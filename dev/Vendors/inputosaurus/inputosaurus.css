@@ -1,0 +1,99 @@
+.inputosaurus-container {
+	margin: 0;
+	padding: 0;
+	display : inline-block;
+	vertical-align: middle;
+	cursor:text;
+	//font-size : 14px;
+	font-family : "Helvetica Neue", Helvetica, Arial, sans-serif;
+	width: 100% !important;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 2px 4px 4px !important;
+}
+.inputosaurus-container li, .inputosaurus-moving-container li {
+	display : block;
+	float : left;
+	overflow: hidden;
+	margin : 2px 4px 0 0;
+	padding : 2px 18px 2px 5px;
+	white-space : nowrap;
+	overflow : hidden;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis;
+	-ms-text-overflow:ellipsis;
+	background-color:#e5eff7;
+	border:#a9cae4 solid 1px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
+	color:#5b9bcd;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.75) inset;
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,0.75) inset;
+	box-shadow: 0 1px 0 rgba(255,255,255,0.75) inset;
+	line-height : 20px;
+	cursor: default;
+	max-width: 300px;
+	position: relative;
+}
+.inputosaurus-container li.inputosaurus-selected {
+	background-color:#bdd6eb;
+}
+.inputosaurus-container li a, .inputosaurus-moving-container li a {
+	font-size:16px;
+	color:#5b9bcd;
+	padding : 1px;
+	text-decoration : none;
+	outline : none;
+	position: absolute;
+	right: 0;
+	margin: -1px 4px 0px;
+}
+.inputosaurus-container li span {
+	margin-right: 4px;
+}
+.inputosaurus-container .inputosaurus-input {
+	border:none;
+	box-shadow: none;
+	background-color:#fff;
+	margin-top : 3px;
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+	max-width: none;
+	width: auto;
+	
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.inputosaurus-container .inputosaurus-input input {
+	border:none;
+	height : 23px;
+	font-size : 14px;
+	line-height : 20px;
+	/*color : #555;*/
+	margin : 0;
+	outline : none;
+	padding : 0 0 2px 6px;
+	width : 25px;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+}
+.inputosaurus-container .inputosaurus-input input:hover {
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+}
+.inputosaurus-input-hidden { display:none; }
+
+.inputosaurus-container .inputosaurus-fake-span {
+    left: -5000px;
+    position: absolute;
+    top: 0;
+}
+
+.ui-draggable-dragging {
+	z-index: 5 !important;
+}

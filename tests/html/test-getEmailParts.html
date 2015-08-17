@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>getEmailParts test</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<script type="text/javascript" src="dev/Vendors/underscore-min.js"></script>
+		<script type="text/javascript" src="dev/Vendors/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="dev/Common/Utils/@ExtUtilsDeclaration.js"></script>
+		<script type="text/javascript" src="dev/Common/Utils/AddressUtils.js"></script>
+		<script type="text/javascript">
+			$(window).load(function () {
+				var
+					aEmails = ['a@a.a', '"sdf,sdf" <asd@asd.xcv>', '"sdf;sdf" <asd@asd.xcv>', 's\'dfs <sdf@sdf.xcv>', 'sdf;sdf <asd@asd.xcv>', 
+						'"sdf;sdf" <asd@asd.xcv> dfg', 'asd asd@asd.xcv', 'sdfsdfsd', 'sdfs@dfsd'],
+					oTbl = $('<table>').appendTo('body')
+				;
+				
+				oTbl.append($('<tr>')
+					.append($('<td style="border: solid 1px grey; padding: 4px;">').text('fullEmail'))
+					.append($('<td style="border: solid 1px grey; padding: 4px;">').text('name'))
+					.append($('<td style="border: solid 1px grey; padding: 4px;">').text('email'))
+					.append($('<td style="border: solid 1px grey; padding: 4px;">').text('correct'))
+				);
+
+				_.each(aEmails, function (sEmail) {
+					var oParts = Utils.Address.getEmailParts(sEmail);
+					oTbl.append($('<tr>')
+						.append($('<td style="border: solid 1px grey; padding: 4px;">').text(oParts.fullEmail))
+						.append($('<td style="border: solid 1px grey; padding: 4px;">').text(oParts.name))
+						.append($('<td style="border: solid 1px grey; padding: 4px;">').text(oParts.email))
+						.append($('<td style="border: solid 1px grey; padding: 4px;">').text(Utils.Address.isCorrectEmail(oParts.email)))
+					);
+				});
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

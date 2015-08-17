@@ -1,0 +1,279 @@
+@theme-tabs-height: 90px;
+@theme-common-link-color: #FE0000;
+@theme-common-link-hover-color: #c74747;
+@pannels-overlap-offset: 2px;
+
+@theme-use-text-fade: true;
+
+.theme-main-background() {
+	background: #ffffff url("images/body.gif") repeat-x 0px 0px;
+}
+
+.theme-tabsbar() {
+	//@fontSize: ;
+	//@itemTopOffset: ;
+	background: url("images/013netvision_logo.png?%VERSION%") no-repeat scroll left center rgba(0, 0, 0, 0);
+    padding-left: 200px;
+	
+	.theme-tabsbar-item() {
+	}
+	
+	.theme-tabsbar-item-hover() {
+	}
+	
+	.theme-current() {
+		color: @fontColorHover;
+		font-weight: bold;
+	}
+	
+	.theme-dropdown() {
+	}
+	
+	.theme-unseen-marker() {
+	}
+}
+
+.theme-common-link() {
+	//@fontSize: ;
+}
+
+.theme-buttons() {
+	.primaryButton() {
+		@background: #FF5B60; 
+		@border: 1px solid #FF2F36;
+		//@textShadow:;
+		//@textColor:;
+	}
+
+	.secondaryButton() {
+		@background: #E3B856;
+		@border: 1px solid #BFAF46;
+		//@textColor:;
+	}
+	
+	.specialButton() {
+		//@background:;
+		//@border:;
+		//@textColor
+	}
+
+	.stateButton() {
+		@background: #FFFFFF;
+		@border: 1px solid #FF5B60;
+		@textColor: #FF5B60;
+	}
+	
+	
+}
+
+.theme-panel() {
+	
+	.theme-resize-handler() {
+	}
+}
+
+//*=== Toolbar CSS ===*/
+@theme-toolbar-height: 56px;
+
+.theme-common-panel-toolbar() {
+	@background: #565656 url("images/toolbar_bg.png") repeat;
+	
+	.theme-item() {
+		border: 0px;
+
+		&.send {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+		
+		&.mail_to {
+			@background: #D59C7A;
+			@border: 1px solid darken(@background, 10%);
+			@textColor: #fff;
+			.theme-buttons > .primaryButton();
+			
+			background: @background;
+			border: @border;
+			color: @textColor;
+			box-shadow: none;
+			
+			padding: 5px 12px;
+			height: auto;
+			line-height: inherit;
+			
+			span {
+				line-height: inherit;
+			}
+		}
+	}
+
+	.theme-item-hover() {
+		box-shadow: none;
+		background: #E60000;
+		
+		&.mail_to {
+			@background: #D59C7A;
+			@border: 1px solid darken(@background, 10%);
+			@textColor: #fff;
+			.theme-buttons > .primaryButton();
+			
+			background: darken(@background, 5%);
+			border: 1px solid darken(@background, 15%);
+			color: @textColor;
+		}
+	}
+}
+//*=== END Toolbar CSS ===*/
+//*=== Clear Panel CSS ===*/
+.theme-clear-panel-toolbar() {
+	.content {
+		padding-top: 10px;
+		padding-bottom: 10px;
+
+		.item {
+			padding-bottom: 5px;
+			padding-top: 5px;
+			font-size: 13pt;
+			font-weight: normal;
+
+			.gradient(#CFCFCF, #7D7D7D, #CFCFCF);
+
+			&:hover {
+				.gradient(#B8B8B8, #626262, #B8B8B8);
+			}
+		}
+	}
+}
+
+.theme-clear-panel() {
+}
+
+.theme-clear-panel-list-item() {
+	&.canNotSelect .collapse_handler{
+		color: #777777;
+		cursor: pointer
+	}
+}
+
+.theme-clear-panel-list-item-count() {
+	background: #969696;
+	box-shadow: 0px 1px 1px #787878 inset, 0px 1px 0px rgba(255,255,255,0.3);
+}
+
+.theme-clear-panel-list-item-count-hover() {
+	background: #787878;
+}
+
+.theme-clear-panel-list-item-unseen-count-hover() {
+	background: #e9e9e9;
+}
+//*=== END Clear Panel CSS ===*/
+//*=== Common Items List CSS ===*/
+@theme-list-item-bg: #fff;
+@theme-list-selected-item-bg: #bbb;
+@theme-list-selected-item-color: #fff;
+@theme-list-checked-item-bg: #EBF7CB;
+@theme-list-unseen-item-bg: #F4F6F7;
+
+.theme-list-item() {
+}
+
+.theme-list-selected-item() {
+	.gradient(lighten(@theme-list-selected-item-bg, 3%), darken(@theme-list-selected-item-bg, 3%), lighten(@theme-list-selected-item-bg, 3%));
+}
+//*=== END Common Items List CSS ===*/
+//*=== Group Style Items List CSS ===*/
+@theme-group-style-item-bg: #fff;
+@theme-group-style-selected-item-bg-color: #BBB7B7;
+@theme-group-style-selected-item-bg: #BBB7B7;
+
+.theme-group-style-item() {
+	.hover() {
+	}
+}
+
+.theme-group-style-selected-item() {
+	.gradient(#c2bfbf, #b1b0b0, #c2bfbf);
+	text-shadow: 0 1px 0 #777777;
+}
+
+.theme-group-style-section() {
+}
+//*=== END Group Style Items List CSS ===*/
+//*=== Dropdown CSS ===*/
+.theme-dropdown() {
+}
+//*=== END Dropdown CSS ===*/
+//*=== Search Block CSS ===*/
+.theme-seach-block() {
+}
+//*=== END Search Block CSS ===*/
+//*=== HTML editor CSS ===*/
+.theme-html-editor () {
+}
+//*=== END HTML editor CSS ===*/
+//*=== Quick Reply CSS ===*/
+.theme-quick-reply() {
+	//@background: ;
+	//@borderTop: ;
+	//@textAreaBorder: ;
+}
+//*=== END Quick Reply CSS ===*/
+//*=== Compose screen CSS ===*/
+.theme-compose-minimized-toolbar () {
+	background: #d7f0c3;
+	border: 1px solid #cacfd5;
+}
+.theme-compose-screen () {
+}
+//*=== END Compose screen CSS ===*/
+//*=== Calendar screen CSS ===*/
+@theme-smallCalendarHeight: 229px;
+
+.theme-small-calendar() {
+}
+.theme-panel-calendar() {
+}
+//*=== END Calendar screen CSS ===*/
+.theme-panel-files() {
+}
+
+.theme-messages-list-item() {
+	@tcBackground: #fff;
+	@tcTextColor: #a0a0a0;
+	@tcBorder: 1px solid #a0a0a0;
+	
+	@tcSelectedBackground: @theme-list-selected-item-bg;
+	@tcSelectedTextColor: #fff;
+	@tcSelectedBorder: 1px solid #fff;
+	
+	@tcUnreadBackground: #a0a0a0;
+	@tcUnreadTextColor: #fff;
+	@tcUnreadBorder: 1px solid #a0a0a0;
+	
+	@tcUnreadSelectedBackground: #fff;
+	@tcUnreadSelectedTextColor: @theme-list-selected-item-bg;
+	@tcUnreadSelectedBorder: @tcSelectedBorder;
+}
+
+.theme-login-panel() {
+	@focusedBackground: #FFF3CE;
+	
+	.theme-header () {
+	}
+	
+	.theme-fieldset () {
+	}
+}
+
+.theme-notifications() {
+	.theme-content () {
+	}
+}
+
+.theme-autocomplete() {
+};
+
+.ui-widget-content a:hover {
+  color: inherit
+}

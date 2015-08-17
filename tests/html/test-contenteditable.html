@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>test contenteditable</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<script type="text/javascript">
+			var Enums = {};
+			var Utils = {};
+		</script>
+		<script type="text/javascript" src="dev/Vendors/underscore-min.js"></script>
+		<script type="text/javascript" src="dev/Vendors/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="dev/Vendors/crea.js"></script>
+		<script type="text/javascript" src="dev/Common/Enums.js"></script>
+		<script type="text/javascript" src="dev/Common/Browser.js"></script>
+		<script type="text/javascript" src="dev/Common/Utils.js"></script>
+		<script type="text/javascript">
+			$(window).load(function () {
+				window.App = {
+					browser: new CBrowser()
+				};
+				var oCrea = new Crea({
+					'onChange': _.bind(function () {console.log('onChange', arguments);}),
+					'onCursorMove': _.bind(function () {console.log('onCursorMove', arguments);}),
+					'onFocus': _.bind(function () {console.log('onFocus', arguments);}),
+					'onBlur': _.bind(function () {console.log('onBlur', arguments);}),
+					'onUrlIn': _.bind(function () {console.log('onUrlIn', arguments);}),
+					'onUrlOut': _.bind(function () {console.log('onUrlOut', arguments);}),
+					'onImageSelect': _.bind(function () {console.log('onImageSelect', arguments);}),
+					'onImageBlur': _.bind(function () {console.log('onImageBlur', arguments);}),
+					'onItemOver': _.bind(function () {console.log('onItemOver', arguments);}),
+					'onItemOut': _.bind(function () {console.log('onItemOut', arguments);}),
+					'openInsertLinkDialog': _.bind(function () {console.log('openInsertLinkDialog', arguments);}),
+					'onUrlClicked': true
+				});
+				oCrea.start(true);
+				oCrea.setText('<div>created by Crea</div>');
+			});
+		</script>
+	</head>
+	<body>
+		<div id="creaId" style="width: 200px; height: 100px; border: solid 1px grey; padding: 10px; margin: 10px;"></div>
+		<div contenteditable="true" style="width: 200px; height: 100px; border: solid 1px green; padding: 10px; margin: 10px;">simple editable div</div>
+	</body>
+</html>

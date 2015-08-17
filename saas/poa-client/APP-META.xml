@@ -1,0 +1,119 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://apstandard.com/ns/1" version="1.2" packaged="@PACKAGED@">
+	<id>http://apsstandard.org/app/AfterLogic-Webmail-Pro</id>
+	<name>AfterLogic Webmail Pro</name>
+	<version>@VERSION@</version>
+	<release>@RELEASE@</release>
+	<homepage>http://www.afterlogic.com/webmail-client</homepage>
+	<vendor>
+		<name>AfterLogic Corp.</name>
+		<homepage>http://www.afterlogic.com/</homepage>
+		<icon path="images/al_logo.png" />
+	</vendor>
+	<packager>
+		<name>Parallels</name>
+		<homepage>http://parallels.com/</homepage>
+	</packager>
+
+	<presentation>
+		<summary>AfterLogic Webmail Pro</summary>
+		<description>
+				Amazing webmail front-end for your network.
+		</description>
+		<icon path="images/wm_logo_64x64.png" />
+		
+		<categories>
+			<category>Collaboration/Email</category>
+		</categories>
+
+		<languages>
+			<language>en</language>
+		</languages>
+	</presentation>
+
+	<global-settings>
+		<setting id="site" class="access_point" type="string" default-value="">
+			<name>Webmail Server URL</name>
+			<description>e.g. http://acs.provider.com/</description>
+		</setting>
+		<setting id="api_key" class="value" type="string" default-value="">
+			<name>Api key</name>
+			<description>Secret key used for connector authentication, alhanumeric characters are allowed.</description>
+		</setting>
+	</global-settings>
+	
+	<patch match="/application/version >= '7.1.0'" />
+	
+	<service id="tenant" class="service">
+		<license must-accept="true">
+			<text>
+				<name>AfterLogic Software License Agreement</name>
+				<url>http://www.afterlogic.com/products/common-licensing</url>
+			</text>
+		</license>
+		<presentation>
+			<name>Tenant</name>
+			<summary>Tenant is a subscription unit which includes all the domains of the customer</summary>
+			<infolinks>
+				<link class="official" href="http://www.afterlogic.com/aurora">Official site</link>
+				<link class="support" href="http://www.afterlogic.com/wiki/Aurora_documentation">Support</link>
+			</infolinks>
+		</presentation>
+
+		<requirements xmlns:php="http://apstandard.com/ns/1/php">
+			<php:version min="5.3" />
+			<php:extension>soap</php:extension>
+		</requirements>
+
+		<service id="account" class="account">
+			<presentation>
+				<name>Webmail Account</name>
+				<infolinks>
+					<link class="official" href="http://www.afterlogic.com/webmail-client">Official site</link>
+					<link class="support" href="http://www.afterlogic.com/wiki/WebMail_Pro_documentation">Support</link>
+				</infolinks>
+				<entry-points>
+					<entry dst="{site}/?postlogin/" method="POST">
+						<label>AfterLogic Webmail Pro</label>
+						<variable value-of-setting="site" name="site"/>
+						<variable value-of-setting="user_login" name="Email"/>
+						<variable value-of-setting="user_password" name="Password"/>
+					</entry>
+				</entry-points>
+			</presentation>
+
+			<settings>
+				<group class="authn">
+					<setting id="user_login" class="login" type="email" >
+						<name>Login (login)</name>
+					</setting>
+					<setting id="user_password" class="password" type="password">
+						<name>Password</name>
+					</setting>
+				</group>
+			</settings>
+
+			<requirements xmlns:php="http://apstandard.com/ns/1/php" xmlns:mail="http://apstandard.com/ns/1/mail">
+				<php:version min="5.0"/>
+				<mail:mailbox>
+					<mail:id>account</mail:id>
+					<mail:access>
+						<mail:imap/>
+					</mail:access>
+					<mail:outgoing>
+						<mail:smtp/>
+					</mail:outgoing>
+				</mail:mailbox>
+			</requirements>
+			
+			<provision>
+                <configuration-script name="configure-mbox.php">
+                    <script-language>php</script-language>
+                    <status-control/>
+                    <structured-output/>
+                </configuration-script>
+            </provision>
+		</service>
+
+	</service>
+</application>
