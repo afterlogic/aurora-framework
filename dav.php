@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-require_once dirname(__FILE__).'/libraries/afterlogic/api.php';
+require_once dirname(__FILE__).'/core/api.php';
 
 /* Mapping PHP errors to exceptions */
 function exception_error_handler($errno, $errstr, $errfile, $errline )

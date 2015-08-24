@@ -1,7 +1,7 @@
 <?php
 
 include_once __DIR__.'/libraries/afterlogic/api.php';
-include_once CApi::LibrariesPath().'/ProjectCore/Notifications.php';
+include_once CApi::LibrariesPath().'/Core/Notifications.php';
 
 $sContents = file_get_contents('php://input');
 $aInputData = array();
@@ -44,7 +44,7 @@ $aResult = array(
 if (!CApi::GetConf('labs.rest', true))
 {
 	$aResult['message'] = 'rest api disabled';
-	$aResult['errorCode'] = \ProjectCore\Notifications::RestApiDisabled;
+	$aResult['errorCode'] = \Core\Notifications::RestApiDisabled;
 	$aResult['result'] = false;
 }
 else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
@@ -78,7 +78,7 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 			if (!((($sSettingsLogin === $sLogin) && ($sSettingsPassword === md5($sPassword))) || $iTenantId > 0))
 			{
 				$aResult['message'] = getErrorMessage('incorrect login or password', $oApiUsersManager);
-				$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidCredentials;
+				$aResult['errorCode'] = \Core\Notifications::RestInvalidCredentials;
 			}
 			else
 			{
@@ -94,19 +94,19 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 		else
 		{
 			$aResult['message'] = 'invalid input parameters';
-			$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+			$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 		}
 	}
 	else if (!(isset($aSecret['login']) && isset($aSecret['password'])))
 	{
 		$aResult['message'] = 'invalid token';
-		$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidToken;
+		$aResult['errorCode'] = \Core\Notifications::RestInvalidToken;
 	}
 	else if (!isset($aSecret['timestamp']) || ((time() - $aSecret['timestamp']) > 3600 /*1h*/))
 	//else if (!isset($aSecret['timestamp']))
 	{
 		$aResult['message'] = 'token expired';
-		$aResult['errorCode'] = \ProjectCore\Notifications::RestTokenExpired;
+		$aResult['errorCode'] = \Core\Notifications::RestTokenExpired;
 	}
 	else
 	{
@@ -172,7 +172,7 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 						{
 							$aResult['result'] = false;
 							$aResult['message'] = getErrorMessage('invalid input parameters', $oApiUsersManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+							$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 						}
 						else
 						{
@@ -180,20 +180,20 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 							if (!$aResult['result'])
 							{
 								$aResult['message'] = getErrorMessage('cannot create account', $oApiUsersManager);
-								$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+								$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 							}
 						}
 					}
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot create account', $oApiDomainsManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+						$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -244,19 +244,19 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 						if (!$aResult['result'])
 						{
 							$aResult['message'] = getErrorMessage('cannot update account', $oApiUsersManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot update account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+						$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -287,25 +287,25 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 							if (!$aResult['result'])
 							{
 								$aResult['message'] = getErrorMessage('cannot delete account', $oApiUsersManager);
-								$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+								$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 							}
 						}
 						else
 						{
 							$aResult['message'] = getErrorMessage('cannot delete account, cannot find account in your tenant', $oApiUsersManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot find account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -325,25 +325,25 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 							if (!$aResult['result'])
 							{
 								$aResult['message'] = getErrorMessage('cannot enable account', $oApiUsersManager);
-								$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+								$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 							}
 						}
 						else
 						{
 							$aResult['message'] = getErrorMessage('cannot enable account', $oApiUsersManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot find account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -363,25 +363,25 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 							if (!$aResult['result'])
 							{
 								$aResult['message'] = getErrorMessage('cannot disable account', $oApiUsersManager);
-								$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+								$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 							}
 						}
 						else
 						{
 							$aResult['message'] = getErrorMessage('cannot disable account', $oApiUsersManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot find account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -405,25 +405,25 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 							if (!$aResult['result'])
 							{
 								$aResult['message'] = getErrorMessage('cannot change account password', $oApiUsersManager);
-								$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+								$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 							}
 						}
 						else
 						{
 							$aResult['message'] = getErrorMessage('cannot change account password', $oApiUsersManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot find account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -446,7 +446,7 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 					if (!$aResult['result'])
 					{
 						$aResult['message'] = getErrorMessage('cannot get account list', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+						$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 					}
 					else
 					{
@@ -465,7 +465,7 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 				else
 				{
 					$aResult['message'] = getErrorMessage('cannot get account list', $oApiUsersManager);
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+					$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 				}
 
 				break;
@@ -485,13 +485,13 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot find account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -522,13 +522,13 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 					else
 					{
 						$aResult['message'] = getErrorMessage('cannot find account', $oApiUsersManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -556,19 +556,19 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 								if (!$aResult['result'])
 								{
 									$aResult['message'] = getErrorMessage('cannot create domain', $oApiDomainsManager);
-									$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+									$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 								}
 							}
 							else
 							{
 								$aResult['message'] = getErrorMessage('cannot create domain', $oApiDomainsManager);
-								$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+								$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 							}
 						}
 						else
 						{
 							$aResult['message'] = getErrorMessage('cannot find tenant', $oApiDomainsManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestTenantFindFailed;
+							$aResult['errorCode'] = \Core\Notifications::RestTenantFindFailed;
 						}
 					}
 					else
@@ -577,14 +577,14 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 						if (!$aResult['result'])
 						{
 							$aResult['message'] = getErrorMessage('cannot create domain', $oApiDomainsManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -671,19 +671,19 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 						if (!$aResult['result'])
 						{
 							$aResult['message'] = getErrorMessage('cannot update domain', $oApiDomainsManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = 'cannot find domain';
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestDomainFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestDomainFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -701,19 +701,19 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 						$aResult['result'] = $oApiDomainsManager->deleteDomainByName($sDomain);
 						if (!$aResult['result']) {
 							$aResult['message'] = getErrorMessage('cannot delete domain', $oApiDomainsManager);
-							$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+							$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 						}
 					}
 					else
 					{
 						$aResult['message'] = 'cannot find domain';
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestDomainFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestDomainFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -735,7 +735,7 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 					if (!$aResult['result'])
 					{
 						$aResult['message'] = getErrorMessage('cannot get domain list', $oApiDomainsManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+						$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 					}
 					else
 					{
@@ -754,7 +754,7 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 				else
 				{
 					$aResult['message'] = getErrorMessage('cannot get domain list', $oApiDomainsManager);
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+					$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 				}
 
 				break;
@@ -775,13 +775,13 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 					else
 					{
 						$aResult['message'] = getErrorMessage('domain does not exist', $oApiDomainsManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestOtherError;
+						$aResult['errorCode'] = \Core\Notifications::RestOtherError;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -816,13 +816,13 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 					else
 					{
 						$aResult['message'] = getErrorMessage('domain does not exist', $oApiDomainsManager);
-						$aResult['errorCode'] = \ProjectCore\Notifications::RestAccountFindFailed;
+						$aResult['errorCode'] = \Core\Notifications::RestAccountFindFailed;
 					}
 				}
 				else
 				{
 					$aResult['message'] = 'invalid input parameters';
-					$aResult['errorCode'] = \ProjectCore\Notifications::RestInvalidParameters;
+					$aResult['errorCode'] = \Core\Notifications::RestInvalidParameters;
 				}
 
 				break;
@@ -841,7 +841,7 @@ if (isset($aResult['result']) && $aResult['result'])
 if (!isset($aResult['message']))
 {
 	$aResult['message'] = $bMethod ? 'error' : 'unknown method';
-	$aResult['errorCode'] = $bMethod ? \ProjectCore\Notifications::RestOtherError : \ProjectCore\Notifications::RestUnknownMethod;
+	$aResult['errorCode'] = $bMethod ? \Core\Notifications::RestOtherError : \Core\Notifications::RestUnknownMethod;
 	$aResult['result'] = false;
 }
 
