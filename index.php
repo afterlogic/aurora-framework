@@ -52,7 +52,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 					$sFileName = PSEVEN_APP_ROOT_PATH.$sFolder.'/'.$sClassPath.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
 					if (file_exists($sFileName))
 					{
-						return include $sFileName;
+						return include_once $sFileName;
 					}
 				}
 			}

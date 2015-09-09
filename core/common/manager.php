@@ -203,9 +203,13 @@ class CApiGlobalManager
 			else
 			{
 				$sManagerType = strtolower($sManagerType);
-				if (CApi::Inc('common.managers.'.$sManagerType.'.manager', false))
+				$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
+				if (!class_exists($sClassName))
 				{
-					$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
+					CApi::Inc('common.managers.'.$sManagerType.'.manager', false);
+				}
+				if (class_exists($sClassName))
+				{
 					$oMan = new $sClassName($this, $sForcedStorage);
 					$sCurrentStorageName = $oMan->GetStorageName();
 
