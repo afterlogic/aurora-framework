@@ -27,7 +27,7 @@ class Service
 	protected function __construct()
 	{
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
-		$this->oActions = Actions::NewInstance();
+		$this->oActions = Actions2::NewInstance();
 		$this->oActions->SetHttp($this->oHttp);
 		$this->oTwilio = $this->oActions->GetTwilio();
 
@@ -265,6 +265,7 @@ class Service
 				@ob_start();
 
 				$aResponseItem = null;
+				$sModule = $this->oHttp->GetPost('Module', null);
 				$sAction = $this->oHttp->GetPost('Action', null);
 				try
 				{

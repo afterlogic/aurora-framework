@@ -13,6 +13,11 @@ class CApi
 	static $oManager;
 
 	/**
+	 * @var CApiModuleManager
+	 */
+	static $oModuleManager;
+
+	/**
 	 * @var CApiPluginManager
 	 */
 	static $oPlugin;
@@ -64,6 +69,7 @@ class CApi
 			CApi::Inc('common.crypt');
 			CApi::Inc('common.container');
 			CApi::Inc('common.manager');
+			CApi::Inc('common.module');
 			CApi::Inc('common.xml');
 			CApi::Inc('common.plugin');
 
@@ -121,6 +127,7 @@ class CApi
 			CApi::$oManager = new CApiGlobalManager();
 			CApi::$oPlugin = new CApiPluginManager(CApi::$oManager);
 			CApi::$bIsValid = CApi::validateApi();
+			CApi::$oModuleManager = new CApiModuleManager();
 
 			CApi::$oManager->PrepareStorageMap();
 
@@ -172,6 +179,20 @@ class CApi
 		return CApi::$oManager->GetByType($sManagerType, $sForcedStorage);
 	}
 
+	/**
+	 * @param string $sManagerType
+	 * @param string $sForcedStorage = ''
+	 */
+	public static function GetCoreManager($sManagerType, $sForcedStorage = '')
+	{
+		return CApi::Manager($sManagerType, $sForcedStorage);
+	}
+
+	public static function GetModuleManager()
+	{
+		return CApi::$oModuleManager;
+	}
+	
 	/**
 	 * @return CApiGlobalManager
 	 */
