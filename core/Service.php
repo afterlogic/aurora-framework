@@ -27,7 +27,7 @@ class Service
 	protected function __construct()
 	{
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
-		$this->oActions = Actions2::NewInstance();
+		$this->oActions = Actions::NewInstance();
 		$this->oActions->SetHttp($this->oHttp);
 		$this->oTwilio = $this->oActions->GetTwilio();
 
