@@ -7,6 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Browser = require('core/js/Browser.js'),
 	
 	bMobileApp = false,
 	bMobileDevice = false
@@ -377,5 +378,91 @@ ko.bindingHandlers.command = {
 //		{
 //			jqElement.prop('disabled', !bResult);
 //		}
+	}
+};
+
+function deferredUpdate(element, state, duration, callback)
+{
+	if (!element.__interval && !!state)
+	{
+		element.__state = true;
+		callback(element, true);
+
+		element.__interval = window.setInterval(function () {
+			if (!element.__state)
+			{
+				callback(element, false);
+				window.clearInterval(element.__interval);
+				element.__interval = null;
+			}
+		}, duration);
+	}
+	else if (!state)
+	{
+		element.__state = false;
+	}
+};
+
+ko.bindingHandlers.checkstate = {
+	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+			
+		var
+			oOptions = oElement.oOptions || null,
+			jqElement = oElement.jqElement || null,
+			oIconIE = oElement.oIconIE || null,
+			values = fValueAccessor(),
+			state = values.state
+		;
+
+		if (values.state !== undefined) {
+			if (!jqElement)
+			{
+				oElement.jqElement = jqElement = $(oElement);
+			}
+
+			if (!oOptions)
+			{
+				oElement.oOptions = oOptions = _.defaults(
+					values, {
+						'activeClass': 'process',
+						'duration': 800
+					}
+				);
+			}
+
+			deferredUpdate(jqElement, state, oOptions['duration'], function(element, state){
+				if (Browser.ie9AndBelow)
+				{
+					if (!oIconIE)
+					{
+						oElement.oIconIE = oIconIE = jqElement.find('.icon');
+					}
+
+					if (!oIconIE.__intervalIE && !!state)
+					{
+						var
+							i = 0,
+							style = ''
+						;
+
+						oIconIE.__intervalIE = setInterval(function() {
+							style = '0px -' + (20 * i) + 'px';
+							i = i < 7 ? i + 1 : 0;
+							oIconIE.css({'background-position': style});
+						} , 1000/12);
+					}
+					else
+					{
+						oIconIE.css({'background-position': '0px 0px'});
+						clearInterval(oIconIE.__intervalIE);
+						oIconIE.__intervalIE = null;
+					}
+				}
+				else
+				{
+					element.toggleClass(oOptions['activeClass'], state);
+				}
+			});
+		}
 	}
 };

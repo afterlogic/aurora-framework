@@ -1176,13 +1176,13 @@ html.mobile .toolbar .content .group > .item {
   font-size: 20px;
   color: rgba(0, 0, 0, 0.5);
 }
-.toolbar .content > .item.checkmail,
-.toolbar .content .group > .item.checkmail {
+.toolbar .content > .item.checkstate,
+.toolbar .content .group > .item.checkstate {
   float: right;
   margin-right: 0px;
 }
-html.rtl .toolbar .content > .item.checkmail,
-html.rtl .toolbar .content .group > .item.checkmail {
+html.rtl .toolbar .content > .item.checkstate,
+html.rtl .toolbar .content .group > .item.checkstate {
   float: left;
   margin-left: 0px;
 }
@@ -1235,10 +1235,10 @@ html.rtl .toolbar .content .group > .item.checkmail {
 .toolbar .content .group > .item.passive:hover.mail_to span {
   line-height: inherit;
 }
-.mobile .toolbar .content > .item.passive.checkmail:hover > .icon,
-.mobile .toolbar .content .group > .item.passive.checkmail:hover > .icon,
-.mobile .toolbar .content > .item.passive:hover.checkmail:hover > .icon,
-.mobile .toolbar .content .group > .item.passive:hover.checkmail:hover > .icon {
+.mobile .toolbar .content > .item.passive.checkstate:hover > .icon,
+.mobile .toolbar .content .group > .item.passive.checkstate:hover > .icon,
+.mobile .toolbar .content > .item.passive:hover.checkstate:hover > .icon,
+.mobile .toolbar .content .group > .item.passive:hover.checkstate:hover > .icon {
   color: #626262 !important;
 }
 .toolbar .content > .item .arrow,
@@ -1293,8 +1293,8 @@ html.rtl .toolbar .content .group > .item.checkmail {
 .toolbar .content .group > .item.mail_to span {
   line-height: inherit;
 }
-.mobile .toolbar .content > .item.checkmail:hover > .icon,
-.mobile .toolbar .content .group > .item.checkmail:hover > .icon {
+.mobile .toolbar .content > .item.checkstate:hover > .icon,
+.mobile .toolbar .content .group > .item.checkstate:hover > .icon {
   color: #626262 !important;
 }
 .toolbar .content .group {
@@ -1375,8 +1375,8 @@ html.rtl .toolbar .content .group > .item:last-child {
   color: #888888;
   cursor: default;
 }
-.toolbar .group.checkmail .icon:before,
-.toolbar .item.checkmail .icon:before {
+.toolbar .group.checkstate .icon:before,
+.toolbar .item.checkstate .icon:before {
   content: "\e607";
   width: 100%;
   height: 100%;
@@ -1390,23 +1390,23 @@ html.rtl .toolbar .content .group > .item:last-child {
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
 }
-.no-cssanimations .toolbar .group.checkmail .icon:before,
-.no-cssanimations .toolbar .item.checkmail .icon:before {
+.no-cssanimations .toolbar .group.checkstate .icon:before,
+.no-cssanimations .toolbar .item.checkstate .icon:before {
   content: "";
 }
-.no-cssanimations .toolbar .group.checkmail .icon,
-.no-cssanimations .toolbar .item.checkmail .icon {
+.no-cssanimations .toolbar .group.checkstate .icon,
+.no-cssanimations .toolbar .item.checkstate .icon {
   background: url("images/check.png?%VERSION%") no-repeat 0px 0px;
   overflow: hidden;
   width: 19px !important;
   height: 19px !important;
 }
-.toolbar .group.checkmail.process .icon,
-.toolbar .item.checkmail.process .icon {
+.toolbar .group.checkstate.process .icon,
+.toolbar .item.checkstate.process .icon {
   text-shadow: none;
 }
-.toolbar .group.checkmail.process .icon:before,
-.toolbar .item.checkmail.process .icon:before {
+.toolbar .group.checkstate.process .icon:before,
+.toolbar .item.checkstate.process .icon:before {
   text-shadow: none;
 }
 .toolbar .group.mark .icon:before,
@@ -1636,7 +1636,7 @@ html.rtl .toolbar .item.next .icon:before {
 .mobile .messages .panel_top .toolbar .content {
   padding: 0;
 }
-.mobile .messages .panel_top .toolbar .content .item.checkmail {
+.mobile .messages .panel_top .toolbar .content .item.checkstate {
   padding: 0 2px;
   background: none;
   border: 0;
@@ -8219,7 +8219,7 @@ html.rtl .HelpdeskLayout .AgentArea .panel.threads .toolbar {
 .HelpdeskLayout .AgentArea .panel.threads .toolbar .content {
   padding: 0px;
 }
-.HelpdeskLayout .AgentArea .panel.threads .toolbar .checkmail {
+.HelpdeskLayout .AgentArea .panel.threads .toolbar .checkstate {
   float: none;
   padding: 0px;
   border-radius: 4px;
@@ -8248,7 +8248,7 @@ html.rtl .HelpdeskLayout .AgentArea .panel.threads .panel_top {
   padding-right: 15px;
   padding-left: 40px;
 }
-.HelpdeskLayout .panel.threads .toolbar .checkmail:hover {
+.HelpdeskLayout .panel.threads .toolbar .checkstate:hover {
   background: none;
 }
 .HelpdeskLayout .UserArea .panel.threads .toolbar .new_request {
