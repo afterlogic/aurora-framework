@@ -1,0 +1,7 @@
+<span data-bind="attr: {'class': 'item ' + sName}, css: {'current': isCurrent, 'recivedAnim': recivedAnim}">
+	<span class="helper" data-bind="text: linkText"></span>
+	<a class="link" href="javascript: void(0);" data-bind="attr: {href: hash}">
+		<span class="text" data-bind="text: linkText"></span>
+		<!-- ko template: {name: 'Common_HeaderItemUnseenCountView', data: $data} --><!-- /ko -->
+	</a>
+</span>

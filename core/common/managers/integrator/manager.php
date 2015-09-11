@@ -2110,13 +2110,19 @@ class CApiIntegratorManager extends AApiManager
 		$sMobileSuffix = $bMobile && !$bHelpdesk ? '-mobile' : '';
 		$sWebPath = empty($sWebPath) ? '.' : $sWebPath;
 		return
-'<div class="pSevenMain"><div id="pSevenLoading"></div><div id="pSevenContent"></div><div id="pSevenHidden"></div>'.
+'<div class="pSevenMain">
+	<div id="pSevenLoading"></div>
+	<div id="pSevenContent">
+		<div class="screens"></div>
+		<div class="popups"></div>
+	</div>
+	<div id="pSevenHidden"></div>'.
 '<div>'.
 $this->compileTemplates($sTheme, $bMobile).
 '<script src="'.$sWebPath.'/static/js/libs.js?'.CApi::VersionJs().'"></script>'.
 $this->compileLanguage($sLanguage).
 $this->compileAppData($bHelpdesk, $iHelpdeskIdTenant, $sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash).
-'<script src="'.$sWebPath.'/static/js/app'.$sMobileSuffix.($bHelpdesk ? '-helpdesk' :
+'<script src="'.$sWebPath.'/static/js/all'.$sMobileSuffix.($bHelpdesk ? '-helpdesk' :
 	(empty($sCalendarPubHash) ? (empty($sFileStoragePubHash) ? '' : '-filestorage-pub') : '-calendar-pub')).(CApi::GetConf('labs.use-app-min-js', false) ? '.min' : '').'.js?'.CApi::VersionJs().'"></script>'.
 	(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
 '</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'

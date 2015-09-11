@@ -1,4 +1,5 @@
 {
+	"browserify"	: true,
 	"curly"			: true,
 	"eqeqeq"		: true,
 	"forin"			: true,
