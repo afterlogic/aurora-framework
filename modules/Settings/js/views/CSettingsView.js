@@ -1,7 +1,10 @@
 'use strict';
 
 var
-	Api = require('core/js/Api.js')
+	Api = require('core/js/Api.js'),
+	
+	Popups = require('core/js/Popups.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js')
 ;
 
 /**
@@ -204,7 +207,7 @@ CSettingsView.prototype.confirmSaving = function (sTab)
 
 	if (oCurrentViewModel && Utils.isFunc(oCurrentViewModel.isChanged) && oCurrentViewModel.isChanged())
 	{
-		App.Screens.showPopup(ConfirmPopup, [Utils.i18n('SETTINGS/CONFIRM_SETTINGS_SAVE'), fAction, '', Utils.i18n('SETTINGS/BUTTON_SAVE'), Utils.i18n('SETTINGS/BUTTON_DISCARD')]);
+		Popups.showPopup(ConfirmPopup, [Utils.i18n('SETTINGS/CONFIRM_SETTINGS_SAVE'), fAction, '', Utils.i18n('SETTINGS/BUTTON_SAVE'), Utils.i18n('SETTINGS/BUTTON_DISCARD')]);
 	}
 };
 
@@ -333,7 +336,7 @@ CSettingsView.prototype.onDeleteFolderClick = function (oFolder, oParent)
 	
 	if (oFolder && oFolder.canDelete())
 	{
-		App.Screens.showPopup(ConfirmPopup, [sWarning, fCallBack]);
+		Popups.showPopup(ConfirmPopup, [sWarning, fCallBack]);
 	}
 	else if (oEmailAccountsViewModel)
 	{

@@ -13,6 +13,9 @@ var
 	Routing = require('core/js/Routing.js'),
 	Api = require('core/js/Api.js'),
 	
+	Popups = require('core/js/Popups.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	
 	MailCache = null,
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
@@ -1051,7 +1054,7 @@ CFolderModel.prototype.emptyFolder = function ()
 	
 	if (this.enableEmptyFolder())
 	{
-		App.Screens.showPopup(ConfirmPopup, [sWarning, fCallBack]);
+		Popups.showPopup(ConfirmPopup, [sWarning, fCallBack]);
 	}
 };
 

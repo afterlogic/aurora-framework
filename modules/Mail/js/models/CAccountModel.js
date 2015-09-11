@@ -13,6 +13,9 @@ var
 	Screens = require('core/js/Screens.js'),
 	Browser = require('core/js/Browser.js'),
 	
+	Popups = require('core/js/Popups.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	
 	Accounts = null,
 	Settings = require('modules/Mail/js/Settings.js'),
 	Cache = null,
@@ -274,7 +277,7 @@ CAccountModel.prototype.allowMailAfterConfiguring = function ()
 	{
 		if (this.passwordSpecified())
 		{
-			Screens.showPopup(AlertPopup, [
+			Popups.showPopup(AlertPopup, [
 				TextUtils.i18n('SETTINGS/ACCOUNTS_WARNING_AFTER_CONFIG_MAIL_HTML', {'EMAIL': this.email()}),
 				null,
 				TextUtils.i18n('SETTINGS/ACCOUNTS_WARNING_AFTER_CONFIG_MAIL_TITLE', {'EMAIL': this.email()})
@@ -400,7 +403,7 @@ CAccountModel.prototype.remove = function(fAfterRemoveHandler)
 	if (this.canBeRemoved())
 	{
 		this.fAfterRemoveHandler = fAfterRemoveHandler;
-		Screens.showPopup(ConfirmPopup, [this.removeConfirmation(), fCallBack, this.email()]);
+		Popups.showPopup(ConfirmPopup, [this.removeConfirmation(), fCallBack, this.email()]);
 	}
 };
 

@@ -16,6 +16,7 @@ var
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	MailUtils = require('modules/Mail/js/utils/Mail.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings  = require('modules/Mail/js/Settings.js'),
@@ -774,7 +775,7 @@ CMessageListView.prototype.onDeletePress = function (aMessages)
 
 	if (aUids.length > 0)
 	{
-		App.Api.deleteMessages(aUids, App);
+		MailUtils.deleteMessages(aUids);
 	}
 };
 
@@ -783,7 +784,7 @@ CMessageListView.prototype.onDeletePress = function (aMessages)
  */
 CMessageListView.prototype.executeDelete = function ()
 {
-	App.Api.deleteMessages(this.checkedOrSelectedUids(), App);
+	MailUtils.deleteMessages(this.checkedOrSelectedUids());
 };
 
 /**

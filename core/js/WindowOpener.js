@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	Routing = require('core/js/Routing.js'),
-	Screens = require('core/js/Screens.js'),
+	Popups = require('core/js/Popups.js'),
 	
 	iDefaultRatio = 0.8,
 	aOpenedWins = []
@@ -122,7 +122,7 @@ module.exports = {
 			return oWin.App ? oWin.App.MailCache.editedDraftUid() : '';
 		});
 		
-		if (Screens.hasOpenedMinimizedPopups())
+		if (Popups.hasOpenedMinimizedPopups())
 		{
 			aDraftUids.push(App.MailCache.editedDraftUid());
 		}

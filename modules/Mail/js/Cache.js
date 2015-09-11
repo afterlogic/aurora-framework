@@ -13,6 +13,9 @@ var
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	
+	Popups = require('core/js/Popups.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
@@ -802,7 +805,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids, 
 			if (bTryToDeleteEditedDraft)
 			{
 				this.disableComposeAutosave(true);
-				App.Screens.showPopup(ConfirmPopup, [TextUtils.i18n('MAILBOX/CONFIRM_MESSAGE_FOR_DELETE_IS_EDITED'), 
+				Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAILBOX/CONFIRM_MESSAGE_FOR_DELETE_IS_EDITED'), 
 					_.bind(function (bOk) {
 						if (bOk)
 						{
@@ -1524,7 +1527,7 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 			oToFolder.addMessagesCountsDiff(-oDiffs.PlusDiff, -oDiffs.UnseenPlusDiff);
 			if (oResponse.ErrorCode === Enums.Errors.ImapQuota && (bToFolderTrash || bToFolderSpam))
 			{
-				App.Screens.showPopup(ConfirmPopup, [sConfirm, fDeleteMessages]);
+				Popups.showPopup(ConfirmPopup, [sConfirm, fDeleteMessages]);
 			}
 			else
 			{

@@ -2,7 +2,9 @@
 
 var
 	$ = require('jquery'),
+	
 	Utils = require('core/js/utils/Common.js'),
+	
 	MessageUtils = {}
 ;
 

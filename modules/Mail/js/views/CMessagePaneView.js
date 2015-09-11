@@ -861,17 +861,17 @@ CMessagePaneView.prototype.executeReplyOrForward = function (sReplyType)
 
 CMessagePaneView.prototype.executeDeleteMessage = function ()
 {
-	if (this.currentMessage())
-	{
-		if (this.singleMode() && window.opener && window.opener.App && window.opener.MailCache)
-		{
-			App.Api.deleteMessages([this.currentMessage().uid()], window.opener.App, function () {window.close();});
-		}
-		else if (this.mobileApp)
-		{
-			App.Api.deleteMessages([this.currentMessage().uid()], App);
-		}
-	}
+//	if (this.currentMessage())
+//	{
+//		if (this.singleMode() && window.opener && window.opener.App && window.opener.MailCache)
+//		{
+//			MailUtils.deleteMessages([this.currentMessage().uid()], window.opener.App, function () {window.close();});
+//		}
+//		else if (this.mobileApp)
+//		{
+//			MailUtils.deleteMessages([this.currentMessage().uid()], App);
+//		}
+//	}
 };
 
 CMessagePaneView.prototype.executePrevMessage = function ()

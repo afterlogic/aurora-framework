@@ -335,7 +335,7 @@ CAbstractFileModel.prototype.importFile = function ()
 //		fPgpCallback = _.bind(function (oPgp) {
 //			if (oPgp)
 //			{
-//				Screens.showPopup(CImportOpenPgpKeyPopup, [oPgp, sContent]);
+//				Popups.showPopup(CImportOpenPgpKeyPopup, [oPgp, sContent]);
 //			}
 //		}, this)
 //	;
