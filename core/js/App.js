@@ -13,11 +13,12 @@ var
 ;
 
 require('core/js/splitter.js'); // necessary in mail and contacts modules, not for mobile version
-require('core/js/knockoutBindings.js');
+require('core/js/koBindings.js');
 
 if (!bMobileDevice && !bMobileApp)
 {
 	require('core/js/customTooltip.js');
+	require('core/js/koBindingsNotMobile.js');
 }
 
 require('core/js/enums.js');

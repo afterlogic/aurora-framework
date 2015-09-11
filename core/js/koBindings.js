@@ -7,13 +7,8 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Browser = require('core/js/Browser.js'),
-	
-	bMobileApp = false,
-	bMobileDevice = false
+	Browser = require('core/js/Browser.js')
 ;
-
-require('customscroll');
 
 ko.bindingHandlers.i18n = {
 	'init': function (oElement, fValueAccessor) {
@@ -218,100 +213,6 @@ ko.bindingHandlers.dropdown = {
 				fControlClick(oEv);
 			}
 		});
-	}
-};
-
-ko.bindingHandlers.splitter = {
-	'init': bMobileApp ? null : function (oElement, fValueAccessor) {
-		setTimeout(function() {
-			$(oElement).splitter(fValueAccessor());
-		}, 1);
-	}
-};
-
-ko.bindingHandlers.customScrollbar = {
-	'init': bMobileApp ? null : function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
-		if (bMobileDevice)
-		{
-			return;
-		}
-
-		var
-			jqElement = $(oElement),
-			oCommand = _.defaults(fValueAccessor(), {
-				'oScroll' : null,
-				'scrollToTopTrigger': null,
-				'scrollToBottomTrigger': null,
-				'scrollTo': null
-
-			}),
-			oScroll = null
-		;
-
-		/*_.delay(_.bind(function () {
-			var jqCustomScrollbar = jqElement.find('.customscroll-scrollbar-vertical');
-
-			jqCustomScrollbar.on('click', function (oEv) {
-				oEv.stopPropagation();
-			});
-		}, this), 1000);*/
-
-
-
-		oCommand = /** @type {{scrollToTopTrigger:{subscribe:Function},scrollToBottomTrigger:{subscribe:Function},scrollTo:{subscribe:Function},reset:Function}}*/ oCommand;
-
-		jqElement.addClass('scroll-wrap').customscroll(oCommand);
-		oScroll = jqElement.data('customscroll');
-
-		if (oCommand['oScroll'] && Utils.isFunc(oCommand['oScroll'].subscribe)) {		
-			oCommand['oScroll'](oScroll);
-		} else {
-			oCommand['oScroll'] = oScroll;
-		}
-
-		if (!Utils.isUnd(oCommand.reset)) {
-			oElement._customscroll_reset = _.throttle(function () {
-				oScroll.reset();
-			}, 100);
-		}
-		
-		if (oCommand['scrollToTopTrigger'] && Utils.isFunc(oCommand.scrollToTopTrigger.subscribe)) {
-			oCommand.scrollToTopTrigger.subscribe(function () {
-				if (oScroll) {
-					oScroll['scrollToTop']();
-				}
-			});
-		}
-		
-		if (oCommand['scrollToBottomTrigger'] && Utils.isFunc(oCommand.scrollToBottomTrigger.subscribe)) {
-			oCommand.scrollToBottomTrigger.subscribe(function () {
-				if (oScroll) {
-					oScroll['scrollToBottom']();
-				}
-			});
-		}
-
-		if (oCommand['scrollTo'] && Utils.isFunc(oCommand.scrollTo.subscribe)) {
-			oCommand.scrollTo.subscribe(function () {
-				if (oScroll) {
-					oScroll['scrollTo'](oCommand.scrollTo());
-				}
-			});
-		}
-	},
-	
-	'update': bMobileApp ? null : function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
-		if (bMobileDevice)
-		{
-			return;
-		}
-		if (oElement._customscroll_reset) {
-			oElement._customscroll_reset();
-		}
-		if (!Utils.isUnd(fValueAccessor().top)) {
-
-			$(oElement).data('customscroll')['vertical'].set(fValueAccessor().top);
-		}
 	}
 };
 

@@ -28,7 +28,6 @@
 		"hasher": "./node_modules/hasher/dist/js/hasher.min.js",
 		"underscore": "./node_modules/underscore/underscore-min.js",
 		"knockout": "./node_modules/knockout/build/output/knockout-latest.js",
-		"jquery": "./node_modules/jquery/dist/jquery.min.js",
 		"customscroll": "./core/js/vendors/customscroll.js"
 	},
 	"browserify-shim": {

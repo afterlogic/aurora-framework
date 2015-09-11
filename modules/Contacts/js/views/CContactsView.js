@@ -1146,7 +1146,7 @@ CContactsView.prototype.dragAndDropHelper = function (oContact)
 
 	var
 		oSelected = this.selector.itemSelected(),
-		oHelper = Utils.draggableMessages(),
+		oHelper = Utils.draggableItems(),
 		nCount = this.selector.listCheckedOrSelected().length,
 		aUids = 0 < nCount ? _.map(this.selector.listCheckedOrSelected(), function (oItem) {
 			return [oItem.Id(), oItem.Global() ? '1' : '0'];

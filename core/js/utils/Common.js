@@ -447,4 +447,57 @@ Utils.thumbQueue = (function () {
 	};
 }());
 
+Utils.draggableItems = function ()
+{
+	return $('<div class="draggable"><div class="content"><span class="count-text"></span></div></div>').appendTo('#pSevenHidden');
+};
+
+Utils.uiDropHelperAnim = function (oEvent, oUi)
+{
+	var
+		iLeft = 0,
+		iTop = 0,
+		iNewLeft = 0,
+		iNewTop = 0,
+		iWidth = 0,
+		iHeight = 0,
+		helper = oUi.helper.clone().appendTo('#pSevenHidden'),
+		target = $(oEvent.target).find('.animGoal'),
+		position = null
+	;
+
+	target = target[0] ? $(target[0]) : $(oEvent.target);
+	position = target && target[0] ? target.offset() : null;
+
+	if (position)
+	{
+		iLeft = window.Math.round(position.left);
+		iTop = window.Math.round(position.top);
+
+		iWidth = target.width();
+		iHeight = target.height();
+
+		iNewLeft = iLeft;
+		if (0 < iWidth)
+		{
+			iNewLeft += window.Math.round(iWidth / 2);
+		}
+
+		iNewTop = iTop;
+		if (0 < iHeight)
+		{
+			iNewTop += window.Math.round(iHeight / 2);
+		}
+
+		helper.animate({
+			'left': iNewLeft + 'px',
+			'top': iNewTop + 'px',
+			'font-size': '0px',
+			'opacity': 0
+		}, 800, 'easeOutQuint', function() {
+			$(this).remove();
+		});
+	}
+};
+
 module.exports = Utils;

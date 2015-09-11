@@ -275,7 +275,7 @@ CMailView.prototype.dragAndDropHelper = function (oMessage, bCtrl)
 	}
 
 	var
-		oHelper = Utils.draggableMessages(),
+		oHelper = Utils.draggableItems(),
 		aUids = this.oMessageList.checkedOrSelectedUids(),
 		iCount = aUids.length
 	;
