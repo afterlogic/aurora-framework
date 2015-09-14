@@ -447,10 +447,11 @@ CAjax.prototype.always = function (oParameters, oXhr, sType)
 		this.requests(_.compact(this.requests()));
 
 //		Utils.checkConnection(oParameters.Action, sType);
-
-		if (App.Prefetcher && sType !== 'parsererror' && !this.hasOpenedRequests())
+		
+		var oPrefetcher = require('core/js/Prefetcher.js');
+		if (oPrefetcher && sType !== 'parsererror' && !this.hasOpenedRequests())
 		{
-			App.Prefetcher.start();
+			oPrefetcher.start();
 		}
 	}
 };

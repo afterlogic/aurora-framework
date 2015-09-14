@@ -44,7 +44,7 @@ var
 				var newPos = (rtl ? splitter._overallWidth - e[opts['eventPos']] : e[opts['eventPos']]) + opts['_posSplit'];
 				resplit(newPos);
 				
-				if (Utils.isFunc(args.resizeFunc))
+				if ($.isFunction(args.resizeFunc))
 				{
 					args.resizeFunc();
 				}
@@ -66,7 +66,7 @@ var
 					.unbind('mousemove', doSplitMouse)
 					.unbind('mouseup', endSplitMouse);
 				
-				if (Utils.isFunc(args.resizeFunc))
+				if ($.isFunction(args.resizeFunc))
 				{
 					args.resizeFunc();
 				}

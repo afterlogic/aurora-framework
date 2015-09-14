@@ -23,5 +23,6 @@ module.exports = {
 	SiteName: 'AfterLogic WebMail',
 	IsRTL: bRtl,
 	CsrfToken: AppData.Token,
-	DesktopNotifications: true
+	DesktopNotifications: true,
+	AllowPrefetch: true
 };

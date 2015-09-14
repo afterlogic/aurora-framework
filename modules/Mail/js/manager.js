@@ -13,6 +13,7 @@ module.exports = function () {
 	return {
 		'ScreenList': require('modules/Mail/js/screenList.js'),
 		'HeaderItem': HeaderItemView,
+		'Prefetcher': require('modules/Mail/js/Prefetcher.js'),
 		getBrowserTitle: function (bBrowserFocused) {
 			if (bBrowserFocused || HeaderItemView.unseenCount() === 0)
 			{

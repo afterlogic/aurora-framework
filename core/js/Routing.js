@@ -249,6 +249,7 @@ var Routing = new CRouting();
 module.exports = {
 	init: _.bind(Routing.init, Routing),
 	buildHashFromArray: _.bind(Routing.buildHashFromArray, Routing),
+	replaceHashWithoutMessageUid: _.bind(Routing.replaceHashWithoutMessageUid, Routing),
 	setHash: _.bind(Routing.setHash, Routing),
 	replaceHash: _.bind(Routing.replaceHash, Routing)
 };

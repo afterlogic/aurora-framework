@@ -83,9 +83,7 @@ CApp.prototype.route = function (sHash, aParams)
 
 CApp.prototype.getModulesTabs = function ()
 {
-	var
-		aTabs = []
-	;
+	var aTabs = [];
 	
 	_.each(this.oModules, function (oModule, sName) {
 		oModule.HeaderItem.setName(sName);
@@ -93,6 +91,20 @@ CApp.prototype.getModulesTabs = function ()
 	});
 	
 	return aTabs;
+};
+
+CApp.prototype.getModulesPrefetchers = function ()
+{
+	var aPrefetchers = [];
+	
+	_.each(this.oModules, function (oModule, sName) {
+		if (oModule.Prefetcher)
+		{
+			aPrefetchers.push(oModule.Prefetcher);
+		}
+	});
+	
+	return aPrefetchers;
 };
 
 CApp.prototype.getCurrentModuleBrowserTitle = function (bBrowserFocused)

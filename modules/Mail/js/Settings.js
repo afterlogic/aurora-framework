@@ -16,5 +16,6 @@ module.exports = {
 	MailExpandFolders: true,
 	ThreadLevel: true,
 	AllowFetcher: false,
-	AllowIdentities: false
+	AllowIdentities: false,
+	MaxPrefetchBodiesSize: 50000
 };
