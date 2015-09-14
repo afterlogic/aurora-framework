@@ -858,23 +858,26 @@ CContactsView.prototype.requestContactList = function ()
 	this.loadingList(true);
 
 	Ajax.send({
-		'Action': (Enums.ContactsGroupListType.Global === this.selectedGroupType()) ? 'ContactGlobalList' : 'ContactList',
-		'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ContactsPerPage,
-		'Limit': Settings.ContactsPerPage,
-		'SortField': this.sortType(),
-		'SortOrder': this.sortOrder() ? '1' : '0',
-		'Search': this.search(),
-		'GroupId': this.selectedGroupInList() ? this.selectedGroupInList().Id() : '',
-		'SharedToAll': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0',
-		'SharedToAll1': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0',
-		'All': (Enums.ContactsGroupListType.All === this.selectedGroupType()) ? '1' : '0'
+		'Module': 'Contacts',
+		'Method': (Enums.ContactsGroupListType.Global === this.selectedGroupType()) ? 'GetGlobalContacts' : 'GetContacts',
+		'Parameters': JSON.stringify({
+			'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ContactsPerPage,
+			'Limit': Settings.ContactsPerPage,
+			'SortField': this.sortType(),
+			'SortOrder': this.sortOrder() ? '1' : '0',
+			'Search': this.search(),
+			'GroupId': this.selectedGroupInList() ? this.selectedGroupInList().Id() : '',
+			'SharedToAll': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0',
+			'All': (Enums.ContactsGroupListType.All === this.selectedGroupType()) ? '1' : '0'
+		})
 	}, this.onContactListResponse, this);
 };
 
 CContactsView.prototype.requestGroupFullList = function ()
 {
 	Ajax.send({
-		'Action': 'ContactsGroupFullList'
+		'Module': 'Contacts',
+		'Method': 'GetGroups'
 	}, this.onGroupListResponse, this);
 };
 
