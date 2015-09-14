@@ -4,7 +4,7 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	
-	Ajax = require('core/js/Ajax.js')
+	Ajax = require('modules/Contacts/js/Ajax.js')
 ;
 
 
@@ -69,8 +69,7 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 				'context': oResponseContext
 			};
 			
-			Ajax.send({
-				'Action': 'ContactsGetByEmails',
+			Ajax.send('GetContactsByEmails', {
 				'Emails': aEmailsForRequest.join(','),
 				'HandlerId': sHandlerId
 			}, this.onContactsGetByEmailsResponse, this);

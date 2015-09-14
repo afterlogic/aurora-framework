@@ -7,7 +7,6 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Ajax = require('core/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
@@ -20,6 +19,7 @@ var
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
+	Ajax = require('modules/Contacts/js/Ajax.js'),
 	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
 	Settings = require('modules/Contacts/js/Settings.js'),
 	Cache = require('modules/Contacts/js/Cache.js'),
@@ -407,18 +407,6 @@ CContactsView.prototype.executeSave = function (oData)
 
 			oData.groups(aList);
 
-			oParameters = oData.toObject();
-			oParameters.Action = oData.isNew() ? 'ContactCreate' : 'ContactUpdate';
-			
-			if (oData.isNew())
-			{
-				oParameters.SharedToAll = (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0';
-			}
-			else
-			{
-				oParameters.SharedToAll = oData.sharedToAll() ? '1' : '0';
-			}
-
 			if (oData.edited())
 			{
 				oData.edited(false);
@@ -438,13 +426,21 @@ CContactsView.prototype.executeSave = function (oData)
 				this.recivedAnimUnshare(true);
 			}
 
-			Ajax.send(oParameters, this.onContactCreateResponse, this);
+			oParameters = oData.toObject();
+			
+			if (oData.isNew())
+			{
+				oParameters.SharedToAll = (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0';
+			}
+			else
+			{
+				oParameters.SharedToAll = oData.sharedToAll() ? '1' : '0';
+			}
+
+			Ajax.send(oData.isNew() ? 'CreateContact' : 'UpdateContact', oParameters, this.onContactCreateResponse, this);
 		}
 		else if (oData instanceof CGroupModel && !oData.readOnly())
 		{
-			oParameters = oData.toObject();
-			oParameters.Action = oData.isNew() ? 'ContactsGroupCreate' : 'ContactsGroupUpdate';
-
 			this.gotoGroupList();
 			
 			if (oData.edited())
@@ -457,7 +453,7 @@ CContactsView.prototype.executeSave = function (oData)
 				this.selectedItem(null);
 			}
 
-			Ajax.send(oParameters, this.onGroupCreateResponse, this);
+			Ajax.send(oData.isNew() ? 'CreateGroup' : 'UpdateGroup', oData.toObject(), this.onGroupCreateResponse, this);
 		}
 	}
 	else
@@ -553,8 +549,7 @@ CContactsView.prototype.deleteContacts = function (aChecked)
 			});
 		}, 500);
 
-		Ajax.send({
-			'Action': 'ContactDelete',
+		Ajax.send('DeleteContacts', {
 			'ContactsId': aContactsId.join(','),
 			'SharedToAll': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0'
 		}, this.requestContactList, this);
@@ -593,8 +588,7 @@ CContactsView.prototype.executeRemoveFromGroup = function ()
 			});
 		}, 500);
 
-		Ajax.send({
-			'Action': 'ContactsRemoveFromGroup',
+		Ajax.send('RemoveContactsFromGroup', {
 			'GroupId': oGroup.Id(),
 			'ContactsId': aContactsId.join(',')
 		}, this.requestContactList, this);
@@ -679,8 +673,7 @@ CContactsView.prototype.executeAddContactsToGroupId = function (sGroupId, aConta
 {
 	if (sGroupId && _.isArray(aContactIds) && 0 < aContactIds.length)
 	{
-		Ajax.send({
-			'Action': 'ContactsAddToGroup',
+		Ajax.send('AddContactsToGroup', {
 			'GroupId': sGroupId,
 			'ContactsId': aContactIds
 		}, this.onContactsAddToGroupResponse, this);
@@ -856,29 +849,27 @@ CContactsView.prototype.hotKeysBind = function ()
 CContactsView.prototype.requestContactList = function ()
 {
 	this.loadingList(true);
-
-	Ajax.send({
-		'Module': 'Contacts',
-		'Method': (Enums.ContactsGroupListType.Global === this.selectedGroupType()) ? 'GetGlobalContacts' : 'GetContacts',
-		'Parameters': JSON.stringify({
-			'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ContactsPerPage,
-			'Limit': Settings.ContactsPerPage,
-			'SortField': this.sortType(),
-			'SortOrder': this.sortOrder() ? '1' : '0',
-			'Search': this.search(),
-			'GroupId': this.selectedGroupInList() ? this.selectedGroupInList().Id() : '',
-			'SharedToAll': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0',
-			'All': (Enums.ContactsGroupListType.All === this.selectedGroupType()) ? '1' : '0'
-		})
+	var sStorage = 'personal';
+	switch (this.selectedGroupType())
+	{
+		case Enums.ContactsGroupListType.Global: sStorage = 'global'; break;
+		case Enums.ContactsGroupListType.SharedToAll: sStorage = 'shared'; break;
+		case Enums.ContactsGroupListType.All: sStorage = 'all'; break;
+	}
+	Ajax.send('GetContacts', {
+		'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ContactsPerPage,
+		'Limit': Settings.ContactsPerPage,
+		'SortField': this.sortType(),
+		'SortOrder': this.sortOrder() ? '1' : '0',
+		'Search': this.search(),
+		'GroupId': this.selectedGroupInList() ? this.selectedGroupInList().Id() : '',
+		'Storage': sStorage
 	}, this.onContactListResponse, this);
 };
 
 CContactsView.prototype.requestGroupFullList = function ()
 {
-	Ajax.send({
-		'Module': 'Contacts',
-		'Method': 'GetGroups'
-	}, this.onGroupListResponse, this);
+	Ajax.send('GetGroups', null, this.onGroupListResponse, this);
 };
 
 /**
@@ -888,34 +879,27 @@ CContactsView.prototype.requestContact = function (sUid)
 {
 	this.loadingViewPane(true);
 	
-	var oItem = _.find(this.collection(), function (oItm) {
-		return oItm.sId === sUid;
-	});
+	var
+		oItem = _.find(this.collection(), function (oItm) {
+			return oItm.sId === sUid;
+		}),
+		sStorage = 'personal'
+	;
 	
 	if (oItem)
 	{
 		this.selector.itemSelected(oItem);
-		Ajax.send({
-			'Action': oItem.Global() ? 'ContactGlobal' : 'ContactGet',
+		if (oItem.Global())
+		{
+			sStorage = 'global';
+		}
+		else if (oItem.IsSharedToAll())
+		{
+			sStorage = 'shared';
+		}
+		Ajax.send('GetContact', {
 			'ContactId': oItem.Id(),
-			'SharedToAll': oItem.IsSharedToAll() ? '1' : '0'
-		}, this.onContactGetResponse, this);
-	}
-};
-
-/**
- * @param {string} sItemId
- * @param {boolean} bGlobal
- */
-CContactsView.prototype.requestContactById = function (sItemId, bGlobal)
-{
-	this.loadingViewPane(true);
-
-	if (sItemId)
-	{
-		Ajax.send({
-			'Action': bGlobal ? 'ContactGlobal' : 'ContactGet',
-			'ContactId': sItemId
+			'Storage': sStorage
 		}, this.onContactGetResponse, this);
 	}
 };
@@ -1058,10 +1042,7 @@ CContactsView.prototype.viewGroup = function (sGroupId)
 		this.selector.itemSelected(null);
 		this.selector.listCheckedOrSelected(false);
 		
-		Ajax.send({
-			'Action': 'ContactsGroupEvents',
-			'GroupId': sGroupId
-		}, this.onGroupEventsResponse, this);
+		Ajax.send('GetGroupEvents', { 'GroupId': sGroupId }, this.onGroupEventsResponse, this);
 	}
 	
 	return !!oGroup;
@@ -1074,10 +1055,7 @@ CContactsView.prototype.deleteGroup = function (sGroupId)
 {
 	if (sGroupId)
 	{
-		Ajax.send({
-			'Action': 'ContactsGroupDelete',
-			'GroupId': sGroupId
-		}, this.requestGroupFullList, this);
+		Ajax.send('DeleteGroup', { 'GroupId': sGroupId }, this.requestGroupFullList, this);
 
 		this.selectedGroupType(Enums.ContactsGroupListType.Personal);
 
@@ -1094,8 +1072,7 @@ CContactsView.prototype.mailGroup = function (oGroup)
 {
 	if (oGroup)
 	{
-		Ajax.send({
-			'Action': 'ContactList',
+		Ajax.send('GetContacts', {
 			'Offset': 0,
 			'Limit': 99,
 			'SortField': Enums.ContactSortType.Email,
@@ -1470,8 +1447,7 @@ CContactsView.prototype.executeShare = function ()
 			this.recivedAnimShare(true);
 		}
 	
-		Ajax.send({
-			'Action': 'ContactUpdateSharedToAll',
+		Ajax.send('UpdateShared', {
 			'ContactsId': aContactsId.join(','),
 			'SharedToAll': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0'
 		}, this.onContactUpdateSharedToAllResponse, this);
@@ -1492,8 +1468,7 @@ CContactsView.prototype.requestGroup = function (oItem)
 	
 	if (oItem)
 	{
-		Ajax.send({
-			'Action': 'ContactsGroup',
+		Ajax.send('GetGroup', {
 			'GroupId': oItem.Id()
 		}, this.onGroupResponse, this);
 	}
