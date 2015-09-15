@@ -13,6 +13,8 @@ var
 	Storage = require('core/js/Storage.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
+	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
@@ -261,7 +263,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	this.replyAutoSavingStarted.subscribe(function () {
 		if (!this.replyAutoSavingStarted() && this.requiresPostponedSending())
 		{
-			App.MessageSender.sendPostponedMail(this.replyDraftUid());
+			SendingUtils.sendPostponedMail(this.replyDraftUid());
 			this.requiresPostponedSending(false);
 		}
 	}, this);
@@ -840,7 +842,7 @@ CMessagePaneView.prototype.onAddToContactsResponse = function (oResponse, oReque
 
 CMessagePaneView.prototype.getReplyHtmlText = function ()
 {
-	return '<div style="font-family: ' + this.defaultFontName + '; font-size: 16px">' + App.MessageSender.getHtmlFromText(this.replyText()) + '</div>';
+	return '<div style="font-family: ' + this.defaultFontName + '; font-size: 16px">' + SendingUtils.getHtmlFromText(this.replyText()) + '</div>';
 };
 
 /**
@@ -850,12 +852,12 @@ CMessagePaneView.prototype.executeReplyOrForward = function (sReplyType)
 {
 	if (this.currentMessage())
 	{
-		App.MessageSender.setReplyData(this.getReplyHtmlText(), this.replyDraftUid());
+		SendingUtils.setReplyData(this.getReplyHtmlText(), this.replyDraftUid());
 		
 		this.replyText('');
 		this.replyDraftUid('');
 		
-		App.Api.composeMessageAsReplyOrForward(sReplyType, this.currentMessage().folder(), this.currentMessage().uid());
+		ComposeUtils.composeMessageAsReplyOrForward(sReplyType, this.currentMessage().folder(), this.currentMessage().uid());
 	}
 };
 
@@ -1011,7 +1013,7 @@ CMessagePaneView.prototype.changeAddMenuVisibility = function ()
  */
 CMessagePaneView.prototype.onMessageSendOrSaveResponse = function (oResponse, oRequest)
 {
-	var oResData = App.MessageSender.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending());
+	var oResData = SendingUtils.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending());
 	switch (oResData.Action)
 	{
 		case 'MessageSend':
@@ -1038,7 +1040,7 @@ CMessagePaneView.prototype.executeSendQuickReplyCommand = function ()
 	{
 		this.replySendingStarted(true);
 		this.requiresPostponedSending(this.replyAutoSavingStarted());
-		App.MessageSender.sendReplyMessage('MessageSend', this.getReplyHtmlText(), this.replyDraftUid(), 
+		SendingUtils.sendReplyMessage('MessageSend', this.getReplyHtmlText(), this.replyDraftUid(), 
 			this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
 
 		this.replyTextFocus(false);
@@ -1062,7 +1064,7 @@ CMessagePaneView.prototype.saveReplyMessage = function (bAutosave)
 		{
 			this.replySavingStarted(true);
 		}
-		App.MessageSender.sendReplyMessage('MessageSave', this.getReplyHtmlText(), this.replyDraftUid(), 
+		SendingUtils.sendReplyMessage('MessageSave', this.getReplyHtmlText(), this.replyDraftUid(), 
 			this.onMessageSendOrSaveResponse, this);
 	}
 };
@@ -1130,7 +1132,7 @@ CMessagePaneView.prototype.onApplyBindings = function (oMailViewModel)
 //			var sHref = $(this).attr('href');
 //			if (sHref && 'mailto:' === sHref.toString().toLowerCase().substr(0, 7))
 //			{
-//				App.Api.composeMessageToAddresses(sHref.toString().substr(7));
+//				ComposeUtils.composeMessageToAddresses(sHref.toString().substr(7));
 //				return false;
 //			}
 //		}

@@ -47,6 +47,25 @@ Enums.Importance = {
 	'High': 1
 };
 
+/**
+ * @enum {string}
+ */
+Enums.AnotherMessageComposedAnswer = {
+	'Discard': 'Discard',
+	'SaveAsDraft': 'SaveAsDraft',
+	'Cancel': 'Cancel'
+};
+
+/**
+ * @enum {string}
+ */
+Enums.ReplyType = {
+	'Reply': 'reply',
+	'ReplyAll': 'reply-all',
+	'Resend': 'resend',
+	'Forward': 'forward'
+};
+
 if (typeof window.Enums === 'undefined')
 {
 	window.Enums = {};

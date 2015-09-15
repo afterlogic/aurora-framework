@@ -228,7 +228,7 @@ LinksUtils.parseToAddr = function (mToAddr)
 						case 'cc': sCcAddr = aParts[1]; break;
 						case 'bcc': sBccAddr = aParts[1]; break;
 						case 'body': sBody = aParts[1]; break;
-	}
+					}
 				}
 			});
 		}

@@ -30,6 +30,11 @@ CPopups.prototype.hasOpenedMinimizedPopups = function ()
 	return bOpenedMinimizedPopups;
 };
 
+CPopups.prototype.hasOnlyOneOpenedPopup = function ()
+{
+	return this.popups.length === 1;
+};
+
 CPopups.prototype.hasOpenedMaximizedPopups = function ()
 {
 	var bOpenedMaximizedPopups = false;

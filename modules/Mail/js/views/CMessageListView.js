@@ -17,6 +17,7 @@ var
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
+	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings  = require('modules/Mail/js/Settings.js'),
@@ -386,7 +387,7 @@ CMessageListView.prototype.onMessageDblClick = function (oMessage)
 
 		if (oFolder.type() === Enums.FolderTypes.Drafts)
 		{
-			App.Api.composeMessageFromDrafts(oMessage.folder(), oMessage.uid());
+			ComposeUtils.composeMessageFromDrafts(oMessage.folder(), oMessage.uid());
 		}
 		else
 		{

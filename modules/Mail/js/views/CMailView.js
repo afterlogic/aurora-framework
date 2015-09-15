@@ -11,6 +11,7 @@ var
 	WindowOpener = require('core/js/WindowOpener.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings  = require('modules/Mail/js/Settings.js'),
@@ -103,7 +104,7 @@ function CMailView()
 
 CMailView.prototype.executeCompose = function ()
 {
-	App.Api.composeMessage();
+	ComposeUtils.composeMessage();
 };
 
 CMailView.prototype.executeCheckMail = function ()

@@ -145,10 +145,19 @@ CAppTab.prototype.getInactiveTitle = function ()
 	return sTitle;
 };
 
+/**
+ * @param {string} sFaviconUrl
+ */
+CAppTab.prototype.changeFavicon = function (sFaviconUrl)
+{
+	$('head').append('<link rel="shortcut icon" type="image/x-icon" href=' + sFaviconUrl + ' />');
+};
+
 var AppTab = new CAppTab();
 
 AppTab.init();
 
 module.exports = {
-	focused: AppTab.focused
+	focused: AppTab.focused,
+	changeFavicon: _.bind(AppTab.changeFavicon, AppTab)
 };

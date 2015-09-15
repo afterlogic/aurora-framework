@@ -17,12 +17,13 @@ module.exports = {
 	IsFilesSupported: false,
 	DefaultFontName: 'Tahoma',
 	enableOpenPgp: ko.observable(false),
-	IdUser: 98,
+	IdUser: AppData.IdUser,
 	AllowSaveAsPdf: false,
 	ZipAttachments: false,
 	SiteName: 'AfterLogic WebMail',
 	IsRTL: bRtl,
 	CsrfToken: AppData.Token,
 	DesktopNotifications: true,
-	AllowPrefetch: true
+	AllowPrefetch: true,
+	IsDemo: false
 };

@@ -71,10 +71,10 @@ function CSettingsView()
 	this.folderListOrderUpdateDebounce = _.debounce(_.bind(this.folderListOrderUpdate, this), 3000);
 	this.afterSortableFolderMoveBinded = _.bind(this.afterSortableFolderMove, this);
 	
-	if (AfterLogicApi.runPluginHook)
-	{
-		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
-	}
+//	if (AfterLogicApi.runPluginHook)
+//	{
+//		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
+//	}
 }
 
 CSettingsView.prototype.__name = 'CSettingsView';

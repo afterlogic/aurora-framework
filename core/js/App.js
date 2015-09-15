@@ -14,6 +14,7 @@ var
 
 require('core/js/splitter.js'); // necessary in mail and contacts modules, not for mobile version
 require('core/js/koBindings.js');
+require('core/js/koExtendings.js');
 
 if (!bMobileDevice && !bMobileApp)
 {

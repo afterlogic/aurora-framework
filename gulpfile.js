@@ -114,7 +114,7 @@ for (name in cfg.paths.js)
 	}
 }
 
-gulp.task('b', ['js:all']);
+gulp.task('default', ['js:all']);
 
 gulp.task('m', ['lint', 'js:all:min']);
 

@@ -187,13 +187,13 @@ CScreens.prototype.initViewModel = function (CViewModel, sTemplateId)
 				this.onShow(mParams);
 			}
 			
-			if (('undefined' !== typeof AfterLogicApi) && AfterLogicApi.runPluginHook)
-			{
-				if (this.__name)
-				{
-					AfterLogicApi.runPluginHook('view-model-on-show', [this.__name, this]);
-				}
-			}
+//			if (('undefined' !== typeof AfterLogicApi) && AfterLogicApi.runPluginHook)
+//			{
+//				if (this.__name)
+//				{
+//					AfterLogicApi.runPluginHook('view-model-on-show', [this.__name, this]);
+//				}
+//			}
 			
 			this.bShown = true;
 		}
