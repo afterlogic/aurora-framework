@@ -1218,7 +1218,7 @@ CContactsView.prototype.onClearSearchClick = function ()
  */
 CContactsView.prototype.onContactGetResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
 		var
 			oObject = new CContactModel(),
@@ -1240,9 +1240,9 @@ CContactsView.prototype.onContactGetResponse = function (oResult, oRequest)
  */
 CContactsView.prototype.onContactCreateResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
-		Screens.showReport(oResult.Action === 'ContactCreate' ?
+		Screens.showReport(oResult.Method === 'CreateContact' ?
 			TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED') : TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_UPDATED'));
 			
 		this.requestContactList();
@@ -1251,7 +1251,7 @@ CContactsView.prototype.onContactCreateResponse = function (oResult, oRequest)
 
 CContactsView.prototype.onContactListResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
 		var
 			iIndex = 0,
@@ -1334,7 +1334,7 @@ CContactsView.prototype.viewAllMails = function ()
 
 CContactsView.prototype.onGroupListResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
 		var
 			iIndex = 0,
@@ -1373,7 +1373,7 @@ CContactsView.prototype.onGroupListResponse = function (oResult, oRequest)
 
 CContactsView.prototype.onGroupCreateResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
 		var aCheckedIds = _.map(this.selector.listChecked(), function (oItem) {
 			return [oItem.Id(), oItem.Global() ? '1' : '0'];
@@ -1476,7 +1476,7 @@ CContactsView.prototype.requestGroup = function (oItem)
 
 CContactsView.prototype.onGroupResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
 		var oGroup = oResult.Result;
 		this.oGroupModel
@@ -1499,7 +1499,7 @@ CContactsView.prototype.onGroupResponse = function (oResult, oRequest)
 
 CContactsView.prototype.onGroupEventsResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Action && oResult.Result)
+	if (oResult && oResult.Result)
 	{
 		var Events = oResult.Result;
 		this.oGroupModel.events(Events);
