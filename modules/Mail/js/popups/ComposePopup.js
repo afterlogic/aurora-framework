@@ -10,7 +10,7 @@ var
 	
 	Popups = require('core/js/Popups.js'),
 	
-	CComposeViewModel = require('modules/Mail/js/views/CComposeViewModel.js'),
+	CComposeView = require('modules/Mail/js/views/CComposeView.js'),
 	ConfirmAnotherMessageComposedPopup = require('modules/Mail/js/popups/ConfirmAnotherMessageComposedPopup.js')
 ;
 
@@ -20,7 +20,7 @@ var
  */
 function CComposePopup()
 {
-	CComposeViewModel.call(this);
+	CComposeView.call(this);
 	
 	this.minimized = ko.observable(false);
 	
@@ -54,7 +54,7 @@ function CComposePopup()
 	}, this);
 }
 
-_.extend(CComposePopup.prototype, CComposeViewModel.prototype);
+_.extend(CComposePopup.prototype, CComposeView.prototype);
 
 /**
  * @return {string}
@@ -138,7 +138,7 @@ CComposePopup.prototype.onShow = function (aParams)
 		}
 		else
 		{
-			CComposeViewModel.prototype.onShow.call(this);
+			CComposeView.prototype.onShow.call(this);
 			this.onRoute(aParams);
 		}
 		this.preventBackspaceOn();

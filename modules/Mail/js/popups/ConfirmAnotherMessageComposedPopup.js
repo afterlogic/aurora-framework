@@ -75,4 +75,4 @@ CConfirmAnotherMessageComposedPopup.prototype.onEscHandler = function ()
 	this.onCancelClick();
 };
 
-module.extends = new CConfirmAnotherMessageComposedPopup();
+module.exports = new CConfirmAnotherMessageComposedPopup();

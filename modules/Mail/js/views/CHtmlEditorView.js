@@ -29,7 +29,7 @@ var
  * @param {boolean} bInsertImageAsBase64
  * @param {Object=} oParent
  */
-function CHtmlEditorViewModel(bInsertImageAsBase64, oParent)
+function CHtmlEditorView(bInsertImageAsBase64, oParent)
 {
 	this.mobileApp = bMobileApp;
 	
@@ -143,12 +143,12 @@ function CHtmlEditorViewModel(bInsertImageAsBase64, oParent)
 	this.textChanged = ko.observable(false);
 }
 
-CHtmlEditorViewModel.prototype.hasOpenedPopup = function ()
+CHtmlEditorView.prototype.hasOpenedPopup = function ()
 {
 	return this.visibleInsertLinkPopup() || this.visibleLinkPopup() || this.visibleImagePopup() || this.visibleInsertImagePopup() || this.visibleFontColorPopup();
 };
 	
-CHtmlEditorViewModel.prototype.init = function ()
+CHtmlEditorView.prototype.init = function ()
 {
 	$(document.body).on('click', _.bind(function (oEvent) {
 		this.closeAllPopups(true);
@@ -157,7 +157,7 @@ CHtmlEditorViewModel.prototype.init = function ()
 	this.initEditorUploader();
 };
 
-CHtmlEditorViewModel.prototype.correctFontFromSettings = function ()
+CHtmlEditorView.prototype.correctFontFromSettings = function ()
 {
 	var
 		sDefaultFont = this.sDefaultFont,
@@ -185,7 +185,7 @@ CHtmlEditorViewModel.prototype.correctFontFromSettings = function ()
 /**
  * @param {Object} $link
  */
-CHtmlEditorViewModel.prototype.showLinkPopup = function ($link)
+CHtmlEditorView.prototype.showLinkPopup = function ($link)
 {
 	var
 		$workarea = $(this.workareaDom()),
@@ -219,24 +219,24 @@ CHtmlEditorViewModel.prototype.showLinkPopup = function ($link)
 	this.visibleLinkPopup(true);
 };
 
-CHtmlEditorViewModel.prototype.hideLinkPopup = function ()
+CHtmlEditorView.prototype.hideLinkPopup = function ()
 {
 	this.visibleLinkPopup(false);
 };
 
-CHtmlEditorViewModel.prototype.showChangeLink = function ()
+CHtmlEditorView.prototype.showChangeLink = function ()
 {
 	this.visibleLinkHref(true);
 	this.hideLinkPopup();
 };
 
-CHtmlEditorViewModel.prototype.changeLink = function ()
+CHtmlEditorView.prototype.changeLink = function ()
 {
 	this.oCrea.changeLink(this.linkHref());
 	this.hideChangeLink();
 };
 
-CHtmlEditorViewModel.prototype.hideChangeLink = function ()
+CHtmlEditorView.prototype.hideChangeLink = function ()
 {
 	this.visibleLinkHref(false);
 };
@@ -245,7 +245,7 @@ CHtmlEditorViewModel.prototype.hideChangeLink = function ()
  * @param {jQuery} $image
  * @param {Object} oEvent
  */
-CHtmlEditorViewModel.prototype.showImagePopup = function ($image, oEvent)
+CHtmlEditorView.prototype.showImagePopup = function ($image, oEvent)
 {
 	var
 		$workarea = $(this.workareaDom()),
@@ -259,12 +259,12 @@ CHtmlEditorViewModel.prototype.showImagePopup = function ($image, oEvent)
 	this.visibleImagePopup(true);
 };
 
-CHtmlEditorViewModel.prototype.hideImagePopup = function ()
+CHtmlEditorView.prototype.hideImagePopup = function ()
 {
 	this.visibleImagePopup(false);
 };
 
-CHtmlEditorViewModel.prototype.resizeImage = function (sSize)
+CHtmlEditorView.prototype.resizeImage = function (sSize)
 {
 	var oParams = {
 		'width': 'auto',
@@ -292,7 +292,7 @@ CHtmlEditorViewModel.prototype.resizeImage = function (sSize)
 	this.visibleImagePopup(false);
 };
 
-CHtmlEditorViewModel.prototype.onImageOver = function (oEvent)
+CHtmlEditorView.prototype.onImageOver = function (oEvent)
 {
 	if (oEvent.target.nodeName === 'IMG' && !this.visibleImagePopup())
 	{
@@ -320,7 +320,7 @@ CHtmlEditorViewModel.prototype.onImageOver = function (oEvent)
 	return true;
 };
 
-CHtmlEditorViewModel.prototype.onImageOut = function (oEvent)
+CHtmlEditorView.prototype.onImageOut = function (oEvent)
 {
 	if (this.imageSelected())
 	{
@@ -333,7 +333,7 @@ CHtmlEditorViewModel.prototype.onImageOut = function (oEvent)
 	return true;
 };
 
-CHtmlEditorViewModel.prototype.commit = function ()
+CHtmlEditorView.prototype.commit = function ()
 {
 	this.textChanged(false);
 };
@@ -343,7 +343,7 @@ CHtmlEditorViewModel.prototype.commit = function ()
  * @param {boolean} bPlain
  * @param {string} sTabIndex
  */
-CHtmlEditorViewModel.prototype.initCrea = function (sText, bPlain, sTabIndex)
+CHtmlEditorView.prototype.initCrea = function (sText, bPlain, sTabIndex)
 {
 	if (!this.oCrea)
 	{
@@ -381,7 +381,7 @@ CHtmlEditorViewModel.prototype.initCrea = function (sText, bPlain, sTabIndex)
 	//this.selectedFont(window.document.queryCommandValue('FontName'));
 };
 
-CHtmlEditorViewModel.prototype.setFocus = function ()
+CHtmlEditorView.prototype.setFocus = function ()
 {
 	if (this.oCrea)
 	{
@@ -393,7 +393,7 @@ CHtmlEditorViewModel.prototype.setFocus = function ()
  * @param {string} sNewSignatureContent
  * @param {string} sOldSignatureContent
  */
-CHtmlEditorViewModel.prototype.changeSignatureContent = function (sNewSignatureContent, sOldSignatureContent)
+CHtmlEditorView.prototype.changeSignatureContent = function (sNewSignatureContent, sOldSignatureContent)
 {
 	if (this.oCrea)
 	{
@@ -401,7 +401,7 @@ CHtmlEditorViewModel.prototype.changeSignatureContent = function (sNewSignatureC
 	}
 };
 
-CHtmlEditorViewModel.prototype.setFontValuesFromText = function ()
+CHtmlEditorView.prototype.setFontValuesFromText = function ()
 {
 	this.lockFontSubscribing(true);
 	this.selectedFont(this.oCrea.getFontName());
@@ -410,7 +410,7 @@ CHtmlEditorViewModel.prototype.setFontValuesFromText = function ()
 
 };
 
-CHtmlEditorViewModel.prototype.isUndoAvailable = function ()
+CHtmlEditorView.prototype.isUndoAvailable = function ()
 {
 	if (this.oCrea)
 	{
@@ -420,7 +420,7 @@ CHtmlEditorViewModel.prototype.isUndoAvailable = function ()
 	return false;
 };
 
-CHtmlEditorViewModel.prototype.getPlainText = function ()
+CHtmlEditorView.prototype.getPlainText = function ()
 {
 	if (this.oCrea)
 	{
@@ -433,7 +433,7 @@ CHtmlEditorViewModel.prototype.getPlainText = function ()
 /**
  * @param {boolean=} bRemoveSignatureAnchor = false
  */
-CHtmlEditorViewModel.prototype.getText = function (bRemoveSignatureAnchor)
+CHtmlEditorView.prototype.getText = function (bRemoveSignatureAnchor)
 {
 	return this.oCrea ? this.oCrea.getText(bRemoveSignatureAnchor) : '';
 };
@@ -442,7 +442,7 @@ CHtmlEditorViewModel.prototype.getText = function (bRemoveSignatureAnchor)
  * @param {string} sText
  * @param {boolean} bPlain
  */
-CHtmlEditorViewModel.prototype.setText = function (sText, bPlain)
+CHtmlEditorView.prototype.setText = function (sText, bPlain)
 {
 	if (this.oCrea)
 	{
@@ -458,7 +458,7 @@ CHtmlEditorViewModel.prototype.setText = function (sText, bPlain)
 	}
 };
 
-CHtmlEditorViewModel.prototype.undoAndClearRedo = function ()
+CHtmlEditorView.prototype.undoAndClearRedo = function ()
 {
 	if (this.oCrea)
 	{
@@ -466,7 +466,8 @@ CHtmlEditorViewModel.prototype.undoAndClearRedo = function ()
 		this.oCrea.clearRedo();
 	}
 };
-CHtmlEditorViewModel.prototype.clearUndoRedo = function ()
+
+CHtmlEditorView.prototype.clearUndoRedo = function ()
 {
 	if (this.oCrea)
 	{
@@ -474,12 +475,12 @@ CHtmlEditorViewModel.prototype.clearUndoRedo = function ()
 	}
 };
 
-CHtmlEditorViewModel.prototype.isEditing = function ()
+CHtmlEditorView.prototype.isEditing = function ()
 {
 	return this.oCrea ? this.oCrea.bEditing : false;
 };
 
-CHtmlEditorViewModel.prototype.getNotDefaultText = function ()
+CHtmlEditorView.prototype.getNotDefaultText = function ()
 {
 	var sText = this.getText();
 
@@ -489,7 +490,7 @@ CHtmlEditorViewModel.prototype.getNotDefaultText = function ()
 /**
  * @param {string} sText
  */
-CHtmlEditorViewModel.prototype.removeAllTags = function (sText)
+CHtmlEditorView.prototype.removeAllTags = function (sText)
 {
 	return sText.replace(/<style>.*<\/style>/g, '').replace(/<[^>]*>/g, '');
 };
@@ -497,7 +498,7 @@ CHtmlEditorViewModel.prototype.removeAllTags = function (sText)
 /**
  * @param {koProperty} koActivitySource
  */
-CHtmlEditorViewModel.prototype.setActivitySource = function (koActivitySource)
+CHtmlEditorView.prototype.setActivitySource = function (koActivitySource)
 {
 	this.activitySource = koActivitySource;
 	
@@ -512,7 +513,7 @@ CHtmlEditorViewModel.prototype.setActivitySource = function (koActivitySource)
 	this.inactive(Utils.pInt(this.activitySource()) === 0);
 };
 
-CHtmlEditorViewModel.prototype.onCreaFocus = function ()
+CHtmlEditorView.prototype.onCreaFocus = function ()
 {
 	if (this.oCrea)
 	{
@@ -522,7 +523,7 @@ CHtmlEditorViewModel.prototype.onCreaFocus = function ()
 	}
 };
 
-CHtmlEditorViewModel.prototype.onCreaBlur = function ()
+CHtmlEditorView.prototype.onCreaBlur = function ()
 {
 	if (this.oCrea)
 	{
@@ -530,7 +531,7 @@ CHtmlEditorViewModel.prototype.onCreaBlur = function ()
 	}
 };
 
-CHtmlEditorViewModel.prototype.onEscHandler = function ()
+CHtmlEditorView.prototype.onEscHandler = function ()
 {
 	if (!Popups.hasOpenedMaximizedPopups())
 	{
@@ -541,7 +542,7 @@ CHtmlEditorViewModel.prototype.onEscHandler = function ()
 /**
  * @param {boolean} bWithoutLinkPopup
  */
-CHtmlEditorViewModel.prototype.closeAllPopups = function (bWithoutLinkPopup)
+CHtmlEditorView.prototype.closeAllPopups = function (bWithoutLinkPopup)
 {
 	bWithoutLinkPopup = !!bWithoutLinkPopup;
 	if (!bWithoutLinkPopup)
@@ -557,7 +558,7 @@ CHtmlEditorViewModel.prototype.closeAllPopups = function (bWithoutLinkPopup)
 /**
  * @param {string} sHtml
  */
-CHtmlEditorViewModel.prototype.insertHtml = function (sHtml)
+CHtmlEditorView.prototype.insertHtml = function (sHtml)
 {
 	if (this.oCrea)
 	{
@@ -575,7 +576,7 @@ CHtmlEditorViewModel.prototype.insertHtml = function (sHtml)
  * @param {Object} oEvent
  */
 
-CHtmlEditorViewModel.prototype.insertLink = function (oViewModel, oEvent)
+CHtmlEditorView.prototype.insertLink = function (oViewModel, oEvent)
 {
 	if (oEvent)
 	{
@@ -594,7 +595,7 @@ CHtmlEditorViewModel.prototype.insertLink = function (oViewModel, oEvent)
  * @param {Object} oCurrentViewModel
  * @param {Object} event
  */
-CHtmlEditorViewModel.prototype.insertLinkFromPopup = function (oCurrentViewModel, event)
+CHtmlEditorView.prototype.insertLinkFromPopup = function (oCurrentViewModel, event)
 {
 	if (this.linkForInsert().length > 0)
 	{
@@ -615,7 +616,7 @@ CHtmlEditorViewModel.prototype.insertLinkFromPopup = function (oCurrentViewModel
  * @param {Object} oCurrentViewModel
  * @param {Object} event
  */
-CHtmlEditorViewModel.prototype.closeInsertLinkPopup = function (oCurrentViewModel, event)
+CHtmlEditorView.prototype.closeInsertLinkPopup = function (oCurrentViewModel, event)
 {
 	this.visibleInsertLinkPopup(false);
 	if (event)
@@ -624,7 +625,7 @@ CHtmlEditorViewModel.prototype.closeInsertLinkPopup = function (oCurrentViewMode
 	}
 };
 
-CHtmlEditorViewModel.prototype.textColor = function (oViewModel, oEvent)
+CHtmlEditorView.prototype.textColor = function (oViewModel, oEvent)
 {
 	this.setActive(oEvent);
 	if (this.visibleFontColorPopup())
@@ -644,15 +645,15 @@ CHtmlEditorViewModel.prototype.textColor = function (oViewModel, oEvent)
  * @param {string} sColor
  * @return string
  */
-CHtmlEditorViewModel.prototype.colorToHex = function (sColor)
+CHtmlEditorView.prototype.colorToHex = function (sColor)
 {
-    if (sColor.substr(0, 1) === '#')
+	if (sColor.substr(0, 1) === '#')
 	{
-        return sColor;
-    }
+		return sColor;
+	}
 
 	/*jslint bitwise: true*/
-    var
+	var
 		aDigits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(sColor),
 		iRed = parseInt(aDigits[2], 10),
 		iGreen = parseInt(aDigits[3], 10),
@@ -667,13 +668,13 @@ CHtmlEditorViewModel.prototype.colorToHex = function (sColor)
 		sRgb = '0' + sRgb;
 	}
 
-    return aDigits[1] + '#' + sRgb;
+	return aDigits[1] + '#' + sRgb;
 };
 
 /**
  * @param {string} sColor
  */
-CHtmlEditorViewModel.prototype.setTextColorFromPopup = function (sColor)
+CHtmlEditorView.prototype.setTextColorFromPopup = function (sColor)
 {
 	this.oCrea.textColor(this.colorToHex(sColor));
 	this.closeAllPopups();
@@ -682,13 +683,13 @@ CHtmlEditorViewModel.prototype.setTextColorFromPopup = function (sColor)
 /**
  * @param {string} sColor
  */
-CHtmlEditorViewModel.prototype.setBackColorFromPopup = function (sColor)
+CHtmlEditorView.prototype.setBackColorFromPopup = function (sColor)
 {
 	this.oCrea.backgroundColor(this.colorToHex(sColor));
 	this.closeAllPopups();
 };
 
-CHtmlEditorViewModel.prototype.insertImage = function (oViewModel, oEvent)
+CHtmlEditorView.prototype.insertImage = function (oViewModel, oEvent)
 {
 	this.setActive(oEvent);
 	if (this.allowInsertImage() && !this.visibleInsertImagePopup())
@@ -706,7 +707,7 @@ CHtmlEditorViewModel.prototype.insertImage = function (oViewModel, oEvent)
  * @param {Object} oCurrentViewModel
  * @param {Object} event
  */
-CHtmlEditorViewModel.prototype.insertWebImageFromPopup = function (oCurrentViewModel, event)
+CHtmlEditorView.prototype.insertWebImageFromPopup = function (oCurrentViewModel, event)
 {
 	if (this.allowInsertImage() && this.imagePathFromWeb().length > 0)
 	{
@@ -720,10 +721,10 @@ CHtmlEditorViewModel.prototype.insertWebImageFromPopup = function (oCurrentViewM
  * @param {string} sUid
  * @param oAttachment
  */
-CHtmlEditorViewModel.prototype.insertComputerImageFromPopup = function (sUid, oAttachment)
+CHtmlEditorView.prototype.insertComputerImageFromPopup = function (sUid, oAttachment)
 {
 	var
-		sViewLink = Utils.File.getViewLinkByHash(Accounts.currentId(), oAttachment.Hash),
+		sViewLink = Utils.getViewLinkByHash(Accounts.currentId(), oAttachment.Hash),
 		bResult = false
 	;
 
@@ -749,7 +750,7 @@ CHtmlEditorViewModel.prototype.insertComputerImageFromPopup = function (sUid, oA
  * @param {?=} oCurrentViewModel
  * @param {?=} event
  */
-CHtmlEditorViewModel.prototype.closeInsertImagePopup = function (oCurrentViewModel, event)
+CHtmlEditorView.prototype.closeInsertImagePopup = function (oCurrentViewModel, event)
 {
 	this.visibleInsertImagePopup(false);
 	if (event)
@@ -761,7 +762,7 @@ CHtmlEditorViewModel.prototype.closeInsertImagePopup = function (oCurrentViewMod
 /**
  * Initializes file uploader.
  */
-CHtmlEditorViewModel.prototype.initUploader = function ()
+CHtmlEditorView.prototype.initUploader = function ()
 {
 	if (this.imageUploaderButton() && !this.oJua)
 	{
@@ -803,7 +804,7 @@ CHtmlEditorViewModel.prototype.initUploader = function ()
 /**
  * Initializes file uploader for editor.
  */
-CHtmlEditorViewModel.prototype.initEditorUploader = function ()
+CHtmlEditorView.prototype.initEditorUploader = function ()
 {
 	if (Settings.AllowInsertImage && this.uploaderAreaDom() && !this.editorUploader)
 	{
@@ -876,7 +877,7 @@ CHtmlEditorViewModel.prototype.initEditorUploader = function ()
 	}
 };
 
-CHtmlEditorViewModel.prototype.onEditorDrop = function (sUid, oData) {
+CHtmlEditorView.prototype.onEditorDrop = function (sUid, oData) {
 	var 
 		oReader = null,
 		oFile = null,
@@ -938,7 +939,7 @@ CHtmlEditorViewModel.prototype.onEditorDrop = function (sUid, oData) {
 /**
  * @param {Object} oFile
  */
-CHtmlEditorViewModel.prototype.isFileImage = function (oFile)
+CHtmlEditorView.prototype.isFileImage = function (oFile)
 {
 	if (typeof oFile.Type === 'string')
 	{
@@ -960,7 +961,7 @@ CHtmlEditorViewModel.prototype.isFileImage = function (oFile)
  * @param {string} sUid
  * @param {Object} oFile
  */
-CHtmlEditorViewModel.prototype.onFileUploadSelect = function (sUid, oFile)
+CHtmlEditorView.prototype.onFileUploadSelect = function (sUid, oFile)
 {
 	if (!this.isFileImage(oFile))
 	{
@@ -977,7 +978,7 @@ CHtmlEditorViewModel.prototype.onFileUploadSelect = function (sUid, oFile)
  * @param {boolean} bResponseReceived
  * @param {Object} oData
  */
-CHtmlEditorViewModel.prototype.onFileUploadComplete = function (sUid, bResponseReceived, oData)
+CHtmlEditorView.prototype.onFileUploadComplete = function (sUid, bResponseReceived, oData)
 {
 	var sError = '';
 	
@@ -1003,10 +1004,10 @@ CHtmlEditorViewModel.prototype.onFileUploadComplete = function (sUid, bResponseR
 	}
 };
 
-CHtmlEditorViewModel.prototype.setActive = function (oEvent)
+CHtmlEditorView.prototype.setActive = function (oEvent)
 {
 	oEvent.stopPropagation();
 	this.activitySource(1);
 };
 
-module.exports = CHtmlEditorViewModel;
+module.exports = CHtmlEditorView;

@@ -2,16 +2,11 @@
 
 var
 	$ = require('jquery'),
+	_ = require('underscore'),
 
 	queue = require('core/js/vendors/queue.js'),
 
-	iDefLimit = 20,
-
-	bIsAjaxUploaderSupported = (function () {
-		var oInput = document.createElement('input');
-		oInput.type = 'file';
-		return !!('XMLHttpRequest' in window && 'multiple' in oInput && 'FormData' in window && (new XMLHttpRequest()).upload && true);
-	}())
+	iDefLimit = 20
 ;
 /**
  * @param {*} mValue
@@ -20,27 +15,6 @@ var
 function isUndefined(mValue)
 {
 	return 'undefined' === typeof mValue;
-}
-
-/**
- * @param {Object} mObjectFirst
- * @param {Object=} mObjectSecond
- * @return {Object}
- */
-function extend(mObjectFirst, mObjectSecond)
-{
-	if (mObjectSecond)
-	{
-		for (var sProp in mObjectSecond)
-		{
-			if (mObjectSecond.hasOwnProperty(sProp))
-			{
-				mObjectFirst[sProp] = mObjectSecond[sProp];
-			}
-		}
-	}
-
-	return mObjectFirst;
 }
 
 /**
@@ -524,7 +498,7 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 		;
 
 		oXhr.open('POST', sAction, true);
-
+		
 		if (fProgressFunction && oXhr.upload)
 		{
 			oXhr.upload.onprogress = function (oEvent) {
@@ -894,7 +868,7 @@ function CJua(oOptions)
 		'onLimitReached': null
 	};
 
-	self.oOptions = extend({
+	self.oOptions = _.extend({
 		'action': '',
 		'name': '',
 		'hidden': {},
@@ -1219,7 +1193,11 @@ CJua.prototype.cancel = function (sUid)
  */
 CJua.prototype.isAjaxUploaderSupported = function ()
 {
-	return bIsAjaxUploaderSupported;
+	return (function () {
+		var oInput = document.createElement('input');
+		oInput.type = 'file';
+		return !!('XMLHttpRequest' in window && 'multiple' in oInput && 'FormData' in window && (new XMLHttpRequest()).upload && true);
+	}());
 };
 
 /**

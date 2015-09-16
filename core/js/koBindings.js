@@ -367,3 +367,119 @@ ko.bindingHandlers.checkstate = {
 		}
 	}
 };
+
+ko.bindingHandlers.heightAdjust = {
+	'update': function (oElement, fValueAccessor, fAllBindingsAccessor) {
+		
+		var 
+			jqElement = oElement.jqElement || null,
+			height = 0,
+			sLocation = fValueAccessor().location,
+			sDelay = fValueAccessor().delay || 400
+		;
+
+		if (!jqElement) {
+			oElement.jqElement = jqElement = $(oElement);
+		}
+		_.delay(function () {
+			_.each(fValueAccessor().elements, function (mItem) {
+				
+				var element = mItem();
+				if (element) {
+					height += element.is(':visible') ? element.outerHeight() : 0;
+				}
+			});
+			
+			if (sLocation === 'top' || sLocation === undefined) {
+				jqElement.css({
+					'padding-top': height,
+					'margin-top': -height
+				});
+			} else if (sLocation === 'bottom') {
+				jqElement.css({
+					'padding-bottom': height,
+					'margin-bottom': -height
+				});
+			}
+		}, sDelay);
+	}
+};
+
+ko.bindingHandlers.minHeightAdjust = {
+	'update': function (oElement, fValueAccessor, fAllBindingsAccessor) {
+
+		var
+			jqEl = $(oElement),
+			oOptions = fValueAccessor(),
+			jqAdjustEl = oOptions.adjustElement || $('body'),
+			iMinHeight = oOptions.minHeight || 0
+		;
+		
+		if (oOptions.removeTrigger)
+		{
+			jqAdjustEl.css('min-height', 'inherit');
+		}
+		
+		if (oOptions.trigger)
+		{
+			_.delay(function () {
+				jqAdjustEl.css({'min-height': jqEl.outerHeight(true) + iMinHeight});
+			}, 100);
+		}
+	}
+};
+
+ko.bindingHandlers.listWithMoreButton = {
+	'init': function (oElement, fValueAccessor) {
+
+		var
+			$Element = $(oElement),
+			skipOneResize = false //for some flicker at slow resize (does not solve the problem completely TODO)
+		;
+
+		$Element.closest('div.panel.left_panel').resize(function () {
+			
+			var
+				$ItemsVisible = $Element.find('span.hotkey'),
+				$ItemsHidden = $Element.find('span.item'),
+				$MoreHints = $Element.find('span.more_hints').show(),
+				iElementWidth = $Element.width(),
+				iMoreWidth = $MoreHints.width(),
+				bHideMoreHints = true
+			;
+
+			if (!skipOneResize) {
+				_.each($ItemsVisible, function (oItem, index) {
+
+					var
+						$Item = $(oItem),
+						iItemWidth = $Item.width()
+					;
+
+					if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth) {
+						skipOneResize = false;
+						$Item.show();
+						$($ItemsHidden[index]).hide();
+						iMoreWidth += iItemWidth;
+					}
+					else
+					{
+						skipOneResize = true;
+						bHideMoreHints = false;
+						$Item.hide();
+						$($ItemsHidden[index]).show();
+					}
+				});
+
+				if (bHideMoreHints)
+				{
+					$MoreHints.hide();
+				}
+			}
+			else
+			{
+				skipOneResize = false;
+			}
+		});
+	}
+};

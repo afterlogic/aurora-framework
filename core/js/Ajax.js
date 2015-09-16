@@ -15,7 +15,7 @@ var
  */
 function CAjax()
 {
-	this.sUrl = 'index.php?/Ajax/';
+	this.sUrl = '?/Ajax/';
 	this.requests = ko.observableArray([]);
 	// not "computed", because "reguests" is frequently updated
 	this.openedRequestsCount = ko.observable(0);

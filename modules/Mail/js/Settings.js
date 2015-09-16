@@ -28,5 +28,6 @@ module.exports = {
 	AutosignOutgoingEmails: false,
 	enableOpenPgp: ko.observable(false),
 	JoinReplyPrefixes: true,
-	SaveRepliedToCurrFolder: false
+	SaveRepliedToCurrFolder: false,
+	AttachmentSizeLimit: 0
 };

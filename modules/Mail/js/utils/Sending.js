@@ -6,6 +6,7 @@ var
 	Ajax = require('core/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Api = require('core/js/Api.js'),
+	Routing = require('core/js/Routing.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),

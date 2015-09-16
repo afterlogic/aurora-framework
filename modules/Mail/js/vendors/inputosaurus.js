@@ -342,7 +342,7 @@ var
 				setTimeout(function(){widget._autoCompleteMenuPosition.call(widget);}, 200);
 			}
 
-			if (widget.options.sourceResponseItems && widget.options.selectedItem && !widget.options.selectedItem.global && ev.keyCode === Enums.Key.Del && ev.shiftKey) //shift+del on suggestions list
+			if (widget.options.sourceResponseItems && widget.options.selectedItem && !widget.options.selectedItem.global && ev.keyCode === $.ui.keyCode.DELETE && ev.shiftKey) //shift+del on suggestions list
 			{
 				ev.preventDefault();
 				ev.stopPropagation();
@@ -692,7 +692,7 @@ var
 
 			if (name !== undefined)
 			{
-                li = $('<li data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
+				li = $('<li data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
 				if (!widget.options.mobileDevice)
 				{
 					li.data('full', fullValue);
@@ -726,10 +726,10 @@ var
 
 			this.elements.ul.find('li:not(.inputosaurus-required)').remove();
 
-            $.each(this._chosenValues, function (k, v) {
-                    var el = self._createTag(v.key, v.value);
-                    self.elements.ul.find('li.inputosaurus-input').before(el);
-            });
+			$.each(this._chosenValues, function (k, v) {
+					var el = self._createTag(v.key, v.value);
+					self.elements.ul.find('li.inputosaurus-input').before(el);
+			});
 		},
 
 		_removeTag : function(ev) {
@@ -818,7 +818,7 @@ var
 			$.isFunction(this.options.parseHook) && (values = this.options.parseHook(values));
 
 			this._setChosen(values);
-            this._renderTags();
+			this._renderTags();
 			this.elements.input.val('');
 			this._resizeInput();
 		},

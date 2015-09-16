@@ -261,9 +261,9 @@ function CContactsView()
 		return this.selectedGroupType() !== Enums.ContactsGroupListType.Global;
 	}, this);
 
-    this.isExport = ko.computed(function () {
-        return this.contactCount();
-    }, this);
+	this.isExport = ko.computed(function () {
+		return this.contactCount();
+	}, this);
 
 	this.newContactCommand = Utils.createCommand(this, this.executeNewContact, this.allowCreateContact);
 	this.newGroupCommand = Utils.createCommand(this, this.executeNewGroup);
@@ -1307,7 +1307,7 @@ CContactsView.prototype.onContactListResponse = function (oResult, oRequest)
 			this.requestContact(oSelected.Id());
 		}
 
-        this.contactCount(oResult.Result.ContactCount);
+		this.contactCount(oResult.Result.ContactCount);
 	}
 };
 
