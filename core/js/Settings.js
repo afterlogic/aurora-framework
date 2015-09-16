@@ -9,7 +9,7 @@ var
 ;
 
 module.exports = {
-	Modules: ['mail', 'contacts', 'settings'],
+	Modules: ['auth', 'mail', 'contacts', 'settings'],
 	EntryModule: 'mail',
 	Language: 'English',
 	CustomLogo: '',
@@ -25,5 +25,7 @@ module.exports = {
 	CsrfToken: AppData.Token,
 	DesktopNotifications: true,
 	AllowPrefetch: true,
-	IsDemo: false
+	IsDemo: false,
+	DefaultLanguage: 'English',
+	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}]
 };

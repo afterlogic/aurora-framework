@@ -165,12 +165,12 @@ CAjax.prototype.send = function (oParameters, fResponseHandler, oContext)
 {
 	var
 		bCurrentAccountId = oParameters.AccountID === undefined,
-		bAccountExists = bCurrentAccountId || App.hasAccountWithId(oParameters.AccountID)
+		bAccountExists = bCurrentAccountId || App.isAuth() && App.hasAccountWithId(oParameters.AccountID)
 	;
 	
 	if (oParameters && (App.isAuth() && bAccountExists || this.isAllowedActionWithoutAuth(oParameters.Action)))
 	{
-		if (bCurrentAccountId && oParameters.Action !== 'Login')
+		if (bCurrentAccountId && App.isAuth())
 		{
 			oParameters.AccountID = App.currentAccountId();
 		}
@@ -323,8 +323,8 @@ CAjax.prototype.done = function (oParameters, fResponseHandler, oContext, oData,
 {
 	var
 		bAllowedActionWithoutAuth = this.isAllowedActionWithoutAuth(oParameters.Action),
-		bAccountExists = App.hasAccountWithId(oParameters.AccountID),
-		bDefaultAccount = (oParameters.AccountID === App.defaultAccountId())
+		bAccountExists = App.isAuth() && App.hasAccountWithId(oParameters.AccountID),
+		bDefaultAccount = App.isAuth() && (oParameters.AccountID === App.defaultAccountId())
 	;
 	
 //	Utils.log('Ajax request done', oParameters.Action, sType, Utils.getAjaxDataForLog(oParameters.Action, oData), oParameters);

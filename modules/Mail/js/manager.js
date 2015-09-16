@@ -5,7 +5,6 @@ require('modules/Mail/js/enums.js');
 var
 	TextUtils = require('core/js/utils/Text.js'),
 			
-	Accounts = require('modules/Mail/js/AccountList.js'),
 	HeaderItemView = require('modules/Mail/js/views/HeaderItemView.js')
 ;
 
@@ -15,6 +14,8 @@ module.exports = function () {
 		'HeaderItem': HeaderItemView,
 		'Prefetcher': require('modules/Mail/js/Prefetcher.js'),
 		getBrowserTitle: function (bBrowserFocused) {
+			var Accounts = require('modules/Mail/js/AccountList.js');
+			
 			if (bBrowserFocused || HeaderItemView.unseenCount() === 0)
 			{
 				return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX');

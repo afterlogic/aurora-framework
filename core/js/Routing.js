@@ -5,6 +5,7 @@ var
 	ko = require('knockout'),
 	$ = require('jquery'),
 	hasher = require('hasher'),
+	
 	Screens = require('core/js/Screens.js')
 ;
 
@@ -231,8 +232,7 @@ CRouting.prototype.parseRouting = function (aAddParams)
 		sHash = this.getHashFromHref(),
 		aParams = _.map(sHash.split('/'), function (sHashPart) {
 			return decodeURIComponent(sHashPart);
-		}),
-		App = require('core/js/App.js')
+		})
 	;
 	
 	this.previousHash(this.currentHash());
@@ -241,7 +241,6 @@ CRouting.prototype.parseRouting = function (aAddParams)
 	aAddParams = $.isArray(aAddParams) ? aAddParams : [];
 	
 	Screens.route(aParams.concat(aAddParams));
-	App.route('#' + sHash, aParams.concat(aAddParams));
 };
 
 var Routing = new CRouting();
@@ -251,5 +250,7 @@ module.exports = {
 	buildHashFromArray: _.bind(Routing.buildHashFromArray, Routing),
 	replaceHashWithoutMessageUid: _.bind(Routing.replaceHashWithoutMessageUid, Routing),
 	setHash: _.bind(Routing.setHash, Routing),
-	replaceHash: _.bind(Routing.replaceHash, Routing)
+	replaceHash: _.bind(Routing.replaceHash, Routing),
+	finalize: _.bind(Routing.finalize, Routing),
+	currentHash: Routing.currentHash
 };

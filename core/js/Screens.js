@@ -19,6 +19,7 @@ function CScreens()
 	this.oItems = {};
 
 	this.currentScreen = ko.observable('');
+	this.sDefaultScreen = '';
 
 	this.informationScreen = ko.observable(null);
 }
@@ -38,6 +39,10 @@ CScreens.prototype.addToScreenList = function (sPrefix, oScreenList) {
 			}
 		}
 		this.oItems[sNewKey] = oScreen;
+		if (this.sDefaultScreen === '')
+		{
+			this.sDefaultScreen = sNewKey;
+		}
 	}, this));
 };
 
@@ -49,6 +54,11 @@ CScreens.prototype.route = function (aParams)
 		oCurrentModel = (typeof oCurrentScreen !== 'undefined') ? oCurrentScreen.Model : null,
 		sScreen = aParams.shift()
 	;
+	
+	if (sScreen === '' && sCurrentScreen === '')
+	{
+		sScreen = this.sDefaultScreen;
+	}
 	
 	if (this.oItems[sScreen])
 	{

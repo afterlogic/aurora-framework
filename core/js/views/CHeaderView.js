@@ -4,7 +4,11 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
+	Ajax = require('core/js/Ajax.js'),
+	Screens = require('core/js/Screens.js'),
+	Routing = require('core/js/Routing.js'),
 	Settings = require('core/js/Settings.js')
 ;
 
@@ -26,6 +30,16 @@ function CHeaderView()
 //	}, this);
 //	
 	this.tabs = App.getModulesTabs();
+	
+	ko.computed(function () {
+		_.each(this.tabs, function (oTab) {
+			oTab.isCurrent(Screens.currentScreen() === oTab.sName);
+			if (oTab.isCurrent() && Utils.isNonEmptyString(Routing.currentHash()))
+			{
+				oTab.hash('#' + Routing.currentHash());
+			}
+		});
+	}, this).extend({ rateLimit: 50 });
 //
 //	this.mailLinkText = ko.observable('');
 //
@@ -58,19 +72,6 @@ function CHeaderView()
 
 CHeaderView.prototype.__name = 'CHeaderView';
 
-CHeaderView.prototype.onRoute = function (sHash, aParams)
-{
-	var sScreen = aParams[0] || '';
-	
-	_.each(this.tabs, function (oTab) {
-		oTab.isCurrent(sScreen === oTab.sName);
-		if (oTab.isCurrent())
-		{
-			oTab.hash(sHash);
-		}
-	});
-};
-
 CHeaderView.prototype.changeMailLinkText = function ()
 {
 	var oCurrAccount = AppData.Accounts.getCurrent();
@@ -91,7 +92,7 @@ CHeaderView.prototype.logout = function ()
 
 CHeaderView.prototype.switchToFullVersion = function ()
 {
-	App.Ajax.send({
+	Ajax.send({
 		'Action': 'SystemSetMobile',
 		'Mobile': 0
 	}, function () {

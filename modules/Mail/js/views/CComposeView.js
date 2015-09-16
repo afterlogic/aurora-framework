@@ -184,12 +184,12 @@ function CComposeView()
 		var
 			aRecip = [this.toAddr(), this.ccAddr(), this.bccAddr()].join(',').split(','),
 			aEmails = []
-			;
+		;
 		_.each(aRecip, function (sRecip) {
 			var
 				sTrimmedRecip = $.trim(sRecip),
 				oRecip = null
-				;
+			;
 			if (sTrimmedRecip !== '')
 			{
 				oRecip = AddressUtils.getEmailParts(sTrimmedRecip);
@@ -411,7 +411,7 @@ CComposeView.prototype.isEnableSending = function ()
 	var
 		bRecipientIsEmpty = this.toAddr().length === 0 && this.ccAddr().length === 0 && this.bccAddr().length === 0,
 		bFoldersLoaded = this.folderList() && this.folderList().iAccountId !== 0
-		;
+	;
 
 	return bFoldersLoaded && !this.sending() && !bRecipientIsEmpty && this.allAttachmentsUploaded();
 };
@@ -522,7 +522,7 @@ CComposeView.prototype.getMessageOnRoute = function ()
 		aParams = this.routeParams(),
 		sFolderName = '',
 		sUid = ''
-		;
+	;
 
 	if (this.routeType() !== '' && aParams.length === 3)
 	{
@@ -575,7 +575,7 @@ CComposeView.prototype.onRoute = function (aParams)
 	var
 		sSignature = '',
 		oToAddr = {}
-		;
+	;
 
 	this.plainText(false);
 	this.pgpSecured(false);
@@ -737,7 +737,7 @@ CComposeView.prototype.beforeHide = function (fContinueScreenChanging)
 				Routing.historyBackWithoutParsing(Enums.Screens.Compose);
 			}
 		}, this)
-		;
+	;
 
 	if (!this.closeBecauseSingleCompose() && this.hasSomethingToSave())
 	{
@@ -979,7 +979,7 @@ CComposeView.prototype.addDataAsAttachment = function (sData, sFileName)
 			'Hash': sHash
 		},
 		oAttach = new CMailAttachmentModel()
-		;
+	;
 
 	this.subject(sFileName.substr(0, sFileName.length - 4));
 
@@ -1006,7 +1006,7 @@ CComposeView.prototype.onDataAsAttachmentUpload = function (oResponse, oRequest)
 		oAttachment = _.find(this.attachments(), function (oAttach) {
 			return oAttach.hash() === sHash;
 		})
-		;
+	;
 
 	this.messageUploadAttachmentsStarted(false);
 
@@ -1032,7 +1032,7 @@ CComposeView.prototype.addFilesAsAttachment = function (aFiles)
 		oAttach = null,
 		aHashes = [],
 		oParameters = null
-		;
+	;
 
 	_.each(aFiles, function (oFile) {
 		oAttach = new CMailAttachmentModel();
@@ -1069,7 +1069,8 @@ CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 		aResult = oResponse.Result,
 		aHashes = oRequest.Hashes,
 		sThumbSessionUid = Date.now().toString()
-		;
+	;
+	
 	this.messageUploadAttachmentsStarted(false);
 	if ($.isArray(aResult))
 	{
@@ -1284,13 +1285,15 @@ CComposeView.prototype.commit = function (bOnlyCurrentWindow)
 
 CComposeView.prototype.isChanged = function ()
 {
-	var toAddr = this.toAddr.changed(),
+	var
+		toAddr = this.toAddr.changed(),
 		ccAddr = this.ccAddr.changed(),
 		bccAddr = this.bccAddr.changed(),
 		subject = this.subject.changed(),
 		oHtmlEditor = this.oHtmlEditor.textChanged(),
 		attachmentsChanged = this.attachmentsChanged(),
-		changedInPreviousWindow = this.changedInPreviousWindow();
+		changedInPreviousWindow = this.changedInPreviousWindow()
+	;
 
 	return toAddr || ccAddr || bccAddr ||
 			subject || oHtmlEditor ||
@@ -1467,7 +1470,7 @@ CComposeView.prototype.getSendSaveParameters = function (bRemoveSignatureAnchor)
 {
 	var
 		oAttachments = SendingUtils.convertAttachmentsForSending(this.attachments())
-		;
+	;
 
 	_.each(this.oHtmlEditor.uploadedImagePathes(), function (oAttach) {
 		oAttachments[oAttach.TempName] = [oAttach.Name, oAttach.CID, '1', '1'];
@@ -1545,7 +1548,7 @@ CComposeView.prototype.verifyDataForSending = function ()
 		aBccIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.bccAddr()),
 		aIncorrect = _.union(aToIncorrect, aCcIncorrect, aBccIncorrect),
 		sWarning = TextUtils.i18n('COMPOSE/WARNING_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
-		;
+	;
 
 	if (aIncorrect.length > 0)
 	{
@@ -1620,7 +1623,7 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 				}
 			}
 		}, this)
-		;
+	;
 
 	if (this.isEnableSaving())
 	{
@@ -1698,7 +1701,7 @@ CComposeView.prototype.getMessageDataForSingleMode = function ()
 				'Hash': oAttach.hash()
 			};
 		})
-		;
+	;
 
 	return {
 		accountId: this.senderAccountId(),
@@ -1729,7 +1732,7 @@ CComposeView.prototype.openInNewWindow = function ()
 		oMessageParametersFromCompose = {},
 		oWin = null,
 		sHash = '#' + Enums.Screens.SingleCompose
-		;
+	;
 
 	this.closeBecauseSingleCompose(true);
 	oMessageParametersFromCompose = this.getMessageDataForSingleMode();
@@ -1847,7 +1850,7 @@ CComposeView.prototype.confirmOpenPgp = function ()
 //				this.openPgpPopup(false);
 //			}
 //		}, this)
-//		;
+//	;
 //
 //	if (this.notInlineAttachments().length > 0)
 //	{
@@ -1895,7 +1898,7 @@ CComposeView.prototype.undoPgp = function ()
 //	var
 //		sText = this.textBody(),
 //		aText = []
-//		;
+//	;
 //
 //	if (this.pgpSecured())
 //	{
@@ -1944,7 +1947,7 @@ CComposeView.prototype.autocompleteDeleteItem = function (oContact)
 			'ContactId': oContact.id,
 			'SharedToAll': oContact.sharedToAll ? '1' : '0'
 		}
-		;
+	;
 
 	Ajax.send(oParameters, function (oData) {
 		return true;

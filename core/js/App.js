@@ -4,9 +4,12 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
+	Utils = require('core/js/utils/Common.js'),
 	Settings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
+	WindowOpener = require('core/js/WindowOpener.js'),
+	Browser = require('core/js/Browser.js'),
 	
 	bMobileDevice = false,
 	bMobileApp = false
@@ -29,18 +32,21 @@ function CApp()
 	this.oModules = {};
 	this.bSingleMode = false;
 	this.oHeaderScreen = null;
+	this.bAuth = window.pSevenAppData.Auth;
 }
 
 CApp.prototype.init = function (oAvaliableModules)
 {
 	this.initModules(oAvaliableModules);
 	
-	var Accounts = require('modules/Mail/js/AccountList.js');
-	
-	this.currentAccountId = Accounts.currentId;
-	this.defaultAccountId = Accounts.defaultId;
-	this.hasAccountWithId = _.bind(Accounts.hasAccountWithId, Accounts);
-	this.currentAccountId.valueHasMutated();
+	if (this.bAuth)
+	{
+		var Accounts = require('modules/Mail/js/AccountList.js');
+		this.currentAccountId = Accounts.currentId;
+		this.defaultAccountId = Accounts.defaultId;
+		this.hasAccountWithId = _.bind(Accounts.hasAccountWithId, Accounts);
+		this.currentAccountId.valueHasMutated();
+	}
 	
 	this.initScreens();
 	
@@ -52,7 +58,20 @@ CApp.prototype.initModules = function (oAvaliableModules)
 	var oModules = {};
 	
 	_.each(Settings.Modules, function (sModuleName) {
-		oModules[sModuleName] = oAvaliableModules[sModuleName]();
+		if (App.isAuth())
+		{
+			if (sModuleName !== 'auth')
+			{
+				oModules[sModuleName] = oAvaliableModules[sModuleName]();
+			}
+		}
+		else
+		{
+			if (sModuleName === 'auth')
+			{
+				oModules[sModuleName] = oAvaliableModules[sModuleName]();
+			}
+		}
 	});
 	
 	this.oModules = oModules;
@@ -60,26 +79,18 @@ CApp.prototype.initModules = function (oAvaliableModules)
 
 CApp.prototype.initScreens = function ()
 {
-	Screens.addToScreenList('', require('core/js/screenList.js'));
-	
 	_.each(this.oModules, function (oModule, sModuleName) {
 		Screens.addToScreenList(sModuleName, oModule.ScreenList);
 	});
 	
-	if (!this.bSingleMode)
+	Screens.addToScreenList('', require('core/js/screenList.js'));
+	
+	if (!this.bSingleMode && this.isAuth())
 	{
 		this.oHeaderScreen = Screens.showNormalScreen('header');
 	}
 	
 	Screens.initInformation();
-};
-
-CApp.prototype.route = function (sHash, aParams)
-{
-	if (this.oHeaderScreen)
-	{
-		this.oHeaderScreen.onRoute(sHash, aParams);
-	}
 };
 
 CApp.prototype.getModulesTabs = function ()
@@ -125,7 +136,48 @@ CApp.prototype.getCurrentModuleBrowserTitle = function (bBrowserFocused)
 
 CApp.prototype.isAuth = function ()
 {
-	return true;
+	return this.bAuth;
+};
+
+/**
+ * @param {number=} iLastErrorCode
+ */
+CApp.prototype.logout = function (iLastErrorCode)
+{
+	var
+		Ajax = require('core/js/Ajax.js'),
+		oParameters = {'Action': 'SystemLogout'}
+	;
+	
+	if (iLastErrorCode)
+	{
+		oParameters.LastErrorCode = iLastErrorCode;
+	}
+	
+	Ajax.send(oParameters, this.onLogout, this);
+	
+	this.bAuth = false;
+};
+
+CApp.prototype.authProblem = function ()
+{
+	this.logout(Enums.Errors.AuthError);
+};
+
+CApp.prototype.onLogout = function ()
+{
+	WindowOpener.closeAll();
+	
+	Routing.finalize();
+	
+	if (Utils.isNonEmptyString(Settings.CustomLogoutUrl))
+	{
+		window.location.href = Settings.CustomLogoutUrl;
+	}
+	else
+	{
+		Utils.clearAndReloadLocation(Browser.ie8AndBelow, true);
+	}
 };
 
 CApp.prototype.isModuleIncluded = function (sName)
