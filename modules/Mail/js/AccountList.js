@@ -80,7 +80,7 @@ CAccountListModel.prototype.changeCurrentAccount = function (iNewCurrentId, bPas
 		oNewCurrentAccount.isCurrent(true);
 		if (bPassToMail)
 		{
-			Routing.setHash(LinksUtils.inbox());
+			Routing.setHash(LinksUtils.getInbox());
 		}
 	}
 };

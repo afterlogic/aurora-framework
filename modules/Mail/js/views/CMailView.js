@@ -207,11 +207,13 @@ CMailView.prototype.onRoute = function (aParams)
 CMailView.prototype.onShow = function ()
 {
 	this.oMessageList.onShow();
+	this.oMessagePane.onShow();
 };
 
 CMailView.prototype.onHide = function ()
 {
 	this.oMessageList.onHide();
+	this.oMessagePane.onHide();
 };
 
 CMailView.prototype.onApplyBindings = function ()

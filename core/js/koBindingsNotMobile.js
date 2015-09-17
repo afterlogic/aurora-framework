@@ -5,7 +5,8 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Utils = require('core/js/utils/Common.js'),
+	Browser = require('core/js/Browser.js')
 ;
 
 require('customscroll');
@@ -181,3 +182,149 @@ ko.bindingHandlers.droppable = {
 	}
 };
 
+ko.bindingHandlers.quickReplyAnim = {
+	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+
+		var
+			jqTextarea = oElement.jqTextarea || null,
+			jqStatus = oElement.jqStatus || null,
+			jqButtons = oElement.jqButtons || null,
+			jqElement = oElement.jqElement || null,
+			oPrevActions = oElement.oPrevActions || null,
+			values = fValueAccessor(),
+			oActions = null
+		;
+
+		oActions = _.defaults(
+			values, {
+				'saveAction': false,
+				'sendAction': false,
+				'activeAction': false
+			}
+		);
+
+		if (!jqElement)
+		{
+			oElement.jqElement = jqElement = $(oElement);
+			oElement.jqTextarea = jqTextarea = jqElement.find('textarea');
+			oElement.jqStatus = jqStatus = jqElement.find('.status');
+			oElement.jqButtons = jqButtons = jqElement.find('.buttons');
+			
+			oElement.oPrevActions = oPrevActions = {
+				'saveAction': null,
+				'sendAction': null,
+				'activeAction': null
+			};
+		}
+
+		if (true || jqElement.is(':visible'))
+		{
+			if (Browser.ie9AndBelow)
+			{
+				if (jqTextarea && !jqElement.defualtHeight && !jqTextarea.defualtHeight)
+				{
+					jqElement.defualtHeight = jqElement.outerHeight();
+					jqTextarea.defualtHeight = jqTextarea.outerHeight();
+					jqStatus.defualtHeight = jqButtons.outerHeight();
+					jqButtons.defualtHeight = jqButtons.outerHeight();
+				}
+
+				_.defer(function () {
+					var 
+						activeChanged = oPrevActions.activeAction !== oActions['activeAction'],
+						sendChanged = oPrevActions.sendAction !== oActions['sendAction'],
+						saveChanged = oPrevActions.saveAction !== oActions['saveAction']
+					;
+
+					if (activeChanged)
+					{
+						if (oActions['activeAction'])
+						{
+							jqTextarea.animate({
+								'height': jqTextarea.defualtHeight + 50
+							}, 300);
+							jqElement.animate({
+								'max-height': jqElement.defualtHeight + jqButtons.defualtHeight + 50
+							}, 300);
+						}
+						else
+						{
+							jqTextarea.animate({
+								'height': jqTextarea.defualtHeight
+							}, 300);
+							jqElement.animate({
+								'max-height': jqElement.defualtHeight
+							}, 300);
+						}
+					}
+
+					if (sendChanged || saveChanged)
+					{
+						if (oActions['sendAction'])
+						{
+							jqElement.animate({
+								'max-height': '30px'
+							}, 300);
+							jqStatus.animate({
+								'max-height': '30px',
+								'opacity': 1
+							}, 300);
+						}
+						else if (oActions['saveAction'])
+						{
+							jqElement.animate({
+								'max-height': 0
+							}, 300);
+						}
+						else
+						{
+							jqElement.animate({
+								'max-height': jqElement.defualtHeight + jqButtons.defualtHeight + 50
+							}, 300);
+							jqStatus.animate({
+								'max-height': 0,
+								'opacity': 0
+							}, 300);
+						}
+					}
+				});
+			}
+			else
+			{
+				jqElement.toggleClass('saving', oActions['saveAction']);
+				jqElement.toggleClass('sending', oActions['sendAction']);
+				jqElement.toggleClass('active', oActions['activeAction']);
+			}
+		}
+
+		_.defer(function () {
+			oPrevActions = oActions;
+		});
+	}
+};
+
+ko.bindingHandlers.onCtrlEnter = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
+		var $Element = $(oElement);
+		$Element.on('keydown', function (oEvent) {
+			if (oEvent.ctrlKey && oEvent.keyCode === Enums.Key.Enter)
+			{
+				$Element.trigger('change');
+				fValueAccessor().call(oViewModel);
+			}
+		});
+	}
+};
+
+ko.bindingHandlers.onEsc = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
+		var $Element = $(oElement);
+		$Element.on('keydown', function (oEvent) {
+			if (oEvent.keyCode === Enums.Key.Esc)
+			{
+				$Element.trigger('change');
+				fValueAccessor().call(oViewModel);
+			}
+		});
+	}
+};

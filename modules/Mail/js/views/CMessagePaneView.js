@@ -303,7 +303,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	}, this);
 	
 	this.saveQuickReplyCommand = Utils.createCommand(this, this.executeSaveQuickReply, this.isEnableSaveQuickReply);
-	this.sendQuickReplyCommand = Utils.createCommand(this, this.executeSendQuickReplyCommand, this.isEnableSendQuickReply);
+	this.sendQuickReplyCommand = Utils.createCommand(this, this.executeSendQuickReply, this.isEnableSendQuickReply);
 
 	this.domMessageHeader = ko.observable(null);
 	this.domQuickReply = ko.observable(null);
@@ -1034,7 +1034,7 @@ CMessagePaneView.prototype.onMessageSendOrSaveResponse = function (oResponse, oR
 	}
 };
 
-CMessagePaneView.prototype.executeSendQuickReplyCommand = function ()
+CMessagePaneView.prototype.executeSendQuickReply = function ()
 {
 	if (this.isEnableSendQuickReply())
 	{
@@ -1117,7 +1117,17 @@ CMessagePaneView.prototype.downloadAllAttachmentsSeparately = function ()
 	}
 };
 
-CMessagePaneView.prototype.onApplyBindings = function (oMailViewModel)
+CMessagePaneView.prototype.onShow = function ()
+{
+	this.bShown = true;
+};
+
+CMessagePaneView.prototype.onHide = function ()
+{
+	this.bShown = false;
+};
+
+CMessagePaneView.prototype.onApplyBindings = function ($MailViewModel)
 {
 //	App.registerSessionTimeoutFunction(_.bind(function () {
 //		if (this.replyText() !== '')
@@ -1125,20 +1135,20 @@ CMessagePaneView.prototype.onApplyBindings = function (oMailViewModel)
 //			this.saveReplyMessage(false);
 //		}
 //	}, this));
-//	
-//	$(oMailViewModel).on('mousedown', 'a', function (oEvent) {
-//		if (oEvent && 3 !== oEvent['which'])
-//		{
-//			var sHref = $(this).attr('href');
-//			if (sHref && 'mailto:' === sHref.toString().toLowerCase().substr(0, 7))
-//			{
-//				ComposeUtils.composeMessageToAddresses(sHref.toString().substr(7));
-//				return false;
-//			}
-//		}
-//
-//		return true;
-//	});
+	
+	$MailViewModel.on('mousedown', 'a', function (oEvent) {
+		if (oEvent && 3 !== oEvent['which'])
+		{
+			var sHref = $(this).attr('href');
+			if (sHref && 'mailto:' === sHref.toString().toLowerCase().substr(0, 7))
+			{
+				ComposeUtils.composeMessageToAddresses(sHref.toString().substr(7));
+				return false;
+			}
+		}
+
+		return true;
+	});
 
 	this.hotKeysBind();
 };
@@ -1147,10 +1157,8 @@ CMessagePaneView.prototype.hotKeysBind = function ()
 {
 	$(document).on('keydown', $.proxy(function(ev) {
 
-		var	bComputed = ev && !ev.ctrlKey && !ev.shiftKey &&
+		var	bComputed = this.bShown && ev && !ev.ctrlKey && !ev.shiftKey &&
 			!Utils.isTextFieldFocused() && this.isEnableReply();
-//		var	bComputed = App.Screens.currentScreen() === Enums.Screens.Mailbox && ev && !ev.ctrlKey && !ev.shiftKey &&
-//			!Utils.isTextFieldFocused() && this.isEnableReply();
 
 		if (bComputed && ev.keyCode === Enums.Key.q)
 		{

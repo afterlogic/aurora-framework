@@ -7,6 +7,8 @@ var
 	Screens = require('core/js/Screens.js'),
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
+	CAddressModel = require('core/js/models/CAddressModel.js'),
+	CAddressListModel = require('core/js/models/CAddressListModel.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),

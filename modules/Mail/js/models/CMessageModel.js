@@ -471,19 +471,19 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			this.safety(oData.Safety);
 			this.sourceHeaders(oData.Headers);
 			
-			if (oData.ICAL !== null)
-			{
-				oIcal = new CIcalModel();
-				oIcal.parse(oData.ICAL, Accounts.getAttendee(this.oTo.getEmails()));
-				this.ical(oIcal);
-			}
-			
-			if (oData.VCARD !== null)
-			{
-				oVcard = new CVcardModel();
-				oVcard.parse(oData.VCARD);
-				this.vcard(oVcard);
-			}
+//			if (oData.ICAL !== null)
+//			{
+//				oIcal = new CIcalModel();
+//				oIcal.parse(oData.ICAL, Accounts.getAttendee(this.oTo.getEmails()));
+//				this.ical(oIcal);
+//			}
+//			
+//			if (oData.VCARD !== null)
+//			{
+//				oVcard = new CVcardModel();
+//				oVcard.parse(oData.VCARD);
+//				this.vcard(oVcard);
+//			}
 			
 			this.completelyFilled(true);
 		}
