@@ -27,5 +27,6 @@ module.exports = {
 	AllowPrefetch: true,
 	IsDemo: false,
 	DefaultLanguage: 'English',
-	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}]
+	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
+	IdleSessionTimeout: 0
 };

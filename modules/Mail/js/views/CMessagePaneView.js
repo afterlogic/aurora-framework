@@ -10,6 +10,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	SessionTimeout = require('core/js/SessionTimeout.js'),
 	Storage = require('core/js/Storage.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
@@ -1129,12 +1130,12 @@ CMessagePaneView.prototype.onHide = function ()
 
 CMessagePaneView.prototype.onApplyBindings = function ($MailViewModel)
 {
-//	App.registerSessionTimeoutFunction(_.bind(function () {
-//		if (this.replyText() !== '')
-//		{
-//			this.saveReplyMessage(false);
-//		}
-//	}, this));
+	SessionTimeout.registerFunction(_.bind(function () {
+		if (this.replyText() !== '')
+		{
+			this.saveReplyMessage(false);
+		}
+	}, this));
 	
 	$MailViewModel.on('mousedown', 'a', function (oEvent) {
 		if (oEvent && 3 !== oEvent['which'])

@@ -14,6 +14,7 @@ var
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	App = require('core/js/App.js'),
+	SessionTimeout = require('core/js/SessionTimeout.js'),
 	Api = require('core/js/Api.js'),
 	AppTab = require('core/js/AppTab.js'),
 	CJua = require('core/js/CJua.js'),
@@ -480,7 +481,7 @@ CComposeView.prototype.fromToExpandColaps = function ()
 CComposeView.prototype.onApplyBindings = function ()
 {
 
-//	App.registerSessionTimeoutFunction(_.bind(this.executeSave, this, false));
+	SessionTimeout.registerFunction(_.bind(this.executeSave, this, false));
 
 	this.hotKeysBind();
 };
