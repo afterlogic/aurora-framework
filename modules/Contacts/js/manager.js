@@ -9,8 +9,13 @@ var
 
 module.exports = function () {
 	return {
-		'ScreenList': require('modules/Contacts/js/screenList.js'),
-		'HeaderItem': new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS')),
+		screens: {
+			'main': {
+				'Model': require('modules/Contacts/js/views/CContactsView.js'),
+				'TemplateName': 'Contacts_ContactsView'
+			}
+		},
+		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS')),
 		getBrowserTitle: function () {
 			return TextUtils.i18n('TITLE/CONTACTS');
 		}

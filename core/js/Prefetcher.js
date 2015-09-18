@@ -7,12 +7,13 @@ var
 	
 	Ajax = null,
 	App = require('core/js/App.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	
 	Settings = require('core/js/Settings.js'),
 	
 	bSingleMode = false,
 	
-	ModulesPrefetchers = App.getModulesPrefetchers(),
+	ModulesPrefetchers = ModulesManager.getModulesPrefetchers(),
 	Prefetcher = {},
 	bServerInitializationsDone = false
 ;

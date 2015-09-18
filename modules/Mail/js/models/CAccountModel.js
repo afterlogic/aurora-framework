@@ -8,6 +8,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	App = null,
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
 	Ajax = null,
 	Screens = require('core/js/Screens.js'),
@@ -79,17 +80,15 @@ function CAccountModel()
 		
 		if (this.isDefault())
 		{
-			this.requireApp();
-			
-			if (App.isModuleIncluded('calendar') && App.isModuleIncluded('contacts'))
+			if (ModulesManager.isModuleIncluded('Calendar') && ModulesManager.isModuleIncluded('Contacts'))
 			{
 				sAndOther = TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_CONTACTS_CALENDARS_HINT');
 			}
-			else if (App.isModuleIncluded('calendar'))
+			else if (ModulesManager.isModuleIncluded('Calendar'))
 			{
 				sAndOther = TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_CALENDARS_HINT');
 			}
-			else if (App.isModuleIncluded('contacts'))
+			else if (ModulesManager.isModuleIncluded('Contacts'))
 			{
 				sAndOther = TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_CONTACTS_HINT');
 			}

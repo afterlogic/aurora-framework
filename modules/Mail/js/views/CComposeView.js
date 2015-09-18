@@ -14,9 +14,8 @@ var
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	App = require('core/js/App.js'),
-	SessionTimeout = require('core/js/SessionTimeout.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
-	AppTab = require('core/js/AppTab.js'),
 	CJua = require('core/js/CJua.js'),
 	
 	Popups = require('core/js/Popups.js'),
@@ -52,6 +51,7 @@ function CComposeView()
 
 	if (bSingleMode)
 	{
+		var AppTab = require('core/js/AppTab.js');
 		AppTab.changeFavicon('favicon-single-compose.ico');
 	}
 
@@ -480,8 +480,7 @@ CComposeView.prototype.fromToExpandColaps = function ()
  */
 CComposeView.prototype.onApplyBindings = function ()
 {
-
-	SessionTimeout.registerFunction(_.bind(this.executeSave, this, false));
+	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(this.executeSave, this, false)]);
 
 	this.hotKeysBind();
 };

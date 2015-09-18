@@ -9,8 +9,16 @@ var
 ;
 
 module.exports = {
-	Modules: ['auth', 'mail', 'contacts', 'settings'],
-	EntryModule: 'mail',
+	Modules: {
+		'Auth': {},
+		'Mail': {},
+		'Contacts': {},
+		'Settings': {},
+		'dsbld_SessionTimeout': {
+			'TimeoutSeconds': 20
+		}
+	},
+	EntryModule: 'Contacts',
 	Language: 'English',
 	CustomLogo: '',
 	defaultTimeFormat: ko.observable(0),

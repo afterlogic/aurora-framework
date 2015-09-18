@@ -10,9 +10,14 @@ var
 
 module.exports = function () {
 	return {
-		'ScreenList': require('modules/Mail/js/screenList.js'),
-		'HeaderItem': HeaderItemView,
-		'Prefetcher': require('modules/Mail/js/Prefetcher.js'),
+		screens: {
+			'main': {
+				'Model': require('modules/Mail/js/views/CMailView.js'),
+				'TemplateName': 'Mail_LayoutSidePane_MailViewModel'
+			}
+		},
+		headerItem: HeaderItemView,
+		prefetcher: require('modules/Mail/js/Prefetcher.js'),
 		getBrowserTitle: function (bBrowserFocused) {
 			var Accounts = require('modules/Mail/js/AccountList.js');
 			

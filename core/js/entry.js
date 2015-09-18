@@ -4,16 +4,18 @@ var $ = require('jquery');
 
 $('body').ready(function () {
 	var
-		App = require('core/js/App.js'),
 		oAvaliableModules = {
-			'auth': require('modules/Auth/js/manager.js'),
-			'mail': require('modules/Mail/js/manager.js'),
-			'contacts': require('modules/Contacts/js/manager.js'),
-			'settings': require('modules/Settings/js/manager.js')
-		}
+			'Auth': require('modules/Auth/js/manager.js'),
+			'Mail': require('modules/Mail/js/manager.js'),
+			'Contacts': require('modules/Contacts/js/manager.js'),
+			'Settings': require('modules/Settings/js/manager.js'),
+			
+			'SessionTimeout': require('modules/SessionTimeout/js/manager.js')
+		},
+		ModulesManager = require('core/js/ModulesManager.js'),
+		App = require('core/js/App.js')
 	;
 	
-	App.init(oAvaliableModules);
-	
-	require('core/js/AppTab.js');
+	ModulesManager.init(oAvaliableModules);
+	App.init();
 });

@@ -4,7 +4,7 @@ var
 	ko = require('knockout'),
 	CFavico = require('core/js/vendors/favico.js'),
 	
-	App = require('core/js/App.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Browser = require('core/js/Browser.js'),
 	Settings = require('core/js/Settings.js'),
 	
@@ -13,7 +13,7 @@ var
 
 function CAppTab()
 {
-	this.tabs = App.getModulesTabs();
+	this.tabs = ModulesManager.getModulesTabs();
 	
 	this.focused = ko.observable(true);
 	

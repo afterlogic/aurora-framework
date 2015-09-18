@@ -7,8 +7,8 @@ var
 
 module.exports = function () {
 	return {
-		'ScreenList': require('modules/Settings/js/screenList.js'),
-		'HeaderItem': new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS')),
+		screens: require('modules/Settings/js/screenList.js'),
+		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS')),
 		getBrowserTitle: function () {
 			return TextUtils.i18n('TITLE/SETTINGS');
 		}

@@ -3,7 +3,12 @@
 var
 	_ = require('underscore'),
 	$ = require('jquery'),
-	ko = require('knockout')
+	ko = require('knockout'),
+	
+	ModulesManager = require('core/js/ModulesManager.js'),
+	Settings = require('core/js/Settings.js'),
+	
+	bSingleMode = false
 ;
 
 /**
@@ -24,25 +29,45 @@ function CScreens()
 	this.informationScreen = ko.observable(null);
 }
 
-CScreens.prototype.addToScreenList = function (sPrefix, oScreenList) {
+CScreens.prototype.init = function (bAuth)
+{
+	var oModulesScreens = ModulesManager.getModulesScreens(bAuth);
+	
+	_.each(oModulesScreens, _.bind(function (oScreens, sModuleName) {
+		this.addToScreenList(sModuleName, oScreens);
+	}, this));
+	
+	this.addToScreenList('', require('core/js/screenList.js'));
+	
+	if (this.oItems[Settings.EntryModule.toLowerCase()])
+	{
+		this.sDefaultScreen = Settings.EntryModule.toLowerCase();
+	}
+	
+	if (!bSingleMode && bAuth)
+	{
+		this.showNormalScreen('header');
+	}
+	
+	this.initInformation();
+};
+
+CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
+{
 	_.each(oScreenList, _.bind(function (oScreen, sKey) {
-		var sNewKey = sKey;
+		var sNewKey = sKey.toLowerCase();
 		if (sPrefix !== '')
 		{
 			if (sKey === 'main')
 			{
-				sNewKey = sPrefix;
+				sNewKey = sPrefix.toLowerCase();
 			}
 			else
 			{
-				sNewKey = sPrefix + '-' + sKey;
+				sNewKey = sPrefix.toLowerCase() + '-' + sKey;
 			}
 		}
 		this.oItems[sNewKey] = oScreen;
-		if (this.sDefaultScreen === '')
-		{
-			this.sDefaultScreen = sNewKey;
-		}
 	}, this));
 };
 
@@ -55,7 +80,7 @@ CScreens.prototype.route = function (aParams)
 		sScreen = aParams.shift()
 	;
 	
-	if (sScreen === '' && sCurrentScreen === '')
+	if ((sScreen === '' || !this.oItems[sScreen]) && sCurrentScreen === '')
 	{
 		sScreen = this.sDefaultScreen;
 	}

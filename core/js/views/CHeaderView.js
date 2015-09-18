@@ -6,6 +6,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Ajax = require('core/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
@@ -29,7 +30,8 @@ function CHeaderView()
 //		}, 300);
 //	}, this);
 //	
-	this.tabs = App.getModulesTabs();
+	
+	this.tabs = ModulesManager.getModulesTabs();
 	
 	ko.computed(function () {
 		_.each(this.tabs, function (oTab) {

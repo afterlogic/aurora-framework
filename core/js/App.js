@@ -29,16 +29,11 @@ require('core/js/enums.js');
 
 function CApp()
 {
-	this.oModules = {};
-	this.bSingleMode = false;
-	this.oHeaderScreen = null;
 	this.bAuth = window.pSevenAppData.Auth;
 }
 
-CApp.prototype.init = function (oAvaliableModules)
+CApp.prototype.init = function ()
 {
-	this.initModules(oAvaliableModules);
-	
 	if (this.bAuth)
 	{
 		var Accounts = require('modules/Mail/js/AccountList.js');
@@ -48,90 +43,10 @@ CApp.prototype.init = function (oAvaliableModules)
 		this.currentAccountId.valueHasMutated();
 	}
 	
-	this.initScreens();
-	
+	Screens.init(this.bAuth);
 	Routing.init();
-};
-
-CApp.prototype.initModules = function (oAvaliableModules)
-{
-	var oModules = {};
 	
-	_.each(Settings.Modules, function (sModuleName) {
-		if (App.isAuth())
-		{
-			if (sModuleName !== 'auth')
-			{
-				oModules[sModuleName] = oAvaliableModules[sModuleName]();
-			}
-		}
-		else
-		{
-			if (sModuleName === 'auth')
-			{
-				oModules[sModuleName] = oAvaliableModules[sModuleName]();
-			}
-		}
-	});
-	
-	this.oModules = oModules;
-};
-
-CApp.prototype.initScreens = function ()
-{
-	_.each(this.oModules, function (oModule, sModuleName) {
-		Screens.addToScreenList(sModuleName, oModule.ScreenList);
-	});
-	
-	Screens.addToScreenList('', require('core/js/screenList.js'));
-	
-	if (!this.bSingleMode && this.isAuth())
-	{
-		this.oHeaderScreen = Screens.showNormalScreen('header');
-	}
-	
-	Screens.initInformation();
-};
-
-CApp.prototype.getModulesTabs = function ()
-{
-	var aTabs = [];
-	
-	_.each(this.oModules, function (oModule, sName) {
-		oModule.HeaderItem.setName(sName);
-		aTabs.push(oModule.HeaderItem);
-	});
-	
-	return aTabs;
-};
-
-CApp.prototype.getModulesPrefetchers = function ()
-{
-	var aPrefetchers = [];
-	
-	_.each(this.oModules, function (oModule, sName) {
-		if (oModule.Prefetcher)
-		{
-			aPrefetchers.push(oModule.Prefetcher);
-		}
-	});
-	
-	return aPrefetchers;
-};
-
-CApp.prototype.getCurrentModuleBrowserTitle = function (bBrowserFocused)
-{
-	var
-		oModule = this.oModules[Screens.currentScreen()],
-		sTitle = ''
-	;
-	
-	if (oModule && $.isFunction(oModule.getBrowserTitle))
-	{
-		sTitle = oModule.getBrowserTitle(bBrowserFocused);
-	}
-	
-	return sTitle;
+	require('core/js/AppTab.js');
 };
 
 CApp.prototype.isAuth = function ()
@@ -178,11 +93,6 @@ CApp.prototype.onLogout = function ()
 	{
 		Utils.clearAndReloadLocation(Browser.ie8AndBelow, true);
 	}
-};
-
-CApp.prototype.isModuleIncluded = function (sName)
-{
-	return this.oModules[sName] !== undefined;
 };
 
 var App = new CApp();
