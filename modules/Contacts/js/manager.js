@@ -4,10 +4,14 @@ require('modules/Contacts/js/enums.js');
 
 var
 	TextUtils = require('core/js/utils/Text.js'),
-	CHeaderItemView = require('core/js/views/CHeaderItemView.js')
+	CHeaderItemView = require('core/js/views/CHeaderItemView.js'),
+	
+	Settings = require('modules/Contacts/js/Settings.js')
 ;
 
-module.exports = function () {
+module.exports = function (oSettings) {
+	Settings.init(oSettings);
+	
 	return {
 		screens: {
 			'main': {

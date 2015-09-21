@@ -1,9 +1,9 @@
 'use strict';
 
-var AppData = window.pSevenAppData;
+var _ = require('underscore');
 
 module.exports = {
-	Storages: ['personal', 'global', 'shared'],
-	ContactsPerPage: 20,
-	ImportingContactsLink: AppData && AppData['Links'] && AppData['Links']['ImportingContacts'] ? AppData['Links']['ImportingContacts'] : ''
+	init: function (oSettings) {
+		_.extendOwn(this, oSettings);
+	}
 };

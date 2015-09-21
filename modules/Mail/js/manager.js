@@ -5,10 +5,14 @@ require('modules/Mail/js/enums.js');
 var
 	TextUtils = require('core/js/utils/Text.js'),
 			
-	HeaderItemView = require('modules/Mail/js/views/HeaderItemView.js')
+	Settings = require('modules/Mail/js/Settings.js')
 ;
 
-module.exports = function () {
+module.exports = function (oSettings) {
+	Settings.init(oSettings);
+	
+	var HeaderItemView = require('modules/Mail/js/views/HeaderItemView.js');
+	
 	return {
 		screens: {
 			'main': {
