@@ -1,0 +1,11 @@
+<div class="notice" data-bind="visible: visibleDecryptControl">
+	<span data-i18n="OPENPGP/INFO_ENCRYPTED_MESSAGE" data-bind="i18n: 'text'"></span>
+	<span data-i18n="OPENPGP/INFO_ENTER_YOUR_PASSWORD" data-bind="i18n: 'text'"></span>
+	<input type="password" data-bind="value: decryptPassword, onEnter: onDecryptMessageClick" />
+	<span class="link" data-i18n="OPENPGP/ACTION_DECRYPT" data-bind="i18n: 'text', click: decryptMessage"></span>
+</div>
+
+<div class="notice" data-bind="visible: visibleVerifyControl">
+	<span data-i18n="OPENPGP/INFO_SIGNED_MESSAGE" data-bind="i18n: 'text'"></span>
+	<span class="link" data-i18n="OPENPGP/ACTION_VERIFY" data-bind="i18n: 'text', click: verifyMessage"></span>
+</div>

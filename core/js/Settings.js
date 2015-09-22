@@ -26,6 +26,7 @@ module.exports = {
 			RegistrationDomains: []
 		},
 		'OpenPgp': {
+			enableOpenPgp: ko.observable(true)
 		},
 		'Mail': {
 			ShowQuotaBar: true, //todo: account level

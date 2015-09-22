@@ -8,6 +8,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Ajax = require('core/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	CDateModel = require('core/js/models/CDateModel.js'),
@@ -224,8 +225,6 @@ function CMessageModel()
 	this.vcard = ko.observable(null);
 	
 	this.textRaw = ko.observable('');
-	this.encryptedMessage = ko.observable(false);
-	this.signedMessage = ko.observable(false);
 	
 	this.domMessageForPrint = ko.observable(null);
 	
@@ -446,15 +445,9 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			else
 			{
 				this.textRaw(oData.PlainRaw);
-				if (this.textRaw().indexOf('-----BEGIN PGP MESSAGE-----') !== -1)
+				if (ModulesManager.isModuleIncluded('OpenPgp') && ModulesManager.run('OpenPgp', 'isMessageEncryptedOrSigned', [this.textRaw()]))
 				{
 					this.text('<pre>' + TextUtils.encodeHtml(this.textRaw()) + '</pre>');
-					this.encryptedMessage(true);
-				}
-				else if (this.textRaw().indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1)
-				{
-					this.text('<pre>' + TextUtils.encodeHtml(this.textRaw()) + '</pre>');
-					this.signedMessage(true);
 				}
 				else
 				{

@@ -201,13 +201,31 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	
 	this.contentHasFocus = ko.observable(false);
 
-	this.decryptPassword = ko.observable('');
-	this.visibleDecryptControl = ko.observable(false);
-	this.visibleVerifyControl = ko.observable(false);
+	this.oOpenPgpControls = (ModulesManager.isModuleIncluded('OpenPgp')) ? ModulesManager.run('OpenPgp', 'getMessageControls') : null;
+	if (this.oOpenPgpControls)
+	{
+		this.oOpenPgpControls.setOptions({
+			getMessageData: _.bind(function () {
+				var oMessage = this.currentMessage();
+				return {
+					Text: oMessage.textRaw(),
+					AccountEmail: Accounts.getEmail(),
+					FromEmail: oMessage.oFrom.getFirstEmail()
+				};
+			}, this),
+			changeDecryptedOrVerifiedMessage: _.bind(function (sText) {
+				var oMessage = this.currentMessage();
+				oMessage.text('<pre>' + TextUtils.encodeHtml(sText) + '</pre>');
+				oMessage.$text = null;
+				this.setMessageBody();
+			}, this)
+		});
+	}
 
 	this.fakeHeader = ko.computed(function () {
+		var bPgpVisible = !!this.oOpenPgpControls && this.oOpenPgpControls.visible();
 		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || 
-				this.sensitivityText() !== '' || this.visibleDecryptControl() || this.visibleVerifyControl());
+				this.sensitivityText() !== '' || bPgpVisible);
 	}, this);
 
 	this.mobileApp = bMobileApp;
@@ -551,9 +569,10 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.visibleShowPicturesLink(false);
 		this.ical(null);
 		this.vcard(null);
-		this.decryptPassword('');
-		this.visibleDecryptControl(false);
-		this.visibleVerifyControl(false);
+		if (this.oOpenPgpControls)
+		{
+			this.oOpenPgpControls.reset();
+		}
 	}
 };
 
@@ -693,9 +712,11 @@ CMessagePaneView.prototype.setMessageBody = function ()
 					}
 				}
 				
-				this.decryptPassword('');
-				this.visibleDecryptControl(UserSettings.enableOpenPgp() && oMessage.encryptedMessage());
-				this.visibleVerifyControl(UserSettings.enableOpenPgp() && oMessage.signedMessage());
+				if (this.oOpenPgpControls)
+				{
+					this.oOpenPgpControls.populate(oMessage.textRaw());
+				}
+				
 				$body.data('displayed-message-uid', oMessage.uid());
 				this.displayedMessageUid(oMessage.uid());
 			}
@@ -1183,116 +1204,6 @@ CMessagePaneView.prototype.showSourceHeaders = function ()
 	if (oWin)
 	{
 		$(oWin.document.body).html('<pre>' + TextUtils.encodeHtml(oMessage.sourceHeaders()) + '</pre>');
-	}
-};
-
-CMessagePaneView.prototype.onDecryptMessageClick = function ()
-{
-	if (this.currentMessage() && this.currentMessage().encryptedMessage())
-	{
-		this.decryptVerifyMessage(false);
-	}
-};
-
-CMessagePaneView.prototype.onVerifyMessageClick = function ()
-{
-	if (this.currentMessage() && this.currentMessage().signedMessage())
-	{
-		this.decryptVerifyMessage(true);
-	}
-};
-
-/**
- * @param {boolean} bVerifyOnly
- */
-CMessagePaneView.prototype.decryptVerifyMessage = function (bVerifyOnly)
-{
-	var fPgpCallback = _.bind(function (oPgp) {
-		var oMessage = this.currentMessage();
-		if (oPgp && oMessage)
-		{
-			if (bVerifyOnly && oMessage.signedMessage())
-			{
-				this.verifyMessage(oPgp);
-			}
-			else if (oMessage.encryptedMessage())
-			{
-				this.decryptMessage(oPgp);
-			}
-		}
-	}, this);
-	
-	App.Api.pgp(fPgpCallback, UserSettings.IdUser);
-};
-
-/**
- * @param {Object} oPgp
- */
-CMessagePaneView.prototype.decryptMessage = function (oPgp)
-{
-	var
-		oMessage = this.currentMessage(),
-		sData = oMessage.textRaw(),
-		sAccountEmail = Accounts.getEmail(),
-		sFromEmail = oMessage.oFrom.getFirstEmail(),
-		sPrivateKeyPassword = this.decryptPassword(),
-		oRes = oPgp.decryptAndVerify(sData, sAccountEmail, sFromEmail, sPrivateKeyPassword),
-		bNoSignDataNotice = false
-	;
-	
-	if (oRes && oRes.result && !oRes.errors)
-	{
-		oMessage.text('<pre>' + TextUtils.encodeHtml(oRes.result) + '</pre>');
-		oMessage.$text = null;
-		oMessage.encryptedMessage(false);
-		this.decryptPassword('');
-		this.visibleDecryptControl(false);
-		this.setMessageBody();
-		if (!oRes.notices)
-		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED_AND_VERIFIED'));
-		}
-		else
-		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED'));
-		}
-	}
-	
-	if (oRes && (oRes.errors || oRes.notices))
-	{
-		bNoSignDataNotice = App.Api.showPgpErrorByCode(oRes, Enums.PgpAction.DecryptVerify);
-		if (bNoSignDataNotice)
-		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED_AND_NOT_SIGNED'));
-		}
-	}
-};
-
-/**
- * @param {Object} oPgp
- */
-CMessagePaneView.prototype.verifyMessage = function (oPgp)
-{
-	var
-		oMessage = this.currentMessage(),
-		sData = oMessage.textRaw(),
-		sFromEmail = oMessage.oFrom.getFirstEmail(),
-		oRes = oPgp.verify(sData, sFromEmail)
-	;
-	
-	if (oRes && oRes.result && !(oRes.errors || oRes.notices))
-	{
-		oMessage.text('<pre>' + TextUtils.encodeHtml(oRes.result) + '</pre>');
-		oMessage.$text = null;
-		oMessage.signedMessage(false);
-		this.visibleVerifyControl(false);
-		this.setMessageBody();
-		Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_VERIFIED'));
-	}
-	
-	if (oRes && (oRes.errors || oRes.notices))
-	{
-		App.Api.showPgpErrorByCode(oRes, Enums.PgpAction.Verify);
 	}
 };
 

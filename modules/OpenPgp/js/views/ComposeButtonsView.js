@@ -34,7 +34,7 @@ function CComposeButtonsView()
 	this.openPgpCommand = Utils.createCommand(this, this.confirmOpenPgp, this.isEnableOpenPgpCommand);
 }
 
-CComposeButtonsView.prototype.TemplateName = 'Mail_OpenPgpComposeButtonsView';
+CComposeButtonsView.prototype.TemplateName = 'OpenPgp_ComposeButtonsView';
 
 CComposeButtonsView.prototype.setData = function (koComposeHasAttachments, fComposeGetPlainText, fComposeAfterSigning, 
 													fComposeSend, fComposeGetFromEmail, koComposeRecipientEmails, fComposeAfterUndoPgpFunction)
