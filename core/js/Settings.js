@@ -25,6 +25,8 @@ module.exports = {
 			RegistrationQuestions: [],
 			RegistrationDomains: []
 		},
+		'OpenPgp': {
+		},
 		'Mail': {
 			ShowQuotaBar: true, //todo: account level
 			useThreads: ko.observable(true),
@@ -47,7 +49,6 @@ module.exports = {
 			getUseSaveMailInSentItems: function () { return false; },
 			getSaveMailInSentItems: function () { return false; },
 			AutosignOutgoingEmails: false,
-			enableOpenPgp: ko.observable(false),
 			JoinReplyPrefixes: true,
 			SaveRepliedToCurrFolder: false,
 			AttachmentSizeLimit: 0
@@ -68,7 +69,6 @@ module.exports = {
 	defaultTimeFormat: ko.observable(0),
 	IsFilesSupported: false,
 	DefaultFontName: 'Tahoma',
-	enableOpenPgp: ko.observable(false),
 	IdUser: AppData.IdUser,
 	AllowSaveAsPdf: false,
 	ZipAttachments: false,

@@ -77,7 +77,10 @@ module.exports = {
 			{
 				aParams = [];
 			}
-			oModule[sFunctionName].apply(oModule, aParams)
+			
+			return oModule[sFunctionName].apply(oModule, aParams)
 		}
+		
+		return false;
 	}
 };

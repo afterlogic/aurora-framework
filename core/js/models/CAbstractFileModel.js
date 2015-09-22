@@ -109,9 +109,9 @@ function CAbstractFileModel()
 	this.uploadUid = ko.observable('');
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
-	this.visibleImportLink = ko.computed(function () {
-		return UserSettings.enableOpenPgp() && this.extension().toLowerCase() === 'asc' && this.content() !== '' && !this.isPopupItem();
-	}, this);
+//	this.visibleImportLink = ko.computed(function () {
+//		return UserSettings.enableOpenPgp() && this.extension().toLowerCase() === 'asc' && this.content() !== '' && !this.isPopupItem();
+//	}, this);
 	this.isViewMimeType = ko.computed(function () {
 		return (-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView();
 	}, this);

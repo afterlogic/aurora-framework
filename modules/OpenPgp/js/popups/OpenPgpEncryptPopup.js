@@ -6,9 +6,12 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	
 	UserSettings = require('core/js/Settings.js'),
-	Screens = require('core/js/Screens.js')
+	Screens = require('core/js/Screens.js'),
+	
+	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
+	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),
+	Enums = require('modules/OpenPgp/js/Enums.js')
 ;
 
 /**
@@ -75,21 +78,6 @@ COpenPgpEncryptPopup.prototype.popupTemplate = function ()
 
 COpenPgpEncryptPopup.prototype.executeSignEncrypt = function ()
 {
-	var fPgpCallback = _.bind(function (oPgp) {
-		if (oPgp)
-		{
-			this.signEncrypt(oPgp);
-		}
-	}, this);
-	
-	App.Api.pgp(fPgpCallback, UserSettings.IdUser);
-};
-
-/**
- * @param {Object} oPgp
- */
-COpenPgpEncryptPopup.prototype.signEncrypt = function (oPgp)
-{
 	var
 		sData = this.data(),
 		sPrivateEmail = this.sign() ? this.fromEmail() : '',
@@ -112,13 +100,13 @@ COpenPgpEncryptPopup.prototype.signEncrypt = function (oPgp)
 			{
 				sPgpAction = Enums.PgpAction.EncryptSign;
 				sOkReport = TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SIGNED_ENCRYPTED_SUCCSESSFULLY');
-				oRes = oPgp.signAndEncrypt(sData, sPrivateEmail, aPrincipalsEmail, sPrivateKeyPassword);
+				oRes = OpenPgp.signAndEncrypt(sData, sPrivateEmail, aPrincipalsEmail, sPrivateKeyPassword);
 			}
 			else
 			{
 				sPgpAction = Enums.PgpAction.Encrypt;
 				sOkReport = TextUtils.i18n('OPENPGP/REPORT_MESSAGE_ENCRYPTED_SUCCSESSFULLY');
-				oRes = oPgp.encrypt(sData, aPrincipalsEmail);
+				oRes = OpenPgp.encrypt(sData, aPrincipalsEmail);
 			}
 		}
 	}
@@ -126,7 +114,7 @@ COpenPgpEncryptPopup.prototype.signEncrypt = function (oPgp)
 	{
 		sPgpAction = Enums.PgpAction.Sign;
 		sOkReport = TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SIGNED_SUCCSESSFULLY');
-		oRes = oPgp.sign(sData, sPrivateEmail, sPrivateKeyPassword);
+		oRes = OpenPgp.sign(sData, sPrivateEmail, sPrivateKeyPassword);
 	}
 	
 	if (oRes)
@@ -145,7 +133,7 @@ COpenPgpEncryptPopup.prototype.signEncrypt = function (oPgp)
 		}
 		else
 		{
-			Api.showPgpErrorByCode(oRes, sPgpAction);
+			ErrorsUtils.showPgpErrorByCode(oRes, sPgpAction);
 		}
 	}
 };

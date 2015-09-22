@@ -21,7 +21,6 @@ var
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
-//	OpenPgpEncryptPopup = req-uire('modules/Mail/js/popups/OpenPgpEncryptPopup.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ErrorUtils = require('modules/Mail/js/utils/Error.js'),
@@ -316,27 +315,12 @@ function CComposeView()
 	}, this);
 	this.backToListOnSendOrSave = ko.observable(false);
 
-	this.enableOpenPgp = Settings.enableOpenPgp;
-	this.pgpSecured = ko.observable(false);
-	this.pgpSecured.subscribe(function () {
-		this.oHtmlEditor.disabled(this.pgpSecured());
-	}, this);
-	this.pgpEncrypted = ko.observable(false);
-	this.fromDrafts = ko.observable(false);
-	this.visibleDoPgpButton = ko.computed(function () {
-		return this.enableOpenPgp() && (!this.pgpSecured() || this.pgpEncrypted() && this.fromDrafts());
-	}, this);
-	this.visibleUndoPgpButton = ko.computed(function () {
-		return this.enableOpenPgp() && this.pgpSecured() && (!this.pgpEncrypted() || !this.fromDrafts());
-	}, this);
-	this.isEnableOpenPgpCommand = ko.computed(function () {
-		return this.enableOpenPgp() && !this.pgpSecured();
-	}, this);
+	this.disableEdit = ko.observable(false);
+	this.includeOpenPgp();
 
 	this.backToListCommand = Utils.createCommand(this, this.executeBackToList);
 	this.sendCommand = Utils.createCommand(this, this.executeSend, this.isEnableSending);
 	this.saveCommand = Utils.createCommand(this, this.executeSaveCommand, this.isEnableSaving);
-	this.openPgpCommand = Utils.createCommand(this, this.confirmOpenPgp, this.isEnableOpenPgpCommand);
 
 	this.messageFields = ko.observable(null);
 	this.bottomPanel = ko.observable(null);
@@ -394,7 +378,7 @@ function CComposeView()
 
 	this.splitterDom = ko.observable();
 
-	this.fromToExpandColapssed = ko.observable(false);
+	this.headersCompressed = ko.observable(false);
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{
@@ -403,6 +387,53 @@ function CComposeView()
 }
 
 CComposeView.prototype.__name = 'CComposeView';
+
+CComposeView.prototype.includeOpenPgp = function ()
+{
+	this.oOpenPgpButtons = (ModulesManager.isModuleIncluded('OpenPgp')) ? ModulesManager.run('OpenPgp', 'getComposeButtons') : null;
+	if (this.oOpenPgpButtons)
+	{
+		var 
+			koHasAttachments = ko.computed(function () {return this.notInlineAttachments().length > 0;}, this),
+			fGetPlainText = _.bind(this.oHtmlEditor.getPlainText, this.oHtmlEditor),
+			fAfterSigning = _.bind(function (bSendAfterSigning, sSignedEncryptedText) {
+				if (!bSendAfterSigning)
+				{
+					this.stopAutosaveTimer();
+					this.executeSave(true);
+				}
+				this.plainText(true);
+				this.textBody(sSignedEncryptedText);
+				if (bSendAfterSigning)
+				{
+					this.executeSend(true);
+				}
+			}, this),
+			fSend = _.bind(this.executeSend, this, true),
+			fGetFromEmail = _.bind(function () {return Accounts.getEmail(this.senderAccountId());}, this),
+			koRecipientEmails = this.recipientEmails,
+			fAfterUndoPgp = _.bind(function (sText) {
+				if (sText !== '')
+				{
+					this.textBody(sText);
+				}
+				else
+				{
+					this.oHtmlEditor.undoAndClearRedo();
+				}
+				this.plainText(false);
+				this.headersCompressed(false);
+			}, this)
+		;
+		
+		this.oOpenPgpButtons.pgpSecured.subscribe(function (bPgpSecured) {
+			this.oHtmlEditor.disabled(bPgpSecured);
+		}, this);
+		this.disableEdit = this.oOpenPgpButtons.pgpEncrypted;
+		
+		this.oOpenPgpButtons.setData(koHasAttachments, fGetPlainText, fAfterSigning, fSend, fGetFromEmail, koRecipientEmails, fAfterUndoPgp);
+	}
+};
 
 /**
  * Determines if sending a message is allowed.
@@ -470,9 +501,9 @@ CComposeView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAdd
 /**
  * Colapse from to table.
  */
-CComposeView.prototype.fromToExpandColaps = function ()
+CComposeView.prototype.changeHeadersCompressed = function ()
 {
-	this.fromToExpandColapssed(!this.fromToExpandColapssed());
+	this.headersCompressed(!this.headersCompressed());
 };
 
 /**
@@ -578,9 +609,10 @@ CComposeView.prototype.onRoute = function (aParams)
 	;
 
 	this.plainText(false);
-	this.pgpSecured(false);
-	this.pgpEncrypted(false);
-	this.fromDrafts(false);
+	if (this.oOpenPgpButtons)
+	{
+		this.oOpenPgpButtons.reset();
+	}
 
 	this.bUploadStatus = false;
 	window.clearTimeout(this.iUploadAttachmentsTimer);
@@ -761,7 +793,7 @@ CComposeView.prototype.onHide = function ()
 		this.executeSave(true);
 	}
 
-	this.fromToExpandColapssed(false);
+	this.headersCompressed(false);
 
 	this.shown(false);
 
@@ -809,7 +841,7 @@ CComposeView.prototype.stopAutosaveTimer = function ()
  */
 CComposeView.prototype.startAutosaveTimer = function ()
 {
-	if (this.shown() && !this.pgpSecured())
+	if (this.shown() && !(this.oOpenPgpButtons && this.oOpenPgpButtons.pgpSecured()))
 	{
 		var fSave = _.bind(this.executeSave, this, true);
 		this.stopAutosaveTimer();
@@ -892,7 +924,10 @@ CComposeView.prototype.onMessageResponse = function (oMessage)
 			case 'drafts':
 				this.draftUid(oMessage.uid());
 				this.setDataFromMessage(oMessage);
-				this.fromDrafts(true);
+				if (this.oOpenPgpButtons)
+				{
+					this.oOpenPgpButtons.fromDrafts(true);
+				}
 				break;
 		}
 
@@ -922,8 +957,6 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 {
 	var
 		sTextBody = '',
-		bPgpEncrypted = false,
-		bPgpSigned = false,
 		oFetcherOrIdentity = SendingUtils.getFirstFetcherOrIdentityByRecipientsOrDefault(oMessage.oFrom.aCollection, oMessage.accountId())
 	;
 
@@ -931,18 +964,11 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 
 	if (oMessage.isPlain())
 	{
-		bPgpEncrypted = oMessage.textRaw().indexOf('-----BEGIN PGP MESSAGE-----') !== -1;
-		bPgpSigned = oMessage.textRaw().indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1;
-		if (bPgpSigned || bPgpEncrypted)
+		if (this.oOpenPgpButtons)
 		{
-			sTextBody = oMessage.textRaw();
-			this.pgpSecured(true);
-			this.pgpEncrypted(bPgpEncrypted);
+			this.oOpenPgpButtons.checkPgpSecured(oMessage.textRaw());
 		}
-		else
-		{
-			sTextBody = oMessage.textRaw();
-		}
+		sTextBody = oMessage.textRaw();
 	}
 	else
 	{
@@ -1564,15 +1590,19 @@ CComposeView.prototype.verifyDataForSending = function ()
  */
 CComposeView.prototype.executeSend = function (mParam)
 {
-	var bAlreadySigned = (mParam === true);
+	var
+		bAlreadySigned = (mParam === true),
+		bSigningStarted = false
+	;
 
 	if (this.isEnableSending() && this.verifyDataForSending())
 	{
-		if (!bAlreadySigned && this.enableOpenPgp() && Settings.AutosignOutgoingEmails && !this.pgpSecured())
+		if (!bAlreadySigned && this.oOpenPgpButtons)
 		{
-			this.openPgpPopup(true);
+			bSigningStarted = this.oOpenPgpButtons.signMessageBeforeSend();
 		}
-		else
+		
+		if (!bSigningStarted)
 		{
 			this.sending(true);
 			this.requiresPostponedSending(!this.allowStartSending());
@@ -1605,8 +1635,6 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 	}
 
 	var
-		sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_SAVE_ENCRYPTED_DRAFT'),
-		sOkButton = TextUtils.i18n('COMPOSE/TOOL_SAVE'),
 		fSave = _.bind(function (bSave) {
 			if (bSave)
 			{
@@ -1629,9 +1657,9 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 	{
 		if (!bAutosave || this.isChanged())
 		{
-			if (!bAutosave && this.pgpSecured())
+			if (!bAutosave && this.oOpenPgpButtons && this.oOpenPgpButtons.pgpSecured())
 			{
-				Popups.showPopup(ConfirmPopup, [sConfirm, fSave, '', sOkButton]);
+				this.oOpenPgpButtons.confirmAndSaveEncryptedDraft(fSave);
 			}
 			else
 			{
@@ -1838,105 +1866,6 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
 //	/*global FileStoragePopup:true */
 //	Popups.showPopup(FileStoragePopup, [fCallBack]);
 //	/*global FileStoragePopup:false */
-};
-
-CComposeView.prototype.confirmOpenPgp = function ()
-{
-//	var
-//		sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_FORMATTING'),
-//		fOpenPgpEncryptPopup = _.bind(function (bRes) {
-//			if (bRes)
-//			{
-//				this.openPgpPopup(false);
-//			}
-//		}, this)
-//	;
-//
-//	if (this.notInlineAttachments().length > 0)
-//	{
-//		sConfirm += '\r\n\r\n' + TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_ATTACHMENTS');
-//	}
-//
-//	Popups.showPopup(ConfirmPopup, [sConfirm, fOpenPgpEncryptPopup]);
-};
-
-/**
- * @param {boolean} bSignAndSend
- */
-CComposeView.prototype.openPgpPopup = function (bSignAndSend)
-{
-//	var
-//		sText = this.oHtmlEditor.getPlainText(),
-//		fOkCallback = _.bind(function (oSignedEncryptedText, bEncrypted) {
-//			if (!bSignAndSend)
-//			{
-//				this.stopAutosaveTimer();
-//				this.executeSave(true);
-//			}
-//			this.plainText(true);
-//			this.textBody(oSignedEncryptedText);
-//			this.pgpSecured(true);
-//			this.pgpEncrypted(bEncrypted);
-//			if (bSignAndSend)
-//			{
-//				this.executeSend(true);
-//			}
-//		}, this),
-//		fCancelCallback = _.bind(function () {
-//			if (bSignAndSend)
-//			{
-//				this.executeSend(true);
-//			}
-//		}, this)
-//	;
-//
-//	Popups.showPopup(OpenPgpEncryptPopup, [sText, Accounts.getEmail(this.senderAccountId()), this.recipientEmails(), bSignAndSend, fOkCallback, fCancelCallback]);
-};
-
-CComposeView.prototype.undoPgp = function ()
-{
-//	var
-//		sText = this.textBody(),
-//		aText = []
-//	;
-//
-//	if (this.pgpSecured())
-//	{
-//		this.plainText(false);
-//		if (this.fromDrafts() && !this.pgpEncrypted())
-//		{
-//			aText = sText.split('-----BEGIN PGP SIGNED MESSAGE-----');
-//			if (aText.length === 2)
-//			{
-//				sText = aText[1];
-//			}
-//
-//			aText = sText.split('-----BEGIN PGP SIGNATURE-----');
-//			if (aText.length === 2)
-//			{
-//				sText = aText[0];
-//			}
-//
-//			aText = sText.split('\r\n\r\n');
-//			if (aText.length > 0)
-//			{
-//				aText.shift();
-//				sText = aText.join('\r\n\r\n');
-//			}
-//
-//			sText = '<div>' + sText.replace(/\r\n/gi, '<br />') + '</div>';
-//
-//			this.textBody(sText);
-//		}
-//		else
-//		{
-//			this.oHtmlEditor.undoAndClearRedo();
-//		}
-//
-//		this.fromToExpandColapssed(false);
-//		this.pgpSecured(false);
-//		this.pgpEncrypted(false);
-//	}
 };
 
 CComposeView.prototype.autocompleteDeleteItem = function (oContact)

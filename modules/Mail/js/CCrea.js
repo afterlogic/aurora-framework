@@ -117,6 +117,7 @@ CCrea.prototype.start = function (bEditable)
 	});
 	this.$editableArea.on('blur', function () {
 		self.bFocused = false;
+		self.editableSave();
 	});
 
 	this.$editableArea.on('click', 'img', function (ev) {

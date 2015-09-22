@@ -10,6 +10,7 @@ $('body').ready(function () {
 			'Contacts': require('modules/Contacts/js/manager.js'),
 			'Settings': require('modules/Settings/js/manager.js'),
 			
+			'OpenPgp': require('modules/OpenPgp/js/manager.js'),
 			'SessionTimeout': require('modules/SessionTimeout/js/manager.js')
 		},
 		ModulesManager = require('core/js/ModulesManager.js'),
