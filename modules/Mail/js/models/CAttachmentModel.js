@@ -3,6 +3,7 @@
 var
 	ko = require('knockout'),
 	$ = require('jquery'),
+	_ = require('underscore'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -40,7 +41,7 @@ function CAttachmentModel()
 	}, this);
 }
 
-_.extend(CAttachmentModel.prototype, CAbstractFileModel.prototype);
+_.extendOwn(CAttachmentModel.prototype, CAbstractFileModel.prototype);
 
 CAttachmentModel.prototype.dataObjectName = 'Object/CApiMailAttachment';
 
@@ -112,19 +113,19 @@ CAttachmentModel.prototype.setMessageData = function (sFolderName, sMessageUid)
 };
 
 /**
- * @param {AjaxDefaultResponse} oData
- * @param {Object=} oParameters
+ * @param {Object} oResult
+ * @param {Object} oRequest
  */
-CAttachmentModel.prototype.onMessageGetResponse = function (oData, oParameters)
+CAttachmentModel.prototype.onMessageGetResponse = function (oResult, oRequest)
 {
 	var
-		oResult = oData.Result,
+		oResult = oResult.Result,
 		oMessage = new CMessageModel()
 	;
 	
 	if (oResult && this.oNewWindow)
 	{
-		oMessage.parse(oResult, oData.AccountID, false, true);
+		oMessage.parse(oResult, oResult.AccountID, false, true);
 		this.messagePart(oMessage);
 		this.messagePart().viewMessage(this.oNewWindow);
 		this.oNewWindow = undefined;

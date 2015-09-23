@@ -56,4 +56,4 @@ if (typeof window.Enums === 'undefined')
 	window.Enums = {};
 }
 
-_.extend(window.Enums, Enums);
+_.extendOwn(window.Enums, Enums);

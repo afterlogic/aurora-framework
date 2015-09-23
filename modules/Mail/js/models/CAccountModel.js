@@ -166,15 +166,15 @@ CAccountModel.prototype.init = function (iId, sEmail, sFriendlyName)
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResult
+ * @param {Object} oRequest
  */
-CAccountModel.prototype.onAccountGetQuotaResponse = function (oData, oParameters)
+CAccountModel.prototype.onAccountGetQuotaResponse = function (oResult, oRequest)
 {
-	if (oData && oData.Result && _.isArray(oData.Result) && 1 < oData.Result.length)
+	if (oResult && oResult.Result && _.isArray(oResult.Result) && 1 < oResult.Result.length)
 	{
-		this.quota(Utils.pInt(oData.Result[1]));
-		this.usedSpace(Utils.pInt(oData.Result[0]));
+		this.quota(Utils.pInt(oResult.Result[1]));
+		this.usedSpace(Utils.pInt(oResult.Result[0]));
 		
 		this.requireCache();
 		Cache.quotaChangeTrigger(!Cache.quotaChangeTrigger());

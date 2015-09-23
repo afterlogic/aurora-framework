@@ -45,30 +45,6 @@ function CAbstractFileModel()
 	this.tempName = ko.observable('');
 	this.displayName = ko.observable('');
 	this.extension = ko.observable('');
-	this.oembed = ko.observable('');
-//	this.linkType.subscribe(function (iLinkType) {
-//		var sOembed = '';
-//		switch (iLinkType)
-//		{
-//			case Enums.FileStorageLinkType.YouTube:
-//				sOembed = 'YouTube';
-//				break;
-//			case Enums.FileStorageLinkType.Vimeo:
-//				if (!App.browser.ie || App.browser.ie11)
-//				{
-//					sOembed = 'Vimeo';
-//				}
-//				break;
-//			case Enums.FileStorageLinkType.SoundCloud:
-//				if (!App.browser.ie || App.browser.ie10AndAbove)
-//				{
-//					sOembed = 'SoundCloud';
-//				}
-//				break;
-//		}
-//
-//		this.oembed(sOembed);
-//	}, this);
 	
 	this.fileName.subscribe(function (sFileName) {
 		this.id(sFileName);
@@ -109,9 +85,9 @@ function CAbstractFileModel()
 	this.uploadUid = ko.observable('');
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
-//	this.visibleImportLink = ko.computed(function () {
-//		return UserSettings.enableOpenPgp() && this.extension().toLowerCase() === 'asc' && this.content() !== '' && !this.isPopupItem();
-//	}, this);
+	this.visibleImportLink = ko.computed(function () {
+		return false;//UserSettings.enableOpenPgp() && this.extension().toLowerCase() === 'asc' && this.content() !== '' && !this.isPopupItem();
+	}, this);
 	this.isViewMimeType = ko.computed(function () {
 		return (-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView();
 	}, this);
@@ -119,11 +95,8 @@ function CAbstractFileModel()
 	this.visibleViewLink = ko.computed(function () {
 		return this.isVisibleViewLink() && !this.isPopupItem();
 	}, this);
-	this.visibleOpenLink = ko.computed(function () {
-		return false;//this.linkUrl() !== '';
-	}, this);
 	this.visibleDownloadLink = ko.computed(function () {
-		return !this.isPopupItem() && !this.visibleOpenLink();
+		return !this.isPopupItem();
 	}, this);
 
 	this.subFiles = ko.observableArray([]);
@@ -163,7 +136,6 @@ function CAbstractFileModel()
 	}, this);
 	
 	this.allowDrag = ko.observable(false);
-	this.allowSelect = ko.observable(false);
 	this.allowCheck = ko.observable(false);
 	this.allowDelete = ko.observable(false);
 	this.allowUpload = ko.observable(false);
@@ -174,7 +146,7 @@ function CAbstractFileModel()
 	this.downloadTitle = ko.computed(function () {
 		var sTitle = '';
 		
-		if (!this.allowSelect() && this.allowDownload())
+		if (!this.selected && this.allowDownload())
 		{
 			sTitle = TextUtils.i18n('MESSAGE/ATTACHMENT_CLICK_TO_DOWNLOAD', {
 				'FILENAME': this.fileName(),
@@ -189,8 +161,6 @@ function CAbstractFileModel()
 		
 		return sTitle;
 	}, this);
-
-//	this.oembedHtml = ko.observable('');
 }
 
 /**
@@ -347,17 +317,9 @@ CAbstractFileModel.prototype.importFile = function ()
  * @param {Object} oViewModel
  * @param {Object} oEvent
  */
-CAbstractFileModel.prototype.downloadOrViewByIconClick = function (oViewModel, oEvent)
+CAbstractFileModel.prototype.onIconClick = function (oViewModel, oEvent)
 {
-//	if (this.oembed() !== '')
-//	{
-//		this.viewFile(oViewModel, oEvent);
-//	}
-//	else 
-	if (!this.allowSelect())
-	{
-		this.downloadFile();
-	}
+	this.downloadFile();
 };
 
 /**
@@ -371,33 +333,21 @@ CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
 	this.viewCommonFile();
 };
 
-CAbstractFileModel.prototype.openLink = function ()
-{
-	WindowOpener.openTab(this.viewLink());
-};
-
 /**
  * Starts viewing attachment on click.
+ * @param {string=} sUrl
  */
-CAbstractFileModel.prototype.viewCommonFile = function ()
+CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
-	var
-		sUrl = Utils.getAppPath() + this.viewLink(),
-		oWin = null
-	;
+	var oWin = null;
+	
+	if (Utils.isUnd(sUrl))
+	{
+		sUrl = Utils.getAppPath() + this.viewLink();
+	}
 
 	if (this.visibleViewLink() && this.viewLink().length > 0 && this.viewLink() !== '#')
 	{
-//		if (this.isLink()/* && this.linkType() === Enums.FileStorageLinkType.GoogleDrive*/)
-//		{
-//			sUrl = this.linkUrl();
-//		}
-
-//		if (this.oembedHtml() !== '')
-//		{
-//			App.Api.showPlayer(this.oembedHtml());
-//		}
-//		else 
 		if (this.iframedView())
 		{
 			oWin = WindowOpener.openTab(sUrl);

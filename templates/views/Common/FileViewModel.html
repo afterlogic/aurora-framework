@@ -1,7 +1,7 @@
 <div class="item file attachment" data-bind="
 	css: {
 		'dragHandle': allowDrag(),
-		'selected': allowSelect() && selected(),
+		'selected': selected && selected(),
 		'checked': allowCheck() && checked(),
 		'deleted': allowDelete() && deleted(),
 		'incomplete': allowUpload() && !uploaded(),
@@ -31,12 +31,12 @@
 		<span class="image">
 			<!-- ko if: thumb() -->
 			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()}, event: { load: onImageLoad },
-				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { downloadOrViewByIconClick(oViewModel, oEvent); },
+				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); },
 				visible: thumbnailLoaded()" />
 			<span class="icon play" data-bind="click: viewFile, visible: thumbnailLoaded() && oembed()"></span>
 			<!-- /ko -->
 			<span class="icon download" data-bind="css: extension().toLowerCase() + (oembed() ? ' ' + oembed().toLowerCase() : ''),
-				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { downloadOrViewByIconClick(oViewModel, oEvent); },
+				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); },
 				visible: !thumbnailLoaded()"></span>
 		</span>
 
@@ -55,7 +55,7 @@
 			<!-- /ko -->
 			<!--ko if: !isIosDevice -->
 			<a class="button download" href="javascript: void(0)" data-bind="visible: visibleDownloadLink(), click: function () { downloadFile(); }, i18n: 'text'" data-i18n="MESSAGE/ATTACHMENT_DOWNLOAD"></a>
-			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink(), click: openLink, i18n: 'text'" data-i18n="MESSAGE/ATTACHMENT_LINK_OPEN"></a>
+			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink && visibleOpenLink(), click: openLink, i18n: 'text'" data-i18n="MESSAGE/ATTACHMENT_LINK_OPEN"></a>
 			<a class="button view" href="javascript: void(0)"
 			   data-bind="
 					visible: (visibleViewLink() && !visibleImportLink()), 

@@ -54,7 +54,7 @@ function CComposePopup()
 	}, this);
 }
 
-_.extend(CComposePopup.prototype, CComposeView.prototype);
+_.extendOwn(CComposePopup.prototype, CComposeView.prototype);
 
 /**
  * @return {string}

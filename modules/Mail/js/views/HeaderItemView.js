@@ -26,7 +26,7 @@ function CHeaderItemView()
 	this.accounts = Accounts.collection;
 }
 
-_.extend(CHeaderItemView.prototype, CAbstractHeaderItemView.prototype);
+_.extendOwn(CHeaderItemView.prototype, CAbstractHeaderItemView.prototype);
 
 var HeaderItemView = new CHeaderItemView();
 

@@ -6,6 +6,7 @@ var
 	
 	Routing = require('core/js/Routing.js'),
 	Popups = require('core/js/Popups.js'),
+	App = require('core/js/App.js'),
 	
 	iDefaultRatio = 0.8,
 	aOpenedWins = []
@@ -75,7 +76,7 @@ module.exports = {
 		if (oWin)
 		{
 			oWin.focus();
-			oWin.name = sWinName ? sWinName : (AppData.Accounts ? AppData.Accounts.currentId() : 0);
+			oWin.name = sWinName ? sWinName : (App.currentAccountId ? App.currentAccountId() : 0);
 			aOpenedWins.push(oWin);
 		}
 		

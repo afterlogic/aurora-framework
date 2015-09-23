@@ -176,13 +176,13 @@
 												<span class="label" data-i18n="CALENDAR/EVENT_REPEAT_WEEK" data-bind="i18n: 'text'"></span>
 											</span>
 
-                                            <label data-bind="css: {'checked': always}, visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Daily || repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
-                                                <input type="radio" name="always" value="1" data-bind="checked: always" />
-                                                <span class="label" data-i18n="CALENDAR/NO_END_DATE" data-bind="i18n: 'text'"></span>
-                                            </label>
+											<label data-bind="css: {'checked': always}, visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Daily || repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
+												<input type="radio" name="always" value="1" data-bind="checked: always" />
+												<span class="label" data-i18n="CALENDAR/NO_END_DATE" data-bind="i18n: 'text'"></span>
+											</label>
 
 											<span data-bind="visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Daily || repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
-                                                <input type="radio" name="always" value="0" data-bind="checked: always" />
+												<input type="radio" name="always" value="0" data-bind="checked: always" />
 												<span class="label" data-i18n="CALENDAR/EVENT_REPEAT_UNTIL" data-bind="i18n: 'text'"></span>
 												<input class="date input" spellcheck="false" type="text" readonly="readonly" data-bind="initDom: repeatEndDom, value: repeatEndDate" />
 											</span>

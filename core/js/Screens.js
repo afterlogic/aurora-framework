@@ -245,7 +245,7 @@ CScreens.prototype.initViewModel = function (CViewModel, sTemplateId)
 
 	if (typeof oViewModel.onApplyBindings === 'function')
 	{
-		oViewModel.onApplyBindings($viewModel);
+		oViewModel.onApplyBindings(oViewModel.$viewModel);
 	}
 	
 	return oViewModel;

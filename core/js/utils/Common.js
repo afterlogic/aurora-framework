@@ -572,4 +572,89 @@ Utils.clearAndReloadLocation = function (bOnlyReload, bClearSearch)
 	}
 };
 
+/**
+ * @param {string} sName
+ * @return {boolean}
+ */
+Utils.validateFileOrFolderName = function (sName)
+{
+	sName = $.trim(sName);
+	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);
+};
+
+/**
+ * @param {string} sFile
+ * 
+ * @return {string}
+ */
+Utils.getFileNameWithoutExtension = function (sFile)
+{
+	var 
+		sResult = sFile,
+		iIndex = sFile.lastIndexOf('.')
+	;
+	if (iIndex > -1)
+	{
+		sResult = sFile.substr(0, iIndex);	
+	}
+	return sResult;
+};
+
+/**
+ * Gets link for download by hash.
+ *
+ * @param {number} iAccountId
+ * @param {string} sHash
+ * @param {string=} sPublicHash
+ * 
+ * @return {string}
+ */
+Utils.getFilestorageDownloadLinkByHash = function (iAccountId, sHash, sPublicHash)
+{
+	var sUrl = '?/Raw/FilesDownload/' + iAccountId + '/' + sHash;
+	if (!Utils.isUnd(sPublicHash))
+	{
+		sUrl = sUrl + '/0/' + sPublicHash;
+	}
+	return sUrl;
+};
+
+/**
+ * Gets link for download by hash.
+ *
+ * @param {number} iAccountId
+ * @param {string} sHash
+ * @param {string=} sPublicHash
+ * 
+ * @return {string}
+ */
+Utils.getFilestorageViewLinkByHash = function (iAccountId, sHash, sPublicHash)
+{
+	var sUrl = '?/Raw/FilesView/' + iAccountId + '/' + sHash;
+	if (!Utils.isUnd(sPublicHash))
+	{
+		sUrl = sUrl + '/0/' + sPublicHash;
+	}
+	return sUrl;
+};
+
+/**
+ * Gets link for thumbnail by hash.
+ *
+ * @param {number} iAccountId
+ * @param {string} sHash
+ * @param {string} sPublicHash
+ *
+ * @return {string}
+ */
+Utils.getFilestorageViewThumbnailLinkByHash = function (iAccountId, sHash, sPublicHash)
+{
+	var sUrl = '?/Raw/FilesThumbnail/' + iAccountId + '/' + sHash;
+	if (!Utils.isUnd(sPublicHash))
+	{
+		sUrl = sUrl + '/0/' + sPublicHash;
+	}
+	return sUrl;
+};
+
 module.exports = Utils;

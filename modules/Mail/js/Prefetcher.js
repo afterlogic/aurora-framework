@@ -265,18 +265,18 @@ Prefetcher.startMessagesPrefetch = function ()
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResult
+ * @param {Object} oRequest
  */
-Prefetcher.onMessagesGetBodiesResponse = function (oData, oParameters)
+Prefetcher.onMessagesGetBodiesResponse = function (oResult, oRequest)
 {
 	var
-		oFolder = MailCache.getFolderByFullName(oParameters.AccountID, oParameters.Folder)
+		oFolder = MailCache.getFolderByFullName(oRequest.AccountID, oRequest.Folder)
 	;
 	
-	if (_.isArray(oData.Result))
+	if (_.isArray(oResult.Result))
 	{
-		_.each(oData.Result, function (oRawMessage) {
+		_.each(oResult.Result, function (oRawMessage) {
 			oFolder.parseAndCacheMessage(oRawMessage, false, false);
 		});
 	}

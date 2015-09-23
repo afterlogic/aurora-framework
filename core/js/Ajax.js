@@ -193,9 +193,9 @@ CAjax.prototype.sendExt = function (oParameters, fResponseHandler, oContext)
 	
 	if (oParameters && (App.isAuth() || bAllowWithoutAuth))
 	{
-		if (AppData.TenantHash)
+		if (Settings.TenantHash)
 		{
-			oParameters.TenantHash = AppData.TenantHash;
+			oParameters.TenantHash = Settings.TenantHash;
 		}
 		
 		this.doSend(oParameters, fResponseHandler, oContext, this.doneExt);

@@ -10,7 +10,7 @@ var
 
 module.exports = {
 	Modules: {
-		'Auth': {
+		Auth: {
 			AllowRegistration: false,
 			AllowPasswordReset: false,
 			LoginDescription: '',
@@ -25,10 +25,10 @@ module.exports = {
 			RegistrationQuestions: [],
 			RegistrationDomains: []
 		},
-		'OpenPgp': {
+		OpenPgp: {
 			enableOpenPgp: ko.observable(true)
 		},
-		'Mail': {
+		Mail: {
 			ShowQuotaBar: true, //todo: account level
 			useThreads: ko.observable(true),
 			MailsPerPage: 20,
@@ -54,13 +54,21 @@ module.exports = {
 			SaveRepliedToCurrFolder: false,
 			AttachmentSizeLimit: 0
 		},
-		'Contacts': {
+		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
 			ContactsPerPage: 20,
 			ImportingContactsLink: AppData && AppData['Links'] && AppData['Links']['ImportingContacts'] ? AppData['Links']['ImportingContacts'] : ''
 		},
-		'Settings': {},
-		'dsbld_SessionTimeout': {
+		Files: {
+			FileStoragePubHash: '',
+			IsCollaborationSupported: true,
+			AllowFilesSharing: true,
+			FileStoragePubParams: {Name: ''},
+			ShowQuotaBar: false,
+			FileSizeLimit: 0
+		},
+		Settings: {},
+		dsbld_SessionTimeout: {
 			'TimeoutSeconds': 20
 		}
 	},
@@ -81,5 +89,6 @@ module.exports = {
 	IsDemo: false,
 	DefaultLanguage: 'English',
 	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
-	IdleSessionTimeout: 0
+	IdleSessionTimeout: 0,
+	TenantHash: AppData.TenantHash
 };

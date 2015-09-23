@@ -41,6 +41,10 @@ CApp.prototype.init = function ()
 		this.defaultAccountId = Accounts.defaultId;
 		this.hasAccountWithId = _.bind(Accounts.hasAccountWithId, Accounts);
 		this.currentAccountId.valueHasMutated();
+		this.currentAccountEmail = ko.computed(function () {
+			var oAccount = Accounts.getAccount(this.currentAccountId());
+			return oAccount ? oAccount.email() : '';
+		}, this);
 	}
 	
 	Screens.init(this.bAuth);
