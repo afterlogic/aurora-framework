@@ -7,7 +7,8 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
-	Settings = require('core/js/Settings.js')
+	Settings = require('core/js/Settings.js'),
+	Screens = require('core/js/Screens.js')
 ;
 
 /**
@@ -446,7 +447,7 @@ CAjax.prototype.always = function (oParameters, oXhr, sType)
 
 		this.requests(_.compact(this.requests()));
 
-//		Utils.checkConnection(oParameters.Action, sType);
+		this.checkConnection(oParameters.Action, sType);
 		
 		var oPrefetcher = require('core/js/Prefetcher.js');
 		if (oPrefetcher && sType !== 'parsererror' && !this.hasOpenedRequests())
@@ -455,6 +456,51 @@ CAjax.prototype.always = function (oParameters, oXhr, sType)
 		}
 	}
 };
+
+CAjax.prototype.checkConnection = (function () {
+
+	var
+		iTimer = -1,
+		iLastWakeTime = new Date().getTime(),
+		iCurrentTime = 0,
+		bAwoke = false
+	;
+
+	setInterval(function() { //fix for sleep mode
+		iCurrentTime = new Date().getTime();
+		bAwoke = iCurrentTime > (iLastWakeTime + 5000 + 1000);
+		iLastWakeTime = iCurrentTime;
+		if (bAwoke)
+		{
+			Screens.hideError(true);
+		}
+	}, 5000);
+
+	return function (sAction, sStatus)
+	{
+		clearTimeout(iTimer);
+		if (sStatus !== 'error')
+		{
+			Ajax.InternetConnectionError = false;
+			Screens.hideError(true);
+		}
+		else
+		{
+			if (sAction === 'SystemPing')
+			{
+				Ajax.InternetConnectionError = true;
+				Screens.showError(Utils.i18n('WARNING/NO_INTERNET_CONNECTION'), false, true, true);
+				iTimer = setTimeout(function () {
+					Ajax.send({'Action': 'SystemPing'});
+				}, 60000);
+			}
+			else
+			{
+				Ajax.send({'Action': 'SystemPing'});
+			}
+		}
+	};
+}());
 
 var Ajax = new CAjax();
 

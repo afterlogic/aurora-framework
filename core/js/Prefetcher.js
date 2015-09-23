@@ -30,7 +30,7 @@ Prefetcher.start = function ()
 {
 	Prefetcher.requireAjax();
 	
-	if (App.isAuth() && !bSingleMode && /*!App.InternetConnectionError &&*/ !Ajax.hasOpenedRequests())
+	if (App.isAuth() && !bSingleMode && !Ajax.InternetConnectionError && !Ajax.hasOpenedRequests())
 	{
 		Prefetcher.prefetchAll();
 	}
