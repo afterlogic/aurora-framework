@@ -21,7 +21,8 @@ function CScreens()
 		$win.resize();
 	}, 100);
 	
-	this.oItems = {};
+	this.oConstructors = {};
+	this.oViews = {};
 
 	this.currentScreen = ko.observable('');
 	this.sDefaultScreen = '';
@@ -39,14 +40,14 @@ CScreens.prototype.init = function (bAuth)
 	
 	this.addToScreenList('', require('core/js/screenList.js'));
 	
-	if (this.oItems[Settings.EntryModule.toLowerCase()])
+	if (this.oConstructors[Settings.EntryModule.toLowerCase()])
 	{
 		this.sDefaultScreen = Settings.EntryModule.toLowerCase();
 	}
 	
 	if (!bSingleMode && bAuth)
 	{
-		this.showNormalScreen('header');
+		this.showView('header');
 	}
 	
 	this.initInformation();
@@ -54,7 +55,7 @@ CScreens.prototype.init = function (bAuth)
 
 CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 {
-	_.each(oScreenList, _.bind(function (oScreen, sKey) {
+	_.each(oScreenList, _.bind(function (CScreenView, sKey) {
 		var sNewKey = sKey.toLowerCase();
 		if (sPrefix !== '')
 		{
@@ -67,7 +68,8 @@ CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 				sNewKey = sPrefix.toLowerCase() + '-' + sKey;
 			}
 		}
-		this.oItems[sNewKey] = oScreen;
+		
+		this.oConstructors[sNewKey] = CScreenView;
 	}, this));
 };
 
@@ -75,161 +77,86 @@ CScreens.prototype.route = function (aParams)
 {
 	var
 		sCurrentScreen = this.currentScreen(),
-		oCurrentScreen = this.oItems[sCurrentScreen],
-		sScreen = aParams.shift()
+		oCurrentScreen = this.oViews[sCurrentScreen],
+		sNextScreen = aParams.shift()
 	;
 	
-	if ((sScreen === '' || !this.oItems[sScreen]) && sCurrentScreen === '')
+	if ((sNextScreen === '' || !this.oViews[sNextScreen]) && sCurrentScreen === '')
 	{
-		sScreen = this.sDefaultScreen;
+		sNextScreen = this.sDefaultScreen;
 	}
 	
-	if (this.oItems[sScreen])
+	if (this.oViews[sNextScreen] || this.oConstructors[sNextScreen])
 	{
-		if (sCurrentScreen === sScreen)
+		if (sCurrentScreen !== sNextScreen)
 		{
-			if (oCurrentScreen && oCurrentScreen.bInitialized && $.isFunction(oCurrentScreen.onRoute))
+			if (oCurrentScreen)
 			{
-				oCurrentScreen.onRoute(aParams);
+				oCurrentScreen.hideView();
 			}
+			
+			oCurrentScreen = this.showView(sNextScreen);
 		}
-		else
+		
+		if (oCurrentScreen)
 		{
-			if (oCurrentScreen && oCurrentScreen.bInitialized)
-			{
-				oCurrentScreen.hideViewModel();
-			}
-			
-			this.showNormalScreen(sScreen, aParams);
-			
-			oCurrentScreen = this.oItems[sScreen];
-			if (oCurrentScreen && oCurrentScreen.bInitialized)
-			{
-				this.currentScreen(sScreen);
-				if ($.isFunction(oCurrentScreen.onRoute))
-				{
-					oCurrentScreen.onRoute(aParams);
-				}
-			}
+			this.currentScreen(sNextScreen);
+			oCurrentScreen.onRoute(aParams);
 		}
 	}
 };
 
-//CScreens.prototype.init = function ()
-//{
-//	$('#pSevenContent').addClass('single_mode');
-//	
-//	_.defer(function () {
-//		if (!AppData.SingleMode)
-//		{
-//			$('#pSevenContent').removeClass('single_mode');
-//		}
-//	});
-//};
-
 /**
  * @param {string} sScreen
- * @param {?=} mParams
- */
-CScreens.prototype.showCurrentScreen = function (sScreen, mParams)
-{
-	var
-		oCurrentScreen = this.oItems[this.currentScreen()]
-	;
-	
-	if (this.currentScreen() !== sScreen)
-	{
-		if (oCurrentScreen && oCurrentScreen.bInitialized)
-		{
-			oCurrentScreen.hideViewModel();
-		}
-		this.currentScreen(sScreen);
-	}
-	
-	this.showNormalScreen(sScreen, mParams);
-	this.resizeAll();
-};
-
-/**
- * @param {string} sScreen
- * @param {?=} mParams
  * 
  * @return Object
  */
-CScreens.prototype.showNormalScreen = function (sScreen, mParams)
+CScreens.prototype.showView = function (sScreen)
 {
 	var
 		sScreenId = sScreen,
-		oScreen = this.oItems[sScreenId]
+		CScreenView = this.oConstructors[sScreenId],
+		oScreen = this.oViews[sScreenId]
 	;
+	
+	if (!oScreen && CScreenView)
+	{
+		oScreen = this.initView(sScreenId, CScreenView);
+	}
 	
 	if (oScreen)
 	{
-		oScreen.bInitialized = (typeof oScreen.bInitialized !== 'boolean') ? false : oScreen.bInitialized;
-		if (!oScreen.bInitialized)
-		{
-			oScreen = this.initViewModel(oScreen);
-			this.oItems[sScreenId] = oScreen;
-			oScreen.bInitialized = true;
-		}
-
-		oScreen.showViewModel(mParams);
+		oScreen.showView();
 	}
 	
-	return oScreen || null;
+	return oScreen;
 };
 
 /**
- * @param {?} CScreenView
+ * @param {string} sScreenId
+ * @param {Object} CScreenView
  * 
  * @return {Object}
  */
-CScreens.prototype.initViewModel = function (CScreenView)
+CScreens.prototype.initView = function (sScreenId, CScreenView)
 {
-	var
-		oScreen = new CScreenView(),
-		$templatePlace = $('<!-- ko template: { name: \'' + oScreen.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'))
-	;
-
-	ko.applyBindings(oScreen, $templatePlace[0]);
+	var oScreen = new CScreenView();
 	
-	oScreen.$viewModel = $templatePlace.next();
-	oScreen.bShown = false;
-	oScreen.showViewModel = function (mParams)
+	if (oScreen.ViewTemplate)
 	{
-		this.$viewModel.show();
-		if (!this.bShown)
+		var $templatePlace = $('<!-- ko template: { name: \'' + oScreen.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'));
+		if ($templatePlace.length > 0)
 		{
-			if (typeof this.onShow === 'function')
-			{
-				this.onShow(mParams);
-			}
-			
-//			if (('undefined' !== typeof AfterLogicApi) && AfterLogicApi.runPluginHook)
-//			{
-//				if (this.__name)
-//				{
-//					AfterLogicApi.runPluginHook('view-model-on-show', [this.__name, this]);
-//				}
-//			}
-			
-			this.bShown = true;
-		}
-	};
-	oScreen.hideViewModel = function ()
-	{
-		this.$viewModel.hide();
-		if (typeof this.onHide === 'function')
-		{
-			this.onHide();
-		}
-		this.bShown = false;
-	};
+			ko.applyBindings(oScreen, $templatePlace[0]);
 
-	if (typeof oScreen.onApplyBindings === 'function')
-	{
-		oScreen.onApplyBindings(oScreen.$viewModel);
+			oScreen.$viewDom = $templatePlace.next();
+
+			oScreen.onBind();
+		}
 	}
+	
+	this.oViews[sScreenId] = oScreen;
+	delete this.oConstructors[sScreenId];
 	
 	return oScreen;
 };
@@ -292,20 +219,21 @@ CScreens.prototype.hideError = function (bGray)
 
 CScreens.prototype.initInformation = function ()
 {
-	this.informationScreen(this.showNormalScreen('information'));
+	this.informationScreen(this.showView('information'));
 };
 
-CScreens.prototype.initHelpdesk = function ()
-{
-	var oScreen = this.oItems[Enums.Screens.Helpdesk];
-
-	if (AppData.User.IsHelpdeskSupported && oScreen && !oScreen.bInitialized)
-	{
-		oScreen = this.initViewModel(oScreen);
-		this.oItems[Enums.Screens.Helpdesk] = oScreen;
-		oScreen.bInitialized = true;
-	}
-};
+//CScreens.prototype.initHelpdesk = function ()
+//{
+//	var
+//		CScreenView = this.oConstructors[Enums.Screens.Helpdesk],
+//		oScreen = this.oViews[Enums.Screens.Helpdesk]
+//	;
+//
+//	if (AppData.User.IsHelpdeskSupported && !oScreen && CScreenView)
+//	{
+//		oScreen = this.initView(Enums.Screens.Helpdesk, CScreenView);
+//	}
+//};
 
 var Screens = new CScreens();
 

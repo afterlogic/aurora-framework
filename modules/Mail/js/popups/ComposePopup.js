@@ -142,14 +142,14 @@ CComposePopup.prototype.onShow = function (aParams)
 CComposePopup.prototype.minimize = function ()
 {
 	this.minimized(true);
-	this.$viewModel.addClass('minimized');
+	this.$popupDom.addClass('minimized');
 	this.minHeightRemoveTrigger(true);
 };
 
 CComposePopup.prototype.maximize = function ()
 {
 	this.minimized(false);
-	this.$viewModel.removeClass('minimized');
+	this.$popupDom.removeClass('minimized');
 	this.minHeightAdjustTrigger(true);
 };
 

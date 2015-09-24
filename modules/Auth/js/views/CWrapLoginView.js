@@ -2,6 +2,7 @@
 
 var
 	ko = require('knockout'),
+	_ = require('underscore'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -11,7 +12,8 @@ var
 	Settings = require('modules/Auth/js/Settings.js'),
 	CLoginView = require('modules/Auth/js/views/CLoginView.js'),
 	CRegisterView = require('modules/Auth/js/views/CRegisterView.js'),
-	CForgotView = require('modules/Auth/js/views/CForgotView.js')
+	CForgotView = require('modules/Auth/js/views/CForgotView.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js')
 ;
 
 /**
@@ -19,6 +21,8 @@ var
  */
 function CWrapLoginView()
 {
+	CAbstractView.call(this);
+	
 	this.bSocialInviteMode = typeof Utils.getRequestParam('invite-auth') === 'string';
 	this.socialInviteTitle = TextUtils.i18n('LOGIN/SOCIAL_INVITE_TITLE', {'SITENAME': UserSettings.SiteName});
 	this.socialInviteText = TextUtils.i18n('LOGIN/SOCIAL_INVITE_TEXT');
@@ -58,23 +62,19 @@ function CWrapLoginView()
 //	}
 }
 
+_.extendOwn(CWrapLoginView.prototype, CAbstractView.prototype);
+
 CWrapLoginView.prototype.ViewTemplate = 'Auth_WrapLoginView';
 CWrapLoginView.prototype.__name = 'CWrapLoginView';
 
 CWrapLoginView.prototype.onShow = function ()
 {
-	if (this.oLoginView.onShow)
-	{
-		this.oLoginView.onShow();
-	}
+	this.oLoginView.onShow();
 };
 
-CWrapLoginView.prototype.onApplyBindings = function ()
+CWrapLoginView.prototype.onBind = function ()
 {
-	if (this.oLoginView.onApplyBindings)
-	{
-		this.oLoginView.onApplyBindings();
-	}
+	this.oLoginView.onBind();
 };
 
 /**

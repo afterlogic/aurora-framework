@@ -70,7 +70,7 @@ CPopups.prototype.showPopup = function (oPopupViewModel, aParameters)
 
 				ko.applyBindings(oPopupViewModel, oViewModelDom[0]);
 				
-				oPopupViewModel.$viewModel = oViewModelDom.next();
+				oPopupViewModel.$popupDom = oViewModelDom.next();
 				
 				oPopupViewModel.visibility = ko.observable(false);
 
@@ -82,22 +82,22 @@ CPopups.prototype.showPopup = function (oPopupViewModel, aParameters)
 					this.hidePopup(oPopupViewModel);
 				}, this));
 
-				if ($.isFunction(oPopupViewModel.onApplyBindings))
+				if ($.isFunction(oPopupViewModel.onBind))
 				{
-					oPopupViewModel.onApplyBindings();
+					oPopupViewModel.onBind();
 				}
 				
 				oPopupViewModel.__builded = true;
 			}
 		}
 
-		if (oPopupViewModel && oPopupViewModel.$viewModel)
+		if (oPopupViewModel && oPopupViewModel.$popupDom)
 		{
 			if (!oPopupViewModel.visibility())
 			{
-				oPopupViewModel.$viewModel.show();
+				oPopupViewModel.$popupDom.show();
 				_.delay(function() {
-					oPopupViewModel.$viewModel.addClass('visible');
+					oPopupViewModel.$popupDom.addClass('visible');
 				}, 50);
 				oPopupViewModel.visibility(true);
 
@@ -152,7 +152,7 @@ CPopups.prototype.keyupPopup = function (oEvent)
  */
 CPopups.prototype.hidePopup = function (oPopupViewModel)
 {
-	if (oPopupViewModel && oPopupViewModel.$viewModel)
+	if (oPopupViewModel && oPopupViewModel.$popupDom)
 	{
 		if (this.keyupPopupBinded && this.popups.length === 1)
 		{
@@ -160,7 +160,7 @@ CPopups.prototype.hidePopup = function (oPopupViewModel)
 			this.keyupPopupBinded = undefined;
 		}
 		
-		oPopupViewModel.$viewModel.removeClass('visible').hide();
+		oPopupViewModel.$popupDom.removeClass('visible').hide();
 
 		oPopupViewModel.visibility(false);
 		

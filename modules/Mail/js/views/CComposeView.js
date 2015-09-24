@@ -510,7 +510,7 @@ CComposeView.prototype.changeHeadersCompressed = function ()
 /**
  * Executes after applying bindings.
  */
-CComposeView.prototype.onApplyBindings = function ()
+CComposeView.prototype.onBind = function ()
 {
 	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(this.executeSave, this, false)]);
 

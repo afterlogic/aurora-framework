@@ -1150,7 +1150,7 @@ CMessagePaneView.prototype.onHide = function ()
 	this.bShown = false;
 };
 
-CMessagePaneView.prototype.onApplyBindings = function ($MailViewModel)
+CMessagePaneView.prototype.onBind = function ($MailViewModel)
 {
 	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(function () {
 		if (this.replyText() !== '')

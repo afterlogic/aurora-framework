@@ -9,6 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
@@ -27,6 +28,8 @@ var
  */
 function CMailView()
 {
+	CAbstractView.call(this);
+	
 	this.folderList = MailCache.folderList;
 	this.domFolderList = ko.observable(null);
 	
@@ -101,6 +104,8 @@ function CMailView()
 		this.gotoMessagePane();
 	}, this);
 }
+
+_.extendOwn(CMailView.prototype, CAbstractView.prototype);
 
 CMailView.prototype.ViewTemplate = 'Mail_MailView';
 
@@ -218,12 +223,12 @@ CMailView.prototype.onHide = function ()
 	this.oMessagePane.onHide();
 };
 
-CMailView.prototype.onApplyBindings = function ()
+CMailView.prototype.onBind = function ()
 {
 	var self = this;
 
-	this.oMessageList.onApplyBindings(this.$viewModel);
-	this.oMessagePane.onApplyBindings(this.$viewModel);
+	this.oMessageList.onBind(this.$viewDom);
+	this.oMessagePane.onBind(this.$viewDom);
 
 	$(this.domFolderList()).on('click', 'span.folder', function (oEvent) {
 		if (self.folderList().currentFolderFullName() !== $(this).data('folder')) {

@@ -669,9 +669,9 @@ CMessageListView.prototype.routeForMessage = function (oMessage)
 };
 
 /**
- * @param {Object} $viewModel
+ * @param {Object} $viewDom
  */
-CMessageListView.prototype.onApplyBindings = function ($viewModel)
+CMessageListView.prototype.onBind = function ($viewDom)
 {
 	var
 		self = this,
@@ -683,7 +683,7 @@ CMessageListView.prototype.onApplyBindings = function ($viewModel)
 		}, this)
 	;
 
-	$('.message_list', $viewModel)
+	$('.message_list', $viewDom)
 		.on('click', function ()
 		{
 			self.isFocused(false);
@@ -705,8 +705,8 @@ CMessageListView.prototype.onApplyBindings = function ($viewModel)
 		'.message_sub_list .item',
 		'.message_sub_list .item.selected',
 		'.message_sub_list .item .custom_checkbox',
-		$('.message_list', $viewModel),
-		$('.message_list_scroll.scroll-inner', $viewModel)
+		$('.message_list', $viewDom),
+		$('.message_list_scroll.scroll-inner', $viewDom)
 	);
 
 	this.initUploader();

@@ -94,7 +94,7 @@ function CLoginView()
 CLoginView.prototype.ViewTemplate = 'Auth_LoginView';
 CLoginView.prototype.__name = 'CLoginView';
 
-CLoginView.prototype.onApplyBindings = function ()
+CLoginView.prototype.onBind = function ()
 {
 	$html.addClass('non-adjustable-valign');
 };

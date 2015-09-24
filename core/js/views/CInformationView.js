@@ -5,7 +5,8 @@ var
 	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js')
 ;
 
 /**
@@ -13,6 +14,8 @@ var
  */
 function CInformationView()
 {
+	CAbstractView.call(this);
+	
 	this.iAnimationDuration = 500;
 	this.iReportDuration = 5000;
 	this.iErrorDuration = 10000;
@@ -32,6 +35,8 @@ function CInformationView()
 	this.isHtmlError = ko.observable(false);
 	this.gray = ko.observable(false);
 }
+
+_.extendOwn(CInformationView.prototype, CAbstractView.prototype);
 
 CInformationView.prototype.ViewTemplate = 'Core_InformationView';
 

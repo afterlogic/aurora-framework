@@ -13,6 +13,7 @@ var
 	UserSettings = require('core/js/Settings.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
@@ -34,6 +35,8 @@ var
 */
 function CFilesView(bPopup)
 {
+	CAbstractView.call(this);
+	
 	this.allowSendEmails = ko.computed(function () {
 		return false;//!!(AppData.App && AppData.App.AllowWebMail && AppData.Accounts && AppData.Accounts.isCurrentAllowsMail());
 	}, this);
@@ -236,20 +239,19 @@ function CFilesView(bPopup)
 	this.timerId = null;
 }
 
+_.extendOwn(CFilesView.prototype, CAbstractView.prototype);
+
 CFilesView.prototype.ViewTemplate = 'Files_FilesView';
 CFilesView.prototype.__name = 'CFilesView';
 
-/**
- * @param {Object} $viewModel
- */
-CFilesView.prototype.onApplyBindings = function ($viewModel)
+CFilesView.prototype.onBind = function ()
 {
 	this.selector.initOnApplyBindings(
 		'.items_sub_list .item',
 		'.items_sub_list .selected.item',
 		'.items_sub_list .item .custom_checkbox',
-		$('.panel.files .items_list', $viewModel),
-		$('.panel.files .items_list .files_scroll.scroll-inner', $viewModel)
+		$('.panel.files .items_list', this.$viewDom),
+		$('.panel.files .items_list .files_scroll.scroll-inner', this.$viewDom)
 	);
 	
 	this.initUploader();

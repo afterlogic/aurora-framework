@@ -29,7 +29,7 @@ CImportView.prototype.ViewTemplate = 'Contacts_ImportView';
 /**
  * @param {Object} $oViewModel
  */
-CImportView.prototype.onApplyBindings = function ($oViewModel)
+CImportView.prototype.onBind = function ($oViewModel)
 {
 	this.oJua = new CJua({
 		'action': '?/Upload/Contacts/',

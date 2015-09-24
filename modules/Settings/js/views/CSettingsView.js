@@ -99,12 +99,12 @@ CSettingsView.prototype.onHide = function (aParams)
 	$html.removeClass('non-adjustable');
 };
 
-CSettingsView.prototype.onApplyBindings = function ()
+CSettingsView.prototype.onBind = function ()
 {
 	_.each(this.aTabs(), function(oViewModel){ 
-		if (oViewModel && Utils.isFunc(oViewModel.onApplyBindings))
+		if (oViewModel && Utils.isFunc(oViewModel.onBind))
 		{
-			oViewModel.onApplyBindings();
+			oViewModel.onBind();
 		}
 	});
 };

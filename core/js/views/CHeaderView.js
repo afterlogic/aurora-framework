@@ -10,7 +10,8 @@ var
 	Ajax = require('core/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
-	Settings = require('core/js/Settings.js')
+	Settings = require('core/js/Settings.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js')
 ;
 
 /**
@@ -18,6 +19,8 @@ var
  */
 function CHeaderView()
 {
+	CAbstractView.call(this);
+	
 //	var self = this;
 //	this.mobileApp = bMobileApp;
 //	this.mobileDevice = AppData.AllowMobile && bMobileDevice;
@@ -71,6 +74,8 @@ function CHeaderView()
 //		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
 //	}
 }
+
+_.extendOwn(CHeaderView.prototype, CAbstractView.prototype);
 
 CHeaderView.prototype.ViewTemplate = 'Core_HeaderView';
 CHeaderView.prototype.__name = 'CHeaderView';

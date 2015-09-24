@@ -15,6 +15,7 @@ var
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -36,6 +37,8 @@ var
  */
 function CContactsView()
 {
+	CAbstractView.call(this);
+	
 	this.isPublic = bExtApp;
 
 	this.contactCount = ko.observable(0);
@@ -337,6 +340,8 @@ function CContactsView()
 		}
 	}, this);
 }
+
+_.extendOwn(CContactsView.prototype, CAbstractView.prototype);
 
 CContactsView.prototype.ViewTemplate = 'Contacts_ContactsView';
 
@@ -761,19 +766,19 @@ CContactsView.prototype.onHide = function ()
 //	}
 };
 
-CContactsView.prototype.onApplyBindings = function ()
+CContactsView.prototype.onBind = function ()
 {
 	this.selector.initOnApplyBindings(
 		'.contact_sub_list .item',
 		'.contact_sub_list .selected.item',
 		'.contact_sub_list .item .custom_checkbox',
-		$('.contact_list', this.$viewModel),
-		$('.contact_list_scroll.scroll-inner', this.$viewModel)
+		$('.contact_list', this.$viewDom),
+		$('.contact_list_scroll.scroll-inner', this.$viewDom)
 	);
 
 	var self = this;
 
-	this.$viewModel.on('click', '.content .item.add_to .dropdown_helper .item', function () {
+	this.$viewDom.on('click', '.content .item.add_to .dropdown_helper .item', function () {
 
 		if ($(this).hasClass('new-group'))
 		{
@@ -791,7 +796,7 @@ CContactsView.prototype.onApplyBindings = function ()
 	
 	this.selectedGroupType.valueHasMutated();
 	
-	this.oImportView.onApplyBindings(this.$viewModel);
+	this.oImportView.onBind(this.$viewDom);
 	this.requestGroupFullList();
 
 	this.hotKeysBind();
