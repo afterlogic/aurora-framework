@@ -142,6 +142,11 @@ CAppTab.prototype.getInactiveTitle = function ()
 		sTitle = iCount + ' new';
 	}
 	
+	if (sTitle === '')
+	{
+		sTitle = this.getActiveTitle();
+	}
+	
 	return sTitle;
 };
 

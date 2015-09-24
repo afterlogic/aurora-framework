@@ -24,7 +24,7 @@ function CHeaderItemView(sLinkText, sActiveTitle)
 
 CHeaderItemView.prototype.setName = function (sName)
 {
-	this.sName = sName;
+	this.sName = sName.toLowerCase();
 	this.hash(Routing.buildHashFromArray([sName.toLowerCase()]));
 };
 
