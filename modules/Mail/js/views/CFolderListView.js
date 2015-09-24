@@ -63,4 +63,6 @@ function CFolderListView()
 	this.isCurrentAllowsMail = Accounts.isCurrentAllowsMail; // todo: manage folders
 }
 
+CFolderListView.prototype.ViewTemplate = 'Mail_FolderListView';
+
 module.exports = CFolderListView;

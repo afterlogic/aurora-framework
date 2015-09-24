@@ -91,6 +91,7 @@ function CLoginView()
 	this.shake = ko.observable(false).extend({'autoResetToFalse': 800});
 }
 
+CLoginView.prototype.ViewTemplate = 'Auth_LoginView';
 CLoginView.prototype.__name = 'CLoginView';
 
 CLoginView.prototype.onApplyBindings = function ()

@@ -15,10 +15,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': {
-				'Model': require('modules/Mail/js/views/CMailView.js'),
-				'TemplateName': 'Mail_LayoutSidePane_MailViewModel'
-			}
+			'main': require('modules/Mail/js/views/CMailView.js')
 		},
 		headerItem: HeaderItemView,
 		prefetcher: require('modules/Mail/js/Prefetcher.js'),

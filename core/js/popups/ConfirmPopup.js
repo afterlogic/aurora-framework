@@ -20,6 +20,8 @@ function CConfirmPopup()
 	this.shown = false;
 }
 
+CConfirmPopup.prototype.PopupTemplate = 'Core_ConfirmPopup';
+
 /**
  * @param {string} sDesc
  * @param {Function} fConfirmCallback
@@ -43,14 +45,6 @@ CConfirmPopup.prototype.onShow = function (sDesc, fConfirmCallback, sTitle, sOkB
 CConfirmPopup.prototype.onHide = function ()
 {
 	this.shown = false;
-};
-
-/**
- * @return {string}
- */
-CConfirmPopup.prototype.popupTemplate = function ()
-{
-	return 'Popups_ConfirmPopupView';
 };
 
 CConfirmPopup.prototype.onEnterHandler = function ()

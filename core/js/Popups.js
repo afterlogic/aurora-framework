@@ -61,7 +61,7 @@ CPopups.prototype.showPopup = function (oPopupViewModel, aParameters)
 		{
 			var
 				oViewModelDom = null,
-				sTemplate = oPopupViewModel.popupTemplate ? oPopupViewModel.popupTemplate() : ''
+				sTemplate = oPopupViewModel.PopupTemplate || ''
 			;
 
 			if ('' !== sTemplate)

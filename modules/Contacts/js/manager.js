@@ -14,10 +14,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': {
-				'Model': require('modules/Contacts/js/views/CContactsView.js'),
-				'TemplateName': 'Contacts_ContactsView'
-			}
+			'main': require('modules/Contacts/js/views/CContactsView.js')
 		},
 		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS')),
 		getBrowserTitle: function () {

@@ -54,7 +54,7 @@
 	</div>
 </div>
 <div class="panel_bottom unselectable">
-	<!-- ko template: {name: 'Common_PageSwitcherViewModel', data: oPageSwitcher} --><!-- /ko -->
+	<!-- ko template: {name: oPageSwitcher.ViewTemplate, data: oPageSwitcher} --><!-- /ko -->
 	<a href="javascript: void(0);" data-bind="css: {'selected': listFilter() === Enums.HelpdeskFilters.All}, click: function () { listFilter(Enums.HelpdeskFilters.All); }, i18n: 'text'" data-i18n="HELPDESK/THREADS_LIST_FILTER_ALL"></a>
 	<a href="javascript: void(0);" data-bind="css: {'selected': listFilter() === Enums.HelpdeskFilters.Open}, click: function () { listFilter(Enums.HelpdeskFilters.Open); }, i18n: 'text'" data-i18n="HELPDESK/THREADS_LIST_FILTER_OPEN"></a>
 </div>

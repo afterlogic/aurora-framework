@@ -124,6 +124,8 @@ function CPageSwitcherView(iCount, iPerPage)
 	this.hotKeysBind();
 }
 
+CPageSwitcherView.prototype.ViewTemplate = 'Core_PageSwitcherView';
+
 CPageSwitcherView.prototype.hotKeysBind = function ()
 {
 	$(document).on('keydown', $.proxy(function(ev) {

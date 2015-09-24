@@ -108,8 +108,8 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 	this.imagePathFromWeb = ko.observable('');
 
 	this.visibleFontColorPopup = ko.observable(false);
-	this.oFontColorPicker = new CColorPickerView(TextUtils.i18n('HTMLEDITOR/TEXT_COLOR_CAPTION'), this.setTextColorFromPopup, this);
-	this.oBackColorPicker = new CColorPickerView(TextUtils.i18n('HTMLEDITOR/BACKGROUND_COLOR_CAPTION'), this.setBackColorFromPopup, this);
+	this.oFontColorPickerView = new CColorPickerView(TextUtils.i18n('HTMLEDITOR/TEXT_COLOR_CAPTION'), this.setTextColorFromPopup, this);
+	this.oBackColorPickerView = new CColorPickerView(TextUtils.i18n('HTMLEDITOR/BACKGROUND_COLOR_CAPTION'), this.setBackColorFromPopup, this);
 
 	this.activitySource = ko.observable(1);
 	this.activitySourceSubscription = null;
@@ -142,6 +142,8 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 	
 	this.textChanged = ko.observable(false);
 }
+
+CHtmlEditorView.prototype.ViewTemplate = 'Mail_HtmlEditorView';
 
 CHtmlEditorView.prototype.hasOpenedPopup = function ()
 {
@@ -636,8 +638,8 @@ CHtmlEditorView.prototype.textColor = function (oViewModel, oEvent)
 	{
 		this.closeAllPopups();
 		this.visibleFontColorPopup(true);
-		this.oFontColorPicker.onShow();
-		this.oBackColorPicker.onShow();
+		this.oFontColorPickerView.onShow();
+		this.oBackColorPickerView.onShow();
 	}
 };
 

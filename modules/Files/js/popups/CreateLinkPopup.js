@@ -27,6 +27,8 @@ function CCreateLinkPopup()
 	this.fileItem = ko.observable(null);
 }
 
+CCreateLinkPopup.prototype.PopupTemplate = 'Files_CreateLinkPopup';
+
 /**
  * @param {Function} fCallback
  */
@@ -40,14 +42,6 @@ CCreateLinkPopup.prototype.onShow = function (fCallback)
 		this.fCallback = fCallback;
 	}
 	this.checkTimer = setTimeout(_.bind(this.checkUrl, this), 2000);
-};
-
-/**
- * @return {string}
- */
-CCreateLinkPopup.prototype.popupTemplate = function ()
-{
-	return 'Files_CreateLinkPopup';
 };
 
 CCreateLinkPopup.prototype.checkUrl = function ()

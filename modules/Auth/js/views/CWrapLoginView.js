@@ -28,20 +28,20 @@ function CWrapLoginView()
 	this.allowRegistration = Settings.AllowRegistration;
 	this.allowPasswordReset = Settings.AllowPasswordReset;
 	
-	this.oLoginViewModel = new CLoginView();
+	this.oLoginView = new CLoginView();
 	if (this.allowRegistration)
 	{
-		this.oRegisterViewModel = new CRegisterView();
+		this.oRegisterView = new CRegisterView();
 	}
 	if (this.allowPasswordReset)
 	{
-		this.oForgotViewModel = new CForgotView();
+		this.oForgotView = new CForgotView();
 	}
-	this.gotoForgot = this.allowPasswordReset ? this.oForgotViewModel.gotoForgot : ko.observable(false);
+	this.gotoForgot = this.allowPasswordReset ? this.oForgotView.gotoForgot : ko.observable(false);
 	this.gotoRegister = ko.observable(false);
 
-	this.emailVisible = this.oLoginViewModel.emailVisible;
-	this.loginVisible = this.oLoginViewModel.loginVisible;
+	this.emailVisible = this.oLoginView.emailVisible;
+	this.loginVisible = this.oLoginView.loginVisible;
 	this.loginDescription = ko.observable(Settings.LoginDescription);
 
 	this.aLanguages = UserSettings.Languages;
@@ -58,21 +58,22 @@ function CWrapLoginView()
 //	}
 }
 
+CWrapLoginView.prototype.ViewTemplate = 'Auth_WrapLoginView';
 CWrapLoginView.prototype.__name = 'CWrapLoginView';
 
 CWrapLoginView.prototype.onShow = function ()
 {
-	if (this.oLoginViewModel.onShow)
+	if (this.oLoginView.onShow)
 	{
-		this.oLoginViewModel.onShow();
+		this.oLoginView.onShow();
 	}
 };
 
 CWrapLoginView.prototype.onApplyBindings = function ()
 {
-	if (this.oLoginViewModel.onApplyBindings)
+	if (this.oLoginView.onApplyBindings)
 	{
-		this.oLoginViewModel.onApplyBindings();
+		this.oLoginView.onApplyBindings();
 	}
 };
 
@@ -84,7 +85,7 @@ CWrapLoginView.prototype.changeLanguage = function (sLanguage)
 	if (sLanguage && this.allowLanguages())
 	{
 		this.currentLanguage(sLanguage);
-		this.oLoginViewModel.changingLanguage(true);
+		this.oLoginView.changingLanguage(true);
 
 		Ajax.send({
 			'Action': 'SystemUpdateLanguageOnLogin',

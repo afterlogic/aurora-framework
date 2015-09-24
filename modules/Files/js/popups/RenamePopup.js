@@ -21,6 +21,8 @@ function CRenamePopup()
 	}, this);
 }
 
+CRenamePopup.prototype.PopupTemplate = 'Files_RenamePopup';
+
 /**
  * @param {Object} oItem
  * @param {Function} fCallback
@@ -39,14 +41,6 @@ CRenamePopup.prototype.onShow = function (oItem, fCallback)
 	{
 		this.fCallback = fCallback;
 	}
-};
-
-/**
- * @return {string}
- */
-CRenamePopup.prototype.popupTemplate = function ()
-{
-	return 'Files_RenamePopup';
 };
 
 CRenamePopup.prototype.onOKClick = function ()

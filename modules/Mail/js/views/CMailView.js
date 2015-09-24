@@ -102,6 +102,8 @@ function CMailView()
 	}, this);
 }
 
+CMailView.prototype.ViewTemplate = 'Mail_MailView';
+
 CMailView.prototype.executeCompose = function ()
 {
 	ComposeUtils.composeMessage();

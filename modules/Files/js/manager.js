@@ -1,6 +1,6 @@
 'use strict';
 
-require('modules/Files/js/enums.js')
+require('modules/Files/js/enums.js');
 
 var
 	TextUtils = require('core/js/utils/Text.js'),
@@ -14,10 +14,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': {
-				'Model': require('modules/Files/js/views/CFilesView.js'),
-				'TemplateName': 'Files_FilesView'
-			}
+			'main': require('modules/Files/js/views/CFilesView.js')
 		},
 		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'), TextUtils.i18n('TITLE/FILESTORAGE')),
 		getBrowserTitle: function () {

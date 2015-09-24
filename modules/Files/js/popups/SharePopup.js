@@ -5,6 +5,7 @@ var
 	
 	App = require('core/js/App.js'),
 	Ajax = require('core/js/Ajax.js')
+;
 
 /**
  * @constructor
@@ -15,6 +16,8 @@ function CSharePopup()
 	this.pub = ko.observable('');
 	this.pubFocus = ko.observable(false);
 }
+
+CSharePopup.prototype.PopupTemplate = 'Files_SharePopup';
 
 /**
  * @param {Object} oItem
@@ -49,14 +52,6 @@ CSharePopup.prototype.onFilesCreatePublicLinkResponse = function (oResult, oRequ
 		this.pubFocus(true);
 		this.item.shared(true);
 	}
-};
-
-/**
- * @return {string}
- */
-CSharePopup.prototype.popupTemplate = function ()
-{
-	return 'Files_SharePopup';
 };
 
 CSharePopup.prototype.onOKClick = function ()

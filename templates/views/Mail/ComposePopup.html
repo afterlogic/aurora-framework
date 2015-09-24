@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: minimize, visible: !minimized()"></div>
 	<div class="popup_panel" data-bind="visible: !minimized()">
 		<span class="close" data-bind="click: onCancelClick"></span>
-		<!-- ko template: {name: 'Mail_ComposeViewModel'} --><!-- /ko -->
+		<!-- ko template: {name: $data.ViewTemplate} --><!-- /ko -->
 	</div>
 	<span class="helper" data-bind="visible: !minimized()"></span>
 

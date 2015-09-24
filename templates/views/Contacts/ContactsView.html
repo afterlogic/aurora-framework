@@ -18,7 +18,7 @@
 					</span>
 				</div>
 				<div class="middle_bar">
-					<!-- ko template: { name: 'Contacts_GroupList', data: $data} --><!-- /ko -->
+					<!-- ko template: { name: 'Contacts_GroupsPart', data: $data} --><!-- /ko -->
 				</div>
 			</div>
 		</div>
@@ -26,30 +26,30 @@
 			<div class="panel contacts">
 				<div class="resize_handler"></div>
 				<div class="panel_content">
-					<div class="toolbar" data-bind="template: { name: 'Contacts_Toolbar'}"></div>
-					<div class="middle_bar" data-bind="template: {name: 'Contacts_ContactList'}"></div>
+					<div class="toolbar" data-bind="template: { name: 'Contacts_ToolbarPart'}"></div>
+					<div class="middle_bar" data-bind="template: {name: 'Contacts_ContactsPart'}"></div>
 				</div>
 			</div>
 			<div class="panel item_viewer contact_viewer">
 				<div class="panel_content">
 					<div class="middle_bar contact" data-bind="visible: selectedContact() && !selectedContact().edited(), with: selectedContact">
-						<!-- ko template: { name: 'Contacts_ViewContactViewModel', data: $data} --><!-- /ko -->
+						<!-- ko template: { name: 'Contacts_ViewContactPart', data: $data} --><!-- /ko -->
 					</div>
 
 					<div class="middle_bar edit_contact" data-bind="visible: selectedContact() && selectedContact().edited(), with: selectedContact" id="selenium_contacts_edit_form">
-						<!-- ko template: { name: 'Contacts_EditContactViewModel', data: $data } --><!-- /ko -->
+						<!-- ko template: { name: 'Contacts_EditContactPart', data: $data } --><!-- /ko -->
 					</div>
 
 					<div class="middle_bar group" data-bind="visible: selectedGroup() && !selectedGroup().edited(), with: selectedGroup">
-						<!-- ko template: { name: 'Contacts_ViewGroupViewModel', data: $data } --><!-- /ko -->
+						<!-- ko template: { name: 'Contacts_ViewGroupPart', data: $data } --><!-- /ko -->
 					</div>
 
 					<div class="middle_bar edit_group" data-bind="visible: selectedGroup() && selectedGroup().edited(), with: selectedGroup" id="selenium_contacts_edit_group_form">
-						<!-- ko template: { name: 'Contacts_EditGroupViewModel', data: $data } --><!-- /ko -->
+						<!-- ko template: { name: 'Contacts_EditGroupPart', data: $data } --><!-- /ko -->
 					</div>
 
-					<div class="middle_bar import" data-bind="visible: oContactImportViewModel.visibility()">
-						<!-- ko template: { name: 'Contacts_ContactsImportViewModel', data: oContactImportViewModel } --><!-- /ko -->
+					<div class="middle_bar import" data-bind="visible: oImportView.visibility()">
+						<!-- ko template: { name: oImportView.ViewTemplate, data: oImportView } --><!-- /ko -->
 					</div>
 				</div>
 			</div>

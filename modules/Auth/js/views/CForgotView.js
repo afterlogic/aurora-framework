@@ -74,6 +74,7 @@ function CForgotView()
 //	}
 }
 
+CForgotView.prototype.ViewTemplate = 'Auth_ForgotView';
 CForgotView.prototype.__name = 'CForgotView';
 
 CForgotView.prototype.executeGetQuestion = function ()

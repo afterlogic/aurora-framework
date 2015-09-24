@@ -367,6 +367,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 //	}
 }
 
+CMessagePaneView.prototype.ViewTemplate = 'Mail_MessagePaneView';
 CMessagePaneView.prototype.__name = 'CMessagePaneView';
 
 CMessagePaneView.prototype.resizeDblClick = function (oData, oEvent)

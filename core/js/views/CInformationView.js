@@ -33,6 +33,8 @@ function CInformationView()
 	this.gray = ko.observable(false);
 }
 
+CInformationView.prototype.ViewTemplate = 'Core_InformationView';
+
 /**
  * @param {string} sMessage
  */

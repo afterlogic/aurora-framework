@@ -46,7 +46,7 @@
 		</div>
 
 		<!-- ko if: oOpenPgpControls -->
-			<!-- ko template: { name: oOpenPgpControls.TemplateName, data: oOpenPgpControls} --><!-- /ko -->
+			<!-- ko template: { name: oOpenPgpControls.ViewTemplate, data: oOpenPgpControls} --><!-- /ko -->
 		<!-- /ko -->
 		
 		<div class="notice" data-bind="visible: sensitivityText() !== ''">
@@ -330,4 +330,4 @@
 	</div>
 <!-- /ko -->
 
-<!-- ko template: {name: 'Mail_PrintMessageViewModel'} --><!-- /ko -->
+<!-- ko template: {name: 'Mail_PrintMessagePart'} --><!-- /ko -->

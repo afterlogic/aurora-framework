@@ -1,8 +1,6 @@
 'use strict';
 
-var
-	$ = require('jquery')
-;
+var $ = require('jquery');
 
 /**
  * @constructor
@@ -12,6 +10,8 @@ function CConfirmAnotherMessageComposedPopup()
 	this.fConfirmCallback = null;
 	this.shown = false;
 }
+
+CConfirmAnotherMessageComposedPopup.prototype.PopupTemplate = 'Mail_ConfirmAnotherMessageComposedPopup';
 
 /**
  * @param {Function} fConfirmCallback
@@ -25,14 +25,6 @@ CConfirmAnotherMessageComposedPopup.prototype.onShow = function (fConfirmCallbac
 CConfirmAnotherMessageComposedPopup.prototype.onHide = function ()
 {
 	this.shown = false;
-};
-
-/**
- * @return {string}
- */
-CConfirmAnotherMessageComposedPopup.prototype.popupTemplate = function ()
-{
-	return 'Popups_ConfirmAnotherMessageComposedPopupViewModel';
 };
 
 CConfirmAnotherMessageComposedPopup.prototype.onDiscardClick = function ()

@@ -8,7 +8,7 @@ var
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
-	OpenPgpEncryptPopup = require('modules/OpenPgp/js/popups/OpenPgpEncryptPopup.js'),
+	EncryptPopup = require('modules/OpenPgp/js/popups/EncryptPopup.js'),
 	
 	Settings = require('modules/OpenPgp/js/Settings.js')
 ;
@@ -34,7 +34,7 @@ function CComposeButtonsView()
 	this.openPgpCommand = Utils.createCommand(this, this.confirmOpenPgp, this.isEnableOpenPgpCommand);
 }
 
-CComposeButtonsView.prototype.TemplateName = 'OpenPgp_ComposeButtonsView';
+CComposeButtonsView.prototype.ViewTemplate = 'OpenPgp_ComposeButtonsView';
 
 CComposeButtonsView.prototype.setData = function (koComposeHasAttachments, fComposeGetPlainText, fComposeAfterSigning, 
 													fComposeSend, fComposeGetFromEmail, koComposeRecipientEmails, fComposeAfterUndoPgpFunction)
@@ -89,7 +89,7 @@ CComposeButtonsView.prototype.confirmOpenPgp = function ()
 {
 	var
 		sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_FORMATTING'),
-		fOpenPgpEncryptPopup = _.bind(function (bRes) {
+		fEncryptPopup = _.bind(function (bRes) {
 			if (bRes)
 			{
 				this.openPgpPopup(false);
@@ -102,7 +102,7 @@ CComposeButtonsView.prototype.confirmOpenPgp = function ()
 		sConfirm += '\r\n\r\n' + TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_ATTACHMENTS');
 	}
 
-	Popups.showPopup(ConfirmPopup, [sConfirm, fOpenPgpEncryptPopup]);
+	Popups.showPopup(ConfirmPopup, [sConfirm, fEncryptPopup]);
 };
 
 /**
@@ -124,7 +124,7 @@ CComposeButtonsView.prototype.openPgpPopup = function (bSendAfterSigning)
 		}, this)
 	;
 
-	Popups.showPopup(OpenPgpEncryptPopup, [this.composeGetPlainTextFunction(), this.composeGetFromEmailFunction(), this.composeRecipientEmails(), bSendAfterSigning, fOkCallback, fCancelCallback]);
+	Popups.showPopup(EncryptPopup, [this.composeGetPlainTextFunction(), this.composeGetFromEmailFunction(), this.composeRecipientEmails(), bSendAfterSigning, fOkCallback, fCancelCallback]);
 };
 
 CComposeButtonsView.prototype.undoPgp = function ()

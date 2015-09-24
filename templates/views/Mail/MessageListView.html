@@ -148,7 +148,7 @@
 				<div class="items_sub_list message_sub_list" data-bind="foreach: collection, 
 					 draggablePlace: function (oMessage, bCtrl) {return $root.dragAndDropHelper(oMessage, bCtrl);},
 					 css: {'not_use_threads': !useThreads(), 'use_threads': useThreads}">
-					<!-- ko template: {name: 'Mail_MessageListItemViewModel'} --><!-- /ko -->
+					<!-- ko template: {name: 'Mail_MessageItemPart'} --><!-- /ko -->
 				</div>
 
 				<span class="list_notification" data-bind="visible: visibleInfoLoading()">
@@ -164,5 +164,5 @@
 		</div>
 	</div>
 
-	<div class="panel_bottom unselectable" data-bind="template: {name: 'Common_PageSwitcherViewModel', data: oPageSwitcher}"></div>
+	<div class="panel_bottom unselectable" data-bind="template: {name: oPageSwitcher.ViewTemplate, data: oPageSwitcher}"></div>
 </div>

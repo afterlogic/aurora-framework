@@ -72,6 +72,7 @@ function CHeaderView()
 //	}
 }
 
+CHeaderView.prototype.ViewTemplate = 'Core_HeaderView';
 CHeaderView.prototype.__name = 'CHeaderView';
 
 CHeaderView.prototype.changeMailLinkText = function ()

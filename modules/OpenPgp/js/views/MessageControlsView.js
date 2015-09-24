@@ -36,7 +36,7 @@ function CMessageControlsView()
 	}, this);
 }
 
-CMessageControlsView.prototype.TemplateName = 'OpenPgp_MessageControlsView';
+CMessageControlsView.prototype.ViewTemplate = 'OpenPgp_MessageControlsView';
 
 CMessageControlsView.prototype.setOptions = function (oOptions)
 {

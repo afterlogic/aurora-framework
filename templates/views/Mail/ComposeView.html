@@ -93,7 +93,7 @@
 					</label>
 					
 					<!-- ko if: oOpenPgpButtons -->
-						<!-- ko template: { name: oOpenPgpButtons.TemplateName, data: oOpenPgpButtons} --><!-- /ko -->
+						<!-- ko template: { name: oOpenPgpButtons.ViewTemplate, data: oOpenPgpButtons} --><!-- /ko -->
 					<!-- /ko -->
 					
 					<!-- /ko -->
@@ -238,7 +238,7 @@
 								<!-- /ko -->
 							</div>
 							<div class="panel_center">
-								<!-- ko template: { name: 'Common_HtmlEditorViewModel', data: oHtmlEditor} --><!-- /ko -->
+								<!-- ko template: { name: oHtmlEditor.ViewTemplate, data: oHtmlEditor} --><!-- /ko -->
 							</div>
 							<div class="panel_bottom" data-bind="initDom: bottomPanel, listWithMoreButton: true">
 								<!-- ko if: showHotkeysHints -->

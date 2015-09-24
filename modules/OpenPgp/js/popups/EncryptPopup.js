@@ -17,7 +17,7 @@ var
 /**
  * @constructor
  */
-function COpenPgpEncryptPopup()
+function CEncryptPopup()
 {
 	this.data = ko.observable('');
 	this.fromEmail = ko.observable('');
@@ -47,6 +47,8 @@ function COpenPgpEncryptPopup()
 	this.signAndSend = ko.observable(false);
 }
 
+CEncryptPopup.prototype.PopupTemplate = 'OpenPgp_EncryptPopup';
+
 /**
  * @param {string} sData
  * @param {string} sFromEmail
@@ -55,7 +57,7 @@ function COpenPgpEncryptPopup()
  * @param {Function} fOkCallback
  * @param {Function} fCancelCallback
  */
-COpenPgpEncryptPopup.prototype.onShow = function (sData, sFromEmail, aEmails, bSignAndSend, fOkCallback, fCancelCallback)
+CEncryptPopup.prototype.onShow = function (sData, sFromEmail, aEmails, bSignAndSend, fOkCallback, fCancelCallback)
 {
 	this.data(sData);
 	this.fromEmail(sFromEmail);
@@ -68,15 +70,7 @@ COpenPgpEncryptPopup.prototype.onShow = function (sData, sFromEmail, aEmails, bS
 	this.signAndSend(bSignAndSend);
 };
 
-/**
- * @return {string}
- */
-COpenPgpEncryptPopup.prototype.popupTemplate = function ()
-{
-	return 'Popups_OpenPgpEncryptPopupViewModel';
-};
-
-COpenPgpEncryptPopup.prototype.executeSignEncrypt = function ()
+CEncryptPopup.prototype.executeSignEncrypt = function ()
 {
 	var
 		sData = this.data(),
@@ -138,7 +132,7 @@ COpenPgpEncryptPopup.prototype.executeSignEncrypt = function ()
 	}
 };
 
-COpenPgpEncryptPopup.prototype.cancel = function ()
+CEncryptPopup.prototype.cancel = function ()
 {
 	if (this.cancelCallback)
 	{
@@ -147,9 +141,9 @@ COpenPgpEncryptPopup.prototype.cancel = function ()
 	this.closeCommand();
 };
 
-COpenPgpEncryptPopup.prototype.onEscHandler = function ()
+CEncryptPopup.prototype.onEscHandler = function ()
 {
 	this.cancel();
 };
 
-module.exports = new COpenPgpEncryptPopup();
+module.exports = new CEncryptPopup();

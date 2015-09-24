@@ -15,7 +15,7 @@ var
  * @param {CContactsViewModel} oParent
  * @constructor
  */
-function CContactsImportView(oParent)
+function CImportView(oParent)
 {
 	this.oJua = null;
 	this.oParent = oParent;
@@ -24,10 +24,12 @@ function CContactsImportView(oParent)
 	this.importing = ko.observable(false);
 }
 
+CImportView.prototype.ViewTemplate = 'Contacts_ImportView';
+
 /**
  * @param {Object} $oViewModel
  */
-CContactsImportView.prototype.onApplyBindings = function ($oViewModel)
+CImportView.prototype.onApplyBindings = function ($oViewModel)
 {
 	this.oJua = new CJua({
 		'action': '?/Upload/Contacts/',
@@ -54,7 +56,7 @@ CContactsImportView.prototype.onApplyBindings = function ($oViewModel)
 	;
 };
 
-CContactsImportView.prototype.onFileUploadStart = function ()
+CImportView.prototype.onFileUploadStart = function ()
 {
 	this.importing(true);
 };
@@ -64,7 +66,7 @@ CContactsImportView.prototype.onFileUploadStart = function ()
  * @param {boolean} bResponseReceived
  * @param {Object} oResponse
  */
-CContactsImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceived, oResponse)
+CImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceived, oResponse)
 {
 	var
 		bError = !bResponseReceived || !oResponse || oResponse.Error|| oResponse.Result.Error || false,
@@ -102,4 +104,4 @@ CContactsImportView.prototype.onFileUploadComplete = function (sFileUid, bRespon
 	}
 };
 
-module.exports = CContactsImportView;
+module.exports = CImportView;

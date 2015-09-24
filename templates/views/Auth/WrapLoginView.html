@@ -16,18 +16,18 @@
 
 			<!-- ko if: !bSocialInviteMode -->
 				<div class="content login clearfix">
-					<!-- ko template: {name: 'Login_LoginViewModel', data: oLoginViewModel} --><!-- /ko -->
+					<!-- ko template: {name: oLoginView.ViewTemplate, data: oLoginView} --><!-- /ko -->
 					<div class="clear"></div>
 				</div>
 				<!-- ko if: allowRegistration -->
 				<div class="content register clearfix">
-					<!-- ko template: {name: 'Login_RegisterViewModel', data: oRegisterViewModel} --><!-- /ko -->
+					<!-- ko template: {name: oRegisterView.ViewTemplate, data: oRegisterView} --><!-- /ko -->
 					<div class="clear"></div>
 				</div>
 				<!-- /ko -->
 				<!-- ko if: allowPasswordReset -->
 				<div class="content forgot clearfix">
-					<!-- ko template: {name: 'Login_ForgotViewModel', data: oForgotViewModel} --><!-- /ko -->
+					<!-- ko template: {name: oForgotView.ViewTemplate, data: oForgotView} --><!-- /ko -->
 					<div class="clear"></div>
 				</div>
 				<!-- /ko -->

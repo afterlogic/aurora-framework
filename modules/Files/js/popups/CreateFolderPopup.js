@@ -20,6 +20,8 @@ function CCreateFolderPopup()
 	}, this);
 }
 
+CCreateFolderPopup.prototype.PopupTemplate = 'Files_CreateFolderPopup';
+
 /**
  * @param {Function} fCallback
  */
@@ -33,14 +35,6 @@ CCreateFolderPopup.prototype.onShow = function (fCallback)
 	{
 		this.fCallback = fCallback;
 	}
-};
-
-/**
- * @return {string}
- */
-CCreateFolderPopup.prototype.popupTemplate = function ()
-{
-	return 'Files_CreateFolderPopup';
 };
 
 CCreateFolderPopup.prototype.onOKClick = function ()

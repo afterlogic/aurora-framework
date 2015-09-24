@@ -18,9 +18,9 @@ function CHeaderItemView(sLinkText, sActiveTitle)
 	this.allowChangeTitle = ko.observable(false); // allows to change favicon and browser title when browser is inactive
 	this.activeTitle = ko.observable(sActiveTitle || ''); // always allowed to be changed
 	this.inactiveTitle = ko.observable('');
-	
-	this.sTemplateName = 'Common_HeaderItemView';
 }
+
+CHeaderItemView.prototype.ViewTemplate = 'Core_HeaderItemView';
 
 CHeaderItemView.prototype.setName = function (sName)
 {

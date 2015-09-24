@@ -41,6 +41,8 @@ function CColorPickerView(sCaption, fPickHandler, oPickContext)
 	this.colorPickerDom = ko.observable(null);
 }
 
+CColorPickerView.prototype.ViewTemplate = 'Mail_ColorPickerView';
+
 CColorPickerView.prototype.onShow = function ()
 {
 	$(this.colorPickerDom()).find('span.color-item').on('click', _.bind(function (oEv)

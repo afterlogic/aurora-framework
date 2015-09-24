@@ -15,8 +15,6 @@ function CHeaderItemView()
 {
 	CAbstractHeaderItemView.call(this, TextUtils.i18n('TITLE/MAILBOX_TAB'));
 	
-	this.sTemplateName = 'Mail_HeaderItemView';
-	
 	this.unseenCount = Cache.newMessagesCount;
 	
 	this.inactiveTitle = ko.computed(function () {
@@ -27,6 +25,8 @@ function CHeaderItemView()
 }
 
 _.extendOwn(CHeaderItemView.prototype, CAbstractHeaderItemView.prototype);
+
+CHeaderItemView.prototype.ViewTemplate = 'Mail_HeaderItemView';
 
 var HeaderItemView = new CHeaderItemView();
 

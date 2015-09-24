@@ -26,7 +26,7 @@ var
 	CContactListItemModel = require('modules/Contacts/js/models/CContactListItemModel.js'),
 	CContactModel = require('modules/Contacts/js/models/CContactModel.js'),
 	CGroupModel = require('modules/Contacts/js/models/CGroupModel.js'),
-	CContactsImportView = require('modules/Contacts/js/views/CContactsImportView.js'),
+	CImportView = require('modules/Contacts/js/views/CImportView.js'),
 	
 	bExtApp = false
 ;
@@ -115,7 +115,7 @@ function CContactsView()
 	this.oContactModel = new CContactModel();
 	this.oGroupModel = new CGroupModel();
 	
-	this.oContactImportViewModel = new CContactsImportView(this);
+	this.oImportView = new CImportView(this);
 
 	this.selectedOldItem = ko.observable(null);
 	this.selectedItem = ko.computed({
@@ -125,13 +125,13 @@ function CContactsView()
 		'write': function (oItem) {
 			if (oItem instanceof CContactModel)
 			{
-				this.oContactImportViewModel.visibility(false);
+				this.oImportView.visibility(false);
 				this.selectedGroup(null);
 				this.selectedContact(oItem);
 			}
 			else if (oItem instanceof CGroupModel)
 			{
-				this.oContactImportViewModel.visibility(false);
+				this.oImportView.visibility(false);
 				this.selectedContact(null);
 				this.selectedGroup(oItem);
 				this.currentGroupId(oItem.idGroup());
@@ -337,6 +337,8 @@ function CContactsView()
 		}
 	}, this);
 }
+
+CContactsView.prototype.ViewTemplate = 'Contacts_ContactsView';
 
 /**
  * 
@@ -598,7 +600,7 @@ CContactsView.prototype.executeRemoveFromGroup = function ()
 CContactsView.prototype.executeImport = function ()
 {
 	this.selectedItem(null);
-	this.oContactImportViewModel.visibility(true);
+	this.oImportView.visibility(true);
 	this.selector.itemSelected(null);
 	this.selectedGroupType(Enums.ContactsGroupListType.Personal);
 	this.gotoViewPane();
@@ -648,7 +650,7 @@ CContactsView.prototype.executeCancel = function ()
 		}
 	}
 
-	this.oContactImportViewModel.visibility(false);
+	this.oImportView.visibility(false);
 };
 
 /**
@@ -789,7 +791,7 @@ CContactsView.prototype.onApplyBindings = function ()
 	
 	this.selectedGroupType.valueHasMutated();
 	
-	this.oContactImportViewModel.onApplyBindings(this.$viewModel);
+	this.oImportView.onApplyBindings(this.$viewModel);
 	this.requestGroupFullList();
 
 	this.hotKeysBind();

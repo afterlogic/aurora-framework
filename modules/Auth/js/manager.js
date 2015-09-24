@@ -9,10 +9,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': {
-				'Model': require('modules/Auth/js/views/CWrapLoginView.js'),
-				'TemplateName': 'Login_WrapLoginViewModel'
-			}
+			'main': require('modules/Auth/js/views/CWrapLoginView.js')
 		}
 	};
 };

@@ -236,6 +236,7 @@ function CFilesView(bPopup)
 	this.timerId = null;
 }
 
+CFilesView.prototype.ViewTemplate = 'Files_FilesView';
 CFilesView.prototype.__name = 'CFilesView';
 
 /**

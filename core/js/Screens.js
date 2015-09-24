@@ -76,7 +76,6 @@ CScreens.prototype.route = function (aParams)
 	var
 		sCurrentScreen = this.currentScreen(),
 		oCurrentScreen = this.oItems[sCurrentScreen],
-		oCurrentModel = (typeof oCurrentScreen !== 'undefined') ? oCurrentScreen.Model : null,
 		sScreen = aParams.shift()
 	;
 	
@@ -89,28 +88,27 @@ CScreens.prototype.route = function (aParams)
 	{
 		if (sCurrentScreen === sScreen)
 		{
-			if (oCurrentModel && oCurrentScreen.bInitialized && $.isFunction(oCurrentModel.onRoute))
+			if (oCurrentScreen && oCurrentScreen.bInitialized && $.isFunction(oCurrentScreen.onRoute))
 			{
-				oCurrentModel.onRoute(aParams);
+				oCurrentScreen.onRoute(aParams);
 			}
 		}
 		else
 		{
-			if (oCurrentModel && oCurrentScreen.bInitialized)
+			if (oCurrentScreen && oCurrentScreen.bInitialized)
 			{
-				oCurrentModel.hideViewModel();
+				oCurrentScreen.hideViewModel();
 			}
 			
 			this.showNormalScreen(sScreen, aParams);
 			
 			oCurrentScreen = this.oItems[sScreen];
-			oCurrentModel = (typeof oCurrentScreen !== 'undefined') ? oCurrentScreen.Model : null;
-			if (oCurrentModel && oCurrentScreen.bInitialized)
+			if (oCurrentScreen && oCurrentScreen.bInitialized)
 			{
 				this.currentScreen(sScreen);
-				if ($.isFunction(oCurrentModel.onRoute))
+				if ($.isFunction(oCurrentScreen.onRoute))
 				{
-					oCurrentModel.onRoute(aParams);
+					oCurrentScreen.onRoute(aParams);
 				}
 			}
 		}
@@ -129,16 +127,6 @@ CScreens.prototype.route = function (aParams)
 //	});
 //};
 
-CScreens.prototype.getCurrentScreenModel = function ()
-{
-	var
-		oCurrentScreen = this.oItems[this.currentScreen()],
-		oCurrentModel = (typeof oCurrentScreen !== 'undefined') ? oCurrentScreen.Model : null
-	;
-	
-	return oCurrentModel;
-};
-
 /**
  * @param {string} sScreen
  * @param {?=} mParams
@@ -146,15 +134,14 @@ CScreens.prototype.getCurrentScreenModel = function ()
 CScreens.prototype.showCurrentScreen = function (sScreen, mParams)
 {
 	var
-		oCurrentScreen = this.oItems[this.currentScreen()],
-		oCurrentModel = (typeof oCurrentScreen !== 'undefined') ? oCurrentScreen.Model : null
+		oCurrentScreen = this.oItems[this.currentScreen()]
 	;
 	
 	if (this.currentScreen() !== sScreen)
 	{
-		if (oCurrentModel && oCurrentScreen.bInitialized)
+		if (oCurrentScreen && oCurrentScreen.bInitialized)
 		{
-			oCurrentModel.hideViewModel();
+			oCurrentScreen.hideViewModel();
 		}
 		this.currentScreen(sScreen);
 	}
@@ -181,38 +168,34 @@ CScreens.prototype.showNormalScreen = function (sScreen, mParams)
 		oScreen.bInitialized = (typeof oScreen.bInitialized !== 'boolean') ? false : oScreen.bInitialized;
 		if (!oScreen.bInitialized)
 		{
-			oScreen.Model = this.initViewModel(oScreen.Model, oScreen.TemplateName);
+			oScreen = this.initViewModel(oScreen);
+			this.oItems[sScreenId] = oScreen;
 			oScreen.bInitialized = true;
 		}
 
-		oScreen.Model.showViewModel(mParams);
+		oScreen.showViewModel(mParams);
 	}
 	
-	return oScreen ? oScreen.Model : null;
+	return oScreen || null;
 };
 
 /**
- * @param {?} CViewModel
- * @param {string} sTemplateId
+ * @param {?} CScreenView
  * 
  * @return {Object}
  */
-CScreens.prototype.initViewModel = function (CViewModel, sTemplateId)
+CScreens.prototype.initViewModel = function (CScreenView)
 {
 	var
-		oViewModel = null,
-		$viewModel = null
+		oScreen = new CScreenView(),
+		$templatePlace = $('<!-- ko template: { name: \'' + oScreen.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'))
 	;
 
-	oViewModel = new CViewModel();
+	ko.applyBindings(oScreen, $templatePlace[0]);
 	
-	$viewModel = $('<!-- ko template: { name: \'' + sTemplateId + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'));
-	
-	ko.applyBindings(oViewModel, $viewModel[0]);
-	
-	oViewModel.$viewModel = $viewModel.next();
-	oViewModel.bShown = false;
-	oViewModel.showViewModel = function (mParams)
+	oScreen.$viewModel = $templatePlace.next();
+	oScreen.bShown = false;
+	oScreen.showViewModel = function (mParams)
 	{
 		this.$viewModel.show();
 		if (!this.bShown)
@@ -233,7 +216,7 @@ CScreens.prototype.initViewModel = function (CViewModel, sTemplateId)
 			this.bShown = true;
 		}
 	};
-	oViewModel.hideViewModel = function ()
+	oScreen.hideViewModel = function ()
 	{
 		this.$viewModel.hide();
 		if (typeof this.onHide === 'function')
@@ -243,12 +226,12 @@ CScreens.prototype.initViewModel = function (CViewModel, sTemplateId)
 		this.bShown = false;
 	};
 
-	if (typeof oViewModel.onApplyBindings === 'function')
+	if (typeof oScreen.onApplyBindings === 'function')
 	{
-		oViewModel.onApplyBindings(oViewModel.$viewModel);
+		oScreen.onApplyBindings(oScreen.$viewModel);
 	}
 	
-	return oViewModel;
+	return oScreen;
 };
 
 /**
@@ -318,7 +301,8 @@ CScreens.prototype.initHelpdesk = function ()
 
 	if (AppData.User.IsHelpdeskSupported && oScreen && !oScreen.bInitialized)
 	{
-		oScreen.Model = this.initViewModel(oScreen.Model, oScreen.TemplateName);
+		oScreen = this.initViewModel(oScreen);
+		this.oItems[Enums.Screens.Helpdesk] = oScreen;
 		oScreen.bInitialized = true;
 	}
 };

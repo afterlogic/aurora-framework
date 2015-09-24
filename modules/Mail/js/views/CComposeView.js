@@ -386,6 +386,7 @@ function CComposeView()
 //	}
 }
 
+CComposeView.prototype.ViewTemplate = 'Mail_ComposeView';
 CComposeView.prototype.__name = 'CComposeView';
 
 CComposeView.prototype.includeOpenPgp = function ()

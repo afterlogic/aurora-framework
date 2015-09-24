@@ -56,13 +56,7 @@ function CComposePopup()
 
 _.extendOwn(CComposePopup.prototype, CComposeView.prototype);
 
-/**
- * @return {string}
- */
-CComposePopup.prototype.popupTemplate = function ()
-{
-	return 'Popups_ComposePopupViewModel';
-};
+CComposePopup.prototype.PopupTemplate = 'Mail_ComposePopup';
 
 CComposePopup.prototype.preventBackspaceOn = function ()
 {

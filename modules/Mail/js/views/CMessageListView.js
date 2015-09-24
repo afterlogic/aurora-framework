@@ -325,6 +325,8 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.sAddingInfo3 = aAddingInfo.length > 2 ? aAddingInfo[2] : '';
 }
 
+CMessageListView.prototype.ViewTemplate = 'Mail_MessageListView';
+
 CMessageListView.prototype.addNewAccount = function ()
 {
 	App.Api.createMailAccount(Accounts.getEmail());

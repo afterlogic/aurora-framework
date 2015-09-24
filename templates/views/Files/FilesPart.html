@@ -24,7 +24,7 @@
 			<div class="items_sub_list large attachments" data-bind="columnCalc: {'prop': columnCount, 'itemSelector': '.item.helper'}">
 				<!-- ko foreach: collection -->
 					<!-- ko if: isFolder() -->
-						<!-- ko template: {name: 'Files_FolderItem'} --><!-- /ko -->
+						<!-- ko template: {name: 'Files_FolderPart'} --><!-- /ko -->
 					<!-- /ko -->
 					<!-- ko if: !isFolder() -->
 						<!-- ko template: {name: 'Common_FileViewModel'} --><!-- /ko -->

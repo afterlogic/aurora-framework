@@ -32,13 +32,7 @@ CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sTitle, sOkButto
 	this.okButtonText(sOkButtonText || TextUtils.i18n('MAIN/BUTTON_OK'));
 };
 
-/**
- * @return {string}
- */
-CAlertPopup.prototype.popupTemplate = function ()
-{
-	return 'Popups_AlertPopupViewModel';
-};
+CAlertPopup.prototype.PopupTemplate = 'Core_AlertPopup';
 
 CAlertPopup.prototype.onEnterHandler = function ()
 {
