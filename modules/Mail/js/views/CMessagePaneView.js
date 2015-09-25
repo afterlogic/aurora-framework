@@ -12,6 +12,7 @@ var
 	WindowOpener = require('core/js/WindowOpener.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Storage = require('core/js/Storage.js'),
+	Pulse = require('core/js/Pulse.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
@@ -354,12 +355,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	
 	this.defaultFontName = UserSettings.DefaultFontName;
 	
-//	if (App.nowDateNumber)
-//	{
-//		App.nowDateNumber.subscribe(function () {
-//			this.updateMomentDate();
-//		}, this);
-//	}
+	Pulse.registerDayOfMonthFunction(_.bind(this.updateMomentDate, this));
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{

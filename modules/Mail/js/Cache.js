@@ -12,6 +12,7 @@ var
 	Api = require('core/js/Api.js'),
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
+	Pulse = require('core/js/Pulse.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -1669,5 +1670,7 @@ CMailCache.prototype.changeDatesInMessages = function () {
 };
 
 var MailCache = new CMailCache();
+
+Pulse.registerDayOfMonthFunction(_.bind(MailCache.changeDatesInMessages, MailCache));
 
 module.exports = MailCache;
