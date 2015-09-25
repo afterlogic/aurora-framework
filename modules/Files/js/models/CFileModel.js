@@ -5,7 +5,7 @@ var
 	_ = require('underscore'),
 	
 	Popups = require('core/js/Popups.js'),
-	PlayerPopup = require('modules/Files/js/popups/PlayerPopup.js'),
+	EmbedHtmlPopup = require('core/js/popups/EmbedHtmlPopup.js'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -171,7 +171,7 @@ function CFileModel()
 		return (this.storageType === Enums.FileStorageType.Personal || this.storageType === Enums.FileStorageType.Corporate);
 	}, this);
 	
-	this.oembedHtml = ko.observable('');
+	this.sHtmlEmbed = ko.observable('');
 }
 
 _.extendOwn(CFileModel.prototype, CAbstractFileModel.prototype);
@@ -216,7 +216,7 @@ CFileModel.prototype.parse = function (oData, sPublicHash)
 		this.thumbnailExternalLink(Utils.pString(oData.ThumbnailLink));
 		this.hash(Utils.pString(oData.Hash));
 		this.publicHash(sPublicHash);
-		this.oembedHtml(oData.OembedHtml ? oData.OembedHtml : '');
+		this.sHtmlEmbed(oData.OembedHtml ? oData.OembedHtml : '');
 	}
 	
 	if(this.thumb() && this.thumbnailExternalLink() === '')
@@ -259,9 +259,9 @@ CFileModel.prototype.onUploadSelectOwn = function (sFileUid, oFileData, sFileNam
  */
 CFileModel.prototype.viewFile = function ()
 {
-	if (this.oembedHtml() !== '')
+	if (this.sHtmlEmbed() !== '')
 	{
-		Popups.showPopup(PlayerPopup, [this.oembedHtml()]);
+		Popups.showPopup(EmbedHtmlPopup, [this.sHtmlEmbed()]);
 	}
 	else if (this.isLink())
 	{
