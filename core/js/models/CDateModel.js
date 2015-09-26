@@ -2,8 +2,10 @@
 
 var
 	moment = require('moment'),
+			
 	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	UserSettings = require('core/js/Settings.js')
 ;
 
 /**
@@ -128,9 +130,7 @@ CDateModel.prototype.getTime = function ()
  */
 CDateModel.prototype.convertDate = function (iDate)
 {
-	//'MM/DD/YYYY' 'DD/MM/YYYY' 'DD MMMM YYYY'
-//	var sFormat = Utils.getDateFormatForMoment(AppData.User.DefaultDateFormat) + ' ' + this.getTimeFormat();
-	var sFormat = 'MM/DD/YYYY' + ' ' + this.getTimeFormat();
+	var sFormat = Utils.getDateFormatForMoment(UserSettings.DefaultDateFormat) + ' ' + this.getTimeFormat();
 	
 	return moment(iDate * 1000).format(sFormat);
 };

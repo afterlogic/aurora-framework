@@ -41,10 +41,28 @@ CApp.prototype.init = function ()
 		this.defaultAccountId = Accounts.defaultId;
 		this.hasAccountWithId = _.bind(Accounts.hasAccountWithId, Accounts);
 		this.currentAccountId.valueHasMutated();
+		
 		this.currentAccountEmail = ko.computed(function () {
 			var oAccount = Accounts.getAccount(this.currentAccountId());
 			return oAccount ? oAccount.email() : '';
 		}, this);
+		
+		this.defaultAccountEmail = ko.computed(function () {
+			var oAccount = Accounts.getAccount(this.defaultAccountId());
+			return oAccount ? oAccount.email() : '';
+		}, this);
+		this.defaultAccountFriendlyName = ko.computed(function () {
+			var oAccount = Accounts.getAccount(this.defaultAccountId());
+			return oAccount ? oAccount.friendlyName() : '';
+		}, this);
+		
+		this.getAttendee = function (aAttendees) {
+			return Accounts.getAttendee(
+				_.map(aAttendees, function (oAttendee) {
+					return oAttendee.email;
+				}, this)
+			);
+		};
 	}
 	
 	Screens.init(this.bAuth);

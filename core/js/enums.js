@@ -109,6 +109,14 @@ Enums.Errors = {
 	'NotDisplayedError': 1155
 };
 
+/**
+ * @enum {number}
+ */
+Enums.TimeFormat = {
+	'F24': '0',
+	'F12': '1'
+};
+
 if (typeof window.Enums === 'undefined')
 {
 	window.Enums = {};

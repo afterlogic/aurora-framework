@@ -8,6 +8,7 @@ $('body').ready(function () {
 			'Auth': require('modules/Auth/js/manager.js'),
 			'Mail': require('modules/Mail/js/manager.js'),
 			'Contacts': require('modules/Contacts/js/manager.js'),
+			'Calendar': require('modules/Calendar/js/manager.js'),
 			'Files': require('modules/Files/js/manager.js'),
 			'Settings': require('modules/Settings/js/manager.js'),
 			

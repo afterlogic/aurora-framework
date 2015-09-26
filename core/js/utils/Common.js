@@ -657,4 +657,46 @@ Utils.getFilestorageViewThumbnailLinkByHash = function (iAccountId, sHash, sPubl
 	return sUrl;
 };
 
+/**
+ * @param {Object} oElement
+ * @param {Object} oItem
+ */
+Utils.defaultOptionsAfterRender = function (oElement, oItem)
+{
+	if (oItem)
+	{
+		if (!Utils.isUnd(oItem.disable))
+		{
+			ko.applyBindingsToNode(oElement, {
+				'disable': oItem.disable
+			}, oItem);
+		}
+	}
+};
+
+/**
+ * @param {string} sDateFormat
+ * 
+ * @return string
+ */
+Utils.getDateFormatForMoment = function (sDateFormat)
+{
+	var sMomentDateFormat = 'MM/DD/YYYY';
+	
+	switch (sDateFormat)
+	{
+		case 'MM/DD/YYYY':
+			sMomentDateFormat = 'MM/DD/YYYY';
+			break;
+		case 'DD/MM/YYYY':
+			sMomentDateFormat = 'DD/MM/YYYY';
+			break;
+		case 'DD Month YYYY':
+			sMomentDateFormat = 'DD MMMM YYYY';
+			break;
+	}
+	
+	return sMomentDateFormat;
+};
+
 module.exports = Utils;

@@ -337,7 +337,7 @@ CMessageListView.prototype.createDatePickerObject = function (oElement)
 //	$(oElement).datepicker({
 //		showOtherMonths: true,
 //		selectOtherMonths: true,
-//		monthNames: Utils.getMonthNamesArray(),
+//		monthNames: DateUtils.getMonthNamesArray(),
 //		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
 //		nextText: '',
 //		prevText: '',

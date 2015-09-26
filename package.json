@@ -21,7 +21,8 @@
 		"knockout": "~3.3.0",
 		"moment": "~2.10.6",
 		"jquery": "~1.11.3",
-		"jquery-ui": "~1.10.5"
+		"jquery-ui": "~1.10.5",
+		"fullcalendar": "~2.4.0"
 	},
 	"browser": {
 		"signals": "./node_modules/signals/dist/signals.min.js",

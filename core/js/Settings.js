@@ -59,6 +59,19 @@ module.exports = {
 			ContactsPerPage: 20,
 			ImportingContactsLink: AppData && AppData['Links'] && AppData['Links']['ImportingContacts'] ? AppData['Links']['ImportingContacts'] : ''
 		},
+		Calendar: {
+			CalendarPubHash: '',
+			AllowCalendar: true,
+			CalendarSharing: true,
+			CalendarDefaultTab: 1,
+			CalendarShowWeekEnds: true,
+			CalendarWeekStartsOn: 7,
+			CalendarShowWorkDay: true,
+			CalendarWorkDayStarts: '09',
+			CalendarWorkDayEnds: '18',
+			AutoCheckCalendarInterval: 60,
+			CalendarAppointments: false
+		},
 		Files: {
 			FileStoragePubHash: '',
 			IsCollaborationSupported: true,
@@ -76,6 +89,7 @@ module.exports = {
 	Language: 'English',
 	CustomLogo: '',
 	defaultTimeFormat: ko.observable(0),
+	DefaultDateFormat: 'DD/MM/YYYY',
 	IsFilesSupported: false,
 	DefaultFontName: 'Tahoma',
 	IdUser: AppData.IdUser,
