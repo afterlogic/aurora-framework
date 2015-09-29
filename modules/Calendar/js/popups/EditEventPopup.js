@@ -16,6 +16,7 @@ var
 	UserSettings = require('core/js/Settings.js'),
 	
 	Popups = require('core/js/Popups.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
@@ -31,6 +32,8 @@ var
  */
 function CEditEventPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.modified = false;
 	this.isPublic = bExtApp;
 	this.isEditable = ko.observable(false);
@@ -233,6 +236,8 @@ function CEditEventPopup()
 
 	this.isAppointmentButtonsVisible = ko.observable(false);
 }
+
+_.extendOwn(CEditEventPopup.prototype, CAbstractPopup.prototype);
 
 CEditEventPopup.prototype.PopupTemplate = 'Calendar_EditEventPopup';
 
@@ -563,7 +568,7 @@ CEditEventPopup.prototype.closePopup = function ()
 	this.hideAll();
 	this.cleanAll();
 
-	this.closeCommand();
+	this.closePopup();
 };
 
 CEditEventPopup.prototype.hideAll = function ()

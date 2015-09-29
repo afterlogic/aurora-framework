@@ -1,6 +1,6 @@
-<div class="mask" data-bind="click: onCancelClick"></div>
+<div class="mask" data-bind="click: cancelPopup"></div>
 <div class="popup_panel">
-	<span class="close" data-bind="click: onCancelClick"></span>
+	<span class="close" data-bind="click: cancelPopup"></span>
 	<span class="title" data-i18n="SETTINGS/ACCOUNT_FOLDERS_SETUP_SPECIAL_FOLDERS" data-bind="i18n: 'text'"></span>
 	
 	<div class="fields">
@@ -31,7 +31,7 @@
 		</div>
 		<div class="buttons">
 			<span class="button" data-i18n="SETTINGS/ACCOUNT_FOLDERS_BUTTON_OK" data-bind="i18n: 'text', click: onOKClick"></span>
-			<span class="button" data-i18n="MAIN/BUTTON_CANCEL" data-bind="i18n: 'text', click: onCancelClick"></span>
+			<span class="button" data-i18n="MAIN/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
 		</div>
 	</div>
 </div>

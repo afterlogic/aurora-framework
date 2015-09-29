@@ -6,6 +6,8 @@ function CAbstractView()
 	this.$viewDom = null;
 }
 
+CAbstractView.prototype.ViewTemplate = '';
+
 CAbstractView.prototype.showView = function ()
 {
 	if (!this.bShown)

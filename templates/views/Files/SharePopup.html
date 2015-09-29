@@ -1,7 +1,7 @@
 <div class="popup" style="display: none;">
-	<div class="mask" data-bind="click: onOKClick"></div>
+	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
-		<span class="close" data-bind="click: onOKClick"></span>
+		<span class="close" data-bind="click: cancelPopup"></span>
 
 		<div class="fields">
 			<div class="fieldset">
@@ -13,7 +13,7 @@
 
 			<div class="buttons">
 				<span class="button remove" data-i18n="FILESTORAGE/BUTTON_CANCEL_SHARING" data-bind="i18n: 'text', click: onCancelSharingClick"></span>
-				<span class="button cancel secondary" data-i18n="FILESTORAGE/BUTTON_CLOSE" data-bind="i18n: 'text', click: onOKClick"></span>
+				<span class="button cancel secondary" data-i18n="FILESTORAGE/BUTTON_CLOSE" data-bind="i18n: 'text', click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

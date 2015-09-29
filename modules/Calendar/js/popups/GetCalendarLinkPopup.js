@@ -3,8 +3,10 @@
 var
 	ko = require('knockout'),
 	$ = require('jquery'),
+	_ = require('underscore'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Utils = require('core/js/utils/Common.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -12,6 +14,8 @@ var
  */
 function CGetCalendarLinkPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 
 	this.calendarId = ko.observable(null);
@@ -22,6 +26,8 @@ function CGetCalendarLinkPopup()
 	this.isPublic = ko.observable(false);
 	this.pubUrl = ko.observable('');
 }
+
+_.extendOwn(CGetCalendarLinkPopup.prototype, CAbstractPopup.prototype);
 
 CGetCalendarLinkPopup.prototype.PopupTemplate = 'Calendar_GetCalendarLinkPopup';
 
@@ -48,18 +54,13 @@ CGetCalendarLinkPopup.prototype.onShow = function (fCallback, oCalendar)
 	}
 };
 
-CGetCalendarLinkPopup.prototype.onCancelClick = function ()
+CGetCalendarLinkPopup.prototype.cancelPopup = function ()
 {
 	if (this.fCallback)
 	{
 		this.fCallback(this.calendarId(), this.isPublic());
 	}
-	this.closeCommand();
-};
-
-CGetCalendarLinkPopup.prototype.onEscHandler = function ()
-{
-	this.onCancelClick();
+	this.closePopup();
 };
 
 module.exports = new CGetCalendarLinkPopup();

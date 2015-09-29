@@ -9,6 +9,7 @@ var
 	Browser = require('core/js/Browser.js'),
 	
 	Popups = require('core/js/Popups.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	CComposeView = require('modules/Mail/js/views/CComposeView.js'),
 	ConfirmAnotherMessageComposedPopup = require('modules/Mail/js/popups/ConfirmAnotherMessageComposedPopup.js')
@@ -20,6 +21,8 @@ var
  */
 function CComposePopup()
 {
+	CAbstractPopup.call(this);
+	
 	CComposeView.call(this);
 	
 	this.minimized = ko.observable(false);
@@ -54,6 +57,8 @@ function CComposePopup()
 	}, this);
 }
 
+_.extendOwn(CComposePopup.prototype, CAbstractPopup.prototype);
+
 _.extendOwn(CComposePopup.prototype, CComposeView.prototype);
 
 CComposePopup.prototype.PopupTemplate = 'Mail_ComposePopup';
@@ -82,7 +87,7 @@ CComposePopup.prototype.onShow = function (aParams)
 	
 	if (aParams.length === 1 && aParams[0] === 'close')
 	{
-		this.closeCommand();
+		this.closePopup();
 	}
 	else
 	{
@@ -160,10 +165,10 @@ CComposePopup.prototype.saveAndClose = function ()
 		this.saveCommand();
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
-CComposePopup.prototype.onCancelClick = function ()
+CComposePopup.prototype.cancelPopup = function ()
 {
 	if (this.hasSomethingToSave())
 	{
@@ -171,7 +176,7 @@ CComposePopup.prototype.onCancelClick = function ()
 	}
 	else
 	{
-		this.closeCommand();
+		this.closePopup();
 	}
 };
 

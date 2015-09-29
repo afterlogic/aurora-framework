@@ -1,4 +1,4 @@
-<div class="mask" data-bind="click: onCancelClick"></div>
+<div class="mask" data-bind="click: cancelPopup"></div>
 <div class="popup_panel">
 	<span class="title" data-i18n="CONTACTS/LABEL_NEW_CONTACT" data-bind="i18n: 'text'"></span>
 	<div class="fields">
@@ -44,7 +44,7 @@
 	<div class="buttons">
 		<span class="button" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: !loading()"></span>
 		<span class="button" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading()"></span>
-		<span class="button" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: onCancelClick, visible: !loading()"></span>
+		<span class="button" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup, visible: !loading()"></span>
 	</div>
 </div>
 <span class="helper"></span>

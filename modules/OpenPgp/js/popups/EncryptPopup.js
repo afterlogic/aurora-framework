@@ -8,6 +8,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
 	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),
@@ -19,6 +20,8 @@ var
  */
 function CEncryptPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.data = ko.observable('');
 	this.fromEmail = ko.observable('');
 	this.emails = ko.observableArray([]);
@@ -46,6 +49,8 @@ function CEncryptPopup()
 	this.signEncryptCommand = Utils.createCommand(this, this.executeSignEncrypt, this.isEnableSignEncrypt);
 	this.signAndSend = ko.observable(false);
 }
+
+_.extendOwn(CEncryptPopup.prototype, CAbstractPopup.prototype);
 
 CEncryptPopup.prototype.PopupTemplate = 'OpenPgp_EncryptPopup';
 
@@ -115,7 +120,7 @@ CEncryptPopup.prototype.executeSignEncrypt = function ()
 	{
 		if (oRes.result)
 		{
-			this.closeCommand();
+			this.closePopup();
 			if (this.okCallback)
 			{
 				if (!this.signAndSend())
@@ -132,18 +137,14 @@ CEncryptPopup.prototype.executeSignEncrypt = function ()
 	}
 };
 
-CEncryptPopup.prototype.cancel = function ()
+CEncryptPopup.prototype.cancelPopup = function ()
 {
 	if (this.cancelCallback)
 	{
 		this.cancelCallback();
 	}
-	this.closeCommand();
-};
-
-CEncryptPopup.prototype.onEscHandler = function ()
-{
-	this.cancel();
+	
+	this.closePopup();
 };
 
 module.exports = new CEncryptPopup();

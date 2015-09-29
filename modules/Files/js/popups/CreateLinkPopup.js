@@ -7,6 +7,8 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	Ajax = require('core/js/Ajax.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	
 	CFileModel = require('modules/Files/js/models/CFileModel.js')
 ;
 
@@ -15,6 +17,8 @@ var
  */
 function CCreateLinkPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	this.link = ko.observable('');
 	this.linkPrev = ko.observable('');
@@ -26,6 +30,8 @@ function CCreateLinkPopup()
 	});
 	this.fileItem = ko.observable(null);
 }
+
+_.extendOwn(CCreateLinkPopup.prototype, CAbstractPopup.prototype);
 
 CCreateLinkPopup.prototype.PopupTemplate = 'Files_CreateLinkPopup';
 
@@ -97,21 +103,16 @@ CCreateLinkPopup.prototype.executeSave = function ()
 		this.urlChecked(false);
 	}
 	clearTimeout(this.checkTimer);
-	this.closeCommand();
+	this.closePopup();
 };
 
-CCreateLinkPopup.prototype.onCancelClick = function ()
+CCreateLinkPopup.prototype.cancelPopup = function ()
 {
 	this.link('');
 	this.linkPrev('');
 	this.urlChecked(false);
 	clearTimeout(this.checkTimer);
-	this.closeCommand();
-};
-
-CCreateLinkPopup.prototype.onEscHandler = function ()
-{
-	this.onCancelClick();
+	this.closePopup();
 };
 
 module.exports = new CCreateLinkPopup();

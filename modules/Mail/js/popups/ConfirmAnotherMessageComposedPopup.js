@@ -1,15 +1,24 @@
 'use strict';
 
-var $ = require('jquery');
+var
+	$ = require('jquery'),
+	_ = require('underscore'),
+	
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
+;
 
 /**
  * @constructor
  */
 function CConfirmAnotherMessageComposedPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fConfirmCallback = null;
 	this.shown = false;
 }
+
+_.extendOwn(CConfirmAnotherMessageComposedPopup.prototype, CAbstractPopup.prototype);
 
 CConfirmAnotherMessageComposedPopup.prototype.PopupTemplate = 'Mail_ConfirmAnotherMessageComposedPopup';
 
@@ -34,7 +43,7 @@ CConfirmAnotherMessageComposedPopup.prototype.onDiscardClick = function ()
 		this.fConfirmCallback(Enums.AnotherMessageComposedAnswer.Discard);
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
 CConfirmAnotherMessageComposedPopup.prototype.onSaveAsDraftClick = function ()
@@ -44,27 +53,22 @@ CConfirmAnotherMessageComposedPopup.prototype.onSaveAsDraftClick = function ()
 		this.fConfirmCallback(Enums.AnotherMessageComposedAnswer.SaveAsDraft);
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
-CConfirmAnotherMessageComposedPopup.prototype.onCancelClick = function ()
+CConfirmAnotherMessageComposedPopup.prototype.cancelPopup = function ()
 {
 	if (this.fConfirmCallback)
 	{
 		this.fConfirmCallback(Enums.AnotherMessageComposedAnswer.Cancel);
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
 CConfirmAnotherMessageComposedPopup.prototype.onEnterHandler = function ()
 {
 	this.onSaveAsDraftClick();
-};
-
-CConfirmAnotherMessageComposedPopup.prototype.onEscHandler = function ()
-{
-	this.onCancelClick();
 };
 
 module.exports = new CConfirmAnotherMessageComposedPopup();

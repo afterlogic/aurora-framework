@@ -1,6 +1,6 @@
-<div class="mask" data-bind="command: closeCommand"></div>
+<div class="mask" data-bind="click: cancelPopup"></div>
 <div class="popup_panel">
-	<span class="close" data-bind="command: closeCommand"></span>
+	<span class="close" data-bind="click: cancelPopup"></span>
 	<span class="title" data-i18n="OPENPGP/POPUP_TITLE_IMPORT_KEY" data-bind="i18n: 'text'"></span>
 	
 	<div class="fields">
@@ -26,7 +26,7 @@
 		<div class="buttons">
 			<span class="button" data-i18n="OPENPGP/BUTTON_CHECK" data-bind="i18n: 'text', click: checkArmor, visible: keys().length === 0"></span>
 			<span class="button" data-i18n="OPENPGP/BUTTON_IMPORT" data-bind="i18n: 'text', click: importKey, visible: keys().length > 0"></span>
-			<span class="button" data-i18n="MAIN/BUTTON_CANCEL" data-bind="i18n: 'text', command: closeCommand"></span>
+			<span class="button" data-i18n="MAIN/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
 		</div>
 	</div>
 </div>

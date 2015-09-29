@@ -3,8 +3,10 @@
 var
 	ko = require('knockout'),
 	$ = require('jquery'),
+	_ = require('underscore'),
 	
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -12,6 +14,8 @@ var
  */
 function CConfirmPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fConfirmCallback = null;
 	this.confirmDesc = ko.observable('');
 	this.title = ko.observable('');
@@ -19,6 +23,8 @@ function CConfirmPopup()
 	this.cancelButtonText = ko.observable(TextUtils.i18n('MAIN/BUTTON_CANCEL'));
 	this.shown = false;
 }
+
+_.extendOwn(CConfirmPopup.prototype, CAbstractPopup.prototype);
 
 CConfirmPopup.prototype.PopupTemplate = 'Core_ConfirmPopup';
 
@@ -59,22 +65,17 @@ CConfirmPopup.prototype.yesClick = function ()
 		this.fConfirmCallback(true);
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
-CConfirmPopup.prototype.noClick = function ()
+CConfirmPopup.prototype.cancelPopup = function ()
 {
 	if (this.fConfirmCallback)
 	{
 		this.fConfirmCallback(false);
 	}
 
-	this.closeCommand();
-};
-
-CConfirmPopup.prototype.onEscHandler = function ()
-{
-	this.noClick();
+	this.closePopup();
 };
 
 module.exports = new CConfirmPopup();

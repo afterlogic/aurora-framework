@@ -1,7 +1,7 @@
 <div class="compose_popup popup" style="display: none;">
 	<div class="mask" data-bind="click: minimize, visible: !minimized()"></div>
 	<div class="popup_panel" data-bind="visible: !minimized()">
-		<span class="close" data-bind="click: onCancelClick"></span>
+		<span class="close" data-bind="click: cancelPopup"></span>
 		<!-- ko template: {name: $data.ViewTemplate} --><!-- /ko -->
 	</div>
 	<span class="helper" data-bind="visible: !minimized()"></span>

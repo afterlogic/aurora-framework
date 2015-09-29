@@ -2,9 +2,11 @@
 
 var
 	ko = require('knockout'),
+	_ = require('underscore'),
 	
 	App = require('core/js/App.js'),
-	Ajax = require('core/js/Ajax.js')
+	Ajax = require('core/js/Ajax.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -12,10 +14,14 @@ var
  */
 function CSharePopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.item = null;
 	this.pub = ko.observable('');
 	this.pubFocus = ko.observable(false);
 }
+
+_.extendOwn(CSharePopup.prototype, CAbstractPopup.prototype);
 
 CSharePopup.prototype.PopupTemplate = 'Files_SharePopup';
 
@@ -54,11 +60,6 @@ CSharePopup.prototype.onFilesCreatePublicLinkResponse = function (oResult, oRequ
 	}
 };
 
-CSharePopup.prototype.onOKClick = function ()
-{
-	this.closeCommand();
-};
-
 CSharePopup.prototype.onCancelSharingClick = function ()
 {
 	if (this.item)
@@ -69,7 +70,7 @@ CSharePopup.prototype.onCancelSharingClick = function ()
 				'Type': this.item.storageType(),
 				'Path': this.item.path(),
 				'Name': this.item.fileName()
-			}, this.closeCommand, this);
+			}, this.closePopup, this);
 		this.item.shared(false);
 	}
 };

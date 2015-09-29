@@ -789,7 +789,7 @@ CComposeView.prototype.onHide = function ()
 {
 	this.stopAutosaveTimer();
 
-	if (!$.isFunction(this.closeCommand) && this.hasSomethingToSave())
+	if (!$.isFunction(this.closePopup) && this.hasSomethingToSave())
 	{
 		this.executeSave(true);
 	}
@@ -1552,9 +1552,9 @@ CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oReque
 			{
 				if (this.backToListOnSendOrSave())
 				{
-					if ($.isFunction(this.closeCommand))
+					if ($.isFunction(this.closePopup))
 					{
-						this.closeCommand();
+						this.closePopup();
 					}
 					else
 					{
@@ -1788,9 +1788,9 @@ CComposeView.prototype.openInNewWindow = function ()
 
 	this.commit();
 
-	if ($.isFunction(this.closeCommand))
+	if ($.isFunction(this.closePopup))
 	{
-		this.closeCommand();
+		this.closePopup();
 	}
 	else
 	{

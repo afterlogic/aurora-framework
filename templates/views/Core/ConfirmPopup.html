@@ -1,12 +1,12 @@
 <div class="confirm popup" style="display: none;">
 	<div class="mask"></div>
 	<div class="popup_panel">
-		<span class="close" data-bind="click: noClick"></span>
+		<span class="close" data-bind="click: cancelPopup"></span>
 		<span class="title" data-bind="visible: (title() !== ''), text: title"></span>
 		<span class="text" data-bind="html: confirmDesc"></span>
 		<div class="buttons">
 			<span class="button success" data-bind="click: yesClick, text: okButtonText" id="selenium_confirm_ok_button"></span>
-			<span class="button secondary cancel" data-bind="click: noClick, text: cancelButtonText"></span>
+			<span class="button secondary cancel" data-bind="click: cancelPopup, text: cancelButtonText"></span>
 		</div>
 	</div>
 	<span class="helper"></span>

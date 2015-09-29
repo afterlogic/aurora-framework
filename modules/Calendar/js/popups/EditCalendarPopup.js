@@ -9,6 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	
 	Popups = require('core/js/Popups.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js')
 ;
 
@@ -17,6 +18,8 @@ var
  */
 function CEditCalendarPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	
 	this.calendarId = ko.observable(null);
@@ -31,6 +34,8 @@ function CEditCalendarPopup()
 	
 	this.popupTitle = ko.observable('');
 }
+
+_.extendOwn(CEditCalendarPopup.prototype, CAbstractPopup.prototype);
 
 CEditCalendarPopup.prototype.PopupTemplate = 'Calendar_EditCalendarPopup';
 
@@ -101,13 +106,8 @@ CEditCalendarPopup.prototype.onSaveClick = function ()
 			this.fCallback(this.calendarName(), this.calendarDescription(), this.selectedColor(), this.calendarId());
 			this.clearFields();
 		}
-		this.closeCommand();
+		this.closePopup();
 	}
-};
-
-CEditCalendarPopup.prototype.onCancelClick = function ()
-{
-	this.closeCommand();
 };
 
 module.exports = new CEditCalendarPopup();

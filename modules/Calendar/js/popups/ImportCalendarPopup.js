@@ -10,7 +10,8 @@ var
 	App = require('core/js/App.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
-	CJua = require('core/js/CJua.js')
+	CJua = require('core/js/CJua.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -18,17 +19,20 @@ var
  */
 function CImportCalendarPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	
 	this.oJua = null;
 	this.allowDragNDrop = ko.observable(false);
 	
-	this.visibility = ko.observable(false);
 	this.importing = ko.observable(false);
 
 	this.color	= ko.observable('');
 	this.calendarId	= ko.observable('');
 }
+
+_.extendOwn(CImportCalendarPopup.prototype, CAbstractPopup.prototype);
 
 CImportCalendarPopup.prototype.PopupTemplate = 'Calendar_ImportCalendarPopup';
 
@@ -105,7 +109,7 @@ CImportCalendarPopup.prototype.onFileUploadComplete = function (sFileUid, bRespo
 	{
 		this.importing(false);
 		this.fCallback();
-		this.closeCommand();
+		this.closePopup();
 	}
 	else
 	{
@@ -118,11 +122,6 @@ CImportCalendarPopup.prototype.onFileUploadComplete = function (sFileUid, bRespo
 			Screens.showError(TextUtils.i18n('WARNING/ERROR_UPLOAD_FILE'));
 		}
 	}
-};
-
-CImportCalendarPopup.prototype.onCancelClick = function ()
-{
-	this.closeCommand();
 };
 
 module.exports = new CImportCalendarPopup();

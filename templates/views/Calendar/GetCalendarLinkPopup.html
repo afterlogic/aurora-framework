@@ -1,7 +1,7 @@
 <div class="popup calendar_popup calendar_getlink" style="display: none;">
-	<div class="mask" data-bind="click: onCancelClick"></div>
+	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
-		<span class="close" data-bind="click: onCancelClick"></span>
+		<span class="close" data-bind="click: cancelPopup"></span>
 		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: 'text'" data-i18n="CALENDAR/TITLE_GETLINK_CALENDAR"></span>
 
 		<div class="fields">
@@ -30,7 +30,7 @@
 				</div>
 			</div>		
 			<div class="buttons">
-				<span class="button save" data-i18n="CALENDAR/BUTTON_CLOSE" data-bind="i18n: 'text', click: onCancelClick"></span>
+				<span class="button save" data-i18n="CALENDAR/BUTTON_CLOSE" data-bind="i18n: 'text', click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

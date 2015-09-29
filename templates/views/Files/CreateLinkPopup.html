@@ -1,7 +1,7 @@
 <div class="popup files_create_link" style="display: none;">
-	<div class="mask" data-bind="click: onCancelClick"></div>
+	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
-		<span class="close" data-bind="click: onCancelClick"></span>
+		<span class="close" data-bind="click: cancelPopup"></span>
 
 		<div class="large attachments" data-bind="visible: urlChecked()" style="text-align: center;">
 			<!-- ko if: fileItem -->
@@ -22,7 +22,7 @@
 
 			<div class="buttons">
 				<span class="button save" data-i18n="SETTINGS/BUTTON_ADD_SHORTCUT" data-bind="css: {'disabled': !urlChecked()}, i18n: 'text', command: saveCommand"></span>
-				<span class="button cancel secondary" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: onCancelClick"></span>
+				<span class="button cancel secondary" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

@@ -2,7 +2,10 @@
 
 var
 	ko = require('knockout'),
-	$ = require('jquery')
+	$ = require('jquery'),
+	_ = require('underscore'),
+	
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -10,6 +13,8 @@ var
  */
 function CRenamePopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	this.item = null;
 	this.name = ko.observable('');
@@ -20,6 +25,8 @@ function CRenamePopup()
 		this.name.error('');
 	}, this);
 }
+
+_.extendOwn(CRenamePopup.prototype, CAbstractPopup.prototype);
 
 CRenamePopup.prototype.PopupTemplate = 'Files_RenamePopup';
 
@@ -56,18 +63,13 @@ CRenamePopup.prototype.onOKClick = function ()
 		}
 		else
 		{
-			this.closeCommand();
+			this.closePopup();
 		}
 	}
 	else
 	{
-		this.closeCommand();
+		this.closePopup();
 	}
-};
-
-CRenamePopup.prototype.onCancelClick = function ()
-{
-	this.closeCommand();
 };
 
 module.exports = new CRenamePopup();

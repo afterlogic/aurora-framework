@@ -3,8 +3,10 @@
 var
 	ko = require('knockout'),
 	$ = require('jquery'),
+	_ = require('underscore'),
 	
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -12,11 +14,17 @@ var
  */
 function CAlertPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.alertDesc = ko.observable('');
 	this.closeCallback = null;
 	this.title = ko.observable('');
 	this.okButtonText = ko.observable(TextUtils.i18n('MAIN/BUTTON_OK'));
 }
+
+_.extendOwn(CAlertPopup.prototype, CAbstractPopup.prototype);
+
+CAlertPopup.prototype.PopupTemplate = 'Core_AlertPopup';
 
 /**
  * @param {string} sDesc
@@ -32,20 +40,18 @@ CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sTitle, sOkButto
 	this.okButtonText(sOkButtonText || TextUtils.i18n('MAIN/BUTTON_OK'));
 };
 
-CAlertPopup.prototype.PopupTemplate = 'Core_AlertPopup';
-
 CAlertPopup.prototype.onEnterHandler = function ()
 {
-	this.close();
+	this.closePopup();
 };
 
-CAlertPopup.prototype.close = function ()
+CAlertPopup.prototype.cancelPopup = function ()
 {
 	if ($.isFunction(this.closeCallback))
 	{
 		this.closeCallback();
 	}
-	this.closeCommand();
+	this.closePopup();
 };
 
 module.exports = new CAlertPopup();

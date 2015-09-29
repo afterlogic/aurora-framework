@@ -1,14 +1,23 @@
 'use strict';
 
-var ko = require('knockout');
+var
+	ko = require('knockout'),
+	_ = require('underscore'),
+	
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
+;
 
 /**
  * @constructor
  */
 function CEmbedHtmlPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.htmlEmbed = ko.observable('');
 }
+
+_.extendOwn(CEmbedHtmlPopup.prototype, CAbstractPopup.prototype);
 
 CEmbedHtmlPopup.prototype.PopupTemplate = 'Core_EmbedHtmlPopup';
 
@@ -19,7 +28,7 @@ CEmbedHtmlPopup.prototype.onShow = function (sHtmlEmbed)
 
 CEmbedHtmlPopup.prototype.onClose = function ()
 {
-	this.closeCommand();
+	this.closePopup();
 	this.htmlEmbed('');
 };
 

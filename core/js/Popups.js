@@ -14,6 +14,7 @@ var
 function CPopups()
 {
 	this.popups = [];
+	this.$popupsPlace = $('#pSevenContent .popups');
 }
 
 CPopups.prototype.hasOpenedMinimizedPopups = function ()
@@ -50,71 +51,39 @@ CPopups.prototype.hasOpenedMaximizedPopups = function ()
 };
 
 /**
- * @param {?} oPopupViewModel
+ * @param {?} oPopup
  * @param {Array=} aParameters
  */
-CPopups.prototype.showPopup = function (oPopupViewModel, aParameters)
+CPopups.prototype.showPopup = function (oPopup, aParameters)
 {
-	if (oPopupViewModel)
+	if (oPopup)
 	{
-		if (!oPopupViewModel.__builded)
+		if (!oPopup.$popupDom && Utils.isNonEmptyString(oPopup.PopupTemplate))
 		{
-			var
-				oViewModelDom = null,
-				sTemplate = oPopupViewModel.PopupTemplate || ''
-			;
+			var $templatePlace = $('<!-- ko template: { name: \'' + oPopup.PopupTemplate + '\' } --><!-- /ko -->').appendTo(this.$popupsPlace);
 
-			if ('' !== sTemplate)
-			{
-				oViewModelDom = $('<!-- ko template: { name: \'' + sTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .popups'));
+			ko.applyBindings(oPopup, $templatePlace[0]);
 
-				ko.applyBindings(oPopupViewModel, oViewModelDom[0]);
-				
-				oPopupViewModel.$popupDom = oViewModelDom.next();
-				
-				oPopupViewModel.visibility = ko.observable(false);
+			oPopup.$popupDom = $templatePlace.next();
 
-				oPopupViewModel.showViewModel = Utils.createCommand(oPopupViewModel, _.bind(function () {
-					this.showPopup(oPopupViewModel);
-				}, this));
-
-				oPopupViewModel.closeCommand = Utils.createCommand(oPopupViewModel, _.bind(function () {
-					this.hidePopup(oPopupViewModel);
-				}, this));
-
-				if ($.isFunction(oPopupViewModel.onBind))
-				{
-					oPopupViewModel.onBind();
-				}
-				
-				oPopupViewModel.__builded = true;
-			}
+			oPopup.onBind();
 		}
 
-		if (oPopupViewModel && oPopupViewModel.$popupDom)
-		{
-			if (!oPopupViewModel.visibility())
-			{
-				oPopupViewModel.$popupDom.show();
-				_.delay(function() {
-					oPopupViewModel.$popupDom.addClass('visible');
-				}, 50);
-				oPopupViewModel.visibility(true);
+		oPopup.openPopup(aParameters);
+	}
+};
 
-				this.popups.push(oPopupViewModel);
+/**
+ * @param {Object} oPopup
+ */
+CPopups.prototype.addPopup = function (oPopup)
+{
+	this.popups.push(oPopup);
 
-				if (this.popups.length === 1)
-				{
-					this.keyupPopupBinded = _.bind(this.keyupPopup, this);
-					$(document).on('keyup', this.keyupPopupBinded);
-				}
-			}
-			
-			if ($.isFunction(oPopupViewModel.onShow))
-			{
-				oPopupViewModel.onShow.apply(oPopupViewModel, aParameters);
-			}
-		}
+	if (this.popups.length === 1)
+	{
+		this.keyupPopupBinded = _.bind(this.keyupPopup, this);
+		$(document).on('keyup', this.keyupPopupBinded);
 	}
 };
 
@@ -123,54 +92,47 @@ CPopups.prototype.showPopup = function (oPopupViewModel, aParameters)
  */
 CPopups.prototype.keyupPopup = function (oEvent)
 {
-	var oViewModel = (this.popups.length > 0) ? this.popups[this.popups.length - 1] : null;
+	var oPopup = (this.popups.length > 0) ? this.popups[this.popups.length - 1] : null;
 	
-	if (oEvent && oViewModel && (!oViewModel.minimized || !oViewModel.minimized()))
+	if (oEvent && oPopup && (!oPopup.minimized || !oPopup.minimized()))
 	{
 		var iKeyCode = window.parseInt(oEvent.keyCode, 10);
+		
 		if (Enums.Key.Esc === iKeyCode)
 		{
-			if (oViewModel.onEscHandler)
-			{
-				oViewModel.onEscHandler(oEvent);
-			}
-			else
-			{
-				oViewModel.closeCommand();
-			}
+			oPopup.onEscHandler(oEvent);
 		}
 
-		if ((Enums.Key.Enter === iKeyCode || Enums.Key.Space === iKeyCode) && oViewModel.onEnterHandler)
+		if ((Enums.Key.Enter === iKeyCode || Enums.Key.Space === iKeyCode))
 		{
-			oViewModel.onEnterHandler();
+			oPopup.onEnterHandler();
 		}
 	}
 };
 
 /**
- * @param {?} oPopupViewModel
+ * @param {?} oPopup
  */
-CPopups.prototype.hidePopup = function (oPopupViewModel)
+CPopups.prototype.removePopup = function (oPopup)
 {
-	if (oPopupViewModel && oPopupViewModel.$popupDom)
+	if (oPopup)
 	{
-		if (this.keyupPopupBinded && this.popups.length === 1)
-		{
-			$(document).off('keyup', this.keyupPopupBinded);
-			this.keyupPopupBinded = undefined;
-		}
-		
-		oPopupViewModel.$popupDom.removeClass('visible').hide();
-
-		oPopupViewModel.visibility(false);
-		
-		if ($.isFunction(oPopupViewModel.onHide))
-		{
-			oPopupViewModel.onHide();
-		}
-		
-		this.popups = _.without(this.popups, oPopupViewModel);
+		oPopup.closePopup();
 	}
+};
+
+/**
+ * @param {?} oPopup
+ */
+CPopups.prototype.removePopup = function (oPopup)
+{
+	if (this.keyupPopupBinded && this.popups.length === 1)
+	{
+		$(document).off('keyup', this.keyupPopupBinded);
+		this.keyupPopupBinded = undefined;
+	}
+
+	this.popups = _.without(this.popups, oPopup);
 };
 
 module.exports = new CPopups();

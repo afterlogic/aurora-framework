@@ -2,7 +2,10 @@
 
 var
 	ko = require('knockout'),
-	$ = require('jquery')
+	$ = require('jquery'),
+	_ = require('underscore'),
+	
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -10,6 +13,8 @@ var
  */
 function CCreateFolderPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	this.folderName = ko.observable('');
 	this.folderName.focus = ko.observable(false);
@@ -19,6 +24,8 @@ function CCreateFolderPopup()
 		this.folderName.error('');
 	}, this);
 }
+
+_.extendOwn(CCreateFolderPopup.prototype, CAbstractPopup.prototype);
 
 CCreateFolderPopup.prototype.PopupTemplate = 'Files_CreateFolderPopup';
 
@@ -50,18 +57,13 @@ CCreateFolderPopup.prototype.onOKClick = function ()
 		}
 		else
 		{
-			this.closeCommand();
+			this.closePopup();
 		}
 	}
 	else
 	{
-		this.closeCommand();
+		this.closePopup();
 	}
-};
-
-CCreateFolderPopup.prototype.onCancelClick = function ()
-{
-	this.closeCommand();
 };
 
 module.exports = new CCreateFolderPopup();

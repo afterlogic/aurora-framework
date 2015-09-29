@@ -2,7 +2,10 @@
 
 var
 	ko = require('knockout'),
-	$ = require('jquery')
+	$ = require('jquery'),
+	_ = require('underscore'),
+	
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -10,6 +13,8 @@ var
  */
 function CSelectCalendarPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	this.fProceedUploading = null;
 
@@ -30,6 +35,8 @@ function CSelectCalendarPopup()
 	}, this);
 	this.selectedCalendarIsEditable = ko.observable(false);
 }
+
+_.extendOwn(CSelectCalendarPopup.prototype, CAbstractPopup.prototype);
 
 CSelectCalendarPopup.prototype.PopupTemplate = 'Calendar_SelectCalendarPopup';
 
@@ -52,12 +59,7 @@ CSelectCalendarPopup.prototype.onSaveClick = function ()
     {
 		this.fCallback(this.selectedCalendarId(), this.fProceedUploading);
     }
-    this.closeCommand();
-};
-
-CSelectCalendarPopup.prototype.onCancelClick = function ()
-{
-	this.closeCommand();
+    this.closePopup();
 };
 
 /**

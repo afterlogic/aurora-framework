@@ -3,8 +3,10 @@
 var
 	ko = require('knockout'),
 	$ = require('jquery'),
+	_ = require('underscore'),
 	
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
 /**
@@ -12,12 +14,16 @@ var
  */
 function CEditEventRecurrencePopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.fCallback = null;
 	this.confirmDesc = TextUtils.i18n('CALENDAR/EDIT_RECURRENCE_CONFIRM_DESCRIPTION');
 	this.onlyThisInstanceButtonText = ko.observable(TextUtils.i18n('CALENDAR/ONLY_THIS_INSTANCE'));
 	this.allEventsButtonText = ko.observable(TextUtils.i18n('CALENDAR/ALL_EVENTS_IN_THE_SERIES'));
 	this.cancelButtonText = ko.observable(TextUtils.i18n('MAIN/BUTTON_CANCEL'));
 }
+
+_.extendOwn(CEditEventRecurrencePopup.prototype, CAbstractPopup.prototype);
 
 CEditEventRecurrencePopup.prototype.PopupTemplate = 'Calendar_EditEventRecurrencePopup';
 
@@ -39,7 +45,7 @@ CEditEventRecurrencePopup.prototype.onlyThisInstanceButtonClick = function ()
 		this.fCallback(Enums.CalendarEditRecurrenceEvent.OnlyThisInstance);
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
 CEditEventRecurrencePopup.prototype.allEventsButtonClick = function ()
@@ -49,22 +55,17 @@ CEditEventRecurrencePopup.prototype.allEventsButtonClick = function ()
 		this.fCallback(Enums.CalendarEditRecurrenceEvent.AllEvents);
 	}
 
-	this.closeCommand();
+	this.closePopup();
 };
 
-CEditEventRecurrencePopup.prototype.cancelButtonClick = function ()
+CEditEventRecurrencePopup.prototype.cancelPopup = function ()
 {
 	if (this.fCallback)
 	{
 		this.fCallback(Enums.CalendarEditRecurrenceEvent.None);
 	}
 
-	this.closeCommand();
-};
-
-CEditEventRecurrencePopup.prototype.onEscHandler = function ()
-{
-	this.cancelButtonClick();
+	this.closePopup();
 };
 
 module.exports = new CEditEventRecurrencePopup();

@@ -9,6 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
 	Ajax = require('core/js/Ajax.js'),
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	bMobileDevice = false
 ;
@@ -18,6 +19,8 @@ var
  */
 function CShareCalendarPopup()
 {
+	CAbstractPopup.call(this);
+	
 	this.guestsDom = ko.observable();
 	this.guestsDom.subscribe(function (a) {
 		this.initInputosaurus(this.guestsDom, this.guests, this.guestsLock);
@@ -74,6 +77,8 @@ function CShareCalendarPopup()
 	this.showGlobalContacts = false;//!!AppData.User.ShowGlobalContacts;
 }
 
+_.extendOwn(CShareCalendarPopup.prototype, CAbstractPopup.prototype);
+
 CShareCalendarPopup.prototype.PopupTemplate = 'Calendar_ShareCalendarPopup';
 
 /**
@@ -111,21 +116,11 @@ CShareCalendarPopup.prototype.onSaveClick = function ()
 	this.closePopup();
 };
 
-CShareCalendarPopup.prototype.onCancelClick = function ()
-{
-	this.closePopup();
-};
-
-CShareCalendarPopup.prototype.onEscHandler = function ()
-{
-	this.onCancelClick();
-};
-
 CShareCalendarPopup.prototype.closePopup = function ()
 {
 	this.cleanAll();
 
-	this.closeCommand();
+	this.closePopup();
 };
 
 CShareCalendarPopup.prototype.cleanAll = function ()
