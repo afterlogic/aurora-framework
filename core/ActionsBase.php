@@ -20,7 +20,7 @@ abstract class ActionsBase
 	protected $aCurrentActionParams = array();
 
 	/**
-	 * @var \CApiContactsManager
+	 * @var \CApiContactsMainManager
 	 */
 	private $oApiContacts = null;
 
@@ -36,7 +36,7 @@ abstract class ActionsBase
 	{
 		if (null === $this->oApiContacts)
 		{
-			$this->oApiContacts = \CApi::Manager('contacts');
+//			$this->oApiContacts = \CApi::Manager('contacts');
 		}
 
 		return $this->oApiContacts;
@@ -49,7 +49,7 @@ abstract class ActionsBase
 	{
 		if (null === $this->oApiGcontacts )
 		{
-			$this->oApiGcontacts  = \CApi::Manager('gcontacts');
+//			$this->oApiGcontacts  = \CApi::Manager('gcontacts');
 		}
 
 		return $this->oApiGcontacts;

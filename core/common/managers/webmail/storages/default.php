@@ -11,7 +11,7 @@ class CApiWebmailStorage extends AApiManagerStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct($sStorageName, CApiGlobalManager &$oManager)
+	public function __construct($sStorageName, AApiManager &$oManager)
 	{
 		parent::__construct('webmail', $sStorageName, $oManager);
 	}

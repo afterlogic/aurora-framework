@@ -8,7 +8,7 @@
 class CApiVoiceManager extends AApiManager
 {
 	/**
-	 * @var $oApiContactsManager CApiContactsmainManager
+	 * @var $oApiContactsManager CApiContactsContactsManager
 	 */
 	private $oApiContactsManager;
 

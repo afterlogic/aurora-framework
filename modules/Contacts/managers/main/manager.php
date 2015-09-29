@@ -3,34 +3,43 @@
 /* -AFTERLOGIC LICENSE HEADER- */
 
 /**
- * @ignore
- *
- * CApiIntegratorManager class summary
- *
- * @package Contactsmain
+ * CApiContactsMainManager class summary
+ * 
+ * @package ContactsMain
  */
-class CApiContactsMainManager extends AApiManagerWithStorage
+class CApiContactsMainManager extends AApiManager
 {
+	/*
+	 * @var $oApiContactsBaseManager CApiContactsBaseManager
+	 */
+	private $oApiContactsBaseManager;
+
+	/*
+	 * @var $oApiContactsGlobalManager CApiContactsGlobalManager
+	 */
+	private $oApiContactsGlobalManager;
+
+	/*
+	 * @var $oApiContactsBaseManagerDAV CApiContactsBaseManager
+	 */
+	private $oApiContactsBaseManagerDAV;
+
 	/**
-	 * Creates a new instance of the object.
-	 *
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db', AApiModule $oModule = null)
 	{
-		parent::__construct('contactsmain', $oManager, $sForcedStorage);
+		parent::__construct('contacts', $oManager, $oModule);
 
-		$this->inc('classes.contact-list-item');
-		$this->inc('classes.contact');
-		$this->inc('classes.group');
-
-		if (CApi::Manager('dav'))
-		{
-			$this->inc('classes.vcard-helper');
-		}
+		$this->oApiContactsGlobalManager = $oModule->GetManager('global', $sForcedStorage);
+		
+		$this->oApiContactsBaseManager = $oModule->GetManager('base', $sForcedStorage);
+		$this->oApiContactsBaseManagerDAV = $oModule->GetManager('base', 'sabredav');
 	}
-
+	
 	/**
+	 * Creates a new instance of ContactList object. 
+	 * 
 	 * @return CContactListItem
 	 */
 	public function createContactListItemObject()
@@ -39,6 +48,8 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * Creates a new instance of Contact object. 
+	 * 
 	 * @return CContact
 	 */
 	public function createContactObject()
@@ -47,6 +58,8 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * Creates a new instance of Group object. 
+	 * 
 	 * @return CGroup
 	 */
 	public function createGroupObject()
@@ -55,1074 +68,1006 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-     * Returns contact item identified by user ID and contact ID.
-     *
-	 * @param int $iUserId
-	 * @param mixed $mContactId
-	 * @param bool $bIgnoreHideInGab. Default value is **false**
-	 * @param int $iSharedTenantId. Default value is **null**
+	 * Returns contact item identified by user ID and contact ID. 
+	 * 
+	 * @param int $iUserId User ID value 
+	 * @param mixed $mContactId Contact ID value 
+	 * @param bool $bIgnoreHideInGab If **true**, the contact will be fetched from Global Address Book disregarding Hidden flag. Default value is **false**. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 * @param int $iSharedTenantId If set, the search will be performed within shared contacts of the specified tenant. Default value is **null**. [Aurora only.](http://dev.afterlogic.com/aurora)
 	 * @param bool $bIgnoreAutoCreate Default value is **false**
-     *
+	 *
 	 * @return CContact|bool
 	 */
 	public function getContactById($iUserId, $mContactId, $bIgnoreHideInGab = false, $iSharedTenantId = null, $bIgnoreAutoCreate = false)
 	{
-		$oContact = null;
-		try
-		{
-			$oContact = $this->oStorage->getContactById($iUserId, $mContactId, $bIgnoreHideInGab, $iSharedTenantId, $bIgnoreAutoCreate);
-			if ($oContact)
-			{
-				$mGroupsIds = $this->getContactGroupsIds($oContact);
-				if (is_array($mGroupsIds))
-				{
-					$oContact->GroupsIds = $mGroupsIds;
-				}
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oContact = false;
-			$this->setLastException($oException);
-		}
-		
-		return $oContact;
+		return $this->oApiContactsBaseManager->getContactById($iUserId, $mContactId, $bIgnoreHideInGab, $iSharedTenantId, $bIgnoreAutoCreate);
 	}
 
 	/**
-     * //TODO
-     *
-	 * @param mixed $mTypeId
-	 * @param int $iContactType
-     *
-	 * @return CContact|bool
-	 */
-	public function GetContactByTypeId($mTypeId, $iContactType)
-	{
-		$oContact = null;
-		try
-		{
-			$oContact = $this->oStorage->GetContactByTypeId($mTypeId, $iContactType);
-			if ($oContact)
-			{
-				$mGroupsIds = $this->getContactGroupsIds($oContact);
-				if (is_array($mGroupsIds))
-				{
-					$oContact->GroupsIds = $mGroupsIds;
-				}
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oContact = false;
-			$this->setLastException($oException);
-		}
-
-		return $oContact;
-	}
-
-	/**
-     * Returns contact item identified by email address.
-     *
-	 * @param int $iUserId
-	 * @param string $sEmail
-     *
+	 * Returns contact item identified by email address. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param string $sEmail Email address 
+	 * 
 	 * @return CContact|bool
 	 */
 	public function getContactByEmail($iUserId, $sEmail)
 	{
-		$oContact = null;
-		try
-		{
-			$oContact = $this->oStorage->getContactByEmail($iUserId, $sEmail);
-			if ($oContact)
-			{
-				$mGroupsIds = $this->getContactGroupsIds($oContact);
-				if (is_array($mGroupsIds))
-				{
-					$oContact->GroupsIds = $mGroupsIds;
-				}
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oContact = false;
-			$this->setLastException($oException);
-		}
-
-		return $oContact;
+		return $this->oApiContactsBaseManager->getContactByEmail($iUserId, $sEmail);
 	}
 
 	/**
-     * Returns contact item identified by str_id value.
-     *
-	 * @param int $iUserId
-	 * @param string $sContactStrId
-	 * @param int $iSharedTenantId. Default value is **null**
-     *
-	 * @return CContact
+	 * Returns contact item identified by str_id value. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param string $sContactStrId str_id value to look up 
+	 * @param int $iSharedTenantId Tenant ID. Default value is **null**. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 * 
+	 * @return CContact|bool
 	 */
 	public function getContactByStrId($iUserId, $sContactStrId, $iSharedTenantId = null)
 	{
-		$oContact = null;
-		try
-		{
-			$oContact = $this->oStorage->getContactByStrId($iUserId, $sContactStrId, $iSharedTenantId);
-			if ($oContact)
-			{
-				$mGroupsIds = $this->getContactGroupsIds($oContact);
-				if (is_array($mGroupsIds))
-				{
-					$oContact->GroupsIds = $mGroupsIds;
-				}
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oContact = false;
-			$this->setLastException($oException);
-		}
-
-		return $oContact;
+		return $this->oApiContactsBaseManager->getContactByStrId($iUserId, $sContactStrId, $iSharedTenantId);
 	}
-	
+
 	/**
-     * Returns list of shared contacts by str_id value.
-     *
+	 * Returns list of shared contacts by str_id value.
+	 *
 	 * @param int $iUserId
-	 * @param int $iSharedTenantId Default value is **null**
-     *
-	 * @return array|bool
+	 * @param int $iSharedTenantId Tenant ID. Default value is **null**. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 *
+	 * @return array
 	 */
 	public function getSharedContactIds($iUserId, $iSharedTenantId = null)
 	{
-		$aContactIds = array();
-		try
-		{
-			$aContactIds = $this->oStorage->getSharedContactIds($iUserId, $iSharedTenantId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$aContactIds = false;
-			$this->setLastException($oException);
-		}
-
-		return $aContactIds;
+		return $this->oApiContactsBaseManager->getSharedContactIds($iUserId, $iSharedTenantId);
 	}
-	
+
 	/**
-	 * @param CContact $oContact
-	 *
+	 * Returns list of groups ID's the specific contact belongs to.
+	 * 
+	 * @param CContact $oContact Contact object 
+	 * 
 	 * @return array|bool
 	 */
 	public function getContactGroupsIds($oContact)
 	{
-		$aGroupsIds = false;
-		try
-		{
-			$aGroupsIds = $this->oStorage->getContactGroupsIds($oContact);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$aGroupsIds = false;
-			$this->setLastException($oException);
-		}
-
-		return $aGroupsIds;
+		return $this->oApiContactsBaseManager->getContactGroupsIds($oContact);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param mixed $mGroupId
-	 *
+	 * Returns group item identified by its ID.
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param mixed $mGroupId Group ID 
+	 * 
 	 * @return CGroup
 	 */
 	public function getGroupById($iUserId, $mGroupId)
 	{
-		$oGroup = null;
-		try
-		{
-			$oGroup = $this->oStorage->getGroupById($iUserId, $mGroupId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oGroup = false;
-			$this->setLastException($oException);
-		}
-
-		return $oGroup;
+		return $this->oApiContactsBaseManager->getGroupById($iUserId, $mGroupId);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param string $sGroupStrId
+	 * Returns group item identified by str_id value. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param string $sGroupStrId str_id value
 	 *
 	 * @return CGroup
 	 */
 	public function getGroupByStrId($iUserId, $sGroupStrId)
 	{
-		$oGroup = null;
-		try
-		{
-			$oGroup = $this->oStorage->getGroupByStrId($iUserId, $sGroupStrId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oGroup = false;
-			$this->setLastException($oException);
-		}
-
-		return $oGroup;
+		return $this->oApiContactsBaseManager->getGroupByStrId($iUserId, $sGroupStrId);
 	}
-
+	
 	/**
-	 * @param int $iUserId
+	 * Returns group item identified by its name.
+	 *
+	 * @param int $iUserId User ID
 	 * @param string $sName
 	 *
 	 * @return CGroup
 	 */
 	public function getGroupByName($iUserId, $sName)
 	{
-		$oGroup = null;
-		try
-		{
-			$oGroup = $this->oStorage->getGroupByName($iUserId, $sName);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$oGroup = false;
-			$this->setLastException($oException);
-		}
-
-		return $oGroup;
-	}
-
-	/**
-	 * @param CContact $oContact
-	 *
-	 * @return bool
-	 */
-	public function updateContact($oContact)
-	{
-		$bResult = false;
-		try
-		{
-			if ($oContact->validate())
-			{
-				$bResult = $this->oStorage->updateContact($oContact);
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-
-		if ($bResult)
-		{
-			$oApiVoiceManager = /* @var $oApiVoiceManager \CApiVoiceManager */ CApi::Manager('voice');
-			if ($oApiVoiceManager)
-			{
-				$oApiVoiceManager->flushCallersNumbersCache($oContact->IdUser);
-			}
-		}
-
-		return $bResult;
-	}
-	
-	/**
-	 * @param CContact $oContact
-	 * @param int $iUserId
-	 *
-	 * @return string
-	 */
-	public function updateContactUserId($oContact, $iUserId)
-	{
-		$bResult = false;
-		try
-		{
-			if ($oContact->validate())
-			{
-				$bResult = $this->oStorage->updateContactUserId($oContact, $iUserId);
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-
-		if ($bResult)
-		{
-			$oApiVoiceManager = /* @var $oApiVoiceManager \CApiVoiceManager */ CApi::Manager('voice');
-			if ($oApiVoiceManager)
-			{
-				$oApiVoiceManager->flushCallersNumbersCache($iUserId);
-			}
-		}
-
-		return $bResult;
+		return $this->oApiContactsBaseManager->getGroupByName($iUserId, $sName);
 	}	
 
 	/**
+	 * Updates contact information. Using this method is required to finalize changes made to the contact object. 
+	 * 
+	 * @param CContact $oContact  Contact object to be updated 
+	 * @param bool $bUpdateFromGlobal
+	 * 
+	 * @return bool
+	 */
+	public function updateContact($oContact, $bUpdateFromGlobal = true)
+	{
+		$res1 = $res2 = false;
+
+		if ($oContact)
+		{
+			if ($oContact->Type === EContactType::Personal)
+			{
+				$res1 = $this->oApiContactsBaseManager->updateContact($oContact);
+			}
+			else if ($oContact->Type === EContactType::Global_)
+			{
+				$res1 = $this->oApiContactsBaseManager->updateContact($oContact);
+				
+				if ($res1 && $bUpdateFromGlobal)
+				{
+					$oGlobalContact = $this->oApiContactsBaseManager->GetMyGlobalContact($oContact->IdUser);
+					if ($oGlobalContact)
+					{
+						if ($oGlobalContact->CompareAndComputedByNewGlobalContact($oContact))
+						{
+							$res1 = $this->oApiContactsGlobalManager->updateContact($oGlobalContact);
+						}
+						else
+						{
+							$res1 = true;
+						}
+					}
+				}
+			}
+
+			if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
+			{
+				$this->updateContactGroupsIdsWithNames($oContact);
+				$res2 = $this->oApiContactsMainManagerDAV->updateContact($oContact);
+			}
+			else
+			{
+				$res2 = true;
+			}
+		}
+
+		return ($res1 && $res2);
+	}
+	
+	/**
+	 * Update contact information setting a new user ID 
+	 * 
+	 * @param CContact $oContact Contact object to be updated 
+	 * @param int $iUserId User ID 
+	 * 
+	 * @return bool
+	 */
+	public function updateContactUserId($oContact, $iUserId)
+	{
+		$res1 = $res2 = false;
+		if ($oContact)
+		{
+			if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
+			{
+				$res2 = $this->oApiContactsMainManagerDAV->updateContactUserId($oContact, $iUserId);
+			}
+			else
+			{
+				$res2 = true;
+			}
+			$res1 = $this->oApiContactsBaseManager->updateContactUserId($oContact, $iUserId);
+		}
+
+		return ($res1 && $res2);
+	}		
+
+	/**
+	 * Updates group information. Using this method is required to finalize changes made to the group object. 
+	 * 
 	 * @param CGroup $oGroup
+	 *
 	 * @return bool
 	 */
 	public function updateGroup($oGroup)
 	{
-		$bResult = false;
-		try
+		$res1 = $res2 = false;
+
+		$oGroupDb = $this->oApiContactsBaseManager->getGroupById($oGroup->IdUser, $oGroup->IdGroup);
+
+		$res1 = $this->oApiContactsBaseManager->updateGroup($oGroup);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts') && $oGroupDb)
 		{
-			if ($oGroup->validate())
+			$oGroup->IdGroup = $oGroupDb->Name;
+
+			$oContactItems = $this->oApiContactsBaseManager->getContactItems($oGroup->IdUser, EContactSortField::EMail,
+				ESortOrder::ASC, 0, 999, '', '', $oGroupDb->IdGroup);
+			
+			if (is_array($oContactItems))
 			{
-				$bResult = $this->oStorage->updateGroup($oGroup);
+				foreach ($oContactItems as $oContactItem)
+				{
+					$oContact = $this->oApiContactsMainManagerDAV->getContactById($oGroup->IdUser, $oContactItem->IdStr);
+					if ($oContact)
+					{
+						$aGroupsIds = array();
+						foreach($oContact->GroupsIds as $sGroupId)
+						{
+							$sGroupId = (string) $sGroupId;
+							if ($sGroupId === (string) $oGroup->IdGroup)
+							{
+								$sGroupId = $oGroup->Name;
+							}
+							
+							$aGroupsIds[] = $sGroupId;
+						}
+						$oContact->GroupsIds = $aGroupsIds;
+						$this->oApiContactsMainManagerDAV->updateContact($oContact);
+					}
+				}
 			}
+			$res2 = true;
 		}
-		catch (CApiBaseException $oException)
+		else
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = true;
 		}
 
-		return $bResult;
+		return ($res1 && $res2);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param string $sSearch Default value is empty string
-	 * @param string $sFirstCharacter Default value is empty string
-	 * @param int $iGroupId Default value is **0**
-	 * @param int $iTenantId Default value is **null**
-	 * @param bool $bAll Default value is **false**
-	 *
+	 * Returns list of contacts which match the specified criteria 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param string $sSearch Search pattern. Default value is empty string.
+	 * @param string $sFirstCharacter If specified, will only return contacts with names starting from the specified character. Default value is empty string.
+	 * @param int $iGroupId Group ID. Default value is **0**.
+	 * @param int $iTenantId Group ID. Default value is null.
+	 * @param bool $bAll Default value is null
+	 * 
 	 * @return int
 	 */
 	public function getContactItemsCount($iUserId, $sSearch = '', $sFirstCharacter = '', $iGroupId = 0, $iTenantId = null, $bAll = false)
 	{
-		$iResult = 0;
-		try
-		{
-			$iResult = $this->oStorage->getContactItemsCount($iUserId, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId, $bAll);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$iResult = 0;
-			$this->setLastException($oException);
-		}
-
-		return $iResult;
+		return $this->oApiContactsBaseManager->getContactItemsCount($iUserId, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId, $bAll);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param int $iOffset Default value is **0**
-	 * @param int $iRequestLimit Default value is **20**
-	 *
-	 * @return bool|array
+	 * Returns list of contacts within specified range. Sorting is not performed. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param int $iOffset Ordinal number of the contact item the list stars with. Default value is **0**.
+	 * @param int $iRequestLimit The upper limit for total number of contacts returned. Default value is **20**.
+	 * 
+	 * @return array|bool
 	 */
 	public function getContactItemsWithoutOrder($iUserId, $iOffset = 0, $iRequestLimit = 20)
 	{
-		$mResult = false;
-		try
-		{
-			$mResult = $this->oStorage->getContactItemsWithoutOrder($iUserId, $iOffset, $iRequestLimit);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$mResult = false;
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
+		return $this->oApiContactsBaseManager->getContactItemsWithoutOrder($iUserId, $iOffset, $iRequestLimit);
 	}
 
 	/**
-	 * @param string $mUserId
-	 * @param int $iSortField Default value is **EContactSortField::EMail 2**,
-	 * @param int $iSortOrder Default value is **ESortOrder::ASC 0**,
-	 * @param int $iOffset Default value is **0**
-	 * @param int $iRequestLimit Default value is **20**
-	 * @param string $sSearch Default value is empty string
-	 * @param string $sFirstCharacter Default value is empty string
-	 * @param string $mGroupId Default value is empty string
-	 * @param int $iTenantId Default value is **null**
-	 * @param bool $bAll Default value is **false**
+	 * Returns list of contacts within specified range, sorted according to specified requirements. 
+	 * 
+	 * @param string $mUserId User ID.
+	 * @param int $iSortField Sort field. Accepted values:
 	 *
-	 * @return bool|array
-	 */
-	public function getContactItems($mUserId, $iSortField = EContactSortField::EMail, $iSortOrder = ESortOrder::ASC, $iOffset = 0, $iRequestLimit = 20, $sSearch = '', $sFirstCharacter = '', $mGroupId = '', $iTenantId = null, $bAll = false)
-	{
-		$mResult = false;
-		try
-		{
-			$mResult = $this->oStorage->getContactItems($mUserId, $iSortField, $iSortOrder,
-				$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $mGroupId, $iTenantId, $bAll);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$mResult = false;
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
-	}
-	
-	/**
-	 * @param string $mUserId
+	 *		EContactSortField::Name
+	 *		EContactSortField::EMail
+	 *		EContactSortField::Frequency
 	 *
-	 * @return bool|array
-	 */
-	public function GetContactItemObjects($mUserId)
-	{
-		$mResult = false;
-		try
-		{
-			$mResult = $this->oStorage->GetContactItemObjects($mUserId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$mResult = false;
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
-	}	
-
-	/**
-	 * @param int $iUserId
+	 * Default value is **EContactSortField::EMail**.
+	 * @param int $iSortOrder Sorting order. Accepted values:
 	 *
-	 * @return CContact|null
+	 *		ESortOrder::ASC
+	 *		ESortOrder::DESC,
+	 *
+	 * for ascending and descending respectively. Default value is **ESortOrder::ASC**.
+	 * @param int $iOffset Ordinal number of the contact item the list stars with. Default value is **0**.
+	 * @param int $iRequestLimit The upper limit for total number of contacts returned. Default value is **20**.
+	 * @param string $sSearch Search pattern. Default value is empty string.
+	 * @param string $sFirstCharacter If specified, will only return contacts with names starting from the specified character. Default value is empty string.
+	 * @param string $mGroupId Group ID. Default value is empty string.
+	 * @param int $iTenantId Tenant ID. Default value is **null**. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 * @param bool $bAll
+	 * 
+	 * @return array|bool
 	 */
-	public function GetMyGlobalContact($iUserId)
+	public function getContactItems($mUserId,
+		$iSortField = EContactSortField::EMail, $iSortOrder = ESortOrder::ASC,
+		$iOffset = 0, $iRequestLimit = 20, $sSearch = '', $sFirstCharacter = '', $mGroupId = '', $iTenantId = null, $bAll = false)
 	{
-		return $this->oStorage->GetMyGlobalContact($iUserId);
+		return $this->oApiContactsBaseManager->getContactItems($mUserId, $iSortField, $iSortOrder,
+			$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $mGroupId, $iTenantId, $bAll);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param string $sSearch Default value is empty string
-	 * @param string $sFirstCharacter Default value is empty string
-	 *
+	 * Returns a number of groups which match the specified criteria. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param string $sSearch = '' Search pattern. Default value is empty string. 
+	 * @param string $sFirstCharacter = '' If specified, will only return contacts with names starting from the specified character. Default value is empty string. 
+	 * 
 	 * @return int
 	 */
 	public function getGroupItemsCount($iUserId, $sSearch = '', $sFirstCharacter = '')
 	{
-		$iResult = 0;
-		try
-		{
-			$iResult = $this->oStorage->getGroupItemsCount($iUserId, $sSearch, $sFirstCharacter);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$iResult = 0;
-			$this->setLastException($oException);
-		}
-
-		return $iResult;
+		return $this->oApiContactsBaseManager->getGroupItemsCount($iUserId, $sSearch, $sFirstCharacter);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param int $iSortField Default value is **EContactSortField::Name 1**,
-	 * @param int $iSortOrder Default value is **ESortOrder::ASC 0**,
-	 * @param int $iOffset Default value is **0**
-	 * @param int $iRequestLimit Default value is **20**
-	 * @param string $sSearch Default value is empty string
-	 * @param string $sFirstCharacter Default value is empty string
-	 * @param int $iContactId Default value is **0**
+	 * Returns filtered and sorted list of user's groups. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param int $iSortField Default value is **EContactSortField::Name**.
+	 * @param int $iSortOrder Sorting order. Accepted values:
 	 *
-	 * @return bool|array
+	 *		ESortOrder::ASC
+	 *		ESortOrder::DESC,
+	 *
+	 * for ascending and descending respectively. Default value is **ESortOrder::ASC**. ,
+	 * @param int $iOffset Ordinal number of the contact item the list stars with. Default value is **0**.
+	 * @param int $iRequestLimit The upper limit for total number of contacts returned. Default value is **20**.
+	 * @param string $sSearch Search pattern. Default value is empty string.
+	 * @param string $sFirstCharacter If specified, will only return contacts with names starting from the specified character. Default value is empty string.
+	 * @param int $iContactId If set, will only return groups which contain specific contact. Default value is **0**.
+	 * 
+	 * @return array|bool
 	 */
 	public function getGroupItems($iUserId,
 		$iSortField = EContactSortField::Name, $iSortOrder = ESortOrder::ASC,
 		$iOffset = 0, $iRequestLimit = 20, $sSearch = '', $sFirstCharacter = '', $iContactId = 0)
 	{
-		$mResult = false;
-		try
-		{
-			$mResult = $this->oStorage->getGroupItems($iUserId, $iSortField, $iSortOrder,
-				$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iContactId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$mResult = false;
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
+		return $this->oApiContactsBaseManager->getGroupItems($iUserId, $iSortField, $iSortOrder,
+			$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iContactId);
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * Provides flexible interface for getting autocompletion list of contacts 
+	 * 
+	 * @param CAccount $oAccount Account object 
+	 * @param string $sSearch Search pattern, usually a text entered in the input field thus far. Default value is empty string.
+	 * @param int $iRequestLimit The upper limit for total number of contacts returned. Default value is **20**.
+	 * @param bool $bGlobalOnly If set to **true**, will only return entries from Global Address book. Default value is **false**. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 * @param bool $bPhoneOnly If set to **true**, will only search against phone numbers. Default value is **false**.
+	 * @param int $iSharedTenantId If specified, will only search within shared contacts for specific tenant. Default value is **null**. [Aurora only.](http://dev.afterlogic.com/aurora)
 	 *
-	 * @return bool|array
-	 */
-	public function GetAllContactsNamesWithPhones($oAccount)
-	{
-		$mResult = false;
-		try
-		{
-			$mResult = array();
-			$oApiCapaManager = /* @var $oApiCapaManager CApiCapabilityManager */ CApi::Manager('capability');
-			if ($oApiCapaManager)
-			{
-				if ($oApiCapaManager->isPersonalContactsSupported($oAccount))
-				{
-					$mResult = $this->oStorage->GetAllContactsNamesWithPhones($oAccount->IdUser, $oAccount->IdTenant,
-						$oApiCapaManager->isGlobalContactsSupported($oAccount));
-				}
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$mResult = false;
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
-	}
-
-	/**
-	 * @param CAccount $oAccount
-	 * @param string $sSearch Default value is empty string
-	 * @param int $iRequestLimit Default value is **20**
-	 * @param bool $bGlobalOnly Default value is **false**
-	 * @param bool $bPhoneOnly Default value is **false**
-	 * @param int $iSharedTenantId Default value is **null**
-	 *
-	 * @throws $oException
-	 *
-	 * @return bool|array
+	 * @return array|bool
 	 */
 	public function getSuggestItems($oAccount, $sSearch = '', $iRequestLimit = 20, $bGlobalOnly = false, $bPhoneOnly = false, $iSharedTenantId = null)
 	{
-		$mResult = false;
-		try
-		{
-			$mResult = array();
-			$oApiCapaManager = /* @var $oApiCapaManager CApiCapabilityManager */ CApi::Manager('capability');
-
-			if (!$bGlobalOnly && $oApiCapaManager->isPersonalContactsSupported($oAccount))
-			{
-				$aGroupItems = $this->oStorage->GetSuggestGroupItems($oAccount->IdUser, $sSearch, $iRequestLimit, $iSharedTenantId);
-				if (is_array($aGroupItems))
-				{
-					$mResult = array_merge($mResult, $aGroupItems);
-				}
-
-				$aContactItems = $this->oStorage->GetSuggestContactItems($oAccount->IdUser,
-					$sSearch, $iRequestLimit, $bPhoneOnly, $iSharedTenantId, false);
-
-				if (is_array($aContactItems))
-				{
-					$aAuto = array();
-					$aNonAuto = array();
-
-					foreach ($aContactItems as /* @var $oItem CContactListItem */ $oItem)
-					{
-						$sEmail = $oItem->Email;
-						if (!empty($sEmail))
-						{
-							if ($oItem->Auto)
-							{
-								$aAuto[$sEmail] = isset($aAuto[$sEmail]) && $aAuto[$sEmail] > $oItem->AgeScore ?
-									$aAuto[$sEmail] : $oItem->AgeScore;
-							}
-							else
-							{
-								$aNonAuto[$sEmail] = isset($aNonAuto[$sEmail]) && $aNonAuto[$sEmail] > $oItem->AgeScore ?
-									$aNonAuto[$sEmail] : $oItem->AgeScore;
-							}
-						}
-					}
-
-					foreach ($aNonAuto as $sEmail => $iFrequency)
-					{
-						if (isset($aAuto[$sEmail]))
-						{
-							$aNonAuto[$sEmail] = $iFrequency > $aAuto[$sEmail] ? $iFrequency : $aAuto[$sEmail];
-							unset($aAuto[$sEmail]);
-						}
-					}
-
-					$aTemp = array();
-					foreach ($aContactItems as /* @var $oItem CContactListItem */ $oItem)
-					{
-						$sEmail = $oItem->Email;
-						if (!empty($sEmail))
-						{
-							if (isset($aNonAuto[$sEmail]))
-							{
-								$oItem->AgeScore = $oItem->AgeScore < $aNonAuto[$sEmail] ? $aNonAuto[$sEmail] : $oItem->AgeScore;
-							}
-							else if (isset($aAuto[$sEmail]))
-							{
-								$oItem->AgeScore = $oItem->AgeScore < $aAuto[$sEmail] ? $aAuto[$sEmail] : $oItem->AgeScore;
-							}
-
-							if (!isset($aTemp[$sEmail]))
-							{
-								$aTemp[$sEmail] = $oItem;
-							}
-						}
-					}
-
-					$mResult = array_merge($mResult, array_values($aTemp));
-				}
-			}
-
-			if ($iRequestLimit > count($mResult) && $oApiCapaManager->isGlobalSuggestContactsSupported($oAccount))
-			{
-				$oApiGcontactManager = /* @var CApiGcontactsManager */ CApi::Manager('gcontacts');
-				if ($oApiGcontactManager)
-				{
-					$aAccountItems = $oApiGcontactManager->getContactItems($oAccount,
-						EContactSortField::Frequency, ESortOrder::DESC, 0, $iRequestLimit, $sSearch, $bPhoneOnly);
-
-					if (is_array($aAccountItems))
-					{
-						$mResult = array_merge($mResult, $aAccountItems);
-					}
-					else
-					{
-						$oException = $oApiGcontactManager->GetLastException();
-						if ($oException)
-						{
-							throw $oException;
-						}
-					}
-				}
-			}
-
-			if (is_array($mResult) && 1 < count($mResult))
-			{
-				$aTemp = array();
-				foreach ($mResult as /* @var $oItem CContactListItem */ $oItem)
-				{
-					$sName = trim($oItem->ToString());
-					$aTemp[$sName] = isset($aTemp[$sName]) && $aTemp[$sName]->AgeScore > $oItem->AgeScore ? $aTemp[$sName] : $oItem;
-				}
-
-				$mResult = array_values($aTemp);
-
-				usort($mResult, function ($oA, $oB) {
-					if ($oA->AgeScore === $oB->AgeScore) {
-						return 0;
-					}
-					return ($oA->AgeScore > $oB->AgeScore) ? -1 : 1;
-				});
-			}
-
-			if (is_array($mResult) && $iRequestLimit < count($mResult))
-			{
-				array_splice($mResult, $iRequestLimit);
-			}
-		}
-		catch (CApiBaseException $oException)
-		{
-			$mResult = false;
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
+		return $this->oApiContactsBaseManager->getSuggestItems($oAccount, $sSearch, $iRequestLimit, $bGlobalOnly, $bPhoneOnly, $iSharedTenantId);
 	}
 
 	/**
+	 * The method is used for saving created contact to the database. 
+	 * 
 	 * @param CContact $oContact
-	 *
+	 * 
 	 * @return bool
 	 */
 	public function createContact($oContact)
 	{
-		$bResult = false;
-		try
+		$res1 = $res2 = false;
+
+		$res1 = $this->oApiContactsBaseManager->createContact($oContact);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			if ($oContact->validate())
-			{
-				$bResult = $this->oStorage->createContact($oContact);
-			}
+			$this->updateContactGroupsIdsWithNames($oContact);
+			$res2 = $this->oApiContactsMainManagerDAV->createContact($oContact);
 		}
-		catch (CApiBaseException $oException)
+		else
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = true;
 		}
 
-		if ($bResult)
-		{
-			$oApiVoiceManager = /* @var $oApiVoiceManager \CApiVoiceManager */ CApi::Manager('voice');
-			if ($oApiVoiceManager)
-			{
-				$oApiVoiceManager->flushCallersNumbersCache($oContact->IdUser);
-			}
-		}
-
-		return $bResult;
+		return ($res1 && $res2);
 	}
 
 	/**
+	 * The method is used for saving created group to the database. 
+	 * 
 	 * @param CGroup $oGroup
-	 *
+	 * 
 	 * @return bool
 	 */
 	public function createGroup($oGroup)
 	{
-		$bResult = false;
-		try
+		$res1 = $res2 = false;
+
+		$res1 = $this->oApiContactsBaseManager->createGroup($oGroup);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			if ($oGroup->validate())
-			{
-				$bResult = $this->oStorage->createGroup($oGroup);
-			}
+			$res2 = $this->oApiContactsMainManagerDAV->createGroup($oGroup);
 		}
-		catch (CApiBaseException $oException)
+		else
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = true;
 		}
-		return $bResult;
+
+		return ($res1 && $res2);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param array $aContactsIds
-	 * @param int $iTenantId Default value is **null**
-	 *
+	 * Deletes one or multiple contacts from user's address book.
+	 * 
+	 * @param int $iUserId User ID
+	 * @param array $aContactsIds List of contacts IDs
+	 * @param int $iTenantId If specified, the search is restricted to specific tenant. Default value is **null**. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 * 
 	 * @return bool
 	 */
 	public function deleteContacts($iUserId, $aContactsIds, $iTenantId = null)
 	{
-		$bResult = false;
-		try
+		$aContactsStrIds = array();
+		foreach ($aContactsIds as $iContactsId)
 		{
-			$bResult = $this->oStorage->deleteContacts($iUserId, $aContactsIds, $iTenantId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-
-		if ($bResult)
-		{
-			$oApiVoiceManager = /* @var $oApiVoiceManager \CApiVoiceManager */ CApi::Manager('voice');
-			if ($oApiVoiceManager)
+			$oContact = $this->oApiContactsBaseManager->getContactById($iUserId, $iContactsId, $iTenantId);
+			if ($oContact)
 			{
-				$oApiVoiceManager->flushCallersNumbersCache($iUserId);
+				$aContactsStrIds[] = $oContact->IdContactStr;
 			}
 		}
 
-		return $bResult;
+		$res1 = $res2 = false;
+
+		$res1 = $this->oApiContactsBaseManager->deleteContacts($iUserId, $aContactsIds, $iTenantId);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts') && is_null($iTenantId))
+		{
+			$res2 = $this->oApiContactsMainManagerDAV->deleteContacts($iUserId, $aContactsStrIds);
+		}
+		else
+		{
+			$res2 = true;
+		}
+
+		return ($res1 && $res2);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param array $aContactsIds
-	 *
+	 * The method is used for deleting one or multiple contacts to autocompletion list of contacts.
+	 * 
+	 * @param int $iUserId User ID
+	 * @param array $aContactsIds List of contacts IDs
+	 * 
 	 * @return bool
 	 */
 	public function deleteSuggestContacts($iUserId, $aContactsIds)
 	{
-		$bResult = false;
-		try
+		$aContactsStrIds = array();
+		foreach ($aContactsIds as $iContactsId)
 		{
-			$bResult = $this->oStorage->deleteSuggestContacts($iUserId, $aContactsIds);
+			$oContact = $this->oApiContactsBaseManager->getContactById($iUserId, $iContactsId);
+			if ($oContact)
+			{
+				$aContactsStrIds[] = $oContact->IdContactStr;
+			}
 		}
-		catch (CApiBaseException $oException)
+
+		$res1 = $res2 = false;
+
+		$res1 = $this->oApiContactsBaseManager->deleteSuggestContacts($iUserId, $aContactsIds);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = $this->oApiContactsMainManagerDAV->deleteSuggestContacts($iUserId, $aContactsStrIds);
 		}
-		return $bResult;
+		else
+		{
+			$res2 = true;
+		}
+
+		return ($res1 && $res2);
 	}
 
 	/**
 	 * todo
 	 *
 	 * @param int $iUserId User ID
-	 * @param string $sContactId Contact ID
+	 * @param mixed $mGroupId Group ID
 	 *
 	 * @return bool
 	 */
 	public function resetContactFrequency($iUserId, $sContactId)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->resetContactFrequency($iUserId, $sContactId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
+		return $this->oApiContactsBaseManager->resetContactFrequency($iUserId, $sContactId);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param array $aGroupsIds
-	 *
+	 * Deletes one or multiple contacts from user's address book.
+	 * 
+	 * @param int $iUserId User ID
+	 * @param array $aGroupsIds List of groups IDs
+	 * 
 	 * @return bool
 	 */
 	public function deleteGroups($iUserId, $aGroupsIds)
 	{
-		$bResult = false;
-		try
+		$res1 = $res2 = false;
+
+		$res1 = $this->oApiContactsBaseManager->deleteGroups($iUserId, $aGroupsIds);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$bResult = $this->oStorage->deleteGroups($iUserId, $aGroupsIds);
+			$res2 = $this->oApiContactsMainManagerDAV->deleteGroups($iUserId, $aGroupsIds);
 		}
-		catch (CApiBaseException $oException)
+		else
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = true;
 		}
-		return $bResult;
+
+		return ($res1 && $res2);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param mixed $mGroupId
-	 *
+	 * Deletes specific group from user's address book.
+	 * 
+	 * @param int $iUserId User ID
+	 * @param mixed $mGroupId Group ID
+	 * 
 	 * @return bool
 	 */
 	public function deleteGroup($iUserId, $mGroupId)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->deleteGroup($iUserId, $mGroupId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
+		return $this->oApiContactsBaseManager->deleteGroup($iUserId, $mGroupId);
 	}
 
 	/**
-	 * @param int $iUserId
-	 * @param array $aEmails
-	 *
+	 * The method is used for deleting one or multiple contacts to autocompletion list of contacts.
+	 * 
+	 * @param int $iUserId User ID
+	 * @param array $aEmails List of email addresses
+	 * 
 	 * @return bool
 	 */
 	function updateSuggestTable($iUserId, $aEmails)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->updateSuggestTable($iUserId, $aEmails);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
+		return $this->oApiContactsBaseManager->updateSuggestTable($iUserId, $aEmails);
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * Allows for importing data into user's address book.
+	 * 
+	 * @param int $iUserId User ID
+	 * @param string $sSyncType Data source type. Currently, "csv" and "vcf" options are supported.
+	 * @param string $sTempFileName Path to the file data are imported from.
+	 * @param int $iParsedCount
+	 * @param int $iGroupId
+	 * @param bool $bIsShared
 	 *
+	 * @return int|false If importing is successful, number of imported entries is returned. 
+	 */
+	public function import($iUserId, $sSyncType, $sTempFileName, &$iParsedCount, $iGroupId, $bIsShared)
+	{
+		$oApiUsersManager = CApi::Manager('users');
+		$oAccount = $oApiUsersManager->getDefaultAccount($iUserId);
+
+		if ($sSyncType === \EContactFileType::CSV)
+		{
+			$this->inc('helpers.'.$sSyncType.'.formatter');
+			$this->inc('helpers.'.$sSyncType.'.parser');
+			$this->inc('helpers.sync.'.$sSyncType);
+
+			$sSyncClass = 'CApi'.ucfirst($this->GetManagerName()).'Sync'.ucfirst($sSyncType);
+			if (class_exists($sSyncClass))
+			{
+				$oSync = new $sSyncClass($this);
+				return $oSync->Import($iUserId, $sTempFileName, $iParsedCount, $iGroupId, $bIsShared);
+			}
+		}
+		else if ($sSyncType === \EContactFileType::VCF)
+		{
+			// You can either pass a readable stream, or a string.
+			$oHandler = fopen($sTempFileName, 'r');
+			$oSplitter = new \Sabre\VObject\Splitter\VCard($oHandler);
+			while($oVCard = $oSplitter->getNext())
+			{
+				$oContact = new \CContact();
+
+				$oContact->InitFromVCardObject($iUserId, $oVCard);
+
+				if ($oAccount)
+				{
+					$oContact->IdDomain = $oAccount->IdDomain;
+					$oContact->IdTenant = $oAccount->IdTenant;
+				}
+				$oContact->SharedToAll = $bIsShared;
+				$oContact->GroupsIds = array($iGroupId);
+
+				if ($this->createContact($oContact))
+				{
+					$iParsedCount++;
+				}
+			}
+			return $iParsedCount;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Allows for exporting data from user's address book. 
+	 * 
+	 * @param int $iUserId User ID 
+	 * @param string $sSyncType Data source type. Currently, "csv" and "vcf" options are supported. 
+	 * 
+	 * @return string | bool
+	 */
+	public function export($iUserId, $sSyncType)
+	{
+		if ($sSyncType === \EContactFileType::CSV)
+		{
+			$this->inc('helpers.'.$sSyncType.'.formatter');
+			$this->inc('helpers.'.$sSyncType.'.parser');
+			$this->inc('helpers.sync.'.$sSyncType);
+
+			$sSyncClass = 'CApi'.ucfirst($this->GetManagerName()).'Sync'.ucfirst($sSyncType);
+			if (class_exists($sSyncClass))
+			{
+				$oSync = new $sSyncClass($this);
+				return $oSync->Export($iUserId);
+			}
+		}
+		else if ($sSyncType === \EContactFileType::VCF)
+		{
+            $sOutput = '';
+			$aContactItems = $this->oApiContactsMainManagerDAV->GetContactItemObjects($iUserId);
+			if (is_array($aContactItems))
+			{
+				foreach ($aContactItems as $oContactItem)
+				{
+					$sOutput .= \Sabre\VObject\Reader::read($oContactItem->get())->serialize();
+				}
+			}
+			return $sOutput;            
+		}
+		
+		return false;
+	}
+
+	///**
+	// * @param int $iUserId
+	// * @param array $aContactsIds
+	// * @return bool
+	// */
+	//public function DeleteContactsExceptIds($iUserId, $aContactsIds)
+	//{
+	//	$aContactsStrIds = array();
+	//	foreach ($aContactsIds as $iContactsId)
+	//	{
+	//		$oContact = $this->oApiContactsMainManager->getContactById($iUserId, $iContactsId);
+	//		if ($oContact)
+	//		{
+	//			$aContactsStrIds[] = $oContact->IdContactStr;
+	//		}
+	//	}
+	//
+	//	$res1 = $res2 = false;
+	//
+	//	$res1 = $this->oApiContactsMainManager->DeleteContactsExceptIds($iUserId, $aContactsIds);
+	//	if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
+	//	{
+	//		$res2 = $this->oApiContactsManagerSabreDAV->DeleteContactsExceptIds($iUserId, $aContactsStrIds);
+	//	}
+	//	else
+	//	{
+	//		$res2 = true;
+	//	}
+	//
+	//	return ($res1 && $res2);
+	//}
+	//
+	///**
+	// * @param int $iUserId
+	// * @param array $aGroupIds
+	// * @return bool
+	// */
+	//public function DeleteGroupsExceptIds($iUserId, $aGroupIds)
+	//{
+	//	$res1 = $res2 = false;
+	//
+	//	$res1 = $this->oApiContactsMainManager->DeleteGroupsExceptIds($iUserId, $aGroupIds);
+	//	if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
+	//	{
+	//		$res2 = $this->oApiContactsManagerSabreDAV->DeleteGroupsExceptIds($iUserId, $aGroupIds);
+	//	}
+	//	else
+	//	{
+	//		$res2 = true;
+	//	}
+	//
+	//	return ($res1 && $res2);
+	//}
+
+	/**
+	 * The method will delete all the groups and contacts from user's address book. 
+	 * 
+	 * @param CAccount $oAccount Object representing account to be processed 
+	 * 
 	 * @return bool
 	 */
 	public function clearAllContactsAndGroups($oAccount)
 	{
-		$bResult = false;
-		try
+		$res1 = $res2 = false;
+
+		$res1 = $this->oApiContactsBaseManager->clearAllContactsAndGroups($oAccount);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$bResult = $this->oStorage->clearAllContactsAndGroups($oAccount);
+			$res2 = $this->oApiContactsMainManagerDAV->clearAllContactsAndGroups($oAccount);
 		}
-		catch (CApiBaseException $oException)
+		else
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = true;
 		}
 
-		if ($bResult)
-		{
-			$oApiVoiceManager = /* @var $oApiVoiceManager \CApiVoiceManager */ CApi::Manager('voice');
-			if ($oApiVoiceManager)
-			{
-				$oApiVoiceManager->flushCallersNumbersCache($oAccount->IdUser);
-			}
-		}
-
-		return $bResult;
+		return ($res1 && $res2);
 	}
 
 	/**
+	 * The method will completely delete all marked as deleted contacts from user's address book.
+	 *
 	 * @return bool
 	 */
 	public function flushContacts()
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->flushContacts();
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
+		return $this->oApiContactsBaseManager->flushContacts();
 	}
 
 	/**
-	 * @param CGroup $oGroup
-	 * @param array $aContactIds
+	 * The method will replace contact groups id's width groups names
 	 *
+	 * @param CContact $oContact
+	 */
+	public function updateContactGroupsIdsWithNames(&$oContact)
+	{
+		$aResult = array();
+
+		foreach ($oContact->GroupsIds as $mGroupId)
+		{
+			$oGroup = $this->oApiContactsBaseManager->getGroupById($oContact->IdUser, $mGroupId);
+			if ($oGroup)
+			{
+				$aResult[] = (string) $oGroup->Name;
+			}
+		}
+		
+		$oContact->GroupsIds = $aResult;
+	}
+
+	/**
+	 * Adds one or multiple contacts to the specific group. 
+	 * 
+	 * @param CGroup $oGroup Group object to be used 
+	 * @param array $aContactIds List of contact IDs to be added 
+	 * 
 	 * @return bool
 	 */
 	public function addContactsToGroup($oGroup, $aContactIds)
 	{
-		$bResult = false;
-		try
+		$res1 = $res2 = false;
+
+		$aContactsStrIds = array();
+		foreach ($aContactIds as $iContactId)
 		{
-			$bResult = $this->oStorage->addContactsToGroup($oGroup, $aContactIds);
+			$oContact = $this->oApiContactsBaseManager->getContactById($oGroup->IdUser, $iContactId);
+			if ($oContact)
+			{
+				$aContactsStrIds[] = $oContact->IdContactStr;
+			}
 		}
-		catch (CApiBaseException $oException)
+		
+		$res1 = $this->oApiContactsBaseManager->addContactsToGroup($oGroup, $aContactIds);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$bResult = false;
-			$this->setLastException($oException);
+			$res2 = $this->oApiContactsMainManagerDAV->addContactsToGroup($oGroup, $aContactsStrIds);
 		}
-		return $bResult;
+		else
+		{
+			$res2 = true;
+		}
+		
+		return ($res1 && $res2);
+	}
+	
+	/**
+	 * Adds one or multiple contacts from global address book to the specific group. [Aurora only.](http://dev.afterlogic.com/aurora)
+	 * 
+	 * @param CAccount $oAccount Object representing account to be processed 
+	 * @param CGroup $oGroup Group object to be used 
+	 * @param array $aContactIds List of contact IDs to be added 
+	 * 
+	 * @return bool
+	 */
+	public function addGlobalContactsToGroup($oAccount, $oGroup, $aContactIds)
+	{
+		if ($this->oApiContactsGlobalManager)
+		{
+			$aNewContactIds = array();
+
+			foreach ($aContactIds as $mId)
+			{
+				$mContactId = $this->oApiContactsBaseManager->ConvertedContactLocalId($oAccount, $mId, EContactType::Global_);
+				if (!$mContactId)
+				{
+					$oGlobalContact = $this->oApiContactsGlobalManager->getContactById($oAccount, $mId);
+
+					/* @var $oGlobalContact CContact */
+					if ($oGlobalContact)
+					{
+						$oGlobalContact->IdUser = $oAccount->IdUser;
+						$oGlobalContact->IdDomain = $oAccount->IdDomain;
+						$oGlobalContact->IdTenant = $oAccount->IdTenant;
+						$oGlobalContact->Type = EContactType::Global_;
+						$oGlobalContact->IdTypeLink = $mId;
+
+						$bResult = $this->createContact($oGlobalContact);
+						if ($bResult)
+						{
+							$aNewContactIds[] = $oGlobalContact->IdContact;
+						}
+					}
+				}
+				else
+				{
+					$aNewContactIds[] = $mContactId;
+				}
+			}
+
+			if (0 < count($aNewContactIds))
+			{
+				return $this->addContactsToGroup($oGroup, $aNewContactIds);
+			}
+		}
+
+		return false;
 	}
 
 	/**
-	 * @param CGroup $oGroup
-	 * @param array $aContactIds
-	 *
+	 * The method deletes one or multiple contacts from the group. 
+	 * 
+	 * @param CGroup $oGroup Group object to be used 
+	 * @param array $aContactIds List of contact IDs to be deleted 
+	 * 
 	 * @return bool
 	 */
 	public function removeContactsFromGroup($oGroup, $aContactIds)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->removeContactsFromGroup($oGroup, $aContactIds);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
-	}
+		$res1 = $res2 = false;
 
-	/**
-	 * @param CAccount $oAccount
-	 * @param mixed $mContactId
-	 * @param int $iContactType Default value is **EContactType::Global_ 1**
-	 *
-	 * @return mixed
-	 */
-	public function ConvertedContactLocalId($oAccount, $mContactId, $iContactType = EContactType::Global_)
-	{
-		$mResult = null;
-		try
+		$aContactsStrIds = array();
+		foreach ($aContactIds as $iContactId)
 		{
-			$mResult = $this->oStorage->ConvertedContactLocalId($oAccount, $mContactId, $iContactType);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-		return $mResult;
-	}
-
-	/**
-	 * @param CAccount $oAccount
-	 * @param int $iContactType Default value is **EContactType::Global_ 1**
-	 *
-	 * @return mixed
-	 */
-	public function ConvertedContactLocalIdCollection($oAccount, $iContactType = EContactType::Global_)
-	{
-		$aResult = array();
-		try
-		{
-			$aResult = $this->oStorage->ConvertedContactLocalIdCollection($oAccount, $iContactType);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-		return $aResult;
-	}
-
-	/**
-	 * @param array $aIds
-	 *
-	 * @return mixed
-	 */
-	public function ContactIdsLinkedToGroups($aIds)
-	{
-		$aResult = array();
-		try
-		{
-			$aResult = $this->oStorage->ContactIdsLinkedToGroups($aIds);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-		return $aResult;
-	}
-
-	/**
-	 * @param int $iUserId
-	 * @param mixed $mContactId
-	 *
-	 * @return CContact|bool
-	 */
-	public function GetGlobalContactById($iUserId, $mContactId)
-	{
-		$oContact = null;
-		try
-		{
-			$oContact = $this->oStorage->GetGlobalContactById($iUserId, $mContactId);
+			$oContact = $this->oApiContactsBaseManager->getContactById($oGroup->IdUser, $iContactId);
 			if ($oContact)
 			{
-				$mGroupsIds = $this->getContactGroupsIds($oContact);
-				if (is_array($mGroupsIds))
-				{
-					$oContact->GroupsIds = $mGroupsIds;
-				}
+				$aContactsStrIds[] = $oContact->IdContactStr;
 			}
 		}
-		catch (CApiBaseException $oException)
-		{
-			$oContact = false;
-			$this->setLastException($oException);
-		}
 
-		return $oContact;
+		$res1 = $this->oApiContactsBaseManager->removeContactsFromGroup($oGroup, $aContactIds);
+		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
+		{
+			$res2 = $this->oApiContactsMainManagerDAV->removeContactsFromGroup($oGroup, $aContactsStrIds);
+		}
+		else
+		{
+			$res2 = true;
+		}
+		return ($res1 && $res2);
 	}
 
 	/**
+	 * The method create contact in global address book for each system account
+	 *
+	 * @param CAccount $oAccount
+	 * @param bool $bSelfOnly
+	 *
+	 * @return bool
+	 */
+	public function synchronizeExternalContacts($oAccount, $bSelfOnly = false)
+	{
+		$aIds = array();
+		if ($this->oApiContactsGlobalManager)
+		{
+			if ($bSelfOnly)
+			{
+				$oGlobalContact = $this->oApiContactsGlobalManager->getContactByTypeId($oAccount, $oAccount->IdUser, true);
+
+				/* @var $oGlobalContact CContact */
+				if ($oGlobalContact)
+				{
+					$mContactId = $this->oApiContactsBaseManager->ConvertedContactLocalId($oAccount,
+						$oGlobalContact->IdContact, EContactType::Global_);
+
+					if ($mContactId)
+					{
+						$aIds[$mContactId] = $oGlobalContact->IdContact;
+					}
+				}
+			}
+			else
+			{
+				$aIds = $this->oApiContactsBaseManager->ConvertedContactLocalIdCollection($oAccount, EContactType::Global_);
+			}
+
+			if ($aIds && is_array($aIds) && 0 < count($aIds))
+			{
+				CApi::Log('synchronizeExternalContacts: '.count($aIds));
+
+				$aLinkedContact = $this->oApiContactsBaseManager->ContactIdsLinkedToGroups(array_keys($aIds));
+				$aLinkedContact = is_array($aLinkedContact) ? $aLinkedContact : array();
+
+				$aContactToDelete = array();
+				foreach ($aIds as $iLocalContactId => $sGlobalId)
+				{
+					if (in_array($iLocalContactId, $aLinkedContact))
+					{
+						$oGlobalContact = $this->oApiContactsGlobalManager->getContactById($oAccount, $sGlobalId, true);
+						if ($oGlobalContact)
+						{
+							$oLocalGlobalContact = $this->oApiContactsBaseManager->getContactById($oAccount->IdUser, $iLocalContactId, true);
+							if ($oLocalGlobalContact && EContactType::Global_ === $oLocalGlobalContact->Type)
+							{
+								if ($oLocalGlobalContact->CompareAndComputedByNewGlobalContact($oGlobalContact))
+								{
+									$this->updateContact($oLocalGlobalContact, false);
+								}
+							}
+						}
+						else
+						{
+							$aContactToDelete[] = $iLocalContactId;
+						}
+					}
+					else
+					{
+						$aContactToDelete[] = $iLocalContactId;
+					}
+				}
+
+				if (0 < count($aContactToDelete))
+				{
+					$this->deleteContacts($oAccount->IdUser, $aContactToDelete);
+				}
+
+				return true;
+			}
+			else
+			{
+				CApi::Log('synchronizeExternalContacts: none');
+			}
+		}
+
+		return true;
+	}
+	
+	
+	/**
+	 * Returns list of calendar events the specific group belongs to
+	 *
+	 * @param int $iUserId
 	 * @param int $iGroupId
 	 *
 	 * @return bool
 	 */
-	public function getGroupEvents($iGroupId)
+	public function getGroupEvents($iUserId, $iGroupId)
 	{
-		$bResult = false;
-		try
+		$aResult = array();
+		$aEvents = $this->oApiContactsBaseManager->getGroupEvents($iGroupId);
+		if (is_array($aEvents) && 0 < count($aEvents))
 		{
-			$bResult = $this->oStorage->getGroupEvents($iGroupId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
-	}
+			$oApiUsersManager = CApi::Manager('users');
+			$iAccountId =  $oApiUsersManager->getDefaultAccountId($iUserId);
+			$oAccount = $oApiUsersManager->getAccountById($iAccountId);
+			
+			if ($oAccount)
+			{
+				$oApiCalendarManager = CApi::Manager('calendar');
 
+				foreach ($aEvents as $aEvent)
+				{
+					$aResult[] = $oApiCalendarManager->getBaseEvent($oAccount, $aEvent['id_calendar'], $aEvent['id_event']);
+				}
+			}
+		}
+		
+		return $aResult;
+	}	
+	
 	/**
+	 *  Return calendar event the specific group belongs to
+	 *
 	 * @param string $sCalendarId
 	 * @param string $sEventId
 	 *
@@ -1130,20 +1075,50 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	 */
 	public function getGroupEvent($sCalendarId, $sEventId)
 	{
-		$bResult = false;
+		$aResult = false;
 		try
 		{
-			$bResult = $this->oStorage->getGroupEvent($sCalendarId, $sEventId);
+			$aResult = $this->oApiContactsBaseManager->getGroupEvent($sCalendarId, $sEventId);
 		}
 		catch (CApiBaseException $oException)
 		{
-			$bResult = false;
+			$aResult = false;
 			$this->setLastException($oException);
 		}
-		return $bResult;
-	}
-
+		return $aResult;
+	}	
+	
 	/**
+	 *  Return calendar event existence the specific group belongs to
+	 *
+	 * @param int $iGroupId
+	 * @param string $sCalendarId
+	 * @param string $sEventId
+	 *
+	 * @return bool
+	 */
+	public function isGroupEventExists($iGroupId, $sCalendarId, $sEventId)
+	{
+		$aResult = false;
+		try
+		{
+			$aEvent = $this->getGroupEvent($iGroupId, $sCalendarId, $sEventId);
+			if (is_array($aEvent) && 0 < count($aEvent))
+			{
+				$aResult = true;
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$aResult = false;
+			$this->setLastException($oException);
+		}
+		return $aResult;
+	}	
+	
+	/**
+	 *  Adds calendar event to the specific group.
+	 *
 	 * @param int $iGroupId
 	 * @param string $sCalendarId
 	 * @param string $sEventId
@@ -1152,20 +1127,12 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	 */
 	public function addEventToGroup($iGroupId, $sCalendarId, $sEventId)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->addEventToGroup($iGroupId, $sCalendarId, $sEventId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
+		return $this->oApiContactsBaseManager->addEventToGroup($iGroupId, $sCalendarId, $sEventId);
 	}
-
+	
 	/**
+	 *  Remove calendar event from the specific group.
+	 *
 	 * @param int $iGroupId
 	 * @param string $sCalendarId
 	 * @param string $sEventId
@@ -1174,20 +1141,12 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	 */
 	public function removeEventFromGroup($iGroupId, $sCalendarId, $sEventId)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->removeEventFromGroup($iGroupId, $sCalendarId, $sEventId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
+		return $this->oApiContactsBaseManager->removeEventFromGroup($iGroupId, $sCalendarId, $sEventId);
 	}
-
+	
 	/**
+	 *  Remove calendar event from the all groups.
+	 *
 	 * @param string $sCalendarId
 	 * @param string $sEventId
 	 *
@@ -1195,17 +1154,7 @@ class CApiContactsMainManager extends AApiManagerWithStorage
 	 */
 	public function removeEventFromAllGroups($sCalendarId, $sEventId)
 	{
-		$bResult = false;
-		try
-		{
-			$bResult = $this->oStorage->removeEventFromAllGroups($sCalendarId, $sEventId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$bResult = false;
-			$this->setLastException($oException);
-		}
-		return $bResult;
-	}	
-	
+		return $this->oApiContactsBaseManager->removeEventFromAllGroups($sCalendarId, $sEventId);
+	}
 }
+

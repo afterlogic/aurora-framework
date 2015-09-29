@@ -6,7 +6,7 @@ namespace afterlogic\DAV\CardDAV;
 
 class AddressBook extends \Sabre\CardDAV\AddressBook {
 
-	/* @var $oApiContactsManager \CApiContactsManager */
+	/* @var $oApiContactsManager \CApiContactsMainManager */
 	protected $oApiContactsManager;
 
 	public function getContactsManager()

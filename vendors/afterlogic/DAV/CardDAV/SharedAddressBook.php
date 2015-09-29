@@ -100,7 +100,7 @@ class SharedAddressBook extends AddressBook {
     public function getChild($name) {
 
 		$bResult = null;
-		/* @var $oApiContactsManager \CApiContactsManager */
+		/* @var $oApiContactsManager \CApiContactsMainManager */
 		$oApiContactsManager = $this->getContactsManager();
 		
 		$oAccount = $this->getAccount();
@@ -133,7 +133,7 @@ class SharedAddressBook extends AddressBook {
 		$oAccount = $this->getAccount();
 		if ($oAccount)
 		{
-			/* @var $oApiContactsManager \CApiContactsManager */
+			/* @var $oApiContactsManager \CApiContactsMainManager */
 			$oApiContactsManager = $this->getContactsManager();
 
 			$aContactListItems = $oApiContactsManager->getContactItems($oAccount->IdUser, \EContactSortField::EMail, \ESortOrder::ASC, 0, 999, '', '', '', $oAccount->IdTenant);

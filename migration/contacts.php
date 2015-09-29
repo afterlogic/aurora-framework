@@ -30,10 +30,10 @@ $oApiDomainsManager = CApi::Manager('domains');
 /* @var $oApiUsersManager CApiUsersManager */
 $oApiUsersManager = CApi::Manager('users');
 
-/* @var $oApiContactsManagerFrom CApiContactsManager */
+/* @var $oApiContactsManagerFrom CApiContactsMainManager */
 $oApiContactsManagerFrom = CApi::Manager('contactsmain', $sStorageFrom);
 
-/* @var $oApiContactsManagerTo CApiContactsManager */
+/* @var $oApiContactsManagerTo CApiContactsMainManager */
 $oApiContactsManagerTo = CApi::Manager('contactsmain', $sStorageTo);
 
 $sFilePath = CApi::DataPath().'/migration';

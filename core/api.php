@@ -417,6 +417,7 @@ class CApi
 
 		return CApi::RootPath().$sFileName.'.php';
 	}
+	
 	/**
 	 * @param string $sFileName
 	 * @param bool $bDoExitOnError = true
@@ -447,7 +448,7 @@ class CApi
 
 		if ($bDoExitOnError)
 		{
-			exit('FILE NOT EXISTS = '.$sFileFullPath);
+			echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
 		
 		return false;

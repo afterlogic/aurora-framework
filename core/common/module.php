@@ -97,6 +97,57 @@ class CApiModuleManager
 /**
  * @package Api
  */
+class CApiModuleMethod
+{
+	/**
+	 * @var object
+	 */
+	protected $oClass;
+
+	/**
+	 * @var string
+	 */
+	protected $sMethodName;
+
+	/**
+	 * @var array
+	 */
+	protected $aParameters;
+	
+	/**
+	 * @param string $sVersion
+	 */
+	public function __construct($oClass, $sMethodName, $aParameters = array())
+	{
+		$this->oClass = $oClass;
+		$this->sMethodName = $sMethodName;
+		$this->aParameters = $aParameters;
+	}
+	
+	public static function createInstance($oClass, $sMethodName, $aParameters = array())
+	{
+		return new CApiModuleMethod($oClass, $sMethodName, $aParameters);
+	}
+	
+	public function Exists()
+	{
+		return method_exists($this->oClass, $this->sMethodName);
+	}	
+	
+	public function Execute()
+	{
+		$mResult = false;
+		if ($this->Exists())
+		{
+			$mResult = call_user_func(array($this->oClass, $this->sMethodName), $this->aParameters);
+		}
+		return $mResult;
+	}
+}
+
+/**
+ * @package Api
+ */
 abstract class AApiModule
 {
 	/**
@@ -113,6 +164,11 @@ abstract class AApiModule
 	 * @var string
 	 */
 	protected $sVersion;
+	
+	/**
+	 * @var array
+	 */
+	protected $aManagersCache = array();	
 
 	/**
 	 * @param string $sVersion
@@ -185,41 +241,318 @@ abstract class AApiModule
 		return $this->sName.'-'.$this->sVersion;
 	}
 	
-	public function GetManager($sManagerName)
+	public function GetManagerPath($sManagerName)
 	{
-		static $aManagersCache = array();
+		return $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
+	}
+
+	public function GetManager($sManagerName, $sForcedStorage = '')
+	{
+		$mResult = false;
+		$sFileFullPath = '';
+		if (!isset($this->aManagersCache[$sManagerName]))
+		{
+			$sFileFullPath = $this->GetManagerPath($sManagerName);
+			if (@file_exists($sFileFullPath))
+			{
+				if (include_once $sFileFullPath)
+				{
+					$this->aManagersCache[$sManagerName] = true;
+				}
+			}
+		}
+		if (isset($this->aManagersCache[$sManagerName]))
+		{
+			$sClassName = 'CApi'.ucfirst($this->GetName()).ucfirst($sManagerName).'Manager';
+			if (class_exists($sClassName))
+			{
+				$mResult = new $sClassName(\CApi::$oManager, $sForcedStorage, $this);
+			}
+		}
+		
+		return $mResult;
+	}
+	
+	/**
+	 * @param string $sFileName
+	 * @param bool $bDoExitOnError = true
+	 * @return bool
+	 */
+	public function Inc($sFileName, $bDoExitOnError = true)
+	{
+		static $aCache = array();
 
 		$sFileFullPath = '';
-		if (isset($aManagersCache[$sManagerName]))
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
+		$sFileName = str_replace('.', '/', $sFileName);
+		if (isset($aCache[$sFileName]))
 		{
 			return true;
 		}
 		else
 		{
-			$sFileFullPath = $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
+			$sFileFullPath = $this->GetPath().'/managers/'.$sFileName.'.php';
 			if (@file_exists($sFileFullPath))
 			{
-				$aManagersCache[$sManagerName] = include_once $sFileFullPath;
-				return $aManagersCache[$sManagerName];
+				$aCache[$sFileName] = true;
+				include_once $sFileFullPath;
+				return true;
 			}
+		}
+
+		if ($bDoExitOnError)
+		{
+			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
 		
 		return false;
-	}
+	}	
 
 	public function MethodExists($sMethod)
 	{
 		return method_exists($this, $sMethod);
 	}
+	
+	public function getParamValue($aParameters, $sKey, $mDefault = null)
+	{
+		return is_array($aParameters) && isset($aParameters[$sKey])
+			? $aParameters[$sKey] : $mDefault;
+	}
+	
+	/**
+	 * @param string $sParamName
+	 * @param mixed $oObject
+	 *
+	 * @return void
+	 */
+	protected function paramToObject($aParameters, $sParamName, &$oObject, $sType = 'string')
+	{
+		switch ($sType)
+		{
+			default:
+			case 'string':
+				$oObject->{$sParamName} = (string) $this->getParamValue($aParameters, $sParamName, $oObject->{$sParamName});
+				break;
+			case 'int':
+				$oObject->{$sParamName} = (int) $this->getParamValue($aParameters, $sParamName, $oObject->{$sParamName});
+				break;
+			case 'bool':
+				$oObject->{$sParamName} = '1' === (string) $this->getParamValue($aParameters, $sParamName, $oObject->{$sParamName} ? '1' : '0');
+				break;
+		}
+	}
+	
+	/**
+	 * @param mixed $oObject
+	 * @param array $aParamsNames
+	 */
+	protected function paramsStrToObjectHelper($aParameters, &$oObject, $aParamsNames)
+	{
+		foreach ($aParamsNames as $sName)
+		{
+			$this->paramToObject($aParameters, $sName, $oObject);
+		}
+	}	
+	
+	/**
+	 * @param string $sObjectName
+	 *
+	 * @return string
+	 */
+	protected function objectNames($sObjectName)
+	{
+		$aList = array(
+			'CApiMailMessageCollection' => 'MessageCollection',
+			'CApiMailMessage' => 'Message',
+			'CApiMailFolderCollection' => 'FolderCollection',
+			'CApiMailFolder' => 'Folder',
+			'Email' => 'Email'
+		);
 
-	public function ExecuteMethod($sMethod, $aArguments)
+		return !empty($aList[$sObjectName]) ? $aList[$sObjectName] : $sObjectName;
+	}
+	
+	/**
+	 * @param \CAccount $oAccount
+	 * @param object $oData
+	 * @param string $sParent
+	 *
+	 * @return array | false
+	 */
+	protected function objectWrapper($oAccount, $oData, $sParent, $aParameters)
 	{
 		$mResult = false;
-		if ($this->MethodExists($sMethod))
+		if (is_object($oData))
 		{
-			$mResult = call_user_func_array(array($this, $sMethod), $aArguments);
+			$aNames = explode('\\', get_class($oData));
+			$sObjectName = end($aNames);
+
+			$mResult = array(
+				'@Object' => $this->objectNames($sObjectName)
+			);
+
+			if ($oData instanceof \MailSo\Base\Collection)
+			{
+				$mResult['@Object'] = 'Collection/'.$mResult['@Object'];
+				$mResult['@Count'] = $oData->Count();
+				$mResult['@Collection'] = $this->responseObject($oAccount, $oData->CloneAsArray(), $sParent, $aParameters);
+			}
+			else
+			{
+				$mResult['@Object'] = 'Object/'.$mResult['@Object'];
+			}
 		}
-		
+
 		return $mResult;
+	}
+		
+	/**
+	 * @param \CAccount $oAccount
+	 * @param mixed $mResponse
+	 * @param string $sParent
+	 * @param array $aParameters = array()
+	 *
+	 * @return mixed
+	 */
+	protected function responseObject($oAccount, $mResponse, $sParent, $aParameters = array())
+	{
+		$mResult = $mResponse;
+
+		if (is_object($mResult))
+		{
+			if (method_exists($mResult, 'toArray'))	
+			{
+				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), $mResponse->toArray());
+			}
+		}
+		else if (is_array($mResponse))
+		{
+			foreach ($mResponse as $iKey => $oItem)
+			{
+				$mResponse[$iKey] = $this->responseObject($oAccount, $oItem, $sParent, $aParameters);
+			}
+
+			$mResult = $mResponse;
+		}
+
+		unset($mResponse);
+		return $mResult;
+	}
+	
+	/**
+	 * @param \CAccount $oAccount
+	 * @param string $sMethod
+	 * @param mixed $mResult = false
+	 *
+	 * @return array
+	 */
+	public function DefaultResponse($oAccount, $sMethod, $mResult = false)
+	{
+		$aResult = array(
+			'Module' => $this->GetName(),
+			'Method' => $sMethod
+		);
+		if ($oAccount instanceof \CAccount)
+		{
+			$aResult['AccountID'] = $oAccount->IdAccount;
+		}
+
+		$aResult['Result'] = $this->responseObject($oAccount, $mResult, $sMethod);
+		$aResult['@Time'] = microtime(true) - PSEVEN_APP_START;
+		return $aResult;
+	}	
+	
+	/**
+	 * @param \CAccount $oAccount
+	 * @param string $sMethod
+	 *
+	 * @return array
+	 */
+	public function TrueResponse($oAccount, $sMethod)
+	{
+		return $this->DefaultResponse($oAccount, $sMethod, true);
+	}
+
+	/**
+	 * @param \CAccount $oAccount
+	 * @param string $sMethod
+	 * @param int $iErrorCode
+	 * @param string $sErrorMessage
+	 * @param array $aAdditionalParams = null
+	 *
+	 * @return array
+	 */
+	public function FalseResponse($oAccount, $sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null)
+	{
+		$aResponseItem = $this->DefaultResponse($oAccount, $sMethod, false);
+
+		if (null !== $iErrorCode)
+		{
+			$aResponseItem['ErrorCode'] = (int) $iErrorCode;
+			if (null !== $sErrorMessage)
+			{
+				$aResponseItem['ErrorMessage'] = null === $sErrorMessage ? '' : (string) $sErrorMessage;
+			}
+		}
+
+		if (is_array($aAdditionalParams))
+		{
+			foreach ($aAdditionalParams as $sKey => $mValue)
+			{
+				$aResponseItem[$sKey] = $mValue;
+			}
+		}
+
+		return $aResponseItem;
+	}	
+	
+	/**
+	 * @param string $sAuthToken = ''
+	 * @return \CAccount | null
+	 */
+	public function GetDefaultAccount($sAuthToken = '')
+	{
+		$oResult = null;
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+
+		$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
+		if (0 < $iUserId)
+		{
+			$oApiUsers = \CApi::GetCoreManager('users');
+			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
+			if (0 < $iAccountId)
+			{
+				$oAccount = $oApiUsers->getAccountById($iAccountId);
+				if ($oAccount instanceof \CAccount && !$oAccount->IsDisabled)
+				{
+					$oResult = $oAccount;
+				}
+			}
+		}
+
+		return $oResult;
+	}
+	
+	/**
+	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
+	 *
+	 * @return \CAccount|null
+	 */
+	protected function getDefaultAccountFromParam($aParameters, $bThrowAuthExceptionOnFalse = true)
+	{
+		$sAuthToken = (string) $this->getParamValue($aParameters, 'AuthToken', '');
+		$oResult = $this->GetDefaultAccount($sAuthToken);
+		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+		}
+
+		return $oResult;
+	}	
+
+	public function ExecuteMethod($sMethod, $aParameters)
+	{
+		return CApiModuleMethod::createInstance($this, $sMethod, $aParameters)->Execute();
 	}
 }

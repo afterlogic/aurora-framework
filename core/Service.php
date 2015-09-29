@@ -265,31 +265,42 @@ class Service
 				@ob_start();
 
 				$aResponseItem = null;
-				$sModule = $this->oHttp->GetPost('Module', null);
 				$sAction = $this->oHttp->GetPost('Action', null);
+				
+				$sModule = $this->oHttp->GetPost('Module', null);
+				$sMethod = $this->oHttp->GetPost('Method', null);
+				$sParameters = $this->oHttp->GetPost('Parameters', null);
 				try
 				{
-					\CApi::Log('AJAX: Action: '.$sAction);
+					\CApi::Log('AJAX:');
+					\CApi::Log('Module: '. $sModule);
+					\CApi::Log('Method: '. $sMethod);
+					
 					if ('SystemGetAppData' !== $sAction &&
 						\CApi::GetConf('labs.webmail.csrftoken-protection', true) &&
 						!$this->validateToken())
 					{
 						throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidToken);
 					}
-					else if (!empty($sAction))
+					else if (!empty($sModule) && !empty($sMethod))
 					{
-						$sMethodName = 'Ajax'.$sAction;
-						if (method_exists($this->oActions, $sMethodName) &&
-							is_callable(array($this->oActions, $sMethodName)))
+						$oModuleManager = \CApi::GetModuleManager();
+						
+						$aParameters = array();
+						if (isset($sParameters))
 						{
-							$this->oActions->SetActionParams($this->oHttp->GetPostAsArray());
-							$aResponseItem = call_user_func(array($this->oActions, $sMethodName));
+							$aParameters = @json_decode($sParameters, true);
 						}
+
+						$aResponseItem = $oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
+						
+/*						
 						else if (\CApi::Plugin()->JsonHookExists($sMethodName))
 						{
 							$this->oActions->SetActionParams($this->oHttp->GetPostAsArray());
 							$aResponseItem = \CApi::Plugin()->RunJsonHook($this->oActions, $sMethodName);
 						}
+  */
 					}
 
 					if (!is_array($aResponseItem))

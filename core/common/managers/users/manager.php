@@ -484,7 +484,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 						if ($oAccount && $oAccount->IsDefaultAccount)
 						{
-							/* @var $oApiContactsManager CApiContactsManager */
+							/* @var $oApiContactsManager CApiContactsMainManager */
 							$oApiContactsManager = CApi::Manager('contactsmain');
 
 							if ($oApiContactsManager && 'db' === CApi::GetManager()->GetStorageByType('contactsmain'))
@@ -885,7 +885,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 				if ($oAccount->IsDefaultAccount)
 				{
-					/* @var $oApiContactsManager CApiContactsManager */
+					/* @var $oApiContactsManager CApiContactsMainManager */
 					$oApiContactsManager = CApi::Manager('contacts');
 					if ($oApiContactsManager)
 					{
