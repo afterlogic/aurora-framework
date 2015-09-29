@@ -33,20 +33,17 @@ function CContactListItemModel()
  */
 CContactListItemModel.prototype.parse = function (oData)
 {
-	if (oData && 'Object/CContactListItem' === Utils.pString(oData['@Object']))
-	{
-		this.sId = Utils.pString(oData.Id);
-		this.sName = Utils.pString(oData.Name);
-		this.sEmail = Utils.pString(oData.Email);
+	this.sId = Utils.pString(oData.Id);
+	this.sName = Utils.pString(oData.Name);
+	this.sEmail = Utils.pString(oData.Email);
 
-		this.bIsGroup = !!oData.IsGroup;
-		this.bIsOrganization = !!oData.IsOrganization;
-		this.bReadOnly = !!oData.ReadOnly;
-		this.bItsMe = !!oData.ItsMe;
-		this.bGlobal = !!oData.Global;
-		this.bSharedToAll =  !!oData.SharedToAll;
-		this.groupType(this.getGroupType(oData));
-	}
+	this.bIsGroup = !!oData.IsGroup;
+	this.bIsOrganization = !!oData.IsOrganization;
+	this.bReadOnly = !!oData.ReadOnly;
+	this.bItsMe = !!oData.ItsMe;
+	this.bGlobal = !!oData.Global;
+	this.bSharedToAll =  !!oData.SharedToAll;
+	this.groupType(this.getGroupType(oData));
 };
 
 /**

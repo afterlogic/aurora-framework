@@ -655,117 +655,114 @@ CContactModel.prototype.toObject = function ()
  */
 CContactModel.prototype.parse = function (oData)
 {
-	if (oData && 'Object/CContact' === oData['@Object'])
+	var
+		iPrimaryEmail = 0,
+		iPrimaryPhone = 0,
+		iPrimaryAddress = 0
+	;
+
+	this.idContact(Utils.pString(oData.IdContact));
+	this.idUser(Utils.pString(oData.IdUser));
+
+	this.global(!!oData.Global);
+	this.itsMe(!!oData.ItsMe);
+	this.readOnly(!!oData.ReadOnly);
+
+	this.displayName(Utils.pString(oData.FullName));
+	this.firstName(Utils.pString(oData.FirstName));
+	this.lastName(Utils.pString(oData.LastName));
+	this.nickName(Utils.pString(oData.NickName));
+
+	this.skype(Utils.pString(oData.Skype));
+	this.facebook(Utils.pString(oData.Facebook));
+
+	iPrimaryEmail = Utils.pInt(oData.PrimaryEmail);
+	switch (iPrimaryEmail)
 	{
-		var
-			iPrimaryEmail = 0,
-			iPrimaryPhone = 0,
-			iPrimaryAddress = 0
-		;
+		case 1:
+			iPrimaryEmail = Enums.ContactEmailType.Business;
+			break;
+		case 2:
+			iPrimaryEmail = Enums.ContactEmailType.Other;
+			break;
+		default:
+		case 0:
+			iPrimaryEmail = Enums.ContactEmailType.Personal;
+			break;
+	}
+	this.primaryEmail(iPrimaryEmail);
 
-		this.idContact(Utils.pString(oData.IdContact));
-		this.idUser(Utils.pString(oData.IdUser));
+	iPrimaryPhone = Utils.pInt(oData.PrimaryPhone);
+	switch (iPrimaryPhone)
+	{
+		case 2:
+			iPrimaryPhone = Enums.ContactPhoneType.Business;
+			break;
+		case 1:
+			iPrimaryPhone = Enums.ContactPhoneType.Personal;
+			break;
+		default:
+		case 0:
+			iPrimaryPhone = Enums.ContactPhoneType.Mobile;
+			break;
+	}
+	this.primaryPhone(iPrimaryPhone);
 
-		this.global(!!oData.Global);
-		this.itsMe(!!oData.ItsMe);
-		this.readOnly(!!oData.ReadOnly);
+	iPrimaryAddress = Utils.pInt(oData.PrimaryAddress);
+	switch (iPrimaryAddress)
+	{
+		case 1:
+			iPrimaryAddress = Enums.ContactAddressType.Business;
+			break;
+		default:
+		case 0:
+			iPrimaryAddress = Enums.ContactAddressType.Personal;
+			break;
+	}
+	this.primaryAddress(iPrimaryAddress);
 
-		this.displayName(Utils.pString(oData.FullName));
-		this.firstName(Utils.pString(oData.FirstName));
-		this.lastName(Utils.pString(oData.LastName));
-		this.nickName(Utils.pString(oData.NickName));
+	this.personalEmail(Utils.pString(oData.HomeEmail));
+	this.personalStreetAddress(Utils.pString(oData.HomeStreet));
+	this.personalCity(Utils.pString(oData.HomeCity));
+	this.personalState(Utils.pString(oData.HomeState));
+	this.personalZipCode(Utils.pString(oData.HomeZip));
+	this.personalCountry(Utils.pString(oData.HomeCountry));
+	this.personalWeb(Utils.pString(oData.HomeWeb));
+	this.personalFax(Utils.pString(oData.HomeFax));
+	this.personalPhone(Utils.pString(oData.HomePhone));
+	this.personalMobile(Utils.pString(oData.HomeMobile));
 
-		this.skype(Utils.pString(oData.Skype));
-		this.facebook(Utils.pString(oData.Facebook));
+	this.businessEmail(Utils.pString(oData.BusinessEmail));
+	this.businessCompany(Utils.pString(oData.BusinessCompany));
+	this.businessDepartment(Utils.pString(oData.BusinessDepartment));
+	this.businessJob(Utils.pString(oData.BusinessJobTitle));
+	this.businessOffice(Utils.pString(oData.BusinessOffice));
+	this.businessStreetAddress(Utils.pString(oData.BusinessStreet));
+	this.businessCity(Utils.pString(oData.BusinessCity));
+	this.businessState(Utils.pString(oData.BusinessState));
+	this.businessZipCode(Utils.pString(oData.BusinessZip));
+	this.businessCountry(Utils.pString(oData.BusinessCountry));
+	this.businessWeb(Utils.pString(oData.BusinessWeb));
+	this.businessFax(Utils.pString(oData.BusinessFax));
+	this.businessPhone(Utils.pString(oData.BusinessPhone));
 
-		iPrimaryEmail = Utils.pInt(oData.PrimaryEmail);
-		switch (iPrimaryEmail)
-		{
-			case 1:
-				iPrimaryEmail = Enums.ContactEmailType.Business;
-				break;
-			case 2:
-				iPrimaryEmail = Enums.ContactEmailType.Other;
-				break;
-			default:
-			case 0:
-				iPrimaryEmail = Enums.ContactEmailType.Personal;
-				break;
-		}
-		this.primaryEmail(iPrimaryEmail);
+	this.otherEmail(Utils.pString(oData.OtherEmail));
+	this.otherBirthdayMonth(Utils.pString(oData.BirthdayMonth));
+	this.otherBirthdayDay(Utils.pString(oData.BirthdayDay));
+	this.otherBirthdayYear(Utils.pString(oData.BirthdayYear));
+	this.otherNotes(Utils.pString(oData.Notes));
 
-		iPrimaryPhone = Utils.pInt(oData.PrimaryPhone);
-		switch (iPrimaryPhone)
-		{
-			case 2:
-				iPrimaryPhone = Enums.ContactPhoneType.Business;
-				break;
-			case 1:
-				iPrimaryPhone = Enums.ContactPhoneType.Personal;
-				break;
-			default:
-			case 0:
-				iPrimaryPhone = Enums.ContactPhoneType.Mobile;
-				break;
-		}
-		this.primaryPhone(iPrimaryPhone);
-		
-		iPrimaryAddress = Utils.pInt(oData.PrimaryAddress);
-		switch (iPrimaryAddress)
-		{
-			case 1:
-				iPrimaryAddress = Enums.ContactAddressType.Business;
-				break;
-			default:
-			case 0:
-				iPrimaryAddress = Enums.ContactAddressType.Personal;
-				break;
-		}
-		this.primaryAddress(iPrimaryAddress);
+	this.etag(Utils.pString(oData.ETag));
 
-		this.personalEmail(Utils.pString(oData.HomeEmail));
-		this.personalStreetAddress(Utils.pString(oData.HomeStreet));
-		this.personalCity(Utils.pString(oData.HomeCity));
-		this.personalState(Utils.pString(oData.HomeState));
-		this.personalZipCode(Utils.pString(oData.HomeZip));
-		this.personalCountry(Utils.pString(oData.HomeCountry));
-		this.personalWeb(Utils.pString(oData.HomeWeb));
-		this.personalFax(Utils.pString(oData.HomeFax));
-		this.personalPhone(Utils.pString(oData.HomePhone));
-		this.personalMobile(Utils.pString(oData.HomeMobile));
+	this.sharedToAll(!!oData.SharedToAll);
 
-		this.businessEmail(Utils.pString(oData.BusinessEmail));
-		this.businessCompany(Utils.pString(oData.BusinessCompany));
-		this.businessDepartment(Utils.pString(oData.BusinessDepartment));
-		this.businessJob(Utils.pString(oData.BusinessJobTitle));
-		this.businessOffice(Utils.pString(oData.BusinessOffice));
-		this.businessStreetAddress(Utils.pString(oData.BusinessStreet));
-		this.businessCity(Utils.pString(oData.BusinessCity));
-		this.businessState(Utils.pString(oData.BusinessState));
-		this.businessZipCode(Utils.pString(oData.BusinessZip));
-		this.businessCountry(Utils.pString(oData.BusinessCountry));
-		this.businessWeb(Utils.pString(oData.BusinessWeb));
-		this.businessFax(Utils.pString(oData.BusinessFax));
-		this.businessPhone(Utils.pString(oData.BusinessPhone));
-
-		this.otherEmail(Utils.pString(oData.OtherEmail));
-		this.otherBirthdayMonth(Utils.pString(oData.BirthdayMonth));
-		this.otherBirthdayDay(Utils.pString(oData.BirthdayDay));
-		this.otherBirthdayYear(Utils.pString(oData.BirthdayYear));
-		this.otherNotes(Utils.pString(oData.Notes));
-
-		this.etag(Utils.pString(oData.ETag));
-
-		this.sharedToAll(!!oData.SharedToAll);
-
-		if (_.isArray(oData.GroupsIds))
-		{
-			this.groups(
-				_.map(oData.GroupsIds, function (sItem) {
-					return Utils.pString(sItem);
-				})
-			);
-		}
+	if (_.isArray(oData.GroupsIds))
+	{
+		this.groups(
+			_.map(oData.GroupsIds, function (sItem) {
+				return Utils.pString(sItem);
+			})
+		);
 	}
 };
 
