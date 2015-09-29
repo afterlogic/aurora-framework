@@ -1100,7 +1100,7 @@ CContactsView.prototype.mailGroup = function (oGroup)
 
 				for (iLen = aResultList.length; iIndex < iLen; iIndex++)
 				{
-					if (aResultList[iIndex] && 'Object/CContactListItem' === Utils.pString(aResultList[iIndex]['@Object']))
+					if (aResultList[iIndex])
 					{
 						oObject = new CContactListItemModel();
 						oObject.parse(aResultList[iIndex]);
@@ -1275,7 +1275,7 @@ CContactsView.prototype.onContactListResponse = function (oResult, oRequest)
 
 		for (iLen = oResult.Result.List.length; iIndex < iLen; iIndex++)
 		{
-			if (oResult.Result.List[iIndex] && 'Object/CContactListItem' === Utils.pString(oResult.Result.List[iIndex]['@Object']))
+			if (oResult.Result.List[iIndex])
 			{
 				oObject = new CContactListItemModel();
 				oObject.parse(oResult.Result.List[iIndex]);
@@ -1357,7 +1357,7 @@ CContactsView.prototype.onGroupListResponse = function (oResult, oRequest)
 		
 		for (iLen = oResult.Result.length; iIndex < iLen; iIndex++)
 		{
-			if (oResult.Result[iIndex] && 'Object/CContactListItem' === Utils.pString(oResult.Result[iIndex]['@Object']))
+			if (oResult.Result[iIndex])
 			{
 				oObject = new CContactListItemModel();
 				oObject.parse(oResult.Result[iIndex]);
