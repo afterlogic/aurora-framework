@@ -31,10 +31,12 @@ class CApiContactsMainManager extends AApiManager
 	{
 		parent::__construct('contacts', $oManager, $oModule);
 
-		$this->oApiContactsGlobalManager = $oModule->GetManager('global', $sForcedStorage);
-		
-		$this->oApiContactsBaseManager = $oModule->GetManager('base', $sForcedStorage);
-		$this->oApiContactsBaseManagerDAV = $oModule->GetManager('base', 'sabredav');
+		if ($oModule instanceof AApiModule)
+		{
+			$this->oApiContactsGlobalManager = $oModule->GetManager('global', $sForcedStorage);
+			$this->oApiContactsBaseManager = $oModule->GetManager('base', $sForcedStorage);
+			$this->oApiContactsBaseManagerDAV = $oModule->GetManager('base', 'sabredav');
+		}
 	}
 	
 	/**
@@ -216,7 +218,7 @@ class CApiContactsMainManager extends AApiManager
 			if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 			{
 				$this->updateContactGroupsIdsWithNames($oContact);
-				$res2 = $this->oApiContactsMainManagerDAV->updateContact($oContact);
+				$res2 = $this->oApiContactsBaseManagerDAV->updateContact($oContact);
 			}
 			else
 			{
@@ -242,7 +244,7 @@ class CApiContactsMainManager extends AApiManager
 		{
 			if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 			{
-				$res2 = $this->oApiContactsMainManagerDAV->updateContactUserId($oContact, $iUserId);
+				$res2 = $this->oApiContactsBaseManagerDAV->updateContactUserId($oContact, $iUserId);
 			}
 			else
 			{
@@ -279,7 +281,7 @@ class CApiContactsMainManager extends AApiManager
 			{
 				foreach ($oContactItems as $oContactItem)
 				{
-					$oContact = $this->oApiContactsMainManagerDAV->getContactById($oGroup->IdUser, $oContactItem->IdStr);
+					$oContact = $this->oApiContactsBaseManagerDAV->getContactById($oGroup->IdUser, $oContactItem->IdStr);
 					if ($oContact)
 					{
 						$aGroupsIds = array();
@@ -294,7 +296,7 @@ class CApiContactsMainManager extends AApiManager
 							$aGroupsIds[] = $sGroupId;
 						}
 						$oContact->GroupsIds = $aGroupsIds;
-						$this->oApiContactsMainManagerDAV->updateContact($oContact);
+						$this->oApiContactsBaseManagerDAV->updateContact($oContact);
 					}
 				}
 			}
@@ -447,7 +449,7 @@ class CApiContactsMainManager extends AApiManager
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
 			$this->updateContactGroupsIdsWithNames($oContact);
-			$res2 = $this->oApiContactsMainManagerDAV->createContact($oContact);
+			$res2 = $this->oApiContactsBaseManagerDAV->createContact($oContact);
 		}
 		else
 		{
@@ -471,7 +473,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->createGroup($oGroup);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->createGroup($oGroup);
+			$res2 = $this->oApiContactsBaseManagerDAV->createGroup($oGroup);
 		}
 		else
 		{
@@ -507,7 +509,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->deleteContacts($iUserId, $aContactsIds, $iTenantId);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts') && is_null($iTenantId))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->deleteContacts($iUserId, $aContactsStrIds);
+			$res2 = $this->oApiContactsBaseManagerDAV->deleteContacts($iUserId, $aContactsStrIds);
 		}
 		else
 		{
@@ -542,7 +544,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->deleteSuggestContacts($iUserId, $aContactsIds);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->deleteSuggestContacts($iUserId, $aContactsStrIds);
+			$res2 = $this->oApiContactsBaseManagerDAV->deleteSuggestContacts($iUserId, $aContactsStrIds);
 		}
 		else
 		{
@@ -580,7 +582,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->deleteGroups($iUserId, $aGroupsIds);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->deleteGroups($iUserId, $aGroupsIds);
+			$res2 = $this->oApiContactsBaseManagerDAV->deleteGroups($iUserId, $aGroupsIds);
 		}
 		else
 		{
@@ -702,7 +704,7 @@ class CApiContactsMainManager extends AApiManager
 		else if ($sSyncType === \EContactFileType::VCF)
 		{
             $sOutput = '';
-			$aContactItems = $this->oApiContactsMainManagerDAV->GetContactItemObjects($iUserId);
+			$aContactItems = $this->oApiContactsBaseManagerDAV->GetContactItemObjects($iUserId);
 			if (is_array($aContactItems))
 			{
 				foreach ($aContactItems as $oContactItem)
@@ -784,7 +786,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->clearAllContactsAndGroups($oAccount);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->clearAllContactsAndGroups($oAccount);
+			$res2 = $this->oApiContactsBaseManagerDAV->clearAllContactsAndGroups($oAccount);
 		}
 		else
 		{
@@ -850,7 +852,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->addContactsToGroup($oGroup, $aContactIds);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->addContactsToGroup($oGroup, $aContactsStrIds);
+			$res2 = $this->oApiContactsBaseManagerDAV->addContactsToGroup($oGroup, $aContactsStrIds);
 		}
 		else
 		{
@@ -938,7 +940,7 @@ class CApiContactsMainManager extends AApiManager
 		$res1 = $this->oApiContactsBaseManager->removeContactsFromGroup($oGroup, $aContactIds);
 		if ('sabredav' !== CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			$res2 = $this->oApiContactsMainManagerDAV->removeContactsFromGroup($oGroup, $aContactsStrIds);
+			$res2 = $this->oApiContactsBaseManagerDAV->removeContactsFromGroup($oGroup, $aContactsStrIds);
 		}
 		else
 		{
