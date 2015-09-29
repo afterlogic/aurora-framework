@@ -13,7 +13,7 @@ class CApiFilestorageStorage extends AApiManagerStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct($sStorageName, CApiGlobalManager &$oManager)
+	public function __construct($sStorageName, AApiManager &$oManager)
 	{
 		parent::__construct('filestorage', $sStorageName, $oManager);
 	}

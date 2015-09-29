@@ -25,7 +25,7 @@ class CApiUsersDbStorage extends CApiUsersStorage
 	 * 
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('db', $oManager);
 

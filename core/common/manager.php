@@ -289,16 +289,22 @@ abstract class AApiManager
 	protected $oManager;
 
 	/**
+	 * @var AApiModule
+	 */
+	protected $oModule;	
+	
+	/**
 	 * @var api_Settings
 	 */
 	protected $oSettings;
 
-	public function __construct($sManagerName, CApiGlobalManager &$oManager)
+	public function __construct($sManagerName, CApiGlobalManager &$oManager, AApiModule $oModule = null)
 	{
 		$this->sManagerName = strtolower($sManagerName);
 		$this->oSettings =& $oManager->GetSettings();
 		$this->oManager =& $oManager;
 		$this->oLastException = null;
+		$this->oModule = $oModule;
 	}
 
 	/**
@@ -318,6 +324,22 @@ abstract class AApiManager
 	}
 
 	/**
+	 * @return AApiModule
+	 */
+	public function GetModule()
+	{
+		return $this->oModule;
+	}
+	
+	/**
+	 * @return &api_Settings
+	 */
+	public function GetGlobalManager()
+	{
+		return $this->oManager;
+	}
+
+	/**
 	 * @return &api_Settings
 	 */
 	public function &GetSettings()
@@ -333,6 +355,123 @@ abstract class AApiManager
 	{
 		CApi::ManagerInc($this->GetManagerName(), $sInclude, $bDoExitOnError);
 	}
+
+	/**
+	 * @param string $sFileName
+	 * @return void
+	 */
+	public function incClass($sFileName, $bDoExitOnError = true)
+	{
+		static $aCache = array();
+
+		$sFileFullPath = '';
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
+		$sFileName = str_replace('.', '/', $sFileName);
+		if (isset($aCache[$sFileName]))
+		{
+			return true;
+		}
+		else
+		{
+			$sFileFullPath = $this->oModule->GetPath().'/managers/'.$this->GetManagerName().'/classes/'.$sFileName.'.php';
+			if (@file_exists($sFileFullPath))
+			{
+				$aCache[$sFileName] = true;
+				include_once $sFileFullPath;
+				return true;
+			}
+		}
+
+		if ($bDoExitOnError)
+		{
+			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
+		}
+		
+		return false;			}
+
+	/**
+	 * @param string $sInclude
+	 * @return bool
+	 */
+	public function incDefaultStorage()
+	{
+		return $this->incStorage('default');
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getPath()
+	{
+		return $this->oModule->GetPath().'/managers/'.$this->GetManagerName();
+	}	
+	
+	/**
+	 * @param string $sInclude
+	 * @return bool
+	 */
+	public function incStorage($sFileName, $bDoExitOnError = true)
+	{
+		static $aCache = array();
+
+		$sFileFullPath = '';
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
+		$sFileName = str_replace('.', '/', $sFileName);
+		if (isset($aCache[$sFileName]))
+		{
+			return true;
+		}
+		else
+		{
+			$sFileFullPath = $this->oModule->GetPath().'/managers/'.$this->GetManagerName().'/storages/'.$sFileName.'.php';
+			if (@file_exists($sFileFullPath))
+			{
+				$aCache[$sFileName] = true;
+				include_once $sFileFullPath;
+				return true;
+			}
+		}
+
+		if ($bDoExitOnError)
+		{
+			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
+		}
+		
+		return false;		
+	}
+	
+	public function &GetConnection()
+	{
+		return $this->oManager->GetConnection();
+	}
+	
+	public function &GetCommandCreator(AApiManagerStorage &$oStorage, $aCommandCreatorsNames)
+	{
+		$oSettings =& $oStorage->GetSettings();
+		$oCommandCreatorHelper =& $this->oManager->GetSqlHelper();
+
+		$oCommandCreator = null;
+
+		if ($oSettings)
+		{
+			$sDbType = $oSettings->GetConf('Common/DBType');
+			$sDbPrefix = $oSettings->GetConf('Common/DBPrefix');
+
+			if (isset($aCommandCreatorsNames[$sDbType]))
+			{
+				CApi::Inc('common.db.command_creator');
+				$oStorage->inc('command_creator');
+//				$this->incStorage('db.command_creator');
+
+				$oCommandCreator =
+					new $aCommandCreatorsNames[$sDbType]($oCommandCreatorHelper, $sDbPrefix);
+			}
+		}
+
+		return $oCommandCreator;
+	}	
 
 	/**
 	 * @param string $sInclude
@@ -420,25 +559,43 @@ abstract class AApiManagerWithStorage extends AApiManager
 	 * @param string $sForcedStorage
 	 * @return AApiManager
 	 */
-	public function __construct($sManagerName, CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct($sManagerName, CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct($sManagerName, $oManager);
+		parent::__construct($sManagerName, $oManager, $oModule);
 
 		$this->oStorage = null;
 		$this->sStorageName = !empty($sForcedStorage)
 			? strtolower(trim($sForcedStorage)) : strtolower($oManager->GetStorageByType($sManagerName));
 
-		CApi::Inc('common.managers.'.$this->GetManagerName().'.storages.default');
-
-		if (CApi::Inc('common.managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
+		if (isset($this->oModule))
 		{
-			$sClassName = 'CApi'.ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
-			$this->oStorage = new $sClassName($oManager);
+			$this->incDefaultStorage();
+
+			if ($this->incStorage($this->GetStorageName().'.storage', false))
+			{
+				$sClassName = 'CApi'.ucfirst($oModule->GetName()).ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
+				$this->oStorage = new $sClassName($this);
+			}
+			else
+			{
+				$sClassName = 'CApi'.ucfirst($oModule->GetName()).ucfirst($this->GetManagerName()).'Storage';
+				$this->oStorage = new $sClassName($this->sStorageName, $this);
+			}
 		}
 		else
 		{
-			$sClassName = 'CApi'.ucfirst($this->GetManagerName()).'Storage';
-			$this->oStorage = new $sClassName($this->sStorageName, $oManager);
+			CApi::Inc('common.managers.'.$this->GetManagerName().'.storages.default');
+
+			if (CApi::Inc('common.managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
+			{
+				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
+				$this->oStorage = new $sClassName($this);
+			}
+			else
+			{
+				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).'Storage';
+				$this->oStorage = new $sClassName($this->sStorageName, $this);
+			}
 		}
 	}
 
@@ -471,6 +628,11 @@ abstract class AApiManagerWithStorage extends AApiManager
 	}
 }
 
+class CApiCoreManagerWithStorage extends AApiManagerWithStorage
+{
+	
+}
+
 /**
  * @package Api
  */
@@ -490,6 +652,11 @@ abstract class AApiManagerStorage
 	 * @var string
 	 */
 	protected $sStorageName;
+	
+	/**
+	 * @var string
+	 */
+	protected $oManager;
 
 	/**
 	 * @var api_Settings
@@ -501,11 +668,12 @@ abstract class AApiManagerStorage
 	 */
 	protected $oLastException;
 
-	public function __construct($sManagerName, $sStorageName, CApiGlobalManager &$oManager)
+	public function __construct($sManagerName, $sStorageName, AApiManager &$oManager)
 	{
 		$this->sManagerName = strtolower($sManagerName);
 		$this->sStorageName = strtolower($sStorageName);
-		$this->oSettings =& $oManager->GetSettings();
+		$this->oManager = $oManager;
+		$this->oSettings =& $oManager->GetGlobalManager()->GetSettings();
 		$this->oLastException = null;
 	}
 
@@ -564,14 +732,54 @@ abstract class AApiManagerStorage
 			}
 		}
 	}
+	
+	public function getPath()
+	{
+		return $this->oManager->getPath().'/storages/'.$this->GetStorageName();
+	}
 
 	/**
-	 * @param string $sInclude
+	 * @param string $sFileName
 	 * @return void
 	 */
-	protected function inc($sInclude)
+	public function inc($sFileName)
 	{
-		CApi::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sInclude);
+		static $aCache = array();
+		
+		$sFileFullPath = '';
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
+		$sFileName = str_replace('.', '/', $sFileName);
+		if (isset($aCache[$sFileName]))
+		{
+			return true;
+		}
+		else
+		{
+			$oModule = $this->oManager->GetModule();
+			if (isset($oModule))
+			{
+				$sFileFullPath = $this->getPath().'/'.$sFileName.'.php';
+				if (@file_exists($sFileFullPath))
+				{
+					$aCache[$sFileName] = true;
+					include_once $sFileFullPath;
+					return true;
+				}
+				
+			}
+			else
+			{
+				return CApi::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sFileName);
+			}
+		}
+
+		if ($bDoExitOnError)
+		{
+			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
+		}
+		
+		return false;		
 	}
 }
 

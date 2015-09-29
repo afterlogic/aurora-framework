@@ -16,7 +16,7 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('file', $oManager);
 

@@ -93,7 +93,7 @@ class CApiMailsuiteManager extends AApiManagerWithStorage
 
 					if ($oMailingList)
 					{
-						/* @var $oApiContactsManager CApiContactsManager */
+						/* @var $oApiContactsManager CApiContactsMainManager */
 						$oApiContactsManager = CApi::Manager('contactsmain');
 
 						/* @var $oApiTenantsManager CApiTenantsManager */
