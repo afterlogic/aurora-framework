@@ -468,7 +468,7 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteContact($aParameters)
+	public function DeleteContacts($aParameters)
 	{
 		$oAccount = $this->getDefaultAccountFromParam($aParameters);
 
