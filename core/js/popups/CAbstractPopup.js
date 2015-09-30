@@ -26,9 +26,9 @@ CAbstractPopup.prototype.openPopup = function (aParameters)
 		}, this), 50);
 
 		Popups.addPopup(this);
-		
-		this.onShow.apply(this, aParameters);
 	}
+		
+	this.onShow.apply(this, aParameters);
 };
 
 CAbstractPopup.prototype.closePopup = function ()
