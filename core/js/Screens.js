@@ -30,6 +30,9 @@ function CScreens()
 	this.informationScreen = ko.observable(null);
 }
 
+/**
+ * @param {boolean} bAuth
+ */
 CScreens.prototype.init = function (bAuth)
 {
 	var oModulesScreens = ModulesManager.getModulesScreens(bAuth);
@@ -53,6 +56,10 @@ CScreens.prototype.init = function (bAuth)
 	this.initInformation();
 };
 
+/**
+ * @param {string} sPrefix
+ * @param {Object} oScreenList
+ */
 CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 {
 	_.each(oScreenList, _.bind(function (CScreenView, sKey) {
@@ -73,6 +80,19 @@ CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 	}, this));
 };
 
+/**
+ * @param {string} sScreen
+ * 
+ * @returns {boolean}
+ */
+CScreens.prototype.hasScreenData = function (sScreen)
+{
+	return !!(this.oViews[sScreen] || this.oConstructors[sScreen]);
+};
+
+/**
+ * @param {Array} aParams
+ */
 CScreens.prototype.route = function (aParams)
 {
 	var
@@ -81,12 +101,12 @@ CScreens.prototype.route = function (aParams)
 		sNextScreen = aParams.shift()
 	;
 	
-	if ((sNextScreen === '' || !this.oViews[sNextScreen]) && sCurrentScreen === '')
+	if ((sNextScreen === '' || !this.hasScreenData(sNextScreen)) && sCurrentScreen === '')
 	{
 		sNextScreen = this.sDefaultScreen;
 	}
-	
-	if (this.oViews[sNextScreen] || this.oConstructors[sNextScreen])
+
+	if (this.hasScreenData(sNextScreen))
 	{
 		if (sCurrentScreen !== sNextScreen)
 		{
@@ -109,7 +129,7 @@ CScreens.prototype.route = function (aParams)
 /**
  * @param {string} sScreen
  * 
- * @return Object
+ * @returns {Object}
  */
 CScreens.prototype.showView = function (sScreen)
 {
@@ -136,7 +156,7 @@ CScreens.prototype.showView = function (sScreen)
  * @param {string} sScreenId
  * @param {Object} CScreenView
  * 
- * @return {Object}
+ * @returns {Object}
  */
 CScreens.prototype.initView = function (sScreenId, CScreenView)
 {
