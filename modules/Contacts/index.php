@@ -111,6 +111,30 @@ class ContactsModule extends AApiModule
 	}	
 	
 	/**
+	 * @param \CGroup $oGroup
+	 */
+	private function populateGroupObject($aParameters, &$oGroup)
+	{
+		$this->paramToObject($aParameters, 'IsOrganization', $oGroup, 'bool');
+
+		$this->paramsStrToObjectHelper($aParameters, $oGroup, 
+				array(
+					'Name', 
+					'Email', 
+					'Country', 
+					'City', 
+					'Company', 
+					'Fax', 
+					'Phone',
+					'State', 
+					'Street', 
+					'Web', 
+					'Zip'			
+				)
+		);
+	}	
+	
+	/**
 	 * @return array
 	 */
 	public function GetGroups($aParameters)
@@ -131,6 +155,27 @@ class ContactsModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $aList);
 	}
 	
+	/**
+	 * @return array
+	 */
+	public function GetGroup($aParameters)
+	{
+		$oGroup = false;
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$sGroupId = (string) $this->getParamValue('GroupId', '');
+			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup);
+	}
+
 	public function GetContacts($aParameters)
 	{
 		$oAccount = $this->getDefaultAccountFromParam($aParameters);
@@ -201,6 +246,95 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
+	public function GetContactsByEmails($aParameters)
+	{
+		$aResult = array();
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		$sEmails = (string) $this->getParamValue($aParameters, 'Emails', '');
+		$aEmails = explode(',', $sEmails);
+
+		if (0 < count($aEmails))
+		{
+			$oApiContacts = $this->oApiContactsManager;
+			$oApiGlobalContacts = $this->GetManager('global');
+			
+			$bPab = $oApiContacts && $this->oApiCapabilityManager->isPersonalContactsSupported($oAccount);
+			$bGab = $oApiGlobalContacts && $this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true);
+
+			foreach ($aEmails as $sEmail)
+			{
+				$oContact = false;
+				$sEmail = trim($sEmail);
+				
+				if ($bPab)
+				{
+					$oContact = $oApiContacts->getContactByEmail($oAccount->IdUser, $sEmail);
+				}
+
+				if (!$oContact && $bGab)
+				{
+					$oContact = $oApiGlobalContacts->getContactByEmail($oAccount, $sEmail);
+				}
+
+				if ($oContact)
+				{
+					$aResult[$sEmail] = $oContact;
+				}
+			}
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function GetGlobalContacts($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oApiGlobalContacts = $this->GetManager($aParameters, 'global');
+
+		$iOffset = (int) $this->getParamValue($aParameters, 'Offset', 0);
+		$iLimit = (int) $this->getParamValue($aParameters, 'Limit', 20);
+		$sSearch = (string) $this->getParamValue($aParameters, 'Search', '');
+
+		$iSortField = \EContactSortField::EMail;
+		$iSortOrder = \ESortOrder::ASC;
+
+		$this->populateSortParams($aParameters, $iSortField, $iSortOrder);
+
+		$iCount = 0;
+		$aList = array();
+
+		if ($this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
+		{
+			$iCount = $oApiGlobalContacts->getContactItemsCount($oAccount, $sSearch);
+
+			if (0 < $iCount)
+			{
+				$aContacts = $oApiGlobalContacts->getContactItems(
+					$oAccount, $iSortField, $iSortOrder, $iOffset,
+					$iLimit, $sSearch);
+
+				$aList = (is_array($aContacts)) ? $aContacts : array();
+			}
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+			'ContactCount' => $iCount,
+			'Search' => $sSearch,
+			'List' => $aList
+		));
+	}	
+	
+	/**
+	 * @return array
+	 */
 	public function GetContact($aParameters)
 	{
 		$oContact = false;
@@ -217,6 +351,33 @@ class ContactsModule extends AApiModule
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function GetContactByEmail($aParameters)
+	{
+		$oContact = false;
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		
+		$sEmail = (string) $this->getParamValue($aParameters, 'Email', '');
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$oContact = $this->oApiContactsManager->getContactByEmail($oAccount->IdUser, $sEmail);
+		}
+
+		if (!$oContact && $this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
+		{
+			$oApiGContacts = $this->GetManager('global');
+			if ($oApiGContacts)
+			{
+				$oContact = $oApiGContacts->getContactByEmail($oAccount, $sEmail);
+			}
 		}
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
@@ -328,6 +489,194 @@ class ContactsModule extends AApiModule
 		}
 
 		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function CreateGroup($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$oGroup = new \CGroup();
+			$oGroup->IdUser = $oAccount->IdUser;
+
+			$this->populateGroupObject($aParameters, $oGroup);
+
+			$this->oApiContactsManager->createGroup($oGroup);
+			return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup ? array(
+				'IdGroup' => $oGroup->IdGroup
+			) : false);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateGroup($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		$sGroupId = $this->getParamValue($aParameters, 'GroupId', '');
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
+			if ($oGroup)
+			{
+				$this->populateGroupObject($aParameters, $oGroup);
+
+				if ($this->oApiContactsManager->updateGroup($oGroup))
+				{
+					return $this->TrueResponse($oAccount, __FUNCTION__);
+				}
+				else
+				{
+					switch ($oApiContacts->getLastErrorCode())
+					{
+						case \Errs::Sabre_PreconditionFailed:
+							throw new \Core\Exceptions\ClientException(
+								\Core\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
+					}
+				}
+			}
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(
+				\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function DeleteGroup($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$sGroupId = $this->getParamValue($aParameters, 'GroupId', '');
+
+			return $this->DefaultResponse($oAccount, __FUNCTION__,
+				$this->oApiContactsManager->deleteGroup($oAccount->IdUser, $sGroupId));
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function AddContactsToGroup($aParameters)
+	{
+		$oAccount = $this->getAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$sGroupId = (string) $this->getParamValue($aParameters, 'GroupId', '');
+
+			$aContactsId = $this->getParamValue($aParameters, 'ContactsId', null);
+			if (!is_array($aContactsId))
+			{
+				return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+			}
+
+			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
+			if ($oGroup)
+			{
+				$aLocalContacts = array();
+				$aGlobalContacts = array();
+				
+				foreach ($aContactsId as $aItem)
+				{
+					if (is_array($aItem) && 2 === count($aItem))
+					{
+						if ('1' === $aItem[1])
+						{
+							$aGlobalContacts[] = $aItem[0];
+						}
+						else
+						{
+							$aLocalContacts[] = $aItem[0];
+						}
+					}
+				}
+
+				$bRes1 = true;
+				if (0 < count($aGlobalContacts))
+				{
+					$bRes1 = false;
+					if (!$this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
+					{
+						throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+					}
+
+					$bRes1 = $this->oApiContactsManager->addGlobalContactsToGroup($oAccount, $oGroup, $aGlobalContacts);
+				}
+
+				$bRes2 = true;
+				if (0 < count($aLocalContacts))
+				{
+					$bRes2 = $this->oApiContactsManager->addContactsToGroup($oGroup, $aLocalContacts);
+				}
+
+				return $this->DefaultResponse($oAccount, __FUNCTION__, $bRes1 && $bRes2);
+			}
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function RemoveContactsFromGroup($aParameters)
+	{
+		$oAccount = $this->getAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount) ||
+			$this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
+		{
+			$sGroupId = (string) $this->getParamValue($aParameters, 'GroupId', '');
+
+			$aContactsId = explode(',', $this->getParamValue($aParameters, 'ContactsId', ''));
+			$aContactsId = array_map('trim', $aContactsId);
+
+			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
+			if ($oGroup)
+			{
+				return $this->DefaultResponse($oAccount, __FUNCTION__,
+					$this->oApiContactsManager->removeContactsFromGroup($oGroup, $aContactsId));
+			}
+
+			return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, false);
 	}	
 }
 
