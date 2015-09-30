@@ -201,6 +201,30 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
+	public function GetContact($aParameters)
+	{
+		$oContact = false;
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$sContactId = (string) $this->getParamValue($aParameters, 'ContactId', '');
+			$bSharedToAll = '1' === (string) $this->getParamValue($aParameters, 'SharedToAll', '0');
+			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+
+			$oContact = $this->oApiContactsManager->getContactById($oAccount->IdUser, $sContactId, false, $iTenantId);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
+	}	
+	
+	/**
+	 * @return array
+	 */
 	public function CreateContact($aParameters)
 	{
 		$oAccount = $this->getDefaultAccountFromParam($aParameters);
@@ -219,6 +243,84 @@ class ContactsModule extends AApiModule
 			return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact ? array(
 				'IdContact' => $oContact->IdContact
 			) : false);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateContact($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		$bGlobal = '1' === $this->getParamValue($aParameters, 'Global', '0');
+		$sContactId = $this->getParamValue($aParameters, 'ContactId', '');
+
+		$bSharedToAll = '1' === $this->getParamValue($aParameters, 'SharedToAll', '0');
+		$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+
+		if ($bGlobal && $this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
+		{
+			$oApiContacts = $this->GetManager('global');
+		}
+		else if (!$bGlobal && $this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$oApiContacts = $this->oApiContactsManager;
+		}
+
+		if ($oApiContacts)
+		{
+			$oContact = $oApiContacts->getContactById($bGlobal ? $oAccount : $oAccount->IdUser, $sContactId, false, $iTenantId);
+			if ($oContact)
+			{
+				$this->populateContactObject($aParameters, $oContact, $oContact->ItsMe);
+
+				if ($oApiContacts->updateContact($oContact))
+				{
+					return $this->TrueResponse($oAccount, __FUNCTION__);
+				}
+				else
+				{
+					switch ($oApiContacts->getLastErrorCode())
+					{
+						case \Errs::Sabre_PreconditionFailed:
+							throw new \Core\Exceptions\ClientException(
+								\Core\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
+					}
+				}
+			}
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function DeleteContact($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$aContactsId = explode(',', $this->getParamValue($aParameters, 'ContactsId', ''));
+			$aContactsId = array_map('trim', $aContactsId);
+			
+			$bSharedToAll = '1' === (string) $this->getParamValue($aParameters, 'SharedToAll', '0');
+			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+
+			return $this->DefaultResponse($oAccount, __FUNCTION__,
+				$this->oApiContactsManager->deleteContacts($oAccount->IdUser, $aContactsId, $iTenantId));
 		}
 		else
 		{

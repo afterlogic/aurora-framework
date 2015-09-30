@@ -607,4 +607,65 @@ class CContact extends api_AContainer
 			}
 		}
 	}
+	
+	public function toArray()
+	{
+		return array(
+			'IdUser' => $this->IdUser,
+			'IdContact' => $this->IdContact,
+			'IdContactStr' => $this->IdContactStr,
+
+			'Global' => $this->Global,
+			'ItsMe' => $this->ItsMe,
+
+			'PrimaryEmail' => $this->PrimaryEmail,
+			'UseFriendlyName' => $this->UseFriendlyName,
+
+			'GroupsIds' => $this->GroupsIds,
+
+			'FullName' => $this->FullName,
+			'Title' => $this->Title,
+			'FirstName' => $this->FirstName,
+			'LastName' => $this->LastName,
+			'NickName' => $this->NickName,
+			'Skype' => $this->Skype,
+			'Facebook' => $this->Facebook,
+
+			'HomeEmail' => $this->HomeEmail,
+			'HomeStreet' => $this->HomeStreet,
+			'HomeCity' => $this->HomeCity,
+			'HomeState' => $this->HomeState,
+			'HomeZip' => $this->HomeZip,
+			'HomeCountry' => $this->HomeCountry,
+			'HomePhone' => $this->HomePhone,
+			'HomeFax' => $this->HomeFax,
+			'HomeMobile' => $this->HomeMobile,
+			'HomeWeb' => $this->HomeWeb,
+
+			'BusinessEmail' => $this->BusinessEmail,
+			'BusinessCompany' => $this->BusinessCompany,
+			'BusinessStreet' => $this->BusinessStreet,
+			'BusinessCity' => $this->BusinessCity,
+			'BusinessState' => $this->BusinessState,
+			'BusinessZip' => $this->BusinessZip,
+			'BusinessCountry' => $this->BusinessCountry,
+			'BusinessJobTitle' => $this->BusinessJobTitle,
+			'BusinessDepartment' => $this->BusinessDepartment,
+			'BusinessOffice' => $this->BusinessOffice,
+			'BusinessPhone' => $this->BusinessPhone,
+			'BusinessMobile' => $this->BusinessMobile,
+			'BusinessFax' => $this->BusinessFax,
+			'BusinessWeb' => $this->BusinessWeb,
+
+			'OtherEmail' => $this->OtherEmail,
+			'Notes' => $this->Notes,
+
+			'BirthdayDay' => $this->BirthdayDay,
+			'BirthdayMonth' => $this->BirthdayMonth,
+			'BirthdayYear' => $this->BirthdayYear,
+			'ReadOnly' => $this->ReadOnly,
+			'ETag' => $this->ETag,
+			'SharedToAll' => $this->SharedToAll
+		);
+	}
 }
