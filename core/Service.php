@@ -223,7 +223,7 @@ class Service
 		}
 
 		/* @var $oApiIntegrator \CApiIntegratorManager */
-		$oApiIntegrator = \CApi::Manager('integrator');
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
 		// ------ Redirect to HTTPS
 		$oSettings =& \CApi::GetSettings();
@@ -237,7 +237,7 @@ class Service
 		// ------
 
 		/* @var $oApiCapability \CApiCapabilityManager */
-		$oApiCapability = \CApi::Manager('capability');
+		$oApiCapability = \CApi::GetCoreManager('capability');
 
 		$sResult = '';
 
@@ -286,12 +286,7 @@ class Service
 					{
 						$oModuleManager = \CApi::GetModuleManager();
 						
-						$aParameters = array();
-						if (isset($sParameters))
-						{
-							$aParameters = @json_decode($sParameters, true);
-						}
-
+						$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
 						$aResponseItem = $oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
 						
 /*						

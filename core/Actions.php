@@ -267,6 +267,7 @@ class Actions extends ActionsBase
 		return $oResult;
 	}
 
+
 	/**
 	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
 	 * @param bool $bVerifyLogginedUserId Default value is **true**.

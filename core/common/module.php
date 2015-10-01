@@ -535,6 +535,33 @@ abstract class AApiModule
 	}
 	
 	/**
+	 * @param int $iAccountId
+	 * @param bool $bVerifyLogginedUserId = true
+	 * @param string $sAuthToken = ''
+	 * @return CAccount | null
+	 */
+	public function getAccount($iAccountId, $bVerifyLogginedUserId = true, $sAuthToken = '')
+	{
+		$oResult = null;
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		
+		$iUserId = $bVerifyLogginedUserId ? $oApiIntegrator->getLogginedUserId($sAuthToken) : 1;
+		if (0 < $iUserId)
+		{
+			$oApiUsers = \CApi::GetCoreManager('users');
+			
+			$oAccount = $oApiUsers->getAccountById($iAccountId);
+			if ($oAccount instanceof \CAccount && 
+				($bVerifyLogginedUserId && $oAccount->IdUser === $iUserId || !$bVerifyLogginedUserId) && !$oAccount->IsDisabled)
+			{
+				$oResult = $oAccount;
+			}
+		}
+
+		return $oResult;
+	}	
+	
+	/**
 	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
 	 *
 	 * @return \CAccount|null
@@ -546,6 +573,34 @@ abstract class AApiModule
 		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+		}
+
+		return $oResult;
+	}	
+	
+	/**
+	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
+	 * @param bool $bVerifyLogginedUserId Default value is **true**.
+	 *
+	 * @return \CAccount|null
+	 */
+	protected function getAccountFromParam($aParameters, $bThrowAuthExceptionOnFalse = true, $bVerifyLogginedUserId = true)
+	{
+		$oResult = null;
+		$sAuthToken = (string) $this->getParamValue($aParameters, 'AuthToken', '');
+		$sAccountID = (string) $this->getParamValue($aParameters, 'AccountID', '');
+		if (0 === strlen($sAccountID) || !is_numeric($sAccountID))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+		}
+
+		$oResult = $this->getAccount((int) $sAccountID, $bVerifyLogginedUserId, $sAuthToken);
+
+		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
+		{
+			$oExc = $this->oApiUsers->GetLastException();
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError,
+				$oExc ? $oExc : null, $oExc ? $oExc->getMessage() : '');
 		}
 
 		return $oResult;
