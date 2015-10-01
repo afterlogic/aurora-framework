@@ -36,8 +36,6 @@ function CAbstractFileModel()
 
 	this.isFolder = ko.observable(false);
 	this.isLink = ko.observable(false);
-//	this.linkType = ko.observable(Enums.FileStorageLinkType.Unknown);
-//	this.linkUrl = ko.observable('');
 	this.isPopupItem = ko.observable(false);
 	
 	this.id = ko.observable('');
@@ -136,6 +134,7 @@ function CAbstractFileModel()
 	}, this);
 	
 	this.allowDrag = ko.observable(false);
+	this.allowSelect = ko.observable(false);
 	this.allowCheck = ko.observable(false);
 	this.allowDelete = ko.observable(false);
 	this.allowUpload = ko.observable(false);

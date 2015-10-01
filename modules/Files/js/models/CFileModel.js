@@ -188,6 +188,7 @@ CFileModel.prototype.parse = function (oData, sPublicHash)
 {
 	var oDateModel = new CDateModel();
 	
+	this.allowSelect(true);
 	this.isFolder(!!oData.IsFolder);
 	this.isLink(!!oData.IsLink);
 	this.fileName(Utils.pString(oData.Name));
