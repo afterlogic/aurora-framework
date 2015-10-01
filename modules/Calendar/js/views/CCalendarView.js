@@ -12,7 +12,6 @@ var
 	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),//setTitle
 	UserSettings = require('core/js/Settings.js'),
-	Ajax = require('core/js/Ajax.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
 	CAbstractView = require('core/js/views/CAbstractView.js'),
@@ -27,6 +26,7 @@ var
 	EditEventRecurrencePopup = require('modules/Calendar/js/popups/EditEventRecurrencePopup.js'),
 	SelectCalendarPopup = require('modules/Calendar/js/popups/SelectCalendarPopup.js'),
 	
+	Ajax = require('modules/Calendar/js/Ajax.js'),
 	Settings = require('modules/Calendar/js/Settings.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
 	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js'),
@@ -903,8 +903,7 @@ CCalendarView.prototype.getCalendars = function ()
 	this.checkStarted(true);
 	this.setCalendarGridVisibility();	
 
-	Ajax.sendExt({
-			'Action': 'CalendarList',
+	Ajax.sendExt('GetCalendars', {
 			'IsPublic': this.isPublic ? 1 : 0,
 			'PublicCalendarId': this.publicCalendarId
 		}, this.onCalendarsResponse, this
@@ -993,8 +992,7 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
 //		{
 //			this.$calendarGrid.find('.fc-view div').first().css('visibility', 'hidden');
 //		}
-		Ajax.sendExt({
-			'Action': 'CalendarEventList',
+		Ajax.sendExt('GetEvents', {
 			'CalendarIds': JSON.stringify(aCalendarIds),
 			'Start': this.startDateTime,
 			'End': this.endDateTime,
@@ -1097,11 +1095,10 @@ CCalendarView.prototype.createCalendar = function (sName, sDescription, sColor)
 {
 	if (!this.isPublic)
 	{
-		Ajax.send({
+		Ajax.send('CreateCalendar', {
 				'Name': sName,
 				'Description': sDescription,
-				'Color': sColor,
-				'Action': 'CalendarCreate'
+				'Color': sColor
 			}, this.onCalendarCreateResponse, this
 		);
 	}
@@ -1152,12 +1149,11 @@ CCalendarView.prototype.updateCalendar = function (sName, sDescription, sColor, 
 {
 	if (!this.isPublic)
 	{
-		Ajax.send({
+		Ajax.send('UpdateCalendar', {
 				'Name': sName,
 				'Description': sDescription,
 				'Color': sColor,
-				'Id': sId,
-				'Action': 'CalendarUpdate'
+				'Id': sId
 			}, this.onCalendarUpdateResponse, this
 		);
 	}
@@ -1193,10 +1189,9 @@ CCalendarView.prototype.updateCalendarColor = function (sColor, sId)
 {
 	if (!this.isPublic)
 	{
-		Ajax.send({
+		Ajax.send('UpdateCalendarColor', {
 				'Color': sColor,
-				'Id': sId,
-				'Action': 'CalendarUpdateColor'
+				'Id': sId
 			}, this.onCalendarUpdateColorResponse, this
 		);
 	}
@@ -1254,8 +1249,7 @@ CCalendarView.prototype.shareCalendar = function (sId, bIsPublic, aShares, bShar
 {
 	if (!this.isPublic)
 	{
-		Ajax.send({
-				'Action': 'CalendarShareUpdate',
+		Ajax.send('UpdateCalendarShare', {
 				'Id': sId,
 				'IsPublic': bIsPublic ? 1 : 0,
 				'Shares': JSON.stringify(aShares),
@@ -1301,8 +1295,7 @@ CCalendarView.prototype.publicCalendar = function (sId, bIsPublic)
 {
 	if (!this.isPublic)
 	{
-		Ajax.send({
-				'Action': 'CalendarPublicUpdate',
+		Ajax.send('UpdateCalendarPublic', {
 				'Id': sId,
 				'IsPublic': bIsPublic ? 1 : 0
 			}, this.onCalendarPublicUpdateResponse, this
@@ -1340,10 +1333,7 @@ CCalendarView.prototype.deleteCalendar = function (sId, bIsUnsubscribe)
 		fRemove = _.bind(function (bRemove) {
 			if (bRemove)
 			{
-				Ajax.send({
-						'Id': sId,
-						'Action': 'CalendarDelete'
-					}, this.onCalendarDeleteResponse, this
+				Ajax.send('DeleteCalendar', { 'Id': sId }, this.onCalendarDeleteResponse, this
 				);
 			}
 		}, this)
@@ -1565,8 +1555,7 @@ CCalendarView.prototype.createEvent = function (oEventData)
 		aParameters.calendarId = oEventData.newCalendarId;
 		aParameters.selectStart = this.getDateFromCurrentView('start');
 		aParameters.selectEnd = this.getDateFromCurrentView('end');
-		aParameters.Action = 'CalendarEventCreate';
-		Ajax.send(aParameters, this.onEventActionResponseWithSubThrottle, this);
+		Ajax.send('CreateEvent', aParameters, this.onEventActionResponseWithSubThrottle, this);
 	}
 };
 
@@ -1643,11 +1632,11 @@ CCalendarView.prototype.eventClickCallback = function (oEventData)
 };
 
 /**
- * @param {string} sAction
+ * @param {string} sMethod
  * @param {Object} oParameters
  * @param {Function=} fRevertFunc = undefined
  */
-CCalendarView.prototype.eventAction = function (sAction, oParameters, fRevertFunc)
+CCalendarView.prototype.eventAction = function (sMethod, oParameters, fRevertFunc)
 {
 	var oCalendar = this.calendars.getCalendarById(oParameters.calendarId);
 	
@@ -1667,8 +1656,8 @@ CCalendarView.prototype.eventAction = function (sAction, oParameters, fRevertFun
 				this.revertFunction = fRevertFunc;
 			}
 			
-			oParameters.Action = sAction;
 			Ajax.send(
+				sMethod,
 				oParameters,
 				this.onEventActionResponseWithSubThrottle, this
 			);
@@ -1691,7 +1680,7 @@ CCalendarView.prototype.updateEvent = function (oEventData)
 	if (oEventData.modified)
 	{
 		this.calendars.setDefault(oEventData.newCalendarId);
-		this.eventAction('CalendarEventUpdate', oParameters);
+		this.eventAction('UpdateEvent', oParameters);
 	}
 };
 
@@ -1716,7 +1705,7 @@ CCalendarView.prototype.moveEvent = function (oEventData, delta, revertFunc)
 //			if (bConfirm)
 //			{
 //				oParameters.allEvents = Enums.CalendarEditRecurrenceEvent.OnlyThisInstance;
-//				this.eventAction('CalendarEventUpdate', oParameters, revertFunc);
+//				this.eventAction('UpdateEvent', oParameters, revertFunc);
 //			}
 //			else if (revertFunc)
 //			{
@@ -1741,7 +1730,7 @@ CCalendarView.prototype.moveEvent = function (oEventData, delta, revertFunc)
 				if (oParameters.excluded)
 				{
 					oParameters.allEvents = Enums.CalendarEditRecurrenceEvent.OnlyThisInstance;
-					this.eventAction('CalendarEventUpdate', oParameters, revertFunc);
+					this.eventAction('UpdateEvent', oParameters, revertFunc);
 				}
 				else
 				{
@@ -1757,7 +1746,7 @@ CCalendarView.prototype.moveEvent = function (oEventData, delta, revertFunc)
 		else
 		{
 			oParameters.allEvents = Enums.CalendarEditRecurrenceEvent.AllEvents;
-			this.eventAction('CalendarEventUpdate', oParameters, revertFunc);
+			this.eventAction('UpdateEvent', oParameters, revertFunc);
 		}
 	}	
 	
@@ -1779,7 +1768,7 @@ CCalendarView.prototype.resizeEvent = function (oEventData, delta, revertFunc)
 			if (iResult !== Enums.CalendarEditRecurrenceEvent.None)
 			{
 				oParameters.allEvents = iResult;
-				this.eventAction('CalendarEventUpdate', oParameters, revertFunc);
+				this.eventAction('UpdateEvent', oParameters, revertFunc);
 			}
 			else
 			{
@@ -1812,7 +1801,7 @@ CCalendarView.prototype.resizeEvent = function (oEventData, delta, revertFunc)
  */
 CCalendarView.prototype.deleteEvent = function (oEventData)
 {
-	this.eventAction('CalendarEventDelete', this.getParamsFromEventData(oEventData));
+	this.eventAction('DeleteEvent', this.getParamsFromEventData(oEventData));
 };
 
 /**

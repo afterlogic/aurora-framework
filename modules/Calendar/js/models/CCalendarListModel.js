@@ -156,7 +156,7 @@ CCalendarListModel.prototype.getEvents = function (start, end)
 };
 
 /**
- * @param {AjaxCalendarResponse} oCalendarData
+ * @param {Object} oCalendarData
  * 
  * @return {Object}
  */
@@ -169,7 +169,7 @@ CCalendarListModel.prototype.parseCalendar = function (oCalendarData)
 };
 	
 /**
- * @param {AjaxCalendarResponse} oCalendarData
+ * @param {Object} oCalendarData
  * 
  * @return {Object}
  */

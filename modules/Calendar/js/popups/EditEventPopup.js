@@ -11,7 +11,6 @@ var
 	DateUtils = require('core/js/utils/Date.js'),
 	App = require('core/js/App.js'),
 	Api = require('core/js/Api.js'),
-	Ajax = require('core/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
 	
@@ -20,6 +19,7 @@ var
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
+	Ajax = require('modules/Calendar/js/Ajax.js'),
 	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
 	Settings = require('modules/Calendar/js/Settings.js'),
@@ -937,42 +937,42 @@ CEditEventPopup.prototype.disableAlarms = function ()
  */
 CEditEventPopup.prototype.autocompleteCallback = function (sTerm, fResponse)
 {
-	var
-		oParameters = {
-			'Action': 'ContactSuggestions',
-			'Search': sTerm,
-			'GlobalOnly': '0'
-		}
-	;
-
-	this.guestAutocompleteItem(null);
-
-	Ajax.send(oParameters, function (oData) {
-		var aList = [];
-		if (oData && oData.Result && oData.Result && oData.Result.List)
-		{
-			aList = _.map(oData.Result.List, function (oItem) {
-				return oItem && oItem.Email && oItem.Email !== this.owner() ?
-				{
-					value: oItem.Name && 0 < $.trim(oItem.Name).length ? '"' + oItem.Name + '" <' + oItem.Email + '>' : oItem.Email,
-					name: oItem.Name,
-					email: oItem.Email,
-					frequency: oItem.Frequency,
-					id: oItem.Id,
-					global: oItem.Global,
-					sharedToAll: oItem.SharedToAll
-				} :
-				null;
-			}, this);
-
-			aList = _.sortBy(_.compact(aList), function(oItem){
-				return oItem.frequency;
-			}).reverse();
-		}
-
-		fResponse(aList);
-
-	}, this);
+//	var
+//		oParameters = {
+//			'Action': 'ContactSuggestions',
+//			'Search': sTerm,
+//			'GlobalOnly': '0'
+//		}
+//	;
+//
+//	this.guestAutocompleteItem(null);
+//
+//	Ajax.send(oParameters, function (oData) {
+//		var aList = [];
+//		if (oData && oData.Result && oData.Result && oData.Result.List)
+//		{
+//			aList = _.map(oData.Result.List, function (oItem) {
+//				return oItem && oItem.Email && oItem.Email !== this.owner() ?
+//				{
+//					value: oItem.Name && 0 < $.trim(oItem.Name).length ? '"' + oItem.Name + '" <' + oItem.Email + '>' : oItem.Email,
+//					name: oItem.Name,
+//					email: oItem.Email,
+//					frequency: oItem.Frequency,
+//					id: oItem.Id,
+//					global: oItem.Global,
+//					sharedToAll: oItem.SharedToAll
+//				} :
+//				null;
+//			}, this);
+//
+//			aList = _.sortBy(_.compact(aList), function(oItem){
+//				return oItem.frequency;
+//			}).reverse();
+//		}
+//
+//		fResponse(aList);
+//
+//	}, this);
 };
 
 CEditEventPopup.prototype.repeatRuleParse = function (oRepeatRule)
@@ -1302,7 +1302,6 @@ CEditEventPopup.prototype.setAppointmentAction = function (sDecision)
 		}, this),
 		oCalendar = this.calendars.getCalendarById(this.selectedCalendarId()),
 		oParameters = {
-			'Action': 'CalendarAppointmentSetAction',
 			'AppointmentAction': sDecision,
 			'CalendarId': this.selectedCalendarId(),
 			'EventId': this.uid(),
@@ -1327,7 +1326,7 @@ CEditEventPopup.prototype.setAppointmentAction = function (sDecision)
 				CalendarCache.markIcalNonexistent(this.uid());
 				break;
 		}
-		Ajax.send(oParameters, this.onCalendarAppointmentSetActionResponse, this);
+		Ajax.send('SetAppointmentAction', oParameters, this.onCalendarAppointmentSetActionResponse, this);
 
 		oAttendee.status = iDecision;
 		this.attendees([]);
@@ -1439,17 +1438,17 @@ CEditEventPopup.prototype.displayReminderPart = function (sPart, sPrefix)
 
 CEditEventPopup.prototype.autocompleteDeleteItem = function (oContact)
 {
-	var
-		oParameters = {
-			'Action': 'ContactSuggestionDelete',
-			'ContactId': oContact.id,
-			'SharedToAll': oContact.sharedToAll ? '1' : '0'
-		}
-	;
-
-	Ajax.send(oParameters, function (oData) {
-		return true;
-	}, this);
+//	var
+//		oParameters = {
+//			'Action': 'ContactSuggestionDelete',
+//			'ContactId': oContact.id,
+//			'SharedToAll': oContact.sharedToAll ? '1' : '0'
+//		}
+//	;
+//
+//	Ajax.send(oParameters, function (oData) {
+//		return true;
+//	}, this);
 };
 
 module.exports = new CEditEventPopup();

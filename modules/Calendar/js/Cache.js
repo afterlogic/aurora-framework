@@ -5,7 +5,8 @@ var
 	_ = require('underscore'),
 	
 	App = require('core/js/App.js'),
-	Ajax = require('core/js/Ajax.js')
+	
+	Ajax = require('modules/Calendar/js/Ajax.js')
 ;
 
 /**
@@ -92,7 +93,7 @@ CCalendarCache.prototype.requestCalendarList = function ()
 {
 	if (!this.calendarsLoadingStarted())
 	{
-		Ajax.send({'Action': 'CalendarList'}, this.onCalendarListResponse, this);
+		Ajax.send('GetCalendars', null, this.onCalendarListResponse, this);
 		
 		this.calendarsLoadingStarted(true);
 	}

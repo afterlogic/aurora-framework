@@ -8,7 +8,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
-	Ajax = require('core/js/Ajax.js'),
+//	Ajax = require('core/js/Ajax.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	bMobileDevice = false
@@ -138,32 +138,32 @@ CShareCalendarPopup.prototype.cleanAll = function ()
  */
 CShareCalendarPopup.prototype.autocompleteCallback = function (sTerm, fResponse)
 {
-	var oParameters = {
-			'Action': 'ContactSuggestions',
-			'Search': sTerm,
-			'GlobalOnly': '1'
-		}
-	;
-
-	Ajax.send(oParameters, function (oData) {
-		var aList = [];
-		if (oData && oData.Result && oData.Result && oData.Result.List)
-		{
-			aList = _.map(oData.Result.List, function (oItem) {
-				return oItem && oItem.Email && oItem.Email !== this.owner() ?
-					(oItem.Name && 0 < $.trim(oItem.Name).length ?
-						oItem.ForSharedToAll ? {value: oItem.Name, name: oItem.Name, email: oItem.Email, frequency: oItem.Frequency} :
-						{value:'"' + oItem.Name + '" <' + oItem.Email + '>', name: oItem.Name, email: oItem.Email, frequency: oItem.Frequency} : {value: oItem.Email, name: '', email: oItem.Email, frequency: oItem.Frequency}) : null;
-			}, this);
-
-			aList = _.sortBy(_.compact(aList), function(num){
-				return num.frequency;
-			}).reverse();
-		}
-
-		fResponse(aList);
-
-	}, this);
+//	var oParameters = {
+//			'Action': 'ContactSuggestions',
+//			'Search': sTerm,
+//			'GlobalOnly': '1'
+//		}
+//	;
+//
+//	Ajax.send(oParameters, function (oData) {
+//		var aList = [];
+//		if (oData && oData.Result && oData.Result && oData.Result.List)
+//		{
+//			aList = _.map(oData.Result.List, function (oItem) {
+//				return oItem && oItem.Email && oItem.Email !== this.owner() ?
+//					(oItem.Name && 0 < $.trim(oItem.Name).length ?
+//						oItem.ForSharedToAll ? {value: oItem.Name, name: oItem.Name, email: oItem.Email, frequency: oItem.Frequency} :
+//						{value:'"' + oItem.Name + '" <' + oItem.Email + '>', name: oItem.Name, email: oItem.Email, frequency: oItem.Frequency} : {value: oItem.Email, name: '', email: oItem.Email, frequency: oItem.Frequency}) : null;
+//			}, this);
+//
+//			aList = _.sortBy(_.compact(aList), function(num){
+//				return num.frequency;
+//			}).reverse();
+//		}
+//
+//		fResponse(aList);
+//
+//	}, this);
 };
 
 /**

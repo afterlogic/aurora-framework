@@ -91,7 +91,7 @@ CCalendarModel.prototype.parseCssColor = function (sColor)
 };
 
 /**
- * @param {AjaxCalendarResponse} oData
+ * @param {Object} oData
  */
 CCalendarModel.prototype.parse = function (oData)
 {
