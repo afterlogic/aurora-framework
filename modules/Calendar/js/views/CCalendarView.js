@@ -842,11 +842,11 @@ CCalendarView.prototype.setAutoReloadTimer = function ()
 	var self = this;
 	clearTimeout(this.iAutoReloadTimer);
 	
-	if (Settings.AutoCheckCalendarInterval > 0)
+	if (UserSettings.AutoRefreshIntervalMinutes > 0)
 	{
 		this.iAutoReloadTimer = setTimeout(function () {
 			self.getCalendars();
-		}, Settings.AutoCheckCalendarInterval * 60 * 1000);
+		}, UserSettings.AutoRefreshIntervalMinutes * 60 * 1000);
 	}
 };
 

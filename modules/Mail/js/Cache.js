@@ -7,6 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	Ajax = require('core/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
@@ -542,7 +543,7 @@ CMailCache.prototype.setAutocheckmailTimer = function ()
 {
 	clearTimeout(this.iAutoCheckMailTimer);
 	
-	if (!bSingleMode && Settings.AutoCheckMailInterval > 0)
+	if (!bSingleMode && UserSettings.AutoRefreshIntervalMinutes > 0)
 	{
 		this.iAutoCheckMailTimer = setTimeout(function () {
 			if (!Ajax.isSearchMessages())
@@ -550,7 +551,7 @@ CMailCache.prototype.setAutocheckmailTimer = function ()
 				MailCache.checkMessageFlags();
 				MailCache.executeCheckMail(false);
 			}
-		}, Settings.AutoCheckMailInterval * 60 * 1000);
+		}, UserSettings.AutoRefreshIntervalMinutes * 60 * 1000);
 	}
 };
 
@@ -615,7 +616,7 @@ CMailCache.prototype.requestCurrentMessageList = function (sFolder, iPage, sSear
 {
 	var
 		oRequestData = this.requestMessageList(sFolder, iPage, sSearch, sFilter || '', true, (bFillMessages || false)),
-		iCheckmailIntervalMilliseconds = Settings.AutoCheckMailInterval * 60 * 1000,
+		iCheckmailIntervalMilliseconds = UserSettings.AutoRefreshIntervalMinutes * 60 * 1000,
 		iFolderUpdateDiff = oRequestData.Folder.relevantInformationLastMoment ? moment().diff(oRequestData.Folder.relevantInformationLastMoment) : iCheckmailIntervalMilliseconds + 1
 	;
 	

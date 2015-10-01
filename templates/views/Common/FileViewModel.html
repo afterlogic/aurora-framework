@@ -1,7 +1,7 @@
 <div class="item file attachment" data-bind="
 	css: {
 		'dragHandle': allowDrag(),
-		'selected': selected && selected(),
+		'selected': allowSelect() && selected(),
 		'checked': allowCheck() && checked(),
 		'deleted': allowDelete() && deleted(),
 		'incomplete': allowUpload() && !uploaded(),

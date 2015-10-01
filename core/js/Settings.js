@@ -34,7 +34,6 @@ module.exports = {
 			MailsPerPage: 20,
 			AllowAutosaveInDrafts: false,
 			AutoSaveIntervalSeconds: 60,
-			AutoCheckMailInterval: 60,
 			AllowCompose: true,
 			AllowUsersChangeEmailSettings: true,
 			MailExpandFolders: true,
@@ -69,7 +68,6 @@ module.exports = {
 			CalendarShowWorkDay: true,
 			CalendarWorkDayStarts: '09',
 			CalendarWorkDayEnds: '18',
-			AutoCheckCalendarInterval: 60,
 			CalendarAppointments: false
 		},
 		Files: {
@@ -79,6 +77,15 @@ module.exports = {
 			FileStoragePubParams: {Name: ''},
 			ShowQuotaBar: false,
 			FileSizeLimit: 0
+		},
+		Helpdesk: {
+			IsHelpdeskAgent: false,
+			HelpdeskIframeUrl: '',
+			helpdeskSignature: ko.observable(''),
+			helpdeskSignatureEnable: ko.observable(false),
+			HelpdeskThreadId: '',
+			HelpdeskThreadAction: '',
+			ThreadsPerPage: 10
 		},
 		Settings: {},
 		dsbld_SessionTimeout: {
@@ -104,5 +111,6 @@ module.exports = {
 	DefaultLanguage: 'English',
 	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
 	IdleSessionTimeout: 0,
-	TenantHash: AppData.TenantHash
+	TenantHash: AppData.TenantHash,
+	AutoRefreshIntervalMinutes: 1
 };
