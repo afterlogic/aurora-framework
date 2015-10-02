@@ -77,7 +77,7 @@ class Service
 		{
 			if ($bHelpdesk)
 			{
-				$oApiHelpdesk = \CApi::Manager('helpdesk');
+//				$oApiHelpdesk = \CApi::Manager('helpdesk');
 				if ($oApiHelpdesk)
 				{
 					$oLogginedAccount = $this->oActions->GetDefaultAccount();

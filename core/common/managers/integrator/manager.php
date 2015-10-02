@@ -859,7 +859,7 @@ class CApiIntegratorManager extends AApiManager
 
 		CApi::Plugin()->RunHook('api-integrator-login-to-helpdesk-user', array(&$sEmail, &$sPassword));
 
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
+//		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
 		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetCoreManager('users');
 		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
@@ -1695,7 +1695,7 @@ class CApiIntegratorManager extends AApiManager
 			return $aAppData;
 		}
 
-		$oApiHelpdeskManager = CApi::Manager('helpdesk');
+//		$oApiHelpdeskManager = CApi::Manager('helpdesk');
 		/* @var $oApiHelpdeskManager CApiHelpdeskManager */
 
 		$oApiTenant = CApi::GetCoreManager('tenants');
@@ -1885,7 +1885,7 @@ class CApiIntegratorManager extends AApiManager
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
-		$oApiHelpdeskManager = CApi::Manager('helpdesk');
+//		$oApiHelpdeskManager = CApi::Manager('helpdesk');
 		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
 
 		return $oUser;

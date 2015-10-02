@@ -131,7 +131,7 @@ class Actions extends ActionsBase
 	{
 		if (null === $this->oApiHelpdesk)
 		{
-			$this->oApiHelpdesk = \CApi::Manager('helpdesk');
+//			$this->oApiHelpdesk = \CApi::Manager('helpdesk');
 		}
 
 		return $this->oApiHelpdesk;
@@ -2816,7 +2816,7 @@ class Actions extends ActionsBase
 			$oApiIntegrator->resetCookies();
 		}
 
-		$oApiHelpdesk = \CApi::Manager('helpdesk');
+//		$oApiHelpdesk = \CApi::Manager('helpdesk');
 
 		if ($this->oApiCapability->isGlobalContactsSupported($oAccount, true))
 		{
@@ -5445,7 +5445,7 @@ class Actions extends ActionsBase
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$oApiHelpdesk = \CApi::Manager('helpdesk');
+//		$oApiHelpdesk = \CApi::Manager('helpdesk');
 		if ($oApiHelpdesk)
 		{
 			$mHelpdeskThreadId = $sThreadId ? $sThreadId : $oApiHelpdesk->getThreadIdByHash($oUser->IdTenant, $sThreadHash);
