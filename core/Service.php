@@ -18,8 +18,12 @@ class Service
 	 * @var \Core\Actions
 	 */
 	protected $oActions;
-
-	protected $oTwilio;
+	
+	
+	/**
+	 * @var CApiModuleManager
+	 */
+	protected $oModuleManager;
 
 	/**
 	 * @return void
@@ -29,7 +33,7 @@ class Service
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
 		$this->oActions = Actions::NewInstance();
 		$this->oActions->SetHttp($this->oHttp);
-		$this->oTwilio = $this->oActions->GetTwilio();
+		$this->oModuleManager = \CApi::GetModuleManager();
 
 		\CApi::Plugin()->SetActions($this->oActions);
 		
@@ -284,10 +288,8 @@ class Service
 					}
 					else if (!empty($sModule) && !empty($sMethod))
 					{
-						$oModuleManager = \CApi::GetModuleManager();
-						
 						$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
-						$aResponseItem = $oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
+						$aResponseItem = $this->oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
 						
 /*						
 						else if (\CApi::Plugin()->JsonHookExists($sMethodName))
@@ -865,7 +867,8 @@ class Service
 			}
 			else if ('twilio' === $sFirstPart)
 			{
-				$sResult = $this->oTwilio->getTwiML($aPaths, $this->oHttp);
+				$oTwilio = $this->oModuleManager->GetModule('Twilio');
+				$sResult = $oTwilio->getTwiML($aPaths, $this->oHttp);
 			}
 			else if ('plugins' === $sFirstPart)
 			{

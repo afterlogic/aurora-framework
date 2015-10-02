@@ -7,7 +7,7 @@ class CalendarModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oApiCalendarManager = $this->GetManager('main');
+		$this->oApiCalendarManager = $this->GetManager('main', 'sabredav');
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 

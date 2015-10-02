@@ -85,8 +85,8 @@ class Actions extends ActionsBase
 		$this->oApiMail = \CApi::Manager('mail');
 		$this->oApiFileCache = \CApi::Manager('filecache');
 		$this->oApiSieve = \CApi::Manager('sieve');
-		$this->oApiFilestorage = \CApi::Manager('filestorage');
-		$this->oApiCalendar = \CApi::Manager('calendar');
+//		$this->oApiFilestorage = \CApi::Manager('filestorage');
+//		$this->oApiCalendar = \CApi::Manager('calendar');
 		$this->oApiCapability = \CApi::Manager('capability');
 
 		$this->oApiFetchers = null;

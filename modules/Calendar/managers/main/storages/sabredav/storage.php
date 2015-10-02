@@ -8,7 +8,7 @@
  * @package Calendar
  * @subpackage Storages
  */
-class CApiCalendarSabredavStorage extends CApiCalendarStorage
+class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 {
 	/**
 	 * @var array
@@ -43,7 +43,7 @@ class CApiCalendarSabredavStorage extends CApiCalendarStorage
 	/**
 	 * @param CApiGlobalManager $oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('sabredav', $oManager);
 
