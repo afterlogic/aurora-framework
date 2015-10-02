@@ -9,6 +9,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Browser = require('core/js/Browser.js'),
 	
 	bMobileDevice = false,
@@ -81,17 +82,7 @@ CApp.prototype.isAuth = function ()
  */
 CApp.prototype.logout = function (iLastErrorCode)
 {
-	var
-		Ajax = require('core/js/Ajax.js'),
-		oParameters = {'Action': 'SystemLogout'}
-	;
-	
-	if (iLastErrorCode)
-	{
-		oParameters.LastErrorCode = iLastErrorCode;
-	}
-	
-	Ajax.send(oParameters, this.onLogout, this);
+	ModulesManager.run('Auth', 'logout', [iLastErrorCode, this.onLogout, this]);
 	
 	this.bAuth = false;
 };

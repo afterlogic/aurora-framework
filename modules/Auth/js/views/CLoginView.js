@@ -8,9 +8,9 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Api = require('core/js/Api.js'),
-	Ajax = require('core/js/Ajax.js'),
 	Browser = require('core/js/Browser.js'),
 	
+	Ajax = require('modules/Auth/js/Ajax.js'),
 	Settings = require('modules/Auth/js/Settings.js'),
 	
 	$html = $('html')
@@ -182,18 +182,16 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 
 CLoginView.prototype.sendRequest = function ()
 {
-	var
-		oParameters = {
-			'Action': 'SystemLogin',
-			'Email': this.emailVisible() ? this.email() : '',
-			'IncLogin': this.loginVisible() ? this.login() : '',
-			'IncPassword': this.password(),
-			'SignMe': this.signMe() ? '1' : '0'
-		}
-	;
+	var oParameters = {
+		'Email': this.emailVisible() ? this.email() : '',
+		'IncLogin': this.loginVisible() ? this.login() : '',
+		'IncPassword': this.password(),
+		'SignMe': this.signMe() ? '1' : '0'
+	};
 
 	this.loading(true);
-	Ajax.send(oParameters, this.onSystemLoginResponse, this);
+	
+	Ajax.send('Login', oParameters, this.onSystemLoginResponse, this);
 };
 
 module.exports = CLoginView;

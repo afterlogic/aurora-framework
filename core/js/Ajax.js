@@ -24,11 +24,11 @@ function CAjax()
 		this.openedRequestsCount(this.requests().length);
 	}, this);
 	
-	this.aActionsWithoutAuthForSend = ['SystemLogin', 'SystemUpdateLanguageOnLogin', 'SystemLogout', 'AccountCreate', 
+	this.aActionsWithoutAuthForSend = ['SystemLogin', 'SystemUpdateLanguageOnLogin', 'Logout', 'AccountCreate', 
 		'SystemSetMobile', 'AccountRegister', 'AccountGetForgotQuestion', 'AccountValidateForgotQuestion', 'AccountChangeForgotPassword'];
 	
 	this.aActionsWithoutAuthForSendExt = ['SocialRegister', 'HelpdeskRegister', 'HelpdeskForgot', 
-			'HelpdeskLogin', 'HelpdeskForgotChangePassword', 'SystemLogout', 'GetCalendars',
+			'HelpdeskLogin', 'HelpdeskForgotChangePassword', 'Logout', 'GetCalendars',
 			'GetEvents', 'GetPublicFiles'];
 }
 
@@ -110,7 +110,7 @@ CAjax.prototype.isAllowedActionWithoutAuth = function (sAction)
 
 CAjax.prototype.isAllowedExtAction = function (sAction)
 {
-	return sAction === 'SocialRegister' || sAction === 'HelpdeskRegister' || sAction === 'HelpdeskForgot' || sAction === 'HelpdeskLogin' || sAction === 'SystemLogout';
+	return sAction === 'SocialRegister' || sAction === 'HelpdeskRegister' || sAction === 'HelpdeskForgot' || sAction === 'HelpdeskLogin' || sAction === 'Logout';
 };
 
 /**

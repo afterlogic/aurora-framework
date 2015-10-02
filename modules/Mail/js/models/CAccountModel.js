@@ -219,16 +219,16 @@ CAccountModel.prototype.parse = function (oData, iDefaultId)
 
 CAccountModel.prototype.requestExtensions = function ()
 {
-	if (!this.extensionsRequested())
-	{
-		var oTz = window.jstz ? window.jstz.determine() : null;
-		this.requireAjax();
-		Ajax.send({
-			'AccountID': this.id(),
-			'Action': 'SystemIsAuth',
-			'ClientTimeZone': oTz ? oTz.name() : ''
-		}, this.onSystemIsAuthResponse, this);
-	}
+//	if (!this.extensionsRequested())
+//	{
+//		var oTz = window.jstz ? window.jstz.determine() : null;
+//		this.requireAjax();
+//		Ajax.send({
+//			'AccountID': this.id(),
+//			'Action': 'SystemIsAuth',
+//			'ClientTimeZone': oTz ? oTz.name() : ''
+//		}, this.onSystemIsAuthResponse, this);
+//	}
 };
 
 /**
