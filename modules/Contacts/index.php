@@ -386,6 +386,64 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
+	public function GetSuggestions($aParameters)
+	{
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		$sSearch = (string) $this->getParamValue($aParameters, 'Search', '');
+		$bGlobalOnly = '1' === (string) $this->getParamValue($aParameters, 'GlobalOnly', '0');
+		$bPhoneOnly = '1' === (string) $this->getParamValue($aParameters, 'PhoneOnly', '0');
+
+		$aList = array();
+		
+		$iSharedTenantId = null;
+		if ($this->oApiCapabilityManager->isSharedContactsSupported($oAccount) && !$bPhoneOnly)
+		{
+			$iSharedTenantId = $oAccount->IdTenant;
+		}
+
+		if ($this->oApiCapabilityManager->isContactsSupported($oAccount))
+		{
+			$aContacts = 	$this->oApiContactsManager->getSuggestItems($oAccount, $sSearch,
+					\CApi::GetConf('webmail.suggest-contacts-limit', 20), $bGlobalOnly, $bPhoneOnly, $iSharedTenantId);
+
+			if (is_array($aContacts))
+			{
+				$aList = $aContacts;
+			}
+		}
+
+		$aCounts = array(0, 0);
+		
+		\CApi::Plugin()->RunHook('webmail.change-suggest-list', array($oAccount, $sSearch, &$aList, &$aCounts));
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+			'Search' => $sSearch,
+			'List' => $aList
+		));
+	}	
+	
+	public function DeleteSuggestion($aParameters)
+	{
+		$mResult = false;
+		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$sContactId = (string) $this->getParamValue($aParameters, 'ContactId', '');
+			$this->oApiContactsManager->resetContactFrequency($oAccount->IdUser, $sContactId);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+	}	
+	
+	/**
+	 * @return array
+	 */
 	public function CreateContact($aParameters)
 	{
 		$oAccount = $this->getDefaultAccountFromParam($aParameters);

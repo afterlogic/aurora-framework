@@ -3,11 +3,11 @@
 /* -AFTERLOGIC LICENSE HEADER- */
 
 /**
- * CApiCalendarManager class summary
+ * CApiCalendarMainManager class summary
  * 
  * @package Calendar
  */
-class CApiCalendarManager extends AApiManagerWithStorage
+class CApiCalendarMainManager extends AApiManagerWithStorage
 {
 	/*
 	 * @type $ApiUsersManager CApiUsersManager
@@ -1931,5 +1931,3 @@ class CApiCalendarManager extends AApiManagerWithStorage
 		return $bResult;
 	}
 }
-
-return new CApiCalendarManager(\CApi::$oManager);
