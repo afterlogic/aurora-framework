@@ -2,7 +2,13 @@
 
 var
 	_ = require('underscore'),
-	Enums = {}
+	Enums = {
+		has: function (sEnumName, sFoundValue) {
+			return !!_.find(Enums[sEnumName], function (sValue) {
+				return sFoundValue === sValue;
+			});
+		}
+	}
 ;
 
 /**

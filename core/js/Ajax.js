@@ -29,7 +29,7 @@ function CAjax()
 	
 	this.aActionsWithoutAuthForSendExt = ['SocialRegister', 'HelpdeskRegister', 'HelpdeskForgot', 
 			'HelpdeskLogin', 'HelpdeskForgotChangePassword', 'SystemLogout', 'GetCalendars',
-			'GetEvents', 'FilesPub'];
+			'GetEvents', 'GetPublicFiles'];
 }
 
 /**

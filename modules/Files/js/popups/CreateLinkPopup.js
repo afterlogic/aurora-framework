@@ -6,9 +6,9 @@ var
 	$ = require('jquery'),
 	
 	Utils = require('core/js/utils/Common.js'),
-	Ajax = require('core/js/Ajax.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
+	Ajax = require('modules/Files/js/Ajax.js'),
 	CFileModel = require('modules/Files/js/models/CFileModel.js')
 ;
 
@@ -56,32 +56,34 @@ CCreateLinkPopup.prototype.checkUrl = function ()
 	if (this.link() !== this.linkPrev())
 	{
 		this.linkPrev(this.link());
-		Ajax.send({
-				'Action': 'FilesCheckUrl',
-				'Url': this.link()
-			},
-			this.onFilesCheckUrlResponse,
-			this
-		);
+		Ajax.send('CheckUrl', { 'Url': this.link() }, this.onCheckUrlResponse, this);
 	}
 	this.checkTimer = setTimeout(_.bind(this.checkUrl, this), 1000);
 };
 
-CCreateLinkPopup.prototype.onFilesCheckUrlResponse = function (oData)
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CCreateLinkPopup.prototype.onCheckUrlResponse = function (oResponse, oRequest)
 {
-	var fileItem = new CFileModel();
-	if (oData.Result)
+	var
+		oResult = oResponse.Result,
+		fileItem = new CFileModel()
+	;
+	
+	if (oResult)
 	{
 		fileItem.isPopupItem(true);
 		fileItem.linkUrl(this.link());
-		fileItem.fileName(oData.Result.Name);
-		fileItem.size(oData.Result.Size);
-		fileItem.linkType(oData.Result.LinkType ? oData.Result.LinkType : Enums.FileStorageLinkType.Unknown);
+		fileItem.fileName(Utils.pString(oResult.Name));
+		fileItem.size(Utils.pInt(oResult.Size));
+		fileItem.linkType(Enums.has('FileStorageLinkType', pInt(oResult.LinkType)) ? pInt(oResult.LinkType) : Enums.FileStorageLinkType.Unknown);
 		fileItem.allowDownload(false);
-		if (oData.Result.Thumb)
+		if (oResult.Thumb)
 		{
 			fileItem.thumb(true);
-			fileItem.thumbnailSrc(oData.Result.Thumb);
+			fileItem.thumbnailSrc(Utils.pString(oResult.Thumb));
 		}
 		this.fileItem(fileItem);
 		

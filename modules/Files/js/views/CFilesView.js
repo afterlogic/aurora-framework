@@ -8,7 +8,6 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	App = require('core/js/App.js'),
-	Ajax = require('core/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
 	CJua = require('core/js/CJua.js'),
@@ -23,6 +22,7 @@ var
 	CreateFolderPopup = require('modules/Files/js/popups/CreateFolderPopup.js'),
 	CreateLinkPopup = require('modules/Files/js/popups/CreateLinkPopup.js'),
 	
+	Ajax = require('modules/Files/js/Ajax.js'),
 	Settings = require('modules/Files/js/Settings.js'),
 	CFileModel = require('modules/Files/js/models/CFileModel.js'),
 	
@@ -516,27 +516,23 @@ CFilesView.prototype.filesDrop = function (oFolder, oEvent, oUi)
 			
 			if (aItems.length > 0)
 			{
-				Ajax.send({
-						'Action': oEvent.ctrlKey ? 'FilesCopy' : 'FilesMove',
-						'FromType': this.storageType(),
-						'ToType': oFolder.storageType(),
-						'FromPath': sFromPath,
-						'ToPath': sToPath,
-						'Files': JSON.stringify(aItems)
-					},
-					this.onFilesMoveResponse,
-					this
-				);
+				Ajax.send(oEvent.ctrlKey ? 'Copy' : 'Move', {
+					'FromType': this.storageType(),
+					'ToType': oFolder.storageType(),
+					'FromPath': sFromPath,
+					'ToPath': sToPath,
+					'Files': JSON.stringify(aItems)
+				}, this.onMoveResponse, this);
 			}
 		}
 	}
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onFilesMoveResponse = function (oResult, oRequest)
+CFilesView.prototype.onMoveResponse = function (oResponse, oRequest)
 {
 	this.getQuota(this.storageType());
 };
@@ -638,12 +634,19 @@ CFilesView.prototype.onItemDblClick = function (oItem)
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onFilesResponse = function (oResult, oRequest)
+CFilesView.prototype.onGetFilesResponse = function (oResponse, oRequest)
 {
-	if (oResult.Result)
+	var
+		oResult = oResponse.Result,
+		oParameters = JSON.parse(oRequest.Parameters)
+	;
+	
+	this.onGetQuotaResponse(oResponse, oRequest);
+	
+	if (oResult)
 	{
 		var 
 			aFolderList = [],
@@ -651,13 +654,7 @@ CFilesView.prototype.onFilesResponse = function (oResult, oRequest)
 			sThumbSessionUid = Date.now().toString()
 		;
 
-		if (oResult.Result.Quota)
-		{
-			this.quota(oResult.Result.Quota[0] + oResult.Result.Quota[1]);
-			this.used(oResult.Result.Quota[0]);
-		}
-		
-		_.each(oResult.Result.Items, function (oValue) {
+		_.each(oResult.Items, function (oValue) {
 			var oItem = new CFileModel()
 				.allowDrag(true)
 				.allowCheck(true)
@@ -681,7 +678,7 @@ CFilesView.prototype.onFilesResponse = function (oResult, oRequest)
 			}
 		}, this);
 		
-		if (this.isPublic || oRequest.Type === this.storageType())
+		if (this.isPublic || oParameters.Type === this.storageType())
 		{
 			this.folders(aFolderList);
 			this.files(aFileList);
@@ -699,25 +696,26 @@ CFilesView.prototype.onFilesResponse = function (oResult, oRequest)
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onQuotaResponse = function (oResult, oRequest)
+CFilesView.prototype.onGetQuotaResponse = function (oResponse, oRequest)
 {
-	if (oResult.Result && oResult.Result.Quota)
+	var oResult = oResponse.Result;
+	if (oResult && oResult.Quota)
 	{
-		this.quota(oResult.Result.Quota[0] + oResult.Result.Quota[1]);
-		this.used(oResult.Result.Quota[0]);
+		this.quota(oResult.Quota[0] + oResult.Quota[1]);
+		this.used(oResult.Quota[0]);
 	}
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onFilesDeleteResponse = function (oResult, oRequest)
+CFilesView.prototype.onDeleteResponse = function (oResponse, oRequest)
 {
-	if (oResult.Result)
+	if (oResponse.Result)
 	{
 		this.expungeFileItems();
 	}
@@ -800,14 +798,13 @@ CFilesView.prototype.renameItem = function (oItem)
 	}
 	else
 	{
-		Ajax.send({
-				'Action': 'FilesRename',
+		Ajax.send('Rename', {
 				'Type': this.storageType(),
 				'Path': oItem.path(),
 				'Name': oItem.id(),
 				'NewName': sName,
 				'IsLink': oItem.isLink() ? 1 : 0
-			}, this.onFilesRenameResponse, this
+			}, this.onRenameResponse, this
 		);
 	}
 
@@ -818,7 +815,7 @@ CFilesView.prototype.renameItem = function (oItem)
  * @param {Object} oResult
  * @param {Object} oRequest
  */
-CFilesView.prototype.onFilesRenameResponse = function (oResult, oRequest)
+CFilesView.prototype.onRenameResponse = function (oResult, oRequest)
 {
 	this.getFiles(this.storageType(), this.getPathItemByIndex(this.iPathIndex()), this.searchPattern());
 };
@@ -865,10 +862,9 @@ CFilesView.prototype.onHide = function ()
  */
 CFilesView.prototype.getQuota = function (iType)
 {
-	Ajax.send({
-			'Action': 'FilesQuota',
+	Ajax.send('GetQuota', {
 			'Type': iType
-		}, this.onQuotaResponse, this
+		}, this.onGetQuotaResponse, this
 	);
 };
 
@@ -935,21 +931,19 @@ CFilesView.prototype.getStorages = function ()
 
 CFilesView.prototype.getExternalFileStorages = function ()
 {
-	Ajax.send({
-			'Action': 'FileStoragesExternal'
-		}, this.onExternalStoragesResponse, this
-	);
+	Ajax.send('GetExternalStorages', null, this.onGetExternalStoragesResponse, this);
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onExternalStoragesResponse = function (oResult, oRequest)
+CFilesView.prototype.onGetExternalStoragesResponse = function (oResponse, oRequest)
 {
-	if (oResult.Result)
+	var oResult = oResponse.Result;
+	if (oResult)
 	{
-		_.each(oResult.Result, function(oStorage){
+		_.each(oResult, function(oStorage){
 			if (!this.getStorageByType(oStorage.Type))
 			{
 				this.storages.push(
@@ -962,7 +956,7 @@ CFilesView.prototype.onExternalStoragesResponse = function (oResult, oRequest)
 			}
 		}, this);
 		
-		this.expungeExternalStorages(_.map(oResult.Result, function(oStorage){
+		this.expungeExternalStorages(_.map(oResult, function(oStorage){
 			return oStorage.Type;
 		}, this));
 	}
@@ -994,7 +988,7 @@ CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
 	;
 	if (this.isPublic)
 	{
-		return this.getFilesPub(oPath);
+		return this.getPublicFiles(oPath);
 	}
 	this.error(false);
 	this.storageType(sType);
@@ -1031,19 +1025,18 @@ CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
 		this.files([]);
 	}
 	
-	Ajax.sendExt({
-			'Action': 'Files',
+	Ajax.sendExt('GetFiles', {
 			'Type': sType,
 			'Path': this.path(),
 			'Pattern': this.searchPattern()
-		}, this.onFilesResponse, this
+		}, this.onGetFilesResponse, this
 	);
 };
 
 /**
- * @param {string} sHash
+ * @param {Object} oPath
  */
-CFilesView.prototype.getFilesPub = function (oPath)
+CFilesView.prototype.getPublicFiles = function (oPath)
 {
 	var 
 		iPathIndex = this.iPathIndex(),
@@ -1070,11 +1063,10 @@ CFilesView.prototype.getFilesPub = function (oPath)
 		this.files([]);
 	}
 	
-	Ajax.sendExt({
-			'Action': 'FilesPub',
+	Ajax.sendExt('GetPublicFiles', {
 			'Hash': Settings.FileStoragePubHash,
 			'Path': this.path()
-		}, this.onFilesResponse, this
+		}, this.onGetFilesResponse, this
 	);
 };
 
@@ -1095,12 +1087,11 @@ CFilesView.prototype.deleteItems = function (aChecked, bOkAnswer)
 				};
 			});
 		
-		Ajax.send({
-				'Action': 'FilesDelete',
+		Ajax.send('Delete', {
 				'Type': this.storageType(),
 				'Path': this.path(),
 				'Items': JSON.stringify(aItems)		
-			}, this.onFilesDeleteResponse, this
+			}, this.onDeleteResponse, this
 		);
 	}		
 };
@@ -1261,10 +1252,10 @@ CFilesView.prototype.onCancelUpload = function (sFileUid)
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onCreateFolderResponse = function (oResult, oRequest)
+CFilesView.prototype.onCreateFolderResponse = function (oResponse, oRequest)
 {
 	this.getFiles(this.storageType(), this.getPathItemByIndex(this.iPathIndex()));
 };
@@ -1281,8 +1272,7 @@ CFilesView.prototype.createFolder = function (sFolderName)
 	}
 	else
 	{
-		Ajax.send({
-				'Action': 'FilesFolderCreate',
+		Ajax.send('CreateFolder', {
 				'Type': this.storageType(),
 				'Path': this.path(),
 				'FolderName': sFolderName
@@ -1299,10 +1289,10 @@ CFilesView.prototype.onCreateFolderClick = function ()
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFilesView.prototype.onCreateLinkResponse = function (oResult, oRequest)
+CFilesView.prototype.onCreateLinkResponse = function (oResponse, oRequest)
 {
 	this.getFiles(this.storageType(), this.getPathItemByIndex(this.iPathIndex()));
 };
@@ -1312,8 +1302,7 @@ CFilesView.prototype.onCreateLinkResponse = function (oResult, oRequest)
  */
 CFilesView.prototype.createLink = function (oFileItem)
 {
-		Ajax.send({
-			'Action': 'FilesLinkCreate',
+		Ajax.send('CreateLink', {
 			'Type': this.storageType(),
 			'Path': this.path(),
 			'Link': oFileItem.linkUrl(),

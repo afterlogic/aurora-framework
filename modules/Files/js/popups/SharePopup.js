@@ -5,8 +5,9 @@ var
 	_ = require('underscore'),
 	
 	App = require('core/js/App.js'),
-	Ajax = require('core/js/Ajax.js'),
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
+	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	
+	Ajax = require('modules/Files/js/Ajax.js')
 ;
 
 /**
@@ -34,27 +35,26 @@ CSharePopup.prototype.onShow = function (oItem)
 	
 	this.pub('');
 		
-	Ajax.send({
-			'Action': 'FilesCreatePublicLink',
+	Ajax.send('CreatePublicLink', {
 			'Account': App.defaultAccountId(),
 			'Type': oItem.storageType(),
 			'Path': oItem.path(),
 			'Name': oItem.fileName(),
 			'Size': oItem.size(),
 			'IsFolder': oItem.isFolder() ? '1' : '0'
-		}, this.onFilesCreatePublicLinkResponse, this
+		}, this.onCreatePublicLinkResponse, this
 	);
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CSharePopup.prototype.onFilesCreatePublicLinkResponse = function (oResult, oRequest)
+CSharePopup.prototype.onCreatePublicLinkResponse = function (oResponse, oRequest)
 {
-	if (oResult.Result)
+	if (oResponse.Result)
 	{
-		this.pub(oResult.Result);
+		this.pub(oResponse.Result);
 		this.pubFocus(true);
 		this.item.shared(true);
 	}
@@ -64,8 +64,7 @@ CSharePopup.prototype.onCancelSharingClick = function ()
 {
 	if (this.item)
 	{
-		Ajax.send({
-				'Action': 'FilesPublicLinkDelete',
+		Ajax.send('DeletePublicLink', {
 				'Account': App.defaultAccountId(),
 				'Type': this.item.storageType(),
 				'Path': this.item.path(),
