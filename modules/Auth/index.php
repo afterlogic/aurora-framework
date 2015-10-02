@@ -5,13 +5,13 @@ class AuthModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function IsAuth($aParameters)
+	public function IsAuth()
 	{
 		$mResult = false;
-		$oAccount = $this->getAccountFromParam($aParameters, false);
+		$oAccount = $this->getAccountFromParam(false);
 		if ($oAccount)
 		{
-			$sClientTimeZone = trim($this->getParamValue($aParameters, 'ClientTimeZone', ''));
+			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
 			if ('' !== $sClientTimeZone)
 			{
 				$oAccount->User->ClientTimeZone = $sClientTimeZone;
@@ -48,20 +48,20 @@ class AuthModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function Login($aParameters)
+	public function Login()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$sEmail = trim((string) $this->getParamValue($aParameters, 'Email', ''));
-		$sIncLogin = (string) $this->getParamValue($aParameters, 'IncLogin', '');
-		$sIncPassword = (string) $this->getParamValue($aParameters, 'IncPassword', '');
-		$sLanguage = (string) $this->getParamValue($aParameters, 'Language', '');
+		$sEmail = trim((string) $this->getParamValue('Email', ''));
+		$sIncLogin = (string) $this->getParamValue('IncLogin', '');
+		$sIncPassword = (string) $this->getParamValue('IncPassword', '');
+		$sLanguage = (string) $this->getParamValue('Language', '');
 
-		$bSignMe = '1' === (string) $this->getParamValue($aParameters, 'SignMe', '0');
+		$bSignMe = '1' === (string) $this->getParamValue('SignMe', '0');
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		try
 		{
-			\CApi::Plugin()->RunHook('webmail-login-custom-data', array($this->getParamValue($aParameters, 'CustomRequestData', null)));
+			\CApi::Plugin()->RunHook('webmail-login-custom-data', array($this->getParamValue('CustomRequestData', null)));
 		}
 		catch (\Exception $oException)
 		{
@@ -166,11 +166,11 @@ class AuthModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function Logout($aParameters)
+	public function Logout()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$sAuthToken = (string) $this->getParamValue($aParameters, 'AuthToken', '');
-		$oAccount = $this->getAccountFromParam($aParameters, false);
+		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
+		$oAccount = $this->getAccountFromParam(false);
 
 		$oApiCapability = \CApi::GetCoreManager('capability');
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');

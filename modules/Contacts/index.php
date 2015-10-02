@@ -11,10 +11,10 @@ class ContactsModule extends AApiModule
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 	
-	private function populateSortParams($aParameters, &$iSortField, &$iSortOrder)
+	private function populateSortParams( &$iSortField, &$iSortOrder)
 	{
-		$sSortField = (string) $this->getParamValue($aParameters, 'SortField', 'Email');
-		$iSortOrder = '1' === (string) $this->getParamValue($aParameters, 'SortOrder', '0') ?
+		$sSortField = (string) $this->getParamValue('SortField', 'Email');
+		$iSortOrder = '1' === (string) $this->getParamValue('SortOrder', '0') ?
 			\ESortOrder::ASC : \ESortOrder::DESC;
 
 		switch (strtolower($sSortField))
@@ -35,10 +35,10 @@ class ContactsModule extends AApiModule
 	 * @param \CContact $oContact
 	 * @param bool $bItsMe = false
 	 */
-	private function populateContactObject($aParameters, &$oContact, $bItsMe = false)
+	private function populateContactObject(&$oContact, $bItsMe = false)
 	{
 		$iPrimaryEmail = $oContact->PrimaryEmail;
-		switch (strtolower($this->getParamValue($aParameters, 'PrimaryEmail', '')))
+		switch (strtolower($this->getParamValue('PrimaryEmail', '')))
 		{
 			case 'home':
 			case 'personal':
@@ -54,9 +54,9 @@ class ContactsModule extends AApiModule
 
 		$oContact->PrimaryEmail = $iPrimaryEmail;
 
-		$this->paramToObject($aParameters, 'UseFriendlyName', $oContact, 'bool');
+		$this->paramToObject('UseFriendlyName', $oContact, 'bool');
 
-		$this->paramsStrToObjectHelper($aParameters, $oContact, 
+		$this->paramsStrToObjectHelper($oContact, 
 				array(
 					'Title', 
 					'FullName', 
@@ -98,14 +98,14 @@ class ContactsModule extends AApiModule
 
 		if (!$bItsMe)
 		{
-			$this->paramToObject($aParameters, 'BusinessEmail', $oContact);
+			$this->paramToObject('BusinessEmail', $oContact);
 		}
 
-		$this->paramToObject($aParameters, 'BirthdayDay', $oContact, 'int');
-		$this->paramToObject($aParameters, 'BirthdayMonth', $oContact, 'int');
-		$this->paramToObject($aParameters, 'BirthdayYear', $oContact, 'int');
+		$this->paramToObject('BirthdayDay', $oContact, 'int');
+		$this->paramToObject('BirthdayMonth', $oContact, 'int');
+		$this->paramToObject('BirthdayYear', $oContact, 'int');
 
-		$aGroupsIds = $this->getParamValue($aParameters, 'GroupsIds');
+		$aGroupsIds = $this->getParamValue('GroupsIds');
 		$aGroupsIds = is_array($aGroupsIds) ? array_map('trim', $aGroupsIds) : array();
 		$oContact->GroupsIds = array_unique($aGroupsIds);
 	}	
@@ -113,11 +113,11 @@ class ContactsModule extends AApiModule
 	/**
 	 * @param \CGroup $oGroup
 	 */
-	private function populateGroupObject($aParameters, &$oGroup)
+	private function populateGroupObject(&$oGroup)
 	{
-		$this->paramToObject($aParameters, 'IsOrganization', $oGroup, 'bool');
+		$this->paramToObject('IsOrganization', $oGroup, 'bool');
 
-		$this->paramsStrToObjectHelper($aParameters, $oGroup, 
+		$this->paramsStrToObjectHelper($oGroup, 
 				array(
 					'Name', 
 					'Email', 
@@ -137,9 +137,9 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetGroups($aParameters)
+	public function GetGroups()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		$aList = false;
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
@@ -158,10 +158,10 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetGroup($aParameters)
+	public function GetGroup()
 	{
 		$oGroup = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
@@ -176,24 +176,24 @@ class ContactsModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup);
 	}
 
-	public function GetContacts($aParameters)
+	public function GetContacts()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
-		$iOffset = (int) $this->getParamValue($aParameters, 'Offset', 0);
-		$iLimit = (int) $this->getParamValue($aParameters, 'Limit', 20);
-		$sGroupId = (string) $this->getParamValue($aParameters, 'GroupId', '');
-		$sSearch = (string) $this->getParamValue($aParameters, 'Search', '');
-		$sFirstCharacter = (string) $this->getParamValue($aParameters, 'FirstCharacter', '');
-		$bSharedToAll = '1' === (string) $this->getParamValue($aParameters, 'SharedToAll', '0');
-		$bAll = '1' === (string) $this->getParamValue($aParameters, 'All', '0');
+		$iOffset = (int) $this->getParamValue('Offset', 0);
+		$iLimit = (int) $this->getParamValue('Limit', 20);
+		$sGroupId = (string) $this->getParamValue('GroupId', '');
+		$sSearch = (string) $this->getParamValue('Search', '');
+		$sFirstCharacter = (string) $this->getParamValue('FirstCharacter', '');
+		$bSharedToAll = '1' === (string) $this->getParamValue('SharedToAll', '0');
+		$bAll = '1' === (string) $this->getParamValue('All', '0');
 
 		$iSortField = \EContactSortField::Name;
 		$iSortOrder = \ESortOrder::ASC;
 		
 		$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
 		
-		$this->populateSortParams($aParameters, $iSortField, $iSortOrder);
+		$this->populateSortParams($iSortField, $iSortOrder);
 
 		$bAllowContactsSharing = $this->oApiCapabilityManager->isSharedContactsSupported($oAccount);
 		if ($bAll && !$bAllowContactsSharing &&
@@ -246,12 +246,12 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetContactsByEmails($aParameters)
+	public function GetContactsByEmails()
 	{
 		$aResult = array();
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
-		$sEmails = (string) $this->getParamValue($aParameters, 'Emails', '');
+		$sEmails = (string) $this->getParamValue('Emails', '');
 		$aEmails = explode(',', $sEmails);
 
 		if (0 < count($aEmails))
@@ -290,19 +290,19 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetGlobalContacts($aParameters)
+	public function GetGlobalContacts()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
-		$oApiGlobalContacts = $this->GetManager($aParameters, 'global');
+		$oAccount = $this->getDefaultAccountFromParam();
+		$oApiGlobalContacts = $this->GetManager('global');
 
-		$iOffset = (int) $this->getParamValue($aParameters, 'Offset', 0);
-		$iLimit = (int) $this->getParamValue($aParameters, 'Limit', 20);
-		$sSearch = (string) $this->getParamValue($aParameters, 'Search', '');
+		$iOffset = (int) $this->getParamValue('Offset', 0);
+		$iLimit = (int) $this->getParamValue('Limit', 20);
+		$sSearch = (string) $this->getParamValue('Search', '');
 
 		$iSortField = \EContactSortField::EMail;
 		$iSortOrder = \ESortOrder::ASC;
 
-		$this->populateSortParams($aParameters, $iSortField, $iSortOrder);
+		$this->populateSortParams($iSortField, $iSortOrder);
 
 		$iCount = 0;
 		$aList = array();
@@ -335,15 +335,15 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetContact($aParameters)
+	public function GetContact()
 	{
 		$oContact = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			$sContactId = (string) $this->getParamValue($aParameters, 'ContactId', '');
-			$bSharedToAll = '1' === (string) $this->getParamValue($aParameters, 'SharedToAll', '0');
+			$sContactId = (string) $this->getParamValue('ContactId', '');
+			$bSharedToAll = '1' === (string) $this->getParamValue('SharedToAll', '0');
 			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
 
 			$oContact = $this->oApiContactsManager->getContactById($oAccount->IdUser, $sContactId, false, $iTenantId);
@@ -359,12 +359,12 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetContactByEmail($aParameters)
+	public function GetContactByEmail()
 	{
 		$oContact = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		
-		$sEmail = (string) $this->getParamValue($aParameters, 'Email', '');
+		$sEmail = (string) $this->getParamValue('Email', '');
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
@@ -386,13 +386,13 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetSuggestions($aParameters)
+	public function GetSuggestions()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
-		$sSearch = (string) $this->getParamValue($aParameters, 'Search', '');
-		$bGlobalOnly = '1' === (string) $this->getParamValue($aParameters, 'GlobalOnly', '0');
-		$bPhoneOnly = '1' === (string) $this->getParamValue($aParameters, 'PhoneOnly', '0');
+		$sSearch = (string) $this->getParamValue('Search', '');
+		$bGlobalOnly = '1' === (string) $this->getParamValue('GlobalOnly', '0');
+		$bPhoneOnly = '1' === (string) $this->getParamValue('PhoneOnly', '0');
 
 		$aList = array();
 		
@@ -423,14 +423,14 @@ class ContactsModule extends AApiModule
 		));
 	}	
 	
-	public function DeleteSuggestion($aParameters)
+	public function DeleteSuggestion()
 	{
 		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			$sContactId = (string) $this->getParamValue($aParameters, 'ContactId', '');
+			$sContactId = (string) $this->getParamValue('ContactId', '');
 			$this->oApiContactsManager->resetContactFrequency($oAccount->IdUser, $sContactId);
 		}
 		else
@@ -444,9 +444,9 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CreateContact($aParameters)
+	public function CreateContact()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
@@ -454,9 +454,9 @@ class ContactsModule extends AApiModule
 			$oContact->IdUser = $oAccount->IdUser;
 			$oContact->IdTenant = $oAccount->IdTenant;
 			$oContact->IdDomain = $oAccount->IdDomain;
-			$oContact->SharedToAll = '1' === $this->getParamValue($aParameters, 'SharedToAll', '0');
+			$oContact->SharedToAll = '1' === $this->getParamValue('SharedToAll', '0');
 
-			$this->populateContactObject($aParameters, $oContact);
+			$this->populateContactObject($oContact);
 
 			$this->oApiContactsManager->createContact($oContact);
 			return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact ? array(
@@ -474,14 +474,14 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateContact($aParameters)
+	public function UpdateContact()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
-		$bGlobal = '1' === $this->getParamValue($aParameters, 'Global', '0');
-		$sContactId = $this->getParamValue($aParameters, 'ContactId', '');
+		$bGlobal = '1' === $this->getParamValue('Global', '0');
+		$sContactId = $this->getParamValue('ContactId', '');
 
-		$bSharedToAll = '1' === $this->getParamValue($aParameters, 'SharedToAll', '0');
+		$bSharedToAll = '1' === $this->getParamValue('SharedToAll', '0');
 		$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
 
 		if ($bGlobal && $this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
@@ -498,7 +498,7 @@ class ContactsModule extends AApiModule
 			$oContact = $oApiContacts->getContactById($bGlobal ? $oAccount : $oAccount->IdUser, $sContactId, false, $iTenantId);
 			if ($oContact)
 			{
-				$this->populateContactObject($aParameters, $oContact, $oContact->ItsMe);
+				$this->populateContactObject($oContact, $oContact->ItsMe);
 
 				if ($oApiContacts->updateContact($oContact))
 				{
@@ -526,16 +526,16 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteContacts($aParameters)
+	public function DeleteContacts()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			$aContactsId = explode(',', $this->getParamValue($aParameters, 'ContactsId', ''));
+			$aContactsId = explode(',', $this->getParamValue('ContactsId', ''));
 			$aContactsId = array_map('trim', $aContactsId);
 			
-			$bSharedToAll = '1' === (string) $this->getParamValue($aParameters, 'SharedToAll', '0');
+			$bSharedToAll = '1' === (string) $this->getParamValue('SharedToAll', '0');
 			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
 
 			return $this->DefaultResponse($oAccount, __FUNCTION__,
@@ -552,16 +552,16 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CreateGroup($aParameters)
+	public function CreateGroup()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
 			$oGroup = new \CGroup();
 			$oGroup->IdUser = $oAccount->IdUser;
 
-			$this->populateGroupObject($aParameters, $oGroup);
+			$this->populateGroupObject($oGroup);
 
 			$this->oApiContactsManager->createGroup($oGroup);
 			return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup ? array(
@@ -579,18 +579,18 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateGroup($aParameters)
+	public function UpdateGroup()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
-		$sGroupId = $this->getParamValue($aParameters, 'GroupId', '');
+		$sGroupId = $this->getParamValue('GroupId', '');
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
 			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
 			if ($oGroup)
 			{
-				$this->populateGroupObject($aParameters, $oGroup);
+				$this->populateGroupObject($oGroup);
 
 				if ($this->oApiContactsManager->updateGroup($oGroup))
 				{
@@ -619,13 +619,13 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteGroup($aParameters)
+	public function DeleteGroup()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			$sGroupId = $this->getParamValue($aParameters, 'GroupId', '');
+			$sGroupId = $this->getParamValue('GroupId', '');
 
 			return $this->DefaultResponse($oAccount, __FUNCTION__,
 				$this->oApiContactsManager->deleteGroup($oAccount->IdUser, $sGroupId));
@@ -641,15 +641,15 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function AddContactsToGroup($aParameters)
+	public function AddContactsToGroup()
 	{
-		$oAccount = $this->getAccountFromParam($aParameters);
+		$oAccount = $this->getAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			$sGroupId = (string) $this->getParamValue($aParameters, 'GroupId', '');
+			$sGroupId = (string) $this->getParamValue('GroupId', '');
 
-			$aContactsId = $this->getParamValue($aParameters, 'ContactsId', null);
+			$aContactsId = $this->getParamValue('ContactsId', null);
 			if (!is_array($aContactsId))
 			{
 				return $this->DefaultResponse($oAccount, __FUNCTION__, false);
@@ -708,16 +708,16 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function RemoveContactsFromGroup($aParameters)
+	public function RemoveContactsFromGroup()
 	{
-		$oAccount = $this->getAccountFromParam($aParameters);
+		$oAccount = $this->getAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount) ||
 			$this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
 		{
-			$sGroupId = (string) $this->getParamValue($aParameters, 'GroupId', '');
+			$sGroupId = (string) $this->getParamValue('GroupId', '');
 
-			$aContactsId = explode(',', $this->getParamValue($aParameters, 'ContactsId', ''));
+			$aContactsId = explode(',', $this->getParamValue('ContactsId', ''));
 			$aContactsId = array_map('trim', $aContactsId);
 
 			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);

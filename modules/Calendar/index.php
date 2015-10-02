@@ -14,15 +14,15 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetCalendars($aParameters)
+	public function GetCalendars()
 	{
 		$mResult = false;
-		$bIsPublic = (bool) $this->getParamValue($aParameters, 'IsPublic', false); 
+		$bIsPublic = (bool) $this->getParamValue('IsPublic', false); 
 		$oAccount = null;
 				
 		if ($bIsPublic)
 		{
-			$sPublicCalendarId = $this->getParamValue($aParameters, 'PublicCalendarId', '');
+			$sPublicCalendarId = $this->getParamValue('PublicCalendarId', '');
 			$oCalendar = $this->oApiCalendarManager->getPublicCalendar($sPublicCalendarId);
 			$mResult = array();
 			if ($oCalendar instanceof \CCalendar)
@@ -33,7 +33,7 @@ class CalendarModule extends AApiModule
 		}
 		else
 		{
-			$oAccount = $this->getDefaultAccountFromParam($aParameters);
+			$oAccount = $this->getDefaultAccountFromParam();
 			if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
@@ -47,18 +47,18 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CreateCalendar($aParameters)
+	public function CreateCalendar()
 	{
 		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sName = $this->getParamValue($aParameters, 'Name');
-		$sDescription = $this->getParamValue($aParameters, 'Description'); 
-		$sColor = $this->getParamValue($aParameters, 'Color'); 
+		$sName = $this->getParamValue('Name');
+		$sDescription = $this->getParamValue('Description'); 
+		$sColor = $this->getParamValue('Color'); 
 		
 		$mCalendarId = $this->oApiCalendarManager->createCalendar($oAccount, $sName, $sDescription, 0, $sColor);
 		if ($mCalendarId)
@@ -76,18 +76,18 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendar($aParameters)
+	public function UpdateCalendar()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sName = $this->getParamValue($aParameters, 'Name');
-		$sDescription = $this->getParamValue($aParameters, 'Description'); 
-		$sColor = $this->getParamValue($aParameters, 'Color'); 
-		$sId = $this->getParamValue($aParameters, 'Id'); 
+		$sName = $this->getParamValue('Name');
+		$sDescription = $this->getParamValue('Description'); 
+		$sColor = $this->getParamValue('Color'); 
+		$sId = $this->getParamValue('Id'); 
 		
 		$mResult = $this->oApiCalendarManager->updateCalendar($oAccount, $sId, $sName, $sDescription, 0, $sColor);
 		
@@ -97,16 +97,16 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendarColor($aParameters)
+	public function UpdateCalendarColor()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sColor = $this->getParamValue($aParameters, 'Color'); 
-		$sId = $this->getParamValue($aParameters, 'Id'); 
+		$sColor = $this->getParamValue('Color'); 
+		$sId = $this->getParamValue('Id'); 
 		
 		$mResult = $this->oApiCalendarManager->updateCalendarColor($oAccount, $sId, $sColor);
 		
@@ -116,15 +116,15 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendarShare($aParameters)
+	public function UpdateCalendarShare()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
-		$sCalendarId = $this->getParamValue($aParameters, 'Id');
-		$bIsPublic = (bool) $this->getParamValue($aParameters, 'IsPublic');
-		$aShares = @json_decode($this->getParamValue($aParameters, 'Shares'), true);
+		$oAccount = $this->getDefaultAccountFromParam();
+		$sCalendarId = $this->getParamValue('Id');
+		$bIsPublic = (bool) $this->getParamValue('IsPublic');
+		$aShares = @json_decode($this->getParamValue('Shares'), true);
 		
-		$bShareToAll = (bool) $this->getParamValue($aParameters, 'ShareToAll', false);
-		$iShareToAllAccess = (int) $this->getParamValue($aParameters, 'ShareToAllAccess', \ECalendarPermission::Read);
+		$bShareToAll = (bool) $this->getParamValue('ShareToAll', false);
+		$iShareToAllAccess = (int) $this->getParamValue('ShareToAllAccess', \ECalendarPermission::Read);
 		
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
@@ -151,11 +151,11 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendarPublic($aParameters)
+	public function UpdateCalendarPublic()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
-		$sCalendarId = $this->getParamValue($aParameters, 'Id');
-		$bIsPublic = (bool) $this->getParamValue($aParameters, 'IsPublic');
+		$oAccount = $this->getDefaultAccountFromParam();
+		$sCalendarId = $this->getParamValue('Id');
+		$bIsPublic = (bool) $this->getParamValue('IsPublic');
 		
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
@@ -169,11 +169,11 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteCalendar($aParameters)
+	public function DeleteCalendar()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		
-		$sCalendarId = $this->getParamValue($aParameters, 'Id');
+		$sCalendarId = $this->getParamValue('Id');
 		$mResult = $this->oApiCalendarManager->deleteCalendar($oAccount, $sCalendarId);
 		
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
@@ -182,16 +182,16 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetEvents($aParameters)
+	public function GetEvents()
 	{
 		$mResult = false;
 		$oAccount = null;
-		$aCalendarIds = @json_decode($this->getParamValue($aParameters, 'CalendarIds'), true);
-		$iStart = $this->getParamValue($aParameters,'Start'); 
-		$iEnd = $this->getParamValue($aParameters, 'End'); 
-		$bIsPublic = (bool) $this->getParamValue($aParameters, 'IsPublic'); 
-		$iTimezoneOffset = $this->getParamValue($aParameters, 'TimezoneOffset'); 
-		$sTimezone = $this->getParamValue($aParameters, 'Timezone'); 
+		$aCalendarIds = @json_decode($this->getParamValue('CalendarIds'), true);
+		$iStart = $this->getParamValue('Start'); 
+		$iEnd = $this->getParamValue('End'); 
+		$bIsPublic = (bool) $this->getParamValue('IsPublic'); 
+		$iTimezoneOffset = $this->getParamValue('TimezoneOffset'); 
+		$sTimezone = $this->getParamValue('Timezone'); 
 		
 		if ($bIsPublic)
 		{
@@ -202,7 +202,7 @@ class CalendarModule extends AApiModule
 		}
 		else
 		{
-			$oAccount = $this->getDefaultAccountFromParam($aParameters);
+			$oAccount = $this->getDefaultAccountFromParam();
 			if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
@@ -216,9 +216,9 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CreateEvent($aParameters)
+	public function CreateEvent()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
@@ -226,17 +226,17 @@ class CalendarModule extends AApiModule
 		
 		$oEvent = new \CEvent();
 
-		$oEvent->IdCalendar = $this->getParamValue($aParameters, 'newCalendarId');
-		$oEvent->Name = $this->getParamValue($aParameters, 'subject');
-		$oEvent->Description = $this->getParamValue($aParameters, 'description');
-		$oEvent->Location = $this->getParamValue($aParameters, 'location');
-		$oEvent->Start = $this->getParamValue($aParameters, 'startTS');
-		$oEvent->End = $this->getParamValue($aParameters, 'endTS');
-		$oEvent->AllDay = (bool) $this->getParamValue($aParameters, 'allDay');
-		$oEvent->Alarms = @json_decode($this->getParamValue($aParameters, 'alarms'), true);
-		$oEvent->Attendees = @json_decode($this->getParamValue($aParameters, 'attendees'), true);
+		$oEvent->IdCalendar = $this->getParamValue('newCalendarId');
+		$oEvent->Name = $this->getParamValue('subject');
+		$oEvent->Description = $this->getParamValue('description');
+		$oEvent->Location = $this->getParamValue('location');
+		$oEvent->Start = $this->getParamValue('startTS');
+		$oEvent->End = $this->getParamValue('endTS');
+		$oEvent->AllDay = (bool) $this->getParamValue('allDay');
+		$oEvent->Alarms = @json_decode($this->getParamValue('alarms'), true);
+		$oEvent->Attendees = @json_decode($this->getParamValue('attendees'), true);
 
-		$aRRule = @json_decode($this->getParamValue($aParameters, 'rrule'), true);
+		$aRRule = @json_decode($this->getParamValue('rrule'), true);
 		if ($aRRule)
 		{
 			$oRRule = new \CRRule($oAccount);
@@ -259,30 +259,30 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateEvent($aParameters)
+	public function UpdateEvent()
 	{
 		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sNewCalendarId = $this->getParamValue($aParameters, 'newCalendarId'); 
+		$sNewCalendarId = $this->getParamValue('newCalendarId'); 
 		$oEvent = new \CEvent();
 
-		$oEvent->IdCalendar = $this->getParamValue($aParameters, 'calendarId');
-		$oEvent->Id = $this->getParamValue($aParameters, 'uid');
-		$oEvent->Name = $this->getParamValue($aParameters, 'subject');
-		$oEvent->Description = $this->getParamValue($aParameters, 'description');
-		$oEvent->Location = $this->getParamValue($aParameters, 'location');
-		$oEvent->Start = $this->getParamValue($aParameters, 'startTS');
-		$oEvent->End = $this->getParamValue($aParameters, 'endTS');
-		$oEvent->AllDay = (bool) $this->getParamValue($aParameters, 'allDay');
-		$oEvent->Alarms = @json_decode($this->getParamValue($aParameters, 'alarms'), true);
-		$oEvent->Attendees = @json_decode($this->getParamValue($aParameters, 'attendees'), true);
+		$oEvent->IdCalendar = $this->getParamValue('calendarId');
+		$oEvent->Id = $this->getParamValue('uid');
+		$oEvent->Name = $this->getParamValue('subject');
+		$oEvent->Description = $this->getParamValue('description');
+		$oEvent->Location = $this->getParamValue('location');
+		$oEvent->Start = $this->getParamValue('startTS');
+		$oEvent->End = $this->getParamValue('endTS');
+		$oEvent->AllDay = (bool) $this->getParamValue('allDay');
+		$oEvent->Alarms = @json_decode($this->getParamValue('alarms'), true);
+		$oEvent->Attendees = @json_decode($this->getParamValue('attendees'), true);
 		
-		$aRRule = @json_decode($this->getParamValue($aParameters, 'rrule'), true);
+		$aRRule = @json_decode($this->getParamValue('rrule'), true);
 		if ($aRRule)
 		{
 			$oRRule = new \CRRule($oAccount);
@@ -290,8 +290,8 @@ class CalendarModule extends AApiModule
 			$oEvent->RRule = $oRRule;
 		}
 		
-		$iAllEvents = (int) $this->getParamValue($aParameters, 'allEvents');
-		$sRecurrenceId = $this->getParamValue($aParameters, 'recurrenceId');
+		$iAllEvents = (int) $this->getParamValue('allEvents');
+		$sRecurrenceId = $this->getParamValue('recurrenceId');
 		
 		if ($iAllEvents && $iAllEvents === 1)
 		{
@@ -308,8 +308,8 @@ class CalendarModule extends AApiModule
 		}
 		if ($mResult)
 		{
-			$iStart = $this->getParamValue($aParameters, 'selectStart'); 
-			$iEnd = $this->getParamValue($aParameters, 'selectEnd'); 
+			$iStart = $this->getParamValue('selectStart'); 
+			$iEnd = $this->getParamValue('selectEnd'); 
 
 			$mResult = $this->oApiCalendarManager->getExpandedEvent($oAccount, $oEvent->IdCalendar, $oEvent->Id, $iStart, $iEnd);
 		}
@@ -320,15 +320,15 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteEvent($aParameters)
+	public function DeleteEvent()
 	{
 		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		
-		$sCalendarId = $this->getParamValue($aParameters, 'calendarId');
-		$sId = $this->getParamValue($aParameters, 'uid');
+		$sCalendarId = $this->getParamValue('calendarId');
+		$sId = $this->getParamValue('uid');
 
-		$iAllEvents = (int) $this->getParamValue($aParameters, 'allEvents');
+		$iAllEvents = (int) $this->getParamValue('allEvents');
 		
 		if ($iAllEvents && $iAllEvents === 1)
 		{
@@ -336,7 +336,7 @@ class CalendarModule extends AApiModule
 			$oEvent->IdCalendar = $sCalendarId;
 			$oEvent->Id = $sId;
 			
-			$sRecurrenceId = $this->getParamValue($aParameters, 'recurrenceId');
+			$sRecurrenceId = $this->getParamValue('recurrenceId');
 
 			$mResult = $this->oApiCalendarManager->updateExclusion($oAccount, $oEvent, $sRecurrenceId, true);
 		}
@@ -351,18 +351,18 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function SetAppointmentAction($aParameters)
+	public function SetAppointmentAction()
 	{
-		$oAccount = $this->getAccountFromParam($aParameters);
-		$oDefaultAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getAccountFromParam();
+		$oDefaultAccount = $this->getDefaultAccountFromParam();
 		
 		$mResult = false;
 
-		$sCalendarId = (string) $this->getParamValue($aParameters, 'CalendarId', '');
-		$sEventId = (string) $this->getParamValue($aParameters, 'EventId', '');
-		$sTempFile = (string) $this->getParamValue($aParameters, 'File', '');
-		$sAction = (string) $this->getParamValue($aParameters, 'AppointmentAction', '');
-		$sAttendee = (string) $this->getParamValue($aParameters, 'Attendee', '');
+		$sCalendarId = (string) $this->getParamValue('CalendarId', '');
+		$sEventId = (string) $this->getParamValue('EventId', '');
+		$sTempFile = (string) $this->getParamValue('File', '');
+		$sAction = (string) $this->getParamValue('AppointmentAction', '');
+		$sAttendee = (string) $this->getParamValue('Attendee', '');
 		
 		if (empty($sAction) || empty($sCalendarId))
 		{
@@ -401,17 +401,6 @@ class CalendarModule extends AApiModule
 
 		return $this->DefaultResponse($oDefaultAccount, __FUNCTION__, $mResult);
 	}	
-	
-	public function ExecuteMethod($sMethod, $aArguments) 
-	{
-		$mResult = parent::ExecuteMethod($sMethod, $aArguments);
-		if (!$mResult && method_exists($this->oApiCalendarManager, $sMethod))
-		{
-			$mResult = call_user_func_array(array($this->oApiCalendarManager, $sMethod), $aArguments);
-		}
-		
-		return $mResult;
-	}
 }
 
 return new CalendarModule('1.0');

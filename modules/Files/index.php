@@ -11,9 +11,9 @@ class FilesModule extends AApiModule
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 	
-	public function GetExternalStorages($aParameters)
+	public function GetExternalStorages()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
@@ -25,17 +25,17 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}
 
-	public function GetFiles($aParameters)
+	public function GetFiles()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sPath = $this->getParamValue($aParameters, 'Path');
-		$sType = $this->getParamValue($aParameters, 'Type');
-		$sPattern = $this->getParamValue($aParameters, 'Pattern');
+		$sPath = $this->getParamValue('Path');
+		$sType = $this->getParamValue('Type');
+		$sPattern = $this->getParamValue('Pattern');
 		
 		$oResult = array(
 			'Items' => $this->oApiFilesManager->getFiles($oAccount, $sType, $sPath, $sPattern),
@@ -45,15 +45,15 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}	
 
-	public function GetPublicFiles($aParameters)
+	public function GetPublicFiles()
 	{
 		$oAccount = null;
 		$oResult = array();
 
 		$oMin = \CApi::GetCoreManager('min');
 
-		$sHash = $this->getParamValue($aParameters, 'Hash');
-		$sPath = $this->getParamValue($aParameters, 'Path', '');
+		$sHash = $this->getParamValue('Hash');
+		$sPath = $this->getParamValue('Path', '');
 		
 		$mMin = $oMin->getMinByHash($sHash);
 		if (!empty($mMin['__hash__']))
@@ -79,9 +79,9 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}	
 
-	public function GetQuota($aParameters)
+	public function GetQuota()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
@@ -94,17 +94,17 @@ class FilesModule extends AApiModule
 		);
 	}	
 
-	public function CreateFolder($aParameters)
+	public function CreateFolder()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapability->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sType = $this->getParamValue($aParameters, 'Type');
-		$sPath = $this->getParamValue($aParameters, 'Path');
-		$sFolderName = $this->getParamValue($aParameters, 'FolderName');
+		$sType = $this->getParamValue('Type');
+		$sPath = $this->getParamValue('Path');
+		$sFolderName = $this->getParamValue('FolderName');
 		$oResult = null;
 		
 		$oResult = $this->oApiFilesManager->createFolder($oAccount, $sType, $sPath, $sFolderName);
@@ -112,33 +112,33 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}
 	
-	public function CreateLink($aParameters)
+	public function CreateLink()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sType = $this->getParamValue($aParameters, 'Type');
-		$sPath = $this->getParamValue($aParameters, 'Path');
-		$sLink = $this->getParamValue($aParameters, 'Link');
-		$sName = $this->getParamValue($aParameters, 'Name');
+		$sType = $this->getParamValue('Type');
+		$sPath = $this->getParamValue('Path');
+		$sLink = $this->getParamValue('Link');
+		$sName = $this->getParamValue('Name');
 		$oResult = $this->oApiFilesManager->createLink($oAccount, $sType, $sPath, $sLink, $sName);
 		
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}
 	
-	public function Delete($aParameters)
+	public function Delete()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sType = $this->getParamValue($aParameters, 'Type');
-		$aItems = @json_decode($this->getParamValue($aParameters, 'Items'), true);
+		$sType = $this->getParamValue('Type');
+		$aItems = @json_decode($this->getParamValue('Items'), true);
 		$oResult = false;
 		
 		foreach ($aItems as $oItem)
@@ -149,19 +149,19 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}	
 
-	public function Rename($aParameters)
+	public function Rename()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$sType = $this->getParamValue($aParameters, 'Type');
-		$sPath = $this->getParamValue($aParameters, 'Path');
-		$sName = $this->getParamValue($aParameters, 'Name');
-		$sNewName = $this->getParamValue($aParameters, 'NewName');
-		$bIsLink = !!$this->getParamValue($aParameters, 'IsLink');
+		$sType = $this->getParamValue('Type');
+		$sPath = $this->getParamValue('Path');
+		$sName = $this->getParamValue('Name');
+		$sNewName = $this->getParamValue('NewName');
+		$bIsLink = !!$this->getParamValue('IsLink');
 		$oResult = null;
 
 		$sNewName = \trim(\MailSo\Base\Utils::ClearFileName($sNewName));
@@ -172,19 +172,19 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}	
 
-	public function Copy($aParameters)
+	public function Copy()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sFromType = $this->getParamValue($aParameters, 'FromType');
-		$sToType = $this->getParamValue($aParameters, 'ToType');
-		$sFromPath = $this->getParamValue($aParameters, 'FromPath');
-		$sToPath = $this->getParamValue($aParameters, 'ToPath');
-		$aItems = @json_decode($this->getParamValue($aParameters, 'Files'), true);
+		$sFromType = $this->getParamValue('FromType');
+		$sToType = $this->getParamValue('ToType');
+		$sFromPath = $this->getParamValue('FromPath');
+		$sToPath = $this->getParamValue('ToPath');
+		$aItems = @json_decode($this->getParamValue('Files'), true);
 		$oResult = null;
 		
 		foreach ($aItems as $aItem)
@@ -199,19 +199,19 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}	
 
-	public function Move($aParameters)
+	public function Move()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$sFromType = $this->getParamValue($aParameters, 'FromType');
-		$sToType = $this->getParamValue($aParameters, 'ToType');
-		$sFromPath = $this->getParamValue($aParameters, 'FromPath');
-		$sToPath = $this->getParamValue($aParameters, 'ToPath');
-		$aItems = @json_decode($this->getParamValue($aParameters, 'Files'), true);
+		$sFromType = $this->getParamValue('FromType');
+		$sToType = $this->getParamValue('ToType');
+		$sFromPath = $this->getParamValue('FromPath');
+		$sToPath = $this->getParamValue('ToPath');
+		$aItems = @json_decode($this->getParamValue('Files'), true);
 		$oResult = null;
 		
 		foreach ($aItems as $aItem)
@@ -226,37 +226,37 @@ class FilesModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
 	}	
 	
-	public function CreatePublicLink($aParameters)
+	public function CreatePublicLink()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$sType = $this->getParamValue($aParameters, 'Type'); 
-		$sPath = $this->getParamValue($aParameters, 'Path'); 
-		$sName = $this->getParamValue($aParameters, 'Name');
-		$sSize = $this->getParamValue($aParameters, 'Size');
-		$bIsFolder = $this->getParamValue($aParameters, 'IsFolder', '0') === '1' ? true : false;
+		$sType = $this->getParamValue('Type'); 
+		$sPath = $this->getParamValue('Path'); 
+		$sName = $this->getParamValue('Name');
+		$sSize = $this->getParamValue('Size');
+		$bIsFolder = $this->getParamValue('IsFolder', '0') === '1' ? true : false;
 		
 		$mResult = $this->oApiFilesManager->createPublicLink($oAccount, $sType, $sPath, $sName, $sSize, $bIsFolder);
 		
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
 	}	
 	
-	public function DeletePublicLink($aParameters)
+	public function DeletePublicLink()
 	{
 		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$sType = $this->getParamValue($aParameters, 'Type'); 
-		$sPath = $this->getParamValue($aParameters, 'Path'); 
-		$sName = $this->getParamValue($aParameters, 'Name');
+		$sType = $this->getParamValue('Type'); 
+		$sPath = $this->getParamValue('Path'); 
+		$sName = $this->getParamValue('Name');
 		
 		$mResult = $this->oApiFilesManager->deletePublicLink($oAccount, $sType, $sPath, $sName);
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
@@ -265,14 +265,14 @@ class FilesModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CheckUrl($aParameters)
+	public function CheckUrl()
 	{
-		$oAccount = $this->getDefaultAccountFromParam($aParameters);
+		$oAccount = $this->getDefaultAccountFromParam();
 		$mResult = false;
 
 		if ($oAccount)
 		{
-			$sUrl = trim($this->getParamValue($aParameters, 'Url', ''));
+			$sUrl = trim($this->getParamValue('Url', ''));
 
 			if (!empty($sUrl))
 			{

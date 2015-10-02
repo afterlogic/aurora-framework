@@ -139,7 +139,7 @@ class CApiModuleMethod
 		$mResult = false;
 		if ($this->Exists())
 		{
-			$mResult = call_user_func(array($this->oClass, $this->sMethodName), $this->aParameters);
+			$mResult = call_user_func(array($this->oClass, $this->sMethodName));
 		}
 		return $mResult;
 	}
@@ -171,6 +171,11 @@ abstract class AApiModule
 	protected $aManagersCache = array();	
 
 	/**
+	 * @var array
+	 */
+	protected $aParameters;
+
+	/**
 	 * @param string $sVersion
 	 */
 	public function __construct($sVersion)
@@ -179,6 +184,7 @@ abstract class AApiModule
 
 		$this->sName = '';
 		$this->sPath = '';
+		$this->aParameters = array();
 	}
 
 	public function init()
@@ -199,6 +205,14 @@ abstract class AApiModule
 	final public function SetPath($sPath)
 	{
 		$this->sPath = $sPath;
+	}
+
+	/**
+	 * @param array $aParameters
+	 */
+	final public function SetParameters($aParameters)
+	{
+		$this->aParameters = $aParameters;
 	}
 
 	/**
@@ -314,10 +328,10 @@ abstract class AApiModule
 		return method_exists($this, $sMethod);
 	}
 	
-	public function getParamValue($aParameters, $sKey, $mDefault = null)
+	public function getParamValue($sKey, $mDefault = null)
 	{
-		return is_array($aParameters) && isset($aParameters[$sKey])
-			? $aParameters[$sKey] : $mDefault;
+		return is_array($this->aParameters) && isset($this->aParameters[$sKey])
+			? $this->aParameters[$sKey] : $mDefault;
 	}
 	
 	/**
@@ -326,19 +340,19 @@ abstract class AApiModule
 	 *
 	 * @return void
 	 */
-	protected function paramToObject($aParameters, $sParamName, &$oObject, $sType = 'string')
+	protected function paramToObject($sParamName, &$oObject, $sType = 'string')
 	{
 		switch ($sType)
 		{
 			default:
 			case 'string':
-				$oObject->{$sParamName} = (string) $this->getParamValue($aParameters, $sParamName, $oObject->{$sParamName});
+				$oObject->{$sParamName} = (string) $this->getParamValue($sParamName, $oObject->{$sParamName});
 				break;
 			case 'int':
-				$oObject->{$sParamName} = (int) $this->getParamValue($aParameters, $sParamName, $oObject->{$sParamName});
+				$oObject->{$sParamName} = (int) $this->getParamValue($sParamName, $oObject->{$sParamName});
 				break;
 			case 'bool':
-				$oObject->{$sParamName} = '1' === (string) $this->getParamValue($aParameters, $sParamName, $oObject->{$sParamName} ? '1' : '0');
+				$oObject->{$sParamName} = '1' === (string) $this->getParamValue($sParamName, $oObject->{$sParamName} ? '1' : '0');
 				break;
 		}
 	}
@@ -347,11 +361,11 @@ abstract class AApiModule
 	 * @param mixed $oObject
 	 * @param array $aParamsNames
 	 */
-	protected function paramsStrToObjectHelper($aParameters, &$oObject, $aParamsNames)
+	protected function paramsStrToObjectHelper(&$oObject, $aParamsNames)
 	{
 		foreach ($aParamsNames as $sName)
 		{
-			$this->paramToObject($aParameters, $sName, $oObject);
+			$this->paramToObject($sName, $oObject);
 		}
 	}	
 	
@@ -380,7 +394,7 @@ abstract class AApiModule
 	 *
 	 * @return array | false
 	 */
-	protected function objectWrapper($oAccount, $oData, $sParent, $aParameters)
+	protected function objectWrapper($oAccount, $oData, $sParent)
 	{
 		$mResult = false;
 		if (is_object($oData))
@@ -411,11 +425,10 @@ abstract class AApiModule
 	 * @param \CAccount $oAccount
 	 * @param mixed $mResponse
 	 * @param string $sParent
-	 * @param array $aParameters = array()
 	 *
 	 * @return mixed
 	 */
-	protected function responseObject($oAccount, $mResponse, $sParent, $aParameters = array())
+	protected function responseObject($oAccount, $mResponse, $sParent)
 	{
 		$mResult = $mResponse;
 
@@ -423,14 +436,14 @@ abstract class AApiModule
 		{
 			if (method_exists($mResult, 'toArray'))	
 			{
-				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), $mResponse->toArray());
+				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent), $mResponse->toArray());
 			}
 		}
 		else if (is_array($mResponse))
 		{
 			foreach ($mResponse as $iKey => $oItem)
 			{
-				$mResponse[$iKey] = $this->responseObject($oAccount, $oItem, $sParent, $aParameters);
+				$mResponse[$iKey] = $this->responseObject($oAccount, $oItem, $sParent);
 			}
 
 			$mResult = $mResponse;
@@ -566,9 +579,9 @@ abstract class AApiModule
 	 *
 	 * @return \CAccount|null
 	 */
-	protected function getDefaultAccountFromParam($aParameters, $bThrowAuthExceptionOnFalse = true)
+	protected function getDefaultAccountFromParam($bThrowAuthExceptionOnFalse = true)
 	{
-		$sAuthToken = (string) $this->getParamValue($aParameters, 'AuthToken', '');
+		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		$oResult = $this->GetDefaultAccount($sAuthToken);
 		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
 		{
@@ -584,11 +597,11 @@ abstract class AApiModule
 	 *
 	 * @return \CAccount|null
 	 */
-	protected function getAccountFromParam($aParameters, $bThrowAuthExceptionOnFalse = true, $bVerifyLogginedUserId = true)
+	protected function getAccountFromParam($bThrowAuthExceptionOnFalse = true, $bVerifyLogginedUserId = true)
 	{
 		$oResult = null;
-		$sAuthToken = (string) $this->getParamValue($aParameters, 'AuthToken', '');
-		$sAccountID = (string) $this->getParamValue($aParameters, 'AccountID', '');
+		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
+		$sAccountID = (string) $this->getParamValue('AccountID', '');
 		if (0 === strlen($sAccountID) || !is_numeric($sAccountID))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
@@ -608,6 +621,9 @@ abstract class AApiModule
 
 	public function ExecuteMethod($sMethod, $aParameters)
 	{
-		return CApiModuleMethod::createInstance($this, $sMethod, $aParameters)->Execute();
+		$this->SetParameters($aParameters);
+		$mResult = CApiModuleMethod::createInstance($this, $sMethod, $this->aParameters)->Execute();
+		$this->aParameters = array();
+		return $mResult;
 	}
 }
