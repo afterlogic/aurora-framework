@@ -20,8 +20,6 @@ var
  */
 function CFileModel()
 {
-	CAbstractFileModel.call(this);
-	
 	this.id = ko.observable('');
 	this.fileName = ko.observable('');
 	this.nameForEdit = ko.observable('');
@@ -83,6 +81,8 @@ function CFileModel()
 			'LASTMODIFIED': this.lastModified()
 		});
 	}, this);
+	
+	CAbstractFileModel.call(this);
 	
 	this.fileName.subscribe(function (value) {
 		this.nameForEdit(value);
