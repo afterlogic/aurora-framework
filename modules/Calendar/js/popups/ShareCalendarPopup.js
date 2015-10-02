@@ -8,6 +8,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	bMobileDevice = false

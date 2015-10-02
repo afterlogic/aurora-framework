@@ -1285,7 +1285,6 @@ CCalendarView.prototype.onUpdateCalendarShareResponse = function (oResponse, oRe
 		
 		if (oCalendar)
 		{
-			console.log('oParameters.Shares', oParameters.Shares);
 			oCalendar.shares(JSON.parse(oParameters.Shares));
 			if (oParameters.ShareToAll === 1)
 			{
@@ -1512,9 +1511,6 @@ CCalendarView.prototype.getParamsFromEventData = function (oEventData)
 CCalendarView.prototype.getEventDataFromParams = function (aParameters)
 {
 	var	oEventData = aParameters;
-	console.log('aParameters.alarms', aParameters.alarms);
-	console.log('aParameters.attendees', aParameters.attendees);
-	console.log('aParameters.rrule', aParameters.rrule);
 	oEventData.alarms = aParameters.alarms ? JSON.parse(aParameters.alarms) : [];
 	oEventData.attendees = aParameters.attendees ? JSON.parse(aParameters.attendees) : [];
 
