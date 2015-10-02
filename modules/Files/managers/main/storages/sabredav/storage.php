@@ -8,7 +8,7 @@
  * @package Filestorage
  * @subpackage Storages
  */
-class CApiFilestorageSabredavStorage extends CApiFilestorageStorage
+class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 {
 	/**
 	 * @var bool
@@ -23,7 +23,7 @@ class CApiFilestorageSabredavStorage extends CApiFilestorageStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('sabredav', $oManager);
 		

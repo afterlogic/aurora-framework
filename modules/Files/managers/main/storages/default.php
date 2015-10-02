@@ -8,12 +8,12 @@
  * @package Filestorage
  * @subpackage Storages
  */
-class CApiFilestorageStorage extends AApiManagerStorage
+class CApiFilesMainStorage extends AApiManagerStorage
 {
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct($sStorageName, CApiGlobalManager &$oManager)
+	public function __construct($sStorageName, AApiManager &$oManager)
 	{
 		parent::__construct('filestorage', $sStorageName, $oManager);
 	}

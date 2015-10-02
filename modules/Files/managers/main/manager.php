@@ -7,18 +7,18 @@
  * 
  * @package Filestorage
  */
-class CApiFilestorageManager extends AApiManagerWithStorage
+class CApiFilesMainManager extends AApiManagerWithStorage
 {
 	protected $oApiMinManager = null;
 	
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('filestorage', $oManager, $sForcedStorage);
+		parent::__construct('main', $oManager, $sForcedStorage, $oModule);
 
-		$this->inc('classes.item');
+		$this->incClass('item');
 	}
 
 	/**
@@ -29,7 +29,7 @@ class CApiFilestorageManager extends AApiManagerWithStorage
 	{
 		if ($this->oApiMinManager === null)
 		{
-			$this->oApiMinManager = \CApi::Manager('min');
+			$this->oApiMinManager = \CApi::GetCoreManager('min');
 		}
 		return $this->oApiMinManager;
 	}

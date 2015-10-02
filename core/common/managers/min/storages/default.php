@@ -11,7 +11,7 @@ class CApiMinStorage extends AApiManagerStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct($sStorageName, CApiGlobalManager &$oManager)
+	public function __construct($sStorageName, AApiManager &$oManager)
 	{
 		parent::__construct('min', $sStorageName, $oManager);
 	}

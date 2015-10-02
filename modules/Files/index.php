@@ -7,7 +7,7 @@ class FilesModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oApiFilesManager = $this->GetManager('main');
+		$this->oApiFilesManager = $this->GetManager('main', 'sabredav');
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 	

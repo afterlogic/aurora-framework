@@ -101,4 +101,31 @@ class CFileStorageItem  extends api_AContainer
 			'IsExternal' => array('bool')
 		);
 	}
+	
+	public function toArray()
+	{
+		return array(
+			'Id' => $this->Id,
+			'Type' => $this->TypeStr,
+			'Path' => $this->Path,
+			'FullPath' => $this->FullPath,
+			'Name' => $this->Name,
+			'Size' => $this->Size,
+			'IsFolder' => $this->IsFolder,
+			'IsLink' => $this->IsLink,
+			'LinkType' => $this->LinkType,
+			'LinkUrl' => $this->LinkUrl,
+			'LastModified' => $this->LastModified,
+			'ContentType' => $this->ContentType,
+			'Iframed' => $this->Iframed,
+			'Thumb' => $this->Thumb,
+			'ThumbnailLink' => $this->ThumbnailLink,
+			'OembedHtml' => $this->OembedHtml,
+			'Hash' => $this->Hash,
+			'Shared' => $this->Shared,
+			'Owner' => $this->Owner,
+			'Content' => $this->Content,
+			'IsExternal' => $this->IsExternal
+		);		
+	}
 }
