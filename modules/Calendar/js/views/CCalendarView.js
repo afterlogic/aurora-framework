@@ -241,22 +241,22 @@ CCalendarView.prototype.ViewTemplate = 'Calendar_CalendarView';
 */
 CCalendarView.prototype.hotKeysBind = function ()
 {
-	var self = this;
-	$(document).on('keyup', function(ev) {
-		var
-			nKey = ev.keyCode
-		;
-		/* Close popup more if click Esc button */
-		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month'){
-			if (nKey === 27 && self.popUpStatus) {
-				/* two triggers for correct pluggin working */
-				$('body').trigger('click');
-				if (!self.popUpStatus){
-					$('body').trigger('mousedown');
-				}
-			}
-		}
-	});
+//	var self = this;
+//	$(document).on('keyup', function(ev) {
+//		var
+//			nKey = ev.keyCode
+//		;
+//		/* Close popup more if click Esc button */
+//		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month'){
+//			if (nKey === 27 && self.popUpStatus) {
+//				/* two triggers for correct pluggin working */
+//				$('body').trigger('click');
+//				if (!self.popUpStatus){
+//					$('body').trigger('mousedown');
+//				}
+//			}
+//		}
+//	});
 };
 
 
@@ -368,38 +368,38 @@ CCalendarView.prototype.onBind = function ()
 		this.initUploader();
 	}
 	/* Click more links */
-	$('body').on('click', function (e) {
-		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month'){
-			if ($(e.target).hasClass('fc-more')){
-				var $this = $(e.target);
-				$('.fc-more-cell.active').removeClass('active');
-				$('.fc-row.fc-week.active').removeClass('active');
-				$this.closest('.fc-more-cell').addClass('active');
-				$this.closest('.fc-row.fc-week').addClass('active');
-				var $popup = $('body').find('.fc-popover.fc-more-popover'),
-					$parent = $this.closest('tr'),
-					$superParent = $this.closest('.fc-day-grid'),
-					indexColumn = parseInt($parent.find('.fc-more-cell.active').index('.fc-more-cell')),
-					indexRow = parseInt($superParent.find('.fc-row.fc-week.active').index('.fc-row.fc-week'))
-				;
-				if ($popup.length > 0){
-					self.linkRow = indexRow;
-					self.linkColumn = indexColumn;
-					self.popUpStatus = true;
-				} else {
-					self.popUpStatus = false;
-					self.linkRow = 0;
-					self.linkColumn = 0;
-				}
-			} else if ($(e.target).hasClass('checkmail') || $(e.target).parent().hasClass('checkmail')) {
-				e.preventDefault();
-			} else {
-				self.popUpStatus = false;
-				self.linkRow = 0;
-				self.linkColumn = 0;
-			}
-		}
-	});
+//	$('body').on('click', function (e) {
+//		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month'){
+//			if ($(e.target).hasClass('fc-more')){
+//				var $this = $(e.target);
+//				$('.fc-more-cell.active').removeClass('active');
+//				$('.fc-row.fc-week.active').removeClass('active');
+//				$this.closest('.fc-more-cell').addClass('active');
+//				$this.closest('.fc-row.fc-week').addClass('active');
+//				var $popup = $('body').find('.fc-popover.fc-more-popover'),
+//					$parent = $this.closest('tr'),
+//					$superParent = $this.closest('.fc-day-grid'),
+//					indexColumn = parseInt($parent.find('.fc-more-cell.active').index('.fc-more-cell')),
+//					indexRow = parseInt($superParent.find('.fc-row.fc-week.active').index('.fc-row.fc-week'))
+//				;
+//				if ($popup.length > 0){
+//					self.linkRow = indexRow;
+//					self.linkColumn = indexColumn;
+//					self.popUpStatus = true;
+//				} else {
+//					self.popUpStatus = false;
+//					self.linkRow = 0;
+//					self.linkColumn = 0;
+//				}
+//			} else if ($(e.target).hasClass('checkmail') || $(e.target).parent().hasClass('checkmail')) {
+//				e.preventDefault();
+//			} else {
+//				self.popUpStatus = false;
+//				self.linkRow = 0;
+//				self.linkColumn = 0;
+//			}
+//		}
+//	});
 };
 
 
@@ -500,9 +500,9 @@ CCalendarView.prototype.updateAllEvents = function (oView)
 		}
 
 		/* open current more link */
-		if (this.popUpStatus){
-			$('body').find('.fc-row.fc-week').eq(this.linkRow).find('.fc-more-cell').eq(this.linkColumn).find('a.fc-more').click();
-		}
+//		if (this.popUpStatus){
+//			$('body').find('.fc-row.fc-week').eq(this.linkRow).find('.fc-more-cell').eq(this.linkColumn).find('a.fc-more').click();
+//		}
 	}
 };
 
@@ -906,15 +906,15 @@ CCalendarView.prototype.getCalendars = function ()
 	Ajax.sendExt('GetCalendars', {
 			'IsPublic': this.isPublic ? 1 : 0,
 			'PublicCalendarId': this.publicCalendarId
-		}, this.onCalendarsResponse, this
+		}, this.onGetCalendarsResponse, this
 	);
 };
 
 /**
- * @param {Object} oData
+ * @param {Object} oResponse
  * @param {Object} oParameters
  */
-CCalendarView.prototype.onCalendarsResponse = function (oData, oParameters)
+CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameters)
 {
 	var
 		aCalendarIds = [],
@@ -922,24 +922,27 @@ CCalendarView.prototype.onCalendarsResponse = function (oData, oParameters)
 		oCalendar = null,
 		oClientCalendar = null
 	;
-	if (this.loadOnce && this.selectedView() === 'month'){
+	
+	if (this.loadOnce && this.selectedView() === 'month')
+	{
 		this.scrollHeight = this.scrollModel()['vertical'].get();
-	} else {
+	}
+	else
+	{
 		this.scrollHeight = 0;
 	}
-	if (oData.Result)
+	
+	if (oResponse.Result)
 	{
 		this.loaded = true;
 
-		//sets default calendar aways fist in list
-		//oData.Result = _.sortBy(oData.Result, function(oItem){return !oItem.isDefault;});
-		_.each(oData.Result, function (oCalendarData) {
+		//sets default calendar always fist in list
+		_.each(oResponse.Result, function (oCalendarData) {
 			oCalendar = this.calendars.parseCalendar(oCalendarData);
 			aCalendarIds.push(oCalendar.id);
 			oClientCalendar = this.calendars.getCalendarById(oCalendar.id);
 			if (/*this.needsToReload || */!oClientCalendar ||
-					(oCalendar && oClientCalendar &&
-						oClientCalendar.cTag !== oCalendar.cTag))
+				(oCalendar && oClientCalendar && oClientCalendar.cTag !== oCalendar.cTag))
 			{
 				oCalendar = this.calendars.parseAndAddCalendar(oCalendarData);
 				if (oCalendar)
@@ -999,7 +1002,7 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
 			'IsPublic': this.isPublic ? 1 : 0,
 			'TimezoneOffset': moment().utcOffset(),
 			'Timezone': window.jstz ? window.jstz.determine().name() : ''
-		}, this.onEventsResponse, this);
+		}, this.onGetEventsResponse, this);
 	}
 	else
 	{
@@ -1009,20 +1012,21 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onEventsResponse = function (oData, oParameters)
+CCalendarView.prototype.onGetEventsResponse = function (oResponse, oRequest)
 {
 	var 
 		oCalendar = null,
+		oParameters = JSON.parse(oRequest.Parameters),
 		aCalendarIds = oParameters.CalendarIds ? JSON.parse(oParameters.CalendarIds) : [],
 		aEvents = []
 	;
 
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		_.each(oData.Result, function (oEventData) {
+		_.each(oResponse.Result, function (oEventData) {
 			oCalendar = this.calendars.getCalendarById(oEventData.calendarId);			
 			if (oCalendar)
 			{
@@ -1099,20 +1103,20 @@ CCalendarView.prototype.createCalendar = function (sName, sDescription, sColor)
 				'Name': sName,
 				'Description': sDescription,
 				'Color': sColor
-			}, this.onCalendarCreateResponse, this
+			}, this.onCreateCalendarResponse, this
 		);
 	}
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onCalendarCreateResponse = function (oData, oParameters)
+CCalendarView.prototype.onCreateCalendarResponse = function (oResponse, oRequest)
 {
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		this.calendars.parseAndAddCalendar(oData.Result);
+		this.calendars.parseAndAddCalendar(oResponse.Result);
 		//this.calendars.sort();
 	}
 };
@@ -1154,23 +1158,24 @@ CCalendarView.prototype.updateCalendar = function (sName, sDescription, sColor, 
 				'Description': sDescription,
 				'Color': sColor,
 				'Id': sId
-			}, this.onCalendarUpdateResponse, this
+			}, this.onUpdateCalendarResponse, this
 		);
 	}
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onCalendarUpdateResponse = function (oData, oParameters)
+CCalendarView.prototype.onUpdateCalendarResponse = function (oResponse, oRequest)
 {
-	var
-		oCalendar = null
-	;
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		oCalendar = this.calendars.getCalendarById(oParameters.Id);
+		var
+			oParameters = JSON.parse(oRequest.Parameters),
+			oCalendar = this.calendars.getCalendarById(oParameters.Id)
+		;
+		
 		if (oCalendar)
 		{
 			oCalendar.name(oParameters.Name);
@@ -1192,20 +1197,24 @@ CCalendarView.prototype.updateCalendarColor = function (sColor, sId)
 		Ajax.send('UpdateCalendarColor', {
 				'Color': sColor,
 				'Id': sId
-			}, this.onCalendarUpdateColorResponse, this
+			}, this.onUpdateCalendarColorResponse, this
 		);
 	}
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onCalendarUpdateColorResponse = function (oData, oParameters)
+CCalendarView.prototype.onUpdateCalendarColorResponse = function (oResponse, oRequest)
 {
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		var oCalendar = this.calendars.getCalendarById(oParameters.Id);
+		var
+			oParameters = JSON.parse(oRequest.Parameters),
+			oCalendar = this.calendars.getCalendarById(oParameters.Id)
+		;
+		
 		if (oCalendar)
 		{
 			oCalendar.color(oParameters.Color);
@@ -1216,11 +1225,12 @@ CCalendarView.prototype.onCalendarUpdateColorResponse = function (oData, oParame
 
 /**
  * @param {Object} oCalendar
+ * @param {Object} oEvent
  */
-CCalendarView.prototype.openGetLinkCalendarForm = function (oCalendar, eEvent)
+CCalendarView.prototype.openGetLinkCalendarForm = function (oCalendar, oEvent)
 {
-	eEvent.preventDefault();
-	eEvent.stopPropagation();
+	oEvent.preventDefault();
+	oEvent.stopPropagation();
 	if (!this.isPublic)
 	{
 		Popups.showPopup(GetCalendarLinkPopup, [_.bind(this.publicCalendar, this), oCalendar]);
@@ -1255,22 +1265,27 @@ CCalendarView.prototype.shareCalendar = function (sId, bIsPublic, aShares, bShar
 				'Shares': JSON.stringify(aShares),
 				'ShareToAll': bShareToAll ? 1 : 0, 
 				'ShareToAllAccess': iShareToAllAccess
-			}, this.onCalendarShareUpdateResponse, this
+			}, this.onUpdateCalendarShareResponse, this
 		);
 	}
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onCalendarShareUpdateResponse = function (oData, oParameters)
+CCalendarView.prototype.onUpdateCalendarShareResponse = function (oResponse, oRequest)
 {
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		var	oCalendar = this.calendars.getCalendarById(oParameters.Id);
+		var
+			oParameters = JSON.parse(oRequest.Parameters),
+			oCalendar = this.calendars.getCalendarById(oParameters.Id)
+		;
+		
 		if (oCalendar)
 		{
+			console.log('oParameters.Shares', oParameters.Shares);
 			oCalendar.shares(JSON.parse(oParameters.Shares));
 			if (oParameters.ShareToAll === 1)
 			{
@@ -1298,20 +1313,23 @@ CCalendarView.prototype.publicCalendar = function (sId, bIsPublic)
 		Ajax.send('UpdateCalendarPublic', {
 				'Id': sId,
 				'IsPublic': bIsPublic ? 1 : 0
-			}, this.onCalendarPublicUpdateResponse, this
+			}, this.onUpdateCalendarPublicResponse, this
 		);
 	}
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onCalendarPublicUpdateResponse = function (oData, oParameters)
+CCalendarView.prototype.onUpdateCalendarPublicResponse = function (oResponse, oRequest)
 {
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		var	oCalendar = this.calendars.getCalendarById(oParameters.Id);
+		var
+			oParameters = JSON.parse(oRequest.Parameters),
+			oCalendar = this.calendars.getCalendarById(oParameters.Id)
+		;
 		if (oCalendar)
 		{
 			oCalendar.isPublic(oParameters.IsPublic);
@@ -1333,7 +1351,7 @@ CCalendarView.prototype.deleteCalendar = function (sId, bIsUnsubscribe)
 		fRemove = _.bind(function (bRemove) {
 			if (bRemove)
 			{
-				Ajax.send('DeleteCalendar', { 'Id': sId }, this.onCalendarDeleteResponse, this
+				Ajax.send('DeleteCalendar', { 'Id': sId }, this.onDeleteCalendarResponse, this
 				);
 			}
 		}, this)
@@ -1346,14 +1364,18 @@ CCalendarView.prototype.deleteCalendar = function (sId, bIsUnsubscribe)
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CCalendarView.prototype.onCalendarDeleteResponse = function (oData, oParameters)
+CCalendarView.prototype.onDeleteCalendarResponse = function (oResponse, oRequest)
 {
-	if (oData.Result)
+	if (oResponse.Result)
 	{
-		var oCalendar = this.calendars.getCalendarById(oParameters.Id);
+		var
+			oParameters = JSON.parse(oRequest.Parameters),
+			oCalendar = this.calendars.getCalendarById(oParameters.Id)
+		;
+		
 		if (oCalendar && !oCalendar.isDefault)
 		{
 			if (this.calendars.currentCal().id === oCalendar.id)
@@ -1490,7 +1512,9 @@ CCalendarView.prototype.getParamsFromEventData = function (oEventData)
 CCalendarView.prototype.getEventDataFromParams = function (aParameters)
 {
 	var	oEventData = aParameters;
-	
+	console.log('aParameters.alarms', aParameters.alarms);
+	console.log('aParameters.attendees', aParameters.attendees);
+	console.log('aParameters.rrule', aParameters.rrule);
 	oEventData.alarms = aParameters.alarms ? JSON.parse(aParameters.alarms) : [];
 	oEventData.attendees = aParameters.attendees ? JSON.parse(aParameters.attendees) : [];
 
@@ -1822,25 +1846,26 @@ CCalendarView.prototype.onEventActionResponseWithSubThrottle = function (oData, 
 };
 
 /**
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  * @param {boolean=} bDoRefresh
  */
-CCalendarView.prototype.onEventActionResponse = function (oData, oParameters, bDoRefresh)
+CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, bDoRefresh)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		oCalendar = this.calendars.getCalendarById(oParameters.calendarId),
-		oEventData = null,
 		oEvent = null,
 		iScrollTop = 0
 	;
+	
 	bDoRefresh = Utils.isUnd(bDoRefresh) ? true : !!bDoRefresh;
-	if (oData && oData.Result && !Utils.isUnd(oCalendar))
+	
+	if (oResponse && oResponse.Result && !Utils.isUnd(oCalendar))
 	{
 		iScrollTop = $('.calendar .fc-widget-content .scroll-inner').scrollTop();
-		if (oParameters.Action === 'CalendarEventCreate' || oParameters.Action === 'CalendarEventUpdate')
+		if (oRequest.Method === 'CreateEvent' || oRequest.Method === 'UpdateEvent')
 		{
-			//this.customscrollTop(parseInt($('.calendar .scroll-inner').scrollTop(), 10));
 			oEvent = oCalendar.getEvent(oParameters.id);
 			
 			if (((!Utils.isUnd(oEvent) && !Utils.isUnd(oEvent.rrule)) || oParameters.rrule) && 
@@ -1858,11 +1883,11 @@ CCalendarView.prototype.onEventActionResponse = function (oData, oParameters, bD
 				oCalendar = this.calendars.getCalendarById(oParameters.newCalendarId);			
 			}
 
-			_.each(oData.Result.Events, function (oEventData) {
+			_.each(oResponse.Result.Events, function (oEventData) {
 				oCalendar.addEvent(oEventData);
 			}, this);
 			
-			oCalendar.cTag = oData.Result.CTag;
+			oCalendar.cTag = oResponse.Result.CTag;
 			
 			if (!oCalendar.active())
 			{
@@ -1875,12 +1900,11 @@ CCalendarView.prototype.onEventActionResponse = function (oData, oParameters, bD
 			}
 
 			this.restoreScroll(iScrollTop);
-			//this.customscrollTop.valueHasMutated();
 			this.calendars.currentCal(oCalendar);
 		}
-		else if (oParameters.Action === 'CalendarEventDelete')
+		else if (oRequest.Method === 'DeleteEvent')
 		{
-			oCalendar.cTag = oData.Result; 
+			oCalendar.cTag = oResponse.Result; 
 			if(oParameters.allEvents === Enums.CalendarEditRecurrenceEvent.OnlyThisInstance)
 			{
 				oCalendar.removeEvent(oParameters.id);
@@ -1897,37 +1921,8 @@ CCalendarView.prototype.onEventActionResponse = function (oData, oParameters, bD
 
 			this.restoreScroll(iScrollTop);
 		}
-		else if (oParameters.Action === 'CalendarEventBase')
-		{
-			oEventData = oData.Result;
-			Popups.showPopup(EditEventPopup, [{
-				CallbackSave: _.bind(this.updateEvent, this),
-				CallbackDelete: _.bind(this.deleteEvent, this),
-				ID: oEventData.id,
-				Uid: oEventData.uid,
-				RecurrenceId: oEventData.recurrenceId,
-				Calendars: this.calendars,
-				SelectedCalendar: oEventData.calendarId,
-				Start: moment(oEventData.start * 1000),
-				End: moment(oEventData.end * 1000),
-				AllDay: oEventData.allDay,
-				Location: oEventData.location,
-				Description: oEventData.description,
-				Subject: oEventData.subject,
-				Alarms: oEventData.alarms,
-				Attendees: oEventData.attendees,
-				RRule: oEventData.rrule ? oEventData.rrule : null,
-				Excluded: oEventData.excluded ? oEventData.excluded : false,
-				Owner: oEventData.owner,
-				Appointment: oEventData.appointment,
-				TimeFormat: this.timeFormat,
-				DateFormat: this.dateFormat,
-				AllEvents: Enums.CalendarEditRecurrenceEvent.AllEvents
-			}]);
-		}
 	}
-	else if (oParameters.Action === 'CalendarEventUpdate' && !oData.Result &&
-		1155 === Utils.pInt(oData.ErrorCode))
+	else if (oRequest.Method === 'UpdateEvent' && !oResponse.Result && 1155 === Utils.pInt(oResponse.ErrorCode))
 	{
 		this.revertFunction = null;
 	}

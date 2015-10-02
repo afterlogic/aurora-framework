@@ -69,7 +69,7 @@ CCalendarCache.prototype.firstRequestCalendarList = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CCalendarCache.prototype.onCalendarListResponse = function (oResponse, oRequest)
+CCalendarCache.prototype.onGetCalendarsResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
@@ -93,7 +93,7 @@ CCalendarCache.prototype.requestCalendarList = function ()
 {
 	if (!this.calendarsLoadingStarted())
 	{
-		Ajax.send('GetCalendars', null, this.onCalendarListResponse, this);
+		Ajax.send('GetCalendars', null, this.onGetCalendarsResponse, this);
 		
 		this.calendarsLoadingStarted(true);
 	}

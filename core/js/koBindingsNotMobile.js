@@ -336,9 +336,9 @@ ko.bindingHandlers.autocompleteSimple = {
 			jqEl = $(oElement),
 			oOptions = fValueAccessor(),
 			fCallback = oOptions['callback'],
-			fDataAccessor = oOptions.dataAccessor ? oOptions.dataAccessor : Utils.emptyFunction(),
-			fDeleteAccessor = oOptions.deleteAccessor ? oOptions.deleteAccessor : Utils.emptyFunction(),
-			fSourceResponse = Utils.emptyFunction(),
+			fDataAccessor = oOptions.dataAccessor ? oOptions.dataAccessor : function () {},
+			fDeleteAccessor = oOptions.deleteAccessor ? oOptions.deleteAccessor : function () {},
+			fSourceResponse = function () {},
 			fDelete = function () {
 				fDeleteAccessor(oSelectedItem);
 				$.ui.autocomplete.prototype.__response.call(jqEl.data('autocomplete'), _.filter(aSourceResponseItems, function(oItem){ return oItem.value !== oSelectedItem.value; }));

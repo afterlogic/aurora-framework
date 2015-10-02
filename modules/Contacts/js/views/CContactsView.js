@@ -270,7 +270,7 @@ function CContactsView()
 
 	this.newContactCommand = Utils.createCommand(this, this.executeNewContact, this.allowCreateContact);
 	this.newGroupCommand = Utils.createCommand(this, this.executeNewGroup);
-	this.addContactsCommand = Utils.createCommand(this, Utils.emptyFunction, this.isEnableAddContacts);
+	this.addContactsCommand = Utils.createCommand(this, function () {}, this.isEnableAddContacts);
 	this.deleteCommand = Utils.createCommand(this, this.executeDelete, this.isEnableDeleting);
 	this.shareCommand = Utils.createCommand(this, this.executeShare, this.isEnableSharing);
 	this.removeFromGroupCommand = Utils.createCommand(this, this.executeRemoveFromGroup, this.isEnableRemoveContactsFromGroup);

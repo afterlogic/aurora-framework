@@ -564,12 +564,10 @@ CEditEventPopup.prototype.onEscHandler = function ()
 	}
 };
 
-CEditEventPopup.prototype.closePopup = function ()
+CEditEventPopup.prototype.onHide = function ()
 {
 	this.hideAll();
 	this.cleanAll();
-
-	this.closePopup();
 };
 
 CEditEventPopup.prototype.hideAll = function ()
@@ -1249,7 +1247,7 @@ CEditEventPopup.prototype.setActualTime = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CEditEventPopup.prototype.onCalendarAppointmentSetActionResponse = function (oResponse, oRequest)
+CEditEventPopup.prototype.onSetAppointmentActionResponse = function (oResponse, oRequest)
 {
 	if (!oResponse.Result)
 	{
@@ -1295,7 +1293,7 @@ CEditEventPopup.prototype.setAppointmentAction = function (sDecision)
 				CalendarCache.markIcalNonexistent(this.uid());
 				break;
 		}
-		Ajax.send('SetAppointmentAction', oParameters, this.onCalendarAppointmentSetActionResponse, this);
+		Ajax.send('SetAppointmentAction', oParameters, this.onSetAppointmentActionResponse, this);
 
 		oAttendee.status = iDecision;
 		this.attendees([]);

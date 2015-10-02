@@ -80,17 +80,17 @@ CEditCalendarPopup.prototype.onShow = function (fCallback, aColors, oCalendar)
 		this.popupTitle(TextUtils.i18n("CALENDAR/TITLE_CREATE_CALENDAR"));
 	}
 
-	$(document).on('keyup.calendar_create', _.bind(function(ev) {
-		if (ev.keyCode === Enums.Key.Enter)
-		{
-			this.onSaveClick();
-		}
-	}, this));
+//	$(document).on('keyup.calendar_create', _.bind(function(ev) {
+//		if (ev.keyCode === Enums.Key.Enter)
+//		{
+//			this.onSaveClick();
+//		}
+//	}, this));
 };
 
 CEditCalendarPopup.prototype.onHide = function (fCallback, aColors, oCalendar)
 {
-	$(document).off('keyup.calendar_create');
+//	$(document).off('keyup.calendar_create');
 };
 
 CEditCalendarPopup.prototype.onSaveClick = function ()

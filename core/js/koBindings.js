@@ -149,7 +149,8 @@ ko.bindingHandlers.dropdown = {
 						
 						_.defer(function () {
 							oDocument.on('click.dropdown', function (ev) {
-								if((oCommand['passClick'] || ev.button !== Enums.MouseKey.Right) && !bScrollBar)
+								var iMouseRightClick = 2;
+								if((oCommand['passClick'] || ev.button !== iMouseRightClick) && !bScrollBar)
 								{
 									oDocument.unbind('click.dropdown');
 									if (oCommand['close'] && oCommand['close']['subscribe'])

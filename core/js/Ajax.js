@@ -28,8 +28,8 @@ function CAjax()
 		'SystemSetMobile', 'AccountRegister', 'AccountGetForgotQuestion', 'AccountValidateForgotQuestion', 'AccountChangeForgotPassword'];
 	
 	this.aActionsWithoutAuthForSendExt = ['SocialRegister', 'HelpdeskRegister', 'HelpdeskForgot', 
-			'HelpdeskLogin', 'HelpdeskForgotChangePassword', 'SystemLogout', 'CalendarList',
-			'CalendarEventList', 'FilesPub'];
+			'HelpdeskLogin', 'HelpdeskForgotChangePassword', 'SystemLogout', 'GetCalendars',
+			'GetEvents', 'FilesPub'];
 }
 
 /**
@@ -207,7 +207,7 @@ CAjax.prototype.sendExt = function (oParameters, fResponseHandler, oContext)
  */
 CAjax.prototype.abortRequests = function (oParameters)
 {
-	switch (oParameters.Action)
+	switch (oParameters.Action || oParameters.Method)
 	{
 		case 'MessageMove':
 		case 'MessageDelete':
@@ -245,14 +245,14 @@ CAjax.prototype.abortRequests = function (oParameters)
 			this.abortRequestByActionName('ContactGet');
 			this.abortRequestByActionName('ContactGlobal');
 			break;
-		case 'CalendarEventUpdate':
-			this.abortRequestByActionName('CalendarEventUpdate', {'calendarId': oParameters.calendarId, 'uid': oParameters.uid});
+		case 'UpdateEvent':
+			this.abortRequestByActionName('UpdateEvent', {'calendarId': oParameters.calendarId, 'uid': oParameters.uid});
 			break;
-		case 'CalendarList':
-			this.abortRequestByActionName('CalendarList');
+		case 'GetCalendars':
+			this.abortRequestByActionName('GetCalendars');
 			break;
-		case 'CalendarEventList':
-			this.abortRequestByActionName('CalendarEventList');
+		case 'GetEvents':
+			this.abortRequestByActionName('GetEvents');
 			break;
 	}
 };
@@ -278,7 +278,7 @@ CAjax.prototype.abortRequestByActionName = function (sAction, oParameters)
 						bDoAbort = true;
 					}
 					break;
-				case 'CalendarEventUpdate':
+				case 'UpdateEvent':
 					if (oParameters.calendarId === oReq.Parameters.calendarId && 
 							oParameters.uid === oReq.Parameters.uid)
 					{

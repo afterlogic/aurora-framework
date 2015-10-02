@@ -115,11 +115,9 @@ CShareCalendarPopup.prototype.onSaveClick = function ()
 	this.closePopup();
 };
 
-CShareCalendarPopup.prototype.closePopup = function ()
+CShareCalendarPopup.prototype.onHide = function ()
 {
 	this.cleanAll();
-
-	this.closePopup();
 };
 
 CShareCalendarPopup.prototype.cleanAll = function ()
