@@ -7,7 +7,6 @@ var
 	Ajax = require('modules/Contacts/js/Ajax.js')
 ;
 
-
 /**
  * @constructor
  */

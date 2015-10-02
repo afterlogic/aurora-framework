@@ -328,3 +328,78 @@ ko.bindingHandlers.onEsc = {
 		});
 	}
 };
+
+ko.bindingHandlers.autocompleteSimple = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+
+		var
+			jqEl = $(oElement),
+			oOptions = fValueAccessor(),
+			fCallback = oOptions['callback'],
+			fDataAccessor = oOptions.dataAccessor ? oOptions.dataAccessor : Utils.emptyFunction(),
+			fDeleteAccessor = oOptions.deleteAccessor ? oOptions.deleteAccessor : Utils.emptyFunction(),
+			fSourceResponse = Utils.emptyFunction(),
+			fDelete = function () {
+				fDeleteAccessor(oSelectedItem);
+				$.ui.autocomplete.prototype.__response.call(jqEl.data('autocomplete'), _.filter(aSourceResponseItems, function(oItem){ return oItem.value !== oSelectedItem.value; }));
+			},
+			aSourceResponseItems = null,
+			oSelectedItem = null
+		;
+
+		if (fCallback && jqEl && jqEl[0])
+		{
+			jqEl.autocomplete({
+				'minLength': 1,
+				'autoFocus': true,
+				'position': {
+					collision: "flip" //prevents the escape off the screen
+				},
+				'source': function (request, response) {
+					fSourceResponse = response;
+					fCallback(request['term'], function (oItems) { //additional layer for story oItems
+						aSourceResponseItems = oItems;
+						fSourceResponse(oItems);
+					});
+				},
+				'focus': function (oEvent, oItem) {
+					oSelectedItem = oItem.item;
+				},
+				'open': function (oEvent, oItem) {
+					$(jqEl.autocomplete('widget')).find('span.del').on('click', function(oEvent, oItem) {
+						Utils.calmEvent(oEvent);
+						fDelete();
+					});
+				},
+				'select': function (oEvent, oItem) {
+					_.delay(function () {
+						jqEl.trigger('change');
+					}, 5);
+					fDataAccessor(oItem.item);
+
+					return true;
+				}
+			}).on('click', function(oEvent, oItem) {
+				if (jqEl.val() === '')
+				{
+					if (!$(jqEl.autocomplete('widget')).is(':visible'))
+					{
+						jqEl.autocomplete("option", "minLength", 0); //for triggering search on empty field
+						jqEl.autocomplete("search");
+						jqEl.autocomplete("option", "minLength", 1);
+					}
+					else
+					{
+						jqEl.autocomplete("close");
+					}
+				}
+			}).on('keydown', function(oEvent, oItem) {
+				if (aSourceResponseItems && oSelectedItem && !oSelectedItem.global && oEvent.keyCode === Enums.Key.Del && oEvent.shiftKey) //shift+del on suggestions list
+				{
+					Utils.calmEvent(oEvent);
+					fDelete();
+				}
+			});
+		}
+	}
+};

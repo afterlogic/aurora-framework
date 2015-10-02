@@ -13,6 +13,7 @@ var
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
@@ -937,43 +938,11 @@ CEditEventPopup.prototype.disableAlarms = function ()
  */
 CEditEventPopup.prototype.autocompleteCallback = function (sTerm, fResponse)
 {
-//	var
-//		oParameters = {
-//			'Action': 'ContactSuggestions',
-//			'Search': sTerm,
-//			'GlobalOnly': '0'
-//		}
-//	;
-//
-//	this.guestAutocompleteItem(null);
-//
-//	Ajax.send(oParameters, function (oData) {
-//		var aList = [];
-//		if (oData && oData.Result && oData.Result && oData.Result.List)
-//		{
-//			aList = _.map(oData.Result.List, function (oItem) {
-//				return oItem && oItem.Email && oItem.Email !== this.owner() ?
-//				{
-//					value: oItem.Name && 0 < $.trim(oItem.Name).length ? '"' + oItem.Name + '" <' + oItem.Email + '>' : oItem.Email,
-//					name: oItem.Name,
-//					email: oItem.Email,
-//					frequency: oItem.Frequency,
-//					id: oItem.Id,
-//					global: oItem.Global,
-//					sharedToAll: oItem.SharedToAll
-//				} :
-//				null;
-//			}, this);
-//
-//			aList = _.sortBy(_.compact(aList), function(oItem){
-//				return oItem.frequency;
-//			}).reverse();
-//		}
-//
-//		fResponse(aList);
-//
-//	}, this);
+	this.guestAutocompleteItem(null);
+	ModulesManager.run('Contacts', 'suggestionsAutocompleteCallback', [sTerm, fResponse, this.owner(), false]);
 };
+
+CEditEventPopup.prototype.autocompleteDeleteItem = ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler');
 
 CEditEventPopup.prototype.repeatRuleParse = function (oRepeatRule)
 {
@@ -1434,21 +1403,6 @@ CEditEventPopup.prototype.displayReminderPart = function (sPart, sPrefix)
 	}
 
 	return sPrefix + sTemplate;
-};
-
-CEditEventPopup.prototype.autocompleteDeleteItem = function (oContact)
-{
-//	var
-//		oParameters = {
-//			'Action': 'ContactSuggestionDelete',
-//			'ContactId': oContact.id,
-//			'SharedToAll': oContact.sharedToAll ? '1' : '0'
-//		}
-//	;
-//
-//	Ajax.send(oParameters, function (oData) {
-//		return true;
-//	}, this);
 };
 
 module.exports = new CEditEventPopup();
