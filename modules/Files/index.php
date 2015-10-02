@@ -97,7 +97,7 @@ class FilesModule extends AApiModule
 	public function CreateFolder()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapability->isFilesSupported($oAccount))
+		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
