@@ -444,7 +444,7 @@ CContactsView.prototype.executeSave = function (oData)
 				oParameters.SharedToAll = oData.sharedToAll() ? '1' : '0';
 			}
 
-			Ajax.send(oData.isNew() ? 'CreateContact' : 'UpdateContact', oParameters, this.onContactCreateResponse, this);
+			Ajax.send(oData.isNew() ? 'CreateContact' : 'UpdateContact', oParameters, this.onCreateContactResponse, this);
 		}
 		else if (oData instanceof CGroupModel && !oData.readOnly())
 		{
@@ -460,7 +460,7 @@ CContactsView.prototype.executeSave = function (oData)
 				this.selectedItem(null);
 			}
 
-			Ajax.send(oData.isNew() ? 'CreateGroup' : 'UpdateGroup', oData.toObject(), this.onGroupCreateResponse, this);
+			Ajax.send(oData.isNew() ? 'CreateGroup' : 'UpdateGroup', oData.toObject(), this.onCreateGroupResponse, this);
 		}
 	}
 	else
@@ -683,11 +683,11 @@ CContactsView.prototype.executeAddContactsToGroupId = function (sGroupId, aConta
 		Ajax.send('AddContactsToGroup', {
 			'GroupId': sGroupId,
 			'ContactsId': aContactIds
-		}, this.onContactsAddToGroupResponse, this);
+		}, this.onAddContactsToGroupResponse, this);
 	}
 };
 
-CContactsView.prototype.onContactsAddToGroupResponse = function () {
+CContactsView.prototype.onAddContactsToGroupResponse = function () {
 	this.requestContactList();
 	if (this.selector.itemSelected())
 	{
@@ -871,12 +871,12 @@ CContactsView.prototype.requestContactList = function ()
 		'Search': this.search(),
 		'GroupId': this.selectedGroupInList() ? this.selectedGroupInList().Id() : '',
 		'Storage': sStorage
-	}, this.onContactListResponse, this);
+	}, this.onGetContactsResponse, this);
 };
 
 CContactsView.prototype.requestGroupFullList = function ()
 {
-	Ajax.send('GetGroups', null, this.onGroupListResponse, this);
+	Ajax.send('GetGroups', null, this.onGetGroupsResponse, this);
 };
 
 /**
@@ -907,7 +907,7 @@ CContactsView.prototype.requestContact = function (sUid)
 		Ajax.send('GetContact', {
 			'ContactId': oItem.Id(),
 			'Storage': sStorage
-		}, this.onContactGetResponse, this);
+		}, this.onGetContactResponse, this);
 	}
 };
 
@@ -1049,7 +1049,7 @@ CContactsView.prototype.viewGroup = function (sGroupId)
 		this.selector.itemSelected(null);
 		this.selector.listCheckedOrSelected(false);
 		
-		Ajax.send('GetGroupEvents', { 'GroupId': sGroupId }, this.onGroupEventsResponse, this);
+		Ajax.send('GetGroupEvents', { 'GroupId': sGroupId }, this.onGetGroupEventsResponse, this);
 	}
 	
 	return !!oGroup;
@@ -1220,19 +1220,21 @@ CContactsView.prototype.onClearSearchClick = function ()
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CContactsView.prototype.onContactGetResponse = function (oResult, oRequest)
+CContactsView.prototype.onGetContactResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	var oResult = oResponse.Result;
+	
+	if (oResult)
 	{
 		var
 			oObject = new CContactModel(),
 			oSelected  = this.selector.itemSelected()
 		;
 
-		oObject.parse(oResult.Result);
+		oObject.parse(oResult);
 
 		if (oSelected && oSelected.Id() === oObject.idContact())
 		{
@@ -1242,23 +1244,29 @@ CContactsView.prototype.onContactGetResponse = function (oResult, oRequest)
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CContactsView.prototype.onContactCreateResponse = function (oResult, oRequest)
+CContactsView.prototype.onCreateContactResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	if (oResponse && oResponse.Result)
 	{
-		Screens.showReport(oResult.Method === 'CreateContact' ?
+		Screens.showReport(oResponse.Method === 'CreateContact' ?
 			TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED') : TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_UPDATED'));
 			
 		this.requestContactList();
 	}
 };
 
-CContactsView.prototype.onContactListResponse = function (oResult, oRequest)
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CContactsView.prototype.onGetContactsResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	var oResult = oResponse.Result;
+	
+	if (oResult)
 	{
 		var
 			iIndex = 0,
@@ -1273,12 +1281,12 @@ CContactsView.prototype.onContactListResponse = function (oResult, oRequest)
 			oObject = null
 		;
 
-		for (iLen = oResult.Result.List.length; iIndex < iLen; iIndex++)
+		for (iLen = oResult.List.length; iIndex < iLen; iIndex++)
 		{
-			if (oResult.Result.List[iIndex])
+			if (oResult.List[iIndex])
 			{
 				oObject = new CContactListItemModel();
-				oObject.parse(oResult.Result.List[iIndex]);
+				oObject.parse(oResult.List[iIndex]);
 
 				aList.push(oObject);
 			}
@@ -1300,21 +1308,21 @@ CContactsView.prototype.onContactListResponse = function (oResult, oRequest)
 
 		this.collection(aList);
 		this.loadingList(false);
-		this.oPageSwitcher.setCount(Utils.pInt(oResult.Result.ContactCount));
+		this.oPageSwitcher.setCount(Utils.pInt(oResult.ContactCount));
 
 		if (oSubSelected)
 		{
 			this.selector.itemSelected(oSubSelected);
 		}
 
-		this.selectedGroupContactsList(oResult.Result.List);
+		this.selectedGroupContactsList(oResult.List);
 
 		if (oSelected)
 		{
 			this.requestContact(oSelected.Id());
 		}
 
-		this.contactCount(oResult.Result.ContactCount);
+		this.contactCount(oResult.ContactCount);
 	}
 };
 
@@ -1339,9 +1347,15 @@ CContactsView.prototype.viewAllMails = function ()
 	}
 };
 
-CContactsView.prototype.onGroupListResponse = function (oResult, oRequest)
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CContactsView.prototype.onGetGroupsResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	var oResult = oResponse.Result;
+	
+	if (oResult)
 	{
 		var
 			iIndex = 0,
@@ -1355,12 +1369,12 @@ CContactsView.prototype.onGroupListResponse = function (oResult, oRequest)
 
 		this.groupFullCollection(aList);
 		
-		for (iLen = oResult.Result.length; iIndex < iLen; iIndex++)
+		for (iLen = oResult.length; iIndex < iLen; iIndex++)
 		{
-			if (oResult.Result[iIndex])
+			if (oResult[iIndex])
 			{
 				oObject = new CContactListItemModel();
-				oObject.parse(oResult.Result[iIndex]);
+				oObject.parse(oResult[iIndex]);
 				
 				if (oObject.IsGroup())
 				{
@@ -1378,18 +1392,19 @@ CContactsView.prototype.onGroupListResponse = function (oResult, oRequest)
 	}
 };
 
-CContactsView.prototype.onGroupCreateResponse = function (oResult, oRequest)
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CContactsView.prototype.onCreateGroupResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	if (oResponse && oResponse.Result)
 	{
 		var aCheckedIds = _.map(this.selector.listChecked(), function (oItem) {
 			return [oItem.Id(), oItem.Global() ? '1' : '0'];
 		});
 		
-		this.executeAddContactsToGroupId(
-			Utils.pString(oResult.Result.IdGroup),
-			aCheckedIds
-		);
+		this.executeAddContactsToGroupId(Utils.pString(oResponse.Result.IdGroup), aCheckedIds);
 
 		if (!this.mobileApp)
 		{
@@ -1457,13 +1472,8 @@ CContactsView.prototype.executeShare = function ()
 		Ajax.send('UpdateShared', {
 			'ContactsId': aContactsId.join(','),
 			'SharedToAll': (Enums.ContactsGroupListType.SharedToAll === this.selectedGroupType()) ? '1' : '0'
-		}, this.onContactUpdateSharedToAllResponse, this);
+		});
 	}
-};
-
-CContactsView.prototype.onContactUpdateSharedToAllResponse = function (oResult, oRequest)
-{
-	// TODO:
 };
 
 /**
@@ -1477,15 +1487,19 @@ CContactsView.prototype.requestGroup = function (oItem)
 	{
 		Ajax.send('GetGroup', {
 			'GroupId': oItem.Id()
-		}, this.onGroupResponse, this);
+		}, this.onGetGroupResponse, this);
 	}
 };
 
-CContactsView.prototype.onGroupResponse = function (oResult, oRequest)
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CContactsView.prototype.onGetGroupResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	if (oResponse && oResponse.Result)
 	{
-		var oGroup = oResult.Result;
+		var oGroup = oResponse.Result;
 		this.oGroupModel
 			.idGroup(Utils.pString(oGroup.IdGroup))
 			.name(oGroup.Name)
@@ -1504,11 +1518,15 @@ CContactsView.prototype.onGroupResponse = function (oResult, oRequest)
 	}
 };
 
-CContactsView.prototype.onGroupEventsResponse = function (oResult, oRequest)
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CContactsView.prototype.onGetGroupEventsResponse = function (oResponse, oRequest)
 {
-	if (oResult && oResult.Result)
+	if (oResponse && oResponse.Result)
 	{
-		var Events = oResult.Result;
+		var Events = oResponse.Result;
 		this.oGroupModel.events(Events);
 	}
 };

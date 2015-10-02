@@ -235,15 +235,11 @@ CAjax.prototype.abortRequests = function (oParameters)
 		case 'MessagesGetFlags':
 			this.abortRequestByActionName('MessagesGetFlags');
 			break;
-		case 'ContactList':
-		case 'ContactGlobalList':
-			this.abortRequestByActionName('ContactList');
-			this.abortRequestByActionName('ContactGlobalList');
+		case 'GetContacts':
+			this.abortRequestByActionName('GetContacts');
 			break;
-		case 'ContactGet':
-		case 'ContactGlobal':
-			this.abortRequestByActionName('ContactGet');
-			this.abortRequestByActionName('ContactGlobal');
+		case 'GetContact':
+			this.abortRequestByActionName('GetContact');
 			break;
 		case 'UpdateEvent':
 			this.abortRequestByActionName('UpdateEvent', {'calendarId': oParameters.calendarId, 'uid': oParameters.uid});

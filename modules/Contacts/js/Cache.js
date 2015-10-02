@@ -71,7 +71,7 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 			Ajax.send('GetContactsByEmails', {
 				'Emails': aEmailsForRequest.join(','),
 				'HandlerId': sHandlerId
-			}, this.onContactsGetByEmailsResponse, this);
+			}, this.onGetContactsByEmailsResponse, this);
 		}
 //	}
 };
@@ -82,10 +82,11 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
  * @param {Object} oResponse Data obtained from the server.
  * @param {Object} oRequest Data has been transferred to the server.
  */
-CContactsCache.prototype.onContactsGetByEmailsResponse = function (oResponse, oRequest)
+CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oRequest)
 {
 	var
-		oHandler = this.responseHandlers[oRequest.HandlerId],
+		oParameters = JSON.parse(oRequest.Parameters),
+		oHandler = this.responseHandlers[oParameters.HandlerId],
 		oResult = oResponse.Result
 	;
 	
@@ -107,7 +108,7 @@ CContactsCache.prototype.onContactsGetByEmailsResponse = function (oResponse, oR
 		}, this));
 	}
 	
-	this.responseHandlers[oRequest.HandlerId] = undefined;
+	this.responseHandlers[oParameters.HandlerId] = undefined;
 };
 
 /**
