@@ -198,7 +198,7 @@ class CalendarModule extends AApiModule
 			$oPublicAccount = $this->oApiCalendarManager->getPublicAccount();
 			$oPublicAccount->User->DefaultTimeZone = $iTimezoneOffset;
 			$oPublicAccount->User->ClientTimeZone = $sTimezone;
-			$mResult = $this->oApiCalendar->getEvents($oPublicAccount, $aCalendarIds, $iStart, $iEnd);
+			$mResult = $this->oApiCalendarManager->getEvents($oPublicAccount, $aCalendarIds, $iStart, $iEnd);
 		}
 		else
 		{
@@ -250,7 +250,7 @@ class CalendarModule extends AApiModule
 			$iStart = $this->getParamValue('selectStart'); 
 			$iEnd = $this->getParamValue('selectEnd'); 
 
-			$mResult = $this->oApiCalendar->getExpandedEvent($oAccount, $oEvent->IdCalendar, $mResult, $iStart, $iEnd);
+			$mResult = $this->oApiCalendarManager->getExpandedEvent($oAccount, $oEvent->IdCalendar, $mResult, $iStart, $iEnd);
 		}
 		
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
