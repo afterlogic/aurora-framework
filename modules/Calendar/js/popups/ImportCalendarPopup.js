@@ -69,7 +69,7 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
 		'hidden': {
-			'Module': 'Calendars',
+			'Module': 'Calendar',
 			'Method': 'UploadCalendar',
 			'Token': UserSettins.CsrfToken,
 			'AccountID': App.defaultAccountId(),

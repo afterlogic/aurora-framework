@@ -1974,7 +1974,7 @@ CCalendarView.prototype.initUploader = function ()
 			'disableDragAndDrop': false,
 			'disableAutoUploadOnDrop': true,
 			'hidden': {
-				'Module': 'Calendars',
+				'Module': 'Calendar',
 				'Method': 'UploadCalendar',
 				'Token': UserSettings.CsrfToken,
 				'AccountID': App.defaultAccountId(),
