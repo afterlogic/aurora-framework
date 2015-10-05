@@ -279,7 +279,7 @@ CFilesView.prototype.initUploader = function ()
 	if (this.uploaderButton() && this.uploaderArea())
 	{
 		this.oJua = new CJua({
-			'action': '?/Upload/File/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'clickElement': this.uploaderButton(),
@@ -289,13 +289,11 @@ CFilesView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': this.isPublic ? true : false,
 			'disableDragAndDrop': this.isPublic ? true : false,
 			'hidden': {
-				'Token': function () {
-					return UserSettings.CsrfToken;
-				},
-				'AccountID': function () {
-					return App.currentAccountId();
-				},
-				'AdditionalData':  function (oFile) {
+				'Module': 'Files',
+				'Method': 'UploadFile',
+				'Token': UserSettings.CsrfToken,
+				'AccountID': App.defaultAccountId(),
+				'Parameters':  function (oFile) {
 					return JSON.stringify({
 						'Type': self.storageType(),
 						'SubPath': oFile && !Utils.isUnd(oFile['Folder']) ? oFile['Folder'] : '',

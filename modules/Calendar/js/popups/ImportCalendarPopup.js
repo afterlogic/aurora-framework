@@ -60,7 +60,7 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 {
 	var self = this;
 	this.oJua = new CJua({
-		'action': '?/Upload/Calendars/',
+		'action': '?/Upload/',
 		'name': 'jua-uploader',
 		'queueSize': 1,
 		'clickElement': $('#jue_import_button', $oViewModel),
@@ -69,13 +69,11 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
 		'hidden': {
-			'Token': function () {
-				return UserSettins.CsrfToken;
-			},
-			'AccountID': function () {
-				return App.currentAccountId();
-			},
-			'AdditionalData':  function () {
+			'Module': 'Calendars',
+			'Method': 'UploadCalendar',
+			'Token': UserSettins.CsrfToken,
+			'AccountID': App.defaultAccountId(),
+			'Parameters':  function () {
 				return JSON.stringify({
 					'CalendarID': self.calendarId()
 				});

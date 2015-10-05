@@ -1456,7 +1456,7 @@ CComposeView.prototype.initUploader = function ()
 	if (this.shown() && this.composeUploaderButton() && this.oJua === null)
 	{
 		this.oJua = new CJua({
-			'action': '?/Upload/Attachment/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'clickElement': this.composeUploaderButton(),
@@ -1466,9 +1466,9 @@ CComposeView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'hidden': {
-				'Token': function () {
-					return UserSettings.CsrfToken;
-				},
+				'Module': 'Mail',
+				'Method': 'UploadAttachment',
+				'Token': UserSettings.CsrfToken,
 				'AccountID': function () {
 					return App.currentAccountId();
 				}

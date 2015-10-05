@@ -1410,7 +1410,7 @@ CHelpdeskView.prototype.createJuaObject = function (oButton)
 	if (oButton)
 	{
 		var oJua = new CJua({
-			'action': '?/Upload/HelpdeskFile/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'clickElement': oButton,
@@ -1420,10 +1420,14 @@ CHelpdeskView.prototype.createJuaObject = function (oButton)
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'hidden': {
-				'IsExt': this.bExtApp ? '1' : '0',
+				'Module': 'Helpdesk',
+				'Method': 'UploadAttachment',
 				'Token': UserSettings.CsrfToken,
-				'TenantHash': this.bExtApp ? UserSettings.TenantHash : '',
-				'AccountID': (this.bExtApp || !App.currentAccountId) ? 0 : App.currentAccountId()
+				'AccountID': (this.bExtApp || !App.defaultAccountId) ? 0 : App.defaultAccountId(),
+				'Parameters': JSON.stringify({
+					'TenantHash': this.bExtApp ? UserSettings.TenantHash : '',
+					'IsExt': this.bExtApp ? '1' : '0'
+				})
 			}
 		});
 

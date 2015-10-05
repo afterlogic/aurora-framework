@@ -1965,7 +1965,7 @@ CCalendarView.prototype.initUploader = function ()
 	if (this.uploaderArea())
 	{
 		this.oJua = new CJua({
-			'action': '?/Upload/Calendars/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'dragAndDropElement': this.uploaderArea(),
@@ -1974,14 +1974,11 @@ CCalendarView.prototype.initUploader = function ()
 			'disableDragAndDrop': false,
 			'disableAutoUploadOnDrop': true,
 			'hidden': {
-				'Token': function () {
-					return UserSettings.CsrfToken;
-				},
-				'AccountID': function () {
-					return App.currentAccountId();
-				},
-				'AdditionalData':  function () {
-
+				'Module': 'Calendars',
+				'Method': 'UploadCalendar',
+				'Token': UserSettings.CsrfToken,
+				'AccountID': App.defaultAccountId(),
+				'Parameters':  function () {
 					return JSON.stringify({
 						'CalendarID': self.uploadCalendarId()
 					});

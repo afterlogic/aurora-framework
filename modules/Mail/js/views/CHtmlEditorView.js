@@ -769,7 +769,7 @@ CHtmlEditorView.prototype.initUploader = function ()
 	if (this.imageUploaderButton() && !this.oJua)
 	{
 		this.oJua = new Jua({
-			'action': '?/Upload/Attachment/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'clickElement': this.imageUploaderButton(),
@@ -778,9 +778,9 @@ CHtmlEditorView.prototype.initUploader = function ()
 			'disableAjaxUpload': false,
 			'disableDragAndDrop': true,
 			'hidden': {
-				'Token': function () {
-					return UserSettings.CsrfToken;
-				},
+				'Module': 'Mail',
+				'Method': 'UploadAttachment',
+				'Token': UserSettings.CsrfToken,
 				'AccountID': function () {
 					return Accounts.currentId();
 				}
@@ -829,7 +829,7 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 			}, this);
 
 			this.editorUploader = new Jua({
-				'action': '?/Upload/Attachment/',
+				'action': '?/Upload/',
 				'name': 'jua-uploader',
 				'queueSize': 1,
 				'dragAndDropElement': this.bAllowImageDragAndDrop ? this.uploaderAreaDom() : null,
@@ -837,9 +837,9 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 				'disableAjaxUpload': false,
 				'disableDragAndDrop': !this.bAllowImageDragAndDrop,
 				'hidden': {
-					'Token': function () {
-						return UserSettings.CsrfToken;
-					},
+					'Module': 'Mail',
+					'Method': 'UploadAttachment',
+					'Token': UserSettings.CsrfToken,
 					'AccountID': function () {
 						return Accounts.currentId();
 					}

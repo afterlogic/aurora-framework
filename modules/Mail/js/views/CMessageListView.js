@@ -846,7 +846,7 @@ CMessageListView.prototype.initUploader = function ()
 	if (this.uploaderArea())
 	{
 		this.oJua = new Jua({
-			'action': '?/Upload/Message/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'dragAndDropElement': this.uploaderArea(),
@@ -854,13 +854,13 @@ CMessageListView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': this.isPublic,
 			'disableDragAndDrop': this.isPublic,
 			'hidden': {
-				'Token': function () {
-					return UserSettings.CsrfToken;
-				},
+				'Module': 'Mail',
+				'Method': 'UploadMessage',
+				'Token': UserSettings.CsrfToken,
 				'AccountID': function () {
 					return App.currentAccountId();
 				},
-				'AdditionalData':  function (oFile) {
+				'Parameters':  function () {
 					return JSON.stringify({
 						'Folder': self.folderFullName()
 					});

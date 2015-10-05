@@ -32,7 +32,7 @@ CImportView.prototype.ViewTemplate = 'Contacts_ImportView';
 CImportView.prototype.onBind = function ($oViewModel)
 {
 	this.oJua = new CJua({
-		'action': '?/Upload/Contacts/',
+		'action': '?/Upload/',
 		'name': 'jua-uploader',
 		'queueSize': 1,
 		'clickElement': $('#jue_import_button', $oViewModel),
@@ -41,12 +41,10 @@ CImportView.prototype.onBind = function ($oViewModel)
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
 		'hidden': {
-			'Token': function () {
-				return UserSettings.CsrfToken;
-			},
-			'AccountID': function () {
-				return App.currentAccountId();
-			}
+			'Module': 'Contacts',
+			'Method': 'UploadContacts',
+			'Token': UserSettings.CsrfToken,
+			'AccountID': App.defaultAccountId()
 		}
 	});
 

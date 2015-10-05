@@ -1543,7 +1543,7 @@ CContactsView.prototype.initUploader = function ()
 	if (this.uploaderArea())
 	{
 		this.oJua = new Jua({
-			'action': '?/Upload/Contacts/',
+			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'dragAndDropElement': this.uploaderArea(),
@@ -1551,13 +1551,11 @@ CContactsView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': this.isPublic,
 			'disableDragAndDrop': this.isPublic,
 			'hidden': {
-				'Token': function () {
-					return UserSettings.CsrfToken;
-				},
-				'AccountID': function () {
-					return App.currentAccountId();
-				},
-				'AdditionalData':  function (oFile) {
+				'Module': 'Contacts',
+				'Method': 'UploadContacts',
+				'Token': UserSettings.CsrfToken,
+				'AccountID': App.defaultAccountId(),
+				'Parameters':  function () {
 					return JSON.stringify({
 						'GroupId': self.selectedGroupType() === Enums.ContactsGroupListType.SubGroup ? self.currentGroupId() : '',
 						'IsShared': self.selectedGroupType() === Enums.ContactsGroupListType.SharedToAll
