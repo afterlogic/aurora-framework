@@ -4,29 +4,32 @@ var
 	$ = require('jquery'),
 	_ = require('underscore'),
 	
+	AddressUtils = require('core/js/utils/Address.js'),
+	
 	Ajax = require('modules/Contacts/js/Ajax.js')
 ;
 
 /**
- * @param {string} sTerm
- * @param {Function} fResponse
+ * @param {object} oRequest
+ * @param {function} fResponse
  * @param {string} sExceptEmail
  * @param {boolean} bGlobalOnly
  */
-function Callback(sTerm, fResponse, sExceptEmail, bGlobalOnly)
+function Callback(oRequest, fResponse, sExceptEmail, bGlobalOnly)
 {
 	var
+		sTerm = oRequest.term,
 		oParameters = {
 			'Search': sTerm,
 			'GlobalOnly': bGlobalOnly ? '1' : '0'
 		}
 	;
 
-	Ajax.send('GetSuggestions', oParameters, function (oData) {
+	Ajax.send('GetSuggestions', oParameters, function (oResponse) {
 		var aList = [];
-		if (oData && oData.Result && oData.Result && oData.Result.List)
+		if (oResponse && oResponse.Result && oResponse.Result.List)
 		{
-			aList = _.map(oData.Result.List, function (oItem) {
+			aList = _.map(oResponse.Result.List, function (oItem) {
 				return oItem && oItem.Email && oItem.Email !== sExceptEmail ?
 				{
 					value: (oItem.Name && 0 < $.trim(oItem.Name).length) ? (oItem.ForSharedToAll ? oItem.Name : ('"' + oItem.Name + '" <' + oItem.Email + '>')) : oItem.Email,
@@ -50,22 +53,78 @@ function Callback(sTerm, fResponse, sExceptEmail, bGlobalOnly)
 	});
 };
 
-function DeleteHandler(oContact)
+/**
+ * @param {object} oRequest
+ * @param {function} fResponse
+ */
+function ComposeCallback(oRequest, fResponse)
 {
 	var
-		oParameters = {
-			'ContactId': oContact.id,
-			'SharedToAll': oContact.sharedToAll ? '1' : '0'
-		}
+		sTerm = oRequest.term,
+		oParameters = { 'Search': sTerm }
 	;
 
-	Ajax.send('DeleteSuggestion', oParameters, function (oData) {
-		return true;
+	Ajax.send('GetSuggestions', oParameters, function (oResponse) {
+		var aList = [];
+		if (oResponse && oResponse.Result && oResponse.Result.List)
+		{
+			aList = _.map(oResponse.Result.List, function (oItem) {
+				var
+					sLabel = '',
+					sValue = oItem.Email
+				;
+
+				if (oItem.IsGroup)
+				{
+					if (oItem.Name && 0 < $.trim(oItem.Name).length)
+					{
+						sLabel = '"' + oItem.Name + '" (' + oItem.Email + ')';
+					}
+					else
+					{
+						sLabel = '(' + oItem.Email + ')';
+					}
+				}
+				else
+				{
+					sLabel = AddressUtils.getFullEmail(oItem.Name, oItem.Email);
+					sValue = sLabel;
+				}
+
+				return {
+					'label': sLabel,
+					'value': sValue,
+					'frequency': oItem.Frequency,
+					'id': oItem.Id,
+					'global': oItem.Global,
+					'sharedToAll': oItem.SharedToAll
+				};
+			});
+
+			aList = _.sortBy(_.compact(aList), function(oItem) {
+				return oItem.frequency;
+			}).reverse();
+		}
+
+		fResponse(aList);
+
 	}, this);
+};
+
+/**
+ * @param {Object} oContact
+ */
+function DeleteHandler(oContact)
+{
+	Ajax.send('DeleteSuggestion', {
+		'ContactId': oContact.id,
+		'SharedToAll': oContact.sharedToAll ? '1' : '0'
+	});
 };
 
 
 module.exports = {
 	callback: Callback,
+	composeCallback: ComposeCallback,
 	deleteHandler: DeleteHandler
 };
