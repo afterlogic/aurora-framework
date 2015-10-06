@@ -15,7 +15,9 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': require('modules/Mail/js/views/CMailView.js')
+			'main': function () {
+				return require('modules/Mail/js/views/CMailView.js');
+			}
 		},
 		headerItem: HeaderItemView,
 		prefetcher: require('modules/Mail/js/Prefetcher.js'),

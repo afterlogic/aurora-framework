@@ -24,6 +24,11 @@ var
 	AddressUtils = require('core/js/utils/Address.js')
 ;
 
+function GetAutocomplete(oInput)
+{
+	return oInput.data('customAutocomplete') || oInput.data('uiAutocomplete') || oInput.data('autocomplete') || oInput.data('ui-autocomplete');
+}
+
 (function($) {
 
 	var inputosaurustext = {
@@ -77,7 +82,7 @@ var
 			deleteSelectedItem: function (widget) {
 				var self = this;
 				this.autoCompleteDeleteItem(this.selectedItem);
-				$.ui.autocomplete.prototype.__response.call($(widget.elements.input).data('autocomplete'), _.filter(this.sourceResponseItems, function(oItem){ return oItem.value !== self.selectedItem.value; }));
+				$.ui.autocomplete.prototype.__response.call(GetAutocomplete($(widget.elements.input)), _.filter(this.sourceResponseItems, function(oItem){ return oItem.value !== self.selectedItem.value; }));
 			},
 			sourceResponseItems: null,
 			selectedItem: null,
@@ -183,8 +188,9 @@ var
 					autoFocus: true,
 					appendTo: this.options.autoCompleteAppendTo || 'body',
 					select : function(ev, ui){
-						if ($(this).val() !== sOrigSearch) {
-							$(this).data('autocomplete').close();
+						if ($(this).val() !== sOrigSearch)
+						{
+							GetAutocomplete($(this)).close();
 							return false;
 						}
 
@@ -194,8 +200,7 @@ var
 					},
 					open : function() {
 						var
-							auto =  $(this).data('customAutocomplete') || $(this).data('uiAutocomplete') || $(this).data('autocomplete') || $(this).data('ui-autocomplete'),
-							menu = auto.menu || null,
+							menu = GetAutocomplete($(this)).menu || null,
 							$menuItems,
 							maxHeight
 						;
@@ -240,10 +245,9 @@ var
 		},
 
 		_autoCompleteMenuPosition : function() {
-			var widget;
-			if(this.options.autoCompleteSource){
-				widget = this.elements.input.data('autocomplete');
-				widget && widget.menu.element.position({
+			if (this.options.autoCompleteSource)
+			{
+				GetAutocomplete(this.elements.input).menu.element.position({
 					of: this.elements.ul,
 					my: 'left top',
 					at: 'left bottom',
@@ -782,7 +786,6 @@ var
 		_click : function(ev) {
 			var widget = (ev && ev.data.widget) || this ;
 
-			//console.log(!!$(widget.elements.input.autocomplete('widget')).is(':visible'));
 			if (widget.elements.input.val() === '')
 			{
 				if (!widget.options.openedByClick)

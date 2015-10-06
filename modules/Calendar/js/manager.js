@@ -15,7 +15,9 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': require('modules/Calendar/js/views/CCalendarView.js')
+			'main': function () {
+				return require('modules/Calendar/js/views/CCalendarView.js');
+			}
 		},
 		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/CALENDAR'), TextUtils.i18n('TITLE/CALENDAR')),
 		getBrowserTitle: function () {

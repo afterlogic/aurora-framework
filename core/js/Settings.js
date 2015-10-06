@@ -68,7 +68,7 @@ module.exports = {
 			CalendarShowWorkDay: true,
 			CalendarWorkDayStarts: '09',
 			CalendarWorkDayEnds: '18',
-			CalendarAppointments: false
+			CalendarAppointments: true
 		},
 		Files: {
 			FileStoragePubHash: '',

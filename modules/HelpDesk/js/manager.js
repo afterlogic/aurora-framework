@@ -12,7 +12,9 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': require('modules/Helpdesk/js/views/CHelpdeskView.js')
+			'main': function () {
+				return require('modules/Helpdesk/js/views/CHelpdeskView.js');
+			}
 		},
 		headerItem: HeaderItemView
 	};

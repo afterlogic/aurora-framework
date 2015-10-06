@@ -14,7 +14,9 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': require('modules/Files/js/views/CFilesView.js')
+			'main': function () {
+				return require('modules/Files/js/views/CFilesView.js');
+			}
 		},
 		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'), TextUtils.i18n('TITLE/FILESTORAGE')),
 		getBrowserTitle: function () {

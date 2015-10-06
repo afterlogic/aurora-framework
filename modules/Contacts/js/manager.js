@@ -15,10 +15,17 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': require('modules/Contacts/js/views/CContactsView.js')
+			'main': function () {
+				return require('modules/Contacts/js/views/CContactsView.js');
+			}
 		},
 		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS')),
-		suggestionsAutocompleteCallback: SuggestionsAutocomplete.callback,
+		getSuggestionsAutocompleteCallback: function () {
+			return SuggestionsAutocomplete.callback;
+		},
+		getSuggestionsAutocompleteComposeCallback: function () {
+			return SuggestionsAutocomplete.composeCallback;
+		},
 		getSuggestionsAutocompleteDeleteHandler: function () {
 			return SuggestionsAutocomplete.deleteHandler;
 		}

@@ -28,6 +28,8 @@ if (!bMobileDevice && !bMobileApp)
 
 require('core/js/enums.js');
 
+require('core/js/vendors/inputosaurus.js');
+
 function CApp()
 {
 	this.bAuth = window.pSevenAppData.Auth;

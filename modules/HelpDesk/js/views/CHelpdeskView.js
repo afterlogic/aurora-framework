@@ -12,6 +12,7 @@ var
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Ajax = require('core/js/Ajax.js'),
 	Storage = require('core/js/Storage.js'),
 	UserSettings = require('core/js/Settings.js'),
@@ -404,11 +405,10 @@ CHelpdeskView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAd
 		$(koAddrDom()).inputosaurus({
 			width: 'auto',
 			parseOnBlur: true,
-			autoCompleteSource: _.bind(function (oData, fResponse) {
-				this.autocompleteCallback(oData.term, fResponse);
-			}, this),
-			autoCompleteAppendTo : $(koAddrDom()).closest('td'),
-			change : _.bind(function (ev) {
+			autoCompleteSource: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteComposeCallback') || function () {},
+			autoCompleteDeleteItem: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler') || function () {},
+			autoCompleteAppendTo: $(koAddrDom()).closest('td'),
+			change: _.bind(function (ev) {
 				koLockAddr(true);
 				this.setRecipient(koAddr, ev.target.value);
 				koLockAddr(false);
@@ -425,59 +425,6 @@ CHelpdeskView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAd
 			mobileDevice: bMobileDevice
 		});
 	}
-};
-
-/**
- * @param {string} sTerm
- * @param {Function} fResponse
- */
-CHelpdeskView.prototype.autocompleteCallback = function (sTerm, fResponse)
-{
-	var
-		oParameters = {
-			'Action': 'ContactSuggestions',
-			'Search': sTerm
-		}
-		;
-
-	Ajax.send(oParameters, function (oResponse) {
-
-		var aList = [];
-		if (oResponse && oResponse.Result && oResponse.Result && oResponse.Result.List)
-		{
-			aList = _.map(oResponse.Result.List, function (oItem) {
-
-				var
-					sLabel = '',
-					sValue = oItem.Email
-					;
-
-				if (oItem.IsGroup)
-				{
-					if (oItem.Name && 0 < $.trim(oItem.Name).length)
-					{
-						sLabel = '"' + oItem.Name + '" (' + oItem.Email + ')';
-					}
-					else
-					{
-						sLabel = '(' + oItem.Email + ')';
-					}
-				}
-				else
-				{
-					sLabel = AddressUtils.getFullEmail(oItem.Name, oItem.Email);
-					sValue = sLabel;
-				}
-
-				return {'label': sLabel, 'value': sValue, 'frequency': oItem.Frequency};
-			});
-
-			aList = _.compact(aList);
-		}
-
-		fResponse(aList);
-
-	}, this);
 };
 
 /**

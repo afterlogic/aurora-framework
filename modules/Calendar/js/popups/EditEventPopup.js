@@ -936,8 +936,13 @@ CEditEventPopup.prototype.disableAlarms = function ()
  */
 CEditEventPopup.prototype.autocompleteCallback = function (sTerm, fResponse)
 {
-	this.guestAutocompleteItem(null);
-	ModulesManager.run('Contacts', 'suggestionsAutocompleteCallback', [sTerm, fResponse, this.owner(), false]);
+	var fAutocompleteCallback = ModulesManager.run('Contacts', 'getSuggestionsAutocompleteCallback');
+	
+	if ($.isFunction(fAutocompleteCallback))
+	{
+		this.guestAutocompleteItem(null);
+		fAutocompleteCallback(sTerm, fResponse, this.owner(), false);
+	}
 };
 
 CEditEventPopup.prototype.autocompleteDeleteItem = ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler');

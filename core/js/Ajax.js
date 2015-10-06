@@ -171,7 +171,7 @@ CAjax.prototype.send = function (oParameters, fResponseHandler, oContext)
 	
 	if (oParameters && (App.isAuth() && bAccountExists || this.isAllowedActionWithoutAuth(oParameters.Action)))
 	{
-		if (bCurrentAccountId && App.isAuth())
+		if (bCurrentAccountId && App.isAuth() && App.currentAccountId)
 		{
 			oParameters.AccountID = App.currentAccountId();
 		}

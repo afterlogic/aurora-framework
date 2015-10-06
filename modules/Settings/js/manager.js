@@ -12,9 +12,8 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': {
-				'Model': require('modules/Settings/js/views/CSettingsView.js'),
-				'TemplateName': 'Settings_SettingsViewModel'
+			'main': function () {
+				return require('modules/Settings/js/views/CSettingsView.js');
 			}
 		},
 		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS')),

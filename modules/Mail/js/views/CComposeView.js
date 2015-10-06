@@ -39,8 +39,6 @@ var
 	$html = $('html')
 ;
 
-require('modules/Mail/js/vendors/inputosaurus.js');
-
 /**
  * @constructor
  */
@@ -472,13 +470,9 @@ CComposeView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAdd
 		$(koAddrDom()).inputosaurus({
 			width: 'auto',
 			parseOnBlur: true,
-			autoCompleteSource: _.bind(function (oData, fResponse) {
-				this.autocompleteCallback(oData.term, fResponse);
-			}, this),
-			autoCompleteDeleteItem: _.bind(function (oContact) {
-				this.autocompleteDeleteItem(oContact);
-			}, this),
-			autoCompleteAppendTo : $(koAddrDom()).closest('td'),
+			autoCompleteSource: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteComposeCallback') || function () {},
+			autoCompleteDeleteItem: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler') || function () {},
+			autoCompleteAppendTo: $(koAddrDom()).closest('td'),
 			change : _.bind(function (ev) {
 				koLockAddr(true);
 				this.setRecipient(koAddr, ev.target.value);
@@ -1798,90 +1792,12 @@ CComposeView.prototype.openInNewWindow = function ()
 	}
 };
 
-/**
- * @param {string} sTerm
- * @param {Function} fResponse
- */
-CComposeView.prototype.autocompleteCallback = function (sTerm, fResponse)
-{
-	var
-		oParameters = {
-			'Action': 'ContactSuggestions',
-			'Search': sTerm
-		}
-	;
-
-	Ajax.send(oParameters, function (oResponse) {
-
-		var aList = [];
-		if (oResponse && oResponse.Result && oResponse.Result && oResponse.Result.List)
-		{
-			aList = _.map(oResponse.Result.List, function (oItem) {
-
-				var
-					sLabel = '',
-					sValue = oItem.Email
-				;
-
-				if (oItem.IsGroup)
-				{
-					if (oItem.Name && 0 < $.trim(oItem.Name).length)
-					{
-						sLabel = '"' + oItem.Name + '" (' + oItem.Email + ')';
-					}
-					else
-					{
-						sLabel = '(' + oItem.Email + ')';
-					}
-				}
-				else
-				{
-					sLabel = AddressUtils.getFullEmail(oItem.Name, oItem.Email);
-					sValue = sLabel;
-				}
-
-				return {
-					'label': sLabel,
-					'value': sValue,
-					'frequency': oItem.Frequency,
-					'id': oItem.Id,
-					'global': oItem.Global,
-					'sharedToAll': oItem.SharedToAll
-				};
-			});
-
-			aList = _.sortBy(_.compact(aList), function(oItem){
-				return oItem.frequency;
-			}).reverse();
-		}
-
-		fResponse(aList);
-
-	}, this);
-
-};
-
 CComposeView.prototype.onShowFilesPopupClick = function ()
 {
 //	var fCallBack = _.bind(this.addFilesAsAttachment, this);
 //	/*global FileStoragePopup:true */
 //	Popups.showPopup(FileStoragePopup, [fCallBack]);
 //	/*global FileStoragePopup:false */
-};
-
-CComposeView.prototype.autocompleteDeleteItem = function (oContact)
-{
-	var
-		oParameters = {
-			'Action': 'ContactSuggestionDelete',
-			'ContactId': oContact.id,
-			'SharedToAll': oContact.sharedToAll ? '1' : '0'
-		}
-	;
-
-	Ajax.send(oParameters, function (oData) {
-		return true;
-	}, this);
 };
 
 module.exports = CComposeView;

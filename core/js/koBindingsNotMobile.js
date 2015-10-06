@@ -11,6 +11,7 @@ var
 
 require('customscroll');
 require('jquery-ui');
+require('core/js/autocomplete.js');
 
 ko.bindingHandlers.splitter = {
 	'init': function (oElement, fValueAccessor) {
@@ -338,10 +339,10 @@ ko.bindingHandlers.autocompleteSimple = {
 			fCallback = oOptions['callback'],
 			fDataAccessor = oOptions.dataAccessor ? oOptions.dataAccessor : function () {},
 			fDeleteAccessor = oOptions.deleteAccessor ? oOptions.deleteAccessor : function () {},
-			fSourceResponse = function () {},
 			fDelete = function () {
 				fDeleteAccessor(oSelectedItem);
-				$.ui.autocomplete.prototype.__response.call(jqEl.data('autocomplete'), _.filter(aSourceResponseItems, function(oItem){ return oItem.value !== oSelectedItem.value; }));
+				var oAutocomplete = jqEl.data('customAutocomplete') || jqEl.data('uiAutocomplete') || jqEl.data('autocomplete') || jqEl.data('ui-autocomplete');
+				$.ui.autocomplete.prototype.__response.call(oAutocomplete, _.filter(aSourceResponseItems, function (oItem) { return oItem.value !== oSelectedItem.value; }));
 			},
 			aSourceResponseItems = null,
 			oSelectedItem = null
@@ -355,9 +356,8 @@ ko.bindingHandlers.autocompleteSimple = {
 				'position': {
 					collision: "flip" //prevents the escape off the screen
 				},
-				'source': function (request, response) {
-					fSourceResponse = response;
-					fCallback(request['term'], function (oItems) { //additional layer for story oItems
+				'source': function (oRequest, fSourceResponse) {
+					fCallback(oRequest, function (oItems) { //additional layer for story oItems
 						aSourceResponseItems = oItems;
 						fSourceResponse(oItems);
 					});

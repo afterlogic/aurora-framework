@@ -62,7 +62,7 @@ CScreens.prototype.init = function (bAuth)
  */
 CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 {
-	_.each(oScreenList, _.bind(function (CScreenView, sKey) {
+	_.each(oScreenList, _.bind(function (fGetCScreenView, sKey) {
 		var sNewKey = sKey.toLowerCase();
 		if (sPrefix !== '')
 		{
@@ -76,7 +76,7 @@ CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 			}
 		}
 		
-		this.oConstructors[sNewKey] = CScreenView;
+		this.oConstructors[sNewKey] = fGetCScreenView;
 	}, this));
 };
 
@@ -135,13 +135,13 @@ CScreens.prototype.showView = function (sScreen)
 {
 	var
 		sScreenId = sScreen,
-		CScreenView = this.oConstructors[sScreenId],
+		fGetCScreenView = this.oConstructors[sScreenId],
 		oScreen = this.oViews[sScreenId]
 	;
 	
-	if (!oScreen && CScreenView)
+	if (!oScreen && fGetCScreenView)
 	{
-		oScreen = this.initView(sScreenId, CScreenView);
+		oScreen = this.initView(sScreenId, fGetCScreenView);
 	}
 	
 	if (oScreen)
@@ -154,13 +154,16 @@ CScreens.prototype.showView = function (sScreen)
 
 /**
  * @param {string} sScreenId
- * @param {Object} CScreenView
+ * @param {function} fGetCScreenView
  * 
  * @returns {Object}
  */
-CScreens.prototype.initView = function (sScreenId, CScreenView)
+CScreens.prototype.initView = function (sScreenId, fGetCScreenView)
 {
-	var oScreen = new CScreenView();
+	var
+		CScreenView = fGetCScreenView(),
+		oScreen = new CScreenView()
+	;
 	
 	if (oScreen.ViewTemplate)
 	{
@@ -245,13 +248,13 @@ CScreens.prototype.initInformation = function ()
 //CScreens.prototype.initHelpdesk = function ()
 //{
 //	var
-//		CScreenView = this.oConstructors[Enums.Screens.Helpdesk],
+//		fGetCScreenView = this.oConstructors[Enums.Screens.Helpdesk],
 //		oScreen = this.oViews[Enums.Screens.Helpdesk]
 //	;
 //
-//	if (AppData.User.IsHelpdeskSupported && !oScreen && CScreenView)
+//	if (AppData.User.IsHelpdeskSupported && !oScreen && fGetCScreenView)
 //	{
-//		oScreen = this.initView(Enums.Screens.Helpdesk, CScreenView);
+//		oScreen = this.initView(Enums.Screens.Helpdesk, fGetCScreenView);
 //	}
 //};
 

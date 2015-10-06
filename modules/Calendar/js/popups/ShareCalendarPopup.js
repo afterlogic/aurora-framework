@@ -131,15 +131,6 @@ CShareCalendarPopup.prototype.cleanAll = function ()
 };
 
 /**
- * @param {string} sTerm
- * @param {Function} fResponse
- */
-CShareCalendarPopup.prototype.autocompleteCallback = function (sTerm, fResponse)
-{
-	ModulesManager.run('Contacts', 'suggestionsAutocompleteCallback', [sTerm, fResponse, this.owner(), true]);
-};
-
-/**
  * @param {Object} koDom
  * @param {Object} ko
  * @param {Object} koLock
@@ -151,10 +142,9 @@ CShareCalendarPopup.prototype.initInputosaurus = function (koDom, ko, koLock)
 		$(koDom()).inputosaurus({
 			width: 'auto',
 			parseOnBlur: true,
-			autoCompleteSource: _.bind(function (oData, fResponse) {
-				this.autocompleteCallback(oData.term, fResponse);
-			}, this),
-			change : _.bind(function (ev) {
+			autoCompleteSource: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteCallback') || function () {},
+			autoCompleteDeleteItem: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler') || function () {},
+			change: _.bind(function (ev) {
 				koLock(true);
 				this.setRecipient(ko, ev.target.value);
 				koLock(false);
