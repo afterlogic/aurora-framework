@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Routing = require('core/js/Routing.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
@@ -301,10 +301,7 @@ CAccountListModel.prototype.populateFetchers = function ()
 {
 	if (Settings.AllowFetcher)
 	{
-		Ajax.send({
-			'Action': 'AccountFetcherGetList',
-			'AccountID': this.defaultId()
-		}, this.onAccountFetcherGetListResponse, this);
+		Ajax.send('GetFetchers', { 'AccountID': this.defaultId() }, this.onGetFetchersResponse, this);
 	}
 };
 
@@ -312,7 +309,7 @@ CAccountListModel.prototype.populateFetchers = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountListModel.prototype.onAccountFetcherGetListResponse = function (oResponse, oRequest)
+CAccountListModel.prototype.onGetFetchersResponse = function (oResponse, oRequest)
 {
 	var
 		oFetcherList = null,
@@ -331,7 +328,7 @@ CAccountListModel.prototype.populateIdentities = function ()
 {
 	if (AllowFetcher.AllowIdentities && (this.isCurrentAllowsMail() || this.collection().length > 1))
 	{
-		Ajax.send({'Action': 'AccountIdentitiesGet'}, this.onAccountIdentitiesGetResponse, this);
+		Ajax.send(GetIdentities, null, this.onGetIdentitiesResponse, this);
 	}
 };
 
@@ -339,7 +336,7 @@ CAccountListModel.prototype.populateIdentities = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountListModel.prototype.onAccountIdentitiesGetResponse = function (oResponse, oRequest)
+CAccountListModel.prototype.onGetIdentitiesResponse = function (oResponse, oRequest)
 {
 	var oIdentities = {};
 	

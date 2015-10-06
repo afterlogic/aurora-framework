@@ -91,7 +91,7 @@ CAjax.prototype.isSearchMessages = function ()
 	var bSearchMessages = false;
 	
 	_.each(this.requests(), function (oReq) {
-		if (oReq && oReq.Parameters && oReq.Parameters.Action === 'MessagesGetList' && oReq.Parameters.Search !== '')
+		if (oReq && oReq.Parameters && oReq.Parameters.Action === 'GetMessages' && oReq.Parameters.Search !== '')
 		{
 			bSearchMessages = true;
 		}
@@ -151,7 +151,7 @@ CAjax.prototype.doSend = function (oParameters, fResponseHandler, oContext, fDon
 		success: doneFunc,
 		error: failFunc,
 		complete: alwaysFunc,
-		timeout: oParameters.Action === 'MessagesGetBodies' ? 100000 : 50000
+		timeout: oParameters.Action === 'GetMessagesBodies' ? 100000 : 50000
 	});
 	
 	this.requests().push({Parameters: oParameters, Xhr: oXhr});
@@ -209,31 +209,31 @@ CAjax.prototype.abortRequests = function (oParameters)
 {
 	switch (oParameters.Action || oParameters.Method)
 	{
-		case 'MessageMove':
-		case 'MessageDelete':
-			this.abortRequestByActionName('MessagesGetList', {'Folder': oParameters.Folder});
-			this.abortRequestByActionName('MessageGet');
+		case 'MoveMessages':
+		case 'DeleteMessages':
+			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
+			this.abortRequestByActionName('GetMessage');
 			break;
-		case 'MessagesGetList':
-		case 'MessageSetSeen':
+		case 'GetMessages':
+		case 'SetMessagesSeen':
 		case 'MessageSetFlagged':
-			this.abortRequestByActionName('MessagesGetList', {'Folder': oParameters.Folder});
+			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
 			break;
 		case 'MessagesSetAllSeen':
-			this.abortRequestByActionName('MessagesGetList', {'Folder': oParameters.Folder});
-			this.abortRequestByActionName('MessagesGetListByUids', {'Folder': oParameters.Folder});
+			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
+			this.abortRequestByActionName('GetMessagesByUids', {'Folder': oParameters.Folder});
 			break;
-		case 'FolderClear':
-			this.abortRequestByActionName('MessagesGetList', {'Folder': oParameters.Folder});
+		case 'ClearFolder':
+			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
 			
-			// FoldersGetRelevantInformation-request aborted during folder cleaning, not to get the wrong information.
-			this.abortRequestByActionName('FoldersGetRelevantInformation');
+			// GetRelevantFoldersInformation-request aborted during folder cleaning, not to get the wrong information.
+			this.abortRequestByActionName('GetRelevantFoldersInformation');
 			break;
-		case 'FoldersGetRelevantInformation':
-			this.abortRequestByActionName('FoldersGetRelevantInformation');
+		case 'GetRelevantFoldersInformation':
+			this.abortRequestByActionName('GetRelevantFoldersInformation');
 			break;
-		case 'MessagesGetFlags':
-			this.abortRequestByActionName('MessagesGetFlags');
+		case 'GetMessagesFlags':
+			this.abortRequestByActionName('GetMessagesFlags');
 			break;
 		case 'GetContacts':
 			this.abortRequestByActionName('GetContacts');
@@ -268,7 +268,7 @@ CAjax.prototype.abortRequestByActionName = function (sAction, oParameters)
 		{
 			switch (sAction)
 			{
-				case 'MessagesGetList':
+				case 'GetMessages':
 					if (oParameters.Folder === oReq.Parameters.Folder)
 					{
 						bDoAbort = true;

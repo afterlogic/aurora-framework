@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
@@ -251,12 +251,11 @@ Prefetcher.startMessagesPrefetch = function ()
 
 			oParameters = {
 				'AccountID': iAccountId,
-				'Action': 'MessagesGetBodies',
 				'Folder': oCurrFolder.fullName(),
 				'Uids': aUids
 			};
 
-			Ajax.send(oParameters, this.onMessagesGetBodiesResponse, this);
+			Ajax.send('GetMessagesBodies', oParameters, this.onGetMessagesBodiesResponse, this);
 			return true;
 		}
 	}
@@ -265,18 +264,19 @@ Prefetcher.startMessagesPrefetch = function ()
 };
 
 /**
- * @param {Object} oResult
+ * @param {Object} oResponse
  * @param {Object} oRequest
  */
-Prefetcher.onMessagesGetBodiesResponse = function (oResult, oRequest)
+Prefetcher.onGetMessagesBodiesResponse = function (oResponse, oRequest)
 {
 	var
-		oFolder = MailCache.getFolderByFullName(oRequest.AccountID, oRequest.Folder)
+		oParameters = JSON.parse(oRequest.Parameters),
+		oFolder = MailCache.getFolderByFullName(oParameters.AccountID, oParameters.Folder)
 	;
 	
-	if (_.isArray(oResult.Result))
+	if (_.isArray(oResponse.Result))
 	{
-		_.each(oResult.Result, function (oRawMessage) {
+		_.each(oResponse.Result, function (oRawMessage) {
 			oFolder.parseAndCacheMessage(oRawMessage, false, false);
 		});
 	}

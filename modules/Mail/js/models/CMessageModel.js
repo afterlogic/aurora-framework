@@ -9,7 +9,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	CDateModel = require('core/js/models/CDateModel.js'),
 	CAddressListModel = require('core/js/models/CAddressListModel.js'),
@@ -659,7 +659,7 @@ CMessageModel.prototype.downloadAllAttachments = function ()
 {
 	if (this.allAttachmentsHash !== '')
 	{
-//		App.Api.downloadByUrl(Utils.getDownloadLinkByHash(this.accountId(), this.allAttachmentsHash));
+		Utils.downloadByUrl(Utils.getDownloadLinkByHash(this.accountId(), this.allAttachmentsHash));
 	}
 	else
 	{
@@ -672,10 +672,7 @@ CMessageModel.prototype.downloadAllAttachments = function ()
 			})
 		;
 
-		Ajax.send({
-			'Action': 'MessageAttachmentsZip',
-			'Hashes': aHashes
-		}, this.onMessageZipAttachments, this);
+		Ajax.send('GetAttachmentsZipHash', { 'Hashes': aHashes }, this.onGetAttachmentsZipHashResponse, this);
 	}
 };
 
@@ -683,13 +680,13 @@ CMessageModel.prototype.downloadAllAttachments = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMessageModel.prototype.onMessageZipAttachments = function (oResponse, oRequest)
+CMessageModel.prototype.onGetAttachmentsZipHashResponse = function (oResponse, oRequest)
 {
-//	if (oResponse.Result)
-//	{
-//		this.allAttachmentsHash = oResponse.Result;
-//		App.Api.downloadByUrl(Utils.getDownloadLinkByHash(this.accountId(), this.allAttachmentsHash));
-//	}
+	if (oResponse.Result)
+	{
+		this.allAttachmentsHash = Utils.pString(oResponse.Result);
+		Utils.downloadByUrl(Utils.getDownloadLinkByHash(this.accountId(), this.allAttachmentsHash));
+	}
 };
 
 CMessageModel.prototype.saveAttachmentsToFiles = function ()
@@ -704,26 +701,24 @@ CMessageModel.prototype.saveAttachmentsToFiles = function ()
 	;
 
 	App.filesRecievedAnim(true);
-	Ajax.send({
-		'Action': 'MessageAttachmentsSaveToFiles',
-		'Attachments': aHashes
-	}, this.onMessageAttachmentsSaveToFilesResponse, this);
+	Ajax.send('SaveAttachmentsToFiles', { 'Attachments': aHashes }, this.onSaveAttachmentsToFilesResponse, this);
 };
 
 /**
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMessageModel.prototype.onMessageAttachmentsSaveToFilesResponse = function (oResponse, oRequest)
+CMessageModel.prototype.onSaveAttachmentsToFilesResponse = function (oResponse, oRequest)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		iSavedCount = 0,
-		iTotalCount = oRequest.Attachments.length
+		iTotalCount = oParameters.Attachments.length
 	;
 	
 	if (oResponse.Result)
 	{
-		_.each(oRequest.Attachments, function (sHash) {
+		_.each(oParameters.Attachments, function (sHash) {
 			if (oResponse.Result[sHash] !== undefined)
 			{
 				iSavedCount++;

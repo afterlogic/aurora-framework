@@ -384,8 +384,7 @@ CMessagePaneView.prototype.notifySender = function ()
 {
 	if (this.currentMessage() && this.currentMessage().readingConfirmation() !== '')
 	{
-		App.Ajax.send({
-			'Action': 'MessageSendConfirmation',
+		App.Ajax.send('SendConfirmationMessage', {
 			'Confirmation': this.currentMessage().readingConfirmation(),
 			'Subject': TextUtils.i18n('MESSAGE/RETURN_RECEIPT_MAIL_SUBJECT'),
 			'Text': TextUtils.i18n('MESSAGE/RETURN_RECEIPT_MAIL_TEXT', {
@@ -1003,14 +1002,13 @@ CMessagePaneView.prototype.executeSaveAsPdf = function ()
 			fReplaceWithBase64(this);
 		});
 
-		App.Ajax.send({
-			'Action': 'MessageGetPdfFromHtml',
+		App.Ajax.send('GetMessagePdfHash', {
 			'Subject': this.subject(),
 			'Html': oBody.html()
-		}, function (oData) {
-			if (oData && oData.Result && oData.Result['Hash'])
+		}, function (oResponse) {
+			if (oResponse.Result && oResponse.Result['Hash'])
 			{
-				Utils.downloadByUrl(Utils.getDownloadLinkByHash(iAccountId, oData.Result['Hash']));
+				Utils.downloadByUrl(Utils.getDownloadLinkByHash(iAccountId, oResponse.Result['Hash']));
 			}
 			else
 			{
@@ -1033,16 +1031,16 @@ CMessagePaneView.prototype.changeAddMenuVisibility = function ()
 CMessagePaneView.prototype.onMessageSendOrSaveResponse = function (oResponse, oRequest)
 {
 	var oResData = SendingUtils.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending());
-	switch (oResData.Action)
+	switch (oResData.Method)
 	{
-		case 'MessageSend':
+		case 'SendMessage':
 			this.replySendingStarted(false);
 			if (oResData.Result)
 			{
 				this.replyText('');
 			}
 			break;
-		case 'MessageSave':
+		case 'SaveMessage':
 			if (oResData.Result)
 			{
 				this.replyDraftUid(oResData.NewUid);
@@ -1059,7 +1057,7 @@ CMessagePaneView.prototype.executeSendQuickReply = function ()
 	{
 		this.replySendingStarted(true);
 		this.requiresPostponedSending(this.replyAutoSavingStarted());
-		SendingUtils.sendReplyMessage('MessageSend', this.getReplyHtmlText(), this.replyDraftUid(), 
+		SendingUtils.sendReplyMessage('SendMessage', this.getReplyHtmlText(), this.replyDraftUid(), 
 			this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
 
 		this.replyTextFocus(false);

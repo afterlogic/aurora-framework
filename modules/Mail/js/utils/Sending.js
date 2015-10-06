@@ -3,7 +3,7 @@
 var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
@@ -38,7 +38,7 @@ SendingUtils.setReplyData = function (sText, sDraftUid)
 };
 
 /**
- * @param {string} sAction
+ * @param {string} sMethod
  * @param {Object} oParameters
  * @param {boolean} bSaveMailInSentItems
  * @param {boolean} bShowLoading
@@ -46,7 +46,7 @@ SendingUtils.setReplyData = function (sText, sDraftUid)
  * @param {Object} oMessageSendResponseContext
  * @param {boolean=} bPostponedSending = false
  */
-SendingUtils.send = function (sAction, oParameters, bSaveMailInSentItems, bShowLoading,
+SendingUtils.send = function (sMethod, oParameters, bSaveMailInSentItems, bShowLoading,
 											fMessageSendResponseHandler, oMessageSendResponseContext, bPostponedSending)
 {
 	var
@@ -66,12 +66,12 @@ SendingUtils.send = function (sAction, oParameters, bSaveMailInSentItems, bShowL
 		sSentFolder = oParameters.DraftInfo[2];
 	}
 	
-	oParameters.Action = sAction;
+	oParameters.Method = sMethod;
 	oParameters.ShowReport = bShowLoading;
 	
-	switch (sAction)
+	switch (sMethod)
 	{
-		case 'MessageSend':
+		case 'SendMessage':
 			sLoadingMessage = TextUtils.i18n('COMPOSE/INFO_SENDING');
 			if (bSaveMailInSentItems)
 			{
@@ -86,7 +86,7 @@ SendingUtils.send = function (sAction, oParameters, bSaveMailInSentItems, bShowL
 				Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
 			}
 			break;
-		case 'MessageSave':
+		case 'SaveMessage':
 			sLoadingMessage = TextUtils.i18n('COMPOSE/INFO_SAVING');
 			oParameters.DraftFolder = sDraftFolder;
 			MailCache.savingDraftUid(oParameters.DraftUid);
@@ -112,7 +112,7 @@ SendingUtils.send = function (sAction, oParameters, bSaveMailInSentItems, bShowL
 	}
 	else
 	{
-		Ajax.send(oParameters, fMessageSendResponseHandler, oMessageSendResponseContext);
+		Ajax.send(sMethod, oParameters, fMessageSendResponseHandler, oMessageSendResponseContext);
 	}
 };
 
@@ -142,20 +142,20 @@ SendingUtils.sendPostponedMail = function (sDraftUid)
 	
 	if (this.postponedMailData)
 	{
-		Ajax.send(oParameters, oData.MessageSendResponseHandler, oData.MessageSendResponseContext);
+		Ajax.send(oParameters.Method, oParameters, oData.MessageSendResponseHandler, oData.MessageSendResponseContext);
 		this.postponedMailData = null;
 	}
 };
 
 /**
- * @param {string} sAction
+ * @param {string} sMethod
  * @param {string} sText
  * @param {string} sDraftUid
  * @param {Function} fMessageSendResponseHandler
  * @param {Object} oMessageSendResponseContext
  * @param {boolean} bRequiresPostponedSending
  */
-SendingUtils.sendReplyMessage = function (sAction, sText, sDraftUid, fMessageSendResponseHandler, 
+SendingUtils.sendReplyMessage = function (sMethod, sText, sDraftUid, fMessageSendResponseHandler, 
 														oMessageSendResponseContext, bRequiresPostponedSending)
 {
 	var
@@ -189,7 +189,7 @@ SendingUtils.sendReplyMessage = function (sAction, sText, sDraftUid, fMessageSen
 
 		oParameters.Attachments = this.convertAttachmentsForSending(oParameters.Attachments);
 
-		this.send(sAction, oParameters, Settings.getSaveMailInSentItems(), false,
+		this.send(sMethod, oParameters, Settings.getSaveMailInSentItems(), false,
 			fMessageSendResponseHandler, oMessageSendResponseContext, bRequiresPostponedSending);
 	}
 };
@@ -236,9 +236,9 @@ SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequi
 		Screens.hideLoading();
 	}
 	
-	switch (oRequest.Action)
+	switch (oRequest.Method)
 	{
-		case 'MessageSave':
+		case 'SaveMessage':
 			if (!bResult)
 			{
 				if (oRequest.ShowReport)
@@ -304,7 +304,7 @@ SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequi
 		MailCache.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.DraftFolder);
 	}
 	
-	return {Action: oRequest.Action, Result: bResult, NewUid: oResponse.Result ? oResponse.Result.NewUid : ''};
+	return {Method: oRequest.Method, Result: bResult, NewUid: oResponse.Result ? oResponse.Result.NewUid : ''};
 };
 
 /**

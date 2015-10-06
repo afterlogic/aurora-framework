@@ -9,7 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
@@ -254,7 +254,7 @@ function CMailCache()
 	
 	this.waitForUnseenMessages = ko.observable(true);
 	
-	this.iMessageSetSeenCount = 0;	
+	this.iSetMessagesSeenCount = 0;	
 	
 	this.__name = 'CMailCache';
 }
@@ -269,7 +269,7 @@ CMailCache.prototype.init = function ()
 	Ajax.openedRequestsCount.subscribe(function () {
 		if (Ajax.openedRequestsCount() === 0)
 		{
-			// Delay not to reset these flags between two related requests (e.g. 'FoldersGetRelevantInformation' and 'MessagesGetList')
+			// Delay not to reset these flags between two related requests (e.g. 'GetRelevantFoldersInformation' and 'GetMessages')
 			_.delay(_.bind(function () {
 				if (Ajax.requests().length === 0)
 				{
@@ -355,19 +355,13 @@ CMailCache.prototype.checkCurrentFolderList = function ()
  */
 CMailCache.prototype.getFolderList = function (iAccountID)
 {
-	var
-		oAccount = Accounts.getAccount(iAccountID),
-		oParameters = {
-			'AccountID': iAccountID,
-			'Action': 'FoldersGetList'
-		}
-	;
+	var oAccount = Accounts.getAccount(iAccountID);
 	
 	if (oAccount && oAccount.allowMail())
 	{
 		this.folderListLoading.push(iAccountID);
 
-		Ajax.send(oParameters, this.onFoldersGetListResponse, this);
+		Ajax.send('GetFolders', { 'AccountID': iAccountID }, this.onGetFoldersResponse, this);
 	}
 	else if (iAccountID === this.currentAccountId())
 	{
@@ -524,18 +518,17 @@ CMailCache.prototype.executeCheckMail = function (bAbortPrevious)
 		oParameters = null
 	;
 	
-	if (App.isAuth() && (bAbortPrevious || !Ajax.hasOpenedRequests('FoldersGetRelevantInformation') || !bCurrentAccountCheckmailStarted) && (aFolders.length > 0))
+	if (App.isAuth() && (bAbortPrevious || !Ajax.hasOpenedRequests('GetRelevantFoldersInformation') || !bCurrentAccountCheckmailStarted) && (aFolders.length > 0))
 	{
 		aFolders = _.uniq(_.compact(_.union(aFolders, aFoldersFromAccount)));
 		oParameters = {
-			'Action': 'FoldersGetRelevantInformation',
 			'Folders': aFolders,
 			'AccountID': iAccountID
 		};
 		
 		this.checkMailStarted(true);
 		this.checkMailStartedAccountId(iAccountID);
-		Ajax.send(oParameters, this.onFoldersGetRelevantInformationResponse, this);
+		Ajax.send('GetRelevantFoldersInformation', oParameters, this.onGetRelevantFoldersInformationResponse, this);
 	}
 };
 
@@ -561,7 +554,6 @@ CMailCache.prototype.checkMessageFlags = function ()
 		oInbox = this.folderList().inboxFolder(),
 		aUids = oInbox ? oInbox.getFlaggedMessageUids() : [],
 		oParameters = {
-			'Action': 'MessagesGetFlags',
 			'Folder': this.folderList().inboxFolderFullName(),
 			'Uids': aUids
 		}
@@ -569,7 +561,7 @@ CMailCache.prototype.checkMessageFlags = function ()
 	
 	if (aUids.length > 0)
 	{
-		Ajax.send(oParameters, this.onMessagesGetFlagsResponse, this);
+		Ajax.send('GetMessagesFlags', oParameters, this.onGetMessagesFlagsResponse, this);
 	}
 };
 
@@ -577,7 +569,7 @@ CMailCache.prototype.checkMessageFlags = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMailCache.prototype.onMessagesGetFlagsResponse = function (oResponse, oRequest)
+CMailCache.prototype.onGetMessagesFlagsResponse = function (oResponse, oRequest)
 {
 	var oInbox = this.folderList().inboxFolder();
 	
@@ -651,7 +643,6 @@ CMailCache.prototype.requestMessageList = function (sFolder, iPage, sSearch, sFi
 		bCacheIsEmpty = oUidList && oUidList.resultCount() === -1,
 		iOffset = (iPage - 1) * Settings.MailsPerPage,
 		oParameters = {
-			'Action': 'MessagesGetList',
 			'Folder': sFolder,
 			'Offset': iOffset,
 			'Limit': Settings.MailsPerPage,
@@ -661,7 +652,7 @@ CMailCache.prototype.requestMessageList = function (sFolder, iPage, sSearch, sFi
 		},
 		bStartRequest = false,
 		bDataExpected = false,
-		fCallBack = bCurrent ? this.onCurrentMessagesGetListResponse : this.onMessagesGetListResponse,
+		fCallBack = bCurrent ? this.onCurrentGetMessagesResponse : this.onGetMessagesResponse,
 		aUids = []
 	;
 	
@@ -690,7 +681,7 @@ CMailCache.prototype.requestMessageList = function (sFolder, iPage, sSearch, sFi
 	
 	if (bStartRequest)
 	{
-		Ajax.send(oParameters, fCallBack, this);
+		Ajax.send('GetMessages', oParameters, fCallBack, this);
 	}
 	else
 	{
@@ -737,7 +728,7 @@ CMailCache.prototype.onClearFolder = function (oFolder)
 			this.uidList(new CUidListModel());
 		}
 		
-		// FoldersGetRelevantInformation-request aborted during folder cleaning, not to get the wrong information.
+		// GetRelevantFoldersInformation-request aborted during folder cleaning, not to get the wrong information.
 		// So here indicates that chekmail is over.
 		this.checkMailStarted(false);
 		this.setAutocheckmailTimer();
@@ -762,7 +753,6 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids, 
 			}, this)),
 			oToFolder = this.folderList().getFolderByFullName(sToFolderFullName),
 			oParameters = {
-				'Action': 'MessageMove',
 				'Folder': oCurrFolder ? oCurrFolder.fullName() : '',
 				'ToFolder': sToFolderFullName,
 				'Uids': aUids.join(',')
@@ -786,7 +776,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids, 
 
 				oToFolder.markHasChanges();
 				
-				Ajax.send(oParameters, this.onMoveMessagesResponse, this);
+				Ajax.send('MoveMessages', oParameters, this.onMoveMessagesResponse, this);
 
 //				if (oToFolder && oToFolder.type() === Enums.FolderTypes.Trash)
 //				{
@@ -835,7 +825,6 @@ CMailCache.prototype.copyMessagesToFolder = function (sToFolderFullName, aUids, 
 			oCurrFolder = this.folderList().currentFolder(),
 			oToFolder = this.folderList().getFolderByFullName(sToFolderFullName),
 			oParameters = {
-				'Action': 'MessageCopy',
 				'Folder': oCurrFolder ? oCurrFolder.fullName() : '',
 				'ToFolder': sToFolderFullName,
 				'Uids': aUids.join(',')
@@ -851,7 +840,7 @@ CMailCache.prototype.copyMessagesToFolder = function (sToFolderFullName, aUids, 
 
 			oToFolder.markHasChanges();
 
-			Ajax.send(oParameters, this.onCopyMessagesResponse, this);
+			Ajax.send('CopyMessages', oParameters, this.onCopyMessagesResponse, this);
 
 //			if (oToFolder && oToFolder.type() === Enums.FolderTypes.Trash)
 //			{
@@ -960,19 +949,16 @@ CMailCache.prototype.deleteMessages = function (aUids)
  */
 CMailCache.prototype.deleteMessagesFromFolder = function (oFolder, aUids)
 {
-	var
-		oParameters = {
-			'Action': 'MessageDelete',
-			'Folder': oFolder.fullName(),
-			'Uids': aUids.join(',')
-		}
-	;
+	var oParameters = {
+		'Folder': oFolder.fullName(),
+		'Uids': aUids.join(',')
+	};
 
 	oFolder.markDeletedByUids(aUids);
 
 	this.excludeDeletedMessages();
 
-	Ajax.send(oParameters, this.onMoveMessagesResponse, this);
+	Ajax.send('DeleteMessages', oParameters, this.onMoveMessagesResponse, this);
 	
 //	AfterLogicApi.runPluginHook('delete-messages', 
 //		[Accounts.currentId(), oParameters.Folder, aUids]);
@@ -1026,7 +1012,7 @@ CMailCache.prototype.setCurrentMessage = function (sUid, sFolder)
 		this.currentMessage(oMessage);
 		if (!this.currentMessage().seen())
 		{
-			this.executeGroupOperation('MessageSetSeen', [this.currentMessage().uid()], 'seen', true);
+			this.executeGroupOperation('SetMessagesSeen', [this.currentMessage().uid()], 'seen', true);
 		}
 		oCurrFolder.getCompletelyFilledMessage(sUid, this.onCurrentMessageResponse, this);
 	}
@@ -1086,12 +1072,11 @@ CMailCache.prototype.getMessage = function (sFullName, sUid, fResponseHandler, o
  * @param {string} sField
  * @param {boolean} bSetAction
  */
-CMailCache.prototype.executeGroupOperation = function (sAction, aUids, sField, bSetAction)
+CMailCache.prototype.executeGroupOperation = function (sMethod, aUids, sField, bSetAction)
 {
 	var
 		oCurrFolder = this.folderList().currentFolder(),
 		oParameters = {
-			'Action': sAction,
 			'Folder': oCurrFolder ? oCurrFolder.fullName() : '',
 			'Uids': aUids.join(','),
 			'SetAction': bSetAction ? 1 : 0
@@ -1099,16 +1084,17 @@ CMailCache.prototype.executeGroupOperation = function (sAction, aUids, sField, b
 		iOffset = (this.page() - 1) * Settings.MailsPerPage,
 		iUidsCount = aUids.length,
 		iStarredCount = this.folderList().oStarredFolder ? this.folderList().oStarredFolder.messageCount() : 0,
-		oStarredUidList = oCurrFolder ? oCurrFolder.getUidList('', Enums.FolderFilter.Flagged) : null
+		oStarredUidList = oCurrFolder ? oCurrFolder.getUidList('', Enums.FolderFilter.Flagged) : null,
+		fCallback = (sMethod === 'SetMessagesSeen') ? this.onSetMessagesSeenResponse : function () {}
 	;
 
 	if (oCurrFolder)
 	{
-		if (oParameters.Action === 'MessageSetSeen')
+		if (sMethod === 'SetMessagesSeen')
 		{
-			this.iMessageSetSeenCount++;
+			this.iSetMessagesSeenCount++;
 		}
-		Ajax.send(oParameters, this.onExecuteGroupOperationResponse, this);
+		Ajax.send(sMethod, oParameters, fCallback, this);
 
 		oCurrFolder.executeGroupOperation(sField, aUids, bSetAction);
 		
@@ -1162,19 +1148,16 @@ CMailCache.prototype.executeGroupOperation = function (sAction, aUids, sField, b
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMailCache.prototype.onExecuteGroupOperationResponse = function (oResponse, oRequest)
+CMailCache.prototype.onSetMessagesSeenResponse = function (oResponse, oRequest)
 {
-	if (oRequest.Action === 'MessageSetSeen')
+	this.iSetMessagesSeenCount--;
+	if (this.iSetMessagesSeenCount < 0)
 	{
-		this.iMessageSetSeenCount--;
-		if (this.iMessageSetSeenCount < 0)
-		{
-			this.iMessageSetSeenCount = 0;
-		}
-		if (this.folderList().currentFolder() && this.iMessageSetSeenCount === 0 && (this.uidList().filters() !== Enums.FolderFilter.Unseen || this.waitForUnseenMessages()))
-		{
-			this.requestCurrentMessageList(this.folderList().currentFolder().fullName(), this.page(), this.uidList().search(), this.uidList().filters(), false);
-		}
+		this.iSetMessagesSeenCount = 0;
+	}
+	if (this.folderList().currentFolder() && this.iSetMessagesSeenCount === 0 && (this.uidList().filters() !== Enums.FolderFilter.Unseen || this.waitForUnseenMessages()))
+	{
+		this.requestCurrentMessageList(this.folderList().currentFolder().fullName(), this.page(), this.uidList().search(), this.uidList().filters(), false);
 	}
 };
 
@@ -1182,9 +1165,10 @@ CMailCache.prototype.onExecuteGroupOperationResponse = function (oResponse, oReq
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMailCache.prototype.onFoldersGetListResponse = function (oResponse, oRequest)
+CMailCache.prototype.onGetFoldersResponse = function (oResponse, oRequest)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		oFolderList = new CFolderListModel(),
 		iAccountId = parseInt(oResponse.AccountID, 10),
 		oFolderListOld = this.oFolderListItems[iAccountId],
@@ -1195,7 +1179,7 @@ CMailCache.prototype.onFoldersGetListResponse = function (oResponse, oRequest)
 	{
 		Api.showErrorByCode(oResponse);
 		
-		if (oRequest.AccountID === this.currentAccountId() && this.messages().length === 0)
+		if (oParameters.AccountID === this.currentAccountId() && this.messages().length === 0)
 		{
 			this.messagesLoading(false);
 			this.messagesLoadingError(true);
@@ -1251,7 +1235,6 @@ CMailCache.prototype.getAllFoldersRelevantInformation = function (iAccountId)
 		oFolderList = this.oFolderListItems[iAccountId],
 		aFolders = oFolderList ? oFolderList.getFoldersWithoutCountInfo() : [],
 		oParameters = {
-			'Action': 'FoldersGetRelevantInformation',
 			'Folders': aFolders,
 			'AccountID': iAccountId
 		}
@@ -1259,7 +1242,7 @@ CMailCache.prototype.getAllFoldersRelevantInformation = function (iAccountId)
 	
 	if (aFolders.length > 0)
 	{
-		Ajax.send(oParameters, this.onFoldersGetRelevantInformationResponse, this);
+		Ajax.send('GetRelevantFoldersInformation', oParameters, this.onGetRelevantFoldersInformationResponse, this);
 	}
 };
 
@@ -1267,7 +1250,7 @@ CMailCache.prototype.getAllFoldersRelevantInformation = function (iAccountId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMailCache.prototype.onFoldersGetRelevantInformationResponse = function (oResponse, oRequest)
+CMailCache.prototype.onGetRelevantFoldersInformationResponse = function (oResponse, oRequest)
 {
 	var
 		bCheckMailStarted = false,
@@ -1280,7 +1263,7 @@ CMailCache.prototype.onFoldersGetRelevantInformationResponse = function (oRespon
 	if (oResponse.Result === false)
 	{
 		Api.showErrorByCode(oResponse);
-		if (Ajax.hasOpenedRequests('FoldersGetRelevantInformation'))
+		if (Ajax.hasOpenedRequests('GetRelevantFoldersInformation'))
 		{
 			bCheckMailStarted = true;
 		}
@@ -1384,7 +1367,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMailCache.prototype.onCurrentMessagesGetListResponse = function (oResponse, oRequest)
+CMailCache.prototype.onCurrentGetMessagesResponse = function (oResponse, oRequest)
 {
 	this.checkMailStarted(false);
 
@@ -1409,7 +1392,7 @@ CMailCache.prototype.onCurrentMessagesGetListResponse = function (oResponse, oRe
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMailCache.prototype.onMessagesGetListResponse = function (oResponse, oRequest)
+CMailCache.prototype.onGetMessagesResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
@@ -1425,10 +1408,11 @@ CMailCache.prototype.parseMessageList = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
+		oParameters = JSON.parse(oRequest.Parameters),
 		oFolderList = this.oFolderListItems[oResponse.AccountID],
 		oFolder = null,
 		oUidList = null,
-		bTrustThreadInfo = (oRequest.UseThreads === '1'),
+		bTrustThreadInfo = (oParameters.UseThreads === '1'),
 		bHasFolderChanges = false,
 		bCurrentFolder = this.currentAccountId() === oResponse.AccountID &&
 				this.folderList().currentFolderFullName() === oResult.FolderName,
@@ -1503,8 +1487,9 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oFolder = this.folderList().getFolderByFullName(oRequest.Folder),
-		oToFolder = this.folderList().getFolderByFullName(oRequest.ToFolder),
+		oParameters = JSON.parse(oRequest.Parameters),
+		oFolder = this.folderList().getFolderByFullName(oParameters.Folder),
+		oToFolder = this.folderList().getFolderByFullName(oParameters.ToFolder),
 		bToFolderTrash = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Trash)),
 		bToFolderSpam = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Spam)),
 		oDiffs = null,
@@ -1513,7 +1498,7 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 		fDeleteMessages = _.bind(function (bResult) {
 			if (bResult && oFolder)
 			{
-				this.deleteMessagesFromFolder(oFolder, oRequest.Uids.split(','));
+				this.deleteMessagesFromFolder(oFolder, oParameters.Uids.split(','));
 			}
 		}, this),
 		oCurrFolder = this.folderList().currentFolder(),
@@ -1523,7 +1508,7 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 	
 	if (oResult === false)
 	{
-		oDiffs = oFolder.revertDeleted(oRequest.Uids.split(','));
+		oDiffs = oFolder.revertDeleted(oParameters.Uids.split(','));
 		if (oToFolder)
 		{
 			oToFolder.addMessagesCountsDiff(-oDiffs.PlusDiff, -oDiffs.UnseenPlusDiff);
@@ -1544,7 +1529,7 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		oFolder.commitDeleted(oRequest.Uids.split(','));
+		oFolder.commitDeleted(oParameters.Uids.split(','));
 	}
 	
 	if (sCurrFolderFullName === oFolder.fullName() || oToFolder && sCurrFolderFullName === oToFolder.fullName())
@@ -1575,12 +1560,17 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 	}
 };
 
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
 CMailCache.prototype.onCopyMessagesResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oFolder = this.folderList().getFolderByFullName(oRequest.Folder),
-		oToFolder = this.folderList().getFolderByFullName(oRequest.ToFolder),
+		oParameters = JSON.parse(oRequest.Parameters),
+		oFolder = this.folderList().getFolderByFullName(oParameters.Folder),
+		oToFolder = this.folderList().getFolderByFullName(oParameters.ToFolder),
 		oCurrFolder = this.folderList().currentFolder(),
 		sCurrFolderFullName = oCurrFolder.fullName()
 	;

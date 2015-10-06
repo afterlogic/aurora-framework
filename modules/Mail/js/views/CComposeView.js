@@ -9,7 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
 	UserSettings = require('core/js/Settings.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
@@ -1528,9 +1528,9 @@ CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oReque
 
 	this.commit();
 
-	switch (oResData.Action)
+	switch (oResData.Method)
 	{
-		case 'MessageSave':
+		case 'SaveMessage':
 			if (oResData.Result && oRequest.DraftUid === this.draftUid())
 			{
 				this.draftUid(Utils.pString(oResData.NewUid));
@@ -1541,7 +1541,7 @@ CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oReque
 			}
 			this.saving(false);
 			break;
-		case 'MessageSend':
+		case 'SendMessage':
 			if (oResData.Result)
 			{
 				if (this.backToListOnSendOrSave())
@@ -1602,7 +1602,7 @@ CComposeView.prototype.executeSend = function (mParam)
 			this.sending(true);
 			this.requiresPostponedSending(!this.allowStartSending());
 
-			SendingUtils.send('MessageSend', this.getSendSaveParameters(true), this.saveMailInSentItems(),
+			SendingUtils.send('SendMessage', this.getSendSaveParameters(true), this.saveMailInSentItems(),
 				true, this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
 		}
 

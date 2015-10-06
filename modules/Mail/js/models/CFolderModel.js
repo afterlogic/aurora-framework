@@ -8,7 +8,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Storage = require('core/js/Storage.js'),
 	Routing = require('core/js/Routing.js'),
 	Api = require('core/js/Api.js'),
@@ -285,15 +285,12 @@ CFolderModel.prototype.loadThreadMessages = function (aUidsForLoad)
 {
 	if (aUidsForLoad.length > 0)
 	{
-		var
-			oParameters = {
-				'Action': 'MessagesGetListByUids',
-				'Folder': this.fullName(),
-				'Uids': aUidsForLoad
-			}
-		;
+		var oParameters = {
+			'Folder': this.fullName(),
+			'Uids': aUidsForLoad
+		};
 
-		Ajax.send(oParameters, this.onMessagesGetListByUidsResponse, this);
+		Ajax.send('GetMessagesByUids', oParameters, this.onGetMessagesByUidsResponse, this);
 	}
 };
 
@@ -352,7 +349,7 @@ CFolderModel.prototype.parseAndCacheMessage = function (oRawMessage, bThreadPart
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFolderModel.prototype.onMessagesGetListByUidsResponse = function (oResponse, oRequest)
+CFolderModel.prototype.onGetMessagesByUidsResponse = function (oResponse, oRequest)
 {
 	var oResult = oResponse.Result;
 	
@@ -899,12 +896,13 @@ CFolderModel.prototype.initComputedFields = function (bDisableManageSubscribe)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CFolderModel.prototype.onMessageGetResponse = function (oResponse, oRequest)
+CFolderModel.prototype.onGetMessageResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
+		oParameters = JSON.parse(oRequest.Parameters),
 		oHand = null,
-		sUid = oResult ? oResult.Uid.toString() : oRequest.Uid.toString(),
+		sUid = oResult ? oResult.Uid.toString() : oParameters.Uid.toString(),
 		oMessage = this.oMessages[sUid],
 		bSelected = oMessage ? oMessage.selected() : false
 	;
@@ -946,7 +944,6 @@ CFolderModel.prototype.getCompletelyFilledMessage = function (sUid, fResponseHan
 	var
 		oMessage = this.oMessages[sUid],
 		oParameters = {
-			'Action': 'MessageGet',
 			'Folder': this.fullName(),
 			'Uid': sUid
 		}
@@ -961,7 +958,7 @@ CFolderModel.prototype.getCompletelyFilledMessage = function (sUid, fResponseHan
 				this.aResponseHandlers[sUid] = {handler: fResponseHandler, context: oContext};
 			}
 			
-			Ajax.send(oParameters, this.onMessageGetResponse, this);
+			Ajax.send('GetMessage', oParameters, this.onGetMessageResponse, this);
 		}
 		else if (fResponseHandler && oContext)
 		{
@@ -1063,16 +1060,9 @@ CFolderModel.prototype.emptyFolder = function ()
  */
 CFolderModel.prototype.clearFolder = function (bOkAnswer)
 {
-	var
-		oParameters = {
-			'Action': 'FolderClear',
-			'Folder': this.fullName()
-		}
-	;
-	
 	if (this.enableEmptyFolder() && bOkAnswer)
 	{
-		Ajax.send(oParameters);
+		Ajax.send('ClearFolder', { 'Folder': this.fullName() });
 
 		this.removeAllMessages();
 

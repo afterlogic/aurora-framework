@@ -547,7 +547,7 @@ class MailModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function MoveMessage()
+	public function MoveMessages()
 	{
 		$sFromFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		$sToFolderFullNameRaw = (string) $this->getParamValue('ToFolder', '');
@@ -580,7 +580,7 @@ class MailModule extends AApiModule
 		return $this->TrueResponse($oAccount, __FUNCTION__);
 	}
 
-	public function CopyMessage()
+	public function CopyMessages()
 	{
 		$sFromFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		$sToFolderFullNameRaw = (string) $this->getParamValue('ToFolder', '');
@@ -616,7 +616,7 @@ class MailModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteMessage()
+	public function DeleteMessages()
 	{
 		$sFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		
@@ -971,7 +971,7 @@ class MailModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function SetMessageSeen()
+	public function SetMessagesSeen()
 	{
 		return $this->messageFlagSet(\MailSo\Imap\Enumerations\MessageFlag::SEEN, 'SetMessageSeen');
 	}	

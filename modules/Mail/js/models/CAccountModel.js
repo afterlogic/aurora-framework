@@ -140,7 +140,7 @@ CAccountModel.prototype.requireAjax = function ()
 {
 	if (Ajax === null)
 	{
-		Ajax = require('core/js/Ajax.js');
+		Ajax = require('modules/Mail/js/Ajax.js');
 	}
 };
 
@@ -169,9 +169,9 @@ CAccountModel.prototype.init = function (iId, sEmail, sFriendlyName)
  * @param {Object} oResult
  * @param {Object} oRequest
  */
-CAccountModel.prototype.onAccountGetQuotaResponse = function (oResult, oRequest)
+CAccountModel.prototype.onGetQuotaResponse = function (oResult, oRequest)
 {
-	if (oResult && oResult.Result && _.isArray(oResult.Result) && 1 < oResult.Result.length)
+	if (_.isArray(oResult.Result) && 1 < oResult.Result.length)
 	{
 		this.quota(Utils.pInt(oResult.Result[1]));
 		this.usedSpace(Utils.pInt(oResult.Result[0]));
@@ -185,17 +185,10 @@ CAccountModel.prototype.onAccountGetQuotaResponse = function (oResult, oRequest)
 
 CAccountModel.prototype.updateQuotaParams = function ()
 {
-	var
-		oParams = {
-			'Action': 'AccountGetQuota',
-			'AccountID': this.id()
-		}
-	;
-	
 	if (Settings.ShowQuotaBar && this.allowMail())
 	{
 		this.requireAjax();
-		Ajax.send(oParams, this.onAccountGetQuotaResponse, this);
+		Ajax.send('GetQuota', { 'AccountID': this.id() }, this.onGetQuotaResponse, this);
 	}
 };
 
@@ -219,23 +212,22 @@ CAccountModel.prototype.parse = function (oData, iDefaultId)
 
 CAccountModel.prototype.requestExtensions = function ()
 {
-//	if (!this.extensionsRequested())
-//	{
-//		var oTz = window.jstz ? window.jstz.determine() : null;
-//		this.requireAjax();
-//		Ajax.send({
-//			'AccountID': this.id(),
-//			'Action': 'SystemIsAuth',
-//			'ClientTimeZone': oTz ? oTz.name() : ''
-//		}, this.onSystemIsAuthResponse, this);
-//	}
+	if (!this.extensionsRequested())
+	{
+		var oTz = window.jstz ? window.jstz.determine() : null;
+		this.requireAjax();
+		Ajax.send('GetExtensions', {
+			'AccountID': this.id(),
+			'ClientTimeZone': oTz ? oTz.name() : ''
+		}, this.onGetExtensionsResponse, this);
+	}
 };
 
 /**
  * @param {Object} oResult
  * @param {Object} oRequest
  */
-CAccountModel.prototype.onSystemIsAuthResponse = function (oResult, oRequest)
+CAccountModel.prototype.onGetExtensionsResponse = function (oResult, oRequest)
 {
 	var
 		bResult = !!oResult.Result,
@@ -413,17 +405,10 @@ CAccountModel.prototype.remove = function(fAfterRemoveHandler)
  */
 CAccountModel.prototype.confirmedRemove = function(bOkAnswer)
 {
-	var
-		oParameters = {
-			'Action': 'AccountDelete',
-			'AccountIDToDelete': this.id()
-		}
-	;
-	
 	if (bOkAnswer)
 	{
 		this.requireAjax();
-		Ajax.send(oParameters, this.onAccountDeleteResponse, this);
+		Ajax.send('DeleteAccount', { 'AccountIDToDelete': this.id() }, this.onAccountDeleteResponse, this);
 	}
 	else
 	{

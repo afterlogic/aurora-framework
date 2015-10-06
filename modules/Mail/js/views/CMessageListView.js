@@ -730,7 +730,7 @@ CMessageListView.prototype.onFlagClick = function (oMessage)
  */
 CMessageListView.prototype.executeMarkAsRead = function ()
 {
-	MailCache.executeGroupOperation('MessageSetSeen', this.checkedOrSelectedUids(), 'seen', true);
+	MailCache.executeGroupOperation('SetMessagesSeen', this.checkedOrSelectedUids(), 'seen', true);
 };
 
 /**
@@ -738,7 +738,7 @@ CMessageListView.prototype.executeMarkAsRead = function ()
  */
 CMessageListView.prototype.executeMarkAsUnread = function ()
 {
-	MailCache.executeGroupOperation('MessageSetSeen', this.checkedOrSelectedUids(), 'seen', false);
+	MailCache.executeGroupOperation('SetMessagesSeen', this.checkedOrSelectedUids(), 'seen', false);
 };
 
 /**

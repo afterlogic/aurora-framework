@@ -7,7 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
 	
@@ -116,7 +116,7 @@ CAttachmentModel.prototype.setMessageData = function (sFolderName, sMessageUid)
  * @param {Object} oResult
  * @param {Object} oRequest
  */
-CAttachmentModel.prototype.onMessageGetResponse = function (oResult, oRequest)
+CAttachmentModel.prototype.onGetMessageResponse = function (oResult, oRequest)
 {
 	var
 		oResult = oResult.Result,
@@ -170,12 +170,11 @@ CAttachmentModel.prototype.viewMessageFile = function ()
 			$(oWin.document.body).html(sLoadingText);
 			this.oNewWindow = oWin;
 
-			Ajax.send({
-				'Action': 'MessageGet',
+			Ajax.send('GetMessage', {
 				'Folder': this.folderName(),
 				'Uid': this.messageUid(),
 				'Rfc822MimeIndex': this.mimePartIndex()
-			}, this.onMessageGetResponse, this);
+			}, this.onGetMessageResponse, this);
 		}
 		
 		oWin.focus();

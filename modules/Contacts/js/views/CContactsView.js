@@ -613,12 +613,12 @@ CContactsView.prototype.executeImport = function ()
 
 CContactsView.prototype.executeCSVExport = function ()
 {
-//	App.Api.downloadByUrl(Utils.getExportContactsLink('csv'));
+	Utils.downloadByUrl(Utils.getExportContactsLink('csv'));
 };
 
 CContactsView.prototype.executeVCFExport = function ()
 {
-//	App.Api.downloadByUrl(Utils.getExportContactsLink('vcf'));
+	Utils.downloadByUrl(Utils.getExportContactsLink('vcf'));
 };
 
 CContactsView.prototype.executeCancel = function ()
