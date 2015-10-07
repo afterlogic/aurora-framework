@@ -108,7 +108,46 @@ function ComposeCallback(oRequest, fResponse)
 
 		fResponse(aList);
 
-	}, this);
+	});
+};
+
+/**
+ * @param {object} oRequest
+ * @param {function} fResponse
+ */
+function PhoneCallback(oRequest, fResponse)
+{
+	var
+		sTerm = $.trim(oRequest.term),
+		oParameters = {
+			'Search': sTerm,
+			'PhoneOnly': '1'
+		}
+	;
+
+	if ('' !== sTerm)
+	{
+		Ajax.send('GetSuggestions', oParameters, function (oData) {
+			var aList = [];
+
+			if (oData && oData.Result && oData.Result.List)
+			{
+				_.each(oData.Result.List, function (oItem) {
+					_.each(oItem.Phones, function (sPhone, sKey) {
+						aList.push({
+							label: oItem.Name !== '' ? oItem.Name + ' ' + '<' + oItem.Email + '> ' + sPhone : oItem.Email + ' ' + sPhone,
+							value: sPhone,
+							frequency: oItem.Frequency
+						});
+					});
+				});
+
+				aList = _.sortBy(_.compact(aList), function(num){ return -(num.frequency); });
+			}
+			
+			fResponse(aList);
+		});
+	}
 };
 
 /**
@@ -126,5 +165,6 @@ function DeleteHandler(oContact)
 module.exports = {
 	callback: Callback,
 	composeCallback: ComposeCallback,
+	phoneCallback: PhoneCallback,
 	deleteHandler: DeleteHandler
 };

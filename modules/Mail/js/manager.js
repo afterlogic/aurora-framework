@@ -11,15 +11,15 @@ var
 module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
-	var HeaderItemView = require('modules/Mail/js/views/HeaderItemView.js');
-	
 	return {
 		screens: {
 			'main': function () {
 				return require('modules/Mail/js/views/CMailView.js');
 			}
 		},
-		headerItem: HeaderItemView,
+		getHeaderItem: function () {
+			return require('modules/Mail/js/views/HeaderItemView.js');
+		},
 		prefetcher: require('modules/Mail/js/Prefetcher.js'),
 		getBrowserTitle: function (bBrowserFocused) {
 			var Accounts = require('modules/Mail/js/AccountList.js');

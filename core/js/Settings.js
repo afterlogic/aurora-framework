@@ -88,6 +88,14 @@ module.exports = {
 			ThreadsPerPage: 10
 		},
 		Settings: {},
+		Phone: {
+			VoiceProvider: '',
+			SipRealm: '192.168.0.59',
+			SipImpi: '102',
+			SipPassword: 'user02',
+			SipWebsocketProxyUrl: 'ws://192.168.0.59:8088/ws'
+//			SipOutboundProxyUrl: ''
+		},
 		dsbld_SessionTimeout: {
 			'TimeoutSeconds': 20
 		}

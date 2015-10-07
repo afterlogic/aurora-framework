@@ -34,14 +34,17 @@ function CHeaderView()
 //	}, this);
 //	
 	
-	this.tabs = ModulesManager.getModulesTabs();
+	this.tabs = ModulesManager.getModulesTabs(false);
 	
 	ko.computed(function () {
 		_.each(this.tabs, function (oTab) {
-			oTab.isCurrent(Screens.currentScreen() === oTab.sName);
-			if (oTab.isCurrent() && Utils.isNonEmptyString(Routing.currentHash()))
+			if (oTab.isCurrent)
 			{
-				oTab.hash('#' + Routing.currentHash());
+				oTab.isCurrent(Screens.currentScreen() === oTab.sName);
+				if (oTab.isCurrent() && Utils.isNonEmptyString(Routing.currentHash()))
+				{
+					oTab.hash('#' + Routing.currentHash());
+				}
 			}
 		});
 	}, this).extend({ rateLimit: 50 });

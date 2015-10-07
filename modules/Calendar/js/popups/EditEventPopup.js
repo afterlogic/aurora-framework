@@ -931,17 +931,17 @@ CEditEventPopup.prototype.disableAlarms = function ()
 };
 
 /**
- * @param {string} sTerm
- * @param {Function} fResponse
+ * @param {object} oRequest
+ * @param {function} fResponse
  */
-CEditEventPopup.prototype.autocompleteCallback = function (sTerm, fResponse)
+CEditEventPopup.prototype.autocompleteCallback = function (oRequest, fResponse)
 {
 	var fAutocompleteCallback = ModulesManager.run('Contacts', 'getSuggestionsAutocompleteCallback');
 	
 	if ($.isFunction(fAutocompleteCallback))
 	{
 		this.guestAutocompleteItem(null);
-		fAutocompleteCallback(sTerm, fResponse, this.owner(), false);
+		fAutocompleteCallback(oRequest, fResponse, this.owner(), false);
 	}
 };
 

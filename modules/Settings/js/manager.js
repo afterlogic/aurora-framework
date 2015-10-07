@@ -16,7 +16,9 @@ module.exports = function (oSettings) {
 				return require('modules/Settings/js/views/CSettingsView.js');
 			}
 		},
-		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS')),
+		getHeaderItem: function () {
+			return new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS'));
+		},
 		getBrowserTitle: function () {
 			return TextUtils.i18n('TITLE/SETTINGS');
 		}

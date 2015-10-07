@@ -19,12 +19,17 @@ module.exports = function (oSettings) {
 				return require('modules/Contacts/js/views/CContactsView.js');
 			}
 		},
-		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS')),
+		getHeaderItem: function () {
+			return new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS'));
+		},
 		getSuggestionsAutocompleteCallback: function () {
 			return SuggestionsAutocomplete.callback;
 		},
 		getSuggestionsAutocompleteComposeCallback: function () {
 			return SuggestionsAutocomplete.composeCallback;
+		},
+		getSuggestionsAutocompletePhoneCallback: function () {
+			return SuggestionsAutocomplete.phoneCallback;
 		},
 		getSuggestionsAutocompleteDeleteHandler: function () {
 			return SuggestionsAutocomplete.deleteHandler;

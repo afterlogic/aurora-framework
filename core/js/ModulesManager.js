@@ -32,20 +32,29 @@ module.exports = {
 		return oModulesScreens;
 	},
 	
-	getModulesTabs: function () {
+	getModulesTabs: function (bOnlyStandard) {
 		if (!_.isArray(this.aTabs))
 		{
 			this.aTabs = [];
+			this.aStandardTabs = [];
 			_.each(oModules, _.bind(function (oModule, sName) {
-				if (oModule.headerItem)
+				if ($.isFunction(oModule.getHeaderItem))
 				{
-					oModule.headerItem.setName(sName);
-					this.aTabs.push(oModule.headerItem);
+					var oHeaderItem = oModule.getHeaderItem();
+					if (oHeaderItem)
+					{
+						if ($.isFunction(oHeaderItem.setName))
+						{
+							oHeaderItem.setName(sName);
+							this.aStandardTabs.push(oHeaderItem);
+						}
+						this.aTabs.push(oHeaderItem);
+					}
 				}
 			}, this));
 		}
 		
-		return this.aTabs;
+		return bOnlyStandard ? this.aStandardTabs : this.aTabs;
 	},
 	
 	getModulesPrefetchers: function ()

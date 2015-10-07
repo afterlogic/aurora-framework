@@ -11,6 +11,7 @@ $('body').ready(function () {
 			'Calendar': require('modules/Calendar/js/manager.js'),
 			'Files': require('modules/Files/js/manager.js'),
 			'Helpdesk': require('modules/Helpdesk/js/manager.js'),
+			'Phone': require('modules/Phone/js/manager.js'),
 			'Settings': require('modules/Settings/js/manager.js'),
 			
 			'OpenPgp': require('modules/OpenPgp/js/manager.js'),

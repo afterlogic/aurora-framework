@@ -13,7 +13,7 @@ var
 
 function CAppTab()
 {
-	this.tabs = ModulesManager.getModulesTabs();
+	this.tabs = ModulesManager.getModulesTabs(true);
 	
 	this.focused = ko.observable(true);
 	

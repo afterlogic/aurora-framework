@@ -2,10 +2,7 @@
 
 require('modules/Helpdesk/js/enums.js');
 
-var
-	HeaderItemView = require('modules/Helpdesk/js/views/HeaderItemView.js'),
-	Settings = require('modules/Helpdesk/js/Settings.js')
-;
+var Settings = require('modules/Helpdesk/js/Settings.js');
 
 module.exports = function (oSettings) {
 	Settings.init(oSettings);
@@ -16,6 +13,8 @@ module.exports = function (oSettings) {
 				return require('modules/Helpdesk/js/views/CHelpdeskView.js');
 			}
 		},
-		headerItem: HeaderItemView
+		getHeaderItem: function () {
+			return require('modules/Helpdesk/js/views/HeaderItemView.js');
+		}
 	};
 };

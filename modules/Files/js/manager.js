@@ -18,7 +18,9 @@ module.exports = function (oSettings) {
 				return require('modules/Files/js/views/CFilesView.js');
 			}
 		},
-		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'), TextUtils.i18n('TITLE/FILESTORAGE')),
+		getHeaderItem: function () {
+			return new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'), TextUtils.i18n('TITLE/FILESTORAGE'));
+		},
 		getBrowserTitle: function () {
 			return TextUtils.i18n('TITLE/FILESTORAGE');
 		}

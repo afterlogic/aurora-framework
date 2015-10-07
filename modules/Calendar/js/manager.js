@@ -19,7 +19,9 @@ module.exports = function (oSettings) {
 				return require('modules/Calendar/js/views/CCalendarView.js');
 			}
 		},
-		headerItem: new CHeaderItemView(TextUtils.i18n('HEADER/CALENDAR'), TextUtils.i18n('TITLE/CALENDAR')),
+		getHeaderItem: function () {
+			return new CHeaderItemView(TextUtils.i18n('HEADER/CALENDAR'), TextUtils.i18n('TITLE/CALENDAR'));
+		},
 		getBrowserTitle: function () {
 			return TextUtils.i18n('TITLE/CALENDAR');
 		}
