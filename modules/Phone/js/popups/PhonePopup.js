@@ -20,23 +20,20 @@ function CPhonePopup()
 	this.report = Phone.report;
 
 	this.text = ko.observable('');
-	this.callback = null;
 }
 
 _.extendOwn(CPhonePopup.prototype, CAbstractPopup.prototype);
 
 CPhonePopup.prototype.PopupTemplate = 'Phone_PhonePopup';
 
-CPhonePopup.prototype.onShow = function (oParameters)
+CPhonePopup.prototype.onShow = function (sText)
 {
-	this.text(oParameters.text);
-	this.callback = oParameters.Callback || function () {};
+	this.text(sText);
 };
 
 CPhonePopup.prototype.onOKClick = function ()
 {
 	this.closePopup();
-	this.callback();
 };
 
 CPhonePopup.prototype.answer = function ()

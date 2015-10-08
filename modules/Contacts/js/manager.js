@@ -33,6 +33,9 @@ module.exports = function (oSettings) {
 		},
 		getSuggestionsAutocompleteDeleteHandler: function () {
 			return SuggestionsAutocomplete.deleteHandler;
+		},
+		requestUserByPhone: function (sNumber, fCallBack, oContext) {
+			SuggestionsAutocomplete.requestUserByPhone(sNumber, fCallBack, oContext);
 		}
 	};
 };

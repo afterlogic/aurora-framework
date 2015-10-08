@@ -28,11 +28,11 @@ function CPhoneView()
 	this.indicator = ko.observable(TextUtils.i18n('PHONE/MISSED_CALLS'));
 	this.dropdownShow = ko.observable(false);
 	this.input = ko.observable('');
-	this.input.subscribe(function(sInput) {
+	this.input.subscribe(function (sInput) {
 		this.dropdownShow(sInput === '' && this.action() === Enums.PhoneAction.OnlineActive);
 	}, this);
 	this.inputFocus = ko.observable(false);
-	this.inputFocus.subscribe(function(bFocus) {
+	this.inputFocus.subscribe(function (bFocus) {
 		if(bFocus && this.input() === '' && this.action() === Enums.PhoneAction.OnlineActive)
 		{
 			this.dropdownShow(true);
@@ -40,7 +40,7 @@ function CPhoneView()
 	}, this);
 	this.phoneAutocompleteItem = ko.observable(null);
 
-	this.action.subscribe(function(sAction) {
+	this.action.subscribe(function (sAction) {
 		switch (sAction)
 		{
 			case Enums.PhoneAction.Offline:
@@ -79,8 +79,10 @@ function CPhoneView()
 	}, this);
 
 	$(document).on('click', _.bind(function (e) {
-		if ($(e.target).closest('.item.phone, .ui-autocomplete').length === 0) {
-			if (this.action() === Enums.PhoneAction.OnlineActive) {
+		if ($(e.target).closest('.item.phone, .ui-autocomplete').length === 0)
+		{
+			if (this.action() === Enums.PhoneAction.OnlineActive)
+			{
 				this.action(Enums.PhoneAction.Online);
 				this.dropdownShow(false);
 			}
@@ -111,7 +113,7 @@ CPhoneView.prototype.multiAction = function ()
 	{
 		this.action(Enums.PhoneAction.OnlineActive);
 		this.getLogs();
-		_.delay(_.bind(function(){
+		_.delay(_.bind(function () {
 			this.inputFocus(true);
 		},this), 500);
 	}
@@ -130,12 +132,10 @@ CPhoneView.prototype.multiAction = function ()
 		this.action(Enums.PhoneAction.Online);
 		this.dropdownShow(false);
 	}
-	else if (
-		sAction === Enums.PhoneAction.Outgoing  ||
-		sAction === Enums.PhoneAction.Incoming ||
-		sAction === Enums.PhoneAction.OutgoingConnect ||
-		sAction === Enums.PhoneAction.IncomingConnect
-	)
+	else if (sAction === Enums.PhoneAction.Outgoing  ||
+			sAction === Enums.PhoneAction.Incoming ||
+			sAction === Enums.PhoneAction.OutgoingConnect ||
+			sAction === Enums.PhoneAction.IncomingConnect)
 	{
 		this.action(Enums.PhoneAction.Online);
 		this.dropdownShow(false);
@@ -162,6 +162,9 @@ CPhoneView.prototype.validateNumber = function ()
 	return (/^[^a-zA-Z\u00BF-\u1FFF\u2C00-\uD7FF]+$/g).test(this.input()); //Check for letters absence
 };
 
+/**
+ * @param {object} oItem
+ */
 CPhoneView.prototype.onLogItem = function (oItem)
 {
 	this.input(oItem.phoneToCall);
@@ -191,14 +194,14 @@ CPhoneView.prototype.onLogsResponse = function (oResponse, oRequest)
 			_.each(oStatus, function (oDirection) {
 				_.each(oDirection, function (oItem) {
 					oItem.phoneToShow = Phone.getCleanedPhone(oItem.UserDirection === 'incoming' ? oItem.From : oItem.To);
-					if (oItem.phoneToShow) {
+					if (oItem.phoneToShow)
+					{
 						this.logs.push(oItem);
 					}
 				}, this);
 			}, this);
 		}, this);*/
 		_.each(oResponse.Result, function (oItem) {
-
 			oItem.phoneToCall = Phone.getCleanedPhone(oItem.UserDirection === 'incoming' ? oItem.From : oItem.To);
 			if (oItem.UserDisplayName)
 			{
@@ -209,12 +212,13 @@ CPhoneView.prototype.onLogsResponse = function (oResponse, oRequest)
 				oItem.phoneToShow = oItem.phoneToCall;
 			}
 
-			if (oItem.phoneToShow) {
+			if (oItem.phoneToShow)
+			{
 				this.logs.push(oItem);
 			}
 		}, this);
 
-		this.logs(_.sortBy(this.logs(), function(oItem){ return -(Date.parse(oItem.StartTime)); }).slice(0, 100));
+		this.logs(_.sortBy(this.logs(), function (oItem) { return -(Date.parse(oItem.StartTime)); }).slice(0, 100));
 
 		this.seeMore();
 	}
@@ -238,8 +242,7 @@ CPhoneView.prototype.timer = (function ()
 			return sItem.length === 1 ? sItem = '0' + sItem : sItem;
 		};
 
-	return function (sAction)
-	{
+	return function (sAction) {
 		if (sAction === 'start')
 		{
 			iSeconds = 0;

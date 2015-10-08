@@ -33,9 +33,9 @@ function CPhoneWebrtc()
 	this.createStackErrorBinded = this.createStackError.bind(this);
 	this.createStackBinded = this.createStack.bind(this);
 
-	//this.videoLocal = document.getElementById("video_local");
-	//this.videoRemote = document.getElementById("video_remote");
-	this.audioRemote = document.getElementById("audio_remote");
+	//this.videoLocal = document.getElementById('video_local');
+	//this.videoRemote = document.getElementById('video_remote');
+	this.audioRemote = document.getElementById('audio_remote');
 
 	this.interval = 0;
 }
@@ -44,8 +44,7 @@ CPhoneWebrtc.prototype.init = function ()
 {
 	var self = this;
 
-	$.getScript("static/js/sipml.js", function(sData, sStatus, jqXHR)
-	{
+	$.getScript('static/js/sipml.js', function(sData, sStatus, jqXHR) {
 		Phone.onGetScript(sStatus);
 		if (sStatus === 'success')
 		{
@@ -86,27 +85,27 @@ CPhoneWebrtc.prototype.setConfigs = function ()
 		}
 	});
 
-	this.registerConf(
-		{
-			audio_remote: this.audioRemote,
-			expires: 3600,
-			events_listener: {
-				events: '*',
-				listener: this.eventSessionBinded
-			},
-			sip_caps: [
-				{ name: '+g.oma.sip-im', value: null },
-				{ name: '+audio', value: null },
-				{ name: '+sip.ice' },
-				{ name: 'language', value: '\"en,fr\"' }
-			]
-		});
+	this.registerConf({
+		audio_remote: this.audioRemote,
+		expires: 3600,
+		events_listener: {
+			events: '*',
+			listener: this.eventSessionBinded
+		},
+		sip_caps: [
+			{ name: '+g.oma.sip-im', value: null },
+			{ name: '+audio', value: null },
+			{ name: '+sip.ice' },
+			{ name: 'language', value: '\"en,fr\"' }
+		]
+	});
 
 	this.hangupConf({
 		events_listener: {
 			events: '*',
 			listener: this.eventSessionBinded
-		}});
+		}
+	});
 };
 
 CPhoneWebrtc.prototype.createStack = function ()
@@ -256,7 +255,7 @@ CPhoneWebrtc.prototype.eventSession = function (ev)
  */
 CPhoneWebrtc.prototype.call = function (sPhone)
 {
-	if(!this.isStarted())
+	if (!this.isStarted())
 	{
 		//this.hasFatalError(false);
 		this.createStack();
@@ -313,6 +312,10 @@ CPhoneWebrtc.prototype.reconnect = (function ()
 	};
 }());
 
+/**
+ * @param {function} fResponseHandler
+ * @param {object} oContext
+ */
 CPhoneWebrtc.prototype.getLogs = function (fResponseHandler, oContext)
 {
 	fResponseHandler.call(oContext);

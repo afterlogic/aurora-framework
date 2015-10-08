@@ -88,7 +88,7 @@ module.exports = {
 			ThreadsPerPage: 10
 		},
 		Settings: {},
-		Phone: {
+		dsbld_Phone: {
 			VoiceProvider: '',
 			SipRealm: '192.168.0.59',
 			SipImpi: '102',
@@ -97,7 +97,7 @@ module.exports = {
 //			SipOutboundProxyUrl: ''
 		},
 		dsbld_SessionTimeout: {
-			'TimeoutSeconds': 20
+			TimeoutSeconds: 20
 		}
 	},
 	EntryModule: 'Mail',

@@ -40,11 +40,9 @@ CPhoneTwilio.prototype.onGetTokenResponse = function (oResponse, oRequest)
 	{
 		Phone.log('*************** twilioToken_requestTrue');
 
-//		$.ajaxSettings.cache = true;//todo
 		$.getScript(
-			"//static.twilio.com/libs/twiliojs/1.2/twilio.min.js",
-			function(sData, sStatus, jqXHR)
-			{
+			'//static.twilio.com/libs/twiliojs/1.2/twilio.min.js',
+			function (sData, sStatus, jqXHR) {
 				Phone.onGetScript(sStatus);
 				if (sStatus === 'success')
 				{
@@ -76,7 +74,7 @@ CPhoneTwilio.prototype.setupDevice = function (sToken)
 		//debug: true
 	});
 
-	/*************** events ***************/
+	//*************** events ***************//
 	this.device.ready(function (oDevice) {
 		Phone.log('*************** ready ', oDevice);
 
@@ -108,11 +106,11 @@ CPhoneTwilio.prototype.setupDevice = function (sToken)
 	this.device.connect(function (oConnection) { //This is triggered when a connection is opened (incoming||outgoing)
 		Phone.log('*************** connect ', oConnection);
 
-		if (oConnection.message.Direction === "outbound")
+		if (oConnection.message.Direction === 'outbound')
 		{
 			self.action(Enums.PhoneAction.Outgoing);
 		}
-		else if (oConnection.message.Direction === "inbound")
+		else if (oConnection.message.Direction === 'inbound')
 		{
 			self.action(Enums.PhoneAction.Incoming);
 		}
@@ -152,8 +150,8 @@ CPhoneTwilio.prototype.setupDevice = function (sToken)
 CPhoneTwilio.prototype.call = function (sPhoneNumber)
 {
 	this.connection = this.device.connect({
-		"PhoneNumber": sPhoneNumber,
-		"AfterlogicCall": 1
+		PhoneNumber: sPhoneNumber,
+		AfterlogicCall: 1
 	});
 };
 
@@ -190,8 +188,7 @@ CPhoneTwilio.prototype.reconnect = (function ()
 {
 	var iIntervalId = 0;
 
-	return function (iInterval)
-	{
+	return function (iInterval) {
 		clearInterval(iIntervalId);
 
 		if (iInterval)
@@ -218,7 +215,7 @@ CPhoneTwilio.prototype.getLogs = function (fResponseHandler, oContext)
 {
 	var oParameters = {
 		//'Status': 'no-answer',
-		'StartTime': moment().subtract(3, 'months').format("YYYY-MM-DD") //subtract 3 months from now
+		'StartTime': moment().subtract(3, 'months').format('YYYY-MM-DD') //subtract 3 months from now
 	};
 
 	Ajax.send('GetLogs', oParameters, fResponseHandler, oContext);

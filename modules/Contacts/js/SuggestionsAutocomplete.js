@@ -4,6 +4,7 @@ var
 	$ = require('jquery'),
 	_ = require('underscore'),
 	
+	Utils = require('core/js/utils/Common.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
 	
 	Ajax = require('modules/Contacts/js/Ajax.js')
@@ -51,7 +52,7 @@ function Callback(oRequest, fResponse, sExceptEmail, bGlobalOnly)
 		fResponse(aList);
 
 	});
-};
+}
 
 /**
  * @param {object} oRequest
@@ -109,7 +110,7 @@ function ComposeCallback(oRequest, fResponse)
 		fResponse(aList);
 
 	});
-};
+}
 
 /**
  * @param {object} oRequest
@@ -148,23 +149,59 @@ function PhoneCallback(oRequest, fResponse)
 			fResponse(aList);
 		});
 	}
-};
+}
 
 /**
  * @param {Object} oContact
  */
 function DeleteHandler(oContact)
 {
+	console.log('oContact', oContact);
 	Ajax.send('DeleteSuggestion', {
 		'ContactId': oContact.id,
 		'SharedToAll': oContact.sharedToAll ? '1' : '0'
 	});
-};
+}
 
+function RequestUserByPhone(sNumber, fCallBack, oContext)
+{
+	oParameters = {
+		'Search': sNumber,
+		'PhoneOnly': '1'
+	};
+	
+	Ajax.send('GetSuggestions', oParameters, function (oResponse) {
+		var
+			oResult = oResponse.Result,
+			sUser = '',
+			oUser = Utils.isNonEmptyArray(oResult.List) ? oResult.List[0] : null
+		;
+		
+		if (oUser && oUser.Phones)
+		{
+			$.each(oUser.Phones, function (sKey, sUserPhone) {
+				var
+					regExp = /[()\s_\-]/g,
+					sCleanedPhone = (sNumber.replace(regExp, '')),
+					sCleanedUserPhone = (sUserPhone.replace(regExp, ''))
+				;
+
+				if (sCleanedPhone === sCleanedUserPhone)
+				{
+					sUser = oUser.Name === '' ? oUser.Email + ' ' + sUserPhone : oUser.Name + ' ' + sUserPhone;
+					return false;
+				}
+			});
+		}
+		
+		fCallBack.call(oContext, sUser);
+	});
+}
 
 module.exports = {
 	callback: Callback,
 	composeCallback: ComposeCallback,
 	phoneCallback: PhoneCallback,
-	deleteHandler: DeleteHandler
+	deleteHandler: DeleteHandler,
+	requestUserByPhone: RequestUserByPhone
 };

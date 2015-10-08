@@ -8,7 +8,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Screens = require('core/js/Screens.js'),
-	Ajax = require('core/js/Ajax.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	PhonePopup = require('modules/Phone/js/popups/PhonePopup.js'),
@@ -30,25 +30,21 @@ function CPhone()
 	this.phoneToCall = ko.observable('');
 	this.action = ko.observable(Enums.PhoneAction.Offline);
 
-	this.action.subscribe(function(sAction) {
+	this.action.subscribe(function (sAction) {
 		switch (sAction)
 		{
 			case Enums.PhoneAction.Offline:
-
 				this.provider.reconnect(60000);
 				break;
 			case Enums.PhoneAction.OfflineError:
-
 				this.provider.reconnect(60000);
 				break;
 			case Enums.PhoneAction.OfflineInit:
-
 				this.provider.init();
 				break;
 			case Enums.PhoneAction.OfflineActive:
 				break;
 			case Enums.PhoneAction.Online:
-
 				Popups.hidePopup(PhonePopup);
 				Utils.desktopNotify('hide');
 				this.provider.reconnect();
@@ -57,7 +53,6 @@ function CPhone()
 			case Enums.PhoneAction.OnlineActive:
 				break;
 			case Enums.PhoneAction.Outgoing:
-
 				this.provider.call(this.getFormattedPhone(this.phoneToCall()));
 				break;
 			case Enums.PhoneAction.OutgoingConnect:
@@ -65,7 +60,6 @@ function CPhone()
 			case Enums.PhoneAction.Incoming:
 				break;
 			case Enums.PhoneAction.IncomingConnect:
-
 				Popups.hidePopup(PhonePopup);
 				Utils.desktopNotify('hide');
 				this.provider.answer();
@@ -76,8 +70,6 @@ function CPhone()
 
 CPhone.prototype.init = function ()
 {
-//	$.ajaxSettings.cache = true;//todo
-
 	this.provider = Settings.VoiceProvider === 'sip' ?
 				require('modules/Phone/js/PhoneWebrtc.js') :
 				require('modules/Phone/js/PhoneTwilio.js');
@@ -149,9 +141,9 @@ CPhone.prototype.phoneSupport = function (bIsWebrtc, sFlashVersion)
 		{ //other browsers
 			try
 			{
-				if (navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin)
+				if (navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin)
 				{
-					return (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description.replace(/\D+/g, ",").match(/^,?(.+),?$/)[1];
+					return (navigator.plugins['Shockwave Flash 2.0'] || navigator.plugins['Shockwave Flash']).description.replace(/\D+/g, ',').match(/^,?(.+),?$/)[1];
 				}
 			}
 			catch(eXt) {}
@@ -182,71 +174,43 @@ CPhone.prototype.phoneSupport = function (bIsWebrtc, sFlashVersion)
  */
 CPhone.prototype.incomingCall = function (sNumber)
 {
-	var
-		self,
-		oParameters,
-		fShowAll
-	;
-
 	this.action(Enums.PhoneAction.Incoming);
 
-	if (sNumber)
+	if (Utils.isNonEmptyString(sNumber))
 	{
-		self = this;
-		oParameters = {
-			'Action': 'ContactSuggestions',
-			'Search': sNumber,
-			'PhoneOnly': '1'
-		};
-		fShowAll = function (sText) {
-			self.report(TextUtils.i18n('PHONE/INCOMING_CALL_FROM') + ' ' + sText);
-			Popups.showPopup(PhonePopup, [{
-				text: sText
-			}]);
+		var fShowAll = _.bind(function (sText) {
+			this.report(TextUtils.i18n('PHONE/INCOMING_CALL_FROM') + ' ' + sText);
+			
+			Popups.showPopup(PhonePopup, [sText]);
+			
 			Utils.desktopNotify({
 				action: 'show',
 				title: sText + TextUtils.i18n(' calling...'),
 				body: TextUtils.i18n('Click here to answer.\r\n To drop the call, click End in the web interface.'),
 				callback: _.bind(function() {
-					self.action(Enums.PhoneAction.IncomingConnect);
-				}, self),
+					this.action(Enums.PhoneAction.IncomingConnect);
+				}, this),
 				timeout: 60000
 			});
-		};
-
-		Ajax.send(oParameters, function (oResponse) {
-			var oResult = oResponse.Result;
-			if (oResult && oResult.List && oResult.List[0] && oResult.List[0].Phones)
-			{
-				var sUser = '';
-
-				$.each(oResult.List[0].Phones, function (sKey, sUserPhone) {
-					var
-						oUser = oResult.List[0],
-						regExp = /[()\s_\-]/g,
-						sCleanedPhone = (sNumber.replace(regExp, '')),
-						sCleanedUserPhone = (sUserPhone.replace(regExp, ''))
-					;
-
-					if (sCleanedPhone === sCleanedUserPhone)
-					{
-						sUser = oUser.Name === '' ? oUser.Email + ' ' + sUserPhone : oUser.Name + ' ' + sUserPhone;
-						fShowAll(sUser);
-						return false;
-					}
-				}, this);
-
-				if (sUser === '')
+		}, this);
+		
+		if (ModulesManager.isModuleIncluded('Contacts'))
+		{
+			ModulesManager.run('Contacts', 'requestUserByPhone', function (sUser) {
+				if (Utils.isNonEmptyString(sUser))
+				{
+					fShowAll(sUser);
+				}
+				else
 				{
 					fShowAll(sNumber);
 				}
-			}
-			else
-			{
-				fShowAll(sNumber);
-			}
-
-		}, this);
+			});
+		}
+		else
+		{
+			fShowAll(sNumber);
+		}
 
 		this.missedCalls(true);
 	}
@@ -266,7 +230,7 @@ CPhone.prototype.getFormattedPhone = function (sPhone)
 		sCleanedPhone = (/#/g).test(sPhone) ? sPhone.split('#')[1] : sPhone.replace(/[()\s_\-+]/g, '')
 	;
 
-	_.each(oPrefixes, function(sVal, sKey){
+	_.each(oPrefixes, function (sVal, sKey) {
 		sCleanedPhone = sCleanedPhone.replace(new RegExp('^' + sKey, 'g'), sVal);
 	});
 
@@ -298,7 +262,7 @@ var Phone = new CPhone();
 // prevent load phone in other tabs
 if (window.localStorage)
 {
-	$(window).on('storage', function(e) {
+	$(window).on('storage', function () {
 		if (window.localStorage.getItem('p7phoneLoad') !== 'false')
 		{
 			window.localStorage.setItem('p7phoneLoad', 'false'); //triggering from other tabs
@@ -306,7 +270,7 @@ if (window.localStorage)
 	});
 
 	window.localStorage.setItem('p7phoneLoad', (Math.floor(Math.random() * (1000 - 100) + 100)).toString()); //random - storage event triggering only if key has been changed
-	window.setTimeout(function() { //wait until the triggering storage event
+	window.setTimeout(function () { //wait until the triggering storage event
 		if (!bSingleMode && Phone && (window.localStorage.getItem('p7phoneLoad') !== 'false' || window.sessionStorage.getItem('p7phoneTab')))
 		{
 			Phone.init();
