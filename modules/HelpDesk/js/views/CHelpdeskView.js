@@ -655,8 +655,7 @@ CHelpdeskView.prototype.requestThreadsList = function ()
 	{
 		this.loadingList(true);
 		this.checkStarted(true);
-console.log('this.oPageSwitcher.currentPage()', this.oPageSwitcher.currentPage());
-console.log('Settings.ThreadsPerPage', Settings.ThreadsPerPage);
+		
 		Ajax.send('GetThreads', {
 			'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ThreadsPerPage,
 			'Limit': Settings.ThreadsPerPage,
