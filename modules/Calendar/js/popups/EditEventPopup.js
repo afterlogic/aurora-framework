@@ -132,7 +132,7 @@ function CEditEventPopup()
 	this.weekSA = ko.observable(false);
 	this.weekSU = ko.observable(false);
 
-    this.always = ko.observable(1);
+	this.always = ko.observable(1);
 
 	this.appointment = ko.observable(false);
 	this.attendees = ko.observableArray([]);
@@ -214,7 +214,7 @@ function CEditEventPopup()
 		this.weekFR();
 		this.weekSA();
 		this.weekSU();
-        this.always();
+		this.always();
 		this.attendees();
 		this.selectedCalendarId();
 
@@ -374,8 +374,8 @@ CEditEventPopup.prototype.onShow = function (oParameters)
 		sAttendee = App.getAttendee(this.attendees());
 	}
 
-    this.isMyEvent(owner === oParameters.Owner && sAttendee !== owner || owner === sCalendarOwner && sAttendee !== owner);
-    this.editableSwitch(this.selectedCalendarIsShared(), this.selectedCalendarIsEditable(), this.isMyEvent());
+	this.isMyEvent(owner === oParameters.Owner && sAttendee !== owner || owner === sCalendarOwner && sAttendee !== owner);
+	this.editableSwitch(this.selectedCalendarIsShared(), this.selectedCalendarIsEditable(), this.isMyEvent());
 
 	this.setCurrentAttenderStatus(sAttendee, oParameters.Attendees || []);
 
@@ -451,8 +451,8 @@ CEditEventPopup.prototype.onSaveClick = function ()
 					attendees: this.attendees(),
 					owner: this.owner(),
 					modified: this.modified
-                },
-                iAlways = parseInt(this.always())
+				},
+				iAlways = parseInt(this.always())
 			;
 			
 			if (this.allDay())
@@ -517,32 +517,32 @@ CEditEventPopup.prototype.onSaveClick = function ()
 						weekNum: null
 					};
 				}
-                else if (iPeriod === Enums.CalendarRepeatPeriod.Daily && iAlways === Enums.CalendarAlways.Enable)
-                {
-                    oEventData.rrule = {
-                        byDays: [],
-                        count: null,
-                        end: 3,
-                        interval: 1,
-                        period: iPeriod,
-                        until: iUnixDate,
-                        weekNum: null
-                    };
-                }
-                else if (iPeriod === Enums.CalendarRepeatPeriod.Weekly && iAlways === Enums.CalendarAlways.Enable)
-                {
-                    this.setDayOfWeek();
+				else if (iPeriod === Enums.CalendarRepeatPeriod.Daily && iAlways === Enums.CalendarAlways.Enable)
+				{
+					oEventData.rrule = {
+						byDays: [],
+						count: null,
+						end: 3,
+						interval: 1,
+						period: iPeriod,
+						until: iUnixDate,
+						weekNum: null
+					};
+				}
+				else if (iPeriod === Enums.CalendarRepeatPeriod.Weekly && iAlways === Enums.CalendarAlways.Enable)
+				{
+					this.setDayOfWeek();
 
-                    oEventData.rrule = {
-                        byDays: this.getDays(),
-                        count: null,
-                        end: 3,
-                        interval: iInterval,
-                        period: iPeriod,
-                        until: iUnixDate,
-                        weekNum: null
-                    };
-                }
+					oEventData.rrule = {
+						byDays: this.getDays(),
+						count: null,
+						end: 3,
+						interval: iInterval,
+						period: iPeriod,
+						until: iUnixDate,
+						weekNum: null
+					};
+				}
 			}
 
 			this.callbackSave(oEventData);
@@ -602,7 +602,7 @@ CEditEventPopup.prototype.cleanAll = function ()
 	this.weekSA(false);
 	this.weekSU(false);
 	this.attendees([]);
-    this.always(1);
+	this.always(1);
 	this.selectedCalendarId('');
 
 	this.attendees([]);
@@ -971,7 +971,7 @@ CEditEventPopup.prototype.repeatRuleParse = function (oRepeatRule)
 		this.repeatInterval(oRepeatRule.interval);
 		this.repeatCount(oRepeatRule.count);
 		this.repeatWeekNum(oRepeatRule.weekNum);
-        this.always(oRepeatRule.end === 3 ? 1 : 0);
+		this.always(oRepeatRule.end === 3 ? 1 : 0);
 	}
 };
 
@@ -1320,7 +1320,7 @@ CEditEventPopup.prototype.setAppointmentAction = function (sDecision)
  */
 CEditEventPopup.prototype.editableSwitch = function (bShared, bEditable, bMyEvent)
 {
-    this.isEditable(
+	this.isEditable(
 			(bShared && bEditable && bMyEvent) ||
 				(!bShared && bEditable && bMyEvent) ||
 					(bShared && !bEditable && !bMyEvent)

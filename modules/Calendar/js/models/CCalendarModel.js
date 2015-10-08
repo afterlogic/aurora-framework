@@ -34,8 +34,8 @@ function CCalendarModel()
 	this.shares = ko.observableArray([]);
 	this.events = ko.observableArray([]);
 	this.eventsCount = ko.computed(function() {
-        return this.events().length;
-    }, this);
+		return this.events().length;
+	}, this);
 	this.access = ko.observable(Enums.CalendarAccess.Write);
 	
 	this.control = ko.computed(function() {

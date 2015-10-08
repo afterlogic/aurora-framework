@@ -13,7 +13,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Helpdesk/js/Ajax.js'),
 	Storage = require('core/js/Storage.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
@@ -59,13 +59,11 @@ function CHelpdeskView()
 		}
 	;
 
-	//use different ajax functions for different application
 	this.bRtl = UserSettings.IsRTL;
 
 	this.iAutoCheckTimer = 0;
 
 	this.bExtApp = bExtApp;
-	this.ajaxSendFunc = this.bExtApp ? 'sendExt' : 'send';
 	this.bAgent = Settings.IsHelpdeskAgent;
 	this.singleMode = bSingleMode;
 
@@ -504,16 +502,15 @@ CHelpdeskView.prototype.deletePost = function (oPost)
 	if (oPost && oPost.itsMe())
 	{
 		Screens.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_DELETE_THIS_POST'),
-			_.bind(function (bResult) {
-				if (bResult)
+			_.bind(function (bDelete) {
+				if (bDelete)
 				{
 					this.postForDelete(oPost);
-					Ajax[this.ajaxSendFunc]({
+					Ajax.send('DeletePost', {
 						'Action': 'HelpdeskPostDelete',
 						'PostId': oPost.Id,
-						'ThreadId': oPost.IdThread,
-						'IsExt': this.bExtApp ? 1 : 0
-					}, this.onHelpdeskPostDeleteResponse, this);
+						'ThreadId': oPost.IdThread
+					}, this.onDeletePostResponse, this);
 				}
 			}, this)
 		]);
@@ -524,7 +521,7 @@ CHelpdeskView.prototype.deletePost = function (oPost)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onHelpdeskPostDeleteResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result === false)
 	{
@@ -602,17 +599,14 @@ CHelpdeskView.prototype.startAutocheckmail = function ()
 	}
 };
 
-/**
- * @param {Object} $viewModel
- */
-CHelpdeskView.prototype.onBind = function ($viewModel)
+CHelpdeskView.prototype.onBind = function ()
 {
 	this.selector.initOnApplyBindings(
 		'.items_sub_list .item',
 		'.items_sub_list .selected.item',
 		'.items_sub_list .item .custom_checkbox',
-		$('.items_list', $viewModel),
-		$('.threads_scroll.scroll-inner', $viewModel)
+		$('.items_list', this.$viewDom),
+		$('.threads_scroll.scroll-inner', this.$viewDom)
 	);
 
 	this.initUploader();
@@ -643,7 +637,7 @@ CHelpdeskView.prototype.onShow = function ()
 	this.selector.useKeyboardKeys(true);
 
 	this.oPageSwitcher.show();
-	this.oPageSwitcher.perPage(this.ThreadsPerPage);
+	this.oPageSwitcher.perPage(Settings.ThreadsPerPage);
 	this.oPageSwitcher.currentPage(1);
 
 	this.requestThreadsList();
@@ -657,46 +651,26 @@ CHelpdeskView.prototype.onHide = function ()
 
 CHelpdeskView.prototype.requestThreadsList = function ()
 {
-	if (!this.newThreadCreating()) {
+	if (!this.newThreadCreating())
+	{
 		this.loadingList(true);
 		this.checkStarted(true);
-
-		Ajax[this.ajaxSendFunc]({
-			'Action': 'HelpdeskThreadsList',
-			'IsExt': this.bExtApp ? 1 : 0,
-			'Offset': (this.oPageSwitcher.currentPage() - 1) * this.ThreadsPerPage,
-			'Limit': this.ThreadsPerPage,
+console.log('this.oPageSwitcher.currentPage()', this.oPageSwitcher.currentPage());
+console.log('Settings.ThreadsPerPage', Settings.ThreadsPerPage);
+		Ajax.send('GetThreads', {
+			'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ThreadsPerPage,
+			'Limit': Settings.ThreadsPerPage,
 			'Filter': this.listFilter(),
 			'Search': this.search()
-		}, this.onHelpdeskThreadsListResponse, this);
-
-		this.requestThreadsPendingCount();
+		}, this.onGetThreadsResponse, this);
 	}
-};
-
-CHelpdeskView.prototype.requestThreadByIdOrHash = function (iThreadId, sThreadHash)
-{
-	Ajax[this.ajaxSendFunc]({
-		'Action': 'HelpdeskThreadByIdOrHash',
-		'IsExt': this.bExtApp ? 1 : 0,
-		'ThreadId': iThreadId ? iThreadId : 0,
-		'ThreadHash': sThreadHash ? sThreadHash : ''
-	}, this.onThreadByIdOrHashResponse, this);
-};
-
-CHelpdeskView.prototype.requestThreadsPendingCount = function ()
-{
-	Ajax[this.ajaxSendFunc]({
-		'Action': 'HelpdeskThreadsPendingCount',
-		'IsExt': this.bExtApp ? 1 : 0
-	}, this.onHelpdeskThreadsPendingCountResponse, this);
 };
 
 /**
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onHelpdeskThreadsListResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 {
 	var
 		iIndex = 0,
@@ -739,7 +713,8 @@ CHelpdeskView.prototype.onHelpdeskThreadsListResponse = function (oResponse, oRe
 
 		this.loadingList(false);
 
-		if (this.newThreadId()) {
+		if (this.newThreadId())
+		{
 			var iThreadId = this.newThreadId();
 
 			this.onItemSelect( _.find(this.threads().concat(aList), function(oItem){ return oItem.ItsMe && oItem.Id === iThreadId; }));
@@ -781,15 +756,31 @@ CHelpdeskView.prototype.onHelpdeskThreadsListResponse = function (oResponse, oRe
 	}
 };
 
-CHelpdeskView.prototype.onHelpdeskThreadsPendingCountResponse = function (oResponse, oRequest)
+/**
+ * @param {number} iThreadId
+ * @param {string} sThreadHash
+ */
+CHelpdeskView.prototype.requestThreadByIdOrHash = function (iThreadId, sThreadHash)
 {
-	if (oResponse.Result === false)
+	Ajax.send('GetThread', {
+		'ThreadId': iThreadId ? iThreadId : 0,
+		'ThreadHash': sThreadHash ? sThreadHash : ''
+	}, this.onGetThreadResponse, this);
+};
+
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CHelpdeskView.prototype.onGetThreadResponse = function (oResponse, oRequest)
+{
+	var oItem = new CThreadListModel();
+
+	if (oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse);
-	}
-	else
-	{
-//		App.helpdeskPendingCount(oResponse.Result);
+		oItem.parse(oResponse.Result);
+		oItem.OwnerIsMe = Utils.pString(oItem.IdOwner);
+		this.onItemSelect(oItem);
 	}
 };
 
@@ -809,8 +800,6 @@ CHelpdeskView.prototype.requestPosts = function (oItem, iStartFromId)
 	if (iId)
 	{
 		oParameters = {
-			'Action': 'HelpdeskThreadPosts',
-			'IsExt': this.bExtApp ? 1 : 0,
 			'ThreadId': iId,
 			'StartFromId': iFromId,
 			'Limit': 5
@@ -821,7 +810,7 @@ CHelpdeskView.prototype.requestPosts = function (oItem, iStartFromId)
 			this.loadingMoreMessages(true);
 		}
 
-		Ajax[this.ajaxSendFunc](oParameters, this.onHelpdeskThreadPostsResponse, this);
+		Ajax.send('GetPosts', Parameters, this.onGetPostsResponse, this);
 	}
 };
 
@@ -829,7 +818,7 @@ CHelpdeskView.prototype.requestPosts = function (oItem, iStartFromId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onHelpdeskThreadPostsResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 {
 	var
 		self = this,
@@ -838,18 +827,19 @@ CHelpdeskView.prototype.onHelpdeskThreadPostsResponse = function (oResponse, oRe
 		aList = [],
 		aPosts = [],
 		oObject = null,
-		aPostList = (oResponse.Result && _.isArray(oResponse.Result.List)) ? oResponse.Result.List : []
+		oResult = oResponse.Result,
+		aPostList = (oResult && _.isArray(oResult.List)) ? oResult.List : []
 	;
 
-	if (oResponse.Result === false)
+	if (oResult === false)
 	{
 		Api.showErrorByCode(oResponse);
 	}
 	else
 	{
-		if (this.selectedItem() && oResponse.Result.ThreadId === this.selectedItem().Id)
+		if (this.selectedItem() && oResult.ThreadId === this.selectedItem().Id)
 		{
-			this.selectedItem().postsCount(Utils.pInt(oResponse.Result.ItemsCount));
+			this.selectedItem().postsCount(Utils.pInt(oResult.ItemsCount));
 
 			for (iLen = aPostList.length; iIndex < iLen; iIndex++)
 			{
@@ -864,7 +854,7 @@ CHelpdeskView.prototype.onHelpdeskThreadPostsResponse = function (oResponse, oRe
 
 			aPosts = this.posts();
 
-			if (oResponse.Result.StartFromId)
+			if (oResult.StartFromId)
 			{
 				_.each(aList, function (oItem, iIdx) {
 					this.posts.unshift(oItem);
@@ -918,7 +908,6 @@ CHelpdeskView.prototype.onRoute = function (aParams)
 
 	if (oItem)
 	{
-		oItem = /** @type {Object} */ oItem;
 		this.onItemSelect(oItem);
 	}
 	else if (this.threads().length === 0 && this.loadingList() && this.threadSubscription === undefined && !bSingleMode)
@@ -941,33 +930,17 @@ CHelpdeskView.prototype.onRoute = function (aParams)
 };
 
 /**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CHelpdeskView.prototype.onThreadByIdOrHashResponse = function (oResponse, oRequest)
-{
-	var oItem = new CThreadListModel();
-
-	if (oResponse.Result)
-	{
-		oItem.parse(oResponse.Result);
-		oItem.OwnerIsMe = Utils.pString(oItem.IdOwner);
-		this.onItemSelect(oItem);
-	}
-};
-
-/**
  * @param {Object} oItem
  */
 CHelpdeskView.prototype.onItemSelect = function (oItem)
 {
-    this.previousSelectedItem(this.selectedItem());
+	this.previousSelectedItem(this.selectedItem());
 	if (!this.selectedItem() || oItem && (this.selectedItem().ThreadHash !== oItem.ThreadHash || this.selectedItem().Id !== oItem.Id))
 	{
 		if (!this.replySendingStarted() && (!this.isQuickReplyPaneEmpty() || !this.isNewThreadPaneEmpty()))
 		{
 			Screens.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_CANCEL_REPLY'),
-					_.bind(function (bResult) {
+				_.bind(function (bResult) {
 					if (bResult)
 					{
 						this.selectItem(oItem);
@@ -993,20 +966,25 @@ CHelpdeskView.prototype.onItemDelete = function ()
 	this.executeDelete();
 };
 
+/**
+ * @param {object} oItem
+ */
 CHelpdeskView.prototype.selectItem = function (oItem)
 {
 	this.visibleNewThread(false);
 	this.selector.listCheckedAndSelected(false);
 	this.cleanAll();
 
-	if (oItem) {
+	if (oItem)
+	{
 		this.selector.itemSelected(oItem);
 		this.selectedItem(oItem);
 
 		this.isQuickReplyHidden(oItem.ItsMe || !this.bAgent);
 		this.requestPosts(oItem);
 
-		if (!this.singleMode) {
+		if (!this.singleMode)
+		{
 			Routing.setHash(['helpdesk', oItem.ThreadHash]); //TODO this code causes a bug with switching to helpdesk when you on another screen
 		}
 		oItem.postsCount(0);
@@ -1058,14 +1036,16 @@ CHelpdeskView.prototype.executeDelete = function ()
 
 		this.selectedItem(null);
 
-		Ajax[this.ajaxSendFunc]({
-			'Action': 'HelpdeskThreadDelete',
-			'IsExt': this.bExtApp ? 1 : 0,
-			'ThreadId': oSelectedItem.Id
-		}, this.onHelpdeskThreadDeleteResponse, this);
+		Ajax.send('DeleteThread', { 'ThreadId': oSelectedItem.Id }, this.updateDisplayingData, this);
 		
 		Routing.setHash(['helpdesk', '']);
 	}
+};
+
+CHelpdeskView.prototype.updateDisplayingData = function ()
+{
+	this.requestThreadsList();
+	this.updateOpenerWindow();
 };
 
 CHelpdeskView.prototype.executeOpenNewWindow = function ()
@@ -1073,16 +1053,6 @@ CHelpdeskView.prototype.executeOpenNewWindow = function ()
 	var sUrl = Routing.buildHashFromArray(['helpdesk', this.selectedItem().ThreadHash]);
 
 	WindowOpener.openTab(sUrl);
-};
-
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CHelpdeskView.prototype.onHelpdeskThreadDeleteResponse = function (oResponse, oRequest)
-{
-	this.requestThreadsList();
-	this.updateOpenerWindow();
 };
 
 /**
@@ -1102,23 +1072,11 @@ CHelpdeskView.prototype.executeChangeState = function (iState)
 	{
 		oSelectedItem.state(iState);
 
-		Ajax[this.ajaxSendFunc]({
-			'Action': 'HelpdeskThreadChangeState',
-			'IsExt': this.bExtApp ? 1 : 0,
+		Ajax.send('ChangeThreadState', {
 			'ThreadId': oSelectedItem.Id,
 			'Type': oSelectedItem.state()
-		}, this.onHelpdeskThreadChangeStateResponse, this);
+		}, this.updateDisplayingData, this);
 	}
-};
-
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CHelpdeskView.prototype.onHelpdeskThreadChangeStateResponse = function (oResponse, oRequest)
-{
-	this.requestThreadsList();
-	this.updateOpenerWindow();
 };
 
 /**
@@ -1128,11 +1086,7 @@ CHelpdeskView.prototype.executeThreadPing = function (iId)
 {
 	if (iId !== undefined)
 	{
-		Ajax[this.ajaxSendFunc]({
-			'Action': 'HelpdeskThreadPing',
-			'IsExt': this.bExtApp ? 1 : 0,
-			'ThreadId': iId
-		}, this.onThreadPingResponse, this);
+		Ajax.send('PingThread', { 'ThreadId': iId }, this.onPingThreadResponse, this);
 	}
 };
 
@@ -1140,7 +1094,7 @@ CHelpdeskView.prototype.executeThreadPing = function (iId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onThreadPingResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onPingThreadResponse = function (oResponse, oRequest)
 {
 	this.watchers(
 		_.map(oResponse.Result, function (aWatcher) {
@@ -1184,6 +1138,9 @@ CHelpdeskView.prototype.onThreadPingResponse = function (oResponse, oRequest)
 	);
 };
 
+/**
+ * @param {string} sName
+ */
 CHelpdeskView.prototype.getInitials = function (sName)
 {
 	return _.reduce(sName.split(' ', 2), function(sMemo, sNamePath){ return sMemo + sNamePath.substr(0,1); }, ''); //get first letter from each of the two words
@@ -1196,11 +1153,7 @@ CHelpdeskView.prototype.executeThreadSeen = function (iId)
 {
 	if (iId !== undefined)
 	{
-		Ajax[this.ajaxSendFunc]({
-			'Action': 'HelpdeskThreadSeen',
-			'IsExt': this.bExtApp ? 1 : 0,
-			'ThreadId': iId
-		}, this.onHelpdeskThreadSeenResponse, this);
+		Ajax.send('SetThreadSeen', { 'ThreadId': iId }, this.onSetThreadSeenResponse, this);
 	}
 };
 
@@ -1208,9 +1161,9 @@ CHelpdeskView.prototype.executeThreadSeen = function (iId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onHelpdeskThreadSeenResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onSetThreadSeenResponse = function (oResponse, oRequest)
 {
-	if(oResponse.Result && this.selectedItem())
+	if (oResponse.Result && this.selectedItem())
 	{
 		this.selectedItem().unseen(false);
 		this.setUnseenCount();
@@ -1233,19 +1186,19 @@ CHelpdeskView.prototype.executeThreadCreate = function ()
 
 	this.newThreadCreating(true);
 
-	this.sendHelpdeskPostCreate(0, sNewThreadSubject, this.newThreadText(), this.onThreadCreateResponse);
+	this.createPost(0, sNewThreadSubject, this.newThreadText(), this.onCreateThreadResponse);
 };
 
 /**
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onThreadCreateResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
 {
 	//TODO change created post
 	this.newThreadCreating(false);
 
-	if (oResponse.Result && oRequest)
+	if (oResponse.Result)
 	{
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_THREAD_SUCCESSFULLY_CREATED'));
 
@@ -1258,8 +1211,7 @@ CHelpdeskView.prototype.onThreadCreateResponse = function (oResponse, oRequest)
 		this.visibleNewThread(false);
 	}
 
-	this.requestThreadsList();
-	this.updateOpenerWindow();
+	this.updateDisplayingData();
 };
 
 CHelpdeskView.prototype.executePostCreate = function ()
@@ -1267,7 +1219,7 @@ CHelpdeskView.prototype.executePostCreate = function ()
 	if (this.selectedItem())
 	{
 		this.replySendingStarted(true);
-		this.sendHelpdeskPostCreate(this.selectedItem().Id, '', this.replyText(), this.onPostCreateResponse);
+		this.createPost(this.selectedItem().Id, '', this.replyText(), this.onCreatePostResponse);
 	}
 };
 
@@ -1275,19 +1227,18 @@ CHelpdeskView.prototype.executePostCreate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onPostCreateResponse = function (oResponse, oRequest)
+CHelpdeskView.prototype.onCreatePostResponse = function (oResponse, oRequest)
 {
 	this.replySendingStarted(false);
 
-	if (oResponse.Result && oRequest)
+	if (oResponse.Result)
 	{
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_SUCCESSFULLY_ADDED'));
 		this.cleanAll();
 		this.requestPosts();
 	}
 
-	this.requestThreadsList();
-	this.updateOpenerWindow();
+	this.updateDisplayingData();
 };
 
 /**
@@ -1296,7 +1247,7 @@ CHelpdeskView.prototype.onPostCreateResponse = function (oResponse, oRequest)
  * @param {string} sText
  * @param {Function} fResponseHandler
  */
-CHelpdeskView.prototype.sendHelpdeskPostCreate = function (iThreadId, sSubject, sText, fResponseHandler)
+CHelpdeskView.prototype.createPost = function (iThreadId, sSubject, sText, fResponseHandler)
 {
 	var
 		aAttachments = {},
@@ -1308,8 +1259,6 @@ CHelpdeskView.prototype.sendHelpdeskPostCreate = function (iThreadId, sSubject, 
 	});
 
 	oParameters = {
-		'Action': 'HelpdeskPostCreate',
-		'IsExt': this.bExtApp ? 1 : 0,
 		'ThreadId': iThreadId,
 		'IsInternal': this.internalNote() ? 1 : 0,
 		'Subject': sSubject,
@@ -1319,7 +1268,7 @@ CHelpdeskView.prototype.sendHelpdeskPostCreate = function (iThreadId, sSubject, 
 		'Attachments': aAttachments
 	};
 
-	Ajax[this.ajaxSendFunc](oParameters, fResponseHandler, this);
+	Ajax.send('CreatePost', oParameters, fResponseHandler, this);
 };
 
 CHelpdeskView.prototype.onShowThreadsByOwner = function ()
@@ -1491,7 +1440,7 @@ CHelpdeskView.prototype.onFileUploadComplete = function (sFileUID, bResult, oRes
 	var
 		oAttach = this.getUploadedFileByUID(sFileUID),
 		sThumbSessionUid = Date.now().toString()
-		;
+	;
 
 	if (oAttach)
 	{
@@ -1511,13 +1460,18 @@ CHelpdeskView.prototype.setUnseenCount = function ()
 	}, this).length);
 };
 
+/**
+ * @param {string} sText
+ */
 CHelpdeskView.prototype.quoteText = function (sText)
 {
-	var sReplyText = this.replyText(),
+	var
+		sReplyText = this.replyText(),
 		fDoingQuote = _.bind(function() {
 			this.replyText(sReplyText === '' ? '>' + sText : sReplyText + '\n' + '>' + sText);
 			this.replyTextFocus(true);
-		},this);
+		}, this)
+	;
 
 	if(this.isQuickReplyHidden())
 	{
@@ -1530,6 +1484,10 @@ CHelpdeskView.prototype.quoteText = function (sText)
 	this.isQuickReplyHidden(false);
 };
 
+/**
+ * @param {object} koText
+ * @param {object} domTextarea
+ */
 CHelpdeskView.prototype.setSignature = function (koText, domTextarea)
 {
 	if (koText && koText() === '' && this.isSignatureVisible())
@@ -1537,7 +1495,8 @@ CHelpdeskView.prototype.setSignature = function (koText, domTextarea)
 		koText("\r\n\r\n" + this.signature());
 	}
 
-	if (domTextarea) {
+	if (domTextarea)
+	{
 		setTimeout(function () {
 			domTextarea = domTextarea[0];
 			if (domTextarea.setSelectionRange)
@@ -1556,11 +1515,10 @@ CHelpdeskView.prototype.setSignature = function (koText, domTextarea)
 	}
 };
 
-CHelpdeskView.prototype.changeCcbccVisibility = function (koText, domTextarea)
+CHelpdeskView.prototype.changeCcbccVisibility = function ()
 {
 	this.ccbccVisible(true);
 	$(this.ccAddrDom()).inputosaurus('focus');
-	//$(this.bccAddrDom()).inputosaurus('focus');
 };
 
 module.exports = CHelpdeskView;

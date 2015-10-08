@@ -38,8 +38,8 @@ Enums.CalendarRepeatPeriod = {
  * @enum {number}
  */
 Enums.CalendarAlways = {
-    'Disable': 0,
-    'Enable': 1
+	'Disable': 0,
+	'Enable': 1
 };
 
 /**

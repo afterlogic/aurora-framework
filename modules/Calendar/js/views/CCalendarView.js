@@ -163,7 +163,7 @@ function CCalendarView()
 			day: 'dddd D'	// Monday 7
 		},
 		titleFormat: {
-			month: 'MMMM YYYY',                         // September 2009
+			month: 'MMMM YYYY',							// September 2009
 			week: "MMMM D[ YYYY]{ '-'[ MMMM] D YYYY}",	// Sep 7 - 13 2009
 			day: 'MMMM D, YYYY'							// Tuesday, Sep 8, 2009
 		},

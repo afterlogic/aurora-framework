@@ -55,11 +55,11 @@ CSelectCalendarPopup.prototype.onShow = function (oParameters)
 
 CSelectCalendarPopup.prototype.onSaveClick = function ()
 {
-    if (this.fCallback)
-    {
+	if (this.fCallback)
+	{
 		this.fCallback(this.selectedCalendarId(), this.fProceedUploading);
-    }
-    this.closePopup();
+	}
+	this.closePopup();
 };
 
 /**
