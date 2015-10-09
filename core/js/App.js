@@ -2,6 +2,7 @@
 
 var
 	_ = require('underscore'),
+	ko = require('knockout'),
 	$ = require('jquery'),
 	
 	Utils = require('core/js/utils/Common.js'),
@@ -33,9 +34,10 @@ require('core/js/vendors/inputosaurus.js');
 function CApp()
 {
 	this.bAuth = window.pSevenAppData.Auth;
+	this.bPublic = false;
 }
 
-CApp.prototype.init = function ()
+CApp.prototype.init = function (bPublic)
 {
 	if (this.bAuth)
 	{
@@ -68,7 +70,9 @@ CApp.prototype.init = function ()
 		};
 	}
 	
-	Screens.init(this.bAuth);
+	this.bPublic = bPublic;
+	
+	Screens.init(!this.bAuth && !bPublic);
 	Routing.init();
 	
 	require('core/js/AppTab.js');
@@ -77,6 +81,11 @@ CApp.prototype.init = function ()
 CApp.prototype.isAuth = function ()
 {
 	return this.bAuth;
+};
+
+CApp.prototype.isPublic = function ()
+{
+	return this.bPublic;
 };
 
 /**

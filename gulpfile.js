@@ -42,12 +42,22 @@ crlf +
 cfg.paths.js = {
 	all: {
 		dest: './static/js/',
-		name: 'all.js',
-		min: 'all.min.js',
+		name: 'app.js',
+		min: 'app.min.js',
 		afterlogic: true,
 		watch: true,
 		src: [
 			"./core/js/entry.js"
+		]
+	},
+	files_pub: {
+		dest: './static/js/',
+		name: 'app-files-pub.js',
+		min: 'app-files-pub.min.js',
+		afterlogic: true,
+		watch: true,
+		src: [
+			"./modules/Files/js/entry-pub.js"
 		]
 	}
 };
@@ -115,6 +125,10 @@ for (name in cfg.paths.js)
 }
 
 gulp.task('default', ['js:all']);
+
+gulp.task('a', ['js:all', 'js:files_pub']);
+
+gulp.task('f', ['js:files_pub']);
 
 gulp.task('m', ['lint', 'js:all:min']);
 

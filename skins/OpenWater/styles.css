@@ -7762,6 +7762,9 @@ html.rtl .contact_data_groups .link.call {
   width: 85%;
   position: relative;
 }
+.panel.files.public {
+  width: 100%;
+}
 .panel.files .middle_bar {
   padding-top: 31px;
   margin-top: -31px;

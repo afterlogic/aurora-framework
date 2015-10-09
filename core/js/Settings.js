@@ -2,6 +2,7 @@
 
 var
 	ko = require('knockout'),
+	$ = require('jquery'),
 			
 	AppData = window.pSevenAppData,
 	
@@ -71,7 +72,7 @@ module.exports = {
 			CalendarAppointments: true
 		},
 		Files: {
-			FileStoragePubHash: '',
+			FileStoragePubHash: AppData.FileStoragePubHash,
 			IsCollaborationSupported: true,
 			AllowFilesSharing: true,
 			FileStoragePubParams: {Name: ''},

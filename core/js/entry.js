@@ -22,5 +22,5 @@ $('body').ready(function () {
 	;
 	
 	ModulesManager.init(oAvaliableModules);
-	App.init();
+	App.init(false);
 });

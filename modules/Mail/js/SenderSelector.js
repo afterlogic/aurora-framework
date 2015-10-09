@@ -68,7 +68,6 @@ CSenderSelector.prototype.changeSelectedSender = function (oFetcherOrIdentity)
 		if (_.find(this.senderList(), function (oItem) {return oItem.id === sSelectedSenderId;}))
 		{
 			this.lockSelectedSender(true);
-			console.log(1, 'sSelectedSenderId', sSelectedSenderId);
 			this.selectedSender(sSelectedSenderId);
 			this.selectedFetcherOrIdentity(oFetcherOrIdentity);
 			this.lockSelectedSender(false);

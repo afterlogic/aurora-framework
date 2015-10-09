@@ -768,7 +768,7 @@ CHtmlEditorView.prototype.initUploader = function ()
 {
 	if (this.imageUploaderButton() && !this.oJua)
 	{
-		this.oJua = new Jua({
+		this.oJua = new CJua({
 			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,

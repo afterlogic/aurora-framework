@@ -19,11 +19,11 @@ module.exports = {
 		});
 	},
 	
-	getModulesScreens: function (bAuth) {
+	getModulesScreens: function (bOnlyAuthModule) {
 		var oModulesScreens = {};
 		
 		_.each(oModules, function (oModule, sModuleName) {
-			if (!!oModule.screens && (bAuth ? sModuleName !== 'Auth' : sModuleName === 'Auth'))
+			if (!!oModule.screens && (bOnlyAuthModule ? sModuleName === 'Auth' : sModuleName !== 'Auth'))
 			{
 				oModulesScreens[sModuleName] = oModule.screens;
 			}

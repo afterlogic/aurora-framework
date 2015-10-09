@@ -57,7 +57,7 @@ function CAbstractFileModel()
 	
 	this.content = ko.observable('');
 
-	this.accountId = ko.observable(App.defaultAccountId());
+	this.accountId = ko.observable(App.defaultAccountId ? App.defaultAccountId() : 0);
 	this.hash = ko.observable('');
 	this.thumb = ko.observable(false);
 	this.iframedView = ko.observable(false);

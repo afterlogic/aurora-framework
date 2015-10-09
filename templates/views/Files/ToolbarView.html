@@ -1,0 +1,33 @@
+<span class="content">
+	<span class="search_block">
+		<span class="input" data-bind="css: {'focus': isSearchFocused}">
+			<span class="icon search" data-i18n="CONTACTS/BUTTON_SEARCH" data-bind="i18n: 'text'"></span>
+			<input class="field" spellcheck="false" type="text" data-bind="hasfocus: isSearchFocused, value: searchPattern, onEnter: onSearch" />
+		</span>
+	</span>
+	<span class="item new_folder" data-bind="click: onCreateFolderClick, customTooltip: 'FILESTORAGE/NEW_FOLDER'">
+		<span class="icon"></span>
+		<span class="text" data-bind="i18n: 'text'" data-i18n="FILESTORAGE/NEW_FOLDER"></span>
+	</span>
+	<span class="item new_link" data-bind="visible: !isCurrentStorageExternal(), click: onCreateLinkClick, customTooltip: 'FILESTORAGE/BUTTON_UPLOAD_FILE_AS_LINK'">
+		<span class="icon"></span>
+		<span class="text" data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_UPLOAD_FILE_AS_LINK"></span>
+	</span>
+	<!-- ko template: { name: 'Files_DownloadButtonView'} --><!-- /ko -->
+	<span class="item send_files command" data-bind="visible: allowSendEmails(), command: sendCommand, customTooltip: 'FILESTORAGE/BUTTON_SEND_FILE'">
+		<span class="icon"></span>
+		<span class="text" data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_SEND_FILE"></span>
+	</span>
+	<span class="item edit" data-bind="command: renameCommand, customTooltip: 'FILESTORAGE/BUTTON_RENAME'">
+		<span class="icon"></span>
+		<span class="text" data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_RENAME"></span>
+	</span>
+	<span class="item publish" data-bind="visible: !isCurrentStorageExternal(), command: shareCommand, customTooltip: 'FILESTORAGE/BUTTON_PUBLIC_LINK'">
+		<span class="icon"></span>
+		<span class="text" data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_PUBLIC_LINK"></span>
+	</span>
+	<span class="item delete" data-bind="command: deleteCommand, customTooltip: 'FILESTORAGE/BUTTON_DELETE'">
+		<span class="icon"></span>
+		<span class="text" data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_DELETE"></span>
+	</span>
+</span>

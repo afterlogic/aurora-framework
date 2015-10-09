@@ -1,30 +1,32 @@
-<div class="panels" data-bind="splitter: {name: (isPublic ? 'file_storages_pub' : 'file_storages'), sizeLeft: (isPublic ? 0 : 200), minLeft: (isPublic ? 0 : 20), minRight: 572, resizeToWidth: true}">
-	<div class="panel storages" data-bind="visible: !isPublic">
-		<div class="resize_handler"></div>
-		<div class="panel_content">
-			<div class="toolbar">
-				<span class="content"> 
-					<a class="item upload" data-bind="initDom: uploaderButton"> 
-						<span data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_UPLOAD_FILES"></span> 
-					</a>
-				</span>
-			</div>
-			<div class="middle_bar" data-bind="">
-				<!-- ko template: { name: 'Files_StoragesPart'} --><!-- /ko -->
-				<div class="panel_bottom">
-					<span class="volumer" data-bind="visible: -1 < quotaProc()">
-						<span class="volumer_conteiner" data-bind="customTooltip: quotaDesc()">
-							<span class="used" data-bind="style: {'width': '' + (-1 < quotaProc() ? quotaProc() : 0) + '%' }"></span>
-						</span>
+<div class="screen FileStorageLayout" style="display: none;">
+	<div class="panels" data-bind="splitter: {name: 'file_storages', sizeLeft: 200, minLeft: 20, minRight: 572, resizeToWidth: true}">
+		<div class="panel storages">
+			<div class="resize_handler"></div>
+			<div class="panel_content">
+				<div class="toolbar">
+					<span class="content"> 
+						<a class="item upload" data-bind="initDom: uploaderButton"> 
+							<span data-bind="i18n: 'text'" data-i18n="FILESTORAGE/BUTTON_UPLOAD_FILES"></span> 
+						</a>
 					</span>
+				</div>
+				<div class="middle_bar" data-bind="">
+					<!-- ko template: { name: 'Files_StoragesPart'} --><!-- /ko -->
+					<div class="panel_bottom">
+						<span class="volumer" data-bind="visible: -1 < quotaProc()">
+							<span class="volumer_conteiner" data-bind="customTooltip: quotaDesc()">
+								<span class="used" data-bind="style: {'width': '' + (-1 < quotaProc() ? quotaProc() : 0) + '%' }"></span>
+							</span>
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="panel files">
-		<div class="panel_content">
-			<div class="toolbar" data-bind="template: { name: 'Files_ToolbarPart'}"></div>
-			<div class="middle_bar" data-bind="template: {name: 'Files_FilesPart'}"></div>
+		<div class="panel files">
+			<div class="panel_content">
+				<div class="toolbar" data-bind="template: { name: 'Files_ToolbarView'}"></div>
+				<div class="middle_bar" data-bind="template: {name: 'Files_FilesPart'}"></div>
+			</div>
 		</div>
 	</div>
 </div>

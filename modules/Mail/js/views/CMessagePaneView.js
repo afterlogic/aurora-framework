@@ -963,7 +963,6 @@ CMessagePaneView.prototype.executePrint = function ()
 
 CMessagePaneView.prototype.executeSave = function ()
 {
-	console.log(this.currentMessage());
 	if (this.currentMessage())
 	{
 		Utils.downloadByUrl(this.currentMessage().downloadLink());

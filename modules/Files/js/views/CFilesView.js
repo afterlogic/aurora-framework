@@ -24,9 +24,7 @@ var
 	
 	Ajax = require('modules/Files/js/Ajax.js'),
 	Settings = require('modules/Files/js/Settings.js'),
-	CFileModel = require('modules/Files/js/models/CFileModel.js'),
-	
-	bExtApp = false
+	CFileModel = require('modules/Files/js/models/CFileModel.js')
 ;
 
 /**
@@ -43,8 +41,8 @@ function CFilesView(bPopup)
 	
 	this.error = ko.observable(false);
 	this.loaded = ko.observable(false);
-	this.isPublic = bExtApp;
-	this.publicHash = bExtApp ? Settings.FileStoragePubHash : '';
+	this.isPublic = App.isPublic();
+	this.publicHash = this.isPublic ? Settings.FileStoragePubHash : '';
 	this.IsCollaborationSupported = Settings.IsCollaborationSupported;
 	this.AllowFilesSharing = Settings.AllowFilesSharing;
 	
@@ -241,7 +239,7 @@ function CFilesView(bPopup)
 
 _.extendOwn(CFilesView.prototype, CAbstractView.prototype);
 
-CFilesView.prototype.ViewTemplate = 'Files_FilesView';
+CFilesView.prototype.ViewTemplate = App.isPublic() ? 'Files_PublicFilesView' : 'Files_FilesView';
 CFilesView.prototype.__name = 'CFilesView';
 
 CFilesView.prototype.onBind = function ()
@@ -292,7 +290,7 @@ CFilesView.prototype.initUploader = function ()
 				'Module': 'Files',
 				'Method': 'UploadFile',
 				'Token': UserSettings.CsrfToken,
-				'AccountID': App.defaultAccountId(),
+				'AccountID': App.defaultAccountId ? App.defaultAccountId() : 0,
 				'Parameters':  function (oFile) {
 					return JSON.stringify({
 						'Type': self.storageType(),

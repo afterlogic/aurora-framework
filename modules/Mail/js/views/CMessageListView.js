@@ -845,7 +845,7 @@ CMessageListView.prototype.initUploader = function ()
 
 	if (this.uploaderArea())
 	{
-		this.oJua = new Jua({
+		this.oJua = new CJua({
 			'action': '?/Upload/',
 			'name': 'jua-uploader',
 			'queueSize': 2,

@@ -4,6 +4,7 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	moment = require('moment'),
 	
 	aDayOfMonthFunctions = [],
 	iNowDayOfMonth = ko.observable(moment().date())

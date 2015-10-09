@@ -156,7 +156,6 @@ function PhoneCallback(oRequest, fResponse)
  */
 function DeleteHandler(oContact)
 {
-	console.log('oContact', oContact);
 	Ajax.send('DeleteSuggestion', {
 		'ContactId': oContact.id,
 		'SharedToAll': oContact.sharedToAll ? '1' : '0'

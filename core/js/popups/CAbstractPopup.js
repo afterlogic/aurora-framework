@@ -1,6 +1,8 @@
 'use strict';
 
 var
+	_ = require('underscore'),
+	
 	Utils = require('core/js/utils/Common.js'),
 	Popups = require('core/js/Popups.js')
 ;

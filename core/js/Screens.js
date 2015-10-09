@@ -6,9 +6,7 @@ var
 	ko = require('knockout'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
-	Settings = require('core/js/Settings.js'),
-	
-	bSingleMode = false
+	Settings = require('core/js/Settings.js')
 ;
 
 /**
@@ -31,13 +29,21 @@ function CScreens()
 }
 
 /**
- * @param {boolean} bAuth
+ * @param {boolean} bOnlyAuthModule
  */
-CScreens.prototype.init = function (bAuth)
+CScreens.prototype.init = function (bOnlyAuthModule)
 {
-	var oModulesScreens = ModulesManager.getModulesScreens(bAuth);
+	var
+		oModulesScreens = ModulesManager.getModulesScreens(bOnlyAuthModule),
+		oModulesTabs = ModulesManager.getModulesTabs(),
+		sFirstModuleName = ''
+	;
 	
 	_.each(oModulesScreens, _.bind(function (oScreens, sModuleName) {
+		if (sFirstModuleName === '')
+		{
+			sFirstModuleName = sModuleName;
+		}
 		this.addToScreenList(sModuleName, oScreens);
 	}, this));
 	
@@ -48,7 +54,12 @@ CScreens.prototype.init = function (bAuth)
 		this.sDefaultScreen = Settings.EntryModule.toLowerCase();
 	}
 	
-	if (!bSingleMode && bAuth)
+	if (this.sDefaultScreen === '')
+	{
+		this.sDefaultScreen = sFirstModuleName.toLowerCase();
+	}
+	
+	if (oModulesTabs.length > 0)
 	{
 		this.showView('header');
 	}
