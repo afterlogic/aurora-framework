@@ -1023,7 +1023,7 @@ CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
 		this.files([]);
 	}
 	
-	Ajax.sendExt('GetFiles', {
+	Ajax.send('GetFiles', {
 			'Type': sType,
 			'Path': this.path(),
 			'Pattern': this.searchPattern()
@@ -1061,7 +1061,7 @@ CFilesView.prototype.getPublicFiles = function (oPath)
 		this.files([]);
 	}
 	
-	Ajax.sendExt('GetPublicFiles', {
+	Ajax.send('GetPublicFiles', {
 			'Hash': Settings.FileStoragePubHash,
 			'Path': this.path()
 		}, this.onGetFilesResponse, this

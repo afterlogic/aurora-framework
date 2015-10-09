@@ -1,19 +1,9 @@
 'use strict';
 
-var
-	Ajax = require('core/js/Ajax.js')
-;
+var Ajax = require('core/js/Ajax.js');
 
 module.exports = {
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
-		var oRequestParameters = {
-			'Module': 'Auth',
-			'Method': sMethod
-		};
-		if (oParameters)
-		{
-			oRequestParameters.Parameters = JSON.stringify(oParameters);
-		}
-		Ajax.send(oRequestParameters, fResponseHandler, oContext);
+		Ajax.send('Auth', sMethod, oParameters, fResponseHandler, oContext);
 	}
 };

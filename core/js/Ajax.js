@@ -16,292 +16,199 @@ var
  */
 function CAjax()
 {
-	this.sUrl = '?/Ajax/';
 	this.requests = ko.observableArray([]);
-	// not "computed", because "reguests" is frequently updated
-	this.openedRequestsCount = ko.observable(0);
+	
+	this.aOnAllRequestsClosedHandlers = [];
 	this.requests.subscribe(function () {
-		this.openedRequestsCount(this.requests().length);
+		if (this.requests().length === 0)
+		{
+			_.each(this.aOnAllRequestsClosedHandlers, function (fHandler) {
+				if ($.isFunction(fHandler))
+				{
+					fHandler();
+				}
+			});
+		}
 	}, this);
 	
-	this.aActionsWithoutAuthForSend = ['SystemLogin', 'SystemUpdateLanguageOnLogin', 'Logout', 'AccountCreate', 
-		'SystemSetMobile', 'AccountRegister', 'AccountGetForgotQuestion', 'AccountValidateForgotQuestion', 'AccountChangeForgotPassword'];
+	this.aAbortRequestHandlers = {};
 	
-	this.aActionsWithoutAuthForSendExt = ['SocialRegister', 'HelpdeskRegister', 'HelpdeskForgot', 
-			'HelpdeskLogin', 'HelpdeskForgotChangePassword', 'Logout', 'GetCalendars',
-			'GetEvents', 'GetPublicFiles'];
+	this.bAllowRequests = true;
+	this.bInternetConnectionProblem = false;
 }
 
 /**
- * @param {string=} sAction = ''
+ * @param {string} sModule
+ * @param {string} sMethod
+ * @returns {object}
  */
-CAjax.prototype.AddActionsWithoutAuthForSendExt = function (sAction)
+CAjax.prototype.getOpenedRequest = function (sModule, sMethod)
 {
-	sAction = Utils.isUnd(sAction) ? '' : sAction;
-	if (sAction !== '')
-	{
-		if (_.indexOf(this.aActionsWithoutAuthForSendExt, sAction) === -1)
-		{
-			this.aActionsWithoutAuthForSendExt.push(sAction);
-		}
-	}
-};
-
-/**
- * @param {string=} sAction = ''
- */
-CAjax.prototype.AddActionsWithoutAuthForSend = function (sAction)
-{
-	sAction = Utils.isUnd(sAction) ? '' : sAction;
-	if (sAction !== '')
-	{
-		if (_.indexOf(this.aActionsWithoutAuthForSend, sAction) === -1)
-		{
-			this.aActionsWithoutAuthForSend.push(sAction);
-		}
-	}
-};
-
-/**
- * @param {string=} sAction = ''
- * @returns {Boolean}
- */
-CAjax.prototype.hasOpenedRequests = function (sAction)
-{
-	sAction = Utils.isUnd(sAction) ? '' : sAction;
+	var oFoundReqData = _.find(this.requests(), function (oReqData) {
+		return oReqData.Request.Module === sModule && oReqData.Request.Method === sMethod;
+	});
 	
-	this.requests(_.filter(this.requests(), function (oReq) {
-		var
-			bComplete = oReq && oReq.Xhr.readyState === 4,
-			bAbort = !oReq || oReq.Xhr.readyState === 0 && oReq.Xhr.statusText === 'abort',
-			bSameAction = (sAction === '') || oReq && (oReq.Parameters.Action === sAction)
-		;
+	return oFoundReqData ? oFoundReqData.Request : null;
+};
+
+/**
+ * @param {string=} sModule = ''
+ * @param {string=} sMethod = ''
+ * @returns {boolean}
+ */
+CAjax.prototype.hasOpenedRequests = function (sModule, sMethod)
+{
+	sModule = Utils.isUnd(sModule) ? '' : sModule;
+	sMethod = Utils.isUnd(sMethod) ? '' : sMethod;
+	
+	if (sMethod === '')
+	{
+		return this.requests().length > 0;
+	}
+	else
+	{
+		return !!_.find(this.requests(), function (oReqData) {
+			if (oReqData)
+			{
+				var
+					bComplete = oReqData.Xhr.readyState === 4,
+					bAbort = oReqData.Xhr.readyState === 0 && oReqData.Xhr.statusText === 'abort',
+					bSameMethod = oReqData.Request.Module === sModule && oReqData.Request.Method === sMethod
+				;
+				return !bComplete && !bAbort && bSameMethod;
+			}
+			return false;
+		});
+	}
+};
+
+/**
+ * @param {string} sModule
+ * @param {function} fHandler
+ */
+CAjax.prototype.registerAbortRequestHandler = function (sModule, fHandler)
+{
+	this.aAbortRequestHandlers[sModule] = fHandler;
+};
+
+/**
+ * @param {function} fHandler
+ */
+CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler)
+{
+	this.aOnAllRequestsClosedHandlers.push(fHandler);
+};
+
+/**
+ * @param {string} sModule
+ * @param {string} sMethod
+ * @param {object} oParameters
+ * @param {function=} fResponseHandler
+ * @param {object=} oContext
+ * @param {number=} iTimeout
+ */
+CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, iTimeout)
+{
+	if (this.bAllowRequests && !this.bInternetConnectionProblem)
+	{
+		var oRequest = {
+			Module: sModule,
+			Method: sMethod
+		};
 		
-		return oReq && !bComplete && !bAbort && bSameAction;
-	}));
-	
-	return this.requests().length > 0;
-};
+//		if (AfterLogicApi.runPluginHook)
+//		{
+//			AfterLogicApi.runPluginHook('ajax-default-request', [sModule, sMethod, oParameters]);
+//		}
 
-/**
- * @return {boolean}
- */
-CAjax.prototype.isSearchMessages = function ()
-{
-	var bSearchMessages = false;
-	
-	_.each(this.requests(), function (oReq) {
-		if (oReq && oReq.Parameters && oReq.Parameters.Action === 'GetMessages' && oReq.Parameters.Search !== '')
+		if (oParameters)
 		{
-			bSearchMessages = true;
+			oRequest.Parameters = JSON.stringify(oParameters);
 		}
-	}, this);
+		
+		if (App.isAuth() && App.defaultAccountId)
+		{
+			oRequest.AccountID = App.defaultAccountId();
+		}
+		else if (Settings.TenantHash)
+		{
+			oRequest.TenantHash = Settings.TenantHash;
+		}
+		
+		if (Settings.CsrfToken)
+		{
+			oRequest.Token = Settings.CsrfToken;
+		}
+		
+		this.abortRequests(oRequest);
 	
-	return bSearchMessages;
+		this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
+	}
 };
+
+/*************************private*************************************/
 
 /**
- * @param {string} sAction
- */
-CAjax.prototype.isAllowedActionWithoutAuth = function (sAction)
-{
-	return _.indexOf(this.aActionsWithoutAuthForSend, sAction) !== -1;
-};
-
-CAjax.prototype.isAllowedExtAction = function (sAction)
-{
-	return sAction === 'SocialRegister' || sAction === 'HelpdeskRegister' || sAction === 'HelpdeskForgot' || sAction === 'HelpdeskLogin' || sAction === 'Logout';
-};
-
-/**
- * @param {Object} oParameters
+ * @param {Object} oRequest
  * @param {Function=} fResponseHandler
  * @param {Object=} oContext
- * @param {Function=} fDone
+ * @param {number=} iTimeout
  */
-CAjax.prototype.doSend = function (oParameters, fResponseHandler, oContext, fDone)
+CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeout)
 {
 	var
-		doneFunc = _.bind((fDone || null), this, oParameters, fResponseHandler, oContext),
-		failFunc = _.bind(this.fail, this, oParameters, fResponseHandler, oContext),
-		alwaysFunc = _.bind(this.always, this, oParameters),
+		doneFunc = _.bind(this.done, this, oRequest, fResponseHandler, oContext),
+		failFunc = _.bind(this.fail, this, oRequest, fResponseHandler, oContext),
+		alwaysFunc = _.bind(this.always, this, oRequest),
 		oXhr = null
 	;
 	
-//	if (AfterLogicApi.runPluginHook)
-//	{
-//		AfterLogicApi.runPluginHook('ajax-default-request', [oParameters.Action, oParameters]);
-//	}
-	
-	if (Settings.CsrfToken)
-	{
-		oParameters.Token = Settings.CsrfToken;
-	}
-
-	this.abortRequests(oParameters);
-	
-//	Utils.log('Ajax request send', oParameters.Action, oParameters);
-	
 	oXhr = $.ajax({
-		url: this.sUrl,
+		url: '?/Ajax/',
 		type: 'POST',
 		async: true,
 		dataType: 'json',
-		data: oParameters,
+		data: oRequest,
 		success: doneFunc,
 		error: failFunc,
 		complete: alwaysFunc,
-		timeout: oParameters.Action === 'GetMessagesBodies' ? 100000 : 50000
+		timeout: Utils.isUnd(iTimeout) ? 50000 : iTimeout
 	});
 	
-	this.requests().push({Parameters: oParameters, Xhr: oXhr});
+	this.requests().push({ Request: oRequest, Xhr: oXhr });
 };
 
 /**
- * @param {Object} oParameters
- * @param {Function=} fResponseHandler
- * @param {Object=} oContext
+ * @param {Object} oRequest
  */
-CAjax.prototype.send = function (oParameters, fResponseHandler, oContext)
+CAjax.prototype.abortRequests = function (oRequest)
 {
-	var
-		bCurrentAccountId = oParameters.AccountID === undefined,
-		bAccountExists = bCurrentAccountId || App.isAuth() && App.hasAccountWithId(oParameters.AccountID)
-	;
+	var fHandler = this.aAbortRequestHandlers[oRequest.Module];
 	
-	if (oParameters && (App.isAuth() && bAccountExists || this.isAllowedActionWithoutAuth(oParameters.Action)))
+	if ($.isFunction(fHandler))
 	{
-		if (bCurrentAccountId && App.isAuth() && App.currentAccountId)
-		{
-			oParameters.AccountID = App.currentAccountId();
-		}
-		
-		this.doSend(oParameters, fResponseHandler, oContext, this.done);
-	}
-};
-
-/**
- * @param {Object} oParameters
- * @param {Function=} fResponseHandler
- * @param {Object=} oContext
- */
-CAjax.prototype.sendExt = function (oParameters, fResponseHandler, oContext)
-{	
-	var
-		bAllowWithoutAuth = _.indexOf(this.aActionsWithoutAuthForSendExt, oParameters.Action) !== -1
-	;
-	
-	if (oParameters && (App.isAuth() || bAllowWithoutAuth))
-	{
-		if (Settings.TenantHash)
-		{
-			oParameters.TenantHash = Settings.TenantHash;
-		}
-		
-		this.doSend(oParameters, fResponseHandler, oContext, this.doneExt);
-	}
-};
-
-/**
- * @param {Object} oParameters
- */
-CAjax.prototype.abortRequests = function (oParameters)
-{
-	switch (oParameters.Action || oParameters.Method)
-	{
-		case 'MoveMessages':
-		case 'DeleteMessages':
-			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
-			this.abortRequestByActionName('GetMessage');
-			break;
-		case 'GetMessages':
-		case 'SetMessagesSeen':
-		case 'MessageSetFlagged':
-			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
-			break;
-		case 'MessagesSetAllSeen':
-			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
-			this.abortRequestByActionName('GetMessagesByUids', {'Folder': oParameters.Folder});
-			break;
-		case 'ClearFolder':
-			this.abortRequestByActionName('GetMessages', {'Folder': oParameters.Folder});
-			
-			// GetRelevantFoldersInformation-request aborted during folder cleaning, not to get the wrong information.
-			this.abortRequestByActionName('GetRelevantFoldersInformation');
-			break;
-		case 'GetRelevantFoldersInformation':
-			this.abortRequestByActionName('GetRelevantFoldersInformation');
-			break;
-		case 'GetMessagesFlags':
-			this.abortRequestByActionName('GetMessagesFlags');
-			break;
-		case 'GetContacts':
-			this.abortRequestByActionName('GetContacts');
-			break;
-		case 'GetContact':
-			this.abortRequestByActionName('GetContact');
-			break;
-		case 'UpdateEvent':
-			this.abortRequestByActionName('UpdateEvent', {'calendarId': oParameters.calendarId, 'uid': oParameters.uid});
-			break;
-		case 'GetCalendars':
-			this.abortRequestByActionName('GetCalendars');
-			break;
-		case 'GetEvents':
-			this.abortRequestByActionName('GetEvents');
-			break;
-	}
-};
-
-/**
- * @param {string} sAction
- * @param {Object=} oParameters
- */
-CAjax.prototype.abortRequestByActionName = function (sAction, oParameters)
-{
-	var bDoAbort;
-	
-	_.each(this.requests(), function (oReq, iIndex) {
-		bDoAbort = false;
-		
-		if (oReq && oReq.Parameters.Action === sAction)
-		{
-			switch (sAction)
+		_.each(this.requests(), _.bind(function (oReqData, iIndex) {
+			var oOpenedRequest = oReqData.Request;
+			if (oRequest.Module === oOpenedRequest.Module)
 			{
-				case 'GetMessages':
-					if (oParameters.Folder === oReq.Parameters.Folder)
-					{
-						bDoAbort = true;
-					}
-					break;
-				case 'UpdateEvent':
-					if (oParameters.calendarId === oReq.Parameters.calendarId && 
-							oParameters.uid === oReq.Parameters.uid)
-					{
-						bDoAbort = true;
-					}
-					break;
-				default:
-					bDoAbort = true;
-					break;
+				if (fHandler(oRequest, oOpenedRequest))
+				{
+					oReqData.Xhr.abort();
+					this.requests()[iIndex] = undefined;
+				}
 			}
-		}
-		if (bDoAbort)
-		{
-			oReq.Xhr.abort();
-			this.requests()[iIndex] = undefined;
-		}
-	}, this);
+		}, this));
+	}
 	
 	this.requests(_.compact(this.requests()));
 };
 
 CAjax.prototype.abortAllRequests = function ()
 {
-	_.each(this.requests(), function (oReq) {
-		if (oReq)
+	_.each(this.requests(), function (oReqData) {
+		if (oReqData)
 		{
-			oReq.Xhr.abort();
+			oReqData.Xhr.abort();
 		}
 	}, this);
 	
@@ -309,133 +216,108 @@ CAjax.prototype.abortAllRequests = function ()
 };
 
 /**
- * @param {Object} oParameters
+ * @param {Object} oRequest
  * @param {Function} fResponseHandler
  * @param {Object} oContext
- * @param {{Result:boolean}} oData
+ * @param {{Result:boolean}} oResponse
  * @param {string} sType
  * @param {Object} oXhr
  */
-CAjax.prototype.done = function (oParameters, fResponseHandler, oContext, oData, sType, oXhr)
+CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr)
 {
-	var
-		bAllowedActionWithoutAuth = this.isAllowedActionWithoutAuth(oParameters.Action),
-		bAccountExists = App.isAuth() && App.hasAccountWithId(oParameters.AccountID),
-		bDefaultAccount = App.isAuth() && (oParameters.AccountID === App.defaultAccountId())
-	;
+	var bDefaultAccount = App.isAuth() && (oRequest.AccountID === App.defaultAccountId());
 	
-//	Utils.log('Ajax request done', oParameters.Action, sType, Utils.getAjaxDataForLog(oParameters.Action, oData), oParameters);
-	
-	if (bAllowedActionWithoutAuth || bAccountExists)
+	if (oResponse && !oResponse.Result)
 	{
-		if (oData && !oData.Result)
+		switch (oResponse.ErrorCode)
 		{
-			switch (oData.ErrorCode)
-			{
-				case Enums.Errors.InvalidToken:
-					if (!bAllowedActionWithoutAuth)
-					{
-						App.tokenProblem();
-					}
-					break;
-				case Enums.Errors.AuthError:
-					if (bDefaultAccount && !bAllowedActionWithoutAuth)
-					{
-						this.abortAllRequests();
-						App.authProblem();
-					}
-					break;
-			}
+			case Enums.Errors.InvalidToken:
+				this.bAllowRequests = false;
+				App.tokenProblem();
+				break;
+			case Enums.Errors.AuthError:
+				if (bDefaultAccount)
+				{
+					this.bAllowRequests = false;
+					this.abortAllRequests();
+					App.authProblem();
+				}
+				break;
 		}
-
-		this.executeResponseHandler(fResponseHandler, oContext, oData, oParameters);
 	}
+
+	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest);
 };
 
 /**
- * @param {Object} oParameters
- * @param {Function} fResponseHandler
- * @param {Object} oContext
- * @param {{Result:boolean}} oData
- * @param {string} sType
- * @param {Object} oXhr
- */
-CAjax.prototype.doneExt = function (oParameters, fResponseHandler, oContext, oData, sType, oXhr)
-{
-	this.executeResponseHandler(fResponseHandler, oContext, oData, oParameters);
-};
-
-/**
- * @param {Object} oParameters
+ * @param {Object} oRequest
  * @param {Function} fResponseHandler
  * @param {Object} oContext
  * @param {Object} oXhr
  * @param {string} sType
  * @param {string} sErrorText
  */
-CAjax.prototype.fail = function (oParameters, fResponseHandler, oContext, oXhr, sType, sErrorText)
+CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sType, sErrorText)
 {
-	var oData = {'Result': false, 'ErrorCode': 0};
-	
-//	Utils.log('Ajax request fail', oParameters.Action, sType, oParameters);
+	var oResponse = { Result: false, ErrorCode: 0 };
 	
 	switch (sType)
 	{
 		case 'abort':
-			oData = {'Result': false, 'ErrorCode': Enums.Errors.NotDisplayedError};
+			oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError };
 			break;
 		default:
 		case 'error':
 		case 'parseerror':
 			if (sErrorText === '')
 			{
-				oData = {'Result': false, 'ErrorCode': Enums.Errors.NotDisplayedError};
+				oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError };
 			}
 			else
 			{
-				oData = {'Result': false, 'ErrorCode': Enums.Errors.DataTransferFailed};
+				oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed };
 			}
 			break;
 	}
 	
-	this.executeResponseHandler(fResponseHandler, oContext, oData, oParameters);
+	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest);
 };
 
 /**
  * @param {Function} fResponseHandler
  * @param {Object} oContext
- * @param {Object} oData
- * @param {Object} oParameters
+ * @param {Object} oResponse
+ * @param {Object} oRequest
  */
-CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oData, oParameters)
+CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest)
 {
-	if (!oData)
+	if (!oResponse)
 	{
-		oData = {'Result': false, 'ErrorCode': 0};
+		oResponse = { Result: false, ErrorCode: 0 };
 	}
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{
-//		AfterLogicApi.runPluginHook('ajax-default-response', [oParameters.Action, oData]);
+//		AfterLogicApi.runPluginHook('ajax-default-response', [oRequest.Module, oRequest.Method, oData]);
 //	}
 	
-	if (typeof fResponseHandler === 'function' && !oData['StopExecuteResponse'])
+	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
-		fResponseHandler.apply(oContext, [oData, oParameters]);
+		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
 };
 
 /**
- * @param {Object} oXhr
+ * @param {object} oXhr
  * @param {string} sType
- * @param {{Action:string}} oParameters
+ * @param {object} oRequest
  */
-CAjax.prototype.always = function (oParameters, oXhr, sType)
+CAjax.prototype.always = function (oRequest, oXhr, sType)
 {
 	if (sType !== 'abort')
 	{
-		_.each(this.requests(), function (oReq, iIndex) {
-			if (oReq && _.isEqual(oReq.Parameters, oParameters))
+		_.each(this.requests(), function (oReqData, iIndex) {
+			if (oReqData && _.isEqual(oReqData.Request, oRequest))
 			{
 				this.requests()[iIndex] = undefined;
 			}
@@ -443,13 +325,7 @@ CAjax.prototype.always = function (oParameters, oXhr, sType)
 
 		this.requests(_.compact(this.requests()));
 
-		this.checkConnection(oParameters.Action, sType);
-		
-		var oPrefetcher = require('core/js/Prefetcher.js');
-		if (oPrefetcher && sType !== 'parsererror' && !this.hasOpenedRequests())
-		{
-			oPrefetcher.start();
-		}
+		this.checkConnection(oRequest.Module, oRequest.Method, sType);
 	}
 };
 
@@ -472,27 +348,27 @@ CAjax.prototype.checkConnection = (function () {
 		}
 	}, 5000);
 
-	return function (sAction, sStatus)
+	return function (sModule, sMethod, sStatus)
 	{
 		clearTimeout(iTimer);
 		if (sStatus !== 'error')
 		{
-			Ajax.InternetConnectionError = false;
+			Ajax.bInternetConnectionProblem = false;
 			Screens.hideError(true);
 		}
 		else
 		{
-			if (sAction === 'SystemPing')
+			if (sModule === 'Ping' && sMethod === 'Ping')
 			{
-				Ajax.InternetConnectionError = true;
+				Ajax.bInternetConnectionProblem = true;
 				Screens.showError(Utils.i18n('WARNING/NO_INTERNET_CONNECTION'), false, true, true);
 				iTimer = setTimeout(function () {
-					Ajax.send({'Action': 'SystemPing'});
+					Ajax.doSend({ Module: 'Ping', Method: 'Ping' });
 				}, 60000);
 			}
 			else
 			{
-				Ajax.send({'Action': 'SystemPing'});
+				Ajax.doSend({ Module: 'Ping', Method: 'Ping' });
 			}
 		}
 	};
@@ -500,4 +376,11 @@ CAjax.prototype.checkConnection = (function () {
 
 var Ajax = new CAjax();
 
-module.exports = Ajax;
+module.exports = {
+	getOpenedRequest: _.bind(Ajax.getOpenedRequest, Ajax),
+	hasInternetConnectionProblem: function () { return Ajax.bInternetConnectionProblem; },
+	hasOpenedRequests: _.bind(Ajax.hasOpenedRequests, Ajax),
+	registerAbortRequestHandler: _.bind(Ajax.registerAbortRequestHandler, Ajax),
+	registerOnAllRequestsClosedHandler: _.bind(Ajax.registerOnAllRequestsClosedHandler, Ajax),
+	send: _.bind(Ajax.send, Ajax)
+};

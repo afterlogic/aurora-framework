@@ -266,19 +266,16 @@ CMailCache.prototype.init = function ()
 {
 	var oMailCache = null;
 	
-	Ajax.openedRequestsCount.subscribe(function () {
-		if (Ajax.openedRequestsCount() === 0)
-		{
-			// Delay not to reset these flags between two related requests (e.g. 'GetRelevantFoldersInformation' and 'GetMessages')
-			_.delay(_.bind(function () {
-				if (Ajax.requests().length === 0)
-				{
-					this.checkMailStarted(false);
-					this.folderListLoading.removeAll();
-				}
-			}, this), 10);
-		}
-	}, this);
+	Ajax.registerOnAllRequestsClosedHandler(function () {
+		// Delay not to reset these flags between two related requests (e.g. 'GetRelevantFoldersInformation' and 'GetMessages')
+		_.delay(_.bind(function () {
+			if (!Ajax.hasOpenedRequests())
+			{
+				this.checkMailStarted(false);
+				this.folderListLoading.removeAll();
+			}
+		}, this), 10);
+	});
 	
 	if (bSingleMode && window.opener)
 	{
@@ -539,13 +536,19 @@ CMailCache.prototype.setAutocheckmailTimer = function ()
 	if (!bSingleMode && UserSettings.AutoRefreshIntervalMinutes > 0)
 	{
 		this.iAutoCheckMailTimer = setTimeout(function () {
-			if (!Ajax.isSearchMessages())
+			if (!this.isSearchExecuting())
 			{
 				MailCache.checkMessageFlags();
 				MailCache.executeCheckMail(false);
 			}
 		}, UserSettings.AutoRefreshIntervalMinutes * 60 * 1000);
 	}
+};
+
+CMailCache.prototype.isSearchExecuting = function ()
+{
+	var oRequest = Ajax.getOpenedRequest('GetMessages');
+	return oRequest && oRequest.Parameters.Search !== '';
 };
 
 CMailCache.prototype.checkMessageFlags = function ()

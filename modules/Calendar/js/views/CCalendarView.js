@@ -903,7 +903,7 @@ CCalendarView.prototype.getCalendars = function ()
 	this.checkStarted(true);
 	this.setCalendarGridVisibility();	
 
-	Ajax.sendExt('GetCalendars', {
+	Ajax.send('GetCalendars', {
 			'IsPublic': this.isPublic ? 1 : 0,
 			'PublicCalendarId': this.publicCalendarId
 		}, this.onGetCalendarsResponse, this
@@ -995,7 +995,7 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
 //		{
 //			this.$calendarGrid.find('.fc-view div').first().css('visibility', 'hidden');
 //		}
-		Ajax.sendExt('GetEvents', {
+		Ajax.send('GetEvents', {
 			'CalendarIds': JSON.stringify(aCalendarIds),
 			'Start': this.startDateTime,
 			'End': this.endDateTime,

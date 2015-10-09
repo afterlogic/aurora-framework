@@ -4,14 +4,6 @@ var Ajax = require('core/js/Ajax.js');
 
 module.exports = {
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
-		var oRequestParameters = {
-			'Module': 'Twilio',
-			'Method': sMethod
-		};
-		if (oParameters)
-		{
-			oRequestParameters.Parameters = JSON.stringify(oParameters);
-		}
-		Ajax.send(oRequestParameters, fResponseHandler, oContext);
+		Ajax.send('Twilio', sMethod, oParameters, fResponseHandler, oContext);
 	}
 };

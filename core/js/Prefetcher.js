@@ -23,6 +23,9 @@ Prefetcher.requireAjax = function ()
 	if (Ajax === null)
 	{
 		Ajax = require('core/js/Ajax.js');
+		Ajax.registerOnAllRequestsClosedHandler(function () {
+			Prefetcher.start();
+		});
 	}
 };
 
@@ -30,7 +33,7 @@ Prefetcher.start = function ()
 {
 	Prefetcher.requireAjax();
 	
-	if (App.isAuth() && !bSingleMode && !Ajax.InternetConnectionError && !Ajax.hasOpenedRequests())
+	if (App.isAuth() && !bSingleMode && !Ajax.hasInternetConnectionProblem() && !Ajax.hasOpenedRequests())
 	{
 		Prefetcher.prefetchAll();
 	}
