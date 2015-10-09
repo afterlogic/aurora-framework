@@ -289,6 +289,8 @@ class Service
 					else if (!empty($sModule) && !empty($sMethod))
 					{
 						$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
+						$aParameters['AccountID'] = $this->oHttp->GetPost('AccountID', '');
+						$aParameters['AuthToken'] = $this->oHttp->GetPost('AuthToken', '');
 						$aResponseItem = $this->oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
 						
 /*						
@@ -340,12 +342,15 @@ class Service
 				@ob_start();
 				$aResponseItem = null;
 				$sAction = empty($aPaths[1]) ? '' : $aPaths[1];
+				$sModule = $this->oHttp->GetPost('Module', null);
+				$sMethod = $this->oHttp->GetPost('Method', null);
+				$sParameters = $this->oHttp->GetPost('Parameters', null);
 				try
 				{
-					$sMethodName = 'Upload'.$sAction;
-					if (method_exists($this->oActions, $sMethodName) &&
-						is_callable(array($this->oActions, $sMethodName)))
+					
+					if (!empty($sModule) && !empty($sMethod))
 					{
+						$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
 						$sError = '';
 						$sInputName = 'jua-uploader';
 
@@ -356,23 +361,24 @@ class Service
 							$iError = (isset($_FILES[$sInputName]['error'])) ? (int) $_FILES[$sInputName]['error'] : UPLOAD_ERR_OK;
 							if (UPLOAD_ERR_OK === $iError)
 							{
-								$this->oActions->SetActionParams(array(
-									'AccountID' => $this->oHttp->GetPost('AccountID', ''),
-									'FileData' => $_FILES[$sInputName],
-									'AdditionalData' => $this->oHttp->GetPost('AdditionalData', null),
-									'IsExt' => '1' === (string) $this->oHttp->GetPost('IsExt', '0') ? '1' : '0',
-									'TenantHash' => (string) $this->oHttp->GetPost('TenantHash', ''),
-									'Token' => $this->oHttp->GetPost('Token', ''),
-									'AuthToken' => $this->oHttp->GetPost('AuthToken', '')
-								));
+								$aParameters = array_merge($aParameters, 
+									array(
+										'AccountID' => $this->oHttp->GetPost('AccountID', ''),
+										'FileData' => $_FILES[$sInputName],
+										'IsExt' => '1' === (string) $this->oHttp->GetPost('IsExt', '0') ? '1' : '0',
+										'TenantHash' => (string) $this->oHttp->GetPost('TenantHash', ''),
+										'Token' => $this->oHttp->GetPost('Token', ''),
+										'AuthToken' => $this->oHttp->GetPost('AuthToken', '')
+									)
+								);
 
-								\CApi::LogObject($this->oActions->GetActionParams());
 
-								$aResponseItem = call_user_func(array($this->oActions, $sMethodName));
+								$aResponseItem = $this->oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
 							}
 							else
 							{
-								$sError = $this->oActions->convertUploadErrorToString($iError);
+								$sError = 'unknown';
+//								$sError = $this->oActions->convertUploadErrorToString($iError);
 							}
 						}
 						else if (!isset($_FILES) || !is_array($_FILES) || 0 === count($_FILES))
@@ -383,7 +389,7 @@ class Service
 						{
 							$sError = 'unknown';
 						}
-					}
+					}					
 
 					if (!is_array($aResponseItem) && empty($sError))
 					{

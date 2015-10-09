@@ -316,4 +316,35 @@ class CApiMailFolder
 
 		return $iXListType;
 	}
+	
+	public function toArray()
+	{
+		$aExtended = null;
+		$mStatus = $this->getStatus();
+		if (is_array($mStatus) && isset($mStatus['MESSAGES'], $mStatus['UNSEEN'], $mStatus['UIDNEXT']))
+		{
+			$aExtended = array(
+				'MessageCount' => (int) $mStatus['MESSAGES'],
+				'MessageUnseenCount' => (int) $mStatus['UNSEEN'],
+				'UidNext' => (string) $mStatus['UIDNEXT'],
+				'Hash' => \api_Utils::GenerateFolderHash(
+					$this->getRawFullName(), $mStatus['MESSAGES'], $mStatus['UNSEEN'], $mStatus['UIDNEXT']
+				)
+			);
+		}
+
+		return array(
+			'Type' => $this->getType(),
+			'Name' => $this->getName(),
+			'FullName' => $this->getFullName(),
+			'FullNameRaw' => $this->getRawFullName(),
+			'FullNameHash' => md5($this->getRawFullName()),
+			'Delimiter' => $this->getDelimiter(),
+			'IsSubscribed' => /*$oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) ? true : */$this->isSubscribed(),
+			'IsSelectable' => $this->isSelectable(),
+			'Exists' => $this->exists(),
+			'Extended' => $aExtended,
+			'SubFolders' => array()
+		);		
+	}
 }

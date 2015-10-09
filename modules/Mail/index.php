@@ -6,7 +6,7 @@ class MailModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oApiMailManager = $this->GetManager('main');
+		$this->oApiMailManager = $this->GetManager('main', 'db');
 	}
 	
 	/**

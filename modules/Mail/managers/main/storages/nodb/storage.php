@@ -10,12 +10,12 @@
  * @package Mail
  * @subpackage Storages
  */
-class CApiMailNodbStorage extends CApiMailStorage
+class CApiMailMainNodbStorage extends CApiMailStorage
 {
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('nodb', $oManager);
 	}

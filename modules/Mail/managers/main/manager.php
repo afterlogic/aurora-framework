@@ -7,7 +7,7 @@
  * 
  * @package Mail
  */
-class CApiMailManager extends AApiManagerWithStorage
+class CApiMailMainManager extends AApiManagerWithStorage
 {
 	/**
 	 * @var array List of ImapClient objects.
@@ -21,19 +21,19 @@ class CApiMailManager extends AApiManagerWithStorage
 	 * 
 	 * @return void
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('mail', $oManager);
+		parent::__construct('main', $oManager, $sForcedStorage, $oModule);
 
-		$this->inc('classes.enum');
-		$this->inc('classes.folder');
-		$this->inc('classes.folder-collection');
-		$this->inc('classes.message');
-		$this->inc('classes.message-collection');
-		$this->inc('classes.attachment');
-		$this->inc('classes.attachment-collection');
-		$this->inc('classes.ics');
-		$this->inc('classes.vcard');
+		$this->incClass('enum');
+		$this->incClass('folder');
+		$this->incClass('folder-collection');
+		$this->incClass('message');
+		$this->incClass('message-collection');
+		$this->incClass('attachment');
+		$this->incClass('attachment-collection');
+		$this->incClass('ics');
+		$this->incClass('vcard');
 
 		$this->aImapClientCache = array();
 	}

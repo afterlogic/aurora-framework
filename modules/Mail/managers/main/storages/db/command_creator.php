@@ -10,7 +10,7 @@
  * @package Mail
  * @subpackage Storages
  */
-class CApiMailCommandCreator extends api_CommandCreator
+class CApiMailMainCommandCreator extends api_CommandCreator
 {
 	/**
 	 * Returns query for obtaining folders order from wm_folders_order_names table.
@@ -173,7 +173,7 @@ VALUES';
  * @package Mail
  * @subpackage Storages
  */
-class CApiMailCommandCreatorMySQL extends CApiMailCommandCreator
+class CApiMailMainCommandCreatorMySQL extends CApiMailMainCommandCreator
 {
 }
 
@@ -183,6 +183,6 @@ class CApiMailCommandCreatorMySQL extends CApiMailCommandCreator
  * @package Mail
  * @subpackage Storages
  */
-class CApiMailCommandCreatorPostgreSQL extends CApiMailCommandCreator
+class CApiMailMainCommandCreatorPostgreSQL extends CApiMailMainCommandCreator
 {
 }

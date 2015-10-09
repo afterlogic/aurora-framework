@@ -10,7 +10,7 @@
  * @package Mail
  * @subpackage Storages
  */
-class CApiMailDbStorage extends CApiMailStorage
+class CApiMailMainDbStorage extends CApiMailMainStorage
 {
 	/**
 	 * Object for work with database connection.
@@ -29,15 +29,15 @@ class CApiMailDbStorage extends CApiMailStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('db', $oManager);
 
 		$this->oConnection =& $oManager->GetConnection();
 		$this->oCommandCreator =& $oManager->GetCommandCreator(
 			$this, array(
-				EDbType::MySQL => 'CApiMailCommandCreatorMySQL',
-				EDbType::PostgreSQL => 'CApiMailCommandCreatorPostgreSQL'
+				EDbType::MySQL => 'CApiMailMainCommandCreatorMySQL',
+				EDbType::PostgreSQL => 'CApiMailMainCommandCreatorPostgreSQL'
 			)
 		);
 	}

@@ -430,13 +430,26 @@ abstract class AApiModule
 	 */
 	protected function responseObject($oAccount, $mResponse, $sParent)
 	{
-		$mResult = $mResponse;
+		$mResult = null;
 
-		if (is_object($mResult))
+		if (is_object($mResponse))
 		{
-			if (method_exists($mResult, 'toArray'))	
+			
+			$aNames = explode('\\', get_class($mResponse));
+			$sObjectName = end($aNames);
+
+			$mResult = array(
+				'@Object' => $this->objectNames($sObjectName)
+			);			
+			if (method_exists($mResponse, 'toArray'))	
 			{
 				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent), $mResponse->toArray());
+			}
+			else if ($mResponse instanceof \MailSo\Base\Collection)
+			{
+				$mResult['@Object'] = 'Collection/'.$mResult['@Object'];
+				$mResult['@Count'] = $mResponse->Count();
+				$mResult['@Collection'] = $this->responseObject($oAccount, $mResponse->CloneAsArray(), $sParent);
 			}
 		}
 		else if (is_array($mResponse))
