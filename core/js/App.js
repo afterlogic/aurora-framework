@@ -39,7 +39,9 @@ function CApp()
 
 CApp.prototype.init = function (bPublic)
 {
-	if (this.bAuth)
+	this.bPublic = bPublic;
+	
+	if (this.bAuth && !this.bPublic)
 	{
 		var Accounts = require('modules/Mail/js/AccountList.js');
 		this.currentAccountId = Accounts.currentId;
@@ -69,8 +71,6 @@ CApp.prototype.init = function (bPublic)
 			);
 		};
 	}
-	
-	this.bPublic = bPublic;
 	
 	Screens.init(!this.bAuth && !bPublic);
 	Routing.init();

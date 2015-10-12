@@ -3,6 +3,7 @@
 var
 	_ = require('underscore'),
 	$ = require('jquery'),
+	moment = require('moment'),
 	
 	CalendarUtils = {}
 ;

@@ -4,13 +4,14 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	moment = require('moment'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	DateUtils = require('core/js/utils/Date.js'),
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
-	App = require('core/js/App.js'),//setTitle
+	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
@@ -32,7 +33,6 @@ var
 	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js'),
 	CCalendarListModel = require('modules/Calendar/js/models/CCalendarListModel.js'),
 	
-	bExtApp = false,
 	bMobileDevice = false
 ;
 
@@ -45,7 +45,7 @@ function CCalendarView()
 	
 	var self = this;
 	this.initialized = ko.observable(false);
-	this.isPublic = bExtApp;
+	this.isPublic = App.isPublic();
 	
 	this.uploaderArea = ko.observable(null);
 	this.bDragActive = ko.observable(false);
@@ -61,7 +61,6 @@ function CCalendarView()
 	this.linkColumn = 0;
 	
 	this.publicCalendarId = (this.isPublic) ? Settings.CalendarPubHash : '';
-	this.publicCalendarName = ko.observable('');
 
 	this.timeFormat = (UserSettings.defaultTimeFormat() === Enums.TimeFormat.F24) ? 'HH:mm' : 'hh:mm A';
 	this.dateFormat = UserSettings.DefaultDateFormat;
@@ -142,6 +141,7 @@ function CCalendarView()
 
 		self.currentCalendarDropdown(bValue);
 	};
+	this.calendarDropdownHide = _.throttle(_.bind(function () { this.calendarDropdownToggle(false); }, this), 500);
 	
 	this.dayNamesResizeBinding = _.throttle(_.bind(this.resize, this), 50);
 
@@ -364,7 +364,8 @@ CCalendarView.prototype.onBind = function ()
 	var self = this;
 	this.$calendarGrid = $(this.calendarGridDom());
 	this.$datePicker = $(this.datePickerDom());
-	if (!this.isPublic) {
+	if (!this.isPublic)
+	{
 		this.initUploader();
 	}
 	/* Click more links */
@@ -949,8 +950,9 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 				{
 					if (this.isPublic)
 					{
-//						App.setTitle(oCalendar.name());//todo!!!
-						this.publicCalendarName(oCalendar.name());
+						var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
+						oPublicHeaderItem.linkText(oCalendar.name());
+						oPublicHeaderItem.activeTitle(oCalendar.name());
 					}
 					aNewCalendarIds.push(oCalendar.id);
 				}
@@ -960,7 +962,8 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 
 		if (this.calendars.count() === 0 && this.isPublic && this.needsToReload)
 		{
-//			App.setTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));//todo
+			var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
+			oPublicHeaderItem.activeTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
 			Api.showErrorByCode(0, TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
 		}
 
@@ -1082,9 +1085,7 @@ CCalendarView.prototype.openCreateCalendarForm = function ()
 {
 	if (!this.isPublic)
 	{
-		var 
-			oCalendar = new CCalendarModel()
-		;
+		var oCalendar = new CCalendarModel();
 		oCalendar.color(this.getUnusedColor());
 		Popups.showPopup(EditCalendarPopup, [_.bind(this.createCalendar, this), this.colors, oCalendar]);
 	}

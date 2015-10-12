@@ -40,7 +40,7 @@ crlf +
 ;
 
 cfg.paths.js = {
-	all: {
+	app: {
 		dest: './static/js/',
 		name: 'app.js',
 		min: 'app.min.js',
@@ -58,6 +58,16 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./modules/Files/js/entry-pub.js"
+		]
+	},
+	calendar_pub: {
+		dest: './static/js/',
+		name: 'app-calendar-pub.js',
+		min: 'app-calendar-pub.min.js',
+		afterlogic: true,
+		watch: true,
+		src: [
+			"./modules/Calendar/js/entry-pub.js"
 		]
 	}
 };
@@ -124,12 +134,14 @@ for (name in cfg.paths.js)
 	}
 }
 
-gulp.task('default', ['js:all']);
+gulp.task('default', ['js:app']);
 
-gulp.task('a', ['js:all', 'js:files_pub']);
+gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub']);
 
-gulp.task('f', ['js:files_pub']);
+gulp.task('files', ['js:files_pub']);
 
-gulp.task('m', ['lint', 'js:all:min']);
+gulp.task('cal', ['js:calendar_pub']);
+
+gulp.task('min', ['lint', 'js:all:min']);
 
 gulp.task('w', ['js:all:watch']);

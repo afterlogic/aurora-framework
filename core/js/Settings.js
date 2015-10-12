@@ -60,7 +60,7 @@ module.exports = {
 			ImportingContactsLink: AppData && AppData['Links'] && AppData['Links']['ImportingContacts'] ? AppData['Links']['ImportingContacts'] : ''
 		},
 		Calendar: {
-			CalendarPubHash: '',
+			CalendarPubHash: AppData.CalendarPubHash,
 			AllowCalendar: true,
 			CalendarSharing: true,
 			CalendarDefaultTab: 1,

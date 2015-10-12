@@ -1,10 +1,3 @@
-<!--<div class="tabs_panel" data-bind="visible: isPublic">
-	<span class="item calendar current">
-		<span class="link">
-			<span class="" data-bind="text: publicCalendarName"></span>
-		</span>
-	</span>
-</div>-->
 <div class="panels" data-bind="splitter: {name: 'calendar', sizeLeft: 200, minLeft: 200, minRight: 40, resizeToWidth: true, resizeFunc: dayNamesResizeBinding}">
 	<div class="panel calendar_manager">
 		<div class="resize_handler"></div>
@@ -16,7 +9,7 @@
 			</div>
 			<div class="middle_bar">
 				<div class="panel_center" data-bind="visible: !isPublic">
-					<div class="panel_center" data-bind="customScrollbar: {x: false, 'onStart': _.throttle(function () { calendarDropdownToggle(false); }, 500) }">
+					<div class="panel_center" data-bind="customScrollbar: {x: false, 'onStart': calendarDropdownHide }">
 						<div class="scroll-inner">
 							<div class="items_list calendars">
 								<span class="section_title">
@@ -27,7 +20,7 @@
 									</span>
 								</span>
 								<!-- ko foreach: calendars.own() -->
-									<!-- ko template: {name: 'Calendar_CalendarListItem'} --><!-- /ko -->
+									<!-- ko template: {name: 'Calendar_CalendarItemView'} --><!-- /ko -->
 								<!-- /ko -->
 							</div>
 							<div class="items_list calendars" data-bind="visible: (calendars.sharedCount() > 0 && calendarSharing)">
@@ -38,7 +31,7 @@
 									</span>
 								</span>
 								<!-- ko foreach: calendars.shared() -->
-									<!-- ko template: {name: 'Calendar_CalendarListItem'} --><!-- /ko -->
+									<!-- ko template: {name: 'Calendar_CalendarItemView'} --><!-- /ko -->
 								<!-- /ko -->						
 							</div>
 							<div class="items_list calendars" data-bind="visible: (calendars.sharedToAllCount() > 0 && calendarSharing)">
@@ -49,13 +42,13 @@
 									</span>
 								</span>
 								<!-- ko foreach: calendars.sharedToAll() -->
-									<!-- ko template: {name: 'Calendar_CalendarListItem'} --><!-- /ko -->
+									<!-- ko template: {name: 'Calendar_CalendarItemView'} --><!-- /ko -->
 								<!-- /ko -->						
 							</div>
 						</div>
 					</div>
 					<div class="dropdowns" data-bind="style: {'top': currentCalendarDropdownOffset() + 'px'}">
-						<!-- ko template: {name: 'Calendar_CalendarListItemMenu', foreach: calendars.collection()} --><!-- /ko -->
+						<!-- ko template: {name: 'Calendar_CalendarItemMenuView', foreach: calendars.collection()} --><!-- /ko -->
 					</div>
 				</div>
 				<div class="panel_bottom" data-bind="initDom: datePickerDom">

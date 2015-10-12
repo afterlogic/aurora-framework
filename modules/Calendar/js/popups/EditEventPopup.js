@@ -23,9 +23,7 @@ var
 	Ajax = require('modules/Calendar/js/Ajax.js'),
 	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	Settings = require('modules/Calendar/js/Settings.js'),
-	
-	bExtApp = false
+	Settings = require('modules/Calendar/js/Settings.js')
 ;
 
 /**
@@ -36,7 +34,7 @@ function CEditEventPopup()
 	CAbstractPopup.call(this);
 	
 	this.modified = false;
-	this.isPublic = bExtApp;
+	this.isPublic = App.isPublic();
 	this.isEditable = ko.observable(false);
 	this.isEditableReminders = ko.observable(false);
 	this.selectedCalendarIsShared = ko.observable(false);

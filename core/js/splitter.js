@@ -2,6 +2,8 @@
 
 var
 	jQuery = require('jquery'),
+	_ = require('underscore'),
+	
 	Storage = require('core/js/Storage.js'),
 	Browser = require('core/js/Browser.js')
 ;

@@ -225,7 +225,7 @@ CAjax.prototype.abortAllRequests = function ()
  */
 CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr)
 {
-	var bDefaultAccount = App.isAuth() && (oRequest.AccountID === App.defaultAccountId());
+	var bDefaultAccount = App.isAuth() && !App.isPublic() && (oRequest.AccountID === App.defaultAccountId());
 	
 	if (oResponse && !oResponse.Result)
 	{
