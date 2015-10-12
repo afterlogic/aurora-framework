@@ -231,7 +231,7 @@
 									</span>
 									<div class="items_list" data-bind="customScrollbar: {x: false}">
 										<div class="scroll-inner">
-											<div class="attachments_container" data-bind="template: {name: 'Common_FileViewModel', foreach: notInlineAttachments}"></div>
+											<div class="attachments_container" data-bind="template: {name: 'Core_FileView', foreach: notInlineAttachments}"></div>
 										</div>
 									</div>
 								</div>
@@ -290,7 +290,7 @@
 									<!--<div class="items_list" data-bind="customScrollbar: {x: false}, visible: notInlineAttachments().length > 0">-->
 									<div class="items_list">
 										<span class="list_notification" data-bind="i18n: 'text', visible: allowDragNDrop() && notInlineAttachments().length === 0" data-i18n="COMPOSE/ATTACH_HINT"></span>
-										<div class="attachments_container" data-bind="template: {name: 'Common_FileViewModel', foreach: notInlineAttachments}"></div>
+										<div class="attachments_container" data-bind="template: {name: 'Core_FileView', foreach: notInlineAttachments}"></div>
 									</div>
 								</div>
 							</div>

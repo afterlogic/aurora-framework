@@ -1,0 +1,25 @@
+<div class="popup files" style="display: none;">
+	<div class="mask" data-bind="click: cancelPopup"></div>
+	<div class="popup_panel">
+		<span class="close" data-bind="click: cancelPopup"></span>
+
+		<div class="panels">
+			<div class="panel storages">
+				<div class="panel_content">
+					<div class="middle_bar" data-bind="template: {name: 'Files_StoragesPanelView', data: oFilesView}"></div>
+				</div>
+			</div>
+			<div class="panel files">
+				<div class="panel_content">
+					<div class="middle_bar" data-bind="template: {name: 'Files_FilesPanelView', data: oFilesView}"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="buttons">
+			<span class="button save" data-i18n="FILESTORAGE/BUTTON_SELECT" data-bind="i18n: 'text', click: onSelectClick"></span>
+			<span class="button save" data-i18n="FILESTORAGE/BUTTON_CLOSE" data-bind="i18n: 'text', click: closePopup"></span>
+		</div>
+	</div>
+	<span class="helper"></span>
+</div>

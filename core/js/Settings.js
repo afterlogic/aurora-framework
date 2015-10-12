@@ -77,7 +77,8 @@ module.exports = {
 			AllowFilesSharing: true,
 			FileStoragePubParams: {Name: ''},
 			ShowQuotaBar: false,
-			FileSizeLimit: 0
+			FileSizeLimit: 0,
+			filesEnable: ko.observable(true)
 		},
 		Helpdesk: {
 			IsHelpdeskAgent: false,
@@ -106,7 +107,7 @@ module.exports = {
 	CustomLogo: '',
 	defaultTimeFormat: ko.observable(0),
 	DefaultDateFormat: 'DD/MM/YYYY',
-	IsFilesSupported: false,
+	IsFilesSupported: true,
 	DefaultFontName: 'Tahoma',
 	IdUser: AppData.IdUser,
 	AllowSaveAsPdf: false,

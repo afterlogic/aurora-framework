@@ -536,7 +536,7 @@ CMailCache.prototype.setAutocheckmailTimer = function ()
 	if (!bSingleMode && UserSettings.AutoRefreshIntervalMinutes > 0)
 	{
 		this.iAutoCheckMailTimer = setTimeout(function () {
-			if (!this.isSearchExecuting())
+			if (!MailCache.isSearchExecuting())
 			{
 				MailCache.checkMessageFlags();
 				MailCache.executeCheckMail(false);

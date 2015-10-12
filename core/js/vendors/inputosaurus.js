@@ -19,6 +19,7 @@
 
 var
 	jQuery = require('jquery'),
+	_ = require('underscore'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	AddressUtils = require('core/js/utils/Address.js')

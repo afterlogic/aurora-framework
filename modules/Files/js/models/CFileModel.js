@@ -40,29 +40,29 @@ function CFileModel()
 	this.linkType = ko.observable(0);
 	this.linkUrl = ko.observable('');
 	this.thumbnailExternalLink = ko.observable('');
-	this.oembed = ko.observable('');
+	this.embedType = ko.observable('');
 	this.linkType.subscribe(function (iLinkType) {
-		var sOembed = '';
+		var sEmbedType = '';
 		switch (iLinkType)
 		{
 			case Enums.FileStorageLinkType.YouTube:
-				sOembed = 'YouTube';
+				sEmbedType = 'YouTube';
 				break;
 			case Enums.FileStorageLinkType.Vimeo:
 				if (!App.browser.ie || App.browser.ie11)
 				{
-					sOembed = 'Vimeo';
+					sEmbedType = 'Vimeo';
 				}
 				break;
 			case Enums.FileStorageLinkType.SoundCloud:
 				if (!App.browser.ie || App.browser.ie10AndAbove)
 				{
-					sOembed = 'SoundCloud';
+					sEmbedType = 'SoundCloud';
 				}
 				break;
 		}
-
-		this.oembed(sOembed);
+		this.hasHtmlEmbed(sEmbedType !== '');
+		this.embedType(sEmbedType);
 	}, this);
 	
 	this.deleted = ko.observable(false); // temporary removal until it was confirmation from the server to delete
@@ -138,7 +138,7 @@ function CFileModel()
 	}, this);
 	
 	this.visibleViewLink = ko.computed(function () {
-		return (this.oembed() !== '' || this.linkUrl() === '') && this.isViewable();
+		return (this.embedType() !== '' || this.linkUrl() === '') && this.isViewable();
 	}, this);
 	this.visibleOpenLink = ko.computed(function () {
 		return this.linkUrl() !== '';
@@ -285,7 +285,7 @@ CFileModel.prototype.openLink = function ()
  */
 CFileModel.prototype.onIconClick = function (oViewModel, oEvent)
 {
-	if (this.oembed() !== '')
+	if (this.embedType() !== '')
 	{
 		this.viewFile(oViewModel, oEvent);
 	}

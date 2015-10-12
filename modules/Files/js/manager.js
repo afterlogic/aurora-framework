@@ -6,7 +6,8 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	CHeaderItemView = require('core/js/views/CHeaderItemView.js'),
 	
-	Settings = require('modules/Files/js/Settings.js')
+	Settings = require('modules/Files/js/Settings.js'),
+	SelectFilesPopup = require('modules/Files/js/popups/SelectFilesPopup.js')
 ;
 
 module.exports = function (oSettings) {
@@ -23,6 +24,9 @@ module.exports = function (oSettings) {
 		},
 		getBrowserTitle: function () {
 			return TextUtils.i18n('TITLE/FILESTORAGE');
+		},
+		getSelectFilesPopup: function () {
+			return SelectFilesPopup;
 		}
 	};
 };

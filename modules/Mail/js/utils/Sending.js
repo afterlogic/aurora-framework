@@ -1,6 +1,8 @@
 'use strict';
 
 var
+	_ = require('underscore'),
+	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),

@@ -2,6 +2,7 @@
 
 var
 	ko = require('knockout'),
+	_ = require('underscore'),
 	
 	Utils = require('core/js/utils/Common.js'),
 			

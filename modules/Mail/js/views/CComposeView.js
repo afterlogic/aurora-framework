@@ -21,6 +21,7 @@ var
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
+	SelectFilesPopup = ModulesManager.run('Files', 'getSelectFilesPopup'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ErrorUtils = require('modules/Mail/js/utils/Error.js'),
@@ -38,7 +39,8 @@ var
 	bMobileApp = false,
 	$html = $('html')
 ;
-
+console.log('SelectFilesPopup', SelectFilesPopup);
+console.log('ModulesManager.isModuleIncluded(\'Files\')', ModulesManager.isModuleIncluded('Files'));
 /**
  * @constructor
  */
@@ -336,8 +338,8 @@ function CComposeView()
 		{ value: 'Ctrl+I', action: TextUtils.i18n('COMPOSE/HOTKEY_ITALIC') },
 		{ value: 'Ctrl+U', action: TextUtils.i18n('COMPOSE/HOTKEY_UNDERLINE') }
 	];
-
-	this.allowFiles = ko.observable(false);
+console.log('!!! SelectFilesPopup', SelectFilesPopup, !!SelectFilesPopup);
+	this.allowFiles = !!SelectFilesPopup;
 
 	this.closeBecauseSingleCompose = ko.observable(false);
 	this.changedInPreviousWindow = ko.observable(false);
@@ -684,9 +686,6 @@ CComposeView.prototype.onRoute = function (aParams)
 	this.visibleBcc(this.bccAddr() !== '');
 	this.commit(true);
 
-	this.allowFiles(false);
-//	this.allowFiles(AppData.User.IsFilesSupported && AppData.User.filesEnable());
-
 	if (bSingleMode && this.changedInPreviousWindow())
 	{
 		_.defer(_.bind(this.executeSave, this, true));
@@ -999,7 +998,7 @@ CComposeView.prototype.addDataAsAttachment = function (sData, sFileName)
 			'FileName': sFileName,
 			'Hash': sHash
 		},
-		oAttach = new CMailAttachmentModel()
+		oAttach = new CAttachmentModel()
 	;
 
 	this.subject(sFileName.substr(0, sFileName.length - 4));
@@ -1056,7 +1055,7 @@ CComposeView.prototype.addFilesAsAttachment = function (aFiles)
 	;
 
 	_.each(aFiles, function (oFile) {
-		oAttach = new CMailAttachmentModel();
+		oAttach = new CAttachmentModel();
 		oAttach.fileName(oFile.fileName());
 		oAttach.hash(oFile.hash());
 		oAttach.thumb(oFile.thumb());
@@ -1129,7 +1128,7 @@ CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 CComposeView.prototype.addContactAsAttachment = function (oContact)
 {
 	var
-		oAttach = new CMailAttachmentModel(),
+		oAttach = new CAttachmentModel(),
 		oParameters = null
 	;
 
@@ -1273,7 +1272,7 @@ CComposeView.prototype.setMessageDataInSingleMode = function (oParameters)
 	this.setRecipient(this.bccAddr, oParameters.bccAddr);
 	this.subject(oParameters.subject);
 	this.attachments(_.map(oParameters.attachments, function (oRawAttach) {
-		var oAttach = new CMailAttachmentModel();
+		var oAttach = new CAttachmentModel();
 		oAttach.parse(oRawAttach, this.senderAccountId());
 		return oAttach;
 	}, this));
@@ -1794,10 +1793,10 @@ CComposeView.prototype.openInNewWindow = function ()
 
 CComposeView.prototype.onShowFilesPopupClick = function ()
 {
-//	var fCallBack = _.bind(this.addFilesAsAttachment, this);
-//	/*global FileStoragePopup:true */
-//	Popups.showPopup(FileStoragePopup, [fCallBack]);
-//	/*global FileStoragePopup:false */
+	if (SelectFilesPopup)
+	{
+		Popups.showPopup(SelectFilesPopup, [_.bind(this.addFilesAsAttachment, this)]);
+	}
 };
 
 module.exports = CComposeView;

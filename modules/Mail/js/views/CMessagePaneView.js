@@ -20,6 +20,7 @@ var
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
+	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
 	bSingleMode = false,
 	bMobileApp = false
@@ -484,7 +485,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			/*jshint onevar: true*/
 
 			_.each(oMessage.attachments(), _.bind(function (oAttach) {
-				var oCopy = new CMailAttachmentModel();
+				var oCopy = new CAttachmentModel();
 				oCopy.copyProperties(oAttach);
 				oCopy.getInThumbQueue(sThumbSessionUid);
 				aAtachments.push(oCopy);

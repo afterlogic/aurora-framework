@@ -11,7 +11,7 @@
 					</span>
 				</div>
 				<div class="middle_bar" data-bind="">
-					<!-- ko template: { name: 'Files_StoragesPart'} --><!-- /ko -->
+					<!-- ko template: { name: 'Files_StoragesPanelView'} --><!-- /ko -->
 					<div class="panel_bottom">
 						<span class="volumer" data-bind="visible: -1 < quotaProc()">
 							<span class="volumer_conteiner" data-bind="customTooltip: quotaDesc()">
@@ -25,7 +25,7 @@
 		<div class="panel files">
 			<div class="panel_content">
 				<div class="toolbar" data-bind="template: { name: 'Files_ToolbarView'}"></div>
-				<div class="middle_bar" data-bind="template: {name: 'Files_FilesPart'}"></div>
+				<div class="middle_bar" data-bind="template: {name: 'Files_FilesPanelView'}"></div>
 			</div>
 		</div>
 	</div>

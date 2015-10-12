@@ -828,7 +828,7 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 				this.oParent.composeUploaderDragOver(false);
 			}, this);
 
-			this.editorUploader = new Jua({
+			this.editorUploader = new CJua({
 				'action': '?/Upload/',
 				'name': 'jua-uploader',
 				'queueSize': 1,
@@ -862,7 +862,7 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 			fBodyDragEnter = _.bind(this.editorUploaderBodyDragOver, this, true);
 			fBodyDragOver = _.bind(this.editorUploaderBodyDragOver, this, false);
 
-			this.editorUploader = new Jua({
+			this.editorUploader = new CJua({
 				'queueSize': 1,
 				'dragAndDropElement': this.bAllowImageDragAndDrop ? this.uploaderAreaDom() : null,
 				'disableMultiple': true,

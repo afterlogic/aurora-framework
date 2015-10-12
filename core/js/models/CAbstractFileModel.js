@@ -96,6 +96,8 @@ function CAbstractFileModel()
 	this.visibleDownloadLink = ko.computed(function () {
 		return !this.isPopupItem();
 	}, this);
+	this.visibleOpenLink = ko.observable(false); // overrided
+	this.hasHtmlEmbed = ko.observable(false);
 
 	this.subFiles = ko.observableArray([]);
 	this.allowExpandSubFiles = ko.observable(false);

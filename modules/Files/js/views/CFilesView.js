@@ -242,14 +242,18 @@ _.extendOwn(CFilesView.prototype, CAbstractView.prototype);
 CFilesView.prototype.ViewTemplate = App.isPublic() ? 'Files_PublicFilesView' : 'Files_FilesView';
 CFilesView.prototype.__name = 'CFilesView';
 
-CFilesView.prototype.onBind = function ()
+CFilesView.prototype.onBind = function ($popupDom)
 {
+	console.log('this.$viewDom', this.$viewDom);
+	console.log('this.$popupDom', this.$popupDom);
+	console.log('$popupDom', $popupDom);
+	var $dom = this.$viewDom || $popupDom;
 	this.selector.initOnApplyBindings(
 		'.items_sub_list .item',
 		'.items_sub_list .selected.item',
 		'.items_sub_list .item .custom_checkbox',
-		$('.panel.files .items_list', this.$viewDom),
-		$('.panel.files .items_list .files_scroll.scroll-inner', this.$viewDom)
+		$('.panel.files .items_list', $dom),
+		$('.panel.files .items_list .files_scroll.scroll-inner', $dom)
 	);
 	
 	this.initUploader();
