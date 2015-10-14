@@ -67,26 +67,10 @@ CCreateLinkPopup.prototype.checkUrl = function ()
  */
 CCreateLinkPopup.prototype.onCheckUrlResponse = function (oResponse, oRequest)
 {
-	var
-		oResult = oResponse.Result,
-		fileItem = new CFileModel()
-	;
-	
-	if (oResult)
+	if (oResponse.Result)
 	{
-		fileItem.isPopupItem(true);
-		fileItem.linkUrl(this.link());
-		fileItem.fileName(Utils.pString(oResult.Name));
-		fileItem.size(Utils.pInt(oResult.Size));
-		fileItem.linkType(Enums.has('FileStorageLinkType', pInt(oResult.LinkType)) ? pInt(oResult.LinkType) : Enums.FileStorageLinkType.Unknown);
-		fileItem.allowDownload(false);
-		if (oResult.Thumb)
-		{
-			fileItem.thumb(true);
-			fileItem.thumbnailSrc(Utils.pString(oResult.Thumb));
-		}
-		this.fileItem(fileItem);
-		
+		var oFile = new CFileModel();
+		this.fileItem(oFile.parseLink(oResponse.Result, this.link()));
 		this.urlChecked(true);
 	}
 	else

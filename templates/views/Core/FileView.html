@@ -13,7 +13,7 @@
 	event: isPopupItem() ? null : { 'dragstart': eventDragStart },
 	draggable: !isPopupItem() && allowDrag(),
 	draggablePlace: !isPopupItem() && allowDrag() ? $parent.dragAndDropHelperBinded : null,
-	draggableDragStartCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(true);}},
+	draggableDragStartCallback: function() {console.log(!isPopupItem() && allowDrag()); if (!isPopupItem() && allowDrag()) {console.log($root.dragover); $root.dragover(true);}},
 	draggableDragStopCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(false);}}
 ">
 

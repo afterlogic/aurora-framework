@@ -22,7 +22,6 @@ var
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings  = require('modules/Mail/js/Settings.js'),
 	
-	bExtApp = false,
 	bMobileApp = false
 ;
 
@@ -33,8 +32,6 @@ var
  */
 function CMessageListView(fOpenMessageInNewWindowBinded)
 {
-	this.isPublic = bExtApp;
-
 	this.uploaderArea = ko.observable(null);
 	this.bDragActive = ko.observable(false);
 	this.bDragActiveComp = ko.computed(function () {
@@ -850,9 +847,9 @@ CMessageListView.prototype.initUploader = function ()
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'dragAndDropElement': this.uploaderArea(),
-			'disableAjaxUpload': this.isPublic,
-			'disableFolderDragAndDrop': this.isPublic,
-			'disableDragAndDrop': this.isPublic,
+			'disableAjaxUpload': false,
+			'disableFolderDragAndDrop': false,
+			'disableDragAndDrop': false,
 			'hidden': {
 				'Module': 'Mail',
 				'Method': 'UploadMessage',

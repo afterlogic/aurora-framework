@@ -121,6 +121,12 @@ function removeActiveFocus()
 	}
 }
 
+ko.bindingHandlers.draggable = {
+	'init': function (oElement, fValueAccessor) {
+		$(oElement).attr('draggable', ko.utils.unwrapObservable(fValueAccessor()));
+	}
+};
+
 ko.bindingHandlers.draggablePlace = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
 		if (fValueAccessor() === null)

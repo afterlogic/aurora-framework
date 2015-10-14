@@ -27,9 +27,7 @@ var
 	CContactListItemModel = require('modules/Contacts/js/models/CContactListItemModel.js'),
 	CContactModel = require('modules/Contacts/js/models/CContactModel.js'),
 	CGroupModel = require('modules/Contacts/js/models/CGroupModel.js'),
-	CImportView = require('modules/Contacts/js/views/CImportView.js'),
-	
-	bExtApp = false
+	CImportView = require('modules/Contacts/js/views/CImportView.js')
 ;
 
 /**
@@ -39,8 +37,6 @@ function CContactsView()
 {
 	CAbstractView.call(this);
 	
-	this.isPublic = bExtApp;
-
 	this.contactCount = ko.observable(0);
 	this.uploaderArea = ko.observable(null);
 	this.bDragActive = ko.observable(false);
@@ -1547,9 +1543,9 @@ CContactsView.prototype.initUploader = function ()
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'dragAndDropElement': this.uploaderArea(),
-			'disableAjaxUpload': this.isPublic,
-			'disableFolderDragAndDrop': this.isPublic,
-			'disableDragAndDrop': this.isPublic,
+			'disableAjaxUpload': false,
+			'disableFolderDragAndDrop': false,
+			'disableDragAndDrop': false,
 			'hidden': {
 				'Module': 'Contacts',
 				'Method': 'UploadContacts',

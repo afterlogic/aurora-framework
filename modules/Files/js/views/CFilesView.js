@@ -66,7 +66,7 @@ function CFilesView(bPopup)
 			oStorage = this.getStorageByType(this.storageType());
 			if (oStorage)
 			{
-				this.rootPath(oStorage.displayName());
+				this.rootPath(oStorage.displayName);
 			}
 		}
 		this.selector.listCheckedAndSelected(false);
@@ -232,7 +232,7 @@ function CFilesView(bPopup)
 	this.isPopup = !!bPopup;
 	this.isCurrentStorageExternal = ko.computed(function () {
 		var oStorage = this.getStorageByType(this.storageType());
-		return (oStorage && oStorage.isExternal());
+		return (oStorage && oStorage.isExternal);
 	}, this);
 	this.timerId = null;
 }
@@ -242,11 +242,11 @@ _.extendOwn(CFilesView.prototype, CAbstractView.prototype);
 CFilesView.prototype.ViewTemplate = App.isPublic() ? 'Files_PublicFilesView' : 'Files_FilesView';
 CFilesView.prototype.__name = 'CFilesView';
 
+/**
+ * @param {object} $popupDom
+ */
 CFilesView.prototype.onBind = function ($popupDom)
 {
-	console.log('this.$viewDom', this.$viewDom);
-	console.log('this.$popupDom', this.$popupDom);
-	console.log('$popupDom', $popupDom);
 	var $dom = this.$viewDom || $popupDom;
 	this.selector.initOnApplyBindings(
 		'.items_sub_list .item',
@@ -868,50 +868,51 @@ CFilesView.prototype.getQuota = function (iType)
 	);
 };
 
-CFilesView.prototype.getStorageByType = function (storageType)
+/**
+ * @param {string} sStorageType
+ */
+CFilesView.prototype.getStorageByType = function (sStorageType)
 {
-	return _.find(this.storages(), function(oStorageItem){ 
-		return oStorageItem.storageType() === storageType; 
+	return _.find(this.storages(), function (oStorage) { 
+		return oStorage.type === sStorageType; 
 	});	
+};
+
+/**
+ * @param {string} sStorageType
+ */
+CFilesView.prototype.addStorageIfNot = function (sStorageType)
+{
+	var sDisplayName = '';
+	
+	switch (sStorageType)
+	{
+		case 'personal': sDisplayName = TextUtils.i18n('FILESTORAGE/TAB_PERSONAL_FILES'); break;
+		case 'corporate': sDisplayName = TextUtils.i18n('FILESTORAGE/TAB_CORPORATE_FILES'); break;
+		case 'shared': sDisplayName = TextUtils.i18n('FILESTORAGE/TAB_SHARED_FILES'); break;
+	}
+	
+	if (!this.getStorageByType(sStorageType))
+	{
+		this.storages.push({
+			isExternal: false,
+			type: sStorageType,
+			displayName: sDisplayName
+		});
+	}
 };
 
 CFilesView.prototype.getStorages = function ()
 {
-//	this.storages.removeAll();
-	
 	if (!this.isPublic)
 	{
-		if (!this.getStorageByType('personal'))
-		{
-			this.storages.push(
-				new CFileModel()
-					.isFolder(true)
-					.storageType('personal')
-					.displayName(TextUtils.i18n('FILESTORAGE/TAB_PERSONAL_FILES'))
-			);
-		}
+		this.addStorageIfNot('personal');
 		if (this.IsCollaborationSupported)
 		{
-			if (!this.getStorageByType('corporate'))
-			{
-				this.storages.push(
-					new CFileModel()
-						.isFolder(true)
-						.storageType('corporate')
-						.displayName(TextUtils.i18n('FILESTORAGE/TAB_CORPORATE_FILES'))
-				);
-			}
+			this.addStorageIfNot('corporate');
 			if (this.AllowFilesSharing)
 			{
-				if (!this.getStorageByType('shared'))
-				{
-					this.storages.push(
-						new CFileModel()
-							.isFolder(true)
-							.storageType('shared')
-							.displayName(TextUtils.i18n('FILESTORAGE/TAB_SHARED_FILES'))
-					);
-				}
+				this.addStorageIfNot('shared');
 			}
 		}
 		if (!this.isPopup)
@@ -946,13 +947,11 @@ CFilesView.prototype.onGetExternalStoragesResponse = function (oResponse, oReque
 		_.each(oResult, function(oStorage){
 			if (!this.getStorageByType(oStorage.Type))
 			{
-				this.storages.push(
-					new CFileModel()
-						.isExternal(true)
-						.isFolder(true)
-						.storageType(oStorage.Type)
-						.displayName(oStorage.DisplayName)
-				);
+				this.storages.push({
+					isExternal: true,
+					type: oStorage.Type,
+					displayName: oStorage.DisplayName
+				});
 			}
 		}, this);
 		
@@ -1117,21 +1116,6 @@ CFilesView.prototype.getPathItemByIndex = function (iIndex)
 };
 
 /**
- * @param {number} iIndex
- * 
- * @return {string}
- */
-CFilesView.prototype.getFullPathByIndex = function (iIndex)
-{
-	var 
-		aPath = _.map(this.pathItems().slice(0, iIndex), function (oItem){
-			return oItem.fileName();
-		});
-	
-	return aPath.join('/');
-};
-
-/**
  * @param {string} sName
  * 
  * @return {?}
@@ -1163,9 +1147,6 @@ CFilesView.prototype.deleteFolderByName = function (sName)
 	}));
 };
 
-/**
- * @param {string} sName
- */
 CFilesView.prototype.expungeFileItems = function ()
 {
 	this.folders(_.filter(this.folders(), function(oFolder){
@@ -1181,21 +1162,10 @@ CFilesView.prototype.expungeFileItems = function ()
  */
 CFilesView.prototype.expungeExternalStorages = function (aStorageTypes)
 {
-	this.storages(_.filter(this.storages(), function(oStorage){
-		return !oStorage.isExternal() || _.include(aStorageTypes, oStorage.storageType());
+	this.storages(_.filter(this.storages(), function (oStorage) {
+		return !oStorage.isExternal || _.include(aStorageTypes, oStorage.storageType());
 	},this));
 };
-
-/**
- * @param {int} iType
- */
-CFilesView.prototype.deleteStorageByType = function (iType)
-{
-	this.storages(_.filter(this.storages(), function (oItem) {
-		return oItem.storageType() !== iType;
-	}));
-};
-
 
 /**
  * @param {string} sFileUid

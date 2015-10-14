@@ -184,6 +184,25 @@ CFileModel.prototype.getInstance = function ()
 	return new CFileModel();
 };
 
+/**
+ * @param {object} oData
+ * @param {string} sLinkUrl
+ */
+CFileModel.prototype.parseLink = function (oData, sLinkUrl)
+{
+	this.isPopupItem(true);
+	this.linkUrl(sLinkUrl);
+	this.fileName(Utils.pString(oData.Name));
+	this.size(Utils.pInt(oData.Size));
+	this.linkType(Enums.has('FileStorageLinkType', pInt(oData.LinkType)) ? pInt(oData.LinkType) : Enums.FileStorageLinkType.Unknown);
+	this.allowDownload(false);
+	if (oData.Thumb)
+	{
+		this.thumb(true);
+		this.thumbnailSrc(Utils.pString(oData.Thumb));
+	}
+};
+
 CFileModel.prototype.parse = function (oData, sPublicHash)
 {
 	var oDateModel = new CDateModel();
