@@ -48,6 +48,8 @@ function CHeaderView()
 			}
 		});
 	}, this).extend({ rateLimit: 50 });
+	
+	this.showLogout = App.isAuth() && !App.isPublic();
 //
 //	this.mailLinkText = ko.observable('');
 //
