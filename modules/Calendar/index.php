@@ -17,6 +17,8 @@ class CalendarModule extends AApiModule
 	public function GetCalendars()
 	{
 		$mResult = false;
+		$mCalendars = false;
+		
 		$bIsPublic = (bool) $this->getParamValue('IsPublic', false); 
 		$oAccount = null;
 				
@@ -24,12 +26,7 @@ class CalendarModule extends AApiModule
 		{
 			$sPublicCalendarId = $this->getParamValue('PublicCalendarId', '');
 			$oCalendar = $this->oApiCalendarManager->getPublicCalendar($sPublicCalendarId);
-			$mResult = array();
-			if ($oCalendar instanceof \CCalendar)
-			{
-				$aCalendar = $oCalendar->toArray($oAccount);
-				$mResult = array($aCalendar);
-			}
+			$mCalendars = array($oCalendar);
 		}
 		else
 		{
@@ -38,7 +35,14 @@ class CalendarModule extends AApiModule
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 			}
-			$mResult = $this->oApiCalendarManager->getCalendars($oAccount);
+			$mCalendars = $this->oApiCalendarManager->getCalendars($oAccount);
+		}
+		
+		if ($mCalendars)
+		{
+			$oApiDavManager = \CApi::GetCoreManager('dav');
+			$mResult['Calendars'] = $mCalendars;
+			$mResult['ServerUrl'] = $oApiDavManager && $oAccount ? $oApiDavManager->getServerUrl($oAccount) : '';
 		}
 		
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
