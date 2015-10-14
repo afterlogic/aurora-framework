@@ -764,10 +764,10 @@ class CApiIntegratorManager extends AApiManager
 				{
 					$oAccount->IncomingMailPassword = $sIncPassword;
 				}
-				$oApiMailManager = CApi::Manager('mail');
+				$oApiModuleManager = CApi::GetModuleManager();
 				try
 				{
-					$oApiMailManager->validateAccountConnection($oAccount);
+					$oApiModuleManager->ExecuteMethod('Mail', 'validateAccountConnection', array($oAccount));
 				}
 				catch (Exception $oException)
 				{

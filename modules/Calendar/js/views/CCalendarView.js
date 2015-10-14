@@ -938,7 +938,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 		this.loaded = true;
 
 		//sets default calendar always fist in list
-		_.each(oResponse.Result, function (oCalendarData) {
+		_.each(oResponse.Result.Calendars, function (oCalendarData) {
 			oCalendar = this.calendars.parseCalendar(oCalendarData);
 			aCalendarIds.push(oCalendar.id);
 			oClientCalendar = this.calendars.getCalendarById(oCalendar.id);
@@ -948,6 +948,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 				oCalendar = this.calendars.parseAndAddCalendar(oCalendarData);
 				if (oCalendar)
 				{
+					oCalendar.davUrl(Utils.pString(oResponse.Result.ServerUrl));
 					if (this.isPublic)
 					{
 						var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');

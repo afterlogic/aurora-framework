@@ -82,10 +82,8 @@ class CCalendar
 		return ($oAccount->Email === $this->Owner);
 	}
 	
-	public function toArray($oAccount)
+	public function toArray($oAccount = null)
 	{
-		$oApiDavManager = \CApi::Manager('dav');
-		
 		return array(
 			'Id' => $this->Id,
 			'Url' => $this->Url,
@@ -96,8 +94,6 @@ class CCalendar
 			'Owner' => $this->Owner,
 			'IsDefault' => $this->IsDefault,
 			'PrincipalId' => $this->GetMainPrincipalUrl(),
-			'ServerUrl' => $oApiDavManager && $oAccount ? $oApiDavManager->getServerUrl($oAccount) : '',
-			'PrincipalUrl' => $oApiDavManager && $oAccount ? $oApiDavManager->getPrincipalUrl($oAccount) : '',
 			'Shared' => $this->Shared,
 			'SharedToAll' => $this->SharedToAll,
 			'SharedToAllAccess' => $this->SharedToAllAccess,

@@ -461,6 +461,10 @@ abstract class AApiModule
 
 			$mResult = $mResponse;
 		}
+		else
+		{
+			$mResult = $mResponse;
+		}
 
 		unset($mResponse);
 		return $mResult;

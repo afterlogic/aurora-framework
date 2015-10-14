@@ -1584,16 +1584,15 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 					$oCalendar->IsDefault = $bDefault = true;
 				}
 				$oCalendar = $this->populateCalendarShares($oAccount, $oCalendar);
-				if ($oCalendar instanceof \CCalendar)
-				{
-					$oResult[] = $oCalendar->toArray($oAccount);
-				}
+				$oResult[] = $oCalendar;
 			}
-
+/*
 			if (is_array($oResult) && count($oResult) > 0)
 			{
 				$oResult[0]['IsDefault'] = true;
 			}
+ * 
+ */
 			//uasort($oResult['user'], array(&$this, '___qSortCallback'));
 		}
 		catch (Exception $oException)
