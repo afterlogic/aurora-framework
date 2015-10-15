@@ -70,7 +70,7 @@ class CalendarModule extends AApiModule
 			$oCalendar = $this->oApiCalendarManager->getCalendar($oAccount, $mCalendarId);
 			if ($oCalendar instanceof \CCalendar)
 			{
-				$mResult = $oCalendar->toArray($oAccount);
+				$mResult = $oCalendar->toResponseArray($oAccount);
 			}
 		}
 		

@@ -284,6 +284,47 @@ class MailModule extends AApiModule
 		return $this->TrueResponse($oAccount, $sFunctionName);
 	}	
 	
+	public function GetExtensions()
+	{
+	
+		$mResult = false;
+		$oAccount = $this->getAccountFromParam(false);
+		if ($oAccount)
+		{
+			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
+			if ('' !== $sClientTimeZone)
+			{
+				$oAccount->User->ClientTimeZone = $sClientTimeZone;
+				$oApiUsers = \CApi::GetCoreManager('users');
+				if ($oApiUsers)
+				{
+					$oApiUsers->updateAccount($oAccount);
+				}
+			}
+
+			$mResult = array();
+			$mResult['Extensions'] = array();
+
+			// extensions
+			if ($oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) &&
+				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe))
+			{
+				$oAccount->enableExtension(\CAccount::DisableManageSubscribe);
+			}
+
+			$aExtensions = $oAccount->getExtensionList();
+			foreach ($aExtensions as $sExtensionName)
+			{
+				if ($oAccount->isExtensionEnabled($sExtensionName))
+				{
+					$mResult['Extensions'][] = $sExtensionName;
+				}
+			}
+		}
+
+		return $this->DefaultResponse(null, __FUNCTION__, $mResult);
+	}
+	
 	/**
 	 * @return array
 	 */
@@ -291,6 +332,47 @@ class MailModule extends AApiModule
 	{
 		$oAccount = $this->getAccountFromParam();
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMailManager->getFolders($oAccount));
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function GetRelevantFoldersInformation()
+	{
+		$aFolders = $this->getParamValue('Folders', '');
+		$sInboxUidnext = $this->getParamValue('InboxUidnext', '');
+		
+		if (!is_array($aFolders) || 0 === count($aFolders))
+		{
+			throw new \ProjectCore\Exceptions\ClientException(\ProjectCore\Notifications::InvalidInputParameter);
+		}
+
+		$aResult = array();
+		$oAccount = null;
+
+		try
+		{
+			$oAccount = $this->getAccountFromParam();
+			$oReturnInboxNewData = \Core\Base\DataByRef::createInstance(array());
+			$aResult = $this->oApiMailManager->getFolderListInformation($oAccount, $aFolders, $sInboxUidnext, $oReturnInboxNewData);
+		}
+		catch (\MailSo\Net\Exceptions\ConnectionException $oException)
+		{
+			throw $oException;
+		}
+		catch (\MailSo\Imap\Exceptions\LoginException $oException)
+		{
+			throw $oException;
+		}
+		catch (\Exception $oException)
+		{
+			\CApi::Log((string) $oException);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+			'Counts' => $aResult,
+			'New' => $oReturnInboxNewData->GetData()
+		));
 	}	
 	
 	/**

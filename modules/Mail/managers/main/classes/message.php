@@ -1041,4 +1041,72 @@ class CApiMailMessage
 
 		return $this;
 	}
+	
+	public function toResponseArray()
+	{
+		$iTrimmedLimit = \CApi::GetConf('labs.message-body-size-limit', 0);
+
+		$oAttachments = $this->getAttachments();
+
+		$iInternalTimeStampInUTC = $this->getInternalTimeStamp();
+		$iReceivedOrDateTimeStampInUTC = $this->getReceivedOrDateTimeStamp();
+
+		$aFlags = $this->getFlagsLowerCase();
+		$mResult = array_merge(/*\CApiResponseManager::objectWrapper($oAccount, $this, $sParent, $aParameters)*/array(), array(
+			'Folder' => $this->getFolder(),
+			'Uid' => $this->getUid(),
+			'Subject' => $this->getSubject(),
+			'MessageId' => $this->getMessageId(),
+			'Size' => $this->getSize(),
+			'TextSize' => $this->getTextSize(),
+			'InternalTimeStampInUTC' => $iInternalTimeStampInUTC,
+			'ReceivedOrDateTimeStampInUTC' => $iReceivedOrDateTimeStampInUTC,
+			'TimeStampInUTC' =>	\CApi::GetConf('labs.use-date-from-headers', false) && 0 < $iReceivedOrDateTimeStampInUTC ?
+				$iReceivedOrDateTimeStampInUTC : $iInternalTimeStampInUTC,
+			'From' => \CApiResponseManager::GetResponseObject($this->getFrom()),
+			'To' => \CApiResponseManager::GetResponseObject($this->getTo()),
+			'Cc' => \CApiResponseManager::GetResponseObject($this->getCc()),
+			'Bcc' => \CApiResponseManager::GetResponseObject($this->getBcc()),
+			'Sender' => \CApiResponseManager::GetResponseObject($this->getSender()),
+			'ReplyTo' => \CApiResponseManager::GetResponseObject($this->getReplyTo()),
+    		'IsSeen' => in_array('\\seen', $aFlags),
+			'IsFlagged' => in_array('\\flagged', $aFlags),
+			'IsAnswered' => in_array('\\answered', $aFlags),
+			'IsForwarded' => false,
+			'HasAttachments' => $oAttachments && $oAttachments->hasNotInlineAttachments(),
+			'HasVcardAttachment' => $oAttachments && $oAttachments->hasVcardAttachment(),
+			'HasIcalAttachment' => $oAttachments && $oAttachments->hasIcalAttachment(),
+			'Priority' => $this->getPriority(),
+			'DraftInfo' => $this->getDraftInfo(),
+			'Sensitivity' => $this->getSensitivity()
+		));
+
+		$mResult['TrimmedTextSize'] = $mResult['TextSize'];
+		if (0 < $iTrimmedLimit && $mResult['TrimmedTextSize'] > $iTrimmedLimit)
+		{
+			$mResult['TrimmedTextSize'] = $iTrimmedLimit;
+		}
+
+		$sLowerForwarded = strtolower(\CApi::GetConf('webmail.forwarded-flag-name', ''));
+		if (!empty($sLowerForwarded))
+		{
+			$mResult['IsForwarded'] = in_array($sLowerForwarded, $aFlags);
+		}
+
+		$mResult['Hash'] = \CApi::EncodeKeyValues(array(
+//			'AccountID' => $oAccount ? $oAccount->IdAccount : 0,
+			'Folder' => $mResult['Folder'],
+			'Uid' => $mResult['Uid'],
+			'MimeType' => 'message/rfc822',
+			'FileName' => $mResult['Subject'].'.eml'
+		));
+
+		$mResult['@Object'] = 'Object/MessageListItem';
+		$mResult['Threads'] = $this->getThreads();
+
+		$mResult['Custom'] = \CApiResponseManager::GetResponseObject($this->getCustomList());
+		$mResult['Subject'] = \MailSo\Base\Utils::Utf8Clear($mResult['Subject']);
+		
+		return $mResult;
+	}
 }

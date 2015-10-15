@@ -632,7 +632,7 @@ class CApiContactsMainManager extends AApiManager
 	 */
 	public function import($iUserId, $sSyncType, $sTempFileName, &$iParsedCount, $iGroupId, $bIsShared)
 	{
-		$oApiUsersManager = CApi::Manager('users');
+		$oApiUsersManager = CApi::GetCoreManager('users');
 		$oAccount = $oApiUsersManager->getDefaultAccount($iUserId);
 
 		if ($sSyncType === \EContactFileType::CSV)
@@ -1049,17 +1049,19 @@ class CApiContactsMainManager extends AApiManager
 		$aEvents = $this->oApiContactsBaseManager->getGroupEvents($iGroupId);
 		if (is_array($aEvents) && 0 < count($aEvents))
 		{
-			$oApiUsersManager = CApi::Manager('users');
+			$oApiUsersManager = CApi::GetCoreManager('users');
 			$iAccountId =  $oApiUsersManager->getDefaultAccountId($iUserId);
 			$oAccount = $oApiUsersManager->getAccountById($iAccountId);
 			
 			if ($oAccount)
 			{
-				$oApiCalendarManager = CApi::Manager('calendar');
-
-				foreach ($aEvents as $aEvent)
+				$oApiCalendarManager = CApi::GetModuleManager()->GetModule('Calendar');
+				if ($oApiCalendarManager)
 				{
-					$aResult[] = $oApiCalendarManager->getBaseEvent($oAccount, $aEvent['id_calendar'], $aEvent['id_event']);
+					foreach ($aEvents as $aEvent)
+					{
+						$aResult[] = $oApiCalendarManager->getBaseEvent($oAccount, $aEvent['id_calendar'], $aEvent['id_event']);
+					}
 				}
 			}
 		}

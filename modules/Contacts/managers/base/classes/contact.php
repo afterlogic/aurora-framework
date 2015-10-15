@@ -608,7 +608,7 @@ class CContact extends api_AContainer
 		}
 	}
 	
-	public function toArray()
+	public function toResponseArray()
 	{
 		return array(
 			'IdUser' => $this->IdUser,

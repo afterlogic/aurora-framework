@@ -144,4 +144,24 @@ class CApiMailMessageCollection extends \MailSo\Base\Collection
 	{
 		return new self();
 	}
+	
+	public function toResponseArray() {
+		return array_merge(
+				parent::toResponseArray(), 
+				array(
+					'Uids' => $this->Uids,
+					'UidNext' => $this->UidNext,
+					'FolderHash' => $this->FolderHash,
+					'MessageCount' => $this->MessageCount,
+					'MessageUnseenCount' => $this->MessageUnseenCount,
+					'MessageResultCount' => $this->MessageResultCount,
+					'FolderName' => $this->FolderName,
+					'Offset' => $this->Offset,
+					'Limit' => $this->Limit,
+					'Search' => $this->Search,
+					'Filters' => $this->Filters,
+					'New' => $this->New
+				)				
+		);
+	}
 }

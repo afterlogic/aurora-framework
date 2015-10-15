@@ -1698,7 +1698,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 				$aAccountEmails[] = $aUserAccount[1];
 			}
 		}
-		$oApiFetchers = \CApi::Manager('fetchers');
+		$oApiFetchers = $this->GetModule()->GetManager('fetchers');
 		$aFetchers = $oApiFetchers->getFetchers($oDefaultAccount);
 		if (is_array($aFetchers) && 0 < count($aFetchers))
 		{

@@ -70,6 +70,7 @@ class CApi
 			CApi::Inc('common.container');
 			CApi::Inc('common.manager');
 			CApi::Inc('common.module');
+			CApi::Inc('common.response');
 			CApi::Inc('common.xml');
 			CApi::Inc('common.plugin');
 

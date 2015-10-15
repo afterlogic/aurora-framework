@@ -154,12 +154,12 @@ abstract class Collection
 	 * @return mixed | null
 	 * @return mixed
 	 */
-	public function &GetByIndex($iIndex)
+	public function &GetByIndex($mIndex)
 	{
 		$mResult = null;
-		if (\key_exists($iIndex, $this->aItems))
+		if (\key_exists($mIndex, $this->aItems))
 		{
-			$mResult = $this->aItems[$iIndex];
+			$mResult = $this->aItems[$mIndex];
 		}
 
 		return $mResult;
@@ -182,4 +182,17 @@ abstract class Collection
 
 		return $this;
 	}
+	
+	public function toResponseArray()
+	{
+		$aNames = explode('\\', get_class($this));
+		$sObjectName = end($aNames);
+		
+		return array(
+			'@Object' => 'Collection/'.\CApiResponseManager::GetObjectName($sObjectName),
+			'@Count' => $this->Count(),
+			'@Collection' => \CApiResponseManager::GetResponseObject($this->CloneAsArray())
+		);
+	}
+	
 }

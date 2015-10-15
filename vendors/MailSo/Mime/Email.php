@@ -240,7 +240,7 @@ class Email
 	 * 
 	 * @return array
 	 */
-	public function toArray($bIdn = false)
+	public function toResponseArray($bIdn = false)
 	{
 		return array($this->sDisplayName, $this->GetEmail($bIdn), $this->sRemark);
 	}

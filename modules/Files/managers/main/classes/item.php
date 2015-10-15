@@ -102,7 +102,7 @@ class CFileStorageItem  extends api_AContainer
 		);
 	}
 	
-	public function toArray()
+	public function toResponseArray()
 	{
 		return array(
 			'Id' => $this->Id,

@@ -370,107 +370,6 @@ abstract class AApiModule
 	}	
 	
 	/**
-	 * @param string $sObjectName
-	 *
-	 * @return string
-	 */
-	protected function objectNames($sObjectName)
-	{
-		$aList = array(
-			'CApiMailMessageCollection' => 'MessageCollection',
-			'CApiMailMessage' => 'Message',
-			'CApiMailFolderCollection' => 'FolderCollection',
-			'CApiMailFolder' => 'Folder',
-			'Email' => 'Email'
-		);
-
-		return !empty($aList[$sObjectName]) ? $aList[$sObjectName] : $sObjectName;
-	}
-	
-	/**
-	 * @param \CAccount $oAccount
-	 * @param object $oData
-	 * @param string $sParent
-	 *
-	 * @return array | false
-	 */
-	protected function objectWrapper($oAccount, $oData, $sParent)
-	{
-		$mResult = false;
-		if (is_object($oData))
-		{
-			$aNames = explode('\\', get_class($oData));
-			$sObjectName = end($aNames);
-
-			$mResult = array(
-				'@Object' => $this->objectNames($sObjectName)
-			);
-
-			if ($oData instanceof \MailSo\Base\Collection)
-			{
-				$mResult['@Object'] = 'Collection/'.$mResult['@Object'];
-				$mResult['@Count'] = $oData->Count();
-				$mResult['@Collection'] = $this->responseObject($oAccount, $oData->CloneAsArray(), $sParent, $aParameters);
-			}
-			else
-			{
-				$mResult['@Object'] = 'Object/'.$mResult['@Object'];
-			}
-		}
-
-		return $mResult;
-	}
-		
-	/**
-	 * @param \CAccount $oAccount
-	 * @param mixed $mResponse
-	 * @param string $sParent
-	 *
-	 * @return mixed
-	 */
-	protected function responseObject($oAccount, $mResponse, $sParent)
-	{
-		$mResult = null;
-
-		if (is_object($mResponse))
-		{
-			
-			$aNames = explode('\\', get_class($mResponse));
-			$sObjectName = end($aNames);
-
-			$mResult = array(
-				'@Object' => $this->objectNames($sObjectName)
-			);			
-			if (method_exists($mResponse, 'toArray'))	
-			{
-				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent), $mResponse->toArray());
-			}
-			else if ($mResponse instanceof \MailSo\Base\Collection)
-			{
-				$mResult['@Object'] = 'Collection/'.$mResult['@Object'];
-				$mResult['@Count'] = $mResponse->Count();
-				$mResult['@Collection'] = $this->responseObject($oAccount, $mResponse->CloneAsArray(), $sParent);
-			}
-		}
-		else if (is_array($mResponse))
-		{
-			foreach ($mResponse as $iKey => $oItem)
-			{
-				$mResponse[$iKey] = $this->responseObject($oAccount, $oItem, $sParent);
-			}
-
-			$mResult = $mResponse;
-		}
-		else
-		{
-			$mResult = $mResponse;
-		}
-
-		unset($mResponse);
-		return $mResult;
-	}
-	
-	/**
 	 * @param \CAccount $oAccount
 	 * @param string $sMethod
 	 * @param mixed $mResult = false
@@ -488,7 +387,7 @@ abstract class AApiModule
 			$aResult['AccountID'] = $oAccount->IdAccount;
 		}
 
-		$aResult['Result'] = $this->responseObject($oAccount, $mResult, $sMethod);
+		$aResult['Result'] = \CApiResponseManager::GetResponseObject($mResult);
 		$aResult['@Time'] = microtime(true) - PSEVEN_APP_START;
 		return $aResult;
 	}	
