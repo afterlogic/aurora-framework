@@ -344,7 +344,7 @@ class CApiMailFolder
 			'IsSelectable' => $this->isSelectable(),
 			'Exists' => $this->exists(),
 			'Extended' => $aExtended,
-			'SubFolders' => array()
+			'SubFolders' => \CApi::GetResponseObject($this->getSubFolders())
 		);		
 	}
 }
