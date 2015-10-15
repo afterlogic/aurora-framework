@@ -38,10 +38,13 @@ function CApp()
 	this.bPublic = false;
 }
 
-CApp.prototype.init = function (bPublic)
+CApp.prototype.setPublic = function ()
 {
-	this.bPublic = bPublic;
-	
+	this.bPublic = true;
+}
+
+CApp.prototype.init = function ()
+{
 	if (this.bAuth && !this.bPublic)
 	{
 		var Accounts = require('modules/Mail/js/AccountList.js');
@@ -73,7 +76,7 @@ CApp.prototype.init = function (bPublic)
 		};
 	}
 	
-	Screens.init(!this.bAuth && !bPublic);
+	Screens.init();
 	Routing.init();
 	
 	require('core/js/AppTab.js');

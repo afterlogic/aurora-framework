@@ -28,13 +28,10 @@ function CScreens()
 	this.informationScreen = ko.observable(null);
 }
 
-/**
- * @param {boolean} bOnlyAuthModule
- */
-CScreens.prototype.init = function (bOnlyAuthModule)
+CScreens.prototype.init = function ()
 {
 	var
-		oModulesScreens = ModulesManager.getModulesScreens(bOnlyAuthModule),
+		oModulesScreens = ModulesManager.getModulesScreens(),
 		oModulesTabs = ModulesManager.getModulesTabs(),
 		sFirstModuleName = ''
 	;

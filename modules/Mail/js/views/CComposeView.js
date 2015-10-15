@@ -337,7 +337,7 @@ function CComposeView()
 		{ value: 'Ctrl+I', action: TextUtils.i18n('COMPOSE/HOTKEY_ITALIC') },
 		{ value: 'Ctrl+U', action: TextUtils.i18n('COMPOSE/HOTKEY_UNDERLINE') }
 	];
-console.log('!!! SelectFilesPopup', SelectFilesPopup, !!SelectFilesPopup);
+
 	this.allowFiles = !!SelectFilesPopup;
 
 	this.closeBecauseSingleCompose = ko.observable(false);

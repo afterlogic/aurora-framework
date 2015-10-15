@@ -30,6 +30,8 @@ function CImportCalendarPopup()
 
 	this.color	= ko.observable('');
 	this.calendarId	= ko.observable('');
+	
+	this.importButtonDom	= ko.observable(null);
 }
 
 _.extendOwn(CImportCalendarPopup.prototype, CAbstractPopup.prototype);
@@ -63,7 +65,7 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 		'action': '?/Upload/',
 		'name': 'jua-uploader',
 		'queueSize': 1,
-		'clickElement': $('#jue_import_button', $oViewModel),
+		'clickElement': this.importButtonDom(),
 		'hiddenElementsPosition': UserSettings.IsRTL ? 'right' : 'left',
 		'disableAjaxUpload': false,
 		'disableDragAndDrop': true,
@@ -71,7 +73,7 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 		'hidden': {
 			'Module': 'Calendar',
 			'Method': 'UploadCalendar',
-			'Token': UserSettins.CsrfToken,
+			'Token': UserSettings.CsrfToken,
 			'AccountID': App.defaultAccountId(),
 			'Parameters':  function () {
 				return JSON.stringify({
@@ -103,9 +105,10 @@ CImportCalendarPopup.prototype.onFileUploadComplete = function (sFileUid, bRespo
 {
 	var bError = !bResponseReceived || !oResponse || oResponse.Error|| oResponse.Result.Error || false;
 
+	this.importing(false);
+	
 	if (!bError)
 	{
-		this.importing(false);
 		this.fCallback();
 		this.closePopup();
 	}

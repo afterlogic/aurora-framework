@@ -16,9 +16,11 @@
 					<span data-i18n="CALENDAR/HINT_IMPORT_CALENDAR" data-bind="i18n: 'text'"></span>
 				</div>
 				<div class="row">
-					<span data-bind="visible: importing, i18n: 'text'" data-i18n="CONTACTS/IMPORTING"></span>
+					<div class="buttons without_border_top" data-bind="visible: importing">
+						<span class="button import" data-i18n="CONTACTS/IMPORTING" data-bind="i18n: 'text'"></span>
+					</div>
 					<div class="buttons without_border_top" data-bind="visible: !importing()">
-						<span id="jue_import_button" class="button import" data-i18n="CONTACTS/BUTTON_IMPORT_CONTACTS" data-bind="i18n: 'text'"></span>
+						<span class="button import" data-i18n="CONTACTS/BUTTON_IMPORT_CONTACTS" data-bind="i18n: 'text', initDom: importButtonDom"></span>
 					</div>
 				</div>
 			</div>

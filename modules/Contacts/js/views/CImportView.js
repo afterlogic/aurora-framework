@@ -2,6 +2,7 @@
 
 var
 	ko = require('knockout'),
+	_ = require('underscore'),
 	
 	App = require('core/js/App.js'),
 	Utils = require('core/js/utils/Common.js'),
@@ -22,20 +23,19 @@ function CImportView(oParent)
 
 	this.visibility = ko.observable(false);
 	this.importing = ko.observable(false);
+	
+	this.importButtonDom = ko.observable(null);
 }
 
 CImportView.prototype.ViewTemplate = 'Contacts_ImportView';
 
-/**
- * @param {Object} $oViewModel
- */
-CImportView.prototype.onBind = function ($oViewModel)
+CImportView.prototype.onBind = function ()
 {
 	this.oJua = new CJua({
 		'action': '?/Upload/',
 		'name': 'jua-uploader',
 		'queueSize': 1,
-		'clickElement': $('#jue_import_button', $oViewModel),
+		'clickElement': this.importButtonDom(),
 		'hiddenElementsPosition': UserSettings.IsRTL ? 'right' : 'left',
 		'disableAjaxUpload': false,
 		'disableDragAndDrop': true,

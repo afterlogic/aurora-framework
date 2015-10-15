@@ -5,9 +5,18 @@ var
 	$ = require('jquery'),
 	
 	Settings = require('core/js/Settings.js'),
+	App = require('core/js/App.js'),
 	
-	oModules = {}
+	oModules = {},
+	bOnlyAuthModule = true//!App.isAuth() && !App.isPublic()
 ;
+
+function IsModuleIncluded(sModuleName)
+{
+	App = require('core/js/App.js');
+	bOnlyAuthModule = !App.isAuth() && !App.isPublic();
+	return bOnlyAuthModule ? sModuleName === 'Auth' : sModuleName !== 'Auth';
+}
 
 module.exports = {
 	init: function (oAvaliableModules) {
@@ -19,11 +28,11 @@ module.exports = {
 		});
 	},
 	
-	getModulesScreens: function (bOnlyAuthModule) {
+	getModulesScreens: function () {
 		var oModulesScreens = {};
 		
 		_.each(oModules, function (oModule, sModuleName) {
-			if (!!oModule.screens && (bOnlyAuthModule ? sModuleName === 'Auth' : sModuleName !== 'Auth'))
+			if (!!oModule.screens && IsModuleIncluded(sModuleName))
 			{
 				oModulesScreens[sModuleName] = oModule.screens;
 			}
@@ -37,18 +46,21 @@ module.exports = {
 		{
 			this.aTabs = [];
 			this.aStandardTabs = [];
-			_.each(oModules, _.bind(function (oModule, sName) {
-				if ($.isFunction(oModule.getHeaderItem))
+			_.each(oModules, _.bind(function (oModule, sModuleName) {
+				if (IsModuleIncluded(sModuleName))
 				{
-					var oHeaderItem = oModule.getHeaderItem();
-					if (oHeaderItem)
+					if ($.isFunction(oModule.getHeaderItem))
 					{
-						if ($.isFunction(oHeaderItem.setName))
+						var oHeaderItem = oModule.getHeaderItem();
+						if (oHeaderItem)
 						{
-							oHeaderItem.setName(sName);
-							this.aStandardTabs.push(oHeaderItem);
+							if ($.isFunction(oHeaderItem.setName))
+							{
+								oHeaderItem.setName(sModuleName);
+								this.aStandardTabs.push(oHeaderItem);
+							}
+							this.aTabs.push(oHeaderItem);
 						}
-						this.aTabs.push(oHeaderItem);
 					}
 				}
 			}, this));
@@ -61,7 +73,7 @@ module.exports = {
 	{
 		var aPrefetchers = [];
 
-		_.each(oModules, function (oModule, sName) {
+		_.each(oModules, function (oModule, sModuleName) {
 			if (oModule.prefetcher)
 			{
 				aPrefetchers.push(oModule.prefetcher);
@@ -71,9 +83,9 @@ module.exports = {
 		return aPrefetchers;
 	},
 	
-	isModuleIncluded: function (sName)
+	isModuleIncluded: function (sModuleName)
 	{
-		return oModules[sName] !== undefined;
+		return oModules[sModuleName] !== undefined;
 	},
 	
 	run: function (sModuleName, sFunctionName, aParams)

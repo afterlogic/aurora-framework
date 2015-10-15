@@ -792,7 +792,7 @@ CContactsView.prototype.onBind = function ()
 	
 	this.selectedGroupType.valueHasMutated();
 	
-	this.oImportView.onBind(this.$viewDom);
+	this.oImportView.onBind();
 	this.requestGroupFullList();
 
 	this.hotKeysBind();

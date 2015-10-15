@@ -12,6 +12,7 @@ $('body').ready(function () {
 		App = require('core/js/App.js')
 	;
 	
+	App.setPublic();
 	ModulesManager.init(oAvaliableModules);
-	App.init(true);
+	App.init();
 });
