@@ -12,7 +12,6 @@ var
 
 ko.bindingHandlers.i18n = {
 	'init': function (oElement, fValueAccessor) {
-
 		var
 			sKey = $(oElement).data('i18n'),
 			sValue = sKey ? TextUtils.i18n(sKey) : sKey
@@ -20,22 +19,13 @@ ko.bindingHandlers.i18n = {
 
 		if ('' !== sValue)
 		{
-			switch (fValueAccessor()) {
-			case 'value':
-				$(oElement).val(sValue);
-				break;
-			case 'text':
-				$(oElement).text(sValue);
-				break;
-			case 'html':
-				$(oElement).html(sValue);
-				break;
-			case 'title':
-				$(oElement).attr('title', sValue);
-				break;
-			case 'placeholder':
-				$(oElement).attr({'placeholder': sValue});
-				break;
+			switch (fValueAccessor())
+			{
+				case 'value': $(oElement).val(sValue); break;
+				case 'text': $(oElement).text(sValue); break;
+				case 'html': $(oElement).html(sValue); break;
+				case 'title': $(oElement).attr('title', sValue); break;
+				case 'placeholder': $(oElement).attr({'placeholder': sValue}); break;
 			}
 		}
 	}
@@ -132,10 +122,9 @@ ko.bindingHandlers.dropdown = {
 				
 				if (!bHasDropdownParent && !jqElement.hasClass(oCommand['disabled']) && !bScrollBar)
 				{
-
 					fToggleExpand();
 
-					_.defer(function(){
+					_.defer(function () {
 						fCallback();
 					});
 
@@ -219,7 +208,8 @@ ko.bindingHandlers.dropdown = {
 
 ko.bindingHandlers.initDom = {
 	'init': function (oElement, fValueAccessor) {
-		if (fValueAccessor()) {
+		if (fValueAccessor())
+		{
 			if (_.isArray(fValueAccessor()))
 			{
 				var
@@ -257,7 +247,6 @@ ko.bindingHandlers.command = {
 	},
 
 	'update': function (oElement, fValueAccessor) {
-
 		var
 			bResult = true,
 			jqElement = $(oElement),
@@ -307,7 +296,6 @@ function deferredUpdate(element, state, duration, callback)
 
 ko.bindingHandlers.checkstate = {
 	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
-			
 		var
 			oOptions = oElement.oOptions || null,
 			jqElement = oElement.jqElement || null,
@@ -315,8 +303,9 @@ ko.bindingHandlers.checkstate = {
 			values = fValueAccessor(),
 			state = values.state
 		;
-
-		if (values.state !== undefined) {
+		
+		if (values.state !== undefined)
+		{
 			if (!jqElement)
 			{
 				oElement.jqElement = jqElement = $(oElement);
@@ -332,7 +321,7 @@ ko.bindingHandlers.checkstate = {
 				);
 			}
 
-			deferredUpdate(jqElement, state, oOptions['duration'], function(element, state){
+			deferredUpdate(jqElement, state, oOptions['duration'], function (element, state) {
 				if (Browser.ie9AndBelow)
 				{
 					if (!oIconIE)
@@ -347,11 +336,11 @@ ko.bindingHandlers.checkstate = {
 							style = ''
 						;
 
-						oIconIE.__intervalIE = setInterval(function() {
+						oIconIE.__intervalIE = setInterval(function () {
 							style = '0px -' + (20 * i) + 'px';
 							i = i < 7 ? i + 1 : 0;
 							oIconIE.css({'background-position': style});
-						} , 1000/12);
+						}, 1000/12);
 					}
 					else
 					{
@@ -379,24 +368,28 @@ ko.bindingHandlers.heightAdjust = {
 			sDelay = fValueAccessor().delay || 400
 		;
 
-		if (!jqElement) {
+		if (!jqElement)
+		{
 			oElement.jqElement = jqElement = $(oElement);
 		}
 		_.delay(function () {
 			_.each(fValueAccessor().elements, function (mItem) {
-				
 				var element = mItem();
-				if (element) {
+				if (element)
+				{
 					height += element.is(':visible') ? element.outerHeight() : 0;
 				}
 			});
 			
-			if (sLocation === 'top' || sLocation === undefined) {
+			if (sLocation === 'top' || sLocation === undefined)
+			{
 				jqElement.css({
 					'padding-top': height,
 					'margin-top': -height
 				});
-			} else if (sLocation === 'bottom') {
+			}
+			else if (sLocation === 'bottom')
+			{
 				jqElement.css({
 					'padding-bottom': height,
 					'margin-bottom': -height
@@ -408,7 +401,6 @@ ko.bindingHandlers.heightAdjust = {
 
 ko.bindingHandlers.minHeightAdjust = {
 	'update': function (oElement, fValueAccessor, fAllBindingsAccessor) {
-
 		var
 			jqEl = $(oElement),
 			oOptions = fValueAccessor(),
@@ -432,7 +424,6 @@ ko.bindingHandlers.minHeightAdjust = {
 
 ko.bindingHandlers.listWithMoreButton = {
 	'init': function (oElement, fValueAccessor) {
-
 		var
 			$Element = $(oElement),
 			skipOneResize = false //for some flicker at slow resize (does not solve the problem completely TODO)
@@ -449,15 +440,16 @@ ko.bindingHandlers.listWithMoreButton = {
 				bHideMoreHints = true
 			;
 
-			if (!skipOneResize) {
+			if (!skipOneResize)
+			{
 				_.each($ItemsVisible, function (oItem, index) {
-
 					var
 						$Item = $(oItem),
 						iItemWidth = $Item.width()
 					;
 
-					if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth) {
+					if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth)
+					{
 						skipOneResize = false;
 						$Item.show();
 						$($ItemsHidden[index]).hide();

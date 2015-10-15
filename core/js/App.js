@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	$ = require('jquery'),
+	Modernizr = require('modernizr'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	Settings = require('core/js/Settings.js'),
@@ -122,3 +123,12 @@ CApp.prototype.onLogout = function ()
 var App = new CApp();
 
 module.exports = App;
+
+if (Modernizr && navigator)
+{
+	Modernizr.addTest('pdf', function() {
+		return !!_.find(navigator.mimeTypes, function (oMimeType) {
+			return 'application/pdf' === oMimeType.type;
+		});
+	});
+}

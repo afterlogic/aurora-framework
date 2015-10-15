@@ -39,8 +39,7 @@ var
 	bMobileApp = false,
 	$html = $('html')
 ;
-console.log('SelectFilesPopup', SelectFilesPopup);
-console.log('ModulesManager.isModuleIncluded(\'Files\')', ModulesManager.isModuleIncluded('Files'));
+
 /**
  * @constructor
  */

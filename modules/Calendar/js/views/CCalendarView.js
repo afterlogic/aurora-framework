@@ -369,40 +369,49 @@ CCalendarView.prototype.onBind = function ()
 		this.initUploader();
 	}
 	/* Click more links */
-//	$('body').on('click', function (e) {
-//		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month'){
-//			if ($(e.target).hasClass('fc-more')){
-//				var $this = $(e.target);
-//				$('.fc-more-cell.active').removeClass('active');
-//				$('.fc-row.fc-week.active').removeClass('active');
-//				$this.closest('.fc-more-cell').addClass('active');
-//				$this.closest('.fc-row.fc-week').addClass('active');
-//				var $popup = $('body').find('.fc-popover.fc-more-popover'),
-//					$parent = $this.closest('tr'),
-//					$superParent = $this.closest('.fc-day-grid'),
-//					indexColumn = parseInt($parent.find('.fc-more-cell.active').index('.fc-more-cell')),
-//					indexRow = parseInt($superParent.find('.fc-row.fc-week.active').index('.fc-row.fc-week'))
-//				;
-//				if ($popup.length > 0){
-//					self.linkRow = indexRow;
-//					self.linkColumn = indexColumn;
-//					self.popUpStatus = true;
-//				} else {
-//					self.popUpStatus = false;
-//					self.linkRow = 0;
-//					self.linkColumn = 0;
-//				}
-//			} else if ($(e.target).hasClass('checkmail') || $(e.target).parent().hasClass('checkmail')) {
-//				e.preventDefault();
-//			} else {
-//				self.popUpStatus = false;
-//				self.linkRow = 0;
-//				self.linkColumn = 0;
-//			}
-//		}
-//	});
+	$('body').on('click', function (e) {
+		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month')
+		{
+			if ($(e.target).hasClass('fc-more'))
+			{
+				var $this = $(e.target);
+				$('.fc-more-cell.active').removeClass('active');
+				$('.fc-row.fc-week.active').removeClass('active');
+				$this.closest('.fc-more-cell').addClass('active');
+				$this.closest('.fc-row.fc-week').addClass('active');
+				var
+					$popup = $('body').find('.fc-popover.fc-more-popover'),
+					$parent = $this.closest('tr'),
+					$superParent = $this.closest('.fc-day-grid'),
+					indexColumn = parseInt($parent.find('.fc-more-cell.active').index('.fc-more-cell')),
+					indexRow = parseInt($superParent.find('.fc-row.fc-week.active').index('.fc-row.fc-week'))
+				;
+				if ($popup.length > 0)
+				{
+					self.linkRow = indexRow;
+					self.linkColumn = indexColumn;
+					self.popUpStatus = true;
+				}
+				else
+				{
+					self.popUpStatus = false;
+					self.linkRow = 0;
+					self.linkColumn = 0;
+				}
+			}
+			else if ($(e.target).hasClass('checkstate') || $(e.target).parent().hasClass('checkstate'))
+			{
+				e.preventDefault();
+			}
+			else
+			{
+				self.popUpStatus = false;
+				self.linkRow = 0;
+				self.linkColumn = 0;
+			}
+		}
+	});
 };
-
 
 CCalendarView.prototype.onShow = function ()
 {
