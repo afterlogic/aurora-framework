@@ -10,6 +10,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	App = require('core/js/App.js'),
+	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
 	CDateModel = require('core/js/models/CDateModel.js')
 ;
@@ -22,7 +23,6 @@ function CFileModel()
 {
 	this.id = ko.observable('');
 	this.fileName = ko.observable('');
-	this.nameForEdit = ko.observable('');
 	this.storageType = ko.observable(Enums.FileStorageType.Personal);
 	this.lastModified = ko.observable('');
 	
@@ -32,8 +32,6 @@ function CFileModel()
 	
 	this.selected = ko.observable(false);
 	this.checked = ko.observable(false);
-	this.isFolder = ko.observable(false);
-	this.edited = ko.observable(false);
 
 	this.isExternal = ko.observable(false);
 	this.isLink = ko.observable(false);
@@ -84,10 +82,6 @@ function CFileModel()
 	
 	CAbstractFileModel.call(this);
 	
-	this.fileName.subscribe(function (value) {
-		this.nameForEdit(value);
-	}, this);
-
 	this.type = this.storageType;
 	this.uploaded = ko.observable(true);
 
@@ -159,16 +153,8 @@ function CFileModel()
 		}
 	}, this);
 
-	this.edited.subscribe(function (value) {
-		if (value === false)
-		{
-			this.nameForEdit(this.fileName());
-		}
-	}, this);
-
-
 	this.canShare = ko.computed(function () {
-		return (this.storageType === Enums.FileStorageType.Personal || this.storageType === Enums.FileStorageType.Corporate);
+		return (this.storageType() === Enums.FileStorageType.Personal || this.storageType() === Enums.FileStorageType.Corporate);
 	}, this);
 	
 	this.sHtmlEmbed = ko.observable('');
@@ -194,7 +180,7 @@ CFileModel.prototype.parseLink = function (oData, sLinkUrl)
 	this.linkUrl(sLinkUrl);
 	this.fileName(Utils.pString(oData.Name));
 	this.size(Utils.pInt(oData.Size));
-	this.linkType(Enums.has('FileStorageLinkType', pInt(oData.LinkType)) ? pInt(oData.LinkType) : Enums.FileStorageLinkType.Unknown);
+	this.linkType(Enums.has('FileStorageLinkType', Utils.pInt(oData.LinkType)) ? Utils.pInt(oData.LinkType) : Enums.FileStorageLinkType.Unknown);
 	this.allowDownload(false);
 	if (oData.Thumb)
 	{
@@ -203,12 +189,25 @@ CFileModel.prototype.parseLink = function (oData, sLinkUrl)
 	}
 };
 
-CFileModel.prototype.parse = function (oData, sPublicHash)
+/**
+ * @param {object} oData
+ * @param {string} sPublicHash
+ * @param {boolean} bPopup
+ */
+CFileModel.prototype.parse = function (oData, sPublicHash, bPopup)
 {
 	var oDateModel = new CDateModel();
 	
 	this.allowSelect(true);
-	this.isFolder(!!oData.IsFolder);
+	this.allowDrag(true);
+	this.allowCheck(true);
+	this.allowDelete(true);
+	this.allowUpload(true);
+	this.allowSharing(true);
+	this.allowHeader(true);
+	this.allowDownload(true);
+	this.isPopupItem(bPopup);
+		
 	this.isLink(!!oData.IsLink);
 	this.fileName(Utils.pString(oData.Name));
 	this.id(Utils.pString(oData.Id));
@@ -226,20 +225,17 @@ CFileModel.prototype.parse = function (oData, sPublicHash)
 		this.linkType(Utils.pInt(oData.LinkType));
 	}
 	
-	if (!this.isFolder())
-	{
-		this.size(Utils.pInt(oData.Size));
-		oDateModel.parse(oData['LastModified']);
-		this.lastModified(oDateModel.getShortDate());
-		this.owner(Utils.pString(oData.Owner));
-		this.thumb(!!oData.Thumb);
-		this.thumbnailExternalLink(Utils.pString(oData.ThumbnailLink));
-		this.hash(Utils.pString(oData.Hash));
-		this.publicHash(sPublicHash);
-		this.sHtmlEmbed(oData.OembedHtml ? oData.OembedHtml : '');
-	}
+	this.size(Utils.pInt(oData.Size));
+	oDateModel.parse(oData['LastModified']);
+	this.lastModified(oDateModel.getShortDate());
+	this.owner(Utils.pString(oData.Owner));
+	this.thumb(!!oData.Thumb);
+	this.thumbnailExternalLink(Utils.pString(oData.ThumbnailLink));
+	this.hash(Utils.pString(oData.Hash));
+	this.publicHash(sPublicHash);
+	this.sHtmlEmbed(oData.OembedHtml ? oData.OembedHtml : '');
 	
-	if(this.thumb() && this.thumbnailExternalLink() === '')
+	if (this.thumb() && this.thumbnailExternalLink() === '')
 	{
 		Utils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
 	}

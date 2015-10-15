@@ -35,7 +35,6 @@ function CAbstractFileModel()
 {
 	this.isIosDevice = bIsIosDevice;
 
-	this.isFolder = ko.observable(false);
 	this.isLink = ko.observable(false);
 	this.isPopupItem = ko.observable(false);
 	
@@ -48,7 +47,7 @@ function CAbstractFileModel()
 	this.fileName.subscribe(function (sFileName) {
 		this.id(sFileName);
 		this.displayName(sFileName);
-		this.extension(this.isFolder() ? '' : Utils.getFileExtension(sFileName));
+		this.extension(Utils.getFileExtension(sFileName));
 	}, this);
 	
 	this.size = ko.observable(0);

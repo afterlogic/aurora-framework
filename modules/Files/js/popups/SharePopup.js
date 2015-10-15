@@ -7,7 +7,8 @@ var
 	App = require('core/js/App.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
-	Ajax = require('modules/Files/js/Ajax.js')
+	Ajax = require('modules/Files/js/Ajax.js'),
+	CFolderModel = require('modules/Files/js/models/CFolderModel.js')
 ;
 
 /**
@@ -40,8 +41,8 @@ CSharePopup.prototype.onShow = function (oItem)
 			'Type': oItem.storageType(),
 			'Path': oItem.path(),
 			'Name': oItem.fileName(),
-			'Size': oItem.size(),
-			'IsFolder': oItem.isFolder() ? '1' : '0'
+			'Size': oItem instanceof CFolderModel ? 0 : oItem.size(),
+			'IsFolder': oItem instanceof CFolderModel ? '1' : '0'
 		}, this.onCreatePublicLinkResponse, this
 	);
 };

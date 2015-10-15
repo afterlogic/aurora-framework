@@ -47,7 +47,7 @@ CSelectFilesPopup.prototype.onSelectClick = function ()
 	var
 		aItems = this.oFilesView.selector.listCheckedAndSelected(),
 		aFileItems = _.filter(aItems, function (oItem) {
-			return !oItem.isFolder();
+			return oItem instanceof CFileModel;
 		}, this)
 	;
 	

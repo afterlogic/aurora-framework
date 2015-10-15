@@ -16,13 +16,12 @@ function CRenamePopup()
 	CAbstractPopup.call(this);
 	
 	this.fCallback = null;
-	this.item = null;
+	
 	this.name = ko.observable('');
-	this.name.focus = ko.observable(false);
-	this.name.error = ko.observable('');
-
+	this.focused = ko.observable(false);
+	this.error = ko.observable('');
 	this.name.subscribe(function () {
-		this.name.error('');
+		this.error('');
 	}, this);
 }
 
@@ -31,35 +30,28 @@ _.extendOwn(CRenamePopup.prototype, CAbstractPopup.prototype);
 CRenamePopup.prototype.PopupTemplate = 'Files_RenamePopup';
 
 /**
- * @param {Object} oItem
- * @param {Function} fCallback
+ * @param {string} sName
+ * @param {function} fCallback
  */
-CRenamePopup.prototype.onShow = function (oItem, fCallback)
+CRenamePopup.prototype.onShow = function (sName, fCallback)
 {
-
-	this.item = oItem;
-	this.item.nameForEdit(this.item.fileName());
-
-	this.name(this.item.nameForEdit());
-	this.name.focus(true);
-	this.name.error('');
+	this.fCallback = fCallback;
 	
-	if ($.isFunction(fCallback))
-	{
-		this.fCallback = fCallback;
-	}
+	this.name(sName);
+	this.focused(true);
+	this.error('');
 };
 
 CRenamePopup.prototype.onOKClick = function ()
 {
-	this.name.error('');
-	if (this.fCallback)
+	this.error('');
+	
+	if ($.isFunction(this.fCallback))
 	{
-		this.item.nameForEdit(this.name());
-		var sError = this.fCallback(this.item);
+		var sError = this.fCallback(this.name());
 		if (sError)
 		{
-			this.name.error('' + sError);
+			this.error(sError);
 		}
 		else
 		{

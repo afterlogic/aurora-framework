@@ -24,7 +24,8 @@ var
 	
 	Ajax = require('modules/Files/js/Ajax.js'),
 	Settings = require('modules/Files/js/Settings.js'),
-	CFileModel = require('modules/Files/js/models/CFileModel.js')
+	CFileModel = require('modules/Files/js/models/CFileModel.js'),
+	CFolderModel = require('modules/Files/js/models/CFolderModel.js')
 ;
 
 /**
@@ -54,9 +55,8 @@ function CFilesView(bPopup)
 	this.rootPath = ko.observable(TextUtils.i18n('FILESTORAGE/TAB_PERSONAL_FILES'));
 	this.storageType = ko.observable(Enums.FileStorageType.Personal);
 	this.storageType.subscribe(function () {
-		var 
-			oStorage = null
-		;
+		var  oStorage = null;
+		
 		if (this.isPublic)
 		{
 			this.rootPath(Settings.FileStoragePubParams.Name);
@@ -86,14 +86,18 @@ function CFilesView(bPopup)
 		this.dropPath(value);
 	}, this);
 
-	this.collection = ko.computed(function () {
+	this.filesCollection = ko.computed(function () {
 		var files = _.union(this.files(), this.getUploadingFiles());
 
 		files.sort(function(left, right) { 
 			return left.fileName() === right.fileName() ? 0 : (left.fileName() < right.fileName() ? -1 : 1); 
 		});
 		
-		return _.union(this.folders(), files);
+		return files;
+	}, this);
+	
+	this.collection = ko.computed(function () {
+		return _.union(this.folders(), this.filesCollection());
 	}, this);
 	
 	this.columnCount = ko.observable(1);
@@ -106,7 +110,6 @@ function CFilesView(bPopup)
 
 	this.renameCommand = Utils.createCommand(this, this.executeRename, function () {
 		var items = this.selector.listCheckedAndSelected();
-		//return (1 === items.length && !items[0].isLink());
 		return (1 === items.length);
 	});
 	this.deleteCommand = Utils.createCommand(this, this.executeDelete, function () {
@@ -115,17 +118,17 @@ function CFilesView(bPopup)
 	});
 	this.downloadCommand = Utils.createCommand(this, this.executeDownload, function () {
 		var items = this.selector.listCheckedAndSelected();
-		return (1 === items.length && !items[0].isFolder());
+		return (1 === items.length && items[0] instanceof CFileModel);
 	});
 	this.shareCommand = Utils.createCommand(this, this.executeShare, function () {
 		var items = this.selector.listCheckedAndSelected();
-		return (1 === items.length && !items[0].isLink());
+		return (1 === items.length && (!items[0].isLink || !items[0].isLink()));
 	});
 	this.sendCommand = Utils.createCommand(this, this.executeSend, function () {
 		var
 			aItems = this.selector.listCheckedAndSelected(),
 			aFileItems = _.filter(aItems, function (oItem) {
-				return !oItem.isFolder();
+				return oItem instanceof CFileModel;
 			}, this)
 		;
 		return (aFileItems.length > 0);
@@ -451,7 +454,7 @@ CFilesView.prototype.onDrop = function (oFile, oEvent)
 	if (oEvent && oEvent.target && this.searchPattern() === '')
 	{
 		var oFolder = ko.dataFor(oEvent.target);
-		if (oFolder && oFolder instanceof CFileModel && oFolder.isFolder())
+		if (oFolder && oFolder instanceof CFolderModel)
 		{
 			this.dropPath(oFolder.fullPath());
 		}
@@ -493,12 +496,12 @@ CFilesView.prototype.filesDrop = function (oFolder, oEvent, oUi)
 			aChecked = this.selector.listCheckedAndSelected();
 			_.each(aChecked, function (oItem) {
 				sFromPath = oItem.path();
-				bFolderIntoItself = oItem.isFolder() && sToPath === sFromPath + '/' + oItem.id();
+				bFolderIntoItself = oItem instanceof CFolderModel && sToPath === sFromPath + '/' + oItem.id();
 				if (!bFolderIntoItself)
 				{
 					if (!oEvent.ctrlKey)
 					{
-						if (!oItem.isFolder())
+						if (oItem instanceof CFileModel)
 						{
 							self.deleteFileByName(oItem.id());
 						}
@@ -509,7 +512,7 @@ CFilesView.prototype.filesDrop = function (oFolder, oEvent, oUi)
 					}
 					aItems.push({
 						'Name':  oItem.id(),
-						'IsFolder': oItem.isFolder()
+						'IsFolder': oItem instanceof CFolderModel
 					});
 				}
 			});
@@ -556,7 +559,7 @@ CFilesView.prototype.dragAndDropHelper = function (oFile)
 		sText = '';
 	
 	_.each(aItems, function (oItem) {
-		if (oItem.isFolder())
+		if (oItem instanceof CFolderModel)
 		{
 			nFoldersCount++;
 		}
@@ -591,7 +594,7 @@ CFilesView.prototype.onItemDelete = function ()
 };
 
 /**
- * @param {{isFolder:Function,path:Function,name:Function,isViewable:Function,viewFile:Function,downloadFile:Function}} oItem
+ * @param {{path:Function,name:Function,isViewable:Function,viewFile:Function,downloadFile:Function}} oItem
  */
 CFilesView.prototype.onEnter = function (oItem)
 {
@@ -599,13 +602,13 @@ CFilesView.prototype.onEnter = function (oItem)
 };
 
 /**
- * @param {{isFolder:Function,path:Function,name:Function,isViewable:Function,viewFile:Function,downloadFile:Function}} oItem
+ * @param {{path:Function,name:Function,isViewable:Function,viewFile:Function,downloadFile:Function}} oItem
  */
 CFilesView.prototype.onItemDblClick = function (oItem)
 {
 	if (oItem)
 	{
-		if (oItem.isFolder())
+		if (oItem instanceof CFolderModel)
 		{
 			this.getFiles(this.storageType(), oItem);
 		}
@@ -654,27 +657,19 @@ CFilesView.prototype.onGetFilesResponse = function (oResponse, oRequest)
 			sThumbSessionUid = Date.now().toString()
 		;
 
-		_.each(oResult.Items, function (oValue) {
-			var oItem = new CFileModel()
-				.allowDrag(true)
-				.allowCheck(true)
-				.allowDelete(true)
-				.allowUpload(true)
-				.allowSharing(true)
-				.allowHeader(true)
-				.allowDownload(true)
-				.isPopupItem(this.isPopup);
-				
-			oItem.parse(oValue, this.publicHash);
-			
-			oItem.getInThumbQueue(sThumbSessionUid);
-			if (oItem.isFolder())
+		_.each(oResult.Items, function (oData) {
+			if (oData.IsFolder)
 			{
-				aFolderList.push(oItem);
+				var oFolder = new CFolderModel();
+				oFolder.parse(oData);
+				aFolderList.push(oFolder);
 			}
 			else
 			{
-				aFileList.push(oItem);
+				var oFile = new CFileModel();
+				oFile.parse(oData, this.publicHash, this.isPopup);
+				oFile.getInThumbQueue(sThumbSessionUid);
+				aFileList.push(oFile);
 			}
 		}, this);
 		
@@ -728,12 +723,44 @@ CFilesView.prototype.onDeleteResponse = function (oResponse, oRequest)
 CFilesView.prototype.executeRename = function ()
 {
 	var
-		aChecked = this.selector.listCheckedAndSelected()
+		aChecked = this.selector.listCheckedAndSelected(),
+		oItem = aChecked[0]
 	;
-	if (!this.isPublic && aChecked[0])
+	if (!this.isPublic && oItem)
 	{
-		Popups.showPopup(RenamePopup, [aChecked[0], _.bind(this.renameItem, this)]);
+		Popups.showPopup(RenamePopup, [oItem.fileName(), _.bind(this.renameItem, this)]);
 	}
+};
+
+/**
+ * @param {string} sName
+ * @returns {string}
+ */
+CFilesView.prototype.renameItem = function (sName)
+{
+	var
+		aChecked = this.selector.listCheckedAndSelected(),
+		oItem = aChecked[0]
+	;
+	
+	if (!Utils.validateFileOrFolderName(sName))
+	{
+		return oItem instanceof CFolderModel ?
+			TextUtils.i18n('FILESTORAGE/INVALID_FOLDER_NAME') : TextUtils.i18n('FILESTORAGE/INVALID_FILE_NAME');
+	}
+	else
+	{
+		Ajax.send('Rename', {
+				'Type': this.storageType(),
+				'Path': oItem.path(),
+				'Name': oItem.id(),
+				'NewName': sName,
+				'IsLink': oItem.isLink && oItem.isLink() ? 1 : 0
+			}, this.onRenameResponse, this
+		);
+	}
+	
+	return '';
 };
 
 CFilesView.prototype.executeDownload = function ()
@@ -741,7 +768,7 @@ CFilesView.prototype.executeDownload = function ()
 	var 
 		aChecked = this.selector.listCheckedAndSelected()
 	;
-	if (aChecked[0] && !aChecked[0].isFolder())
+	if (aChecked[0] && aChecked[0] instanceof CFileModel)
 	{
 		aChecked[0].downloadFile();
 	}
@@ -763,7 +790,7 @@ CFilesView.prototype.executeSend = function ()
 	var
 		aItems = this.selector.listCheckedAndSelected(),
 		aFileItems = _.filter(aItems, function (oItem) {
-			return !oItem.isFolder();
+			return oItem instanceof CFileModel;
 		}, this)
 	;
 	
@@ -782,33 +809,6 @@ CFilesView.prototype.onShareIconClick = function (oItem)
 	{
 		Popups.showPopup(SharePopup, [oItem]);
 	}
-};
-
-/**
- * @param {Object} oItem
- * @return {string}
- */
-CFilesView.prototype.renameItem = function (oItem)
-{
-	var sName = $.trim(oItem.nameForEdit());
-	if (!Utils.validateFileOrFolderName(sName))
-	{
-		return oItem.isFolder() ?
-			TextUtils.i18n('FILESTORAGE/INVALID_FOLDER_NAME') : TextUtils.i18n('FILESTORAGE/INVALID_FILE_NAME');
-	}
-	else
-	{
-		Ajax.send('Rename', {
-				'Type': this.storageType(),
-				'Path': oItem.path(),
-				'Name': oItem.id(),
-				'NewName': sName,
-				'IsLink': oItem.isLink() ? 1 : 0
-			}, this.onRenameResponse, this
-		);
-	}
-
-	return '';
 };
 
 /**
@@ -981,9 +981,7 @@ CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
 		self = this,
 		sTypePrev = this.storageType(),
 		iPathIndex = this.iPathIndex(),
-		oFolder = new CFileModel()
-			.isFolder(true)
-			.storageType(sType)
+		oFolder = new CFolderModel().storageType(sType)
 	;
 	if (this.isPublic)
 	{
@@ -1039,8 +1037,7 @@ CFilesView.prototype.getPublicFiles = function (oPath)
 {
 	var 
 		iPathIndex = this.iPathIndex(),
-		oFolder = new CFileModel()
-			.isFolder(true)
+		oFolder = new CFolderModel()
 	;
 	if (Utils.isUnd(oPath) || oPath.id() === '')
 	{
@@ -1104,15 +1101,17 @@ CFilesView.prototype.getPathItemByIndex = function (iIndex)
 {
 	var 
 		oItem = this.pathItems()[iIndex],
-		oResult = new CFileModel().fileName(this.rootPath()).id('')
+		oFolder = new CFolderModel().fileName(this.rootPath()).id('')
 	;
 	
 	this.pathItems(this.pathItems().slice(0, iIndex));
+	
 	if (oItem && !this.isPublic)
 	{
-		oResult = oItem;
+		oFolder = oItem;
 	}
-	return oResult;
+	
+	return oFolder;
 };
 
 /**
@@ -1272,14 +1271,12 @@ CFilesView.prototype.onCreateLinkResponse = function (oResponse, oRequest)
  */
 CFilesView.prototype.createLink = function (oFileItem)
 {
-		Ajax.send('CreateLink', {
-			'Type': this.storageType(),
-			'Path': this.path(),
-			'Link': oFileItem.linkUrl(),
-			'Name': oFileItem.fileName()
-		}, this.onCreateLinkResponse, this
-	);
-		
+	Ajax.send('CreateLink', {
+		'Type': this.storageType(),
+		'Path': this.path(),
+		'Link': oFileItem.linkUrl(),
+		'Name': oFileItem.fileName()
+	}, this.onCreateLinkResponse, this);
 };
 
 CFilesView.prototype.onCreateLinkClick = function ()

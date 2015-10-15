@@ -3,6 +3,7 @@
 var
 	_ = require('underscore'),
 	ko = require('knockout'),
+	$ = require('jquery'),
 	
 	Routing = require('core/js/Routing.js'),
 	Popups = require('core/js/Popups.js'),
@@ -29,7 +30,6 @@ function GetSizeParameters()
 
 	return ',width=' + iWidth + ',height=' + iHeight + ',top=' + iTop + ',left=' + iLeft;
 }
-
 
 module.exports = {
 
@@ -69,9 +69,7 @@ module.exports = {
 	openTab: function (sUrl, sWinName)
 	{
 		$.cookie('aft-cache-ctrl', '1');
-		var oWin = null;
-
-		oWin = window.open(sUrl, '_blank');
+		var oWin = window.open(sUrl, '_blank');
 		
 		if (oWin)
 		{
@@ -103,7 +101,7 @@ module.exports = {
 
 		oWin = window.open(sUrl, sPopupName, sParams);
 		oWin.focus();
-		oWin.name = 98; // todo: AppData.Accounts ? AppData.Accounts.currentId() : 0; //no Accounts in client helpdesk
+		oWin.name = App.currentAccountId ? App.currentAccountId() : 0;
 
 		aOpenedWins.push(oWin);
 		
@@ -151,20 +149,12 @@ module.exports = {
 
 	closeAll: function ()
 	{
-		var
-			iLen = aOpenedWins.length,
-			iIndex = 0,
-			oWin = null
-		;
-
-		for (; iIndex < iLen; iIndex++)
-		{
-			oWin = aOpenedWins[iIndex];
+		_.each(aOpenedWins, function (oWin) {
 			if (!oWin.closed)
 			{
 				oWin.close();
 			}
-		}
+		});
 
 		aOpenedWins = [];
 	}

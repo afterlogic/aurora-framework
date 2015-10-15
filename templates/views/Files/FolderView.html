@@ -7,7 +7,6 @@
 		css: {'selected': selected(), 
 			  'checked': checked(),
 			  'deleted': deleted(),
-			  'incomplete': !uploaded(),
 			  'shared': shared() && !$root.isPublic
 		}"
 >
@@ -16,12 +15,7 @@
 			<span class="icon animGoal"></span>
 		</div>
 		<span class="shared_icon" data-bind="click: function (oItem) { $root.onShareIconClick(oItem); }"></span>						
-		<span class="name" data-bind="text: fileName(), visible: !edited()"></span>
-		<input type="text" class="input" maxlength="30" data-bind="value: nameForEdit(), visible: edited, hasfocus: edited" />
-		<span class="progress" data-bind="visible: !uploaded()">
-			<span data-bind="style: {'width': progressPercent() + '%'}"></span>
-			<span class="percent" data-bind="text: progressPercent() + '%'"></span>
-		</span>
+		<span class="name" data-bind="text: fileName()"></span>
 		<div class="separator"></div>
 	</div>
 </div>

@@ -32,6 +32,8 @@ require('core/js/enums.js');
 
 require('core/js/vendors/inputosaurus.js');
 
+require('jquery.cookie');
+
 function CApp()
 {
 	this.bAuth = window.pSevenAppData.Auth;

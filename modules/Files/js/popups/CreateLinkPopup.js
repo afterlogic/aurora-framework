@@ -43,10 +43,7 @@ CCreateLinkPopup.prototype.onShow = function (fCallback)
 	this.link('');
 	this.linkFocus(true);
 	
-	if ($.isFunction(fCallback))
-	{
-		this.fCallback = fCallback;
-	}
+	this.fCallback = fCallback;
 	this.checkTimer = setTimeout(_.bind(this.checkUrl, this), 2000);
 };
 
@@ -70,7 +67,8 @@ CCreateLinkPopup.prototype.onCheckUrlResponse = function (oResponse, oRequest)
 	if (oResponse.Result)
 	{
 		var oFile = new CFileModel();
-		this.fileItem(oFile.parseLink(oResponse.Result, this.link()));
+		oFile.parseLink(oResponse.Result, this.link());
+		this.fileItem(oFile);
 		this.urlChecked(true);
 	}
 	else
@@ -81,7 +79,7 @@ CCreateLinkPopup.prototype.onCheckUrlResponse = function (oResponse, oRequest)
 
 CCreateLinkPopup.prototype.executeSave = function ()
 {
-	if (this.fCallback)
+	if ($.isFunction(this.fCallback))
 	{
 		this.fCallback(this.fileItem());
 		this.link('');

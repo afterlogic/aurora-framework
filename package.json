@@ -32,11 +32,13 @@
 		"moment": "./node_modules/moment/min/moment-with-locales.min.js",
 		"fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
 		"customscroll": "./core/js/vendors/customscroll.js",
-		"modernizr": "./core/js/vendors/modernizr.js"
+		"modernizr": "./core/js/vendors/modernizr.js",
+		"jquery.cookie": "./core/js/vendors/jquery.cookie.js"
 	},
 	"browserify-shim": {
 		"customscroll": { "depends": [ "jquery:jQuery" ] },
-		"modernizr": "Modernizr"
+		"modernizr": "Modernizr",
+		"jquery.cookie": { "depends": [ "jquery:jQuery" ] }
 	},
 	"browserify": {
 		"transform": [
