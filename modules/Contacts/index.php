@@ -203,6 +203,8 @@ class ContactsModule extends AApiModule
 		}
 
 		$iCount = 0;
+		$aList = array();
+		
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
 			$iGroupId = ('' === $sGroupId) ? 0 : (int) $sGroupId;
@@ -215,7 +217,6 @@ class ContactsModule extends AApiModule
 			$iCount = $this->oApiContactsManager->getContactItemsCount(
 				$oAccount->IdUser, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId, $bAll);
 
-			$aList = array();
 			if (0 < $iCount)
 			{
 				$aContacts = $this->oApiContactsManager->getContactItems(
@@ -239,7 +240,7 @@ class ContactsModule extends AApiModule
 			'Search' => $sSearch,
 			'FirstCharacter' => $sFirstCharacter,
 			'All' => $bAll,
-			'List' => $aList
+			'List' => \CApiResponseManager::GetResponseObject($aList)
 		));		
 	}
 	

@@ -389,4 +389,26 @@ class CContactListItem
 	{
 		return $this->ToString();
 	}
+	
+	public function toResponseObject()
+	{
+		return array(
+//			'IdUser' => $oAccount->IdUser, TODO:
+			'Id' => $this->Id,
+			'Name' => $this->Name,
+			'Email' => $this->Email,
+			'Emails' => $this->Emails,
+			'Phones' => $this->Phones,
+			'UseFriendlyName' => $this->UseFriendlyName,
+			'IsGroup' => $this->IsGroup,
+			'IsOrganization' => $this->IsOrganization,
+			'ReadOnly' => $this->ReadOnly,
+			'ItsMe' => $this->ItsMe,
+			'Global' => $this->Global,
+			'ForSharedToAll' => $this->ForSharedToAll,
+			'SharedToAll' => $this->SharedToAll,
+			'Frequency' => $this->Frequency,
+			'AgeScore' => $this->AgeScore		
+		);
+	}
 }

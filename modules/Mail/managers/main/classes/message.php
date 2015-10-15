@@ -1210,6 +1210,7 @@ class CApiMailMessage
 			$mResult['HasExternals'] = $bHasExternals;
 			$mResult['FoundedCIDs'] = $aFoundedCIDs;
 			$mResult['FoundedContentLocationUrls'] = $aFoundedContentLocationUrls;
+			$mResult['Attachments'] = \CApiResponseManager::GetResponseObject($oAttachments);
 /*			$mResult['Attachments'] = array_merge(\CApiResponseManager::GetResponseObject($oAttachments), array(
 				'FoundedCIDs' => $aFoundedCIDs,
 				'FoundedContentLocationUrls' => $aFoundedContentLocationUrls

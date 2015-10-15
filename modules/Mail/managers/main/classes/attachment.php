@@ -267,4 +267,70 @@ class CApiMailAttachment
 		$this->oBodyStructure = $oBodyStructure;
 		return $this;
 	}
+	
+	public function toResponseArray()
+	{
+		$mFoundedCIDs = isset($aParameters['FoundedCIDs']) && is_array($aParameters['FoundedCIDs'])
+			? $aParameters['FoundedCIDs'] : null;
+
+		$mFoundedContentLocationUrls = isset($aParameters['FoundedContentLocationUrls']) &&
+			\is_array($aParameters['FoundedContentLocationUrls']) &&
+			0 < \count($aParameters['FoundedContentLocationUrls']) ?
+				$aParameters['FoundedContentLocationUrls'] : null;
+
+		if ($mFoundedCIDs || $mFoundedContentLocationUrls)
+		{
+			$aFoundedCIDs = \array_merge($mFoundedCIDs ? $mFoundedCIDs : array(),
+				$mFoundedContentLocationUrls ? $mFoundedContentLocationUrls : array());
+
+			$aFoundedCIDs = 0 < \count($mFoundedCIDs) ? $mFoundedCIDs : null;
+		}
+
+		$sMimeType = strtolower(trim($this->getMimeType()));
+		$sMimeIndex = strtolower(trim($this->getMimeIndex()));
+		$sContentTransferEncoding = strtolower(trim($this->getEncoding()));
+
+		$sFileName = $this->getFileName(true);
+		$iEstimatedSize = $this->getEstimatedSize();
+		$iThumbnailLimit = 1024 * 1024 * 2; // 2MB //TODO
+
+		if (in_array($sMimeType, array('application/octet-stream')))
+		{
+			$sMimeType = \MailSo\Base\Utils::MimeContentType($sFileName);
+		}
+
+		$sCid = \trim(\trim($this->getCid()), '<>');
+
+		$mResult = array_merge(\CApiResponseManager::objectWrapper($this), array(
+			'FileName' => $sFileName,
+			'MimeType' => $sMimeType,
+			'MimePartIndex' => ('message/rfc822' === $sMimeType && ('base64' === $sContentTransferEncoding || 'quoted-printable' === $sContentTransferEncoding))
+				? '' :  $sMimeIndex,
+			'EstimatedSize' => $iEstimatedSize,
+			'CID' => $sCid,
+			'ContentLocation' => $this->getContentLocation(),
+			'Thumb' => \CApi::GetConf('labs.allow-thumbnail', true) &&
+				$iEstimatedSize < $iThumbnailLimit &&
+				\api_Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName),
+			'Expand' =>\CApi::isExpandMimeTypeSupported($sMimeType, $sFileName),
+			'Iframed' =>\CApi::isIframedMimeTypeSupported($sMimeType, $sFileName),
+			'Content' => $this->getContent(),
+			'IsInline' => $this->isInline(),
+			'IsLinked' => (!empty($sCid) && $mFoundedCIDs && \in_array($sCid, $mFoundedCIDs)) ||
+				($mFoundedContentLocationUrls && \in_array(\trim($this->getContentLocation()), $mFoundedContentLocationUrls))
+		));
+
+		$mResult['Hash'] = \CApi::EncodeKeyValues(array(
+			'Iframed' => $mResult['Iframed'],
+//			'AccountID' => $oAccount ? $oAccount->IdAccount : 0, TODO:
+			'Folder' => $this->getFolder(),
+			'Uid' => $this->getUid(),
+			'MimeIndex' => $sMimeIndex,
+			'MimeType' =>  $sMimeType,
+			'FileName' => $this->getFileName(true)
+		));		
+		
+		return $mResult;
+	}
+			
 }
