@@ -48,13 +48,13 @@ class EmailCollection extends \MailSo\Base\Collection
 	/**
 	 * @return array
 	 */
-	public function toResponseArray()
+	public function toArray()
 	{
 		$aReturn = $aEmails = array();
 		$aEmails =& $this->GetAsArray();
 		foreach ($aEmails as /* @var $oEmail \MailSo\Mime\Email */ $oEmail)
 		{
-			$aReturn[] = $oEmail->toResponseArray();
+			$aReturn[] = $oEmail->tArray();
 		}
 
 		return $aReturn;

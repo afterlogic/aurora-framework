@@ -240,7 +240,7 @@ class Email
 	 * 
 	 * @return array
 	 */
-	public function toResponseArray($bIdn = false)
+	public function toArray($bIdn = false)
 	{
 		return array($this->sDisplayName, $this->GetEmail($bIdn), $this->sRemark);
 	}
@@ -282,5 +282,13 @@ class Email
 		}
 
 		return \trim($sReturn);
+	}
+	
+	public function toResponseArray()
+	{
+		return array(
+			'DisplayName' => \MailSo\Base\Utils::Utf8Clear($this->GetDisplayName()),
+			'Email' => \MailSo\Base\Utils::Utf8Clear($this->GetEmail())
+		);		
 	}
 }

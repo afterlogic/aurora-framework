@@ -5,14 +5,25 @@
  */
 class CApiResponseManager
 {
+	protected static $sMethod = null;
+
 	public static $objectNames = array(
 			'CApiMailMessageCollection' => 'MessageCollection',
 			'CApiMailMessage' => 'Message',
 			'CApiMailFolderCollection' => 'FolderCollection',
 			'CApiMailFolder' => 'Folder'
 	);
+
+	public static function GetMethod()
+	{
+		return  self::$sMethod;
+	}
 	
-	
+	public static function SetMethod($sMethod)
+	{
+		self::$sMethod = $sMethod;
+	}
+
 	/**
 	 * @param string $sObjectName
 	 *

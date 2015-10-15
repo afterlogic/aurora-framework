@@ -1101,8 +1101,128 @@ class CApiMailMessage
 			'FileName' => $mResult['Subject'].'.eml'
 		));
 
-		$mResult['@Object'] = 'Object/MessageListItem';
-		$mResult['Threads'] = $this->getThreads();
+		$sMethod = \CApiResponseManager::GetMethod();		
+		if ('GetMessage' === $sMethod || 'GetMessagesBodies' === $sMethod)
+		{
+			$mResult['Headers'] = \MailSo\Base\Utils::Utf8Clear($this->getHeaders());
+			$mResult['InReplyTo'] = $this->getInReplyTo();
+			$mResult['References'] = $this->getReferences();
+			$mResult['ReadingConfirmation'] = $this->getReadingConfirmation();
+
+			if (!empty($mResult['ReadingConfirmation']) && in_array('$readconfirm', $aFlags))
+			{
+				$mResult['ReadingConfirmation'] = '';
+			}
+
+			$bHasExternals = false;
+			$aFoundedCIDs = array();
+
+			$sPlain = '';
+			$sHtml = trim($this->getHtml());
+
+			if (0 === strlen($sHtml))
+			{
+				$sPlain = $this->getPlain();
+			}
+
+			$aContentLocationUrls = array();
+			$aFoundedContentLocationUrls = array();
+
+			if ($oAttachments && 0 < $oAttachments->Count())
+			{
+				$aList =& $oAttachments->GetAsArray();
+				foreach ($aList as /* @var \afterlogic\common\managers\mail\classes\attachment */ $oAttachment)
+				{
+					if ($oAttachment)
+					{
+						$sContentLocation = $oAttachment->getContentLocation();
+						if ($sContentLocation && 0 < \strlen($sContentLocation))
+						{
+							$aContentLocationUrls[] = $oAttachment->getContentLocation();
+						}
+					}
+				}
+			}
+
+			$iTextSizeLimit = 500000;
+			if ($iTextSizeLimit < \strlen($sHtml))
+			{
+				$iSpacePost = \strpos($sHtml, ' ', $iTextSizeLimit);
+				$sHtml = \substr($sHtml, 0, (false !== $iSpacePost && $iSpacePost > $iTextSizeLimit) ? $iSpacePost : $iTextSizeLimit);
+			}
+
+			if ($iTextSizeLimit < \strlen($sPlain))
+			{
+				$iSpacePost = \strpos($sPlain, ' ', $iTextSizeLimit);
+				$sPlain = \substr($sPlain, 0, (false !== $iSpacePost && $iSpacePost > $iTextSizeLimit) ? $iSpacePost : $iTextSizeLimit);
+			}
+
+			if (0 < \strlen($sHtml) && \CApi::GetConf('labs.webmail.display-inline-css', false))
+			{
+				include_once PSEVEN_APP_ROOT_PATH.'libraries/other/CssToInlineStyles.php';
+
+				$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+				$oCssToInlineStyles->setEncoding('utf-8');
+				$oCssToInlineStyles->setUseInlineStylesBlock(true);
+
+				$mResult['Html'] = \MailSo\Base\HtmlUtils::ClearHtml($oCssToInlineStyles->convert(), $bHasExternals, $aFoundedCIDs,
+					$aContentLocationUrls, $aFoundedContentLocationUrls, false, true);
+			}
+			else
+			{
+				$mResult['Html'] = 0 === strlen($sHtml) ? '' :
+					\MailSo\Base\HtmlUtils::ClearHtml($sHtml, $bHasExternals, $aFoundedCIDs,
+						$aContentLocationUrls, $aFoundedContentLocationUrls, false, true);
+			}
+
+			$mResult['Trimmed'] = false;
+			$mResult['Plain'] = 0 === strlen($sPlain) ? '' : \MailSo\Base\HtmlUtils::ConvertPlainToHtml($sPlain);
+			$mResult['PlainRaw'] = \trim($sPlain);
+			$mResult['Rtl'] = 0 < \strlen($mResult['Plain']) ? \MailSo\Base\Utils::IsRTL($mResult['Plain']) : false;
+
+			if (0 < $iTrimmedLimit && 'Messages' === $sMethod)
+			{
+				if ($iTrimmedLimit < strlen($mResult['Plain']))
+				{
+					$iPos = strpos($mResult['Plain'], ' ', $iTrimmedLimit);
+					if (false !== $iPos && $iTrimmedLimit <= $iPos)
+					{
+						$mResult['Plain'] = substr($mResult['Plain'], 0, $iPos);
+						$mResult['Trimmed'] = true;
+					}
+				}
+
+				if ($iTrimmedLimit < strlen($mResult['Html']))
+				{
+					$iPos = strpos($mResult['Html'], ' <', $iTrimmedLimit);
+					if (false !== $iPos && $iTrimmedLimit <= $iPos)
+					{
+						$mResult['Html'] = substr($mResult['Html'], 0, $iPos).'<!-- cutted -->';
+						$mResult['Trimmed'] = true;
+					}
+				}
+			}
+
+			$mResult['ICAL'] = \CApiResponseManager::GetResponseObject($this->getExtend('ICAL'));
+			$mResult['VCARD'] = \CApiResponseManager::GetResponseObject($this->getExtend('VCARD'));
+
+			$mResult['Safety'] = $this->getSafety();
+			$mResult['HasExternals'] = $bHasExternals;
+			$mResult['FoundedCIDs'] = $aFoundedCIDs;
+			$mResult['FoundedContentLocationUrls'] = $aFoundedContentLocationUrls;
+/*			$mResult['Attachments'] = array_merge(\CApiResponseManager::GetResponseObject($oAttachments), array(
+				'FoundedCIDs' => $aFoundedCIDs,
+				'FoundedContentLocationUrls' => $aFoundedContentLocationUrls
+			));*/
+
+//					$mResult['Html'] = \MailSo\Base\Utils::Utf8Clear($mResult['Html']);
+//					$mResult['Plain'] = \MailSo\Base\Utils::Utf8Clear($mResult['Plain']);
+		}
+		else
+		{
+			$mResult['@Object'] = 'Object/MessageListItem';
+			$mResult['Threads'] = $this->getThreads();
+		}
 
 		$mResult['Custom'] = \CApiResponseManager::GetResponseObject($this->getCustomList());
 		$mResult['Subject'] = \MailSo\Base\Utils::Utf8Clear($mResult['Subject']);

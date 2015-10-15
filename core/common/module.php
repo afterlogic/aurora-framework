@@ -515,7 +515,6 @@ abstract class AApiModule
 	 */
 	protected function getAccountFromParam($bThrowAuthExceptionOnFalse = true, $bVerifyLogginedUserId = true)
 	{
-		$oResult = null;
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		$sAccountID = (string) $this->getParamValue('AccountID', '');
 		if (0 === strlen($sAccountID) || !is_numeric($sAccountID))
@@ -538,6 +537,7 @@ abstract class AApiModule
 	public function ExecuteMethod($sMethod, $aParameters)
 	{
 		$this->SetParameters($aParameters);
+		\CApiResponseManager::SetMethod($sMethod);
 		$mResult = CApiModuleMethod::createInstance($this, $sMethod, $this->aParameters)->Execute();
 		$this->aParameters = array();
 		return $mResult;
