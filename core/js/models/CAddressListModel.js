@@ -22,7 +22,10 @@ function CAddressListModel()
 CAddressListModel.prototype.parse = function (oData)
 {
 	var aCollection = oData ? oData['@Collection'] : [];
-	if (Utils.isNonEmptyArray(aCollection) > 0)
+	
+	this.aCollection = [];
+	
+	if (_.isArray(aCollection))
 	{
 		this.aCollection = _.map(aCollection, function (oItem) {
 			var oAddress = new CAddressModel();

@@ -547,16 +547,20 @@ CMessageModel.prototype.getConvertedHtml = function (sAppPath, bForcedShowPictur
 /**
  * Parses attachments.
  *
- * @param {Array} aData
+ * @param {object} oData
  * @param {number} iAccountId
  */
-CMessageModel.prototype.parseAttachments = function (aData, iAccountId)
+CMessageModel.prototype.parseAttachments = function (oData, iAccountId)
 {
-	if (_.isArray(aData))
+	var aCollection = oData ? oData['@Collection'] : [];
+	
+	this.attachments([]);
+	
+	if (Utils.isNonEmptyArray(aCollection) > 0)
 	{
 		var sThumbSessionUid = Date.now().toString();
 
-		this.attachments(_.map(aData, function (oRawAttach) {
+		this.attachments(_.map(aCollection, function (oRawAttach) {
 			var oAttachment = new CAttachmentModel();
 			oAttachment.parse(oRawAttach, iAccountId);
 			oAttachment.getInThumbQueue(sThumbSessionUid);
