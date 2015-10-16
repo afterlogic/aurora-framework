@@ -604,7 +604,7 @@ function GetAutocomplete(oInput)
 		_setChosen : function(valArr) {
 			var self = this;
 
-			if (!$.isArray(valArr)) {
+			if (!_.isArray(valArr)) {
 				return;
 			}
 

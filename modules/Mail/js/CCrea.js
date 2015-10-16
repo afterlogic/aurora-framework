@@ -936,7 +936,7 @@ CCrea.prototype.setFocus = function (bKeepCurrent)
 	;
 
 	this.$editableArea.focus();
-	if (bKeepCurrent && $.isArray(this.aRanges) && this.aRanges.length > 0)
+	if (bKeepCurrent && _.isArray(this.aRanges) && this.aRanges.length > 0)
 	{
 		this.restoreSelectionPosition();
 	}
@@ -1644,7 +1644,7 @@ CCrea.prototype.getSelectedText = function ()
 CCrea.prototype.storeSelectionPosition = function ()
 {
 	var aNewRanges = this.getSelectionRanges();
-	if ($.isArray(aNewRanges) && aNewRanges.length > 0)
+	if (_.isArray(aNewRanges) && aNewRanges.length > 0)
 	{
 		this.aRanges = aNewRanges;
 	}
@@ -1740,7 +1740,7 @@ CCrea.prototype.restoreSelectionPosition = function (sText)
 	;
 
 	sRangeText = this.setSelectionRanges(this.aRanges);
-	if (window.getSelection && $.isArray(this.aRanges))
+	if (window.getSelection && _.isArray(this.aRanges))
 	{
 		sText = (sText !== undefined) ? sText : '';
 		if (Browser.firefox && sRangeText === '' && sText !== '')
@@ -1777,7 +1777,7 @@ CCrea.prototype.setSelectionRanges = function (aRanges)
 		sRangeText = ''
 	;
 
-	if (window.getSelection && $.isArray(aRanges))
+	if (window.getSelection && _.isArray(aRanges))
 	{
 		iLen = aRanges.length;
 

@@ -5,21 +5,23 @@ var
 	$ = require('jquery'),
 	
 	Settings = require('core/js/Settings.js'),
-	App = require('core/js/App.js'),
 	
 	oModules = {},
-	bOnlyAuthModule = true//!App.isAuth() && !App.isPublic()
+	ShowOnlyAuthModule = false
 ;
 
-function IsModuleIncluded(sModuleName)
+function CanModuleBeDisplayed(sModuleName)
 {
-	App = require('core/js/App.js');
-	bOnlyAuthModule = !App.isAuth() && !App.isPublic();
-	return bOnlyAuthModule ? sModuleName === 'Auth' : sModuleName !== 'Auth';
+	return ShowOnlyAuthModule ? sModuleName === 'Auth' : sModuleName !== 'Auth';
 }
 
 module.exports = {
-	init: function (oAvaliableModules) {
+	init: function (oAvaliableModules, bShowOnlyAuthModule) {
+		if (!_.isUndefined(bShowOnlyAuthModule))
+		{
+			ShowOnlyAuthModule = bShowOnlyAuthModule;
+		}
+		
 		_.each(Settings.Modules, function (oModuleSettings, sModuleName) {
 			if ($.isFunction(oAvaliableModules[sModuleName]))
 			{
@@ -32,7 +34,7 @@ module.exports = {
 		var oModulesScreens = {};
 		
 		_.each(oModules, function (oModule, sModuleName) {
-			if (!!oModule.screens && IsModuleIncluded(sModuleName))
+			if (!!oModule.screens && CanModuleBeDisplayed(sModuleName))
 			{
 				oModulesScreens[sModuleName] = oModule.screens;
 			}
@@ -47,7 +49,7 @@ module.exports = {
 			this.aTabs = [];
 			this.aStandardTabs = [];
 			_.each(oModules, _.bind(function (oModule, sModuleName) {
-				if (IsModuleIncluded(sModuleName))
+				if (CanModuleBeDisplayed(sModuleName))
 				{
 					if ($.isFunction(oModule.getHeaderItem))
 					{

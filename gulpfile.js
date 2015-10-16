@@ -50,6 +50,16 @@ cfg.paths.js = {
 			"./core/js/entry.js"
 		]
 	},
+	message_newtab: {
+		dest: './static/js/',
+		name: 'app-message-newtab.js',
+		min: 'app-message-newtab.min.js',
+		afterlogic: true,
+		watch: true,
+		src: [
+			"./modules/Mail/js/entry-newtab.js"
+		]
+	},
 	files_pub: {
 		dest: './static/js/',
 		name: 'app-files-pub.js',
@@ -146,13 +156,15 @@ for (name in cfg.paths.js)
 
 gulp.task('default', ['js:app']);
 
-gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext']);
+gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext', 'js:message_newtab']);
 
 gulp.task('files', ['js:files_pub']);
 
 gulp.task('cal', ['js:calendar_pub']);
 
 gulp.task('helpdesk', ['js:helpdesk_ext']);
+
+gulp.task('msg', ['js:message_newtab']);
 
 gulp.task('min', ['lint', 'js:all:min']);
 

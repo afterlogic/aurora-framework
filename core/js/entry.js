@@ -21,6 +21,6 @@ $('body').ready(function () {
 		App = require('core/js/App.js')
 	;
 	
-	ModulesManager.init(oAvaliableModules);
+	ModulesManager.init(oAvaliableModules, !App.isAuth() && !App.isPublic());
 	App.init();
 });

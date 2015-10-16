@@ -1091,7 +1091,7 @@ CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 	;
 	
 	this.messageUploadAttachmentsStarted(false);
-	if ($.isArray(aResult))
+	if (_.isArray(aResult))
 	{
 		_.each(aResult, function (oFileData) {
 			var oAttachment = _.find(this.attachments(), function (oAttach) {

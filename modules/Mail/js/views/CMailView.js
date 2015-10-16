@@ -138,7 +138,25 @@ CMailView.prototype.openMessageInNewWindow = function (oMessage)
 		this.oMessagePane.replyDraftUid('');
 	}
 	
-	WindowOpener.openMessage(oMessage, bDraftFolder);
+	if (oMessage)
+	{
+		var
+			sFolder = oMessage.folder(),
+			sUid = oMessage.uid(),
+			sHash = ''
+		;
+
+		if (bDraftFolder)
+		{
+			sHash = Routing.buildHashFromArray(['compose', 'drafts', sFolder, sUid]);
+		}
+		else
+		{
+			sHash = Routing.buildHashFromArray(['view', sFolder, 'msg' + sUid]);
+		}
+
+		WindowOpener.openTab('?message-newtab' + sHash);
+	}
 };
 
 CMailView.prototype.gotoFolderList = function ()

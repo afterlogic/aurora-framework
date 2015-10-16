@@ -418,7 +418,7 @@ function getNewInput(sName, bMultiple, sInputPos)
 function getStringOrCallFunction(mStringOrFunction, aFunctionParams)
 {
 	return $.isFunction(mStringOrFunction) ? 
-		mStringOrFunction.apply(null, $.isArray(aFunctionParams) ? aFunctionParams : []).toString() :
+		mStringOrFunction.apply(null, _.isArray(aFunctionParams) ? aFunctionParams : []).toString() :
 		mStringOrFunction.toString();
 }
 

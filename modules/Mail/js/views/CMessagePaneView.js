@@ -13,6 +13,7 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Storage = require('core/js/Storage.js'),
 	Pulse = require('core/js/Pulse.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
@@ -33,6 +34,8 @@ var
  */
 function CMessagePaneView(fOpenMessageInNewWindowBinded)
 {
+	CAbstractView.call(this);
+	
 	this.openMessageInNewWindowBinded = fOpenMessageInNewWindowBinded;
 	
 	this.singleMode = ko.observable(bSingleMode);
@@ -363,6 +366,8 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 //		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
 //	}
 }
+
+_.extendOwn(CMessagePaneView.prototype, CAbstractView.prototype);
 
 CMessagePaneView.prototype.ViewTemplate = 'Mail_MessagePaneView';
 CMessagePaneView.prototype.__name = 'CMessagePaneView';
@@ -1144,7 +1149,10 @@ CMessagePaneView.prototype.onHide = function ()
 	this.bShown = false;
 };
 
-CMessagePaneView.prototype.onBind = function ($MailViewModel)
+/**
+ * @param {object} $MailViewDom
+ */
+CMessagePaneView.prototype.onBind = function ($MailViewDom)
 {
 	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(function () {
 		if (this.replyText() !== '')
@@ -1153,7 +1161,12 @@ CMessagePaneView.prototype.onBind = function ($MailViewModel)
 		}
 	}, this)]);
 	
-	$MailViewModel.on('mousedown', 'a', function (oEvent) {
+	if (_.isUndefined($MailViewDom))
+	{
+		$MailViewDom = this.$viewDom;
+	}
+	
+	$MailViewDom.on('mousedown', 'a', function (oEvent) {
 		if (oEvent && 3 !== oEvent['which'])
 		{
 			var sHref = $(this).attr('href');

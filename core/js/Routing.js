@@ -178,17 +178,6 @@ CRouting.prototype.getHashFromHref = function ()
 	return sHash;
 };
 
-CRouting.prototype.isSingleMode = function ()
-{
-//	var
-//		sScreen = this.getScreenFromHash(),
-//		bSingleMode = (sScreen === Enums.Screens.SingleMessageView || sScreen === Enums.Screens.SingleCompose || 
-//			sScreen === Enums.Screens.SingleHelpdesk)
-//	;
-//	
-	return false;
-};
-
 /**
  * @param {Array} aRoutingParts
  * @param {Array} aAddParams
@@ -238,7 +227,7 @@ CRouting.prototype.parseRouting = function (aAddParams)
 	this.previousHash(this.currentHash());
 	this.currentHash(sHash);
 	
-	aAddParams = $.isArray(aAddParams) ? aAddParams : [];
+	aAddParams = _.isArray(aAddParams) ? aAddParams : [];
 	
 	Screens.route(aParams.concat(aAddParams));
 };

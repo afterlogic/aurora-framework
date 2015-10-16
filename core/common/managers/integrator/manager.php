@@ -2102,6 +2102,35 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function buildBody($sWebPath = '.', $bHelpdesk = false, $iHelpdeskIdTenant = null, $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $bMobile = false)
 	{
+		$oHttp = \MailSo\Base\Http::NewInstance();
+		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
+		$sPostfix = '';
+		
+		if ($bMobile && !$bHelpdesk)
+		{
+			$sPostfix = '-mobile';
+		}
+		else if (isset($sMessageNewtab))
+		{
+			$sPostfix = '-message-newtab';
+		}
+		else if ($bHelpdesk)
+		{
+			$sPostfix = '-helpdesk';
+		}
+		else if (!empty($sCalendarPubHash))
+		{
+			$sPostfix = '-calendar-pub';
+		}
+		else if (!empty($sFileStoragePubHash))
+		{
+			$sPostfix = '-files-pub';
+		}
+		if (CApi::GetConf('labs.use-app-min-js', false))
+		{
+			$sPostfix = $sPostfix.'.min';
+		}
+		
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 
 		$sMobileSuffix = $bMobile && !$bHelpdesk ? '-mobile' : '';
@@ -2118,8 +2147,7 @@ class CApiIntegratorManager extends AApiManager
 $this->compileTemplates($sTheme, $bMobile).
 $this->compileLanguage($sLanguage).
 $this->compileAppData($bHelpdesk, $iHelpdeskIdTenant, $sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash).
-'<script src="'.$sWebPath.'/static/js/app'.$sMobileSuffix.($bHelpdesk ? '-helpdesk' :
-	(empty($sCalendarPubHash) ? (empty($sFileStoragePubHash) ? '' : '-files-pub') : '-calendar-pub')).(CApi::GetConf('labs.use-app-min-js', false) ? '.min' : '').'.js?'.CApi::VersionJs().'"></script>'.
+'<script src="'.$sWebPath.'/static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
 	(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
 '</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'
 		;

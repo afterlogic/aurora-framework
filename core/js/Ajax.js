@@ -88,7 +88,7 @@ CAjax.prototype.hasOpenedRequests = function (sModule, sMethod)
  */
 CAjax.prototype.registerAbortRequestHandler = function (sModule, fHandler)
 {
-	this.aAbortRequestHandlers[sModule] = fHandler;
+//	this.aAbortRequestHandlers[sModule] = fHandler;
 };
 
 /**
@@ -183,24 +183,24 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
  */
 CAjax.prototype.abortRequests = function (oRequest)
 {
-	var fHandler = this.aAbortRequestHandlers[oRequest.Module];
-	
-	if ($.isFunction(fHandler))
-	{
-		_.each(this.requests(), _.bind(function (oReqData, iIndex) {
-			var oOpenedRequest = oReqData.Request;
-			if (oRequest.Module === oOpenedRequest.Module)
-			{
-				if (fHandler(oRequest, oOpenedRequest))
-				{
-					oReqData.Xhr.abort();
-					this.requests()[iIndex] = undefined;
-				}
-			}
-		}, this));
-	}
-	
-	this.requests(_.compact(this.requests()));
+//	var fHandler = this.aAbortRequestHandlers[oRequest.Module];
+//	
+//	if ($.isFunction(fHandler))
+//	{
+//		_.each(this.requests(), _.bind(function (oReqData, iIndex) {
+//			var oOpenedRequest = oReqData.Request;
+//			if (oRequest.Module === oOpenedRequest.Module)
+//			{
+//				if (fHandler(oRequest, oOpenedRequest))
+//				{
+//					oReqData.Xhr.abort();
+//					this.requests()[iIndex] = undefined;
+//				}
+//			}
+//		}, this));
+//	}
+//	
+//	this.requests(_.compact(this.requests()));
 };
 
 CAjax.prototype.abortAllRequests = function ()

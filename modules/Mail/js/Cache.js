@@ -14,6 +14,7 @@ var
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	Pulse = require('core/js/Pulse.js'),
+	Prefetcher = require('core/js/Prefetcher.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -586,7 +587,7 @@ CMailCache.prototype.onGetMessagesFlagsResponse = function (oResponse, oRequest)
 		});
 	}
 	oInbox.removeFlaggedMessageListsFromCache();
-	App.Prefetcher.prefetchStarredMessageList();
+	Prefetcher.prefetchStarredMessageList();
 };
 
 /**
@@ -1555,11 +1556,11 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 	}
 	else if (sCurrFolderFullName !== oFolder.fullName())
 	{
-		App.Prefetcher.startFolderPrefetch(oFolder);
+		Prefetcher.startFolderPrefetch(oFolder);
 	}
 	else if (oToFolder && sCurrFolderFullName !== oToFolder.fullName())
 	{
-		App.Prefetcher.startFolderPrefetch(oToFolder);
+		Prefetcher.startFolderPrefetch(oToFolder);
 	}
 };
 
@@ -1590,11 +1591,11 @@ CMailCache.prototype.onCopyMessagesResponse = function (oResponse, oRequest)
 	}
 	else if (sCurrFolderFullName !== oFolder.fullName())
 	{
-		App.Prefetcher.startFolderPrefetch(oFolder);
+		Prefetcher.startFolderPrefetch(oFolder);
 	}
 	else if (oToFolder && sCurrFolderFullName !== oToFolder.fullName())
 	{
-		App.Prefetcher.startFolderPrefetch(oToFolder);
+		Prefetcher.startFolderPrefetch(oToFolder);
 	}
 };
 

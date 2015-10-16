@@ -32,34 +32,6 @@ function GetSizeParameters()
 }
 
 module.exports = {
-
-	/**
-	 * @param {{folder:Function, uid:Function}} oMessage
-	 * @param {boolean=} bDrafts
-	 */
-	openMessage: function (oMessage, bDrafts)
-	{
-		if (oMessage)
-		{
-			var
-				sFolder = oMessage.folder(),
-				sUid = oMessage.uid(),
-				sHash = ''
-			;
-			
-			if (bDrafts)
-			{
-				sHash = Routing.buildHashFromArray([Enums.Screens.SingleCompose, 'drafts', sFolder, sUid]);
-			}
-			else
-			{
-				sHash = Routing.buildHashFromArray([Enums.Screens.SingleMessageView, sFolder, 'msg' + sUid]);
-			}
-
-			this.openTab(sHash);
-		}
-	},
-
 	/**
 	 * @param {string} sUrl
 	 * @param {string=} sWinName
