@@ -87,7 +87,14 @@ module.exports = {
 			helpdeskSignatureEnable: ko.observable(false),
 			HelpdeskThreadId: '',
 			HelpdeskThreadAction: '',
-			ThreadsPerPage: 10
+			ThreadsPerPage: 10,
+			HelpdeskStyleImage: '',
+			HelpdeskForgotHash: '',
+			SocialFacebook: '',
+			SocialGoogle: '',
+			SocialTwitter: '',
+			SocialEmail: '',
+			SocialIsLoggedIn: false
 		},
 		Settings: {},
 		dsbld_Phone: {

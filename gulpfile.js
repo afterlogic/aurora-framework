@@ -69,6 +69,16 @@ cfg.paths.js = {
 		src: [
 			"./modules/Calendar/js/entry-pub.js"
 		]
+	},
+	helpdesk_ext: {
+		dest: './static/js/',
+		name: 'app-helpdesk.js',
+		min: 'app-helpdesk.min.js',
+		afterlogic: true,
+		watch: true,
+		src: [
+			"./modules/HelpDesk/js/entry-ext.js"
+		]
 	}
 };
 
@@ -136,11 +146,13 @@ for (name in cfg.paths.js)
 
 gulp.task('default', ['js:app']);
 
-gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub']);
+gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext']);
 
 gulp.task('files', ['js:files_pub']);
 
 gulp.task('cal', ['js:calendar_pub']);
+
+gulp.task('helpdesk', ['js:helpdesk_ext']);
 
 gulp.task('min', ['lint', 'js:all:min']);
 

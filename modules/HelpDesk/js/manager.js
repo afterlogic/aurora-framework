@@ -1,8 +1,8 @@
 'use strict';
 
-require('modules/Helpdesk/js/enums.js');
+require('modules/HelpDesk/js/enums.js');
 
-var Settings = require('modules/Helpdesk/js/Settings.js');
+var Settings = require('modules/HelpDesk/js/Settings.js');
 
 module.exports = function (oSettings) {
 	Settings.init(oSettings);
@@ -10,11 +10,11 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/Helpdesk/js/views/CHelpdeskView.js');
+				return require('modules/HelpDesk/js/views/CHelpdeskView.js');
 			}
 		},
 		getHeaderItem: function () {
-			return require('modules/Helpdesk/js/views/HeaderItemView.js');
+			return require('modules/HelpDesk/js/views/HeaderItemView.js');
 		}
 	};
 };
