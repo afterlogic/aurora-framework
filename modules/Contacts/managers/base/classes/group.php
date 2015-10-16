@@ -132,4 +132,38 @@ class CGroup extends api_AContainer
 			'Web'		=> array('string(255)', 'web')
 		);
 	}
+	
+	public function toResponseArray()
+	{
+		$mResult = null; 
+		$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
+		 if ($oContactsModule)
+		 {
+			$aContacts = $oContactsModule->oApiContactsManager->getContactItems(
+				$this->IdUser, \EContactSortField::Name, \ESortOrder::ASC, 0, 299, '', '', $this->IdGroup);
+
+			$mResult = array(
+				'IdUser' => $this->IdUser,
+				'IdGroup' => $this->IdGroup,
+				'IdGroupStr' => $this->IdGroupStr,
+				'Name' => $this->Name,
+
+				'IsOrganization' => $this->IsOrganization,
+				'Email'		=> $this->Email,
+				'Company'	=> $this->Company,
+				'Street'	=> $this->Street,
+				'City'		=> $this->City,
+				'State'		=> $this->City,
+				'Zip'		=> $this->Zip,
+				'Country'	=> $this->Country,
+				'Phone'		=> $this->Phone,
+				'Fax'		=> $this->Fax,
+				'Web'		=> $this->Web,
+
+				'Contacts' => \CApiResponseManager::GetResponseObject($aContacts)
+			);
+		 }
+		 
+		return $mResult;
+	}
 }

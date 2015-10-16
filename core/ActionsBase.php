@@ -682,13 +682,6 @@ abstract class ActionsBase
 				));
 
 			}
-			else if ('MailSo\Mime\Email' === $sClassName)
-			{
-				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), array(
-					'DisplayName' => \MailSo\Base\Utils::Utf8Clear($mResponse->GetDisplayName()),
-					'Email' => \MailSo\Base\Utils::Utf8Clear($mResponse->GetEmail())
-				));
-			}
 			else if ('CApiMailMessageCollection' === $sClassName)
 			{
 				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), array(
