@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	
 	Ajax = require('core/js/Ajax.js'),
+	Utils = require('core/js/utils/Common.js'),
 	CAddressModel = require('core/js/models/CAddressModel.js')
 ;
 
@@ -16,15 +17,19 @@ function CAddressListModel()
 }
 
 /**
- * @param {Array} aData
+ * @param {object} oData
  */
-CAddressListModel.prototype.parse = function (aData)
+CAddressListModel.prototype.parse = function (oData)
 {
-	this.aCollection = _.map(aData, function (oItem) {
-		var oAddress = new CAddressModel();
-		oAddress.parse(oItem);
-		return oAddress;
-	});
+	var aCollection = oData ? oData['@Collection'] : [];
+	if (Utils.isNonEmptyArray(aCollection) > 0)
+	{
+		this.aCollection = _.map(aCollection, function (oItem) {
+			var oAddress = new CAddressModel();
+			oAddress.parse(oItem);
+			return oAddress;
+		});
+	}
 };
 
 /**
