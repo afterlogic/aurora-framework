@@ -390,7 +390,7 @@ class CContactListItem
 		return $this->ToString();
 	}
 	
-	public function toResponseObject()
+	public function toResponseArray()
 	{
 		return array(
 //			'IdUser' => $oAccount->IdUser, TODO:
