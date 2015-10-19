@@ -160,8 +160,6 @@ LinksUtils.parseMailbox = function (aParams)
  */
 LinksUtils.getCompose = function ()
 {
-//	var sScreen = (AppData.SingleMode) ? Enums.Screens.SingleCompose : Enums.Screens.Compose;
-	
 	return ['compose'];
 };
 
@@ -169,14 +167,11 @@ LinksUtils.getCompose = function ()
  * @param {string} sType
  * @param {string} sFolder
  * @param {string} sUid
- * @param {boolean} bSingleMode
  * 
  * @return {Array}
  */
-LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid, bSingleMode)
+LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid)
 {
-//	var sScreen = (bSingleMode || AppData.SingleMode) ? Enums.Screens.SingleCompose : Enums.Screens.Compose;
-	
 	return ['compose', sType, sFolder, sUid];
 };
 
@@ -187,8 +182,6 @@ LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid, bSingleMode)
  */
 LinksUtils.getComposeWithToField = function (sTo)
 {
-//	var sScreen = (AppData.SingleMode) ? Enums.Screens.SingleCompose : Enums.Screens.Compose;
-	
 	return ['compose', 'to', sTo];
 };
 

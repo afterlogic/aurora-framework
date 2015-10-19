@@ -59,15 +59,15 @@
 				<div class="toolbar">
 					<span class="content">
 
-						<span class="item delete" data-bind="command: deleteCommand, visible: singleMode, customTooltip: 'MAILBOX/TOOL_DELETE'">
+						<span class="item delete" data-bind="command: deleteCommand, visible: bNewTab, customTooltip: 'MAILBOX/TOOL_DELETE'">
 							<span class="icon"></span>
 							<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_DELETE"></span>
 						</span>
-						<span class="item prev" data-bind="command: nextMessageCommand, visible: singleMode">
+						<span class="item prev" data-bind="command: nextMessageCommand, visible: bNewTab">
 							<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_NEXT_MESSAGE'"></span>
 							<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_NEXT_MESSAGE"></span>
 						</span>
-						<span class="item next" data-bind="command: prevMessageCommand, visible: singleMode">
+						<span class="item next" data-bind="command: prevMessageCommand, visible: bNewTab">
 							<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_PREV_MESSAGE'"></span>
 							<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_PREV_MESSAGE"></span>
 						</span>
@@ -89,7 +89,7 @@
 						</span>
 						
 						<a class="item new_window" href="javascript: void(0);" 
-							data-bind="click: openInNewWindow, visible: !singleMode()">
+							data-bind="click: openInNewWindow, visible: !bNewTab">
 							<span class="icon" data-bind="customTooltip: 'MESSAGE/ACTION_OPEN_IN_NEW_WINDOW'"></span>
 							<span class="text" data-bind="i18n: 'text'" data-i18n="MESSAGE/ACTION_OPEN_IN_NEW_WINDOW"></span>
 						</a>
@@ -265,11 +265,11 @@
 				<div class="message_content scroll-inner" data-bind="hasfocus: contentHasFocus">
 
 					<!-- ko if: visibleAppointmentInfo -->
-						<div class="appointment" data-bind="template: {name: 'Mail_AppointmentViewModel', data: ical}"></div>
+						<div class="appointment" data-bind="template: {name: 'Mail_AppointmentView', data: ical}"></div>
 					<!-- /ko -->
 
 					<!-- ko if: visibleVcardInfo -->
-						<div class="appointment" data-bind="template: {name: 'Mail_VcardAttachmentViewModel', data: vcard}"></div>
+						<div class="appointment" data-bind="template: {name: 'Mail_VcardAttachmentView', data: vcard}"></div>
 					<!-- /ko -->
 
 					<div class="message_body_info" data-bind="visible: visibleNoMessageSelectedText">
@@ -330,4 +330,4 @@
 	</div>
 <!-- /ko -->
 
-<!-- ko template: {name: 'Mail_PrintMessagePart'} --><!-- /ko -->
+<!-- ko template: {name: 'Mail_PrintMessageView'} --><!-- /ko -->

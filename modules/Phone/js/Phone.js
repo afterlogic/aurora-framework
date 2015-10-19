@@ -13,9 +13,7 @@ var
 	Popups = require('core/js/Popups.js'),
 	PhonePopup = require('modules/Phone/js/popups/PhonePopup.js'),
 	
-	Settings = require('modules/Phone/js/Settings.js'),
-	
-	bSingleMode = false
+	Settings = require('modules/Phone/js/Settings.js')
 ;
 
 /**
@@ -271,7 +269,7 @@ if (window.localStorage)
 
 	window.localStorage.setItem('p7phoneLoad', (Math.floor(Math.random() * (1000 - 100) + 100)).toString()); //random - storage event triggering only if key has been changed
 	window.setTimeout(function () { //wait until the triggering storage event
-		if (!bSingleMode && Phone && (window.localStorage.getItem('p7phoneLoad') !== 'false' || window.sessionStorage.getItem('p7phoneTab')))
+		if (Phone && (window.localStorage.getItem('p7phoneLoad') !== 'false' || window.sessionStorage.getItem('p7phoneTab')))
 		{
 			Phone.init();
 			window.sessionStorage.setItem('p7phoneTab', 'true'); //for phone tab detection, live only one session

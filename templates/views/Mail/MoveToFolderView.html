@@ -4,9 +4,9 @@
 		<span class="title" data-bind="text: displayName"></span>
 	</span>
 	<!-- ko if: !bNamespace -->
-		<span class="children" data-bind="template: { name: 'Mail_MoveToFolderItemPart', foreach: subfolders }"></span>
+		<span class="children" data-bind="template: { name: 'Mail_MoveToFolderView', foreach: subfolders }"></span>
 	<!-- /ko -->
 </span>
 <!-- ko if: bNamespace -->
-	<!-- ko template: {name: 'Mail_MoveToFolderItemPart', foreach: subfolders} --><!-- /ko -->
+	<!-- ko template: {name: 'Mail_MoveToFolderView', foreach: subfolders} --><!-- /ko -->
 <!-- /ko -->

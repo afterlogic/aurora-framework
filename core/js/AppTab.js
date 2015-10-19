@@ -2,13 +2,12 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
+	App = require('core/js/App.js'),
 	CFavico = require('core/js/vendors/favico.js'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Browser = require('core/js/Browser.js'),
-	Settings = require('core/js/Settings.js'),
-	
-	bSingleMode = false
+	Settings = require('core/js/Settings.js')
 ;
 
 function CAppTab()
@@ -24,12 +23,12 @@ function CAppTab()
 
 CAppTab.prototype.init = function ()
 {
-	this.focused.subscribe(function() {
-		if (!bSingleMode)
-		{
+	if (!App.isNewTab())
+	{
+		this.focused.subscribe(function() {
 			this.change();
-		}
-	}, this);
+		}, this);
+	}
 	
 	_.each(this.tabs, _.bind(function (oTab) {
 		
@@ -47,7 +46,7 @@ CAppTab.prototype.init = function ()
 			}
 		}, this);
 		
-		if (!bSingleMode && oTab.allowChangeTitle())
+		if (!App.isNewTab() && oTab.allowChangeTitle())
 		{
 			oTab.inactiveTitle.subscribe(function () {
 				if (!this.focused())
@@ -92,7 +91,7 @@ CAppTab.prototype.init = function ()
 
 CAppTab.prototype.change = function ()
 {
-	var sTitle = (bSingleMode || this.focused()) ? this.getActiveTitle() : this.getInactiveTitle();
+	var sTitle = (App.isNewTab() || this.focused()) ? this.getActiveTitle() : this.getInactiveTitle();
 	
 	if (sTitle === '')
 	{

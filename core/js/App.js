@@ -34,16 +34,53 @@ require('core/js/vendors/inputosaurus.js');
 
 require('jquery.cookie');
 
+function InitModernizr()
+{
+	if (Modernizr && navigator)
+	{
+		Modernizr.addTest('pdf', function() {
+			return !!_.find(navigator.mimeTypes, function (oMimeType) {
+				return 'application/pdf' === oMimeType.type;
+			});
+		});
+
+		Modernizr.addTest('newtab', function() {
+			return App.isNewTab();
+		});
+	}
+}
+
 function CApp()
 {
 	this.bAuth = window.pSevenAppData.Auth;
 	this.bPublic = false;
+	this.bNewTab = false;
 }
+
+CApp.prototype.isAuth = function ()
+{
+	return this.bAuth;
+};
 
 CApp.prototype.setPublic = function ()
 {
 	this.bPublic = true;
-}
+};
+
+CApp.prototype.isPublic = function ()
+{
+	return this.bPublic;
+};
+
+CApp.prototype.setNewTab = function ()
+{
+	this.bNewTab = true;
+};
+
+CApp.prototype.isNewTab = function ()
+{
+	return this.bNewTab;
+};
 
 CApp.prototype.init = function ()
 {
@@ -78,20 +115,12 @@ CApp.prototype.init = function ()
 		};
 	}
 	
+	InitModernizr();
+	
 	Screens.init();
 	Routing.init();
 	
 	require('core/js/AppTab.js');
-};
-
-CApp.prototype.isAuth = function ()
-{
-	return this.bAuth;
-};
-
-CApp.prototype.isPublic = function ()
-{
-	return this.bPublic;
 };
 
 /**
@@ -128,12 +157,3 @@ CApp.prototype.onLogout = function ()
 var App = new CApp();
 
 module.exports = App;
-
-if (Modernizr && navigator)
-{
-	Modernizr.addTest('pdf', function() {
-		return !!_.find(navigator.mimeTypes, function (oMimeType) {
-			return 'application/pdf' === oMimeType.type;
-		});
-	});
-}

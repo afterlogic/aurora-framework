@@ -7,6 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	App = require('core/js/App.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
@@ -15,15 +16,17 @@ var
 	Pulse = require('core/js/Pulse.js'),
 	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
+	MailUtils = require('modules/Mail/js/utils/Mail.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
+	ComposeUtils = App.isNewTab() ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
-	bSingleMode = false,
+	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
+	
 	bMobileApp = false
 ;
 
@@ -38,7 +41,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	
 	this.openMessageInNewWindowBinded = fOpenMessageInNewWindowBinded;
 	
-	this.singleMode = ko.observable(bSingleMode);
+	this.bNewTab = App.isNewTab();
 	this.isLoading = ko.observable(false);
 
 	MailCache.folderList.subscribe(this.onFolderListSubscribe, this);
@@ -369,7 +372,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 
 _.extendOwn(CMessagePaneView.prototype, CAbstractView.prototype);
 
-CMessagePaneView.prototype.ViewTemplate = 'Mail_MessagePaneView';
+CMessagePaneView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_MessagePaneScreenView' : 'Mail_MessagePaneView';
 CMessagePaneView.prototype.__name = 'CMessagePaneView';
 
 CMessagePaneView.prototype.resizeDblClick = function (oData, oEvent)
@@ -406,7 +409,7 @@ CMessagePaneView.prototype.notifySender = function ()
 
 CMessagePaneView.prototype.onFolderListSubscribe = function ()
 {
-	if (bSingleMode)
+	if (App.isNewTab())
 	{
 		this.onMessagesSubscribe();
 	}
@@ -426,14 +429,15 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		oIcal = null,
 		oVcard = null,
 		oMessage = this.currentMessage(),
-		oAccount = oMessage ? Accounts.getAccount(oMessage.accountId()) : null
+		oAccount = oMessage ? Accounts.getAccount(oMessage.accountId()) : null,
+		oReplyDataFromViewPane = null
 	;
 	
-	if (this.singleMode() && window.opener && window.opener.oReplyDataFromViewPane)
+	if (BaseTab)
 	{
-		this.replyText(window.opener.oReplyDataFromViewPane.ReplyText);
-		this.replyDraftUid(window.opener.oReplyDataFromViewPane.ReplyDraftUid);
-		window.opener.oReplyDataFromViewPane = null;
+		oReplyDataFromViewPane = BaseTab.getReplyDataFromViewPane();
+		this.replyText(oReplyDataFromViewPane.ReplyText);
+		this.replyDraftUid(oReplyDataFromViewPane.ReplyDraftUid);
 	}
 	else if (!oMessage || oMessage.uid() !== this.displayedMessageUid())
 	{
@@ -480,7 +484,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.setMessageBody();
 		this.rtlMessage(oMessage.rtl());
 
-		if (this.singleMode())
+		if (App.isNewTab())
 		{
 			/*jshint onevar: false*/
 			var
@@ -510,7 +514,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			this.ical().animation(false);
 		}
 		oIcal = oMessage.ical();
-		if (oIcal && this.singleMode())
+		if (oIcal && App.isNewTab())
 		{
 			oIcal = this.getIcalCopy(oIcal);
 		}
@@ -526,7 +530,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			this.ical().updateAttendeeStatus(this.fromEmail());
 		}
 		oVcard = oMessage.vcard();
-		if (oVcard && this.singleMode())
+		if (oVcard && App.isNewTab())
 		{
 			oVcard = this.getVcardCopy(oVcard);
 		}
@@ -537,9 +541,9 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			/*jshint onevar: false*/
 			var oSubscribedField = !oMessage.completelyFilled() ? oMessage.completelyFilled : oMessage.trimmed;
 			/*jshint onevar: true*/
-			if (this.singleMode())
+			if (App.isNewTab())
 			{
-				oMessage.completelyFilledSingleModeSubscription = oSubscribedField.subscribe(this.onCurrentMessageSubscribe, this);
+				oMessage.completelyFilledNewTabSubscription = oSubscribedField.subscribe(this.onCurrentMessageSubscribe, this);
 			}
 			else
 			{
@@ -551,10 +555,10 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			oMessage.completelyFilledSubscription.dispose();
 			oMessage.completelyFilledSubscription = undefined;
 		}
-		else if (oMessage.completelyFilledSingleModeSubscription)
+		else if (oMessage.completelyFilledNewTabSubscription)
 		{
-			oMessage.completelyFilledSingleModeSubscription.dispose();
-			oMessage.completelyFilledSingleModeSubscription = undefined;
+			oMessage.completelyFilledNewTabSubscription.dispose();
+			oMessage.completelyFilledNewTabSubscription = undefined;
 		}
 	}
 	else
@@ -887,17 +891,17 @@ CMessagePaneView.prototype.executeReplyOrForward = function (sReplyType)
 
 CMessagePaneView.prototype.executeDeleteMessage = function ()
 {
-//	if (this.currentMessage())
-//	{
-//		if (this.singleMode() && window.opener && window.opener.App && window.opener.MailCache)
-//		{
-//			MailUtils.deleteMessages([this.currentMessage().uid()], window.opener.App, function () {window.close();});
-//		}
-//		else if (this.mobileApp)
-//		{
-//			MailUtils.deleteMessages([this.currentMessage().uid()], App);
-//		}
-//	}
+	if (this.currentMessage())
+	{
+		if (BaseTab)
+		{
+			BaseTab.deleteMessage(this.currentMessage().uid());
+		}
+		else if (this.mobileApp)
+		{
+			MailUtils.deleteMessages([this.currentMessage().uid()], App);
+		}
+	}
 };
 
 CMessagePaneView.prototype.executePrevMessage = function ()

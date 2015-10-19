@@ -809,18 +809,18 @@ CContactModel.prototype.onCallClick = function (sPhone)
 
 CContactModel.prototype.viewAllMailsWithContact = function ()
 {
-	var sSearch = this.getEmailsString();
-	
-	if (AppData.SingleMode && window.opener && window.opener.App)
-	{
-		window.opener.App.MailCache.searchMessagesInCurrentFolder('email:' + sSearch);
-		window.opener.focus();
-		window.close();
-	}
-	else
-	{
-		App.MailCache.searchMessagesInCurrentFolder('email:' + sSearch);
-	}
+//	var sSearch = this.getEmailsString();
+//	
+//	if (App.isNewTab() && window.opener && window.opener.App)
+//	{
+//		window.opener.App.MailCache.searchMessagesInCurrentFolder('email:' + sSearch);
+//		window.opener.focus();
+//		window.close();
+//	}
+//	else
+//	{
+//		App.MailCache.searchMessagesInCurrentFolder('email:' + sSearch);
+//	}
 };
 
 module.exports = CContactModel;

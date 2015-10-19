@@ -9,6 +9,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
+	App = require('core/js/App.js'),
 	CAddressModel = require('core/js/models/CAddressModel.js'),
 	CAddressListModel = require('core/js/models/CAddressListModel.js'),
 	
@@ -20,7 +21,7 @@ var
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	
-	bSingleMode = false,
+	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
 	
 	SendingUtils = {
 		sReplyText: '',
@@ -60,7 +61,6 @@ SendingUtils.send = function (sMethod, oParameters, bSaveMailInSentItems, bShowL
 		sCurrEmail = Accounts.getEmail(iAccountID),
 		bSelfRecipient = (oParameters.To.indexOf(sCurrEmail) > -1 || oParameters.Cc.indexOf(sCurrEmail) > -1 || 
 			oParameters.Bcc.indexOf(sCurrEmail) > -1)
-		//oParentApp = (bSingleMode && window.opener && window.opener.App) ? window.opener.App : App
 	;
 	
 	if (Settings.SaveRepliedToCurrFolder && !bSelfRecipient && Utils.isNonEmptyArray(oParameters.DraftInfo, 3))
@@ -82,20 +82,32 @@ SendingUtils.send = function (sMethod, oParameters, bSaveMailInSentItems, bShowL
 			if (oParameters.DraftUid !== '')
 			{
 				oParameters.DraftFolder = sDraftFolder;
-				//oParentApp.
-				MailCache.removeOneMessageFromCacheForFolder(oParameters.AccountID, oParameters.DraftFolder, oParameters.DraftUid);
-				//oParentApp.
-				Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
+				if (BaseTab)
+				{
+					BaseTab.removeOneMessageFromCacheForFolder(oParameters.AccountID, oParameters.DraftFolder, oParameters.DraftUid);
+					BaseTab.replaceHashWithoutMessageUid(oParameters.DraftUid);
+				}
+				else
+				{
+					MailCache.removeOneMessageFromCacheForFolder(oParameters.AccountID, oParameters.DraftFolder, oParameters.DraftUid);
+					Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
+				}
 			}
 			break;
 		case 'SaveMessage':
 			sLoadingMessage = TextUtils.i18n('COMPOSE/INFO_SAVING');
 			oParameters.DraftFolder = sDraftFolder;
 			MailCache.savingDraftUid(oParameters.DraftUid);
-			//oParentApp.
-			MailCache.startMessagesLoadingWhenDraftSaving(oParameters.AccountID, oParameters.DraftFolder);
-			//oParentApp.
-			Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
+			if (BaseTab)
+			{
+				BaseTab.startMessagesLoadingWhenDraftSaving(oParameters.AccountID, oParameters.DraftFolder);
+				BaseTab.replaceHashWithoutMessageUid(oParameters.DraftUid);
+			}
+			else
+			{
+				MailCache.startMessagesLoadingWhenDraftSaving(oParameters.AccountID, oParameters.DraftFolder);
+				Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
+			}
 			break;
 	}
 	
@@ -129,17 +141,22 @@ SendingUtils.sendPostponedMail = function (sDraftUid)
 		iAccountID = oParameters.AccountID,
 		oFolderList = MailCache.oFolderListItems[iAccountID],
 		sDraftFolder = oFolderList ? oFolderList.draftsFolderFullName() : ''
-		//oParentApp = (bSingleMode && window.opener && window.opener.App) ? window.opener.App : App
 	;
 	
 	if (sDraftUid !== '')
 	{
 		oParameters.DraftUid = sDraftUid;
 		oParameters.DraftFolder = sDraftFolder;
-		//oParentApp.
-		MailCache.removeOneMessageFromCacheForFolder(oParameters.AccountID, oParameters.DraftFolder, oParameters.DraftUid);
-		//oParentApp.
-		Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
+		if (BaseTab)
+		{
+			BaseTab.removeOneMessageFromCacheForFolder(oParameters.AccountID, oParameters.DraftFolder, oParameters.DraftUid);
+			BaseTab.replaceHashWithoutMessageUid(oParameters.DraftUid);
+		}
+		else
+		{
+			MailCache.removeOneMessageFromCacheForFolder(oParameters.AccountID, oParameters.DraftFolder, oParameters.DraftUid);
+			Routing.replaceHashWithoutMessageUid(oParameters.DraftUid);
+		}
 	}
 	
 	if (this.postponedMailData)
@@ -228,7 +245,6 @@ SendingUtils.convertAttachmentsForSending = function (aAttachments)
 SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequiresPostponedSending)
 {
 	var
-		//oParentApp = (bSingleMode && window.opener && window.opener.App) ? window.opener.App : App,
 		bResult = !!oResponse.Result,
 		sFullName, sUid, sReplyType
 	;
@@ -278,8 +294,14 @@ SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequi
 				}
 				else
 				{
-					//oParentApp.
-					Screens.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
+					if (BaseTab)
+					{
+						BaseTab.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
+					}
+					else
+					{
+						Screens.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
+					}
 				}
 
 				if (_.isArray(oRequest.DraftInfo) && oRequest.DraftInfo.length === 3)
@@ -293,8 +315,14 @@ SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequi
 			
 			if (oRequest.SentFolder)
 			{
-				//oParentApp.
-				MailCache.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.SentFolder);
+				if (BaseTab)
+				{
+					BaseTab.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.SentFolder);
+				}
+				else
+				{
+					MailCache.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.SentFolder);
+				}
 			}
 			
 			break;
@@ -302,8 +330,14 @@ SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequi
 
 	if (oRequest.DraftFolder && !bRequiresPostponedSending)
 	{
-		//oParentApp.
-		MailCache.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.DraftFolder);
+		if (BaseTab)
+		{
+			MailCache.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.DraftFolder);
+		}
+		else
+		{
+			MailCache.removeMessagesFromCacheForFolder(oRequest.AccountID, oRequest.DraftFolder);
+		}
 	}
 	
 	return {Method: oRequest.Method, Result: bResult, NewUid: oResponse.Result ? oResponse.Result.NewUid : ''};

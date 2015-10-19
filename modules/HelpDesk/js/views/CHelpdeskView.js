@@ -32,8 +32,7 @@ var
 	CHelpdeskAttachmentModel = require('modules/HelpDesk/js/models/CHelpdeskAttachmentModel.js'),
 	
 	bExtApp = false,
-	bMobileDevice = false,
-	bSingleMode = false
+	bMobileDevice = false
 ;
 
 /**
@@ -65,7 +64,7 @@ function CHelpdeskView()
 
 	this.bExtApp = bExtApp;
 	this.bAgent = Settings.IsHelpdeskAgent;
-	this.singleMode = bSingleMode;
+	this.bNewTab = App.isNewTab();
 
 	this.externalUrl = ko.observable(Settings.HelpdeskIframeUrl);
 
@@ -250,10 +249,10 @@ function CHelpdeskView()
 	this.ownerContactInfoReceived = ko.observable(false);
 	this.ownerContact = ko.observable(/*!this.bExtApp ? new CContactModel() :*/ null);
 	this.hasOwnerContact = ko.computed(function () {
-		return !this.singleMode && this.ownerContactInfoReceived() && this.ownerExistsInContacts();
+		return !App.isNewTab() && this.ownerContactInfoReceived() && this.ownerExistsInContacts();
 	}, this);
 	this.visibleAddToContacts = ko.computed(function () {
-		return !this.singleMode && this.ownerContactInfoReceived() && !this.ownerExistsInContacts();
+		return !App.isNewTab() && this.ownerContactInfoReceived() && !this.ownerExistsInContacts();
 	}, this);
 
 	this.contactCardWidth = ko.observable(0);
@@ -488,7 +487,7 @@ CHelpdeskView.prototype.onOwnerContactResponse = function (oContact)
 
 CHelpdeskView.prototype.updateOpenerWindow = function ()
 {
-//	if (this.singleMode && window.opener && window.opener.App)
+//	if (App.isNewTab() && window.opener && window.opener.App)
 //	{
 //		window.opener.App.updateHelpdesk();
 //	}
@@ -909,7 +908,7 @@ CHelpdeskView.prototype.onRoute = function (aParams)
 	{
 		this.onItemSelect(oItem);
 	}
-	else if (this.threads().length === 0 && this.loadingList() && this.threadSubscription === undefined && !bSingleMode)
+	else if (this.threads().length === 0 && this.loadingList() && this.threadSubscription === undefined && !App.isNewTab())
 	{
 		this.threadSubscription = this.threads.subscribe(function () {
 			this.onRoute(aParams);
@@ -982,7 +981,7 @@ CHelpdeskView.prototype.selectItem = function (oItem)
 		this.isQuickReplyHidden(oItem.ItsMe || !this.bAgent);
 		this.requestPosts(oItem);
 
-		if (!this.singleMode)
+		if (!App.isNewTab())
 		{
 			Routing.setHash(['helpdesk', oItem.ThreadHash]); //TODO this code causes a bug with switching to helpdesk when you on another screen
 		}

@@ -34,7 +34,8 @@ var
 	CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
-	bSingleMode = false,
+	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
+	
 	bMobileDevice = false,
 	bMobileApp = false,
 	$html = $('html')
@@ -47,7 +48,7 @@ function CComposeView()
 {
 	var self = this;
 
-	if (bSingleMode)
+	if (App.isNewTab())
 	{
 		var AppTab = require('core/js/AppTab.js');
 		AppTab.changeFavicon('favicon-single-compose.ico');
@@ -71,7 +72,7 @@ function CComposeView()
 		this.getMessageOnRoute();
 	}, this);
 
-	this.singleMode = ko.observable(bSingleMode);
+	this.bNewTab = App.isNewTab();
 	this.isDemo = ko.observable(UserSettings.IsDemo);
 
 	this.sending = ko.observable(false);
@@ -362,7 +363,7 @@ function CComposeView()
 		return this.hasSomethingToSave() ? TextUtils.i18n('COMPOSE/TOOL_SAVE_CLOSE') : TextUtils.i18n('COMPOSE/TOOL_CLOSE');
 	}, this);
 
-	if (window.opener)
+	if (BaseTab)
 	{
 		setTimeout(function() {
 			window.onbeforeunload = function(){
@@ -385,7 +386,7 @@ function CComposeView()
 //	}
 }
 
-CComposeView.prototype.ViewTemplate = 'Mail_ComposeView';
+CComposeView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_ComposeScreenView' : 'Mail_ComposeView';
 CComposeView.prototype.__name = 'CComposeView';
 
 CComposeView.prototype.includeOpenPgp = function ()
@@ -637,9 +638,9 @@ CComposeView.prototype.onRoute = function (aParams)
 		default:
 			sSignature = SendingUtils.getSignatureText(this.senderAccountId(), this.selectedFetcherOrIdentity(), true);
 
-			if (bSingleMode && window.opener && window.opener.aMessagesParametersFromCompose && window.opener.aMessagesParametersFromCompose[window.name])
+			if (BaseTab)
 			{
-				this.setMessageDataInSingleMode(window.opener.aMessagesParametersFromCompose[window.name]);
+				this.setMessageDataInNewTab(BaseTab.getComposedMessage(window.name));
 			}
 			else if (sSignature !== '')
 			{
@@ -685,7 +686,7 @@ CComposeView.prototype.onRoute = function (aParams)
 	this.visibleBcc(this.bccAddr() !== '');
 	this.commit(true);
 
-	if (bSingleMode && this.changedInPreviousWindow())
+	if (App.isNewTab() && this.changedInPreviousWindow())
 	{
 		_.defer(_.bind(this.executeSave, this, true));
 	}
@@ -1259,9 +1260,8 @@ CComposeView.prototype.setAttachTepmNameByHash = function (sHash, sTempName)
 /**
  * @param {Object} oParameters
  */
-CComposeView.prototype.setMessageDataInSingleMode = function (oParameters)
+CComposeView.prototype.setMessageDataInNewTab = function (oParameters)
 {
-
 	this.draftInfo(oParameters.draftInfo);
 	this.draftUid(oParameters.draftUid);
 	this.inReplyTo(oParameters.inReplyTo);
@@ -1321,7 +1321,7 @@ CComposeView.prototype.isChanged = function ()
 
 CComposeView.prototype.executeBackToList = function ()
 {
-	if (bSingleMode)
+	if (App.isNewTab())
 	{
 		window.close();
 	}
@@ -1532,7 +1532,7 @@ CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oReque
 			if (oResData.Result && oRequest.DraftUid === this.draftUid())
 			{
 				this.draftUid(Utils.pString(oResData.NewUid));
-				if (bSingleMode)
+				if (App.isNewTab())
 				{
 					Routing.replaceHashDirectly(LinksUtils.composeFromMessage('drafts', oRequest.DraftFolder, this.draftUid()));
 				}
@@ -1703,7 +1703,7 @@ CComposeView.prototype.changeCcVisibility = function ()
 	}
 };
 
-CComposeView.prototype.getMessageDataForSingleMode = function ()
+CComposeView.prototype.getMessageDataForNewTab = function ()
 {
 	var
 		aAttachments = _.map(this.attachments(), function (oAttach)
@@ -1756,7 +1756,7 @@ CComposeView.prototype.openInNewWindow = function ()
 	;
 
 	this.closeBecauseSingleCompose(true);
-	oMessageParametersFromCompose = this.getMessageDataForSingleMode();
+	oMessageParametersFromCompose = this.getMessageDataForNewTab();
 
 	if (this.draftUid().length > 0 && !this.isChanged())
 	{

@@ -322,7 +322,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.sAddingInfo3 = aAddingInfo.length > 2 ? aAddingInfo[2] : '';
 }
 
-CMessageListView.prototype.ViewTemplate = 'Mail_MessageListView';
+CMessageListView.prototype.ViewTemplate = 'Mail_MessagesView';
 
 CMessageListView.prototype.addNewAccount = function ()
 {

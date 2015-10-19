@@ -11,7 +11,7 @@ $('body').ready(function () {
 		App = require('core/js/App.js')
 	;
 	
-	App.setPublic();
+	App.setNewTab();
 	ModulesManager.init(oAvaliableModules);
 	App.init();
 });

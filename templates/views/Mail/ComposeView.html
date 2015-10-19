@@ -3,7 +3,7 @@
 		<div class="panel_content">
 			<div class="toolbar">
 				<span class="content">
-					<!-- ko if: !mobileApp && !singleMode() -->
+					<!-- ko if: !mobileApp && !bNewTab -->
 					<span class="item save_and_close" data-bind="visible: typeof saveAndClose === 'function', 
 							click: function () { if (saveAndClose) { saveAndClose(); } }, customTooltip: saveAndCloseTooltip">
 						<span class="icon"></span>

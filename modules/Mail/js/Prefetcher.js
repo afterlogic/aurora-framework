@@ -4,12 +4,11 @@ var
 	_ = require('underscore'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
+	App = require('core/js/App.js'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
-	
-	bSingleMode = false,
 	
 	Prefetcher = {},
 	bFetchersIdentitiesPrefetched = false
@@ -17,7 +16,7 @@ var
 
 Prefetcher.prefetchFetchersIdentities = function ()
 {
-	if (!bSingleMode && !bFetchersIdentitiesPrefetched && (Settings.AllowFetcher || Settings.AllowIdentities))
+	if (!App.isNewTab() && !bFetchersIdentitiesPrefetched && (Settings.AllowFetcher || Settings.AllowIdentities))
 	{
 		Accounts.populateFetchersIdentities();
 		bFetchersIdentitiesPrefetched = true;
@@ -363,5 +362,17 @@ module.exports = {
 		}
 		
 		return bPrefetchStarted;
+	},
+	prefetchStarredMessageList: function () {
+		Prefetcher.prefetchStarredMessageList();
+	},
+	startFolderPrefetch: function (oFolder) {
+		Prefetcher.startFolderPrefetch(oFolder);
+	},
+	prefetchNextPage: function (sCurrentUid) {
+		Prefetcher.prefetchNextPage(sCurrentUid);
+	},
+	prefetchPrevPage: function (sCurrentUid) {
+		Prefetcher.prefetchPrevPage(sCurrentUid);
 	}
 };

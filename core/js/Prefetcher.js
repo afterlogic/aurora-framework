@@ -11,8 +11,6 @@ var
 	
 	Settings = require('core/js/Settings.js'),
 	
-	bSingleMode = false,
-	
 	ModulesPrefetchers = ModulesManager.getModulesPrefetchers(),
 	Prefetcher = {},
 	bServerInitializationsDone = false
@@ -33,7 +31,7 @@ Prefetcher.start = function ()
 {
 	Prefetcher.requireAjax();
 	
-	if (App.isAuth() && !bSingleMode && !Ajax.hasInternetConnectionProblem() && !Ajax.hasOpenedRequests())
+	if (App.isAuth() && !App.isNewTab() && !Ajax.hasInternetConnectionProblem() && !Ajax.hasOpenedRequests())
 	{
 		Prefetcher.prefetchAll();
 	}
@@ -81,7 +79,7 @@ Prefetcher.prefetchAll = function ()
 
 Prefetcher.doServerInitializations = function ()
 {
-	if (!bSingleMode && !bServerInitializationsDone)
+	if (!App.isNewTab() && !bServerInitializationsDone)
 	{
 		Prefetcher.requireAjax();
 		Ajax.send({'Action': 'SystemDoServerInitializations'});

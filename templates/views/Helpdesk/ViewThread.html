@@ -55,11 +55,11 @@
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_WAITING"></span>
 			</span>
-			<span class="item delete" data-bind="command: deleteCommand, visible: !singleMode, customTooltip: 'HELPDESK/TOOL_DELETE'">
+			<span class="item delete" data-bind="command: deleteCommand, visible: !bNewTab, customTooltip: 'HELPDESK/TOOL_DELETE'">
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_DELETE"></span>
 			</span>
-			<span class="item new_window" data-bind="command: openNewWindowCommand, visible: !singleMode, customTooltip: 'HELPDESK/TOOL_NEW_WINDOW'">
+			<span class="item new_window" data-bind="command: openNewWindowCommand, visible: !bNewTab, customTooltip: 'HELPDESK/TOOL_NEW_WINDOW'">
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_NEW_WINDOW"></span>
 			</span>
@@ -80,7 +80,7 @@
 		</span>
 	</div>
 	<a class="link" href="javascript:void(0);" data-bind="i18n: 'text', click: onShowThreadsByOwner,
-	   visible: !singleMode" data-i18n="HELPDESK/SHOW_ALL_THREADS"></a>
+	   visible: !bNewTab" data-i18n="HELPDESK/SHOW_ALL_THREADS"></a>
 </div>
 <div class="panel_center" data-bind="customScrollbar: {'scrollToBottomTrigger': scrollToBottomTrigger,
 	 'scrollToTopTrigger': scrollToTopTrigger}">

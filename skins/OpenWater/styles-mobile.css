@@ -467,7 +467,7 @@ textarea {
   box-sizing: border-box;
   height: 100%;
 }
-.single_mode .screens {
+.newtab .screens {
   padding-top: 0px;
   margin-top: 0px;
 }
@@ -5890,7 +5890,7 @@ html.rtl .panel.messages .items_list .item .thread {
   background: none;
   width: 100%;
 }
-.single_mode .message_viewer {
+.newtab .message_viewer {
   height: 100%;
   width: 100%;
 }
