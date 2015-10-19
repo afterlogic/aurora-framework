@@ -1042,9 +1042,10 @@ class CApiMailMessage
 		return $this;
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		$iTrimmedLimit = \CApi::GetConf('labs.message-body-size-limit', 0);
+		$oAccount = isset($aParameters['Account']) ?  $aParameters['Account'] : null;
 
 		$oAttachments = $this->getAttachments();
 
@@ -1052,7 +1053,7 @@ class CApiMailMessage
 		$iReceivedOrDateTimeStampInUTC = $this->getReceivedOrDateTimeStamp();
 
 		$aFlags = $this->getFlagsLowerCase();
-		$mResult = array_merge(/*\CApiResponseManager::objectWrapper($oAccount, $this, $sParent, $aParameters)*/array(), array(
+		$mResult = array_merge(CApiResponseManager::objectWrapper($this, $aParameters), array(
 			'Folder' => $this->getFolder(),
 			'Uid' => $this->getUid(),
 			'Subject' => $this->getSubject(),
@@ -1094,7 +1095,7 @@ class CApiMailMessage
 		}
 
 		$mResult['Hash'] = \CApi::EncodeKeyValues(array(
-//			'AccountID' => $oAccount ? $oAccount->IdAccount : 0,
+			'AccountID' => $oAccount ? $oAccount->IdAccount : 0,
 			'Folder' => $mResult['Folder'],
 			'Uid' => $mResult['Uid'],
 			'MimeType' => 'message/rfc822',
@@ -1210,12 +1211,13 @@ class CApiMailMessage
 			$mResult['HasExternals'] = $bHasExternals;
 			$mResult['FoundedCIDs'] = $aFoundedCIDs;
 			$mResult['FoundedContentLocationUrls'] = $aFoundedContentLocationUrls;
-			$mResult['Attachments'] = \CApiResponseManager::GetResponseObject($oAttachments);
-/*			$mResult['Attachments'] = array_merge(\CApiResponseManager::GetResponseObject($oAttachments), array(
-				'FoundedCIDs' => $aFoundedCIDs,
-				'FoundedContentLocationUrls' => $aFoundedContentLocationUrls
-			));*/
-
+			$mResult['Attachments'] = \CApiResponseManager::GetResponseObject($oAttachments,
+					array(
+						'Account' => isset($oAccount) ? $oAccount : null,
+						'FoundedCIDs' => $aFoundedCIDs,
+						'FoundedContentLocationUrls' => $aFoundedContentLocationUrls
+					)
+			);
 //					$mResult['Html'] = \MailSo\Base\Utils::Utf8Clear($mResult['Html']);
 //					$mResult['Plain'] = \MailSo\Base\Utils::Utf8Clear($mResult['Plain']);
 		}

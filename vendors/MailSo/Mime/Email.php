@@ -284,7 +284,7 @@ class Email
 		return \trim($sReturn);
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		return array(
 			'DisplayName' => \MailSo\Base\Utils::Utf8Clear($this->GetDisplayName()),

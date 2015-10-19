@@ -124,7 +124,7 @@ class CFetcher extends api_AContainer
 		);
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		return array(
 			'IdFetcher' => $this->IdFetcher,

@@ -145,9 +145,9 @@ class CApiMailMessageCollection extends \MailSo\Base\Collection
 		return new self();
 	}
 	
-	public function toResponseArray() {
+	public function toResponseArray($aParameters = array()) {
 		return array_merge(
-				parent::toResponseArray(), 
+				parent::toResponseArray($aParameters), 
 				array(
 					'Uids' => $this->Uids,
 					'UidNext' => $this->UidNext,

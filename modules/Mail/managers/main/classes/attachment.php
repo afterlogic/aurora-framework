@@ -268,8 +268,9 @@ class CApiMailAttachment
 		return $this;
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
+		$oAccount = isset($aParameters['Account']) ? $aParameters['Account'] : null;
 		$mFoundedCIDs = isset($aParameters['FoundedCIDs']) && is_array($aParameters['FoundedCIDs'])
 			? $aParameters['FoundedCIDs'] : null;
 
@@ -301,7 +302,7 @@ class CApiMailAttachment
 
 		$sCid = \trim(\trim($this->getCid()), '<>');
 
-		$mResult = array_merge(\CApiResponseManager::objectWrapper($this), array(
+		$mResult = array_merge(\CApiResponseManager::objectWrapper($this, $aParameters), array(
 			'FileName' => $sFileName,
 			'MimeType' => $sMimeType,
 			'MimePartIndex' => ('message/rfc822' === $sMimeType && ('base64' === $sContentTransferEncoding || 'quoted-printable' === $sContentTransferEncoding))
@@ -322,7 +323,7 @@ class CApiMailAttachment
 
 		$mResult['Hash'] = \CApi::EncodeKeyValues(array(
 			'Iframed' => $mResult['Iframed'],
-//			'AccountID' => $oAccount ? $oAccount->IdAccount : 0, TODO:
+			'AccountID' => $oAccount ? $oAccount->IdAccount : 0, 
 			'Folder' => $this->getFolder(),
 			'Uid' => $this->getUid(),
 			'MimeIndex' => $sMimeIndex,

@@ -183,7 +183,7 @@ abstract class Collection
 		return $this;
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		$aNames = explode('\\', get_class($this));
 		$sObjectName = end($aNames);
@@ -191,7 +191,7 @@ abstract class Collection
 		return array(
 			'@Object' => 'Collection/'.\CApiResponseManager::GetObjectName($sObjectName),
 			'@Count' => $this->Count(),
-			'@Collection' => \CApiResponseManager::GetResponseObject($this->CloneAsArray())
+			'@Collection' => \CApiResponseManager::GetResponseObject($this->CloneAsArray(), $aParameters)
 		);
 	}
 	

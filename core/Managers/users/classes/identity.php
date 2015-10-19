@@ -118,7 +118,7 @@ class CIdentity extends api_AContainer
 		);
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		return array(
 			'IdIdentity' => $this->IdIdentity,

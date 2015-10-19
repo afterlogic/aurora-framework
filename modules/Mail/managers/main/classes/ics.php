@@ -111,7 +111,7 @@ class CApiMailIcs
 		return new self();
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		return array(
 			'Uid' => $this->Uid,

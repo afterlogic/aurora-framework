@@ -39,7 +39,7 @@ class CApiResponseManager
 	 *
 	 * @return array | false
 	 */
-	public static function objectWrapper($oData)
+	public static function objectWrapper($oData, $aParameters = array())
 	{
 		$mResult = false;
 		if (is_object($oData))
@@ -54,7 +54,7 @@ class CApiResponseManager
 			{
 				$mResult['@Object'] = 'Collection/'.$mResult['@Object'];
 				$mResult['@Count'] = $oData->Count();
-				$mResult['@Collection'] = self::GetResponseObject($oData->CloneAsArray());
+				$mResult['@Collection'] = self::GetResponseObject($oData->CloneAsArray(), $aParameters);
 			}
 			else
 			{
@@ -70,7 +70,7 @@ class CApiResponseManager
 	 *
 	 * @return mixed
 	 */
-	public static function GetResponseObject($mResponse)
+	public static function GetResponseObject($mResponse, $aParameters = array())
 	{
 		$mResult = null;
 
@@ -78,14 +78,14 @@ class CApiResponseManager
 		{
 			if (method_exists($mResponse, 'toResponseArray'))	
 			{
-				$mResult = array_merge(self::objectWrapper($mResponse), $mResponse->toResponseArray());
+				$mResult = array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
 			}
 		}
 		else if (is_array($mResponse))
 		{
 			foreach ($mResponse as $iKey => $oItem)
 			{
-				$mResponse[$iKey] = self::GetResponseObject($oItem);
+				$mResponse[$iKey] = self::GetResponseObject($oItem, $aParameters);
 			}
 
 			$mResult = $mResponse;

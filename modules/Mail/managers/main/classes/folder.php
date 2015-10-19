@@ -317,7 +317,7 @@ class CApiMailFolder
 		return $iXListType;
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		$aExtended = null;
 		$mStatus = $this->getStatus();

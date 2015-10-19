@@ -205,12 +205,7 @@ class Service
 		$sVersion = file_get_contents(PSEVEN_APP_ROOT_PATH.'VERSION');
 		define('PSEVEN_APP_VERSION', $sVersion);
 
-		if (!class_exists('MailSo\Version'))
-		{
-			echo 'MailSo';
-			return '';
-		}
-		else if (!class_exists('\\CApi') || !\CApi::IsValid())
+		if (!class_exists('\\CApi') || !\CApi::IsValid())
 		{
 			echo 'AfterLogic API';
 			return '';

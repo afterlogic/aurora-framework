@@ -4813,7 +4813,18 @@ class Actions extends ActionsBase
 		}
 
 		$self = $this;
-		return $this->oApiMail->directMessageToStream($oAccount,
+		$oModuleManager = \CApi::GetModuleManager();
+		$oMailModule = $oModuleManager->GetModule('Mail');
+		$oMailManager = false;
+		if ($oMailModule)
+		{
+			$oMailManager = $oMailModule->GetManager('main');
+		}
+		if (!$oMailManager)
+		{
+			return false;
+		}
+		return $oMailManager->directMessageToStream($oAccount,
 			function($rResource, $sContentType, $sFileName, $sMimeIndex = '') use ($self, $oAccount, $fCallback, $sRawKey, $bCache, $sContentTypeIn, $sFileNameIn) {
 				if (is_resource($rResource))
 				{

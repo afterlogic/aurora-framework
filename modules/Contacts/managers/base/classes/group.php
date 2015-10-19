@@ -133,7 +133,7 @@ class CGroup extends api_AContainer
 		);
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		$mResult = null; 
 		$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');

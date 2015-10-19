@@ -82,7 +82,7 @@ class CCalendar
 		return ($oAccount->Email === $this->Owner);
 	}
 	
-	public function toResponseArray()
+	public function toResponseArray($aParameters = array())
 	{
 		return array(
 			'Id' => $this->Id,
