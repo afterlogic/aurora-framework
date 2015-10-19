@@ -110,4 +110,22 @@ class CApiMailIcs
 	{
 		return new self();
 	}
+	
+	public function toResponseArray()
+	{
+		return array(
+			'Uid' => $this->Uid,
+			'Sequence' => $this->Sequence,
+			'Attendee' => $this->Attendee,
+			'File' => $this->File,
+			'Type' => $this->Type,
+			'Location' => $this->Location,
+			'Description' => \MailSo\Base\LinkFinder::NewInstance()
+				->Text($this->Description)
+				->UseDefaultWrappers(true)
+				->CompileText(),
+			'When' => $this->When,
+			'CalendarId' => $this->CalendarId
+		);		
+	}
 }

@@ -57,4 +57,16 @@ class CFilter extends api_AContainer
 			'FolderFullName' => array('string')
 		);
 	}
+	
+	public function toResponseArray()
+	{
+		return array(
+			'Enable' => $this->Enable,
+			'Field' => $this->Field,
+			'Filter' => $this->Filter,
+			'Condition' => $this->Condition,
+			'Action' => $this->Action,
+			'FolderFullName' => $this->FolderFullName,
+		);		
+	}
 }

@@ -123,4 +123,29 @@ class CFetcher extends api_AContainer
 			'Folder'				=> array('string', 'dest_folder')
 		);
 	}
+	
+	public function toResponseArray()
+	{
+		return array(
+			'IdFetcher' => $this->IdFetcher,
+			'IdAccount' => $this->IdAccount,
+			'IsEnabled' => $this->IsEnabled,
+			'IsLocked' => $this->IsLocked,
+			'Folder' => $this->Folder,
+			'Name' => $this->Name,
+			'Email' => $this->Email,
+			'Signature' => $this->Signature,
+			'SignatureOptions' => $this->SignatureOptions,
+			'LeaveMessagesOnServer' => $this->LeaveMessagesOnServer,
+			'IncomingMailServer' => $this->IncomingMailServer,
+			'IncomingMailPort' => $this->IncomingMailPort,
+			'IncomingMailLogin' => $this->IncomingMailLogin,
+			'IsOutgoingEnabled' => $this->IsOutgoingEnabled,
+			'OutgoingMailServer' => $this->OutgoingMailServer,
+			'OutgoingMailPort' => $this->OutgoingMailPort,
+			'OutgoingMailAuth' => $this->OutgoingMailAuth,
+			'IncomingMailSsl' => $this->IncomingMailSecurity === \MailSo\Net\Enumerations\ConnectionSecurityType::SSL,
+			'OutgoingMailSsl' => $this->OutgoingMailSecurity === \MailSo\Net\Enumerations\ConnectionSecurityType::SSL
+		);		
+	}
 }

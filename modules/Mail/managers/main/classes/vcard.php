@@ -65,4 +65,15 @@ class CApiMailVcard
 	{
 		return new self();
 	}
+	
+	public function toResponseArray()
+	{
+		return array(
+			'Uid' => $this->Uid,
+			'File' => $this->File,
+			'Name' => $this->Name,
+			'Email' => $this->Email,
+			'Exists' => $this->Exists
+		);		
+	}
 }
