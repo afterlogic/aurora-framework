@@ -9,7 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
@@ -28,7 +28,7 @@ var
  */
 function CMailView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	this.folderList = MailCache.folderList;
 	this.domFolderList = ko.observable(null);
@@ -105,7 +105,7 @@ function CMailView()
 	}, this);
 }
 
-_.extendOwn(CMailView.prototype, CAbstractView.prototype);
+_.extendOwn(CMailView.prototype, CAbstractScreenView.prototype);
 
 CMailView.prototype.ViewTemplate = 'Mail_MailView';
 

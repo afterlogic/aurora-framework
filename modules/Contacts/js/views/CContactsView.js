@@ -15,7 +15,7 @@ var
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -35,7 +35,7 @@ var
  */
 function CContactsView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	this.contactCount = ko.observable(0);
 	this.uploaderArea = ko.observable(null);
@@ -337,7 +337,7 @@ function CContactsView()
 	}, this);
 }
 
-_.extendOwn(CContactsView.prototype, CAbstractView.prototype);
+_.extendOwn(CContactsView.prototype, CAbstractScreenView.prototype);
 
 CContactsView.prototype.ViewTemplate = 'Contacts_ContactsView';
 

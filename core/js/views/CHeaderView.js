@@ -11,7 +11,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
 	Settings = require('core/js/Settings.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js')
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
 ;
 
 /**
@@ -19,7 +19,7 @@ var
  */
 function CHeaderView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 //	var self = this;
 //	this.mobileApp = bMobileApp;
@@ -80,7 +80,7 @@ function CHeaderView()
 //	}
 }
 
-_.extendOwn(CHeaderView.prototype, CAbstractView.prototype);
+_.extendOwn(CHeaderView.prototype, CAbstractScreenView.prototype);
 
 CHeaderView.prototype.ViewTemplate = 'Core_HeaderView';
 CHeaderView.prototype.__name = 'CHeaderView';

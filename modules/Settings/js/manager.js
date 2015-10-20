@@ -1,13 +1,7 @@
 'use strict';
 
-var
-	TextUtils = require('core/js/utils/Text.js'),
-	CHeaderItemView = require('core/js/views/CHeaderItemView.js'),
-	
-	Settings = require('modules/Settings/js/Settings.js')
-;
-
 module.exports = function (oSettings) {
+	var Settings = require('modules/Settings/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -17,10 +11,11 @@ module.exports = function (oSettings) {
 			}
 		},
 		getHeaderItem: function () {
+			var
+				TextUtils = require('core/js/utils/Text.js'),
+				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
+			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS'));
-		},
-		getBrowserTitle: function () {
-			return TextUtils.i18n('TITLE/SETTINGS');
 		}
 	};
 };

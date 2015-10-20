@@ -15,7 +15,7 @@ var
 	Storage = require('core/js/Storage.js'),
 	Pulse = require('core/js/Pulse.js'),
 	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
@@ -38,7 +38,7 @@ var
  */
 function CMessagePaneView(fOpenMessageInNewWindowBinded)
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	this.openMessageInNewWindowBinded = fOpenMessageInNewWindowBinded;
 	
@@ -371,7 +371,7 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 //	}
 }
 
-_.extendOwn(CMessagePaneView.prototype, CAbstractView.prototype);
+_.extendOwn(CMessagePaneView.prototype, CAbstractScreenView.prototype);
 
 CMessagePaneView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_MessagePaneScreenView' : 'Mail_MessagePaneView';
 CMessagePaneView.prototype.__name = 'CMessagePaneView';

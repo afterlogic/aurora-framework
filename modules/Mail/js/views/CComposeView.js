@@ -17,7 +17,7 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
 	CJua = require('core/js/CJua.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -47,15 +47,9 @@ var
  */
 function CComposeView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	var self = this;
-
-	if (App.isNewTab())
-	{
-		var AppTab = require('core/js/AppTab.js');
-		AppTab.changeFavicon('favicon-single-compose.ico');
-	}
 
 	this.toAddrDom = ko.observable();
 	this.toAddrDom.subscribe(function () {
@@ -389,7 +383,7 @@ function CComposeView()
 //	}
 }
 
-_.extendOwn(CComposeView.prototype, CAbstractView.prototype);
+_.extendOwn(CComposeView.prototype, CAbstractScreenView.prototype);
 
 CComposeView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_ComposeScreenView' : 'Mail_ComposeView';
 CComposeView.prototype.__name = 'CComposeView';
@@ -572,6 +566,12 @@ CComposeView.prototype.getMessageOnRoute = function ()
  */
 CComposeView.prototype.onShow = function ()
 {
+	if (App.isNewTab())
+	{
+		var AppTab = require('core/js/AppTab.js');
+		AppTab.changeFavicon('favicon-single-compose.ico');
+	}
+	
 	var sFocusedField = this.focusedField();
 	this.shown(true);
 

@@ -12,7 +12,7 @@ var
 	UserSettings = require('core/js/Settings.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
@@ -34,7 +34,7 @@ var
 */
 function CFilesView(bPopup)
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	this.allowSendEmails = ko.computed(function () {
 		return false;//!!(AppData.App && AppData.App.AllowWebMail && AppData.Accounts && AppData.Accounts.isCurrentAllowsMail());
@@ -240,7 +240,7 @@ function CFilesView(bPopup)
 	this.timerId = null;
 }
 
-_.extendOwn(CFilesView.prototype, CAbstractView.prototype);
+_.extendOwn(CFilesView.prototype, CAbstractScreenView.prototype);
 
 CFilesView.prototype.ViewTemplate = App.isPublic() ? 'Files_PublicFilesView' : 'Files_FilesView';
 CFilesView.prototype.__name = 'CFilesView';

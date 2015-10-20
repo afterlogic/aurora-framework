@@ -1,16 +1,10 @@
 'use strict';
 
-require('fullcalendar');
-require('modules/Calendar/js/enums.js');
-
-var
-	TextUtils = require('core/js/utils/Text.js'),
-			
-	PublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js'),
-	Settings = require('modules/Calendar/js/Settings.js')
-;
-
 module.exports = function (oSettings) {
+	require('fullcalendar');
+	require('modules/Calendar/js/enums.js');
+
+	var Settings = require('modules/Calendar/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -20,10 +14,7 @@ module.exports = function (oSettings) {
 			}
 		},
 		getHeaderItem: function () {
-			return PublicHeaderItem;
-		},
-		getBrowserTitle: function () {
-			return TextUtils.i18n('TITLE/CALENDAR');
+			return require('modules/Calendar/js/views/PublicHeaderItem.js');
 		}
 	};
 };

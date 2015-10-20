@@ -4,11 +4,8 @@ module.exports = function (oSettings) {
 	require('modules/Mail/js/enums.js');
 
 	var
-		TextUtils = require('core/js/utils/Text.js'),
-
 		Settings = require('modules/Mail/js/Settings.js'),
-		Cache = null,
-		Accounts = null
+		Cache = null
 	;
 
 	Settings.init(oSettings);
@@ -25,21 +22,6 @@ module.exports = function (oSettings) {
 		getHeaderItem: function () {
 			return require('modules/Mail/js/views/HeaderItemView.js');
 		},
-		prefetcher: require('modules/Mail/js/Prefetcher.js'),
-		getBrowserTitle: function (bBrowserFocused) {
-			if (Accounts === null)
-			{
-				Accounts = require('modules/Mail/js/AccountList.js');
-			}
-			
-			if (bBrowserFocused || HeaderItemView.unseenCount() === 0)
-			{
-				return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX');
-			}
-			else
-			{
-				return TextUtils.i18n('TITLE/HAS_UNSEEN_MESSAGES_PLURAL', {'COUNT': HeaderItemView.unseenCount()}, null, HeaderItemView.unseenCount()) + ' - ' + Accounts.getEmail()
-			}
-		}
+		prefetcher: require('modules/Mail/js/Prefetcher.js')
 	};
 };

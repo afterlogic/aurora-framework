@@ -1,14 +1,14 @@
 'use strict';
 
-function CAbstractView()
+function CAbstractScreenView()
 {
 	this.bShown = false;
 	this.$viewDom = null;
 }
 
-CAbstractView.prototype.ViewTemplate = '';
+CAbstractScreenView.prototype.ViewTemplate = '';
 
-CAbstractView.prototype.showView = function ()
+CAbstractScreenView.prototype.showView = function ()
 {
 	if (!this.bShown)
 	{
@@ -27,7 +27,7 @@ CAbstractView.prototype.showView = function ()
 	}
 };
 
-CAbstractView.prototype.hideView = function ()
+CAbstractScreenView.prototype.hideView = function ()
 {
 	if (this.bShown)
 	{
@@ -37,20 +37,20 @@ CAbstractView.prototype.hideView = function ()
 	}
 };
 
-CAbstractView.prototype.onBind = function ()
+CAbstractScreenView.prototype.onBind = function ()
 {
 };
 
-CAbstractView.prototype.onShow = function ()
+CAbstractScreenView.prototype.onShow = function ()
 {
 };
 
-CAbstractView.prototype.onHide = function ()
+CAbstractScreenView.prototype.onHide = function ()
 {
 };
 
-CAbstractView.prototype.onRoute = function (aParams)
+CAbstractScreenView.prototype.onRoute = function (aParams)
 {
 };
 
-module.exports = CAbstractView;
+module.exports = CAbstractScreenView;

@@ -1,14 +1,9 @@
 'use strict';
 
-require('modules/Files/js/enums.js');
-
-var
-	TextUtils = require('core/js/utils/Text.js'),
-	
-	Settings = require('modules/Files/js/Settings.js')
-;
-
 module.exports = function (oSettings) {
+	require('modules/Files/js/enums.js');
+
+	var Settings = require('modules/Files/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -16,9 +11,6 @@ module.exports = function (oSettings) {
 			'main': function () {
 				return require('modules/Files/js/views/CFilesView.js');
 			}
-		},
-		getBrowserTitle: function () {
-			return TextUtils.i18n('TITLE/FILESTORAGE');
 		}
 	};
 };

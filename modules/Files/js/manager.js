@@ -1,16 +1,9 @@
 'use strict';
 
-require('modules/Files/js/enums.js');
-
-var
-	TextUtils = require('core/js/utils/Text.js'),
-	CHeaderItemView = require('core/js/views/CHeaderItemView.js'),
-	
-	Settings = require('modules/Files/js/Settings.js'),
-	SelectFilesPopup = require('modules/Files/js/popups/SelectFilesPopup.js')
-;
-
 module.exports = function (oSettings) {
+	require('modules/Files/js/enums.js');
+
+	var Settings = require('modules/Files/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -20,13 +13,14 @@ module.exports = function (oSettings) {
 			}
 		},
 		getHeaderItem: function () {
+			var
+				TextUtils = require('core/js/utils/Text.js'),
+				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
+			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'), TextUtils.i18n('TITLE/FILESTORAGE'));
 		},
-		getBrowserTitle: function () {
-			return TextUtils.i18n('TITLE/FILESTORAGE');
-		},
 		getSelectFilesPopup: function () {
-			return SelectFilesPopup;
+			return require('modules/Files/js/popups/SelectFilesPopup.js');
 		}
 	};
 };

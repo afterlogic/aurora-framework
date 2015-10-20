@@ -4,11 +4,8 @@ module.exports = function (oSettings) {
 	require('modules/Mail/js/enums.js');
 
 	var
-		TextUtils = require('core/js/utils/Text.js'),
-
 		Settings = require('modules/Mail/js/Settings.js'),
-		Cache = null,
-		Accounts = null
+		Cache = null
 	;
 
 	Settings.init(oSettings);
@@ -24,13 +21,6 @@ module.exports = function (oSettings) {
 			'compose': function () {
 				return require('modules/Mail/js/views/CComposeView.js');
 			}
-		},
-		getBrowserTitle: function () {
-			if (Accounts === null)
-			{
-				Accounts = require('modules/Mail/js/AccountList.js');
-			}
-			return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX');
 		}
 	};
 };

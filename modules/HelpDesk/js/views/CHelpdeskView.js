@@ -20,7 +20,7 @@ var
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
@@ -40,7 +40,7 @@ var
  */
 function CHelpdeskView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	var
 		self = this,
@@ -385,7 +385,7 @@ function CHelpdeskView()
 	this.requestFromLogin();
 }
 
-_.extendOwn(CHelpdeskView.prototype, CAbstractView.prototype);
+_.extendOwn(CHelpdeskView.prototype, CAbstractScreenView.prototype);
 
 CHelpdeskView.prototype.ViewTemplate = 'Helpdesk_HelpdeskView';
 

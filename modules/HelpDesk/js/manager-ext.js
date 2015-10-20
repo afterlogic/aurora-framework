@@ -1,14 +1,9 @@
 'use strict';
 
-require('modules/HelpDesk/js/enums.js');
-
-var
-	TextUtils = require('core/js/utils/Text.js'),
-	
-	Settings = require('modules/HelpDesk/js/Settings.js')
-;
-
 module.exports = function (oSettings) {
+	require('modules/HelpDesk/js/enums.js');
+
+	var Settings = require('modules/HelpDesk/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -19,9 +14,6 @@ module.exports = function (oSettings) {
 			'auth': function () {
 				return require('modules/HelpDesk/js/views/CLoginView.js');
 			}
-		},
-		getBrowserTitle: function () {
-			return TextUtils.i18n('TITLE/FILESTORAGE');
 		}
 	};
 };

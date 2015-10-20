@@ -6,7 +6,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js')
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
 ;
 
 /**
@@ -14,7 +14,7 @@ var
  */
 function CInformationView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	this.iAnimationDuration = 500;
 	this.iReportDuration = 5000;
@@ -36,7 +36,7 @@ function CInformationView()
 	this.gray = ko.observable(false);
 }
 
-_.extendOwn(CInformationView.prototype, CAbstractView.prototype);
+_.extendOwn(CInformationView.prototype, CAbstractScreenView.prototype);
 
 CInformationView.prototype.ViewTemplate = 'Core_InformationView';
 

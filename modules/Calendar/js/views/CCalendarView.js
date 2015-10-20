@@ -15,7 +15,7 @@ var
 	UserSettings = require('core/js/Settings.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js'),
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -41,7 +41,7 @@ var
  */
 function CCalendarView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	var self = this;
 	this.initialized = ko.observable(false);
@@ -232,7 +232,7 @@ function CCalendarView()
 	this.hotKeysBind();
 }
 
-_.extendOwn(CCalendarView.prototype, CAbstractView.prototype);
+_.extendOwn(CCalendarView.prototype, CAbstractScreenView.prototype);
 
 CCalendarView.prototype.ViewTemplate = 'Calendar_CalendarView';
 

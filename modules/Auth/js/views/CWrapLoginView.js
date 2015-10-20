@@ -13,7 +13,7 @@ var
 	CLoginView = require('modules/Auth/js/views/CLoginView.js'),
 	CRegisterView = require('modules/Auth/js/views/CRegisterView.js'),
 	CForgotView = require('modules/Auth/js/views/CForgotView.js'),
-	CAbstractView = require('core/js/views/CAbstractView.js')
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
 ;
 
 /**
@@ -21,7 +21,7 @@ var
  */
 function CWrapLoginView()
 {
-	CAbstractView.call(this);
+	CAbstractScreenView.call(this);
 	
 	this.bSocialInviteMode = typeof Utils.getRequestParam('invite-auth') === 'string';
 	this.socialInviteTitle = TextUtils.i18n('LOGIN/SOCIAL_INVITE_TITLE', {'SITENAME': UserSettings.SiteName});
@@ -62,7 +62,7 @@ function CWrapLoginView()
 //	}
 }
 
-_.extendOwn(CWrapLoginView.prototype, CAbstractView.prototype);
+_.extendOwn(CWrapLoginView.prototype, CAbstractScreenView.prototype);
 
 CWrapLoginView.prototype.ViewTemplate = 'Auth_WrapLoginView';
 CWrapLoginView.prototype.__name = 'CWrapLoginView';
