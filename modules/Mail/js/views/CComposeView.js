@@ -49,6 +49,10 @@ function CComposeView()
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.computed(function () {
+		return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/COMPOSE');
+	});
+	
 	var self = this;
 
 	this.toAddrDom = ko.observable();

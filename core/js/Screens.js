@@ -26,6 +26,11 @@ function CScreens()
 
 	this.currentScreen = ko.observable('');
 	this.sDefaultScreen = '';
+	
+	this.browserTitle = ko.computed(function () {
+		var oCurrScreen = this.oViews[this.currentScreen()];
+		return oCurrScreen ? oCurrScreen.browserTitle() : '';
+	}, this);
 
 	this.informationScreen = ko.observable(null);
 }

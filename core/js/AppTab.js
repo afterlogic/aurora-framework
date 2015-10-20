@@ -6,6 +6,7 @@ var
 	CFavico = require('core/js/vendors/favico.js'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
 	Browser = require('core/js/Browser.js'),
 	Settings = require('core/js/Settings.js')
 ;
@@ -16,6 +17,22 @@ function CAppTab()
 	
 	this.focused = ko.observable(true);
 	
+	ko.computed(function () {
+		var sTitle = '';
+		
+		if (!App.isNewTab() && !this.focused())
+		{
+			sTitle = this.getInactiveTitle();
+		}
+		
+		if (sTitle === '')
+		{
+			sTitle = Screens.browserTitle();
+		}
+		
+		this.setTitle(sTitle);
+	}, this);
+	
 	this.favico = (!Browser.ie8AndBelow && CFavico) ? new CFavico({
 		'animation': 'none'
 	}) : null;
@@ -23,40 +40,6 @@ function CAppTab()
 
 CAppTab.prototype.init = function ()
 {
-	if (!App.isNewTab())
-	{
-		this.focused.subscribe(function() {
-			this.change();
-		}, this);
-	}
-	
-	_.each(this.tabs, _.bind(function (oTab) {
-		
-		oTab.activeTitle.subscribe(function () {
-			if (this.focused() && oTab.isCurrent())
-			{
-				this.change();
-			}
-		}, this);
-		
-		oTab.isCurrent.subscribe(function () {
-			if (this.focused() && oTab.isCurrent())
-			{
-				this.change();
-			}
-		}, this);
-		
-		if (!App.isNewTab() && oTab.allowChangeTitle())
-		{
-			oTab.inactiveTitle.subscribe(function () {
-				if (!this.focused())
-				{
-					this.change();
-				}
-			}, this);
-		}
-	}, this));
-	
 	if (Browser.ie)
 	{
 		$(document)
@@ -85,14 +68,13 @@ CAppTab.prototype.init = function ()
 			this.favico.badge(iCount < 100 ? iCount : '99+');
 		}, this);
 	}
-	
-	this.change();
 };
 
-CAppTab.prototype.change = function ()
+/**
+ * @param {string} sTitle
+ */
+CAppTab.prototype.setTitle = function (sTitle)
 {
-	var sTitle = (App.isNewTab() || this.focused()) ? this.getActiveTitle() : this.getInactiveTitle();
-	
 	if (sTitle === '')
 	{
 		sTitle = Settings.SiteName;
@@ -104,14 +86,6 @@ CAppTab.prototype.change = function ()
 	
 	document.title = '.';
 	document.title = sTitle;
-};
-
-CAppTab.prototype.getActiveTitle = function ()
-{
-	var oCurrentTab = _.find(this.tabs, function (oTab) {
-		return oTab.isCurrent();
-	});
-	return (oCurrentTab) ? oCurrentTab.activeTitle() : '';
 };
 
 CAppTab.prototype.getInactiveTitle = function ()
@@ -139,11 +113,6 @@ CAppTab.prototype.getInactiveTitle = function ()
 	if (iCount > 0 && sTitle === '')
 	{
 		sTitle = iCount + ' new';
-	}
-	
-	if (sTitle === '')
-	{
-		sTitle = this.getActiveTitle();
 	}
 	
 	return sTitle;

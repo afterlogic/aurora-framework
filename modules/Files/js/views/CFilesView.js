@@ -36,6 +36,8 @@ function CFilesView(bPopup)
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/FILESTORAGE'));
+	
 	this.allowSendEmails = ko.computed(function () {
 		return false;//!!(AppData.App && AppData.App.AllowWebMail && AppData.Accounts && AppData.Accounts.isCurrentAllowsMail());
 	}, this);

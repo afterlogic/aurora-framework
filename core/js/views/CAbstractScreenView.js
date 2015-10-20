@@ -1,9 +1,12 @@
 'use strict';
 
+var ko = require('knockout');
+
 function CAbstractScreenView()
 {
 	this.bShown = false;
 	this.$viewDom = null;
+	this.browserTitle = ko.observable('');
 }
 
 CAbstractScreenView.prototype.ViewTemplate = '';

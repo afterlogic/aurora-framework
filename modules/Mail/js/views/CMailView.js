@@ -30,6 +30,10 @@ function CMailView()
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.computed(function () {
+		return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX');
+	});
+	
 	this.folderList = MailCache.folderList;
 	this.domFolderList = ko.observable(null);
 	
@@ -257,7 +261,7 @@ CMailView.prototype.hotKeysBind = function ()
 	$(document).on('keydown', $.proxy(function(ev) {
 		var
 			sKey = ev.keyCode,
-			bComputed = ev && !ev.ctrlKey && !ev.altKey && !ev.shiftKey && !Utils.isTextFieldFocused(),// && App.Screens.currentScreen() === Enums.Screens.Mailbox,
+			bComputed = ev && !ev.ctrlKey && !ev.altKey && !ev.shiftKey && !Utils.isTextFieldFocused() && this.bShown,
 			oList = this.oMessageList,
 			oFirstMessage = oList.collection()[0],
 			bGotoSearch = oFirstMessage && MailCache.currentMessage() && oFirstMessage.uid() === MailCache.currentMessage().uid()

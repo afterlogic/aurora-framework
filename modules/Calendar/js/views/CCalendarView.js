@@ -43,6 +43,8 @@ function CCalendarView()
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/CALENDAR'));
+	
 	var self = this;
 	this.initialized = ko.observable(false);
 	this.isPublic = App.isPublic();
@@ -962,7 +964,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 					{
 						var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
 						oPublicHeaderItem.linkText(oCalendar.name());
-						oPublicHeaderItem.activeTitle(oCalendar.name());
+						this.browserTitle(oCalendar.name());
 					}
 					aNewCalendarIds.push(oCalendar.id);
 				}
@@ -973,7 +975,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 		if (this.calendars.count() === 0 && this.isPublic && this.needsToReload)
 		{
 			var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
-			oPublicHeaderItem.activeTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
+			this.browserTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
 			Api.showErrorByCode(0, TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
 		}
 

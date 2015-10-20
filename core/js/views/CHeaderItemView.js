@@ -16,7 +16,6 @@ function CHeaderItemView(sLinkText, sActiveTitle)
 	this.unseenCount = ko.observable(0);
 	
 	this.allowChangeTitle = ko.observable(false); // allows to change favicon and browser title when browser is inactive
-	this.activeTitle = ko.observable(sActiveTitle || ''); // always allowed to be changed
 	this.inactiveTitle = ko.observable('');
 }
 

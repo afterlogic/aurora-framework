@@ -42,6 +42,8 @@ function CHelpdeskView()
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/HELPDESK'));
+	
 	var
 		self = this,
 		fChangeStateHelper = function(state) {
@@ -615,7 +617,7 @@ CHelpdeskView.prototype.onBind = function ()
 	}, this));
 
 	$(document.body).on('click', _.bind(function (oEvent) {
-		if (Screens.currentScreen() === 'helpdesk' && this.isQuickReplyPaneEmpty() && !this.preventFalseClick())
+		if (this.bShown && this.isQuickReplyPaneEmpty() && !this.preventFalseClick())
 		{
 			this.replyText('');
 			this.isQuickReplyActive(false);

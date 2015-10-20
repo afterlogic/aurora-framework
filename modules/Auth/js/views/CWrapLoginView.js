@@ -23,6 +23,8 @@ function CWrapLoginView()
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/LOGIN'));
+	
 	this.bSocialInviteMode = typeof Utils.getRequestParam('invite-auth') === 'string';
 	this.socialInviteTitle = TextUtils.i18n('LOGIN/SOCIAL_INVITE_TITLE', {'SITENAME': UserSettings.SiteName});
 	this.socialInviteText = TextUtils.i18n('LOGIN/SOCIAL_INVITE_TEXT');

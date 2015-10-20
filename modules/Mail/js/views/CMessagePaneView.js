@@ -53,6 +53,15 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	UserSettings.defaultTimeFormat.subscribe(this.onCurrentMessageSubscribe, this);
 	this.displayedMessageUid = ko.observable('');
 	
+	this.browserTitle = ko.computed(function () {
+		var
+			oMessage = this.currentMessage(),
+			sSubject = oMessage ? oMessage.subject() : '',
+			sPrefix = sSubject ? sSubject + ' - ' : ''
+		;
+		return sPrefix + Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/VIEW_MESSAGE');
+	}, this);
+	
 	this.isCurrentMessage = ko.computed(function () {
 		return !!this.currentMessage();
 	}, this);

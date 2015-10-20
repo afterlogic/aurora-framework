@@ -37,6 +37,8 @@ function CContactsView()
 {
 	CAbstractScreenView.call(this);
 	
+	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/CONTACTS'));
+	
 	this.contactCount = ko.observable(0);
 	this.uploaderArea = ko.observable(null);
 	this.bDragActive = ko.observable(false);
@@ -809,11 +811,10 @@ CContactsView.prototype.hotKeysBind = function ()
 			nKey = ev.keyCode,
 			oFirstContact = this.collection()[0],
 			bListIsFocused = this.isSearchFocused(),
-			bFirstContactSelected = false,
-			bIsContactsScreen = true//App.Screens.currentScreen() === Enums.Screens.Contacts
+			bFirstContactSelected = false
 		;
 
-		if (bIsContactsScreen && !Utils.isTextFieldFocused() && !bListIsFocused && ev && nKey === Enums.Key.s)
+		if (this.bShown && !Utils.isTextFieldFocused() && !bListIsFocused && ev && nKey === Enums.Key.s)
 		{
 			ev.preventDefault();
 			this.searchFocus();

@@ -31,7 +31,6 @@ CHeaderItemView.prototype.ViewTemplate = 'Mail_HeaderItemView';
 var HeaderItemView = new CHeaderItemView();
 
 HeaderItemView.linkText(Accounts.getEmail());
-HeaderItemView.activeTitle(Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX'));
 HeaderItemView.allowChangeTitle(true);
 
 module.exports = HeaderItemView;
