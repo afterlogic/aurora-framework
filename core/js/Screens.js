@@ -5,6 +5,8 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	Utils = require('core/js/utils/Common.js'),
+	
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Settings = require('core/js/Settings.js')
 ;
@@ -33,14 +35,10 @@ CScreens.prototype.init = function ()
 	var
 		oModulesScreens = ModulesManager.getModulesScreens(),
 		oModulesTabs = ModulesManager.getModulesTabs(),
-		sFirstModuleName = ''
+		aKeys = []
 	;
 	
 	_.each(oModulesScreens, _.bind(function (oScreens, sModuleName) {
-		if (sFirstModuleName === '')
-		{
-			sFirstModuleName = sModuleName;
-		}
 		this.addToScreenList(sModuleName, oScreens);
 	}, this));
 	
@@ -53,7 +51,11 @@ CScreens.prototype.init = function ()
 	
 	if (this.sDefaultScreen === '')
 	{
-		this.sDefaultScreen = sFirstModuleName.toLowerCase();
+		aKeys = _.keys(this.oConstructors);
+		if (Utils.isNonEmptyArray(aKeys))
+		{
+			this.sDefaultScreen = aKeys[0];
+		}
 	}
 	
 	if (oModulesTabs.length > 0)

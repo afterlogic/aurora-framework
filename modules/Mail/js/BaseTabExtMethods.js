@@ -2,14 +2,14 @@
 
 var
 	Api = require('core/js/Api.js'),
-	MailCache = require('core/js/MailCache.js'),
 	Routing = require('core/js/Routing.js'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
+	MailCache = require('modules/Mail/js/Cache.js'),
 	Prefetcher = require('modules/Mail/js/Prefetcher.js'),
 	
 	aMessagesParametersFromCompose = [],
-	oReplyDataFromViewPane = null
+	aReplyData = []
 ;
 
 var BaseTabMethods = {
@@ -49,10 +49,10 @@ var BaseTabMethods = {
 		MailCache.searchMessagesInCurrentFolder();
 		window.focus();
 	},
-	getReplyDataFromViewPane: function () {
-		var oTempReplyDataFromViewPane = oReplyDataFromViewPane;
-		oReplyDataFromViewPane = null;
-		return oTempReplyDataFromViewPane;
+	getReplyData: function (sUniq) {
+		var oReplyData = aReplyData[sUniq];
+		delete aReplyData[sUniq];
+		return oReplyData;
 	},
 	deleteMessage: function (sUid) {
 		MailUtils.deleteMessages([sUid], function () {window.close();});
@@ -60,3 +60,10 @@ var BaseTabMethods = {
 };
 
 window.BaseTabMethods = BaseTabMethods;
+
+module.exports = {
+	setReplyData: function (sUniq, oReplyData) {
+		aReplyData[sUniq] = oReplyData;
+	}
+	
+};

@@ -14,6 +14,7 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Storage = require('core/js/Storage.js'),
 	Pulse = require('core/js/Pulse.js'),
+	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
 	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
@@ -423,6 +424,23 @@ CMessagePaneView.prototype.onMessagesSubscribe = function ()
 	}
 };
 
+/**
+ * @param {string} sUniq
+ */
+CMessagePaneView.prototype.passReplyDataToNewTab = function (sUniq)
+{
+	if (this.currentMessage() && this.currentMessage().sUniq === sUniq && this.replyText() !== '')
+	{
+		BaseTabExtMethods.setReplyData(sUniq, {
+			'ReplyText': this.replyText(),
+			'ReplyDraftUid': this.replyDraftUid()
+		});
+		
+		this.replyText('');
+		this.replyDraftUid('');
+	}
+};
+
 CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 {
 	var
@@ -430,14 +448,17 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		oVcard = null,
 		oMessage = this.currentMessage(),
 		oAccount = oMessage ? Accounts.getAccount(oMessage.accountId()) : null,
-		oReplyDataFromViewPane = null
+		oReplyData = null
 	;
 	
 	if (BaseTab)
 	{
-		oReplyDataFromViewPane = BaseTab.getReplyDataFromViewPane();
-		this.replyText(oReplyDataFromViewPane.ReplyText);
-		this.replyDraftUid(oReplyDataFromViewPane.ReplyDraftUid);
+		oReplyData = BaseTab.getReplyData(oMessage.sUniq);
+		if (oReplyData)
+		{
+			this.replyText(oReplyData.ReplyText);
+			this.replyDraftUid(oReplyData.ReplyDraftUid);
+		}
 	}
 	else if (!oMessage || oMessage.uid() !== this.displayedMessageUid())
 	{
@@ -1090,7 +1111,7 @@ CMessagePaneView.prototype.saveReplyMessage = function (bAutosave)
 		{
 			this.replySavingStarted(true);
 		}
-		SendingUtils.sendReplyMessage('MessageSave', this.getReplyHtmlText(), this.replyDraftUid(), 
+		SendingUtils.sendReplyMessage('SaveMessage', this.getReplyHtmlText(), this.replyDraftUid(), 
 			this.onMessageSendOrSaveResponse, this);
 	}
 };

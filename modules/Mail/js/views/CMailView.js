@@ -14,8 +14,8 @@ var
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
-	MailCache  = require('modules/Mail/js/Cache.js'),
-	Settings  = require('modules/Mail/js/Settings.js'),
+	MailCache = require('modules/Mail/js/Cache.js'),
+	Settings = require('modules/Mail/js/Settings.js'),
 	CFolderListView = require('modules/Mail/js/views/CFolderListView.js'),
 	CMessageListView = require('modules/Mail/js/views/CMessageListView.js'),
 	CMessagePaneView = require('modules/Mail/js/views/CMessagePaneView.js'),
@@ -120,39 +120,29 @@ CMailView.prototype.executeCheckMail = function ()
 	MailCache.executeCheckMail(true);
 };
 
+/**
+ * @param {object} oMessage
+ */
 CMailView.prototype.openMessageInNewWindow = function (oMessage)
 {
-	var
-		oFolder = this.folderList().getFolderByFullName(oMessage.folder()),
-		bDraftFolder = (oFolder.type() === Enums.FolderTypes.Drafts)
-	;
-	
-	if (this.oMessagePane.currentMessage() && this.oMessagePane.currentMessage().uid() === oMessage.uid() &&
-			(this.oMessagePane.replyText() !== '' || this.oMessagePane.replyDraftUid() !== ''))
-	{
-		window.oReplyDataFromViewPane = {
-			'ReplyText': this.oMessagePane.replyText(),
-			'ReplyDraftUid': this.oMessagePane.replyDraftUid()
-		};
-		this.oMessagePane.replyText('');
-		this.oMessagePane.replyDraftUid('');
-	}
-	
 	if (oMessage)
 	{
 		var
 			sFolder = oMessage.folder(),
 			sUid = oMessage.uid(),
+			oFolder = this.folderList().getFolderByFullName(sFolder),
+			bDraftFolder = (oFolder.type() === Enums.FolderTypes.Drafts),
 			sHash = ''
 		;
 
 		if (bDraftFolder)
 		{
-			sHash = Routing.buildHashFromArray(['compose', 'drafts', sFolder, sUid]);
+			sHash = Routing.buildHashFromArray(LinksUtils.getComposeFromMessage('drafts', sFolder, sUid));
 		}
 		else
 		{
-			sHash = Routing.buildHashFromArray(['view', sFolder, 'msg' + sUid]);
+			sHash = Routing.buildHashFromArray(LinksUtils.getViewMessage(sFolder, sUid));
+			this.oMessagePane.passReplyDataToNewTab(oMessage.sUniq);
 		}
 
 		WindowOpener.openTab('?message-newtab' + sHash);
@@ -286,7 +276,7 @@ CMailView.prototype.hotKeysBind = function ()
 		}
 		else if (bComputed && sKey === Enums.Key.n)
 		{
-			window.location.href = '#compose';
+			Routing.setHash(LinksUtils.getCompose());
 		}
 	},this));
 };

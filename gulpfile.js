@@ -158,13 +158,13 @@ gulp.task('default', ['js:app']);
 
 gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext', 'js:message_newtab']);
 
-gulp.task('files', ['js:files_pub']);
+gulp.task('files', ['js:app', 'js:files_pub']);
 
-gulp.task('cal', ['js:calendar_pub']);
+gulp.task('cal', ['js:app', 'js:calendar_pub']);
 
-gulp.task('helpdesk', ['js:helpdesk_ext']);
+gulp.task('helpdesk', ['js:app', 'js:helpdesk_ext']);
 
-gulp.task('msg', ['js:message_newtab']);
+gulp.task('msg', ['js:app', 'js:message_newtab']);
 
 gulp.task('min', ['lint', 'js:all:min']);
 

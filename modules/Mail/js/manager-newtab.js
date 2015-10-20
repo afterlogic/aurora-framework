@@ -18,8 +18,11 @@ module.exports = function (oSettings) {
 	
 	return {
 		screens: {
-			'main': function () {
+			'view': function () {
 				return require('modules/Mail/js/views/CMessagePaneView.js');
+			},
+			'compose': function () {
+				return require('modules/Mail/js/views/CComposeView.js');
 			}
 		},
 		getBrowserTitle: function () {

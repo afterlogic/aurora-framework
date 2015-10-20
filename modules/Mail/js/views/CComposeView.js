@@ -17,6 +17,7 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
 	CJua = require('core/js/CJua.js'),
+	CAbstractView = require('core/js/views/CAbstractView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -46,6 +47,8 @@ var
  */
 function CComposeView()
 {
+	CAbstractView.call(this);
+	
 	var self = this;
 
 	if (App.isNewTab())
@@ -385,6 +388,8 @@ function CComposeView()
 //		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
 //	}
 }
+
+_.extendOwn(CComposeView.prototype, CAbstractView.prototype);
 
 CComposeView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_ComposeScreenView' : 'Mail_ComposeView';
 CComposeView.prototype.__name = 'CComposeView';
@@ -1634,12 +1639,12 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 				if (bWaitResponse)
 				{
 					this.saving(true);
-					SendingUtils.send('MessageSave', this.getSendSaveParameters(false), this.saveMailInSentItems(),
+					SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
 						!bAutosave, this.onMessageSendOrSaveResponse, this);
 				}
 				else
 				{
-					SendingUtils.send('MessageSave', this.getSendSaveParameters(false), this.saveMailInSentItems(),
+					SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
 						!bAutosave, SendingUtils.onMessageSendOrSaveResponse, SendingUtils);
 				}
 			}

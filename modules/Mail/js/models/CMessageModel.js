@@ -27,9 +27,10 @@ var
 function CMessageModel()
 {
 	this.accountId = ko.observable(Accounts.currentId());
-
 	this.folder = ko.observable('');
 	this.uid = ko.observable('');
+	this.sUniq = '';
+	
 	this.subject = ko.observable('');
 	this.emptySubject = ko.computed(function () {
 		return ($.trim(this.subject()) === '');
@@ -387,9 +388,10 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 	if (oData['@Object'] === 'Object/Message' || oData['@Object'] === 'Object/MessageListItem')
 	{
 		this.accountId(iAccountId);
-		
 		this.folder(oData.Folder);
 		this.uid(Utils.pString(oData.Uid));
+		this.sUniq = this.accountId() + this.folder() + this.uid();
+		
 		this.subject(Utils.pString(oData.Subject));
 		this.messageId(Utils.pString(oData.MessageId));
 		this.size(oData.Size);

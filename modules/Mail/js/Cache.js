@@ -2,6 +2,7 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
 	moment = require('moment'),
 	
@@ -289,7 +290,7 @@ CMailCache.prototype.init = function ()
 		if (window.name)
 		{
 			var
-				iAccountId = TextUtils.pInt(window.name),
+				iAccountId = Utils.pInt(window.name),
 				oMessageParametersFromCompose
 			;
 			

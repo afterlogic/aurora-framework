@@ -156,11 +156,21 @@ LinksUtils.parseMailbox = function (aParams)
 };
 
 /**
+ * @param {string} sFolder
+ * @param {string} sUid
+ * @return {Array}
+ */
+LinksUtils.getViewMessage = function (sFolder, sUid)
+{
+	return ['mail-view', sFolder, 'msg' + sUid];
+};
+
+/**
  * @return {Array}
  */
 LinksUtils.getCompose = function ()
 {
-	return ['compose'];
+	return ['mail-compose'];
 };
 
 /**
@@ -172,7 +182,7 @@ LinksUtils.getCompose = function ()
  */
 LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid)
 {
-	return ['compose', sType, sFolder, sUid];
+	return ['mail-compose', sType, sFolder, sUid];
 };
 
 /**
@@ -182,7 +192,7 @@ LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid)
  */
 LinksUtils.getComposeWithToField = function (sTo)
 {
-	return ['compose', 'to', sTo];
+	return ['mail-compose', 'to', sTo];
 };
 
 /**
@@ -210,9 +220,7 @@ LinksUtils.parseToAddr = function (mToAddr)
 		{
 			aMessageParts = aMailto[1].split('&');
 			_.each(aMessageParts, function (sPart) {
-				var
-					aParts = sPart.split('=')
-				;
+				var aParts = sPart.split('=');
 				if (aParts.length === 2)
 				{
 					switch (aParts[0])
