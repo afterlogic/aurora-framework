@@ -49,6 +49,38 @@ class CalendarModule extends AApiModule
 	}
 	
 	/**
+	 * @return bool
+	 */
+	public function DownloadCalendar()
+	{
+		$oAccount = $this->getDefaultAccountFromParam();
+		if ($this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		{
+			$sRawKey = (string) $this->getParamValue('RawKey', '');
+			$aValues = \CApi::DecodeKeyValues($sRawKey);
+
+			if (isset($aValues['CalendarId']))
+			{
+				$sCalendarId = $aValues['CalendarId'];
+
+				$sOutput = $this->oApiCalendarManager->exportCalendarToIcs($oAccount, $sCalendarId);
+				if (false !== $sOutput)
+				{
+					header('Pragma: public');
+					header('Content-Type: text/calendar');
+					header('Content-Disposition: attachment; filename="'.$sCalendarId.'.ics";');
+					header('Content-Transfer-Encoding: binary');
+
+					echo $sOutput;
+					return true;
+				}
+			}
+		}
+
+		return false;		
+	}
+	
+	/**
 	 * @return array
 	 */
 	public function CreateCalendar()

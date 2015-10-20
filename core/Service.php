@@ -598,37 +598,23 @@ class Service
 					\CApi::Location('./');
 				}
 			}
-			else if ('raw' === $sFirstPart)
+			else if ('download' === $sFirstPart)
 			{
-				$sAction = empty($aPaths[1]) ? '' : $aPaths[1];
+				$sModule = empty($aPaths[1]) ? '' : $aPaths[1];
+				$sMethod = empty($aPaths[2]) ? '' : $aPaths[2];
+				
 				try
 				{
-					if (!empty($sAction))
+					if (!empty($sModule) && !empty($sMethod))
 					{
-						$sMethodName =  'Raw'.$sAction;
-						if (method_exists($this->oActions, $sMethodName))
-						{
-							$this->oActions->SetActionParams(array(
-								'AccountID' => empty($aPaths[2]) || '0' === (string) $aPaths[2] ? '' : $aPaths[2],
-								'RawKey' => empty($aPaths[3]) ? '' : $aPaths[3],
-								'IsExt' => empty($aPaths[4]) ? '0' : ('1' === (string) $aPaths[4] ? '1' : 0),
-								'TenantHash' => empty($aPaths[5]) ? '' : $aPaths[5],
-								'AuthToken' => empty($aPaths[6]) ? '' : $aPaths[6]
-							));
-
-							if (!call_user_func(array($this->oActions, $sMethodName)))
-							{
-								\CApi::Log('False result.', \ELogLevel::Error);
-							}
-						}
-						else
-						{
-							\CApi::Log('Invalid action.', \ELogLevel::Error);
-						}
-					}
-					else
-					{
-						\CApi::Log('Empty action.', \ELogLevel::Error);
+						$aParameters = array(
+							'RawKey' => empty($aPaths[3]) ? '' : $aPaths[3],
+							'IsExt' => empty($aPaths[4]) ? '0' : ('1' === (string) $aPaths[4] ? '1' : 0),
+							'TenantHash' => empty($aPaths[5]) ? '' : $aPaths[5],
+							'AuthToken' => empty($aPaths[6]) ? '' : $aPaths[6]
+						);						
+						
+						$aResponseItem = $this->oModuleManager->ExecuteMethod($sModule, $sMethod, $aParameters);
 					}
 				}
 				catch (\Exception $oException)
