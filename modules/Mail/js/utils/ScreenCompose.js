@@ -10,7 +10,7 @@ var
 
 ScreenComposeUtils.composeMessage = function ()
 {
-	Routing.setHash([Enums.Screens.Compose]);
+	Routing.setHash(LinksUtils.getCompose());
 };
 
 /**

@@ -289,15 +289,11 @@ CMailCache.prototype.init = function ()
 		
 		if (window.name)
 		{
-			var
-				iAccountId = Utils.pInt(window.name),
-				oMessageParametersFromCompose
-			;
+			var iAccountId = Utils.pInt(window.name);
 			
 			if (iAccountId === 0)
 			{
-				oMessageParametersFromCompose = BaseTab.getComposedMessage(window.name);
-				iAccountId = oMessageParametersFromCompose ? oMessageParametersFromCompose.accountId : 0;
+				iAccountId = BaseTab.getComposedMessageAccountId(window.name);
 			}
 			
 			if (iAccountId !== 0)

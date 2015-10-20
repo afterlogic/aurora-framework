@@ -16,6 +16,7 @@ var
 	App = require('core/js/App.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
+	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
 	CJua = require('core/js/CJua.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
@@ -769,7 +770,7 @@ CComposeView.prototype.beforeHide = function (fContinueScreenChanging)
 			}
 			else
 			{
-				Routing.historyBackWithoutParsing(Enums.Screens.Compose);
+				Routing.historyBackWithoutParsing('mail-compose');
 			}
 		}, this)
 	;
@@ -1543,7 +1544,7 @@ CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oReque
 				this.draftUid(Utils.pString(oResData.NewUid));
 				if (App.isNewTab())
 				{
-					Routing.replaceHashDirectly(LinksUtils.composeFromMessage('drafts', oRequest.DraftFolder, this.draftUid()));
+					Routing.replaceHashDirectly(LinksUtils.getComposeFromMessage('drafts', oRequest.DraftFolder, this.draftUid()));
 				}
 			}
 			this.saving(false);
@@ -1761,7 +1762,7 @@ CComposeView.prototype.openInNewWindow = function ()
 		sWinName = 'id' + Math.random().toString(),
 		oMessageParametersFromCompose = {},
 		oWin = null,
-		sHash = '#' + Enums.Screens.SingleCompose
+		sHash = Routing.buildHashFromArray(LinksUtils.getCompose())
 	;
 
 	this.closeBecauseSingleCompose(true);
@@ -1769,22 +1770,18 @@ CComposeView.prototype.openInNewWindow = function ()
 
 	if (this.draftUid().length > 0 && !this.isChanged())
 	{
-		sHash = Routing.buildHashFromArray(LinksUtils.composeFromMessage('drafts', MailCache.folderList().draftsFolderFullName(), this.draftUid(), true));
-		oWin = WindowOpener.openTab(sHash);
+		sHash = Routing.buildHashFromArray(LinksUtils.getComposeFromMessage('drafts', MailCache.folderList().draftsFolderFullName(), this.draftUid(), true));
+		oWin = WindowOpener.openTab('?message-newtab' + sHash);
 	}
 	else if (!this.isChanged())
 	{
-		sHash = Routing.buildHashFromArray(_.union([Enums.Screens.SingleCompose], this.routeParams()));
-		oWin = WindowOpener.openTab(sHash);
+		sHash = Routing.buildHashFromArray(_.union(['mail-compose'], this.routeParams()));
+		oWin = WindowOpener.openTab('?message-newtab' + sHash);
 	}
 	else
 	{
-		if (!window.aMessagesParametersFromCompose)
-		{
-			window.aMessagesParametersFromCompose = [];
-		}
-		window.aMessagesParametersFromCompose[sWinName] = oMessageParametersFromCompose;
-		oWin = WindowOpener.openTab(sHash, sWinName);
+		BaseTabExtMethods.passComposedMessage(sWinName, oMessageParametersFromCompose);
+		oWin = WindowOpener.openTab('?message-newtab' + sHash, sWinName);
 	}
 
 	this.commit();

@@ -8,7 +8,7 @@ var
 	MailCache = require('modules/Mail/js/Cache.js'),
 	Prefetcher = require('modules/Mail/js/Prefetcher.js'),
 	
-	aMessagesParametersFromCompose = [],
+	aComposedMessages = [],
 	aReplyData = []
 ;
 
@@ -30,8 +30,14 @@ var BaseTabMethods = {
 	prefetchPrevPage: function (sCurrentUid) {
 		Prefetcher.prefetchPrevPage(sCurrentUid);
 	},
+	getComposedMessageAccountId: function (sWindowName) {
+		var oComposedMessage = aComposedMessages[sWindowName];
+		return oComposedMessage ? oComposedMessage.accountId : 0;
+	},
 	getComposedMessage: function (sWindowName) {
-		return aMessagesParametersFromCompose[sWindowName];
+		var oComposedMessage = aComposedMessages[sWindowName];
+		delete aComposedMessages[sWindowName];
+		return oComposedMessage;
 	},
 	removeOneMessageFromCacheForFolder: function (iAccountId, sDraftFolder, sDraftUid) {
 		MailCache.removeOneMessageFromCacheForFolder(iAccountId, sDraftFolder, sDraftUid);
@@ -62,8 +68,10 @@ var BaseTabMethods = {
 window.BaseTabMethods = BaseTabMethods;
 
 module.exports = {
-	setReplyData: function (sUniq, oReplyData) {
+	passReplyData: function (sUniq, oReplyData) {
 		aReplyData[sUniq] = oReplyData;
+	},
+	passComposedMessage: function (sWinName, oComposedMessage) {
+		aComposedMessages[sWinName] = oComposedMessage;
 	}
-	
 };

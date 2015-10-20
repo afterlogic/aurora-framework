@@ -6,6 +6,7 @@ var
 	$ = require('jquery'),
 	hasher = require('hasher'),
 	
+	Utils = require('core/js/utils/Common.js'),
 	Screens = require('core/js/Screens.js')
 ;
 
@@ -81,7 +82,7 @@ CRouting.prototype.replaceHashFromString = function (sNewHash)
 {
 	if (location.hash !== sNewHash)
 	{
-		location.replace(sNewHash);
+		location.replace(Utils.getAppPath() + sNewHash);
 	}
 };
 

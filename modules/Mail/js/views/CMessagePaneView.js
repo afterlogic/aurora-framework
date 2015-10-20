@@ -440,7 +440,7 @@ CMessagePaneView.prototype.passReplyDataToNewTab = function (sUniq)
 {
 	if (this.currentMessage() && this.currentMessage().sUniq === sUniq && this.replyText() !== '')
 	{
-		BaseTabExtMethods.setReplyData(sUniq, {
+		BaseTabExtMethods.passReplyData(sUniq, {
 			'ReplyText': this.replyText(),
 			'ReplyDraftUid': this.replyDraftUid()
 		});
@@ -955,12 +955,7 @@ CMessagePaneView.prototype.executeNextMessage = function ()
  */
 CMessagePaneView.prototype.moveToSingleMessageView = function (sUid)
 {
-	var
-		sFolder = MailCache.folderList().currentFolderFullName(),
-		aHash = [Enums.Screens.SingleMessageView, sFolder, 'msg' + sUid]
-	;
-
-	App.Routing.setHash(aHash);
+	App.Routing.setHash(LinksUtils.getViewMessage(sFolder, MailCache.folderList().currentFolderFullName()));
 };
 
 CMessagePaneView.prototype.executeReply = function ()
