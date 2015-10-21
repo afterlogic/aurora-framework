@@ -694,7 +694,7 @@ class CApiContactsMainManager extends AApiManager
 			$this->incClass($sSyncType.'.parser');
 			$this->incClass('sync.'.$sSyncType);
 
-			$sSyncClass = 'CApi'.ucfirst($this->GetManagerName()).'Sync'.ucfirst($sSyncType);
+			$sSyncClass = 'CApiContactsSync'.ucfirst($sSyncType);
 			if (class_exists($sSyncClass))
 			{
 				$oSync = new $sSyncClass($this);

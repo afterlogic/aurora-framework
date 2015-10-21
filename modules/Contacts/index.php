@@ -134,7 +134,7 @@ class ContactsModule extends AApiModule
 		);
 	}	
 	
-	private function DownloadContact($sSyncType)
+	private function DownloadContacts($sSyncType)
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
 		if ($this->oApiCapabilityManager->isContactsSupported($oAccount))
@@ -379,12 +379,12 @@ class ContactsModule extends AApiModule
 	
 	public function DownloadContactsAsCSV()
 	{
-		return $this->DownloadContact('csv');
+		return $this->DownloadContacts('csv');
 	}
 	
 	public function DownloadContactsAsVCF()
 	{
-		return $this->DownloadContact('vcf');
+		return $this->DownloadContacts('vcf');
 	}
 
 	/**
