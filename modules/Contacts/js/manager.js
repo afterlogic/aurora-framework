@@ -6,18 +6,15 @@ module.exports = function (oSettings) {
 	var
 		_ = require('underscore'),
 		
-		App = require('core/js/App.js'),
-				
 		Settings = require('modules/Contacts/js/Settings.js'),
-		SuggestionsAutocomplete = require('modules/Contacts/js/SuggestionsAutocomplete.js'),
 		
-		ScreensMethods = {},
-		SuggestionsMethods = {}
+		ManagerSuggestions = require('modules/Contacts/js/manager-suggestions.js'),
+		SuggestionsMethods = ManagerSuggestions()
 	;
 
 	Settings.init(oSettings);
 	
-	ScreensMethods = {
+	return _.extend({
 		screens: {
 			'main': function () {
 				return require('modules/Contacts/js/views/CContactsView.js');
@@ -30,32 +27,5 @@ module.exports = function (oSettings) {
 			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS'));
 		}
-	};
-	
-	SuggestionsMethods = {
-		getSuggestionsAutocompleteCallback: function () {
-			return SuggestionsAutocomplete.callback;
-		},
-		getSuggestionsAutocompleteComposeCallback: function () {
-			return SuggestionsAutocomplete.composeCallback;
-		},
-		getSuggestionsAutocompletePhoneCallback: function () {
-			return SuggestionsAutocomplete.phoneCallback;
-		},
-		getSuggestionsAutocompleteDeleteHandler: function () {
-			return SuggestionsAutocomplete.deleteHandler;
-		},
-		requestUserByPhone: function (sNumber, fCallBack, oContext) {
-			SuggestionsAutocomplete.requestUserByPhone(sNumber, fCallBack, oContext);
-		}
-	};
-	
-	if (App.isNewTab())
-	{
-		return SuggestionsMethods;
-	}
-	else
-	{
-		return _.extend(ScreensMethods, SuggestionsMethods);
-	}
+	}, SuggestionsMethods);
 };
