@@ -133,5 +133,27 @@ class CApiResponseManager
 		header('Accept-Ranges: none', true);
 		header('Content-Transfer-Encoding: binary');	
 	}
+	
+	public static function GetThumbResource($oAccount, $rResource, $sFileName)
+	{
+		$sMd5Hash = md5(rand(1000, 9999));
+
+		$oApiFileCache = \CApi::GetCoreManager('filecache');
+		$oApiFileCache->putFile($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
+		if ($oApiFileCache->isFileExists($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))
+		{
+			try
+			{
+				$oThumb = new \PHPThumb\GD(
+					$oApiFileCache->generateFullFilePath($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName)
+				);
+
+				$oThumb->adaptiveResize(120, 100)->show();
+			}
+			catch (\Exception $oE) {}
+		}
+
+		$oApiFileCache->clear($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
+	}	
 }
 

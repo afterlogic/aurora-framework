@@ -129,7 +129,7 @@ class FilesModule extends AApiModule
 					if ($bThumbnail)
 					{
 //						$this->cacheByKey($sRawKey);	// todo
-//						$this->thumbResource($oAccount, $mResult, $sFileName); // todo
+						\CApiResponseManager::GetThumbResource($oAccount, $mResult, $sFileName);
 					}
 					else
 					{
@@ -156,7 +156,7 @@ class FilesModule extends AApiModule
 		return $this->GetRawFile(false);
 	}
 
-	public function ThumbnailFile()
+	public function GetFileThumbnail()
 	{
 		return $this->GetRawFile(false, true);
 	}
