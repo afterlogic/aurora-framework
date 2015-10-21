@@ -4,9 +4,10 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	Utils = require('core/js/utils/Common.js'),
 	Routing = require('core/js/Routing.js'),
 	
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	CAccountModel = require('modules/Mail/js/models/CAccountModel.js')
@@ -28,17 +29,20 @@ function CAccountListModel(iDefaultAccountId)
 
 	this.currentId.subscribe(function(value) {
 		var oCurrentAccount = this.getCurrent();
-		oCurrentAccount.requestExtensions();
-		
-		this.checkIfMailAllowed();
-		
-		if (!this.bLockEditedWhenCurrentChange)
+		if (oCurrentAccount)
 		{
-			// deferred execution to edited account has changed a bit later and did not make a second request 
-			// of the folder list of the same account.
-			_.delay(_.bind(function () {
-				this.editedId(value);
-			}, this), 1000);
+			oCurrentAccount.requestExtensions();
+
+			this.checkIfMailAllowed();
+
+			if (!this.bLockEditedWhenCurrentChange)
+			{
+				// deferred execution to edited account has changed a bit later and did not make a second request 
+				// of the folder list of the same account.
+				_.delay(_.bind(function () {
+					this.editedId(value);
+				}, this), 1000);
+			}
 		}
 	}, this);
 
@@ -506,7 +510,7 @@ CAccountListModel.prototype.getAttendee = function (aEmails)
 	return sAttendee;
 };
 
-var AccountList = new CAccountListModel(window.pSevenAppData.Default);
+var AccountList = new CAccountListModel(Utils.pInt(window.pSevenAppData.Default));
 
 AccountList.parse(window.pSevenAppData.Default, window.pSevenAppData.Accounts);
 

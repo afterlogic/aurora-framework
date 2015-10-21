@@ -1532,19 +1532,23 @@ CComposeView.prototype.getSendSaveParameters = function (bRemoveSignatureAnchor)
  */
 CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oRequest)
 {
-	var oResData = SendingUtils.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending());
+	var
+		oResData = SendingUtils.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending()),
+		oParameters = JSON.parse(oRequest.Parameters)
+	;
 
 	this.commit();
 
 	switch (oResData.Method)
 	{
 		case 'SaveMessage':
-			if (oResData.Result && oRequest.DraftUid === this.draftUid())
+			if (oResData.Result && oParameters.DraftUid === this.draftUid())
 			{
 				this.draftUid(Utils.pString(oResData.NewUid));
-				if (App.isNewTab())
+				
+				if (this instanceof CComposeView)// it is screen, not popup
 				{
-					Routing.replaceHashDirectly(LinksUtils.getComposeFromMessage('drafts', oRequest.DraftFolder, this.draftUid()));
+					Routing.replaceHashDirectly(LinksUtils.getComposeFromMessage('drafts', oParameters.DraftFolder, this.draftUid()));
 				}
 			}
 			this.saving(false);

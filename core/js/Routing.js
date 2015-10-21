@@ -82,7 +82,7 @@ CRouting.prototype.replaceHashFromString = function (sNewHash)
 {
 	if (location.hash !== sNewHash)
 	{
-		location.replace(Utils.getAppPath() + sNewHash);
+		location.replace(Utils.getAppPath() + window.location.search + sNewHash);
 	}
 };
 
@@ -242,5 +242,6 @@ module.exports = {
 	setHash: _.bind(Routing.setHash, Routing),
 	replaceHash: _.bind(Routing.replaceHash, Routing),
 	finalize: _.bind(Routing.finalize, Routing),
-	currentHash: Routing.currentHash
+	currentHash: Routing.currentHash,
+	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing)
 };

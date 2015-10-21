@@ -544,8 +544,11 @@ CMailCache.prototype.setAutocheckmailTimer = function ()
 
 CMailCache.prototype.isSearchExecuting = function ()
 {
-	var oRequest = Ajax.getOpenedRequest('GetMessages');
-	return oRequest && oRequest.Parameters.Search !== '';
+	var
+		oRequest = Ajax.getOpenedRequest('GetMessages'),
+		oParameters = oRequest ? JSON.parse(oRequest.Parameters) : null
+	;
+	return oParameters && oParameters.Search !== '';
 };
 
 CMailCache.prototype.checkMessageFlags = function ()

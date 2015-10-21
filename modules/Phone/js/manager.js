@@ -1,16 +1,16 @@
 'use strict';
 
-require('modules/Phone/js/enums.js');
-
-var
-	Browser = require('core/js/Browser.js'),
-	
-	Settings = require('modules/Phone/js/Settings.js'),
-	
-	bMobileApp = false
-;
-
 module.exports = function (oSettings) {
+	require('modules/Phone/js/enums.js');
+
+	var
+		Browser = require('core/js/Browser.js'),
+
+		Settings = require('modules/Phone/js/Settings.js'),
+
+		bMobileApp = false
+	;
+
 	Settings.init(oSettings);
 	
 	return {

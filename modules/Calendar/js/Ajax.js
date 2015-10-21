@@ -6,9 +6,13 @@ Ajax.registerAbortRequestHandler('Calendar', function (oRequest, oOpenedRequest)
 	switch (oRequest.Method)
 	{
 		case 'UpdateEvent':
+			var
+				oParameters = JSON.parse(oRequest.Parameters),
+				oOpenedParameters = JSON.parse(oOpenedRequest.Parameters)
+			;
 			return	oOpenedRequest.Method === 'UpdateEvent' && 
-					oOpenedRequest.Parameters.calendarId === oRequest.Parameters.calendarId && 
-					oOpenedRequest.Parameters.uid === oRequest.Parameters.uid;
+					oOpenedParameters.calendarId === oParameters.calendarId && 
+					oOpenedParameters.uid === oParameters.uid;
 		case 'GetCalendars':
 			return oOpenedRequest.Method === 'GetCalendars';
 		case 'GetEvents':

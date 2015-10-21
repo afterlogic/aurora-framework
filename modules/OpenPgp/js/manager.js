@@ -1,15 +1,12 @@
 'use strict';
 
-var
-	Settings = require('modules/OpenPgp/js/Settings.js')
-;
-
 function IsPgpSupported()
 {
 	return !!(window.crypto && window.crypto.getRandomValues);
 }
 
 module.exports = function (oSettings) {
+	var Settings = require('modules/OpenPgp/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
