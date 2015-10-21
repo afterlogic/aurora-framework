@@ -1054,6 +1054,39 @@ class MailModule extends AApiModule
 	{
 		return $this->messageFlagSet(\MailSo\Imap\Enumerations\MessageFlag::SEEN, 'SetMessageSeen');
 	}	
+	
+	/**
+	 * @return array
+	 */
+	public function SetupSystemFolders()
+	{
+		$oAccount = $this->getAccountFromParam();
+		
+		$sSent = (string) $this->getParamValue('Sent', '');
+		$sDrafts = (string) $this->getParamValue('Drafts', '');
+		$sTrash = (string) $this->getParamValue('Trash', '');
+		$sSpam = (string) $this->getParamValue('Spam', '');
+
+		$aData = array();
+		if (0 < strlen(trim($sSent)))
+		{
+			$aData[$sSent] = \EFolderType::Sent;
+		}
+		if (0 < strlen(trim($sDrafts)))
+		{
+			$aData[$sDrafts] = \EFolderType::Drafts;
+		}
+		if (0 < strlen(trim($sTrash)))
+		{
+			$aData[$sTrash] = \EFolderType::Trash;
+		}
+		if (0 < strlen(trim($sSpam)))
+		{
+			$aData[$sSpam] = \EFolderType::Spam;
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMailManager->setSystemFolderNames($oAccount, $aData));
+	}	
 }
 
 return new MailModule('1.0');

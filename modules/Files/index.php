@@ -11,6 +11,156 @@ class FilesModule extends AApiModule
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 	
+	private function GetRawFile($bDownload = true, $bThumbnail = false)
+	{
+		$sRawKey = (string) $this->getParamValue('RawKey', '');
+		$aValues = \CApi::DecodeKeyValues($sRawKey);
+
+		if ($bThumbnail)
+		{
+//			$this->verifyCacheByKey($sRawKey); // todo
+		}
+		
+		$sHash = (string) $this->getParamValue('TenantHash', '');
+		$oMin = \CApi::GetCoreManager('min');
+		$oApiUsers = \CApi::GetCoreManager('users');
+
+		$mMin = $oMin->getMinByHash($sHash);
+		$oAccount = null;
+		if (!empty($mMin['__hash__']))
+		{
+			$oAccount = $oApiUsers->getAccountById($mMin['Account']);
+		}
+		else
+		{
+			if (isset($aValues['Iframed'], $aValues['Time']) && $aValues['Iframed'] && $aValues['Time'])
+			{
+				$oAccount = $this->getAccountFromParam(true,
+					!($aValues['Time'] > \Core\Base\Utils::iframedTimestamp())
+				);
+
+				if (!$oAccount->IsDefaultAccount)
+				{
+					$iAccountId = $oApiUsers->getDefaultAccountId($oAccount->IdUser);
+					if (0 < $iAccountId)
+					{
+						$oAccount = $oApiUsers->getAccountById($iAccountId);
+					}
+					else
+					{
+						throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+					}
+				}
+			}
+			else
+			{
+				$oAccount = $this->getDefaultAccountFromParam();
+			}
+		}
+
+		$oTenant = null;
+		$oApiTenants = \CApi::GetCoreManager('tenants');
+		
+		if ($oAccount && $oApiTenants)
+		{
+			$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
+				$oApiTenants->getDefaultGlobalTenant();
+		}
+		
+		if ($this->oApiCapabilityManager->isFilesSupported($oAccount) && $oTenant &&
+			isset($aValues['Type'], $aValues['Path'], $aValues['Name']))
+		{
+			$mResult = false;
+			
+			$sFileName = $aValues['Name'];
+			$sContentType = (empty($sFileName)) ? 'text/plain' : \MailSo\Base\Utils::MimeContentType($sFileName);
+			
+			$oFileInfo = $this->oApiFilesManager->getFileInfo($oAccount, $aValues['Type'], $aValues['Path'], $aValues['Name']);
+			if ($oFileInfo->IsLink)
+			{
+				$iLinkType = \api_Utils::GetLinkType($oFileInfo->LinkUrl);
+
+				if (isset($iLinkType))
+				{
+					if (\EFileStorageLinkType::GoogleDrive === $iLinkType)
+					{
+						$oSocial = $oTenant->getSocialByName('google');
+						if ($oSocial)
+						{
+							$oInfo = \api_Utils::GetGoogleDriveFileInfo($oFileInfo->LinkUrl, $oSocial->SocialApiKey);
+							$sFileName = isset($oInfo->title) ? $oInfo->title : $sFileName;
+							$sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
+
+							if (isset($oInfo->downloadUrl))
+							{
+								$mResult = \MailSo\Base\ResourceRegistry::CreateMemoryResource();
+								$this->oHttp->SaveUrlToFile($oInfo->downloadUrl, $mResult); // todo
+								rewind($mResult);
+							}
+						}
+					}
+					else/* if (\EFileStorageLinkType::DropBox === (int)$aFileInfo['LinkType'])*/
+					{
+						if (\EFileStorageLinkType::DropBox === $iLinkType)
+						{
+							$oFileInfo->LinkUrl = str_replace('www.dropbox.com', 'dl.dropboxusercontent.com', $oFileInfo->LinkUrl);
+						}
+						$mResult = \MailSo\Base\ResourceRegistry::CreateMemoryResource();
+						$sFileName = basename($oFileInfo->LinkUrl);
+						$sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
+						
+						$this->oHttp->SaveUrlToFile($oFileInfo->LinkUrl, $mResult); // todo
+						rewind($mResult);
+					}
+				}
+			}
+			else
+			{
+				$mResult = $this->oApiFilesManager->getFile($oAccount, $aValues['Type'], $aValues['Path'], $aValues['Name']);
+			}
+			if (false !== $mResult)
+			{
+				if (is_resource($mResult))
+				{
+//					$sFileName = $this->clearFileName($oFileInfo->Name, $sContentType); // todo
+					$sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
+					\CApiResponseManager::OutputHeaders($bDownload, $sContentType, $sFileName);
+			
+					if ($bThumbnail)
+					{
+//						$this->cacheByKey($sRawKey);	// todo
+//						$this->thumbResource($oAccount, $mResult, $sFileName); // todo
+					}
+					else
+					{
+						\MailSo\Base\Utils::FpassthruWithTimeLimitReset($mResult);
+					}
+					
+					@fclose($mResult);
+				}
+
+				return true;
+			}
+		}
+
+		return false;		
+	}
+	
+	public function DownloadFile()
+	{
+		return $this->GetRawFile(true);
+	}
+	
+	public function ViewFile()
+	{
+		return $this->GetRawFile(false);
+	}
+
+	public function ThumbnailFile()
+	{
+		return $this->GetRawFile(false, true);
+	}
+
 	public function GetExternalStorages()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
@@ -369,8 +519,7 @@ class FilesModule extends AApiModule
 		
 		return $this->DefaultResponse(null, __FUNCTION__, $mResult);
 	}	
-	
-	
+
 }
 
 return new FilesModule('1.0');

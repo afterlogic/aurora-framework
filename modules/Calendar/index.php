@@ -218,6 +218,27 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
+	public function GetBaseEvent()
+	{
+		$mResult = false;
+		$oAccount = $this->getDefaultAccountFromParam();
+		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+		}
+		
+		$sCalendarId = $this->getParamValue('calendarId');
+		$sEventId = $this->getParamValue('uid');
+		
+		$mResult = $this->oApiCalendarManager->getBaseEvent($oAccount, $sCalendarId, $sEventId);
+		
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+	}	
+	
+	
+	/**
+	 * @return array
+	 */
 	public function GetEvents()
 	{
 		$mResult = false;
@@ -437,6 +458,7 @@ class CalendarModule extends AApiModule
 
 		return $this->DefaultResponse($oDefaultAccount, __FUNCTION__, $mResult);
 	}	
+	
 }
 
 return new CalendarModule('1.0');
