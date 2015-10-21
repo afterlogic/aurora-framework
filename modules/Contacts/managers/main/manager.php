@@ -29,7 +29,7 @@ class CApiContactsMainManager extends AApiManager
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db', AApiModule $oModule = null)
 	{
-		parent::__construct('contacts', $oManager, $oModule);
+		parent::__construct('main', $oManager, $oModule);
 
 		if ($oModule instanceof AApiModule)
 		{
@@ -690,9 +690,9 @@ class CApiContactsMainManager extends AApiManager
 	{
 		if ($sSyncType === \EContactFileType::CSV)
 		{
-			$this->inc('helpers.'.$sSyncType.'.formatter');
-			$this->inc('helpers.'.$sSyncType.'.parser');
-			$this->inc('helpers.sync.'.$sSyncType);
+			$this->incClass($sSyncType.'.formatter');
+			$this->incClass($sSyncType.'.parser');
+			$this->incClass('sync.'.$sSyncType);
 
 			$sSyncClass = 'CApi'.ucfirst($this->GetManagerName()).'Sync'.ucfirst($sSyncType);
 			if (class_exists($sSyncClass))
