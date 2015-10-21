@@ -86,11 +86,12 @@ function CFileModel()
 	this.uploaded = ko.observable(true);
 
 	this.downloadLink = ko.computed(function () {
-		return Utils.getFilestorageDownloadLinkByHash(
-			(App && App.currentAccountId) ? App.currentAccountId() : null, 
-			this.hash(), 
-			this.publicHash()
-		);
+		return '?/Download/Files/DownloadFile/' + this.hash() + '/';
+//		return Utils.getFilestorageDownloadLinkByHash(
+//			(App && App.currentAccountId) ? App.currentAccountId() : null, 
+//			this.hash(), 
+//			this.publicHash()
+//		);
 	}, this);
 
 	this.viewLink = ko.computed(function () {
@@ -101,14 +102,15 @@ function CFileModel()
 		}
 		else
 		{
-			var sUrl = Utils.getFilestorageViewLinkByHash(
-				(App && App.currentAccountId) ? App.currentAccountId() : null, 
-				this.hash(), 
-				this.publicHash()
-			);
-
-			return this.iframedView() ? Utils.getIframeWrappwer(
-				(App && App.currentAccountId) ? App.currentAccountId() : null, sUrl) : sUrl;
+			return '?/Download/Files/ViewFile/' + this.hash() + '/';
+//			var sUrl = Utils.getFilestorageViewLinkByHash(
+//				(App && App.currentAccountId) ? App.currentAccountId() : null, 
+//				this.hash(), 
+//				this.publicHash()
+//			);
+//
+//			return this.iframedView() ? Utils.getIframeWrappwer(
+//				(App && App.currentAccountId) ? App.currentAccountId() : null, sUrl) : sUrl;
 		}
 		
 	}, this);
@@ -149,7 +151,8 @@ function CFileModel()
 		}
 		else
 		{
-			return this.thumb() ? Utils.getFilestorageViewThumbnailLinkByHash(this.accountId(), this.hash(), this.publicHash()) : '';
+			return this.thumb() ? '?/Download/Files/GetFileThumbnail/' + this.hash() + '/' : '';
+//			return this.thumb() ? Utils.getFilestorageViewThumbnailLinkByHash(this.accountId(), this.hash(), this.publicHash()) : '';
 		}
 	}, this);
 
