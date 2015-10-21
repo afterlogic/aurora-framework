@@ -377,12 +377,12 @@ class ContactsModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
 	}	
 	
-	public function DownloadContactAsCSV()
+	public function DownloadContactsAsCSV()
 	{
 		return $this->DownloadContact('csv');
 	}
 	
-	public function DownloadContactAsVCF()
+	public function DownloadContactsAsVCF()
 	{
 		return $this->DownloadContact('vcf');
 	}

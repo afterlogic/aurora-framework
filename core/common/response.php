@@ -98,5 +98,40 @@ class CApiResponseManager
 		unset($mResponse);
 		return $mResult;
 	}	
+	
+	/**
+	 * @param bool $bDownload
+	 * @param string $sContentType
+	 * @param string $sFileName
+	 *
+	 * @return bool
+	 */
+	public static function OutputHeaders($bDownload, $sContentType, $sFileName)
+	{
+	
+		if ($bDownload)
+		{
+			header('Content-Type: '.$sContentType, true);
+		}
+		else
+		{
+			$aParts = explode('/', $sContentType, 2);
+			if (in_array(strtolower($aParts[0]), array('image', 'video', 'audio')) ||
+				in_array(strtolower($sContentType), array('application/pdf', 'application/x-pdf', 'text/html')))
+			{
+				header('Content-Type: '.$sContentType, true);
+			}
+			else
+			{
+				header('Content-Type: text/plain', true);
+			}
+		}
+
+		header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline' ).'; '.
+			\trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
+		
+		header('Accept-Ranges: none', true);
+		header('Content-Transfer-Encoding: binary');	
+	}
 }
 
