@@ -130,6 +130,10 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		{
 			oRequest.AccountID = App.defaultAccountId();
 		}
+		else if (App.isAuth() && oParameters.AccountID)
+		{
+			oRequest.AccountID = oParameters.AccountID;
+		}
 		else if (Settings.TenantHash)
 		{
 			oRequest.TenantHash = Settings.TenantHash;

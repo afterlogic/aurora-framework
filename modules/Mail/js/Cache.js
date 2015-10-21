@@ -302,8 +302,6 @@ CMailCache.prototype.init = function ()
 			}
 		}
 	}
-	
-	this.currentAccountId.valueHasMutated();
 };
 
 CMailCache.prototype.getCurrentFolder = function ()
