@@ -472,6 +472,13 @@ class ContactsModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
 	}	
 	
+	public function UpdateSuggestTable()
+	{
+		$oAccount = $this->getDefaultAccountFromParam();
+		$aEmails = $this->getParamValue('Emails', array());
+		$this->oApiContactsManager->updateSuggestTable($oAccount->IdUser, $aEmails);
+	}
+	
 	/**
 	 * @return array
 	 */

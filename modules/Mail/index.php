@@ -921,22 +921,19 @@ class MailModule extends AApiModule
 			{
 				\CApi::Plugin()->RunHook('webmail.message-success-send', array(&$oAccount, &$oMessage));
 
-				$oApiContacts = $this->ApiContacts();
-				if ($oApiContacts)
+				$oModuleManager = \CApi::GetModuleManager();
+				$aCollection = $oMessage->GetRcpt();
+
+				$aEmails = array();
+				$aCollection->ForeachList(function ($oEmail) use (&$aEmails) {
+					$aEmails[strtolower($oEmail->GetEmail())] = trim($oEmail->GetDisplayName());
+				});
+
+				if (is_array($aEmails))
 				{
-					$aCollection = $oMessage->GetRcpt();
+					\CApi::Plugin()->RunHook('webmail.message-suggest-email', array(&$oAccount, &$aEmails));
 
-					$aEmails = array();
-					$aCollection->ForeachList(function ($oEmail) use (&$aEmails) {
-						$aEmails[strtolower($oEmail->GetEmail())] = trim($oEmail->GetDisplayName());
-					});
-
-					if (is_array($aEmails))
-					{
-						\CApi::Plugin()->RunHook('webmail.message-suggest-email', array(&$oAccount, &$aEmails));
-						
-						$oApiContacts->updateSuggestTable($oAccount->IdUser, $aEmails);
-					}
+					$oModuleManager->ExecuteMethod('Contacs', 'updateSuggestTable', array('Emails' => $aEmails));
 				}
 			}
 
