@@ -134,6 +134,26 @@ class ContactsModule extends AApiModule
 		);
 	}	
 	
+	private function DownloadContact($sSyncType)
+	{
+		$oAccount = $this->getDefaultAccountFromParam();
+		if ($this->oApiCapabilityManager->isContactsSupported($oAccount))
+		{
+			$sOutput = $this->oApiContactsManager->export($oAccount->IdUser, $sSyncType);
+			if (false !== $sOutput)
+			{
+				header('Pragma: public');
+				header('Content-Type: text/csv');
+				header('Content-Disposition: attachment; filename="export.' . $sSyncType . '";');
+				header('Content-Transfer-Encoding: binary');
+
+				echo $sOutput;
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * @return array
 	 */
@@ -357,6 +377,16 @@ class ContactsModule extends AApiModule
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
 	}	
 	
+	public function DownloadContactAsCSV()
+	{
+		return $this->DownloadContact('csv');
+	}
+	
+	public function DownloadContactAsVCF()
+	{
+		return $this->DownloadContact('vcf');
+	}
+
 	/**
 	 * @return array
 	 */
