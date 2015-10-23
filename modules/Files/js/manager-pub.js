@@ -9,7 +9,8 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/Files/js/views/CFilesView.js');
+				var CFilesView = require('modules/Files/js/views/CFilesView.js');
+				return new CFilesView();
 			}
 		}
 	};

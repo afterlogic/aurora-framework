@@ -2067,4 +2067,4 @@ CCalendarView.prototype.restoreScroll = function (iScrollTop)
 	}
 };
 
-module.exports = CCalendarView;
+module.exports = new CCalendarView();

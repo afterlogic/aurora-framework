@@ -10,6 +10,12 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		start: function (ModulesManager) {
+			if (IsPgpSupported())
+			{
+				ModulesManager.run('Mail', 'registerMessagePaneTopController', [require('modules/OpenPgp/js/views/MessageControlsView.js')]);
+			}
+		},
 		getComposeButtons: function () {
 			if (IsPgpSupported())
 			{
@@ -19,23 +25,6 @@ module.exports = function (oSettings) {
 			{
 				return null;
 			}
-		},
-		getMessageControls: function () {
-			if (IsPgpSupported())
-			{
-				return require('modules/OpenPgp/js/views/MessageControlsView.js');
-			}
-			else
-			{
-				return null;
-			}
-		},
-		isMessageEncryptedOrSigned: function (sText) {
-			if (IsPgpSupported())
-			{
-				return (sText.indexOf('-----BEGIN PGP MESSAGE-----') !== -1) || (sText.indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1);
-			}
-			return false;
 		}
 	};
 };

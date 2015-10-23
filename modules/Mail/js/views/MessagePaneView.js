@@ -33,14 +33,10 @@ var
 
 /**
  * @constructor
- * 
- * @param {Function} fOpenMessageInNewWindowBinded
  */
-function CMessagePaneView(fOpenMessageInNewWindowBinded)
+function CMessagePaneView()
 {
 	CAbstractScreenView.call(this);
-	
-	this.openMessageInNewWindowBinded = fOpenMessageInNewWindowBinded;
 	
 	this.bNewTab = App.isNewTab();
 	this.isLoading = ko.observable(false);
@@ -219,31 +215,14 @@ function CMessagePaneView(fOpenMessageInNewWindowBinded)
 	
 	this.contentHasFocus = ko.observable(false);
 
-	this.oOpenPgpControls = (ModulesManager.isModuleIncluded('OpenPgp')) ? ModulesManager.run('OpenPgp', 'getMessageControls') : null;
-	if (this.oOpenPgpControls)
-	{
-		this.oOpenPgpControls.setOptions({
-			getMessageData: _.bind(function () {
-				var oMessage = this.currentMessage();
-				return {
-					Text: oMessage.textRaw(),
-					AccountEmail: Accounts.getEmail(),
-					FromEmail: oMessage.oFrom.getFirstEmail()
-				};
-			}, this),
-			changeDecryptedOrVerifiedMessage: _.bind(function (sText) {
-				var oMessage = this.currentMessage();
-				oMessage.text('<pre>' + TextUtils.encodeHtml(sText) + '</pre>');
-				oMessage.$text = null;
-				this.setMessageBody();
-			}, this)
-		});
-	}
-
+	this.topControllers = ko.observableArray();
+	
 	this.fakeHeader = ko.computed(function () {
-		var bPgpVisible = !!this.oOpenPgpControls && this.oOpenPgpControls.visible();
+		var topControllersVisible = !!_.find(this.topControllers(), function (oController) {
+			return oController.visible();
+		});
 		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || 
-				this.sensitivityText() !== '' || bPgpVisible);
+				this.sensitivityText() !== '' || topControllersVisible);
 	}, this);
 
 	this.mobileApp = bMobileApp;
@@ -385,6 +364,10 @@ _.extendOwn(CMessagePaneView.prototype, CAbstractScreenView.prototype);
 CMessagePaneView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_MessagePaneScreenView' : 'Mail_MessagePaneView';
 CMessagePaneView.prototype.__name = 'CMessagePaneView';
 
+/**
+ * @param {object} oData
+ * @param {object} oEvent
+ */
 CMessagePaneView.prototype.resizeDblClick = function (oData, oEvent)
 {
 	if (oEvent.target.className !== '' && !!oEvent.target.className.search(/add_contact|icon|link|title|subject|link|date|from/))
@@ -512,6 +495,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.isLoading(oMessage.uid() !== '' && !oMessage.completelyFilled());
 		
 		this.setMessageBody();
+		
 		this.rtlMessage(oMessage.rtl());
 
 		if (App.isNewTab())
@@ -605,11 +589,11 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.visibleShowPicturesLink(false);
 		this.ical(null);
 		this.vcard(null);
-		if (this.oOpenPgpControls)
-		{
-			this.oOpenPgpControls.reset();
-		}
 	}
+	
+	_.each(this.topControllers(), _.bind(function (oController) {
+		oController.populate(this.getExtInterface());
+	}, this));
 };
 
 CMessagePaneView.prototype.updateMomentDate = function ()
@@ -746,11 +730,6 @@ CMessagePaneView.prototype.setMessageBody = function ()
 					{
 						this.doHidingBlockquotes(aCollapsedStatuses);
 					}
-				}
-				
-				if (this.oOpenPgpControls)
-				{
-					this.oOpenPgpControls.populate(oMessage.textRaw());
 				}
 				
 				$body.data('displayed-message-uid', oMessage.uid());
@@ -1250,4 +1229,41 @@ CMessagePaneView.prototype.switchDetailsVisibility = function ()
 	Storage.setData('MessageDetailsVisible', this.detailsVisible() ? '1' : '0');
 };
 
-module.exports = CMessagePaneView;
+/**
+ * @param {object} oController
+ */
+CMessagePaneView.prototype.registerTopController = function (oController) {
+	this.topControllers.push(oController);
+};
+
+CMessagePaneView.prototype.getExtInterface = function ()
+{
+	if (this.isCurrentMessageLoaded())
+	{
+		var oMessage = this.currentMessage();
+		return {
+			bPlain: oMessage.isPlain(),
+			sRawText: oMessage.textRaw(),
+			sText: oMessage.text(),
+			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
+			sFromEmail: oMessage.oFrom.getFirstEmail(),
+			changeText: _.bind(function (sText) {
+				oMessage.text(sText);
+				oMessage.$text = null;
+				this.setMessageBody();
+			}, this)
+		};
+	}
+	else
+	{
+		return {
+			bPlain: false,
+			sRawText: '',
+			sAccountEmail: '',
+			sFromEmail: '',
+			changeText: function () {}
+		};
+	}
+};
+
+module.exports = new CMessagePaneView();

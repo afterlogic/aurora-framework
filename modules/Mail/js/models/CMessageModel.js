@@ -447,14 +447,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			else
 			{
 				this.textRaw(oData.PlainRaw);
-				if (ModulesManager.isModuleIncluded('OpenPgp') && ModulesManager.run('OpenPgp', 'isMessageEncryptedOrSigned', [this.textRaw()]))
-				{
-					this.text('<pre>' + TextUtils.encodeHtml(this.textRaw()) + '</pre>');
-				}
-				else
-				{
-					this.text(sPlain !== '' ? '<div>' + sPlain + '</div>' : '');
-				}
+				this.text(sPlain !== '' ? '<div>' + sPlain + '</div>' : '');
 				this.isPlain(true);
 			}
 			this.$text = null;

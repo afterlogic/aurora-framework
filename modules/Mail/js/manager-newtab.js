@@ -16,10 +16,11 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'view': function () {
-				return require('modules/Mail/js/views/CMessagePaneView.js');
+				return require('modules/Mail/js/views/MessagePaneView.js');
 			},
 			'compose': function () {
-				return require('modules/Mail/js/views/CComposeView.js');
+				var CComposeView = require('modules/Mail/js/views/CComposeView.js')
+				return new CComposeView();
 			}
 		}
 	};

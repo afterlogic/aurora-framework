@@ -9,10 +9,10 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/HelpDesk/js/views/CHelpdeskView.js');
+				return require('modules/HelpDesk/js/views/HelpdeskView.js');
 			},
 			'auth': function () {
-				return require('modules/HelpDesk/js/views/CLoginView.js');
+				return require('modules/HelpDesk/js/views/LoginView.js');
 			}
 		}
 	};

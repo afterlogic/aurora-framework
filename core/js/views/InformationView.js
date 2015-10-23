@@ -178,4 +178,4 @@ CInformationView.prototype.hideError = function (bGray)
 	}
 };
 
-module.exports = CInformationView;
+module.exports = new CInformationView();

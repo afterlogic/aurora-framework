@@ -16,12 +16,16 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/Mail/js/views/CMailView.js');
+				return require('modules/Mail/js/views/MailView.js');
 			}
 		},
 		getHeaderItem: function () {
 			return require('modules/Mail/js/views/HeaderItemView.js');
 		},
-		prefetcher: require('modules/Mail/js/Prefetcher.js')
+		prefetcher: require('modules/Mail/js/Prefetcher.js'),
+		registerMessagePaneTopController: function (oController) {
+			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
+			MessagePaneView.registerTopController(oController);
+		}
 	};
 };

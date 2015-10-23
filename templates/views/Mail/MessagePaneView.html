@@ -45,8 +45,8 @@
 			<span class="link" data-i18n="MESSAGE/ACTION_NOTIFY_SENDER" data-bind="i18n: 'text', click: notifySender"></span>
 		</div>
 
-		<!-- ko if: oOpenPgpControls -->
-			<!-- ko template: { name: oOpenPgpControls.ViewTemplate, data: oOpenPgpControls} --><!-- /ko -->
+		<!-- ko foreach: topControllers -->
+			<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
 		<!-- /ko -->
 		
 		<div class="notice" data-bind="visible: sensitivityText() !== ''">

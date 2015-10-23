@@ -28,6 +28,13 @@ module.exports = {
 				oModules[sModuleName] = oAvaliableModules[sModuleName](oModuleSettings);
 			}
 		});
+		
+		_.each(oModules, _.bind(function (oModule) {
+			if ($.isFunction(oModule.start))
+			{
+				oModule.start(this);
+			}
+		}, this));
 	},
 	
 	getModulesScreens: function () {

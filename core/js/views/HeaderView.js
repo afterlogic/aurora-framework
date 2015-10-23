@@ -113,4 +113,4 @@ CHeaderView.prototype.switchToFullVersion = function ()
 	}, this);
 };
 
-module.exports = CHeaderView;
+module.exports = new CHeaderView();

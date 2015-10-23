@@ -98,4 +98,4 @@ CWrapLoginView.prototype.changeLanguage = function (sLanguage)
 	}
 };
 
-module.exports = CWrapLoginView;
+module.exports = new CWrapLoginView();
