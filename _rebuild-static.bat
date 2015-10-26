@@ -1,2 +1,2 @@
 START "" CMD /c "grunt"
-START "" CMD /c "gulp fast"
+START "" CMD /c "gulp"
