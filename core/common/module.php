@@ -67,7 +67,7 @@ class CApiModuleManager
 		return ($this->GetModule($sModuleName)) ? true  : false;
 	}
 	
-	public function ExecuteMethod($sModuleName, $sMethodName, $aArguments)
+	public function ExecuteMethod($sModuleName, $sMethodName, $aArguments = array())
 	{
 		$mResult = false;
 		$oModule = $this->GetModule($sModuleName);
@@ -175,6 +175,8 @@ abstract class AApiModule
 	 */
 	protected $aParameters;
 
+	public $oApiCapabilityManager = null;
+	
 	/**
 	 * @param string $sVersion
 	 */
@@ -185,6 +187,7 @@ abstract class AApiModule
 		$this->sName = '';
 		$this->sPath = '';
 		$this->aParameters = array();
+		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 
 	public function init()

@@ -8,7 +8,7 @@
  * @package Helpdesk
  * @subpackage Storages
  */
-class CApiHelpdeskDbStorage extends CApiHelpdeskStorage
+class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 {
 	/**
 	 * @var CDbStorage $oConnection
@@ -23,7 +23,7 @@ class CApiHelpdeskDbStorage extends CApiHelpdeskStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('db', $oManager);
 

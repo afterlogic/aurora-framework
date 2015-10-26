@@ -135,6 +135,208 @@ class TwilioModule extends AApiModule
 		return $sDial;
 	}	
 	
+	/**
+	 * @return array
+	 */
+	public function GetToken()
+	{
+		$oAccount = $this->getAccountFromParam();
+
+		$oApiTenants = \CApi::GetCoreManager('tenants');
+		$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) : $oApiTenants->getDefaultGlobalTenant();
+		
+		$mToken = false;
+		if ($oTenant && $this->oApiCapabilityManager->isTwilioSupported($oAccount) && $oTenant->isTwilioSupported() && $oTenant->TwilioAllow && $oAccount->User->TwilioEnable && file_exists(PSEVEN_APP_ROOT_PATH.'libraries/Services/Twilio.php'))
+		{
+			try
+			{
+				// Twilio API credentials
+				$sAccountSid = $oTenant->TwilioAccountSID;
+				$sAuthToken = $oTenant->TwilioAuthToken;
+				// Twilio Application Sid
+				$sAppSid = $oTenant->TwilioAppSID;
+
+				$sTwilioPhoneNumber = $oTenant->TwilioPhoneNumber;
+				$bUserTwilioEnable = $oAccount->User->TwilioEnable;
+				$sUserPhoneNumber = $oAccount->User->TwilioNumber;
+				$bUserDefaultNumber = $oAccount->User->TwilioDefaultNumber;
+
+				$oCapability = new \Services_Twilio_Capability($sAccountSid, $sAuthToken);
+				$oCapability->allowClientOutgoing($sAppSid);
+
+				\CApi::Log('twilio_debug');
+				\CApi::Log('twilio_account_sid-' . $sAccountSid);
+				\CApi::Log('twilio_auth_token-' . $sAuthToken);
+				\CApi::Log('twilio_app_sid-' . $sAppSid);
+				\CApi::Log('twilio_enable-' . $bUserTwilioEnable ? 'true' : 'false');
+				\CApi::Log('twilio_user_default_number-' . ($bUserDefaultNumber ? 'true' : 'false'));
+				\CApi::Log('twilio_number-' . $sTwilioPhoneNumber);
+				\CApi::Log('twilio_user_number-' . $sUserPhoneNumber);
+				\CApi::Log('twilio_debug_end');
+
+				//$oCapability->allowClientIncoming('TwilioAftId_'.$oAccount->IdTenant.'_'.$oAccount->User->TwilioNumber);
+
+				if ($bUserTwilioEnable)
+				{
+					if ($bUserDefaultNumber)
+					{
+						$oCapability->allowClientIncoming(strlen($sUserPhoneNumber) > 0 ? $sUserPhoneNumber : 'default');
+					}
+					else if (strlen($sUserPhoneNumber) > 0)
+					{
+						$oCapability->allowClientIncoming($sUserPhoneNumber);
+					}
+				}
+
+				$mToken = $oCapability->generateToken(86400000); //Token lifetime set to 24hr (default 1hr)
+			}
+			catch (\Exception $oE)
+			{
+				\CApi::LogException($oE);
+			}
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::VoiceNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $mToken);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function GetLogs()
+	{
+		$oAccount = $this->getAccountFromParam();
+
+		$bTwilioEnable = $oAccount->User->TwilioEnable;
+
+		$oApiTenants = \CApi::GetCoreManager('tenants');
+		$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
+			$this->oApiTenants->getDefaultGlobalTenant();
+
+		if ($oTenant && $this->oApiCapabilityManager->isTwilioSupported($oAccount) && $oTenant->isTwilioSupported())
+		{
+			try
+			{
+				include PSEVEN_APP_ROOT_PATH.'libraries/Services/Twilio.php';
+
+				$sStatus = (string) $this->getParamValue('Status', '');
+				$sStartTime = (string) $this->getParamValue('StartTime', '');
+
+				$sAccountSid = $oTenant->TwilioAccountSID;
+				$sAuthToken = $oTenant->TwilioAuthToken;
+				$sAppSid = $oTenant->TwilioAppSID;
+
+				$sTwilioPhoneNumber = $oTenant->TwilioPhoneNumber;
+				$sUserPhoneNumber = $oAccount->User->TwilioNumber;
+				$aResult = array();
+				$aNumbers = array();
+				$aNames = array();
+
+				$client = new \Services_Twilio($sAccountSid, $sAuthToken);
+
+				//$sUserPhoneNumber = '7333';
+				if ($sUserPhoneNumber) {
+					foreach ($client->account->calls->getIterator(0, 50, array
+					(
+						"Status" => $sStatus,
+						"StartTime>" => $sStartTime,
+						"From" => "client:".$sUserPhoneNumber,
+					)) as $call)
+					{
+						//$aResult[$call->status]["outgoing"][] = array
+						$aResult[] = array
+						(
+							"Status" => $call->status,
+							"To" => $call->to,
+							"ToFormatted" => $call->to_formatted,
+							"From" => $call->from,
+							"FromFormatted" => $call->from_formatted,
+							"StartTime" => $call->start_time,
+							"EndTime" => $call->end_time,
+							"Duration" => $call->duration,
+							"Price" => $call->price,
+							"PriceUnit" => $call->price_unit,
+							"Direction" => $call->direction,
+							"UserDirection" => "outgoing",
+							"UserStatus" => $this->oApiTwilio->getCallSimpleStatus($call->status, "outgoing"),
+							"UserPhone" => $sUserPhoneNumber,
+							"UserName" => '',
+							"UserDisplayName" => '',
+							"UserEmail" => ''
+						);
+
+						$aNumbers[] = $call->to_formatted;
+					}
+
+					foreach ($client->account->calls->getIterator(0, 50, array
+					(
+						"Status" => $sStatus,
+						"StartTime>" => $sStartTime,
+						"To" => "client:".$sUserPhoneNumber
+					)) as $call)
+					{
+						//$aResult[$call->status]["incoming"][] = array
+						$aResult[] = array
+						(
+							"Status" => $call->status,
+							"To" => $call->to,
+							"ToFormatted" => $call->to_formatted,
+							"From" => $call->from,
+							"FromFormatted" => $call->from_formatted,
+							"StartTime" => $call->start_time,
+							"EndTime" => $call->end_time,
+							"Duration" => $call->duration,
+							"Price" => $call->price,
+							"PriceUnit" => $call->price_unit,
+							"Direction" => $call->direction,
+							"UserDirection" => "incoming",
+							"UserStatus" => $this->oApiTwilio->getCallSimpleStatus($call->status, "incoming"),
+							"UserPhone" => $sUserPhoneNumber,
+							"UserName" => '',
+							"UserDisplayName" => '',
+							"UserEmail" => ''
+
+						);
+
+						$aNumbers[] = $call->from_formatted;
+					}
+
+					$oApiVoiceManager = \CApi::Manager('voice');
+
+					if ($aResult && $oApiVoiceManager) {
+
+						$aNames = $oApiVoiceManager->getNamesByCallersNumbers($oAccount, $aNumbers);
+
+						foreach ($aResult as &$aCall) {
+
+							if ($aCall['UserDirection'] === 'outgoing')
+							{
+								$aCall['UserDisplayName'] = isset($aNames[$aCall['ToFormatted']]) ? $aNames[$aCall['ToFormatted']] : '';
+							}
+							else if ($aCall['UserDirection'] === 'incoming')
+							{
+								$aCall['UserDisplayName'] = isset($aNames[$aCall['FromFormatted']]) ? $aNames[$aCall['FromFormatted']] : '';
+							}
+						}
+					}
+				}
+			}
+			catch (\Exception $oE)
+			{
+				\CApi::LogException($oE);
+			}
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::VoiceNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+	}	
+	
 }
 
 return new TwilioModule('1.0');

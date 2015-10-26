@@ -3,12 +3,10 @@
 class ContactsModule extends AApiModule
 {
 	public $oApiContactsManager = null;
-	public $oApiCapabilityManager = null;
 	
 	public function init() 
 	{
 		$this->oApiContactsManager = $this->GetManager('main', 'db');
-		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 	
 	private function populateSortParams( &$iSortField, &$iSortOrder)
@@ -195,8 +193,44 @@ class ContactsModule extends AApiModule
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup);
 	}
+	
+	/**
+	 * @return array
+	 */
+	public function GetGroupEvents()
+	{
+		$aEvents = array();
+		$oAccount = $this->getDefaultAccountFromParam();
 
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$sGroupId = (string) $this->getParamValue('GroupId', '');
+			$aEvents = $this->oApiContactsManager->getGroupEvents($oAccount->IdUser, $sGroupId);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $aEvents);
+	}	
+	
+	/**
+	 * @return array
+	 */
 	public function GetContacts()
+	{
+		$sStorage = $this->getParamValue('Storage', 'personal');
+		$sMethod = 'Get' . ucfirst($sStorage) . 'Contacts';
+		if (method_exists($this, $sMethod))
+		{
+			return call_user_func(array($this, $sMethod));
+		}
+		
+		return false;
+	}	
+
+	public function GetPersonalContacts()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
 
@@ -352,6 +386,8 @@ class ContactsModule extends AApiModule
 			'List' => $aList
 		));
 	}	
+	
+	
 	
 	/**
 	 * @return array
@@ -590,6 +626,101 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
+	public function UpdateSharedToAll()
+	{
+		$oAccount = $this->getDefaultAccountFromParam();
+		
+		$aContactsId = explode(',', $this->getParamValue('ContactsId', ''));
+		$aContactsId = array_map('trim', $aContactsId);
+		
+		$bSharedToAll = '1' === $this->getParamValue('SharedToAll', '0');
+		$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			$oApiContacts = $this->oApiContactsManager;
+		}
+
+		if ($oApiContacts && $this->oApiCapabilityManager->isSharedContactsSupported($oAccount))
+		{
+			foreach ($aContactsId as $sContactId)
+			{
+				$oContact = $oApiContacts->getContactById($oAccount->IdUser, $sContactId, false, $iTenantId);
+				if ($oContact)
+				{
+					if ($oContact->SharedToAll)
+					{
+						$oApiContacts->updateContactUserId($oContact, $oAccount->IdUser);
+					}
+
+					$oContact->SharedToAll = !$oContact->SharedToAll;
+					$oContact->IdUser = $oAccount->IdUser;
+					$oContact->IdDomain = $oAccount->IdDomain;
+					$oContact->IdTenant = $oAccount->IdTenant;
+
+					if (!$oApiContacts->updateContact($oContact))
+					{
+						switch ($oApiContacts->getLastErrorCode())
+						{
+							case \Errs::Sabre_PreconditionFailed:
+								throw new \Core\Exceptions\ClientException(
+									\Core\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
+						}
+					}
+				}
+			}
+			
+			return $this->TrueResponse($oAccount, __FUNCTION__);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function AddContactsFromFile()
+	{
+		$oAccount = $this->getAccountFromParam();
+
+		$mResult = false;
+
+		if (!$this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+
+		$sTempFile = (string) $this->getParamValue('File', '');
+		if (empty($sTempFile))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+		}
+
+		$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
+		$sData = $oApiFileCache->get($oAccount, $sTempFile);
+		if (!empty($sData))
+		{
+			$oContact = new \CContact();
+			$oContact->InitFromVCardStr($oAccount->IdUser, $sData);
+
+			if ($this->oApiContactsManager->createContact($oContact))
+			{
+				$mResult = array(
+					'Uid' => $oContact->IdContact
+				);
+			}
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+	}	
+	
+	/**
+	 * @return array
+	 */
 	public function CreateGroup()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
@@ -774,6 +905,16 @@ class ContactsModule extends AApiModule
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, false);
 	}	
+	
+	public function SynchronizeExternalContacts()
+	{
+		$oAccount = $this->getParamValue('Account', null);
+		if ($oAccount)
+		{
+			return $this->oApiContactsManager->SynchronizeExternalContacts($oAccount);
+		}
+		
+	}
 }
 
 return new ContactsModule('1.0');

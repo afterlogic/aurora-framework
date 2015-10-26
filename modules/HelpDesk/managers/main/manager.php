@@ -7,7 +7,7 @@
  *
  * @package Helpdesk
  */
-class CApiHelpdeskManager extends AApiManagerWithStorage
+class CApiHelpdeskMainManager extends AApiManagerWithStorage
 {
 	/**
 	 * @var $oApiMail CApiMailManager
@@ -28,15 +28,15 @@ class CApiHelpdeskManager extends AApiManagerWithStorage
 	 * @param CApiGlobalManager &$oManager
 	 * @param string $sForcedStorage Default value is empty string.
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('helpdesk', $oManager, $sForcedStorage);
+		parent::__construct('main', $oManager, $sForcedStorage, $oModule);
 
-		$this->inc('classes.enum');
-		$this->inc('classes.user');
-		$this->inc('classes.attachment');
-		$this->inc('classes.post');
-		$this->inc('classes.thread');
+		$this->incClass('enum');
+		$this->incClass('user');
+		$this->incClass('attachment');
+		$this->incClass('post');
+		$this->incClass('thread');
 
 		$this->oApiMail = null;
 		$this->oApiUsers = null;

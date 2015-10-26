@@ -7,7 +7,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	CDateModel = require('core/js/models/CDateModel.js'),
 	
-	CHelpdeskAttachmentModel = require('modules/Helpdesk/js/models/CHelpdeskAttachmentModel.js')
+	CHelpdeskAttachmentModel = require('modules/HelpDesk/js/models/CHelpdeskAttachmentModel.js')
 ;
 
 /**

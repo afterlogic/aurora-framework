@@ -3,12 +3,10 @@
 class FilesModule extends AApiModule
 {
 	public $oApiFilesManager = null;
-	public $oApiCapabilityManager = null;
 	
 	public function init() 
 	{
 		$this->oApiFilesManager = $this->GetManager('main', 'sabredav');
-		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 	
 	private function GetRawFile($bDownload = true, $bThumbnail = false)

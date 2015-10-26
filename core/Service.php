@@ -55,7 +55,8 @@ class Service
 	 */
 	protected function validateToken()
 	{
-		return $this->oHttp->IsPost() ? $this->oActions->validateCsrfToken($this->oHttp->GetPost('Token')) : true;
+		$oIntegrator = \CApi::GetCoreManager('integrator');
+		return $this->oHttp->IsPost() ? $oIntegrator->validateCsrfToken($this->oHttp->GetPost('Token')) : true;
 	}
 
 	/**
@@ -275,9 +276,8 @@ class Service
 					\CApi::Log('Module: '. $sModule);
 					\CApi::Log('Method: '. $sMethod);
 					
-					if ('SystemGetAppData' !== $sAction &&
-						\CApi::GetConf('labs.webmail.csrftoken-protection', true) &&
-						!$this->validateToken())
+					if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'SystemGetAppData' &&
+						\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !$this->validateToken())
 					{
 						throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidToken);
 					}

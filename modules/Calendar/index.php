@@ -3,12 +3,10 @@
 class CalendarModule extends AApiModule
 {
 	public $oApiCalendarManager = null;
-	public $oApiCapabilityManager = null;
 	
 	public function init() 
 	{
 		$this->oApiCalendarManager = $this->GetManager('main', 'sabredav');
-		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 	}
 
 	/**
@@ -402,6 +400,44 @@ class CalendarModule extends AApiModule
 			$mResult = $this->oApiCalendarManager->deleteEvent($oAccount, $sCalendarId, $sId);
 		}
 		
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function AddEventsFromFile()
+	{
+		$oAccount = $this->getAccountFromParam();
+
+		$mResult = false;
+
+		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+		}
+
+		$sCalendarId = (string) $this->getParamValue('CalendarId', '');
+		$sTempFile = (string) $this->getParamValue('File', '');
+
+		if (empty($sCalendarId) || empty($sTempFile))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+		}
+
+		$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
+		$sData = $oApiFileCache->get($oAccount, $sTempFile);
+		if (!empty($sData))
+		{
+			$mCreateEventResult = $this->oApiCalendarManager->createEventFromRaw($oAccount, $sCalendarId, null, $sData);
+			if ($mCreateEventResult)
+			{
+				$mResult = array(
+					'Uid' => (string) $mCreateEventResult
+				);
+			}
+		}
+
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
 	}	
 	

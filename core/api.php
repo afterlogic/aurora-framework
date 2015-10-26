@@ -80,8 +80,6 @@ class CApi
 
 			CApi::Inc('common.http');
 
-			CApi::Inc('common.twilio');
-
 			CApi::Inc('common.db.storage');
 
 			$sSalt = '';
