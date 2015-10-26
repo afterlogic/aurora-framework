@@ -335,6 +335,7 @@ class Service
 				\CApi::Plugin()->RunHook('ajax.response-result', array($sAction, &$aResponseItem));
 
 				$sResult = \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());
+//				\CApi::Log('AJAX: Response: '.$sResult);
 			}
 			else if ('upload' === $sFirstPart)
 			{
