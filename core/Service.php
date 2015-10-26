@@ -258,18 +258,7 @@ class Service
 			
 			if ('pull' === $sFirstPart)
 			{
-				$aOut1 = array();
-				$sResult = exec('git pull', $aOut1);
-				foreach ($aOut1 as $sOut)
-				{
-					echo $sOut . '<br />';
-				}
-			}
-			else if ('code-update' === $sFirstPart)
-			{
-				$sResult = 0;
-				$sOut2 = system('cmd /c ' . realpath(__DIR__ . '/../') . '_rebuild-static.bat', $sResult);
-				echo $sOut2 . '<br />';
+				$sResult = system('git pull');
 			}
 			else if ('ping' === $sFirstPart)
 			{
