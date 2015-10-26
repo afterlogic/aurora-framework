@@ -21,14 +21,14 @@ function CScreens()
 		$win.resize();
 	}, 100);
 	
-	this.oConstructors = {};
-	this.oViews = {};
+	this.oGetScreenFunctions = {};
+	this.oScreens = {};
 
 	this.currentScreen = ko.observable('');
 	this.sDefaultScreen = '';
 	
 	this.browserTitle = ko.computed(function () {
-		var oCurrScreen = this.oViews[this.currentScreen()];
+		var oCurrScreen = this.oScreens[this.currentScreen()];
 		return oCurrScreen ? oCurrScreen.browserTitle() : '';
 	}, this);
 
@@ -43,20 +43,20 @@ CScreens.prototype.init = function ()
 		aKeys = []
 	;
 	
-	_.each(oModulesScreens, _.bind(function (oScreens, sModuleName) {
-		this.addToScreenList(sModuleName, oScreens);
+	_.each(oModulesScreens, _.bind(function (oScreenList, sModuleName) {
+		this.addToScreenList(sModuleName, oScreenList);
 	}, this));
 	
 	this.addToScreenList('', require('core/js/screenList.js'));
 	
-	if (this.oConstructors[Settings.EntryModule.toLowerCase()])
+	if (this.oGetScreenFunctions[Settings.EntryModule.toLowerCase()])
 	{
 		this.sDefaultScreen = Settings.EntryModule.toLowerCase();
 	}
 	
 	if (this.sDefaultScreen === '')
 	{
-		aKeys = _.keys(this.oConstructors);
+		aKeys = _.keys(this.oGetScreenFunctions);
 		if (Utils.isNonEmptyArray(aKeys))
 		{
 			this.sDefaultScreen = aKeys[0];
@@ -77,7 +77,7 @@ CScreens.prototype.init = function ()
  */
 CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 {
-	_.each(oScreenList, _.bind(function (fGetCScreenView, sKey) {
+	_.each(oScreenList, _.bind(function (fGetScreen, sKey) {
 		var sNewKey = sKey.toLowerCase();
 		if (sPrefix !== '')
 		{
@@ -91,7 +91,7 @@ CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
 			}
 		}
 		
-		this.oConstructors[sNewKey] = fGetCScreenView;
+		this.oGetScreenFunctions[sNewKey] = fGetScreen;
 	}, this));
 };
 
@@ -102,7 +102,7 @@ CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
  */
 CScreens.prototype.hasScreenData = function (sScreen)
 {
-	return !!(this.oViews[sScreen] || this.oConstructors[sScreen]);
+	return !!(this.oScreens[sScreen] || this.oGetScreenFunctions[sScreen]);
 };
 
 /**
@@ -112,7 +112,7 @@ CScreens.prototype.route = function (aParams)
 {
 	var
 		sCurrentScreen = this.currentScreen(),
-		oCurrentScreen = this.oViews[sCurrentScreen],
+		oCurrentScreen = this.oScreens[sCurrentScreen],
 		sNextScreen = aParams.shift()
 	;
 	
@@ -150,13 +150,13 @@ CScreens.prototype.showView = function (sScreen)
 {
 	var
 		sScreenId = sScreen,
-		fGetCScreenView = this.oConstructors[sScreenId],
-		oScreen = this.oViews[sScreenId]
+		fGetScreen = this.oGetScreenFunctions[sScreenId],
+		oScreen = this.oScreens[sScreenId]
 	;
 	
-	if (!oScreen && fGetCScreenView)
+	if (!oScreen && fGetScreen)
 	{
-		oScreen = this.initView(sScreenId, fGetCScreenView);
+		oScreen = this.initView(sScreenId, fGetScreen);
 	}
 	
 	if (oScreen)
@@ -169,16 +169,13 @@ CScreens.prototype.showView = function (sScreen)
 
 /**
  * @param {string} sScreenId
- * @param {function} fGetCScreenView
+ * @param {function} fGetScreen
  * 
  * @returns {Object}
  */
-CScreens.prototype.initView = function (sScreenId, fGetCScreenView)
+CScreens.prototype.initView = function (sScreenId, fGetScreen)
 {
-	var
-		CScreenView = fGetCScreenView(),
-		oScreen = new CScreenView()
-	;
+	var oScreen = fGetScreen();
 	
 	if (oScreen.ViewTemplate)
 	{
@@ -193,8 +190,8 @@ CScreens.prototype.initView = function (sScreenId, fGetCScreenView)
 		}
 	}
 	
-	this.oViews[sScreenId] = oScreen;
-	delete this.oConstructors[sScreenId];
+	this.oScreens[sScreenId] = oScreen;
+	delete this.oGetScreenFunctions[sScreenId];
 	
 	return oScreen;
 };
@@ -263,13 +260,13 @@ CScreens.prototype.initInformation = function ()
 //CScreens.prototype.initHelpdesk = function ()
 //{
 //	var
-//		fGetCScreenView = this.oConstructors[Enums.Screens.Helpdesk],
+//		fGetScreen = this.oConstructors[Enums.Screens.Helpdesk],
 //		oScreen = this.oViews[Enums.Screens.Helpdesk]
 //	;
 //
-//	if (AppData.User.IsHelpdeskSupported && !oScreen && fGetCScreenView)
+//	if (AppData.User.IsHelpdeskSupported && !oScreen && fGetScreen)
 //	{
-//		oScreen = this.initView(Enums.Screens.Helpdesk, fGetCScreenView);
+//		oScreen = this.initView(Enums.Screens.Helpdesk, fGetScreen);
 //	}
 //};
 

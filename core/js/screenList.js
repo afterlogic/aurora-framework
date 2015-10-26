@@ -2,9 +2,9 @@
 
 module.exports = {
 	'header': function () {
-		return require('core/js/views/CHeaderView.js');
+		return require('core/js/views/HeaderView.js');
 	},
 	'information': function () {
-		return require('core/js/views/CInformationView.js');
+		return require('core/js/views/InformationView.js');
 	}
 };

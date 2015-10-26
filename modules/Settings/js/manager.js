@@ -7,7 +7,7 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/Settings/js/views/CSettingsView.js');
+				return require('modules/Settings/js/views/SettingsView.js');
 			}
 		},
 		getHeaderItem: function () {

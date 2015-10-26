@@ -1521,4 +1521,4 @@ CHelpdeskView.prototype.changeCcbccVisibility = function ()
 	$(this.ccAddrDom()).inputosaurus('focus');
 };
 
-module.exports = CHelpdeskView;
+module.exports = new CHelpdeskView();

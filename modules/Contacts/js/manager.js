@@ -17,7 +17,7 @@ module.exports = function (oSettings) {
 	return _.extend({
 		screens: {
 			'main': function () {
-				return require('modules/Contacts/js/views/CContactsView.js');
+				return require('modules/Contacts/js/views/ContactsView.js');
 			}
 		},
 		getHeaderItem: function () {

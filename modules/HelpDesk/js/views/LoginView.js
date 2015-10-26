@@ -415,7 +415,7 @@ CLoginView.prototype.onHelpdeskForgotResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		screens.showReport(TextUtils.i18n('HELPDESK/INFO_FORGOT_SUCCESSFULL'));
+		Screens.showReport(TextUtils.i18n('HELPDESK/INFO_FORGOT_SUCCESSFULL'));
 
 		this.email(this.forgotEmail());
 		this.passwordFocus(true);
@@ -489,4 +489,4 @@ CLoginView.prototype.onHelpdeskForgotChangePasswordResponse = function (oRespons
 	}
 };
 
-module.exports = CLoginView;
+module.exports = new CLoginView();

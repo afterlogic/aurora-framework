@@ -10,7 +10,7 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/Calendar/js/views/CCalendarView.js');
+				return require('modules/Calendar/js/views/CalendarView.js');
 			}
 		},
 		getHeaderItem: function () {

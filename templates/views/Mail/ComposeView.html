@@ -92,8 +92,8 @@
 						<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/LINK_READING_CONFIRMATION"></span>
 					</label>
 					
-					<!-- ko if: oOpenPgpButtons -->
-						<!-- ko template: { name: oOpenPgpButtons.ViewTemplate, data: oOpenPgpButtons} --><!-- /ko -->
+					<!-- ko foreach: extraButtons -->
+						<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
 					<!-- /ko -->
 					
 					<!-- /ko -->

@@ -1606,4 +1606,4 @@ CContactsView.prototype.createNewContact = function ()
 	}
 };
 
-module.exports = CContactsView;
+module.exports = new CContactsView();

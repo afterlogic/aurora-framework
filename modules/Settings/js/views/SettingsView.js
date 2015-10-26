@@ -509,4 +509,4 @@ CSettingsView.prototype.addTab = function (sTabName)
 	);
 };
 
-module.exports = CSettingsView;
+module.exports = new CSettingsView();

@@ -18,7 +18,7 @@ var
 	Settings = require('modules/Mail/js/Settings.js'),
 	CFolderListView = require('modules/Mail/js/views/CFolderListView.js'),
 	CMessageListView = require('modules/Mail/js/views/CMessageListView.js'),
-	CMessagePaneView = require('modules/Mail/js/views/CMessagePaneView.js'),
+	MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js'),
 	
 	bMobileApp = false
 ;
@@ -41,7 +41,8 @@ function CMailView()
 	
 	this.oFolderList = new CFolderListView();
 	this.oMessageList = new CMessageListView(this.openMessageInNewWindowBinded);
-	this.oMessagePane = new CMessagePaneView(this.openMessageInNewWindowBinded);
+	this.oMessagePane = MessagePaneView;
+	MessagePaneView.openMessageInNewWindowBinded = this.openMessageInNewWindowBinded;
 
 	this.isEnableGroupOperations = this.oMessageList.isEnableGroupOperations;
 
@@ -146,7 +147,7 @@ CMailView.prototype.openMessageInNewWindow = function (oMessage)
 		else
 		{
 			sHash = Routing.buildHashFromArray(LinksUtils.getViewMessage(sFolder, sUid));
-			this.oMessagePane.passReplyDataToNewTab(oMessage.sUniq);
+			MessagePaneView.passReplyDataToNewTab(oMessage.sUniq);
 		}
 
 		WindowOpener.openTab('?message-newtab' + sHash);
@@ -220,19 +221,19 @@ CMailView.prototype.resizeDblClick = function (oData, oEvent)
 CMailView.prototype.onRoute = function (aParams)
 {
 	this.oMessageList.onRoute(aParams);
-	this.oMessagePane.onRoute(aParams);
+	MessagePaneView.onRoute(aParams);
 };
 
 CMailView.prototype.onShow = function ()
 {
 	this.oMessageList.onShow();
-	this.oMessagePane.onShow();
+	MessagePaneView.onShow();
 };
 
 CMailView.prototype.onHide = function ()
 {
 	this.oMessageList.onHide();
-	this.oMessagePane.onHide();
+	MessagePaneView.onHide();
 };
 
 CMailView.prototype.onBind = function ()
@@ -240,7 +241,7 @@ CMailView.prototype.onBind = function ()
 	var self = this;
 
 	this.oMessageList.onBind(this.$viewDom);
-	this.oMessagePane.onBind(this.$viewDom);
+	MessagePaneView.onBind(this.$viewDom);
 
 	$(this.domFolderList()).on('click', 'span.folder', function (oEvent) {
 		if (self.folderList().currentFolderFullName() !== $(this).data('folder')) {
@@ -369,4 +370,4 @@ CMailView.prototype.uncheckMessages = function ()
 	});
 };
 
-module.exports = CMailView;
+module.exports = new CMailView();

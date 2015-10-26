@@ -13,7 +13,7 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/Auth/js/views/CWrapLoginView.js');
+				return require('modules/Auth/js/views/WrapLoginView.js');
 			}
 		},
 		logout: function (iLastErrorCode, fOnLogoutResponse, oContext)
