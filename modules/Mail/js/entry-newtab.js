@@ -6,7 +6,8 @@ $('body').ready(function () {
 	var
 		oAvaliableModules = {
 			'Mail': require('modules/Mail/js/manager-newtab.js'),
-			'Contacts': require('modules/Contacts/js/manager-suggestions.js')
+			'Contacts': require('modules/Contacts/js/manager-suggestions.js'),
+			'OpenPgp': require('modules/OpenPgp/js/manager.js')
 		},
 		ModulesManager = require('core/js/ModulesManager.js'),
 		App = require('core/js/App.js')

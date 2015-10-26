@@ -5,7 +5,16 @@ module.exports = function (oSettings) {
 
 	var
 		Settings = require('modules/Mail/js/Settings.js'),
-		Cache = null
+		Cache = null,
+		ComposeView = null,
+		GetComposeView = function () {
+			if (ComposeView === null)
+			{
+				var CComposeView = require('modules/Mail/js/views/CComposeView.js');
+				ComposeView = new CComposeView();
+			}
+			return ComposeView;
+		}
 	;
 
 	Settings.init(oSettings);
@@ -19,9 +28,16 @@ module.exports = function (oSettings) {
 				return require('modules/Mail/js/views/MessagePaneView.js');
 			},
 			'compose': function () {
-				var CComposeView = require('modules/Mail/js/views/CComposeView.js')
-				return new CComposeView();
+				return GetComposeView();
 			}
+		},
+		registerMessagePaneTopController: function (oController) {
+			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
+			MessagePaneView.registerTopController(oController);
+		},
+		registerComposeExtraButtons: function (oButtons) {
+			var ComposeView = GetComposeView();
+			ComposeView.registerExtraButtons(oButtons);
 		}
 	};
 };

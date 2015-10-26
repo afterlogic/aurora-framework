@@ -2,6 +2,7 @@
 
 var
 	ko = require('knockout'),
+	_ = require('underscore'),
 			
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -20,6 +21,8 @@ function CComposeButtonsView()
 	this.pgpSecured = ko.observable(false);
 	this.pgpEncrypted = ko.observable(false);
 	this.fromDrafts = ko.observable(false);
+	
+	this.disableAutosave = this.pgpSecured;
 	
 	this.visibleDoPgpButton = ko.computed(function () {
 		return this.enableOpenPgp() && (!this.pgpSecured() || this.pgpEncrypted() && this.fromDrafts());

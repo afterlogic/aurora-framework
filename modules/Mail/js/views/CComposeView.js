@@ -318,7 +318,7 @@ function CComposeView()
 	this.backToListOnSendOrSave = ko.observable(false);
 
 	this.disableEdit = ko.observable(false);
-	this.includeOpenPgp();
+	this.extraButtons = ko.observableArray([]);
 
 	this.backToListCommand = Utils.createCommand(this, this.executeBackToList);
 	this.sendCommand = Utils.createCommand(this, this.executeSend, this.isEnableSending);
@@ -393,9 +393,18 @@ _.extendOwn(CComposeView.prototype, CAbstractScreenView.prototype);
 CComposeView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_ComposeScreenView' : 'Mail_ComposeView';
 CComposeView.prototype.__name = 'CComposeView';
 
+/**
+ * @params {object} oButtons
+ */
+CComposeView.prototype.registerExtraButtons = function (oButtons)
+{
+	this.extraButtons.push(oButtons);
+	this.oOpenPgpButtons = oButtons;
+	this.includeOpenPgp();
+};
+
 CComposeView.prototype.includeOpenPgp = function ()
 {
-	this.oOpenPgpButtons = (ModulesManager.isModuleIncluded('OpenPgp')) ? ModulesManager.run('OpenPgp', 'getComposeButtons') : null;
 	if (this.oOpenPgpButtons)
 	{
 		var 
@@ -603,24 +612,14 @@ CComposeView.prototype.onShow = function ()
 	}
 };
 
-/**
- * Executes if routing changed.
- *
- * @param {Array} aParams
- */
-CComposeView.prototype.onRoute = function (aParams)
+CComposeView.prototype.reset = function ()
 {
-	var
-		sSignature = '',
-		oToAddr = {}
-	;
+	_.each(this.extraButtons(), function (oButtons) {
+		oButtons.reset();
+	});
 
 	this.plainText(false);
-	if (this.oOpenPgpButtons)
-	{
-		this.oOpenPgpButtons.reset();
-	}
-
+	
 	this.bUploadStatus = false;
 	window.clearTimeout(this.iUploadAttachmentsTimer);
 	this.messageUploadAttachmentsStarted(false);
@@ -630,7 +629,17 @@ CComposeView.prototype.onRoute = function (aParams)
 	this.setDataFromMessage(new CMessageModel());
 
 	this.isDraftsCleared(false);
+};
 
+/**
+ * Executes if routing was changed.
+ *
+ * @param {Array} aParams
+ */
+CComposeView.prototype.onRoute = function (aParams)
+{
+	this.reset();
+	
 	this.routeType((aParams.length > 0) ? aParams[0] : '');
 	switch (this.routeType())
 	{
@@ -646,60 +655,66 @@ CComposeView.prototype.onRoute = function (aParams)
 			}
 			break;
 		default:
-			sSignature = SendingUtils.getSignatureText(this.senderAccountId(), this.selectedFetcherOrIdentity(), true);
-
-			if (BaseTab)
-			{
-				this.setMessageDataInNewTab(BaseTab.getComposedMessage(window.name));
-			}
-			else if (sSignature !== '')
-			{
-				this.textBody('<br /><br />' + sSignature + '<br />');
-			}
-
-			if (this.routeType() === 'to' && aParams.length === 2)
-			{
-				oToAddr = LinksUtils.parseToAddr(aParams[1]);
-				this.setRecipient(this.toAddr, oToAddr.to);
-				if (oToAddr.hasMailto)
-				{
-					this.subject(oToAddr.subject);
-					this.setRecipient(this.ccAddr, oToAddr.cc);
-					this.setRecipient(this.bccAddr, oToAddr.bcc);
-					this.textBody('<div>' + oToAddr.body + '</div>');
-				}
-			}
-
-			if (this.routeType() === 'vcard' && aParams.length === 2)
-			{
-				this.addContactAsAttachment(aParams[1]);
-			}
-
-			if (this.routeType() === 'file' && aParams.length === 2)
-			{
-				this.addFilesAsAttachment(aParams[1]);
-			}
-
-			if (this.routeType() === 'data-as-file' && aParams.length === 3)
-			{
-				this.addDataAsAttachment(aParams[1], aParams[2]);
-			}
-
-			_.defer(_.bind(function () {
-				this.focusAfterFilling();
-			}, this));
-
+			this.fillDefault();
 			break;
 	}
+};
+
+CComposeView.prototype.fillDefault = function ()
+{
+	var
+		sSignature = SendingUtils.getSignatureText(this.senderAccountId(), this.selectedFetcherOrIdentity(), true),
+		oComposedMessage = BaseTab ? BaseTab.getComposedMessage(window.name) : null,
+		oToAddr = (this.routeType() === 'to' && aParams.length === 2) ? LinksUtils.parseToAddr(aParams[1]) : null
+	;
+
+	if (oComposedMessage)
+	{
+		this.setMessageDataInNewTab(oComposedMessage);
+		if (this.changedInPreviousWindow())
+		{
+			_.defer(_.bind(this.executeSave, this, true));
+		}
+	}
+	else if (sSignature !== '')
+	{
+		this.textBody('<br /><br />' + sSignature + '<br />');
+	}
+
+	if (oToAddr)
+	{
+		this.setRecipient(this.toAddr, oToAddr.to);
+		if (oToAddr.hasMailto)
+		{
+			this.subject(oToAddr.subject);
+			this.setRecipient(this.ccAddr, oToAddr.cc);
+			this.setRecipient(this.bccAddr, oToAddr.bcc);
+			this.textBody('<div>' + oToAddr.body + '</div>');
+		}
+	}
+
+	if (this.routeType() === 'vcard' && aParams.length === 2)
+	{
+		this.addContactAsAttachment(aParams[1]);
+	}
+
+	if (this.routeType() === 'file' && aParams.length === 2)
+	{
+		this.addFilesAsAttachment(aParams[1]);
+	}
+
+	if (this.routeType() === 'data-as-file' && aParams.length === 3)
+	{
+		this.addDataAsAttachment(aParams[1], aParams[2]);
+	}
+
+	_.defer(_.bind(function () {
+		this.focusAfterFilling();
+	}, this));
 
 	this.visibleCc(this.ccAddr() !== '');
 	this.visibleBcc(this.bccAddr() !== '');
 	this.commit(true);
-
-	if (App.isNewTab() && this.changedInPreviousWindow())
-	{
-		_.defer(_.bind(this.executeSave, this, true));
-	}
 };
 
 CComposeView.prototype.focusToAddr = function ()
@@ -845,7 +860,11 @@ CComposeView.prototype.stopAutosaveTimer = function ()
  */
 CComposeView.prototype.startAutosaveTimer = function ()
 {
-	if (this.shown() && !(this.oOpenPgpButtons && this.oOpenPgpButtons.pgpSecured()))
+	var bDisableAutosave = !!_.find(this.extraButtons(), function (oButtons) {
+		return oButtons.disableAutosave && oButtons.disableAutosave();
+	});
+	
+	if (this.shown() && !bDisableAutosave)
 	{
 		var fSave = _.bind(this.executeSave, this, true);
 		this.stopAutosaveTimer();
