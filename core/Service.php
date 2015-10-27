@@ -72,7 +72,7 @@ class Service
 		$sResult = '';
 		$mHelpdeskIdTenant = false;
 		
-		$oApiIntegrator = \CApi::Manager('integrator');
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
 		if ($oApiIntegrator)
 		{
