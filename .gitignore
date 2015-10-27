@@ -31,3 +31,4 @@
 /static/js/*.js
 /static/css/*.css
 /static/
+/build/

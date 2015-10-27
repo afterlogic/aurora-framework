@@ -258,7 +258,14 @@ class Service
 			
 			if ('pull' === $sFirstPart)
 			{
-				$sResult = system('git pull');
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+				{
+					pclose(popen("start /B git pull", "r"));
+				}
+				else 
+				{
+					exec("git pull > /dev/null 2>&1 &");
+				}
 			}
 			else if ('ping' === $sFirstPart)
 			{
