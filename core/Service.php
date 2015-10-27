@@ -83,7 +83,7 @@ class Service
 				{
 					$oLogginedAccount = $this->oActions->GetDefaultAccount();
 
-					$oApiCapability = \CApi::Manager('capability');
+					$oApiCapability = \CApi::GetCoreManager('capability');
 
 					$mHelpdeskIdTenant = $oApiIntegrator->getTenantIdByHash($sHelpdeskHash);
 					if (!is_int($mHelpdeskIdTenant))
