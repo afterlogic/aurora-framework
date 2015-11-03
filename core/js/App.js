@@ -13,6 +13,7 @@ var
 	WindowOpener = require('core/js/WindowOpener.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Browser = require('core/js/Browser.js'),
+	Storage = require('core/js/Storage.js'),
 	
 	bMobileDevice = false,
 	bMobileApp = false
@@ -122,7 +123,7 @@ CApp.prototype.init = function ()
 	
 	require('core/js/AppTab.js');
 	
-	this.Storage.setData('AuthToken', this.Storage.getData('AuthToken'));
+	Storage.setData('AuthToken', Storage.getData('AuthToken'));
 };
 
 /**

@@ -882,6 +882,9 @@ html.rtl .items_list .item .attachments {
   border: 3px dashed #E2DA36;
   border-radius: 5px;
 }
+.items_list.collapsible .empty_accounts {
+  height: 55px;
+}
 .items_list.collapsible .item.accordion .collapse_handler {
   display: inline-block;
   vertical-align: middle;
@@ -1014,8 +1017,8 @@ html.mobile .toolbar .content > .item,
 html.mobile .toolbar .content .group > .item {
   position: static;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive),
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive),
+.screen .toolbar .content > .item.enable:hover,
+.screen .toolbar .content .group > .item.enable:hover,
 .toolbar .content > .item.expand,
 .toolbar .content .group > .item.expand {
   background: #eeeeee;
@@ -1024,46 +1027,46 @@ html.mobile .toolbar .content .group > .item {
   box-shadow: none;
   color: #676767;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive).send,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).send,
+.screen .toolbar .content > .item.enable:hover.send,
+.screen .toolbar .content .group > .item.enable:hover.send,
 .toolbar .content > .item.expand.send,
 .toolbar .content .group > .item.expand.send,
-.toolbar .content > .item:hover:not(.disabled):not(.passive).mail_to,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).mail_to,
+.screen .toolbar .content > .item.enable:hover.mail_to,
+.screen .toolbar .content .group > .item.enable:hover.mail_to,
 .toolbar .content > .item.expand.mail_to,
 .toolbar .content .group > .item.expand.mail_to {
   background: #74ba3c;
   border: 1px solid #5c9430;
   color: #ffffff;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive).new_window,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).new_window,
+.screen .toolbar .content > .item.enable:hover.new_window,
+.screen .toolbar .content .group > .item.enable:hover.new_window,
 .toolbar .content > .item.expand.new_window,
 .toolbar .content .group > .item.expand.new_window,
-.toolbar .content > .item:hover:not(.disabled):not(.passive).save_and_close,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).save_and_close,
+.screen .toolbar .content > .item.enable:hover.save_and_close,
+.screen .toolbar .content .group > .item.enable:hover.save_and_close,
 .toolbar .content > .item.expand.save_and_close,
 .toolbar .content .group > .item.expand.save_and_close,
-.toolbar .content > .item:hover:not(.disabled):not(.passive).minimize,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).minimize,
+.screen .toolbar .content > .item.enable:hover.minimize,
+.screen .toolbar .content .group > .item.enable:hover.minimize,
 .toolbar .content > .item.expand.minimize,
 .toolbar .content .group > .item.expand.minimize,
-.toolbar .content > .item:hover:not(.disabled):not(.passive).maximize,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).maximize,
+.screen .toolbar .content > .item.enable:hover.maximize,
+.screen .toolbar .content .group > .item.enable:hover.maximize,
 .toolbar .content > .item.expand.maximize,
 .toolbar .content .group > .item.expand.maximize {
   box-shadow: none;
   background: none !important;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive) > .icon,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive) > .icon,
+.screen .toolbar .content > .item.enable:hover > .icon,
+.screen .toolbar .content .group > .item.enable:hover > .icon,
 .toolbar .content > .item.expand > .icon,
 .toolbar .content .group > .item.expand > .icon {
   color: rgba(0, 0, 0, 0.5);
   text-shadow: 0 1px 0 #e6e6e6, 0 0 0 #000000;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive) .hint,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive) .hint,
+.screen .toolbar .content > .item.enable:hover .hint,
+.screen .toolbar .content .group > .item.enable:hover .hint,
 .toolbar .content > .item.expand .hint,
 .toolbar .content .group > .item.expand .hint {
   background-color: #d5d5d5;
@@ -3705,8 +3708,6 @@ html.rtl .folders .children .children .children .children .children .children .c
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
-  margin-bottom: -36px;
-  padding-bottom: 36px;
   position: relative;
 }
 .html_editor .workarea {
@@ -3714,8 +3715,8 @@ html.rtl .folders .children .children .children .children .children .children .c
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
-  height: 100% !important;
-  width: 100% !important;
+  height: 100%;
+  width: 100%;
   border: 1px solid #CCCCCC;
   border-top: 0px;
   border-radius: 0 0 4px 4px;
@@ -6365,10 +6366,6 @@ html.rtl .panel.compose table.fields .label {
 .panel.compose table.fields .show_bcc,
 .panel.compose table.fields .show_cc {
   margin-left: 10px;
-}
-.panel.compose table.fields .cc .hide_cc,
-.panel.compose table.fields .bcc .hide_bcc {
-  display: none;
 }
 .panel.compose table.fields .cc .inputosaurus,
 .panel.compose table.fields .bcc .inputosaurus,

@@ -1065,8 +1065,8 @@ html.mobile .toolbar .content > .item,
 html.mobile .toolbar .content .group > .item {
   position: static;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive),
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive),
+.screen .toolbar .content > .item.enable:hover,
+.screen .toolbar .content .group > .item.enable:hover,
 .toolbar .content > .item.expand,
 .toolbar .content .group > .item.expand {
   background: #eeeeee;
@@ -1076,26 +1076,26 @@ html.mobile .toolbar .content .group > .item {
   border-color: #ccc;
   color: #fff;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive) > .icon,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive) > .icon,
+.screen .toolbar .content > .item.enable:hover > .icon,
+.screen .toolbar .content .group > .item.enable:hover > .icon,
 .toolbar .content > .item.expand > .icon,
 .toolbar .content .group > .item.expand > .icon {
   color: #fff;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive).send,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).send,
+.screen .toolbar .content > .item.enable:hover.send,
+.screen .toolbar .content .group > .item.enable:hover.send,
 .toolbar .content > .item.expand.send,
 .toolbar .content .group > .item.expand.send,
-.toolbar .content > .item:hover:not(.disabled):not(.passive).mail_to,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).mail_to,
+.screen .toolbar .content > .item.enable:hover.mail_to,
+.screen .toolbar .content .group > .item.enable:hover.mail_to,
 .toolbar .content > .item.expand.mail_to,
 .toolbar .content .group > .item.expand.mail_to {
   background: #dfaf40;
   border: 1px solid #cb9722;
   color: #ffffff;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive) .hint,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive) .hint,
+.screen .toolbar .content > .item.enable:hover .hint,
+.screen .toolbar .content .group > .item.enable:hover .hint,
 .toolbar .content > .item.expand .hint,
 .toolbar .content .group > .item.expand .hint {
   background-color: #d5d5d5;
@@ -3696,8 +3696,6 @@ html.rtl .folders .children .children .children .children .children .children .c
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
-  margin-bottom: -36px;
-  padding-bottom: 36px;
   position: relative;
 }
 .html_editor .workarea {
@@ -3705,8 +3703,8 @@ html.rtl .folders .children .children .children .children .children .children .c
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
-  height: 100% !important;
-  width: 100% !important;
+  height: 100%;
+  width: 100%;
   border: 1px solid #CCCCCC;
   border-top: 0px;
   border-radius: 0 0 4px 4px;
@@ -6289,10 +6287,11 @@ html.rtl .message_viewer .message_header .from {
   -o-transition: height 500ms ease 0ms;
   transition: height 500ms ease 0ms;
 }
-/*html.screen-compose .pSevenMain {
-	min-height: 570px; //Mail - BUG - Скролл на композе
-}*/
 /*=== Compose screen CSS ===*/
+.MailComposeLayout .panels,
+.compose_popup .panels {
+  background: #f9f9f9;
+}
 .panel.compose {
   background: #f9f9f9;
   box-shadow: -1px 0 4px rgba(0, 0, 0, 0.23);
@@ -6573,10 +6572,6 @@ html.rtl .panel.compose table.fields .label {
 .panel.compose table.fields .show_bcc,
 .panel.compose table.fields .show_cc {
   margin-left: 10px;
-}
-.panel.compose table.fields .cc .hide_cc,
-.panel.compose table.fields .bcc .hide_bcc {
-  display: none;
 }
 .panel.compose table.fields .cc .inputosaurus,
 .panel.compose table.fields .bcc .inputosaurus,

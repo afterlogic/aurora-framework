@@ -816,6 +816,9 @@ html.rtl .items_list .item .attachments {
   border: 3px dashed #E2DA36;
   border-radius: 5px;
 }
+.items_list.collapsible .empty_accounts {
+  height: 55px;
+}
 .items_list.collapsible .item.accordion .collapse_handler {
   display: inline-block;
   vertical-align: middle;
@@ -943,8 +946,8 @@ html.mobile .toolbar .content > .item,
 html.mobile .toolbar .content .group > .item {
   position: static;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive),
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive),
+.screen .toolbar .content > .item.enable:hover,
+.screen .toolbar .content .group > .item.enable:hover,
 .toolbar .content > .item.expand,
 .toolbar .content .group > .item.expand {
   background: #eeeeee;
@@ -953,20 +956,20 @@ html.mobile .toolbar .content .group > .item {
   background: #F9F9D7;
   border-color: #F9F9D7;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive).send,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).send,
+.screen .toolbar .content > .item.enable:hover.send,
+.screen .toolbar .content .group > .item.enable:hover.send,
 .toolbar .content > .item.expand.send,
 .toolbar .content .group > .item.expand.send,
-.toolbar .content > .item:hover:not(.disabled):not(.passive).mail_to,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive).mail_to,
+.screen .toolbar .content > .item.enable:hover.mail_to,
+.screen .toolbar .content .group > .item.enable:hover.mail_to,
 .toolbar .content > .item.expand.mail_to,
 .toolbar .content .group > .item.expand.mail_to {
   background: #bcb091;
   border: 1px solid #a99971;
   color: #ffffff;
 }
-.toolbar .content > .item:hover:not(.disabled):not(.passive) .hint,
-.toolbar .content .group > .item:hover:not(.disabled):not(.passive) .hint,
+.screen .toolbar .content > .item.enable:hover .hint,
+.screen .toolbar .content .group > .item.enable:hover .hint,
 .toolbar .content > .item.expand .hint,
 .toolbar .content .group > .item.expand .hint {
   background-color: #d5d5d5;
@@ -3617,8 +3620,6 @@ html.rtl .folders .children .children .children .children .children .children .c
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
-  margin-bottom: -36px;
-  padding-bottom: 36px;
   position: relative;
 }
 .html_editor .workarea {
@@ -3626,8 +3627,8 @@ html.rtl .folders .children .children .children .children .children .children .c
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
-  height: 100% !important;
-  width: 100% !important;
+  height: 100%;
+  width: 100%;
   border: 1px solid #CCCCCC;
   border-top: 0px;
   border-radius: 0 0 4px 4px;
@@ -6385,10 +6386,6 @@ html.rtl .panel.compose table.fields .label {
 .panel.compose table.fields .show_bcc,
 .panel.compose table.fields .show_cc {
   margin-left: 10px;
-}
-.panel.compose table.fields .cc .hide_cc,
-.panel.compose table.fields .bcc .hide_bcc {
-  display: none;
 }
 .panel.compose table.fields .cc .inputosaurus,
 .panel.compose table.fields .bcc .inputosaurus,

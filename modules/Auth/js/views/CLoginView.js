@@ -9,6 +9,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	Api = require('core/js/Api.js'),
 	Browser = require('core/js/Browser.js'),
+	Storage = require('core/js/Storage.js'),
 	
 	Ajax = require('modules/Auth/js/Ajax.js'),
 	Settings = require('modules/Auth/js/Settings.js'),
@@ -166,7 +167,7 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		App.Storage.setData('AuthToken', oResponse.Result.AuthToken);
+		Storage.setData('AuthToken', oResponse.Result.AuthToken);
 		
 		if (window.location.search !== '' &&
 			Utils.getRequestParam('reset-pass') === null &&
