@@ -73,6 +73,11 @@ AfterLogicApi.getPluginSettings = function (sPluginName)
 	return null;
 };
 
+AfterLogicApi.getAuthToken = function ()
+{
+	return App.Storage.getData('AuthToken');
+};
+
 AfterLogicApi.oPluginHooks = {};
 
 /**

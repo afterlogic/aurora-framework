@@ -21,6 +21,5 @@ Utils.File.getViewLinkByHash = function (iAccountId, sHash, bIsExt, sTenatHash)
 		sExtPart = (bIsExt === true) ? '/1' : '/0',
 		sTenantPart = (typeof sTenatHash === 'string' && sTenatHash !== '') ? '/' + sTenatHash : ''
 	;
-		
 	return sViewLink + sExtPart + sTenantPart;
 };

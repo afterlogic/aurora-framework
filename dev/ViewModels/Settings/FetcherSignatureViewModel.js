@@ -96,6 +96,7 @@ CFetcherSignatureViewModel.prototype.onShow = function (aParams, oAccount)
 {
 	this.oHtmlEditor.initCrea(this.signature(), false, '');
 	this.oHtmlEditor.setActivitySource(this.useSignature);
+	this.oHtmlEditor.resize();
 	this.enableImageDragNDrop(this.oHtmlEditor.editorUploader.isDragAndDropSupported() && !App.browser.ie10AndAbove);
 	
 	this.updateFirstState();

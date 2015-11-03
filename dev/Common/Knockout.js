@@ -33,7 +33,7 @@ ko.bindingHandlers.command = {
 		}
 
 		jqElement.toggleClass('command-disabled disable disabled', !bResult);
-		jqElement.toggleClass('command-disabled', !bResult);
+		jqElement.toggleClass('enable', bResult);
 
 //		if (jqElement.is('input') || jqElement.is('button'))
 //		{

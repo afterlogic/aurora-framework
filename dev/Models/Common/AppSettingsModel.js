@@ -10,12 +10,11 @@ function CAppSettingsModel(bAllowOpenPgp)
 	// allows to edit common settings and calendar settings
 	this.AllowUsersChangeInterfaceSettings = true;
 
-	// allows to delete accounts, allows to change account properties (name and password is always possible to change),
-	// allows to manage special folders, allows to add new accounts
+	// allows to delete default account, allows to change default account properties
 	this.AllowUsersChangeEmailSettings = true;
 
-	// allows to add new accounts (if AllowUsersChangeEmailSettings === true)
-	this.AllowUsersAddNewAccounts = true || this.AllowUsersChangeEmailSettings;
+	// allows to add new accounts
+	this.AllowUsersAddNewAccounts = true;
 	
 	this.SiteName = '';
 
@@ -103,7 +102,7 @@ CAppSettingsModel.prototype.parse = function (oData)
 	this.AllowWebMail = !!oData.AllowWebMail;
 	this.AllowUsersChangeInterfaceSettings = !!oData.AllowUsersChangeInterfaceSettings;
 	this.AllowUsersChangeEmailSettings = !!oData.AllowUsersChangeEmailSettings;
-	this.AllowUsersAddNewAccounts = !!oData.AllowUsersAddNewAccounts || this.AllowUsersChangeEmailSettings;
+	this.AllowUsersAddNewAccounts = !!oData.AllowUsersAddNewAccounts;
 	this.SiteName = Utils.pString(oData.SiteName);
 	this.Languages = oData.Languages;
 	this.Themes = oData.Themes;

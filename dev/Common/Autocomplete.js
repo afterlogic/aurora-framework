@@ -23,7 +23,7 @@
 			.replace(/~~1~~/, '<span class="email" style="opacity: 0.5">')
 			.replace(/~~2~~/, '</span>')
 		;*/
-		var aEmail = item.label.match(/[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.]+/g);
+		var aEmail = item.label.match(/[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-]+/g);
 		if (aEmail) {
 			item.label = item.label.replace('<' + aEmail[0] + '>', "<span style='opacity: 0.5'>" + '&lt;' + aEmail[0] + '&gt' + "</span>"); //highlight <email>
 		}

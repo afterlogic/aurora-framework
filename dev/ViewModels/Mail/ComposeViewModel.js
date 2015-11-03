@@ -437,7 +437,10 @@ CComposeViewModel.prototype.fromToExpandColaps = function ()
  */
 CComposeViewModel.prototype.onApplyBindings = function ()
 {
-
+	this.$viewModel.on('resize', '.panel_content', _.debounce(_.bind(function () {
+		this.oHtmlEditor.resize();
+	}, this), 1));
+	
     App.registerSessionTimeoutFunction(_.bind(this.executeSave, this, false));
 
     this.hotKeysBind();
@@ -445,7 +448,7 @@ CComposeViewModel.prototype.onApplyBindings = function ()
 
 CComposeViewModel.prototype.hotKeysBind = function ()
 {
-    $(document).on('keydown', $.proxy(function(ev) {
+    this.$viewModel.on('keydown', $.proxy(function(ev) {
 
         if (ev && ev.ctrlKey && !ev.altKey && !ev.shiftKey)
         {
@@ -454,7 +457,7 @@ CComposeViewModel.prototype.hotKeysBind = function ()
                 bShown = this.shown() && (!this.minimized || !this.minimized()),
                 bComputed = bShown && ev && ev.ctrlKey,
                 oEnumsKey = Enums.Key
-                ;
+			;
 
             if (bComputed && nKey === oEnumsKey.s)
             {

@@ -148,6 +148,8 @@ CLoginViewModel.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 	}
 	else
 	{
+		App.Storage.setData('AuthToken', oResponse.Result.AuthToken);
+		
 		if (window.location.search !== '' &&
 			Utils.Common.getRequestParam('reset-pass') === null &&
 			Utils.Common.getRequestParam('invite-auth') === null &&

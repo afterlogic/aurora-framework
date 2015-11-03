@@ -105,6 +105,8 @@ AppBase.prototype.init = function ()
 	{
 		$('body').css('overflow', 'hidden');
 	}
+	
+	this.Storage.setData('AuthToken', this.Storage.getData('AuthToken'));
 };
 
 AppBase.prototype.collectScreensData = function () {};
@@ -152,7 +154,10 @@ AppBase.prototype.useGoogleAnalytics = function ()
  */
 AppBase.prototype.logout = function (iLastErrorCode)
 {
-	var oParameters = {'Action': 'SystemLogout'};
+	var oParameters = {
+		'Action': 'SystemLogout',
+		'AuthToken': App.Storage.getData('AuthToken')
+	};
 	
 	if (iLastErrorCode)
 	{

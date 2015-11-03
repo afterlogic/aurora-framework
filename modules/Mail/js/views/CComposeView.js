@@ -521,6 +521,10 @@ CComposeView.prototype.changeHeadersCompressed = function ()
  */
 CComposeView.prototype.onBind = function ()
 {
+	(this.$popupDom || this.$viewDom).on('resize', '.panel_content', _.debounce(_.bind(function () {
+		this.oHtmlEditor.resize();
+	}, this), 1));
+	
 	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(this.executeSave, this, false)]);
 
 	this.hotKeysBind();
@@ -528,7 +532,7 @@ CComposeView.prototype.onBind = function ()
 
 CComposeView.prototype.hotKeysBind = function ()
 {
-	$(document).on('keydown', $.proxy(function(ev) {
+	(this.$popupDom || this.$viewDom).on('keydown', $.proxy(function(ev) {
 
 		if (ev && ev.ctrlKey && !ev.altKey && !ev.shiftKey)
 		{

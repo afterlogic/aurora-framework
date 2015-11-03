@@ -121,6 +121,8 @@ CApp.prototype.init = function ()
 	Routing.init();
 	
 	require('core/js/AppTab.js');
+	
+	this.Storage.setData('AuthToken', this.Storage.getData('AuthToken'));
 };
 
 /**

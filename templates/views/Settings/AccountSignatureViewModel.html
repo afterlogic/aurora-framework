@@ -7,7 +7,7 @@
 	<div class="fieldset">
 		<div class="row">
 			<div>
-				<label class="custom_radio" data-bind="css: {'checked': useSignature() === 0}">
+				<label class="custom_radio" data-bind="css: {'checked': useSignature() == 0}">
 					<span class="icon"></span>
 					<input type="radio" value="0" data-bind="checked: useSignature, attr: {'id': 'noSignature' + __name}" />
 				</label>
@@ -16,12 +16,12 @@
 		</div>
 			
 		<div class="row editor_row">
-			<label class="custom_radio" data-bind="css: {'checked': useSignature() === 1}">
+			<label class="custom_radio" data-bind="css: {'checked': useSignature() == 1}">
 				<span class="icon"></span>
 				<input type="radio" id="useSignature" value="1" data-bind="checked: useSignature, enable: enabled" />
 			</label>
 			
-			<div class="editor" data-bind="template: {name: oHtmlEditor.ViewTemplate, data: oHtmlEditor}"></div>
+			<div class="editor" data-bind="template: {name: 'Common_HtmlEditorViewModel', data: oHtmlEditor}"></div>
 		</div>
 		<div class="hint" data-i18n="HTMLEDITOR/UPLOAD_HINT_IMAGE_DRAGNDROP" data-bind="visible: enableImageDragNDrop, i18n: 'text'"></div>
 	</div>

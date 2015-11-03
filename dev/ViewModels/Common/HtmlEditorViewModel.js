@@ -18,6 +18,7 @@ function CHtmlEditorViewModel(bInsertImageAsBase64, oParent)
 	this.editorUploaderProgress = ko.observable(false);
 	
 	this.htmlEditorDom = ko.observable();
+	this.toolbarDom = ko.observable();
 	this.colorPickerDropdownDom = ko.observable();
 	this.insertLinkDropdownDom = ko.observable();
 	this.insertImageDropdownDom = ko.observable();
@@ -123,11 +124,33 @@ CHtmlEditorViewModel.prototype.hasOpenedPopup = function ()
 	return this.visibleInsertLinkPopup() || this.visibleLinkPopup() || this.visibleImagePopup() || this.visibleInsertImagePopup() || this.visibleFontColorPopup();
 };
 	
+CHtmlEditorViewModel.prototype.resize = function ()
+{
+	var
+		$htmlEditor = $(this.htmlEditorDom()),
+		$parent = $htmlEditor.parent(),
+		$workarea = $(this.workareaDom()),
+		$toolbar = $(this.toolbarDom()),
+
+		iWaWidthMargins = $workarea.outerWidth(true) - $workarea.width(),
+		iHeWidthMargins = $htmlEditor.outerWidth(true) - $htmlEditor.width(),
+		iHeWidth = $parent.width() - iHeWidthMargins,
+
+		iWaHeightMargins = $workarea.outerHeight(true) - $workarea.height(),
+		iHeHeight = $parent.height(),
+		iWaHeight = iHeHeight - iWaHeightMargins - $toolbar.outerHeight()
+	;
+	
+	$htmlEditor.width(iHeWidth);
+	$workarea.width(iHeWidth - iWaWidthMargins);
+
+	$htmlEditor.height(iHeHeight);
+	$workarea.height(iWaHeight);
+};
+	
 CHtmlEditorViewModel.prototype.init = function ()
 {
-	var self = this;
-
-	$(document.body).on('click', _.bind(function (oEvent) {
+	$(document.body).on('click', _.bind(function () {
 		this.closeAllPopups(true);
 	}, this));
 	
@@ -382,7 +405,7 @@ CHtmlEditorViewModel.prototype.setFontValuesFromText = function ()
 {
 	this.lockFontSubscribing(true);
 	this.selectedFont(this.oCrea.getFontName());
-	this.selectedSize(this.oCrea.getFontSizeInNumber());
+	this.selectedSize(this.oCrea.getFontSizeInNumber().toString());
 	this.lockFontSubscribing(false);
 
 };

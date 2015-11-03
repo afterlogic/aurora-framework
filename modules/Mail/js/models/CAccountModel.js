@@ -41,8 +41,8 @@ function CAccountModel()
 	this.incomingMailServer = ko.observable('');
 	this.incomingMailPort = ko.observable(143); 
 	this.incomingMailSsl = ko.observable(false); 
-	this.isInternal = ko.observable(false);
-	this.isLinked = ko.observable(false);
+	this.isInternal = ko.observable(false); // If **true**, the account is hosted by bundled mailserver.
+	this.isLinked = ko.observable(false); // If **true**, the account is belonged to some domain.
 	this.isDefault = ko.observable(false);
 	this.outgoingMailAuth = ko.observable(0);
 	this.outgoingMailLogin = ko.observable('');
@@ -69,7 +69,7 @@ function CAccountModel()
 	this.extensionsRequested = ko.observable(false);
 	
 	this.canBeRemoved = ko.computed(function () {
-		return !this.isInternal() && Settings.AllowUsersChangeEmailSettings;
+		return !this.isInternal() && (!this.isDefault() || this.isDefault() && Settings.AllowUsersChangeEmailSettings);
 	}, this);
 	
 	this.removeHint = ko.computed(function () {

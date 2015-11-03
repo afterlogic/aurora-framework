@@ -47,8 +47,7 @@ function CEmailAccountsSettingsViewModel()
 	this.editedIdentityId = ko.observable(null);
 	
 	this.defaultAccount.fetchers.subscribe(function(oList) {
-
-		if(!oList)
+		if (!oList)
 		{
 			this.onChangeAccount(this.defaultAccountId());
 		}
@@ -63,12 +62,8 @@ function CEmailAccountsSettingsViewModel()
 
 			this.fetchers(oFetchers);
 			this.firstFetcher(oFirstFetcher);
-			/*if(this.editedFetcherId() && isFetcherTAb)
-			{
-				this.onChangeFetcher(this.editedFetcherId());
-			}
-			else */
-			if (isFetcherTAb)
+			
+			if (isFetcherTAb && !oFetchers.hasFetcher(this.editedFetcherId()))
 			{
 				this.editedFetcherId(nFirstFetcherId);
 				this.editedIdentityId(null);
@@ -133,6 +128,10 @@ CEmailAccountsSettingsViewModel.prototype.onRoute = function (aParams)
 		}
 		else
 		{
+			if (sNewTab !== aParams[1])
+			{
+				App.Routing.replaceHash([Enums.Screens.Settings, Enums.SettingsTab.EmailAccounts, sNewTab]);
+			}
 			this.changeCurrentTab(sNewTab);
 		}
 		
@@ -211,14 +210,6 @@ CEmailAccountsSettingsViewModel.prototype.changeCurrentTab = function (sTab)
 			App.Routing.replaceHash([Enums.Screens.Settings, Enums.SettingsTab.EmailAccounts, this.tab()]);
 		}
 	}
-};
-
-/**
- * @param {string} sTab
- * @returns {Object}
- */
-CEmailAccountsSettingsViewModel.prototype.allowedChangeTabAfterConfirm = function (sTab)
-{
 };
 
 /**
@@ -338,12 +329,12 @@ CEmailAccountsSettingsViewModel.prototype.fillAccountPermissions = function (iAc
 		oAccount = AppData.Accounts.getAccount(iAccountId),
 		bAllowMail = !!oAccount && oAccount.allowMail(),
 		bDefault = !!oAccount && oAccount.isDefault(),
-		bLinked = !!oAccount && oAccount.isLinked(),
-		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension')
+		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension'),
+		bCanBeRemoved =  !!oAccount && oAccount.canBeRemoved() && !oAccount.isDefault()
 	;
 	
 	this.isAllowMail(oAccount && oAccount.allowMail());
-	this.allowProperties(AppData.App.AllowUsersChangeEmailSettings && bAllowMail && (!bDefault || !bLinked) || !AppData.AllowIdentities || bChangePass);
+	this.allowProperties((!bDefault || bDefault && AppData.App.AllowUsersChangeEmailSettings) && bAllowMail || !AppData.AllowIdentities || bChangePass || bCanBeRemoved);
 };
 
 /**
@@ -596,6 +587,11 @@ CEmailAccountsSettingsViewModel.prototype.onRemoveIdentity = function ()
 	this.changeCurrentTab(this.tab());
 };
 
+/**
+ * @param {string} sTab
+ * @param {function} fCallback
+ * @param {mixed} mArgument
+ */
 CEmailAccountsSettingsViewModel.prototype.confirmSaving = function (sTab, fCallback, mArgument)
 {
 	var
