@@ -1236,11 +1236,14 @@ CMessagePaneView.prototype.registerTopController = function (oController) {
 	this.topControllers.push(oController);
 };
 
+/**
+ * @returns {Object}
+ */
 CMessagePaneView.prototype.getExtInterface = function ()
 {
-	if (this.isCurrentMessageLoaded())
+	var oMessage = this.currentMessage();
+	if (oMessage && this.isCurrentMessageLoaded())
 	{
-		var oMessage = this.currentMessage();
 		return {
 			bPlain: oMessage.isPlain(),
 			sRawText: oMessage.textRaw(),

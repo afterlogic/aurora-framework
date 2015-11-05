@@ -415,56 +415,6 @@ CComposeView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_ComposeScreenView' 
 CComposeView.prototype.__name = 'CComposeView';
 
 /**
- * @params {object} oButtons
- */
-CComposeView.prototype.registerExtraButtons = function (oButtons)
-{
-	this.extraButtons.push(oButtons);
-	this.oOpenPgpButtons = oButtons;
-	this.includeOpenPgp();
-};
-
-CComposeView.prototype.includeOpenPgp = function ()
-{
-	if (this.oOpenPgpButtons)
-	{
-		var 
-			koHasAttachments = ko.computed(function () {return this.notInlineAttachments().length > 0;}, this),
-			fGetPlainText = _.bind(this.oHtmlEditor.getPlainText, this.oHtmlEditor),
-			fAfterSigning = _.bind(function (bSendAfterSigning, sSignedEncryptedText) {
-				if (!bSendAfterSigning)
-				{
-					this.executeSave(true);
-				}
-				this.plainText(true);
-				this.textBody(sSignedEncryptedText);
-				if (bSendAfterSigning)
-				{
-					this.executeSend(true);
-				}
-			}, this),
-			fSend = _.bind(this.executeSend, this, true),
-			fGetFromEmail = _.bind(function () {return Accounts.getEmail(this.senderAccountId());}, this),
-			koRecipientEmails = this.recipientEmails,
-			fAfterUndoPgp = _.bind(function (sText) {
-				if (sText !== '')
-				{
-					this.textBody(sText);
-				}
-				else
-				{
-					this.oHtmlEditor.undoAndClearRedo();
-				}
-				this.plainText(false);
-				this.headersCompressed(false);
-			}, this)
-		;
-		
-		this.oOpenPgpButtons.setData(koHasAttachments, fGetPlainText, fAfterSigning, fSend, fGetFromEmail, koRecipientEmails, fAfterUndoPgp);
-	}
-};
-
-/**
  * Determines if sending a message is allowed.
  */
 CComposeView.prototype.isEnableSending = function ()
@@ -631,10 +581,6 @@ CComposeView.prototype.onShow = function ()
 
 CComposeView.prototype.reset = function ()
 {
-	_.each(this.extraButtons(), function (oButtons) {
-		oButtons.reset();
-	});
-
 	this.plainText(false);
 	
 	this.bUploadStatus = false;
@@ -977,10 +923,10 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 	this.readingConfirmation(oMessage.readingConfirmation());
 	
 	_.each(this.extraButtons(), function (oButtons) {
-		oButtons.populate({
-			isDraft: !!oMessage.draftInfo(),
-			isPlain: oMessage.isPlain(),
-			rawText: oMessage.textRaw()
+		oButtons.populateSourceMessage({
+			bDraft: !!oMessage.folderObject() && (oMessage.folderObject().type() === Enums.FolderTypes.Drafts),
+			bPlain: oMessage.isPlain(),
+			sRawText: oMessage.textRaw()
 		});
 	});
 };
@@ -1588,24 +1534,29 @@ CComposeView.prototype.verifyDataForSending = function ()
  */
 CComposeView.prototype.executeSend = function (mParam)
 {
-	var bCancelSend = false;
-
-	if (this.isEnableSending() && this.verifyDataForSending())
-	{
-		_.each(this.extraButtons(), function (oButtons) {
-			bCancelSend = bCancelSend || oButtons.doBeforeSend();
-		});
-		
-		if (!bCancelSend)
-		{
+	var
+		bCancelSend = false,
+		fContinueSending = _.bind(function () {
 			this.sending(true);
 			this.requiresPostponedSending(!this.allowStartSending());
 
 			SendingUtils.send('SendMessage', this.getSendSaveParameters(true), this.saveMailInSentItems(),
 				true, this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
-		}
+			
+			this.backToListOnSendOrSave(true);
+		}, this)
+	;
 
-		this.backToListOnSendOrSave(true);
+	if (this.isEnableSending() && this.verifyDataForSending())
+	{
+		_.each(this.extraButtons(), function (oButtons) {
+			bCancelSend = bCancelSend || oButtons.doBeforeSend(fContinueSending);
+		});
+		
+		if (!bCancelSend)
+		{
+			fContinueSending();
+		}
 	}
 };
 
@@ -1638,18 +1589,21 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 				SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
 					!bAutosave, fOnMessageSaveResponse, oContext);
 			}
-		}, this)
+		}, this),
+		bCancelSaving = false
 	;
 
 	if (this.isEnableSaving())
 	{
 		if (!bAutosave || this.isChanged())
 		{
-			if (!bAutosave && this.oOpenPgpButtons && this.oOpenPgpButtons.pgpSecured())
+			if (!bAutosave)
 			{
-				this.oOpenPgpButtons.confirmAndSaveEncryptedDraft(fSave);
+				_.each(this.extraButtons(), function (oButtons) {
+					bCancelSaving = bCancelSaving || oButtons.doBeforeSave(fSave);
+				}, this);
 			}
-			else
+			if (!bCancelSaving)
 			{
 				fSave(true);
 			}
@@ -1783,6 +1737,54 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
 	{
 		Popups.showPopup(SelectFilesPopup, [_.bind(this.addFilesAsAttachment, this)]);
 	}
+};
+
+/**
+ * @param {Object} oButtons
+ */
+CComposeView.prototype.registerExtraButtons = function (oButtons)
+{
+	this.extraButtons.push(oButtons);
+	oButtons.populateComposeInterface(this.getExtInterface());
+};
+
+/**
+ * @returns {Object}
+ */
+CComposeView.prototype.getExtInterface = function ()
+{
+	return {
+		isHtml: function () {
+			return true;
+		},
+		hasAttachments: _.bind(function () {
+			return this.notInlineAttachments().length > 0;
+		}, this),
+		getPlainText: _.bind(this.oHtmlEditor.getPlainText, this.oHtmlEditor),
+		getFromEmail: _.bind(function () {
+			return Accounts.getEmail(this.senderAccountId());
+		}, this),
+		getRecipientEmails: _.bind(function () {
+			return this.recipientEmails();
+		}, this),
+		
+		saveHidden: _.bind(this.executeSave, this, true),
+		setPlainText: _.bind(function (sSignedEncryptedText) {
+			this.plainText(true);
+			this.textBody(sSignedEncryptedText);
+		}, this),
+		undoToHtml: _.bind(function (sHtml) {
+			if (sHtml !== '')
+			{
+				this.textBody(sHtml);
+			}
+			else
+			{
+				this.oHtmlEditor.undoAndClearRedo();
+			}
+			this.plainText(false);
+		}, this)
+	};
 };
 
 module.exports = CComposeView;

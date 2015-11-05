@@ -3,6 +3,7 @@
 var
 	ko = require('knockout'),
 	_ = require('underscore'),
+	$ = require('jquery'),
 			
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -14,6 +15,9 @@ var
 	Settings = require('modules/OpenPgp/js/Settings.js')
 ;
 
+/**
+ * @constructor for object that display buttons "PGP Sign/Encrypt" and "Undo PGP"
+ */
 function CComposeButtonsView()
 {
 	this.enableOpenPgp = ko.observable(true);
@@ -41,122 +45,142 @@ function CComposeButtonsView()
 
 CComposeButtonsView.prototype.ViewTemplate = 'OpenPgp_ComposeButtonsView';
 
-CComposeButtonsView.prototype.setData = function (koComposeHasAttachments, fComposeGetPlainText, fComposeAfterSigning, 
-													fComposeSend, fComposeGetFromEmail, koComposeRecipientEmails, fComposeAfterUndoPgpFunction)
+/**
+ * Receives compose external interface.
+ * @param {Object} oCompose Compose external interface object.
+ */
+CComposeButtonsView.prototype.populateComposeInterface = function (oCompose)
 {
-	this.composeHasAttachments = koComposeHasAttachments;
-	this.composeGetPlainTextFunction = fComposeGetPlainText;
-	this.composeAfterSigningFunction = fComposeAfterSigning;
-	this.composeSendFunction = fComposeSend;
-	this.composeGetFromEmailFunction = fComposeGetFromEmail;
-	this.composeRecipientEmails = koComposeRecipientEmails;
-	this.composeAfterUndoPgpFunction = fComposeAfterUndoPgpFunction;
+	this.oCompose = oCompose;
 };
 
-CComposeButtonsView.prototype.checkPgpSecured = function (sMessage)
+/**
+ * Receives message properties that are displayed when opening the compose popup.
+ * @param {Object} oMessageProps Receiving message properties.
+ */
+CComposeButtonsView.prototype.populateSourceMessage = function (oMessageProps)
 {
-	var
-		bPgpEncrypted = sMessage.indexOf('-----BEGIN PGP MESSAGE-----') !== -1,
-		bPgpSigned = sMessage.indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1
-	;
-	
-	this.pgpSecured(bPgpSigned || bPgpEncrypted);
-	this.pgpEncrypted(bPgpEncrypted);
-};
-
-CComposeButtonsView.prototype.reset = function ()
-{
-	this.pgpSecured(false);
-	this.pgpEncrypted(false);
-	this.fromDrafts(false);
-};
-
-CComposeButtonsView.prototype.populate = function (oMessage)
-{
-	this.fromDrafts(oMessage.isDraft);
-	if (oMessage.isPlain)
+	this.fromDrafts(oMessageProps.bDraft);
+	if (oMessageProps.bPlain)
 	{
-		this.checkPgpSecured(oMessage.rawText);
+		var
+			bPgpEncrypted = oMessageProps.sRawText.indexOf('-----BEGIN PGP MESSAGE-----') !== -1,
+			bPgpSigned = oMessageProps.sRawText.indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1
+		;
+
+		this.pgpSecured(bPgpSigned || bPgpEncrypted);
+		this.pgpEncrypted(bPgpEncrypted);
+	}
+	else
+	{
+		this.pgpSecured(false);
+		this.pgpEncrypted(false);
 	}
 };
 
-CComposeButtonsView.prototype.doBeforeSend = function ()
+/**
+ * Executes before message sending. May cancel the sending and continue it later if it's necessary.
+ * @param {Function} fContinueSending Handler for continue message sending if it's necessary.
+ * @returns {Boolean} If **true** message sending will be canceled.
+ */
+CComposeButtonsView.prototype.doBeforeSend = function (fContinueSending)
 {
 	if (this.enableOpenPgp() && Settings.AutosignOutgoingEmails && !this.pgpSecured())
 	{
-		this.openPgpPopup(true);
+		this.openPgpPopup(fContinueSending);
 		return true;
 	}
 	return false;
 };
 
-CComposeButtonsView.prototype.doBeforeSave = function (fSave)
+/**
+ * Executes before message saving. May cancel the saving and continue it later if it's necessary.
+ * @param {Function} fContinueSaving Handler for continue message saving if it's necessary.
+ * @returns {Boolean} If **true** message saving will be canceled.
+ */
+CComposeButtonsView.prototype.doBeforeSave = function (fContinueSaving)
 {
-};
-
-CComposeButtonsView.prototype.confirmAndSaveEncryptedDraft = function (fSave)
-{
-	var
-		sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_SAVE_ENCRYPTED_DRAFT'),
-		sOkButton = TextUtils.i18n('COMPOSE/TOOL_SAVE')
-	;
-	Popups.showPopup(ConfirmPopup, [sConfirm, fSave, '', sOkButton]);
+	if (this.pgpSecured())
+	{
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('OPENPGP/CONFIRM_SAVE_ENCRYPTED_DRAFT'), fContinueSaving, '', TextUtils.i18n('COMPOSE/TOOL_SAVE')]);
+		
+		return true;
+	}
+	return false;
 };
 
 CComposeButtonsView.prototype.confirmOpenPgp = function ()
 {
-	var
-		sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_FORMATTING'),
-		fEncryptPopup = _.bind(function (bRes) {
-			if (bRes)
-			{
-				this.openPgpPopup(false);
-			}
-		}, this)
-	;
-
-	if (this.composeHasAttachments())
+	if (this.oCompose)
 	{
-		sConfirm += '\r\n\r\n' + TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_ATTACHMENTS');
-	}
+		if (this.oCompose.isHtml())
+		{
+			var
+				sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_FORMATTING'),
+				fEncryptPopup = _.bind(function (bRes) {
+					if (bRes)
+					{
+						this.openPgpPopup();
+					}
+				}, this)
+			;
 
-	Popups.showPopup(ConfirmPopup, [sConfirm, fEncryptPopup]);
+			if (this.oCompose.hasAttachments())
+			{
+				sConfirm += '\r\n\r\n' + TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_ATTACHMENTS');
+			}
+
+			Popups.showPopup(ConfirmPopup, [sConfirm, fEncryptPopup]);
+		}
+		else
+		{
+			this.openPgpPopup();
+		}
+	}
 };
 
 /**
- * @param {boolean} bSendAfterSigning
+ * @param {function} fContinueSending
  */
-CComposeButtonsView.prototype.openPgpPopup = function (bSendAfterSigning)
+CComposeButtonsView.prototype.openPgpPopup = function (fContinueSending)
 {
-	var
-		fOkCallback = _.bind(function (sSignedEncryptedText, bEncrypted) {
-			this.composeAfterSigningFunction(bSendAfterSigning, sSignedEncryptedText);
-			this.pgpSecured(true);
-			this.pgpEncrypted(bEncrypted);
-		}, this),
-		fCancelCallback = _.bind(function () {
-			if (bSendAfterSigning)
-			{
-				this.composeSendFunction();
-			}
-		}, this)
-	;
+	if (this.oCompose)
+	{
+		var
+			bContinueSending = $.isFunction(fContinueSending),
+			fOkCallback = _.bind(function (sSignedEncryptedText, bEncrypted) {
+				if (!bContinueSending)
+				{
+					this.oCompose.saveHidden();
+				}
+				this.oCompose.setPlainText(sSignedEncryptedText);
+				if (bContinueSending)
+				{
+					fContinueSending();
+				}
+				this.pgpSecured(true);
+				this.pgpEncrypted(bEncrypted);
+			}, this),
+			fCancelCallback = bContinueSending ? fContinueSending : function () {}
+		;
 
-	Popups.showPopup(EncryptPopup, [this.composeGetPlainTextFunction(), this.composeGetFromEmailFunction(), this.composeRecipientEmails(), bSendAfterSigning, fOkCallback, fCancelCallback]);
+		Popups.showPopup(EncryptPopup, [this.oCompose.getPlainText(), this.oCompose.getFromEmail(), this.oCompose.getRecipientEmails(), bContinueSending, fOkCallback, fCancelCallback]);
+	}
 };
 
 CComposeButtonsView.prototype.undoPgp = function ()
 {
 	var
 		sText = '',
-		aText = []
+		aText = [],
+		sHtml = ''
 	;
 
-	if (this.pgpSecured())
+	if (this.oCompose && this.pgpSecured())
 	{
 		if (this.fromDrafts() && !this.pgpEncrypted())
 		{
-			sText = this.composeGetPlainTextFunction();
+			sText = this.oCompose.getPlainText();
 			
 			aText = sText.split('-----BEGIN PGP SIGNED MESSAGE-----');
 			if (aText.length === 2)
@@ -177,11 +201,11 @@ CComposeButtonsView.prototype.undoPgp = function ()
 				sText = aText.join('\r\n\r\n');
 			}
 
-			sText = '<div>' + sText.replace(/\r\n/gi, '<br />') + '</div>';
+			sHtml = '<div>' + sText.replace(/\r\n/gi, '<br />') + '</div>';
 
 		}
 		
-		this.composeAfterUndoPgpFunction(sText);
+		this.oCompose.undoToHtml(sHtml);
 
 		this.pgpSecured(false);
 		this.pgpEncrypted(false);
