@@ -617,7 +617,7 @@ CHelpdeskView.prototype.onBind = function ()
 	}, this));
 
 	$(document.body).on('click', _.bind(function (oEvent) {
-		if (this.bShown && this.isQuickReplyPaneEmpty() && !this.preventFalseClick())
+		if (this.shown() && this.isQuickReplyPaneEmpty() && !this.preventFalseClick())
 		{
 			this.replyText('');
 			this.isQuickReplyActive(false);

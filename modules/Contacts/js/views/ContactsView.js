@@ -814,7 +814,7 @@ CContactsView.prototype.hotKeysBind = function ()
 			bFirstContactSelected = false
 		;
 
-		if (this.bShown && !Utils.isTextFieldFocused() && !bListIsFocused && ev && nKey === Enums.Key.s)
+		if (this.shown() && !Utils.isTextFieldFocused() && !bListIsFocused && ev && nKey === Enums.Key.s)
 		{
 			ev.preventDefault();
 			this.searchFocus();

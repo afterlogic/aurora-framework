@@ -2,6 +2,7 @@
 
 var
 	_ = require('underscore'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	Popups = require('core/js/Popups.js')
@@ -9,7 +10,7 @@ var
 
 function CAbstractPopup()
 {
-	this.bOpened = false;
+	this.opened = ko.observable(false);
 	this.$popupDom = null;
 }
 
@@ -17,11 +18,11 @@ CAbstractPopup.prototype.PopupTemplate = '';
 
 CAbstractPopup.prototype.openPopup = function (aParameters)
 {
-	if (this.$popupDom && !this.bOpened)
+	if (this.$popupDom && !this.opened())
 	{
 		this.$popupDom.show();
 		
-		this.bOpened = true;
+		this.opened(true);
 		
 		_.delay(_.bind(function() {
 			this.$popupDom.addClass('visible');
@@ -35,11 +36,11 @@ CAbstractPopup.prototype.openPopup = function (aParameters)
 
 CAbstractPopup.prototype.closePopup = function ()
 {
-	if (this.$popupDom && this.bOpened)
+	if (this.$popupDom && this.opened())
 	{
 		this.$popupDom.hide();
 		
-		this.bOpened = false;
+		this.opened(false);
 		
 		this.$popupDom.removeClass('visible').hide();
 		

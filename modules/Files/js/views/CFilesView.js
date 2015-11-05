@@ -269,7 +269,7 @@ CFilesView.prototype.onBind = function ($popupDom)
 CFilesView.prototype.hotKeysBind = function ()
 {
 	$(document).on('keydown', _.bind(function(ev) {
-		if (this.bShown && ev && ev.keyCode === Enums.Key.s && this.selector.useKeyboardKeys() && !Utils.isTextFieldFocused()) {
+		if (this.shown() && ev && ev.keyCode === Enums.Key.s && this.selector.useKeyboardKeys() && !Utils.isTextFieldFocused()) {
 			ev.preventDefault();
 			this.isSearchFocused(true);
 		}

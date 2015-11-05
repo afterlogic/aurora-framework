@@ -138,7 +138,7 @@
 												<tr>
 													<td class="value" style="width: 100%;" id="selenium_compose_toaddr">
 														<div class="input inputosaurus">
-															<div class="disable_mask" data-bind="visible: disableEdit"></div>
+															<div class="disable_mask" data-bind="visible: disableHeadersEdit"></div>
 															<div data-bind="customScrollbar: {x: false}">
 																<div class="scroll-inner">
 																	<input type="text" spellcheck="false" tabindex="2" data-bind="initDom: toAddrDom" />
@@ -148,10 +148,10 @@
 													</td>
 													<td class="value">
 														<!-- ko if: !mobileApp -->
-														<span class="link show_cc" data-bind="i18n: 'text', visible: !visibleCc() && !disableEdit() && !headersCompressed(), click: changeCcVisibility"
+														<span class="link show_cc" data-bind="i18n: 'text', visible: !visibleCc() && !disableHeadersEdit() && !headersCompressed(), click: changeCcVisibility"
 															data-i18n="COMPOSE/LINK_SHOW_CC"></span>
 
-														<span class="link show_bcc" data-bind="i18n: 'text', visible: !visibleBcc() && !disableEdit() && !headersCompressed(), click: changeBccVisibility"
+														<span class="link show_bcc" data-bind="i18n: 'text', visible: !visibleBcc() && !disableHeadersEdit() && !headersCompressed(), click: changeBccVisibility"
 															data-i18n="COMPOSE/LINK_SHOW_BCC"></span>
 														<!-- /ko -->
 													</td>
@@ -177,7 +177,7 @@
 										</td>
 										<td class="value">
 											<div class="input inputosaurus">
-												<div class="disable_mask" data-bind="visible: disableEdit"></div>
+												<div class="disable_mask" data-bind="visible: disableHeadersEdit"></div>
 												<div data-bind="customScrollbar: {x: false}">
 													<div class="scroll-inner">
 														<input type="text" spellcheck="false" tabindex="3" data-bind="initDom: ccAddrDom" />
@@ -192,7 +192,7 @@
 										</td>
 										<td class="value">
 											<div class="input inputosaurus">
-												<div class="disable_mask" data-bind="visible: disableEdit"></div>
+												<div class="disable_mask" data-bind="visible: disableHeadersEdit"></div>
 												<div data-bind="customScrollbar: {x: false}">
 													<div class="scroll-inner">
 														<input type="text" spellcheck="false" tabindex="4" data-bind="initDom: bccAddrDom" />

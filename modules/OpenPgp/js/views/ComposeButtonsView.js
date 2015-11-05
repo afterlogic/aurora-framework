@@ -22,6 +22,8 @@ function CComposeButtonsView()
 	this.pgpEncrypted = ko.observable(false);
 	this.fromDrafts = ko.observable(false);
 	
+	this.disableHeadersEdit = this.pgpEncrypted;
+	this.disableBodyEdit = this.pgpSecured;
 	this.disableAutosave = this.pgpSecured;
 	
 	this.visibleDoPgpButton = ko.computed(function () {
@@ -69,14 +71,27 @@ CComposeButtonsView.prototype.reset = function ()
 	this.fromDrafts(false);
 };
 
-CComposeButtonsView.prototype.signMessageBeforeSend = function (bAlreadySigned)
+CComposeButtonsView.prototype.populate = function (oMessage)
 {
-	if (!bAlreadySigned && this.enableOpenPgp() && Settings.AutosignOutgoingEmails && !this.pgpSecured())
+	this.fromDrafts(oMessage.isDraft);
+	if (oMessage.isPlain)
+	{
+		this.checkPgpSecured(oMessage.rawText);
+	}
+};
+
+CComposeButtonsView.prototype.doBeforeSend = function ()
+{
+	if (this.enableOpenPgp() && Settings.AutosignOutgoingEmails && !this.pgpSecured())
 	{
 		this.openPgpPopup(true);
 		return true;
 	}
 	return false;
+};
+
+CComposeButtonsView.prototype.doBeforeSave = function (fSave)
+{
 };
 
 CComposeButtonsView.prototype.confirmAndSaveEncryptedDraft = function (fSave)

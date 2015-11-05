@@ -4,7 +4,7 @@ var ko = require('knockout');
 
 function CAbstractScreenView()
 {
-	this.bShown = false;
+	this.shown = ko.observable(false);
 	this.$viewDom = null;
 	this.browserTitle = ko.observable('');
 }
@@ -13,10 +13,10 @@ CAbstractScreenView.prototype.ViewTemplate = '';
 
 CAbstractScreenView.prototype.showView = function ()
 {
-	if (!this.bShown)
+	if (!this.shown())
 	{
 		this.$viewDom.show();
-		this.bShown = true;
+		this.shown(true);
 		this.onShow();
 
 //			if (('undefined' !== typeof AfterLogicApi) && AfterLogicApi.runPluginHook)
@@ -32,10 +32,10 @@ CAbstractScreenView.prototype.showView = function ()
 
 CAbstractScreenView.prototype.hideView = function ()
 {
-	if (this.bShown)
+	if (this.shown())
 	{
 		this.$viewDom.hide();
-		this.bShown = false;
+		this.shown(false);
 		this.onHide();
 	}
 };

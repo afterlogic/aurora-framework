@@ -33,7 +33,7 @@ module.exports = {
 			ShowQuotaBar: true, //todo: account level
 			useThreads: ko.observable(true),
 			MailsPerPage: 20,
-			AllowAutosaveInDrafts: false,
+			AllowAutosaveInDrafts: true,
 			AutoSaveIntervalSeconds: 60,
 			AllowCompose: true,
 			AllowUsersChangeEmailSettings: true,

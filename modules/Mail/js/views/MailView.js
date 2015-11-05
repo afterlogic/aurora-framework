@@ -262,7 +262,7 @@ CMailView.prototype.hotKeysBind = function ()
 	$(document).on('keydown', $.proxy(function(ev) {
 		var
 			sKey = ev.keyCode,
-			bComputed = ev && !ev.ctrlKey && !ev.altKey && !ev.shiftKey && !Utils.isTextFieldFocused() && this.bShown,
+			bComputed = ev && !ev.ctrlKey && !ev.altKey && !ev.shiftKey && !Utils.isTextFieldFocused() && this.shown(),
 			oList = this.oMessageList,
 			oFirstMessage = oList.collection()[0],
 			bGotoSearch = oFirstMessage && MailCache.currentMessage() && oFirstMessage.uid() === MailCache.currentMessage().uid()

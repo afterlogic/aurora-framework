@@ -78,9 +78,7 @@ function CComposeView()
 	this.isDemo = ko.observable(UserSettings.IsDemo);
 
 	this.sending = ko.observable(false);
-	this.sending.subscribe(this.sendingAndSavingSubscription, this);
 	this.saving = ko.observable(false);
-	this.saving.subscribe(this.sendingAndSavingSubscription, this);
 
 	this.oHtmlEditor = new CHtmlEditorView(false, this);
 	this.textFocused = this.oHtmlEditor.textFocused;
@@ -306,19 +304,42 @@ function CComposeView()
 	this.oJua = null;
 
 	this.isDraftsCleared = ko.observable(false);
-	this.autoSaveTimer = -1;
 
-	this.shown = ko.observable(false);
-	this.shown.subscribe(function () {
-		if (!this.shown())
-		{
-			this.stopAutosaveTimer();
-		}
-	}, this);
 	this.backToListOnSendOrSave = ko.observable(false);
 
-	this.disableEdit = ko.observable(false);
 	this.extraButtons = ko.observableArray([]);
+	this.disableHeadersEdit = ko.computed(function () {
+		var bDisableHeadersEdit = false;
+		
+		_.each(this.extraButtons(), function (oButtons) {
+			bDisableHeadersEdit = bDisableHeadersEdit || oButtons.disableHeadersEdit();
+		});
+		
+		return bDisableHeadersEdit;
+	}, this);
+	ko.computed(function () {
+		var bDisableBodyEdit = false;
+		
+		_.each(this.extraButtons(), function (oButtons) {
+			bDisableBodyEdit = bDisableBodyEdit || oButtons.disableBodyEdit();
+		});
+		
+		this.oHtmlEditor.disabled(bDisableBodyEdit);
+	}, this);
+	this.iAutosaveInterval = -1;
+	ko.computed(function () {
+		var bAllowAutosave = Settings.AllowAutosaveInDrafts && (this.opened() || this.shown()) && !this.sending() && !this.saving();
+		_.each(this.extraButtons(), function (oButtons) {
+			bAllowAutosave = bAllowAutosave && !oButtons.disableAutosave();
+		});
+		
+		window.clearInterval(this.iAutosaveInterval);
+		
+		if (bAllowAutosave)
+		{
+			this.iAutosaveInterval = window.setInterval(_.bind(this.executeSave, this, true), Settings.AutoSaveIntervalSeconds * 1000);
+		}
+	}, this);
 
 	this.backToListCommand = Utils.createCommand(this, this.executeBackToList);
 	this.sendCommand = Utils.createCommand(this, this.executeSend, this.isEnableSending);
@@ -413,7 +434,6 @@ CComposeView.prototype.includeOpenPgp = function ()
 			fAfterSigning = _.bind(function (bSendAfterSigning, sSignedEncryptedText) {
 				if (!bSendAfterSigning)
 				{
-					this.stopAutosaveTimer();
 					this.executeSave(true);
 				}
 				this.plainText(true);
@@ -440,11 +460,6 @@ CComposeView.prototype.includeOpenPgp = function ()
 			}, this)
 		;
 		
-		this.oOpenPgpButtons.pgpSecured.subscribe(function (bPgpSecured) {
-			this.oHtmlEditor.disabled(bPgpSecured);
-		}, this);
-		this.disableEdit = this.oOpenPgpButtons.pgpEncrypted;
-		
 		this.oOpenPgpButtons.setData(koHasAttachments, fGetPlainText, fAfterSigning, fSend, fGetFromEmail, koRecipientEmails, fAfterUndoPgp);
 	}
 };
@@ -469,7 +484,7 @@ CComposeView.prototype.isEnableSaving = function ()
 {
 	var bFoldersLoaded = this.folderList() && this.folderList().iAccountId !== 0;
 
-	return this.shown() && bFoldersLoaded && !this.sending() && !this.saving();
+	return (this.opened() || this.shown()) && bFoldersLoaded && !this.sending() && !this.saving();
 };
 
 /**
@@ -538,7 +553,7 @@ CComposeView.prototype.hotKeysBind = function ()
 		{
 			var
 				nKey = ev.keyCode,
-				bShown = this.shown() && (!this.minimized || !this.minimized()),
+				bShown = (this.opened() || this.shown()) && (!this.minimized || !this.minimized()),
 				bComputed = bShown && ev && ev.ctrlKey
 			;
 
@@ -591,7 +606,6 @@ CComposeView.prototype.onShow = function ()
 	}
 	
 	var sFocusedField = this.focusedField();
-	this.shown(true);
 
 	$(this.splitterDom()).trigger('resize');
 
@@ -604,7 +618,6 @@ CComposeView.prototype.onShow = function ()
 	this.initUploader();
 
 	this.backToListOnSendOrSave(false);
-	this.startAutosaveTimer();
 
 	this.focusedField(sFocusedField);//oHtmlEditor initialization puts focus on it and changes the variable focusedField
 
@@ -809,16 +822,12 @@ CComposeView.prototype.beforeHide = function (fContinueScreenChanging)
  */
 CComposeView.prototype.onHide = function ()
 {
-	this.stopAutosaveTimer();
-
 	if (!$.isFunction(this.closePopup) && this.hasSomethingToSave())
 	{
 		this.executeSave(true);
 	}
 
 	this.headersCompressed(false);
-
-	this.shown(false);
 
 	this.routeParams([]);
 
@@ -836,46 +845,6 @@ CComposeView.prototype.onHide = function ()
 	if (this.oJua)
 	{
 		this.oJua.setDragAndDropEnabledStatus(false);
-	}
-};
-
-CComposeView.prototype.sendingAndSavingSubscription = function ()
-{
-	if (this.sending() || this.saving())
-	{
-		this.stopAutosaveTimer();
-	}
-	if (!this.sending() && !this.saving())
-	{
-		this.startAutosaveTimer();
-	}
-};
-
-/**
- * Stops autosave.
- */
-CComposeView.prototype.stopAutosaveTimer = function ()
-{
-	window.clearTimeout(this.autoSaveTimer);
-};
-
-/**
- * Starts autosave.
- */
-CComposeView.prototype.startAutosaveTimer = function ()
-{
-	var bDisableAutosave = !!_.find(this.extraButtons(), function (oButtons) {
-		return oButtons.disableAutosave && oButtons.disableAutosave();
-	});
-	
-	if (this.shown() && !bDisableAutosave)
-	{
-		var fSave = _.bind(this.executeSave, this, true);
-		this.stopAutosaveTimer();
-		if (Settings.AllowAutosaveInDrafts)
-		{
-			this.autoSaveTimer = window.setTimeout(fSave, Settings.AutoSaveIntervalSeconds * 1000);
-		}
 	}
 };
 
@@ -951,10 +920,6 @@ CComposeView.prototype.onMessageResponse = function (oMessage)
 			case 'drafts':
 				this.draftUid(oMessage.uid());
 				this.setDataFromMessage(oMessage);
-				if (this.oOpenPgpButtons)
-				{
-					this.oOpenPgpButtons.fromDrafts(true);
-				}
 				break;
 		}
 
@@ -991,17 +956,12 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 
 	if (oMessage.isPlain())
 	{
-		if (this.oOpenPgpButtons)
-		{
-			this.oOpenPgpButtons.checkPgpSecured(oMessage.textRaw());
-		}
 		sTextBody = oMessage.textRaw();
 	}
 	else
 	{
 		sTextBody = oMessage.getConvertedHtml();
 	}
-
 	this.draftInfo(oMessage.draftInfo());
 	this.inReplyTo(oMessage.inReplyTo());
 	this.references(oMessage.references());
@@ -1015,6 +975,14 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 	this.selectedImportance(oMessage.importance());
 	this.selectedSensitivity(oMessage.sensitivity());
 	this.readingConfirmation(oMessage.readingConfirmation());
+	
+	_.each(this.extraButtons(), function (oButtons) {
+		oButtons.populate({
+			isDraft: !!oMessage.draftInfo(),
+			isPlain: oMessage.isPlain(),
+			rawText: oMessage.textRaw()
+		});
+	});
 };
 
 /**
@@ -1478,7 +1446,7 @@ CComposeView.prototype.onFileRemove = function (sFileUid)
  */
 CComposeView.prototype.initUploader = function ()
 {
-	if (this.shown() && this.composeUploaderButton() && this.oJua === null)
+	if ((this.opened() || this.shown()) && this.composeUploaderButton() && this.oJua === null)
 	{
 		this.oJua = new CJua({
 			'action': '?/Upload/',
@@ -1620,19 +1588,15 @@ CComposeView.prototype.verifyDataForSending = function ()
  */
 CComposeView.prototype.executeSend = function (mParam)
 {
-	var
-		bAlreadySigned = (mParam === true),
-		bSigningStarted = false
-	;
+	var bCancelSend = false;
 
 	if (this.isEnableSending() && this.verifyDataForSending())
 	{
-		if (!bAlreadySigned && this.oOpenPgpButtons)
-		{
-			bSigningStarted = this.oOpenPgpButtons.signMessageBeforeSend();
-		}
+		_.each(this.extraButtons(), function (oButtons) {
+			bCancelSend = bCancelSend || oButtons.doBeforeSend();
+		});
 		
-		if (!bSigningStarted)
+		if (!bCancelSend)
 		{
 			this.sending(true);
 			this.requiresPostponedSending(!this.allowStartSending());
@@ -1665,20 +1629,14 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 	}
 
 	var
+		fOnMessageSaveResponse = bWaitResponse ? this.onMessageSendOrSaveResponse : SendingUtils.onMessageSendOrSaveResponse,
+		oContext = bWaitResponse ? this : SendingUtils,
 		fSave = _.bind(function (bSave) {
 			if (bSave)
 			{
-				if (bWaitResponse)
-				{
-					this.saving(true);
-					SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
-						!bAutosave, this.onMessageSendOrSaveResponse, this);
-				}
-				else
-				{
-					SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
-						!bAutosave, SendingUtils.onMessageSendOrSaveResponse, SendingUtils);
-				}
+				this.saving(bWaitResponse);
+				SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
+					!bAutosave, fOnMessageSaveResponse, oContext);
 			}
 		}, this)
 	;
@@ -1695,10 +1653,6 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 			{
 				fSave(true);
 			}
-		}
-		else if (bAutosave)
-		{
-			this.startAutosaveTimer();
 		}
 
 		this.backToListOnSendOrSave(true);
