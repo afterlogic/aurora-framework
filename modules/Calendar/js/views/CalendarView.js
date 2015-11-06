@@ -1238,12 +1238,9 @@ CCalendarView.prototype.onUpdateCalendarColorResponse = function (oResponse, oRe
 
 /**
  * @param {Object} oCalendar
- * @param {Object} oEvent
  */
-CCalendarView.prototype.openGetLinkCalendarForm = function (oCalendar, oEvent)
+CCalendarView.prototype.openGetLinkCalendarForm = function (oCalendar)
 {
-	oEvent.preventDefault();
-	oEvent.stopPropagation();
 	if (!this.isPublic)
 	{
 		Popups.showPopup(GetCalendarLinkPopup, [_.bind(this.publicCalendar, this), oCalendar]);
