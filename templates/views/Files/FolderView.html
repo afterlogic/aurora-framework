@@ -4,11 +4,7 @@
 		draggablePlace: $parent.dragAndDropHelperBinded,
 		draggableDragStartCallback: function() {if (!$parent.isPopup) $root.dragover(true);},
 		draggableDragStopCallback: function() {if (!$parent.isPopup) $root.dragover(false);},
-		css: {'selected': selected(), 
-			  'checked': checked(),
-			  'deleted': deleted(),
-			  'shared': shared() && !$root.isPublic
-		}"
+		css: {'selected': selected, 'checked': checked, 'deleted': deleted, 'shared': shared}"
 >
 	<div class="item_content ui-droppable" data-bind="css: {'recivedAnim': recivedAnim()}, droppable: {valueFunc: function (oEvent, oUi) {$root.filesDrop($data, oEvent, oUi);}}">
 		<div class="image">

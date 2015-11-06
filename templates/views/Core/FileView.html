@@ -5,7 +5,7 @@
 		'checked': allowCheck() && checked(),
 		'deleted': allowDelete() && deleted(),
 		'incomplete': allowUpload() && !uploaded(),
-		'shared': allowSharing() && shared() && !$root.isPublic,
+		'shared': allowSharing() && shared(),
 		'fail': uploadError(), 
 		'success': !uploadError(),
 		'aslink': isLink()
