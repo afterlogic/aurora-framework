@@ -409,3 +409,164 @@ ko.bindingHandlers.autocompleteSimple = {
 		}
 	}
 };
+
+ko.bindingHandlers.customSelect = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
+		var
+			jqElement = $(oElement),
+			oCommand = _.defaults(
+				fValueAccessor(), {
+					'disabled': 'disabled',
+					'selected': 'selected',
+					'expand': 'expand',
+					'control': true,
+					'input': false,
+					'expandState': function () {}
+				}
+			),
+			aOptions = [],
+			oControl = oCommand['control'] ? jqElement.find('.control') : jqElement,
+			oContainer = jqElement.find('.dropdown_content'),
+			oText = jqElement.find('.link'),
+
+			updateField = function (value) {
+				_.each(aOptions, function (item) {
+					item.removeClass(oCommand['selected']);
+				});
+				var item = _.find(oCommand['options'], function (item) {
+					return item[oCommand['optionsValue']] === value;
+				});
+				if (Utils.isUnd(item))
+				{
+					item = oCommand['options'][0];
+				}
+				else
+				{
+					aOptions[_.indexOf(oCommand['options'], item)].addClass(oCommand['selected']);
+					oText.text($.trim(item[oCommand['optionsText']]));
+				}
+
+//				aOptions[_.indexOf(oCommand['options'], item)].addClass(oCommand['selected']);
+//				oText.text($.trim(item[oCommand['optionsText']]));
+
+				return item[oCommand['optionsValue']];
+			},
+			updateList = function (aList) {
+				oContainer.empty();
+				aOptions = [];
+
+				_.each(aList ? aList : oCommand['options'], function (item) {
+					var
+						oOption = $('<span class="item"></span>')
+							.text(item[oCommand['optionsText']])
+							.data('value', item[oCommand['optionsValue']]),
+						isDisabled = item['isDisabled']
+					;
+
+					if (isDisabled)
+					{
+						oOption.data('isDisabled', isDisabled).addClass('disabled');
+					}
+					else
+					{
+						oOption.data('isDisabled', isDisabled).removeClass('disabled');
+					}
+
+					aOptions.push(oOption);
+					oContainer.append(oOption);
+				}, this);
+			}
+		;
+
+		updateList();
+
+		oContainer.on('click', '.item', function () {
+			var jqItem = $(this);
+
+			if(!jqItem.data('isDisabled'))
+			{
+				oCommand.value(jqItem.data('value'));
+			}
+		});
+
+		if (!oCommand.input && oCommand['value'] && oCommand['value'].subscribe)
+		{
+			oCommand['value'].subscribe(function () {
+				var mValue = updateField(oCommand['value']());
+				if (oCommand['value']() !== mValue)
+				{
+					oCommand['value'](mValue);
+				}
+			}, oViewModel);
+
+			oCommand['value'].valueHasMutated();
+		}
+
+		if (oCommand.input && oCommand['value'] && oCommand['value'].subscribe)
+		{
+			oCommand['value'].subscribe(function () {
+				updateField(oCommand['value']());
+			}, oViewModel);
+
+			oCommand['value'].valueHasMutated();
+		}
+		
+		if (oCommand.input && oCommand['value'] && oCommand['value'].subscribe)
+		{
+			oCommand['value'].subscribe(function () {
+				updateField(oCommand['value']());
+			}, oViewModel);
+
+			oCommand['value'].valueHasMutated();
+		}
+
+		if(oCommand.alarmOptions)
+		{
+			oCommand.alarmOptions.subscribe(function () {
+				updateList();
+			}, oViewModel);
+		}
+		
+		if(oCommand.timeOptions)
+		{
+			oCommand.timeOptions.subscribe(function (aList) {
+				updateList(aList);
+			}, oViewModel);
+		}
+
+		//TODO fix data-bind click
+		jqElement.removeClass(oCommand['expand']);
+		oControl.click(function (ev) {
+			if (!jqElement.hasClass(oCommand['disabled']))
+			{
+				jqElement.toggleClass(oCommand['expand']);
+				oCommand['expandState'](jqElement.hasClass(oCommand['expand']));
+
+				if (jqElement.hasClass(oCommand['expand']))
+				{
+					var
+						jqContent = jqElement.find('.dropdown_content'),
+						jqSelected = jqContent.find('.selected')
+					;
+
+					if (jqSelected.position())
+					{
+						jqContent.scrollTop(0);// need for proper calculation position().top
+						jqContent.scrollTop(jqSelected.position().top - 100);// 100 - hardcoded indent to the element in pixels
+					}
+
+					_.defer(function () {
+						$(document).one('click', function () {
+							jqElement.removeClass(oCommand['expand']);
+							oCommand['expandState'](false);
+						});
+					});
+				}
+				/*else
+				{
+					jqElement.addClass(oCommand['expand']);
+				}*/
+			}
+		});
+	}
+};

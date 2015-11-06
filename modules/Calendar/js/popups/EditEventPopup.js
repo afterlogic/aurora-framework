@@ -75,8 +75,8 @@ function CEditEventPopup()
 		this.selectStartDate();
 	}, this);
 	this.allDay = ko.observable(false);
-	this.allDay.subscribe(function (arg) {
-		if(!arg)
+	this.allDay.subscribe(function () {
+		if (!this.allDay())
 		{
 			this.setActualTime();
 		}
@@ -181,7 +181,7 @@ function CEditEventPopup()
 	this.repeatEdit = ko.observable(false);
 	this.guestsEdit = ko.observable(false);
 	this.defaultOptionsAfterRender = Utils.defaultOptionsAfterRender;
-	this.isEditForm = ko.computed(function(){
+	this.isEditForm = ko.computed(function () {
 		return !!this.id();
 	}, this);
 
@@ -189,7 +189,7 @@ function CEditEventPopup()
 
 	this.calendarAppointments = Settings.AllowCalendar && Settings.CalendarAppointments;
 
-	this.allChanges = ko.computed(function() {
+	this.allChanges = ko.computed(function () {
 		this.subject();
 		this.description();
 		this.location();
@@ -219,19 +219,7 @@ function CEditEventPopup()
 		this.modified = true;
 	}, this);
 
-	this.phaseArray = [''];
-	
-	_.each(TextUtils.i18n('CALENDAR/REMINDER_PHRASE').split(/\s/), function (sItem) {
-		var iIndex = this.phaseArray.length - 1;
-		if (sItem.substr(0,1) === '%' || this.phaseArray[iIndex].substr(-1,1) === '%')
-		{
-			this.phaseArray.push(sItem);
-		}
-		else
-		{
-			this.phaseArray[iIndex] += ' ' + sItem;
-		}
-	}, this);
+	this.aReminderPhrase = TextUtils.i18n('CALENDAR/REMINDER_PHRASE').split('%');
 
 	this.isAppointmentButtonsVisible = ko.observable(false);
 }
@@ -267,16 +255,15 @@ CEditEventPopup.prototype.createDatePickerObject = function (oElement, fSelect)
 	});
 };
 
-
 CEditEventPopup.prototype.initializeDatePickers = function ()
 {
 	this.createDatePickerObject(this.startDom(), this.selectStartDate.bind(this));
 	this.createDatePickerObject(this.endDom(), this.selectEndDate.bind(this));
 	this.createDatePickerObject(this.repeatEndDom(), function () {});
 
-	this.startDom().datepicker( "option", "dateFormat", this.dateFormatDatePicker);
-	this.endDom().datepicker( "option", "dateFormat", this.dateFormatDatePicker);
-	this.repeatEndDom().datepicker( "option", "dateFormat", this.dateFormatDatePicker);
+	this.startDom().datepicker('option', 'dateFormat', this.dateFormatDatePicker);
+	this.endDom().datepicker('option', 'dateFormat', this.dateFormatDatePicker);
+	this.repeatEndDom().datepicker('option', 'dateFormat', this.dateFormatDatePicker);
 };
 
 /**
@@ -291,7 +278,7 @@ CEditEventPopup.prototype.onShow = function (oParameters)
 		oStartMomentDate = oParameters.Start.clone(),
 		sAttendee = '',
 		oCalendar = null,
-		sCalendarOwner = ""
+		sCalendarOwner = ''
 	;
 	
 	this.differenceInMinutes = null;
@@ -385,7 +372,8 @@ CEditEventPopup.prototype.onShow = function (oParameters)
 	this.excluded(oParameters.Excluded || false);
 	this.repeatRuleParse(oParameters.RRule || null);
 
-	if (this.id() === null) {
+	if (this.id() === null)
+	{
 		this.subjectFocus(true);
 	}
 
@@ -708,6 +696,9 @@ CEditEventPopup.prototype.onAddGuestClick = function ()
 	this.guestEmailFocus(true);
 };
 
+/**
+ * @param {Array} aAlarms
+ */
 CEditEventPopup.prototype.populateAlarms = function (aAlarms)
 {
 	if (aAlarms)
@@ -726,44 +717,41 @@ CEditEventPopup.prototype.populateAlarms = function (aAlarms)
  */
 CEditEventPopup.prototype.getDisplayedAlarms = function (aMinutes)
 {
-	var
-		alarm,
-		sText,
-		aDisplayedAlarms = []
-	;
+	var aDisplayedAlarms = [];
 
-	if (aMinutes) {
+	if (aMinutes)
+	{
 		_.each(aMinutes, function (iMinutes, iIdx) {
-			alarm = this['alarm' + iMinutes] = ko.observable(iMinutes);
-			alarm.subscribe(function () {
+			var
+				koAlarm = this['alarm' + iMinutes] = ko.observable(iMinutes),
+				sText = ''
+			;
+			
+			koAlarm.subscribe(function () {
 				//alarm observable value not actual
 				this.disableAlarms();
 			}, this);
 
-			if (iMinutes > 0 && iMinutes < 60) {
-				sText = (TextUtils.i18n('CALENDAR/ALARM_MINUTES_PLURAL', {
-					'COUNT': iMinutes
-				}, null, iMinutes));
+			if (iMinutes > 0 && iMinutes < 60)
+			{
+				sText = (TextUtils.i18n('CALENDAR/ALARM_MINUTES_PLURAL', {'COUNT': iMinutes}, null, iMinutes));
 			}
-			else if (iMinutes >= 60 && iMinutes < 1440) {
-				sText = (TextUtils.i18n('CALENDAR/ALARM_HOURS_PLURAL', {
-					'COUNT': iMinutes / 60
-				}, null, iMinutes / 60));
+			else if (iMinutes >= 60 && iMinutes < 1440)
+			{
+				sText = (TextUtils.i18n('CALENDAR/ALARM_HOURS_PLURAL', {'COUNT': iMinutes / 60}, null, iMinutes / 60));
 			}
-			else if (iMinutes >= 1440 && iMinutes < 10080) {
-				sText = (TextUtils.i18n('CALENDAR/ALARM_DAYS_PLURAL', {
-					'COUNT': iMinutes / 1440
-				}, null, iMinutes / 1440));
+			else if (iMinutes >= 1440 && iMinutes < 10080)
+			{
+				sText = (TextUtils.i18n('CALENDAR/ALARM_DAYS_PLURAL', {'COUNT': iMinutes / 1440}, null, iMinutes / 1440));
 			}
-			else {
-				sText = (TextUtils.i18n('CALENDAR/ALARM_WEEKS_PLURAL', {
-					'COUNT': iMinutes / 10080
-				}, null, iMinutes / 10080));
+			else
+			{
+				sText = (TextUtils.i18n('CALENDAR/ALARM_WEEKS_PLURAL', {'COUNT': iMinutes / 10080}, null, iMinutes / 10080));
 			}
 
 			aDisplayedAlarms.push({
 				'value': iMinutes,
-				'alarm': alarm,
+				'alarm': koAlarm,
 				'text': sText,
 				'isDisabled': false
 			});
@@ -827,17 +815,16 @@ CEditEventPopup.prototype.getAlarmsArray = function (aDisplayedAlarms)
 {
 	var aAlarms = [];
 
-	_.each(aDisplayedAlarms, function(oAlarm, iIdx)
-	{
+	_.each(aDisplayedAlarms, function (oAlarm, iIdx) {
 		aAlarms.push(oAlarm.alarm());
 	}, this);
 
-	return _.sortBy(aAlarms, function(num){return -num;});
+	return _.sortBy(aAlarms, function (num) {return -num;});
 };
 
 CEditEventPopup.prototype.addFirstAlarm = function ()
 {
-	if(!this.displayedAlarms().length)
+	if (!this.displayedAlarms().length)
 	{
 		this.displayedAlarms(this.getDisplayedAlarms([this.alarmOptions()[0].value]));
 	}
@@ -865,9 +852,9 @@ CEditEventPopup.prototype.addAlarm = function ()
 		iMinutes = 0
 	;
 
-	aSortedAlarms = _.sortBy(this.displayedAlarms(), function(oAlarm){return oAlarm.alarm();});
+	aSortedAlarms = _.sortBy(this.displayedAlarms(), function (oAlarm) {return oAlarm.alarm();});
 
-	_.each(aSortedAlarms, function(oAlarm) {
+	_.each(aSortedAlarms, function (oAlarm) {
 
 		var nAlarmMinutes = oAlarm.alarm();
 
@@ -917,12 +904,10 @@ CEditEventPopup.prototype.removeGuest = function (oItem)
 
 CEditEventPopup.prototype.disableAlarms = function ()
 {
-	_.each(this.alarmOptions(), function(oAlarm, iIdx) {
-
-		oAlarm.isDisabled = _.any(this.displayedAlarms(), function(oItem){
+	_.each(this.alarmOptions(), function (oAlarm, iIdx) {
+		oAlarm.isDisabled = _.any(this.displayedAlarms(), function (oItem) {
 			return oItem.alarm() === oAlarm.value;
 		});
-
 	}, this);
 
 	this.alarmOptions.valueHasMutated();
@@ -945,11 +930,14 @@ CEditEventPopup.prototype.autocompleteCallback = function (oRequest, fResponse)
 
 CEditEventPopup.prototype.autocompleteDeleteItem = ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler');
 
+/**
+ * @param {Object} oRepeatRule
+ */
 CEditEventPopup.prototype.repeatRuleParse = function (oRepeatRule)
 {
 	var allEvents = this.allEvents();
 
-	this.repeatEndDom().datepicker("option", "minDate", this.getDateTime(this.endDom()));
+	this.repeatEndDom().datepicker('option', 'minDate', this.getDateTime(this.endDom()));
 
 	if(oRepeatRule && allEvents === Enums.CalendarEditRecurrenceEvent.AllEvents)
 	{
@@ -960,8 +948,7 @@ CEditEventPopup.prototype.repeatRuleParse = function (oRepeatRule)
 
 		if (oRepeatRule.byDays.length)
 		{
-			_.each(oRepeatRule.byDays, function (sItem)
-			{
+			_.each(oRepeatRule.byDays, function (sItem) {
 				this['week' + sItem](true);
 			}, this);
 		}
@@ -1344,16 +1331,16 @@ CEditEventPopup.prototype.getAttenderTextStatus = function (sStatus)
 	switch (sStatus)
 	{
 		case 0:
-			sStatus="pending";
+			sStatus = 'pending';
 			break;
 		case 1:
-			sStatus="accepted";
+			sStatus = 'accepted';
 			break;
 		case 2:
-			sStatus="declined";
+			sStatus = 'declined';
 			break;
 		case 3:
-			sStatus="tentative";
+			sStatus = 'tentative';
 			break;
 	}
 	return sStatus;
@@ -1361,11 +1348,12 @@ CEditEventPopup.prototype.getAttenderTextStatus = function (sStatus)
 
 CEditEventPopup.prototype.setDayOfWeek = function ()
 {
-	if (this.repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly && !this.getDays().length) {
-
+	if (this.repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly && !this.getDays().length)
+	{
 		var iDayOfWeek = this.getDateTime(this.startDom()).getUTCDay();
 
-		switch (iDayOfWeek) {
+		switch (iDayOfWeek)
+		{
 			case 0:
 				this.weekMO(true);
 				break;
@@ -1389,21 +1377,6 @@ CEditEventPopup.prototype.setDayOfWeek = function ()
 				break;
 		}
 	}
-};
-
-CEditEventPopup.prototype.displayReminderPart = function (sPart, sPrefix)
-{
-	var sTemplate = '';
-	if (sPart === '%REMINDERS%')
-	{
-		sTemplate = 'Reminders';
-	}
-	else
-	{
-		sTemplate = 'Text';
-	}
-
-	return sPrefix + sTemplate;
 };
 
 module.exports = new CEditEventPopup();
