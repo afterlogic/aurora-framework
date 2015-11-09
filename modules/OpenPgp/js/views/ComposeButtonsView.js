@@ -41,15 +41,17 @@ function CComposeButtonsView()
 		return this.enableOpenPgp() && !this.pgpSecured();
 	}, this);
 	this.openPgpCommand = Utils.createCommand(this, this.confirmOpenPgp, this.isEnableOpenPgpCommand);
+	
+	this.bComposeModeChanged = false;
 }
 
 CComposeButtonsView.prototype.ViewTemplate = 'OpenPgp_ComposeButtonsView';
 
 /**
- * Receives compose external interface.
+ * Assigns compose external interface.
  * @param {Object} oCompose Compose external interface object.
  */
-CComposeButtonsView.prototype.populateComposeInterface = function (oCompose)
+CComposeButtonsView.prototype.assignComposeExtInterface = function (oCompose)
 {
 	this.oCompose = oCompose;
 };
@@ -58,8 +60,9 @@ CComposeButtonsView.prototype.populateComposeInterface = function (oCompose)
  * Receives message properties that are displayed when opening the compose popup.
  * @param {Object} oMessageProps Receiving message properties.
  */
-CComposeButtonsView.prototype.populateSourceMessage = function (oMessageProps)
+CComposeButtonsView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
+	this.bComposeModeChanged = false;
 	this.fromDrafts(oMessageProps.bDraft);
 	if (oMessageProps.bPlain)
 	{
@@ -151,9 +154,16 @@ CComposeButtonsView.prototype.openPgpPopup = function (fContinueSending)
 			fOkCallback = _.bind(function (sSignedEncryptedText, bEncrypted) {
 				if (!bContinueSending)
 				{
-					this.oCompose.saveHidden();
+					this.oCompose.saveSilently();
+				}
+				
+				if (this.oCompose.isHtml())
+				{
+					this.oCompose.setPlainTextMode();
+					this.bComposeModeChanged = true;
 				}
 				this.oCompose.setPlainText(sSignedEncryptedText);
+				
 				if (bContinueSending)
 				{
 					fContinueSending();
@@ -178,6 +188,12 @@ CComposeButtonsView.prototype.undoPgp = function ()
 
 	if (this.oCompose && this.pgpSecured())
 	{
+		if (this.bComposeModeChanged)
+		{
+			this.oCompose.setHtmlTextMode();
+			this.bComposeModeChanged = false;
+		}
+		
 		if (this.fromDrafts() && !this.pgpEncrypted())
 		{
 			sText = this.oCompose.getPlainText();
@@ -201,11 +217,19 @@ CComposeButtonsView.prototype.undoPgp = function ()
 				sText = aText.join('\r\n\r\n');
 			}
 
-			sHtml = '<div>' + sText.replace(/\r\n/gi, '<br />') + '</div>';
-
+			if (this.oCompose.isHtml())
+			{
+				this.oCompose.setHtmlText('<div>' + sText.replace(/\r\n/gi, '<br />') + '</div>');
+			}
+			else
+			{
+				this.oCompose.setPlainText(sText);
+			}
 		}
-		
-		this.oCompose.undoToHtml(sHtml);
+		else
+		{
+			this.oCompose.undoHtml();
+		}
 
 		this.pgpSecured(false);
 		this.pgpEncrypted(false);

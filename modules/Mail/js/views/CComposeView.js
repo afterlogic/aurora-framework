@@ -923,7 +923,7 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 	this.readingConfirmation(oMessage.readingConfirmation());
 	
 	_.each(this.extraButtons(), function (oButtons) {
-		oButtons.populateSourceMessage({
+		oButtons.doAfterPopulatingMessage({
 			bDraft: !!oMessage.folderObject() && (oMessage.folderObject().type() === Enums.FolderTypes.Drafts),
 			bPlain: oMessage.isPlain(),
 			sRawText: oMessage.textRaw()
@@ -1740,12 +1740,12 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
 };
 
 /**
- * @param {Object} oButtons
+ * @param {Object} oController
  */
-CComposeView.prototype.registerExtraButtons = function (oButtons)
+CComposeView.prototype.registerToolbarController = function (oController)
 {
-	this.extraButtons.push(oButtons);
-	oButtons.populateComposeInterface(this.getExtInterface());
+	this.extraButtons.push(oController);
+	oController.assignComposeExtInterface(this.getExtInterface());
 };
 
 /**
@@ -1754,9 +1754,9 @@ CComposeView.prototype.registerExtraButtons = function (oButtons)
 CComposeView.prototype.getExtInterface = function ()
 {
 	return {
-		isHtml: function () {
-			return true;
-		},
+		isHtml: _.bind(function () {
+			return !this.plainText();
+		}, this),
 		hasAttachments: _.bind(function () {
 			return this.notInlineAttachments().length > 0;
 		}, this),
@@ -1768,22 +1768,16 @@ CComposeView.prototype.getExtInterface = function ()
 			return this.recipientEmails();
 		}, this),
 		
-		saveHidden: _.bind(this.executeSave, this, true),
-		setPlainText: _.bind(function (sSignedEncryptedText) {
-			this.plainText(true);
-			this.textBody(sSignedEncryptedText);
+		saveSilently: _.bind(this.executeSave, this, true),
+		setPlainTextMode: _.bind(this.plainText, this, true),
+		setPlainText: _.bind(function (sText) {
+			this.textBody(sText);
 		}, this),
-		undoToHtml: _.bind(function (sHtml) {
-			if (sHtml !== '')
-			{
-				this.textBody(sHtml);
-			}
-			else
-			{
-				this.oHtmlEditor.undoAndClearRedo();
-			}
-			this.plainText(false);
-		}, this)
+		setHtmlTextMode: _.bind(this.plainText, this, false),
+		setHtmlText: _.bind(function (sHtml) {
+			this.textBody(sHtml);
+		}, this),
+		undoHtml: _.bind(this.oHtmlEditor.undoAndClearRedo, this.oHtmlEditor)
 	};
 };
 

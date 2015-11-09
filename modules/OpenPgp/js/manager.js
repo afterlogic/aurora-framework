@@ -14,7 +14,7 @@ module.exports = function (oSettings) {
 			if (IsPgpSupported())
 			{
 				ModulesManager.run('Mail', 'registerMessagePaneTopController', [require('modules/OpenPgp/js/views/MessageControlsView.js')]);
-				ModulesManager.run('Mail', 'registerComposeExtraButtons', [require('modules/OpenPgp/js/views/ComposeButtonsView.js')]);
+				ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/OpenPgp/js/views/ComposeButtonsView.js')]);
 			}
 		}
 	};
