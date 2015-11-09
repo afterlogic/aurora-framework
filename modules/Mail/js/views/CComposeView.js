@@ -307,12 +307,12 @@ function CComposeView()
 
 	this.backToListOnSendOrSave = ko.observable(false);
 
-	this.extraButtons = ko.observableArray([]);
+	this.toolbarControllers = ko.observableArray([]);
 	this.disableHeadersEdit = ko.computed(function () {
 		var bDisableHeadersEdit = false;
 		
-		_.each(this.extraButtons(), function (oButtons) {
-			bDisableHeadersEdit = bDisableHeadersEdit || oButtons.disableHeadersEdit();
+		_.each(this.toolbarControllers(), function (oController) {
+			bDisableHeadersEdit = bDisableHeadersEdit || !!oController.disableHeadersEdit && oController.disableHeadersEdit();
 		});
 		
 		return bDisableHeadersEdit;
@@ -320,8 +320,8 @@ function CComposeView()
 	ko.computed(function () {
 		var bDisableBodyEdit = false;
 		
-		_.each(this.extraButtons(), function (oButtons) {
-			bDisableBodyEdit = bDisableBodyEdit || oButtons.disableBodyEdit();
+		_.each(this.toolbarControllers(), function (oController) {
+			bDisableBodyEdit = bDisableBodyEdit || !!oController.disableBodyEdit && oController.disableBodyEdit();
 		});
 		
 		this.oHtmlEditor.disabled(bDisableBodyEdit);
@@ -329,8 +329,8 @@ function CComposeView()
 	this.iAutosaveInterval = -1;
 	ko.computed(function () {
 		var bAllowAutosave = Settings.AllowAutosaveInDrafts && (this.opened() || this.shown()) && !this.sending() && !this.saving();
-		_.each(this.extraButtons(), function (oButtons) {
-			bAllowAutosave = bAllowAutosave && !oButtons.disableAutosave();
+		_.each(this.toolbarControllers(), function (oController) {
+			bAllowAutosave = bAllowAutosave && !(!!oController.disableAutosave && oController.disableAutosave());
 		});
 		
 		window.clearInterval(this.iAutosaveInterval);
@@ -922,12 +922,15 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 	this.selectedSensitivity(oMessage.sensitivity());
 	this.readingConfirmation(oMessage.readingConfirmation());
 	
-	_.each(this.extraButtons(), function (oButtons) {
-		oButtons.doAfterPopulatingMessage({
-			bDraft: !!oMessage.folderObject() && (oMessage.folderObject().type() === Enums.FolderTypes.Drafts),
-			bPlain: oMessage.isPlain(),
-			sRawText: oMessage.textRaw()
-		});
+	_.each(this.toolbarControllers(), function (oController) {
+		if ($.isFunction(oController.doAfterPopulatingMessage))
+		{
+			oController.doAfterPopulatingMessage({
+				bDraft: !!oMessage.folderObject() && (oMessage.folderObject().type() === Enums.FolderTypes.Drafts),
+				bPlain: oMessage.isPlain(),
+				sRawText: oMessage.textRaw()
+			});
+		}
 	});
 };
 
@@ -1549,8 +1552,11 @@ CComposeView.prototype.executeSend = function (mParam)
 
 	if (this.isEnableSending() && this.verifyDataForSending())
 	{
-		_.each(this.extraButtons(), function (oButtons) {
-			bCancelSend = bCancelSend || oButtons.doBeforeSend(fContinueSending);
+		_.each(this.toolbarControllers(), function (oController) {
+			if ($.isFunction(oController.doBeforeSend))
+			{
+				bCancelSend = bCancelSend || oController.doBeforeSend(fContinueSending);
+			}
 		});
 		
 		if (!bCancelSend)
@@ -1599,8 +1605,11 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 		{
 			if (!bAutosave)
 			{
-				_.each(this.extraButtons(), function (oButtons) {
-					bCancelSaving = bCancelSaving || oButtons.doBeforeSave(fSave);
+				_.each(this.toolbarControllers(), function (oController) {
+					if ($.isFunction(oController.doBeforeSave))
+					{
+						bCancelSaving = bCancelSaving || oController.doBeforeSave(fSave);
+					}
 				}, this);
 			}
 			if (!bCancelSaving)
@@ -1744,8 +1753,11 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
  */
 CComposeView.prototype.registerToolbarController = function (oController)
 {
-	this.extraButtons.push(oController);
-	oController.assignComposeExtInterface(this.getExtInterface());
+	this.toolbarControllers.push(oController);
+	if ($.isFunction(oController.assignComposeExtInterface))
+	{
+		oController.assignComposeExtInterface(this.getExtInterface());
+	}
 };
 
 /**
