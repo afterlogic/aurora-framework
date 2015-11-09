@@ -219,7 +219,7 @@ function CMessagePaneView()
 	
 	this.fakeHeader = ko.computed(function () {
 		var topControllersVisible = !!_.find(this.topControllers(), function (oController) {
-			return oController.visible();
+			return !!oController.visible && oController.visible();
 		});
 		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || 
 				this.sensitivityText() !== '' || topControllersVisible);
@@ -591,9 +591,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.vcard(null);
 	}
 	
-	_.each(this.topControllers(), _.bind(function (oController) {
-		oController.populate(this.getExtInterface());
-	}, this));
+	this.doAfterPopulatingMessage();
 };
 
 CMessagePaneView.prototype.updateMomentDate = function ()
@@ -1234,6 +1232,10 @@ CMessagePaneView.prototype.switchDetailsVisibility = function ()
  */
 CMessagePaneView.prototype.registerTopController = function (oController) {
 	this.topControllers.push(oController);
+	if ($.isFunction(oController.assignMessagePaneExtInterface))
+	{
+		oController.assignMessagePaneExtInterface(this.getExtInterface());
+	}
 };
 
 /**
@@ -1241,32 +1243,39 @@ CMessagePaneView.prototype.registerTopController = function (oController) {
  */
 CMessagePaneView.prototype.getExtInterface = function ()
 {
-	var oMessage = this.currentMessage();
-	if (oMessage && this.isCurrentMessageLoaded())
-	{
-		return {
-			bPlain: oMessage.isPlain(),
-			sRawText: oMessage.textRaw(),
-			sText: oMessage.text(),
-			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
-			sFromEmail: oMessage.oFrom.getFirstEmail(),
-			changeText: _.bind(function (sText) {
+	return {
+		changeText: _.bind(function (sText) {
+			var oMessage = this.currentMessage();
+			if (oMessage && this.isCurrentMessageLoaded())
+			{
 				oMessage.text(sText);
 				oMessage.$text = null;
 				this.setMessageBody();
-			}, this)
-		};
+			}
+		}, this)
 	}
-	else
-	{
-		return {
-			bPlain: false,
-			sRawText: '',
-			sAccountEmail: '',
-			sFromEmail: '',
-			changeText: function () {}
-		};
-	}
+};
+
+CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
+{
+	var
+		oMessage = this.currentMessage(),
+		bLoaded = oMessage && this.isCurrentMessageLoaded(),
+		oMessageProps = {
+			bPlain: bLoaded ? oMessage.isPlain() : false,
+			sRawText: bLoaded ? oMessage.textRaw() : '',
+			sText: bLoaded ? oMessage.text() : '',
+			sAccountEmail: bLoaded ? Accounts.getEmail(oMessage.accountId()) : '',
+			sFromEmail: bLoaded ? oMessage.oFrom.getFirstEmail() : ''
+		}
+	;
+	
+	_.each(this.topControllers(), _.bind(function (oController) {
+		if ($.isFunction(oController.doAfterPopulatingMessage))
+		{
+			oController.doAfterPopulatingMessage(oMessageProps);
+		}
+	}, this));
 };
 
 module.exports = new CMessagePaneView();

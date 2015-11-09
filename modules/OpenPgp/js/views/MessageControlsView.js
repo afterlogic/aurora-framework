@@ -36,7 +36,6 @@ CMessageControlsView.prototype.reset = function ()
 	this.sText = '';
 	this.sAccountEmail = '';
 	this.sFromEmail = '';
-	this.fChangeText = function () {};
 	
 	this.decryptPassword('');
 	
@@ -45,26 +44,33 @@ CMessageControlsView.prototype.reset = function ()
 };
 
 /**
- * @param {object} oMessagePaneExtInterface
+ * @param {object} oMessagePane
  */
-CMessageControlsView.prototype.populate = function (oMessagePaneExtInterface)
+CMessageControlsView.prototype.assignMessagePaneExtInterface = function (oMessagePane)
 {
-	if (oMessagePaneExtInterface.bPlain)
+	this.oMessagePane = oMessagePane;
+};
+
+/**
+ * @param {object} oMessageProps
+ */
+CMessageControlsView.prototype.doAfterPopulatingMessage = function (oMessageProps)
+{
+	if (oMessageProps.bPlain)
 	{
-		this.sText = oMessagePaneExtInterface.sRawText;
-		this.sAccountEmail = oMessagePaneExtInterface.sAccountEmail;
-		this.sFromEmail = oMessagePaneExtInterface.sFromEmail;
-		this.fChangeText = oMessagePaneExtInterface.changeText;
+		this.sText = oMessageProps.sRawText;
+		this.sAccountEmail = oMessageProps.sAccountEmail;
+		this.sFromEmail = oMessageProps.sFromEmail;
 
 		this.decryptPassword('');
 
 		if (Settings.enableOpenPgp())
 		{
-			this.visibleDecryptControl(oMessagePaneExtInterface.sText.indexOf('-----BEGIN PGP MESSAGE-----') !== -1);
-			this.visibleVerifyControl(oMessagePaneExtInterface.sText.indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1);
-			if (this.visible())
+			this.visibleDecryptControl(oMessageProps.sText.indexOf('-----BEGIN PGP MESSAGE-----') !== -1);
+			this.visibleVerifyControl(oMessageProps.sText.indexOf('-----BEGIN PGP SIGNED MESSAGE-----') !== -1);
+			if (this.visible() && this.oMessagePane)
 			{
-				this.fChangeText('<pre>' + TextUtils.encodeHtml(this.sText) + '</pre>');
+				this.oMessagePane.changeText('<pre>' + TextUtils.encodeHtml(this.sText) + '</pre>');
 			}
 		}
 	}
@@ -82,9 +88,9 @@ CMessageControlsView.prototype.decryptMessage = function ()
 		bNoSignDataNotice = false
 	;
 	
-	if (oRes && oRes.result && !oRes.errors)
+	if (oRes && oRes.result && !oRes.errors && this.oMessagePane)
 	{
-		this.fChangeText('<pre>' + TextUtils.encodeHtml(oRes.result) + '</pre>');
+		this.oMessagePane.changeText('<pre>' + TextUtils.encodeHtml(oRes.result) + '</pre>');
 		
 		this.decryptPassword('');
 		this.visibleDecryptControl(false);
@@ -113,9 +119,9 @@ CMessageControlsView.prototype.verifyMessage = function ()
 {
 	var oRes = OpenPgp.verify(this.sText, this.sFromEmail);
 	
-	if (oRes && oRes.result && !(oRes.errors || oRes.notices))
+	if (oRes && oRes.result && !(oRes.errors || oRes.notices) && this.oMessagePane)
 	{
-		this.fChangeText('<pre>' + TextUtils.encodeHtml(oRes.result) + '</pre>');
+		this.oMessagePane.changeText('<pre>' + TextUtils.encodeHtml(oRes.result) + '</pre>');
 		
 		this.visibleVerifyControl(false);
 		
