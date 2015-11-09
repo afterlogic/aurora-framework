@@ -2,9 +2,16 @@
 
 class TwilioModule extends AApiModule
 {
+	public function init() {
+		parent::init();
+		
+		$this->AddEntry('twilio', 'getTwiML');
+	}
 
-	public function getTwiML($aPaths, $oHttp)
+
+	public function getTwiML()
 	{
+		$aPaths = \Core\Service::GetPaths();
 		$oApiCapability = \CApi::GetCoreManager('capability');
 		$oApiUsers = \CApi::GetCoreManager('users');
 		$oApiTenants = \CApi::GetCoreManager('tenants');
@@ -18,10 +25,10 @@ class TwilioModule extends AApiModule
 
 		$sTwilioPhoneNumber = $oTenant->TwilioPhoneNumber;
 
-		$sDigits = $oHttp->GetRequest('Digits');
+		$sDigits = $this->oHttp->GetRequest('Digits');
 		//$sFrom = str_replace('client:', '', $oHttp->GetRequest('From'));
-		$sFrom = $oHttp->GetRequest('From');
-		$sTo = $oHttp->GetRequest('PhoneNumber');
+		$sFrom = $this->oHttp->GetRequest('From');
+		$sTo = $this->oHttp->GetRequest('PhoneNumber');
 
 		$aTwilioNumbers = $oApiUsers->getTwilioNumbers($sTenantId);
 
@@ -29,9 +36,9 @@ class TwilioModule extends AApiModule
 		$aResult = array('<?xml version="1.0" encoding="UTF-8"?>');
 		$aResult[] = '<Response>';
 
-		if ($oHttp->GetRequest('CallSid'))
+		if ($this->oHttp->GetRequest('CallSid'))
 		{
-			if ($oHttp->GetRequest('AfterlogicCall')) //internal call from webmail first occurrence
+			if ($this->oHttp->GetRequest('AfterlogicCall')) //internal call from webmail first occurrence
 			{
 				if (preg_match("/^[\d\+\-\(\) ]+$/", $sTo) && strlen($sTo) > 0 && strlen($sTo) < 10) //to internal number
 				{
@@ -47,7 +54,7 @@ class TwilioModule extends AApiModule
 			}
 			else //call from other systems or internal call second occurrence
 			{
-				if ($oTenant->TwilioAccountSID === $oHttp->GetRequest('AccountSid') && $oTenant->TwilioAppSID === $oHttp->GetRequest('ApplicationSid')) //internal call second occurrence
+				if ($oTenant->TwilioAccountSID === $this->oHttp->GetRequest('AccountSid') && $oTenant->TwilioAppSID === $this->oHttp->GetRequest('ApplicationSid')) //internal call second occurrence
 				{
 					/*$sTo = isset($_COOKIE['twilioCall'][$oHttp->GetRequest('CallSid')]) ? $_COOKIE['twilioCall'][$oHttp->GetRequest('CallSid')] : '';
 					@setcookie ('twilioCall['.$oHttp->GetRequest('CallSid').']', '', time() - 1);*/

@@ -32,13 +32,10 @@ class Basic extends \Sabre\DAV\Auth\Backend\AbstractBasic
 	{
 		if (class_exists('CApi') && \CApi::IsValid())
 		{
-			/* @var $oApiCalendarManager \CApiCalendarManager */
-			$oApiCalendarManager = \CApi::Manager('calendar');
-
 			/* @var $oApiCapabilityManager \CApiCapabilityManager */
-			$oApiCapabilityManager = \CApi::Manager('capability');
+			$oApiCapabilityManager = \CApi::GetCoreManager('capability');
 
-			if ($oApiCalendarManager && $oApiCapabilityManager)
+			if ($oApiCapabilityManager)
 			{
 				$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
 				if ($oAccount && $oAccount->IsDisabled)
@@ -60,10 +57,12 @@ class Basic extends \Sabre\DAV\Auth\Backend\AbstractBasic
 					\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
 				}
 
+				/* @var $oApiCalendarManager \CApiCalendarManager */
+				$oApiCalendarManager = \CApi::Manager('calendar');
+
 				if (($oAccount && $oAccount->IncomingMailPassword === $sPassword &&
 						(($bIsMobileSync && !$bIsOutlookSyncClient) || ($bIsOutlookSync && $bIsOutlookSyncClient))) ||
-					$bIsDemo ||
-					$sUserName === $oApiCalendarManager->getPublicUser()
+					$bIsDemo || ($oApiCalendarManager && $sUserName === $oApiCalendarManager->getPublicUser())
 				)
 				{
 					\afterlogic\DAV\Utils::CheckPrincipals($sUserName);

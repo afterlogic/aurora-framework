@@ -5,7 +5,7 @@
 /**
  * @package Dav
  */
-class CApiDavManager extends AApiManager
+class CApiDavMainManager extends AApiManager
 {
 	/**
 	 * @var array
@@ -17,10 +17,10 @@ class CApiDavManager extends AApiManager
 	 * @param CApiGlobalManager $oManager
 	 * @param type $sForcedStorage
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('dav', $oManager);
-		CApi::Inc('common.dav.client');
+		parent::__construct('main', $oManager, $oModule);
+		$this->incClass('dav-client');
 
 		$this->aDavClients = array();
 	}
@@ -29,7 +29,7 @@ class CApiDavManager extends AApiManager
 	 * @param CAccount $oAccount
 	 * @return CDAVClient|false
 	 */
-	protected function &_getDAVClient($oAccount)
+	public function &GetDAVClient($oAccount)
 	{
 		$mResult = false;
 		if (!isset($this->aDavClients[$oAccount->Email]))
@@ -124,7 +124,7 @@ class CApiDavManager extends AApiManager
 	 * 
 	 * @return int
 	 */
-	public function getServerPort($oAccount)
+	public function getServerPort($oAccount = null)
 	{
 		$iResult = 80;
 		if ($this->isUseSsl($oAccount))
@@ -174,7 +174,7 @@ class CApiDavManager extends AApiManager
 
 					if ($this->getCalendarStorageType() === 'caldav' || $this->getContactsStorageType() === 'carddav')
 					{
-						$oDav =& $this->_getDAVClient($oAccount);
+						$oDav =& $this->GetDAVClient($oAccount);
 						if ($oDav && $oDav->Connect())
 						{
 							$mResult = $sServerUrl.$oDav->GetCurrentPrincipal();
@@ -235,7 +235,7 @@ class CApiDavManager extends AApiManager
 	public function testConnection($oAccount)
 	{
 		$bResult = false;
-		$oDav =& $this->_getDAVClient($oAccount);
+		$oDav =& $this->GetDAVClient($oAccount);
 		if ($oDav && $oDav->Connect())
 		{
 			$bResult = true;

@@ -20,7 +20,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isNotLite()
 	{
-		return !!CApi::Manager('licensing');
+		return !!CApi::GetCoreManager('licensing');
 	}
 
 	/**
@@ -28,7 +28,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCollaborationSupported()
 	{
-		return $this->isNotLite() && !!CApi::Manager('collaboration');
+		return $this->isNotLite() && !!CApi::GetCoreManager('collaboration');
 	}
 
 	/**
@@ -36,7 +36,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isMailsuite()
 	{
-		return !!CApi::GetConf('mailsuite', false) && !!CApi::Manager('mailsuite');
+		return !!CApi::GetConf('mailsuite', false) && !!CApi::GetCoreManager('mailsuite');
 	}
 
 	/**
@@ -44,7 +44,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isDavSupported()
 	{
-		return $this->isNotLite() && !!CApi::Manager('dav');
+		return $this->isNotLite() && !!CApi::GetModuleManager()->ModuleExists('dav');
 	}
 
 	/**

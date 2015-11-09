@@ -222,45 +222,6 @@ class CApiGlobalManager
 
 		return $oResult;
 	}
-
-	/**
-	 * @param string $sManagerType
-	 * @param string $sForcedStorage = ''
-	 */
-	public function GetByType1($sManagerType, $sForcedStorage = '')
-	{
-		$oResult = null;
-		if (CApi::IsValid())
-		{
-			if (empty($sForcedStorage))
-			{
-				if (isset($this->aManagers[$sManagerType]))
-				{
-					$oResult =& $this->aManagers[$sManagerType];
-				}
-				else
-				{
-					$sManagerType = strtolower($sManagerType);
-					if (CApi::Inc('common.managers.'.$sManagerType.'.manager', false))
-					{
-						$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
-						$this->aManagers[$sManagerType] = new $sClassName($this);
-						$oResult =& $this->aManagers[$sManagerType];
-					}
-				}
-			}
-			else
-			{
-				if (CApi::Inc('common.managers.'.$sManagerType.'.manager', false))
-				{
-					$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
-					$oResult = new $sClassName($this, $sForcedStorage);
-				}
-			}
-		}
-
-		return $oResult;
-	}
 }
 
 /**

@@ -149,4 +149,23 @@ class CHelpdeskThread extends api_AContainer
 			'IsRead'			=> array('bool')
 		);
 	}
+	
+	public function toResponseArray()
+	{
+		return array(
+			'IdHelpdeskThread' => $this->IdHelpdeskThread,
+			'ThreadHash' => $this->StrHelpdeskThreadHash,
+			'IdOwner' => $this->IdOwner,
+			'Owner' => $this->Owner,
+			'Type' => $this->Type,
+			'Subject' => $this->Subject,
+			'IsRead' => $this->IsRead,
+			'IsArchived' => $this->IsArchived,
+			'ItsMe' => $this->ItsMe,
+			'HasAttachments' => $this->HasAttachments,
+			'PostCount' => $this->PostCount,
+			'Created' => $this->Created,
+			'Updated' => $this->Updated
+		);		
+	}
 }

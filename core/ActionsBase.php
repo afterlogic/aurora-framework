@@ -287,62 +287,7 @@ abstract class ActionsBase
 		if (is_object($mResponse))
 		{
 			$sClassName = get_class($mResponse);
-			if ('CHelpdeskThread' === $sClassName)
-			{
-				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), array(
-					'IdHelpdeskThread' => $mResponse->IdHelpdeskThread,
-					'ThreadHash' => $mResponse->StrHelpdeskThreadHash,
-					'IdOwner' => $mResponse->IdOwner,
-					'Owner' => $mResponse->Owner,
-					'Type' => $mResponse->Type,
-					'Subject' => $mResponse->Subject,
-					'IsRead' => $mResponse->IsRead,
-					'IsArchived' => $mResponse->IsArchived,
-					'ItsMe' => $mResponse->ItsMe,
-					'HasAttachments' => $mResponse->HasAttachments,
-					'PostCount' => $mResponse->PostCount,
-					'Created' => $mResponse->Created,
-					'Updated' => $mResponse->Updated
-				));
-			}
-			else if ('CHelpdeskPost' === $sClassName)
-			{
-				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), array(
-					'IdHelpdeskPost' => $mResponse->IdHelpdeskPost,
-					'IdHelpdeskThread' => $mResponse->IdHelpdeskThread,
-					'IdOwner' => $mResponse->IdOwner,
-					'Owner' => $mResponse->Owner,
-					'Attachments' => $this->responseObject($oAccount, $mResponse->Attachments, $sParent),
-					'IsThreadOwner' => $mResponse->IsThreadOwner,
-					'ItsMe' => $mResponse->ItsMe,
-					'Type' => $mResponse->Type,
-					'SystemType' => $mResponse->SystemType,
-					'Text' => \MailSo\Base\HtmlUtils::ConvertPlainToHtml($mResponse->Text),
-					'Created' => $mResponse->Created
-				));
-			}
-			else if ('CHelpdeskAttachment' === $sClassName)
-			{
-				$iThumbnailLimit = 1024 * 1024 * 2; // 2MB
-
-				/* @var $mResponse CHelpdeskAttachment */
-				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), array(
-					'IdHelpdeskAttachment' => $mResponse->IdHelpdeskAttachment,
-					'IdHelpdeskPost' => $mResponse->IdHelpdeskPost,
-					'IdHelpdeskThread' => $mResponse->IdHelpdeskThread,
-					'SizeInBytes' => $mResponse->SizeInBytes,
-					'FileName' => $mResponse->FileName,
-					'MimeType' => \MailSo\Base\Utils::MimeContentType($mResponse->FileName),
-					'Thumb' => \CApi::GetConf('labs.allow-thumbnail', true) &&
-						$mResponse->SizeInBytes < $iThumbnailLimit &&
-						\api_Utils::IsGDImageMimeTypeSuppoted(
-							\MailSo\Base\Utils::MimeContentType($mResponse->FileName), $mResponse->FileName),
-					'Hash' => $mResponse->Hash,
-					'Content' => $mResponse->Content,
-					'Created' => $mResponse->Created
-				));
-			}
-			else if ('CApiMailFolderCollection' === $sClassName)
+			if ('CApiMailFolderCollection' === $sClassName)
 			{
 				$mResult = array_merge($this->objectWrapper($oAccount, $mResponse, $sParent, $aParameters), array(
 					'Namespace' => $mResponse->GetNamespace()

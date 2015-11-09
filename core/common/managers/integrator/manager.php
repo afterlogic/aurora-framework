@@ -1695,7 +1695,7 @@ class CApiIntegratorManager extends AApiManager
 			return $aAppData;
 		}
 
-//		$oApiHelpdeskManager = CApi::Manager('helpdesk');
+		$oApiHelpdeskManager = CApi::Manager('helpdesk');
 		/* @var $oApiHelpdeskManager CApiHelpdeskManager */
 
 		$oApiTenant = CApi::GetCoreManager('tenants');

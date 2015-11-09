@@ -24,7 +24,7 @@ class HelpDeskModule extends AApiModule
 			$oAccount = $this->getDefaultAccountFromParam($bThrowAuthExceptionOnFalse);
 			if ($oAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
 			{
-				$oResult = $this->GetHelpdeskAccountFromMainAccount($oAccount);
+				$oResult = $this->getHelpdeskAccountFromMainAccount($oAccount);
 			}
 		}
 		else
@@ -44,6 +44,63 @@ class HelpDeskModule extends AApiModule
 
 		return $oResult;
 	}
+	
+	/**
+	 * @param \CAccount $oAccount
+	 * 
+	 * @return \CHelpdeskUser|null
+	 */
+	protected function getHelpdeskAccountFromMainAccount(&$oAccount)
+	{
+		$oResult = null;
+		$oApiUsers = CApi::GetCoreManager('users');
+		if ($oAccount && $oAccount->IsDefaultAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
+		{
+			if (0 < $oAccount->User->IdHelpdeskUser)
+			{
+				$oHelpdeskUser = $this->oApiHelpDeskManager->getUserById($oAccount->IdTenant, $oAccount->User->IdHelpdeskUser);
+				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
+			}
+
+			if (!($oResult instanceof \CHelpdeskUser))
+			{
+				$oHelpdeskUser = $this->oApiHelpDeskManager->getUserByEmail($oAccount->IdTenant, $oAccount->Email);
+				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
+				
+				if ($oResult instanceof \CHelpdeskUser)
+				{
+					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
+					$oApiUsers->updateAccount($oAccount);
+				}
+			}
+
+			if (!($oResult instanceof \CHelpdeskUser))
+			{
+				$oHelpdeskUser = new \CHelpdeskUser();
+				$oHelpdeskUser->Email = $oAccount->Email;
+				$oHelpdeskUser->Name = $oAccount->FriendlyName;
+				$oHelpdeskUser->IdSystemUser = $oAccount->IdUser;
+				$oHelpdeskUser->IdTenant = $oAccount->IdTenant;
+				$oHelpdeskUser->Activated = true;
+				$oHelpdeskUser->IsAgent = true;
+				$oHelpdeskUser->Language = $oAccount->User->DefaultLanguage;
+				$oHelpdeskUser->DateFormat = $oAccount->User->DefaultDateFormat;
+				$oHelpdeskUser->TimeFormat = $oAccount->User->DefaultTimeFormat;
+
+				$oHelpdeskUser->setPassword($oAccount->IncomingMailPassword);
+
+				if ($this->oApiHelpDeskManager->createUser($oHelpdeskUser))
+				{
+					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
+					$oApiUsers->updateAccount($oAccount);
+
+					$oResult = $oHelpdeskUser;
+				}
+			}
+		}
+
+		return $oResult;
+	}	
 	
 	public function Login()
 	{
@@ -282,7 +339,7 @@ class HelpDeskModule extends AApiModule
 			$oThread->Type = \EHelpdeskThreadType::Pending;
 			$oThread->Subject = $sSubject;
 
-			if (!$this->ApiHelpdesk()->createThread($oUser, $oThread))
+			if (!$this->oApiHelpDeskManager->createThread($oUser, $oThread))
 			{
 				$oThread = null;
 			}
@@ -352,7 +409,7 @@ class HelpDeskModule extends AApiModule
 				}
 			}
 
-			$mResult = $this->ApiHelpdesk()->createPost($oUser, $oThread, $oPost, $bIsNew, true, $sCc, $sBcc);
+			$mResult = $this->oApiHelpDeskManager->createPost($oUser, $oThread, $oPost, $bIsNew, true, $sCc, $sBcc);
 
 			if ($mResult)
 			{
@@ -460,7 +517,7 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetThreadPosts()
+	public function GetPosts()
 	{
 		$oAccount = null;
 		$oUser = $this->getHelpdeskAccountFromParam($oAccount);

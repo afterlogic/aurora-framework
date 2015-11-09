@@ -33,7 +33,6 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 		$this->ApiUsersManager = CApi::GetCoreManager('users');
 		$this->oApiCapabilityManager = CApi::GetCoreManager('capability');
-		$this->oApiDavManager = CApi::GetCoreManager('dav');
 	}
 	
 	/**

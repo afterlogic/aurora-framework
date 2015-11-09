@@ -23,7 +23,7 @@ class CApiModuleManager
 							$oModule->SetName($sFileItem);
 							$oModule->SetPath($sModulesPath.$sFileItem);
 							$oModule->init();
-							$this->_aModules[$sFileItem] = $oModule;
+							$this->_aModules[strtolower($sFileItem)] = $oModule;
 						}
 					}
 				}
@@ -55,7 +55,41 @@ class CApiModuleManager
 	 */
 	public function GetModule($sModuleName)
 	{
+		$sModuleName = strtolower($sModuleName);
 		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof AApiModule) ? $this->_aModules[$sModuleName] : false;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function GetModuleByEntry($sEntryName)
+	{
+		$sModule = '';
+		$oHttp = \MailSo\Base\Http::NewInstance();
+		if ($oHttp->IsPost())
+		{
+			$sModule = $oHttp->GetPost('Module', null);
+		}
+		else
+		{
+			$aPath = \Core\Service::GetPaths();
+			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
+		}
+			
+		$oResult = $this->GetModule($sModule);
+		if (!$oResult)
+		{
+			foreach ($this->_aModules as $oModule)
+			{
+				if ($oModule instanceof AApiModule && $oModule->HasEntry($sEntryName))
+				{
+					$oResult = $oModule;
+					break;
+				}
+			}
+		}
+		
+		return $oResult;
 	}
 	
 	/**
@@ -67,13 +101,25 @@ class CApiModuleManager
 		return ($this->GetModule($sModuleName)) ? true  : false;
 	}
 	
-	public function ExecuteMethod($sModuleName, $sMethodName, $aArguments = array())
+	public function RunEntry($sEntryName)
+	{
+		$mResult = false;
+		$oModule = $this->GetModuleByEntry($sEntryName);
+		if ($oModule instanceof AApiModule)
+		{
+			$mResult = $oModule->RunEntry($sEntryName);
+		}
+		
+		return $mResult;
+	}
+
+	public function ExecuteMethod($sModuleName, $sMethod, $aParameters)
 	{
 		$mResult = false;
 		$oModule = $this->GetModule($sModuleName);
-		if ($oModule)
+		if ($oModule && $oModule instanceof AApiModule)
 		{
-			$mResult = $oModule->ExecuteMethod($sMethodName, $aArguments);
+			$mResult = $oModule->ExecuteMethod($sMethod, $aParameters);
 		}
 		
 		return $mResult;
@@ -173,9 +219,19 @@ abstract class AApiModule
 	/**
 	 * @var array
 	 */
+	protected $aEntries = array();	
+
+	/**
+	 * @var array
+	 */
 	protected $aParameters;
 
 	public $oApiCapabilityManager = null;
+	
+	/**
+	 * @var \MailSo\Base\Http
+	 */
+	protected $oHttp;	
 	
 	/**
 	 * @param string $sVersion
@@ -188,6 +244,13 @@ abstract class AApiModule
 		$this->sPath = '';
 		$this->aParameters = array();
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
+		$this->oHttp = \MailSo\Base\Http::NewInstance();
+		
+		$this->aEntries = array(
+			'ajax' => 'EntryAjax',
+			'upload' => 'EntryUpload',
+			'download' => 'EntryDownload'
+		);
 	}
 
 	public function init()
@@ -290,6 +353,226 @@ abstract class AApiModule
 		return $mResult;
 	}
 	
+	public function AddEntry($sName, $mCallbak)
+	{
+		if (!isset($this->aEntries[$sName]))
+		{
+			$this->aEntries[$sName] = $mCallbak;
+		}
+	}
+	
+	public function HasEntry($sName)
+	{
+		return isset($this->aEntries[$sName]);
+	}
+	
+	public function GetEntry($sName)
+	{
+		$mResult = false;
+		if (isset($this->aEntries[$sName]))
+		{
+			$mResult = $this->aEntries[$sName];
+		}
+		
+		return $mResult;
+	}	
+	
+	public function RunEntry($sName)
+	{
+		$mResult = false;
+		$mEntry = $this->GetEntry($sName);
+		if ($mEntry && method_exists($this, $mEntry))
+		{
+			$mResult = call_user_func(array($this, $mEntry));
+		}			
+		
+		return $mResult;
+	}
+
+	public function EntryAjax()
+	{
+		@ob_start();
+
+		$aResponseItem = null;
+		$sAction = $this->oHttp->GetPost('Action', null);
+
+		$sModule = $this->oHttp->GetPost('Module', null);
+		if (strtolower($sModule) === strtolower($this->GetName()))
+		{
+			$sMethod = $this->oHttp->GetPost('Method', null);
+			$sParameters = $this->oHttp->GetPost('Parameters', null);
+			try
+			{
+				\CApi::Log('AJAX:');
+				\CApi::Log('Module: '. $sModule);
+				\CApi::Log('Method: '. $sMethod);
+
+				if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'SystemGetAppData' &&
+					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\Core\Service::validateToken())
+				{
+					throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidToken);
+				}
+				else if (!empty($sModule) && !empty($sMethod))
+				{
+					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
+					$aParameters['AccountID'] = $this->oHttp->GetPost('AccountID', '');
+					$aParameters['AuthToken'] = $this->oHttp->GetPost('AuthToken', '');
+					$aResponseItem = $this->ExecuteMethod($sMethod, $aParameters);
+
+	/*						
+					else if (\CApi::Plugin()->JsonHookExists($sMethodName))
+					{
+						$this->oActions->SetActionParams($this->oHttp->GetPostAsArray());
+						$aResponseItem = \CApi::Plugin()->RunJsonHook($this->oActions, $sMethodName);
+					}
+	*/
+				}
+
+				if (!is_array($aResponseItem))
+				{
+					throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
+				}
+			}
+			catch (\Exception $oException)
+			{
+				//if ($oException instanceof \Core\Exceptions\ClientException &&
+				//	\Core\Notifications::AuthError === $oException->getCode())
+				//{
+				//	$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::Manager('integrator');
+				//	$oApiIntegrator->setLastErrorCode(\Core\Notifications::AuthError);
+				//	$oApiIntegrator->logoutAccount();
+				//}
+
+				\CApi::LogException($oException);
+
+				$sAction = empty($sAction) ? 'Unknown' : $sAction;
+
+				$aAdditionalParams = null;
+				if ($oException instanceof \Core\Exceptions\ClientException)
+				{
+					$aAdditionalParams = $oException->GetObjectParams();
+				}
+
+				$aResponseItem = $this->ExceptionResponse(null, $sAction, $oException, $aAdditionalParams);
+			}
+
+			@header('Content-Type: application/json; charset=utf-8');
+
+			\CApi::Plugin()->RunHook('ajax.response-result', array($sAction, &$aResponseItem));
+		}
+
+		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
+	}
+
+	public function EntryUpload()
+	{
+		@ob_start();
+		$aResponseItem = null;
+		$sMethod = $this->oHttp->GetPost('Method', null);
+		$sParameters = $this->oHttp->GetPost('Parameters', null);
+		try
+		{
+
+			if (!empty($sModule) && !empty($sMethod))
+			{
+				$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
+				$sError = '';
+				$sInputName = 'jua-uploader';
+
+				$iError = UPLOAD_ERR_OK;
+				$_FILES = isset($_FILES) ? $_FILES : null;
+				if (isset($_FILES, $_FILES[$sInputName], $_FILES[$sInputName]['name'], $_FILES[$sInputName]['tmp_name'], $_FILES[$sInputName]['size'], $_FILES[$sInputName]['type']))
+				{
+					$iError = (isset($_FILES[$sInputName]['error'])) ? (int) $_FILES[$sInputName]['error'] : UPLOAD_ERR_OK;
+					if (UPLOAD_ERR_OK === $iError)
+					{
+						$aParameters = array_merge($aParameters, 
+							array(
+								'AccountID' => $this->oHttp->GetPost('AccountID', ''),
+								'FileData' => $_FILES[$sInputName],
+								'IsExt' => '1' === (string) $this->oHttp->GetPost('IsExt', '0') ? '1' : '0',
+								'TenantHash' => (string) $this->oHttp->GetPost('TenantHash', ''),
+								'Token' => $this->oHttp->GetPost('Token', ''),
+								'AuthToken' => $this->oHttp->GetPost('AuthToken', '')
+							)
+						);
+
+
+						$aResponseItem = $this->ExecuteMethod($sMethod, $aParameters);
+					}
+					else
+					{
+						$sError = 'unknown';
+//								$sError = $this->oActions->convertUploadErrorToString($iError);
+					}
+				}
+				else if (!isset($_FILES) || !is_array($_FILES) || 0 === count($_FILES))
+				{
+					$sError = 'size';
+				}
+				else
+				{
+					$sError = 'unknown';
+				}
+			}					
+
+			if (!is_array($aResponseItem) && empty($sError))
+			{
+				throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
+			}
+		}
+		catch (\Exception $oException)
+		{
+			\CApi::LogException($oException);
+			$aResponseItem = $this->ExceptionResponse(null, 'Upload', $oException);
+			$sError = 'exception';
+		}
+
+		if (0 < strlen($sError))
+		{
+			$aResponseItem['Error'] = $sError;
+		}
+
+		@ob_get_clean();
+		@header('Content-Type: text/html; charset=utf-8');
+//				if ('iframe' === $this->oHttp->GetPost('jua-post-type', ''))
+//				{
+//					@header('Content-Type: text/html; charset=utf-8');
+//				}
+//				else
+//				{
+//					@header('Content-Type: application/json; charset=utf-8');
+//				}
+
+		return \MailSo\Base\Utils::Php2js($aResponseItem);		
+	}
+
+	public function EntryDownload()
+	{
+		$aPaths = \Core\Service::GetPaths();
+		$sMethod = empty($aPaths[2]) ? '' : $aPaths[2];
+
+		try
+		{
+			if (!empty($sMethod))
+			{
+				$aParameters = array(
+					'RawKey' => empty($aPaths[3]) ? '' : $aPaths[3],
+					'IsExt' => empty($aPaths[4]) ? '0' : ('1' === (string) $aPaths[4] ? '1' : 0),
+					'TenantHash' => empty($aPaths[5]) ? '' : $aPaths[5],
+					'AuthToken' => empty($aPaths[6]) ? '' : $aPaths[6]
+				);						
+
+				$this->ExecuteMethod($sMethod, $aParameters);
+			}
+		}
+		catch (\Exception $oException)
+		{
+			\CApi::LogException($oException, \ELogLevel::Error);
+			$this->oHttp->StatusHeader(404);
+		}
+	}
+
 	/**
 	 * @param string $sFileName
 	 * @param bool $bDoExitOnError = true
@@ -437,6 +720,54 @@ abstract class AApiModule
 		}
 
 		return $aResponseItem;
+	}	
+	
+	/**
+	 * @param \CAccount $oAccount
+	 * @param string $sActionName
+	 * @param \Exception $oException
+	 * @param array $aAdditionalParams = null
+	 *
+	 * @return array
+	 */
+	public function ExceptionResponse($oAccount, $sActionName, $oException, $aAdditionalParams = null)
+	{
+		$iErrorCode = null;
+		$sErrorMessage = null;
+
+		$bShowError = \CApi::GetConf('labs.webmail.display-server-error-information', false);
+
+		if ($oException instanceof \Core\Exceptions\ClientException)
+		{
+			$iErrorCode = $oException->getCode();
+			$sErrorMessage = null;
+			if ($bShowError)
+			{
+				$sErrorMessage = $oException->getMessage();
+				if (empty($sErrorMessage) || 'ClientException' === $sErrorMessage)
+				{
+					$sErrorMessage = null;
+				}
+			}
+		}
+		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException)
+		{
+			$iErrorCode = \Core\Notifications::MailServerError;
+			
+			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
+			if ($oResponse instanceof \MailSo\Imap\Response)
+			{
+				$sErrorMessage = $oResponse instanceof \MailSo\Imap\Response ?
+					$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : null;
+			}
+		}
+		else
+		{
+			$iErrorCode = \Core\Notifications::UnknownError;
+//			$sErrorMessage = $oException->getCode().' - '.$oException->getMessage();
+		}
+
+		return $this->FalseResponse($oAccount, $sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams);
 	}	
 	
 	/**

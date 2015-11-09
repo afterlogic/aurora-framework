@@ -314,10 +314,10 @@ class CApi
 	public static function IsMobileApplication()
 	{
 		/* @var $oApiIntegrator \CApiIntegratorManager */
-		$oApiIntegrator = \CApi::Manager('integrator');
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
 		/* @var $oApiCapability \CApiCapabilityManager */
-		$oApiCapability = \CApi::Manager('capability');
+		$oApiCapability = \CApi::GetCoreManager('capability');
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
 	}

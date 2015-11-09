@@ -97,4 +97,21 @@ class CHelpdeskPost extends api_AContainer
 			'Created'			=> array('datetime', 'created', true, false)
 		);
 	}
+	
+	public function toResponseArray()
+	{
+		return	array(
+			'IdHelpdeskPost' => $this->IdHelpdeskPost,
+			'IdHelpdeskThread' => $this->IdHelpdeskThread,
+			'IdOwner' => $this->IdOwner,
+			'Owner' => $this->Owner,
+			'Attachments' => \CApiResponseManager::GetResponseObject($this->Attachments),
+			'IsThreadOwner' => $this->IsThreadOwner,
+			'ItsMe' => $this->ItsMe,
+			'Type' => $this->Type,
+			'SystemType' => $this->SystemType,
+			'Text' => \MailSo\Base\HtmlUtils::ConvertPlainToHtml($this->Text),
+			'Created' => $this->Created
+		);	
+	}
 }

@@ -3,6 +3,7 @@
 var
 	ko = require('knockout'),
 	$ = require('jquery'),
+	moment = require('moment'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js')

@@ -810,7 +810,7 @@ CHelpdeskView.prototype.requestPosts = function (oItem, iStartFromId)
 			this.loadingMoreMessages(true);
 		}
 
-		Ajax.send('GetPosts', Parameters, this.onGetPostsResponse, this);
+		Ajax.send('GetPosts', oParameters, this.onGetPostsResponse, this);
 	}
 };
 

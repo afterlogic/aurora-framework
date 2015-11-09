@@ -136,4 +136,24 @@ class CHelpdeskAttachment extends api_AContainer
 			'Hash'					=> array('string', 'hash')
 		);
 	}
+	
+	public function toResponseArray()
+	{
+		$iThumbnailLimit = 1024 * 1024 * 2; // 2MB TODO:
+		return array(
+			'IdHelpdeskAttachment' => $this->IdHelpdeskAttachment,
+			'IdHelpdeskPost' => $this->IdHelpdeskPost,
+			'IdHelpdeskThread' => $this->IdHelpdeskThread,
+			'SizeInBytes' => $this->SizeInBytes,
+			'FileName' => $this->FileName,
+			'MimeType' => \MailSo\Base\Utils::MimeContentType($this->FileName),
+			'Thumb' => \CApi::GetConf('labs.allow-thumbnail', true) &&
+				$this->SizeInBytes < $iThumbnailLimit &&
+				\api_Utils::IsGDImageMimeTypeSuppoted(
+					\MailSo\Base\Utils::MimeContentType($this->FileName), $this->FileName),
+			'Hash' => $this->Hash,
+			'Content' => $this->Content,
+			'Created' => $this->Created
+		);
+	}	
 }
