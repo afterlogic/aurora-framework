@@ -1261,13 +1261,13 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 	var
 		oMessage = this.currentMessage(),
 		bLoaded = oMessage && this.isCurrentMessageLoaded(),
-		oMessageProps = {
-			bPlain: bLoaded ? oMessage.isPlain() : false,
-			sRawText: bLoaded ? oMessage.textRaw() : '',
-			sText: bLoaded ? oMessage.text() : '',
-			sAccountEmail: bLoaded ? Accounts.getEmail(oMessage.accountId()) : '',
-			sFromEmail: bLoaded ? oMessage.oFrom.getFirstEmail() : ''
-		}
+		oMessageProps = bLoaded ? {
+			bPlain: oMessage.isPlain(),
+			sRawText: oMessage.textRaw(),
+			sText: oMessage.text(),
+			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
+			sFromEmail: oMessage.oFrom.getFirstEmail()
+		} : null
 	;
 	
 	_.each(this.topControllers(), _.bind(function (oController) {

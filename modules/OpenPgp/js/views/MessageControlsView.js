@@ -44,7 +44,10 @@ CMessageControlsView.prototype.reset = function ()
 };
 
 /**
- * @param {object} oMessagePane
+ * Assigns message pane external interface.
+ * 
+ * @param {Object} oMessagePane Message pane external interface.
+ * @param {Function} changeText(sText) Function changes displaying text in message pane and in message too so exactly this text will be shown next time.
  */
 CMessageControlsView.prototype.assignMessagePaneExtInterface = function (oMessagePane)
 {
@@ -52,11 +55,20 @@ CMessageControlsView.prototype.assignMessagePaneExtInterface = function (oMessag
 };
 
 /**
- * @param {object} oMessageProps
+ * Receives properties of the message that is displaying in the message pane. 
+ * It is called every time the message is changing in the message pane.
+ * Receives null if there is no message in the pane.
+ * 
+ * @param {Object|null} oMessageProps Information about message in message pane.
+ * @param {Boolean} oMessageProps.bPlain **true**, if displaying message is plain.
+ * @param {String} oMessageProps.sRawText Rraw plain text of message.
+ * @param {String} oMessageProps.sText Prepared for displaying plain text of message.
+ * @param {String} oMessageProps.sAccountEmail Email of account that received message.
+ * @param {String} oMessageProps.sFromEmail Message sender email.
  */
 CMessageControlsView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
-	if (oMessageProps.bPlain)
+	if (oMessageProps && oMessageProps.bPlain)
 	{
 		this.sText = oMessageProps.sRawText;
 		this.sAccountEmail = oMessageProps.sAccountEmail;
