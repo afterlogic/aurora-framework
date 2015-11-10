@@ -172,11 +172,10 @@ class AuthModule extends AApiModule
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		$oAccount = $this->getAccountFromParam(false);
 
-		$oApiCapability = \CApi::GetCoreManager('capability');
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
 		if ($oAccount && $oAccount->User && 0 < $oAccount->User->IdHelpdeskUser &&
-			$oApiCapability->isHelpdeskSupported($oAccount))
+			$this->oApiCapability->isHelpdeskSupported($oAccount))
 		{
 			$oApiIntegrator->logoutHelpdeskUser();
 		}

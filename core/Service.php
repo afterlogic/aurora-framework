@@ -114,7 +114,7 @@ class Service
 		foreach ($aQuery as $sQueryItem)
 		{
 			$iPos = \strpos($sQueryItem, '=');
-			$aResult[] = \substr($sQueryItem, 0, $iPos);
+			$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
 		}
 		
 		

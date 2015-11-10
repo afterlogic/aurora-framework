@@ -2135,8 +2135,7 @@ class CApiIntegratorManager extends AApiManager
 
 		$sMobileSuffix = $bMobile && !$bHelpdesk ? '-mobile' : '';
 		$sWebPath = empty($sWebPath) ? '.' : $sWebPath;
-		return
-'<div class="pSevenMain">
+		return '<div class="pSevenMain">
 	<div id="pSevenLoading"></div>
 	<div id="pSevenContent">
 		<div class="screens"></div>
