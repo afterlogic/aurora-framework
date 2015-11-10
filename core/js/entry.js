@@ -15,6 +15,7 @@ $('body').ready(function () {
 			'Settings': require('modules/Settings/js/manager.js'),
 			
 			'OpenPgp': require('modules/OpenPgp/js/manager.js'),
+			'MailSensitivity': require('modules/MailSensitivity/js/manager.js'),
 			'SessionTimeout': require('modules/SessionTimeout/js/manager.js')
 		},
 		ModulesManager = require('core/js/ModulesManager.js'),

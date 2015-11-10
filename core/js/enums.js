@@ -3,9 +3,9 @@
 var
 	_ = require('underscore'),
 	Enums = {
-		has: function (sEnumName, sFoundValue) {
-			return !!_.find(Enums[sEnumName], function (sValue) {
-				return sFoundValue === sValue;
+		has: function (sEnumName, mFoundValue) {
+			return !!_.find(window.Enums[sEnumName], function (mValue) {
+				return mFoundValue === mValue;
 			});
 		}
 	}

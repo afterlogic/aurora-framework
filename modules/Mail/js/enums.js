@@ -31,16 +31,6 @@ Enums.FolderTypes = {
 /**
  * @enum {number}
  */
-Enums.Sensitivity = {
-	'Nothing': 0,
-	'Confidential': 1,
-	'Private': 2,
-	'Personal': 3
-};
-
-/**
- * @enum {number}
- */
 Enums.Importance = {
 	'Low': 5,
 	'Normal': 3,

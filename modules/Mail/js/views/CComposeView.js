@@ -117,7 +117,6 @@ function CComposeView()
 	}, this);
 
 	this.selectedImportance = ko.observable(Enums.Importance.Normal);
-	this.selectedSensitivity = ko.observable(Enums.Sensitivity.Nothing);
 
 	this.senderAccountId = SenderSelector.senderAccountId;
 	this.senderList = SenderSelector.senderList;
@@ -919,7 +918,6 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 	this.plainText(oMessage.isPlain());
 	this.textBody(sTextBody);
 	this.selectedImportance(oMessage.importance());
-	this.selectedSensitivity(oMessage.sensitivity());
 	this.readingConfirmation(oMessage.readingConfirmation());
 	
 	_.each(this.toolbarControllers(), function (oController) {
@@ -928,7 +926,8 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 			oController.doAfterPopulatingMessage({
 				bDraft: !!oMessage.folderObject() && (oMessage.folderObject().type() === Enums.FolderTypes.Drafts),
 				bPlain: oMessage.isPlain(),
-				sRawText: oMessage.textRaw()
+				sRawText: oMessage.textRaw(),
+				oCustom: oMessage.Custom
 			});
 		}
 	});
@@ -1227,10 +1226,16 @@ CComposeView.prototype.setMessageDataInNewTab = function (oParameters)
 	}, this));
 	this.textBody(oParameters.textBody);
 	this.selectedImportance(oParameters.selectedImportance);
-	this.selectedSensitivity(oParameters.selectedSensitivity);
 	this.readingConfirmation(oParameters.readingConfirmation);
 	this.changedInPreviousWindow(oParameters.changedInPreviousWindow);
 
+	_.each(this.toolbarControllers(), function (oController) {
+		if ($.isFunction(oController.doAfterApplyingBaseTabParameters))
+		{
+			oController.doAfterApplyingBaseTabParameters(oParameters);
+		}
+	});
+	
 	SenderSelector.changeSenderAccountId(oParameters.senderAccountId, oParameters.selectedFetcherOrIdentity);
 	this.focusedField(oParameters.focusedField);
 };
@@ -1438,14 +1443,15 @@ CComposeView.prototype.initUploader = function ()
 CComposeView.prototype.getSendSaveParameters = function (bRemoveSignatureAnchor)
 {
 	var
-		oAttachments = SendingUtils.convertAttachmentsForSending(this.attachments())
+		oAttachments = SendingUtils.convertAttachmentsForSending(this.attachments()),
+		oParameters = null
 	;
 
 	_.each(this.oHtmlEditor.uploadedImagePathes(), function (oAttach) {
 		oAttachments[oAttach.TempName] = [oAttach.Name, oAttach.CID, '1', '1'];
 	});
 
-	return {
+	oParameters = {
 		'AccountID': this.senderAccountId(),
 		'FetcherID': this.selectedFetcherOrIdentity() && this.selectedFetcherOrIdentity().FETCHER ? this.selectedFetcherOrIdentity().id() : '',
 		'IdentityID': this.selectedFetcherOrIdentity() && !this.selectedFetcherOrIdentity().FETCHER ? this.selectedFetcherOrIdentity().id() : '',
@@ -1458,12 +1464,20 @@ CComposeView.prototype.getSendSaveParameters = function (bRemoveSignatureAnchor)
 		'Text': this.plainText() ? this.oHtmlEditor.getPlainText() : this.oHtmlEditor.getText(bRemoveSignatureAnchor),
 		'IsHtml': this.plainText() ? '0' : '1',
 		'Importance': this.selectedImportance(),
-		'Sensitivity': this.selectedSensitivity(),
 		'ReadingConfirmation': this.readingConfirmation() ? '1' : '0',
 		'Attachments': oAttachments,
 		'InReplyTo': this.inReplyTo(),
 		'References': this.references()
 	};
+	
+	_.each(this.toolbarControllers(), function (oController) {
+		if ($.isFunction(oController.doAfterComposingSendMessageParameters))
+		{
+			oController.doAfterComposingSendMessageParameters(oParameters);
+		}
+	});
+	
+	return oParameters;
 };
 
 /**
@@ -1673,10 +1687,11 @@ CComposeView.prototype.getMessageDataForNewTab = function ()
 				'IsLinked': oAttach.linked(),
 				'Hash': oAttach.hash()
 			};
-		})
+		}),
+		oParameters = null
 	;
 
-	return {
+	oParameters = {
 		accountId: this.senderAccountId(),
 		draftInfo: this.draftInfo(),
 		draftUid: this.draftUid(),
@@ -1691,11 +1706,19 @@ CComposeView.prototype.getMessageDataForNewTab = function ()
 		attachments: aAttachments,
 		textBody: this.oHtmlEditor.getText(),
 		selectedImportance: this.selectedImportance(),
-		selectedSensitivity: this.selectedSensitivity(),
 		readingConfirmation: this.readingConfirmation(),
 		changedInPreviousWindow: this.isChanged(),
 		focusedField: this.focusedField()
 	};
+	
+	_.each(this.toolbarControllers(), function (oController) {
+		if ($.isFunction(oController.doAfterComposingBaseTabParameters))
+		{
+			oController.doAfterComposingBaseTabParameters(oParameters);
+		}
+	});
+	
+	return oParameters;
 };
 
 CComposeView.prototype.openInNewWindow = function ()
@@ -1770,11 +1793,6 @@ CComposeView.prototype.registerOwnToolbarControllers = function ()
 		ViewTemplate: 'Mail_Toolbar_ImportanceDropdownView',
 		sId: 'importance',
 		selectedImportance: this.selectedImportance
-	});
-	this.registerToolbarController({
-		ViewTemplate: 'Mail_Toolbar_SensitivityDropdownView',
-		sId: 'sensitivity',
-		selectedSensitivity: this.selectedSensitivity
 	});
 	this.registerToolbarController({
 		ViewTemplate: 'Mail_Toolbar_ConfirmationCheckboxView',

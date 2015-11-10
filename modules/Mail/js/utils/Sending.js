@@ -196,7 +196,6 @@ SendingUtils.sendReplyMessage = function (sMethod, sText, sDraftUid, fMessageSen
 
 		oParameters.Bcc = '';
 		oParameters.Importance = Enums.Importance.Normal;
-		oParameters.Sensitivity = Enums.Sensitivity.Nothing;
 		oParameters.ReadingConfirmation = '0';
 		oParameters.IsQuickReply = '1';
 		oParameters.IsHtml = '1';

@@ -51,7 +51,7 @@ module.exports = {
 			JoinReplyPrefixes: true,
 			SaveRepliedToCurrFolder: false,
 			AttachmentSizeLimit: 0,
-			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'sensitivity', 'confirmation', 'OpenPgp'],
+			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'],
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
@@ -106,7 +106,8 @@ module.exports = {
 		},
 		dsbld_SessionTimeout: {
 			TimeoutSeconds: 20
-		}
+		},
+		MailSensitivity: {}
 	},
 	EntryModule: 'Mail',
 	Language: 'English',

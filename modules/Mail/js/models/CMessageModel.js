@@ -172,7 +172,6 @@ function CMessageModel()
 	
 	this.importance = ko.observable(Enums.Importance.Normal);
 	this.draftInfo = ko.observableArray([]);
-	this.sensitivity = ko.observable(Enums.Sensitivity.Nothing);
 	this.hash = ko.observable('');
 	this.downloadLink = ko.computed(function () {
 		return (this.hash().length > 0) ? Utils.getDownloadLinkByHash(this.accountId(), this.hash()) : '';
@@ -387,6 +386,8 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 	
 	if (oData['@Object'] === 'Object/Message' || oData['@Object'] === 'Object/MessageListItem')
 	{
+		this.Custom.Sensitivity = oData.Sensitivity;
+		
 		this.accountId(iAccountId);
 		this.folder(oData.Folder);
 		this.uid(Utils.pString(oData.Uid));
@@ -427,7 +428,6 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 		{
 			this.draftInfo(oData.DraftInfo);
 		}
-		this.sensitivity(oData.Sensitivity);
 		this.hash(Utils.pString(oData.Hash));
 
 		if (oData['@Object'] === 'Object/Message')

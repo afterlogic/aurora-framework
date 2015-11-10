@@ -125,28 +125,6 @@ function CMessagePaneView()
 		return this.vcard() !== null;
 	}, this);
 	
-	this.sensitivityText = ko.computed(function () {
-		var sText = '';
-		
-		if (this.currentMessage())
-		{
-			switch (this.currentMessage().sensitivity())
-			{
-				case Enums.Sensitivity.Confidential:
-					sText = TextUtils.i18n('MESSAGE/SENSITIVITY_CONFIDENTIAL');
-					break;
-				case Enums.Sensitivity.Personal:
-					sText = TextUtils.i18n('MESSAGE/SENSITIVITY_PERSONAL');
-					break;
-				case Enums.Sensitivity.Private:
-					sText = TextUtils.i18n('MESSAGE/SENSITIVITY_PRIVATE');
-					break;
-			}
-		}
-		
-		return sText;
-	}, this);
-
 	this.visibleConfirmationControl = ko.computed(function () {
 		return (this.currentMessage() && this.currentMessage().readingConfirmation() !== '');
 	}, this);
@@ -221,8 +199,7 @@ function CMessagePaneView()
 		var topControllersVisible = !!_.find(this.topControllers(), function (oController) {
 			return !!oController.visible && oController.visible();
 		});
-		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || 
-				this.sensitivityText() !== '' || topControllersVisible);
+		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || topControllersVisible);
 	}, this);
 
 	this.mobileApp = bMobileApp;
@@ -1266,7 +1243,8 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			sRawText: oMessage.textRaw(),
 			sText: oMessage.text(),
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
-			sFromEmail: oMessage.oFrom.getFirstEmail()
+			sFromEmail: oMessage.oFrom.getFirstEmail(),
+			oCustom: oMessage.Custom
 		} : null
 	;
 	
