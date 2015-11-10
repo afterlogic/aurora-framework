@@ -47,12 +47,11 @@ module.exports = {
 			AllowInsertImage: true,
 			AllowChangeInputDirection: true,
 			ImageUploadSizeLimit: 0,
-			getUseSaveMailInSentItems: function () { return false; },
-			getSaveMailInSentItems: function () { return false; },
 			AutosignOutgoingEmails: false,
 			JoinReplyPrefixes: true,
 			SaveRepliedToCurrFolder: false,
-			AttachmentSizeLimit: 0
+			AttachmentSizeLimit: 0,
+			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'sensitivity', 'confirmation', 'OpnePgp']
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],

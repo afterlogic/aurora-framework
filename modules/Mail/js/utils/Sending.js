@@ -43,14 +43,12 @@ SendingUtils.setReplyData = function (sText, sDraftUid)
 /**
  * @param {string} sMethod
  * @param {Object} oParameters
- * @param {boolean} bSaveMailInSentItems
  * @param {boolean} bShowLoading
  * @param {Function} fMessageSendResponseHandler
  * @param {Object} oMessageSendResponseContext
  * @param {boolean=} bPostponedSending = false
  */
-SendingUtils.send = function (sMethod, oParameters, bSaveMailInSentItems, bShowLoading,
-											fMessageSendResponseHandler, oMessageSendResponseContext, bPostponedSending)
+SendingUtils.send = function (sMethod, oParameters, bShowLoading, fMessageSendResponseHandler, oMessageSendResponseContext, bPostponedSending)
 {
 	var
 		iAccountID = oParameters.AccountID,
@@ -75,10 +73,7 @@ SendingUtils.send = function (sMethod, oParameters, bSaveMailInSentItems, bShowL
 	{
 		case 'SendMessage':
 			sLoadingMessage = TextUtils.i18n('COMPOSE/INFO_SENDING');
-			if (bSaveMailInSentItems)
-			{
-				oParameters.SentFolder = sSentFolder;
-			}
+			oParameters.SentFolder = sSentFolder;
 			if (oParameters.DraftUid !== '')
 			{
 				oParameters.DraftFolder = sDraftFolder;
@@ -208,8 +203,7 @@ SendingUtils.sendReplyMessage = function (sMethod, sText, sDraftUid, fMessageSen
 
 		oParameters.Attachments = this.convertAttachmentsForSending(oParameters.Attachments);
 
-		this.send(sMethod, oParameters, Settings.getSaveMailInSentItems(), false,
-			fMessageSendResponseHandler, oMessageSendResponseContext, bRequiresPostponedSending);
+		this.send(sMethod, oParameters, false, fMessageSendResponseHandler, oMessageSendResponseContext, bRequiresPostponedSending);
 	}
 };
 

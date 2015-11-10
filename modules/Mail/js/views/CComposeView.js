@@ -100,8 +100,6 @@ function CComposeView()
 	this.visibleCounter = ko.observable(false);
 
 	this.readingConfirmation = ko.observable(false);
-	this.saveMailInSentItems = ko.observable(true);
-	this.useSaveMailInSentItems = ko.observable(false);
 
 	this.composeUploaderButton = ko.observable(null);
 	this.composeUploaderButton.subscribe(function () {
@@ -558,9 +556,6 @@ CComposeView.prototype.onShow = function ()
 	var sFocusedField = this.focusedField();
 
 	$(this.splitterDom()).trigger('resize');
-
-	this.useSaveMailInSentItems(Settings.getUseSaveMailInSentItems());
-	this.saveMailInSentItems(Settings.getSaveMailInSentItems());
 
 	this.oHtmlEditor.initCrea(this.textBody(), this.plainText(), '7');
 	this.oHtmlEditor.commit();
@@ -1543,8 +1538,7 @@ CComposeView.prototype.executeSend = function (mParam)
 			this.sending(true);
 			this.requiresPostponedSending(!this.allowStartSending());
 
-			SendingUtils.send('SendMessage', this.getSendSaveParameters(true), this.saveMailInSentItems(),
-				true, this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
+			SendingUtils.send('SendMessage', this.getSendSaveParameters(true), true, this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
 			
 			this.backToListOnSendOrSave(true);
 		}, this)
@@ -1592,8 +1586,7 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 			if (bSave)
 			{
 				this.saving(bWaitResponse);
-				SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), this.saveMailInSentItems(),
-					!bAutosave, fOnMessageSaveResponse, oContext);
+				SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), !bAutosave, fOnMessageSaveResponse, oContext);
 			}
 		}, this),
 		bCancelSaving = false
