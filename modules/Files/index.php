@@ -7,6 +7,7 @@ class FilesModule extends AApiModule
 	public function init() 
 	{
 		$this->oApiFilesManager = $this->GetManager('main', 'sabredav');
+		$this->AddEntry('files-pub', 'EntryFilesPub');
 	}
 	
 	private function GetRawFile($bDownload = true, $bThumbnail = false)
@@ -517,6 +518,11 @@ class FilesModule extends AApiModule
 		
 		return $this->DefaultResponse(null, __FUNCTION__, $mResult);
 	}	
+	
+	public function EntryFilesPub()
+	{
+		return 'files-pub';
+	}
 
 }
 

@@ -1117,7 +1117,7 @@ class CAdminPanel
 		if (!$bIsInclude)
 		{
 			$sRp = self::RootPath();
-			include_once $sRp.'/../libraries/afterlogic/api.php';
+			include_once $sRp.'/../core/api.php';
 			CSession::$sSessionName = 'PHPWMADMINSESSID';
 
 			include_once $sRp.'/core/constants.php';

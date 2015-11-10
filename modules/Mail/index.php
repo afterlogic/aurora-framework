@@ -331,7 +331,10 @@ class MailModule extends AApiModule
 	public function GetFolders()
 	{
 		$oAccount = $this->getAccountFromParam();
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMailManager->getFolders($oAccount));
+		$oFolderCollection = $this->oApiMailManager->getFolders($oAccount);
+		$aResponse = $this->DefaultResponse($oAccount, __FUNCTION__, $oFolderCollection);
+		$aResponse['Result']['Namespace'] = $oFolderCollection->GetNamespace();
+		return $aResponse;
 	}	
 	
 	/**

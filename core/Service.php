@@ -32,7 +32,6 @@ class Service
 	{
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
 		$this->oActions = Actions::NewInstance();
-		$this->oActions->SetHttp($this->oHttp);
 		$this->oModuleManager = \CApi::GetModuleManager();
 
 		\CApi::Plugin()->SetActions($this->oActions);
@@ -91,16 +90,17 @@ class Service
 	public static function GetPaths()
 	{
 		$aResult = array();
-
+		$aQuery = array();
+		
 		$oHttp = \MailSo\Base\Http::NewInstance();
 		$aPathInfo = array_filter(explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/'))));
 		if (0 < count($aPathInfo))
 		{
-			$aResult = $aPathInfo;
+			$aQuery = $aPathInfo;
 		}
 		else 
 		{
-			$sQuery = \trim(\trim($oHttp->GetServer('QUERY_STRING', '')), ' /');
+			$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
 
 			\CApi::Plugin()->RunQueryHandle($sQuery);
 
@@ -109,8 +109,15 @@ class Service
 			{
 				$sQuery = \substr($sQuery, 0, $iPos);
 			}
-			$aResult = explode('/', $sQuery);
+			$aQuery = explode('/', $sQuery);
 		}
+		foreach ($aQuery as $sQueryItem)
+		{
+			$iPos = \strpos($sQueryItem, '=');
+			$aResult[] = \substr($sQueryItem, 0, $iPos);
+		}
+		
+		
 		return $aResult;
 	}
 			
@@ -131,85 +138,6 @@ class Service
 		
 		if ($oApiIntegrator)
 		{
-			if ($bHelpdesk)
-			{
-//				$oApiHelpdesk = \CApi::Manager('helpdesk');
-				if ($oApiHelpdesk)
-				{
-					$oLogginedAccount = $this->oActions->GetDefaultAccount();
-
-					$oApiCapability = \CApi::GetCoreManager('capability');
-
-					$mHelpdeskIdTenant = $oApiIntegrator->getTenantIdByHash($sHelpdeskHash);
-					if (!is_int($mHelpdeskIdTenant))
-					{
-						\CApi::Location('./');
-						return '';
-					}
-
-					$bDoId = false;
-					$sThread = $this->oHttp->GetQuery('thread');
-					$sThreadAction = $this->oHttp->GetQuery('action');
-					if (0 < strlen($sThread))
-					{
-						if ($oApiHelpdesk)
-						{
-							$iThreadID = $oApiHelpdesk->getThreadIdByHash($mHelpdeskIdTenant, $sThread);
-							if (0 < $iThreadID)
-							{
-								$oApiIntegrator->setThreadIdFromRequest($iThreadID, $sThreadAction);
-								$bDoId = true;
-							}
-						}
-					}
-
-					$sActivateHash = $this->oHttp->GetQuery('activate');
-					if (0 < strlen($sActivateHash) && !$this->oHttp->HasQuery('forgot'))
-					{
-						$bRemove = true;
-						$oUser = $oApiHelpdesk->getUserByActivateHash($mHelpdeskIdTenant, $sActivateHash);
-						/* @var $oUser \CHelpdeskUser */
-						if ($oUser)
-						{
-							if (!$oUser->Activated)
-							{
-								$oUser->Activated = true;
-								$oUser->regenerateActivateHash();
-
-								if ($oApiHelpdesk->updateUser($oUser))
-								{
-									$bRemove = false;
-									$oApiIntegrator->setUserAsActivated($oUser);
-								}
-							}
-						}
-
-						if ($bRemove)
-						{
-							$oApiIntegrator->removeUserAsActivated();
-						}
-					}
-					
-					if ($oLogginedAccount && $oApiCapability && $oApiCapability->isHelpdeskSupported($oLogginedAccount) &&
-						$oLogginedAccount->IdTenant === $mHelpdeskIdTenant)
-					{
-						if (!$bDoId)
-						{
-							$oApiIntegrator->setThreadIdFromRequest(0);
-						}
-
-						$oApiIntegrator->skipMobileCheck();
-						\CApi::Location('./');
-						return '';
-					}
-				}
-				else
-				{
-					\CApi::Location('./');
-					return '';
-				}
-			}
-
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
 			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox'))
@@ -278,18 +206,6 @@ class Service
 				{
 					$this->TargetPost();
 				}
-				else if ('min' === $sFirstPart)
-				{
-					$sResult = $this->TargetMin();
-				}
-				else if ('window' === $sFirstPart)
-				{
-					$sResult = $this->TargetWindow();
-				}
-				else if ('helpdesk' === $sFirstPart)
-				{
-					$sResult = $this->indexHTML(true, $this->oHttp->GetQuery('helpdesk'));
-				}
 				else if ('calendar-pub' === $sFirstPart)
 				{
 					$sResult = $this->indexHTML(false, '', $this->oHttp->GetQuery('calendar-pub'));
@@ -353,87 +269,6 @@ class Service
 		}		
 	}
 	
-	private function TargetMin()
-	{
-		$sResult = '';
-		$sAction = empty($aPaths[1]) ? '' : $aPaths[1];
-		try
-		{
-			if (!empty($sAction))
-			{
-				$sMethodName =  $aPaths[0].$sAction;
-				if (method_exists($this->oActions, $sMethodName))
-				{
-					if ('Min' === $aPaths[0])
-					{
-						$oMinManager = /* @var $oMinManager \CApiMinManager */ \CApi::Manager('min');
-						$mHashResult = $oMinManager->getMinByHash(empty($aPaths[2]) ? '' : $aPaths[2]);
-
-						$this->oActions->SetActionParams(array(
-							'Result' => $mHashResult,
-							'Hash' => empty($aPaths[2]) ? '' : $aPaths[2],
-						));
-					}
-					else
-					{
-						$this->oActions->SetActionParams(array(
-							'AccountID' => empty($aPaths[2]) || '0' === (string) $aPaths[2] ? '' : $aPaths[2],
-							'RawKey' => empty($aPaths[3]) ? '' : $aPaths[3]
-						));
-					}
-
-					$mResult = call_user_func(array($this->oActions, $sMethodName));
-					$sTemplate = isset($mResult['Template']) && !empty($mResult['Template']) &&
-						is_string($mResult['Template']) ? $mResult['Template'] : null;
-
-					if (!empty($sTemplate) && is_array($mResult) && file_exists(PSEVEN_APP_ROOT_PATH.$sTemplate))
-					{
-						$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.$sTemplate);
-						if (is_string($sResult))
-						{
-							$sResult = strtr($sResult, $mResult);
-						}
-						else
-						{
-							\CApi::Log('Empty template.', \ELogLevel::Error);
-						}
-					}
-					else if (!empty($sTemplate))
-					{
-						\CApi::Log('Empty template.', \ELogLevel::Error);
-					}
-					else if (true === $mResult)
-					{
-						$sResult = '';
-					}
-					else
-					{
-						\CApi::Log('False result.', \ELogLevel::Error);
-					}
-				}
-				else
-				{
-					\CApi::Log('Invalid action.', \ELogLevel::Error);
-				}
-			}
-			else
-			{
-				\CApi::Log('Empty action.', \ELogLevel::Error);
-			}
-		}
-		catch (\Exception $oException)
-		{
-			\CApi::LogException($oException);
-		}		
-		
-		return $sResult;
-	}
-	
-	private function TargetWindow()
-	{
-		return $this->TargetMin();
-	}
-
 	/**
 	 * @return string
 	 */

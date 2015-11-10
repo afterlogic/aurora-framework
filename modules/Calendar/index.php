@@ -8,6 +8,7 @@ class CalendarModule extends AApiModule
 	{
 		$this->oApiCalendarManager = $this->GetManager('main', 'sabredav');
 		$this->AddEntry('invite', 'EntryInvite');
+		$this->AddEntry('calendar-pub', 'EntryCalendarPub');
 	}
 
 	/**
@@ -609,6 +610,11 @@ class CalendarModule extends AApiModule
 			}
 		}
 		return $sResult;
+	}
+	
+	public function EntryCalendarPub()
+	{
+		return 'calendar-pub';
 	}
 	
 	

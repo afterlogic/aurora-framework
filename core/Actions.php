@@ -7,7 +7,7 @@ namespace Core;
 /**
  * @category Core
  */
-class Actions extends ActionsBase
+class Actions
 {
 	/**
 	 * @var \CApiUsersManager

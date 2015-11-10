@@ -167,5 +167,10 @@ class CSocial extends api_AContainer
 			unset($aScopes[$mResult]);
 			$this->Scopes = implode(' ', $aScopes);
 		}
-	}		
+	}	
+	
+	public function toResponseArray()
+	{
+		return $this->toArray();
+	}
 }
