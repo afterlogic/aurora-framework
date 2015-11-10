@@ -18,19 +18,8 @@
 					</span>
 					<!-- /ko -->
 					
-					<!-- ko template: {name: 'Mail_Toolbar_BackButtonView'} --><!-- /ko -->
-					<!-- ko template: {name: 'Mail_Toolbar_SendButtonView'} --><!-- /ko -->
-					<!-- ko template: {name: 'Mail_Toolbar_SaveButtonView'} --><!-- /ko -->
-
-					<!-- ko if: !mobileApp -->
-						<!-- ko template: {name: 'Mail_Toolbar_ImportanceDropdownView'} --><!-- /ko -->
-						<!-- ko template: {name: 'Mail_Toolbar_SensitivityDropdownView'} --><!-- /ko -->
-						<!-- ko template: {name: 'Mail_Toolbar_ConfirmationCheckboxView'} --><!-- /ko -->
-					
-						<!-- ko foreach: toolbarControllers -->
-							<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
-						<!-- /ko -->
-					
+					<!-- ko foreach: toolbarControllers -->
+						<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
 					<!-- /ko -->
 				</span>
 			</div>

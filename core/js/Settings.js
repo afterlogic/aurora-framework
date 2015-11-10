@@ -51,7 +51,7 @@ module.exports = {
 			JoinReplyPrefixes: true,
 			SaveRepliedToCurrFolder: false,
 			AttachmentSizeLimit: 0,
-			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'sensitivity', 'confirmation', 'OpnePgp']
+			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'sensitivity', 'confirmation', 'OpenPgp'],
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],

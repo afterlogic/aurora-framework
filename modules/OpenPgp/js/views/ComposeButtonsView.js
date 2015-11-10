@@ -20,6 +20,8 @@ var
  */
 function CComposeButtonsView()
 {
+	this.sId = 'OpenPgp';
+	
 	this.enableOpenPgp = ko.observable(true);
 	
 	this.pgpSecured = ko.observable(false);

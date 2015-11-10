@@ -305,6 +305,10 @@ function CComposeView()
 
 	this.backToListOnSendOrSave = ko.observable(false);
 
+	this.composeShown = ko.computed(function () {
+		return !!this.opened && this.opened() || !!this.shown && this.shown();
+	}, this);
+	
 	this.toolbarControllers = ko.observableArray([]);
 	this.disableHeadersEdit = ko.computed(function () {
 		var bDisableHeadersEdit = false;
@@ -326,7 +330,7 @@ function CComposeView()
 	}, this);
 	this.iAutosaveInterval = -1;
 	ko.computed(function () {
-		var bAllowAutosave = Settings.AllowAutosaveInDrafts && (this.opened() || this.shown()) && !this.sending() && !this.saving();
+		var bAllowAutosave = Settings.AllowAutosaveInDrafts && this.composeShown() && !this.sending() && !this.saving();
 		_.each(this.toolbarControllers(), function (oController) {
 			bAllowAutosave = bAllowAutosave && !(!!oController.disableAutosave && oController.disableAutosave());
 		});
@@ -387,7 +391,7 @@ function CComposeView()
 	if (BaseTab)
 	{
 		setTimeout(function() {
-			window.onbeforeunload = function(){
+			window.onbeforeunload = function () {
 				if (self.hasSomethingToSave())
 				{
 					self.beforeHide(window.close);
@@ -400,6 +404,8 @@ function CComposeView()
 	this.splitterDom = ko.observable();
 
 	this.headersCompressed = ko.observable(false);
+	
+	this.registerOwnToolbarControllers();
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{
@@ -432,7 +438,7 @@ CComposeView.prototype.isEnableSaving = function ()
 {
 	var bFoldersLoaded = this.folderList() && this.folderList().iAccountId !== 0;
 
-	return (this.opened() || this.shown()) && bFoldersLoaded && !this.sending() && !this.saving();
+	return this.composeShown() && bFoldersLoaded && !this.sending() && !this.saving();
 };
 
 /**
@@ -501,8 +507,7 @@ CComposeView.prototype.hotKeysBind = function ()
 		{
 			var
 				nKey = ev.keyCode,
-				bShown = (this.opened() || this.shown()) && (!this.minimized || !this.minimized()),
-				bComputed = bShown && ev && ev.ctrlKey
+				bComputed = this.composeShown() && (!this.minimized || !this.minimized()) && ev && ev.ctrlKey
 			;
 
 			if (bComputed && nKey === Enums.Key.s)
@@ -1270,7 +1275,7 @@ CComposeView.prototype.executeBackToList = function ()
 	{
 		window.close();
 	}
-	else if (this.shown())
+	else if (!!this.shown && this.shown())
 	{
 		Routing.setPreviousHash();
 	}
@@ -1390,7 +1395,7 @@ CComposeView.prototype.onFileRemove = function (sFileUid)
  */
 CComposeView.prototype.initUploader = function ()
 {
-	if ((this.opened() || this.shown()) && this.composeUploaderButton() && this.oJua === null)
+	if (this.composeShown() && this.composeUploaderButton() && this.oJua === null)
 	{
 		this.oJua = new CJua({
 			'action': '?/Upload/',
@@ -1741,15 +1746,64 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
 	}
 };
 
+CComposeView.prototype.registerOwnToolbarControllers = function ()
+{
+	this.registerToolbarController({
+		ViewTemplate: 'Mail_Toolbar_BackButtonView',
+		sId: 'back',
+		bOnlyMobile: true,
+		backToListCommand: this.backToListCommand
+	});
+	this.registerToolbarController({
+		ViewTemplate: 'Mail_Toolbar_SendButtonView',
+		sId: 'send',
+		bAllowMobile: true,
+		sendCommand: this.sendCommand
+	});
+	this.registerToolbarController({
+		ViewTemplate: 'Mail_Toolbar_SaveButtonView',
+		sId: 'save',
+		bAllowMobile: true,
+		saveCommand: this.saveCommand
+	});
+	this.registerToolbarController({
+		ViewTemplate: 'Mail_Toolbar_ImportanceDropdownView',
+		sId: 'importance',
+		selectedImportance: this.selectedImportance
+	});
+	this.registerToolbarController({
+		ViewTemplate: 'Mail_Toolbar_SensitivityDropdownView',
+		sId: 'sensitivity',
+		selectedSensitivity: this.selectedSensitivity
+	});
+	this.registerToolbarController({
+		ViewTemplate: 'Mail_Toolbar_ConfirmationCheckboxView',
+		sId: 'confirmation',
+		readingConfirmation: this.readingConfirmation
+	});
+};
+
 /**
  * @param {Object} oController
  */
 CComposeView.prototype.registerToolbarController = function (oController)
 {
-	this.toolbarControllers.push(oController);
-	if ($.isFunction(oController.assignComposeExtInterface))
+	var
+		bAllowRegister = this.mobileApp ? (oController.bOnlyMobile || oController.bAllowMobile) : (!oController.bOnlyMobile),
+		iLastIndex = Settings.ComposeToolbarOrder.length
+	;
+	
+	if (bAllowRegister)
 	{
-		oController.assignComposeExtInterface(this.getExtInterface());
+		this.toolbarControllers.push(oController);
+		this.toolbarControllers(_.sortBy(this.toolbarControllers(), function (oContr) {
+			var iIndex = _.indexOf(Settings.ComposeToolbarOrder, oContr.sId);
+			return iIndex !== -1 ? iIndex : iLastIndex;
+		}));
+		if ($.isFunction(oController.assignComposeExtInterface))
+		{
+			oController.assignComposeExtInterface(this.getExtInterface());
+		}
 	}
 };
 
