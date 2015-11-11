@@ -38,7 +38,6 @@ module.exports = {
 			AllowCompose: true,
 			AllowUsersChangeEmailSettings: true,
 			MailExpandFolders: true,
-			ThreadLevel: true,
 			AllowFetcher: false,
 			AllowIdentities: false,
 			MaxPrefetchBodiesSize: 50000,

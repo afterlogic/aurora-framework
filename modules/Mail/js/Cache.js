@@ -123,118 +123,9 @@ function CMailCache()
 //				[Accounts.currentId(), this.currentMessage().folder(), this.currentMessage().uid()]);
 //		}
 //	}, this);
-	this.nextMessageUid = ko.computed(function () {
-		var
-			sCurrentUid = '',
-			sNextUid = '',
-			oFolder = null,
-			oParentMessage = null,
-			bThreadLevel = false
-		;
-		if (this.currentMessage() && App.isNewTab())
-		{
-			bThreadLevel = this.currentMessage().threadPart() && this.currentMessage().threadParentUid() !== '';
-			oFolder = this.folderList().getFolderByFullName(this.currentMessage().folder());
-			sCurrentUid = this.currentMessage().uid();
-			if (Settings.ThreadLevel || bThreadLevel)
-			{
-				Settings.ThreadLevel = true;
-				if (bThreadLevel)
-				{
-					oParentMessage = oFolder.getMessageByUid(this.currentMessage().threadParentUid());
-					if (oParentMessage)
-					{
-						_.each(oParentMessage.threadUids(), function (sUid, iIndex, aCollection) {
-							if (sUid === sCurrentUid && iIndex > 0)
-							{
-								sNextUid = aCollection[iIndex - 1];
-							}
-						});
-						if (Utils.isUnd(sNextUid) || sNextUid === '')
-						{
-							sNextUid = oParentMessage.uid();
-						}
-					}
-				}
-			}
-			else
-			{
-				_.each(this.uidList().collection(), function (sUid, iIndex, aCollection) {
-					if (sUid === sCurrentUid && iIndex > 0)
-					{
-						sNextUid = aCollection[iIndex - 1];
-					}
-				});
-				if (Utils.isUnd(sNextUid))
-				{
-					sNextUid = '';
-				}
-				if (sNextUid === '' && BaseTab)
-				{
-					BaseTab.prefetchNextPage(sCurrentUid);
-				}
-			}
-		}
-		return sNextUid;
-	}, this);
-	this.prevMessageUid = ko.computed(function () {
-		var
-			sCurrentUid = this.currentMessage() ? this.currentMessage().uid() : '',
-			sPrevUid = '',
-			oFolder = null,
-			oParentMessage = null,
-			bThreadLevel = false
-		;
-		if (this.currentMessage() && App.isNewTab())
-		{
-			bThreadLevel = this.currentMessage().threadPart() && this.currentMessage().threadParentUid() !== '';
-			oFolder = this.folderList().getFolderByFullName(this.currentMessage().folder());
-			sCurrentUid = this.currentMessage().uid();
-			if (Settings.ThreadLevel || bThreadLevel)
-			{
-				Settings.ThreadLevel = true;
-				if (bThreadLevel)
-				{
-					oParentMessage = oFolder.getMessageByUid(this.currentMessage().threadParentUid());
-					if (oParentMessage)
-					{
-						_.each(oParentMessage.threadUids(), function (sUid, iIndex, aCollection) {
-							if (sUid === sCurrentUid && (iIndex + 1) < aCollection.length)
-							{
-								sPrevUid = aCollection[iIndex + 1];
-							}
-						});
-						if (Utils.isUnd(sPrevUid))
-						{
-							sPrevUid = '';
-						}
-					}
-				}
-				else if (this.currentMessage().threadCount() > 0)
-				{
-					sPrevUid = this.currentMessage().threadUids()[0];
-				}
-			}
-			else
-			{
-				_.each(this.uidList().collection(), function (sUid, iIndex, aCollection) {
-					if (sUid === sCurrentUid && (iIndex + 1) < aCollection.length)
-					{
-						sPrevUid = aCollection[iIndex + 1];
-					}
-				});
-				if (Utils.isUnd(sPrevUid))
-				{
-					sPrevUid = '';
-				}
-				if (sPrevUid === '' && BaseTab)
-				{
-					BaseTab.prefetchPrevPage(sCurrentUid);
-				}
-			}
-		}
-		return sPrevUid;
-	}, this);
+	
+	this.nextMessageUid = ko.observable('');
+	this.prevMessageUid = ko.observable('');
 
 	this.savingDraftUid = ko.observable('');
 	this.editedDraftUid = ko.observable('');
@@ -301,7 +192,139 @@ CMailCache.prototype.init = function ()
 				this.currentAccountId(iAccountId);
 			}
 		}
+		
+		this.initPrevNextSubscribes();
 	}
+};
+
+CMailCache.prototype.initPrevNextSubscribes = function ()
+{
+	this.bInThreadLevel = false;
+	
+	this.currentMessage.subscribe(this.calcNextMessageUid, this);
+	this.uidList.subscribe(this.calcNextMessageUid, this);
+	
+	this.currentMessage.subscribe(this.calcPrevMessageUid, this);
+	this.uidList.subscribe(this.calcPrevMessageUid, this);
+};
+
+CMailCache.prototype.calcNextMessageUid = function ()
+{
+	var
+		sCurrentUid = '',
+		sNextUid = '',
+		oFolder = null,
+		oParentMessage = null,
+		bThreadLevel = false
+	;
+	
+	if (this.currentMessage())
+	{
+		bThreadLevel = this.currentMessage().threadPart() && this.currentMessage().threadParentUid() !== '';
+		oFolder = this.folderList().getFolderByFullName(this.currentMessage().folder());
+		sCurrentUid = this.currentMessage().uid();
+		if (this.bInThreadLevel || bThreadLevel)
+		{
+			this.bInThreadLevel = true;
+			if (bThreadLevel)
+			{
+				oParentMessage = oFolder.getMessageByUid(this.currentMessage().threadParentUid());
+				if (oParentMessage)
+				{
+					_.each(oParentMessage.threadUids(), function (sUid, iIndex, aCollection) {
+						if (sUid === sCurrentUid && iIndex > 0)
+						{
+							sNextUid = aCollection[iIndex - 1];
+						}
+					});
+					if (Utils.isUnd(sNextUid) || sNextUid === '')
+					{
+						sNextUid = oParentMessage.uid();
+					}
+				}
+			}
+		}
+		else
+		{
+			_.each(this.uidList().collection(), function (sUid, iIndex, aCollection) {
+				if (sUid === sCurrentUid && iIndex > 0)
+				{
+					sNextUid = aCollection[iIndex - 1];
+				}
+			});
+			if (Utils.isUnd(sNextUid))
+			{
+				sNextUid = '';
+			}
+			if (sNextUid === '' && BaseTab)
+			{
+				BaseTab.prefetchNextPage(sCurrentUid);
+			}
+		}
+	}
+	this.nextMessageUid(sNextUid);
+};
+
+CMailCache.prototype.calcPrevMessageUid = function ()
+{
+	var
+		sCurrentUid = this.currentMessage() ? this.currentMessage().uid() : '',
+		sPrevUid = '',
+		oFolder = null,
+		oParentMessage = null,
+		bThreadLevel = false
+	;
+
+	if (this.currentMessage())
+	{
+		bThreadLevel = this.currentMessage().threadPart() && this.currentMessage().threadParentUid() !== '';
+		oFolder = this.folderList().getFolderByFullName(this.currentMessage().folder());
+		sCurrentUid = this.currentMessage().uid();
+		if (this.bInThreadLevel || bThreadLevel)
+		{
+			this.bInThreadLevel = true;
+			if (bThreadLevel)
+			{
+				oParentMessage = oFolder.getMessageByUid(this.currentMessage().threadParentUid());
+				if (oParentMessage)
+				{
+					_.each(oParentMessage.threadUids(), function (sUid, iIndex, aCollection) {
+						if (sUid === sCurrentUid && (iIndex + 1) < aCollection.length)
+						{
+							sPrevUid = aCollection[iIndex + 1];
+						}
+					});
+					if (Utils.isUnd(sPrevUid))
+					{
+						sPrevUid = '';
+					}
+				}
+			}
+			else if (this.currentMessage().threadCount() > 0)
+			{
+				sPrevUid = this.currentMessage().threadUids()[0];
+			}
+		}
+		else
+		{
+			_.each(this.uidList().collection(), function (sUid, iIndex, aCollection) {
+				if (sUid === sCurrentUid && (iIndex + 1) < aCollection.length)
+				{
+					sPrevUid = aCollection[iIndex + 1];
+				}
+			});
+			if (Utils.isUnd(sPrevUid))
+			{
+				sPrevUid = '';
+			}
+			if (sPrevUid === '' && BaseTab)
+			{
+				BaseTab.prefetchPrevPage(sCurrentUid);
+			}
+		}
+	}
+	
+	this.prevMessageUid(sPrevUid);
 };
 
 CMailCache.prototype.getCurrentFolder = function ()
