@@ -123,7 +123,7 @@ class CRRule
 		$this->ByDays = isset($aRRule['byDays']) ? $aRRule['byDays'] : array();
 	}
 	
-	public function toResponseArray($aParameters = array())
+	public function toArray()
 	{
 		return array(
 			'startBase' => $this->StartBase,
@@ -136,6 +136,11 @@ class CRRule
 			'count' => $this->Count,
 			'byDays' => $this->ByDays
 		);
+	}
+
+	public function toResponseArray($aParameters = array())
+	{
+		return $this->toArray();
 	}
 	
     public function __toString()
