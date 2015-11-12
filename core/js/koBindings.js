@@ -208,23 +208,16 @@ ko.bindingHandlers.dropdown = {
 
 ko.bindingHandlers.initDom = {
 	'init': function (oElement, fValueAccessor) {
-		if (fValueAccessor())
+		var oCommand = fValueAccessor();
+		if (oCommand)
 		{
-			if (_.isArray(fValueAccessor()))
+			if (_.isArray(oCommand()))
 			{
-				var
-					aList = fValueAccessor(),
-					iIndex = aList.length - 1
-				;
-
-				for (; 0 <= iIndex; iIndex--)
-				{
-					aList[iIndex]($(oElement));
-				}
+				oCommand().push($(oElement));
 			}
 			else
 			{
-				fValueAccessor()($(oElement));
+				oCommand($(oElement));
 			}
 		}
 	}

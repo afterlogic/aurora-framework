@@ -180,6 +180,7 @@ function CMessagePaneView()
 	this.aBccAddr = ko.observableArray([]);
 	this.allRecipients = ko.observable('');
 	this.aAllRecipients = ko.observableArray([]);
+	this.recipientsDom = ko.observableArray([]);
 	this.recipientsContacts = ko.observableArray([]);
 	this.currentAccountEmail = ko.observable();
 	this.meSender = TextUtils.i18n('MESSAGE/ME_SENDER');
@@ -568,6 +569,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.visibleShowPicturesLink(false);
 		this.ical(null);
 		this.vcard(null);
+		this.recipientsDom([]);
 	}
 	
 	this.doAfterPopulatingMessage();
@@ -992,8 +994,8 @@ CMessagePaneView.prototype.executeSaveAsPdf = function ()
 			fReplaceWithBase64(this);
 		});
 
-		Ajax.send('GetMessagePdfHash', {
-			'Subject': this.subject(),
+		Ajax.send('GeneratePdfFile', {
+			'FileName': this.subject(),
 			'Html': oBody.html()
 		}, function (oResponse) {
 			if (oResponse.Result && oResponse.Result['Hash'])
@@ -1249,7 +1251,8 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			sText: oMessage.text(),
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
-			oCustom: oMessage.Custom
+			oCustom: oMessage.Custom,
+			a$recipients: this.recipientsDom()
 		} : null
 	;
 	

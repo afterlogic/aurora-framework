@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
+	_ = require('underscore'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js')
@@ -111,77 +111,86 @@ var CustomTooltip = {
 	}
 };
 
+function InitCustomTooltip(oElement, oCommand)
+{
+	var
+		sTooltipText = TextUtils.i18n(oCommand),
+		$Element = $(oElement),
+		$Dropdown = $Element.find('span.dropdown'),
+		bShown = false,
+		fMouseIn = function () {
+			var $ItemToAlign = $(this);
+			if (!$ItemToAlign.hasClass('expand'))
+			{
+				clearTimeout(CustomTooltip.iHideTimer);
+				bShown = true;
+				clearTimeout(CustomTooltip.iTimer);
+				CustomTooltip.iTimer = setTimeout(function () {
+					if (bShown)
+					{
+						if ($ItemToAlign.hasClass('expand'))
+						{
+							bShown = false;
+							clearTimeout(CustomTooltip.iTimer);
+							CustomTooltip.hide();
+						}
+						else
+						{
+							CustomTooltip.show(sTooltipText, $ItemToAlign);
+						}
+					}
+				}, 100);
+			}
+		},
+		fMouseOut = function () {
+			clearTimeout(CustomTooltip.iHideTimer);
+			CustomTooltip.iHideTimer = setTimeout(function () {
+				bShown = false;
+				clearTimeout(CustomTooltip.iTimer);
+				CustomTooltip.hide();
+			}, 10);
+		},
+		fEmpty = function () {},
+		fBindEvents = function () {
+			$Element.unbind('mouseover', fMouseIn);
+			$Element.unbind('mouseout', fMouseOut);
+			$Element.unbind('click', fMouseOut);
+			$Dropdown.unbind('mouseover', fMouseOut);
+			$Dropdown.unbind('mouseout', fEmpty);
+			if (sTooltipText !== '')
+			{
+				$Element.bind('mouseover', fMouseIn);
+				$Element.bind('mouseout', fMouseOut);
+				$Element.bind('click', fMouseOut);
+				$Dropdown.bind('mouseover', fMouseOut);
+				$Dropdown.bind('mouseout', fEmpty);
+			}
+		},
+		fSubscribtion = null
+	;
+	
+	if (typeof sTooltipText === 'function')
+	{
+		sTooltipText = sTooltipText();
+	}
+
+	fBindEvents();
+
+	if (typeof oCommand.subscribe === 'function' && fSubscribtion === null)
+	{
+		fSubscribtion = oCommand.subscribe(function (sValue) {
+			sTooltipText = sValue;
+			fBindEvents();
+		});
+	}
+}
+
 ko.bindingHandlers.customTooltip = {
 	'init': function (oElement, fValueAccessor) {
-		var
-			sTooltipText = TextUtils.i18n(fValueAccessor()),
-			$Element = $(oElement),
-			$Dropdown = $Element.find('span.dropdown'),
-			bShown = false,
-			fMouseIn = function () {
-				var $ItemToAlign = $(this);
-				if (!$ItemToAlign.hasClass('expand'))
-				{
-					clearTimeout(CustomTooltip.iHideTimer);
-					bShown = true;
-					clearTimeout(CustomTooltip.iTimer);
-					CustomTooltip.iTimer = setTimeout(function () {
-						if (bShown)
-						{
-							if ($ItemToAlign.hasClass('expand'))
-							{
-								bShown = false;
-								clearTimeout(CustomTooltip.iTimer);
-								CustomTooltip.hide();
-							}
-							else
-							{
-								CustomTooltip.show(sTooltipText, $ItemToAlign);
-							}
-						}
-					}, 100);
-				}
-			},
-			fMouseOut = function () {
-				clearTimeout(CustomTooltip.iHideTimer);
-				CustomTooltip.iHideTimer = setTimeout(function () {
-					bShown = false;
-					clearTimeout(CustomTooltip.iTimer);
-					CustomTooltip.hide();
-				}, 10);
-			},
-			fEmpty = function () {},
-			fBindEvents = function () {
-				$Element.unbind('mouseover', fMouseIn);
-				$Element.unbind('mouseout', fMouseOut);
-				$Element.unbind('click', fMouseOut);
-				$Dropdown.unbind('mouseover', fMouseOut);
-				$Dropdown.unbind('mouseout', fEmpty);
-				if (sTooltipText !== '')
-				{
-					$Element.bind('mouseover', fMouseIn);
-					$Element.bind('mouseout', fMouseOut);
-					$Element.bind('click', fMouseOut);
-					$Dropdown.bind('mouseover', fMouseOut);
-					$Dropdown.bind('mouseout', fEmpty);
-				}
-			},
-			fSubscribtion = null
-		;
-		
-		if (typeof sTooltipText === 'function')
-		{
-			sTooltipText = sTooltipText();
-		}
-		
-		fBindEvents();
-		
-		if (typeof fValueAccessor().subscribe === 'function' && fSubscribtion === null)
-		{
-			fSubscribtion = fValueAccessor().subscribe(function (sValue) {
-				sTooltipText = sValue;
-				fBindEvents();
-			});
-		}
+		InitCustomTooltip(oElement, fValueAccessor());
 	}
+};
+
+module.exports = {
+	init: InitCustomTooltip
 };

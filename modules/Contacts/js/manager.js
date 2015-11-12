@@ -9,12 +9,18 @@ module.exports = function (oSettings) {
 		Settings = require('modules/Contacts/js/Settings.js'),
 		
 		ManagerSuggestions = require('modules/Contacts/js/manager-suggestions.js'),
-		SuggestionsMethods = ManagerSuggestions()
+		SuggestionsMethods = ManagerSuggestions(),
+		
+		ManagerContactCard = require('modules/Contacts/js/manager-contact-card.js'),
+		ContactCardMethods = ManagerContactCard()
 	;
 
 	Settings.init(oSettings);
 	
-	return _.extend({
+	return _.extend(_.extend({
+		start: function (ModulesManager) {
+			ContactCardMethods.start(ModulesManager);
+		},
 		screens: {
 			'main': function () {
 				return require('modules/Contacts/js/views/ContactsView.js');
@@ -27,5 +33,5 @@ module.exports = function (oSettings) {
 			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/CONTACTS'), TextUtils.i18n('TITLE/CONTACTS'));
 		}
-	}, SuggestionsMethods);
+	}, SuggestionsMethods), ContactCardMethods);
 };
