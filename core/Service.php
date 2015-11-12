@@ -195,5 +195,3 @@ class Service
 		echo $mResult;
 	}
 }
-
-\Core\Service::NewInstance()->Handle();
