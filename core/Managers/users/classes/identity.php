@@ -117,18 +117,4 @@ class CIdentity extends api_AContainer
 			'UseSignature'	=> array('bool', 'use_signature'),
 		);
 	}
-	
-	public function toResponseArray($aParameters = array())
-	{
-		return array(
-			'IdIdentity' => $this->IdIdentity,
-			'IdAccount' => $this->IdAccount,
-			'Default' => $this->Default,
-			'Enabled' => $this->Enabled,
-			'Email' => $this->Email,
-			'FriendlyName' => $this->FriendlyName,
-			'UseSignature' => $this->UseSignature,
-			'Signature' => $this->Signature
-		);		
-	}
 }

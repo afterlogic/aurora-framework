@@ -3,7 +3,7 @@
 /* -AFTERLOGIC LICENSE HEADER- */
 
 /**
- * CApiUsersManager class is used for work with essential user's functions.
+ * CApiUsersManager class summary
  * 
  * @api
  * @package Users
@@ -11,8 +11,6 @@
 class CApiUsersManager extends AApiManagerWithStorage
 {
 	/**
-	 * Creates a new instance of the object.
-	 * 
 	 * @param CApiGlobalManager &$oManager
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
@@ -57,87 +55,114 @@ class CApiUsersManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * Retrieves information on WebMail Pro account. Account ID is used for look up.
+	 * Retrieves information on social account.
 	 * 
-	 * @api
+	 * @internal
 	 * 
-	 * @param int $mAccountId Account identifier.
-	 * @param bool $bIdIsMd5 Default value is **false**.
+	 * @param string $sEmail Email address associated with the account.
 	 * 
 	 * @return CAccount
 	 */
-	public function getAccountById($mAccountId, $bIdIsMd5 = false)
+	public function getAccountBySocialEmail($sEmail)
 	{
 		$oAccount = null;
 		try
 		{
-			if (is_numeric($mAccountId))
+			$oAccount = $this->oStorage->getAccountBySocialEmail($sEmail);
+		}
+		catch (CApiBaseException $oException)
+		{
+			$oAccount = false;
+			$this->setLastException($oException);
+		}
+		return $oAccount;
+	}	
+	
+	/**
+	 * Retrieves information on WebMail Pro account. Account ID is used for look up.
+	 * 
+	 * @api
+	 * 
+	 * @param int $iAccountId Account identifier.
+	 * 
+	 * @return CAccount
+	 */
+	public function getAccountById($iAccountId)
+	{
+		$oAccount = null;
+		try
+		{
+			if (is_numeric($iAccountId))
 			{
-				$iAccountId = (int) $mAccountId;
+				$iAccountId = (int) $iAccountId;
 				if (CApi::Plugin() !== null)
 				{
 					CApi::Plugin()->RunHook('api-get-account-by-id-precall', array(&$iAccountId, &$oAccount));
 				}
-			}
-			if (null === $oAccount)
-			{
-				$oAccount = $this->oStorage->getAccountById($mAccountId, $bIdIsMd5);
-			}
-
-			// Default account extension
-			if ($oAccount instanceof CAccount)
-			{
-				if ($oAccount->IsInternal)
+				if (null === $oAccount)
 				{
-					$oAccount->enableExtension(CAccount::DisableAccountDeletion);
-					$oAccount->enableExtension(CAccount::ChangePasswordExtension);
+					$oAccount = $this->oStorage->getAccountById($iAccountId);
 				}
 
-				if (EMailProtocol::IMAP4 === $oAccount->IncomingMailProtocol)
+				// Default account extension
+				if ($oAccount instanceof CAccount)
 				{
-					$oAccount->enableExtension(CAccount::SpamFolderExtension);
-				}
-
-				if (CApi::GetConf('labs.webmail.disable-folders-manual-sort', false))
-				{
-					$oAccount->enableExtension(CAccount::DisableFoldersManualSort);
-				}
-
-				if (CApi::GetConf('sieve', false))
-				{
-					$aSieveDomains = CApi::GetConf('sieve.config.domains', array());
-					if (!is_array($aSieveDomains))
+					if ($oAccount->IsInternal)
 					{
-						$aSieveDomains = array();
+						$oAccount->EnableExtension(CAccount::DisableAccountDeletion);
+						$oAccount->EnableExtension(CAccount::ChangePasswordExtension);
 					}
 
-					if ($oAccount->IsInternal || (is_array($aSieveDomains) && 0 < count($aSieveDomains)))
+					if (EMailProtocol::IMAP4 === $oAccount->IncomingMailProtocol)
 					{
-						$aSieveDomains = array_map('trim', $aSieveDomains);
-						$aSieveDomains = array_map('strtolower', $aSieveDomains);
+						$oAccount->EnableExtension(CAccount::SpamFolderExtension);
+					}
 
-						if ($oAccount->IsInternal || in_array($oAccount->IncomingMailServer, $aSieveDomains))
+					if (CApi::GetConf('labs.webmail.disable-folders-manual-sort', false))
+					{
+						$oAccount->EnableExtension(CAccount::DisableFoldersManualSort);
+					}
+
+					if (CApi::GetConf('sieve', false))
+					{
+						$aSieveDomains = CApi::GetConf('sieve.config.domains', array());
+						if (!is_array($aSieveDomains))
 						{
-							if (CApi::GetConf('sieve.autoresponder', false))
-							{
-								$oAccount->enableExtension(CAccount::AutoresponderExtension);
-							}
+							$aSieveDomains = array();
+						}
+						
+						if ($oAccount->IsInternal || (is_array($aSieveDomains) && 0 < count($aSieveDomains)))
+						{
+							$aSieveDomains = array_map('trim', $aSieveDomains);
+							$aSieveDomains = array_map('strtolower', $aSieveDomains);
 
-							if (CApi::GetConf('sieve.forward', false))
+							if ($oAccount->IsInternal || in_array($oAccount->IncomingMailServer, $aSieveDomains))
 							{
-								$oAccount->enableExtension(CAccount::ForwardExtension);
-							}
+								if (CApi::GetConf('sieve.autoresponder', false))
+								{
+									$oAccount->EnableExtension(CAccount::AutoresponderExtension);
+								}
 
-							if (CApi::GetConf('sieve.filters', false))
-							{
-								$oAccount->enableExtension(CAccount::SieveFiltersExtension);
+								if (CApi::GetConf('sieve.forward', false))
+								{
+									$oAccount->EnableExtension(CAccount::ForwardExtension);
+								}
+								
+								if (CApi::GetConf('sieve.filters', false))
+								{
+									$oAccount->EnableExtension(CAccount::SieveFiltersExtension);
+								}
 							}
 						}
 					}
 				}
-			}
 
-			CApi::Plugin()->RunHook('api-change-account-by-id', array(&$oAccount));
+				CApi::Plugin()->RunHook('api-change-account-by-id', array(&$oAccount));
+			}
+			else
+			{
+				throw new CApiBaseException(Errs::Validation_InvalidParameters);
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -155,7 +180,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iUserId User identifier.
 	 * 
-	 * @return CUser|false
+	 * @return CUser | false
 	 */
 	public function getUserById($iUserId)
 	{
@@ -284,7 +309,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oIdentity->isValid())
+			if ($oIdentity->Validate())
 			{
 				if (!$this->oSettings->GetConf('WebMail/AllowIdentities') ||
 					$oIdentity->Virtual || !$this->oStorage->createIdentity($oIdentity))
@@ -310,7 +335,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * @api
 	 * @param CAccount $oAccount
 	 * @param CTenant $oTenant
-	 * @param bool $bCreate Default value is **false**.
+	 * @param bool $bUpdate
 	 *
 	 * @return bool
 	 *
@@ -334,7 +359,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 //					$oSub = $oSubscriptionsApi->getSubscriptionById($oAccount->User->IdSubscription);
 //					if (/* @var $oSub CSubscription */ $oSub)
 //					{
-//						$aUsage = $oTenantsApi->getSubscriptionUserUsage($oTenant->IdTenant,
+//						$aUsage = $oTenantsApi->GetSubscriptionUserUsage($oTenant->IdTenant,
 //							$bCreate ? null : $oAccount->IdUser);
 //
 //						$iLimit = is_array($aUsage) && isset($aUsage[$oAccount->User->IdSubscription])
@@ -367,12 +392,12 @@ class CApiUsersManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * Creates WebMail account. In most cases, using simpler loginToAccount wrapper is recommended.
+	 * Creates WebMail account. In most cases, using simpler LoginToAccount wrapper is recommended.
 	 * 
 	 * @api
 	 * 
 	 * @param CAccount &$oAccount Object instance with prepopulated account properties.
-	 * @param bool $bWithMailConnection Default value is **true**. Defines whether account credentials should be verified against mail server.
+	 * @param bool $bWithMailConnection = true Defines whether account credentials should be verified against mail server.
 	 * 
 	 * @return bool
 	 */
@@ -381,10 +406,13 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oAccount->isValid())
+			if ($oAccount->Validate())
 			{
 				if (!$this->accountExists($oAccount))
 				{
+					$oAccount->IncomingMailUseSSL = in_array($oAccount->IncomingMailPort, array(993, 995));
+					$oAccount->OutgoingMailUseSSL = in_array($oAccount->OutgoingMailPort, array(465));
+
 					/* @var $oApiLicensingManager CApiLicensingManager */
 					$oApiLicensingManager = CApi::Manager('licensing');
 					if ($oApiLicensingManager)
@@ -412,14 +440,14 @@ class CApiUsersManager extends AApiManagerWithStorage
 						if ($oTenantsApi)
 						{
 							/* @var $oTenant CTenant */
-							$oTenant = $oTenantsApi->getTenantById($oAccount->Domain->IdTenant);
+							$oTenant = $oTenantsApi->GetTenantById($oAccount->Domain->IdTenant);
 							if (!$oTenant)
 							{
 								throw new CApiManagerException(Errs::TenantsManager_TenantDoesNotExist);
 							}
 							else
 							{
-								if (0 < $oTenant->UserCountLimit && $oTenant->UserCountLimit <= $oTenant->getUserCount())
+								if (0 < $oTenant->UserCountLimit && $oTenant->UserCountLimit <= $oTenant->GetUserCount())
 								{
 									throw new CApiManagerException(Errs::TenantsManager_AccountCreateUserLimitReached);
 								}
@@ -429,8 +457,8 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 							if (0 < $oTenant->QuotaInMB)
 							{
-								$iSize = $oTenantsApi->getTenantAllocatedSize($oTenant->IdTenant);
-								if (((int) ($oAccount->getRealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
+								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->IdTenant);
+								if (((int) ($oAccount->RealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
 								{
 									throw new CApiManagerException(Errs::TenantsManager_QuotaLimitExided);
 								}
@@ -484,7 +512,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 						if ($oAccount && $oAccount->IsDefaultAccount)
 						{
-							/* @var $oApiContactsManager CApiContactsMainManager */
+							/* @var $oApiContactsManager CApiContactsManager */
 							$oApiContactsManager = CApi::Manager('contactsmain');
 
 							if ($oApiContactsManager && 'db' === CApi::GetManager()->GetStorageByType('contactsmain'))
@@ -516,6 +544,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 							throw new CApiManagerException(Errs::UserManager_AccountConnectToMailServerFailed);
 						}
 					}
+
 				}
 				else
 				{
@@ -565,7 +594,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * @api
 	 * 
 	 * @param CAccount &$oAccount Account object containing data to be saved.
-	 * @param bool $bSetIdentityDefault Default value is **false**.. If **true** account identity needs treatting as default.
+	 * @param bool $bSetIdentityDefault = false. If **true** account identity needs treatting as default.
 	 * 
 	 * @return bool
 	 */
@@ -574,7 +603,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oAccount->isValid())
+			if ($oAccount->Validate())
 			{
 				$oAccount->IncomingMailUseSSL = in_array($oAccount->IncomingMailPort, array(993, 995));
 				$oAccount->OutgoingMailUseSSL = in_array($oAccount->OutgoingMailPort, array(465));
@@ -586,7 +615,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					if ($oTenantsApi)
 					{
 						/* @var $oTenant CTenant */
-						$oTenant = $oTenantsApi->getTenantById($oAccount->Domain->IdTenant);
+						$oTenant = $oTenantsApi->GetTenantById($oAccount->Domain->IdTenant);
 						if (!$oTenant)
 						{
 							throw new CApiManagerException(Errs::TenantsManager_TenantDoesNotExist);
@@ -598,14 +627,31 @@ class CApiUsersManager extends AApiManagerWithStorage
 							if (0 < $oTenant->QuotaInMB)
 							{
 								$iAccountStorageQuota = $oAccount->GetObsoleteValue('StorageQuota');
-								$iSize = $oTenantsApi->getTenantAllocatedSize($oTenant->IdTenant);
+								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->IdTenant);
 								$iSize -= (int) ($iAccountStorageQuota / 1024);
 								
-								if (((int) ($oAccount->getRealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
+								if (((int) ($oAccount->RealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
 								{
 									throw new CApiManagerException(Errs::TenantsManager_QuotaLimitExided);
 								}
 							}
+						}
+					}
+				}
+				
+				if (trim($oAccount->SocialEmail) !== '')
+				{
+					$oDefaultAccount = $this->getAccountByEmail($oAccount->SocialEmail);
+					if ($oDefaultAccount && $oDefaultAccount->IdAccount !== $oAccount->IdAccount)
+					{
+						throw new CApiManagerException(Errs::UserManager_SocialAccountAlreadyExists);
+					}
+					else
+					{
+						$oSocialAccount = $this->getAccountBySocialEmail($oAccount->SocialEmail);
+						if ($oSocialAccount && $oAccount->IdAccount !== $oSocialAccount->IdAccount)
+						{
+							throw new CApiManagerException(Errs::UserManager_SocialAccountAlreadyExists);
 						}
 					}
 				}
@@ -648,7 +694,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					$oApiGContactsManager = CApi::Manager('gcontacts');
 					if ($oApiGContactsManager)
 					{
-						$oContact = $oApiGContactsManager->getContactByTypeId($oAccount, $oAccount->IdUser, true);
+						$oContact = $oApiGContactsManager->GetContactByTypeId($oAccount, $oAccount->IdUser, true);
 						if ($oContact)
 						{
 							$oContact->FullName = $oAccount->FriendlyName;
@@ -690,7 +736,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oIdentity->isValid())
+			if ($oIdentity->Validate())
 			{
 				$bUseOnlyHookUpdate = false;
 				CApi::Plugin()->RunHook('api-update-identity', array(&$oIdentity, &$bUseOnlyHookUpdate));
@@ -858,7 +904,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					/* @var $oApiTenantsManager CApiTenantsManager */
 					if ($oApiTenantsManager)
 					{
-						$oTenant = $oApiTenantsManager->getTenantById($oAccount->IdTenant);
+						$oTenant = $oApiTenantsManager->GetTenantById($oAccount->IdTenant);
 						/* @var $oTenant CTenant */
 						if (\strtolower($oAccount->Email) === $oTenant->HelpdeskAdminEmailAccount)
 						{
@@ -877,15 +923,15 @@ class CApiUsersManager extends AApiManagerWithStorage
 					$oApiMailSuiteManager = CApi::Manager('mailsuite');
 					if ($oApiMailSuiteManager)
 					{
-						$oApiMailSuiteManager->deleteMailAliases($oAccount);
-						$oApiMailSuiteManager->deleteMailForwards($oAccount);
-						$oApiMailSuiteManager->deleteMailDir($oAccount);
+						$oApiMailSuiteManager->DeleteMailAliases($oAccount);
+						$oApiMailSuiteManager->DeleteMailForwards($oAccount);
+						$oApiMailSuiteManager->DeleteMailDir($oAccount);
 					}
 				}
 
 				if ($oAccount->IsDefaultAccount)
 				{
-					/* @var $oApiContactsManager CApiContactsMainManager */
+					/* @var $oApiContactsManager CApiContactsManager */
 					$oApiContactsManager = CApi::Manager('contacts');
 					if ($oApiContactsManager)
 					{
@@ -917,7 +963,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					$oApiSocialManager = CApi::Manager('social');
 					if ($oApiSocialManager)
 					{
-						$oApiSocialManager->deleteSocialByAccountId($oAccount->IdAccount);
+						$oApiSocialManager->DeleteSocialByAccountId($oAccount->IdAccount);
 					}
 
 					if (0 < $oAccount->User->IdHelpdeskUser)
@@ -982,10 +1028,10 @@ class CApiUsersManager extends AApiManagerWithStorage
 			$oApiMailSuiteManager = CApi::Manager('mailsuite');
 			if ($oApiMailSuiteManager)
 			{
-				$oMailingList = $oApiMailSuiteManager->getMailingListById((int) $iAccountId);
+				$oMailingList = $oApiMailSuiteManager->GetMailingListById((int) $iAccountId);
 				if ($oMailingList)
 				{
-					$bResult = $oApiMailSuiteManager->deleteMailingList($oMailingList);
+					$bResult = $oApiMailSuiteManager->DeleteMailingList($oMailingList);
 				}
 			}
 		}
@@ -1041,7 +1087,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param string $iUserId User identifier.
 	 * @param string $sEmail Email of sender.
-	 * @param bool $bUseCache Default value is **false**. If **true** value of sender safety will be retrieved from cache.
+	 * @param bool $bUseCache If **true** value of sender safety will be retrieved from cache.
 	 * 
 	 * @return bool
 	 */
@@ -1106,7 +1152,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iUserId User identifier. 
 	 * 
-	 * @return array|false array holding a list of account IDs, or false
+	 * @return array | false array holding a list of account IDs, or false 
 	 */
 	public function getAccountIdList($iUserId)
 	{
@@ -1130,7 +1176,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iIdentityId Indentity identifier.
 	 * 
-	 * @return CIdentity|bool
+	 * @return CIdentity | bool
 	 */
 	public function getIdentity($iIdentityId)
 	{
@@ -1203,7 +1249,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iUserId User identifier.
 	 * 
-	 * @return array|false array(int IdAccount => array(bool isDefaultAccount, string email, string friendlyName, string signature, int isSignatureHtml, int isSignatureAdded))
+	 * @return array | false array(int IdAccount => array(bool isDefaultAccount, string email, string friendlyName, string signature, int isSignatureHtml, int isSignatureAdded))
 	 */
 	public function getUserAccounts($iUserId)
 	{
@@ -1228,20 +1274,20 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * @param int $iUserId Identifier of user that contains account.
 	 * @param string $sEmail Email of account that is looked up.
 	 * 
-	 * @return int|false
+	 * @return boolean
 	 */
 	public function getUserAccountId($iUserId, $sEmail)
 	{
-		$iResult = false;
+		$bResult = false;
 		try
 		{
-			$iResult = $this->oStorage->getUserAccountId($iUserId, $sEmail);
+			$bResult = $this->oStorage->getUserAccountId($iUserId, $sEmail);
 		}
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
-		return $iResult;
+		return $bResult;
 	}
 
 	/**
@@ -1253,9 +1299,9 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * @param int $iDomainId Domain identifier.
 	 * @param int $iPage List page.
 	 * @param int $iUsersPerPage Number of users on a single page.
-	 * @param string $sOrderBy Default value is **'email'**.. Field by which to sort.
-	 * @param bool $bAscOrderType Default value is **true**. If **true** the sort order type is ascending.
-	 * @param string $sSearchDesc Default value is empty string. If specified, the search goes on by substring in the name and email of default account.
+	 * @param string $sOrderBy = 'email'. Field by which to sort.
+	 * @param bool $bAscOrderType = true. If **true** the sort order type is ascending.
+	 * @param string $sSearchDesc = ''. If specified, the search goes on by substring in the name and email of default account.
 	 * 
 	 * @return array | false [IdAccount => [IsMailingList, Email, FriendlyName, IsDisabled, IdUser, StorageQuota, LastLogin]]
 	 */
@@ -1283,7 +1329,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * @param int $iPage List page.
 	 * @param int $iUsersPerPage Number of identifiers on a single page.
 	 * 
-	 * @return array|false
+	 * @return array | false
 	 */
 	public function getDefaultAccountIdList($iDomainId, $iPage, $iUsersPerPage)
 	{
@@ -1305,7 +1351,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @api
 	 * 
-	 * @return array|false
+	 * @return array | false
 	 */
 	public function getDefaultAccountList()
 	{
@@ -1327,7 +1373,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @api
 	 * 
-	 * @param int $iTenantId Tenant identifier.
+	 * @param $iTenantId Tenant identifier.
 	 * 
 	 * @return array|false
 	 */
@@ -1352,9 +1398,9 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * @api
 	 * 
 	 * @param int $iDomainId Domain identifier.
-	 * @param string $sSearchDesc Default value is empty string. If not empty, only users matching this pattern are counted.
+	 * @param string $sSearchDesc = '' If not empty, only users matching this pattern are counted.
 	 * 
-	 * @return int|false
+	 * @return int | false
 	 */
 	public function getUsersCountForDomain($iDomainId, $sSearchDesc = '')
 	{
@@ -1377,7 +1423,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iTenantId Tenant identifier.
 	 * 
-	 * @return int|false
+	 * @return int | false
 	 */
 	public function getUsersCountForTenant($iTenantId)
 	{
@@ -1421,7 +1467,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iUserId User identifier.
 	 * 
-	 * @return CCalUser|false
+	 * @return CCalUser | false
 	 */
 	public function getCalUser($iUserId)
 	{
@@ -1466,7 +1512,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oCalUser->isValid())
+			if ($oCalUser->Validate())
 			{
 				$oExCalUser = $this->getCalUser($oCalUser->IdUser);
 				if ($oExCalUser instanceof CCalUser)
@@ -1499,7 +1545,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 * 
 	 * @param int $iUserId User identifier.
 	 * 
-	 * @return CCalUser|false
+	 * @return CCalUser | false
 	 */
 	public function getOrCreateCalUser($iUserId)
 	{
@@ -1537,7 +1583,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oCalUser->isValid())
+			if ($oCalUser->Validate())
 			{
 				$bUseOnlyHookUpdate = false;
 				CApi::Plugin()->RunHook('api-update-cal-user', array(&$oCalUser, &$bUseOnlyHookUpdate));

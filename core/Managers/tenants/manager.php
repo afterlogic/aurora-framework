@@ -200,6 +200,32 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	}
 	
 	/**
+	 * @param string $sTenantHash
+	 *
+	 * @return int|bool
+	 */
+	public function getTenantIdByHash($sTenantHash)
+	{
+		$iResult = 0;
+
+		if (0 === strlen($sTenantHash))
+		{
+			return 0;
+		}
+		else if (0 < strlen($sTenantHash))
+		{
+			$oTenant = $this->getTenantByHash($sTenantHash);
+			if ($oTenant)
+			{
+				$iResult = $oTenant->IdTenant;
+			}
+		}
+
+		return 0 < $iResult ? $iResult : false;
+	}
+	
+	
+	/**
 	 * @param int $iDomainId
 	 *
 	 * @return int

@@ -206,7 +206,7 @@ class CApiGlobalManager
 				$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
 				if (!class_exists($sClassName))
 				{
-					CApi::Inc('common.managers.'.$sManagerType.'.manager', false);
+					CApi::Inc('Managers.'.$sManagerType.'.manager', false);
 				}
 				if (class_exists($sClassName))
 				{
@@ -545,9 +545,9 @@ abstract class AApiManagerWithStorage extends AApiManager
 		}
 		else
 		{
-			CApi::Inc('common.managers.'.$this->GetManagerName().'.storages.default');
+			CApi::Inc('Managers.'.$this->GetManagerName().'.storages.default');
 
-			if (CApi::Inc('common.managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
+			if (CApi::Inc('Managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
 			{
 				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
 				$this->oStorage = new $sClassName($this);

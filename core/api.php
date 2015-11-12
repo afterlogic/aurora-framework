@@ -383,7 +383,7 @@ class CApi
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return CApi::Inc('common.managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
+		return CApi::Inc('Managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
 	/**
@@ -392,7 +392,7 @@ class CApi
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return CApi::IncPath('common.managers.'.$sManagerName.'.'.$sFileName);
+		return CApi::IncPath('Managers.'.$sManagerName.'.'.$sFileName);
 	}
 
 	/**
@@ -402,7 +402,7 @@ class CApi
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
 		$sStorageName = preg_replace('/[^a-z]/', '', strtolower($sStorageName));
-		return CApi::Inc('common.managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
+		return CApi::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
 	}
 
 	/**
