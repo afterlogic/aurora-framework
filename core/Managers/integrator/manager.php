@@ -12,47 +12,47 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @type string
 	 */
-	const AUTH_KEY = 'p7auth';
+	const AUTH_KEY = 'aurora-auth';
 
 	/**
 	 * @type string
 	 */
-	const MOBILE_KEY = 'p7mobile';
+	const MOBILE_KEY = 'aurora-mobile';
 
 	/**
 	 * @type string
 	 */
-	const AUTH_HD_KEY = 'p7hdauth';
+	const AUTH_HD_KEY = 'aurora-hd-auth';
 
 	/**
 	 * @type string
 	 */
-	const TOKEN_KEY = 'p7token';
+	const TOKEN_KEY = 'aurora-token';
 
 	/**
 	 * @type string
 	 */
-	const TOKEN_LAST_CODE = 'p7lastcode';
+	const TOKEN_LAST_CODE = 'aurora-last-code';
 
 	/**
 	 * @type string
 	 */
-	const TOKEN_LANGUAGE = 'p7lang';
+	const TOKEN_LANGUAGE = 'aurora-lang';
 
 	/**
 	 * @type string
 	 */
-	const TOKEN_HD_THREAD_ID = 'p7hdthread';
+	const TOKEN_HD_THREAD_ID = 'aurora-hd-thread';
 
 	/**
 	 * @type string
 	 */
-	const TOKEN_HD_ACTIVATED = 'p7hdactivated';
+	const TOKEN_HD_ACTIVATED = 'aurora-hd-activated';
 
 	/**
 	 * @type string
 	 */
-	const TOKEN_SKIP_MOBILE_CHECK = 'p7skipmobile';
+	const TOKEN_SKIP_MOBILE_CHECK = 'aurora-skip-mobile';
 
 	/**
 	 * @var $bCache bool
