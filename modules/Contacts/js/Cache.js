@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	$ = require('jquery'),
 	ko = require('knockout'),
 	_ = require('underscore'),
 	
@@ -36,44 +37,43 @@ CContactsCache.prototype.clearInfoAboutEmail = function (sEmail)
  * 
  * @param {Array} aEmails List of emails.
  * @param {Function} fResponseHandler Function to call when the server response.
- * @param {Object} oResponseContext Context in which the function should be called.
  */
-CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandler, oResponseContext)
+CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandler)
 {
-//	if (AppData.User.ShowContacts)
-//	{
-		var
-			aEmailsForRequest = [],
-			sHandlerId = Math.random().toString()
-		;
+	var
+		aContacts = [],
+		aEmailsForRequest = [],
+		sHandlerId = Math.random().toString()
+	;
 
-		_.each(aEmails, _.bind(function (sEmail) {
-			var oContact = this.contacts[sEmail];
-			
-			if (oContact !== undefined)
-			{
-				fResponseHandler.apply(oResponseContext, [oContact, sEmail]);
-			}
-			else
-			{
-				this.contacts[sEmail] = null;
-				aEmailsForRequest.push(sEmail);
-			}
-		}, this));
-		
-		if (aEmailsForRequest.length > 0)
+	_.each(aEmails, _.bind(function (sEmail) {
+		var oContact = this.contacts[sEmail];
+
+		if (oContact !== undefined)
 		{
-			this.responseHandlers[sHandlerId] = {
-				'func': fResponseHandler,
-				'context': oResponseContext
-			};
-			
-			Ajax.send('GetContactsByEmails', {
-				'Emails': aEmailsForRequest.join(','),
-				'HandlerId': sHandlerId
-			}, this.onGetContactsByEmailsResponse, this);
+			aContacts[sEmail] = oContact;
 		}
-//	}
+		else
+		{
+			this.contacts[sEmail] = null;
+			aEmailsForRequest.push(sEmail);
+		}
+	}, this));
+	
+	if ($.isFunction(fResponseHandler) && aContacts.length > 0)
+	{
+		fResponseHandler(aContacts);
+	}
+
+	if (aEmailsForRequest.length > 0)
+	{
+		this.responseHandlers[sHandlerId] = fResponseHandler;
+
+		Ajax.send('GetContactsByEmails', {
+			'Emails': aEmailsForRequest.join(','),
+			'HandlerId': sHandlerId
+		}, this.onGetContactsByEmailsResponse, this);
+	}
 };
 
 /**
@@ -86,8 +86,10 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 {
 	var
 		oParameters = JSON.parse(oRequest.Parameters),
-		oHandler = this.responseHandlers[oParameters.HandlerId],
-		oResult = oResponse.Result
+		fResponseHandler = this.responseHandlers[oParameters.HandlerId],
+		oResult = oResponse.Result,
+		aEmails = oParameters.Emails.split(','),
+		aContacts = []
 	;
 	
 	if (oResult)
@@ -99,16 +101,20 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 			{
 				oContact.parse(oRawContact);
 				this.contacts[sEmail] = oContact;
-
-				if (oHandler)
-				{
-					oHandler.func.apply(oHandler.context, [oContact, sEmail]);
-				}
 			}
 		}, this));
 	}
 	
-	this.responseHandlers[oParameters.HandlerId] = undefined;
+	_.each(aEmails, _.bind(function (sEmail) {
+		aContacts[sEmail] = this.contacts[sEmail];
+	}, this));
+	
+	if ($.isFunction(fResponseHandler))
+	{
+		fResponseHandler(aContacts);
+	}
+	
+	delete this.responseHandlers[oParameters.HandlerId];
 };
 
 /**

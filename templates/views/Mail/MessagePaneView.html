@@ -46,7 +46,9 @@
 		</div>
 
 		<!-- ko foreach: topControllers -->
-			<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
+			<!-- ko if: $data.ViewTemplate -->
+				<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
+			<!-- /ko -->
 		<!-- /ko -->
 		
 		<div class="header_content clearfix">
@@ -135,22 +137,11 @@
 				
 				<div class="message_info" data-bind="visible: !detailsVisible()">
 					<div class="message_info_line">
-						<span class="from control" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from,
-							contactCardInMessage: {'address': fromEmail(), 'trigger': recipientsContacts()},
-							css: {'link found': oFromAddr() && oFromAddr().found()}">
-						</span><span class="add_contact" data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', 
-									click: function () { addToContacts(oFromAddr().sEmail, oFromAddr().sName); },
-									visible: isCurrentNotDraftOrSent() && oFromAddr() && oFromAddr().loaded() && !oFromAddr().found()"></span>
+						<span class="from control" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}, initDom: recipientsDom"></span>
 						<span data-i18n="MESSAGE/SHORT_LINE_TO" data-bind="i18n: 'text', visible: aAllRecipients().length > 0"></span>
 						<span data-bind="foreach: aAllRecipients">
-							<span data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay,
-								contactCardInMessage: {'address': sEmail, 'trigger': $parent.recipientsContacts()},
-								css: {'link found': found}">
-							</span><span class="add_contact" data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', 
-									click: function () { $parent.addToContacts(sEmail, sName); },
-									visible: loaded() && !found() && $parent.currentAccountEmail() !== sEmail">
-							</span><span data-bind="visible: $parent.aAllRecipients().length > $index() + 1">, </span>
-							
+							<span data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, attr: {'data-email': sEmail, 'data-name': sName}, initDom: $parent.recipientsDom"></span>
+							<span data-bind="visible: $parent.aAllRecipients().length > $index() + 1">, </span>
 						</span>
 					</div>
 				</div>
