@@ -151,10 +151,11 @@ class MailModule extends AApiModule
 					$bIsLinked = '1' === (string) $aData[3];
 					$sContentLocation = isset($aData[4]) ? (string) $aData[4] : '';
 
-					$rResource = $this->ApiFileCache()->getFile($oAccount, $sTempName);
+					$oApiFileCache = \CApi::GetCoreManager('filecache');
+					$rResource = $oApiFileCache->getFile($oAccount, $sTempName);
 					if (is_resource($rResource))
 					{
-						$iFileSize = $this->ApiFileCache()->fileSize($oAccount, $sTempName);
+						$iFileSize = $oApiFileCache->fileSize($oAccount, $sTempName);
 
 						$sCID = trim(trim($sCID), '<>');
 						$bIsFounded = 0 < strlen($sCID) ? in_array($sCID, $aFoundCids) : false;
@@ -1090,6 +1091,67 @@ class MailModule extends AApiModule
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMailManager->setSystemFolderNames($oAccount, $aData));
 	}	
+	
+	/**
+	 * @return bool
+	 */
+	public function GeneratePdfFile()
+	{
+		$oAccount = $this->getAccountFromParam();
+		if ($oAccount)
+		{
+			$sSubject = (string) $this->getParamValue('FileName', '');
+			$sHtml = (string) $this->getParamValue('Html', '');
+
+			$sFileName = $sSubject.'.pdf';
+			$sMimeType = 'application/pdf';
+
+			$sSavedName = 'pdf-'.$oAccount->IdAccount.'-'.md5($sFileName.microtime(true)).'.pdf';
+			
+			include_once PSEVEN_APP_ROOT_PATH.'vendors/other/CssToInlineStyles.php';
+
+			$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+			$oCssToInlineStyles->setEncoding('utf-8');
+			$oCssToInlineStyles->setUseInlineStylesBlock(true);
+
+			$sExec = \CApi::DataPath().'/system/wkhtmltopdf/linux/wkhtmltopdf';
+			if (!file_exists($sExec))
+			{
+				$sExec = \CApi::DataPath().'/system/wkhtmltopdf/win/wkhtmltopdf.exe';
+				if (!file_exists($sExec))
+				{
+					$sExec = '';
+				}
+			}
+
+			if (0 < strlen($sExec))
+			{
+				$oSnappy = new \Knp\Snappy\Pdf($sExec);
+				$oSnappy->setOption('quiet', true);
+				$oSnappy->setOption('disable-javascript', true);
+
+				$oApiFileCache = \CApi::GetCoreManager('filecache');
+				$oSnappy->generateFromHtml($oCssToInlineStyles->convert(),
+					$oApiFileCache->generateFullFilePath($oAccount, $sSavedName), array(), true);
+
+				return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+					'Name' => $sFileName,
+					'TempName' => $sSavedName,
+					'MimeType' => $sMimeType,
+					'Size' =>  (int) $oApiFileCache->fileSize($oAccount, $sSavedName),
+					'Hash' => \CApi::EncodeKeyValues(array(
+						'TempFile' => true,
+						'AccountID' => $oAccount->IdAccount,
+						'Name' => $sFileName,
+						'TempName' => $sSavedName
+					))
+				));
+			}
+		}
+
+		return $this->FalseResponse($oAccount, __FUNCTION__);
+	}
+	
 }
 
 return new MailModule('1.0');

@@ -96,13 +96,12 @@ class CApiIntegratorManager extends AApiManager
 
 	/**
 	 * @param string $sTheme
-	 * @param bool $bMobile Default value is **false**.
 	 *
 	 * @return string
 	 */
-	private function compileTemplates($sTheme, $bMobile = false)
+	private function compileTemplates($sTheme)
 	{
-		$bMobile = false;
+		$bMobile = $bMobile = \CApi::IsMobileApplication();
 		$sHash = CApi::Plugin()->Hash();
 		
 		$sCacheFileName = '';
@@ -1026,36 +1025,6 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @param string $sTenantHash
-	 *
-	 * @return int|bool
-	 */
-	public function getTenantIdByHash($sTenantHash)
-	{
-		$iResult = 0;
-
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
-		if (0 === strlen($sTenantHash)/* && $oApiCapabilityManager->isHelpdeskSupported() && !$oApiCapabilityManager->isTenantsSupported()*/)
-		{
-			return 0;
-		}
-		else if (0 < strlen($sTenantHash))
-		{
-			$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */ CApi::GetCoreManager('tenants');
-			if ($oApiTenantsManager)
-			{
-				$oTenant = $oApiTenantsManager->getTenantByHash($sTenantHash);
-				if ($oTenant && $oTenant->isHelpdeskSupported())
-				{
-					$iResult = $oTenant->IdTenant;
-				}
-			}
-		}
-
-		return 0 < $iResult ? $iResult : false;
-	}
-
-	/**
 	 * @param CAccount $oAccount
 	 *
 	 * @return CDomain
@@ -1592,8 +1561,6 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @param bool $bHelpdesk Default value is **false**.
-	 * @param int $iHelpdeskIdTenant Default value is **null**.
 	 * @param string $sHelpdeskTenantHash Default value is empty string.
 	 * @param string $sCalendarPubHash Default value is empty string.
 	 * @param string $sFileStoragePubHash Default value is empty string.
@@ -1601,7 +1568,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return array
 	 */
-	public function appData($bHelpdesk = false, $iHelpdeskIdTenant = null, $sHelpdeskTenantHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAuthToken = '')
+	public function appData($sHelpdeskTenantHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAuthToken = '')
 	{
 		$aAppData = array(
 			'Auth' => false,
@@ -1717,7 +1684,7 @@ class CApiIntegratorManager extends AApiManager
 		$aThreadId = $this->getThreadIdFromRequestAndClear();
 		$mThreadId = isset($aThreadId['id']) ? $aThreadId['id'] : null;
 		$sThreadAction = isset($aThreadId['action']) ? $aThreadId['action'] : '';
-		if ($bHelpdesk)
+		if (!empty($sHelpdeskTenantHash))
 		{
 			$aHelpdeskMainData = null;
 			$aAppData['TenantHash'] = $sHelpdeskTenantHash;
@@ -1726,7 +1693,7 @@ class CApiIntegratorManager extends AApiManager
 			$iUserId = $this->getLogginedHelpdeskUserId();
 			if (0 < $iUserId && $oApiHelpdeskManager)
 			{
-				$oHelpdeskUser = $oApiHelpdeskManager->getUserById($iHelpdeskIdTenant, $iUserId);
+				$oHelpdeskUser = $oApiHelpdeskManager->getUserById($oApiTenant->getTenantIdByHash($sHelpdeskTenantHash), $iUserId);
 				if ($oHelpdeskUser)
 				{
 					$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($oHelpdeskUser->IdTenant);
@@ -1740,7 +1707,7 @@ class CApiIntegratorManager extends AApiManager
 
 			if (!$aHelpdeskMainData && $oApiHelpdeskManager)
 			{
-				$iIdTenant = $this->getTenantIdByHash($sHelpdeskTenantHash);
+				$iIdTenant = $oApiTenant->getTenantIdByHash($sHelpdeskTenantHash);
 				$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($iIdTenant);
 				$aAppData['HelpdeskSiteName'] = isset($aHelpdeskMainData['SiteName']) ? $aHelpdeskMainData['SiteName'] : '';
 				$aAppData['HelpdeskStyleImage'] = isset($aHelpdeskMainData['StyleImage']) &&
@@ -1773,7 +1740,6 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$oDefaultAccount = null;
-		$oDomain = null;
 
 		$iUserId = $this->getLogginedUserId($sAuthToken);
 		if (0 < $iUserId)
@@ -1880,29 +1846,28 @@ class CApiIntegratorManager extends AApiManager
 	public function getAhdSocialUser($sHelpdeskTenantHash = '', $sUserId = '')
 	{
 		$sTenantHash = $sHelpdeskTenantHash;
-		$iIdTenant = $this->getTenantIdByHash($sTenantHash);
+		$oApiTenant = \CApi::GetCoreManager('tenants');
+		$iIdTenant = $oApiTenant->getTenantIdByHash($sTenantHash);
 		if (!is_int($iIdTenant))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
-//		$oApiHelpdeskManager = CApi::Manager('helpdesk');
+//		$oApiHelpdeskManager = CApi::Manager('helpdesk'); // TODO:
 		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
 
 		return $oUser;
 	}
 
 	/**
-	 * @param bool $bHelpdesk Default value is **false**.
-	 * @param int $iHelpdeskIdTenant Default value is **null**.
 	 * @param string $sHelpdeskHash Default value is empty string.
 	 * @param string $sCalendarPubHash Default value is empty string.
 	 * @param string $sFileStoragePubHash Default value is empty string.
 	 *
 	 * @return string
 	 */
-	private function compileAppData($bHelpdesk = false, $iHelpdeskIdTenant = null, $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+	private function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
 	{
-		return '<script>window.pSevenAppData='.@json_encode($this->appData($bHelpdesk, $iHelpdeskIdTenant, $sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash)).';</script>';
+		return '<script>window.pSevenAppData='.@json_encode($this->appData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash)).';</script>';
 	}
 
 	/**
@@ -2018,94 +1983,65 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @param bool $bHelpdesk Default value is **false**.
-	 *
 	 * @return string
 	 */
-	public function getAppDirValue($bHelpdesk = false)
+	public function IsRtl()
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
-		return \in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian')) ? 'rtl' : 'ltr';
+		return \in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian'));
 	}
 
 	/**
-	 * @param string $sWebPath Default value is **'.'**.
-	 * @param bool $bHelpdesk Default value is **false**.
-	 * @param int $iHelpdeskIdTenant Default value is **null**.
 	 * @param string $sHelpdeskHash Default value is empty string.
 	 * @param string $sCalendarPubHash Default value is empty string.
 	 * @param string $sFileStoragePubHash Default value is empty string.
-	 * @param bool $bMobile Default value is **false**.
 	 * @return string
 	 */
-	public function buildHeadersLink($sWebPath = '.', $bHelpdesk = false, $iHelpdeskIdTenant = null, $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $bMobile = false)
+	public function buildHeadersLink($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($bHelpdesk);
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage(!empty($sHelpdeskHash));
+		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
 		
-		$sMobileSuffix = $bMobile ? '-mobile' : '';
-		
-		$sVersionJs = '?'.CApi::VersionJs();
-		$sWebPath = empty($sWebPath) ? '.' : $sWebPath;
-
-		if ($bHelpdesk)
+		$sS = 
+'<link type="text/css" rel="stylesheet" href="./static/css/libs.css'.'?'.CApi::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="./skins/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+		if (!empty($sHelpdeskHash))
 		{
-			$sS = 
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/static/css/libs.css'.$sVersionJs.'" />'.
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/skins/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.$sVersionJs.'" />';
-
 			$oApiTenant = /* @var $oApiTenant CApiTenantsManager */ CApi::GetCoreManager('tenants');
 
-			$oTenant = $oApiTenant && null !== $iHelpdeskIdTenant ?
-				(0 < $iHelpdeskIdTenant ? $oApiTenant->getTenantById($iHelpdeskIdTenant) : $oApiTenant->getDefaultGlobalTenant()) : null;
+			$oTenant = $oApiTenant->getTenantByHash($sHelpdeskHash);
+			if (!$oTenant)
+			{
+				$oTenant = $oApiTenant->getDefaultGlobalTenant();
+			}
 
 			if ($oTenant && $oTenant->HelpdeskStyleAllow)
 			{
 				$sS .= '<style>'.strip_tags($oTenant->getHelpdeskStyleText()).'</style>';
 			}
-
-			return $sS;
-
 		}
-		else if (!empty($sCalendarPubHash))
+		else if (empty($sCalendarPubHash) && empty($sFileStoragePubHash))
 		{
-			return
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/static/css/libs.css'.$sVersionJs.'" />'.
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/skins/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.$sVersionJs.'" />';
-		}
-		else if (!empty($sFileStoragePubHash))
-		{
-			return
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/static/css/libs.css'.$sVersionJs.'" />'.
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/skins/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.$sVersionJs.'" />';
-		}
-		else
-		{
-			$sS =
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/static/css/libs.css'.$sVersionJs.'" />'.
-'<link type="text/css" rel="stylesheet" href="'.$sWebPath.'/skins/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.$sVersionJs.'" />';
-			
 			$sS .= '<style>'.\CApi::Plugin()->CompileCss().'</style>';
-			return $sS;
 		}
+		return $sS;
 	}
 
 	/**
-	 * @param string $sWebPath Default value is **'.'**.
-	 * @param bool $bHelpdesk Default value is **false**.
-	 * @param int $iHelpdeskIdTenant Default value is **null**.
 	 * @param string $sHelpdeskHash Default value is empty string.
 	 * @param string $sCalendarPubHash Default value is empty string.
 	 * @param string $sFileStoragePubHash Default value is empty string.
-	 * @param bool $bMobile Default value is **false**.
 	 *
 	 * @return string
 	 */
-	public function buildBody($sWebPath = '.', $bHelpdesk = false, $iHelpdeskIdTenant = null, $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $bMobile = false)
+	public function buildBody($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
 	{
 		$oHttp = \MailSo\Base\Http::NewInstance();
 		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
 		$sPostfix = '';
 		
+		$bMobile = \CApi::IsMobileApplication();
+		$bHelpdesk = !empty($sHelpdeskHash); 		
 		if ($bMobile && !$bHelpdesk)
 		{
 			$sPostfix = '-mobile';
@@ -2133,8 +2069,6 @@ class CApiIntegratorManager extends AApiManager
 		
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 
-		$sMobileSuffix = $bMobile && !$bHelpdesk ? '-mobile' : '';
-		$sWebPath = empty($sWebPath) ? '.' : $sWebPath;
 		return '<div class="pSevenMain">
 	<div id="pSevenLoading"></div>
 	<div id="pSevenContent">
@@ -2145,8 +2079,8 @@ class CApiIntegratorManager extends AApiManager
 '<div>'.
 $this->compileTemplates($sTheme, $bMobile).
 $this->compileLanguage($sLanguage).
-$this->compileAppData($bHelpdesk, $iHelpdeskIdTenant, $sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash).
-'<script src="'.$sWebPath.'/static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
+$this->compileAppData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash).
+'<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
 	(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
 '</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'
 		;

@@ -63,13 +63,6 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 
 	spl_autoload_register('CoreSplAutoLoad');
 
-	if (class_exists('Core\Service'))
-	{
-		include PSEVEN_APP_ROOT_PATH.'core/api.php';
-		include PSEVEN_APP_ROOT_PATH.'core/Boot.php';
-	}
-	else
-	{
-		spl_autoload_unregister('CoreSplAutoLoad');
-	}
+	include PSEVEN_APP_ROOT_PATH.'core/api.php';
+	include PSEVEN_APP_ROOT_PATH.'core/Service.php';
 }

@@ -30,8 +30,8 @@ class HelpDeskModule extends AApiModule
 		}
 		else
 		{
-			$oApiIntegrator = \CApi::GetCoreManager('integrator');
-			$mTenantID = $oApiIntegrator->getTenantIdByHash($this->getParamValue('TenantHash', ''));
+			$oApiTenants = \CApi::GetCoreManager('tenants');
+			$mTenantID = $oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
 			if (is_int($mTenantID))
 			{
 				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
@@ -118,8 +118,9 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 			
-			$oApiIntegrator = \CApi::GetCoreManager('integrator');
-			$mIdTenant = $oApiIntegrator->getTenantIdByHash($sTenantHash);
+			$oApiTenants = \CApi::GetCoreManager('tenants');
+			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
+			
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
@@ -127,6 +128,7 @@ class HelpDeskModule extends AApiModule
 
 			try
 			{
+				$oApiIntegrator = \CApi::GetCoreManager('integrator');
 				$oHelpdeskUser = $oApiIntegrator->loginToHelpdeskAccount($mIdTenant, $sEmail, $sPassword);
 				if ($oHelpdeskUser && !$oHelpdeskUser->Blocked)
 				{
@@ -189,8 +191,8 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oApiIntegrator = \CApi::GetCoreManager('integrator');
-			$mIdTenant = $oApiIntegrator->getTenantIdByHash($sTenantHash);
+			$oApiTenants = \CApi::GetCoreManager('tenants');
+			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
@@ -199,6 +201,7 @@ class HelpDeskModule extends AApiModule
 			$bResult = false;
 			try
 			{
+				$oApiIntegrator = \CApi::GetCoreManager('integrator');
 				$bResult = !!$oApiIntegrator->registerHelpdeskAccount($mIdTenant, $sEmail, $sName, $sPassword);
 			}
 			catch (\Exception $oException)
@@ -252,8 +255,8 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oApiIntegrator = \CApi::GetCoreManager('integrator');
-			$mIdTenant = $oApiIntegrator->getTenantIdByHash($sTenantHash);
+			$oApiTenants = \CApi::GetCoreManager('tenants');
+			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
@@ -284,8 +287,8 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oApiIntegrator = \CApi::GetCoreManager('integrator');
-			$mIdTenant = $oApiIntegrator->getTenantIdByHash($sTenantHash);
+			$oApiTenants = \CApi::GetCoreManager('tenants');
+			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
@@ -844,8 +847,8 @@ class HelpDeskModule extends AApiModule
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
-		$sHelpdeskHash = $this->oHttp->GetQuery('helpdesk');
-		$mHelpdeskIdTenant = $oApiIntegrator->getTenantIdByHash($sHelpdeskHash);
+		$oApiTenants = \CApi::GetCoreManager('tenants');
+		$mHelpdeskIdTenant = $oApiTenants->getTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
 		if (!is_int($mHelpdeskIdTenant))
 		{
 			\CApi::Location('./');

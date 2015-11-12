@@ -614,8 +614,44 @@ class CalendarModule extends AApiModule
 	
 	public function EntryCalendarPub()
 	{
-		return 'calendar-pub';
-	}
+		$sResult = '';
+		
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		
+		if ($oApiIntegrator)
+		{
+			@\header('Content-Type: text/html; charset=utf-8', true);
+			
+			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox'))
+			{
+				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
+			}
+			
+			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl'])))
+			{
+				setcookie('aft-cache-ctrl', '', time() - 3600);
+				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
+				exit();
+			}
+			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
+			if (is_string($sResult))
+			{
+				$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+				if (0 < \strlen($sFrameOptions))
+				{
+					@\header('X-Frame-Options: '.$sFrameOptions);
+				}
+
+				$sResult = strtr($sResult, array(
+					'{{AppVersion}}' => PSEVEN_APP_VERSION,
+					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub')),
+					'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub'))
+				));
+			}
+		}
+
+		return $sResult;	}
 	
 	
 }

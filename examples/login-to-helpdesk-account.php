@@ -28,8 +28,9 @@ if (class_exists('CApi') && CApi::IsValid())
 		// Getting required API class
 		$oApiIntegratorManager = CApi::Manager('integrator');
 		$oApiHelpdeskManager = CApi::Manager('helpdesk');
+		$oApiTenantsManager = CApi::Manager('tenants');
 
-		$iIdTenant = $oApiIntegratorManager->getTenantIdByHash($sTenantHash);
+		$iIdTenant = $oApiTenantsManager->getTenantIdByHash($sTenantHash);
 
 		// checking existence of user
 		$oUser = $oApiHelpdeskManager->GetUserByEmail($iIdTenant, $sEmail);

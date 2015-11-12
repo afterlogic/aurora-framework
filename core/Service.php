@@ -10,17 +10,6 @@ namespace Core;
 class Service
 {
 	/**
-	 * @var \MailSo\Base\Http
-	 */
-	protected $oHttp;
-
-	/**
-	 * @var \Core\Actions
-	 */
-	protected $oActions;
-	
-	
-	/**
 	 * @var CApiModuleManager
 	 */
 	protected $oModuleManager;
@@ -30,11 +19,9 @@ class Service
 	 */
 	protected function __construct()
 	{
-		$this->oHttp = \MailSo\Base\Http::NewInstance();
-		$this->oActions = Actions::NewInstance();
 		$this->oModuleManager = \CApi::GetModuleManager();
 
-		\CApi::Plugin()->SetActions($this->oActions);
+//		\CApi::Plugin()->SetActions($this->oActions);
 		
 //		\MailSo\Config::$FixIconvByMbstring = false;
 		\MailSo\Config::$SystemLogger = \CApi::MailSoLogger();
@@ -122,17 +109,14 @@ class Service
 	}
 			
 	/**
-	 * @param bool $bHelpdesk = false
 	 * @param string $sHelpdeskHash = ''
 	 * @param string $sCalendarPubHash = ''
 	 * @param string $sFileStoragePubHash = ''
-	 * @param bool $bMobile = false
 	 * @return string
 	 */
-	private function indexHTML($bHelpdesk = false, $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $bMobile = false)
+	private function generateHTML()
 	{
 		$sResult = '';
-		$mHelpdeskIdTenant = false;
 		
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
@@ -148,34 +132,25 @@ class Service
 			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl'])))
 			{
 				setcookie('aft-cache-ctrl', '', time() - 3600);
-				$this->oHttp->StatusHeader(304);
+				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
-			else
+			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
+			if (is_string($sResult))
 			{
-				$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
-				if (is_string($sResult))
+				$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+				if (0 < \strlen($sFrameOptions))
 				{
-					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-					if (0 < \strlen($sFrameOptions))
-					{
-						@\header('X-Frame-Options: '.$sFrameOptions);
-					}
-
-					$sResult = strtr($sResult, array(
-						'{{AppVersion}}' => PSEVEN_APP_VERSION,
-						'{{IntegratorDir}}' => $oApiIntegrator->getAppDirValue(),
-						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('.', $bHelpdesk,
-							$mHelpdeskIdTenant, $sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $bMobile),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody('.', $bHelpdesk,
-							$mHelpdeskIdTenant, $sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $bMobile)
-					));
+					@\header('X-Frame-Options: '.$sFrameOptions);
 				}
+
+				$sResult = strtr($sResult, array(
+					'{{AppVersion}}' => PSEVEN_APP_VERSION,
+					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
+					'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
+				));
 			}
-		}
-		else
-		{
-			$sResult = '';
 		}
 
 		return $sResult;
@@ -186,7 +161,7 @@ class Service
 	 */
 	public function Handle()
 	{
-		$sResult = '';
+		$mResult = '';
 
 		$this->GetVersion();
 		$this->CheckApi();
@@ -196,91 +171,29 @@ class Service
 		
 		if (0 < count($aPaths) && !empty($aPaths[0]))
 		{
-			$sFirstPart = strtolower($aPaths[0]);
+			$sEntryPart = strtolower($aPaths[0]);
 			
-			$sResult = $this->oModuleManager->RunEntry($sFirstPart);
+			$mResult = $this->oModuleManager->RunEntry($sEntryPart);
 			
-			if (!$sResult)
+			if (!$mResult)
 			{
-				if ('post' === $sFirstPart)
-				{
-					$this->TargetPost();
-				}
-				else if ('calendar-pub' === $sFirstPart)
-				{
-					$sResult = $this->indexHTML(false, '', $this->oHttp->GetQuery('calendar-pub'));
-				}
-				else if ('files-pub' === $sFirstPart)
-				{
-					$sResult = $this->indexHTML(false, '', '', $this->oHttp->GetQuery('files-pub'));
-				}
-				else
-				{
-					@ob_start();
-					\CApi::Plugin()->RunServiceHandle($sFirstPart, $aPaths);
-					$sResult = @ob_get_clean();
+				@ob_start();
+				\CApi::Plugin()->RunServiceHandle($sEntryPart, $aPaths);
+				$mResult = @ob_get_clean();
 
-					if (0 === strlen($sResult))
-					{
-						$sResult = $this->getIndexHTML();
-					}
+				if (0 === strlen($mResult))
+				{
+					$mResult = $this->generateHTML();
 				}
 			}
 		}
 		else
 		{
-			$sResult = $this->getIndexHTML();
+			$mResult = $this->generateHTML();
 		}
 
-		// Output result
-		echo $sResult;
-	}
-	
-	private function TargetPost()
-	{
-		$sAction = $this->oHttp->GetPost('Action');
-		try
-		{
-			if (!empty($sAction))
-			{
-				$sMethodName =  'Post'.$sAction;
-				if (method_exists($this->oActions, $sMethodName) &&
-					is_callable(array($this->oActions, $sMethodName)))
-				{
-					$this->oActions->SetActionParams($this->oHttp->GetPostAsArray());
-					if (!call_user_func(array($this->oActions, $sMethodName)))
-					{
-						\CApi::Log('False result.', \ELogLevel::Error);
-					}
-				}
-				else
-				{
-					\CApi::Log('Invalid action.', \ELogLevel::Error);
-				}
-			}
-			else
-			{
-				\CApi::Log('Empty action.', \ELogLevel::Error);
-			}
-		}
-		catch (\Exception $oException)
-		{
-			\CApi::LogException($oException, \ELogLevel::Error);
-		}		
-	}
-	
-	/**
-	 * @return string
-	 */
-	private function getIndexHTML()
-	{
-		if (\CApi::IsMobileApplication())
-		{
-			return $this->indexHTML(false, '', '', '', true);
-		}
-		else
-		{
-			return $this->indexHTML();
-		}
+		echo $mResult;
 	}
 }
+
+\Core\Service::NewInstance()->Handle();

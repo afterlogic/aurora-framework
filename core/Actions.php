@@ -318,7 +318,7 @@ class Actions
 		}
 		else
 		{
-			$mTenantID = $this->oApiIntegrator->getTenantIdByHash($this->getParamValue('TenantHash', ''));
+			$mTenantID = $this->oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
 			if (is_int($mTenantID))
 			{
 				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
@@ -826,65 +826,6 @@ class Actions
 		$oAccount = $this->getAccountFromParam();
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMail->getQuota($oAccount));
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function AjaxMessageGetPdfFromHtml()
-	{
-		$oAccount = $this->getAccountFromParam();
-		if ($oAccount)
-		{
-			$sSubject = (string) $this->getParamValue('Subject', '');
-			$sHtml = (string) $this->getParamValue('Html', '');
-
-			$sFileName = $sSubject.'.pdf';
-			$sMimeType = 'application/pdf';
-
-			$sSavedName = 'pdf-'.$oAccount->IdAccount.'-'.md5($sFileName.microtime(true)).'.pdf';
-			
-			include_once PSEVEN_APP_ROOT_PATH.'vendors/other/CssToInlineStyles.php';
-
-			$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
-			$oCssToInlineStyles->setEncoding('utf-8');
-			$oCssToInlineStyles->setUseInlineStylesBlock(true);
-
-			$sExec = \CApi::DataPath().'/system/wkhtmltopdf/linux/wkhtmltopdf';
-			if (!file_exists($sExec))
-			{
-				$sExec = \CApi::DataPath().'/system/wkhtmltopdf/win/wkhtmltopdf.exe';
-				if (!file_exists($sExec))
-				{
-					$sExec = '';
-				}
-			}
-
-			if (0 < strlen($sExec))
-			{
-				$oSnappy = new \Knp\Snappy\Pdf($sExec);
-				$oSnappy->setOption('quiet', true);
-				$oSnappy->setOption('disable-javascript', true);
-
-				$oSnappy->generateFromHtml($oCssToInlineStyles->convert(),
-					$this->ApiFileCache()->generateFullFilePath($oAccount, $sSavedName), array(), true);
-
-				return $this->DefaultResponse($oAccount, __FUNCTION__, array(
-					'Name' => $sFileName,
-					'TempName' => $sSavedName,
-					'MimeType' => $sMimeType,
-					'Size' =>  (int) $this->ApiFileCache()->fileSize($oAccount, $sSavedName),
-					'Hash' => \CApi::EncodeKeyValues(array(
-						'TempFile' => true,
-						'AccountID' => $oAccount->IdAccount,
-						'Name' => $sFileName,
-						'TempName' => $sSavedName
-					))
-				));
-			}
-		}
-
-		return $this->FalseResponse($oAccount, __FUNCTION__);
 	}
 
 	/**
@@ -1428,7 +1369,7 @@ class Actions
 		$oApiIntegratorManager = \CApi::Manager('integrator');
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		return $this->DefaultResponse(null, __FUNCTION__, 
-				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, null, '', '', '', $sAuthToken) : false);
+				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false);
 	}
 	
 	/**
@@ -3317,41 +3258,6 @@ class Actions
 	}
 
 	/**
-	 * @return bool
-	 */
-	public function PostPdfFromHtml()
-	{
-		$oAccount = $this->getAccountFromParam();
-		if ($oAccount)
-		{
-			$sSubject = (string) $this->getParamValue('Subject', '');
-			$sHtml = (string) $this->getParamValue('Html', '');
-
-			include_once PSEVEN_APP_ROOT_PATH.'libraries/other/CssToInlineStyles.php';
-
-			$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
-			$oCssToInlineStyles->setEncoding('utf-8');
-			$oCssToInlineStyles->setUseInlineStylesBlock(true);
-
-			$this->RawOutputHeaders(true, 'application/pdf', $sSubject.'.pdf');
-
-			include_once PSEVEN_APP_ROOT_PATH.'libraries/dompdf/dompdf_config.inc.php';
-
-			$oDomPdf = new \DOMPDF();
-			$oDomPdf->load_html('<html><head></head><body>'.
-				\MailSo\Base\HtmlUtils::ClearHtmlSimple($oCssToInlineStyles->convert(), true, true).
-				'</body></html>');
-			
-			$oDomPdf->render();
-			$oDomPdf->stream($sSubject.'.pdf', array('Attachment' => false));
-
-			return true;
-		}
-		
-		return false;
-	}
-
-	/**
 	 * @param string $sFileName
 	 * @param string $sContentType
 	 * @param string $sMimeIndex = ''
@@ -3624,7 +3530,7 @@ class Actions
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$mIdTenant = $this->oApiIntegrator->getTenantIdByHash($sTenantHash);
+			$mIdTenant = $this->oApiTenants->getTenantIdByHash($sTenantHash);
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);

@@ -107,7 +107,7 @@ class CoreModule extends AApiModule
 		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		return $this->DefaultResponse(null, __FUNCTION__, 
-				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, null, '', '', '', $sAuthToken) : false);
+				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false);
 	}	
 	
 	public function EntryPull()

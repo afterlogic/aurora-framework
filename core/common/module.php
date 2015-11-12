@@ -860,7 +860,8 @@ abstract class AApiModule
 
 		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
 		{
-			$oExc = $this->oApiUsers->GetLastException();
+			$oApiUsers = \CApi::GetCoreManager('users');
+			$oExc = $oApiUsers->GetLastException();
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError,
 				$oExc ? $oExc : null, $oExc ? $oExc->getMessage() : '');
 		}
