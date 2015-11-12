@@ -1,7 +1,7 @@
 <?php
 
 // api
-include_once WM_INSTALLER_PATH.'../libraries/afterlogic/api.php';
+include_once WM_INSTALLER_PATH.'../core/api.php';
 
 class CAdminpanelStep extends AInstallerStep
 {

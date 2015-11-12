@@ -4,7 +4,7 @@
 
 defined('P7_ROOTPATH') || define('P7_ROOTPATH', (dirname(__FILE__).'/../'));
 
-include_once P7_ROOTPATH.'libraries/afterlogic/api.php';
+include_once P7_ROOTPATH.'core/api.php';
 
 class CReminder
 {

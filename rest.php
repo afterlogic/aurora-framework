@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__.'/libraries/afterlogic/api.php';
+include_once __DIR__.'/core/api.php';
 include_once CApi::LibrariesPath().'/Core/Notifications.php';
 
 $sContents = file_get_contents('php://input');

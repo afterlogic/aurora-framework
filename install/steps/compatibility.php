@@ -11,7 +11,7 @@ class CCompatibilityStep extends AInstallerStep
 
 	function CCompatibilityStep()
 	{
-		include_once WM_INSTALLER_PATH . '/../libraries/afterlogic/api.php';		
+		include_once WM_INSTALLER_PATH . '/../core/api.php';		
 		
 		$this->aCompatibility = array();
 		$this->Validate();

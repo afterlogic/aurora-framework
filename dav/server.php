@@ -12,7 +12,7 @@ if (\strlen($sRequestUri) >= $iLen && 'dav/'.$sCurrentFile === \substr($sRequest
 	exit();
 }
 
-require_once \dirname(__FILE__).'/../libraries/afterlogic/api.php';
+require_once \dirname(__FILE__).'/../core/api.php';
 
 \set_time_limit(3000);
 \set_error_handler(function ($errno, $errstr, $errfile, $errline) {

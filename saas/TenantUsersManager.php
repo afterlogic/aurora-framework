@@ -4,7 +4,7 @@ namespace saas;
 
 defined('APP_ROOTPATH') || define('APP_ROOTPATH', realpath(__DIR__.'/../'));
 
-require_once APP_ROOTPATH.'/libraries/afterlogic/api.php';
+require_once APP_ROOTPATH.'/core/api.php';
 require_once APP_ROOTPATH.'/saas/api/IUsersManager.php';
 require_once APP_ROOTPATH.'/saas/tool/iterators/TenantUsersIterator.php';
 require_once APP_ROOTPATH.'/saas/User.php';

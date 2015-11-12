@@ -6,7 +6,7 @@
 	exit('remove this line');
 
 	// utilizing API
-	include_once __DIR__.'/../libraries/afterlogic/api.php';
+	include_once __DIR__.'/../core/api.php';
 	
 	if (class_exists('CApi') && CApi::IsValid())
 	{

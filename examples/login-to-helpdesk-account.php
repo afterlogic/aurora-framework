@@ -8,7 +8,7 @@ exit('remove this line');
 // Example of logging into Helpdesk account using email, password and tenant hash for incorporating into another web application
 
 // utilizing API
-include_once __DIR__.'/../libraries/afterlogic/api.php';
+include_once __DIR__.'/../core/api.php';
 
 if (class_exists('CApi') && CApi::IsValid())
 {
