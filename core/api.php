@@ -157,8 +157,8 @@ class CApi
 
 	public static function PostRun()
 	{
-		CApi::Manager('users');
-		CApi::Manager('domains');
+		CApi::GetCoreManager('users');
+		CApi::GetCoreManager('domains');
 	}
 
 	/**
@@ -383,7 +383,7 @@ class CApi
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return CApi::Inc('Managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
+		return CApi::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
 	/**
@@ -392,7 +392,7 @@ class CApi
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return CApi::IncPath('Managers.'.$sManagerName.'.'.$sFileName);
+		return CApi::IncPath('managers.'.$sManagerName.'.'.$sFileName);
 	}
 
 	/**
