@@ -13,8 +13,7 @@ var
 	
 	Ajax = require('modules/Contacts/js/Ajax.js'),
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
-	CreateContactPopup = require('modules/Contacts/js/popups/CreateContactPopup.js')
+	LinksUtils = require('modules/Contacts/js/utils/Links.js')
 ;
 
 /**
@@ -35,8 +34,7 @@ function CCreateContactPopup()
 
 	this.loading = ko.observable(false);
 
-	this.fCallback = null;
-	this.oContext = null;
+	this.fCallback = function () {};
 }
 
 _.extendOwn(CCreateContactPopup.prototype, CAbstractPopup.prototype);
@@ -46,10 +44,9 @@ CCreateContactPopup.prototype.PopupTemplate = 'Contacts_CreateContactPopup';
 /**
  * @param {string} sName
  * @param {string} sEmail
- * @param {Function} fContactCreateResponse
- * @param {Object} oContactCreateContext
+ * @param {Function} fCallback
  */
-CCreateContactPopup.prototype.onShow = function (sName, sEmail, fContactCreateResponse, oContactCreateContext)
+CCreateContactPopup.prototype.onShow = function (sName, sEmail, fCallback)
 {
 	if (this.displayName() !== sName || this.email() !== sEmail)
 	{
@@ -61,15 +58,7 @@ CCreateContactPopup.prototype.onShow = function (sName, sEmail, fContactCreateRe
 		this.facebook('');
 	}
 
-	if ($.isFunction(fContactCreateResponse))
-	{
-		this.fCallback = fContactCreateResponse;
-	}
-	
-	if (oContactCreateContext)
-	{
-		this.oContext = oContactCreateContext;
-	}
+	this.fCallback = $.isFunction(fCallback) ? fCallback : function () {};
 };
 
 CCreateContactPopup.prototype.onSaveClick = function ()
@@ -121,7 +110,7 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 	{
 		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
 		ContactsCache.clearInfoAboutEmail(oRequest.HomeEmail);
-		ContactsCache.getContactsByEmails([oRequest.HomeEmail], this.fCallback, this.oContext);
+		ContactsCache.getContactsByEmails([oRequest.HomeEmail], this.fCallback);
 		this.closePopup();
 	}
 };

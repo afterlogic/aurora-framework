@@ -10,6 +10,9 @@ module.exports = function (oSettings) {
 	var SuggestionsAutocomplete = require('modules/Contacts/js/SuggestionsAutocomplete.js');
 
 	return {
+		start: function (ModulesManager) {
+			ModulesManager.run('Mail', 'registerMessagePaneTopController', [require('modules/Contacts/js/ContactCard.js')]);
+		},
 		getSuggestionsAutocompleteCallback: function () {
 			return SuggestionsAutocomplete.callback;
 		},

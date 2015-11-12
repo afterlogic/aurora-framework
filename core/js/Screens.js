@@ -197,6 +197,21 @@ CScreens.prototype.initView = function (sScreenId, fGetScreen)
 };
 
 /**
+ * @param {Object} oView
+ */
+CScreens.prototype.showAnyView = function (oView)
+{
+	if (oView.ViewTemplate)
+	{
+		var $templatePlace = $('<!-- ko template: { name: \'' + oView.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'));
+		if ($templatePlace.length > 0)
+		{
+			ko.applyBindings(oView, $templatePlace[0]);
+		}
+	}
+};
+
+/**
  * @param {string} sMessage
  */
 CScreens.prototype.showLoading = function (sMessage)

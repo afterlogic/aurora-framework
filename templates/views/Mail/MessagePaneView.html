@@ -305,16 +305,4 @@
 	<!-- /ko -->
 </div>
 
-<!-- ko foreach: recipientsContacts -->
-	<div class="item_viewer" style="position: absolute;" data-bind="attr: {'data-email': email}">
-		<span class="dropdown control contact_card">
-			<span class="dropdown_helper">
-				<span class="dropdown_arrow"><span></span></span>
-				<span class="dropdown_content dropdown_content_mail" data-bind="template: {name: 'Common_ContactCard', data: $data}">
-				</span>
-			</span>
-		</span>
-	</div>
-<!-- /ko -->
-
 <!-- ko template: {name: 'Mail_PrintMessageView'} --><!-- /ko -->

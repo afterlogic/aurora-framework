@@ -5,7 +5,8 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js')
+	Ajax = require('modules/Contacts/js/Ajax.js'),
+	CContactModel = require('modules/Contacts/js/models/CContactModel.js')
 ;
 
 /**
