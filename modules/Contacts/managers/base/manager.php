@@ -23,11 +23,7 @@ class CApiContactsBaseManager extends AApiManagerWithStorage
 		$this->incClass('contact-list-item');
 		$this->incClass('contact');
 		$this->incClass('group');
-
-		if (CApi::GetCoreManager('dav'))
-		{
-			$this->incClass('vcard-helper');
-		}
+		$this->incClass('vcard-helper');
 	}
 
 	/**

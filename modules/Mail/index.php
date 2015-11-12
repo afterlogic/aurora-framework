@@ -375,7 +375,7 @@ class MailModule extends AApiModule
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
 			'Counts' => $aResult,
-			'New' => $oReturnInboxNewData->GetData()
+			'New' => isset($oReturnInboxNewData) ? $oReturnInboxNewData->GetData() : ''
 		));
 	}	
 	
