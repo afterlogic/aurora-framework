@@ -1,0 +1,66 @@
+<?php
+
+/* -AFTERLOGIC LICENSE HEADER- */
+
+/**
+ * @property int $IdSubscription
+ * @property int $IdTenant
+ * @property string $Name
+ * @property string $Description
+ * @property string $Capa
+ * @property int $Limit
+ *
+ * @package Subscription
+ * @subpackage Classes
+ */
+class CSubscription extends api_AContainer
+{
+	public function __construct()
+	{
+		parent::__construct(get_class($this), 'IdSubscription');
+
+		$this->__USE_TRIM_IN_STRINGS__ = true;
+
+		$this->SetDefaults(array(
+			'IdSubscription'	=> 0,
+			'IdTenant'			=> 0,
+			'Name'				=> '',
+			'Description'		=> '',
+			'Capa'				=> '',
+			'Limit'				=> 0
+		));
+	}
+
+	/**
+	 * @param CTenant $oTenant
+	 *
+	 * @return CSubscription
+	 */
+	public static function createInstance($oTenant)
+	{
+		return new self($oTenant);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMap()
+	{
+		return self::getStaticMap();
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getStaticMap()
+	{
+		return array(
+			'IdSubscription'	=> array('int', 'id_subscription', false, false),
+			'IdTenant'			=> array('int', 'id_tenant', true, false),
+			'Name'				=> array('string', 'name'),
+			'Description'		=> array('string', 'description'),
+			'Capa'				=> array('string', 'capa'),
+			'Limit'				=> array('int', 'limit')
+		);
+	}
+}
