@@ -35,7 +35,7 @@ class FilesModule extends AApiModule
 			if (isset($aValues['Iframed'], $aValues['Time']) && $aValues['Iframed'] && $aValues['Time'])
 			{
 				$oAccount = $this->getAccountFromParam(true,
-					!($aValues['Time'] > \Core\Base\Utils::iframedTimestamp())
+					!($aValues['Time'] > \api_Utils::iframedTimestamp())
 				);
 
 				if (!$oAccount->IsDefaultAccount)

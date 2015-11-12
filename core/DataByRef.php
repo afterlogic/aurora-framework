@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace Core\Base;
+namespace Core;
 
 /**
  * @category Core

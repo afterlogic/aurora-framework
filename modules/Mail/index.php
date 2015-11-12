@@ -270,7 +270,7 @@ class MailModule extends AApiModule
 	{
 		$sFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		$bSetAction = '1' === (string) $this->getParamValue('SetAction', '0');
-		$aUids = \Core\Base\Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
+		$aUids = \api_Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
@@ -357,7 +357,7 @@ class MailModule extends AApiModule
 		try
 		{
 			$oAccount = $this->getAccountFromParam();
-			$oReturnInboxNewData = \Core\Base\DataByRef::createInstance(array());
+			$oReturnInboxNewData = \Core\DataByRef::createInstance(array());
 			$aResult = $this->oApiMailManager->getFolderListInformation($oAccount, $aFolders, $sInboxUidnext, $oReturnInboxNewData);
 		}
 		catch (\MailSo\Net\Exceptions\ConnectionException $oException)
@@ -637,7 +637,7 @@ class MailModule extends AApiModule
 	{
 		$sFromFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		$sToFolderFullNameRaw = (string) $this->getParamValue('ToFolder', '');
-		$aUids = \Core\Base\Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
+		$aUids = \api_Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
 
 		if (0 === strlen(trim($sFromFolderFullNameRaw)) || 0 === strlen(trim($sToFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
@@ -670,7 +670,7 @@ class MailModule extends AApiModule
 	{
 		$sFromFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		$sToFolderFullNameRaw = (string) $this->getParamValue('ToFolder', '');
-		$aUids = \Core\Base\Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
+		$aUids = \api_Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
 
 		if (0 === strlen(trim($sFromFolderFullNameRaw)) || 0 === strlen(trim($sToFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
@@ -706,7 +706,7 @@ class MailModule extends AApiModule
 	{
 		$sFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		
-		$aUids = \Core\Base\Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
+		$aUids = \api_Utils::ExplodeIntUids((string) $this->getParamValue('Uids', ''));
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
