@@ -44,7 +44,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isDavSupported()
 	{
-		return $this->isNotLite() && !!CApi::Manager('dav');
+		return $this->isNotLite() && !!CApi::GetModuleManager()->ModuleExists('Dav');
 	}
 
 	/**
@@ -62,9 +62,9 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCalendarSupported($oAccount = null)
 	{
-		$bResult = $this->isNotLite() && $this->isDavSupported();
+		$bResult = false;
 
-		if ($bResult && $oAccount)
+		if ($this->isNotLite() && $oAccount)
 		{
 			$bResult = $oAccount->Domain->AllowCalendar && $oAccount->User->getCapa(ECapa::CALENDAR);
 		}
