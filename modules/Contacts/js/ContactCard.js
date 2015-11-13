@@ -20,7 +20,7 @@ var
 		contacts: ko.observableArray([]),
 		ViewTemplate: 'Contacts_ContactCardsView',
 		add: function (aContacts) {
-			this.contacts(_.uniq(this.contacts().concat(_.values(aContacts))));
+			this.contacts(_.compact(_.uniq(this.contacts().concat(_.values(aContacts)))));
 		}
 	}
 ;
@@ -122,9 +122,8 @@ function BindContactCard($Element, sAddress)
  */
 function OnContactResponse(aContacts)
 {
-	console.log('aWaitElements', aWaitElements);
 	_.each(aWaitElements, function ($Element, iIndex) {
-		// поиск по ключам, потому что значение может быть null - underscore его игнорирует.
+		// Search by keys, because the value can be null - underscore ignores it.
 		var sFoundEmail = _.find(_.keys(aContacts), function (sEmail) {
 			return sEmail === $Element.data('email');
 		});
@@ -141,6 +140,7 @@ function OnContactResponse(aContacts)
 					$add.on('click', function () {
 						Popups.showPopup(CreateContactPopup, [$Element.data('name'), sFoundEmail, function (aContacts) {
 							$add.remove();
+							$Element.addClass('link found');
 							oContactCardsView.add(aContacts);
 							BindContactCard($Element, sFoundEmail);
 						}]);
@@ -155,13 +155,6 @@ function OnContactResponse(aContacts)
 			}
 			aWaitElements[iIndex] = undefined;
 		}
-//		_.each(_.keys(aContacts), function (sEmail) {
-//	console.log('$Element', $Element);
-//	console.log('iIndex', iIndex);
-//			if ($Element && sEmail === $Element.data('email'))
-//			{
-//			}
-//		});
 	});
 	
 	aWaitElements = _.compact(aWaitElements);
@@ -171,16 +164,17 @@ module.exports = {
 	doAfterPopulatingMessage: function (oMessageProps) {
 		if (oMessageProps)
 		{
-			var
-				aRecipients = oMessageProps.a$recipients,
-				aEmails = _.uniq(_.map(aRecipients, function ($Element) {
-					return $Element.data('email');
-				}))
-			;
-			
-			aWaitElements = _.filter(_.uniq(aWaitElements.concat(aRecipients)), function ($Element) {
+			aWaitElements = _.filter(oMessageProps.a$recipients, function ($Element) {
 				return $Element.parent().length > 0;
 			});
+			
+			var
+				aEmails = _.uniq(_.map(aWaitElements, function ($Element) {
+					return $Element && $Element.data('email');
+				}))
+			;
+			console.log('aWaitElements', aWaitElements);
+			console.log('aEmails', aEmails);
 			
 			ContactsCache.getContactsByEmails(aEmails, OnContactResponse);
 		}
