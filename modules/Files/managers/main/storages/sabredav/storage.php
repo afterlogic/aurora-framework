@@ -57,7 +57,12 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	{
 		if ($this->oApiMinManager === null)
 		{
-			$this->oApiMinManager = \CApi::Manager('min');
+			
+			$oMinModule = \CApi::GetModuleManager()->GetModule('Min');
+			if ($oMinModule)
+			{
+				$this->oApiMinManager = $oMinModule->oApiMinManager;
+			}
 		}
 		
 		return $this->oApiMinManager;
