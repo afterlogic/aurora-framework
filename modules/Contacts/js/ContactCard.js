@@ -125,7 +125,8 @@ function OnContactResponse(aContacts)
 	_.each(aWaitElements, function ($Element, iIndex) {
 		// Search by keys, because the value can be null - underscore ignores it.
 		var sFoundEmail = _.find(_.keys(aContacts), function (sEmail) {
-			return sEmail === $Element.data('email');
+			// $Element.data('email')
+			return sEmail === $Element.attr('data-email');
 		});
 		
 		if (Utils.isNonEmptyString(sFoundEmail))
@@ -138,7 +139,7 @@ function OnContactResponse(aContacts)
 					$Element.after($add);
 					customTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
 					$add.on('click', function () {
-						Popups.showPopup(CreateContactPopup, [$Element.data('name'), sFoundEmail, function (aContacts) {
+						Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sFoundEmail, function (aContacts) {
 							$add.remove();
 							$Element.addClass('link found');
 							oContactCardsView.add(aContacts);
@@ -164,17 +165,15 @@ module.exports = {
 	doAfterPopulatingMessage: function (oMessageProps) {
 		if (oMessageProps)
 		{
-			aWaitElements = _.filter(oMessageProps.a$recipients, function ($Element) {
-				return $Element.parent().length > 0;
+			aWaitElements = _.map(oMessageProps.$Recipients, function (oElement) {
+				return $(oElement);
 			});
 			
 			var
 				aEmails = _.uniq(_.map(aWaitElements, function ($Element) {
-					return $Element && $Element.data('email');
+					return $Element && $Element.attr('data-email');
 				}))
 			;
-			console.log('aWaitElements', aWaitElements);
-			console.log('aEmails', aEmails);
 			
 			ContactsCache.getContactsByEmails(aEmails, OnContactResponse);
 		}

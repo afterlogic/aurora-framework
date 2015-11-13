@@ -180,7 +180,6 @@ function CMessagePaneView()
 	this.aBccAddr = ko.observableArray([]);
 	this.allRecipients = ko.observable('');
 	this.aAllRecipients = ko.observableArray([]);
-	this.recipientsDom = ko.observableArray([]);
 	this.recipientsContacts = ko.observableArray([]);
 	this.currentAccountEmail = ko.observable();
 	this.meSender = TextUtils.i18n('MESSAGE/ME_SENDER');
@@ -569,7 +568,6 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.visibleShowPicturesLink(false);
 		this.ical(null);
 		this.vcard(null);
-		this.recipientsDom([]);
 	}
 	
 	this.doAfterPopulatingMessage();
@@ -1150,13 +1148,10 @@ CMessagePaneView.prototype.onBind = function ($MailViewDom)
 			this.saveReplyMessage(false);
 		}
 	}, this)]);
+
+	this.$MailViewDom = _.isUndefined($MailViewDom) ? this.$viewDom : $MailViewDom;
 	
-	if (_.isUndefined($MailViewDom))
-	{
-		$MailViewDom = this.$viewDom;
-	}
-	
-	$MailViewDom.on('mousedown', 'a', function (oEvent) {
+	this.$MailViewDom.on('mousedown', 'a', function (oEvent) {
 		if (oEvent && 3 !== oEvent['which'])
 		{
 			var sHref = $(this).attr('href');
@@ -1252,7 +1247,7 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
 			oCustom: oMessage.Custom,
-			a$recipients: this.recipientsDom()
+			$Recipients: this.$MailViewDom.find('span.address')
 		} : null
 	;
 	

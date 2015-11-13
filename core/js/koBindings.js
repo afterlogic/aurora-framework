@@ -211,14 +211,7 @@ ko.bindingHandlers.initDom = {
 		var oCommand = fValueAccessor();
 		if (oCommand)
 		{
-			if (_.isArray(oCommand()))
-			{
-				oCommand().push($(oElement));
-			}
-			else
-			{
-				oCommand($(oElement));
-			}
+			oCommand($(oElement));
 		}
 	}
 };

@@ -137,10 +137,10 @@
 				
 				<div class="message_info" data-bind="visible: !detailsVisible()">
 					<div class="message_info_line">
-						<span class="from control" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}, initDom: recipientsDom"></span>
+						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
 						<span data-i18n="MESSAGE/SHORT_LINE_TO" data-bind="i18n: 'text', visible: aAllRecipients().length > 0"></span>
 						<span data-bind="foreach: aAllRecipients">
-							<span data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, attr: {'data-email': sEmail, 'data-name': sName}, initDom: $parent.recipientsDom"></span>
+							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, attr: {'data-email': sEmail, 'data-name': sName}"></span>
 							<span data-bind="visible: $parent.aAllRecipients().length > $index() + 1">, </span>
 						</span>
 					</div>
