@@ -125,7 +125,7 @@ function OnContactResponse(aContacts)
 	_.each(aWaitElements, function ($Element, iIndex) {
 		// Search by keys, because the value can be null - underscore ignores it.
 		var sFoundEmail = _.find(_.keys(aContacts), function (sEmail) {
-			// $Element.data('email')
+			// $Element.data('email') 
 			return sEmail === $Element.attr('data-email');
 		});
 		
