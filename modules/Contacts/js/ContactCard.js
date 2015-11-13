@@ -122,6 +122,7 @@ function BindContactCard($Element, sAddress)
  */
 function OnContactResponse(aContacts)
 {
+//	console.log('OnContactResponse aContacts', aContacts);
 	_.each(aWaitElements, function ($Element, iIndex) {
 		// Search by keys, because the value can be null - underscore ignores it.
 		var sFoundEmail = _.find(_.keys(aContacts), function (sEmail) {
@@ -133,20 +134,17 @@ function OnContactResponse(aContacts)
 		{
 			if (aContacts[sFoundEmail] === null)
 			{
-				if (!$Element.next().hasClass('add_contact'))
-				{
-					var $add = $('<span class="add_contact"></span>');
-					$Element.after($add);
-					customTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
-					$add.on('click', function () {
-						Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sFoundEmail, function (aContacts) {
-							$add.remove();
-							$Element.addClass('link found');
-							oContactCardsView.add(aContacts);
-							BindContactCard($Element, sFoundEmail);
-						}]);
-					});
-				}
+				var $add = $('<span class="add_contact"></span>');
+				$Element.after($add);
+				customTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
+				$add.on('click', function () {
+					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sFoundEmail, function (aContacts) {
+						$add.remove();
+						$Element.addClass('link found');
+						oContactCardsView.add(aContacts);
+						BindContactCard($Element, sFoundEmail);
+					}]);
+				});
 			}
 			else
 			{
@@ -154,11 +152,8 @@ function OnContactResponse(aContacts)
 				oContactCardsView.add(aContacts);
 				BindContactCard($Element, sFoundEmail);
 			}
-			aWaitElements[iIndex] = undefined;
 		}
 	});
-	
-	aWaitElements = _.compact(aWaitElements);
 }
 
 module.exports = {
@@ -176,6 +171,18 @@ module.exports = {
 			;
 			
 			ContactsCache.getContactsByEmails(aEmails, OnContactResponse);
+		}
+		else
+		{
+			_.each(aWaitElements, function ($Element) {
+				if ($Element.next().hasClass('add_contact'))
+				{
+					$Element.next().remove();
+				}
+				$Element.removeClass('link found');
+				$Element.off();
+			});
+			aWaitElements = [];
 		}
 	}
 };

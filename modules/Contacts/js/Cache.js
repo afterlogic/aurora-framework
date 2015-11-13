@@ -61,7 +61,11 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 		}
 	}, this));
 	
-	if ($.isFunction(fResponseHandler) && aContacts.length > 0)
+//	console.log('aContacts', aContacts);
+//	console.log('aContacts.length', aContacts.length);
+//	console.log('fResponseHandler', fResponseHandler);
+//	console.log('$.isFunction(fResponseHandler)', $.isFunction(fResponseHandler));
+	if ($.isFunction(fResponseHandler))
 	{
 		fResponseHandler(aContacts);
 	}
