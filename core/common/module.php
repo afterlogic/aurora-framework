@@ -620,6 +620,14 @@ abstract class AApiModule
 			? $this->aParameters[$sKey] : $mDefault;
 	}
 	
+	public function setParamValue($sKey, $mValue)
+	{
+		if (is_array($this->aParameters))
+		{
+			$this->aParameters[$sKey] = $mValue;
+		}
+	}
+
 	/**
 	 * @param string $sParamName
 	 * @param mixed $oObject

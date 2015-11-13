@@ -149,7 +149,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isGlobalContactsSupported($oAccount = null, $bCheckShowSettings = true)
 	{
-		$bResult = $this->isContactsSupported() && $this->isCollaborationSupported() && !!CApi::Manager('gcontacts');
+		$bResult = $this->isContactsSupported() && $this->isCollaborationSupported();
 		if ($bResult && $bCheckShowSettings)
 		{
 			$oSettings = null;

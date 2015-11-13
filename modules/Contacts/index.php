@@ -229,6 +229,18 @@ class ContactsModule extends AApiModule
 		
 		return false;
 	}	
+	
+	public function GetAllContacts()
+	{
+		$this->setParamValue('All', '1');
+		return $this->GetPersonalContacts();
+	}
+
+	public function GetSharedContacts()
+	{
+		$this->setParamValue('SharedToAll', '1');
+		return $this->GetPersonalContacts();
+	}
 
 	public function GetPersonalContacts()
 	{
