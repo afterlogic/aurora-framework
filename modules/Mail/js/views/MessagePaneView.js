@@ -1180,7 +1180,7 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			sText: oMessage.text(),
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
-			oCustom: oMessage.Custom
+			iSensitivity: oMessage.sensitivity()
 		} : null
 	;
 	

@@ -1,10 +1,6 @@
 'use strict';
 
-var
-	ko = require('knockout'),
-	
-	Utils = require('core/js/utils/Common.js')
-;
+var ko = require('knockout');
 
 /**
  * @constructor for object that display Sensitivity button on Compose
@@ -20,7 +16,7 @@ CComposeDropdownView.prototype.ViewTemplate = 'MailSensitivity_ComposeDropdownVi
 /**
  * @param {Object} oParameters
  */
-CComposeDropdownView.prototype.doAfterApplyingBaseTabParameters = function (oParameters)
+CComposeDropdownView.prototype.doAfterApplyingMainTabParameters = function (oParameters)
 {
 	this.selectedSensitivity(oParameters.Sensitivity);
 };
@@ -28,7 +24,7 @@ CComposeDropdownView.prototype.doAfterApplyingBaseTabParameters = function (oPar
 /**
  * @param {Object} oParameters
  */
-CComposeDropdownView.prototype.doAfterComposingBaseTabParameters = function (oParameters)
+CComposeDropdownView.prototype.doAfterPreparingMainTabParameters = function (oParameters)
 {
 	oParameters.Sensitivity = this.selectedSensitivity();
 };
@@ -38,20 +34,13 @@ CComposeDropdownView.prototype.doAfterComposingBaseTabParameters = function (oPa
  */
 CComposeDropdownView.prototype.doAfterPopulatingMessage = function (oParameters)
 {
-	var iSensitivity = Utils.pInt(oParameters.oCustom && oParameters.oCustom.Sensitivity);
-	
-	if (!Enums.has('Sensitivity', iSensitivity))
-	{
-		iSensitivity = Enums.Sensitivity.Nothing;
-	}
-	
-	this.selectedSensitivity(oParameters.oCustom.Sensitivity);
+	this.selectedSensitivity(oParameters.iSensitivity);
 };
 
 /**
  * @param {Object} oParameters
  */
-CComposeDropdownView.prototype.doAfterComposingSendMessageParameters = function (oParameters)
+CComposeDropdownView.prototype.doAfterPreparingSendMessageParameters = function (oParameters)
 {
 	oParameters.Sensitivity = this.selectedSensitivity();
 };

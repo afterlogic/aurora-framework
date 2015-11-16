@@ -8,7 +8,6 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	CDateModel = require('core/js/models/CDateModel.js'),
@@ -204,6 +203,7 @@ function CMessageModel()
 	this.inReplyTo = ko.observable('');
 	this.references = ko.observable('');
 	this.readingConfirmation = ko.observable('');
+	this.sensitivity = ko.observable(Enums.Sensitivity.Nothing);
 	this.isPlain = ko.observable(false);
 	this.text = ko.observable('');
 	this.textBodyForNewWindow = ko.observable('');
@@ -423,7 +423,16 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			}, this));
 		}
 		
-		this.importance(oData.Priority);
+		this.importance(Utils.pInt(oData.Priority));
+		if (!Enums.has('Importance', this.importance()))
+		{
+			this.importance(Enums.Importance.Normal);
+		}
+		this.sensitivity(Utils.pInt(oData.Sensitivity));
+		if (!Enums.has('Sensitivity', this.sensitivity()))
+		{
+			this.sensitivity(Enums.Sensitivity.Nothing);
+		}
 		if (_.isArray(oData.DraftInfo))
 		{
 			this.draftInfo(oData.DraftInfo);

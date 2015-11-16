@@ -38,6 +38,16 @@ Enums.Importance = {
 };
 
 /**
+ * @enum {number}
+ */
+Enums.Sensitivity = {
+	'Nothing': 0,
+	'Confidential': 1,
+	'Private': 2,
+	'Personal': 3
+};
+
+/**
  * @enum {string}
  */
 Enums.AnotherMessageComposedAnswer = {

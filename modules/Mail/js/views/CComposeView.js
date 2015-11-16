@@ -927,7 +927,7 @@ CComposeView.prototype.setDataFromMessage = function (oMessage)
 				bDraft: !!oMessage.folderObject() && (oMessage.folderObject().type() === Enums.FolderTypes.Drafts),
 				bPlain: oMessage.isPlain(),
 				sRawText: oMessage.textRaw(),
-				oCustom: oMessage.Custom
+				iSensitivity: oMessage.sensitivity()
 			});
 		}
 	});
@@ -1230,9 +1230,9 @@ CComposeView.prototype.setMessageDataInNewTab = function (oParameters)
 	this.changedInPreviousWindow(oParameters.changedInPreviousWindow);
 
 	_.each(this.toolbarControllers(), function (oController) {
-		if ($.isFunction(oController.doAfterApplyingBaseTabParameters))
+		if ($.isFunction(oController.doAfterApplyingMainTabParameters))
 		{
-			oController.doAfterApplyingBaseTabParameters(oParameters);
+			oController.doAfterApplyingMainTabParameters(oParameters);
 		}
 	});
 	
@@ -1471,9 +1471,9 @@ CComposeView.prototype.getSendSaveParameters = function (bRemoveSignatureAnchor)
 	};
 	
 	_.each(this.toolbarControllers(), function (oController) {
-		if ($.isFunction(oController.doAfterComposingSendMessageParameters))
+		if ($.isFunction(oController.doAfterPreparingSendMessageParameters))
 		{
-			oController.doAfterComposingSendMessageParameters(oParameters);
+			oController.doAfterPreparingSendMessageParameters(oParameters);
 		}
 	});
 	
@@ -1712,9 +1712,9 @@ CComposeView.prototype.getMessageDataForNewTab = function ()
 	};
 	
 	_.each(this.toolbarControllers(), function (oController) {
-		if ($.isFunction(oController.doAfterComposingBaseTabParameters))
+		if ($.isFunction(oController.doAfterPreparingMainTabParameters))
 		{
-			oController.doAfterComposingBaseTabParameters(oParameters);
+			oController.doAfterPreparingMainTabParameters(oParameters);
 		}
 	});
 	
