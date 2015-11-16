@@ -831,24 +831,6 @@ class Actions
 	/**
 	 * @return array
 	 */
-	public function AjaxEmailSetSafety()
-	{
-		$sEmail = (string) $this->getParamValue('Email', '');
-		if (0 === strlen(trim($sEmail)))
-		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
-		}
-
-		$oAccount = $this->getAccountFromParam();
-
-		$this->oApiUsers->setSafetySender($oAccount->IdUser, $sEmail);
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, true);
-	}
-
-	/**
-	 * @return array
-	 */
 	public function AjaxSystemUpdateLanguageOnLogin()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);

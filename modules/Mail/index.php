@@ -1152,6 +1152,25 @@ class MailModule extends AApiModule
 		return $this->FalseResponse($oAccount, __FUNCTION__);
 	}
 	
+	/**
+	 * @return array
+	 */
+	public function SetEmailSafety()
+	{
+		$sEmail = (string) $this->getParamValue('Email', '');
+		if (0 === strlen(trim($sEmail)))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+		}
+
+		$oAccount = $this->getAccountFromParam();
+
+		$oApiUsers = \CApi::GetCoreManager('users');
+		$oApiUsers->setSafetySender($oAccount->IdUser, $sEmail);
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, true);
+	}	
+	
 }
 
 return new MailModule('1.0');
