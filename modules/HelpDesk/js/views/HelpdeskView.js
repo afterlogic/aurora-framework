@@ -7,7 +7,6 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	AddressUtils = require('core/js/utils/Address.js'),
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
@@ -24,6 +23,7 @@ var
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
 	Settings = require('modules/HelpDesk/js/Settings.js'),
 	HeaderItemView = require('modules/HelpDesk/js/views/HeaderItemView.js'),
@@ -89,15 +89,18 @@ function CHelpdeskView()
 	this.previousSelectedItem = ko.observable(null);
 	this.postForDelete = ko.observable(null);
 	this.state = ko.observable(0);
+	this.ownerDom = ko.observable(null);
+	ko.computed(function () {
+		this.selectedItem();
+		if (this.ownerDom())
+		{
+			ModulesManager.run('Contacts', 'applyContactsCards', [[this.ownerDom()]]);
+		}
+	}, this).extend({ rateLimit: 50 });
 	this.selectedItem.subscribe(function (oItem) {
 		this.state(oItem ? oItem.state() : 0);
 		this.subject(this.selectedItem() ? (this.bExtApp ? this.selectedItem().sSubject : this.selectedItem().sFromFull) : '');
 		this.internalNote(false);
-
-//		if (!this.bExtApp && this.selectedItem())
-//		{
-//			ContactsCache.getContactsByEmails([this.selectedItem().sEmail], this.onOwnerContactResponse, this);
-//		}
 
 		clearInterval(this.iPingInterval);
 		clearTimeout(this.iPingStartTimer);
@@ -238,8 +241,7 @@ function CHelpdeskView()
 	}
 
 	// view pane
-	this.clientDetailsVisible = ko.observable(
-		Storage.hasData('HelpdeskUserDetails') ? Storage.getData('HelpdeskUserDetails') : true);
+	this.clientDetailsVisible = ko.observable(Storage.hasData('HelpdeskUserDetails') ? Storage.getData('HelpdeskUserDetails') : true);
 
 	this.clientDetailsVisible.subscribe(function (value) {
 		Storage.setData('HelpdeskUserDetails', value);
@@ -247,25 +249,12 @@ function CHelpdeskView()
 
 	this.subject = ko.observable('');
 	this.watchers = ko.observableArray([]);
-	this.ownerExistsInContacts = ko.observable(false);
-	this.ownerContactInfoReceived = ko.observable(false);
-	this.ownerContact = ko.observable(/*!this.bExtApp ? new CContactModel() :*/ null);
-	this.hasOwnerContact = ko.computed(function () {
-		return !App.isNewTab() && this.ownerContactInfoReceived() && this.ownerExistsInContacts();
-	}, this);
-	this.visibleAddToContacts = ko.computed(function () {
-		return !App.isNewTab() && this.ownerContactInfoReceived() && !this.ownerExistsInContacts();
-	}, this);
-
-	this.contactCardWidth = ko.observable(0);
 
 	this.uploadedFiles = ko.observableArray([]);
 	this.allAttachmentsUploaded = ko.computed(function () {
-		var
-			aNotUploadedFiles = _.filter(this.uploadedFiles(), function (oFile) {
-				return !oFile.uploaded();
-			})
-		;
+		var aNotUploadedFiles = _.filter(this.uploadedFiles(), function (oFile) {
+			return !oFile.uploaded();
+		});
 
 		return aNotUploadedFiles.length === 0;
 	}, this);
@@ -468,25 +457,6 @@ CHelpdeskView.prototype.cleanAll = function ()
 	//this.setRecipient(this.bccAddr, '');
 };
 
-/**
- * @param {Object} oContact
- */
-CHelpdeskView.prototype.onOwnerContactResponse = function (oContact)
-{
-//	if (oContact)
-//	{
-//		this.ownerContact(oContact);
-//		this.ownerExistsInContacts(true);
-//	}
-//	else
-//	{
-//		this.ownerContact(new CContactModel());
-//		this.ownerExistsInContacts(false);
-//	}
-//
-//	this.ownerContactInfoReceived(true);
-};
-
 CHelpdeskView.prototype.updateOpenerWindow = function ()
 {
 //	if (App.isNewTab() && window.opener && window.opener.App)
@@ -502,7 +472,7 @@ CHelpdeskView.prototype.deletePost = function (oPost)
 {
 	if (oPost && oPost.itsMe())
 	{
-		Screens.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_DELETE_THIS_POST'),
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_DELETE_THIS_POST'),
 			_.bind(function (bDelete) {
 				if (bDelete)
 				{
@@ -538,34 +508,12 @@ CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 	this.updateOpenerWindow();
 };
 
-CHelpdeskView.prototype.addToContacts = function ()
-{
-//	if (this.selectedItem())
-//	{
-//		ContactsCache.addToContacts('', this.selectedItem().sEmail, this.onAddToContactsResponse, this);
-//	}
-};
-
 CHelpdeskView.prototype.iHaveMoreToSay = function ()
 {
 	this.isQuickReplyHidden(false);
 	_.delay(_.bind(function () {
 		this.replyTextFocus(true);
 	}, this), 300);
-};
-
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CHelpdeskView.prototype.onAddToContactsResponse = function (oResponse, oRequest)
-{
-//	if (oResponse.Result && this.selectedItem() && oRequest.HomeEmail !== '' && oRequest.HomeEmail === this.selectedItem().sEmail)
-//	{
-//		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
-//		ContactsCache.clearInfoAboutEmail(this.selectedItem().sEmail);
-//		ContactsCache.getContactsByEmails([this.selectedItem().sEmail], this.onOwnerContactResponse, this);
-//	}
 };
 
 CHelpdeskView.prototype.scrollPostsToBottom = function ()

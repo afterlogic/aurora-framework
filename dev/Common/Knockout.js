@@ -875,7 +875,7 @@ ko.bindingHandlers.moveToFolderFilter = {
 		}
 	}
 };
-//contactCardInMessage: {'address': fromEmail(), 'trigger': recipientsContacts()}
+
 ko.bindingHandlers.contactCardInMessage = {
 	'update': (bMobileApp || bMobileDevice) ? null : function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
 		var

@@ -100,6 +100,8 @@ CCreateContactPopup.prototype.cancelPopup = function ()
  */
 CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRequest)
 {
+	var oParameters = JSON.parse(oRequest.Parameters);
+	
 	this.loading(false);
 
 	if (!oResponse.Result)
@@ -109,8 +111,8 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 	else
 	{
 		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
-		ContactsCache.clearInfoAboutEmail(oRequest.HomeEmail);
-		ContactsCache.getContactsByEmails([oRequest.HomeEmail], this.fCallback);
+		ContactsCache.clearInfoAboutEmail(oParameters.HomeEmail);
+		ContactsCache.getContactsByEmails([oParameters.HomeEmail], this.fCallback);
 		this.closePopup();
 	}
 };

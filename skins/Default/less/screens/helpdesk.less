@@ -328,14 +328,22 @@
 				display: block;
 			}
 
-			.found {
-				padding-left: 7px;
-			}
-
 			.link {
 				font-size: 9pt;
 				display: inline-block;
 				margin: 0px 10px;
+			}
+			
+			.found.link {
+				font-size: 12pt;
+				cursor: pointer;
+				color: #555566;
+				text-decoration: underline;
+				margin: 0;
+				
+				&:hover {
+					color: #333344;
+				}
 			}
 		}
 

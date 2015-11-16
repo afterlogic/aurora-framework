@@ -15,9 +15,6 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return _.extend({
-		start: function (ModulesManager) {
-			ComponentsMethods.start(ModulesManager);
-		},
 		screens: {
 			'main': function () {
 				return require('modules/Contacts/js/views/ContactsView.js');

@@ -7,11 +7,14 @@ module.exports = function (oSettings) {
 		Settings.init(oSettings);
 	}
 	
-	var SuggestionsAutocomplete = require('modules/Contacts/js/SuggestionsAutocomplete.js');
+	var
+		SuggestionsAutocomplete = require('modules/Contacts/js/SuggestionsAutocomplete.js'),
+		ContactCard = require('modules/Contacts/js/ContactCard.js')
+	;
 
 	return {
-		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneTopController', [require('modules/Contacts/js/ContactCard.js')]);
+		applyContactsCards: function ($Addresses) {
+			ContactCard.applyTo($Addresses);
 		},
 		getSuggestionsAutocompleteCallback: function () {
 			return SuggestionsAutocomplete.callback;

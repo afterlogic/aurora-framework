@@ -137,11 +137,13 @@
 				
 				<div class="message_info" data-bind="visible: !detailsVisible()">
 					<div class="message_info_line">
-						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
-						<span data-i18n="MESSAGE/SHORT_LINE_TO" data-bind="i18n: 'text', visible: aAllRecipients().length > 0"></span>
-						<span data-bind="foreach: aAllRecipients">
-							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, attr: {'data-email': sEmail, 'data-name': sName}"></span>
-							<span data-bind="visible: $parent.aAllRecipients().length > $index() + 1">, </span>
+						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, 
+								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
+						<span data-i18n="MESSAGE/SHORT_LINE_TO" data-bind="i18n: 'text', visible: allRecipients().length > 0"></span>
+						<span data-bind="foreach: allRecipients">
+							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, 
+									attr: {'data-email': sEmail, 'data-name': sName}">
+							</span><span data-bind="visible: $parent.allRecipients().length > $index() + 1">, </span>
 						</span>
 					</div>
 				</div>
@@ -149,44 +151,29 @@
 				<div class="message_info message_detail_info" data-bind="visible: detailsVisible()">
 					<div class="message_info_line">
 						<span class="title" data-i18n="MESSAGE/HEADER_FROM" data-bind="i18n: 'text'"></span>: 
-						<span class="from control" data-bind="text: fullFrom, 
-							contactCardInMessage: {'address': fromEmail(), 'trigger': recipientsContacts()},
-							css: {'link found': oFromAddr() && oFromAddr().found()}">
-						</span><span class="add_contact" data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', 
-									click: function () {addToContacts(oFromAddr().sEmail, oFromAddr().sName);},
-									visible: isCurrentNotDraftOrSent() && oFromAddr() && oFromAddr().loaded() && !oFromAddr().found()"></span>
+						<span class="from control address" data-bind="text: fullFrom, 
+								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}">
+						</span>
 					</div>
 				
 					<div class="message_info_line" data-bind="visible: aToAddr().length > 0">
 						<span class="title" data-i18n="MESSAGE/HEADER_TO" data-bind="i18n: 'text'"></span>: 
 						<!-- ko foreach: aToAddr -->
-						<span data-bind="text: sFull, contactCardInMessage: {'address': sEmail, 'trigger': $parent.recipientsContacts()},
-							  css: {'link found': found}">
-						</span><span class="add_contact" data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', 
-									click: function () {$parent.addToContacts(sEmail, sName);},
-									visible: loaded() && !found()">
+						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aToAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aCcAddr().length > 0">
 						<span class="title" data-i18n="MESSAGE/HEADER_CC" data-bind="i18n: 'text'"></span>: 
 						<!-- ko foreach: aCcAddr -->
-						<span data-bind="text: sFull, contactCardInMessage: {'address': sEmail, 'trigger': $parent.recipientsContacts()},
-							  css: {'link found': found}">
-						</span><span class="add_contact" data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', 
-									click: function () {$parent.addToContacts(sEmail, sName);},
-									visible: loaded() && !found()">
+						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aCcAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aBccAddr().length > 0">
 						<span class="title" data-i18n="MESSAGE/HEADER_BCC" data-bind="i18n: 'text'"></span>: 
 						<!-- ko foreach: aBccAddr -->
-						<span data-bind="text: sFull, contactCardInMessage: {'address': sEmail, 'trigger': $parent.recipientsContacts()},
-							  css: {'link found': found}">
-						</span><span class="add_contact" data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', 
-									click: function () {$parent.addToContacts(sEmail, sName);},
-									visible: loaded() && !found()">
+						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aBccAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>

@@ -178,9 +178,7 @@ function CMessagePaneView()
 	this.aCcAddr = ko.observableArray([]);
 	this.bcc = ko.observable('');
 	this.aBccAddr = ko.observableArray([]);
-	this.allRecipients = ko.observable('');
-	this.aAllRecipients = ko.observableArray([]);
-	this.recipientsContacts = ko.observableArray([]);
+	this.allRecipients = ko.observableArray([]);
 	this.currentAccountEmail = ko.observable();
 	this.meSender = TextUtils.i18n('MESSAGE/ME_SENDER');
 	this.meRecipient = TextUtils.i18n('MESSAGE/ME_RECIPIENT');
@@ -462,11 +460,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.aBccAddr(oMessage.oBcc.aCollection);
 
 		this.currentAccountEmail(oAccount.email());
-		this.aAllRecipients(_.uniq(_.union(this.aToAddr(), this.aCcAddr(), this.aBccAddr())));
-		if (!this.mobileApp)
-		{
-			this.requestContactsFromCache(_.union(oMessage.oFrom.aCollection, this.aAllRecipients()));
-		}
+		this.allRecipients(_.uniq(_.union(this.aToAddr(), this.aCcAddr(), this.aBccAddr())));
 
 		this.midDate(oMessage.oDateModel.getMidDate());
 		this.fullDate(oMessage.oDateModel.getFullDate());
@@ -581,43 +575,6 @@ CMessagePaneView.prototype.updateMomentDate = function ()
 		this.midDate(oMessage.oDateModel.getMidDate());
 		this.fullDate(oMessage.oDateModel.getFullDate());
 	}
-};
-
-/**
- * Requests the contact information from the cache.
- * 
- * @param {Array} aRecipients List of CAddressModel objects.
- */
-CMessagePaneView.prototype.requestContactsFromCache = function (aRecipients)
-{
-//	var aEmails = _.map(aRecipients, function (oAddress) {
-//		return oAddress.sEmail;
-//	});
-//	
-//	this.recipientsContacts([]);
-//	App.ContactsCache.getContactsByEmails(aEmails, this.onContactResponse, this);
-};
-
-/**
- * Gets the contact information from the cache and uses it in hint-popups.
- * 
- * @param {Object} oContact CContactModel object.
- * @param {string} sEmail Email at which the contact was found.
- */
-CMessagePaneView.prototype.onContactResponse = function (oContact, sEmail)
-{
-	if (oContact)
-	{
-		this.recipientsContacts.push(oContact);
-		this.recipientsContacts(_.uniq(this.recipientsContacts()));
-	}
-	_.each(_.union([this.oFromAddr()], this.aAllRecipients()), function (oAddress) {
-		if (oAddress && oAddress.sEmail === sEmail)
-		{
-			oAddress.loaded(true);
-			oAddress.found(!!oContact);
-		}
-	});
 };
 
 /**
@@ -837,29 +794,6 @@ CMessagePaneView.prototype.alwaysShowPictures = function ()
 CMessagePaneView.prototype.openInNewWindow = function ()
 {
 	this.openMessageInNewWindowBinded(this.currentMessage());
-};
-
-/**
- * @param {String} sEmail
- * @param {String} sName
- */
-CMessagePaneView.prototype.addToContacts = function (sEmail, sName)
-{
-	App.Api.contactCreate(sName, sEmail, this.onContactResponse, this);
-};
-
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CMessagePaneView.prototype.onAddToContactsResponse = function (oResponse, oRequest)
-{
-	if (oResponse.Result && oRequest.HomeEmail !== '')
-	{
-		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
-		App.ContactsCache.clearInfoAboutEmail(oRequest.HomeEmail);
-		App.ContactsCache.getContactsByEmails([oRequest.HomeEmail], this.onContactResponse, this);
-	}
 };
 
 CMessagePaneView.prototype.getReplyHtmlText = function ()
@@ -1246,8 +1180,7 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			sText: oMessage.text(),
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
-			oCustom: oMessage.Custom,
-			$Recipients: this.$MailViewDom.find('span.address')
+			oCustom: oMessage.Custom
 		} : null
 	;
 	
@@ -1257,6 +1190,8 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			oController.doAfterPopulatingMessage(oMessageProps);
 		}
 	}, this));
+	
+	ModulesManager.run('Contacts', 'applyContactsCards', [this.$MailViewDom.find('span.address')]);
 };
 
 module.exports = new CMessagePaneView();

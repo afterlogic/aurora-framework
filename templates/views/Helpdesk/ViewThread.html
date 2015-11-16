@@ -66,17 +66,10 @@
 		</span>
 	</div>
 	
-	<div class="title" data-bind="contactcard: {'trigger': hasOwnerContact, 'controlWidth': contactCardWidth}, css: {'has_contactcard': hasOwnerContact}">
+	<div class="title">
 		<span class="text">
-			<span class="owner control" data-bind="text: subject(), css: {'found': hasOwnerContact}"></span>
-			<span class="add_contact"
-				data-bind="customTooltip: 'MESSAGE/ACTION_ADD_TO_CONTACTS', click: addToContacts, visible: visibleAddToContacts()"></span>
-		</span>
-		<span class="dropdown control contact_card helpdesk" data-bind="visible: hasOwnerContact, if: hasOwnerContact">
-			<span class="dropdown_helper">
-				<span class="dropdown_arrow"><span></span></span>
-				<span class="dropdown_content dropdown_content_mail" data-bind="template: {name: 'Common_ContactCard', data: ownerContact}, style: {'width': contactCardWidth()+'px'}"></span>
-			</span>
+			<span class="owner control" data-bind="text: subject(), initDom: ownerDom, 
+					attr: {'data-email': selectedItem() ? selectedItem().sEmail : '', 'data-name': selectedItem() ? selectedItem().sName : ''}"></span>
 		</span>
 	</div>
 	<a class="link" href="javascript:void(0);" data-bind="i18n: 'text', click: onShowThreadsByOwner,

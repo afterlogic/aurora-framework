@@ -6,21 +6,22 @@ var
 	_ = require('underscore'),
 	
 	Utils = require('core/js/utils/Common.js'),
-	customTooltip = require('core/js/customTooltip.js'),
+	CustomTooltip = require('core/js/CustomTooltipObj.js'),
 	Screens = require('core/js/Screens.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CreateContactPopup = require('modules/Contacts/js/popups/CreateContactPopup.js'),
 	
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	CContactModel = require('modules/Contacts/js/models/CContactModel.js'),
 	
-	aWaitElements = [],
 	oContactCardsView = {
 		contacts: ko.observableArray([]),
 		ViewTemplate: 'Contacts_ContactCardsView',
 		add: function (aContacts) {
-			this.contacts(_.compact(_.uniq(this.contacts().concat(_.values(aContacts)))));
+			var aDiffContacts = _.filter(this.contacts(), function (oContact) {
+				return -1 === $.inArray(oContact.email(), _.keys(aContacts));
+			});
+			this.contacts(aDiffContacts.concat(_.compact(_.values(aContacts))));
 		}
 	}
 ;
@@ -117,32 +118,49 @@ function BindContactCard($Element, sAddress)
 	}
 }
 
+function ClearElement($Element)
+{
+	if ($Element.next().hasClass('add_contact'))
+	{
+		$Element.next().remove();
+	}
+	$Element.removeClass('link found');
+	$Element.off();
+}
+
 /**
+ * @param {Array} aElements
  * @param {Array} aContacts
  */
-function OnContactResponse(aContacts)
+function OnContactResponse(aElements, aContacts)
 {
-//	console.log('OnContactResponse aContacts', aContacts);
-	_.each(aWaitElements, function ($Element, iIndex) {
+	_.each(aElements, function ($Element) {
 		// Search by keys, because the value can be null - underscore ignores it.
 		var sFoundEmail = _.find(_.keys(aContacts), function (sEmail) {
-			// $Element.data('email') 
+			// $Element.data('email') returns wrong values if data-email was changed by knockoutjs
 			return sEmail === $Element.attr('data-email');
 		});
 		
 		if (Utils.isNonEmptyString(sFoundEmail))
 		{
+			ClearElement($Element);
+			
 			if (aContacts[sFoundEmail] === null)
 			{
 				var $add = $('<span class="add_contact"></span>');
 				$Element.after($add);
-				customTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
+				CustomTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
 				$add.on('click', function () {
 					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sFoundEmail, function (aContacts) {
-						$add.remove();
-						$Element.addClass('link found');
-						oContactCardsView.add(aContacts);
-						BindContactCard($Element, sFoundEmail);
+						_.each(aElements, function ($El) {
+							if ($El.attr('data-email') === sFoundEmail)
+							{
+								ClearElement($El);
+								$El.addClass('link found');
+								oContactCardsView.add(aContacts);
+								BindContactCard($El, sFoundEmail);
+							}
+						});
 					}]);
 				});
 			}
@@ -157,32 +175,16 @@ function OnContactResponse(aContacts)
 }
 
 module.exports = {
-	doAfterPopulatingMessage: function (oMessageProps) {
-		if (oMessageProps)
-		{
-			aWaitElements = _.map(oMessageProps.$Recipients, function (oElement) {
+	applyTo: function ($Addresses) {
+		var
+			aElements = _.map($Addresses, function (oElement) {
 				return $(oElement);
-			});
-			
-			var
-				aEmails = _.uniq(_.map(aWaitElements, function ($Element) {
-					return $Element && $Element.attr('data-email');
-				}))
-			;
-			
-			ContactsCache.getContactsByEmails(aEmails, OnContactResponse);
-		}
-		else
-		{
-			_.each(aWaitElements, function ($Element) {
-				if ($Element.next().hasClass('add_contact'))
-				{
-					$Element.next().remove();
-				}
-				$Element.removeClass('link found');
-				$Element.off();
-			});
-			aWaitElements = [];
-		}
+			}),
+			aEmails = _.uniq(_.map(aElements, function ($Element) {
+				return $Element && $Element.attr('data-email');
+			}))
+		;
+
+		ContactsCache.getContactsByEmails(aEmails, _.bind(OnContactResponse, {}, aElements));
 	}
 };

@@ -56,15 +56,10 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 		}
 		else
 		{
-			this.contacts[sEmail] = null;
 			aEmailsForRequest.push(sEmail);
 		}
 	}, this));
 	
-//	console.log('aContacts', aContacts);
-//	console.log('aContacts.length', aContacts.length);
-//	console.log('fResponseHandler', fResponseHandler);
-//	console.log('$.isFunction(fResponseHandler)', $.isFunction(fResponseHandler));
 	if ($.isFunction(fResponseHandler))
 	{
 		fResponseHandler(aContacts);
@@ -111,6 +106,10 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 	}
 	
 	_.each(aEmails, _.bind(function (sEmail) {
+		if (!this.contacts[sEmail])
+		{
+			this.contacts[sEmail] = null;
+		}
 		aContacts[sEmail] = this.contacts[sEmail];
 	}, this));
 	
