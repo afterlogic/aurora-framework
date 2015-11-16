@@ -718,7 +718,7 @@ CMessageListView.prototype.onFlagClick = function (oMessage)
 {
 	if (!this.isSavingDraft(oMessage))
 	{
-		MailCache.executeGroupOperation('MessageSetFlagged', [oMessage.uid()], 'flagged', !oMessage.flagged());
+		MailCache.executeGroupOperation('SetMessageFlagged', [oMessage.uid()], 'flagged', !oMessage.flagged());
 	}
 };
 

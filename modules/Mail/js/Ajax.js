@@ -15,7 +15,7 @@ Ajax.registerAbortRequestHandler('Mail', function (oRequest, oOpenedRequest) {
 					oOpenedRequest.Method === 'GetMessages' && oOpenedParameters.Folder === oParameters.Folder;
 		case 'GetMessages':
 		case 'SetMessagesSeen':
-		case 'MessageSetFlagged':
+		case 'SetMessageFlagged':
 			return oOpenedRequest.Method === 'GetMessages' && oOpenedParameters.Folder === oParameters.Folder;
 		case 'MessagesSetAllSeen':
 			return (oOpenedRequest.Method === 'GetMessages' || oOpenedRequest.Method === 'GetMessages') &&
