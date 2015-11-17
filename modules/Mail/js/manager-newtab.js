@@ -23,6 +23,9 @@ module.exports = function (oSettings) {
 	Cache.init();
 	
 	return {
+		start: function () {
+			require('modules/Mail/js/koBindings.js');
+		},
 		screens: {
 			'view': function () {
 				return require('modules/Mail/js/views/MessagePaneView.js');
@@ -38,6 +41,14 @@ module.exports = function (oSettings) {
 		registerComposeToolbarController: function (oController) {
 			var ComposeView = GetComposeView();
 			ComposeView.registerToolbarController(oController);
+		},
+		getComposeMessageToAddresses: function () {
+			var
+				bAllowSendMail = true,
+				ComposeUtils = require('modules/Mail/js/utils/ScreenCompose.js')
+			;
+			
+			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;
 		}
 	};
 };

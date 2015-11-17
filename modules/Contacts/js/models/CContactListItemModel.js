@@ -2,7 +2,8 @@
 
 var
 	ko = require('knockout'),
-	Utils = require('core/js/utils/Common.js')
+	Utils = require('core/js/utils/Common.js'),
+	AddressUtils = require('core/js/utils/Address.js')
 ;
 
 /**
@@ -105,9 +106,9 @@ CContactListItemModel.prototype.Email = function ()
 /**
  * @return {string}
  */
-CContactListItemModel.prototype.EmailAndName = function ()
+CContactListItemModel.prototype.getFullEmail = function ()
 {
-	return Utils.Address.getFullEmail(this.sName, this.sEmail);
+	return AddressUtils.getFullEmail(this.sName, this.sEmail);
 };
 
 /**

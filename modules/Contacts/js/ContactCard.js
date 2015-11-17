@@ -5,9 +5,10 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	CustomTooltip = require('core/js/CustomTooltipObj.js'),
+	CustomTooltip = require('core/js/CustomTooltip.js'),
 	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	ComposeMessageToAddressesFunc = ModulesManager.run('Mail', 'getComposeMessageToAddresses'),
 	
 	Popups = require('core/js/Popups.js'),
 	CreateContactPopup = require('modules/Contacts/js/popups/CreateContactPopup.js'),
@@ -17,6 +18,8 @@ var
 	oContactCardsView = {
 		contacts: ko.observableArray([]),
 		ViewTemplate: 'Contacts_ContactCardsView',
+		composeMessageToAddresses: ComposeMessageToAddressesFunc,
+		allowComposeMessageToAddresses: $.isFunction(ComposeMessageToAddressesFunc),
 		add: function (aContacts) {
 			var aDiffContacts = _.filter(this.contacts(), function (oContact) {
 				return -1 === $.inArray(oContact.email(), _.keys(aContacts));
@@ -135,30 +138,29 @@ function ClearElement($Element)
 function OnContactResponse(aElements, aContacts)
 {
 	_.each(aElements, function ($Element) {
-		// Search by keys, because the value can be null - underscore ignores it.
-		var sFoundEmail = _.find(_.keys(aContacts), function (sEmail) {
-			// $Element.data('email') returns wrong values if data-email was changed by knockoutjs
-			return sEmail === $Element.attr('data-email');
-		});
+		var
+			sEmail = $Element.attr('data-email'), // $Element.data('email') returns wrong values if data-email was changed by knockoutjs
+			oContact = aContacts[sEmail]
+		;
 		
-		if (Utils.isNonEmptyString(sFoundEmail))
+		if (oContact !== undefined)
 		{
 			ClearElement($Element);
 			
-			if (aContacts[sFoundEmail] === null)
+			if (oContact === null)
 			{
 				var $add = $('<span class="add_contact"></span>');
 				$Element.after($add);
 				CustomTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
 				$add.on('click', function () {
-					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sFoundEmail, function (aContacts) {
+					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sEmail, function (aContacts) {
 						_.each(aElements, function ($El) {
-							if ($El.attr('data-email') === sFoundEmail)
+							if ($El.attr('data-email') === sEmail)
 							{
 								ClearElement($El);
 								$El.addClass('link found');
 								oContactCardsView.add(aContacts);
-								BindContactCard($El, sFoundEmail);
+								BindContactCard($El, sEmail);
 							}
 						});
 					}]);
@@ -168,7 +170,7 @@ function OnContactResponse(aElements, aContacts)
 			{
 				$Element.addClass('link found');
 				oContactCardsView.add(aContacts);
-				BindContactCard($Element, sFoundEmail);
+				BindContactCard($Element, sEmail);
 			}
 		}
 	});

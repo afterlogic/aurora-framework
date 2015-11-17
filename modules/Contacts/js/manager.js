@@ -1,8 +1,6 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Contacts/js/enums.js');
-
 	var
 		_ = require('underscore'),
 		

@@ -617,12 +617,15 @@ CComposeView.prototype.onRoute = function (aParams)
 			}
 			break;
 		default:
-			this.fillDefault();
+			this.fillDefault(aParams);
 			break;
 	}
 };
 
-CComposeView.prototype.fillDefault = function ()
+/**
+ * @param {Array} aParams
+ */
+CComposeView.prototype.fillDefault = function (aParams)
 {
 	var
 		sSignature = SendingUtils.getSignatureText(this.senderAccountId(), this.selectedFetcherOrIdentity(), true),

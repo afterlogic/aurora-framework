@@ -1,13 +1,15 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
+	moment = require('moment'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	DateUtils = require('core/js/utils/Date.js'),
+	AddressUtils = require('core/js/utils/Address.js'),
 	
 	CDateModel = require('core/js/models/CDateModel.js'),
 	
@@ -421,22 +423,6 @@ function CContactModel()
 	this.canBeSave = ko.computed(function () {
 		return this.displayName() !== '' || !!this.emails().length;
 	}, this);
-	
-	this.sendMailLink = ko.computed(function () {
-		return bMobileApp ? this.getSendMailLink(this.email()) : '#';
-	}, this);
-
-	this.sendMailToPersonalLink = ko.computed(function () {
-		return bMobileApp ? this.getSendMailLink(this.personalEmail()) : '#';
-	}, this);
-	
-	this.sendMailToBusinessLink = ko.computed(function () {
-		return bMobileApp ? this.getSendMailLink(this.businessEmail()) : '#';
-	}, this);
-	
-	this.sendMailToOtherLink = ko.computed(function () {
-		return bMobileApp ? this.getSendMailLink(this.otherEmail()) : '#';
-	}, this);
 }
 
 CContactModel.birthdayMonths = DateUtils.getMonthNamesArray();
@@ -460,48 +446,6 @@ CContactModel.birthdayMonthSelect = [
 CContactModel.birthdayYearSelect = [
 	{'text': TextUtils.i18n('DATETIME/YEAR'), 'value': '0'}
 ];
-
-/**
- * @param {string} sEmail
- * @return {Array}
- */
-CContactModel.prototype.getSendMailParts = function (sEmail)
-{
-	return App.Links.composeWithToField(this.getFullEmail(sEmail));
-};
-
-/**
- * @param {string} sEmail
- * @return {string}
- */
-CContactModel.prototype.getSendMailLink = function (sEmail)
-{
-	return App.Routing.buildHashFromArray(this.getSendMailParts(sEmail));
-};
-
-CContactModel.prototype.sendMail = function ()
-{
-	App.Api.composeMessageToAddresses(this.email());
-	return bMobileApp;
-};
-
-CContactModel.prototype.sendMailToPersonal = function ()
-{
-	App.Api.composeMessageToAddresses(this.personalEmail());
-	return bMobileApp;
-};
-
-CContactModel.prototype.sendMailToBusiness = function ()
-{
-	App.Api.composeMessageToAddresses(this.businessEmail());
-	return bMobileApp;
-};
-
-CContactModel.prototype.sendMailToOther = function ()
-{
-	App.Api.composeMessageToAddresses(this.otherEmail());
-	return bMobileApp;
-};
 
 CContactModel.prototype.clear = function ()
 {
@@ -772,7 +716,11 @@ CContactModel.prototype.parse = function (oData)
  */
 CContactModel.prototype.getFullEmail = function (sEmail)
 {
-	return Utils.Address.getFullEmail(this.displayName(), sEmail);
+	if (!Utils.isNonEmptyString(sEmail))
+	{
+		sEmail = this.email();
+	}
+	return AddressUtils.getFullEmail(this.displayName(), sEmail);
 };
 
 CContactModel.prototype.getEmailsString = function ()

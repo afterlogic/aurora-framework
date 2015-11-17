@@ -1,7 +1,6 @@
 'use strict';
 
 var
-	$ = require('jquery'),
 	Utils = require('core/js/utils/Common.js'),
 	LinksUtils = {}
 ;

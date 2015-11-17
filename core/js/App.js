@@ -25,7 +25,7 @@ require('core/js/koExtendings.js');
 
 if (!bMobileDevice && !bMobileApp)
 {
-	require('core/js/CustomTooltipObj.js');
+	require('core/js/CustomTooltip.js');
 	require('core/js/koBindingsNotMobile.js');
 }
 

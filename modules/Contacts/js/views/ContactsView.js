@@ -12,6 +12,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
@@ -229,16 +230,9 @@ function CContactsView()
 		Routing.setHash(LinksUtils.getContacts(iType, sGroupId, this.searchInput()));
 	});
 
-	this.selector = new CSelector(this.collection, _.bind(function (oItem) {
-		if (oItem)
-		{
-			var
-				iType = this.selectedGroupType(),
-				sGroupId = (iType === Enums.ContactsGroupListType.SubGroup) ? this.currentGroupId() : ''
-			;
-			Routing.setHash(LinksUtils.getContacts(iType, sGroupId, this.search(), this.oPageSwitcher.currentPage(), oItem.sId));
-		}
-	}, this), _.bind(this.executeDelete, this), _.bind(this.onContactDblClick, this));
+	this.composeMessageToAddresses = ModulesManager.run('Mail', 'getComposeMessageToAddresses');
+	this.allowComposeMessageToAddresses = $.isFunction(this.composeMessageToAddresses);
+	this.selector = new CSelector(this.collection, _.bind(this.viewContact, this), _.bind(this.deleteContact, this), this.allowComposeMessageToAddresses ? _.bind(this.composeMessageToContact, this) : null);
 
 	this.checkAll = this.selector.koCheckAll();
 	this.checkAllIncomplite = this.selector.koCheckAllIncomplete();
@@ -265,41 +259,23 @@ function CContactsView()
 	this.isExport = ko.computed(function () {
 		return this.contactCount();
 	}, this);
+	
+	this.isExactlyOneContactSelected = ko.computed(function () {
+		return 1 === this.selector.listCheckedOrSelected().length;
+	}, this);
 
 	this.newContactCommand = Utils.createCommand(this, this.executeNewContact, this.allowCreateContact);
 	this.newGroupCommand = Utils.createCommand(this, this.executeNewGroup);
 	this.addContactsCommand = Utils.createCommand(this, function () {}, this.isEnableAddContacts);
-	this.deleteCommand = Utils.createCommand(this, this.executeDelete, this.isEnableDeleting);
+	this.deleteCommand = Utils.createCommand(this, this.deleteContact, this.isEnableDeleting);
 	this.shareCommand = Utils.createCommand(this, this.executeShare, this.isEnableSharing);
 	this.removeFromGroupCommand = Utils.createCommand(this, this.executeRemoveFromGroup, this.isEnableRemoveContactsFromGroup);
 	this.importCommand = Utils.createCommand(this, this.executeImport);
 	this.exportCSVCommand = Utils.createCommand(this, this.executeCSVExport, this.isExport);
 	this.exportVCFCommand = Utils.createCommand(this, this.executeVCFExport, this.isExport);
 	this.saveCommand = Utils.createCommand(this, this.executeSave);
-	this.updateSharedToAllCommand = Utils.createCommand(this, this.executeUpdateSharedToAll, function () {
-		return (1 === this.selector.listCheckedOrSelected().length);
-	});
-
-	this.newMessageCommand = Utils.createCommand(this, function () {
-		
-		var 
-			aList = this.selector.listCheckedOrSelected(),
-			aText = []
-		;
-		
-		if (_.isArray(aList) && 0 < aList.length)
-		{
-			aText = _.map(aList, function (oItem) {
-				return oItem.EmailAndName();
-			});
-
-			aText = _.compact(aText);
-			App.Api.composeMessageToAddresses(aText.join(', '));
-		}
-
-	}, function () {
-		return 0 < this.selector.listCheckedOrSelected().length;
-	});
+	this.updateSharedToAllCommand = Utils.createCommand(this, this.executeUpdateSharedToAll, this.isExactlyOneContactSelected);
+	this.composeMessageCommand = Utils.createCommand(this, this.composeMessage, this.isCheckedOrSelected);
 
 	this.selector.listCheckedOrSelected.subscribe(function (aList) {
 		this.oGroupModel.newContactsInGroupCount(aList.length);
@@ -341,7 +317,7 @@ function CContactsView()
 
 _.extendOwn(CContactsView.prototype, CAbstractScreenView.prototype);
 
-CContactsView.prototype.ViewTemplate = 'Contacts_ContactsView';
+CContactsView.prototype.ViewTemplate = 'Contacts_ContactsScreenView';
 
 /**
  * 
@@ -487,7 +463,7 @@ CContactsView.prototype.executeNewGroup = function ()
 	this.gotoViewPane();
 };
 
-CContactsView.prototype.executeDelete = function ()
+CContactsView.prototype.deleteContact = function ()
 {
 	var iGroupType = this.selectedGroupType();
 	if (iGroupType === Enums.ContactsGroupListType.Personal || iGroupType === Enums.ContactsGroupListType.SharedToAll)
@@ -1074,7 +1050,7 @@ CContactsView.prototype.deleteGroup = function (sGroupId)
  */
 CContactsView.prototype.mailGroup = function (oGroup)
 {
-	if (oGroup)
+	if (this.allowComposeMessageToAddresses && oGroup)
 	{
 		Ajax.send('GetContacts', {
 			'Offset': 0,
@@ -1082,38 +1058,21 @@ CContactsView.prototype.mailGroup = function (oGroup)
 			'SortField': Enums.ContactSortType.Email,
 			'SortOrder': true ? '1' : '0',
 			'GroupId': oGroup.idGroup()
-		}, function (oData) {
+		}, function (oResponse) {
+			var
+				aList = oResponse && oResponse.Result && oResponse.Result.List,
+				aEmails = Utils.isNonEmptyArray(aList) ? _.compact(_.map(aList, function (oRawContactItem) {
+					var oContactItem = new CContactListItemModel();
+					oContactItem.parse(oRawContactItem);
+					return oContactItem.getFullEmail();
+				})) : [],
+				sEmails = aEmails.join(', ')
+			;
 
-			if (oData && oData['Result'] && oData['Result']['List'])
+			if (sEmails !== '')
 			{
-				var
-					iIndex = 0,
-					iLen = 0,
-					aText = [],
-					oObject = null,
-					aList = [],
-					aResultList = oData['Result']['List']
-					;
-
-				for (iLen = aResultList.length; iIndex < iLen; iIndex++)
-				{
-					if (aResultList[iIndex])
-					{
-						oObject = new CContactListItemModel();
-						oObject.parse(aResultList[iIndex]);
-
-						aList.push(oObject);
-					}
-				}
-
-				aText = _.map(aList, function (oItem) {
-					return oItem.EmailAndName();
-				});
-
-				aText = _.compact(aText);
-				App.Api.composeMessageToAddresses(aText.join(', '));
+				this.composeMessageToAddresses(sEmails);
 			}
-
 		}, this);
 	}
 };
@@ -1200,12 +1159,47 @@ CContactsView.prototype.searchFocus = function ()
 	}
 };
 
-CContactsView.prototype.onContactDblClick = function ()
+/**
+ * @param {Object} oContact
+ */
+CContactsView.prototype.viewContact = function (oContact)
 {
-	var oContact = this.selectedContact();
 	if (oContact)
 	{
-		App.Api.composeMessageToAddresses(oContact.email());
+		var
+			iType = this.selectedGroupType(),
+			sGroupId = (iType === Enums.ContactsGroupListType.SubGroup) ? this.currentGroupId() : ''
+		;
+		
+		Routing.setHash(LinksUtils.getContacts(iType, sGroupId, this.search(), this.oPageSwitcher.currentPage(), oContact.sId));
+	}
+};
+
+/**
+ * @param {Object} oContact
+ */
+CContactsView.prototype.composeMessageToContact = function (oContact)
+{
+	var sEmail = oContact ? oContact.getFullEmail() : '';
+	
+	if (sEmail !== '')
+	{
+		this.composeMessageToAddresses(sEmail);
+	}
+};
+
+CContactsView.prototype.composeMessage = function () {
+	var
+		aList = this.selector.listCheckedOrSelected(),
+		aEmails = Utils.isNonEmptyArray(aList) ? _.compact(_.map(aList, function (oItem) {
+			return oItem.getFullEmail();
+		})) : [],
+		sEmails = aEmails.join(', ')
+	;
+
+	if (sEmails !== '')
+	{
+		this.composeMessageToAddresses(sEmails);
 	}
 };
 

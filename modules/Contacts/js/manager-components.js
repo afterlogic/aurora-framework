@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = function (oSettings) {
+	require('modules/Contacts/js/enums.js');
+	
 	if (oSettings)
 	{
 		var Settings = require('modules/Contacts/js/Settings.js');
