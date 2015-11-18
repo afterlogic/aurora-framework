@@ -728,11 +728,6 @@ CContactModel.prototype.getEmailsString = function ()
 	return _.uniq(_.without([this.email(), this.personalEmail(), this.businessEmail(), this.otherEmail()], '')).join(',');
 };
 
-CContactModel.prototype.viewAllMails = function ()
-{
-	App.MailCache.searchMessagesInInbox('email:' + this.getEmailsString());
-};
-
 CContactModel.prototype.sendThisContact = function ()
 {
 	App.Api.composeMessageWithVcard(this);
@@ -753,22 +748,6 @@ CContactModel.prototype.isStrLink = function (mLink)
 CContactModel.prototype.onCallClick = function (sPhone)
 {
 //	App.Phone.call(sPhone);
-};
-
-CContactModel.prototype.viewAllMailsWithContact = function ()
-{
-//	var sSearch = this.getEmailsString();
-//	
-//	if (App.isNewTab() && window.opener && window.opener.App)
-//	{
-//		window.opener.App.MailCache.searchMessagesInCurrentFolder('email:' + sSearch);
-//		window.opener.focus();
-//		window.close();
-//	}
-//	else
-//	{
-//		App.MailCache.searchMessagesInCurrentFolder('email:' + sSearch);
-//	}
 };
 
 module.exports = CContactModel;

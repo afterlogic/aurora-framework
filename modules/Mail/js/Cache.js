@@ -1644,6 +1644,7 @@ CMailCache.prototype.searchMessagesInCurrentFolder = function (sSearch)
  */
 CMailCache.prototype.searchMessagesInInbox = function (sSearch)
 {
+	console.log('sSearch', sSearch);
 	Routing.setHash(LinksUtils.getMailbox(this.folderList().inboxFolderFullName() || 'INBOX', 1, '', sSearch, ''));
 };
 

@@ -9,6 +9,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	ComposeMessageToAddressesFunc = ModulesManager.run('Mail', 'getComposeMessageToAddresses'),
+	SearchMessagesInCurrentFolderFunc = ModulesManager.run('Mail', 'getSearchMessagesInCurrentFolder'),
 	
 	Popups = require('core/js/Popups.js'),
 	CreateContactPopup = require('modules/Contacts/js/popups/CreateContactPopup.js'),
@@ -18,8 +19,9 @@ var
 	oContactCardsView = {
 		contacts: ko.observableArray([]),
 		ViewTemplate: 'Contacts_ContactCardsView',
-		composeMessageToAddresses: ComposeMessageToAddressesFunc,
-		allowComposeMessageToAddresses: $.isFunction(ComposeMessageToAddressesFunc),
+		bAllowComposeMessageToAddresses: $.isFunction(ComposeMessageToAddressesFunc),
+		searchMessagesInCurrentFolder: SearchMessagesInCurrentFolderFunc,
+		bAllowSearchMessagesInCurrentFolder: $.isFunction(SearchMessagesInCurrentFolderFunc),
 		add: function (aContacts) {
 			var aDiffContacts = _.filter(this.contacts(), function (oContact) {
 				return -1 === $.inArray(oContact.email(), _.keys(aContacts));

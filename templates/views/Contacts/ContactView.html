@@ -32,7 +32,7 @@
 	</div>
 	<!-- /ko -->
 	<h2 class="title" data-bind="visibility: '' !== displayName(), text: displayName()"></h2>
-	<span class="item mail_to_title" href="javascript: void(0)" data-bind="sendMailTo: getFullEmail(), customTooltip: $root.allowComposeMessageToAddresses ? 'CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT' : ''">
+	<span class="item mail_to_title" href="javascript: void(0)" data-bind="sendMailTo: getFullEmail(), customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT' : ''">
 		<span class="title email" data-bind="text: email()"></span>
 	</span>
 </div>
@@ -280,8 +280,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="fields_switcher">
-				<span class="link" data-bind="visible: hasEmails() && allowSendEmails(), i18n: 'text', click: viewAllMails" data-i18n="CONTACTS/BUTTON_SEE_EMAILS_WITH_THIS_CONTACTS"></span>
+			<div class="fields_switcher" data-bind="visible: $root.bAllowSearchMessagesInInbox && hasEmails()">
+				<span class="link" data-bind="i18n: 'text', click: function () {$root.searchMessagesInInbox('email:' + getEmailsString());}" data-i18n="CONTACTS/BUTTON_SEE_EMAILS_WITH_THIS_CONTACTS"></span>
 			</div>
 		</div>
 	</div>

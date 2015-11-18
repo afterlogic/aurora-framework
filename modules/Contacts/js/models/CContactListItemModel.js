@@ -20,6 +20,7 @@ function CContactListItemModel()
 	this.sName = '';
 	this.sEmail = '';
 	this.bSharedToAll = false;
+	this.aEmails = [];
 
 	this.deleted = ko.observable(false);
 	this.checked = ko.observable(false);
@@ -37,6 +38,11 @@ CContactListItemModel.prototype.parse = function (oData)
 	this.sId = Utils.pString(oData.Id);
 	this.sName = Utils.pString(oData.Name);
 	this.sEmail = Utils.pString(oData.Email);
+	
+	if (Utils.isNonEmptyArray(oData.Emails))
+	{
+		this.aEmails = oData.Emails;
+	}
 
 	this.bIsGroup = !!oData.IsGroup;
 	this.bIsOrganization = !!oData.IsOrganization;

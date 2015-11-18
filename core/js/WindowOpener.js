@@ -2,10 +2,9 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
 	
-	Routing = require('core/js/Routing.js'),
+	Utils = require('core/js/utils/Common.js'),
 	Popups = require('core/js/Popups.js'),
 	App = require('core/js/App.js'),
 	

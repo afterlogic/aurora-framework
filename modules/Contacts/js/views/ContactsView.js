@@ -110,7 +110,7 @@ function CContactsView()
 
 	this.selectedGroup = ko.observable(null);
 	this.selectedContact = ko.observable(null);
-	this.selectedGroupContactsList = ko.observable(null);
+	this.selectedGroupEmails = ko.observableArray([]);
 	
 	this.currentGroupId = ko.observable('');
 
@@ -230,9 +230,11 @@ function CContactsView()
 		Routing.setHash(LinksUtils.getContacts(iType, sGroupId, this.searchInput()));
 	});
 
+	this.searchMessagesInInbox = ModulesManager.run('Mail', 'getSearchMessagesInInbox');
+	this.bAllowSearchMessagesInInbox = $.isFunction(this.searchMessagesInInbox);
 	this.composeMessageToAddresses = ModulesManager.run('Mail', 'getComposeMessageToAddresses');
-	this.allowComposeMessageToAddresses = $.isFunction(this.composeMessageToAddresses);
-	this.selector = new CSelector(this.collection, _.bind(this.viewContact, this), _.bind(this.deleteContact, this), this.allowComposeMessageToAddresses ? _.bind(this.composeMessageToContact, this) : null);
+	this.bAllowComposeMessageToAddresses = $.isFunction(this.composeMessageToAddresses);
+	this.selector = new CSelector(this.collection, _.bind(this.viewContact, this), _.bind(this.deleteContact, this), this.bAllowComposeMessageToAddresses ? _.bind(this.composeMessageToContact, this) : null);
 
 	this.checkAll = this.selector.koCheckAll();
 	this.checkAllIncomplite = this.selector.koCheckAllIncomplete();
@@ -1050,7 +1052,7 @@ CContactsView.prototype.deleteGroup = function (sGroupId)
  */
 CContactsView.prototype.mailGroup = function (oGroup)
 {
-	if (this.allowComposeMessageToAddresses && oGroup)
+	if (this.bAllowComposeMessageToAddresses && oGroup)
 	{
 		Ajax.send('GetContacts', {
 			'Offset': 0,
@@ -1260,81 +1262,52 @@ CContactsView.prototype.onGetContactsResponse = function (oResponse, oRequest)
 	if (oResult)
 	{
 		var
-			iIndex = 0,
-			iLen = 0,
-			aList = [],
+			iContactCount = Utils.pInt(oResult.ContactCount),
+			aNewCollection = Utils.isNonEmptyArray(oResult.List) ? _.compact(_.map(oResult.List, function (oRawContactItem) {
+				var oContactItem = new CContactListItemModel();
+				oContactItem.parse(oRawContactItem);
+				return oContactItem;
+			})) : [],
 			oSelected  = this.selector.itemSelected(),
-			oSubSelected  = null,
+			oNewSelected  = oSelected ? _.find(aNewCollection, function (oContactItem) {
+				return oSelected.Id() === oContactItem.Id();
+			}) : null,
 			aChecked = this.selector.listChecked(),
 			aCheckedIds = (aChecked && 0 < aChecked.length) ? _.map(aChecked, function (oItem) {
 				return oItem.Id();
-			}) : [],
-			oObject = null
+			}) : []
 		;
 
-		for (iLen = oResult.List.length; iIndex < iLen; iIndex++)
+		if (Utils.isNonEmptyArray(aCheckedIds))
 		{
-			if (oResult.List[iIndex])
-			{
-				oObject = new CContactListItemModel();
-				oObject.parse(oResult.List[iIndex]);
-
-				aList.push(oObject);
-			}
-		}
-
-		if (oSelected)
-		{
-			oSubSelected = _.find(aList, function (oItem) {
-				return oSelected.Id() === oItem.Id();
+			_.each(aNewCollection, function (oContactItem) {
+				oContactItem.checked(-1 < $.inArray(oContactItem.Id(), aCheckedIds));
 			});
 		}
 
-		if (aCheckedIds && 0 < aCheckedIds.length)
+		this.collection(aNewCollection);
+		this.oPageSwitcher.setCount(iContactCount);
+		this.contactCount(iContactCount);
+
+		if (oNewSelected)
 		{
-			_.each(aList, function (oItem) {
-				oItem.checked(-1 < $.inArray(oItem.Id(), aCheckedIds));
-			});
+			this.selector.itemSelected(oNewSelected);
+			this.requestContact(oNewSelected.Id());
 		}
 
-		this.collection(aList);
-		this.loadingList(false);
-		this.oPageSwitcher.setCount(Utils.pInt(oResult.ContactCount));
-
-		if (oSubSelected)
-		{
-			this.selector.itemSelected(oSubSelected);
-		}
-
-		this.selectedGroupContactsList(oResult.List);
-
-		if (oSelected)
-		{
-			this.requestContact(oSelected.Id());
-		}
-
-		this.contactCount(oResult.ContactCount);
+		this.selectedGroupEmails(this.selectedGroup() ? _.uniq(_.flatten(_.map(this.collection(), function (oContactItem) {
+			return oContactItem.aEmails;
+		}))) : []);
 	}
+	
+	this.loadingList(false);
 };
 
 CContactsView.prototype.viewAllMails = function ()
 {
-	var
-		aContactsList = this.selectedGroupContactsList(),
-		sSearchRequest = 'email:'
-	;
-
-	if (aContactsList)
+	if (this.selectedGroupEmails().length > 0)
 	{
-		_.each(aContactsList, function(oContact, iContactKey)
-		{
-			_.each(oContact.Emails, function(sEmail, iEmailKey)
-			{
-				sSearchRequest = sSearchRequest + sEmail + ',';
-			});
-		});
-
-		Cache.searchMessagesInInbox(sSearchRequest);
+		this.searchMessagesInInbox('email:' + this.selectedGroupEmails().join(','));
 	}
 };
 

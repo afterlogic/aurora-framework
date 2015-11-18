@@ -51,9 +51,8 @@ var BaseTabMethods = {
 	removeMessagesFromCacheForFolder: function (iAccountID, sSentFolder) {
 		MailCache.removeMessagesFromCacheForFolder(iAccountID, sSentFolder);
 	},
-	searchMessagesInCurrentFolder: function () {
-		MailCache.searchMessagesInCurrentFolder();
-		window.focus();
+	searchMessagesInCurrentFolder: function (sSearch) {
+		MailCache.searchMessagesInCurrentFolder(sSearch);
 	},
 	getReplyData: function (sUniq) {
 		var oReplyData = aReplyData[sUniq];

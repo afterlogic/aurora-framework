@@ -152,15 +152,16 @@
 				</div>
 				
 				<div class="row" data-bind="visible: otherNotes()">
-					<!-- <span class="label" data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_NOTES"></span> -->
 					<span class="stroke" data-bind="text: otherNotes"></span>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="buttons buttons_position">
+<div class="buttons buttons_position" data-bind="visible: $root.bAllowComposeMessageToAddresses || $root.bAllowSearchMessagesInCurrentFolder && hasEmails()">
 	<a class="link" href="javascript: void(0)" data-i18n="CONTACTS/LINK_SEND_MAIL" 
 	   data-bind="i18n: 'text', sendMailTo: getFullEmail()" style="display: none;"></a>
-	<span class="link" data-i18n="CONTACTS/LINK_VIEW_MAILS" data-bind="i18n: 'text', click: viewAllMailsWithContact"></span>
+	<span class="link" data-i18n="CONTACTS/LINK_VIEW_MAILS" data-bind="i18n: 'text',
+		click: function () {$root.searchMessagesInCurrentFolder('email:' + getEmailsString());},
+		visible: $root.bAllowSearchMessagesInCurrentFolder && hasEmails()"></span>
 </div>

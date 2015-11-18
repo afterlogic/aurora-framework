@@ -4,6 +4,8 @@ module.exports = function (oSettings) {
 	require('modules/Mail/js/enums.js');
 
 	var
+		_ = require('underscore'),
+		
 		Settings = require('modules/Mail/js/Settings.js'),
 		Cache = null,
 		ComposeView = null,
@@ -49,6 +51,10 @@ module.exports = function (oSettings) {
 			;
 			
 			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;
+		},
+		getSearchMessagesInCurrentFolder: function () {
+			var BaseTab = window.opener && window.opener.BaseTabMethods;
+			return BaseTab ? _.bind(BaseTab.searchMessagesInCurrentFolder, BaseTab) : false;
 		}
 	};
 };

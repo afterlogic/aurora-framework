@@ -3,7 +3,6 @@
 var
 	_ = require('underscore'),
 	ko = require('knockout'),
-	$ = require('jquery'),
 	hasher = require('hasher'),
 	
 	Utils = require('core/js/utils/Common.js'),

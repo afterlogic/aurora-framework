@@ -11,7 +11,7 @@
 				<span class="text" data-i18n="CONTACTS/BUTTON_EDIT_GROUP"
 					data-bind="i18n: 'text', click: function (oItem) { $root.editGroup(oItem); }"></span>
 			</span>
-			<span class="item mail_to" data-bind="visible: $root.allowComposeMessageToAddresses">
+			<span class="item mail_to" data-bind="visible: $root.bAllowComposeMessageToAddresses">
 				<span class="icon"></span>
 				<span class="text" data-i18n="CONTACTS/BUTTON_EMAIL_TO_THIS_GROUP"
 					data-bind="i18n: 'text', click: function() { $root.mailGroup($data); }"></span>
@@ -107,8 +107,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="fields_switcher">
-			<span class="link" data-bind="visible: $root.selectedGroupContactsList().length !== 0, i18n: 'text', click: function() { $root.viewAllMails(); }" data-i18n="CONTACTS/BUTTON_SEE_EMAILS_WITH_THIS_GROUP"></span>
+		<div class="fields_switcher" data-bind="visible: $root.bAllowSearchMessagesInInbox && $root.selectedGroupEmails().length > 0">
+			<span class="link" data-bind="i18n: 'text', click: function() { $root.viewAllMails(); }" data-i18n="CONTACTS/BUTTON_SEE_EMAILS_WITH_THIS_GROUP"></span>
 		</div>
 	</div>
 </div>
