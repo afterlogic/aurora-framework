@@ -200,6 +200,11 @@ class CApi
 		return CApi::$oManager;
 	}
 
+	public static function ExecuteModuleMethod($sModuleName, $sMethod, $aParameters)
+	{
+		return CApi::GetModuleManager()->ExecuteMethod($sModuleName, $sMethod, $aParameters);
+	}
+
 	/**
 	 * @return \MailSo\Cache\CacheClient
 	 */

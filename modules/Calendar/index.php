@@ -651,7 +651,8 @@ class CalendarModule extends AApiModule
 			}
 		}
 
-		return $sResult;	}
+		return $sResult;	
+	}
 	
 	
 }

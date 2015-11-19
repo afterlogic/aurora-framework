@@ -8,7 +8,6 @@ class MinModule extends AApiModule
 		parent::init();
 		
 		$this->oApiMinManager = $this->GetManager('main', 'db');
-		$this->AddEntry('min', 'EntryMin');
 		$this->AddEntry('window', 'EntryMin');
 	}
 	
@@ -16,13 +15,13 @@ class MinModule extends AApiModule
 	{
 		$sResult = '';
 		$aPaths = \Core\Service::GetPaths();
-		$sAction = empty($aPaths[1]) ? '' : $aPaths[1];
+		$sModule = empty($aPaths[1]) ? '' : $aPaths[1];
 		try
 		{
-			if (!empty($sAction))
+			if (!empty($sModule))
 			{
-				$sMethodName =  $aPaths[0].$sAction;
-				if (method_exists($this->oActions, $sMethodName))
+//				\CApi::GetModuleManager()->ExecuteMethod($sModule, $sMethod, $aParameters);
+				if (/*method_exists($this->oActions, $sMethodName)*/ true)
 				{
 					if ('Min' === $aPaths[0])
 					{
@@ -87,6 +86,28 @@ class MinModule extends AApiModule
 		
 		return $sResult;		
 	}
+	
+	public function CreateMin()
+	{
+		return $this->oApiMinManager->createMin($this->getParamValue('HashId'), $this->getParamValue('Parameters'));
+	}
+
+	public function GetMinByHash()
+	{
+		return $this->oApiMinManager->getMinByHash($this->getParamValue('Hash'));
+	}
+	
+	public function GetMinByID()
+	{
+		return $this->oApiMinManager->getMinByID($this->getParamValue('ID'));
+	}
+
+	public function UpdateMinByID()
+	{
+		return $this->oApiMinManager->updateMinByID($this->getParamValue('ID'), $this->getParamValue('Data'), $this->getParamValue('NewID'));
+	}
+
+	
 	
 }
 

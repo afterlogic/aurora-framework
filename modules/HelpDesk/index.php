@@ -909,6 +909,89 @@ class HelpDeskModule extends AApiModule
 		}	
 				
 	}
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateUserPassword()
+	{
+		$oAccount = null;
+		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+
+		$sCurrentPassword = (string) $this->getParamValue('CurrentPassword', '');
+		$sNewPassword = (string) $this->getParamValue('NewPassword', '');
+
+		$bResult = false;
+		if ($oUser && $oUser->validatePassword($sCurrentPassword) && 0 < strlen($sNewPassword))
+		{
+			$oUser->setPassword($sNewPassword);
+			if (!$this->oApiHelpDeskManager->updateUser($oUser))
+			{
+				throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotChangePassword);
+			}
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateSettings()
+	{
+		setcookie('aft-cache-ctrl', '', time() - 3600);
+		$oAccount = null;
+		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+
+		$sName = (string) $this->getParamValue('Name', $oUser->Name);
+		$sLanguage = (string) $this->getParamValue('Language', $oUser->Language);
+		//$sLanguage = $this->validateLang($sLanguage);
+
+		$sDateFormat = (string) $this->getParamValue('DateFormat', $oUser->DateFormat);
+		$iTimeFormat = (int) $this->getParamValue('TimeFormat', $oUser->TimeFormat);
+
+		$oUser->Name = trim($sName);
+		$oUser->Language = trim($sLanguage);
+		$oUser->DateFormat = $sDateFormat;
+		$oUser->TimeFormat = $iTimeFormat;
+		
+		return $this->DefaultResponse($oAccount, __FUNCTION__,
+			$this->oApiHelpDeskManager->updateUser($oUser));
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateUserSettings()
+	{
+		/*$oAccount = $this->getAccountFromParam();
+		$oHelpdeskUser = $this->GetHelpdeskAccountFromMainAccount($oAccount);
+		
+		$oAccount->User->AllowHelpdeskNotifications =  (bool) $this->getParamValue('AllowHelpdeskNotifications', $oAccount->User->AllowHelpdeskNotifications);
+		$oHelpdeskUser->Signature = trim((string) $this->getParamValue('Signature', $oHelpdeskUser->Signature));
+		$oHelpdeskUser->SignatureEnable = (bool) $this->getParamValue('SignatureEnable', $oHelpdeskUser->SignatureEnable);
+
+		$bResult = $this->oApiUsers->UpdateAccount($oAccount);
+		if ($bResult)
+		{
+			$bResult = $this->ApiHelpdesk()->updateUser($oHelpdeskUser);
+		}
+		else
+		{
+			$this->ApiHelpdesk()->updateUser($oHelpdeskUser);
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);*/
+
+		$oAccount = $this->getAccountFromParam();
+
+		$oAccount->User->AllowHelpdeskNotifications =  (bool) $this->getParamValue('AllowHelpdeskNotifications', $oAccount->User->AllowHelpdeskNotifications);
+		$oAccount->User->HelpdeskSignature = trim((string) $this->getParamValue('HelpdeskSignature', $oAccount->User->HelpdeskSignature));
+		$oAccount->User->HelpdeskSignatureEnable = (bool) $this->getParamValue('HelpdeskSignatureEnable', $oAccount->User->HelpdeskSignatureEnable);
+
+		$oApiUsers = \CApi::GetCoreManager('users');
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $oApiUsers->UpdateAccount($oAccount));
+	}	
 }
 
 return new HelpDeskModule('1.0');

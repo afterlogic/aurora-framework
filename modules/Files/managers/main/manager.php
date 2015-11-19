@@ -361,15 +361,19 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 				$sID = $this->oStorage->generateShareHash($oAccount, $iType, $sPath, $sName);
 				$sNewID = $this->oStorage->generateShareHash($oAccount, $iType, $sPath, $sNewName);
 
-				$oMin = $this->getApiMinManager();
-
-				$mData = $oMin->getMinByID($sID);
+				$mData = \CApi::ExecuteModuleMethod('Min', 'GetMinByID', array('ID' => $sID));
 				if ($mData && $oAccount)
 				{
 					$aData = $this->generateMinArray($oAccount, $iType, $sPath, $sNewName, $mData['Size']);
 					if ($aData)
 					{
-						$oMin->updateMinByID($sID, $aData, $sNewID);
+						\CApi::ExecuteModuleMethod('Min', 'UpdateMinByID', 
+								array(
+									'ID' => $sID,
+									'Data' => $aData,
+									'NewID' => $sNewID,
+								)
+						);
 					}
 				}
 			}
@@ -405,15 +409,19 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 				$sID = $this->oStorage->generateShareHash($oAccount, $iFromType, $sFromPath, $sName);
 				$sNewID = $this->oStorage->generateShareHash($oAccount, $iToType, $sToPath, $sNewName);
 
-				$oMin = $this->getApiMinManager();
-
-				$mData = $oMin->getMinByID($sID);
+				$mData = \CApi::ExecuteModuleMethod('Min', 'GetMinByID', array('ID' => $sID));
 				if ($mData)
 				{
 					$aData = $this->generateMinArray($oAccount, $iToType, $sToPath, $sNewName, $mData['Size']);
 					if ($aData)
 					{
-						$oMin->updateMinByID($sID, $aData, $sNewID);
+						\CApi::ExecuteModuleMethod('Min', 'UpdateMinByID', 
+								array(
+									'ID' => $sID,
+									'Data' => $aData,
+									'NewID' => $sNewID,
+								)
+						);
 					}
 				}
 			}

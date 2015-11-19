@@ -1477,39 +1477,6 @@ class Actions
 	/**
 	 * @return array
 	 */
-	public function AjaxHelpdeskUserSettingsUpdate()
-	{
-		/*$oAccount = $this->getAccountFromParam();
-		$oHelpdeskUser = $this->GetHelpdeskAccountFromMainAccount($oAccount);
-		
-		$oAccount->User->AllowHelpdeskNotifications =  (bool) $this->getParamValue('AllowHelpdeskNotifications', $oAccount->User->AllowHelpdeskNotifications);
-		$oHelpdeskUser->Signature = trim((string) $this->getParamValue('Signature', $oHelpdeskUser->Signature));
-		$oHelpdeskUser->SignatureEnable = (bool) $this->getParamValue('SignatureEnable', $oHelpdeskUser->SignatureEnable);
-
-		$bResult = $this->oApiUsers->UpdateAccount($oAccount);
-		if ($bResult)
-		{
-			$bResult = $this->ApiHelpdesk()->updateUser($oHelpdeskUser);
-		}
-		else
-		{
-			$this->ApiHelpdesk()->updateUser($oHelpdeskUser);
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);*/
-
-		$oAccount = $this->getAccountFromParam();
-
-		$oAccount->User->AllowHelpdeskNotifications =  (bool) $this->getParamValue('AllowHelpdeskNotifications', $oAccount->User->AllowHelpdeskNotifications);
-		$oAccount->User->HelpdeskSignature = trim((string) $this->getParamValue('HelpdeskSignature', $oAccount->User->HelpdeskSignature));
-		$oAccount->User->HelpdeskSignatureEnable = (bool) $this->getParamValue('HelpdeskSignatureEnable', $oAccount->User->HelpdeskSignatureEnable);
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->UpdateAccount($oAccount));
-	}
-
-	/**
-	 * @return array
-	 */
 	/*public function AjaxHelpdeskUserSettings()
 	{
 		$oAccount = $this->getAccountFromParam();
@@ -2318,27 +2285,6 @@ class Actions
 	/**
 	 * @return array
 	 */
-	public function WindowPublicCalendar()
-	{
-//		$sRawKey = (string) $this->getParamValue('RawKey', '');
-//		$aValues = \CApi::DecodeKeyValues($sRawKey);
-//		print_r($aValues);
-		
-		$sUrlRewriteBase = (string) \CApi::GetConf('labs.server-url-rewrite-base', '');
-		if (!empty($sUrlRewriteBase))
-		{
-			$sUrlRewriteBase = '<base href="'.$sUrlRewriteBase.'" />';
-		}
-		
-		return array(
-			'Template' => 'templates/CalendarPub.html',
-			'{{BaseUrl}}' => $sUrlRewriteBase 
-		);
-	}
-	
-	/**
-	 * @return array
-	 */
 	public function MinInfo()
 	{
 		$mData = $this->getParamValue('Result', false);
@@ -2347,40 +2293,6 @@ class Actions
 		return true;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function MinShare()
-	{
-		$mData = $this->getParamValue('Result', false);
-
-		if ($mData && isset($mData['__hash__'], $mData['Name'], $mData['Size']))
-		{
-			$bUseUrlRewrite = (bool) \CApi::GetConf('labs.server-use-url-rewrite', false);			
-			$sUrl = '?/Min/Download/';
-			if ($bUseUrlRewrite)
-			{
-				$sUrl = '/download/';
-			}
-			
-			$sUrlRewriteBase = (string) \CApi::GetConf('labs.server-url-rewrite-base', '');
-			if (!empty($sUrlRewriteBase))
-			{
-				$sUrlRewriteBase = '<base href="'.$sUrlRewriteBase.'" />';
-			}
-		
-			return array(
-				'Template' => 'templates/FilesPub.html',
-				'{{Url}}' => $sUrl.$mData['__hash__'], 
-				'{{FileName}}' => $mData['Name'],
-				'{{FileSize}}' => \api_Utils::GetFriendlySize($mData['Size']),
-				'{{FileType}}' => \api_Utils::GetFileExtension($mData['Name']),
-				'{{BaseUrl}}' => $sUrlRewriteBase 
-			);
-		}
-		return false;
-	}
-	
 	public function MinDownload()
 	{
 		$mData = $this->getParamValue('Result', false);
@@ -3429,55 +3341,6 @@ class Actions
 		return $mResult;
 	}
 	
-	/**
-	 * @return array
-	 */
-	public function AjaxHelpdeskSettingsUpdate()
-	{
-		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
-
-		$sName = (string) $this->oHttp->GetPost('Name', $oUser->Name);
-		$sLanguage = (string) $this->oHttp->GetPost('Language', $oUser->Language);
-		//$sLanguage = $this->validateLang($sLanguage);
-
-		$sDateFormat = (string) $this->oHttp->GetPost('DateFormat', $oUser->DateFormat);
-		$iTimeFormat = (int) $this->oHttp->GetPost('TimeFormat', $oUser->TimeFormat);
-
-		$oUser->Name = trim($sName);
-		$oUser->Language = trim($sLanguage);
-		$oUser->DateFormat = $sDateFormat;
-		$oUser->TimeFormat = $iTimeFormat;
-		
-		return $this->DefaultResponse($oAccount, __FUNCTION__,
-			$this->ApiHelpdesk()->updateUser($oUser));
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxHelpdeskUserPasswordUpdate()
-	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
-
-		$sCurrentPassword = (string) $this->oHttp->GetPost('CurrentPassword', '');
-		$sNewPassword = (string) $this->oHttp->GetPost('NewPassword', '');
-
-		$bResult = false;
-		if ($oUser && $oUser->validatePassword($sCurrentPassword) && 0 < strlen($sNewPassword))
-		{
-			$oUser->setPassword($sNewPassword);
-			if (!$this->ApiHelpdesk()->updateUser($oUser))
-			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotChangePassword);
-			}
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
-	}
-
 	public function AjaxSocialRegister()
 	{
 		$sTenantHash = trim($this->getParamValue('TenantHash', ''));

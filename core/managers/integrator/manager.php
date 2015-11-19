@@ -1649,8 +1649,7 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$aAppData['FileStoragePubHash'] = $sFileStoragePubHash;
 
-			$oMin = \CApi::GetCoreManager('min');
-			$mMin = $oMin->getMinByHash($sFileStoragePubHash);
+			$mMin = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sFileStoragePubHash));
 
 			$aAppData['FileStoragePubParams'] = array();
 			if (!empty($mMin['__hash__']))

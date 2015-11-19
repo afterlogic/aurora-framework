@@ -21,10 +21,9 @@ class FilesModule extends AApiModule
 		}
 		
 		$sHash = (string) $this->getParamValue('TenantHash', '');
-		$oMin = \CApi::GetCoreManager('min');
 		$oApiUsers = \CApi::GetCoreManager('users');
 
-		$mMin = $oMin->getMinByHash($sHash);
+		$mMin = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sHash));
 		$oAccount = null;
 		if (!empty($mMin['__hash__']))
 		{
@@ -199,12 +198,10 @@ class FilesModule extends AApiModule
 		$oAccount = null;
 		$oResult = array();
 
-		$oMin = \CApi::GetCoreManager('min');
-
 		$sHash = $this->getParamValue('Hash');
 		$sPath = $this->getParamValue('Path', '');
 		
-		$mMin = $oMin->getMinByHash($sHash);
+		$mMin = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sHash));
 		if (!empty($mMin['__hash__']))
 		{
 			$oApiUsers = \CApi::GetCoreManager('users');
@@ -369,7 +366,7 @@ class FilesModule extends AApiModule
 			if (!$bFolderIntoItself)
 			{
 				$sNewName = $this->oApiFilesManager->getNonExistingFileName($oAccount, $sToType, $sToPath, $aItem['Name']);
-				$oResult = $this->oApiFilesManager>move($oAccount, $sFromType, $sToType, $sFromPath, $sToPath, $aItem['Name'], $sNewName);
+				$oResult = $this->oApiFilesManager->move($oAccount, $sFromType, $sToType, $sFromPath, $sToPath, $aItem['Name'], $sNewName);
 			}
 		}
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oResult);
@@ -523,43 +520,96 @@ class FilesModule extends AApiModule
 	{
 		$sResult = '';
 		
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		$sFilesPub = \MailSo\Base\Http::NewInstance()->GetQuery('files-pub');
+		$mData = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sFilesPub));
 		
-		if ($oApiIntegrator)
+		if (is_array($mData) && isset($mData['IsFolder']) && $mData['IsFolder'])
 		{
-			@\header('Content-Type: text/html; charset=utf-8', true);
-			
-			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox'))
+			$oApiIntegrator = \CApi::GetCoreManager('integrator');
+
+			if ($oApiIntegrator)
 			{
-				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
+				$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
+				if (is_string($sResult))
+				{
+					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+					if (0 < \strlen($sFrameOptions))
+					{
+						@\header('X-Frame-Options: '.$sFrameOptions);
+					}
+
+					$sResult = strtr($sResult, array(
+						'{{AppVersion}}' => PSEVEN_APP_VERSION,
+						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', '', $sFilesPub),
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', '', $sFilesPub)
+					));
+				}
 			}
-			
-			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl'])))
+		}
+		else if ($mData && isset($mData['__hash__'], $mData['Name'], $mData['Size']))
+		{
+			$sUrl = (bool) \CApi::GetConf('labs.server-use-url-rewrite', false) ? '/download/' : '?/Min/Download/';
+
+			$sUrlRewriteBase = (string) \CApi::GetConf('labs.server-url-rewrite-base', '');
+			if (!empty($sUrlRewriteBase))
 			{
-				setcookie('aft-cache-ctrl', '', time() - 3600);
-				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
-				exit();
+				$sUrlRewriteBase = '<base href="'.$sUrlRewriteBase.'" />';
 			}
-			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
+
+			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/FilesPub.html');
 			if (is_string($sResult))
 			{
-				$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-				if (0 < \strlen($sFrameOptions))
-				{
-					@\header('X-Frame-Options: '.$sFrameOptions);
-				}
-
 				$sResult = strtr($sResult, array(
-					'{{AppVersion}}' => PSEVEN_APP_VERSION,
-					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', '', \MailSo\Base\Http::NewInstance()->GetQuery('files-pub')),
-					'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', '', \MailSo\Base\Http::NewInstance()->GetQuery('files-pub'))
+					'{{Url}}' => $sUrl.$mData['__hash__'], 
+					'{{FileName}}' => $mData['Name'],
+					'{{FileSize}}' => \api_Utils::GetFriendlySize($mData['Size']),
+					'{{FileType}}' => \api_Utils::GetFileExtension($mData['Name']),
+					'{{BaseUrl}}' => $sUrlRewriteBase 
 				));
+			}
+			else
+			{
+				\CApi::Log('Empty template.', \ELogLevel::Error);
 			}
 		}
 
 		return $sResult;
 	}
+	
+	/**
+	 * @return array
+	 */
+	public function MinShare()
+	{
+		$mData = $this->getParamValue('Result', false);
+
+		if ($mData && isset($mData['__hash__'], $mData['Name'], $mData['Size']))
+		{
+			$bUseUrlRewrite = (bool) \CApi::GetConf('labs.server-use-url-rewrite', false);			
+			$sUrl = '?/Min/Download/';
+			if ($bUseUrlRewrite)
+			{
+				$sUrl = '/download/';
+			}
+			
+			$sUrlRewriteBase = (string) \CApi::GetConf('labs.server-url-rewrite-base', '');
+			if (!empty($sUrlRewriteBase))
+			{
+				$sUrlRewriteBase = '<base href="'.$sUrlRewriteBase.'" />';
+			}
+		
+			return array(
+				'Template' => 'templates/FilesPub.html',
+				'{{Url}}' => $sUrl.$mData['__hash__'], 
+				'{{FileName}}' => $mData['Name'],
+				'{{FileSize}}' => \api_Utils::GetFriendlySize($mData['Size']),
+				'{{FileType}}' => \api_Utils::GetFileExtension($mData['Name']),
+				'{{BaseUrl}}' => $sUrlRewriteBase 
+			);
+		}
+		return false;
+	}	
 
 }
 
