@@ -89,13 +89,13 @@ function CFilesView(bPopup)
 	}, this);
 
 	this.filesCollection = ko.computed(function () {
-		var files = _.union(this.files(), this.getUploadingFiles());
+		var aFiles = _.union(this.files(), this.getUploadingFiles());
 
-		files.sort(function(left, right) { 
+		aFiles.sort(function(left, right) { 
 			return left.fileName() === right.fileName() ? 0 : (left.fileName() < right.fileName() ? -1 : 1); 
 		});
 		
-		return files;
+		return aFiles;
 	}, this);
 	
 	this.collection = ko.computed(function () {

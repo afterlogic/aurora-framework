@@ -13,7 +13,7 @@
 	event: isPopupItem() ? null : { 'dragstart': eventDragStart },
 	draggable: !isPopupItem() && allowDrag(),
 	draggablePlace: !isPopupItem() && allowDrag() ? $parent.dragAndDropHelperBinded : null,
-	draggableDragStartCallback: function() {console.log(!isPopupItem() && allowDrag()); if (!isPopupItem() && allowDrag()) {console.log($root.dragover); $root.dragover(true);}},
+	draggableDragStartCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(true);}},
 	draggableDragStopCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(false);}}
 ">
 
@@ -24,7 +24,7 @@
 	</span>
 	<!-- /ko -->
 
-	<span class="item_content ui-droppable">
+	<span class="item_content ui-droppable dragHandle">
 
 		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: 'COMPOSE/UPLOAD_CANCEL'"></span>
 

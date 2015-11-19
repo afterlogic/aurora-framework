@@ -9,7 +9,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	App = require('core/js/App.js'),
+	Browser = require('core/js/Browser.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
 	CDateModel = require('core/js/models/CDateModel.js')
@@ -47,13 +47,13 @@ function CFileModel()
 				sEmbedType = 'YouTube';
 				break;
 			case Enums.FileStorageLinkType.Vimeo:
-				if (!App.browser.ie || App.browser.ie11)
+				if (!Browser.ie || Browser.ie11)
 				{
 					sEmbedType = 'Vimeo';
 				}
 				break;
 			case Enums.FileStorageLinkType.SoundCloud:
-				if (!App.browser.ie || App.browser.ie10AndAbove)
+				if (!Browser.ie || Browser.ie10AndAbove)
 				{
 					sEmbedType = 'SoundCloud';
 				}
