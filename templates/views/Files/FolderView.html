@@ -1,12 +1,11 @@
-<div class="item dragHandle folder" draggable="true" 
+<div class="item folder" 
 	data-bind="
-		event: ($parent.isPopup) ? null : { 'dragstart': eventDragStart },
-		draggablePlace: $parent.dragAndDropHelperBinded,
+		draggablePlace: !$parent.isPopup ? $parent.dragAndDropHelperBinded : null,
 		draggableDragStartCallback: function() {if (!$parent.isPopup) $root.dragover(true);},
 		draggableDragStopCallback: function() {if (!$parent.isPopup) $root.dragover(false);},
 		css: {'selected': selected, 'checked': checked, 'deleted': deleted, 'shared': shared}"
 >
-	<div class="item_content ui-droppable" data-bind="css: {'recivedAnim': recivedAnim()}, droppable: {valueFunc: function (oEvent, oUi) {$root.filesDrop($data, oEvent, oUi);}}">
+	<div class="item_content ui-droppable dragHandle" data-bind="css: {'recivedAnim': recivedAnim()}, droppable: {valueFunc: function (oEvent, oUi) {$root.filesDrop($data, oEvent, oUi);}}">
 		<div class="image">
 			<span class="icon animGoal"></span>
 		</div>

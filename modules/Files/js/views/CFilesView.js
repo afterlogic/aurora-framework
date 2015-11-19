@@ -478,21 +478,25 @@ CFilesView.prototype.filesDrop = function (oFolder, oEvent, oUi)
 	{
 		return;
 	}
-
+	
 	if (oFolder && oEvent)
 	{
 		var
 			self = this,
 			sFromPath = '',
 			bFolderIntoItself = false,
-			sToPath = oFolder.fullPath(),
+			sToPath = oFolder instanceof CFolderModel ? oFolder.fullPath() : '',
 			aChecked = [],
-			aItems = []
+			aItems = [],
+			sStorageType = oFolder instanceof CFolderModel ? oFolder.storageType() : oFolder.type
 		;
 		
-		if (this.path() !== sToPath && this.storageType() === oFolder.storageType() || this.storageType() !== oFolder.storageType())
+		if (this.path() !== sToPath && this.storageType() === sStorageType || this.storageType() !== sStorageType)
 		{
-			oFolder.recivedAnim(true);
+			if (oFolder instanceof CFolderModel)
+			{
+				oFolder.recivedAnim(true);
+			}
 			Utils.uiDropHelperAnim(oEvent, oUi);
 
 			aChecked = this.selector.listCheckedAndSelected();
@@ -523,7 +527,7 @@ CFilesView.prototype.filesDrop = function (oFolder, oEvent, oUi)
 			{
 				Ajax.send(oEvent.ctrlKey ? 'Copy' : 'Move', {
 					'FromType': this.storageType(),
-					'ToType': oFolder.storageType(),
+					'ToType': sStorageType,
 					'FromPath': sFromPath,
 					'ToPath': sToPath,
 					'Files': JSON.stringify(aItems)
