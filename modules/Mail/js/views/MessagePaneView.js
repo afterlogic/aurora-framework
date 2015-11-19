@@ -116,15 +116,11 @@ function CMessagePaneView()
 			this.icalSubscription.dispose();
 		}
 	}, this);
-	this.vcard = ko.observable(null);
 
 	this.visiblePicturesControl = ko.observable(false);
 	this.visibleShowPicturesLink = ko.observable(false);
 	this.visibleAppointmentInfo = ko.computed(function () {
 		return this.ical() !== null;
-	}, this);
-	this.visibleVcardInfo = ko.computed(function () {
-		return this.vcard() !== null;
 	}, this);
 	
 	this.visibleConfirmationControl = ko.computed(function () {
@@ -194,6 +190,10 @@ function CMessagePaneView()
 	this.contentHasFocus = ko.observable(false);
 
 	this.topControllers = ko.observableArray();
+	this.bodyControllers = ko.observableArray();
+	this.controllers = ko.computed(function () {
+		return _.union(this.topControllers(), this.bodyControllers());
+	}, this);
 	
 	this.fakeHeader = ko.computed(function () {
 		var topControllersVisible = !!_.find(this.topControllers(), function (oController) {
@@ -414,7 +414,6 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 {
 	var
 		oIcal = null,
-		oVcard = null,
 		oMessage = this.currentMessage(),
 		oAccount = oMessage ? Accounts.getAccount(oMessage.accountId()) : null,
 		oReplyData = null
@@ -516,12 +515,6 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			}, this));
 			this.ical().updateAttendeeStatus(this.fromEmail());
 		}
-		oVcard = oMessage.vcard();
-		if (oVcard && App.isNewTab())
-		{
-			oVcard = this.getVcardCopy(oVcard);
-		}
-		this.vcard(oVcard);
 		
 		if (!oMessage.completelyFilled() || oMessage.trimmed())
 		{
@@ -561,7 +554,6 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.visiblePicturesControl(false);
 		this.visibleShowPicturesLink(false);
 		this.ical(null);
-		this.vcard(null);
 	}
 	
 	this.doAfterPopulatingMessage();
@@ -575,22 +567,6 @@ CMessagePaneView.prototype.updateMomentDate = function ()
 		this.midDate(oMessage.oDateModel.getMidDate());
 		this.fullDate(oMessage.oDateModel.getFullDate());
 	}
-};
-
-/**
- * @param {Object} oVcard
- * @returns {Object}
- */
-CMessagePaneView.prototype.getVcardCopy = function (oVcard)
-{
-	var oNewVcard = new CVcardModel();
-	oNewVcard.uid(oVcard.uid());
-	oNewVcard.file(oVcard.file());
-	oNewVcard.name(oVcard.name());
-	oNewVcard.email(oVcard.email());
-	oNewVcard.exists(oVcard.exists());
-	oNewVcard.isJustSaved(oVcard.isJustSaved());
-	return oNewVcard;
 };
 
 /**
@@ -1141,10 +1117,20 @@ CMessagePaneView.prototype.switchDetailsVisibility = function ()
 };
 
 /**
- * @param {object} oController
+ * @param {Object} oController
+ * @param {string} sPlace
  */
-CMessagePaneView.prototype.registerTopController = function (oController) {
-	this.topControllers.push(oController);
+CMessagePaneView.prototype.registerController = function (oController, sPlace) {
+	switch (sPlace)
+	{
+		case 'BeforeMessageHeaders':
+			this.topControllers.push(oController);
+			break
+		case 'BeforeMessageBody':
+			this.bodyControllers.push(oController);
+			break
+	}
+	
 	if ($.isFunction(oController.assignMessagePaneExtInterface))
 	{
 		oController.assignMessagePaneExtInterface(this.getExtInterface());
@@ -1180,11 +1166,12 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			sText: oMessage.text(),
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
-			iSensitivity: oMessage.sensitivity()
+			iSensitivity: oMessage.sensitivity(),
+			oRawVcard: oMessage.oRawVcard
 		} : null
 	;
 	
-	_.each(this.topControllers(), _.bind(function (oController) {
+	_.each(this.controllers(), _.bind(function (oController) {
 		if ($.isFunction(oController.doAfterPopulatingMessage))
 		{
 			oController.doAfterPopulatingMessage(oMessageProps);

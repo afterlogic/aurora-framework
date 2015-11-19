@@ -36,9 +36,9 @@ module.exports = function (oSettings) {
 				return GetComposeView();
 			}
 		},
-		registerMessagePaneTopController: function (oController) {
+		registerMessagePaneController: function (oController, sPlace) {
 			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
-			MessagePaneView.registerTopController(oController);
+			MessagePaneView.registerController(oController, sPlace);
 		},
 		registerComposeToolbarController: function (oController) {
 			var ComposeView = GetComposeView();

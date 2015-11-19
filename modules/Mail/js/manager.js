@@ -28,9 +28,9 @@ module.exports = function (oSettings) {
 			return require('modules/Mail/js/views/HeaderItemView.js');
 		},
 		prefetcher: require('modules/Mail/js/Prefetcher.js'),
-		registerMessagePaneTopController: function (oController) {
+		registerMessagePaneController: function (oController, sPlace) {
 			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
-			MessagePaneView.registerTopController(oController);
+			MessagePaneView.registerController(oController, sPlace);
 		},
 		registerComposeToolbarController: function (oController) {
 			var ComposePopup = require('modules/Mail/js/popups/ComposePopup.js');

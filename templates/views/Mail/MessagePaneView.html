@@ -242,8 +242,10 @@
 						<div class="appointment" data-bind="template: {name: 'Mail_AppointmentView', data: ical}"></div>
 					<!-- /ko -->
 
-					<!-- ko if: visibleVcardInfo -->
-						<div class="appointment" data-bind="template: {name: 'Mail_VcardAttachmentView', data: vcard}"></div>
+					<!-- ko foreach: bodyControllers -->
+						<!-- ko if: $data.ViewTemplate -->
+							<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
+						<!-- /ko -->
 					<!-- /ko -->
 
 					<div class="message_body_info" data-bind="visible: visibleNoMessageSelectedText">

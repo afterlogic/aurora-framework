@@ -222,7 +222,6 @@ function CMessageModel()
 	this.date = ko.observable('');
 	
 	this.ical = ko.observable(null);
-	this.vcard = ko.observable(null);
 	
 	this.textRaw = ko.observable('');
 	
@@ -357,7 +356,6 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 {
 	var
 		oIcal = null,
-		oVcard = null,
 		sHtml = '',
 		sPlain = ''
 	;
@@ -474,13 +472,8 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 //				oIcal.parse(oData.ICAL, Accounts.getAttendee(this.oTo.getEmails()));
 //				this.ical(oIcal);
 //			}
-//			
-//			if (oData.VCARD !== null)
-//			{
-//				oVcard = new CVcardModel();
-//				oVcard.parse(oData.VCARD);
-//				this.vcard(oVcard);
-//			}
+
+			this.oRawVcard = oData.VCARD;
 			
 			this.completelyFilled(true);
 		}
