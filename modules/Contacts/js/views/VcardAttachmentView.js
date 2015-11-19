@@ -9,9 +9,6 @@ var
 function CVcardAttachmentView()
 {
 	this.vcard = ko.observable(null);
-	this.vcard.subscribe(function () {
-		console.log('this.vcard', this.vcard());
-	}, this);
 }
 
 CVcardAttachmentView.prototype.ViewTemplate = 'Contacts_VcardAttachmentView';
