@@ -23,7 +23,7 @@ class FilesModule extends AApiModule
 		$sHash = (string) $this->getParamValue('TenantHash', '');
 		$oApiUsers = \CApi::GetCoreManager('users');
 
-		$mMin = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sHash));
+		$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sHash));
 		$oAccount = null;
 		if (!empty($mMin['__hash__']))
 		{
@@ -201,7 +201,7 @@ class FilesModule extends AApiModule
 		$sHash = $this->getParamValue('Hash');
 		$sPath = $this->getParamValue('Path', '');
 		
-		$mMin = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sHash));
+		$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sHash));
 		if (!empty($mMin['__hash__']))
 		{
 			$oApiUsers = \CApi::GetCoreManager('users');
@@ -521,7 +521,7 @@ class FilesModule extends AApiModule
 		$sResult = '';
 		
 		$sFilesPub = \MailSo\Base\Http::NewInstance()->GetQuery('files-pub');
-		$mData = \CApi::ExecuteModuleMethod('Min', 'GetMinByHash', array('Hash' => $sFilesPub));
+		$mData = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sFilesPub));
 		
 		if (is_array($mData) && isset($mData['IsFolder']) && $mData['IsFolder'])
 		{

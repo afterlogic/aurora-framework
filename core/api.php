@@ -200,8 +200,9 @@ class CApi
 		return CApi::$oManager;
 	}
 
-	public static function ExecuteModuleMethod($sModuleName, $sMethod, $aParameters)
+	public static function ExecuteMethod($sMethod, $aParameters)
 	{
+		list($sModuleName, $sMethod) = explode('::', $sMethod);
 		return CApi::GetModuleManager()->ExecuteMethod($sModuleName, $sMethod, $aParameters);
 	}
 

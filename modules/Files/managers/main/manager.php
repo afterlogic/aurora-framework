@@ -9,8 +9,6 @@
  */
 class CApiFilesMainManager extends AApiManagerWithStorage
 {
-	protected $oApiMinManager = null;
-	
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
@@ -21,19 +19,6 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 		$this->incClass('item');
 	}
 
-	/**
-	 * 
-	 * @return CApiMinManager
-	 */
-	public function getApiMinManager()
-	{
-		if ($this->oApiMinManager === null)
-		{
-			$this->oApiMinManager = \CApi::GetCoreManager('min');
-		}
-		return $this->oApiMinManager;
-	}
-	
 	/**
 	 * Checks if file exists. 
 	 * 
@@ -283,11 +268,11 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 			$bResult = $this->oStorage->delete($oAccount, $iType, $sPath, $sName);
 			if ($oAccount && $oAccount instanceof CAccount)
 			{
-				$oMin = $this->getApiMinManager();
-				if ($oMin)
-				{
-					$oMin->deleteMinByID($this->oStorage->generateShareHash($oAccount, $iType, $sPath, $sName));
-				}
+				\CApi::ExecuteMethod('Min::DeleteMinByID', 
+						array(
+							'ID' => $this->oStorage->generateShareHash($oAccount, $iType, $sPath, $sName)
+						)
+				);
 			}
 		}
 		
@@ -361,13 +346,13 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 				$sID = $this->oStorage->generateShareHash($oAccount, $iType, $sPath, $sName);
 				$sNewID = $this->oStorage->generateShareHash($oAccount, $iType, $sPath, $sNewName);
 
-				$mData = \CApi::ExecuteModuleMethod('Min', 'GetMinByID', array('ID' => $sID));
+				$mData = \CApi::ExecuteMethod('Min::GetMinByID', array('ID' => $sID));
 				if ($mData && $oAccount)
 				{
 					$aData = $this->generateMinArray($oAccount, $iType, $sPath, $sNewName, $mData['Size']);
 					if ($aData)
 					{
-						\CApi::ExecuteModuleMethod('Min', 'UpdateMinByID', 
+						\CApi::ExecuteMethod('Min::UpdateMinByID', 
 								array(
 									'ID' => $sID,
 									'Data' => $aData,
@@ -409,18 +394,18 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 				$sID = $this->oStorage->generateShareHash($oAccount, $iFromType, $sFromPath, $sName);
 				$sNewID = $this->oStorage->generateShareHash($oAccount, $iToType, $sToPath, $sNewName);
 
-				$mData = \CApi::ExecuteModuleMethod('Min', 'GetMinByID', array('ID' => $sID));
+				$mData = \CApi::ExecuteMethod('Min::GetMinByID', array('ID' => $sID));
 				if ($mData)
 				{
 					$aData = $this->generateMinArray($oAccount, $iToType, $sToPath, $sNewName, $mData['Size']);
 					if ($aData)
 					{
-						\CApi::ExecuteModuleMethod('Min', 'UpdateMinByID', 
-								array(
-									'ID' => $sID,
-									'Data' => $aData,
-									'NewID' => $sNewID,
-								)
+						\CApi::ExecuteMethod('Min::UpdateMinByID', 
+							array(
+								'ID' => $sID,
+								'Data' => $aData,
+								'NewID' => $sNewID,
+							)
 						);
 					}
 				}
