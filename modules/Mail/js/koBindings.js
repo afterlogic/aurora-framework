@@ -10,7 +10,7 @@ var
 
 if ($.isFunction(ComposeMessageToAddressesFunc))
 {
-	ko.bindingHandlers.sendMailTo = {
+	ko.bindingHandlers.makeLinkComposeMailTo = {
 		'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
 			var
 				$Element = $(oElement),

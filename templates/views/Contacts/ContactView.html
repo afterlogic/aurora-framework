@@ -9,7 +9,7 @@
 			<span class="icon"></span>
 			<span class="text" data-i18n="CONTACTS/BUTTON_SEND_THIS_CONTACT" data-bind="i18n: 'text'"></span>
 		</span>
-		<a class="item new_message command" href="javascript: void(0)" data-bind="sendMailTo: getFullEmail()" style="display: none;">
+		<a class="item new_message command" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail()" style="display: none;">
 			<span class="icon"></span>
 			<span class="text" data-i18n="CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT" data-bind="i18n: 'text'"></span>
 		</a>
@@ -24,7 +24,7 @@
 			<a class="item mail_to" href="javascript: void(0)" data-bind="visible: hasEmails() && allowSendEmails(), click: sendThisContact">
 				<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/BUTTON_SEND_THIS_CONTACT"></span>
 			</a>
-			<a class="item mail_to" href="javascript: void(0)" data-bind="sendMailTo: getFullEmail()" style="display: none;">
+			<a class="item mail_to" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail()" style="display: none;">
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT"></span>
 			</a>
@@ -32,7 +32,7 @@
 	</div>
 	<!-- /ko -->
 	<h2 class="title" data-bind="visibility: '' !== displayName(), text: displayName()"></h2>
-	<span class="item mail_to_title" href="javascript: void(0)" data-bind="sendMailTo: getFullEmail(), customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT' : ''">
+	<span class="item mail_to_title" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail(), customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT' : ''">
 		<span class="title email" data-bind="text: email()"></span>
 	</span>
 </div>

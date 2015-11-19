@@ -11,7 +11,7 @@
 					</span>
 				</div>
 				<div class="row" data-bind="visible: email()">
-					<span data-bind="text: email, sendMailTo: getFullEmail()"></span>
+					<span data-bind="text: email, makeLinkComposeMailTo: getFullEmail()"></span>
 				</div>
 				<div class="row" data-bind="visible: firstName() || lastName()">
 					<span class="value">
@@ -57,7 +57,7 @@
 				</div>
 				<div class="row" data-bind="visible: (personalEmail() && personalEmail() !== email())">
 					<span class="value">
-						<span data-bind="text: personalEmail, sendMailTo: getFullEmail(personalEmail())"></span>
+						<span data-bind="text: personalEmail, makeLinkComposeMailTo: getFullEmail(personalEmail())"></span>
 					</span>
 				</div>
 				
@@ -86,7 +86,7 @@
 				
 				<div class="row" data-bind="visible: (businessEmail() && businessEmail() !== email())">
 					<span class="value">
-						<span data-bind="text: businessEmail, sendMailTo: getFullEmail(businessEmail())"></span>
+						<span data-bind="text: businessEmail, makeLinkComposeMailTo: getFullEmail(businessEmail())"></span>
 					</span>
 				</div>
 				<div class="row" data-bind="visible: businessCompany()">
@@ -147,7 +147,7 @@
 				</div>
 				<div class="row" data-bind="visible: (otherEmail() && otherEmail() !== email())">
 					<span class="value">
-						<span data-bind="text: otherEmail, sendMailTo: getFullEmail(otherEmail())"></span>
+						<span data-bind="text: otherEmail, makeLinkComposeMailTo: getFullEmail(otherEmail())"></span>
 					</span>
 				</div>
 				
@@ -160,7 +160,7 @@
 </div>
 <div class="buttons buttons_position" data-bind="visible: $root.bAllowComposeMessageToAddresses || $root.bAllowSearchMessagesInCurrentFolder && hasEmails()">
 	<a class="link" href="javascript: void(0)" data-i18n="CONTACTS/LINK_SEND_MAIL" 
-	   data-bind="i18n: 'text', sendMailTo: getFullEmail()" style="display: none;"></a>
+	   data-bind="i18n: 'text', makeLinkComposeMailTo: getFullEmail()" style="display: none;"></a>
 	<span class="link" data-i18n="CONTACTS/LINK_VIEW_MAILS" data-bind="i18n: 'text',
 		click: function () {$root.searchMessagesInCurrentFolder('email:' + getEmailsString());},
 		visible: $root.bAllowSearchMessagesInCurrentFolder && hasEmails()"></span>
