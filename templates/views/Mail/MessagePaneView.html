@@ -238,10 +238,6 @@
 			<div class="message" data-bind="customScrollbar: {x: true, y: true, 'reset': displayedMessageUid()}, css: {'has_bodytext': hasBodyText, 'has_attachments': hasNotInlineAttachments}">
 				<div class="message_content scroll-inner" data-bind="hasfocus: contentHasFocus">
 
-					<!-- ko if: visibleAppointmentInfo -->
-						<div class="appointment" data-bind="template: {name: 'Mail_AppointmentView', data: ical}"></div>
-					<!-- /ko -->
-
 					<!-- ko foreach: bodyControllers -->
 						<!-- ko if: $data.ViewTemplate -->
 							<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->

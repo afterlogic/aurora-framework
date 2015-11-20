@@ -100,19 +100,6 @@ CCalendarCache.prototype.requestCalendarList = function ()
 };
 
 /**
- * @param {string} sUid
- */
-CCalendarCache.prototype.markIcalNonexistent = function (sUid)
-{
-	_.each(this.icalAttachments, function (oIcal) {
-		if (sUid === oIcal.uid())
-		{
-			oIcal.onEventDelete();
-		}
-	});
-};
-
-/**
  * @param {string} sFile
  * @param {string} sType
  * @param {string} sCancelDecision
@@ -138,12 +125,25 @@ CCalendarCache.prototype.markIcalTypeByFile = function (sFile, sType, sCancelDec
 /**
  * @param {string} sUid
  */
+CCalendarCache.prototype.markIcalNonexistent = function (sUid)
+{
+	_.each(this.icalAttachments, function (oIcal) {
+		if (sUid === oIcal.uid())
+		{
+			oIcal.markNeededAction();
+		}
+	});
+};
+
+/**
+ * @param {string} sUid
+ */
 CCalendarCache.prototype.markIcalTentative = function (sUid)
 {
 	_.each(this.icalAttachments, function (oIcal) {
 		if (sUid === oIcal.uid())
 		{
-			oIcal.onEventTentative();
+			oIcal.markTentative();
 		}
 	});
 };
@@ -156,7 +156,7 @@ CCalendarCache.prototype.markIcalAccepted = function (sUid)
 	_.each(this.icalAttachments, function (oIcal) {
 		if (sUid === oIcal.uid())
 		{
-			oIcal.onEventAccept();
+			oIcal.markAccepted();
 		}
 	});
 };

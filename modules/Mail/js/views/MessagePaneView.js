@@ -108,20 +108,16 @@ function CMessagePaneView()
 	this.saveAsPdfCommand = Utils.createCommand(this, this.executeSaveAsPdf, this.isEnableSaveAsPdf);
 	this.moreCommand = Utils.createCommand(this, null, this.isCurrentMessageLoaded);
 
-	this.ical = ko.observable(null);
-	this.icalSubscription = this.ical.subscribe(function () {
-		if (this.ical() !== null)
-		{
-			App.CalendarCache.firstRequestCalendarList();
-			this.icalSubscription.dispose();
-		}
-	}, this);
+//	this.icalSubscription = this.ical.subscribe(function () {
+//		if (this.ical() !== null)
+//		{
+//			App.CalendarCache.firstRequestCalendarList();
+//			this.icalSubscription.dispose();
+//		}
+//	}, this);
 
 	this.visiblePicturesControl = ko.observable(false);
 	this.visibleShowPicturesLink = ko.observable(false);
-	this.visibleAppointmentInfo = ko.computed(function () {
-		return this.ical() !== null;
-	}, this);
 	
 	this.visibleConfirmationControl = ko.computed(function () {
 		return (this.currentMessage() && this.currentMessage().readingConfirmation() !== '');
@@ -413,7 +409,6 @@ CMessagePaneView.prototype.passReplyDataToNewTab = function (sUniq)
 CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 {
 	var
-		oIcal = null,
 		oMessage = this.currentMessage(),
 		oAccount = oMessage ? Accounts.getAccount(oMessage.accountId()) : null,
 		oReplyData = null
@@ -495,26 +490,26 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 
 		// animation of buttons turns on with delay
 		// so it does not trigger when placing initial values
-		if (this.ical() !== null)
-		{
-			this.ical().animation(false);
-		}
-		oIcal = oMessage.ical();
-		if (oIcal && App.isNewTab())
-		{
-			oIcal = this.getIcalCopy(oIcal);
-		}
-		this.ical(oIcal);
-		if (this.ical() !== null)
-		{
-			_.defer(_.bind(function () {
-				if (this.ical() !== null)
-				{
-					this.ical().animation(true);
-				}
-			}, this));
-			this.ical().updateAttendeeStatus(this.fromEmail());
-		}
+//		if (this.ical() !== null)
+//		{
+//			this.ical().animation(false);
+//		}
+//		oIcal = oMessage.ical();
+//		if (oIcal && App.isNewTab())
+//		{
+//			oIcal = this.getIcalCopy(oIcal);
+//		}
+//		this.ical(oIcal);
+//		if (this.ical() !== null)
+//		{
+//			_.defer(_.bind(function () {
+//				if (this.ical() !== null)
+//				{
+//					this.ical().animation(true);
+//				}
+//			}, this));
+//			this.ical().updateAttendeeStatus(this.fromEmail());
+//		}
 		
 		if (!oMessage.completelyFilled() || oMessage.trimmed())
 		{
@@ -553,7 +548,6 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		this.attachments([]);
 		this.visiblePicturesControl(false);
 		this.visibleShowPicturesLink(false);
-		this.ical(null);
 	}
 	
 	this.doAfterPopulatingMessage();
@@ -567,30 +561,6 @@ CMessagePaneView.prototype.updateMomentDate = function ()
 		this.midDate(oMessage.oDateModel.getMidDate());
 		this.fullDate(oMessage.oDateModel.getFullDate());
 	}
-};
-
-/**
- * @param {Object} oIcal
- * @returns {Object}
- */
-CMessagePaneView.prototype.getIcalCopy = function (oIcal)
-{
-	var oNewIcal = new CIcalModel();
-	oNewIcal.uid(oIcal.uid());
-	oNewIcal.file(oIcal.file());
-	oNewIcal.attendee(oIcal.attendee());
-	oNewIcal.type(oIcal.type());
-	oNewIcal.cancelDecision(oIcal.cancelDecision());
-	oNewIcal.replyDecision(oIcal.replyDecision());
-	oNewIcal.isJustSaved(oIcal.isJustSaved());
-	oNewIcal.location(oIcal.location());
-	oNewIcal.description(oIcal.description());
-	oNewIcal.when(oIcal.when());
-	oNewIcal.calendarId(oIcal.calendarId());
-	oNewIcal.selectedCalendarId(oIcal.selectedCalendarId());
-	oNewIcal.calendars(oIcal.calendars());
-	oNewIcal.animation(oIcal.animation());
-	return oNewIcal;
 };
 
 CMessagePaneView.prototype.setMessageBody = function ()
@@ -1161,13 +1131,15 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 		oMessage = this.currentMessage(),
 		bLoaded = oMessage && this.isCurrentMessageLoaded(),
 		oMessageProps = bLoaded ? {
+			aToEmails: oMessage.oTo.getEmails(),
 			bPlain: oMessage.isPlain(),
 			sRawText: oMessage.textRaw(),
 			sText: oMessage.text(),
 			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
 			iSensitivity: oMessage.sensitivity(),
-			oRawVcard: oMessage.oRawVcard
+			oRawVcard: oMessage.oRawVcard,
+			oRawIcal: oMessage.oRawIcal
 		} : null
 	;
 	

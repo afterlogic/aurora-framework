@@ -221,8 +221,6 @@ function CMessageModel()
 
 	this.date = ko.observable('');
 	
-	this.ical = ko.observable(null);
-	
 	this.textRaw = ko.observable('');
 	
 	this.domMessageForPrint = ko.observable(null);
@@ -355,7 +353,6 @@ CMessageModel.prototype.markAsThreadPart = function (iShowThrottle, sParentUid)
 CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrustThreadInfo)
 {
 	var
-		oIcal = null,
 		sHtml = '',
 		sPlain = ''
 	;
@@ -466,13 +463,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			this.safety(oData.Safety);
 			this.sourceHeaders(oData.Headers);
 			
-//			if (oData.ICAL !== null)
-//			{
-//				oIcal = new CIcalModel();
-//				oIcal.parse(oData.ICAL, Accounts.getAttendee(this.oTo.getEmails()));
-//				this.ical(oIcal);
-//			}
-
+			this.oRawIcal = oData.ICAL;
 			this.oRawVcard = oData.VCARD;
 			
 			this.completelyFilled(true);

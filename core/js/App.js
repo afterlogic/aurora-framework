@@ -3,7 +3,6 @@
 var
 	_ = require('underscore'),
 	ko = require('knockout'),
-	$ = require('jquery'),
 	Modernizr = require('modernizr'),
 	
 	Utils = require('core/js/utils/Common.js'),
@@ -109,8 +108,8 @@ CApp.prototype.init = function ()
 		
 		this.getAttendee = function (aAttendees) {
 			return Accounts.getAttendee(
-				_.map(aAttendees, function (oAttendee) {
-					return oAttendee.email;
+				_.map(aAttendees, function (mAttendee) {
+					return Utils.isNonEmptyString(mAttendee) ? mAttendee : mAttendee.email;
 				}, this)
 			);
 		};

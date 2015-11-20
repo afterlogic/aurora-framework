@@ -8,6 +8,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		start: function (ModulesManager) {
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
+		},
 		screens: {
 			'main': function () {
 				return require('modules/Calendar/js/views/CalendarView.js');
