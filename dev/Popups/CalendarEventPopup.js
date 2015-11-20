@@ -471,7 +471,7 @@ CalendarEventPopup.prototype.onSaveClick = function ()
 						weekNum: null
 					};
 				}
-				else if (iPeriod === Enums.CalendarRepeatPeriod.Monthly && iAlways === Enums.CalendarAlways.Disable)
+				else if (iPeriod === Enums.CalendarRepeatPeriod.Monthly)
 				{
 					oEventData.rrule = {
 						byDays: [],
@@ -483,7 +483,7 @@ CalendarEventPopup.prototype.onSaveClick = function ()
 						weekNum: null
 					};
 				}
-				else if (iPeriod === Enums.CalendarRepeatPeriod.Yearly && iAlways === Enums.CalendarAlways.Disable)
+				else if (iPeriod === Enums.CalendarRepeatPeriod.Yearly)
 				{
 					oEventData.rrule = {
 						byDays: [],
@@ -1336,11 +1336,7 @@ CalendarEventPopup.prototype.setAppointmentAction = function (sDecision)
  */
 CalendarEventPopup.prototype.editableSwitch = function (bShared, bEditable, bMyEvent)
 {
-    this.isEditable(
-			(bShared && bEditable && bMyEvent) ||
-				(!bShared && bEditable && bMyEvent) ||
-					(bShared && !bEditable && !bMyEvent)
-	);
+    this.isEditable(bShared && bEditable || bMyEvent);
 	this.isEditableReminders(bEditable);
 };
 
