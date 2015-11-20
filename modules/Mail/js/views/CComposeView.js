@@ -1,21 +1,20 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	App = require('core/js/App.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
-	Api = require('core/js/Api.js'),
 	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
 	CJua = require('core/js/CJua.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
@@ -39,7 +38,6 @@ var
 	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
 	
 	bMobileDevice = false,
-	bMobileApp = false,
 	$html = $('html')
 ;
 
@@ -349,8 +347,8 @@ function CComposeView()
 	this.messageFields = ko.observable(null);
 	this.bottomPanel = ko.observable(null);
 
-	this.mobileApp = bMobileApp;
-	this.showHotkeysHints = !bMobileDevice && !bMobileApp;
+	this.mobileApp = App.isMobile();
+	this.showHotkeysHints = !bMobileDevice && !App.isMobile();
 
 	this.aHotkeys = [
 		{ value: 'Ctrl+Enter', action: TextUtils.i18n('COMPOSE/HOTKEY_SEND') },
@@ -1810,7 +1808,7 @@ CComposeView.prototype.registerOwnToolbarControllers = function ()
 CComposeView.prototype.registerToolbarController = function (oController)
 {
 	var
-		bAllowRegister = this.mobileApp ? (oController.bOnlyMobile || oController.bAllowMobile) : (!oController.bOnlyMobile),
+		bAllowRegister = App.isMobile() ? (oController.bOnlyMobile || oController.bAllowMobile) : (!oController.bOnlyMobile),
 		iLastIndex = Settings.ComposeToolbarOrder.length
 	;
 	

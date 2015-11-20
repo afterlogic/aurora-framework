@@ -6,6 +6,8 @@ module.exports = function (oSettings) {
 	var
 		_ = require('underscore'),
 		
+		App = require('core/js/App.js'),
+		
 		Settings = require('modules/Mail/js/Settings.js'),
 		Cache = null
 	;
@@ -38,9 +40,8 @@ module.exports = function (oSettings) {
 		},
 		getComposeMessageToAddresses: function () {
 			var
-				bMobileApp = false,
 				bAllowSendMail = true,
-				ComposeUtils = bMobileApp ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js')
+				ComposeUtils = App.isMobile() ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js')
 			;
 			
 			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;

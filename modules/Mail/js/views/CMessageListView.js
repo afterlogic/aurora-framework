@@ -2,14 +2,14 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	Browser = require('core/js/Browser.js'),
 	Screens = require('core/js/Screens.js'),
-	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
@@ -20,9 +20,7 @@ var
 	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
-	Settings  = require('modules/Mail/js/Settings.js'),
-	
-	bMobileApp = false
+	Settings  = require('modules/Mail/js/Settings.js')
 ;
 
 /**
@@ -241,7 +239,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.oPageSwitcher.currentPage.subscribe(function (iPage) {
 		var
 			sFolder = this.folderList().currentFolderFullName(),
-			sUid = !bMobileApp && this.currentMessage() ? this.currentMessage().uid() : '',
+			sUid = !App.isMobile() && this.currentMessage() ? this.currentMessage().uid() : '',
 			sSearch = this.search()
 		;
 		
@@ -649,14 +647,14 @@ CMessageListView.prototype.routeForMessage = function (oMessage)
 		
 		if (sUid !== '')
 		{
-			if (bMobileApp && oFolder.type() === Enums.FolderTypes.Drafts)
+			if (App.isMobile() && oFolder.type() === Enums.FolderTypes.Drafts)
 			{
 				Routing.setHash(LinksUtils.getComposeFromMessage('drafts', oMessage.folder(), oMessage.uid()));
 			}
 			else
 			{
 				this.changeRoutingForMessageList(sFolder, iPage, sUid, sSearch, this.filters());
-				if (bMobileApp && MailCache.currentMessage() && sUid === MailCache.currentMessage().uid())
+				if (App.isMobile() && MailCache.currentMessage() && sUid === MailCache.currentMessage().uid())
 				{
 					MailCache.currentMessage.valueHasMutated();
 				}

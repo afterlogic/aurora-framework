@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 			
 	AppData = window.pSevenAppData,
 	
@@ -128,5 +128,7 @@ module.exports = {
 	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
 	IdleSessionTimeout: 0,
 	TenantHash: AppData.TenantHash,
-	AutoRefreshIntervalMinutes: 1
+	AutoRefreshIntervalMinutes: 1,
+	AllowMobile: AppData.AllowMobile,
+	IsMobile: AppData.IsMobile
 };

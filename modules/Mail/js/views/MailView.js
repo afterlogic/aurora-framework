@@ -2,11 +2,12 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
@@ -18,9 +19,7 @@ var
 	Settings = require('modules/Mail/js/Settings.js'),
 	CFolderListView = require('modules/Mail/js/views/CFolderListView.js'),
 	CMessageListView = require('modules/Mail/js/views/CMessageListView.js'),
-	MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js'),
-	
-	bMobileApp = false
+	MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js')
 ;
 
 /**
@@ -103,7 +102,7 @@ function CMailView()
 
 	this.jqPanelHelper = null;
 	
-	this.mobileApp = bMobileApp;
+	this.mobileApp = App.isMobile();
 	this.selectedPanel = ko.observable(Enums.MobilePanel.Items);
 	MailCache.currentMessage.subscribe(function () {
 		this.gotoMessagePane();
@@ -182,7 +181,7 @@ CMailView.prototype.gotoMessagePane = function ()
  */
 CMailView.prototype.changeSelectedPanel = function (iPanel)
 {
-	if (this.mobileApp)
+	if (App.isMobile())
 	{
 		if (this.selectedPanel() !== iPanel)
 		{

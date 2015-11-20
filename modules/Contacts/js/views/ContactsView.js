@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -299,7 +299,7 @@ function CContactsView()
 		});
 	}, this);
 	
-	this.mobileApp = false;
+	this.mobileApp = App.isMobile();
 	this.selectedPanel = ko.observable(Enums.MobilePanel.Items);
 	this.selectedItem.subscribe(function () {
 		
@@ -361,7 +361,7 @@ CContactsView.prototype.backToContactList = function ()
  */
 CContactsView.prototype.changeSelectedPanel = function (iPanel)
 {
-	if (this.mobileApp)
+	if (App.isMobile())
 	{
 		this.selectedPanel(iPanel);
 	}
@@ -431,7 +431,7 @@ CContactsView.prototype.executeSave = function (oData)
 				oData.edited(false);
 			}
 
-			if (oData.isNew() && !this.mobileApp)
+			if (oData.isNew() && !App.isMobile())
 			{
 				this.selectedItem(null);
 			}
@@ -1370,7 +1370,7 @@ CContactsView.prototype.onCreateGroupResponse = function (oResponse, oRequest)
 		
 		this.executeAddContactsToGroupId(Utils.pString(oResponse.Result.IdGroup), aCheckedIds);
 
-		if (!this.mobileApp)
+		if (!App.isMobile())
 		{
 			this.selectedItem(null);
 			this.selector.itemSelected(null);

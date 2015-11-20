@@ -14,15 +14,14 @@ var
 	Browser = require('core/js/Browser.js'),
 	Storage = require('core/js/Storage.js'),
 	
-	bMobileDevice = false,
-	bMobileApp = false
+	bMobileDevice = false
 ;
 
 require('core/js/splitter.js'); // necessary in mail and contacts modules, not for mobile version
 require('core/js/koBindings.js');
 require('core/js/koExtendings.js');
 
-if (!bMobileDevice && !bMobileApp)
+if (!bMobileDevice)// && !this.bMobile)
 {
 	require('core/js/CustomTooltip.js');
 	require('core/js/koBindingsNotMobile.js');
@@ -55,6 +54,7 @@ function CApp()
 	this.bAuth = window.pSevenAppData.Auth;
 	this.bPublic = false;
 	this.bNewTab = false;
+	this.bMobile = false;
 }
 
 CApp.prototype.isAuth = function ()
@@ -82,8 +82,20 @@ CApp.prototype.isNewTab = function ()
 	return this.bNewTab;
 };
 
+CApp.prototype.setMobile = function ()
+{
+	this.bMobile = true;
+};
+
+CApp.prototype.isMobile = function ()
+{
+	return this.bMobile;
+};
+
 CApp.prototype.init = function ()
 {
+	this.checkMobile();
+	
 	if (this.bAuth && !this.bPublic)
 	{
 		var Accounts = require('modules/Mail/js/AccountList.js');
@@ -153,6 +165,29 @@ CApp.prototype.onLogout = function ()
 	else
 	{
 		Utils.clearAndReloadLocation(Browser.ie8AndBelow, true);
+	}
+};
+
+CApp.prototype.checkMobile = function () {
+	/**
+	 * Settings.IsMobile:
+	 *	-1 - first time, mobile is not determined
+	 *	0 - mobile is switched off
+	 *	1 - mobile is switched on
+	 */
+	if (Settings.AllowMobile && Settings.IsMobile === -1)
+	{
+		var
+			Ajax = require('core/js/Ajax.js'),
+			bMobile = !window.matchMedia('all and (min-width: 768px)').matches ? 1 : 0
+		;
+
+		Ajax.send('Core', 'SetMobile', {'Mobile': bMobile}, function (oResponse) {
+			if (bMobile && oResponse.Result)
+			{
+				window.location.reload();
+			}
+		}, this);
 	}
 };
 

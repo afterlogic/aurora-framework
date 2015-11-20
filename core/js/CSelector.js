@@ -1,11 +1,12 @@
 'use strict';
 
 var
-	ko = require('knockout'),
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
+	ko = require('knockout'),
+	
 	Utils = require('core/js/utils/Common.js'),
-	bMobileApp = false,
+	App = require('core/js/App.js'),
 	bMobileDevice = false
 ;
 
@@ -28,7 +29,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.fBeforeSelectCallback = null;
 	this.fSelectCallback = fSelectCallback || function() {};
 	this.fDeleteCallback = fDeleteCallback || function() {};
-	this.fDblClickCallback = (!bMobileApp && fDblClickCallback) ? fDblClickCallback : function() {};
+	this.fDblClickCallback = (!App.isMobile() && fDblClickCallback) ? fDblClickCallback : function() {};
 	this.fEnterCallback = fEnterCallback || function() {};
 	this.bResetCheckedOnClick = Utils.isUnd(bResetCheckedOnClick) ? false : !!bResetCheckedOnClick;
 	this.bCheckOnSelect = Utils.isUnd(bCheckOnSelect) ? false : !!bCheckOnSelect;

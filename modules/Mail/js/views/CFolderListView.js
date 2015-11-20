@@ -1,16 +1,14 @@
 'use strict';
 
 var
-	_ = require('underscore'),
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	App = require('core/js/App.js'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
-	
-	bMobileApp = false
+	Settings = require('modules/Mail/js/Settings.js')
 ;
 
 /**
@@ -20,7 +18,7 @@ function CFolderListView()
 {
 	this.accounts = Accounts.collection; // todo: only mobile version
 	
-	this.mobileApp = bMobileApp;
+	this.mobileApp = App.isMobile();
 	
 	this.folderList = MailCache.folderList;
 	

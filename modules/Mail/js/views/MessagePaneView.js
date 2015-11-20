@@ -2,8 +2,8 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -28,9 +28,7 @@ var
 	Settings = require('modules/Mail/js/Settings.js'),
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
-	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
-	
-	bMobileApp = false
+	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods
 ;
 
 /**
@@ -198,7 +196,7 @@ function CMessagePaneView()
 		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || topControllersVisible);
 	}, this);
 
-	this.mobileApp = bMobileApp;
+	this.mobileApp = App.isMobile();
 	
 	this.attachments = ko.observableArray([]);
 	this.usesAttachmentString = true;
@@ -220,7 +218,7 @@ function CMessagePaneView()
 		return this.notInlineAttachments().length > 1;
 	}, this);
 	this.visibleExtendedDownload = ko.computed(function () {
-		return !this.mobileApp && (this.visibleDownloadAllAttachments() || this.visibleDownloadAllAttachmentsSeparately() || this.visibleSaveAttachmentsToFiles);
+		return !App.isMobile() && (this.visibleDownloadAllAttachments() || this.visibleDownloadAllAttachmentsSeparately() || this.visibleSaveAttachmentsToFiles);
 	}, this);
 	
 	this.detailsVisible = ko.observable(Storage.getData('MessageDetailsVisible') === '1');
@@ -771,7 +769,7 @@ CMessagePaneView.prototype.executeDeleteMessage = function ()
 		{
 			BaseTab.deleteMessage(this.currentMessage().uid());
 		}
-		else if (this.mobileApp)
+		else if (App.isMobile())
 		{
 			MailUtils.deleteMessages([this.currentMessage().uid()], App);
 		}

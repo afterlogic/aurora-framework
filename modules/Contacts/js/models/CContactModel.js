@@ -6,14 +6,12 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
-	DateUtils = require('core/js/utils/Date.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
-	
-	CDateModel = require('core/js/models/CDateModel.js'),
-	
-	bMobileApp = false
+	DateUtils = require('core/js/utils/Date.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	App = require('core/js/App.js'),
+	CDateModel = require('core/js/models/CDateModel.js')
 ;
 
 /**
@@ -519,7 +517,7 @@ CContactModel.prototype.switchToNew = function ()
 	this.edited(true);
 	this.extented(false);
 	this.isNew(true);
-	if (!bMobileApp)
+	if (!App.isMobile())
 	{
 		this.displayNameFocused(true);
 	}

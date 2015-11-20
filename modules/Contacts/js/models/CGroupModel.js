@@ -4,8 +4,7 @@ var
 	ko = require('knockout'),
 			
 	TextUtils = require('core/js/utils/Text.js'),
-	
-	bMobileApp = false
+	App = require('core/js/App.js')
 ;
 
 /**
@@ -108,7 +107,7 @@ CGroupModel.prototype.switchToNew = function ()
 	this.clear();
 	this.edited(true);
 	this.isNew(true);
-	if (!bMobileApp)
+	if (!App.isMobile())
 	{
 		this.nameFocused(true);
 	}

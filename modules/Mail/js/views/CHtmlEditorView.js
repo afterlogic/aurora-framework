@@ -1,13 +1,14 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
+	AddressUtils = require('core/js/utils/Address.js'),
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	AddressUtils = require('core/js/utils/Address.js'),
+	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
@@ -20,7 +21,6 @@ var
 	CCrea = require('modules/Mail/js/CCrea.js'),
 	CColorPickerView = require('modules/Mail/js/views/CColorPickerView.js'),
 	
-	bMobileApp = false,
 	bMobileDevice = false
 ;
 
@@ -31,7 +31,7 @@ var
  */
 function CHtmlEditorView(bInsertImageAsBase64, oParent)
 {
-	this.mobileApp = bMobileApp;
+	this.mobileApp = App.isMobile();
 	
 	this.oParent = oParent;
 	
@@ -390,8 +390,8 @@ CHtmlEditorView.prototype.initCrea = function (sText, bPlain, sTabIndex)
 			'onUrlOut': _.bind(this.hideLinkPopup, this),
 			'onImageSelect': _.bind(this.showImagePopup, this),
 			'onImageBlur': _.bind(this.hideImagePopup, this),
-			'onItemOver': (bMobileDevice || bMobileApp) ? null : _.bind(this.onImageOver, this),
-			'onItemOut': (bMobileDevice || bMobileApp) ? null : _.bind(this.onImageOut, this),
+			'onItemOver': (bMobileDevice || App.isMobile()) ? null : _.bind(this.onImageOver, this),
+			'onItemOut': (bMobileDevice || App.isMobile()) ? null : _.bind(this.onImageOut, this),
 			'openInsertLinkDialog': _.bind(this.insertLink, this),
 			'onUrlClicked': true
 		});
