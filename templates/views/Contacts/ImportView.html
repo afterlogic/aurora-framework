@@ -24,8 +24,8 @@
 		</div>
 	</div>
 </div>
-<!-- ko if: $root.mobileApp -->
-<div class="panel_bottom">
+
+<div class="panel_bottom" data-bind="visible: bVisibleCloseButton">
 	<div class="toolbar">
 		<span class="content">
 			<span class="item close" href="javascript: void(0)" data-bind="click: function () {$root.gotoContactList();}">
@@ -35,4 +35,3 @@
 		</span>
 	</div>
 </div>
-<!-- /ko -->

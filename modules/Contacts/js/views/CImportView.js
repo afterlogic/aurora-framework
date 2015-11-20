@@ -25,6 +25,8 @@ function CImportView(oParent)
 	this.importing = ko.observable(false);
 	
 	this.importButtonDom = ko.observable(null);
+	
+	this.bVisibleCloseButton = App.isMobile();
 }
 
 CImportView.prototype.ViewTemplate = 'Contacts_ImportView';

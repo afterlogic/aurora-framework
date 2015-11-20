@@ -20,9 +20,7 @@
 				</span>
 				<span class="list_notification" data-bind="visible: !isSearch() && inGroup()">
 					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_IN_GROUP" data-bind="i18n: 'text'"></span>
-					<!-- ko if: !$root.mobileApp -->
-					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_IN_GROUP_DESC" data-bind="i18n: 'text'"></span>
-					<!-- /ko -->
+					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_IN_GROUP_DESC" data-bind="i18n: 'text', visible: bVisibleDragNDropDescription"></span>
 				</span>
 				<span class="list_notification" data-bind="visible: isSearch()">
 					<span class="link" data-i18n="MAILBOX/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearchClick"></span>

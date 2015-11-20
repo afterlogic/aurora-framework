@@ -50,6 +50,16 @@ cfg.paths.js = {
 			"./core/js/entry.js"
 		]
 	},
+	mobile: {
+		dest: './static/js/',
+		name: 'app-mobile.js',
+		min: 'app-mobile.min.js',
+		afterlogic: true,
+		watch: true,
+		src: [
+			"./core/js/entry-mobile.js"
+		]
+	},
 	message_newtab: {
 		dest: './static/js/',
 		name: 'app-message-newtab.js',
@@ -165,6 +175,8 @@ gulp.task('cal', ['js:app', 'js:calendar_pub']);
 gulp.task('helpdesk', ['js:app', 'js:helpdesk_ext']);
 
 gulp.task('msg', ['js:app', 'js:message_newtab']);
+
+gulp.task('mob', ['js:app', 'js:mobile']);
 
 gulp.task('min', ['lint', 'js:all:min']);
 

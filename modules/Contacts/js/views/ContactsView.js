@@ -300,6 +300,11 @@ function CContactsView()
 	}, this);
 	
 	this.mobileApp = App.isMobile();
+	this.bVisibleDragNDropDescription = !App.isMobile();
+	this.sGroupsToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_GroupsMobileView' : 'Contacts_Toolbar_GroupsView';
+	this.sContactsToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_ContactsMobileView' : 'Contacts_Toolbar_ContactsView';
+	this.sBeforeContactToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_ContactMobileView' : '';
+	this.sContactToolbarTemplate = App.isMobile() ? '' : 'Contacts_Toolbar_ContactView';
 	this.selectedPanel = ko.observable(Enums.MobilePanel.Items);
 	this.selectedItem.subscribe(function () {
 		
