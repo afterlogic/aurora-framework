@@ -3,10 +3,12 @@
 class MailModule extends AApiModule
 {
 	public $oApiMailManager = null;
+	public $oApiFetchersManager = null;
 	
 	public function init() 
 	{
 		$this->oApiMailManager = $this->GetManager('main', 'db');
+		$this->oApiFetchersManager = $this->GetManager('fetchers', 'db');
 	}
 	
 	/**
@@ -1170,6 +1172,12 @@ class MailModule extends AApiModule
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, true);
 	}	
+	
+	public function GetFetchers()
+	{
+		$oAccount = $this->getParamValue('Account', null);
+		return $this->oApiFetchersManager->getFetchers($oAccount);
+	}
 	
 }
 

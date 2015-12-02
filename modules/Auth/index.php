@@ -175,7 +175,7 @@ class AuthModule extends AApiModule
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
 		if ($oAccount && $oAccount->User && 0 < $oAccount->User->IdHelpdeskUser &&
-			$this->oApiCapability->isHelpdeskSupported($oAccount))
+			$this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
 		{
 			$oApiIntegrator->logoutHelpdeskUser();
 		}

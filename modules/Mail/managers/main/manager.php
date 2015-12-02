@@ -1633,7 +1633,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 
 			if (0 < strlen($sFromEmail))
 			{
-				$oApiUsersManager = /* @var CApiUsersManager */ CApi::Manager('users');
+				$oApiUsersManager = /* @var CApiUsersManager */ CApi::GetCoreManager('users');
 				$oSettings =& CApi::GetSettings();
 				$bAlwaysShowImagesInMessage = !!$oSettings->GetConf('WebMail/AlwaysShowImagesInMessage');
 				$oMessage->setSafety($bAlwaysShowImagesInMessage ? true : 
@@ -1647,40 +1647,42 @@ class CApiMailMainManager extends AApiManagerWithStorage
 			
 			if ($bParseICalAndVcard)
 			{
-				$oApiCapa = /* @var CApiCapabilityManager */ CApi::Manager('capability');
-				$oApiFileCache = /* @var CApiFilecacheManager */ CApi::Manager('filecache');
+				
+				$oApiCapa = /* @var CApiCapabilityManager */ $this->oModule->oApiCapabilityManager;
+				$oApiFileCache = /* @var CApiFilecacheManager */ CApi::GetCoreManager('filecache');
 				
 				// ICAL
 				$sICal = $oMessage->getExtend('ICAL_RAW');
 				if (!empty($sICal) && $oApiCapa->isCalendarSupported($oAccount))
 				{
-					$oApiCalendarManager = CApi::Manager('calendar');
-					if ($oApiCalendarManager)
+					$mResult = \CApi::ExecuteMethod('Calendar::ProcessICS', array(
+						'Account' => $oAccount,
+						'Data' => trim($sICal),
+						'FromEmail' => $sFromEmail
+					));
+					if (is_array($mResult) && !empty($mResult['Action']) && !empty($mResult['Body']))
 					{
-						$mResult = $oApiCalendarManager->processICS($oAccount, trim($sICal), $sFromEmail);
-						if (is_array($mResult) && !empty($mResult['Action']) && !empty($mResult['Body']))
+						$sTemptFile = md5($mResult['Body']).'.ics';
+						if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $mResult['Body']))
 						{
-							$sTemptFile = md5($mResult['Body']).'.ics';
-							if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $mResult['Body']))
+							$oIcs = CApiMailIcs::createInstance();
+
+							$oIcs->Uid = $mResult['UID'];
+							$oIcs->Sequence = $mResult['Sequence'];
+							$oIcs->File = $sTemptFile;
+							$oIcs->Attendee = isset($mResult['Attendee']) ? $mResult['Attendee'] : null;
+							$oIcs->Type = $mResult['Action'];
+							$oIcs->Location = !empty($mResult['Location']) ? $mResult['Location'] : '';
+							$oIcs->Description = !empty($mResult['Description']) ? $mResult['Description'] : '';
+							$oIcs->When = !empty($mResult['When']) ? $mResult['When'] : '';
+							$oIcs->CalendarId = !empty($mResult['CalendarId']) ? $mResult['CalendarId'] : '';
+
+							if (!$oApiCapa->isCalendarAppointmentsSupported($oAccount))
 							{
-								$oIcs = CApiMailIcs::createInstance();
+								$oIcs->Type = 'SAVE';
+							}
 
-								$oIcs->Uid = $mResult['UID'];
-								$oIcs->Sequence = $mResult['Sequence'];
-								$oIcs->File = $sTemptFile;
-								$oIcs->Attendee = isset($mResult['Attendee']) ? $mResult['Attendee'] : null;
-								$oIcs->Type = $mResult['Action'];
-								$oIcs->Location = !empty($mResult['Location']) ? $mResult['Location'] : '';
-								$oIcs->Description = !empty($mResult['Description']) ? $mResult['Description'] : '';
-								$oIcs->When = !empty($mResult['When']) ? $mResult['When'] : '';
-								$oIcs->CalendarId = !empty($mResult['CalendarId']) ? $mResult['CalendarId'] : '';
-
-								if (!$oApiCapa->isCalendarAppointmentsSupported($oAccount))
-								{
-									$oIcs->Type = 'SAVE';
-								}
-
-								// TODO
+							// TODO
 //								$oIcs->Calendars = array();
 //								if (isset($mResult['Calendars']) && is_array($mResult['Calendars']) && 0 < count($mResult['Calendars']))
 //								{
@@ -1690,12 +1692,11 @@ class CApiMailMainManager extends AApiManagerWithStorage
 //									}
 //								}
 
-								$oMessage->addExtend('ICAL', $oIcs);
-							}
-							else
-							{
-								CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
-							}
+							$oMessage->addExtend('ICAL', $oIcs);
+						}
+						else
+						{
+							CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
 						}
 					}
 				}

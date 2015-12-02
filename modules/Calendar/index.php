@@ -654,6 +654,42 @@ class CalendarModule extends AApiModule
 		return $sResult;	
 	}
 	
+	public function UpdateAttendeeStatus()
+	{
+		$oAccount = $this->getAccountFromParam();
+		
+		$mResult = false;
+
+		$sTempFile = (string) $this->getParamValue('File', '');
+		$sFromEmail = (string) $this->getParamValue('FromEmail', '');
+		
+		if (empty($sTempFile) || empty($sFromEmail))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+		}
+		if ($this->oApiCapabilityManager->isCalendarAppointmentsSupported($oAccount))
+		{
+			$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
+			$sData = $oApiFileCache->get($oAccount, $sTempFile);
+			if (!empty($sData))
+			{
+				$mResult = $this->oApiCalendarManager->processICS($oAccount, $sData, $sFromEmail, true);
+			}
+		}
+
+		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);		
+		
+	}	
+	
+	public function ProcessICS()
+	{
+		$oAccount = $this->getParamValue('Account', null);
+		$sData = (string) $this->getParamValue('Data', '');
+		$sFromEmail = (string) $this->getParamValue('FromEmail', '');
+
+		return $this->oApiCalendarManager->processICS($oAccount, $sData, $sFromEmail);
+	}
+	
 	
 }
 

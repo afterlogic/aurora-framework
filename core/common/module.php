@@ -681,7 +681,11 @@ abstract class AApiModule
 			$aResult['AccountID'] = $oAccount->IdAccount;
 		}
 
-		$aResult['Result'] = \CApiResponseManager::GetResponseObject($mResult, array('Account' => $oAccount));
+		$aResult['Result'] = \CApiResponseManager::GetResponseObject($mResult, array(
+			'Account' => $oAccount,
+			'Module' => $this->GetName(),
+			'Method' => $sMethod
+		));
 		$aResult['@Time'] = microtime(true) - PSEVEN_APP_START;
 		return $aResult;
 	}	

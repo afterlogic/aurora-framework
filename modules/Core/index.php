@@ -387,6 +387,17 @@ class CoreModule extends AApiModule
 		}
 	}	
 	
+	
+	/**
+	 * @return array
+	 */
+	public function SetMobile()
+	{
+		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
+		return $this->DefaultResponse(null, __FUNCTION__, $oApiIntegratorManager ?
+			$oApiIntegratorManager->setMobile('1' === (string) $this->getParamValue('Mobile', '0')) : false);
+	}	
+	
 }
 
 return new CoreModule('1.0');

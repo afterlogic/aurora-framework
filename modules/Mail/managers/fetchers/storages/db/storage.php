@@ -6,7 +6,7 @@
  * @package Fetchers
  * @subpackage Storages
  */
-class CApiFetchersDbStorage extends CApiFetchersStorage
+class CApiMailFetchersDbStorage extends CApiMailFetchersStorage
 {
 	/**
 	 * @var CDbStorage $oConnection
@@ -21,15 +21,15 @@ class CApiFetchersDbStorage extends CApiFetchersStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('db', $oManager);
 
 		$this->oConnection =& $oManager->GetConnection();
 		$this->oCommandCreator =& $oManager->GetCommandCreator(
 			$this, array(
-				EDbType::MySQL => 'CApiFetchersCommandCreatorMySQL',
-				EDbType::PostgreSQL => 'CApiFetchersCommandCreatorPostgreSQL'
+				EDbType::MySQL => 'CApiMailFetchersCommandCreatorMySQL',
+				EDbType::PostgreSQL => 'CApiMailFetchersCommandCreatorPostgreSQL'
 			)
 		);
 	}

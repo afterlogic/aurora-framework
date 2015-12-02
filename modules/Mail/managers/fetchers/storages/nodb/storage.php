@@ -6,12 +6,12 @@
  * @package Fetchers
  * @subpackage Storages
  */
-class CApiFetchersNodbStorage extends CApiFetchersStorage
+class CApiMailFetchersNodbStorage extends CApiFetchersStorage
 {
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(AApiManager &$oManager)
 	{
 		parent::__construct('nodb', $oManager);
 	}

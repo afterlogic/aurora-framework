@@ -1103,7 +1103,7 @@ class CApiMailMessage
 		));
 
 		$sMethod = \CApiResponseManager::GetMethod();		
-		if ('GetMessage' === $sMethod || 'GetMessagesBodies' === $sMethod)
+		if (isset($aParameters['Method']) && ('GetMessage' === $aParameters['Method'] || 'GetMessagesBodies' === $aParameters['Method']))
 		{
 			$mResult['Headers'] = \MailSo\Base\Utils::Utf8Clear($this->getHeaders());
 			$mResult['InReplyTo'] = $this->getInReplyTo();

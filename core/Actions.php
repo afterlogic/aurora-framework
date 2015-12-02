@@ -1353,16 +1353,6 @@ class Actions
 		return $this->DefaultResponse(null, __FUNCTION__, 
 				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false);
 	}
-	
-	/**
-	 * @return array
-	 */
-	public function AjaxSystemSetMobile()
-	{
-		$oApiIntegratorManager = \CApi::Manager('integrator');
-		return $this->DefaultResponse(null, __FUNCTION__, $oApiIntegratorManager ?
-			$oApiIntegratorManager->setMobile('1' === (string) $this->getParamValue('Mobile', '0')) : false);
-	}
 
 	/**
 	 * @return array
@@ -2003,37 +1993,6 @@ class Actions
 		return $this->FalseResponse($oAccount, __FUNCTION__);
 	}
 
-	public function AjaxCalendarAttendeeUpdateStatus()
-	{
-		$oAccount = $this->getAccountFromParam();
-		
-		$mResult = false;
-
-		$sTempFile = (string) $this->getParamValue('File', '');
-		$sFromEmail = (string) $this->getParamValue('FromEmail', '');
-		
-		if (empty($sTempFile) || empty($sFromEmail))
-		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
-		}
-		if ($this->oApiCapability->isCalendarAppointmentsSupported($oAccount))
-		{
-			$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::Manager('filecache');
-			$sData = $oApiFileCache->get($oAccount, $sTempFile);
-			if (!empty($sData))
-			{
-				$oCalendarApi = \CApi::Manager('calendar');
-				if ($oCalendarApi)
-				{
-					$mResult = $oCalendarApi->processICS($oAccount, $sData, $sFromEmail, true);
-				}
-			}
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);		
-		
-	}
-	
 	/**
 	 * @return array
 	 */

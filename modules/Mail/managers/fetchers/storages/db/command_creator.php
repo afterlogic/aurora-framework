@@ -6,7 +6,7 @@
  * @package Fetchers
  * @subpackage Storages
  */
-class CApiFetchersCommandCreator extends api_CommandCreator
+class CApiMailFetchersCommandCreator extends api_CommandCreator
 {
 	/**
 	 * @param CAccount $oAccount
@@ -74,7 +74,7 @@ class CApiFetchersCommandCreator extends api_CommandCreator
   * @package Fetchers
  * @subpackage Storages
  */
-class CApiFetchersCommandCreatorMySQL extends CApiFetchersCommandCreator
+class CApiMailFetchersCommandCreatorMySQL extends CApiMailFetchersCommandCreator
 {
 	
 }
@@ -83,7 +83,7 @@ class CApiFetchersCommandCreatorMySQL extends CApiFetchersCommandCreator
  * @package Fetchers
  * @subpackage Storages
  */
-class CApiFetchersCommandCreatorPostgreSQL extends CApiFetchersCommandCreator
+class CApiMailFetchersCommandCreatorPostgreSQL extends CApiMailFetchersCommandCreator
 {
 
 }

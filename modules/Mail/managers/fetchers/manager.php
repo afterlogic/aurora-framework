@@ -7,16 +7,16 @@
  *
  * @package Fetchers
  */
-class CApiFetchersManager extends AApiManagerWithStorage
+class CApiMailFetchersManager extends AApiManagerWithStorage
 {
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('fetchers', $oManager, $sForcedStorage);
+		parent::__construct('fetchers', $oManager, $sForcedStorage, $oModule);
 
-		$this->inc('classes.fetcher');
+		$this->incClass('fetcher');
 	}
 
 	/**
