@@ -3,20 +3,7 @@
 		<div class="panel_content">
 			<div class="toolbar">
 				<span class="content">
-					<!-- ko if: !mobileApp && !bNewTab -->
-					<span class="item save_and_close" data-bind="visible: typeof saveAndClose === 'function', 
-							click: function () { if (saveAndClose) { saveAndClose(); } }, customTooltip: saveAndCloseTooltip">
-						<span class="icon"></span>
-					</span>
-					<span class="item new_window"
-						data-bind="customTooltip: 'COMPOSE/LINK_OPEN_IN_NEW_WINDOW', click: openInNewWindow">
-						<span class="icon"></span>
-					</span>
-					<span class="item minimize" data-bind="visible: typeof minimize === 'function', 
-							click: function () { if (minimize) { minimize(); } }, customTooltip: 'COMPOSE/TOOL_MINIMIZE'">
-						<span class="icon"></span>
-					</span>
-					<!-- /ko -->
+					<!-- ko template: {name: sPopupButtonsViewTemplate} --><!-- /ko -->
 					
 					<!-- ko foreach: toolbarControllers -->
 						<!-- ko template: { name: $data.ViewTemplate, data: $data} --><!-- /ko -->
@@ -31,7 +18,7 @@
 						<div class="middle_bar" data-bind="heightAdjust: {'location': 'bottom', 'delay': '0', 'elements': [messageFields, bottomPanel], 'triggers': [visibleBcc(), visibleCc(), toAddr(), bccAddr(), notInlineAttachments(), senderList(), headersCompressed()]}">
 							<div class="panel_top" data-bind="initDom: messageFields, minHeightAdjust: {'adjustElement': jqContainers, 'minHeight': 450, 'trigger': minHeightAdjustTrigger(), 'removeTrigger': minHeightRemoveTrigger()}">
 
-								<span class="table-compressor" data-bind="visible: !mobileApp, click: changeHeadersCompressed, css: { 'compressed': headersCompressed }"></span>
+								<span class="table-compressor" data-bind="visible: bAllowHeadersCompressing, click: changeHeadersCompressed, css: { 'compressed': headersCompressed }"></span>
 
 								<div class="notice" data-bind="visible: isDemo, i18n: 'text'" data-i18n="DEMO/WARNING_SEND_EMAIL_TO_DEMO_ONLY"></div>
 								<table class="fields">
@@ -63,30 +50,17 @@
 														</div>
 													</td>
 													<td class="value">
-														<!-- ko if: !mobileApp -->
-														<span class="link show_cc" data-bind="i18n: 'text', visible: !visibleCc() && !disableHeadersEdit() && !headersCompressed(), click: changeCcVisibility"
-															data-i18n="COMPOSE/LINK_SHOW_CC"></span>
-
-														<span class="link show_bcc" data-bind="i18n: 'text', visible: !visibleBcc() && !disableHeadersEdit() && !headersCompressed(), click: changeBccVisibility"
-															data-i18n="COMPOSE/LINK_SHOW_BCC"></span>
-														<!-- /ko -->
+														<!-- ko template: {name: sCcBccSwitchersViewTemplate} --><!-- /ko -->
 													</td>
 												</tr>
 											</table>
 										</td>
 									</tr>
-									<!-- ko if: mobileApp -->
-									<tr class="cc" data-bind="visible: (!visibleCc() || !visibleBcc()) && !headersCompressed()">
+									<!-- ko template: {name: sCcBccSwitchersMobileViewTemplate} --><!-- /ko -->
+									<tr class="cc" style="display: none;">
 										<td class="label"></td>
-										<td class="value">
-											<span class="link show_cc" data-bind="i18n: 'text', visible: !visibleCc(), click: changeCcVisibility"
-												data-i18n="COMPOSE/LINK_SHOW_CC"></span>
-
-											<span class="link show_bcc" data-bind="i18n: 'text', visible: !visibleBcc(), click: changeBccVisibility"
-												data-i18n="COMPOSE/LINK_SHOW_BCC"></span>
-										</td>
+										<td class="value"></td>
 									</tr>
-									<!-- /ko -->
 									<tr class="cc" data-bind="visible: visibleCc() && !headersCompressed()">
 										<td class="label">
 											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_CC"></span>:
@@ -136,84 +110,16 @@
 										</td>
 									</tr>
 								</table>
-								<!-- ko if: mobileApp -->
-								<div class="attachments upload large">
-									<span class="uploader_button" data-bind="initDom: composeUploaderButton">
-										<span data-bind="i18n: 'text'" data-i18n="COMPOSE/ATTACH_CLICK_MOBILE"></span>
-									</span>
-									<div class="items_list" data-bind="customScrollbar: {x: false}">
-										<div class="scroll-inner">
-											<div class="attachments_container" data-bind="template: {name: 'Core_FileView', foreach: notInlineAttachments}"></div>
-										</div>
-									</div>
-								</div>
-								<!-- /ko -->
+								<!-- ko template: { name: sAttachmentsMobileViewTemplate} --><!-- /ko -->
 							</div>
 							<div class="panel_center">
 								<!-- ko template: { name: oHtmlEditor.ViewTemplate, data: oHtmlEditor} --><!-- /ko -->
 							</div>
-							<div class="panel_bottom" data-bind="initDom: bottomPanel, listWithMoreButton: true">
-								<!-- ko if: showHotkeysHints -->
-								<span class="text hint" data-bind="foreach: aHotkeys">
-									<span class="hotkey">
-										<span class="hotkey_value" data-bind="text: value"></span>
-										<span class="hotkey_action" data-bind="text: action"></span>
-									</span>
-								</span>
-								<span class="more_hints" data-bind="dropdown: {control: false}, customTooltip: 'MAILBOX/TOOL_MORE_ACTIONS'">
-									<span class="icon"></span>
-									<span class="dropdown">
-										<span class="dropdown_helper">
-											<span class="dropdown_content" data-bind="foreach: aHotkeys">
-												<span class="item">
-													<span class="hotkey_value" data-bind="text: value"></span>
-													<span class="hotkey_action" data-bind="text: action"></span>
-												</span>
-											</span>
-											<span class="dropdown_arrow bottom">
-												<span></span>
-											</span>
-										</span>
-									</span>
-								</span>
-								<!-- /ko -->
-							</div>
-
+							<!-- ko template: { name: sHotkeysHintsViewTemplate} --><!-- /ko -->
 						</div>
 					</div>
 				</div>
-				<!-- ko if: !mobileApp -->
-				<div class="panel right_panel attachments upload large">
-					<div class="panel_content">
-						<div class="middle_bar">
-							<div class="panel_top">
-								<span class="uploader_button desktop" data-bind="initDom: composeUploaderButton, customTooltip: 'COMPOSE/ATTACH_CLICK'">
-									<span class="icon"></span>
-									<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/ATTACH_CLICK"></span>
-								</span>
-								<span class="uploader_button files" data-bind="visible: allowFiles, click: onShowFilesPopupClick">
-									<span class="icon" data-bind="customTooltip: 'COMPOSE/ATTACH_FROM_FILES_CLICK'"></span>
-									<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/ATTACH_FROM_FILES_CLICK"></span>
-								</span>
-								{%INCLUDE-START/Compose-Attach-Buttons/INCLUDE-END%}
-							</div>
-							<div class="panel_center" data-bind="customScrollbar: {x: false}">
-								<div class="scroll-inner">
-									<!--<div class="items_list" data-bind="customScrollbar: {x: false}, visible: notInlineAttachments().length > 0">-->
-									<div class="items_list">
-										<span class="list_notification" data-bind="i18n: 'text', visible: allowDragNDrop() && notInlineAttachments().length === 0" data-i18n="COMPOSE/ATTACH_HINT"></span>
-										<div class="attachments_container" data-bind="template: {name: 'Core_FileView', foreach: notInlineAttachments}"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="uploader_mask" data-bind="initDom: composeUploaderDropPlace, 
-								css: { 'over': uploaderDragOver, 'active': uploaderBodyDragOver }">
-							<div class="inner"></div>
-						</div>
-					</div>
-				</div>
-				<!-- /ko -->
+				<!-- ko template: {name: sAttachmentsViewTemplate} --><!-- /ko -->
 			</div>
 		</div>
 	</div>

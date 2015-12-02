@@ -1,0 +1,29 @@
+<div class="panel right_panel attachments upload large">
+	<div class="panel_content">
+		<div class="middle_bar">
+			<div class="panel_top">
+				<span class="uploader_button desktop" data-bind="initDom: composeUploaderButton, customTooltip: 'COMPOSE/ATTACH_CLICK'">
+					<span class="icon"></span>
+					<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/ATTACH_CLICK"></span>
+				</span>
+				<span class="uploader_button files" data-bind="visible: allowFiles, click: onShowFilesPopupClick">
+					<span class="icon" data-bind="customTooltip: 'COMPOSE/ATTACH_FROM_FILES_CLICK'"></span>
+					<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/ATTACH_FROM_FILES_CLICK"></span>
+				</span>
+				{%INCLUDE-START/Compose-Attach-Buttons/INCLUDE-END%}
+			</div>
+			<div class="panel_center" data-bind="customScrollbar: {x: false}">
+				<div class="scroll-inner">
+					<div class="items_list">
+						<span class="list_notification" data-bind="i18n: 'text', visible: allowDragNDrop() && notInlineAttachments().length === 0" data-i18n="COMPOSE/ATTACH_HINT"></span>
+						<div class="attachments_container" data-bind="template: {name: 'Core_FileView', foreach: notInlineAttachments}"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uploader_mask" data-bind="initDom: composeUploaderDropPlace, 
+				css: { 'over': uploaderDragOver, 'active': uploaderBodyDragOver }">
+			<div class="inner"></div>
+		</div>
+	</div>
+</div>

@@ -36,6 +36,7 @@ var
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
 	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
+	bMobileApp = App.isMobile(),
 	
 	bMobileDevice = false,
 	$html = $('html')
@@ -347,8 +348,13 @@ function CComposeView()
 	this.messageFields = ko.observable(null);
 	this.bottomPanel = ko.observable(null);
 
-	this.mobileApp = App.isMobile();
-	this.showHotkeysHints = !bMobileDevice && !App.isMobile();
+	this.sHotkeysHintsViewTemplate = !bMobileDevice && !bMobileApp ? 'Mail_Compose_HotkeysHintsView' : '';
+	this.sAttachmentsViewTemplate = bMobileApp ? '' : 'Mail_Compose_AttachmentsView';
+	this.sAttachmentsMobileViewTemplate = bMobileApp ? 'Mail_Compose_AttachmentsMobileView' : '';
+	this.sCcBccSwitchersViewTemplate = bMobileApp ? '' : 'Mail_Compose_CcBccSwitchersView';
+	this.sCcBccSwitchersMobileViewTemplate = bMobileApp ? 'Mail_Compose_CcBccSwitchersMobileView' : '';
+	this.sPopupButtonsViewTemplate = !bMobileApp && !App.isNewTab() ? 'Mail_Compose_PopupButtonsView' : '';
+	this.bAllowHeadersCompressing = !bMobileApp;
 
 	this.aHotkeys = [
 		{ value: 'Ctrl+Enter', action: TextUtils.i18n('COMPOSE/HOTKEY_SEND') },
@@ -401,6 +407,9 @@ function CComposeView()
 	this.splitterDom = ko.observable();
 
 	this.headersCompressed = ko.observable(false);
+	this.allowCcBccSwitchers = ko.computed(function () {
+		return !this.disableHeadersEdit() && !this.headersCompressed();
+	}, this);
 	
 	this.registerOwnToolbarControllers();
 	
@@ -1773,30 +1782,30 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
 CComposeView.prototype.registerOwnToolbarControllers = function ()
 {
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Toolbar_BackButtonView',
+		ViewTemplate: 'Mail_Compose_BackButtonView',
 		sId: 'back',
 		bOnlyMobile: true,
 		backToListCommand: this.backToListCommand
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Toolbar_SendButtonView',
+		ViewTemplate: 'Mail_Compose_SendButtonView',
 		sId: 'send',
 		bAllowMobile: true,
 		sendCommand: this.sendCommand
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Toolbar_SaveButtonView',
+		ViewTemplate: 'Mail_Compose_SaveButtonView',
 		sId: 'save',
 		bAllowMobile: true,
 		saveCommand: this.saveCommand
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Toolbar_ImportanceDropdownView',
+		ViewTemplate: 'Mail_Compose_ImportanceDropdownView',
 		sId: 'importance',
 		selectedImportance: this.selectedImportance
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Toolbar_ConfirmationCheckboxView',
+		ViewTemplate: 'Mail_Compose_ConfirmationCheckboxView',
 		sId: 'confirmation',
 		readingConfirmation: this.readingConfirmation
 	});
@@ -1808,7 +1817,7 @@ CComposeView.prototype.registerOwnToolbarControllers = function ()
 CComposeView.prototype.registerToolbarController = function (oController)
 {
 	var
-		bAllowRegister = App.isMobile() ? (oController.bOnlyMobile || oController.bAllowMobile) : (!oController.bOnlyMobile),
+		bAllowRegister = bMobileApp ? (oController.bOnlyMobile || oController.bAllowMobile) : (!oController.bOnlyMobile),
 		iLastIndex = Settings.ComposeToolbarOrder.length
 	;
 	
