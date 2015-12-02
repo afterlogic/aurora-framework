@@ -3,6 +3,8 @@
 var
 	ko = require('knockout'),
 	
+	App = require('core/js/App.js'),
+	
 	CIcalModel = require('modules/Calendar/js/models/CIcalModel.js')
 ;
 
