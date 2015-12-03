@@ -318,6 +318,8 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.sAddingInfo1 = aAddingInfo.length > 0 ? aAddingInfo[0] : '';
 	this.sAddingInfo2 = aAddingInfo.length > 1 ? aAddingInfo[1] : '';
 	this.sAddingInfo3 = aAddingInfo.length > 2 ? aAddingInfo[2] : '';
+	
+	this.sSearchViewTemplate = App.isMobile() ? 'Mail_SearchMobileView' : 'Mail_SearchView';
 }
 
 CMessageListView.prototype.ViewTemplate = 'Mail_MessagesView';

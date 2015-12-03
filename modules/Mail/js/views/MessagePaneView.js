@@ -197,6 +197,8 @@ function CMessagePaneView()
 	}, this);
 
 	this.mobileApp = App.isMobile();
+	this.sToolbarViewTemplate = App.isMobile() ? '' : 'Mail_Message_ToolbarView';
+	this.sToolbarMobileViewTemplate = App.isMobile() ? 'Mail_Message_ToolbarMobileView' : '';
 	
 	this.attachments = ko.observableArray([]);
 	this.usesAttachmentString = true;

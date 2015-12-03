@@ -18,8 +18,6 @@ function CFolderListView()
 {
 	this.accounts = Accounts.collection; // todo: only mobile version
 	
-	this.mobileApp = App.isMobile();
-	
 	this.folderList = MailCache.folderList;
 	
 	this.manageFoldersHash = '#'; // todo: manage folders
@@ -61,6 +59,6 @@ function CFolderListView()
 	this.isCurrentAllowsMail = Accounts.isCurrentAllowsMail; // todo: manage folders
 }
 
-CFolderListView.prototype.ViewTemplate = 'Mail_FoldersView';
+CFolderListView.prototype.ViewTemplate = App.isMobile() ? 'Mail_FoldersMobileView' : 'Mail_FoldersView';
 
 module.exports = CFolderListView;

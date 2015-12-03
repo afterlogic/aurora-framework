@@ -1,0 +1,17 @@
+<div class="toolbar">
+	<span class="content">
+		<span class="item close" data-bind="click: function () {$parent.gotoMessageList(); return true;}">
+			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_BACK_TO_LIST'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_BACK_TO_LIST"></span>
+		</span>
+		
+		<!-- ko template: {name: 'Mail_Message_ReplyButtonsView'} --><!-- /ko -->
+		
+		<!-- ko template: {name: 'Mail_Message_ForwardButtonView'} --><!-- /ko -->
+		
+		<span class="item delete" data-bind="command: deleteCommand">
+			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_DELETE'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_DELETE"></span>
+		</span>
+	</span>
+</div>

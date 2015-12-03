@@ -1,0 +1,16 @@
+<span class="search_block">
+	<span class="input" data-bind="css: {'focus': isFocused}">
+		<span class="icon search" data-i18n="MAILBOX/BUTTON_SEARCH" data-bind="i18n: 'text'"></span>
+		<input class="field" spellcheck="false"  type="text" data-bind="value: searchInput, onEnter: onSearchClick" />
+	</span>
+</span>
+<div class="toolbar">
+	<span class="content">
+		<span class="item checkstate" data-bind="command: $parent.checkMailCommand, 
+				checkstate: {'activeClass': 'process', 'state': $parent.checkMailIndicator(), 'duration': 800}, 
+				customTooltip: 'MAILBOX/TOOL_CHECK_MAIL'">
+			<span class="icon"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_CHECK_MAIL"></span>
+		</span>
+	</span>
+</div>

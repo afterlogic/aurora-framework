@@ -31,7 +31,7 @@ var
  */
 function CHtmlEditorView(bInsertImageAsBase64, oParent)
 {
-	this.mobileApp = App.isMobile();
+	this.bAllowToolbar = !App.isMobile();
 	
 	this.oParent = oParent;
 	

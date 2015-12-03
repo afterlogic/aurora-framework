@@ -1,0 +1,26 @@
+<div class="middle_bar" data-bind="css: {'quota_visible': -1 < quotaProc()}, click: function () { $parent.gotoMessageList(); }">
+	<div class="panel_center" data-bind="customScrollbar: {x: false}">
+		<div class="scroll-inner">
+			<div class="items_list collapsible">
+				<div class="accounts" data-bind="visible: accounts().length > 1, foreach: accounts">
+					<div class="item" data-bind="css: {'selected': isCurrent()}, click: changeAccount">
+						<label class="custom_radio" data-bind="css: {'checked': isCurrent()}">
+							<span class="icon"></span>
+							<input type="radio" id="account_text" data-bind="checked: isCurrent()" />
+						</label>
+						<label for="account_text" class="text" data-bind="text: email"></label>
+					</div>
+				</div>
+				<div class="empty_accounts" data-bind="visible: accounts().length === 1"></div>
+				<div class="folders">
+				<!-- ko template: {name: 'Mail_FolderView', foreach: folderList().collection} --><!-- /ko -->
+				<span class="volumer" data-bind="visible: -1 < quotaProc(), click: $parent.onVolumerClick">
+					<span class="volumer_conteiner">
+						<span class="used" data-bind="style: {'width': '' + (-1 < quotaProc() ? quotaProc() : 0) + '%' }"></span>
+					</span>
+				</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+<div class="toolbar">
+	<span class="resizer" data-bind="event: { 'dblclick': resizeDblClick}"></span>
+	<span class="content">
+		<span data-bind="click: gotoFolderList" class="item back">
+			<span class="icon"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_BACK_TO_LIST"></span>
+		</span>
+		
+		<a href="javascript: void(0)" class="item new_message" data-bind="attr: {href: composeLink}, visible: bVisibleComposeMessage">
+			<span class="icon"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_NEW_MESSAGE"></span>
+		</a>
+		
+		<!-- ko template: {name: 'Mail_Messages_MarkButtonView'} --><!-- /ko -->
+		
+		<!-- ko template: {name: 'Mail_Messages_DeleteButtonView'} --><!-- /ko -->
+		
+		<!-- ko template: {name: 'Mail_Messages_SpamButtonsView'} --><!-- /ko -->
+	</span>
+</div>

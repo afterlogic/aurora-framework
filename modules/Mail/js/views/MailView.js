@@ -102,7 +102,8 @@ function CMailView()
 
 	this.jqPanelHelper = null;
 	
-	this.mobileApp = App.isMobile();
+	this.sToolbarViewTemplate = App.isMobile() ? 'Mail_Messages_ToolbarMobileView' : 'Mail_Messages_ToolbarView';
+	
 	this.selectedPanel = ko.observable(Enums.MobilePanel.Items);
 	MailCache.currentMessage.subscribe(function () {
 		this.gotoMessagePane();
