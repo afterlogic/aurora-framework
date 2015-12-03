@@ -24,8 +24,6 @@ function CCalendarCache()
 	
 	this.calendarSettingsChanged = ko.observable(false);
 	this.calendarChanged = ko.observable(false);
-	
-	this.canRequestCalendarList = ko.observable(false);
 }
 
 /**
@@ -47,22 +45,10 @@ CCalendarCache.prototype.addIcal = function (oIcal)
 		}
 	});
 	this.icalAttachments.push(oIcal);
-	if (this.calendars().length === 0 && this.canRequestCalendarList())
+	if (this.calendars().length === 0)
 	{
 		this.requestCalendarList();
 	}
-};
-
-CCalendarCache.prototype.firstRequestCalendarList = function ()
-{
-	this.canRequestCalendarList(true);
-	
-	if (this.icalAttachments.length > 0 && this.calendars().length === 0)
-	{
-		this.requestCalendarList();
-	}
-	
-	return this.calendarsLoadingStarted();
 };
 
 /**
@@ -71,11 +57,11 @@ CCalendarCache.prototype.firstRequestCalendarList = function ()
  */
 CCalendarCache.prototype.onGetCalendarsResponse = function (oResponse, oRequest)
 {
-	if (oResponse && oResponse.Result)
+	if (oResponse && oResponse.Result && oResponse.Result.Calendars)
 	{
 		var
 			sCurrentEmail = App.currentAccountEmail ? App.currentAccountEmail() : '',
-			aEditableCalendars = _.filter(oResponse.Result, function (oCalendar) {
+			aEditableCalendars = _.filter(oResponse.Result.Calendars, function (oCalendar) {
 				return oCalendar.Owner === sCurrentEmail ||
 					oCalendar.Access === Enums.CalendarAccess.Full ||
 					oCalendar.Access === Enums.CalendarAccess.Write;

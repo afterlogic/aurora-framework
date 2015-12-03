@@ -484,11 +484,11 @@ CAccountListModel.prototype.getAttendee = function (aEmails)
 	_.each(this.collection(), function (oAccount) {
 		if (oAccount.isCurrent())
 		{
-			aAccountsEmails = _.union(oAccount.email(), oAccount.getFetchersIdentitiesEmails(), aAccountsEmails);
+			aAccountsEmails = _.union([oAccount.email()], oAccount.getFetchersIdentitiesEmails(), aAccountsEmails);
 		}
 		else
 		{
-			aAccountsEmails = _.union(aAccountsEmails, oAccount.email(), oAccount.getFetchersIdentitiesEmails());
+			aAccountsEmails = _.union(aAccountsEmails, [oAccount.email()], oAccount.getFetchersIdentitiesEmails());
 		}
 	});
 	

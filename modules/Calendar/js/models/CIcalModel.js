@@ -5,6 +5,8 @@ var
 	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	App = require('core/js/App.js'),
 	Api = require('core/js/Api.js'),
 	
 	Ajax = require('modules/Calendar/js/Ajax.js'),
@@ -34,31 +36,7 @@ function CIcalModel(oRawIcal, sAttendee)
 	this.icalType = ko.observable('');
 	this.icalConfig = ko.observable('');
 	this.type.subscribe(function () {
-		var
-			aTypeParts = this.type().split('-'),
-			sType = aTypeParts.shift(),
-			sFoundType = _.find(Enums.IcalType, function (sIcalType) {
-				return sType === sIcalType;
-			}, this),
-			sConfig = aTypeParts.join('-'),
-			sFoundConfig = _.find(Enums.IcalConfig, function (sIcalConfig) {
-				return sConfig === sIcalConfig;
-			}, this)
-		;
-		
-		if (sType !== sFoundType)
-		{
-			sType = Enums.IcalType.Save;
-		}
-		this.icalType(sType);
-		
-		if (sConfig !== sFoundConfig)
-		{
-			sConfig = Enums.IcalConfig.NeedsAction;
-		}
-		this.icalConfig(sConfig);
-		
-		this.fillDecisions();
+		this.parseType();
 	}, this);
 	
 	this.isRequestType = ko.computed(function () {
@@ -86,8 +64,15 @@ function CIcalModel(oRawIcal, sAttendee)
 	this.isTentative = ko.computed(function () {
 		return this.icalConfig() === Enums.IcalConfig.Tentative;
 	}, this);
+	this.calendars = ko.observableArray(CalendarCache.calendars());
 	
-	this.calendars = ko.observableArray([]);
+	if (this.calendars().length === 0)
+	{
+		var fCalSubscription = CalendarCache.calendars.subscribe(function () {
+			this.calendars(CalendarCache.calendars());
+			fCalSubscription.dispose();
+		}, this);
+	}
 //	if (App.isNewTab() && window.opener)
 //	{
 //		this.calendars(window.opener.App.CalendarCache.calendars());
@@ -97,10 +82,10 @@ function CIcalModel(oRawIcal, sAttendee)
 //	}
 //	else
 //	{
-		this.calendars(CalendarCache.calendars());
-		CalendarCache.calendars.subscribe(function () {
-			this.calendars(CalendarCache.calendars());
-		}, this);
+//		this.calendars(CalendarCache.calendars());
+//		CalendarCache.calendars.subscribe(function () {
+//			this.calendars(CalendarCache.calendars());
+//		}, this);
 //	}
 
 	this.chosenCalendarName = ko.computed(function () {
@@ -146,22 +131,53 @@ function CIcalModel(oRawIcal, sAttendee)
 	// animation of buttons turns on with delay
 	// so it does not trigger when placing initial values
 	this.animation = ko.observable(false);
+	
+	this.parseType();
 }
+
+CIcalModel.prototype.parseType = function ()
+{
+	var
+		aTypeParts = this.type().split('-'),
+		sType = aTypeParts.shift(),
+		sFoundType = _.find(Enums.IcalType, function (sIcalType) {
+			return sType === sIcalType;
+		}, this),
+		sConfig = aTypeParts.join('-'),
+		sFoundConfig = _.find(Enums.IcalConfig, function (sIcalConfig) {
+			return sConfig === sIcalConfig;
+		}, this)
+	;
+
+	if (sType !== sFoundType)
+	{
+		sType = Enums.IcalType.Save;
+	}
+	this.icalType(sType);
+
+	if (sConfig !== sFoundConfig)
+	{
+		sConfig = Enums.IcalConfig.NeedsAction;
+	}
+	this.icalConfig(sConfig);
+
+	this.fillDecisions();
+};
 
 CIcalModel.prototype.fillDecisions = function ()
 {
-	this.cancelDecision(Utils.i18n('MESSAGE/APPOINTMENT_CANCELED', {'SENDER': App.currentAccountEmail()}));
+	this.cancelDecision(TextUtils.i18n('MESSAGE/APPOINTMENT_CANCELED', {'SENDER': App.currentAccountEmail()}));
 	
 	switch (this.icalConfig())
 	{
 		case Enums.IcalConfig.Accepted:
-			this.replyDecision(Utils.i18n('MESSAGE/APPOINTMENT_ACCEPTED', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('MESSAGE/APPOINTMENT_ACCEPTED', {'ATTENDEE': this.attendee()}));
 			break;
 		case Enums.IcalConfig.Declined:
-			this.replyDecision(Utils.i18n('MESSAGE/APPOINTMENT_DECLINED', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('MESSAGE/APPOINTMENT_DECLINED', {'ATTENDEE': this.attendee()}));
 			break;
 		case Enums.IcalConfig.Tentative:
-			this.replyDecision(Utils.i18n('MESSAGE/APPOINTMENT_TENTATIVELY_ACCEPTED', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('MESSAGE/APPOINTMENT_TENTATIVELY_ACCEPTED', {'ATTENDEE': this.attendee()}));
 			break;
 	}
 };
@@ -256,7 +272,7 @@ CIcalModel.prototype.onSetAppointmentActionResponse = function (oResponse, oRequ
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, Utils.i18n('WARNING/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
 	else if (CalendarCache)
 	{

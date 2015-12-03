@@ -106,14 +106,6 @@ function CMessagePaneView()
 	this.saveAsPdfCommand = Utils.createCommand(this, this.executeSaveAsPdf, this.isEnableSaveAsPdf);
 	this.moreCommand = Utils.createCommand(this, null, this.isCurrentMessageLoaded);
 
-//	this.icalSubscription = this.ical.subscribe(function () {
-//		if (this.ical() !== null)
-//		{
-//			App.CalendarCache.firstRequestCalendarList();
-//			this.icalSubscription.dispose();
-//		}
-//	}, this);
-
 	this.visiblePicturesControl = ko.observable(false);
 	this.visibleShowPicturesLink = ko.observable(false);
 	
@@ -488,27 +480,10 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			this.attachments(oMessage.attachments());
 		}
 
-		// animation of buttons turns on with delay
-		// so it does not trigger when placing initial values
-//		if (this.ical() !== null)
-//		{
-//			this.ical().animation(false);
-//		}
 //		oIcal = oMessage.ical();
 //		if (oIcal && App.isNewTab())
 //		{
 //			oIcal = this.getIcalCopy(oIcal);
-//		}
-//		this.ical(oIcal);
-//		if (this.ical() !== null)
-//		{
-//			_.defer(_.bind(function () {
-//				if (this.ical() !== null)
-//				{
-//					this.ical().animation(true);
-//				}
-//			}, this));
-//			this.ical().updateAttendeeStatus(this.fromEmail());
 //		}
 		
 		if (!oMessage.completelyFilled() || oMessage.trimmed())

@@ -62,10 +62,6 @@ Prefetcher.prefetchAll = function ()
 	});
 };
 
-//Prefetcher.prefetchCalendarList = function ()
-//{
-//	return App.CalendarCache.firstRequestCalendarList());
-//};
 //Prefetcher.initHelpdesk = function ()
 //{
 //	if (AppData.User.IsHelpdeskSupported && !this.helpdeskInitialized())

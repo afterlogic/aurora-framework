@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	ko = require('knockout'),
 	
 	App = require('core/js/App.js'),
@@ -21,6 +22,7 @@ CIcalAttachmentView.prototype.ViewTemplate = 'Calendar_IcalAttachmentView';
  * Receives null if there is no message in the pane.
  * 
  * @param {Object|null} oMessageProps Information about message in message pane.
+ * @param {String} oMessageProps.sFromEmail Message sender email.
  * @param {Array} oMessageProps.aToEmails
  * @param {Object} oMessageProps.oIcal
  */
@@ -32,6 +34,19 @@ CIcalAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps
 			sAttendee = App.getAttendee(oMessageProps.aToEmails),
 			oIcal = new CIcalModel(oMessageProps.oRawIcal, sAttendee)
 		;
+		
+		// animation of buttons turns on with delay
+		// so it does not trigger when placing initial values
+		oIcal.animation(false);
+		_.defer(_.bind(function () {
+			if (oIcal !== null)
+			{
+				oIcal.animation(true);
+			}
+		}, this));
+		
+		oIcal.updateAttendeeStatus(oMessageProps.sFromEmail);
+		
 		this.ical(oIcal);
 	}
 	else
