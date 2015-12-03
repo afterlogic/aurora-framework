@@ -730,7 +730,8 @@ class MailModule extends AApiModule
 		$sFolderFullNameRaw = (string) $this->getParamValue('Folder', '');
 		$sUid = trim((string) $this->getParamValue('Uid', ''));
 		$sRfc822SubMimeIndex = trim((string) $this->getParamValue('Rfc822MimeIndex', ''));
-
+		$iBodyTextLimit = 600000;
+		
 		$iUid = 0 < strlen($sUid) && is_numeric($sUid) ? (int) $sUid : 0;
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || 0 >= $iUid)
@@ -740,7 +741,266 @@ class MailModule extends AApiModule
 
 		$oAccount = $this->getAccountFromParam();
 
-		$oMessage = $this->oApiMailManager->getMessage($oAccount, $sFolderFullNameRaw, $iUid, $sRfc822SubMimeIndex, true, true, 600000);
+//		$oMessage = $this->oApiMailManager->getMessage($oAccount, $sFolderFullNameRaw, $iUid, $sRfc822SubMimeIndex, true, true, 600000);
+		
+		if (0 === strlen($sFolderFullNameRaw) || !is_numeric($iUid) || 0 >= (int) $iUid)
+		{
+			throw new CApiInvalidArgumentException();
+		}
+
+		$oImapClient =& $this->oApiMailManager->_getImapClient($oAccount);
+
+		$oImapClient->FolderExamine($sFolderFullNameRaw);
+
+		$oMessage = false;
+
+		$sICalMimeIndex = '';
+		$sVCardMimeIndex = '';
+		$aTextMimeIndexes = array();
+		$aAscPartsIds = array();
+
+		$aFetchResponse = $oImapClient->Fetch(array(
+			\MailSo\Imap\Enumerations\FetchType::BODYSTRUCTURE), $iUid, true);
+
+		$oBodyStructure = (0 < count($aFetchResponse)) ? $aFetchResponse[0]->GetFetchBodyStructure($sRfc822SubMimeIndex) : null;
+		
+		if ($oBodyStructure)
+		{
+			$aTextParts = $oBodyStructure->SearchHtmlOrPlainParts();
+			if (is_array($aTextParts) && 0 < count($aTextParts))
+			{
+				foreach ($aTextParts as $oPart)
+				{
+					$aTextMimeIndexes[] = array($oPart->PartID(), $oPart->Size());
+				}
+			}
+
+			$bParseICalAndVcard = true;
+			if ($bParseICalAndVcard)
+			{
+				$aICalPart = $oBodyStructure->SearchByContentType('text/calendar');
+				$oICalPart = is_array($aICalPart) && 0 < count($aICalPart) ? $aICalPart[0] : null;
+				$sICalMimeIndex = $oICalPart ? $oICalPart->PartID() : '';
+
+				$aVCardPart = $oBodyStructure->SearchByContentType('text/vcard');
+				$aVCardPart = $aVCardPart ? $aVCardPart : $oBodyStructure->SearchByContentType('text/x-vcard');
+				$oVCardPart = is_array($aVCardPart) && 0 < count($aVCardPart) ? $aVCardPart[0] : null;
+				$sVCardMimeIndex = $oVCardPart ? $oVCardPart->PartID() : '';
+			}
+
+			$bParseAsc = true;
+			if ($bParseAsc)
+			{
+				$aAscParts = $oBodyStructure->SearchByCallback(function (/* @var $oPart \MailSo\Imap\BodyStructure */ $oPart) {
+					return '.asc' === \strtolower(\substr(\trim($oPart->FileName()), -4));
+				});
+
+				if (is_array($aAscParts) && 0 < count($aAscParts))
+				{
+					foreach ($aAscParts as $oPart)
+					{
+						$aAscPartsIds[] = $oPart->PartID();
+					}
+				}
+			}
+		}
+
+		$aFetchItems = array(
+			\MailSo\Imap\Enumerations\FetchType::INDEX,
+			\MailSo\Imap\Enumerations\FetchType::UID,
+			\MailSo\Imap\Enumerations\FetchType::RFC822_SIZE,
+			\MailSo\Imap\Enumerations\FetchType::INTERNALDATE,
+			\MailSo\Imap\Enumerations\FetchType::FLAGS,
+			0 < strlen($sRfc822SubMimeIndex)
+				? \MailSo\Imap\Enumerations\FetchType::BODY_PEEK.'['.$sRfc822SubMimeIndex.'.HEADER]'
+				: \MailSo\Imap\Enumerations\FetchType::BODY_HEADER_PEEK
+		);
+
+		if (0 < count($aTextMimeIndexes))
+		{
+			if (0 < strlen($sRfc822SubMimeIndex) && is_numeric($sRfc822SubMimeIndex))
+			{
+				$sLine = \MailSo\Imap\Enumerations\FetchType::BODY_PEEK.'['.$aTextMimeIndexes[0][0].'.1]';
+				if (\is_numeric($iBodyTextLimit) && 0 < $iBodyTextLimit && $iBodyTextLimit < $aTextMimeIndexes[0][1])
+				{
+					$sLine .= '<0.'.((int) $iBodyTextLimit).'>';
+				}
+
+				$aFetchItems[] = $sLine;
+			}
+			else
+			{
+				foreach ($aTextMimeIndexes as $aTextMimeIndex)
+				{
+					$sLine = \MailSo\Imap\Enumerations\FetchType::BODY_PEEK.'['.$aTextMimeIndex[0].']';
+					if (\is_numeric($iBodyTextLimit) && 0 < $iBodyTextLimit && $iBodyTextLimit < $aTextMimeIndex[1])
+					{
+						$sLine .= '<0.'.((int) $iBodyTextLimit).'>';
+					}
+					
+					$aFetchItems[] = $sLine;
+				}
+			}
+		}
+		
+		if (0 < strlen($sICalMimeIndex))
+		{
+			$aFetchItems[] = \MailSo\Imap\Enumerations\FetchType::BODY_PEEK.'['.$sICalMimeIndex.']';
+		}
+		
+		if (0 < strlen($sVCardMimeIndex))
+		{
+			$aFetchItems[] = \MailSo\Imap\Enumerations\FetchType::BODY_PEEK.'['.$sVCardMimeIndex.']';
+		}
+
+		if (0 < count($aAscPartsIds))
+		{
+			foreach ($aAscPartsIds as $sPartID)
+			{
+				$aFetchItems[] = \MailSo\Imap\Enumerations\FetchType::BODY_PEEK.'['.$sPartID.']';
+			}
+		}
+
+		if (!$oBodyStructure)
+		{
+			$aFetchItems[] = \MailSo\Imap\Enumerations\FetchType::BODYSTRUCTURE;
+		}
+
+		$aFetchResponse = $oImapClient->Fetch($aFetchItems, $iUid, true);
+		if (0 < count($aFetchResponse))
+		{
+			$oMessage = CApiMailMessage::createInstance($sFolderFullNameRaw, $aFetchResponse[0], $oBodyStructure, $sRfc822SubMimeIndex, $aAscPartsIds);
+		}
+
+		if ($oMessage)
+		{
+			$sFromEmail = '';
+			$oFromCollection = $oMessage->getFrom();
+			if ($oFromCollection && 0 < $oFromCollection->Count())
+			{
+				$oFrom =& $oFromCollection->GetByIndex(0);
+				if ($oFrom)
+				{
+					$sFromEmail = trim($oFrom->GetEmail());
+				}
+			}
+
+			if (0 < strlen($sFromEmail))
+			{
+				$oApiUsersManager = /* @var CApiUsersManager */ CApi::GetCoreManager('users');
+				$oSettings =& CApi::GetSettings();
+				$bAlwaysShowImagesInMessage = !!$oSettings->GetConf('WebMail/AlwaysShowImagesInMessage');
+				$oMessage->setSafety($bAlwaysShowImagesInMessage ? true : 
+						$oApiUsersManager->getSafetySender($oAccount->IdUser, $sFromEmail, true));
+			}
+
+			/*if ($bParseAsc && 0 < count($aAscPartsIds))
+			{
+				
+			}*/
+			
+			if ($bParseICalAndVcard)
+			{
+				
+				$oApiCapa = /* @var CApiCapabilityManager */ $this->oApiCapabilityManager;
+				$oApiFileCache = /* @var CApiFilecacheManager */ CApi::GetCoreManager('filecache');
+				
+				// ICAL
+				$sICal = $oMessage->getExtend('ICAL_RAW');
+				if (!empty($sICal) && $oApiCapa->isCalendarSupported($oAccount))
+				{
+					$mResult = \CApi::ExecuteMethod('Calendar::ProcessICS', array(
+						'Account' => $oAccount,
+						'Data' => trim($sICal),
+						'FromEmail' => $sFromEmail
+					));
+					if (is_array($mResult) && !empty($mResult['Action']) && !empty($mResult['Body']))
+					{
+						$sTemptFile = md5($mResult['Body']).'.ics';
+						if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $mResult['Body']))
+						{
+							$oIcs = CApiMailIcs::createInstance();
+
+							$oIcs->Uid = $mResult['UID'];
+							$oIcs->Sequence = $mResult['Sequence'];
+							$oIcs->File = $sTemptFile;
+							$oIcs->Attendee = isset($mResult['Attendee']) ? $mResult['Attendee'] : null;
+							$oIcs->Type = $mResult['Action'];
+							$oIcs->Location = !empty($mResult['Location']) ? $mResult['Location'] : '';
+							$oIcs->Description = !empty($mResult['Description']) ? $mResult['Description'] : '';
+							$oIcs->When = !empty($mResult['When']) ? $mResult['When'] : '';
+							$oIcs->CalendarId = !empty($mResult['CalendarId']) ? $mResult['CalendarId'] : '';
+
+							if (!$oApiCapa->isCalendarAppointmentsSupported($oAccount))
+							{
+								$oIcs->Type = 'SAVE';
+							}
+
+							// TODO
+//								$oIcs->Calendars = array();
+//								if (isset($mResult['Calendars']) && is_array($mResult['Calendars']) && 0 < count($mResult['Calendars']))
+//								{
+//									foreach ($mResult['Calendars'] as $sUid => $sName)
+//									{
+//										$oIcs->Calendars[$sUid] = $sName;
+//									}
+//								}
+
+							$oMessage->addExtend('ICAL', $oIcs);
+						}
+						else
+						{
+							CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
+						}
+					}
+				}
+
+				// VCARD
+				$sVCard = $oMessage->getExtend('VCARD_RAW');
+				if (!empty($sVCard) && $oApiCapa->isContactsSupported($oAccount))
+				{
+					$oApiContactsManager = CApi::Manager('contacts');
+					$oContact = new CContact();
+					$oContact->InitFromVCardStr($oAccount->IdUser, $sVCard);
+					$oContact->initBeforeChange();
+
+					$oContact->IdContact = 0;
+
+					$bContactExists = false;
+					if (0 < strlen($oContact->ViewEmail))
+					{
+						if ($oApiContactsManager)
+						{
+							$oLocalContact = $oApiContactsManager->getContactByEmail($oAccount->IdUser, $oContact->ViewEmail);
+							if ($oLocalContact)
+							{
+								$oContact->IdContact = $oLocalContact->IdContact;
+								$bContactExists = true;
+							}
+						}
+					}
+
+					$sTemptFile = md5($sVCard).'.vcf';
+					if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $sVCard))
+					{
+						$oVcard = CApiMailVcard::createInstance();
+
+						$oVcard->Uid = $oContact->IdContact;
+						$oVcard->File = $sTemptFile;
+						$oVcard->Exists = !!$bContactExists;
+						$oVcard->Name = $oContact->FullName;
+						$oVcard->Email = $oContact->ViewEmail;
+
+						$oMessage->addExtend('VCARD', $oVcard);
+					}
+					else
+					{
+						CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
+					}					
+				}
+			}
+		}
+
 		if (!($oMessage instanceof \CApiMailMessage))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotGetMessage);

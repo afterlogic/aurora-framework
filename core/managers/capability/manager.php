@@ -102,8 +102,8 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCalendarAppointmentsSupported($oAccount = null)
 	{
-		$bResult = $this->isCalendarSupported() && $this->isCollaborationSupported();
-		if ($bResult && $oAccount)
+		$bResult = false;
+		if ($this->isCollaborationSupported() && $oAccount)
 		{
 			$bResult = $this->isCalendarSupported($oAccount) && $oAccount->User->getCapa(ECapa::MEETINGS); // TODO
 		}

@@ -47,7 +47,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 	 *
 	 * @return \MailSo\Imap\ImapClient|null
 	 */
-	protected function &_getImapClient(CAccount $oAccount, $iForceConnectTimeOut = 0, $iForceSocketTimeOut = 0)
+	public function &_getImapClient(CAccount $oAccount, $iForceConnectTimeOut = 0, $iForceSocketTimeOut = 0)
 	{
 		$oResult = null;
 		if ($oAccount)
