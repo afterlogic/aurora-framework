@@ -1,0 +1,27 @@
+<div class="quick_reply fields" data-bind="initDom: domQuickReply, 
+	quickReplyAnim: {
+		'sendAction': replySendingStarted(), 
+		'saveAction': replySavingStarted(), 
+		'activeAction': isQuickReplyActive()
+	},
+	visible: replyPaneVisible() && isVisibleReplyTool()">
+	<div class="status">
+		<div class="text" data-bind="text: replyLoadingText"></div>
+	</div>
+	<div class="row" data-bind="css: {'focused': replyTextFocus(),
+		 'filled': replyText().length > 0}">
+		<label for="reply_text" class="title placeholder" 
+			   data-i18n="COMPOSE/QUICK_REPLY_PLACEHOLDER" data-bind="i18n: 'text'"></label>
+		<textarea id="reply_text" class="input" data-bind="value: replyText, 
+			hasfocus: replyTextFocus, onCtrlEnter: executeSendQuickReply, 
+			valueUpdate: 'afterkeydown', style: {'fontFamily': defaultFontName}"></textarea>
+	</div>
+	<div class="buttons">
+		<span class="button send" data-bind="i18n: 'text', command: sendQuickReplyCommand" data-i18n="COMPOSE/TOOL_SEND"></span>
+		<span class="button save" data-bind="text: saveButtonText, command: saveQuickReplyCommand"></span>
+		<span class="text hint" data-i18n="COMPOSE/QUICK_REPLY_HOTKEY" data-bind="i18n: 'text'"></span>
+		<a class="link full_form" href="javascript: void(0);" 
+		   data-bind="i18n: 'text', command: replyAllCommand" 
+		   data-i18n="COMPOSE/QUICK_REPLY_OPEN_FULL"></a>
+	</div>
+</div>

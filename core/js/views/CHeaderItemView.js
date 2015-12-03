@@ -1,10 +1,12 @@
 
 var
 	ko = require('knockout'),
+	
+	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js')
 ;
 
-function CHeaderItemView(sLinkText, sActiveTitle)
+function CHeaderItemView(sLinkText)
 {
 	this.sName = '';
 	
@@ -19,7 +21,7 @@ function CHeaderItemView(sLinkText, sActiveTitle)
 	this.inactiveTitle = ko.observable('');
 }
 
-CHeaderItemView.prototype.ViewTemplate = 'Core_HeaderItemView';
+CHeaderItemView.prototype.ViewTemplate = App.isMobile() ? 'Core_HeaderItemMobileView' : 'Core_HeaderItemView';
 
 CHeaderItemView.prototype.setName = function (sName)
 {

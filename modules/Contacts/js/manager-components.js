@@ -10,28 +10,16 @@ module.exports = function (oSettings) {
 	}
 	
 	var
-		SuggestionsAutocomplete = require('modules/Contacts/js/SuggestionsAutocomplete.js'),
+		_ = require('underscore'),
+		
+		ManagerSuggestions = require('modules/Contacts/js/manager-suggestions.js'),
+		SuggestionsMethods = ManagerSuggestions(),
 		ContactCard = require('modules/Contacts/js/ContactCard.js')
 	;
 
-	return {
+	return _.extend({
 		applyContactsCards: function ($Addresses) {
 			ContactCard.applyTo($Addresses);
-		},
-		getSuggestionsAutocompleteCallback: function () {
-			return SuggestionsAutocomplete.callback;
-		},
-		getSuggestionsAutocompleteComposeCallback: function () {
-			return SuggestionsAutocomplete.composeCallback;
-		},
-		getSuggestionsAutocompletePhoneCallback: function () {
-			return SuggestionsAutocomplete.phoneCallback;
-		},
-		getSuggestionsAutocompleteDeleteHandler: function () {
-			return SuggestionsAutocomplete.deleteHandler;
-		},
-		requestUserByPhone: function (sNumber, fCallBack, oContext) {
-			SuggestionsAutocomplete.requestUserByPhone(sNumber, fCallBack, oContext);
 		}
-	};
+	}, SuggestionsMethods);
 };

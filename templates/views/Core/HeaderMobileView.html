@@ -1,0 +1,24 @@
+<div class="tabs_panel">
+	<div class="right" data-bind="dropdown: {control: false}">
+		<span class="control">
+			<span class="icon"></span>
+		</span>
+		<span class="dropdown">
+			<span class="dropdown_helper">
+				<span class="dropdown_arrow"><span></span></span>
+				<span class="dropdown_content">
+					<!-- ko foreach: tabs -->
+						<!-- ko template: {name: ViewTemplate, data: $data} --><!-- /ko -->
+					<!-- /ko -->
+
+					<span class="item full_version" data-bind="click: switchToFullVersion">
+						<span class="text" data-i18n="HEADER/FULL_VERSION" data-bind="i18n: 'text'"></span>
+					</span>
+					<span class="item logout" data-bind="click: logout">
+						<span class="text" data-i18n="HEADER/LOGOUT" data-bind="i18n: 'text'"></span>
+					</span>
+				</span>
+			</span>
+		</span>
+	</div>
+</div>

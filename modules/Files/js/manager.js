@@ -18,7 +18,7 @@ module.exports = function (oSettings) {
 				TextUtils = require('core/js/utils/Text.js'),
 				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 			;
-			return new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'), TextUtils.i18n('TITLE/FILESTORAGE'));
+			return new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'));
 		},
 		getSelectFilesPopup: function () {
 			return require('modules/Files/js/popups/SelectFilesPopup.js');

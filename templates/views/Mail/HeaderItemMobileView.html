@@ -1,0 +1,5 @@
+<!-- ko foreach: accounts -->
+	<span class="item emails" data-bind="css: {'current': $parent.isCurrent() && isCurrent()}, click: changeAccount">
+		<span class="text"  data-bind="text: email"></span>
+	</span>
+<!-- /ko -->

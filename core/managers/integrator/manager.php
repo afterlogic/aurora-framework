@@ -95,19 +95,16 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @param string $sTheme
-	 *
 	 * @return string
 	 */
-	private function compileTemplates($sTheme)
+	private function compileTemplates()
 	{
-		$bMobile = $bMobile = \CApi::IsMobileApplication();
 		$sHash = CApi::Plugin()->Hash();
 		
 		$sCacheFileName = '';
 		if (CApi::GetConf('labs.cache.templates', $this->bCache))
 		{
-			$sCacheFileName = 'templates-'.md5(CApi::Version().$sHash).($bMobile ? '-mobile' : '').'.cache';
+			$sCacheFileName = 'templates-'.md5(CApi::Version().$sHash).'.cache';
 			$sCacheFullFileName = CApi::DataPath().'/cache/'.$sCacheFileName;
 			if (file_exists($sCacheFullFileName))
 			{
@@ -116,7 +113,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$sResult = '';
-		$sT = 'templates/'.($bMobile ? 'mobile' : 'views').'';
+		$sT = 'templates/views';
 		$iL = strlen($sT) + 1;
 
 		$sDirName = CApi::WebMailPath().$sT;
@@ -2076,7 +2073,7 @@ class CApiIntegratorManager extends AApiManager
 	</div>
 	<div id="pSevenHidden"></div>'.
 '<div>'.
-$this->compileTemplates($sTheme, $bMobile).
+$this->compileTemplates().
 $this->compileLanguage($sLanguage).
 $this->compileAppData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash).
 '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.

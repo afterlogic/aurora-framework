@@ -82,10 +82,11 @@ CAccountListModel.prototype.changeCurrentAccount = function (iNewCurrentId, bPas
 		oCurrentAccount.isCurrent(false);
 		this.currentId(iNewCurrentId);
 		oNewCurrentAccount.isCurrent(true);
-		if (bPassToMail)
-		{
-			Routing.setHash(LinksUtils.getInbox());
-		}
+	}
+	
+	if (bPassToMail)
+	{
+		Routing.setHash(LinksUtils.getInbox());
 	}
 };
 

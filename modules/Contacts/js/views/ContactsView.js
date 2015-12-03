@@ -299,7 +299,6 @@ function CContactsView()
 		});
 	}, this);
 	
-	this.mobileApp = App.isMobile();
 	this.bVisibleDragNDropDescription = !App.isMobile();
 	this.sGroupsToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_GroupsMobileView' : 'Contacts_Toolbar_GroupsView';
 	this.sContactsToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_ContactsMobileView' : 'Contacts_Toolbar_ContactsView';

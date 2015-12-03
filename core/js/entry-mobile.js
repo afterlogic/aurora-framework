@@ -7,7 +7,7 @@ $('body').ready(function () {
 		oAvaliableModules = {
 			'Auth': require('modules/Auth/js/manager.js'),
 			'Mail': require('modules/Mail/js/manager.js'),
-			'Contacts': require('modules/Contacts/js/manager.js'),
+			'Contacts': require('modules/Contacts/js/manager-mobile.js'),
 			'SessionTimeout': require('modules/SessionTimeout/js/manager.js')
 		},
 		ModulesManager = require('core/js/ModulesManager.js'),

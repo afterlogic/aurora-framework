@@ -1,0 +1,7 @@
+<div class="body_parts_switcher" data-bind="visible: hasNotInlineAttachments, css: {'view_attachments': visibleAttachments}">
+	<span class="item show_message" data-i18n="MESSAGE/VIEW_BODY" data-bind="i18n: 'text', click: showMessage"></span>
+	<span class="item show_attachments" data-bind="click: showAttachments">
+		<span data-i18n="MESSAGE/VIEW_ATTACHMENTS" data-bind="i18n: 'text'"></span>
+		<span data-bind="text: notInlineAttachments().length"></span>
+	</span>
+</div>

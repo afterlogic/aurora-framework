@@ -78,9 +78,6 @@
 						<span class="title" data-i18n="MESSAGE/HEADER_DATE" data-bind="i18n: 'text'"></span>: 
 						<span data-bind="text: fullDate"></span>
 					</div>
-					<!--<div class="message_info_line" data-bind="visible: currentMessage() && currentMessage().completelyFilled()">
-						<span class="link" data-i18n="MESSAGE/LINK_VIEW_MESSAGE_HEADERS" data-bind="i18n: 'text', click: showSourceHeaders"></span>
-					</div>-->
 				</div>
 			</div>
 
@@ -90,15 +87,8 @@
 				<h2 class="subject" data-bind="text: subjectForDisplay"></h2>
 			</div>
 		</div>
-		<!-- ko if: mobileApp -->
-		<div class="body_parts_switcher" data-bind="visible: hasNotInlineAttachments, css: {'view_attachments': visibleAttachments}">
-			<span class="item show_message" data-i18n="MESSAGE/VIEW_BODY" data-bind="i18n: 'text', click: showMessage"></span>
-			<span class="item show_attachments" data-bind="click: showAttachments">
-				<span data-i18n="MESSAGE/VIEW_ATTACHMENTS" data-bind="i18n: 'text'"></span>
-				<span data-bind="text: notInlineAttachments().length"></span>
-			</span>
-		</div>
-		<!-- /ko -->
+		
+		<!-- ko template: {name: sAttachmentsSwitcherViewTemplate} --><!-- /ko -->
 	</div>
 	<div class="panels" data-bind="css: {'has_attachments': hasNotInlineAttachments, 'view_attachments': visibleAttachments}">
 	
@@ -150,41 +140,12 @@
 					<div class="message_body_info" data-i18n="MESSAGE/INFO_LOADING" 
 						 data-bind="visible: isLoading, i18n: 'text'"></div>
 					<div class="message_body html" data-bind="initDom: domTextBody, attr: {'dir': rtlMessage() ? 'rtl' : 'ltr'}"></div>
-					<!--<div class="bodyparts_separator"></div>-->
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<!-- ko if: !mobileApp -->
-	<div class="quick_reply fields" data-bind="initDom: domQuickReply, 
-		quickReplyAnim: {
-			'sendAction': replySendingStarted(), 
-			'saveAction': replySavingStarted(), 
-			'activeAction': isQuickReplyActive()
-		},
-		visible: replyPaneVisible() && isVisibleReplyTool()">
-		<div class="status">
-			<div class="text" data-bind="text: replyLoadingText"></div>
-		</div>
-		<div class="row" data-bind="css: {'focused': replyTextFocus(),
-			 'filled': replyText().length > 0}">
-			<label for="reply_text" class="title placeholder" 
-				   data-i18n="COMPOSE/QUICK_REPLY_PLACEHOLDER" data-bind="i18n: 'text'"></label>
-			<textarea id="reply_text" class="input" data-bind="value: replyText, 
-				hasfocus: replyTextFocus, onCtrlEnter: executeSendQuickReply, 
-				valueUpdate: 'afterkeydown', style: {'fontFamily': defaultFontName}"></textarea>
-		</div>
-		<div class="buttons">
-			<span class="button send" data-bind="i18n: 'text', command: sendQuickReplyCommand" data-i18n="COMPOSE/TOOL_SEND"></span>
-			<span class="button save" data-bind="text: saveButtonText, command: saveQuickReplyCommand"></span>
-			<span class="text hint" data-i18n="COMPOSE/QUICK_REPLY_HOTKEY" data-bind="i18n: 'text'"></span>
-			<a class="link full_form" href="javascript: void(0);" 
-			   data-bind="i18n: 'text', command: replyAllCommand" 
-			   data-i18n="COMPOSE/QUICK_REPLY_OPEN_FULL"></a>
-		</div>
-	</div>
-	<!-- /ko -->
+	<!-- ko template: {name: sQuickReplyViewTemplate} --><!-- /ko -->
 </div>
 
 <!-- ko template: {name: 'Mail_PrintMessageView'} --><!-- /ko -->

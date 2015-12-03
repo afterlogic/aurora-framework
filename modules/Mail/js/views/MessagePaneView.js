@@ -188,9 +188,10 @@ function CMessagePaneView()
 		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || topControllersVisible);
 	}, this);
 
-	this.mobileApp = App.isMobile();
 	this.sToolbarViewTemplate = App.isMobile() ? '' : 'Mail_Message_ToolbarView';
 	this.sToolbarMobileViewTemplate = App.isMobile() ? 'Mail_Message_ToolbarMobileView' : '';
+	this.sAttachmentsSwitcherViewTemplate = App.isMobile() ? 'Mail_Message_AttachmentsSwitcherView' : '';
+	this.sQuickReplyViewTemplate = App.isMobile() ? '' : 'Mail_Message_QuickReplyView';
 	
 	this.attachments = ko.observableArray([]);
 	this.usesAttachmentString = true;

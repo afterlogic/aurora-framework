@@ -5,6 +5,7 @@ var
 	_ = require('underscore'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	App = require('core/js/App.js'),
 	CAbstractHeaderItemView = require('core/js/views/CHeaderItemView.js'),
 			
 	Accounts = require('modules/Mail/js/AccountList.js'),
@@ -26,7 +27,7 @@ function CHeaderItemView()
 
 _.extendOwn(CHeaderItemView.prototype, CAbstractHeaderItemView.prototype);
 
-CHeaderItemView.prototype.ViewTemplate = 'Mail_HeaderItemView';
+CHeaderItemView.prototype.ViewTemplate = App.isMobile() ? 'Mail_HeaderItemMobileView' : 'Mail_HeaderItemView';
 
 var HeaderItemView = new CHeaderItemView();
 
