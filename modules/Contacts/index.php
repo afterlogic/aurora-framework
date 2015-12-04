@@ -7,6 +7,9 @@ class ContactsModule extends AApiModule
 	public function init() 
 	{
 		$this->oApiContactsManager = $this->GetManager('main', 'db');
+		
+		$this->subscribeEvent('GetBodyStructureParts', array($this, 'GetBodyStructureParts'));
+		$this->subscribeEvent('ExtendMessageData', array($this, 'ExtendMessageData'));
 	}
 	
 	private function populateSortParams( &$iSortField, &$iSortOrder)
@@ -927,6 +930,71 @@ class ContactsModule extends AApiModule
 		}
 		
 	}
+	
+	public function GetBodyStructureParts($aParts, &$aResultParts)
+	{
+		foreach ($aParts as $oPart)
+		{
+			if ($oPart instanceof \MailSo\Imap\BodyStructure && 
+					($oPart->ContentType() === 'text/vcard' || $oPart->ContentType() === 'text/x-vcard'))
+			{
+				$aResultParts[] = $oPart;
+			}
+		}
+	}
+	
+	public function ExtendMessageData($oAccount, &$oMessage, $aData)
+	{
+		$oApiCapa = /* @var CApiCapabilityManager */ $this->oApiCapabilityManager;
+		$oApiFileCache = /* @var CApiFilecacheManager */ CApi::GetCoreManager('filecache');
+
+		foreach ($aData as $aDataItem)
+		{
+			if ($aDataItem['Part'] instanceof \MailSo\Imap\BodyStructure && 
+					($aDataItem['Part']->ContentType() === 'text/vcard' || $aDataItem['Part']->ContentType() === 'text/x-vcard'))
+			{
+				$sData = $aDataItem['Data'];
+				if (!empty($sData) && $oApiCapa->isContactsSupported($oAccount))
+				{
+					$oContact = new CContact();
+					$oContact->InitFromVCardStr($oAccount->IdUser, $sData);
+					$oContact->initBeforeChange();
+
+					$oContact->IdContact = 0;
+
+					$bContactExists = false;
+					if (0 < strlen($oContact->ViewEmail))
+					{
+						$oLocalContact = $this->oApiContactsManager->getContactByEmail($oAccount->IdUser, $oContact->ViewEmail);
+						if ($oLocalContact)
+						{
+							$oContact->IdContact = $oLocalContact->IdContact;
+							$bContactExists = true;
+						}
+					}
+
+					$sTemptFile = md5($sData).'.vcf';
+					if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $sData))
+					{
+						$oVcard = CApiMailVcard::createInstance();
+
+						$oVcard->Uid = $oContact->IdContact;
+						$oVcard->File = $sTemptFile;
+						$oVcard->Exists = !!$bContactExists;
+						$oVcard->Name = $oContact->FullName;
+						$oVcard->Email = $oContact->ViewEmail;
+
+						$oMessage->addExtend('VCARD', $oVcard);
+					}
+					else
+					{
+						CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
+					}					
+				}
+			}
+		}
+	}	
+	
 }
 
 return new ContactsModule('1.0');

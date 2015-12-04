@@ -9,6 +9,9 @@ class CalendarModule extends AApiModule
 		$this->oApiCalendarManager = $this->GetManager('main', 'sabredav');
 		$this->AddEntry('invite', 'EntryInvite');
 		$this->AddEntry('calendar-pub', 'EntryCalendarPub');
+		
+		$this->subscribeEvent('GetBodyStructureParts', array($this, 'GetBodyStructureParts'));
+		$this->subscribeEvent('ExtendMessageData', array($this, 'ExtendMessageData'));
 	}
 
 	/**
@@ -690,6 +693,67 @@ class CalendarModule extends AApiModule
 		return $this->oApiCalendarManager->processICS($oAccount, $sData, $sFromEmail);
 	}
 	
+	public function GetBodyStructureParts($aParts, &$aResultParts)
+	{
+		foreach ($aParts as $oPart)
+		{
+			if ($oPart instanceof \MailSo\Imap\BodyStructure && $oPart->ContentType() === 'text/calendar')
+			{
+				$aResultParts[] = $oPart;
+			}
+		}
+	}
+	
+	public function ExtendMessageData($oAccount, &$oMessage, $aData)
+	{
+		$oApiCapa = /* @var CApiCapabilityManager */ $this->oApiCapabilityManager;
+		$oApiFileCache = /* @var CApiFilecacheManager */ CApi::GetCoreManager('filecache');
+		$sFromEmail = '';
+		$oFromCollection = $oMessage->getFrom();
+		if ($oFromCollection && 0 < $oFromCollection->Count())
+		{
+			$oFrom =& $oFromCollection->GetByIndex(0);
+			if ($oFrom)
+			{
+				$sFromEmail = trim($oFrom->GetEmail());
+			}
+		}
+		foreach ($aData as $aDataItem)
+		{
+			if ($aDataItem['Part'] instanceof \MailSo\Imap\BodyStructure && $aDataItem['Part']->ContentType() === 'text/calendar')
+			{
+				$sData = $aDataItem['Data'];
+				if (!empty($sData) && $oApiCapa->isCalendarSupported($oAccount))
+				{
+					$mResult = $this->oApiCalendarManager->processICS($oAccount, $sData, $sFromEmail);
+					if (is_array($mResult) && !empty($mResult['Action']) && !empty($mResult['Body']))
+					{
+						$sTemptFile = md5($mResult['Body']).'.ics';
+						if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $mResult['Body']))
+						{
+							$oIcs = CApiMailIcs::createInstance();
+
+							$oIcs->Uid = $mResult['UID'];
+							$oIcs->Sequence = $mResult['Sequence'];
+							$oIcs->File = $sTemptFile;
+							$oIcs->Attendee = isset($mResult['Attendee']) ? $mResult['Attendee'] : null;
+							$oIcs->Type = ($oApiCapa->isCalendarAppointmentsSupported($oAccount)) ? $mResult['Action'] : 'SAVE';
+							$oIcs->Location = !empty($mResult['Location']) ? $mResult['Location'] : '';
+							$oIcs->Description = !empty($mResult['Description']) ? $mResult['Description'] : '';
+							$oIcs->When = !empty($mResult['When']) ? $mResult['When'] : '';
+							$oIcs->CalendarId = !empty($mResult['CalendarId']) ? $mResult['CalendarId'] : '';
+
+							$oMessage->addExtend('ICAL', $oIcs);
+						}
+						else
+						{
+							CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
+						}
+					}
+				}				
+			}
+		}
+	}
 	
 }
 

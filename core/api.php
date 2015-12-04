@@ -127,6 +127,7 @@ class CApi
 			CApi::$oPlugin = new CApiPluginManager(CApi::$oManager);
 			CApi::$bIsValid = CApi::validateApi();
 			CApi::$oModuleManager = new CApiModuleManager();
+			CApi::$oModuleManager->init();
 
 			CApi::$oManager->PrepareStorageMap();
 

@@ -5,7 +5,21 @@
  */
 class CApiModuleManager
 {
+	protected $_aModules = array();
+	
+    /**
+     * This array contains a list of callbacks we should call when certain events are triggered
+     *
+     * @var array
+     */
+    protected $_aEventSubscriptions = array();
+	
+	
 	public function __construct()
+	{
+	}
+	
+	public function init()
 	{
 		$sModulesPath = $this->GetModulesPath();
 		if (@is_dir($sModulesPath))
@@ -32,6 +46,64 @@ class CApiModuleManager
 			}
 		}
 	}
+	
+    /**
+     * Subscribe to an event.
+     *
+     * When the event is triggered, we'll call all the specified callbacks.
+     * It is possible to control the order of the callbacks through the
+     * priority argument.
+     *
+     * This is for example used to make sure that the authentication plugin
+     * is triggered before anything else. If it's not needed to change this
+     * number, it is recommended to ommit.
+     *
+     * @param string $sEvent
+     * @param callback $fCallback
+     * @param int $iPriority
+     * @return void
+     */
+    public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
+	{
+        if (!isset($this->_aEventSubscriptions[$sEvent])) 
+		{
+            $this->_aEventSubscriptions[$sEvent] = array();
+        }
+        while(isset($this->_aEventSubscriptions[$sEvent][$iPriority]))
+		{
+			$iPriority++;
+		}
+        $this->_aEventSubscriptions[$sEvent][$iPriority] = $fCallback;
+        ksort($this->_aEventSubscriptions[$sEvent]);
+    }	
+	
+    /**
+     * Broadcasts an event
+     *
+     * This method will call all subscribers. If one of the subscribers returns false, the process stops.
+     *
+     * The arguments parameter will be sent to all subscribers
+     *
+     * @param string $sEvent
+     * @param array $aArguments
+     * @return bool
+     */
+    public function broadcastEvent($sEvent, $aArguments = array()) 
+	{
+        if (isset($this->_aEventSubscriptions[$sEvent])) 
+		{
+            foreach($this->_aEventSubscriptions[$sEvent] as $fCallback) 
+			{
+                $result = call_user_func_array($fCallback, $aArguments);
+                if ($result === false)
+				{
+					return false;
+				}
+            }
+        }
+
+        return true;
+    }	
 
 	/**
 	 * @return string
@@ -255,6 +327,11 @@ abstract class AApiModule
 
 	public function init()
 	{
+	}
+	
+	public function subscribeEvent($sEvent, $fCallback)
+	{
+		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback);
 	}
 
 	/**
