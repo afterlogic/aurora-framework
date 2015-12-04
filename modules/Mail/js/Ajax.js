@@ -42,7 +42,14 @@ module.exports = {
 	},
 	registerOnAllRequestsClosedHandler: Ajax.registerOnAllRequestsClosedHandler,
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
-		var iTimeout = (sMethod === 'GetMessagesBodies') ? 100000 : undefined;
+		var
+			MailCache = require('modules/Mail/js/Cache.js'),
+			iTimeout = (sMethod === 'GetMessagesBodies') ? 100000 : undefined
+		;
+		if (!oParameters.AccountID)
+		{
+			oParameters.AccountID = MailCache.currentAccountId();
+		}
 		Ajax.send('Mail', sMethod, oParameters, fResponseHandler, oContext, iTimeout);
 	}
 };

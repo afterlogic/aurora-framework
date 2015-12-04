@@ -126,7 +126,11 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 			oRequest.Parameters = JSON.stringify(oParameters);
 		}
 		
-		if (App.isAuth() && App.defaultAccountId)
+		if (oParameters.AccountID)
+		{
+			oRequest.AccountID = oParameters.AccountID;
+		}
+		else if (App.isAuth() && App.defaultAccountId)
 		{
 			oRequest.AccountID = App.defaultAccountId();
 		}
