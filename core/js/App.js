@@ -12,26 +12,24 @@ var
 	WindowOpener = require('core/js/WindowOpener.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Browser = require('core/js/Browser.js'),
-	Storage = require('core/js/Storage.js'),
-	
-	bMobileDevice = false
+	Storage = require('core/js/Storage.js')
 ;
 
-require('core/js/splitter.js'); // necessary in mail and contacts modules, not for mobile version
 require('core/js/koBindings.js');
 require('core/js/koExtendings.js');
-
-if (!bMobileDevice)// && !this.bMobile)
-{
-	require('core/js/CustomTooltip.js');
-	require('core/js/koBindingsNotMobile.js');
-}
 
 require('core/js/enums.js');
 
 require('core/js/vendors/inputosaurus.js');
 
 require('jquery.cookie');
+
+function InitNotMobileRequires()
+{
+	require('core/js/splitter.js'); // necessary in mail and contacts modules
+	require('core/js/CustomTooltip.js');
+	require('core/js/koBindingsNotMobile.js');
+}
 
 function InitModernizr()
 {
@@ -107,8 +105,6 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
-	this.checkMobile();
-	
 	if (this.bAuth && !this.bPublic)
 	{
 		var Accounts = require('modules/Mail/js/AccountList.js');
@@ -140,6 +136,10 @@ CApp.prototype.init = function ()
 		};
 	}
 	
+	if (!this.bMobile)
+	{
+		InitNotMobileRequires();
+	}
 	InitModernizr();
 	
 	Screens.init();
@@ -201,7 +201,11 @@ CApp.prototype.checkMobile = function () {
 				window.location.reload();
 			}
 		}, this);
+		
+		return true;
 	}
+	
+	return false;
 };
 
 var App = new CApp();

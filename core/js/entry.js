@@ -19,9 +19,13 @@ $('body').ready(function () {
 			'SessionTimeout': require('modules/SessionTimeout/js/manager.js')
 		},
 		ModulesManager = require('core/js/ModulesManager.js'),
-		App = require('core/js/App.js')
+		App = require('core/js/App.js'),
+		bSwitchingToMobile = App.checkMobile()
 	;
 	
-	ModulesManager.init(oAvaliableModules, !App.isAuth() && !App.isPublic());
-	App.init();
+	if (!bSwitchingToMobile)
+	{
+		ModulesManager.init(oAvaliableModules, !App.isAuth() && !App.isPublic());
+		App.init();
+	}
 });

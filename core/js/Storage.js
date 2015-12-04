@@ -1,6 +1,10 @@
 'use strict';
 
-var $ = require('jquery');
+var
+	$ = require('jquery'),
+	
+	Utils = require('core/js/utils/Common.js')
+;
 
 /**
  * Object for saving and restoring data in local storage or cookies.
@@ -37,7 +41,7 @@ CStorage.prototype.getData = function (sKey)
 {
 	var sValue = this.bHtml5 ? localStorage.getItem(sKey) : $.cookie(sKey);
 	
-	return $.parseJSON(sValue);
+	return Utils.isNonEmptyString(sValue) ? $.parseJSON(sValue) : '';
 };
 
 /**

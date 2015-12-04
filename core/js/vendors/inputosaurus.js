@@ -25,6 +25,8 @@ var
 	AddressUtils = require('core/js/utils/Address.js')
 ;
 
+require('jquery-ui');
+
 function GetAutocomplete(oInput)
 {
 	return oInput.data('customAutocomplete') || oInput.data('uiAutocomplete') || oInput.data('autocomplete') || oInput.data('ui-autocomplete');
