@@ -126,7 +126,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 			oRequest.Parameters = JSON.stringify(oParameters);
 		}
 		
-		if (oParameters.AccountID)
+		if (oParameters && oParameters.AccountID)
 		{
 			oRequest.AccountID = oParameters.AccountID;
 		}

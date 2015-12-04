@@ -46,7 +46,7 @@ module.exports = {
 			MailCache = require('modules/Mail/js/Cache.js'),
 			iTimeout = (sMethod === 'GetMessagesBodies') ? 100000 : undefined
 		;
-		if (!oParameters.AccountID)
+		if (oParameters && !oParameters.AccountID)
 		{
 			oParameters.AccountID = MailCache.currentAccountId();
 		}
