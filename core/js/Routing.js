@@ -242,5 +242,6 @@ module.exports = {
 	replaceHash: _.bind(Routing.replaceHash, Routing),
 	finalize: _.bind(Routing.finalize, Routing),
 	currentHash: Routing.currentHash,
-	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing)
+	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing),
+	setPreviousHash: _.bind(Routing.setPreviousHash, Routing)
 };

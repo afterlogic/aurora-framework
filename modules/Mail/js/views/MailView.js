@@ -353,11 +353,6 @@ CMailView.prototype.searchFocus = function ()
 	}
 };
 
-CMailView.prototype.backToList = function ()
-{
-	Routing.setPreviousHash();
-};
-
 CMailView.prototype.onVolumerClick = function (oVm, oEv)
 {
 	oEv.stopPropagation();

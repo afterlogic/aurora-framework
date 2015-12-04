@@ -1,5 +1,5 @@
 <div class="screen ContactsLayout" style="display: none;">
-	<div class="panels" data-bind="splitter: {name: 'groups', sizeLeft: 200, minLeft: 20, minRight: 40, resizeToWidth: true}">
+	<div class="panels" data-bind="splitter: {name: 'groups', sizeLeft: 200, minLeft: 20, minRight: 40, resizeToWidth: true}, css: {'groups': selectedPanel() === Enums.MobilePanel.Groups,  'list_active': selectedPanel() === Enums.MobilePanel.Items,  'viewer_active': selectedPanel() === Enums.MobilePanel.View}">
 		<div class="panel groups" data-splitter="groups">
 			<div class="resize_handler"></div>
 			<div class="panel_content">

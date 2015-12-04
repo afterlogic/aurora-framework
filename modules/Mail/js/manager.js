@@ -9,7 +9,13 @@ module.exports = function (oSettings) {
 		App = require('core/js/App.js'),
 		
 		Settings = require('modules/Mail/js/Settings.js'),
-		Cache = null
+		Cache = null,
+		
+		oScreens = {
+			'main': function () {
+				return require('modules/Mail/js/views/MailView.js');
+			}
+		}
 	;
 
 	Settings.init(oSettings);
@@ -17,15 +23,19 @@ module.exports = function (oSettings) {
 	Cache = require('modules/Mail/js/Cache.js');
 	Cache.init();
 	
+	if (App.isMobile())
+	{
+		oScreens['compose'] = function () {
+			var CComposeView = require('modules/Mail/js/views/CComposeView.js');
+			return new CComposeView();
+		};
+	}
+	
 	return {
 		start: function () {
 			require('modules/Mail/js/koBindings.js');
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Mail/js/views/MailView.js');
-			}
-		},
+		screens: oScreens,
 		getHeaderItem: function () {
 			return require('modules/Mail/js/views/HeaderItemView.js');
 		},
