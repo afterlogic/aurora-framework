@@ -1211,13 +1211,12 @@ class CApiMailMessage
 				}
 			}
 
-			
 			$mResult['Extend'] = array();
 			if (is_array($this->aExtend))
 			{
-				foreach ($this->aExtend as $sKey => $oExtend)
+				foreach ($this->aExtend as $oExtend)
 				{
-					$mResult['Extend'][$sKey] = \CApiResponseManager::GetResponseObject($oExtend);
+					$mResult['Extend'][] = \CApiResponseManager::GetResponseObject($oExtend);
 				}
 			}
 

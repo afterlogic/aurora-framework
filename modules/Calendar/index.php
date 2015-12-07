@@ -482,7 +482,7 @@ class CalendarModule extends AApiModule
 			}
 			else if (!empty($sTempFile))
 			{
-				$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::Manager('filecache');
+				$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
 				$sData = $oApiFileCache->get($oAccount, $sTempFile);
 			}
 			if (!empty($sData))
