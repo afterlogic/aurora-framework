@@ -20,7 +20,7 @@ var
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	ComposeUtils = App.isNewTab() ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
+	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),

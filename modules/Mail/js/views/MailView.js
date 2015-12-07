@@ -13,7 +13,7 @@ var
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	ComposeUtils = require('modules/Mail/js/utils/PopupCompose.js'),
+	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
@@ -34,7 +34,7 @@ function CMailView()
 	});
 	
 	this.folderList = MailCache.folderList;
-	this.domFolderList = ko.observable(null);
+	this.domFoldersMoveTo = ko.observable(null);
 	
 	this.openMessageInNewWindowBinded = _.bind(this.openMessageInNewWindow, this);
 	
@@ -243,7 +243,7 @@ CMailView.prototype.onBind = function ()
 	this.oMessageList.onBind(this.$viewDom);
 	MessagePaneView.onBind(this.$viewDom);
 
-	$(this.domFolderList()).on('click', 'span.folder', function (oEvent) {
+	$(this.domFoldersMoveTo()).on('click', 'span.folder', function (oEvent) {
 		if (self.folderList().currentFolderFullName() !== $(this).data('folder')) {
 			if (oEvent.ctrlKey) {
 				self.oMessageList.executeCopyToFolder($(this).data('folder'));

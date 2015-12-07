@@ -51,7 +51,7 @@ module.exports = function (oSettings) {
 		getComposeMessageToAddresses: function () {
 			var
 				bAllowSendMail = true,
-				ComposeUtils = App.isMobile() ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js')
+				ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js')
 			;
 			
 			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;

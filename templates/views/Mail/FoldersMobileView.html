@@ -1,4 +1,4 @@
-<div class="middle_bar" data-bind="css: {'quota_visible': -1 < quotaProc()}, click: function () { $parent.gotoMessageList(); }">
+<div class="middle_bar" data-bind="css: {'quota_visible': -1 < quotaProc()}, click: $parent.gotoMessageList.bind($parent)">
 	<div class="panel_center" data-bind="customScrollbar: {x: false}">
 		<div class="scroll-inner">
 			<div class="items_list collapsible">
