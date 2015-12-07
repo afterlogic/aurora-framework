@@ -689,14 +689,14 @@ class CApiMailMessage
 		}
 
 		$aTextParts = $oBodyStructure ? $oBodyStructure->SearchHtmlOrPlainParts() : array();
-
+/*
 		$aICalPart = $oBodyStructure ? $oBodyStructure->SearchByContentType('text/calendar') : null;
 		$oICalPart = is_array($aICalPart) && 0 < count($aICalPart) ? $aICalPart[0] : null;
 
 		$aVCardPart = $oBodyStructure ? $oBodyStructure->SearchByContentType('text/vcard') : null;
 		$aVCardPart = $aVCardPart ? $aVCardPart : ($oBodyStructure ? $oBodyStructure->SearchByContentType('text/x-vcard') : null);
 		$oVCardPart = is_array($aVCardPart) && 0 < count($aVCardPart) ? $aVCardPart[0] : null;
-
+*/
 		$sUid = $oFetchResponse->GetFetchValue(\MailSo\Imap\Enumerations\FetchType::UID);
 		$sSize = $oFetchResponse->GetFetchValue(\MailSo\Imap\Enumerations\FetchType::RFC822_SIZE);
 		$sInternalDate = $oFetchResponse->GetFetchValue(\MailSo\Imap\Enumerations\FetchType::INTERNALDATE);
@@ -711,7 +711,7 @@ class CApiMailMessage
 
 		$this->iInternalTimeStampInUTC =
 			\MailSo\Base\DateTimeHelper::ParseInternalDateString($sInternalDate);
-
+/*
 		if ($oICalPart)
 		{
 			$sICal = $oFetchResponse->GetFetchValue(\MailSo\Imap\Enumerations\FetchType::BODY.'['.$oICalPart->PartID().']');
@@ -763,7 +763,7 @@ class CApiMailMessage
 				}
 			}
 		}
-
+*/
 		$sCharset = $oBodyStructure ? $oBodyStructure->SearchCharset() : '';
 		$sCharset = \MailSo\Base\Utils::NormalizeCharset($sCharset);
 
@@ -1204,6 +1204,13 @@ class CApiMailMessage
 				}
 			}
 
+			
+			$mResult['Extend'] = array();
+			foreach ($this->aExtend as $oExtend)
+			{
+				$mResult['Extend'][] = \CApiResponseManager::GetResponseObject($oExtend);
+			}
+			
 			$mResult['ICAL'] = \CApiResponseManager::GetResponseObject($this->getExtend('ICAL'));
 			$mResult['VCARD'] = \CApiResponseManager::GetResponseObject($this->getExtend('VCARD'));
 
