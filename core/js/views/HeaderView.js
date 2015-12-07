@@ -11,6 +11,7 @@ var
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
 	Settings = require('core/js/Settings.js'),
+	Browser = require('core/js/Browser.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
 ;
 
@@ -39,6 +40,8 @@ function CHeaderView()
 	this.showLogout = App.isAuth() && !App.isPublic();
 
 	this.appCustomLogo = Settings.CustomLogo;
+	
+	this.mobileDevice = Browser.mobileDevice;
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{

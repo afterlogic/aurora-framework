@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -16,6 +16,7 @@ var
 	Storage = require('core/js/Storage.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
@@ -31,8 +32,7 @@ var
 	CPostModel = require('modules/HelpDesk/js/models/CPostModel.js'),
 	CHelpdeskAttachmentModel = require('modules/HelpDesk/js/models/CHelpdeskAttachmentModel.js'),
 	
-	bExtApp = false,
-	bMobileDevice = false
+	bExtApp = false
 ;
 
 /**
@@ -410,7 +410,7 @@ CHelpdeskView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAd
 				return sInputosaurusBuffer;
 			}, this),
 			focus: _.bind(this.focusedField, this, sFocusedField),
-			mobileDevice: bMobileDevice
+			mobileDevice: Browser.mobileDevice
 		});
 	}
 };

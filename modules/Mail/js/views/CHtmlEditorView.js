@@ -19,9 +19,7 @@ var
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	CCrea = require('modules/Mail/js/CCrea.js'),
-	CColorPickerView = require('modules/Mail/js/views/CColorPickerView.js'),
-	
-	bMobileDevice = false
+	CColorPickerView = require('modules/Mail/js/views/CColorPickerView.js')
 ;
 
 /**
@@ -396,8 +394,8 @@ CHtmlEditorView.prototype.initCrea = function (sText, bPlain, sTabIndex)
 			'onUrlOut': _.bind(this.hideLinkPopup, this),
 			'onImageSelect': _.bind(this.showImagePopup, this),
 			'onImageBlur': _.bind(this.hideImagePopup, this),
-			'onItemOver': (bMobileDevice || App.isMobile()) ? null : _.bind(this.onImageOver, this),
-			'onItemOut': (bMobileDevice || App.isMobile()) ? null : _.bind(this.onImageOut, this),
+			'onItemOver': (Browser.mobileDevice || App.isMobile()) ? null : _.bind(this.onImageOver, this),
+			'onItemOut': (Browser.mobileDevice || App.isMobile()) ? null : _.bind(this.onImageOut, this),
 			'openInsertLinkDialog': _.bind(this.insertLink, this),
 			'onUrlClicked': true
 		});

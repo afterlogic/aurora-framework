@@ -16,6 +16,7 @@ var
 	WindowOpener = require('core/js/WindowOpener.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
+	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
@@ -38,7 +39,6 @@ var
 	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
 	bMobileApp = App.isMobile(),
 	
-	bMobileDevice = false,
 	$html = $('html')
 ;
 
@@ -348,7 +348,7 @@ function CComposeView()
 	this.messageFields = ko.observable(null);
 	this.bottomPanel = ko.observable(null);
 
-	this.sHotkeysHintsViewTemplate = !bMobileDevice && !bMobileApp ? 'Mail_Compose_HotkeysHintsView' : '';
+	this.sHotkeysHintsViewTemplate = !Browser.mobileDevice && !bMobileApp ? 'Mail_Compose_HotkeysHintsView' : '';
 	this.sAttachmentsViewTemplate = bMobileApp ? '' : 'Mail_Compose_AttachmentsView';
 	this.sAttachmentsMobileViewTemplate = bMobileApp ? 'Mail_Compose_AttachmentsMobileView' : '';
 	this.sCcBccSwitchersViewTemplate = bMobileApp ? '' : 'Mail_Compose_CcBccSwitchersView';
@@ -494,7 +494,7 @@ CComposeView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAdd
 				return sInputosaurusBuffer;
 			}, this),
 			focus: _.bind(this.focusedField, this, sFocusedField),
-			mobileDevice: bMobileDevice
+			mobileDevice: Browser.mobileDevice
 		});
 	}
 };

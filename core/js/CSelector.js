@@ -7,7 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
-	bMobileDevice = false
+	Browser = require('core/js/Browser.js')
 ;
 
 /**
@@ -372,7 +372,7 @@ CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectabel
 		}
 	});
 
-	if (bMobileDevice)
+	if (Browser.mobileDevice)
 	{
 		$(this.oListScope).on('touchstart', sActionSelector, function (e) {
 

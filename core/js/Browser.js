@@ -18,6 +18,13 @@ function CBrowser()
 	this.chrome = /chrome/.test(navigator.userAgent.toLowerCase()) && !/opr/.test(navigator.userAgent.toLowerCase());
 	this.chromeIos = /crios/.test(navigator.userAgent.toLowerCase());
 	this.safari = /safari/.test(navigator.userAgent.toLowerCase()) && !this.chromeIos;
+	
+	this.windowsPhone = -1 < navigator.userAgent.indexOf('Windows Phone');
+	this.iosDevice = !this.windowsPhone && (-1 < navigator.userAgent.indexOf('iPhone') ||
+		-1 < navigator.userAgent.indexOf('iPod') ||
+		-1 < navigator.userAgent.indexOf('iPad'));
+	this.androidDevice = !this.windowsPhone && (-1 < navigator.userAgent.toLowerCase().indexOf('android')),
+	this.mobileDevice = this.windowsPhone || this.iosDevice || this.androidDevice;
 }
 
 CBrowser.prototype.getIeVersion = function ()

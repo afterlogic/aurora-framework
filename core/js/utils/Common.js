@@ -1,15 +1,13 @@
 'use strict';
 
 var
-	ko = require('knockout'),
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Settings = require('core/js/Settings.js'),
 	
-	Utils = {},
-	
-	bMobileDevice = false
+	Utils = {}
 ;
 
 /**
@@ -277,9 +275,12 @@ Utils.getViewThumbnailLinkByHash = function (iAccountId, sHash, bIsExt, sTenatHa
  */
 Utils.downloadByUrl = function (sUrl)
 {
-	var oIframe = null;
+	var
+		Browser = require('core/js/Browser.js'),
+		oIframe = null
+	;
 	
-	if (bMobileDevice)
+	if (Browser.mobileDevice)
 	{
 		window.open(sUrl);
 	}
