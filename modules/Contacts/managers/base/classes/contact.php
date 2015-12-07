@@ -387,8 +387,7 @@ class CContact extends api_AContainer
 	 */
 	public function InitFromVCardStr($iUserId, $sData)
 	{
-		$oDavManager = CApi::Manager('dav');
-		$oVCard = $oDavManager ? $oDavManager->getVCardObject($sData) : null;
+		$oVCard = \Sabre\VObject\Reader::read($sData, \Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES);
 		return $this->InitFromVCardObject($iUserId, $oVCard);
 	}
 	
