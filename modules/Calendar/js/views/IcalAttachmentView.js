@@ -28,11 +28,11 @@ CIcalAttachmentView.prototype.ViewTemplate = 'Calendar_IcalAttachmentView';
  */
 CIcalAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
-	if (oMessageProps && oMessageProps.oRawIcal)
+	if (oMessageProps && oMessageProps.oExtend && oMessageProps.oExtend.ICAL)
 	{
 		var
 			sAttendee = App.getAttendee(oMessageProps.aToEmails),
-			oIcal = new CIcalModel(oMessageProps.oRawIcal, sAttendee)
+			oIcal = new CIcalModel(oMessageProps.oExtend.ICAL, sAttendee)
 		;
 		
 		// animation of buttons turns on with delay

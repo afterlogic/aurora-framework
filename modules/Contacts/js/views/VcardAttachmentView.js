@@ -23,10 +23,10 @@ CVcardAttachmentView.prototype.ViewTemplate = 'Contacts_VcardAttachmentView';
  */
 CVcardAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
-	if (oMessageProps && oMessageProps.oRawVcard)
+	if (oMessageProps && oMessageProps.oExtend.VCARD)
 	{
 		var oVcard = new CVcardModel();
-		oVcard.parse(oMessageProps.oRawVcard);
+		oVcard.parse(oMessageProps.oExtend.VCARD);
 		this.vcard(oVcard);
 	}
 	else

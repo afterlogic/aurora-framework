@@ -463,8 +463,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			this.safety(oData.Safety);
 			this.sourceHeaders(oData.Headers);
 			
-			this.oRawIcal = oData.ICAL;
-			this.oRawVcard = oData.VCARD;
+			this.oExtend = oData.Extend;
 			
 			this.completelyFilled(true);
 		}

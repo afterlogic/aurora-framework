@@ -324,7 +324,7 @@ CIcalModel.prototype.updateAttendeeStatus = function (sEmail)
 {
 	if (this.icalType() === Enums.IcalType.Cancel || this.icalType() === Enums.IcalType.Reply)
 	{
-		App.Ajax.send('UpdateAttendeeStatus', {
+		Ajax.send('UpdateAttendeeStatus', {
 			'File': this.file(),
 			'FromEmail': sEmail
 		}, this.onUpdateAttendeeStatusResponse, this);
