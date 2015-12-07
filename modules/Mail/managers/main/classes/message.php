@@ -310,6 +310,13 @@ class CApiMailMessage
 			$this->aExtend = array();
 		}
 
+		$i = 0;
+		while (isset($this->aExtend[$sName]))
+		{
+			$sName .= $i;
+			$i++;
+		}
+		
 		$this->aExtend[$sName] = $mValue;
 		
 		return $this;
