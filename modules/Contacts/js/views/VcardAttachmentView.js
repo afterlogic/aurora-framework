@@ -1,7 +1,10 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	ko = require('knockout'),
+	
+	Utils = require('core/js/utils/Common.js'),
 	
 	CVcardModel = require('modules/Contacts/js/models/VcardModel.js')
 ;
@@ -23,10 +26,16 @@ CVcardAttachmentView.prototype.ViewTemplate = 'Contacts_VcardAttachmentView';
  */
 CVcardAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
-	if (oMessageProps && oMessageProps.oExtend.VCARD)
+	var
+		aExtend = (oMessageProps && Utils.isNonEmptyArray(oMessageProps.aExtend)) ? oMessageProps.aExtend : [],
+		oFoundRawVcard = _.find(aExtend, function (oRawVcard) {
+			return oRawVcard['@Object'] === 'Object/CApiMailVcard';
+		})
+	;
+	if (oFoundRawVcard)
 	{
 		var oVcard = new CVcardModel();
-		oVcard.parse(oMessageProps.oExtend.VCARD);
+		oVcard.parse(oFoundRawVcard);
 		this.vcard(oVcard);
 	}
 	else

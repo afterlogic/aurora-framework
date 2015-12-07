@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
 	
 	CIcalModel = require('modules/Calendar/js/models/CIcalModel.js')
@@ -28,11 +29,17 @@ CIcalAttachmentView.prototype.ViewTemplate = 'Calendar_IcalAttachmentView';
  */
 CIcalAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
-	if (oMessageProps && oMessageProps.oExtend && oMessageProps.oExtend.ICAL)
+	var
+		aExtend = (oMessageProps && Utils.isNonEmptyArray(oMessageProps.aExtend)) ? oMessageProps.aExtend : [],
+		oFoundRawIcal = _.find(aExtend, function (oRawIcal) {
+			return oRawIcal['@Object'] === 'Object/CApiMailIcs';
+		})
+	;
+	if (oFoundRawIcal)
 	{
 		var
 			sAttendee = App.getAttendee(oMessageProps.aToEmails),
-			oIcal = new CIcalModel(oMessageProps.oExtend.ICAL, sAttendee)
+			oIcal = new CIcalModel(oFoundRawIcal, sAttendee)
 		;
 		
 		// animation of buttons turns on with delay

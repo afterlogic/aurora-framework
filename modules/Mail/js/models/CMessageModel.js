@@ -463,7 +463,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			this.safety(oData.Safety);
 			this.sourceHeaders(oData.Headers);
 			
-			this.oExtend = oData.Extend;
+			this.aExtend = oData.Extend;
 			
 			this.completelyFilled(true);
 		}
