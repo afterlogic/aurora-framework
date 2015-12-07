@@ -1217,9 +1217,6 @@ class CApiMailMessage
 			{
 				$mResult['Extend'][] = \CApiResponseManager::GetResponseObject($oExtend);
 			}
-			
-			$mResult['ICAL'] = \CApiResponseManager::GetResponseObject($this->getExtend('ICAL'));
-			$mResult['VCARD'] = \CApiResponseManager::GetResponseObject($this->getExtend('VCARD'));
 
 			$mResult['Safety'] = $this->getSafety();
 			$mResult['HasExternals'] = $bHasExternals;
