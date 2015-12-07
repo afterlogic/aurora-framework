@@ -1213,9 +1213,12 @@ class CApiMailMessage
 
 			
 			$mResult['Extend'] = array();
-			foreach ($this->aExtend as $sKey => $oExtend)
+			if (is_array($this->aExtend))
 			{
-				$mResult['Extend'][$sKey] = \CApiResponseManager::GetResponseObject($oExtend);
+				foreach ($this->aExtend as $sKey => $oExtend)
+				{
+					$mResult['Extend'][$sKey] = \CApiResponseManager::GetResponseObject($oExtend);
+				}
 			}
 
 			$mResult['Safety'] = $this->getSafety();
