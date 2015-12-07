@@ -638,7 +638,8 @@ class CApiUsersManager extends AApiManagerWithStorage
 						}
 					}
 				}
-				
+
+/* TODO:				
 				if (trim($oAccount->SocialEmail) !== '')
 				{
 					$oDefaultAccount = $this->getAccountByEmail($oAccount->SocialEmail);
@@ -655,7 +656,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 						}
 					}
 				}
-
+*/
 				$bUseOnlyHookUpdate = false;
 				CApi::Plugin()->RunHook('api-update-account', array(&$oAccount, &$bUseOnlyHookUpdate));
 				if (!$bUseOnlyHookUpdate)
