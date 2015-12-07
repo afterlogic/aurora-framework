@@ -164,15 +164,21 @@ CHtmlEditorView.prototype.resize = function ()
 		iHeWidth = $parent.width() - iHeWidthMargins,
 
 		iWaHeightMargins = $workarea.outerHeight(true) - $workarea.height(),
-		iHeHeight = $parent.height(),
-		iWaHeight = iHeHeight - iWaHeightMargins - $toolbar.outerHeight()
+		iHeHeight = $parent.height()
 	;
 	
-	$htmlEditor.width(iHeWidth);
-	$workarea.width(iHeWidth - iWaWidthMargins);
+	if (iHeWidth > 0)
+	{
+		$htmlEditor.width(iHeWidth);
+		$workarea.width(iHeWidth - iWaWidthMargins);
 
-	$htmlEditor.height(iHeHeight);
-	$workarea.height(iWaHeight);
+		if (iHeHeight < 280)
+		{
+			iHeHeight = 280;
+		}
+		$htmlEditor.height(iHeHeight);
+		$workarea.height(iHeHeight - iWaHeightMargins - $toolbar.outerHeight());
+	}
 };
 	
 CHtmlEditorView.prototype.init = function ()

@@ -413,6 +413,22 @@ function CComposeView()
 	
 	this.registerOwnToolbarControllers();
 	
+	this.resizeHtmlEditorBinded = _.debounce(_.bind(function () {
+		this.oHtmlEditor.resize();
+	}, this), 1);
+	
+	ko.computed(function () {
+		this.visibleBcc();
+		this.visibleCc();
+		this.toAddr();
+		this.bccAddr();
+		this.notInlineAttachments();
+		this.senderList();
+		this.headersCompressed();
+		
+		this.resizeHtmlEditorBinded();
+	}, this);
+	
 //	if (AfterLogicApi.runPluginHook)
 //	{
 //		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
@@ -496,9 +512,7 @@ CComposeView.prototype.changeHeadersCompressed = function ()
  */
 CComposeView.prototype.onBind = function ()
 {
-	(this.$popupDom || this.$viewDom).on('resize', '.panel_content', _.debounce(_.bind(function () {
-		this.oHtmlEditor.resize();
-	}, this), 1));
+	(this.$popupDom || this.$viewDom).on('resize', '.panel_content', this.resizeHtmlEditorBinded);
 	
 	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(this.executeSave, this, false)]);
 
