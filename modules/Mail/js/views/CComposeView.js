@@ -415,6 +415,7 @@ function CComposeView()
 	
 	this.resizeHtmlEditorBinded = _.debounce(_.bind(function () {
 		this.oHtmlEditor.resize();
+		this.minHeightAdjustTrigger(true);
 	}, this), 1);
 	
 	ko.computed(function () {

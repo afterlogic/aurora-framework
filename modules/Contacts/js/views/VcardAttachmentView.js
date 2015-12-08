@@ -6,6 +6,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	
+	ContactsCache = require('modules/Contacts/js/Cache.js'),
 	CVcardModel = require('modules/Contacts/js/models/VcardModel.js')
 ;
 
@@ -34,8 +35,12 @@ CVcardAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProp
 	;
 	if (oFoundRawVcard)
 	{
-		var oVcard = new CVcardModel();
-		oVcard.parse(oFoundRawVcard);
+		var oVcard = ContactsCache.getVcard(oFoundRawVcard.File);
+		if (!oVcard)
+		{
+			oVcard = new CVcardModel();
+			oVcard.parse(oFoundRawVcard);
+		}
 		this.vcard(oVcard);
 	}
 	else

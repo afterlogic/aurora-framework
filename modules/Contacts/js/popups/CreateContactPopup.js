@@ -13,7 +13,8 @@ var
 	
 	Ajax = require('modules/Contacts/js/Ajax.js'),
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	LinksUtils = require('modules/Contacts/js/utils/Links.js')
+	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
+	HeaderItemView = require('modules/Contacts/js/views/HeaderItemView.js')
 ;
 
 /**
@@ -114,6 +115,11 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 		ContactsCache.clearInfoAboutEmail(oParameters.HomeEmail);
 		ContactsCache.getContactsByEmails([oParameters.HomeEmail], this.fCallback);
 		this.closePopup();
+		
+		if (!HeaderItemView.isCurrent())
+		{
+			HeaderItemView.recivedAnim(true);
+		}
 	}
 };
 
@@ -124,16 +130,16 @@ CCreateContactPopup.prototype.canBeSave = function ()
 
 CCreateContactPopup.prototype.goToContacts = function ()
 {
-	ContactsCache.newContactParams = {
+	ContactsCache.saveNewContactParams({
 		displayName: this.displayName(),
 		email: this.email(),
 		phone: this.phone(),
 		address: this.address(),
 		skype: this.skype(),
 		facebook: this.facebook()
-	};
+	});
 	this.closePopup();
-	Routing.replaceHash(LinksUtils.contacts());
+	Routing.replaceHash(LinksUtils.getContacts());
 };
 
 module.exports = new CCreateContactPopup();

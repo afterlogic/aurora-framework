@@ -174,6 +174,7 @@ CHtmlEditorView.prototype.resize = function ()
 		{
 			iHeHeight = 280;
 		}
+		console.log('iHeHeight', iHeHeight);
 		$htmlEditor.height(iHeHeight);
 		$workarea.height(iHeHeight - iWaHeightMargins - $toolbar.outerHeight());
 	}

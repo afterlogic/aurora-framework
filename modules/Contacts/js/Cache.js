@@ -14,14 +14,12 @@ var
  */
 function CContactsCache()
 {
-	this.contacts = {};
-	this.responseHandlers = {};
+	this.oContacts = {};
+	this.oResponseHandlers = {};
 	
-	this.vcardAttachments = [];
+	this.aVcardAttachments = [];
 	
-	this.recivedAnim = ko.observable(false).extend({'autoResetToFalse': 500});
-
-	this.newContactParams = null;
+	this.oNewContactParams = null;
 }
 
 /**
@@ -29,7 +27,7 @@ function CContactsCache()
  */
 CContactsCache.prototype.clearInfoAboutEmail = function (sEmail)
 {
-	this.contacts[sEmail] = undefined;
+	this.oContacts[sEmail] = undefined;
 };
 
 /**
@@ -46,10 +44,8 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 		aEmailsForRequest = [],
 		sHandlerId = Math.random().toString()
 	;
-
 	_.each(aEmails, _.bind(function (sEmail) {
-		var oContact = this.contacts[sEmail];
-
+		var oContact = this.oContacts[sEmail];
 		if (oContact !== undefined)
 		{
 			aContacts[sEmail] = oContact;
@@ -67,7 +63,7 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 
 	if (aEmailsForRequest.length > 0)
 	{
-		this.responseHandlers[sHandlerId] = fResponseHandler;
+		this.oResponseHandlers[sHandlerId] = fResponseHandler;
 
 		Ajax.send('GetContactsByEmails', {
 			'Emails': aEmailsForRequest.join(','),
@@ -86,7 +82,7 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 {
 	var
 		oParameters = JSON.parse(oRequest.Parameters),
-		fResponseHandler = this.responseHandlers[oParameters.HandlerId],
+		fResponseHandler = this.oResponseHandlers[oParameters.HandlerId],
 		oResult = oResponse.Result,
 		aEmails = oParameters.Emails.split(','),
 		aContacts = []
@@ -100,17 +96,17 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 			if (oContact)
 			{
 				oContact.parse(oRawContact);
-				this.contacts[sEmail] = oContact;
+				this.oContacts[sEmail] = oContact;
 			}
 		}, this));
 	}
 	
 	_.each(aEmails, _.bind(function (sEmail) {
-		if (!this.contacts[sEmail])
+		if (!this.oContacts[sEmail])
 		{
-			this.contacts[sEmail] = null;
+			this.oContacts[sEmail] = null;
 		}
-		aContacts[sEmail] = this.contacts[sEmail];
+		aContacts[sEmail] = this.oContacts[sEmail];
 	}, this));
 	
 	if ($.isFunction(fResponseHandler))
@@ -118,7 +114,7 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 		fResponseHandler(aContacts);
 	}
 	
-	delete this.responseHandlers[oParameters.HandlerId];
+	delete this.oResponseHandlers[oParameters.HandlerId];
 };
 
 /**
@@ -126,7 +122,17 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
  */
 CContactsCache.prototype.addVcard = function (oVcard)
 {
-	this.vcardAttachments.push(oVcard);
+	this.aVcardAttachments.push(oVcard);
+};
+
+/**
+ * @param {string} sFile
+ */
+CContactsCache.prototype.getVcard = function (sFile)
+{
+	return _.find(this.aVcardAttachments, function (oVcard) {
+		return oVcard.file() === sFile;
+	});
 };
 
 /**
@@ -134,7 +140,7 @@ CContactsCache.prototype.addVcard = function (oVcard)
  */
 CContactsCache.prototype.markVcardsNonexistentByUid = function (aUids)
 {
-	_.each(this.vcardAttachments, function (oVcard) {
+	_.each(this.aVcardAttachments, function (oVcard) {
 		if (-1 !== _.indexOf(aUids, oVcard.uid()))
 		{
 			oVcard.exists(false);
@@ -143,16 +149,21 @@ CContactsCache.prototype.markVcardsNonexistentByUid = function (aUids)
 };
 
 /**
- * @param {string} sFile
+ * @param {Object} oNewContactParams
  */
-CContactsCache.prototype.markVcardExistentByFile = function (sFile)
+CContactsCache.prototype.saveNewContactParams = function (oNewContactParams)
 {
-	_.each(this.vcardAttachments, function (oVcard) {
-		if (oVcard.file() === sFile)
-		{
-			oVcard.exists(true);
-		}
-	});
+	this.oNewContactParams = oNewContactParams;
+};
+
+/**
+ * @returns {Object}
+ */
+CContactsCache.prototype.getNewContactParams = function ()
+{
+	var oNewContactParams = this.oNewContactParams;
+	this.oNewContactParams = null;
+	return oNewContactParams;
 };
 
 module.exports = new CContactsCache();

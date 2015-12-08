@@ -14,7 +14,7 @@ function CHeaderItemView(sLinkText)
 	this.linkText = ko.observable(sLinkText);
 	this.isCurrent = ko.observable(false);
 	
-	this.recivedAnim = ko.observable(false);
+	this.recivedAnim = ko.observable(false).extend({'autoResetToFalse': 500});
 	this.unseenCount = ko.observable(0);
 	
 	this.allowChangeTitle = ko.observable(false); // allows to change favicon and browser title when browser is inactive

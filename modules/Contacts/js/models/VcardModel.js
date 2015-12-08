@@ -7,7 +7,8 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	Ajax = require('modules/Contacts/js/Ajax.js'),
 	
-	ContactsCache = require('modules/Contacts/js/Cache.js')
+	ContactsCache = require('modules/Contacts/js/Cache.js'),
+	HeaderItemView = require('modules/Contacts/js/views/HeaderItemView.js')
 ;
 
 /**
@@ -63,16 +64,7 @@ CVcardModel.prototype.addContact = function ()
 		this.isJustSaved(false);
 	}, this), 20000);
 	
-	ContactsCache.recivedAnim(true);
-	
-//	if (App.isNewTab() && window.opener)
-//	{
-//		window.opener.App.ContactsCache.markVcardExistentByFile(this.file());
-//	}
-//	else
-//	{
-		ContactsCache.markVcardExistentByFile(this.file());
-//	}
+	HeaderItemView.recivedAnim(true);
 };
 
 module.exports = CVcardModel;
