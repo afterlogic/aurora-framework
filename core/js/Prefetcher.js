@@ -2,10 +2,9 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
 	
-	Ajax = null,
+	Ajax = require('core/js/Ajax.js'),
 	App = require('core/js/App.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	
@@ -16,21 +15,8 @@ var
 	bServerInitializationsDone = false
 ;
 
-Prefetcher.requireAjax = function ()
-{
-	if (Ajax === null)
-	{
-		Ajax = require('core/js/Ajax.js');
-		Ajax.registerOnAllRequestsClosedHandler(function () {
-			Prefetcher.start();
-		});
-	}
-};
-
 Prefetcher.start = function ()
 {
-	Prefetcher.requireAjax();
-	
 	if (App.isAuth() && !App.isNewTab() && !Ajax.hasInternetConnectionProblem() && !Ajax.hasOpenedRequests())
 	{
 		Prefetcher.prefetchAll();
@@ -77,8 +63,7 @@ Prefetcher.doServerInitializations = function ()
 {
 	if (!App.isNewTab() && !bServerInitializationsDone)
 	{
-		Prefetcher.requireAjax();
-		Ajax.send({'Action': 'SystemDoServerInitializations'});
+		Ajax.send('Core', 'DoServerInitializations', null);
 		bServerInitializationsDone = true;
 		
 		return true;
@@ -86,12 +71,6 @@ Prefetcher.doServerInitializations = function ()
 	return false;
 };
 
-setInterval(_.bind(function () {
+Ajax.registerOnAllRequestsClosedHandler(function () {
 	Prefetcher.start();
-}, this), 30000);
-
-module.exports = {
-	start: function () {
-		Prefetcher.start();
-	}
-};
+});

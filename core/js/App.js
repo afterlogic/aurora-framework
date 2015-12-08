@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	ko = require('knockout'),
-	Modernizr = require('modernizr'),
+	modernizr = require('modernizr'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	Settings = require('core/js/Settings.js'),
@@ -33,25 +33,25 @@ function InitNotMobileRequires()
 
 function InitModernizr()
 {
-	if (Modernizr && navigator)
+	if (modernizr && navigator)
 	{
-		Modernizr.addTest('pdf', function() {
+		modernizr.addTest('pdf', function() {
 			return !!_.find(navigator.mimeTypes, function (oMimeType) {
 				return 'application/pdf' === oMimeType.type;
 			});
 		});
 
-		Modernizr.addTest('newtab', function() {
+		modernizr.addTest('newtab', function() {
 			return App.isNewTab();
 		});
 
-		Modernizr.addTest('mobile', function() {
+		modernizr.addTest('mobile', function() {
 			return App.isMobile();
 		});
 		
 		if (navigator)
 		{
-			Modernizr.addTest('native-android-browser', function() {
+			modernizr.addTest('native-android-browser', function() {
 				var ua = navigator.userAgent;
 				return (ua.indexOf('Mozilla/5.0') > -1 && ua.indexOf('Android ') > -1 && ua.indexOf('534') > -1 && ua.indexOf('AppleWebKit') > -1);
 				//return navigator.userAgent === 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.34 Safari/534.24';
@@ -146,6 +146,10 @@ CApp.prototype.init = function ()
 	Routing.init();
 	
 	require('core/js/AppTab.js');
+	if (!this.bNewTab)
+	{
+		require('core/js/Prefetcher.js');
+	}
 	
 	Storage.setData('AuthToken', Storage.getData('AuthToken'));
 };

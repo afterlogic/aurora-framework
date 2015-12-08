@@ -39,7 +39,9 @@ module.exports = function (oSettings) {
 		getHeaderItem: function () {
 			return require('modules/Mail/js/views/HeaderItemView.js');
 		},
-		prefetcher: require('modules/Mail/js/Prefetcher.js'),
+		getPrefetcher: function () {
+			return require('modules/Mail/js/Prefetcher.js');
+		},
 		registerMessagePaneController: function (oController, sPlace) {
 			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
 			MessagePaneView.registerController(oController, sPlace);

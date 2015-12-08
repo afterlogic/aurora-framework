@@ -83,9 +83,9 @@ module.exports = {
 		var aPrefetchers = [];
 
 		_.each(oModules, function (oModule, sModuleName) {
-			if (oModule.prefetcher)
+			if ($.isFunction(oModule.getPrefetcher))
 			{
-				aPrefetchers.push(oModule.prefetcher);
+				aPrefetchers.push(oModule.getPrefetcher());
 			}
 		});
 
