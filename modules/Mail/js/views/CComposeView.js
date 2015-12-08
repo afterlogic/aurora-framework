@@ -375,14 +375,7 @@ function CComposeView()
 	this.minHeightAdjustTrigger = ko.observable(false).extend({'autoResetToFalse': 105});
 	this.minHeightRemoveTrigger = ko.observable(false).extend({'autoResetToFalse': 105});
 	this.jqContainers = $('.pSevenMain:first, .popup.compose_popup');
-	ko.computed(function () {
-		this.minHeightAdjustTrigger();
-		this.minHeightRemoveTrigger();
-		_.delay(function () {
-			$('.compose_popup .panel_content .panels').trigger('resize');
-		}, 200);
-	}, this);
-
+	
 	this.hasSomethingToSave = ko.computed(function () {
 		return this.isChanged() && this.isEnableSaving();
 	}, this);
@@ -412,23 +405,6 @@ function CComposeView()
 	}, this);
 	
 	this.registerOwnToolbarControllers();
-	
-	this.resizeHtmlEditorBinded = _.debounce(_.bind(function () {
-		this.oHtmlEditor.resize();
-		this.minHeightAdjustTrigger(true);
-	}, this), 1);
-	
-	ko.computed(function () {
-		this.visibleBcc();
-		this.visibleCc();
-		this.toAddr();
-		this.bccAddr();
-		this.notInlineAttachments();
-		this.senderList();
-		this.headersCompressed();
-		
-		this.resizeHtmlEditorBinded();
-	}, this);
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{
@@ -513,7 +489,27 @@ CComposeView.prototype.changeHeadersCompressed = function ()
  */
 CComposeView.prototype.onBind = function ()
 {
-	(this.$popupDom || this.$viewDom).on('resize', '.panel_content', this.resizeHtmlEditorBinded);
+	ko.computed(function () {
+		this.minHeightAdjustTrigger();
+		this.minHeightRemoveTrigger();
+		_.delay(function () {
+			$('.compose_popup .panel_content .panels').trigger('resize');
+		}, 200);
+	}, this);
+	
+	this.jqContainers = $('.pSevenMain:first, .popup.compose_popup');
+	
+	(this.$popupDom || this.$viewDom).find('.panel_content').on('resize', _.debounce(_.bind(function () {
+		this.oHtmlEditor.resize();
+	}, this), 1));
+	
+	ko.computed(function () {
+		this.visibleBcc();
+		this.visibleCc();
+		this.headersCompressed();
+		
+		this.minHeightAdjustTrigger(true);
+	}, this);
 	
 	ModulesManager.run('SessionTimeout', 'registerFunction', [_.bind(this.executeSave, this, false)]);
 
