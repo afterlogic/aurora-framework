@@ -2,7 +2,6 @@
 
 var
 	$ = require('jquery'),
-	ko = require('knockout'),
 	_ = require('underscore'),
 	
 	Ajax = require('modules/Contacts/js/Ajax.js'),
@@ -16,6 +15,7 @@ function CContactsCache()
 {
 	this.oContacts = {};
 	this.oResponseHandlers = {};
+	this.aRequestedEmails = [];
 	
 	this.aVcardAttachments = [];
 	
@@ -50,7 +50,7 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 		{
 			aContacts[sEmail] = oContact;
 		}
-		else
+		else if (_.indexOf(this.aRequestedEmails, sEmail) === -1)
 		{
 			aEmailsForRequest.push(sEmail);
 		}
@@ -64,7 +64,9 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 	if (aEmailsForRequest.length > 0)
 	{
 		this.oResponseHandlers[sHandlerId] = fResponseHandler;
-
+		
+		this.aRequestedEmails = _.union(this.aRequestedEmails, aEmailsForRequest);
+		
 		Ajax.send('GetContactsByEmails', {
 			'Emails': aEmailsForRequest.join(','),
 			'HandlerId': sHandlerId
@@ -85,7 +87,7 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 		fResponseHandler = this.oResponseHandlers[oParameters.HandlerId],
 		oResult = oResponse.Result,
 		aEmails = oParameters.Emails.split(','),
-		aContacts = []
+		oContacts = {}
 	;
 	
 	if (oResult)
@@ -101,17 +103,19 @@ CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oR
 		}, this));
 	}
 	
+	this.aRequestedEmails = _.difference(this.aRequestedEmails, aEmails);
+		
 	_.each(aEmails, _.bind(function (sEmail) {
 		if (!this.oContacts[sEmail])
 		{
 			this.oContacts[sEmail] = null;
 		}
-		aContacts[sEmail] = this.oContacts[sEmail];
+		oContacts[sEmail] = this.oContacts[sEmail];
 	}, this));
 	
 	if ($.isFunction(fResponseHandler))
 	{
-		fResponseHandler(aContacts);
+		fResponseHandler(oContacts);
 	}
 	
 	delete this.oResponseHandlers[oParameters.HandlerId];
