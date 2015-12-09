@@ -30,19 +30,13 @@ Prefetcher.prefetchAll = function ()
 	_.each(ModulesPrefetchers, function (oModulePrefetcher) {
 		if (!bPrefetchStarted)
 		{
-			if (Settings.AllowPrefetch)
+			if (Settings.AllowPrefetch && $.isFunction(oModulePrefetcher.startAll))
 			{
-				if ($.isFunction(oModulePrefetcher.startAll))
-				{
-					bPrefetchStarted = oModulePrefetcher.startAll();
-				}
+				bPrefetchStarted = oModulePrefetcher.startAll();
 			}
-			else
+			else if ($.isFunction(oModulePrefetcher.startMin))
 			{
-				if ($.isFunction(oModulePrefetcher.startMin))
-				{
-					bPrefetchStarted = oModulePrefetcher.startMin();
-				}
+				bPrefetchStarted = oModulePrefetcher.startMin();
 			}
 		}
 	});

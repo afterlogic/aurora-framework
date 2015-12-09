@@ -166,7 +166,7 @@ function CHelpdeskView()
 	this.checkCommand = Utils.createCommand(this, function () {
 		this.requestThreadsList();
 		this.requestPosts();
-		this.startAutocheckmail();
+		this.startAutoCheckState();
 	});
 
 	this.closeCommand = Utils.createCommand(this, fChangeStateHelper(Enums.HelpdeskThreadStates.Resolved), this.isEnableListActions);
@@ -536,7 +536,7 @@ CHelpdeskView.prototype.hideClientDetails = function ()
 	this.clientDetailsVisible(false);
 };
 
-CHelpdeskView.prototype.startAutocheckmail = function ()
+CHelpdeskView.prototype.startAutoCheckState = function ()
 {
 	var self = this, iIntervalInMin = UserSettings.AutoRefreshIntervalMinutes;
 	if (0 < iIntervalInMin)
@@ -577,7 +577,7 @@ CHelpdeskView.prototype.onBind = function ()
 //		App.registerHelpdeskUpdateFunction(_.bind(this.checkCommand, this));
 //	}
 
-	this.startAutocheckmail();
+	this.startAutoCheckState();
 };
 
 CHelpdeskView.prototype.onShow = function ()
