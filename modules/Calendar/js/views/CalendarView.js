@@ -488,23 +488,27 @@ CCalendarView.prototype.setTimeline = function ()
 };
 
 /**
- * @param {Object} oView
  * When all event's rendered
  */
-CCalendarView.prototype.updateAllEvents = function (oView)
+CCalendarView.prototype.updateAllEvents = function ()
 {
-	if (this.calendars.getEvents().length > 0 && this.selectedView() === 'month'){
-		if (!this.loadOnce){
+	if (this.calendars.getEvents().length > 0 && this.selectedView() === 'month')
+	{
+		if (!this.loadOnce)
+		{
 			this.topPositionToday.valueHasMutated();
 			this.loadOnce = true;
-		} else {
+		}
+		else
+		{
 			this.scrollModel()['vertical'].set(this.scrollHeight);
 		}
 
 		/* open current more link */
-//		if (this.popUpStatus){
-//			$('body').find('.fc-row.fc-week').eq(this.linkRow).find('.fc-more-cell').eq(this.linkColumn).find('a.fc-more').click();
-//		}
+		if (this.popUpStatus)
+		{
+			$('body').find('.fc-row.fc-week').eq(this.linkRow).find('.fc-more-cell').eq(this.linkColumn).find('a.fc-more').click();
+		}
 	}
 };
 
