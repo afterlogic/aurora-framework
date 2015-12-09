@@ -238,29 +238,30 @@ _.extendOwn(CCalendarView.prototype, CAbstractScreenView.prototype);
 
 CCalendarView.prototype.ViewTemplate = 'Calendar_CalendarView';
 
-/*
+/**
  * Hot keys events
-*/
+ */
 CCalendarView.prototype.hotKeysBind = function ()
 {
-//	var self = this;
-//	$(document).on('keyup', function(ev) {
-//		var
-//			nKey = ev.keyCode
-//		;
-//		/* Close popup more if click Esc button */
-//		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month'){
-//			if (nKey === 27 && self.popUpStatus) {
-//				/* two triggers for correct pluggin working */
-//				$('body').trigger('click');
-//				if (!self.popUpStatus){
-//					$('body').trigger('mousedown');
-//				}
-//			}
-//		}
-//	});
+	var self = this;
+	$(document).on('keyup', function(ev) {
+		var iKey = ev.keyCode;
+		/* Close popup "more events" if click Esc button */
+		if (self.calendars.getEvents().length > 0 && self.selectedView() === 'month')
+		{
+			if (iKey === Enums.Key.Esc && self.popUpStatus)
+			{
+				/* two triggers for correct plugin working */
+				$('body').trigger('click');
+				/* popUpStatus has just been changed */
+				if (!self.popUpStatus)
+				{
+					$('body').trigger('mousedown');
+				}
+			}
+		}
+	});
 };
-
 
 CCalendarView.prototype.getFCObject = function ()
 {
