@@ -728,10 +728,10 @@ CContactsView.prototype.onShow = function ()
 	this.oPageSwitcher.show();
 	this.oPageSwitcher.perPage(Settings.ContactsPerPage);
 
-//	if (this.oJua)
-//	{
-//		this.oJua.setDragAndDropEnabledStatus(true);
-//	}
+	if (this.oJua)
+	{
+		this.oJua.setDragAndDropEnabledStatus(true);
+	}
 };
 
 CContactsView.prototype.onHide = function ()
@@ -742,10 +742,10 @@ CContactsView.prototype.onHide = function ()
 	
 	this.oPageSwitcher.hide();
 
-//	if (this.oJua)
-//	{
-//		this.oJua.setDragAndDropEnabledStatus(false);
-//	}
+	if (this.oJua)
+	{
+		this.oJua.setDragAndDropEnabledStatus(false);
+	}
 };
 
 CContactsView.prototype.onBind = function ()
@@ -783,7 +783,7 @@ CContactsView.prototype.onBind = function ()
 
 	this.hotKeysBind();
 
-//	this.initUploader();
+	this.initUploader();
 };
 
 CContactsView.prototype.hotKeysBind = function ()
