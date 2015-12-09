@@ -27,12 +27,6 @@ function CContactModel()
 	this.sPhoneDefaultType = Enums.ContactPhoneType.Mobile;
 	this.sAddressDefaultType = Enums.ContactAddressType.Personal;
 	
-	this.voiceApp = null;
-//	if (App.Phone)
-//	{
-//		this.voiceApp = App.Phone.voiceApp;
-//	}
-
 	this.idContact = ko.observable('');
 	this.idUser = ko.observable('');
 	this.global = ko.observable(false);
@@ -738,14 +732,6 @@ CContactModel.prototype.sendThisContact = function ()
 CContactModel.prototype.isStrLink = function (mLink)
 {
 	return (/^http/).test(mLink);
-};
-
-/**
- * @param {string} sPhone
- */
-CContactModel.prototype.onCallClick = function (sPhone)
-{
-//	App.Phone.call(sPhone);
 };
 
 module.exports = CContactModel;

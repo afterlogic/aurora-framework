@@ -116,14 +116,12 @@
 								<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_PHONE"></span>:
 							</span>
 							<span class="value" data-bind="text: personalPhone"></span>
-							<span class="link call" data-i18n="call" data-bind="i18n: 'text', click: function() { onCallClick(personalPhone()); }, visible: voiceApp"></span>
 						</div>
 						<div class="row mobile" data-bind="visible: '' !== personalMobile()">
 							<span class="label">
 								<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_MOBILE"></span>:
 							</span>
 							<span class="value" data-bind="text: personalMobile"></span>
-							<span class="link call" data-i18n="call" data-bind="i18n: 'text', click: function() { onCallClick(personalMobile()); }, visible: voiceApp"></span>
 						</div>
 					</div>
 				</div>
@@ -209,7 +207,6 @@
 								<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_PHONE"></span>:
 							</span>
 							<span class="value" data-bind="text: businessPhone"></span>
-							<span class="link call" data-i18n="call" data-bind="i18n: 'text', click: function() { onCallClick(businessPhone()); }, visible: voiceApp"></span>
 						</div>
 					</div>
 				</div>

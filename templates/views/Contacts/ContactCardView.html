@@ -69,7 +69,6 @@
 						<span class="stroke" data-bind="visible: personalPhone(), i18n: 'text'" data-i18n="CONTACTS/LABEL_PHONE"></span>
 						<span class="stroke" data-bind="visible: (personalFax() && personalPhone())">/</span>
 						<span class="stroke" data-bind="visible: personalFax(), i18n: 'text'" data-i18n="CONTACTS/LABEL_FAX"></span> <span class="stroke" data-bind="visible: personalPhone(), text: personalPhone"></span>
-						<span class="link call" data-i18n="call" data-bind="i18n: 'text', click: function() {onCallClick(personalPhone());}, visible: voiceApp"></span>
 						<span class="stroke" data-bind="visible: (personalFax() && personalPhone() && (personalFax() !== personalPhone()))">/</span>
 						<span class="stroke" data-bind="visible: (personalFax() && (personalFax() !== personalPhone())), text: personalFax"></span>
 					</span>
@@ -77,7 +76,6 @@
 				<div class="row" data-bind="visible: personalMobile()">
 					<span class="value">
 						<span class="stroke" data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_MOBILE"></span> <span data-bind="text: personalMobile"></span>
-						<span class="link call" data-i18n="call" data-bind="i18n: 'text', click: function() {onCallClick(personalMobile());}, visible: voiceApp"></span>
 					</span>
 				</div>
 			</div>
@@ -131,7 +129,6 @@
 						<span class="stroke" data-bind="visible: businessPhone(), i18n: 'text'" data-i18n="CONTACTS/LABEL_PHONE"></span>
 						<span class="stroke" data-bind="visible: (businessFax() && businessPhone())">/</span>
 						<span class="stroke" data-bind="visible: businessFax(), i18n: 'text'" data-i18n="CONTACTS/LABEL_FAX"></span> <span class="stroke" data-bind="visible: businessPhone(), text: businessPhone"></span>
-						<span class="link call" data-i18n="call" data-bind="i18n: 'text', click: function() {onCallClick(businessPhone());}, visible: voiceApp"></span>
 						<span class="stroke" data-bind="visible: (businessFax() && businessPhone() && (businessFax() !== businessPhone()))">/</span>
 						<span class="stroke" data-bind="visible: (businessFax() && (businessFax() !== businessPhone())), text: businessFax"></span>
 					</span>
