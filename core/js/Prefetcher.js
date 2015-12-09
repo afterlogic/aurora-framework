@@ -42,17 +42,6 @@ Prefetcher.prefetchAll = function ()
 	});
 };
 
-//Prefetcher.initHelpdesk = function ()
-//{
-//	if (AppData.User.IsHelpdeskSupported && !this.helpdeskInitialized())
-//	{
-//		App.Screens.initHelpdesk();
-//		this.helpdeskInitialized(true);
-//		return true;
-//	}
-//	return false;
-//};
-
 Prefetcher.doServerInitializations = function ()
 {
 	if (!App.isNewTab() && !bServerInitializationsDone)

@@ -272,19 +272,6 @@ CScreens.prototype.initInformation = function ()
 	this.informationScreen(this.showView('information'));
 };
 
-//CScreens.prototype.initHelpdesk = function ()
-//{
-//	var
-//		fGetScreen = this.oConstructors[Enums.Screens.Helpdesk],
-//		oScreen = this.oViews[Enums.Screens.Helpdesk]
-//	;
-//
-//	if (AppData.User.IsHelpdeskSupported && !oScreen && fGetScreen)
-//	{
-//		oScreen = this.initView(Enums.Screens.Helpdesk, fGetScreen);
-//	}
-//};
-
 var Screens = new CScreens();
 
 module.exports = Screens;
