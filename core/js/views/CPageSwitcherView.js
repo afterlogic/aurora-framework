@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js')
 ;
@@ -78,17 +78,6 @@ function CPageSwitcherView(iCount, iPerPage)
 		this.lastPage(iEnd);
 		
 	}, this);
-
-	
-//	this.firstPage = ko.computed(function () {
-//		var iValue = this.currentPage() - this.iLimitAround;
-//		return (iValue > 0) ? iValue : 1;
-//	}, this);
-//
-//	this.lastPage = ko.computed(function () {
-//		var iValue = this.firstPage() + this.iLimitAround * 2;
-//		return (iValue <= this.pagesCount()) ? iValue : this.pagesCount();
-//	}, this);
 
 	this.visibleFirst = ko.computed(function () {
 		return (this.firstPage() > 1);

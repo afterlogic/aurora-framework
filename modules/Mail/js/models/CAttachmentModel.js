@@ -1,18 +1,15 @@
 'use strict';
 
 var
-	ko = require('knockout'),
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
-	
-	Settings = require('modules/Mail/js/Settings.js'),
-	Accounts = require('modules/Mail/js/AccountList.js')
+	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')
 ;
 
 /**

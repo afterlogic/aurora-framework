@@ -35,16 +35,6 @@ ko.bindingHandlers.customScrollbar = {
 			oScroll = null
 		;
 
-		/*_.delay(_.bind(function () {
-			var jqCustomScrollbar = jqElement.find('.customscroll-scrollbar-vertical');
-
-			jqCustomScrollbar.on('click', function (oEv) {
-				oEv.stopPropagation();
-			});
-		}, this), 1000);*/
-
-
-
 		oCommand = /** @type {{scrollToTopTrigger:{subscribe:Function},scrollToBottomTrigger:{subscribe:Function},scrollTo:{subscribe:Function},reset:Function}}*/ oCommand;
 
 		jqElement.addClass('scroll-wrap').customscroll(oCommand);
@@ -140,7 +130,6 @@ ko.bindingHandlers.draggablePlace = {
 			'handle': '.dragHandle',
 			'cursorAt': {'top': 0, 'left': 0},
 			'helper': function (oEvent) {
-				//return fValueAccessor().call(oViewModel, oEvent && oEvent.target ? ko.dataFor(oEvent.target) : null);
 				return fValueAccessor().apply(oViewModel, oEvent && oEvent.target ? [ko.dataFor(oEvent.target), oEvent.ctrlKey] : null);
 			},
 			'start': (oAllBindingsAccessor && oAllBindingsAccessor['draggableDragStartCallback']) ? oAllBindingsAccessor['draggableDragStartCallback'] : function () {},
@@ -343,8 +332,6 @@ ko.bindingHandlers.autocompleteSimple = {
 			jqEl = $(oElement),
 			oOptions = fValueAccessor(),
 			fCallback = oOptions['callback'],
-			fDataAccessor = oOptions.dataAccessor ? oOptions.dataAccessor : function () {},
-			fDeleteAccessor = oOptions.deleteAccessor ? oOptions.deleteAccessor : function () {},
 			fDelete = function () {
 				fDeleteAccessor(oSelectedItem);
 				var oAutocomplete = jqEl.data('customAutocomplete') || jqEl.data('uiAutocomplete') || jqEl.data('autocomplete') || jqEl.data('ui-autocomplete');
@@ -445,10 +432,6 @@ ko.bindingHandlers.customSelect = {
 					aOptions[_.indexOf(oCommand['options'], item)].addClass(oCommand['selected']);
 					oText.text($.trim(item[oCommand['optionsText']]));
 				}
-
-//				aOptions[_.indexOf(oCommand['options'], item)].addClass(oCommand['selected']);
-//				oText.text($.trim(item[oCommand['optionsText']]));
-
 				return item[oCommand['optionsValue']];
 			},
 			updateList = function (aList) {
@@ -562,10 +545,6 @@ ko.bindingHandlers.customSelect = {
 						});
 					});
 				}
-				/*else
-				{
-					jqElement.addClass(oCommand['expand']);
-				}*/
 			}
 		});
 	}

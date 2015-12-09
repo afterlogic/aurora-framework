@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
+	ko = require('knockout'),
 	
 	App = require('core/js/App.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),

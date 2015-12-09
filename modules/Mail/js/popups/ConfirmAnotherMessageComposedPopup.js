@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
 	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;

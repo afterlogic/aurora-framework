@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	moment = require('moment'),
 	
 	Utils = require('core/js/utils/Common.js'),

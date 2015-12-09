@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -63,11 +63,6 @@ function CLoginView()
 		{
 			return TextUtils.i18n('LOGIN/BUTTON_SIGNING_IN');
 		}
-		/*else if (this.helpdeskQuestion())
-		{
-			return TextUtils.i18n('Sign in and Send');
-		}
-		else if (!this.helpdeskQuestion())*/
 		else
 		{
 			return TextUtils.i18n('LOGIN/BUTTON_SIGN_IN');
@@ -79,11 +74,6 @@ function CLoginView()
 		{
 			return TextUtils.i18n('HELPDESK/BUTTON_REGISTERING');
 		}
-		/*else if (this.helpdeskQuestion())
-		{
-			return TextUtils.i18n('Register and Send');
-		}
-		else if (!this.helpdeskQuestion())*/
 		else
 		{
 			return TextUtils.i18n('HELPDESK/BUTTON_REGISTER');
@@ -114,7 +104,6 @@ function CLoginView()
 	this.gotoRegister = ko.observable(false);
 	this.gotoSignin = ko.observable(false);
 	this.gotoSocialRegister = ko.observable(false);
-//	this.gotoActivation = ko.observable(false);
 	this.gotoChangepass = ko.observable(Settings.HelpdeskForgotHash ? true : false);
 
 	this.socialFacebook = ko.observable(Settings.SocialFacebook);
@@ -139,10 +128,10 @@ function CLoginView()
 
 	this.socialNetworkLogin();
 
-	if (AfterLogicApi.runPluginHook)
-	{
-		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
-	}
+//	if (AfterLogicApi.runPluginHook)
+//	{
+//		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
+//	}
 }
 
 CLoginView.prototype.__name = 'CLoginView';
@@ -189,7 +178,6 @@ CLoginView.prototype.onHide = function ()
 	this.gotoRegister(false);
 	this.gotoSignin(false);
 	this.gotoSocialRegister(false);
-//	this.gotoActivation(false);
 	this.gotoChangepass(false);
 
 };

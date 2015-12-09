@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -138,13 +138,7 @@ function CFilesView(bPopup)
 	
 	this.uploaderButton = ko.observable(null);
 	this.uploaderArea = ko.observable(null);
-	this.bDragActive = ko.observable(false);//.extend({'throttle': 1});
-//	this.bDragActive.subscribe(function () {
-//		if (this.searchPattern() !== '')
-//		{
-//			this.bDragActive(false);
-//		}
-//	}, this);
+	this.bDragActive = ko.observable(false);
 
 	this.bDragActiveComp = ko.computed(function () {
 		var bDrag = this.bDragActive();
@@ -840,11 +834,8 @@ CFilesView.prototype.executeDelete = function ()
 
 CFilesView.prototype.onShow = function ()
 {
-//	if (!this.loaded() || this.isPopup)
-//	{
-		this.loaded(true);
-		this.getStorages();
-//	}
+	this.loaded(true);
+	this.getStorages();
 
 	this.selector.useKeyboardKeys(true);
 
@@ -1154,10 +1145,10 @@ CFilesView.prototype.deleteFolderByName = function (sName)
 
 CFilesView.prototype.expungeFileItems = function ()
 {
-	this.folders(_.filter(this.folders(), function(oFolder){
+	this.folders(_.filter(this.folders(), function(oFolder) {
 		return !oFolder.deleted();
 	}, this));
-	this.files(_.filter(this.files(), function(oFile){
+	this.files(_.filter(this.files(), function(oFile) {
 		return !oFile.deleted();
 	}, this));
 };

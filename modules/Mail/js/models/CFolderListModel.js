@@ -166,9 +166,7 @@ CFolderListModel.prototype.setCurrentFolder = function (sFolderFullName, sFilter
  */
 CFolderListModel.prototype.getFolderByFullName = function (sFolderFullName)
 {
-	var
-		oFolder = this.oNamedCollection[sFolderFullName]
-	;
+	var oFolder = this.oNamedCollection[sFolderFullName];
 	
 	return oFolder ? oFolder : null;
 };

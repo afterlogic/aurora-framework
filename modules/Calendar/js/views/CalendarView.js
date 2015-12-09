@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	moment = require('moment'),
 	
 	Utils = require('core/js/utils/Common.js'),
@@ -449,7 +449,6 @@ CCalendarView.prototype.onShow = function ()
 CCalendarView.prototype.setTimeline = function () 
 {
 	var 
-		oView = this.$calendarGrid.fullCalendar("getView"),
 		now = new Date(),
 		nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
 		todayDate = new Date(this.todayDate.getFullYear(), this.todayDate.getMonth(), this.todayDate.getDate()),
@@ -480,16 +479,6 @@ CCalendarView.prototype.setTimeline = function ()
 	
 	timeline.show();
 	
-/*	
-	if (oView.start.toDate() < now && oView.end.toDate() > now)
-	{
-		timeline.show();
-	}
-	else
-	{
-		timeline.hide();
-	}
-*/
 	curSeconds = (now.getHours() * 60 * 60) + (now.getMinutes() * 60) + now.getSeconds();
 	percentOfDay = curSeconds / 86400; //24 * 60 * 60 = 86400, % of seconds in a day
 	topLoc = Math.floor(parentDiv.height() * percentOfDay);
@@ -842,7 +831,8 @@ CCalendarView.prototype.displayNext = function ()
 CCalendarView.prototype.changeView = function (viewName)
 {
 	this.selectedView(viewName);
-	if (viewName === 'month'){
+	if (viewName === 'month')
+	{
 		this.loadOnce = false;
 	}
 	this.$calendarGrid.fullCalendar('changeView', viewName);
@@ -864,8 +854,6 @@ CCalendarView.prototype.setAutoReloadTimer = function ()
 
 CCalendarView.prototype.reloadAll = function ()
 {
-//	this.startDateTime = 0;
-//	this.endDateTime = 0;
 	this.needsToReload = true;
 	
 	this.getCalendars();
@@ -881,33 +869,6 @@ CCalendarView.prototype.getTimeLimits = function ()
 	this.startDateTime = iStart;
 	this.endDateTime = iEnd;
 	this.needsToReload = true;
-	
-/*	
-	if (this.startDateTime === 0 && this.endDateTime === 0)
-	{
-		this.startDateTime = iStart;
-		this.endDateTime = iEnd;
-		this.needsToReload = true;
-	}
-	else if (iStart < this.startDateTime && iEnd > this.endDateTime)
-	{
-		this.startDateTime = iStart;
-		this.endDateTime = iEnd;
-		this.needsToReload = true;
-	}
-	else if (iStart < this.startDateTime)
-	{
-		iEnd= this.startDateTime;
-		this.startDateTime = iStart;
-		this.needsToReload = true;
-	}
-	else if (iEnd > this.endDateTime)
-	{
-		iStart = this.endDateTime;
-		this.endDateTime = iEnd;
-		this.needsToReload = true;
-	}
-*/	
 };
 
 CCalendarView.prototype.getCalendars = function ()
@@ -953,8 +914,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 			oCalendar = this.calendars.parseCalendar(oCalendarData);
 			aCalendarIds.push(oCalendar.id);
 			oClientCalendar = this.calendars.getCalendarById(oCalendar.id);
-			if (/*this.needsToReload || */!oClientCalendar ||
-				(oCalendar && oClientCalendar && oClientCalendar.cTag !== oCalendar.cTag))
+			if (!oClientCalendar || (oCalendar && oClientCalendar && oClientCalendar.cTag !== oCalendar.cTag))
 			{
 				oCalendar = this.calendars.parseAndAddCalendar(oCalendarData);
 				if (oCalendar)
@@ -974,7 +934,6 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 
 		if (this.calendars.count() === 0 && this.isPublic && this.needsToReload)
 		{
-			var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
 			this.browserTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
 			Api.showErrorByCode(0, TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
 		}
@@ -1005,11 +964,6 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
 {
 	if (aCalendarIds.length > 0)
 	{
-//		this.checkStarted(true);
-//		if (aCalendarIds.length > 1)
-//		{
-//			this.$calendarGrid.find('.fc-view div').first().css('visibility', 'hidden');
-//		}
 		Ajax.send('GetEvents', {
 			'CalendarIds': JSON.stringify(aCalendarIds),
 			'Start': this.startDateTime,
@@ -1069,7 +1023,6 @@ CCalendarView.prototype.onGetEventsResponse = function (oResponse, oRequest)
 		this.refreshView();
 	}
 	
-//	this.setCalendarGridVisibility();
 	this.setAutoReloadTimer();
 	this.checkStarted(false);
 };
@@ -1086,9 +1039,7 @@ CCalendarView.prototype.setCalendarGridVisibility = function ()
 	
 CCalendarView.prototype.getUnusedColor = function ()
 {
-	var 
-		colors = _.difference(this.colors, this.calendars.getColors())
-	;
+	var colors = _.difference(this.colors, this.calendars.getColors());
 	
 	return (colors.length > 0) ? colors[0] :  this.colors[0];
 };
@@ -1130,7 +1081,6 @@ CCalendarView.prototype.onCreateCalendarResponse = function (oResponse, oRequest
 	if (oResponse.Result)
 	{
 		this.calendars.parseAndAddCalendar(oResponse.Result);
-		//this.calendars.sort();
 	}
 };
 
@@ -1304,7 +1254,6 @@ CCalendarView.prototype.onUpdateCalendarShareResponse = function (oResponse, oRe
 			}
 			else
 			{
-//				oCalendar.isShared(false);
 				oCalendar.isSharedToAll(false);
 			}
 		}
@@ -1565,8 +1514,7 @@ CCalendarView.prototype.openEventPopup = function (oCalendar, oStart, oEnd, bAll
 			AllDay: bAllDay,
 			TimeFormat: this.timeFormat,
 			DateFormat: this.dateFormat,
-			CallbackAttendeeActionDecline: _.bind(this.attendeeActionDecline, this)/*,
-			Owner: oSelectedCalendar.owner()*/
+			CallbackAttendeeActionDecline: _.bind(this.attendeeActionDecline, this)
 		}]);
 	}
 };
@@ -1576,9 +1524,7 @@ CCalendarView.prototype.openEventPopup = function (oCalendar, oStart, oEnd, bAll
  */
 CCalendarView.prototype.createEvent = function (oEventData)
 {
-	var 
-		aParameters = this.getParamsFromEventData(oEventData)
-	;
+	var aParameters = this.getParamsFromEventData(oEventData);
 
 	if (!this.isPublic)
 	{
@@ -1700,9 +1646,7 @@ CCalendarView.prototype.eventAction = function (sMethod, oParameters, fRevertFun
  */
 CCalendarView.prototype.updateEvent = function (oEventData)
 {
-	var 
-		oParameters = this.getParamsFromEventData(oEventData)
-	;
+	var oParameters = this.getParamsFromEventData(oEventData);
 	
 	oParameters.selectStart = this.getDateFromCurrentView('start');
 	oParameters.selectEnd = this.getDateFromCurrentView('end');
@@ -1721,28 +1665,7 @@ CCalendarView.prototype.updateEvent = function (oEventData)
  */
 CCalendarView.prototype.moveEvent = function (oEventData, delta, revertFunc)
 {
-/*	oEventData.dayDelta = dayDelta ? dayDelta : 0;
-	oEventData.minuteDelta = minuteDelta ? minuteDelta : 0;
-*/
-	var 
-		oParameters = this.getParamsFromEventData(oEventData)
-//		iNewStart = oParameters.startTimestamp,
-//		iAllEvStart,
-//		iAllEvEnd,
-
-//		sConfirm = TextUtils.i18n('With drag-n-drop you can change the date of this single instance only. To alter the entire series, open the event and change its date.'),
-//		fConfirm = _.bind(function (bConfirm) {
-//			if (bConfirm)
-//			{
-//				oParameters.allEvents = Enums.CalendarEditRecurrenceEvent.OnlyThisInstance;
-//				this.eventAction('UpdateEvent', oParameters, revertFunc);
-//			}
-//			else if (revertFunc)
-//			{
-//				revertFunc();
-//			}
-//		}, this)
-	;
+	var oParameters = this.getParamsFromEventData(oEventData);
 	
 	oParameters.selectStart = this.getDateFromCurrentView('start');
 	oParameters.selectEnd = this.getDateFromCurrentView('end');
@@ -1751,27 +1674,6 @@ CCalendarView.prototype.moveEvent = function (oEventData, delta, revertFunc)
 		if (oParameters.rrule)
 		{
 			revertFunc(false);
-
-/*			iAllEvStart = JSON.parse(oParameters.rrule).startBase;
-			iAllEvEnd = JSON.parse(oParameters.rrule).until;
-
-			if (iAllEvStart <= iNewStart && iNewStart <= iAllEvEnd)
-			{
-				if (oParameters.excluded)
-				{
-					oParameters.allEvents = Enums.CalendarEditRecurrenceEvent.OnlyThisInstance;
-					this.eventAction('UpdateEvent', oParameters, revertFunc);
-				}
-				else
-				{
-					Popups.showPopup(ConfirmPopup, [sConfirm, fConfirm, '', 'Update this instance']);
-				}
-			}
-			else 
-			{
-				revertFunc(false);
-			}
-*/
 		}
 		else
 		{
@@ -2057,9 +1959,13 @@ CCalendarView.prototype.uploadToSelectedCalendar = function (selectedCalendarId,
 	fProceedUploading();
 };
 
+/**
+ * @param {number} iScrollTop
+ */
 CCalendarView.prototype.restoreScroll = function (iScrollTop)
 {
-	if (this.domScrollWrapper) {
+	if (this.domScrollWrapper)
+	{
 		this.domScrollWrapper.data('customscroll')['vertical'].set(iScrollTop);
 	}
 };

@@ -2,8 +2,8 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	Browser = require('core/js/Browser.js'),

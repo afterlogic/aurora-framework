@@ -1,16 +1,15 @@
 'use strict';
 
 var
-	ko = require('knockout'),
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Ajax = require('core/js/Ajax.js'),
 	App = require('core/js/App.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	UserSettings = require('core/js/Settings.js'),
 	
 	bIsIosDevice = false,
 	aViewMimeTypes = [
@@ -327,6 +326,8 @@ CAbstractFileModel.prototype.onIconClick = function (oViewModel, oEvent)
  * Can be overridden.
  * 
  * Starts viewing attachment on click.
+ * @param {Object} oViewModel
+ * @param {Object} oEvent
  */
 CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
 {

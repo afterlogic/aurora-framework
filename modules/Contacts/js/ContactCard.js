@@ -1,9 +1,9 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	_ = require('underscore'),
 	
 	CustomTooltip = require('core/js/CustomTooltip.js'),
 	Screens = require('core/js/Screens.js'),

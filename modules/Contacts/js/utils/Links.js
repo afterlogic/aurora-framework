@@ -2,6 +2,7 @@
 
 var
 	$ = require('jquery'),
+	
 	Utils = require('core/js/utils/Common.js'),
 	LinksUtils = {}
 ;
@@ -16,9 +17,7 @@ var
  */
 LinksUtils.getContacts = function (iType, sGroupId, sSearch, iPage, sUid)
 {
-	var
-		aParams = ['contacts']
-	;
+	var aParams = ['contacts'];
 	
 	if (typeof iType === 'number')
 	{

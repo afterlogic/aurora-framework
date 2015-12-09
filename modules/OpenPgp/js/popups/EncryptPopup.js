@@ -6,7 +6,6 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	UserSettings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	

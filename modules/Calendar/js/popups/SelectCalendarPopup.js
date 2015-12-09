@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;

@@ -2,7 +2,6 @@
 
 var
 	ko = require('knockout'),
-	_ = require('underscore'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')

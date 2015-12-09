@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout')
 ;
 
@@ -113,7 +113,6 @@ ko.bindingHandlers.highlighter = {
 				;
 				
 				if (!(
-//							oEvent.keyCode === Enums.Key.Enter					||
 						oEvent.keyCode === Enums.Key.Shift					||
 						oEvent.keyCode === Enums.Key.Ctrl					||
 						// for international english -------------------------
@@ -122,7 +121,6 @@ ko.bindingHandlers.highlighter = {
 						oEvent.keyCode === Enums.Key.Six && oEvent.shiftKey	||
 						// ---------------------------------------------------
 						bMoveKeys											||
-//							((oEvent.shiftKey || iPrevKeyCode === Enums.Key.Shift) && bMoveKeys) ||
 						((oEvent.ctrlKey || iPrevKeyCode === Enums.Key.Ctrl) && oEvent.keyCode === Enums.Key.a)
 					))
 				{

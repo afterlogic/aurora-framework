@@ -4,7 +4,6 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	Popups = require('core/js/Popups.js')
 ;
 

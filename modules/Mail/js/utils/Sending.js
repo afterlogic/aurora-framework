@@ -13,9 +13,6 @@ var
 	CAddressModel = require('core/js/models/CAddressModel.js'),
 	CAddressListModel = require('core/js/models/CAddressListModel.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
-	
 	MessageUtils = require('modules/Mail/js/utils/Message.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),

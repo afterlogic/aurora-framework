@@ -266,12 +266,6 @@ function CHelpdeskView()
 	this.internalNote = ko.observable(false);
 
 	this.ccbccVisible = ko.observable(false);
-	/*this.ccbccVisible.subscribe(function () {
-		_.defer(_.bind(function () {
-			$(this.ccAddrDom()).inputosaurus('resizeInput');
-			$(this.bccAddrDom()).inputosaurus('resizeInput');
-		}, this));
-	}, this);*/
 	this.ccAddrDom = ko.observable();
 	this.ccAddrDom.subscribe(function () {
 		this.initInputosaurus(this.ccAddrDom, this.ccAddr, this.lockCcAddr, 'cc');
@@ -453,8 +447,6 @@ CHelpdeskView.prototype.cleanAll = function ()
 	this.ccbccVisible(false);
 	this.ccAddr('');
 	this.bccAddr('');
-	//this.setRecipient(this.ccAddr, '');
-	//this.setRecipient(this.bccAddr, '');
 };
 
 CHelpdeskView.prototype.updateOpenerWindow = function ()

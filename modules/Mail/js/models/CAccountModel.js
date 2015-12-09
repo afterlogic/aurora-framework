@@ -11,11 +11,11 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
 	Ajax = null,
-	Screens = require('core/js/Screens.js'),
 	Browser = require('core/js/Browser.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	
 	Accounts = null,
 	Settings = require('modules/Mail/js/Settings.js'),

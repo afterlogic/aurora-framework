@@ -1335,7 +1335,7 @@ CContactsView.prototype.onGetGroupsResponse = function (oResponse, oRequest)
 				return oItem.selected();
 			}),
 			oObject = null
-			;
+		;
 
 		this.groupFullCollection(aList);
 		

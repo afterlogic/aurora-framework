@@ -25,7 +25,6 @@ var
 			storageKey = args.name,
 			initPosition = 0,
 			nSize = 0,
-			nPreviousNewPosition = 0,
 			oLastState = {},
 			oLastStateReserve = {},
 			startSplitMouse = function (e) {
@@ -77,7 +76,6 @@ var
 
 				var iLeftMin = panes.get(0)._min;
 
-				nPreviousNewPosition = newPosition;
 				if (bCollapse && (iLeftMin - newPosition) > 150) //Collapse
 				{
 					newPosition = 5;

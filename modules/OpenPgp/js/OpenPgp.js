@@ -2,8 +2,8 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	UserSettings = require('core/js/Settings.js'),
@@ -80,6 +80,7 @@ COpenPgp.prototype.convertToNativeKeys = function (aKeys)
 
 /**
  * @private
+ * @param {Object} oKey
  */
 COpenPgp.prototype.cloneKey = function (oKey)
 {
@@ -106,6 +107,10 @@ COpenPgp.prototype.cloneKey = function (oKey)
 
 /**
  * @private
+ * @param {Object} oResult
+ * @param {Object} oKey
+ * @param {string} sPassword
+ * @param {string} sKeyEmail
  */
 COpenPgp.prototype.decryptKeyHelper = function (oResult, oKey, sPassword, sKeyEmail)
 {
@@ -132,6 +137,9 @@ COpenPgp.prototype.decryptKeyHelper = function (oResult, oKey, sPassword, sKeyEm
 
 /**
  * @private
+ * @param {Object} oResult
+ * @param {string} sFromEmail
+ * @param {Object} oDecryptedMessage
  */
 COpenPgp.prototype.verifyMessageHelper = function (oResult, sFromEmail, oDecryptedMessage)
 {

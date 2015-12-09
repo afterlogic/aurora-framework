@@ -1,9 +1,9 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	_ = require('underscore'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	Api = require('core/js/Api.js'),

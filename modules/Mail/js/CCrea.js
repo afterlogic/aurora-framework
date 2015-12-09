@@ -4,7 +4,6 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
 	Browser = require('core/js/Browser.js')
 ;
 
@@ -828,7 +827,6 @@ CCrea.prototype.changeSignatureContent = function (sNewSignatureContent, sOldSig
 		$SignatureContainer,
 		$SignatureBlockquoteParent,
 		sFoundOldSignature,
-		sSignatureContainerHtml,
 		$AnchorBlockquoteParent
 	;
 
@@ -1325,13 +1323,11 @@ CCrea.prototype.strikeThrough = function ()
 
 CCrea.prototype.undo = function ()
 {
-//		this.execCom('Undo');
 	this.editableUndo();
 };
 
 CCrea.prototype.redo = function ()
 {
-//		this.execCom('Redo');
 	this.editableRedo();
 };
 
@@ -1663,9 +1659,7 @@ CCrea.prototype.editableIsActive = function ()
  */
 CCrea.prototype.getSelectionRanges = function ()
 {
-	var
-		aRanges = []
-	;
+	var aRanges = [];
 
 	if (window.getSelection && this.editableIsActive())
 	{

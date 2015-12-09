@@ -1,8 +1,6 @@
 'use strict';
 
-var
-	ko = require('knockout')
-;
+var ko = require('knockout');
 
 /**
  * @constructor
@@ -27,7 +25,6 @@ CSignatureModel.prototype.parse = function (iAccountId, oData)
 {
 	this.iAccountId = iAccountId;
 	
-//	this.type(parseInt(oData.Type, 10) === 1 ? true : false);
 	this.options(parseInt(oData.Options, 10));
 	this.signature(oData.Signature);
 };

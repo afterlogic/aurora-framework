@@ -405,7 +405,6 @@ CHtmlEditorView.prototype.initCrea = function (sText, bPlain, sTabIndex)
 	this.uploadedImagePathes([]);
 	this.selectedFont(this.sDefaultFont);
 	this.selectedSize(this.iDefaultSize);
-	//this.selectedFont(window.document.queryCommandValue('FontName'));
 };
 
 CHtmlEditorView.prototype.setFocus = function ()

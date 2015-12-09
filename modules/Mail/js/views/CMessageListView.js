@@ -511,7 +511,6 @@ CMessageListView.prototype.calculateSearchStringFromAdvancedForm  = function ()
 		sSubject = this.searchInputSubject(),
 		sText = this.searchInputText(),
 		bAttachmentsCheckbox = this.searchAttachmentsCheckbox(),
-		sAttachments = this.searchAttachments(),
 		sDateStart = this.searchDateStart(),
 		sDateEnd = this.searchDateEnd(),
 		aOutput = [],
@@ -553,11 +552,6 @@ CMessageListView.prototype.calculateSearchStringFromAdvancedForm  = function ()
 		aOutput.push('has:attachments');
 	}
 
-	/*if (sAttachments !== '')
-	{
-		aOutput.push('attachments:' + fEsc(sAttachments));
-	}*/
-
 	if (sDateStart !== '' || sDateEnd !== '')
 	{
 		aOutput.push('date:' + fEsc(sDateStart) + '/' + fEsc(sDateEnd));
@@ -570,7 +564,6 @@ CMessageListView.prototype.onSearchClick = function ()
 {
 	var
 		sFolder = this.folderList().currentFolderFullName(),
-		//sUid = this.currentMessage() ? this.currentMessage().uid() : '',
 		iPage = 1,
 		sSearch = this.searchInput()
 	;
@@ -582,7 +575,6 @@ CMessageListView.prototype.onSearchClick = function ()
 		this.bAdvancedSearch(false);
 	}
 	this.changeRoutingForMessageList(sFolder, iPage, '', sSearch, this.filters());
-	//this.highlightTrigger.notifySubscribers();
 };
 
 CMessageListView.prototype.onRetryClick = function ()

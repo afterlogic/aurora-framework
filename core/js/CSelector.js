@@ -286,15 +286,6 @@ CSelector.prototype.getLastOrSelected = function ()
 };
 
 /**
- * @return {boolean}
- */
-/*CSelector.prototype.inFocus = function ()
-{
-	var mTagName = document && document.activeElement ? document.activeElement.tagName : null;
-	return 'INPUT' === mTagName || 'TEXTAREA' === mTagName || 'IFRAME' === mTagName;
-};*/
-
-/**
  * @param {string} sActionSelector css-selector for the active for pressing regions of the list
  * @param {string} sSelectabelSelector css-selector to the item that was selected
  * @param {string} sCheckboxSelector css-selector to the element that checkbox in the list

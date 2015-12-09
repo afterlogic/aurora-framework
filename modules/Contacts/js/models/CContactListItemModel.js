@@ -2,6 +2,7 @@
 
 var
 	ko = require('knockout'),
+	
 	Utils = require('core/js/utils/Common.js'),
 	AddressUtils = require('core/js/utils/Address.js')
 ;

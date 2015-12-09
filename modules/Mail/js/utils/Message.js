@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	$ = require('jquery'),
 	_ = require('underscore'),
+	$ = require('jquery'),
 	
 	Utils = require('core/js/utils/Common.js'),
 	

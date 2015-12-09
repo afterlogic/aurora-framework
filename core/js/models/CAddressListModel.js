@@ -3,8 +3,6 @@
 var
 	_ = require('underscore'),
 	
-	Ajax = require('core/js/Ajax.js'),
-	Utils = require('core/js/utils/Common.js'),
 	CAddressModel = require('core/js/models/CAddressModel.js')
 ;
 

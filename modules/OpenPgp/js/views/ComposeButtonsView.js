@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 			
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
@@ -200,8 +200,7 @@ CComposeButtonsView.prototype.undoPgp = function ()
 {
 	var
 		sText = '',
-		aText = [],
-		sHtml = ''
+		aText = []
 	;
 
 	if (this.oCompose && this.pgpSecured())
