@@ -462,3 +462,15 @@ ko.bindingHandlers.listWithMoreButton = {
 		});
 	}
 };
+
+ko.bindingHandlers.onEnter = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
+		$(oElement).on('keyup', function (oEvent) {
+			if (oEvent.keyCode === Enums.Key.Enter)
+			{
+				$(oElement).trigger('change');
+				fValueAccessor().call(oViewModel);
+			}
+		});
+	}
+};

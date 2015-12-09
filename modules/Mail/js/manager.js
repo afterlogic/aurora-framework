@@ -34,6 +34,10 @@ module.exports = function (oSettings) {
 	return {
 		start: function () {
 			require('modules/Mail/js/koBindings.js');
+			if (!App.isMobile())
+			{
+				require('modules/Mail/js/koBindingSearchHighlighter.js');
+			}
 		},
 		screens: oScreens,
 		getHeaderItem: function () {

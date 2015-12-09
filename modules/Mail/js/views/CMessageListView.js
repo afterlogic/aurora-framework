@@ -574,7 +574,7 @@ CMessageListView.prototype.onSearchClick = function ()
 		iPage = 1,
 		sSearch = this.searchInput()
 	;
-
+	
 	if (this.bAdvancedSearch())
 	{
 		sSearch = this.calculateSearchStringFromAdvancedForm();

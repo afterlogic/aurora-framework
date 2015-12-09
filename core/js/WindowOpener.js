@@ -4,7 +4,6 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	Popups = require('core/js/Popups.js'),
 	App = require('core/js/App.js'),
 	
@@ -106,13 +105,13 @@ module.exports = {
 	closeComposesWithDraftUids: function (aUids)
 	{
 		_.each(aOpenedWins, function (oWin) {
-			if (oWin.App && -1 !== Utils.inArray(oWin.App.MailCache.editedDraftUid(), aUids))
+			if (oWin.App && -1 !== $.inArray(oWin.App.MailCache.editedDraftUid(), aUids))
 			{
 				oWin.close();
 			}
 		});
 		
-		if (-1 !== Utils.inArray(App.MailCache.editedDraftUid(), aUids))
+		if (-1 !== $.inArray(App.MailCache.editedDraftUid(), aUids))
 		{
 			App.Api.closeComposePopup();
 		}

@@ -133,7 +133,7 @@ CSettingsView.prototype.viewTab = function (sTab)
 		oCommonTabModel = this.getViewModel(Enums.SettingsTab.Common),
 		sDefaultTab = (!!oCommonTabModel) ? Enums.SettingsTab.Common : Enums.SettingsTab.EmailAccounts,
 		oNewTab = this.getViewModel(sTab),
-		bExistingTab = (-1 === Utils.inArray(sTab, Enums.SettingsTab))
+		bExistingTab = (-1 === $.inArray(sTab, Enums.SettingsTab))
 	;
 	
 	sTab = (oNewTab && bExistingTab) ? sTab : sDefaultTab;
