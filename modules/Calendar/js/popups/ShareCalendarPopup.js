@@ -72,8 +72,7 @@ function CShareCalendarPopup()
 		{'value': Enums.CalendarAccess.Read, 'display': TextUtils.i18n('CALENDAR/CALENDAR_ACCESS_READ')},
 		{'value': Enums.CalendarAccess.Write, 'display': TextUtils.i18n('CALENDAR/CALENDAR_ACCESS_WRITE')}
 	];
-
-	this.showGlobalContacts = false;//!!AppData.User.ShowGlobalContacts;
+	this.allowSharedToAll = ModulesManager.run('Contacts', 'isGlobalContactsAllowed');
 }
 
 _.extendOwn(CShareCalendarPopup.prototype, CAbstractPopup.prototype);

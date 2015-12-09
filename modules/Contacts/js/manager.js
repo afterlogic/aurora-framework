@@ -23,6 +23,9 @@ module.exports = function (oSettings) {
 		},
 		getHeaderItem: function () {
 			return require('modules/Contacts/js/views/HeaderItemView.js');
+		},
+		isGlobalContactsAllowed: function () {
+			return Settings.Storages.indexOf('global') !== -1;
 		}
 	}, ComponentsMethods);
 };
