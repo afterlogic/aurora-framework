@@ -39,14 +39,6 @@ _.extendOwn(CEditCalendarPopup.prototype, CAbstractPopup.prototype);
 
 CEditCalendarPopup.prototype.PopupTemplate = 'Calendar_EditCalendarPopup';
 
-CEditCalendarPopup.prototype.clearFields = function ()
-{
-	this.calendarName('');
-	this.calendarDescription('');
-	this.selectedColor(this.colors[0]);
-	this.calendarId(null);
-};
-
 /**
  * @param {Function} fCallback
  * @param {Array} aColors
@@ -54,20 +46,15 @@ CEditCalendarPopup.prototype.clearFields = function ()
  */
 CEditCalendarPopup.prototype.onShow = function (fCallback, aColors, oCalendar)
 {
-	this.clearFields();
+	this.fCallback = fCallback;
 	
-	if ($.isFunction(fCallback))
-	{
-		this.fCallback = fCallback;
-	}
-	
-	if (!Utils.isUnd(aColors))
+	if (Utils.isNonEmptyArray(aColors))
 	{
 		this.colors(aColors);
 		this.selectedColor(aColors[0]);		
 	}
 	
-	if (!Utils.isUnd(oCalendar))
+	if (oCalendar)
 	{
 		this.popupTitle(oCalendar.name() ? TextUtils.i18n("CALENDAR/TITLE_EDIT_CALENDAR") : TextUtils.i18n("CALENDAR/TITLE_CREATE_CALENDAR"));
 		this.calendarName(oCalendar.name ? oCalendar.name() : '');
@@ -79,21 +66,17 @@ CEditCalendarPopup.prototype.onShow = function (fCallback, aColors, oCalendar)
 	{
 		this.popupTitle(TextUtils.i18n("CALENDAR/TITLE_CREATE_CALENDAR"));
 	}
-
-//	$(document).on('keyup.calendar_create', _.bind(function(ev) {
-//		if (ev.keyCode === Enums.Key.Enter)
-//		{
-//			this.onSaveClick();
-//		}
-//	}, this));
 };
 
-CEditCalendarPopup.prototype.onHide = function (fCallback, aColors, oCalendar)
+CEditCalendarPopup.prototype.onHide = function ()
 {
-//	$(document).off('keyup.calendar_create');
+	this.calendarName('');
+	this.calendarDescription('');
+	this.selectedColor(this.colors[0]);
+	this.calendarId(null);
 };
 
-CEditCalendarPopup.prototype.onSaveClick = function ()
+CEditCalendarPopup.prototype.save = function ()
 {
 	if (this.calendarName() === '')
 	{
@@ -101,10 +84,9 @@ CEditCalendarPopup.prototype.onSaveClick = function ()
 	}
 	else
 	{
-		if (this.fCallback)
+		if ($.isFunction(this.fCallback))
 		{
 			this.fCallback(this.calendarName(), this.calendarDescription(), this.selectedColor(), this.calendarId());
-			this.clearFields();
 		}
 		this.closePopup();
 	}
