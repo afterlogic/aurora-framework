@@ -92,14 +92,9 @@ function CMailCache()
 	this.editedFolderList = ko.observable(new CFolderListModel());
 
 	this.newMessagesCount = ko.computed(function () {
-		var
-			oInbox = this.folderList().inboxFolder()
-		;
+		var oInbox = this.folderList().inboxFolder();
 		return oInbox ? oInbox.unseenMessageCount() : 0;
 	}, this);
-//	this.newMessagesCount.subscribe(function (iMessagesCount) {
-//		App.mailUnseenCount(iMessagesCount > 99 ? '99+' : iMessagesCount);
-//	}, this);
 
 	this.messages = ko.observableArray([]);
 	this.messages.subscribe(function () {
