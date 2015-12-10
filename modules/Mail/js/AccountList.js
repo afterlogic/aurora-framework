@@ -10,7 +10,9 @@ var
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
-	CAccountModel = require('modules/Mail/js/models/CAccountModel.js')
+	CAccountModel = require('modules/Mail/js/models/CAccountModel.js'),
+	CIdentityModel = require('modules/Mail/js/models/CIdentityModel.js'),
+	CFetcherListModel = require('modules/Mail/js/models/CFetcherListModel.js')
 ;
 
 /**
@@ -326,14 +328,15 @@ CAccountListModel.prototype.onGetFetchersResponse = function (oResponse, oReques
 		oFetcherList = new CFetcherListModel();
 		oFetcherList.parse(this.defaultId(), oResponse.Result);
 	}
+	
 	oDefaultAccount.fetchers(oFetcherList);
 };
 
 CAccountListModel.prototype.populateIdentities = function ()
 {
-	if (AllowFetcher.AllowIdentities && (this.isCurrentAllowsMail() || this.collection().length > 1))
+	if (Settings.AllowIdentities && (this.isCurrentAllowsMail() || this.collection().length > 1))
 	{
-		Ajax.send(GetIdentities, null, this.onGetIdentitiesResponse, this);
+		Ajax.send('GetIdentities', null, this.onGetIdentitiesResponse, this);
 	}
 };
 
