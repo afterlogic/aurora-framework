@@ -111,7 +111,7 @@ module.exports = {
 	EntryModule: 'Mail',
 	Language: 'English',
 	CustomLogo: '',
-	defaultTimeFormat: ko.observable(0),
+	defaultTimeFormat: ko.observable('0'),
 	DefaultDateFormat: 'DD/MM/YYYY',
 	IsFilesSupported: true,
 	DefaultFontName: 'Tahoma',

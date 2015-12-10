@@ -41,9 +41,8 @@ CDateModel.prototype.setDate = function (iYear, iMonth, iDay)
  */
 CDateModel.prototype.getTimeFormat = function ()
 {
-	return 'HH:mm';
-//	return (AppData.User.defaultTimeFormat() === Enums.TimeFormat.F24) ?
-//		'HH:mm' : 'hh:mm A';
+	return (UserSettings.defaultTimeFormat() === Enums.TimeFormat.F24) ?
+		'HH:mm' : 'hh:mm A';
 };
 
 /**
