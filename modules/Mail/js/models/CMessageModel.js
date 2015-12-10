@@ -241,26 +241,26 @@ CMessageModel.prototype.requireMailCache = function ()
  */
 CMessageModel.prototype.viewMessage = function (oWin)
 {
-//	var
-//		oDomText = this.getDomText(Utils.Common.getAppPath()),
-//		sHtml = ''
-//	;
-//	
-//	this.textBodyForNewWindow(oDomText.html());
-//	sHtml = $(this.domMessageForPrint()).html();
-//	
-//	if (oWin)
-//	{
-//		$(oWin.document.body).html(sHtml);
-//		oWin.focus();
-//		_.each(this.attachments(), function (oAttach) {
-//			var oLink = $(oWin.document.body).find("[data-hash='download-" + oAttach.hash() + "']");
-//			oLink.on('click', _.bind(oAttach.downloadFile, oAttach));
-//			
-//			oLink = $(oWin.document.body).find("[data-hash='view-" + oAttach.hash() + "']");
-//			oLink.on('click', _.bind(oAttach.viewFile, oAttach));
-//		}, this);
-//	}
+	var
+		oDomText = this.getDomText(Utils.getAppPath()),
+		sHtml = ''
+	;
+	
+	this.textBodyForNewWindow(oDomText.html());
+	sHtml = $(this.domMessageForPrint()).html();
+	
+	if (oWin)
+	{
+		$(oWin.document.body).html(sHtml);
+		oWin.focus();
+		_.each(this.attachments(), function (oAttach) {
+			var oLink = $(oWin.document.body).find("[data-hash='download-" + oAttach.hash() + "']");
+			oLink.on('click', _.bind(oAttach.downloadFile, oAttach));
+			
+			oLink = $(oWin.document.body).find("[data-hash='view-" + oAttach.hash() + "']");
+			oLink.on('click', _.bind(oAttach.viewFile, oAttach));
+		}, this);
+	}
 };
 
 /**
@@ -433,7 +433,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			this.draftInfo(oData.DraftInfo);
 		}
 		this.hash(Utils.pString(oData.Hash));
-
+		
 		if (oData['@Object'] === 'Object/Message')
 		{
 			this.trimmed(oData.Trimmed);
@@ -467,7 +467,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			
 			this.completelyFilled(true);
 		}
-
+		
 		this.updateMomentDate();
 	}
 };

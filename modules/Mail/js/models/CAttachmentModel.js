@@ -117,12 +117,13 @@ CAttachmentModel.prototype.onGetMessageResponse = function (oResult, oRequest)
 {
 	var
 		oResult = oResult.Result,
+		CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
 		oMessage = new CMessageModel()
 	;
 	
 	if (oResult && this.oNewWindow)
 	{
-		oMessage.parse(oResult, oResult.AccountID, false, true);
+		oMessage.parse(oResult, oRequest.AccountID, false, true);
 		this.messagePart(oMessage);
 		this.messagePart().viewMessage(this.oNewWindow);
 		this.oNewWindow = undefined;
