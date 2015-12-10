@@ -133,6 +133,11 @@ function CIcalModel(oRawIcal, sAttendee)
 	this.animation = ko.observable(false);
 	
 	this.parseType();
+	
+	if (this.isReplyType())
+	{
+		CalendarCache.calendarChanged(true);
+	}
 }
 
 CIcalModel.prototype.parseType = function ()
@@ -274,7 +279,7 @@ CIcalModel.prototype.onSetAppointmentActionResponse = function (oResponse, oRequ
 	{
 		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
-	else if (CalendarCache)
+	else
 	{
 		CalendarCache.calendarChanged(true);
 	}

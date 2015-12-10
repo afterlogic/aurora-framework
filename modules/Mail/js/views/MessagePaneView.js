@@ -481,12 +481,6 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			this.attachments(oMessage.attachments());
 		}
 
-//		oIcal = oMessage.ical();
-//		if (oIcal && App.isNewTab())
-//		{
-//			oIcal = this.getIcalCopy(oIcal);
-//		}
-		
 		if (!oMessage.completelyFilled() || oMessage.trimmed())
 		{
 			/*jshint onevar: false*/

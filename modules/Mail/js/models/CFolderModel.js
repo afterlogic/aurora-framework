@@ -920,10 +920,6 @@ CFolderModel.prototype.onGetMessageResponse = function (oResponse, oRequest)
 	else
 	{
 		oMessage = this.parseAndCacheMessage(oResult, false, false);
-//		if (oMessage && oMessage.ical() && oMessage.ical().isReplyType() && App.CalendarCache)
-//		{
-//			App.CalendarCache.calendarChanged(true);
-//		}
 	}
 
 	oHand = this.aResponseHandlers[sUid];
