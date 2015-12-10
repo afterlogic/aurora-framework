@@ -1554,7 +1554,7 @@ CContactsView.prototype.onContactUploadComplete = function (sFileUid, bResponseR
 	{
 		if (bResponse.ErrorCode)
 		{
-			Api.showErrorByCode(bResponse, TextUtils.i18n('The file must have .CSV or .VCF extension.'));
+			Api.showErrorByCode(bResponse, TextUtils.i18n('CONTACTS/ERROR_INCORRECT_FILE_EXTENSION'));
 		}
 		else
 		{
