@@ -5,12 +5,15 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	DateUtils = require('core/js/utils/Date.js'),
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	Browser = require('core/js/Browser.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
@@ -331,21 +334,21 @@ CMessageListView.prototype.addNewAccount = function ()
 
 CMessageListView.prototype.createDatePickerObject = function (oElement)
 {
-//	$(oElement).datepicker({
-//		showOtherMonths: true,
-//		selectOtherMonths: true,
-//		monthNames: DateUtils.getMonthNamesArray(),
-//		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
-//		nextText: '',
-//		prevText: '',
-//		firstDay: AppData.User.CalendarWeekStartsOn,
-//		showOn: 'focus',
-//		dateFormat: this.dateFormatDatePicker
-//	});
-//
-//	$(oElement).mousedown(function() {
-//		$('#ui-datepicker-div').toggle();
-//	});
+	$(oElement).datepicker({
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		monthNames: DateUtils.getMonthNamesArray(),
+		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
+		nextText: '',
+		prevText: '',
+		firstDay: Utils.pInt(ModulesManager.run('Calendar', 'getWeekStartsOn')),
+		showOn: 'focus',
+		dateFormat: this.dateFormatDatePicker
+	});
+
+	$(oElement).mousedown(function() {
+		$('#ui-datepicker-div').toggle();
+	});
 };
 
 /**

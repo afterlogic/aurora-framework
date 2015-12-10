@@ -22,6 +22,9 @@ module.exports = function (oSettings) {
 				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/CALENDAR'));
+		},
+		getWeekStartsOn: function () {
+			return Settings.CalendarWeekStartsOn;
 		}
 	};
 };
