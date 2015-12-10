@@ -212,32 +212,19 @@ function CHelpdeskView()
 		if (this.bAgent)
 		{
 			this.externalContentUrl = ko.computed(function () {
-
 				var
-					sEmail = '',
-					oSelected = this.selectedItem()
+					oSelected = this.selectedItem(),
+					sEmail = oSelected ? oSelected.Email() : ''
 				;
-
-				if (oSelected)
-				{
-					sEmail = oSelected.Email();
-				}
-
-				if (sEmail)
-				{
-					return Settings.HelpdeskIframeUrl.replace(/\[EMAIL\]/g, sEmail);
-				}
-
-				return '';
-
+				return sEmail ? Settings.HelpdeskIframeUrl.replace(/\[EMAIL\]/g, sEmail) : '';
 			}, this);
 		}
-//		else if (AppData.User.Email)
-//		{
-//			this.externalContentUrl = ko.computed(function () {
-//				return Settings.HelpdeskIframeUrl.replace(/\[EMAIL\]/g, AppData.User.Email);
-//			}, this);
-//		}
+		else if (Settings.HelpdeskUserEmail)
+		{
+			this.externalContentUrl = ko.computed(function () {
+				return Settings.HelpdeskIframeUrl.replace(/\[EMAIL\]/g, Settings.HelpdeskUserEmail);
+			}, this);
+		}
 	}
 
 	// view pane

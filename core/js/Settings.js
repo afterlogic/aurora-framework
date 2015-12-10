@@ -92,7 +92,8 @@ module.exports = {
 			SocialGoogle: '',
 			SocialTwitter: '',
 			SocialEmail: '',
-			SocialIsLoggedIn: false
+			SocialIsLoggedIn: false,
+			HelpdeskUserEmail: ''
 		},
 		Settings: {},
 		dsbld_Phone: {
