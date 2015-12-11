@@ -2,15 +2,20 @@
 
 module.exports = function (oSettings) {
 	require('fullcalendar');
-	require('modules/Calendar/js/enums.js');
+	require('modules/Calendar/js/BaseTabExtMethods.js');
 
-	var Settings = require('modules/Calendar/js/Settings.js');
+	var
+		_ = require('underscore'),
+		
+		Settings = require('modules/Calendar/js/Settings.js'),
+		
+		ManagerComponents = require('modules/Calendar/js/manager-components.js'),
+		ComponentsMethods = ManagerComponents()
+	;
+	
 	Settings.init(oSettings);
 	
-	return {
-		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
-		},
+	return _.extend({
 		screens: {
 			'main': function () {
 				return require('modules/Calendar/js/views/CalendarView.js');
@@ -26,5 +31,5 @@ module.exports = function (oSettings) {
 		getWeekStartsOn: function () {
 			return Settings.CalendarWeekStartsOn;
 		}
-	};
+	}, ComponentsMethods);
 };

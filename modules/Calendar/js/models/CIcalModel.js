@@ -10,7 +10,9 @@ var
 	Api = require('core/js/Api.js'),
 	
 	Ajax = require('modules/Calendar/js/Ajax.js'),
-	CalendarCache = require('modules/Calendar/js/Cache.js')
+	CalendarCache = require('modules/Calendar/js/Cache.js'),
+	
+	BaseTab = App.isNewTab() && window.opener ? window.opener.BaseTabCalendarMethods : null
 ;
 
 /**
@@ -73,25 +75,12 @@ function CIcalModel(oRawIcal, sAttendee)
 			fCalSubscription.dispose();
 		}, this);
 	}
-//	if (App.isNewTab() && window.opener)
-//	{
-//		this.calendars(window.opener.App.CalendarCache.calendars());
-//		window.opener.App.CalendarCache.calendars.subscribe(function () {
-//			this.calendars(window.opener.App.CalendarCache.calendars());
-//		}, this);
-//	}
-//	else
-//	{
-//		this.calendars(CalendarCache.calendars());
-//		CalendarCache.calendars.subscribe(function () {
-//			this.calendars(CalendarCache.calendars());
-//		}, this);
-//	}
 
 	this.chosenCalendarName = ko.computed(function () {
 		var oFoundCal = null;
 
-		if (this.calendarId() !== '') {
+		if (this.calendarId() !== '')
+		{
 			oFoundCal = _.find(this.calendars(), function (oCal) {
 				return oCal.id === this.calendarId();
 			}, this);
@@ -230,16 +219,16 @@ CIcalModel.prototype.changeAndSaveConfig = function (sConfig)
 CIcalModel.prototype.changeConfig = function (sConfig)
 {
 	this.type(this.icalType() + '-' + sConfig);
-//	if (AppData.SingleMode && window.opener)
-//	{
-//		window.opener.App.CalendarCache.markIcalTypeByFile(this.file(), this.type(), this.cancelDecision(),
-//									this.replyDecision(), this.calendarId(), this.selectedCalendarId());
-//	}
-//	else
-//	{
+	if (BaseTab)
+	{
+		BaseTab.markIcalTypeByFile(this.file(), this.type(), this.cancelDecision(),
+									this.replyDecision(), this.calendarId(), this.selectedCalendarId());
+	}
+	else
+	{
 		CalendarCache.markIcalTypeByFile(this.file(), this.type(), this.cancelDecision(),
 									this.replyDecision(), this.calendarId(), this.selectedCalendarId());
-//	}
+	}
 };
 
 CIcalModel.prototype.markNeededAction = function ()
