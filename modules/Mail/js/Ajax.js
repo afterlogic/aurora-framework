@@ -1,12 +1,16 @@
 'use strict';
 
-var Ajax = require('core/js/Ajax.js');
+var
+	Utils = require('core/js/utils/Common.js'),
+	Ajax = require('core/js/Ajax.js')
+;
 
 Ajax.registerAbortRequestHandler('Mail', function (oRequest, oOpenedRequest) {
 	var
-		oParameters = JSON.parse(oRequest.Parameters),
-		oOpenedParameters = JSON.parse(oOpenedRequest.Parameters)
+		oParameters = Utils.isNonEmptyString(oRequest.Parameters) ? JSON.parse(oRequest.Parameters) : null,
+		oOpenedParameters = Utils.isNonEmptyString(oOpenedRequest.Parameters) ? JSON.parse(oOpenedRequest.Parameters): null
 	;
+	
 	switch (oRequest.Method)
 	{
 		case 'MoveMessages':
