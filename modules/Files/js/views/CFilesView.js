@@ -45,7 +45,6 @@ function CFilesView(bPopup)
 	this.error = ko.observable(false);
 	this.loaded = ko.observable(false);
 	this.isPublic = App.isPublic();
-	this.publicHash = this.isPublic ? Settings.FileStoragePubHash : '';
 	this.IsCollaborationSupported = Settings.IsCollaborationSupported;
 	this.AllowFilesSharing = Settings.AllowFilesSharing;
 	
@@ -667,7 +666,7 @@ CFilesView.prototype.onGetFilesResponse = function (oResponse, oRequest)
 			else
 			{
 				var oFile = new CFileModel();
-				oFile.parse(oData, this.publicHash, this.isPopup);
+				oFile.parse(oData, this.isPopup);
 				oFile.getInThumbQueue(sThumbSessionUid);
 				aFileList.push(oFile);
 			}

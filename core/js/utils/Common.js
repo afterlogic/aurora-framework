@@ -602,63 +602,6 @@ Utils.getFileNameWithoutExtension = function (sFile)
 };
 
 /**
- * Gets link for download by hash.
- *
- * @param {number} iAccountId
- * @param {string} sHash
- * @param {string=} sPublicHash
- * 
- * @return {string}
- */
-Utils.getFilestorageDownloadLinkByHash = function (iAccountId, sHash, sPublicHash)
-{
-	var sUrl = '?/Raw/FilesDownload/' + iAccountId + '/' + sHash;
-	if (!Utils.isUnd(sPublicHash))
-	{
-		sUrl = sUrl + '/0/' + sPublicHash;
-	}
-	return sUrl;
-};
-
-/**
- * Gets link for download by hash.
- *
- * @param {number} iAccountId
- * @param {string} sHash
- * @param {string=} sPublicHash
- * 
- * @return {string}
- */
-Utils.getFilestorageViewLinkByHash = function (iAccountId, sHash, sPublicHash)
-{
-	var sUrl = '?/Raw/FilesView/' + iAccountId + '/' + sHash;
-	if (!Utils.isUnd(sPublicHash))
-	{
-		sUrl = sUrl + '/0/' + sPublicHash;
-	}
-	return sUrl;
-};
-
-/**
- * Gets link for thumbnail by hash.
- *
- * @param {number} iAccountId
- * @param {string} sHash
- * @param {string} sPublicHash
- *
- * @return {string}
- */
-Utils.getFilestorageViewThumbnailLinkByHash = function (iAccountId, sHash, sPublicHash)
-{
-	var sUrl = '?/Raw/FilesThumbnail/' + iAccountId + '/' + sHash;
-	if (!Utils.isUnd(sPublicHash))
-	{
-		sUrl = sUrl + '/0/' + sPublicHash;
-	}
-	return sUrl;
-};
-
-/**
  * @param {Object} oElement
  * @param {Object} oItem
  */

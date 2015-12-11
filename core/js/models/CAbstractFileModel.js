@@ -7,6 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	Ajax = require('core/js/Ajax.js'),
 	App = require('core/js/App.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
@@ -62,11 +63,11 @@ function CAbstractFileModel()
 	this.iframedView = ko.observable(false);
 
 	this.downloadLink = ko.computed(function () {
-		return Utils.getDownloadLinkByHash(this.accountId(), this.hash());
+		return FilesUtils.getDownloadLink('Mail', this.hash());
 	}, this);
 
 	this.viewLink = ko.computed(function () {
-		var sUrl = Utils.getViewLinkByHash(this.accountId(), this.hash());
+		var sUrl = FilesUtils.getViewLink('Mail', this.hash());
 		return this.iframedView() ? Utils.getIframeWrappwer(this.accountId(), sUrl) : sUrl;
 	}, this);
 
@@ -75,7 +76,7 @@ function CAbstractFileModel()
 	this.thumbnailSessionUid = ko.observable('');
 
 	this.thumbnailLink = ko.computed(function () {
-		return this.thumb() ? Utils.getViewThumbnailLinkByHash(this.accountId(), this.hash()) : '';
+		return this.thumb() ? FilesUtils.getThumbnailLink('Mail', this.hash()) : '';
 	}, this);
 
 	this.type = ko.observable('');

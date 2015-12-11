@@ -9,6 +9,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	Browser = require('core/js/Browser.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
@@ -28,7 +29,6 @@ function CFileModel()
 	
 	this.path = ko.observable('');
 	this.fullPath = ko.observable('');
-	this.publicHash = ko.observable('');
 	
 	this.selected = ko.observable(false);
 	this.checked = ko.observable(false);
@@ -86,12 +86,7 @@ function CFileModel()
 	this.uploaded = ko.observable(true);
 
 	this.downloadLink = ko.computed(function () {
-		return '?/Download/Files/DownloadFile/' + this.hash() + '/';
-//		return Utils.getFilestorageDownloadLinkByHash(
-//			(App && App.currentAccountId) ? App.currentAccountId() : null, 
-//			this.hash(), 
-//			this.publicHash()
-//		);
+		return FilesUtils.getDownloadLink('Files', this.hash());
 	}, this);
 
 	this.viewLink = ko.computed(function () {
@@ -102,15 +97,7 @@ function CFileModel()
 		}
 		else
 		{
-			return '?/Download/Files/ViewFile/' + this.hash() + '/';
-//			var sUrl = Utils.getFilestorageViewLinkByHash(
-//				(App && App.currentAccountId) ? App.currentAccountId() : null, 
-//				this.hash(), 
-//				this.publicHash()
-//			);
-//
-//			return this.iframedView() ? Utils.getIframeWrappwer(
-//				(App && App.currentAccountId) ? App.currentAccountId() : null, sUrl) : sUrl;
+			return FilesUtils.getViewLink('Files', this.hash());
 		}
 		
 	}, this);
@@ -151,8 +138,7 @@ function CFileModel()
 		}
 		else
 		{
-			return this.thumb() ? '?/Download/Files/GetFileThumbnail/' + this.hash() + '/' : '';
-//			return this.thumb() ? Utils.getFilestorageViewThumbnailLinkByHash(this.accountId(), this.hash(), this.publicHash()) : '';
+			return this.thumb() ? FilesUtils.getThumbnailLink('Files', this.hash()) : '';
 		}
 	}, this);
 
@@ -194,10 +180,9 @@ CFileModel.prototype.parseLink = function (oData, sLinkUrl)
 
 /**
  * @param {object} oData
- * @param {string} sPublicHash
  * @param {boolean} bPopup
  */
-CFileModel.prototype.parse = function (oData, sPublicHash, bPopup)
+CFileModel.prototype.parse = function (oData, bPopup)
 {
 	var oDateModel = new CDateModel();
 	
@@ -235,7 +220,6 @@ CFileModel.prototype.parse = function (oData, sPublicHash, bPopup)
 	this.thumb(!!oData.Thumb);
 	this.thumbnailExternalLink(Utils.pString(oData.ThumbnailLink));
 	this.hash(Utils.pString(oData.Hash));
-	this.publicHash(sPublicHash);
 	this.sHtmlEmbed(oData.OembedHtml ? oData.OembedHtml : '');
 	
 	if (this.thumb() && this.thumbnailExternalLink() === '')
