@@ -5,10 +5,12 @@ var
 	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
+	App = require('core/js/App.js'),
 	Ajax = require('modules/Contacts/js/Ajax.js'),
 	
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	HeaderItemView = require('modules/Contacts/js/views/HeaderItemView.js')
+	HeaderItemView = !App.isNewTab() ? require('modules/Contacts/js/views/HeaderItemView.js') : null,
+	BaseTab = (App.isNewTab() && window.opener) ? window.opener.BaseTabContactsMethods : null
 ;
 
 /**
@@ -64,7 +66,16 @@ CVcardModel.prototype.addContact = function ()
 		this.isJustSaved(false);
 	}, this), 20000);
 	
-	HeaderItemView.recivedAnim(true);
+	console.log('HeaderItemView', HeaderItemView);
+	console.log('BaseTab', BaseTab);
+	if (HeaderItemView)
+	{
+		HeaderItemView.recivedAnim(true);
+	}
+	else if (BaseTab)
+	{
+		BaseTab.markVcardsExistentByFile(this.file());
+	}
 };
 
 module.exports = CVcardModel;

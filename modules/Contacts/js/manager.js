@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = function (oSettings) {
+	require('modules/Contacts/js/BaseTabExtMethods.js');
+	
 	var
 		_ = require('underscore'),
 		
@@ -13,9 +15,6 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return _.extend({
-		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Contacts/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
-		},
 		screens: {
 			'main': function () {
 				return require('modules/Contacts/js/views/ContactsView.js');

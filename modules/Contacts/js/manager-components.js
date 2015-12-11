@@ -18,6 +18,9 @@ module.exports = function (oSettings) {
 	;
 
 	return _.extend({
+		start: function (ModulesManager) {
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Contacts/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
+		},
 		applyContactsCards: function ($Addresses) {
 			ContactCard.applyTo($Addresses);
 		}
