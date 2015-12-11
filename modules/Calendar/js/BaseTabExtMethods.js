@@ -5,6 +5,10 @@ var
 	BaseTabMethods = {
 		markIcalTypeByFile: function (sFile, sType, sCancelDecision, sReplyDecision, sCalendarId, sSelectedCalendar) {
 			CalendarCache.markIcalTypeByFile(sFile, sType, sCancelDecision, sReplyDecision, sCalendarId, sSelectedCalendar);
+		},
+		markCalendarChanged: function ()
+		{
+			CalendarCache.calendarChanged(true);
 		}
 	}
 ;

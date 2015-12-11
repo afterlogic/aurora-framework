@@ -22,11 +22,7 @@ module.exports = function (oSettings) {
 			}
 		},
 		getHeaderItem: function () {
-			var
-				TextUtils = require('core/js/utils/Text.js'),
-				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
-			;
-			return new CHeaderItemView(TextUtils.i18n('HEADER/CALENDAR'));
+			return require('modules/Calendar/js/views/HeaderItemView.js');
 		},
 		getWeekStartsOn: function () {
 			return Settings.CalendarWeekStartsOn;

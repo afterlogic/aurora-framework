@@ -427,18 +427,15 @@ CCalendarView.prototype.onShow = function ()
 		this.initialized(true);
 	}
 
-	if (CalendarCache)
+	if (CalendarCache.calendarSettingsChanged() || CalendarCache.calendarChanged())
 	{
-		if (CalendarCache.calendarSettingsChanged() || CalendarCache.calendarChanged())
+		if (CalendarCache.calendarSettingsChanged())
 		{
-			if (CalendarCache.calendarSettingsChanged())
-			{
-				this.applyCalendarSettings();
-			}
-			CalendarCache.calendarSettingsChanged(false);
-			CalendarCache.calendarChanged(false);
-			this.getCalendars();
+			this.applyCalendarSettings();
 		}
+		CalendarCache.calendarSettingsChanged(false);
+		CalendarCache.calendarChanged(false);
+		this.getCalendars();
 	}
 	else if (this.isPublic)
 	{

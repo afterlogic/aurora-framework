@@ -11,6 +11,7 @@ var
 	
 	Ajax = require('modules/Calendar/js/Ajax.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
+	HeaderItemView = App.isNewTab() ? require('modules/Calendar/js/views/HeaderItemView.js') : null,
 	
 	BaseTab = App.isNewTab() && window.opener ? window.opener.BaseTabCalendarMethods : null
 ;
@@ -22,6 +23,8 @@ var
  */
 function CIcalModel(oRawIcal, sAttendee)
 {
+	this.oRawIcal = oRawIcal;
+	
 	this.uid = ko.observable(Utils.pString(oRawIcal.Uid));
 	this.lastModification = ko.observable(true);
 	this.sSequence = Utils.pInt(oRawIcal.Sequence);
@@ -122,11 +125,6 @@ function CIcalModel(oRawIcal, sAttendee)
 	this.animation = ko.observable(false);
 	
 	this.parseType();
-	
-	if (this.isReplyType())
-	{
-		CalendarCache.calendarChanged(true);
-	}
 }
 
 CIcalModel.prototype.parseType = function ()
@@ -202,10 +200,9 @@ CIcalModel.prototype.changeAndSaveConfig = function (sConfig)
 {
 	if (this.icalConfig() !== sConfig)
 	{
-		if (this.icalConfig() !== sConfig &&
-			(sConfig !== Enums.IcalConfig.Declined || this.icalConfig() !== Enums.IcalConfig.NeedsAction)) 
+		if (sConfig !== Enums.IcalConfig.Declined || this.icalConfig() !== Enums.IcalConfig.NeedsAction)
 		{
-			CalendarCache.recivedAnim(true);
+			this.showChanges();
 		}
 
 		this.changeConfig(sConfig);
@@ -270,7 +267,7 @@ CIcalModel.prototype.onSetAppointmentActionResponse = function (oResponse, oRequ
 	}
 	else
 	{
-		CalendarCache.calendarChanged(true);
+		this.markChanges();
 	}
 };
 
@@ -288,7 +285,7 @@ CIcalModel.prototype.addEvents = function ()
 		this.isJustSaved(false);
 	}, this), 20000);
 	
-	CalendarCache.recivedAnim(true);
+	this.showChanges();
 };
 
 /**
@@ -307,7 +304,7 @@ CIcalModel.prototype.onAddEventsFromFileResponse = function (oResponse, oRequest
 		{
 			this.uid(oResponse.Result.Uid);
 		}
-		CalendarCache.calendarChanged(true);
+		this.markChanges();
 	}
 };
 
@@ -322,6 +319,8 @@ CIcalModel.prototype.updateAttendeeStatus = function (sEmail)
 			'File': this.file(),
 			'FromEmail': sEmail
 		}, this.onUpdateAttendeeStatusResponse, this);
+		
+		this.showChanges();
 	}
 };
 
@@ -333,7 +332,26 @@ CIcalModel.prototype.onUpdateAttendeeStatusResponse = function (oResponse, oRequ
 {
 	if (oResponse.Result)
 	{
-		CalendarCache.recivedAnim(true);
+		this.markChanges();
+	}
+};
+
+CIcalModel.prototype.showChanges = function ()
+{
+	if (HeaderItemView)
+	{
+		HeaderItemView.recivedAnim(true);
+	}
+};
+
+CIcalModel.prototype.markChanges = function ()
+{
+	if (BaseTab)
+	{
+		BaseTab.markCalendarChanged();
+	}
+	else
+	{
 		CalendarCache.calendarChanged(true);
 	}
 };
