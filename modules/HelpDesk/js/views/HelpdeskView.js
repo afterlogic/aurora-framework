@@ -17,6 +17,7 @@ var
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	Browser = require('core/js/Browser.js'),
+	Pulse = require('core/js/Pulse.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
@@ -517,13 +518,12 @@ CHelpdeskView.prototype.hideClientDetails = function ()
 
 CHelpdeskView.prototype.startAutoCheckState = function ()
 {
-	var self = this, iIntervalInMin = UserSettings.AutoRefreshIntervalMinutes;
-	if (0 < iIntervalInMin)
+	if (UserSettings.AutoRefreshIntervalMinutes > 0)
 	{
 		clearTimeout(this.iAutoCheckTimer);
-		this.iAutoCheckTimer = setTimeout(function () {
-			self.checkCommand();
-		}, iIntervalInMin * 60 * 1000);
+		this.iAutoCheckTimer = setTimeout(_.bind(function () {
+			this.checkCommand();
+		}, this), UserSettings.AutoRefreshIntervalMinutes * 60 * 1000);
 	}
 };
 
@@ -557,6 +557,22 @@ CHelpdeskView.prototype.onBind = function ()
 //	}
 
 	this.startAutoCheckState();
+	
+	if (UserSettings.AutoRefreshIntervalMinutes !== 1)
+	{
+		Pulse.registerEveryMinuteFunction(_.bind(function () {
+			if (this.shown())
+			{
+				$('.moment-date-trigger-fast').each(function () {
+					var oItem = ko.dataFor(this);
+					if (oItem && $.isFunction(oItem.updateMomentDate))
+					{
+						oItem.updateMomentDate();
+					}
+				});
+			}
+		}, this));
+	}
 };
 
 CHelpdeskView.prototype.onShow = function ()

@@ -35,7 +35,10 @@ function RequestThreads()
 
 module.exports = {
 	start: function () {
-		RequestThreads();
+		if (UserSettings.AutoRefreshIntervalMinutes > 0)
+		{
+			RequestThreads();
+		}
 	},
 	end: function () {
 		clearTimeout(iTimer);

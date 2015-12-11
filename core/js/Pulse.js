@@ -1,35 +1,38 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	moment = require('moment'),
 	
+	aEveryMinuteFunctions = [],
 	aDayOfMonthFunctions = [],
-	iNowDayOfMonth = ko.observable(moment().date())
+	koNowDayOfMonth = ko.observable(moment().date())
 ;
 
 window.setInterval(function () {
-//	todo: helpdesk
-//	$('.moment-date-trigger-fast').each(function () {
-//		var oItem = ko.dataFor(this);
-//		if (oItem && oItem.updateMomentDate)
-//		{
-//			oItem.updateMomentDate();
-//		}
-//	});
-
-	iNowDayOfMonth(moment().date());
+	_.each(aEveryMinuteFunctions, function (fEveryMinute) {
+		fEveryMinute();
+	});
+	
+	koNowDayOfMonth(moment().date());
 }, 1000 * 60); // every minute
 
-iNowDayOfMonth.subscribe(function () {
+koNowDayOfMonth.subscribe(function () {
 	_.each(aDayOfMonthFunctions, function (fDayOfMonth) {
 		fDayOfMonth();
 	});
 }, this);
 
 module.exports = {
+	registerEveryMinuteFunction: function (fEveryMinute)
+	{
+		if ($.isFunction(fEveryMinute))
+		{
+			aEveryMinuteFunctions.push(fEveryMinute);
+		}
+	},
 	registerDayOfMonthFunction: function (fDayOfMonth)
 	{
 		if ($.isFunction(fDayOfMonth))
