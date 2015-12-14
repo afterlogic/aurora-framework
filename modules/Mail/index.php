@@ -1324,8 +1324,21 @@ class MailModule extends AApiModule
 	
 	public function GetFetchers()
 	{
-		$oAccount = $this->getParamValue('Account', null);
+		$oAccount = $this->GetDefaultAccount();
 		return $this->oApiFetchersManager->getFetchers($oAccount);
+	}
+	
+	public function GetIdentities()
+	{
+		$mResult = false;
+		$oApiUsersManager = \CApi::GetCoreManager('users');
+		$oAccount = $this->GetDefaultAccount();
+		if ($oAccount)
+		{
+			$mResult = $oApiUsersManager->getUserIdentities($oAccount->IdUser);
+		}
+		
+		return $mResult;
 	}
 	
 }
