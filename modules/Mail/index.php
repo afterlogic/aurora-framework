@@ -1341,6 +1341,11 @@ class MailModule extends AApiModule
 		return $mResult;
 	}
 	
+	public function GetQuota()
+	{
+		return $this->oApiMailManager->getQuota($this->getAccountFromParam());
+	}
+	
 }
 
 return new MailModule('1.0');

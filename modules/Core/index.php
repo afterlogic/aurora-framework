@@ -34,7 +34,7 @@ class CoreModule extends AApiModule
 
 		if ($this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
 		{
-			$bResult = \CApi::GetModuleManager()->Execute('Contacts', 'SynchronizeExternalContacts', array('Account' => $oAccount));
+			$bResult = \CApi::ExecuteMethod('Contact::SynchronizeExternalContacts', array('Account' => $oAccount));
 		}
 
 		$oCacher = \CApi::Cacher();

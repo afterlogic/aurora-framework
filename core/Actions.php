@@ -821,16 +821,6 @@ class Actions
 	/**
 	 * @return array
 	 */
-	public function AjaxAccountGetQuota()
-	{
-		$oAccount = $this->getAccountFromParam();
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMail->getQuota($oAccount));
-	}
-
-	/**
-	 * @return array
-	 */
 	public function AjaxSystemUpdateLanguageOnLogin()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
