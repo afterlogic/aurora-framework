@@ -180,7 +180,10 @@ CFolderListModel.prototype.getFolderByFullName = function (sFolderFullName)
  */
 CFolderListModel.prototype.parse = function (iAccountId, oData, oNamedFolderListOld)
 {
-	var sNamespace = Utils.pString(oData.Namespace);
+	var
+		sNamespace = Utils.pString(oData.Namespace),
+		aCollection = oData.Folders['@Collection']
+	;
 	if (sNamespace.length > 0)
 	{
 		this.sNamespaceFolder = sNamespace.substring(0, sNamespace.length - 1);
@@ -196,19 +199,19 @@ CFolderListModel.prototype.parse = function (iAccountId, oData, oNamedFolderList
 	
 	this.oNamedCollection = {};
 	this.aLinedCollection = [];
-	this.collection(this.parseRecursively(oData['@Collection'], oNamedFolderListOld));
+	this.collection(this.parseRecursively(aCollection, oNamedFolderListOld));
 };
 
 /**
  * Recursively parses the folder tree.
  * 
- * @param {Array} aRowCollection
+ * @param {Array} aRawCollection
  * @param {Object} oNamedFolderListOld
  * @param {number=} iLevel
  * @param {string=} sParentFullName
  * @returns {Array}
  */
-CFolderListModel.prototype.parseRecursively = function (aRowCollection, oNamedFolderListOld, iLevel, sParentFullName)
+CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFolderListOld, iLevel, sParentFullName)
 {
 	var
 		self = this,
@@ -249,14 +252,14 @@ CFolderListModel.prototype.parseRecursively = function (aRowCollection, oNamedFo
 	}
 
 	iLevel++;
-	if (_.isArray(aRowCollection))
+	if (_.isArray(aRawCollection))
 	{
-		for (iLen = aRowCollection.length; iIndex < iLen; iIndex++)
+		for (iLen = aRawCollection.length; iIndex < iLen; iIndex++)
 		{
-			sFolderFullName = Utils.pString(aRowCollection[iIndex].FullNameRaw);
+			sFolderFullName = Utils.pString(aRawCollection[iIndex].FullNameRaw);
 			oFolderOld = oNamedFolderListOld[sFolderFullName];
 			oFolder = new CFolderModel(this.iAccountId);
-			oSubFolders = oFolder.parse(aRowCollection[iIndex], sParentFullName, bDisableManageSubscribe, this.sNamespaceFolder);
+			oSubFolders = oFolder.parse(aRawCollection[iIndex], sParentFullName, bDisableManageSubscribe, this.sNamespaceFolder);
 			if (oFolderOld && oFolderOld.hasExtendedInfo() && !oFolder.hasExtendedInfo())
 			{
 				oFolder.setRelevantInformation(oFolderOld.sUidNext, oFolderOld.sHash, 
@@ -266,7 +269,7 @@ CFolderListModel.prototype.parseRecursively = function (aRowCollection, oNamedFo
 			if (bExpandFolders && oSubFolders !== null)
 			{
 				oFolder.expanded(true);
-				this.expandNames().push(Utils.pString(aRowCollection[iIndex].Name));
+				this.expandNames().push(Utils.pString(aRawCollection[iIndex].Name));
 			}
 
 			oFolder.setLevel(iLevel);
