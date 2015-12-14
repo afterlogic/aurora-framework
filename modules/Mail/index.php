@@ -912,18 +912,12 @@ class MailModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$oAccount = $this->getAccountFromParam();
-
 		$aList = array();
 		foreach ($aUids as $iUid)
 		{
 			if (is_numeric($iUid))
 			{
-				$this->SetParameters(array(
-					'Account' => $oAccount,
-					'Folder' => $sFolderFullNameRaw,
-					'Uid' => $iUid
-				));
+				$this->setParamValue('Uid', $iUid);
 				$oMessage = $this->GetMessage();
 				if ($oMessage instanceof \CApiMailMessage)
 				{
