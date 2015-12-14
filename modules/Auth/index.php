@@ -42,7 +42,7 @@ class AuthModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse(null, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -156,7 +156,9 @@ class AuthModule extends AApiModule
 				$sAuthToken = $oApiIntegrator->setAccountAsLoggedIn($oAccount, $bSignMe);
 			}
 			
-			return $this->DefaultResponse($oAccount, __FUNCTION__, array('AuthToken' => $sAuthToken));
+			return array(
+				'AuthToken' => $sAuthToken
+			);
 		}
 
 		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
@@ -187,7 +189,7 @@ class AuthModule extends AApiModule
 		}
 
 		\CApi::LogEvent(\EEvents::Logout, $oAccount);
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oApiIntegrator->logoutAccount($sAuthToken));
+		return $oApiIntegrator->logoutAccount($sAuthToken);
 	}	
 }
 

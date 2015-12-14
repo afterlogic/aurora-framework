@@ -80,7 +80,7 @@ class CoreModule extends AApiModule
 			\CApi::GetModuleManager()->ExecuteMethod('Helpdesk', 'ClearAllOnline');
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+		return $bResult;
 	}
 	
 	/**
@@ -88,7 +88,7 @@ class CoreModule extends AApiModule
 	 */
 	public function Noop()
 	{
-		return $this->TrueResponse(null, __FUNCTION__);
+		return true;
 	}
 
 	/**
@@ -96,7 +96,7 @@ class CoreModule extends AApiModule
 	 */
 	public function Ping()
 	{
-		return $this->DefaultResponse(null, __FUNCTION__, 'Pong');
+		return 'Pong';
 	}	
 	
 	/**
@@ -106,8 +106,7 @@ class CoreModule extends AApiModule
 	{
 		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
-		return $this->DefaultResponse(null, __FUNCTION__, 
-				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false);
+		return $oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false;
 	}	
 	
 	public function EntryPull()
@@ -394,8 +393,8 @@ class CoreModule extends AApiModule
 	public function SetMobile()
 	{
 		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
-		return $this->DefaultResponse(null, __FUNCTION__, $oApiIntegratorManager ?
-			$oApiIntegratorManager->setMobile('1' === (string) $this->getParamValue('Mobile', '0')) : false);
+		return $oApiIntegratorManager ?
+			$oApiIntegratorManager->setMobile('1' === (string) $this->getParamValue('Mobile', '0')) : false;
 	}	
 	
 }

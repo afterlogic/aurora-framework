@@ -325,7 +325,7 @@ class MailModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse(null, __FUNCTION__, $mResult);
+		return $mResult;
 	}
 	
 	/**
@@ -335,9 +335,10 @@ class MailModule extends AApiModule
 	{
 		$oAccount = $this->getAccountFromParam();
 		$oFolderCollection = $this->oApiMailManager->getFolders($oAccount);
-		$aResponse = $this->DefaultResponse($oAccount, __FUNCTION__, $oFolderCollection);
-		$aResponse['Result']['Namespace'] = $oFolderCollection->GetNamespace();
-		return $aResponse;
+		return array(
+			'Folders' => $oFolderCollection, 
+			'Namespace' => $oFolderCollection->GetNamespace()
+		);
 	}	
 	
 	/**
@@ -375,10 +376,10 @@ class MailModule extends AApiModule
 			\CApi::Log((string) $oException);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return array(
 			'Counts' => $aResult,
 			'New' => isset($oReturnInboxNewData) ? $oReturnInboxNewData->GetData() : ''
-		));
+		);
 	}	
 	
 	/**
@@ -446,7 +447,7 @@ class MailModule extends AApiModule
 			}
 		}
 
-		return $this->TrueResponse($oAccount, __FUNCTION__);
+		return true;
 	}	
 	
 	/**
@@ -466,7 +467,7 @@ class MailModule extends AApiModule
 
 		$mResult = $this->oApiMailManager->renameFolder($oAccount, $sPrevFolderFullNameRaw, $sNewFolderNameInUtf8);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, 0 < strlen($mResult) ? array(
+		return (0 < strlen($mResult) ? array(
 			'FullName' => $mResult,
 			'FullNameHash' => md5($mResult)
 		) : false);
@@ -488,7 +489,7 @@ class MailModule extends AApiModule
 
 		$this->oApiMailManager->deleteFolder($oAccount, $sFolderFullNameRaw);
 
-		return $this->TrueResponse($oAccount, __FUNCTION__);
+		return true;
 	}	
 	
 	/**
@@ -509,10 +510,10 @@ class MailModule extends AApiModule
 		if (!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe))
 		{
 			$this->oApiMailManager->subscribeFolder($oAccount, $sFolderFullNameRaw, $bSetAction);
-			return $this->TrueResponse($oAccount, __FUNCTION__);
+			return true;
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -529,11 +530,10 @@ class MailModule extends AApiModule
 		$oAccount = $this->getAccountFromParam();
 		if ($oAccount->isExtensionEnabled(\CAccount::DisableFoldersManualSort))
 		{
-			return $this->FalseResponse($oAccount, __FUNCTION__);
+			return false;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__,
-			$this->oApiMailManager->updateFoldersOrder($oAccount, $aFolderList));
+		return $this->oApiMailManager->updateFoldersOrder($oAccount, $aFolderList);
 	}	
 	
 	/**
@@ -552,7 +552,7 @@ class MailModule extends AApiModule
 
 		$this->oApiMailManager->clearFolder($oAccount, $sFolderFullNameRaw);
 
-		return $this->TrueResponse($oAccount, __FUNCTION__);
+		return true;
 	}	
 	
 	/**
@@ -589,7 +589,7 @@ class MailModule extends AApiModule
 		$oMessageList = $this->oApiMailManager->getMessageList(
 			$oAccount, $sFolderFullNameRaw, $iOffset, $iLimit, $sSearch, $bUseThreads, $aFilters, $sInboxUidnext);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oMessageList);
+		return oMessageList;
 	}	
 	
 	/**
@@ -607,9 +607,7 @@ class MailModule extends AApiModule
 
 		$oAccount = $this->getAccountFromParam();
 
-		$oMessageList = $this->oApiMailManager->getMessageListByUids($oAccount, $sFolderFullNameRaw, $aUids);
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oMessageList);
+		return $this->oApiMailManager->getMessageListByUids($oAccount, $sFolderFullNameRaw, $aUids);
 	}	
 	
 	/**
@@ -627,9 +625,7 @@ class MailModule extends AApiModule
 
 		$oAccount = $this->getAccountFromParam();
 
-		$aMessageFlags = $this->oApiMailManager->getMessagesFlags($oAccount, $sFolderFullNameRaw, $aUids);
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aMessageFlags);
+		return $this->oApiMailManager->getMessagesFlags($oAccount, $sFolderFullNameRaw, $aUids);
 	}	
 	
 	/**
@@ -665,7 +661,7 @@ class MailModule extends AApiModule
 				$oException->getMessage());
 		}
 
-		return $this->TrueResponse($oAccount, __FUNCTION__);
+		return true;
 	}
 
 	public function CopyMessages()
@@ -698,7 +694,7 @@ class MailModule extends AApiModule
 				$oException->getMessage());
 		}
 
-		return $this->TrueResponse($oAccount, __FUNCTION__);
+		return true;
 	}
 
 	/**
@@ -719,7 +715,7 @@ class MailModule extends AApiModule
 
 		$this->oApiMailManager->deleteMessage($oAccount, $sFolderFullNameRaw, $aUids);
 
-		return $this->TrueResponse($oAccount, __FUNCTION__);
+		return true;
 	}	
 	
 	/**
@@ -752,8 +748,6 @@ class MailModule extends AApiModule
 
 		$oMessage = false;
 
-		$sICalMimeIndex = '';
-		$sVCardMimeIndex = '';
 		$aTextMimeIndexes = array();
 		$aAscPartsIds = array();
 
@@ -774,7 +768,6 @@ class MailModule extends AApiModule
 				}
 			}
 
-			$bParseICalAndVcard = true;
 			$aParts = $oBodyStructure->GetAllParts();
 					
 			\CApi::GetModuleManager()->broadcastEvent('GetBodyStructureParts', array($aParts, &$aCustomParts));
@@ -905,7 +898,7 @@ class MailModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotGetMessage);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oMessage);
+		return $oMessage;
 	}
 
 	/**
@@ -928,7 +921,12 @@ class MailModule extends AApiModule
 		{
 			if (is_numeric($iUid))
 			{
-				$oMessage = $this->oApiMailManager->getMessage($oAccount, $sFolderFullNameRaw, (int) $iUid, '', true, true, 600000);
+				$this->SetParameters(array(
+					'Account' => $oAccount,
+					'Folder' => $sFolderFullNameRaw,
+					'Uid' => $iUid
+				));
+				$oMessage = $this->GetMessage();
 				if ($oMessage instanceof \CApiMailMessage)
 				{
 					$aList[] = $oMessage;
@@ -938,7 +936,7 @@ class MailModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aList);
+		return $aList;
 	}	
 	
 	/**
@@ -1004,7 +1002,7 @@ class MailModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -1132,7 +1130,7 @@ class MailModule extends AApiModule
 		}
 
 		\CApi::LogEvent(\EEvents::MessageSend, $oAccount);
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}
 	
 	/**
@@ -1179,7 +1177,7 @@ class MailModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -1201,7 +1199,7 @@ class MailModule extends AApiModule
 			\MailSo\Imap\Enumerations\MessageFlag::SEEN,
 			$bSetAction ? \EMailMessageStoreAction::Add : \EMailMessageStoreAction::Remove, true);
 
-		return $this->TrueResponse($oAccount, 'SetAllMessagesSeen');
+		return true;
 	}	
 	
 	/**
@@ -1250,7 +1248,7 @@ class MailModule extends AApiModule
 			$aData[$sSpam] = \EFolderType::Spam;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiMailManager->setSystemFolderNames($oAccount, $aData));
+		return $this->oApiMailManager->setSystemFolderNames($oAccount, $aData);
 	}	
 	
 	/**
@@ -1295,7 +1293,7 @@ class MailModule extends AApiModule
 				$oSnappy->generateFromHtml($oCssToInlineStyles->convert(),
 					$oApiFileCache->generateFullFilePath($oAccount, $sSavedName), array(), true);
 
-				return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+				return array(
 					'Name' => $sFileName,
 					'TempName' => $sSavedName,
 					'MimeType' => $sMimeType,
@@ -1306,11 +1304,11 @@ class MailModule extends AApiModule
 						'Name' => $sFileName,
 						'TempName' => $sSavedName
 					))
-				));
+				);
 			}
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}
 	
 	/**
@@ -1329,7 +1327,7 @@ class MailModule extends AApiModule
 		$oApiUsers = \CApi::GetCoreManager('users');
 		$oApiUsers->setSafetySender($oAccount->IdUser, $sEmail);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, true);
+		return true;
 	}	
 	
 	public function GetFetchers()

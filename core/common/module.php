@@ -494,7 +494,8 @@ abstract class AApiModule
 					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
 					$aParameters['AccountID'] = $this->oHttp->GetPost('AccountID', '');
 					$aParameters['AuthToken'] = $this->oHttp->GetPost('AuthToken', '');
-					$aResponseItem = $this->ExecuteMethod($sMethod, $aParameters);
+					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
+					$aResponseItem = $this->DefaultResponse($this->GetDefaultAccount(), $sMethod, $mResult);
 
 	/*						
 					else if (\CApi::Plugin()->JsonHookExists($sMethodName))

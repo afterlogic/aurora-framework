@@ -173,7 +173,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aList);
+		return $aList;
 	}
 	
 	/**
@@ -194,7 +194,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup);
+		return $oGroup;
 	}
 	
 	/**
@@ -215,7 +215,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aEvents);
+		return $aEvents;
 	}	
 	
 	/**
@@ -303,14 +303,14 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return array(
 			'ContactCount' => $iCount,
 			'GroupId' => $sGroupId,
 			'Search' => $sSearch,
 			'FirstCharacter' => $sFirstCharacter,
 			'All' => $bAll,
 			'List' => \CApiResponseManager::GetResponseObject($aList)
-		));		
+		);		
 	}
 	
 	/**
@@ -354,7 +354,7 @@ class ContactsModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+		return $aResult;
 	}	
 	
 	/**
@@ -395,11 +395,11 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return array(
 			'ContactCount' => $iCount,
 			'Search' => $sSearch,
 			'List' => $aList
-		));
+		);
 	}	
 	
 	
@@ -425,7 +425,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
+		return $oContact;
 	}	
 	
 	public function DownloadContactsAsCSV()
@@ -462,7 +462,7 @@ class ContactsModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact);
+		return $oContact;
 	}	
 	
 	/**
@@ -499,10 +499,10 @@ class ContactsModule extends AApiModule
 		
 		\CApi::Plugin()->RunHook('webmail.change-suggest-list', array($oAccount, $sSearch, &$aList, &$aCounts));
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return array(
 			'Search' => $sSearch,
 			'List' => $aList
-		));
+		);
 	}	
 	
 	public function DeleteSuggestion()
@@ -520,7 +520,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	public function UpdateSuggestTable()
@@ -548,16 +548,16 @@ class ContactsModule extends AApiModule
 			$this->populateContactObject($oContact);
 
 			$this->oApiContactsManager->createContact($oContact);
-			return $this->DefaultResponse($oAccount, __FUNCTION__, $oContact ? array(
+			return $oContact ? array(
 				'IdContact' => $oContact->IdContact
-			) : false);
+			) : false;
 		}
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -591,7 +591,7 @@ class ContactsModule extends AApiModule
 
 				if ($oApiContacts->updateContact($oContact))
 				{
-					return $this->TrueResponse($oAccount, __FUNCTION__);
+					return true;
 				}
 				else
 				{
@@ -609,7 +609,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}
 	
 	/**
@@ -627,15 +627,14 @@ class ContactsModule extends AApiModule
 			$bSharedToAll = '1' === (string) $this->getParamValue('SharedToAll', '0');
 			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
 
-			return $this->DefaultResponse($oAccount, __FUNCTION__,
-				$this->oApiContactsManager->deleteContacts($oAccount->IdUser, $aContactsId, $iTenantId));
+			return $this->oApiContactsManager->deleteContacts($oAccount->IdUser, $aContactsId, $iTenantId);
 		}
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -685,14 +684,14 @@ class ContactsModule extends AApiModule
 				}
 			}
 			
-			return $this->TrueResponse($oAccount, __FUNCTION__);
+			return true;
 		}
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -730,7 +729,7 @@ class ContactsModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -748,16 +747,16 @@ class ContactsModule extends AApiModule
 			$this->populateGroupObject($oGroup);
 
 			$this->oApiContactsManager->createGroup($oGroup);
-			return $this->DefaultResponse($oAccount, __FUNCTION__, $oGroup ? array(
+			return $oGroup ? array(
 				'IdGroup' => $oGroup->IdGroup
-			) : false);
+			) : false;
 		}
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -778,11 +777,11 @@ class ContactsModule extends AApiModule
 
 				if ($this->oApiContactsManager->updateGroup($oGroup))
 				{
-					return $this->TrueResponse($oAccount, __FUNCTION__);
+					return true;
 				}
 				else
 				{
-					switch ($oApiContacts->getLastErrorCode())
+					switch ($this->oApiContactsManager->getLastErrorCode())
 					{
 						case \Errs::Sabre_PreconditionFailed:
 							throw new \Core\Exceptions\ClientException(
@@ -797,7 +796,7 @@ class ContactsModule extends AApiModule
 				\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -811,15 +810,14 @@ class ContactsModule extends AApiModule
 		{
 			$sGroupId = $this->getParamValue('GroupId', '');
 
-			return $this->DefaultResponse($oAccount, __FUNCTION__,
-				$this->oApiContactsManager->deleteGroup($oAccount->IdUser, $sGroupId));
+			return $this->oApiContactsManager->deleteGroup($oAccount->IdUser, $sGroupId);
 		}
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->FalseResponse($oAccount, __FUNCTION__);
+		return false;
 	}
 	
 	/**
@@ -836,7 +834,7 @@ class ContactsModule extends AApiModule
 			$aContactsId = $this->getParamValue('ContactsId', null);
 			if (!is_array($aContactsId))
 			{
-				return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+				return false;
 			}
 
 			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
@@ -878,7 +876,7 @@ class ContactsModule extends AApiModule
 					$bRes2 = $this->oApiContactsManager->addContactsToGroup($oGroup, $aLocalContacts);
 				}
 
-				return $this->DefaultResponse($oAccount, __FUNCTION__, $bRes1 && $bRes2);
+				return $bRes1 && $bRes2;
 			}
 		}
 		else
@@ -886,7 +884,7 @@ class ContactsModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+		return false;
 	}
 	
 	/**
@@ -907,18 +905,17 @@ class ContactsModule extends AApiModule
 			$oGroup = $this->oApiContactsManager->getGroupById($oAccount->IdUser, $sGroupId);
 			if ($oGroup)
 			{
-				return $this->DefaultResponse($oAccount, __FUNCTION__,
-					$this->oApiContactsManager->removeContactsFromGroup($oGroup, $aContactsId));
+				return $this->oApiContactsManager->removeContactsFromGroup($oGroup, $aContactsId);
 			}
 
-			return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+			return false;
 		}
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, false);
+		return false;
 	}	
 	
 	public function SynchronizeExternalContacts()

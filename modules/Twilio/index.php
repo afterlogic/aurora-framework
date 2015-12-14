@@ -207,7 +207,7 @@ class TwilioModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::VoiceNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mToken);
+		return $mToken;
 	}	
 	
 	/**
@@ -341,7 +341,7 @@ class TwilioModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::VoiceNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+		return $aResult;
 	}	
 	
 }

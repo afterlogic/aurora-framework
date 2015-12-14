@@ -48,7 +48,7 @@ class CalendarModule extends AApiModule
 			$mResult['ServerUrl'] = $oApiDavManager && $oAccount ? $oApiDavManager->getServerUrl($oAccount) : '';
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}
 	
 	/**
@@ -109,7 +109,7 @@ class CalendarModule extends AApiModule
 			}
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -128,9 +128,7 @@ class CalendarModule extends AApiModule
 		$sColor = $this->getParamValue('Color'); 
 		$sId = $this->getParamValue('Id'); 
 		
-		$mResult = $this->oApiCalendarManager->updateCalendar($oAccount, $sId, $sName, $sDescription, 0, $sColor);
-		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->oApiCalendarManager->updateCalendar($oAccount, $sId, $sName, $sDescription, 0, $sColor);
 	}	
 
 	/**
@@ -147,9 +145,7 @@ class CalendarModule extends AApiModule
 		$sColor = $this->getParamValue('Color'); 
 		$sId = $this->getParamValue('Id'); 
 		
-		$mResult = $this->oApiCalendarManager->updateCalendarColor($oAccount, $sId, $sColor);
-		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->oApiCalendarManager->updateCalendarColor($oAccount, $sId, $sColor);
 	}
 	
 	/**
@@ -182,9 +178,7 @@ class CalendarModule extends AApiModule
 			'access' => $bIsPublic ? \ECalendarPermission::Read : \ECalendarPermission::RemovePermission
 		);
 		
-		$mResult = $this->oApiCalendarManager->updateCalendarShares($oAccount, $sCalendarId, $aShares);
-		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->oApiCalendarManager->updateCalendarShares($oAccount, $sCalendarId, $aShares);
 	}		
 	
 	/**
@@ -201,8 +195,7 @@ class CalendarModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$mResult = $this->oApiCalendarManager->publicCalendar($oAccount, $sCalendarId, $bIsPublic);
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->oApiCalendarManager->publicCalendar($oAccount, $sCalendarId, $bIsPublic);
 	}		
 
 	/**
@@ -223,7 +216,6 @@ class CalendarModule extends AApiModule
 	 */
 	public function GetBaseEvent()
 	{
-		$mResult = false;
 		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
@@ -233,9 +225,7 @@ class CalendarModule extends AApiModule
 		$sCalendarId = $this->getParamValue('calendarId');
 		$sEventId = $this->getParamValue('uid');
 		
-		$mResult = $this->oApiCalendarManager->getBaseEvent($oAccount, $sCalendarId, $sEventId);
-		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->oApiCalendarManager->getBaseEvent($oAccount, $sCalendarId, $sEventId);
 	}	
 	
 	
@@ -270,7 +260,7 @@ class CalendarModule extends AApiModule
 			$mResult = $this->oApiCalendarManager->getEvents($oAccount, $aCalendarIds, $iStart, $iEnd);
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -313,7 +303,7 @@ class CalendarModule extends AApiModule
 			$mResult = $this->oApiCalendarManager->getExpandedEvent($oAccount, $oEvent->IdCalendar, $mResult, $iStart, $iEnd);
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}
 	
 	/**
@@ -374,7 +364,7 @@ class CalendarModule extends AApiModule
 			$mResult = $this->oApiCalendarManager->getExpandedEvent($oAccount, $oEvent->IdCalendar, $oEvent->Id, $iStart, $iEnd);
 		}
 			
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -405,7 +395,7 @@ class CalendarModule extends AApiModule
 			$mResult = $this->oApiCalendarManager->deleteEvent($oAccount, $sCalendarId, $sId);
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -443,7 +433,7 @@ class CalendarModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -497,7 +487,7 @@ class CalendarModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oDefaultAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	public function EntryInvite()
@@ -680,7 +670,7 @@ class CalendarModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);		
+		return $mResult;		
 		
 	}	
 	

@@ -133,7 +133,7 @@ class HelpDeskModule extends AApiModule
 				if ($oHelpdeskUser && !$oHelpdeskUser->Blocked)
 				{
 					$oApiIntegrator->setHelpdeskUserAsLoggedIn($oHelpdeskUser, $bSignMe);
-					return $this->TrueResponse(null, __FUNCTION__);
+					return true;
 				}
 			}
 			catch (\Exception $oException)
@@ -162,7 +162,7 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		return $this->FalseResponse(null, __FUNCTION__);
+		return false;
 	}
 
 	public function Logout()
@@ -174,7 +174,7 @@ class HelpDeskModule extends AApiModule
 			$oApiIntegrator->logoutHelpdeskUser();
 		}
 
-		return $this->TrueResponse(null, __FUNCTION__);
+		return true;
 	}	
 	
 	public function Register()
@@ -226,10 +226,10 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException($iErrorCode);
 			}
 
-			return $this->DefaultResponse(null, __FUNCTION__, $bResult);
+			return $bResult;
 		}
 
-		return $this->FalseResponse(null, __FUNCTION__);
+		return false;
 	}	
 	
 	/**
@@ -237,10 +237,9 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function IsAgent()
 	{
-		$oAccount = null;
 		$oUser = $this->getHelpdeskAccountFromParam();
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oUser && $oUser->IsAgent);
+		return $oUser && $oUser->IsAgent;
 	}	
 	
 	public function Forgot()
@@ -268,10 +267,10 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
 			}
 
-			return $this->DefaultResponse(null, __FUNCTION__, $oHelpdesk->forgotUser($oUser));
+			return $this->oApiHelpDeskManager->forgotUser($oUser);
 		}
 		
-		return $this->FalseResponse(null, __FUNCTION__);
+		return false;
 	}	
 	
 	public function ForgotChangePassword()
@@ -304,10 +303,10 @@ class HelpDeskModule extends AApiModule
 			$oUser->setPassword($sNewPassword);
 			$oUser->regenerateActivateHash();
 
-			return $this->DefaultResponse(null, __FUNCTION__, $oHelpdesk->updateUser($oUser));
+			return $this->oApiHelpDeskManager->updateUser($oUser);
 		}
 
-		return $this->FalseResponse(null, __FUNCTION__);
+		return false;
 	}	
 	
 	public function CreatePost()
@@ -424,7 +423,7 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $mResult;
 	}	
 	
 	/**
@@ -459,8 +458,7 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__,
-			$this->oApiHelpDeskManager->deletePosts($oUser, $oThread, array($iPostId)));
+		return $this->oApiHelpDeskManager->deletePosts($oUser, $oThread, array($iPostId));
 	}	
 	
 	/**
@@ -515,7 +513,7 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oThread);
+		return $oThread;
 	}	
 	
 	/**
@@ -635,13 +633,13 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return array(
 			'ThreadId' => $oThread->IdHelpdeskThread,
 			'StartFromId' => $iStartFromId,
 			'Limit' => $iLimit,
 			'ItemsCount' => $iExtPostsCount ? $iExtPostsCount : ($oThread->PostCount > count($aList) ? $oThread->PostCount : count($aList)),
 			'List' => $aList
-		));
+		);
 	}
 	
 	/**
@@ -670,7 +668,7 @@ class HelpDeskModule extends AApiModule
 			$bResult = $this->oApiHelpDeskManager->archiveThreads($oUser, array($iThreadId));
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+		return $bResult;
 	}	
 	
 	/**
@@ -708,7 +706,7 @@ class HelpDeskModule extends AApiModule
 			$bResult = $this->oApiHelpDeskManager->updateThread($oUser, $oThread);
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+		return $bResult;
 	}	
 	
 
@@ -726,7 +724,7 @@ class HelpDeskModule extends AApiModule
 
 		$this->oApiHelpDeskManager->setOnline($oUser, $iThreadId);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiHelpDeskManager->getOnline($oUser, $iThreadId));
+		return $this->oApiHelpDeskManager->getOnline($oUser, $iThreadId);
 	}
 	
 	public function SetThreadSeen()
@@ -747,7 +745,7 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiHelpDeskManager->setThreadSeen($oUser, $oThread));
+		return $this->oApiHelpDeskManager->setThreadSeen($oUser, $oThread);
 	}	
 	
 	/**
@@ -816,14 +814,14 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return array(
 			'Search' => $sSearch,
 			'Filter' => $iFilter,
 			'List' => $aList,
 			'Offset' => $iOffset,
 			'Limit' => $iLimit,
 			'ItemsCount' =>  $iCount
-		));
+		);
 	}	
 	
 	
@@ -838,7 +836,7 @@ class HelpDeskModule extends AApiModule
 		}
 
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiHelpDeskManager->getThreadsPendingCount($oUser->IdTenant));
+		return $this->oApiHelpDeskManager->getThreadsPendingCount($oUser->IdTenant);
 	}	
 	
 	public function EntryHelpDesk()
@@ -931,7 +929,7 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+		return $bResult;
 	}	
 	
 	/**
@@ -955,8 +953,7 @@ class HelpDeskModule extends AApiModule
 		$oUser->DateFormat = $sDateFormat;
 		$oUser->TimeFormat = $iTimeFormat;
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__,
-			$this->oApiHelpDeskManager->updateUser($oUser));
+		return $this->oApiHelpDeskManager->updateUser($oUser);
 	}	
 	
 	/**
@@ -990,7 +987,7 @@ class HelpDeskModule extends AApiModule
 		$oAccount->User->HelpdeskSignatureEnable = (bool) $this->getParamValue('HelpdeskSignatureEnable', $oAccount->User->HelpdeskSignatureEnable);
 
 		$oApiUsers = \CApi::GetCoreManager('users');
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oApiUsers->UpdateAccount($oAccount));
+		return $oApiUsers->UpdateAccount($oAccount);
 	}	
 }
 
