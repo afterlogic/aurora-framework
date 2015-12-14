@@ -586,10 +586,8 @@ class MailModule extends AApiModule
 
 		$oAccount = $this->getAccountFromParam();
 
-		$oMessageList = $this->oApiMailManager->getMessageList(
+		return $this->oApiMailManager->getMessageList(
 			$oAccount, $sFolderFullNameRaw, $iOffset, $iLimit, $sSearch, $bUseThreads, $aFilters, $sInboxUidnext);
-
-		return oMessageList;
 	}	
 	
 	/**
