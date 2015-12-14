@@ -941,7 +941,7 @@ CFilesView.prototype.onGetExternalStoragesResponse = function (oResponse, oReque
 	if (oResult)
 	{
 		_.each(oResult, function(oStorage){
-			if (!this.getStorageByType(oStorage.Type))
+			if (oStorage.Type && !this.getStorageByType(oStorage.Type))
 			{
 				this.storages.push({
 					isExternal: true,
@@ -1117,7 +1117,7 @@ CFilesView.prototype.getPathItemByIndex = function (iIndex)
  */
 CFilesView.prototype.getFileByName = function (sName)
 {
-	return _.find(this.files(), function(oItem){
+	return _.find(this.files(), function (oItem) {
 		return oItem.id() === sName;
 	});	
 };
@@ -1144,10 +1144,10 @@ CFilesView.prototype.deleteFolderByName = function (sName)
 
 CFilesView.prototype.expungeFileItems = function ()
 {
-	this.folders(_.filter(this.folders(), function(oFolder) {
+	this.folders(_.filter(this.folders(), function (oFolder) {
 		return !oFolder.deleted();
 	}, this));
-	this.files(_.filter(this.files(), function(oFile) {
+	this.files(_.filter(this.files(), function (oFile) {
 		return !oFile.deleted();
 	}, this));
 };
@@ -1158,7 +1158,7 @@ CFilesView.prototype.expungeFileItems = function ()
 CFilesView.prototype.expungeExternalStorages = function (aStorageTypes)
 {
 	this.storages(_.filter(this.storages(), function (oStorage) {
-		return !oStorage.isExternal || _.include(aStorageTypes, oStorage.storageType());
+		return !oStorage.isExternal || _.include(aStorageTypes, oStorage.type);
 	},this));
 };
 
