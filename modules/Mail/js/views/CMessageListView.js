@@ -738,7 +738,7 @@ CMessageListView.prototype.executeMarkAsUnread = function ()
  */
 CMessageListView.prototype.executeMarkAllRead = function ()
 {
-	MailCache.executeGroupOperation('MessagesSetAllSeen', [], 'seen', true);
+	MailCache.executeGroupOperation('SetAllMessagesSeen', [], 'seen', true);
 };
 
 /**
