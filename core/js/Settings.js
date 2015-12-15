@@ -131,5 +131,6 @@ module.exports = {
 	TenantHash: AppData.TenantHash,
 	AutoRefreshIntervalMinutes: 1,
 	AllowMobile: AppData.AllowMobile,
-	IsMobile: AppData.IsMobile
+	IsMobile: AppData.IsMobile,
+	AttachmentSizeLimit: 0
 };

@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
@@ -1331,7 +1332,7 @@ CHelpdeskView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
 		return false;
 	}
 
-	if (Api.showErrorIfAttachmentSizeLimit(oFileData.FileName, oFileData.Size))
+	if (FilesUtils.showErrorIfAttachmentSizeLimit(oFileData.FileName, oFileData.Size))
 	{
 		return false;
 	}

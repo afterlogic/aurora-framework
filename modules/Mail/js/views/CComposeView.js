@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	AddressUtils = require('core/js/utils/Address.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
@@ -26,7 +27,6 @@ var
 	SelectFilesPopup = ModulesManager.run('Files', 'getSelectFilesPopup'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	ErrorUtils = require('modules/Mail/js/utils/Error.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
@@ -1318,7 +1318,7 @@ CComposeView.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 {
 	var oAttach;
 
-	if (ErrorUtils.showErrorIfAttachmentSizeLimit(oFileData.FileName, Utils.pInt(oFileData.Size)))
+	if (FilesUtils.showErrorIfAttachmentSizeLimit(oFileData.FileName, Utils.pInt(oFileData.Size)))
 	{
 		return false;
 	}

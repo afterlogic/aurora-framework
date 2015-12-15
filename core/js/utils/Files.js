@@ -1,6 +1,15 @@
 'use strict';
 
-var FilesUtils = {};
+var
+	TextUtils = require('core/js/utils/Text.js'),
+	
+	Popups = require('core/js/Popups.js'),
+	AlertPopup = require('core/js/popups/AlertPopup.js'),
+	
+	Settings = require('core/js/Settings.js'),
+	
+	FilesUtils = {}
+;
 
 /**
  * Gets link for download by hash.
@@ -96,5 +105,28 @@ FilesUtils.thumbQueue = (function () {
 		}
 	};
 }());
+
+/**
+ * @param {string} sFileName
+ * @param {number} iSize
+ * @returns {Boolean}
+ */
+FilesUtils.showErrorIfAttachmentSizeLimit = function (sFileName, iSize)
+{
+	var
+		sWarning = TextUtils.i18n('COMPOSE/UPLOAD_ERROR_FILENAME_SIZE', {
+			'FILENAME': sFileName,
+			'MAXSIZE': TextUtils.getFriendlySize(Settings.AttachmentSizeLimit)
+		})
+	;
+	
+	if (Settings.AttachmentSizeLimit > 0 && iSize > Settings.AttachmentSizeLimit)
+	{
+		Popups.showPopup(AlertPopup, [sWarning]);
+		return true;
+	}
+	
+	return false;
+};
 
 module.exports = FilesUtils;
