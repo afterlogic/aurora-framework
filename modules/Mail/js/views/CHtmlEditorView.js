@@ -6,8 +6,10 @@ var
 	ko = require('knockout'),
 	
 	AddressUtils = require('core/js/utils/Address.js'),
-	Utils = require('core/js/utils/Common.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Browser = require('core/js/Browser.js'),
@@ -750,7 +752,7 @@ CHtmlEditorView.prototype.insertWebImageFromPopup = function (oCurrentViewModel,
 CHtmlEditorView.prototype.insertComputerImageFromPopup = function (sUid, oAttachment)
 {
 	var
-		sViewLink = Utils.getViewLinkByHash(Accounts.currentId(), oAttachment.Hash),
+		sViewLink = FilesUtils.getViewLink('Mail', oAttachment.Hash),
 		bResult = false
 	;
 

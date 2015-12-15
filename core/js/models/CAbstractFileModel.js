@@ -5,9 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Ajax = require('core/js/Ajax.js'),
 	App = require('core/js/App.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
@@ -68,7 +69,7 @@ function CAbstractFileModel()
 
 	this.viewLink = ko.computed(function () {
 		var sUrl = FilesUtils.getViewLink('Mail', this.hash());
-		return this.iframedView() ? Utils.getIframeWrappwer(this.accountId(), sUrl) : sUrl;
+		return this.iframedView() ? FilesUtils.getIframeWrappwer(this.accountId(), sUrl) : sUrl;
 	}, this);
 
 	this.thumbnailSrc = ko.observable('');
@@ -76,7 +77,7 @@ function CAbstractFileModel()
 	this.thumbnailSessionUid = ko.observable('');
 
 	this.thumbnailLink = ko.computed(function () {
-		return this.thumb() ? FilesUtils.getThumbnailLink('Mail', this.hash()) : '';
+		return FilesUtils.getThumbnailLink('Mail', this.hash());
 	}, this);
 
 	this.type = ko.observable('');
@@ -223,7 +224,7 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 	this.thumbnailSessionUid(sThumbSessionUid);
 	if(this.thumb() && (!this.linked || this.linked && !this.linked()))
 	{
-		Utils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
+		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
 	}
 };
 
@@ -496,7 +497,7 @@ CAbstractFileModel.prototype.onImageLoad = function (oAttachmentModel, oEvent)
 	if(this.thumb() && !this.thumbnailLoaded())
 	{
 		this.thumbnailLoaded(true);
-		Utils.thumbQueue(this.thumbnailSessionUid());
+		FilesUtils.thumbQueue(this.thumbnailSessionUid());
 	}
 };
 

@@ -5,8 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
@@ -848,7 +850,7 @@ CMessagePaneView.prototype.executeSaveAsPdf = function ()
 		}, function (oResponse) {
 			if (oResponse.Result && oResponse.Result['Hash'])
 			{
-				Utils.downloadByUrl(Utils.getDownloadLinkByHash(iAccountId, oResponse.Result['Hash']));
+				Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', oResponse.Result['Hash']));
 			}
 			else
 			{

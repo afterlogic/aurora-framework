@@ -212,63 +212,6 @@ Utils.removeSelection = function ()
 };
 
 /**
- * Gets link for download by hash.
- *
- * @param {number} iAccountId
- * @param {string} sHash
- * @param {boolean=} bIsExt = false
- * @param {string=} sTenatHash = ''
- * 
- * @return {string}
- */
-Utils.getDownloadLinkByHash = function (iAccountId, sHash, bIsExt, sTenatHash)
-{
-	bIsExt = Utils.isUnd(bIsExt) ? false : !!bIsExt;
-	sTenatHash = Utils.isUnd(sTenatHash) ? '' : sTenatHash;
-
-	return 'index.php?/Raw/Download/' + iAccountId + '/' + sHash + '/' + (bIsExt ? '1' : '0') + ('' === sTenatHash ? '' : '/' + sTenatHash);
-};
-
-/**
- * Gets link for view by hash.
- *
- * @param {number} iAccountId
- * @param {string} sHash
- * @param {boolean=} bIsExt = false
- * @param {string=} sTenatHash = ''
- * 
- * @return {string}
- */
-Utils.getViewLinkByHash = function (iAccountId, sHash, bIsExt, sTenatHash)
-{
-	var
-		sViewLink = '?/Raw/View/' + iAccountId + '/' + sHash,
-		sExtPart = (bIsExt === true) ? '/1' : '/0',
-		sTenantPart = (typeof sTenatHash === 'string' && sTenatHash !== '') ? '/' + sTenatHash : ''
-	;
-		
-	return sViewLink + sExtPart + sTenantPart;
-};
-
-/**
- * Gets link for thumbnail by hash.
- *
- * @param {number} iAccountId
- * @param {string} sHash
- * @param {boolean=} bIsExt = false
- * @param {string=} sTenatHash = ''
- *
- * @return {string}
- */
-Utils.getViewThumbnailLinkByHash = function (iAccountId, sHash, bIsExt, sTenatHash)
-{
-	bIsExt = Utils.isUnd(bIsExt) ? false : !!bIsExt;
-	sTenatHash = Utils.isUnd(sTenatHash) ? '' : sTenatHash;
-	
-	return '?/Raw/Thumbnail/' + iAccountId + '/' + sHash + '/' + (bIsExt ? '1' : '0') + ('' === sTenatHash ? '' : '/' + sTenatHash);
-};
-
-/**
  * Downloads by url through iframe or new window.
  *
  * @param {string} sUrl
@@ -391,62 +334,6 @@ Utils.getFileExtension = function (sFile)
 
 	return sResult;
 };
-
-/**
- * Gets link for view by hash in iframe.
- *
- * @param {number} iAccountId
- * @param {string} sUrl
- *
- * @return {string}
- */
-Utils.getIframeWrappwer = function (iAccountId, sUrl)
-{
-	return '?/Raw/Iframe/' + iAccountId + '/' + window.encodeURIComponent(sUrl) + '/';
-};
-
-Utils.thumbQueue = (function () {
-
-	var
-		oImages = {},
-		oImagesIncrements = {},
-		iNumberOfImages = 2
-	;
-
-	return function (sSessionUid, sImageSrc, fImageSrcObserver)
-	{
-		if(sImageSrc && fImageSrcObserver)
-		{
-			if(!(sSessionUid in oImagesIncrements) || oImagesIncrements[sSessionUid] > 0) //load first images
-			{
-				if(!(sSessionUid in oImagesIncrements)) //on first image
-				{
-					oImagesIncrements[sSessionUid] = iNumberOfImages;
-					oImages[sSessionUid] = [];
-				}
-				oImagesIncrements[sSessionUid]--;
-
-				fImageSrcObserver(sImageSrc); //load image
-			}
-			else //create queue
-			{
-				oImages[sSessionUid].push({
-					imageSrc: sImageSrc,
-					imageSrcObserver: fImageSrcObserver,
-					messageUid: sSessionUid
-				});
-			}
-		}
-		else //load images from queue (fires load event)
-		{
-			if(oImages[sSessionUid] && oImages[sSessionUid].length)
-			{
-				oImages[sSessionUid][0].imageSrcObserver(oImages[sSessionUid][0].imageSrc);
-				oImages[sSessionUid].shift();
-			}
-		}
-	};
-}());
 
 Utils.draggableItems = function ()
 {

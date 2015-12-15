@@ -4,12 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js'),
-	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
-	
-	bExtApp = false
+	FilesUtils = require('core/js/utils/Files.js'),
+	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')
 ;
 
 /**
@@ -21,28 +17,15 @@ function CHelpdeskAttachmentModel()
 	CAbstractFileModel.call(this);
 	
 	this.downloadLink = ko.computed(function () {
-		var
-			iAccountId = !bExtApp && App.currentAccountId ? App.currentAccountId() : 0,
-			sTenantHash = bExtApp && UserSettings.TenantHash
-		;
-		return Utils.getDownloadLinkByHash(iAccountId, this.hash(), bExtApp, sTenantHash);
+		return FilesUtils.getDownloadLink('HelpDesk', this.hash());
 	}, this);
 	
 	this.viewLink = ko.computed(function () {
-		var
-			iAccountId = !bExtApp && App.currentAccountId ? App.currentAccountId() : 0,
-			sTenantHash = bExtApp && UserSettings.TenantHash
-		;
-		return Utils.getViewLinkByHash(iAccountId, this.hash(), bExtApp, sTenantHash);
+		return FilesUtils.getViewLink('HelpDesk', this.hash());
 	}, this);
 	
 	this.thumbnailLink = ko.computed(function () {
-		var
-			iAccountId = !bExtApp && App.currentAccountId ? App.currentAccountId() : 0,
-			sTenantHash = bExtApp && UserSettings.TenantHash,
-			sLink = this.thumb() ? Utils.getViewThumbnailLinkByHash(iAccountId, this.hash(), bExtApp, sTenantHash) : ''
-		;
-		return sLink;
+		return FilesUtils.getThumbnailLink('HelpDesk', this.hash());
 	}, this);
 }
 

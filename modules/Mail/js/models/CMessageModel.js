@@ -6,8 +6,10 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	CDateModel = require('core/js/models/CDateModel.js'),
@@ -173,7 +175,7 @@ function CMessageModel()
 	this.draftInfo = ko.observableArray([]);
 	this.hash = ko.observable('');
 	this.downloadLink = ko.computed(function () {
-		return (this.hash().length > 0) ? Utils.getDownloadLinkByHash(this.accountId(), this.hash()) : '';
+		return FilesUtils.getDownloadLink('Mail', this.hash());
 	}, this);
 
 	this.completelyFilled = ko.observable(false);
@@ -215,7 +217,7 @@ function CMessageModel()
 	this.foundCids = ko.observableArray([]);
 	this.attachments = ko.observableArray([]);
 	this.usesAttachmentString = false;
-	this.allAttachmentsHash = '';
+	this.sAllAttachmentsHash = '';
 	this.safety = ko.observable(false);
 	this.sourceHeaders = ko.observable('');
 
@@ -648,9 +650,9 @@ CMessageModel.prototype.openThread = function ()
 
 CMessageModel.prototype.downloadAllAttachments = function ()
 {
-	if (this.allAttachmentsHash !== '')
+	if (this.sAllAttachmentsHash !== '')
 	{
-		Utils.downloadByUrl(Utils.getDownloadLinkByHash(this.accountId(), this.allAttachmentsHash));
+		Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
 	}
 	else
 	{
@@ -675,8 +677,8 @@ CMessageModel.prototype.onGetAttachmentsZipHashResponse = function (oResponse, o
 {
 	if (oResponse.Result)
 	{
-		this.allAttachmentsHash = Utils.pString(oResponse.Result);
-		Utils.downloadByUrl(Utils.getDownloadLinkByHash(this.accountId(), this.allAttachmentsHash));
+		this.sAllAttachmentsHash = Utils.pString(oResponse.Result);
+		Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
 	}
 };
 

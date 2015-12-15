@@ -1,19 +1,20 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
+	ko = require('knockout'),
 	
-	Popups = require('core/js/Popups.js'),
-	EmbedHtmlPopup = require('core/js/popups/EmbedHtmlPopup.js'),
-	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Browser = require('core/js/Browser.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
-	CDateModel = require('core/js/models/CDateModel.js')
+	CDateModel = require('core/js/models/CDateModel.js'),
+	
+	Popups = require('core/js/Popups.js'),
+	EmbedHtmlPopup = require('core/js/popups/EmbedHtmlPopup.js')
 ;
 
 /**
@@ -224,7 +225,7 @@ CFileModel.prototype.parse = function (oData, bPopup)
 	
 	if (this.thumb() && this.thumbnailExternalLink() === '')
 	{
-		Utils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
+		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
 	}
 	
 	this.content(Utils.pString(oData.Content));
