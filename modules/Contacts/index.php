@@ -384,7 +384,8 @@ class ContactsModule extends AApiModule
 			{
 				$aContacts = $oApiGlobalContacts->getContactItems(
 					$oAccount, $iSortField, $iSortOrder, $iOffset,
-					$iLimit, $sSearch);
+					$iLimit, $sSearch
+				);
 
 				$aList = (is_array($aContacts)) ? $aContacts : array();
 			}

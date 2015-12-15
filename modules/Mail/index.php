@@ -1000,6 +1000,17 @@ class MailModule extends AApiModule
 	/**
 	 * @return array
 	 */
+	public function SendMessageObject()
+	{
+		$oAccount = $this->getParamValue('Account', null);
+		$oMessage = $this->getParamValue('Message', null);
+		
+		return $this->oApiMailManager->sendMessage($oAccount, $oMessage);
+	}
+	
+	/**
+	 * @return array
+	 */
 	public function SendMessage()
 	{
 		$oAccount = $this->getAccountFromParam();

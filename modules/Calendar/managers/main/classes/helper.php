@@ -451,9 +451,11 @@ class CCalendarHelper
 		{
 			try
 			{
-				$oApiMail = CApi::Manager('mail');
 				CApi::Log('IcsAppointmentActionSendOriginalMailMessage');
-				return $oApiMail ? $oApiMail->sendMessage($oAccount, $oMessage) : false;
+				return \CApi::ExecuteMethod('Mail::SendMessageObject', array(
+					'Account' => $oAccount,
+					'Message' => $oMessage
+				));
 			}
 			catch (\CApiManagerException $oException)
 			{

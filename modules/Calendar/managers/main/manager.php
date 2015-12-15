@@ -823,6 +823,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 					{
 						$this->oStorage->createEvent($oAccount, $sCalendarId, $sUid, $oVCalNew);
 					}
+					$oResult = true;
 				}
 			}
 		}
