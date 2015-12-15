@@ -648,7 +648,7 @@ abstract class AApiModule
 		}
 		catch (\Exception $oException)
 		{
-			\CApi::LogException($oException, \ELogLevel::Error);
+			\CApi::LogException($oException);
 			$this->oHttp->StatusHeader(404);
 		}
 		

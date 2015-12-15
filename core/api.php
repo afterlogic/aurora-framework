@@ -26,6 +26,12 @@ class CApi
 	 * @var array
 	 */
 	static $aConfig;
+	
+	/**
+	 * @var array
+	 */
+	static $aSecretWords;
+	
 
 	/**
 	 * @var bool
@@ -58,6 +64,7 @@ class CApi
 
 		CApi::$aI18N = null;
 		CApi::$aClientI18N = array();
+		CApi::$aSecretWords = array();
 
 		if (!is_object(CApi::$oManager))
 		{
@@ -135,6 +142,22 @@ class CApi
 		}
 	}
 
+	
+	/**
+	 * @param string $sWord
+	 *
+	 * @return bool
+	 */
+	public static function AddSecret($sWord)
+	{
+		if (0 < \strlen(\trim($sWord)))
+		{
+			self::$aSecretWords[] = $sWord;
+			self::$aSecretWords = \array_unique(self::$aSecretWords);
+		}
+	}
+	
+	
 	/**
 	 * @return string
 	 */
@@ -514,7 +537,13 @@ class CApi
 	 */
 	public static function LogException($mObject, $iLogLevel = ELogLevel::Error, $sFilePrefix = '')
 	{
-		CApi::Log((string) $mObject, $iLogLevel, $sFilePrefix);
+		$sDesc = (string) $mObject;
+		if (0 < \count(self::$aSecretWords))
+		{
+			$sDesc = \str_replace(self::$aSecretWords, '*******', $sDesc);
+		}
+		
+		CApi::Log($sDesc, $iLogLevel, $sFilePrefix);
 	}
 
 	/**

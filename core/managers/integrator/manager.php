@@ -718,7 +718,8 @@ class CApiIntegratorManager extends AApiManager
 	public function loginToAccount($sEmail, $sIncPassword, $sIncLogin = '', $sLanguage = '')
 	{
 		$oResult = null;
-
+		\CApi::AddSecret($sIncPassword);
+		
 		/* @var $oApiUsersManager CApiUsersManager */
 		$oApiUsersManager = CApi::GetCoreManager('users');
 
