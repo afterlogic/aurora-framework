@@ -148,8 +148,7 @@ class ContactsModule extends AApiModule
 				header('Content-Disposition: attachment; filename="export.' . $sSyncType . '";');
 				header('Content-Transfer-Encoding: binary');
 
-				echo $sOutput;
-				return true;
+				return $sOutput;
 			}
 		}
 		return false;

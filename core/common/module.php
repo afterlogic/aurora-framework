@@ -627,6 +627,8 @@ abstract class AApiModule
 
 	public function EntryDownload()
 	{
+		$mResult = false;
+		
 		$aPaths = \Core\Service::GetPaths();
 		$sMethod = empty($aPaths[2]) ? '' : $aPaths[2];
 
@@ -641,7 +643,7 @@ abstract class AApiModule
 					'AuthToken' => empty($aPaths[6]) ? '' : $aPaths[6]
 				);						
 
-				$this->ExecuteMethod($sMethod, $aParameters);
+				$mResult = $this->ExecuteMethod($sMethod, $aParameters);
 			}
 		}
 		catch (\Exception $oException)
@@ -649,6 +651,8 @@ abstract class AApiModule
 			\CApi::LogException($oException, \ELogLevel::Error);
 			$this->oHttp->StatusHeader(404);
 		}
+		
+		return $mResult;
 	}
 
 	/**
