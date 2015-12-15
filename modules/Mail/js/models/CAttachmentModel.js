@@ -29,7 +29,7 @@ function CAttachmentModel()
 
 	this.messagePart = ko.observable(null);
 	
-	CAbstractFileModel.call(this);
+	CAbstractFileModel.call(this, 'Mail');
 	
 	this.isMessageType = ko.computed(function () {
 		this.type();

@@ -81,26 +81,13 @@ function CFileModel()
 		});
 	}, this);
 	
-	CAbstractFileModel.call(this);
+	CAbstractFileModel.call(this, 'Files');
 	
 	this.type = this.storageType;
 	this.uploaded = ko.observable(true);
 
-	this.downloadLink = ko.computed(function () {
-		return FilesUtils.getDownloadLink('Files', this.hash());
-	}, this);
-
 	this.viewLink = ko.computed(function () {
-		
-		if (this.isLink())
-		{
-			return this.linkUrl();
-		}
-		else
-		{
-			return FilesUtils.getViewLink('Files', this.hash());
-		}
-		
+		return this.isLink() ? this.linkUrl() : FilesUtils.getViewLink('Files', this.hash());
 	}, this);
 
 	this.isViewable = ko.computed(function () {
@@ -132,14 +119,13 @@ function CFileModel()
 	}, this);
 
 	this.thumbnailLink = ko.computed(function () {
-		
 		if (this.isExternal() || (this.isLink() && (this.linkType() === Enums.FileStorageLinkType.GoogleDrive || this.linkType() === Enums.FileStorageLinkType.YouTube || this.linkType() === Enums.FileStorageLinkType.Vimeo || this.linkType() === Enums.FileStorageLinkType.SoundCloud)))
 		{
 			return this.thumbnailExternalLink();
 		}
 		else
 		{
-			return this.thumb() ? FilesUtils.getThumbnailLink('Files', this.hash()) : '';
+			return FilesUtils.getThumbnailLink('Files', this.hash());
 		}
 	}, this);
 

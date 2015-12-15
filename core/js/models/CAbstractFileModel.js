@@ -31,8 +31,9 @@ if ($('html').hasClass('pdf'))
 
 /**
  * @constructor
+ * @param {string} sModuleName
  */
-function CAbstractFileModel()
+function CAbstractFileModel(sModuleName)
 {
 	this.isIosDevice = bIsIosDevice;
 
@@ -64,11 +65,11 @@ function CAbstractFileModel()
 	this.iframedView = ko.observable(false);
 
 	this.downloadLink = ko.computed(function () {
-		return FilesUtils.getDownloadLink('Mail', this.hash());
+		return FilesUtils.getDownloadLink(sModuleName, this.hash());
 	}, this);
 
 	this.viewLink = ko.computed(function () {
-		var sUrl = FilesUtils.getViewLink('Mail', this.hash());
+		var sUrl = FilesUtils.getViewLink(sModuleName, this.hash());
 		return this.iframedView() ? FilesUtils.getIframeWrappwer(this.accountId(), sUrl) : sUrl;
 	}, this);
 
@@ -77,7 +78,7 @@ function CAbstractFileModel()
 	this.thumbnailSessionUid = ko.observable('');
 
 	this.thumbnailLink = ko.computed(function () {
-		return FilesUtils.getThumbnailLink('Mail', this.hash());
+		return FilesUtils.getThumbnailLink(sModuleName, this.hash());
 	}, this);
 
 	this.type = ko.observable('');

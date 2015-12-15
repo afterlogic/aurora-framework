@@ -2,9 +2,7 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	
-	FilesUtils = require('core/js/utils/Files.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')
 ;
 
@@ -14,19 +12,7 @@ var
  */
 function CHelpdeskAttachmentModel()
 {
-	CAbstractFileModel.call(this);
-	
-	this.downloadLink = ko.computed(function () {
-		return FilesUtils.getDownloadLink('HelpDesk', this.hash());
-	}, this);
-	
-	this.viewLink = ko.computed(function () {
-		return FilesUtils.getViewLink('HelpDesk', this.hash());
-	}, this);
-	
-	this.thumbnailLink = ko.computed(function () {
-		return FilesUtils.getThumbnailLink('HelpDesk', this.hash());
-	}, this);
+	CAbstractFileModel.call(this, 'HelpDesk');
 }
 
 _.extend(CHelpdeskAttachmentModel.prototype, CAbstractFileModel.prototype);
