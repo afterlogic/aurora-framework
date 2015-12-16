@@ -2,16 +2,20 @@
 
 var
 	Popups = require('core/js/Popups.js'),
-	ComposePopup = require('modules/Mail/js/popups/ComposePopup.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	
 	PopupComposeUtils = {}
 ;
 
+function GetComposePopup()
+{
+	return require('modules/Mail/js/popups/ComposePopup.js');
+}
+
 PopupComposeUtils.composeMessage = function ()
 {
-	Popups.showPopup(ComposePopup);
+	Popups.showPopup(GetComposePopup());
 };
 
 /**
@@ -22,7 +26,7 @@ PopupComposeUtils.composeMessageFromDrafts = function (sFolder, sUid)
 {
 	var aParams = LinksUtils.getComposeFromMessage('drafts', sFolder, sUid);
 	aParams.shift();
-	Popups.showPopup(ComposePopup, [aParams]);
+	Popups.showPopup(GetComposePopup(), [aParams]);
 };
 
 /**
@@ -34,7 +38,7 @@ PopupComposeUtils.composeMessageAsReplyOrForward = function (sReplyType, sFolder
 {
 	var aParams = LinksUtils.getComposeFromMessage(sReplyType, sFolder, sUid);
 	aParams.shift();
-	Popups.showPopup(ComposePopup, [aParams]);
+	Popups.showPopup(GetComposePopup(), [aParams]);
 };
 
 /**
@@ -44,7 +48,7 @@ PopupComposeUtils.composeMessageToAddresses = function (sToAddresses)
 {
 	var aParams = LinksUtils.getComposeWithToField(sToAddresses);
 	aParams.shift();
-	Popups.showPopup(ComposePopup, [aParams]);
+	Popups.showPopup(GetComposePopup(), [aParams]);
 };
 
 /**
@@ -53,7 +57,7 @@ PopupComposeUtils.composeMessageToAddresses = function (sToAddresses)
 PopupComposeUtils.composeMessageWithVcard = function (oVcard)
 {
 	var aParams = ['vcard', oVcard];
-	Popups.showPopup(ComposePopup, [aParams]);
+	Popups.showPopup(GetComposePopup(), [aParams]);
 };
 
 /**
@@ -63,7 +67,7 @@ PopupComposeUtils.composeMessageWithVcard = function (oVcard)
 PopupComposeUtils.composeMessageWithPgpKey = function (sArmor, sDownloadLinkFilename)
 {
 	var aParams = ['data-as-file', sArmor, sDownloadLinkFilename];
-	Popups.showPopup(ComposePopup, [aParams]);
+	Popups.showPopup(GetComposePopup(), [aParams]);
 };
 
 /**
@@ -72,12 +76,12 @@ PopupComposeUtils.composeMessageWithPgpKey = function (sArmor, sDownloadLinkFile
 PopupComposeUtils.composeMessageWithFiles = function (aFileItems)
 {
 	var aParams = ['file', aFileItems];
-	Popups.showPopup(ComposePopup, [aParams]);
+	Popups.showPopup(GetComposePopup(), [aParams]);
 };
 
 PopupComposeUtils.closeComposePopup = function ()
 {
-	Popups.showPopup(ComposePopup, [['close']]);
+	Popups.showPopup(GetComposePopup(), [['close']]);
 };
 
 module.exports = PopupComposeUtils;
