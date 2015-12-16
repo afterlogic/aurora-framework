@@ -22,8 +22,6 @@ var
  */
 MailUtils.deleteMessages = function (aUids, fAfterDelete)
 {
-	//todo: context for new window
-	
 	if (!$.isFunction(fAfterDelete))
 	{
 		fAfterDelete = function () {};

@@ -741,7 +741,7 @@ CMessagePaneView.prototype.executeDeleteMessage = function ()
 	{
 		if (BaseTab)
 		{
-			BaseTab.deleteMessage(this.currentMessage().uid());
+			BaseTab.deleteMessage(this.currentMessage().uid(), function () { window.close(); });
 		}
 		else if (App.isMobile())
 		{

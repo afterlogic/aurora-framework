@@ -59,8 +59,8 @@ var BaseTabMethods = {
 		delete aReplyData[sUniq];
 		return oReplyData;
 	},
-	deleteMessage: function (sUid) {
-		MailUtils.deleteMessages([sUid], function () {window.close();});
+	deleteMessage: function (sUid, fAfterDelete) {
+		MailUtils.deleteMessages([sUid], fAfterDelete);
 	}
 };
 
