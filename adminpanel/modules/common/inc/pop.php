@@ -17,7 +17,7 @@ class CCommonPopAction extends ap_CoreModuleHelper
 			echo '<html><head><title>Update</title></head><body><font color="black" size="3" style="font-family: Tahoma, Verdana;"><h3>AfterLogic Db Script:</h3>';
 
 			/* @var $oApiDbManager CApiDbManager */
-			$oApiDbManager = CApi::Manager('db');
+			$oApiDbManager = CApi::GetCoreManager('db');
 
 			echo '<hr style="border: 1px solid grey" />';
 			if ('create' === $sAction && $oApiDbManager->isAUsersTableExists())

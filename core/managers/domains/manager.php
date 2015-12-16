@@ -116,7 +116,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 					if (0 < $oDomain->IdTenant && CApi::GetConf('tenant', false))
 					{
 						/* @var $oTenantsApi CApiTenantsManager */
-						$oTenantsApi = CApi::Manager('tenants');
+						$oTenantsApi = CApi::GetCoreManager('tenants');
 						if ($oTenantsApi)
 						{
 							/* @var $oTenant CTenant */
@@ -307,7 +307,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 			if ($bRemoveAllAccounts)
 			{
 				/* @var $oUsersApi CApiUsersManager */
-				$oUsersApi = CApi::Manager('users');
+				$oUsersApi = CApi::GetCoreManager('users');
 
 				$aPrevIdList = null;
 				while (true)

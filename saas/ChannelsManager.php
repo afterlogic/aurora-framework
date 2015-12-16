@@ -19,7 +19,7 @@ class ChannelsManager implements \saas\api\IChannelsManager
 {
 	protected function nativeChannelManager()
 	{
-		return \CApi::Manager('channels');
+		return \CApi::GetCoreManager('channels');
 	}
 
 	function __construct()

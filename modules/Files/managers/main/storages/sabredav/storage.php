@@ -377,7 +377,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		if ($oAccount && $this->init($oAccount))
 		{
 			$oTenant = null;
-			$oApiTenants = \CApi::Manager('tenants');
+			$oApiTenants = \CApi::GetCoreManager('tenants');
 			if ($oApiTenants)
 			{
 				$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
@@ -872,7 +872,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 			$aSize = \api_Utils::GetDirectorySize($sRootPath);
 			$iUsageSize += (int) $aSize['size'];
 
-			$oApiTenants = \CApi::Manager('tenants');
+			$oApiTenants = \CApi::GetCoreManager('tenants');
 			if ($oApiTenants)
 			{
 				$oTenant = $oApiTenants->getTenantById($oAccount->IdTenant);

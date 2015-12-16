@@ -39,7 +39,7 @@ class Domain extends NativeService implements \saas\api\IDomain
 
 	protected function nativeManager()
 	{
-		return \CApi::Manager('domains');
+		return \CApi::GetCoreManager('domains');
 	}
 
 	protected function nativeFieldMap()

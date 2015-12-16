@@ -300,7 +300,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 			$sPrincipal = 'default_' . \afterlogic\DAV\Constants::DAV_TENANT_PRINCIPAL;
 			if ($oAccount->IdTenant > 0)
 			{
-				$oApiTenantsMan = CApi::Manager('tenants');
+				$oApiTenantsMan = CApi::GetCoreManager('tenants');
 				$oTenant = $oApiTenantsMan ? $oApiTenantsMan->getTenantById($oAccount->IdTenant) : null;
 				if ($oTenant)
 				{

@@ -21,9 +21,9 @@ class DomainUsersIterator extends PageIterator
 	{
 		$this->iPage = 0;
 		$this->iItemsPerPage = $iItemsPerPage;
-		$this->oUsersManager = \CApi::Manager('users');
+		$this->oUsersManager = \CApi::GetCoreManager('users');
 
-		$oDomainManager = \CApi::Manager('domains');
+		$oDomainManager = \CApi::GetCoreManager('domains');
 		$oDomain = $oDomainManager->getDomainByName($sDomain);
 		$this->iDomainId = $oDomain ? $oDomain->IdDomain : false;
 

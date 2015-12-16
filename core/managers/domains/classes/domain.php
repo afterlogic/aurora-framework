@@ -275,7 +275,7 @@ class CDomain extends api_AContainer
 		if (!$this->OverrideSettings && !$this->IsDefaultDomain)
 		{
 			/* @var $oApiDomainsManager CApiDomainsManager */
-			$oApiDomainsManager = CApi::Manager('domains');
+			$oApiDomainsManager = CApi::GetCoreManager('domains');
 
 			$oDefDomain = $oApiDomainsManager->getDefaultDomain();
 			$aOverridenSettingsMap = $this->GetOverridenSettingsMap();

@@ -15,7 +15,7 @@ class UserAddressBooks extends \Sabre\CardDAV\UserAddressBooks {
 	{
         $objs = array();
 		/* @var $oApiCapaManager \CApiCapabilityManager */
-		$oApiCapaManager = \CApi::Manager('capability');
+		$oApiCapaManager = \CApi::GetCoreManager('capability');
 		
 		$addressbooks = $this->carddavBackend->getAddressbooksForUser($this->principalUri);
 		foreach($addressbooks as $addressbook) 

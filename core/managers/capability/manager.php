@@ -20,7 +20,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isNotLite()
 	{
-		return !!CApi::Manager('licensing');
+		return !!CApi::GetCoreManager('licensing');
 	}
 
 	/**
@@ -28,7 +28,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCollaborationSupported()
 	{
-		return $this->isNotLite() && !!CApi::Manager('collaboration');
+		return $this->isNotLite() && !!CApi::GetCoreManager('collaboration');
 	}
 
 	/**
@@ -36,7 +36,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isMailsuite()
 	{
-		return !!CApi::GetConf('mailsuite', false) && !!CApi::Manager('mailsuite');
+		return !!CApi::GetConf('mailsuite', false) && !!CApi::GetCoreManager('mailsuite');
 	}
 
 	/**
@@ -437,7 +437,7 @@ class CApiCapabilityManager extends AApiManager
 		}
 		else
 		{
-			$oApiTenants = /* @var $oApiTenants CApiTenantsManager */ CApi::Manager('tenants');
+			$oApiTenants = /* @var $oApiTenants CApiTenantsManager */ CApi::GetCoreManager('tenants');
 			if ($oApiTenants)
 			{
 				$oTenant = (0 < $iIdTenant) ? $oApiTenants->getTenantById($iIdTenant) : $oApiTenants->getDefaultGlobalTenant();

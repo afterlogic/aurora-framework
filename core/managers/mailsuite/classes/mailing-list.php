@@ -77,7 +77,7 @@ class CMailingList extends api_AContainer
 	{
 		$this->initBeforeChange();
 
-		CApi::Manager('users');
+		CApi::GetCoreManager('users');
 
 		$oAccount = new CAccount($this->oDomain);
 

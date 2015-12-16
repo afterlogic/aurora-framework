@@ -33,7 +33,7 @@ class CApiSubscriptionsManager extends AApiManagerWithStorage
 	{
 		if (null === $this->oApiTenantsManager)
 		{
-			$this->oApiTenantsManager = CApi::Manager('tenants');
+			$this->oApiTenantsManager = CApi::GetCoreManager('tenants');
 		}
 
 		return $this->oApiTenantsManager;

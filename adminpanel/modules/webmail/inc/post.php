@@ -9,7 +9,7 @@ class CWebMailPostAction extends ap_CoreModuleHelper
 		if (isset($_POST['btnClearLog']) || isset($_POST['btnUserActivityClearLog']))
 		{
 			/* @var $oApiLoggerManager CApiLoggerManager */
-			$oApiLoggerManager = CApi::Manager('logger');
+			$oApiLoggerManager = CApi::GetCoreManager('logger');
 
 			$bResult = false;
 			if (isset($_POST['btnClearLog']))

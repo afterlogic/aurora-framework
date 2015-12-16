@@ -26,7 +26,7 @@ class Tenant extends NativeService implements \saas\api\ITenant
 
 	protected function createNativeService()
 	{
-		\CApi::Manager('tenants');
+		\CApi::GetCoreManager('tenants');
 		return new \CTenant();
 	}
 
@@ -42,17 +42,17 @@ class Tenant extends NativeService implements \saas\api\ITenant
 
 	protected function nativeManager()
 	{
-		return \CApi::Manager('tenants');
+		return \CApi::GetCoreManager('tenants');
 	}
 
 	protected function nativeDomainManager()
 	{
-		return \CApi::Manager('domains');
+		return \CApi::GetCoreManager('domains');
 	}
 
 	protected function nativeChannelManager()
 	{
-		return \CApi::Manager('channels');
+		return \CApi::GetCoreManager('channels');
 	}
 
 	protected function findNativeById($id)

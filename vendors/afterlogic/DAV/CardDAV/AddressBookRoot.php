@@ -19,7 +19,7 @@ class AddressBookRoot extends \Sabre\CardDAV\AddressBookRoot
 
 	public function getChildForPrincipal(array $principal)
 	{
-		$oApiCapabilityManager = /* @var \CApiCapabilityManager */ \CApi::Manager('capability');
+		$oApiCapabilityManager = /* @var \CApiCapabilityManager */ \CApi::GetCoreManager('capability');
 		
 		$oAccount = $this->getAccount($principal['uri']);
 		if ($oAccount instanceof \CAccount &&

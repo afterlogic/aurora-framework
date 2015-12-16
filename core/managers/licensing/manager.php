@@ -46,7 +46,7 @@ class CApiLicensingManager extends AApiManager
 		if (null === $iCache)
 		{
 			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager = CApi::Manager('users');
+			$oApiUsersManager = CApi::GetCoreManager('users');
 			$iCache = $oApiUsersManager->getTotalUsersCount();
 		}
 		return $iCache;

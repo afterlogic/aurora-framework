@@ -346,10 +346,10 @@ class CApiUsersManager extends AApiManagerWithStorage
 		// TODO subscriptions
 //		if (CApi::GetConf('capa', false) && $oAccount && $oTenant)
 //		{
-//			$oSubscriptionsApi = CApi::Manager('subscriptions');
+//			$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
 //			/* @var $oSubscriptionsApi CApiSubscriptionsManager */
 //
-//			$oTenantsApi = CApi::Manager('tenants');
+//			$oTenantsApi = CApi::GetCoreManager('tenants');
 //			/* @var $oTenantsApi CApiTenantsManager */
 //
 //			if ($oSubscriptionsApi && $oTenantsApi && $oAccount->IsDefaultAccount && !$oAccount->IsDisabled)
@@ -414,7 +414,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					$oAccount->OutgoingMailUseSSL = in_array($oAccount->OutgoingMailPort, array(465));
 
 					/* @var $oApiLicensingManager CApiLicensingManager */
-					$oApiLicensingManager = CApi::Manager('licensing');
+					$oApiLicensingManager = CApi::GetCoreManager('licensing');
 					if ($oApiLicensingManager)
 					{
 						$isValidKey = $oApiLicensingManager->IsValidKey() ;
@@ -436,7 +436,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					if (0 < $oAccount->Domain->IdTenant && CApi::GetConf('tenant', false))
 					{
 						/* @var $oTenantsApi CApiTenantsManager */
-						$oTenantsApi = CApi::Manager('tenants');
+						$oTenantsApi = CApi::GetCoreManager('tenants');
 						if ($oTenantsApi)
 						{
 							/* @var $oTenant CTenant */
@@ -611,7 +611,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 				if (0 < $oAccount->Domain->IdTenant && CApi::GetConf('tenant', false) && null !== $oAccount->GetObsoleteValue('StorageQuota'))
 				{
 					/* @var $oTenantsApi CApiTenantsManager */
-					$oTenantsApi = CApi::Manager('tenants');
+					$oTenantsApi = CApi::GetCoreManager('tenants');
 					if ($oTenantsApi)
 					{
 						/* @var $oTenant CTenant */
@@ -901,7 +901,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 				}
 				else if (0 < $oAccount->IdTenant)
 				{
-					$oApiTenantsManager = CApi::Manager('tenants');
+					$oApiTenantsManager = CApi::GetCoreManager('tenants');
 					/* @var $oApiTenantsManager CApiTenantsManager */
 					if ($oApiTenantsManager)
 					{
@@ -921,7 +921,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 				if ($oAccount->IsInternal)
 				{
 					/* @var $oApiMailSuiteManager CApiMailSuiteManager */
-					$oApiMailSuiteManager = CApi::Manager('mailsuite');
+					$oApiMailSuiteManager = CApi::GetCoreManager('mailsuite');
 					if ($oApiMailSuiteManager)
 					{
 						$oApiMailSuiteManager->DeleteMailAliases($oAccount);
@@ -1026,7 +1026,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		else
 		{
 			/* @var $oApiMailSuiteManager CApiMailSuiteManager */
-			$oApiMailSuiteManager = CApi::Manager('mailsuite');
+			$oApiMailSuiteManager = CApi::GetCoreManager('mailsuite');
 			if ($oApiMailSuiteManager)
 			{
 				$oMailingList = $oApiMailSuiteManager->GetMailingListById((int) $iAccountId);

@@ -90,7 +90,7 @@ class CApiUsersDbStorage extends CApiUsersStorage
 				if (null === $oDomain)
 				{
 					/* @var $oApiDomainsManager CApiDomainsManager */
-					$oApiDomainsManager = CApi::Manager('domains');
+					$oApiDomainsManager = CApi::GetCoreManager('domains');
 					$oDomain = $oApiDomainsManager->getDefaultDomain();
 				}
 
@@ -285,7 +285,7 @@ class CApiUsersDbStorage extends CApiUsersStorage
 				$this->oConnection->FreeResult();
 				
 				/* @var $oApiDomainsManager CApiDomainsManager */
-				$oApiDomainsManager = CApi::Manager('domains');
+				$oApiDomainsManager = CApi::GetCoreManager('domains');
 
 				$oDomain = null;
 				$iDomainId = $oRow->id_domain;

@@ -29,12 +29,12 @@ class User extends NativeService implements \saas\api\IUser
 
 	protected function nativeManager()
 	{
-		return \CApi::Manager('users');
+		return \CApi::GetCoreManager('users');
 	}
 
 	protected function nativeDomainManager()
 	{
-		return \CApi::Manager('domains');
+		return \CApi::GetCoreManager('domains');
 	}
 
 	protected function findNativeById($id)

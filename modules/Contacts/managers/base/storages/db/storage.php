@@ -131,7 +131,7 @@ class CApiContactsBaseDbStorage extends CApiContactsBaseStorage
 	public function GetMyGlobalContact($iUserId)
 	{
 		/* @var $oApiUsersManager CApiUsersManager */
-		$oApiUsersManager = CApi::Manager('users');
+		$oApiUsersManager = CApi::GetCoreManager('users');
 		
 		/* @var $oApiGContactsManager CApiGcontactsManager */
 		$oApiGContactsManager = CApi::Manager('gcontacts');

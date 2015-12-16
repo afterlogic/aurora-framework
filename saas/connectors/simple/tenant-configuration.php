@@ -39,7 +39,7 @@ function script_simple_task(&$aResult, $aData)
 	$sTenantLogin = $aData['tenant_name'].'_'.$aData['partner_login'];
 
 	/* @var $oApiTenantsManager CApiTenantsManager */
-	$oApiTenantsManager = CApi::Manager('tenants');
+	$oApiTenantsManager = CApi::GetCoreManager('tenants');
 	
 	switch ($sCommand)
 	{

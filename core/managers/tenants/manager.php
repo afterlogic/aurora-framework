@@ -341,7 +341,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					if (0 < $oTenant->IdChannel && CApi::GetConf('tenant', false))
 					{
 						/* @var $oChannelsApi CApiChannelsManager */
-						$oChannelsApi = CApi::Manager('channels');
+						$oChannelsApi = CApi::GetCoreManager('channels');
 						if ($oChannelsApi)
 						{
 							/* @var $oChannel CChannel */
@@ -463,7 +463,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					if (null !== $oTenant->GetObsoleteValue('IsDisabled'))
 					{
 						/* @var $oDomainsApi CApiDomainsManager */
-						$oDomainsApi = CApi::Manager('domains');
+						$oDomainsApi = CApi::GetCoreManager('domains');
 						if (!$oDomainsApi->enableOrDisableDomainsByTenantId($oTenant->IdTenant, !$oTenant->IsDisabled))
 						{
 							$oException = $oDomainsApi->GetLastException();
@@ -499,7 +499,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		{
 			// TODO subscriptions
 			//$aCapa = array();
-			//$oSubscriptionsApi = /* @var $oSubscriptionsApi CApiSubscriptionsManager */ CApi::Manager('subscriptions');
+			//$oSubscriptionsApi = /* @var $oSubscriptionsApi CApiSubscriptionsManager */ CApi::GetCoreManager('subscriptions');
 			//$aSubs = $oSubscriptionsApi ? $oSubscriptionsApi->getSubscriptions($iTenantID) : null;
 			//if (is_array($aSubs) && 0 < count($aSubs))
 			//{
@@ -649,7 +649,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			if ($oTenant && !$oTenant->IsDefault)
 			{
 				/* @var $oDomainsApi CApiDomainsManager */
-				$oDomainsApi = CApi::Manager('domains');
+				$oDomainsApi = CApi::GetCoreManager('domains');
 				if (!$oDomainsApi->deleteDomainsByTenantId($oTenant->IdTenant, true))
 				{
 					$oException = $oDomainsApi->GetLastException();

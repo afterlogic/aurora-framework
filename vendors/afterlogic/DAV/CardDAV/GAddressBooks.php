@@ -59,7 +59,7 @@ class GAddressBooks extends \Sabre\DAV\Collection implements \Sabre\CardDAV\IDir
 		$oAccount = $this->getAccount();
         $aCards = array();
 
-		$oApiCapabilityManager = /* @var \CApiCapabilityManager */ \CApi::Manager('capability');
+		$oApiCapabilityManager = /* @var \CApiCapabilityManager */ \CApi::GetCoreManager('capability');
 
 		if ($oAccount instanceof \CAccount &&
 			$oApiCapabilityManager->isGlobalContactsSupported($oAccount))

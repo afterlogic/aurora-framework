@@ -28,7 +28,7 @@ class Digest extends \Sabre\DAV\Auth\Backend\AbstractDigest
 			$oApiCalendarManager = \CApi::Manager('calendar');
 
 			/* @var $oApiCapabilityManager \CApiCapabilityManager */
-			$oApiCapabilityManager = \CApi::Manager('capability');
+			$oApiCapabilityManager = \CApi::GetCoreManager('capability');
 
 			if ($oApiCalendarManager && $oApiCapabilityManager)
 			{

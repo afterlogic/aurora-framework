@@ -97,7 +97,7 @@ class CApiMailsuiteManager extends AApiManagerWithStorage
 						$oApiContactsManager = CApi::Manager('contactsmain');
 
 						/* @var $oApiTenantsManager CApiTenantsManager */
-						$oApiTenantsManager = CApi::Manager('tenants');
+						$oApiTenantsManager = CApi::GetCoreManager('tenants');
 
 						if ($oApiContactsManager && 'db' === CApi::GetManager()->GetStorageByType('contactsmain'))
 						{
@@ -385,7 +385,7 @@ class CApiMailsuiteManager extends AApiManagerWithStorage
 	public function mailingListExists(CMailingList $oMailingList)
 	{
 		/* @var $oApiUsersManager CApiUsersManager */
-		$oApiUsersManager = CApi::Manager('users');
+		$oApiUsersManager = CApi::GetCoreManager('users');
 		return $oApiUsersManager->accountExists($oMailingList->generateAccount());
 	}
 }

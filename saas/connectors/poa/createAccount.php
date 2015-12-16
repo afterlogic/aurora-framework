@@ -17,8 +17,8 @@
 		exit('Invalid argument');
 	}
 	
-	$oApiDomainsManager = CApi::Manager('domains');
-	$oApiUsersManager = CApi::Manager('users');
+	$oApiDomainsManager = CApi::GetCoreManager('domains');
+	$oApiUsersManager = CApi::GetCoreManager('users');
 	
 	if ($oApiUsersManager && $oApiDomainsManager)
 	{

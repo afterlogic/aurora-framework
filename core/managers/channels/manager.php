@@ -213,7 +213,7 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		try
 		{
 			/* @var $oTenantsApi CApiTenantsManager */
-			$oTenantsApi = CApi::Manager('tenants');
+			$oTenantsApi = CApi::GetCoreManager('tenants');
 			if ($oTenantsApi && !$oTenantsApi->deleteTenantsByChannelId($oChannel->IdChannel, true))
 			{
 				$oException = $oTenantsApi->GetLastException();

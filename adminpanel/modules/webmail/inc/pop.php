@@ -14,7 +14,7 @@ class CWebMailPopAction extends ap_CoreModuleHelper
 			('useractivity' === $sType && 'view' === $sAction))
 		{
 			/* @var $oApiLoggerManager CApiLoggerManager */
-			$oApiLoggerManager = CApi::Manager('logger');
+			$oApiLoggerManager = CApi::GetCoreManager('logger');
 			$iSize = 0;
 			$rLog = ('log' === $sType)
 				? $oApiLoggerManager->getCurrentLogStream($iSize)
@@ -50,7 +50,7 @@ class CWebMailPopAction extends ap_CoreModuleHelper
 		else if ('dllog' === $sType || 'dluseractivity' === $sType)
 		{
 			/* @var $oApiLoggerManager CApiLoggerManager */
-			$oApiLoggerManager = CApi::Manager('logger');
+			$oApiLoggerManager = CApi::GetCoreManager('logger');
 			$iSize = 0;
 			$rLog = ('dllog' === $sType)
 				? $oApiLoggerManager->getCurrentLogStream($iSize)

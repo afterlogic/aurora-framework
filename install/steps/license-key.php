@@ -18,7 +18,7 @@ class CLicensekeyStep extends AInstallerStep
 	public function __construct()
 	{
 		$this->oSettings =& CApi::GetSettings();
-		$this->oApiLicensing = CApi::Manager('licensing');
+		$this->oApiLicensing = CApi::GetCoreManager('licensing');
 
 		if (!isset($_SESSION['wm_install_t']))
 		{

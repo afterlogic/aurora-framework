@@ -52,7 +52,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	{
 		if (null === $this->oApiUsers)
 		{
-			$this->oApiUsers = CApi::Manager('users');
+			$this->oApiUsers = CApi::GetCoreManager('users');
 		}
 
 		return $this->oApiUsers;
@@ -520,7 +520,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 */
 	public function getHelpdeskMainSettings($iIdTenant)
 	{
-		$oApiTenant = CApi::Manager('tenants');
+		$oApiTenant = CApi::GetCoreManager('tenants');
 		$oTenant = /* @var $oTenant CTenant */ $oApiTenant ? 
 			(0 < $iIdTenant ? $oApiTenant->getTenantById($iIdTenant) : $oApiTenant->getDefaultGlobalTenant()) : null;
 
@@ -1153,9 +1153,9 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 			$oApiUsers = $this->_getApiUsers();
 			$oApiMail = $this->_getApiMail();
 			
-			$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::Manager('filecache');
+			$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
 			$oApiFilestorage = /* @var $oApiFileCache \CApiFilestorageManager */ \CApi::Manager('filestorage');
-			$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::Manager('integrator');
+			$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::GetCoreManager('integrator');
 			
 			if ($oApiUsers && $oApiMail && $oApiFileCache)
 			{
@@ -1345,7 +1345,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 		{
 			$oApiUsers = $this->_getApiUsers();
 			$oApiMail = $this->_getApiMail();
-			$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::Manager('filecache');
+			$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
 			$oApiFilestorage = /* @var $oApiFileCache \CApiFilestorageManager */ \CApi::Manager('filestorage');
 
 			if ($oApiUsers && $oApiMail && $oApiFileCache)

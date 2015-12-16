@@ -19,7 +19,7 @@ function script_simple_task(&$aResult, $aData)
 	}
 
 	/* @var $oApiTenantsManager CApiTenantsManager */
-	$oApiTenantsManager = CApi::Manager('tenants');
+	$oApiTenantsManager = CApi::GetCoreManager('tenants');
 	if (!$oApiTenantsManager)
 	{
 		$aResult['message'] = 'Internal error';

@@ -59,7 +59,7 @@ class Server extends \Sabre\DAV\Server
 				new CardDAV\GAddressBooks('gab', Constants::GLOBAL_CONTACTS), /* Global Address Book */
 			);
 
-			$this->oApiCapaManager = \CApi::Manager('capability');
+			$this->oApiCapaManager = \CApi::GetCoreManager('capability');
 
 			/* Files folder */
 			if ($this->oApiCapaManager->isFilesSupported())

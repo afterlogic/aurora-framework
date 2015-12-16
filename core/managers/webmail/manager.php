@@ -37,10 +37,10 @@ class CApiWebmailManager extends AApiManagerWithStorage
 		try
 		{
 			/* @var $oApiDomainsManager CApiDomainsManager */
-			$oApiDomainsManager = CApi::Manager('domains');
+			$oApiDomainsManager = CApi::GetCoreManager('domains');
 
 			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager = CApi::Manager('users');
+			$oApiUsersManager = CApi::GetCoreManager('users');
 
 			$sDomainName = api_Utils::GetDomainFromEmail($sEmail);
 

@@ -89,8 +89,8 @@ class CEmailservertestStep extends AInstallerStep
 			'chIMAP' => (isset($_SESSION['wm_install_server_test_ch_imap4']) && $_SESSION['wm_install_server_test_ch_imap4'])
 				? 'checked="checked"' : '',
 			'FootMessage' => $sMessage,
-			'LiteScript' => CApi::Manager('licensing') ? 
-				(CApi::Manager('collaboration') ? 'window.__awm_au = true;' : '')
+			'LiteScript' => CApi::GetCoreManager('licensing') ? 
+				(CApi::GetCoreManager('collaboration') ? 'window.__awm_au = true;' : '')
 				: 'window.__awm_lite = true;'
 		);
 	}

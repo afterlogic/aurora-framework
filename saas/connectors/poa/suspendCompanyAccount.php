@@ -9,7 +9,7 @@
 
 	$sTenantLogin = isset($_REQUEST['tenant_login']) ? $_REQUEST['tenant_login'] : '';
 
-	$oApiTenantManager = CApi::Manager('tenants');
+	$oApiTenantManager = CApi::GetCoreManager('tenants');
 	if ($oApiTenantManager)
 	{
 		$oTenant = $oApiTenantManager->getTenantById(

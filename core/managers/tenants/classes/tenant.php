@@ -175,13 +175,13 @@ class CTenant extends api_AContainer
 
 	public function getUserCount()
 	{
-		$oUsersApi = CApi::Manager('users');
+		$oUsersApi = CApi::GetCoreManager('users');
 		return $oUsersApi->getUsersCountForTenant($this->IdTenant);
 	}
 
 	public function getDomainCount()
 	{
-		$oDomainsApi = CApi::Manager('domains');
+		$oDomainsApi = CApi::GetCoreManager('domains');
 		return $oDomainsApi->getDomainCount('', $this->IdTenant);
 	}
 

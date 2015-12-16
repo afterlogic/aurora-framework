@@ -43,8 +43,8 @@ class CApiVoiceManager extends AApiManager
 	public function flushCallersNumbersCache($iIdUser)
 	{
 		$sCacheKey = $this->_generateCacheFileName($iIdUser);
-		$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ CApi::Manager('filecache');
-		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ CApi::Manager('users');
+		$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ CApi::GetCoreManager('filecache');
+		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ CApi::GetCoreManager('users');
 		
 		if ($oApiFileCache && $oApiUsers && !empty($sCacheKey))
 		{
@@ -72,7 +72,7 @@ class CApiVoiceManager extends AApiManager
 			$bFromCache = false;
 			$sCacheKey = '';
 			$mNamesResult = null;
-			$oApiFileCache = $bUseCache ? /* @var $oApiFileCache \CApiFilecacheManager */ CApi::Manager('filecache') : false;
+			$oApiFileCache = $bUseCache ? /* @var $oApiFileCache \CApiFilecacheManager */ CApi::GetCoreManager('filecache') : false;
 			if ($oApiFileCache)
 			{
 				$sCacheKey = $this->_generateCacheFileName($oAccount->IdUser);

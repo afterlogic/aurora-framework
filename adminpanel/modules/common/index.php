@@ -44,12 +44,12 @@ class CCommonModule extends ap_Module
 	{
 		parent::__construct($oAdminPanel, $sPath);
 
-		$this->oDomainsApi = CApi::Manager('domains');
-		$this->oUsersApi = CApi::Manager('users');
-		$this->oCapabilityApi = CApi::Manager('capability');
+		$this->oDomainsApi = CApi::GetCoreManager('domains');
+		$this->oUsersApi = CApi::GetCoreManager('users');
+		$this->oCapabilityApi = CApi::GetCoreManager('capability');
 		$this->oWebmailApi = CApi::Manager('webmail');
-		$this->oIntegratorApi = CApi::Manager('integrator');
-		$this->oTenantsApi = CApi::Manager('tenants');
+		$this->oIntegratorApi = CApi::GetCoreManager('integrator');
+		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 
 		if (\CApi::GetConf('labs.allow-social-integration', true))
 		{

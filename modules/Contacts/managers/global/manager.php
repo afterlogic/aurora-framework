@@ -36,7 +36,7 @@ class CApiContactsGlobalManager extends AApiManagerWithStorage
 		}
 		else
 		{
-			$oApiUsersManager = /* @var CApiUsersManager */ CApi::Manager('users');
+			$oApiUsersManager = /* @var CApiUsersManager */ CApi::GetCoreManager('users');
 			if ($oApiUsersManager)
 			{
 				$iIdAccount = $oApiUsersManager->getDefaultAccountId($oAccount->IdUser);
@@ -253,7 +253,7 @@ class CApiContactsGlobalManager extends AApiManagerWithStorage
 				if ($bResult)
 				{
 					/* @var $oApiUsersManager CApiUsersManager */
-					$oApiUsersManager = CApi::Manager('users');
+					$oApiUsersManager = CApi::GetCoreManager('users');
 					$iAccountId = $oApiUsersManager->getDefaultAccountId($oContact->IdTypeLink);
 
 					$oAccount = null;

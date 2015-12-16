@@ -208,7 +208,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		{
 			$oAccount->User->IdSubscription = (int) CPost::get('selSubscribtions');
 
-			$oTenantsApi = CApi::Manager('tenants');
+			$oTenantsApi = CApi::GetCoreManager('tenants');
 			/* @var $oTenantsApi CApiTenantsManager */
 
 			if ($oTenantsApi)
@@ -223,7 +223,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 			}
 		}
 
-		$oCapabylity = CApi::Manager('capability');
+		$oCapabylity = CApi::GetCoreManager('capability');
 		/* @var $oCapabylity CApiCapabilityManager */
 		if ($oAccount && $oCapabylity)
 		{
@@ -478,7 +478,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 			$sChannel = CPost::get('txtChannel', '');
 			if (0 < strlen($sChannel))
 			{
-				$oChannelsApi = CApi::Manager('channels');
+				$oChannelsApi = CApi::GetCoreManager('channels');
 				if ($oChannelsApi)
 				{
 					/* @var $oChannel CChannel */
@@ -749,7 +749,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		if ($sDomainName === '*' && $oDomain->IdTenant !== 0)
 		{
 			/* @var \CApiDomainsManager $oApiDomainsManager */
-			$oApiDomainsManager = \CApi::Manager('domains');
+			$oApiDomainsManager = \CApi::GetCoreManager('domains');
 			$oDefaultDomainForTenant = $oApiDomainsManager->GetDefaultDomainByTenantId($oDomain->IdTenant);
 			
 			if ($oDefaultDomainForTenant !== null)

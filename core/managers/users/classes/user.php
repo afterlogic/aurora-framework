@@ -218,7 +218,7 @@ class CUser extends api_AContainer
 //			}
 //			else
 //			{
-//				$oApiSubscriptionsManager = /* @var $oApiSubscriptionsManager CApiSubscriptionsManager */ CApi::Manager('subscriptions');
+//				$oApiSubscriptionsManager = /* @var $oApiSubscriptionsManager CApiSubscriptionsManager */ CApi::GetCoreManager('subscriptions');
 //				if ($oApiSubscriptionsManager)
 //				{
 //					$oSub = $oApiSubscriptionsManager->getSubscriptionById($this->IdSubscription);
@@ -251,7 +251,7 @@ class CUser extends api_AContainer
 //				$aCapa = array();
 //				if ('' === $sSubCapa)
 //				{
-//					$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */ CApi::Manager('tenants');
+//					$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */ CApi::GetCoreManager('tenants');
 //					if ($oApiTenantsManager)
 //					{
 //						$oTenant = $oApiTenantsManager->getTenantById($oTenant->IdTenant);
@@ -259,7 +259,7 @@ class CUser extends api_AContainer
 //						{
 //							if ('' === $oTenant->Capa)
 //							{
-//								$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::Manager('capability');
+//								$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
 //								if ($oApiCapabilityManager)
 //								{
 //									$aCapa = explode(' ', $oApiCapabilityManager->getSystemCapaAsString());

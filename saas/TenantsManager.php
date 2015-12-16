@@ -18,7 +18,7 @@ class TenantsManager implements \saas\api\ITenantsManager
 
 	protected function nativeTenantManager()
 	{
-		return \CApi::Manager('tenants');
+		return \CApi::GetCoreManager('tenants');
 	}
 
 	function __construct()

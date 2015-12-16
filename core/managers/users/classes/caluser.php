@@ -35,13 +35,13 @@ class CCalUser extends api_AContainer
 		if (0 < $iUserId)
 		{
 			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager = CApi::Manager('users');
+			$oApiUsersManager = CApi::GetCoreManager('users');
 
 			$iDomainId = $oApiUsersManager->getDefaultAccountDomainId($iUserId);
 			if (0 < $iDomainId)
 			{
 				/* @var $oApiDomainsManager CApiDomainsManager */
-				$oApiDomainsManager = CApi::Manager('domains');
+				$oApiDomainsManager = CApi::GetCoreManager('domains');
 				$oDomain = $oApiDomainsManager->getDomainById($iDomainId);
 			}
 		}

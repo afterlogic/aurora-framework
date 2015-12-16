@@ -57,7 +57,7 @@ class Plugin extends \Sabre\DAV\ServerPlugin {
 	{
 		if ($this->oApiTenants === null)
 		{
-			$this->oApiTenants = \CApi::Manager('tenants');
+			$this->oApiTenants = \CApi::GetCoreManager('tenants');
 		}
 		
 		return $this->oApiTenants;
@@ -67,7 +67,7 @@ class Plugin extends \Sabre\DAV\ServerPlugin {
 	{
 		if ($this->oApiUsers == null)
 		{
-			$this->oApiUsers = \CApi::Manager('users');
+			$this->oApiUsers = \CApi::GetCoreManager('users');
 		}
 		return $this->oApiUsers;
 	}

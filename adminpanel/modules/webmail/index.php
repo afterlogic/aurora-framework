@@ -40,10 +40,10 @@ class CWebMailModule extends ap_Module
 		$this->aTabs[] = AP_TAB_USERS;
 		$this->aTabs[] = AP_TAB_SYSTEM;
 
-		$this->oCapabilityApi = CApi::Manager('capability');
+		$this->oCapabilityApi = CApi::GetCoreManager('capability');
 		$this->oWebmailApi = CApi::Manager('webmail');
-		$this->oUsersApi = CApi::Manager('users');
-		$this->oLoggerApi = CApi::Manager('logger');
+		$this->oUsersApi = CApi::GetCoreManager('users');
+		$this->oLoggerApi = CApi::GetCoreManager('logger');
 
 		$this->aQueryActions[] = 'new';
 		$this->aQueryActions[] = 'edit';

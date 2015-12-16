@@ -20,7 +20,7 @@ class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO
 		$oPdo = \CApi::GetPDO();
 		$dbPrefix = \CApi::GetSettings()->GetConf('Common/DBPrefix');
 
-		$this->oApiUsersManager = \CApi::Manager('users');
+		$this->oApiUsersManager = \CApi::GetCoreManager('users');
 		parent::__construct($oPdo, $dbPrefix.Constants::T_PRINCIPALS, $dbPrefix.Constants::T_GROUPMEMBERS);
     } 
 

@@ -20,7 +20,7 @@ class SharedAddressBook extends AddressBook {
 	{
 		if (!isset($this->oApiUsersManager))
 		{
-			$this->oApiUsersManager = \CApi::Manager('users');
+			$this->oApiUsersManager = \CApi::GetCoreManager('users');
 		}
 		return $this->oApiUsersManager;
 	}

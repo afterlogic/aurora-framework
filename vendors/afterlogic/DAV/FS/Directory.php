@@ -40,7 +40,7 @@ class Directory extends \Sabre\DAV\FSExt\Directory {
 	{
 		if ($this->oApiTenants === null)
 		{
-			$this->oApiTenants = \CApi::Manager('tenants');
+			$this->oApiTenants = \CApi::GetCoreManager('tenants');
 		}
 		
 		return $this->oApiTenants;
@@ -50,7 +50,7 @@ class Directory extends \Sabre\DAV\FSExt\Directory {
 	{
 		if ($this->oApiUsers == null)
 		{
-			$this->oApiUsers = \CApi::Manager('users');
+			$this->oApiUsers = \CApi::GetCoreManager('users');
 		}
 		return $this->oApiUsers;
 	}

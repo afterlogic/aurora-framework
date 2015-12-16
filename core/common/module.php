@@ -516,7 +516,7 @@ abstract class AApiModule
 				//if ($oException instanceof \Core\Exceptions\ClientException &&
 				//	\Core\Notifications::AuthError === $oException->getCode())
 				//{
-				//	$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::Manager('integrator');
+				//	$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::GetCoreManager('integrator');
 				//	$oApiIntegrator->setLastErrorCode(\Core\Notifications::AuthError);
 				//	$oApiIntegrator->logoutAccount();
 				//}

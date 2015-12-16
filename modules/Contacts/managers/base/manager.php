@@ -559,7 +559,7 @@ class CApiContactsBaseManager extends AApiManagerWithStorage
 		try
 		{
 			$mResult = array();
-			$oApiCapaManager = /* @var $oApiCapaManager CApiCapabilityManager */ CApi::Manager('capability');
+			$oApiCapaManager = /* @var $oApiCapaManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
 			if ($oApiCapaManager)
 			{
 				if ($oApiCapaManager->isPersonalContactsSupported($oAccount))
@@ -596,7 +596,7 @@ class CApiContactsBaseManager extends AApiManagerWithStorage
 		try
 		{
 			$mResult = array();
-			$oApiCapaManager = /* @var $oApiCapaManager CApiCapabilityManager */ CApi::Manager('capability');
+			$oApiCapaManager = /* @var $oApiCapaManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
 
 			if (!$bGlobalOnly && $oApiCapaManager->isPersonalContactsSupported($oAccount))
 			{

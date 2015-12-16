@@ -17,7 +17,7 @@
 
 	try
 	{
-		$oApiIntegratorManager = /* @var $oApiIntegratorManager CApiIntegratorManager */ CApi::Manager('integrator');
+		$oApiIntegratorManager = /* @var $oApiIntegratorManager CApiIntegratorManager */ CApi::GetCoreManager('integrator');
 
 		if ($oApiIntegratorManager)
 		{

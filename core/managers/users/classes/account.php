@@ -306,7 +306,7 @@ class CAccount extends api_AContainer
 				$this->FlushObsolete('StorageQuota');
 			}
 
-			$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::Manager('users');
+			$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetCoreManager('users');
 			if ($oApiUsersManager)
 			{
 				$this->StorageUsedSpace = $oApiUsersManager->getAccountUsedSpace($this->Email);

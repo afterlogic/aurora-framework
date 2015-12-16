@@ -99,10 +99,10 @@ function script_simple_task(&$aResult, $aData)
 	if (0 < strlen($sEmail) && 0 < strlen($sDomain))
 	{
 		/* @var $oApiUsersManager CApiUsersManager */
-		$oApiUsersManager = CApi::Manager('users');
+		$oApiUsersManager = CApi::GetCoreManager('users');
 
 		/* @var $oApiDomainsManager CApiDomainsManager */
-		$oApiDomainsManager = CApi::Manager('domains');
+		$oApiDomainsManager = CApi::GetCoreManager('domains');
 
 		switch ($sCommand)
 		{

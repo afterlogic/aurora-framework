@@ -27,7 +27,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 	public function CommonHelpdesk(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::Manager('capability');
+		$oApiCapa = CApi::GetCoreManager('capability');
 		if ($oApiCapa && $oApiCapa->isHelpdeskSupported() && (
 			$this->oAdminPanel->IsTenantAuthType() ||
 			($this->oAdminPanel->IsSuperAdminAuthType() && !$oApiCapa->isTenantsSupported())
@@ -92,7 +92,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 	public function CommonSip(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::Manager('capability');
+		$oApiCapa = CApi::GetCoreManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && $oApiCapa->isSipSupported())
@@ -112,7 +112,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 	
 	public function CommonTwilio(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::Manager('capability');
+		$oApiCapa = CApi::GetCoreManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && $oApiCapa->isTwilioSupported())
@@ -169,8 +169,8 @@ class CProPopulateData extends ap_CoreModuleHelper
 // TODO subscriptions
 //				if (CApi::GetConf('capa', false))
 //				{
-//					$oSubscriptionsApi = CApi::Manager('subscriptions');
-//					$oTenantsApi = CApi::Manager('tenants');
+//					$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
+//					$oTenantsApi = CApi::GetCoreManager('tenants');
 //
 //					if ($oSubscriptionsApi && $oTenantsApi)
 //					{
@@ -267,7 +267,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 			{
 				$oScreen->Data->SetValue('domainInTenant', true);
 
-				$oTenantsApi = CApi::Manager('tenants');
+				$oTenantsApi = CApi::GetCoreManager('tenants');
 				/* @var $oTenantsApi CApiTenantsManager */
 
 				if ($oTenantsApi)
@@ -289,7 +289,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 // TODO subscriptions
 //				if (CApi::GetConf('capa', false))
 //				{
-//					$oSubscriptionsApi = CApi::Manager('subscriptions');
+//					$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
 //					if ($oSubscriptionsApi)
 //					{
 //						$aSubscriptions = $oSubscriptionsApi->getSubscriptions($oDomain->IdTenant);
@@ -346,7 +346,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('domainIsInternal', true);
 			}
 
-			$oCapabilityApi = CApi::Manager('capability');
+			$oCapabilityApi = CApi::GetCoreManager('capability');
 			/* @var $oCapabilityApi CApiCapabilityManager */
 
 			if (0 < $oAccount->IdTenant)
@@ -356,7 +356,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				// TODO subscriptions
 //				if (CApi::GetConf('capa', false))
 //				{
-//					$oTenantsApi = CApi::Manager('tenants');
+//					$oTenantsApi = CApi::GetCoreManager('tenants');
 //					/* @var $oTenantsApi CApiTenantsManager */
 //
 //
@@ -367,7 +367,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 //						{
 //							$oCurrentSubscription = null;
 //
-//							$oSubscriptionsApi = CApi::Manager('subscriptions');
+//							$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
 //							/* @var $oSubscriptionsApi CApiSubscriptionsManager */
 //
 //							$aSubscriptions = $oSubscriptionsApi ? $oSubscriptionsApi->getSubscriptions($oAccount->IdTenant) : array();
@@ -657,7 +657,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 			if (0 < $oTenant->IdChannel)
 			{
-				$oChannelsApi = CApi::Manager('channels');
+				$oChannelsApi = CApi::GetCoreManager('channels');
 				if ($oChannelsApi)
 				{
 					$oChannel = $oChannelsApi->getChannelById($oTenant->IdChannel);
@@ -672,8 +672,8 @@ class CProPopulateData extends ap_CoreModuleHelper
 			// TODO subscriptions
 //			if (CApi::GetConf('capa', false))
 //			{
-//				$oSubscriptionsApi = CApi::Manager('subscriptions');
-//				$oTenantsApi = CApi::Manager('tenants');
+//				$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
+//				$oTenantsApi = CApi::GetCoreManager('tenants');
 //
 //				if ($oSubscriptionsApi && $oTenantsApi)
 //				{

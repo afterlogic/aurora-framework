@@ -52,7 +52,7 @@ class CReminder
 		$this->sCurRunFilePath = CApi::DataPath().'/reminder-run';
 		$this->sLang = $oSettings->GetConf('Common/DefaultLanguage');
 
-		$this->oApiUsersManager = CApi::Manager('users');
+		$this->oApiUsersManager = CApi::GetCoreManager('users');
 		$this->oApiCalendarManager = CApi::Manager('calendar');
 		$this->oApiMailManager = CApi::Manager('mail');
 	}

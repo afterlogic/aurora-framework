@@ -54,12 +54,12 @@ class CProModule extends ap_Module
 	{
 		parent::__construct($oAdminPanel, $sPath);
 
-		$this->oDomainsApi = CApi::Manager('domains');
-		$this->oLicApi = CApi::Manager('licensing');
-		$this->oUsersApi = CApi::Manager('users');
+		$this->oDomainsApi = CApi::GetCoreManager('domains');
+		$this->oLicApi = CApi::GetCoreManager('licensing');
+		$this->oUsersApi = CApi::GetCoreManager('users');
 		$this->oWebmailApi = CApi::Manager('webmail');
-		$this->oCapabilityApi = CApi::Manager('capability');
-		$this->oTenantsApi = CApi::Manager('tenants');
+		$this->oCapabilityApi = CApi::GetCoreManager('capability');
+		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 
 		$this->oChannelsApi = null;
 
@@ -73,7 +73,7 @@ class CProModule extends ap_Module
 			$this->aTabs[] = AP_TAB_TENANTS;
 			$this->aTabs[] = AP_TAB_CHANNELS;
 
-			$this->oChannelsApi = CApi::Manager('channels');
+			$this->oChannelsApi = CApi::GetCoreManager('channels');
 		}
 
 		$this->aTabs[] = AP_TAB_DOMAINS;
@@ -153,7 +153,7 @@ class CProModule extends ap_Module
 
 				$oTenant = $this->GetTenantAdminObject();
 
-				$oApiCapa = CApi::Manager('capability');
+				$oApiCapa = CApi::GetCoreManager('capability');
 				/* @var $oApiCapa CApiCapabilityManager */
 
 				if ($oApiCapa && $oApiCapa->isHelpdeskSupported() && $oTenant && (
@@ -610,7 +610,7 @@ class CProModule extends ap_Module
 							$oTenant =& $this->oAdminPanel->GetMainObject('domain_edit_tenant');
 						}
 
-						$oCapabylity = CApi::Manager('capability');
+						$oCapabylity = CApi::GetCoreManager('capability');
 						/* @var $oCapabylity CApiCapabilityManager */
 						if ($oCapabylity)
 						{
@@ -722,7 +722,7 @@ class CProModule extends ap_Module
 							CM_SWITCHER_MODE_EDIT_USER_GENERAL, CM_SWITCHER_MODE_EDIT_USER_GENERAL_NAME,
 							$this->sPath.'/templates/main-edit-user-general.php');
 
-						$oCapabylity = CApi::Manager('capability');
+						$oCapabylity = CApi::GetCoreManager('capability');
 						/* @var $oCapabylity CApiCapabilityManager */
 						if ($oCapabylity)
 						{

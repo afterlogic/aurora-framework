@@ -14,7 +14,7 @@
 		exit('Invalid argument');
 	}
 
-	$oApiTenantManager = CApi::Manager('tenants');
+	$oApiTenantManager = CApi::GetCoreManager('tenants');
 	if ($oApiTenantManager)
 	{
 		$oTenant = $oApiTenantManager->getTenantById(

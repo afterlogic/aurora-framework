@@ -49,7 +49,7 @@ class CApiMailsuiteDbStorage extends CApiMailsuiteStorage
 			if ($oRow)
 			{
 				/* @var $oApiDomainsManager CApiDomainsManager */
-				$oApiDomainsManager = CApi::Manager('domains');
+				$oApiDomainsManager = CApi::GetCoreManager('domains');
 
 				$oDomain = null;
 				$iDomainId = $oRow->id_domain;

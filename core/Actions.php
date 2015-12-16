@@ -76,14 +76,14 @@ class Actions
 	{
 		$this->oHttp = null;
 
-		$this->oApiUsers = \CApi::Manager('users');
-		$this->oApiTenants = \CApi::Manager('tenants');
+		$this->oApiUsers = \CApi::GetCoreManager('users');
+		$this->oApiTenants = \CApi::GetCoreManager('tenants');
 		$this->oApiWebMail = \CApi::Manager('webmail');
-		$this->oApiIntegrator = \CApi::Manager('integrator');
+		$this->oApiIntegrator = \CApi::GetCoreManager('integrator');
 		$this->oApiMail = \CApi::Manager('mail');
-		$this->oApiFileCache = \CApi::Manager('filecache');
+		$this->oApiFileCache = \CApi::GetCoreManager('filecache');
 		$this->oApiSieve = \CApi::Manager('sieve');
-		$this->oApiCapability = \CApi::Manager('capability');
+		$this->oApiCapability = \CApi::GetCoreManager('capability');
 
 		$this->oApiFetchers = null;
 		$this->oApiHelpdesk = null;
@@ -534,7 +534,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$oApiDomains = /* @var $oApiDomains \CApiDomainsManager */ \CApi::Manager('domains');
+		$oApiDomains = /* @var $oApiDomains \CApiDomainsManager */ \CApi::GetCoreManager('domains');
 		$oDomain = $oApiDomains->getDomainByName($sDomainName);
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $oDomain ? array(
@@ -829,7 +829,7 @@ class Actions
 		$sLanguage = (string) $this->getParamValue('Language', '');
 		if (!empty($sLanguage))
 		{
-			$oApiIntegrator = \CApi::Manager('integrator');
+			$oApiIntegrator = \CApi::GetCoreManager('integrator');
 			if ($oApiIntegrator)
 			{
 				$oApiIntegrator->setLoginLanguage($sLanguage);
@@ -1034,7 +1034,7 @@ class Actions
 		$oNewAccount = null;
 		$oAccount = $this->getDefaultAccountFromParam();
 
-		$oApiDomains = \CApi::Manager('domains');
+		$oApiDomains = \CApi::GetCoreManager('domains');
 		$oDomain = $oApiDomains->getDefaultDomain();
 		if ($oDomain)
 		{
@@ -1338,7 +1338,7 @@ class Actions
 	 */
 	public function AjaxSystemGetAppData()
 	{
-		$oApiIntegratorManager = \CApi::Manager('integrator');
+		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		return $this->DefaultResponse(null, __FUNCTION__, 
 				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false);
@@ -3173,7 +3173,7 @@ class Actions
 
 		if ($oAccount && $oApiDavManager)
 		{
-			$oApiCapabilityManager = \CApi::Manager('capability');
+			$oApiCapabilityManager = \CApi::GetCoreManager('capability');
 			/* @var $oApiCapabilityManager \CApiCapabilityManager */
 
 			$oApiCalendarManager = \CApi::Manager('calendar');
@@ -3360,10 +3360,10 @@ class Actions
 			if ($bResult)
 			{
 				$bResult = false;
-				$oUser = \CApi::Manager('integrator')->getAhdSocialUser($sTenantHash, $sSocialId);
+				$oUser = \CApi::GetCoreManager('integrator')->getAhdSocialUser($sTenantHash, $sSocialId);
 				if ($oUser)
 				{
-					\CApi::Manager('integrator')->setHelpdeskUserAsLoggedIn($oUser, false);
+					\CApi::GetCoreManager('integrator')->setHelpdeskUserAsLoggedIn($oUser, false);
 					$bResult = true;
 				}
 			}
