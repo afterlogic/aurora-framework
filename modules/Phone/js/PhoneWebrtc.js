@@ -230,11 +230,11 @@ CPhoneWebrtc.prototype.eventSession = function (ev)
 		case 'm_permission_accepted':
 			/*if(Phone.action() === 'incoming')
 			{
-				this.report(Utils.i18n('PHONE/INCOMING_CALL_FROM') + ' ' + this.callSession()['getRemoteFriendlyName']());
+				this.report(TextUtils.i18n('PHONE/INCOMING_CALL_FROM') + ' ' + this.callSession()['getRemoteFriendlyName']());
 			}
 			else
 			{
-				this.report(Utils.i18n('PHONE/CALL_IN_PROGRESS'));
+				this.report(TextUtils.i18n('PHONE/CALL_IN_PROGRESS'));
 			}*/
 			break;
 		case 'm_permission_refused':

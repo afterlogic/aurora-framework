@@ -5,6 +5,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
+	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
 	Settings = require('core/js/Settings.js'),
@@ -369,7 +370,7 @@ CAjax.prototype.checkConnection = (function () {
 			if (sModule === 'Ping' && sMethod === 'Ping')
 			{
 				Ajax.bInternetConnectionProblem = true;
-				Screens.showError(Utils.i18n('WARNING/NO_INTERNET_CONNECTION'), false, true, true);
+				Screens.showError(TextUtils.i18n('WARNING/NO_INTERNET_CONNECTION'), false, true, true);
 				iTimer = setTimeout(function () {
 					Ajax.doSend({ Module: 'Ping', Method: 'Ping' });
 				}, 60000);
