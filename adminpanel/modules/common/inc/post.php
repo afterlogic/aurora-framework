@@ -82,8 +82,7 @@ class CCommonPostAction extends ap_CoreModuleHelper
 		{
 			if (CPost::Has('txtNewPassword') && CPost::Has('txtConfirmNewPassword'))
 			{
-                $oWebmailApi = CApi::Manager('webmail');
-				if (!$oWebmailApi->validateAdminPassword(trim(CPost::get('txtOldPassword')))) {
+				if (!\CApi::ExecuteMethod('Core::ValidateAdminPassword', array('Password' => trim(CPost::get('txtOldPassword'))))) {
 					$bDoSave = false;
 					$this->LastError = CM_PASSWORDS_INVALID_OLD;
 				} else if ((string)CPost::get('txtNewPassword') !== (string)CPost::get('txtConfirmNewPassword')) {

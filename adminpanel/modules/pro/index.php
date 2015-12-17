@@ -11,11 +11,6 @@ class CProModule extends ap_Module
 	protected $oDomainsApi;
 
 	/**
-	 * @var CApiWebmailManager
-	 */
-	protected $oWebmailApi;
-
-	/**
 	 * @var bool
 	 */
 	private $bHasWebmail;
@@ -57,7 +52,6 @@ class CProModule extends ap_Module
 		$this->oDomainsApi = CApi::GetCoreManager('domains');
 		$this->oLicApi = CApi::GetCoreManager('licensing');
 		$this->oUsersApi = CApi::GetCoreManager('users');
-		$this->oWebmailApi = CApi::Manager('webmail');
 		$this->oCapabilityApi = CApi::GetCoreManager('capability');
 		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 

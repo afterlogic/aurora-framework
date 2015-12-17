@@ -343,51 +343,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 */
 	private function _validateAccountSubscriptionLimits(&$oAccount, $oTenant, $bCreate = false)
 	{
-		// TODO subscriptions
-//		if (CApi::GetConf('capa', false) && $oAccount && $oTenant)
-//		{
-//			$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
-//			/* @var $oSubscriptionsApi CApiSubscriptionsManager */
-//
-//			$oTenantsApi = CApi::GetCoreManager('tenants');
-//			/* @var $oTenantsApi CApiTenantsManager */
-//
-//			if ($oSubscriptionsApi && $oTenantsApi && $oAccount->IsDefaultAccount && !$oAccount->IsDisabled)
-//			{
-//				if (0 < $oAccount->User->IdSubscription)
-//				{
-//					$oSub = $oSubscriptionsApi->getSubscriptionById($oAccount->User->IdSubscription);
-//					if (/* @var $oSub CSubscription */ $oSub)
-//					{
-//						$aUsage = $oTenantsApi->GetSubscriptionUserUsage($oTenant->IdTenant,
-//							$bCreate ? null : $oAccount->IdUser);
-//
-//						$iLimit = is_array($aUsage) && isset($aUsage[$oAccount->User->IdSubscription])
-//							? $aUsage[$oAccount->User->IdSubscription] : 0;
-//
-//						if ($iLimit + 1 <= $oSub->Limit)
-//						{
-//							if ($bCreate)
-//							{
-//								$oAccount->User->Capa = $oSub->Capa;
-//							}
-//
-//							return true;
-//						}
-//					}
-//
-//					if ($bCreate)
-//					{
-//						throw new CApiManagerException(Errs::TenantsManager_AccountCreateUserLimitReached);
-//					}
-//					else
-//					{
-//						throw new CApiManagerException(Errs::TenantsManager_AccountUpdateUserLimitReached);
-//					}
-//				}
-//			}
-//		}
-
 		return false;
 	}
 

@@ -22,11 +22,6 @@ class MasterUser implements \saas\api\IUser
 		return \CApi::GetSettings();
 	}
 
-	protected function nativeWebmail()
-	{
-		return \CApi::Manager('webmail');
-	}
-
 	protected function createChannelsServiceManager()
 	{
 		return new ChannelsManager(0);
@@ -76,7 +71,7 @@ class MasterUser implements \saas\api\IUser
 
 	function validatePassword($passwd)
 	{
-		return $this->nativeWebmail()->validateAdminPassword($passwd);
+		return \CApi::ExecuteMethod('Core::ValidateAdminPassword', array('Password' => $passwd));
 	}
 
 	function primaryEmail()

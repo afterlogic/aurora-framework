@@ -6,11 +6,6 @@ $sCurrentModule = 'CCommonModule';
 class CCommonModule extends ap_Module
 {
 	/**
-	* @var CApiWebmailManager
-	*/
-	protected $oWebmailApi;
-
-	/**
 	 * @var CApiDomainsManager
 	 */
 	protected $oDomainsApi;
@@ -47,7 +42,6 @@ class CCommonModule extends ap_Module
 		$this->oDomainsApi = CApi::GetCoreManager('domains');
 		$this->oUsersApi = CApi::GetCoreManager('users');
 		$this->oCapabilityApi = CApi::GetCoreManager('capability');
-		$this->oWebmailApi = CApi::Manager('webmail');
 		$this->oIntegratorApi = CApi::GetCoreManager('integrator');
 		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 
@@ -471,7 +465,7 @@ class CCommonModule extends ap_Module
 		}
 		
 		if ($oSettings->GetConf('Common/AdminLogin') === $sLogin &&
-			$this->oWebmailApi->validateAdminPassword($sPassword))
+			\CApi::ExecuteMethod('Core::ValidateAdminPassword', array('Password' => $sPassword)))
 		{
 			$this->setAdminAccessType(AP_SESS_AUTH_TYPE_SUPER_ADMIN);
 			return true;

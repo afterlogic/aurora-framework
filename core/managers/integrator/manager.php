@@ -718,13 +718,11 @@ class CApiIntegratorManager extends AApiManager
 	public function loginToAccount($sEmail, $sIncPassword, $sIncLogin = '', $sLanguage = '')
 	{
 		$oResult = null;
-		\CApi::AddSecret($sIncPassword);
 		
+		\CApi::AddSecret($sIncPassword);
+
 		/* @var $oApiUsersManager CApiUsersManager */
 		$oApiUsersManager = CApi::GetCoreManager('users');
-
-		/* @var $oApiWebmailManager CApiWebmailManager */
-		$oApiWebmailManager = CApi::Manager('webmail');
 
 		$bAuthResult = false;
 		CApi::Plugin()->RunHook('api-integrator-login-to-account', array(&$sEmail, &$sIncPassword, &$sIncLogin, &$sLanguage, &$bAuthResult));
@@ -761,10 +759,9 @@ class CApiIntegratorManager extends AApiManager
 				{
 					$oAccount->IncomingMailPassword = $sIncPassword;
 				}
-				$oApiModuleManager = CApi::GetModuleManager();
 				try
 				{
-					$oApiModuleManager->ExecuteMethod('Mail', 'validateAccountConnection', array($oAccount));
+					\CApi::ExecuteMethod('Mail::ValidateAccountConnection', array('Account' => $oAccount));
 				}
 				catch (Exception $oException)
 				{
@@ -800,7 +797,12 @@ class CApiIntegratorManager extends AApiManager
 			}
 			$aExtValues['ApiIntegratorLoginToAccountResult'] = $bAuthResult;
 
-			$oAccount = $oApiWebmailManager->createAccount($sEmail, $sIncPassword, $sLanguage, $aExtValues);
+			$oAccount = \CApi::ExecuteMethod('Core::CreateAccount', array(
+				'Email' => $sEmail, 
+				'Password' => $sIncPassword, 
+				'Language' => $sLanguage, 
+				'ExtValues' => $aExtValues
+			));
 			if ($oAccount instanceof CAccount)
 			{
 				CApi::Plugin()->RunHook('api-integrator-login-success-post-create-account-call', array(&$oAccount));
@@ -809,13 +811,9 @@ class CApiIntegratorManager extends AApiManager
 			}
 			else
 			{
-				$oException = $oApiWebmailManager->GetLastException();
-
 				CApi::Plugin()->RunHook('api-integrator-login-error-post-create-account-call', array(&$oException));
 
-				throw (is_object($oException))
-					? $oException
-					: new CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
+				throw new CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 			}
 		}
 		else

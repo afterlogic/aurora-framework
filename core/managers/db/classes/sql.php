@@ -20,7 +20,6 @@ class CDbSchemaHelper
 		static $sPrefix = null;
 		if (null === $sPrefix)
 		{
-			$oSettings = null;
 			$oSettings =& CApi::GetSettings();
 			$sPrefix = $oSettings->GetConf('Common/DBPrefix');
 		}

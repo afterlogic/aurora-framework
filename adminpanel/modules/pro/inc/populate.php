@@ -166,35 +166,6 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('txtDiskSpace', $sInfo);
 
 				$sSubscriptions = '';
-// TODO subscriptions
-//				if (CApi::GetConf('capa', false))
-//				{
-//					$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
-//					$oTenantsApi = CApi::GetCoreManager('tenants');
-//
-//					if ($oSubscriptionsApi && $oTenantsApi)
-//					{
-//						$aSubscriptions = $oSubscriptionsApi->getSubscriptions($oTenant->IdTenant);
-//						if (is_array($aSubscriptions) && 0 < count($aSubscriptions))
-//						{
-//							$oScreen->Data->SetValue('subscriptionsSupported', true);
-//
-//							$aLimits = $oTenantsApi->getSubscriptionUserUsage($oTenant->IdTenant);
-//
-//							foreach ($aSubscriptions as $oSubscription)
-//							{
-//								/* @var $oSubscription CSubscription */
-//
-//								$sSubscriptions .= $oSubscription->Name.' ('.
-//									(isset($aLimits[$oSubscription->IdSubscription]) ? $aLimits[$oSubscription->IdSubscription] : 0).
-//									' user of '.
-//									(0 === $oSubscription->Limit ? 'unlim' : $oSubscription->Limit).' available)'.'<br />';
-//							}
-//
-//							$oScreen->Data->SetValue('txtSubscriptionPlans', $sSubscriptions);
-//						}
-//					}
-//				}
 
 				if (empty($sSubscriptions))
 				{
@@ -285,36 +256,6 @@ class CProPopulateData extends ap_CoreModuleHelper
 						}
 					}
 				}
-
-// TODO subscriptions
-//				if (CApi::GetConf('capa', false))
-//				{
-//					$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
-//					if ($oSubscriptionsApi)
-//					{
-//						$aSubscriptions = $oSubscriptionsApi->getSubscriptions($oDomain->IdTenant);
-//						if (is_array($aSubscriptions) && 0 < count($aSubscriptions))
-//						{
-//							$oScreen->Data->SetValue('subscriptionsSupported', true);
-//
-//							$sSubscriptionOptions = '<option value="0" selected="selected">Default</option>';
-//							foreach ($aSubscriptions as $oSubscription)
-//							{
-//								/* @var $oSubscription CSubscription */
-//								$sSubscriptionOptions .= '<option value="'.ap_Utils::AttributeQuote($oSubscription->IdSubscription).
-//									'">'.ap_Utils::EncodeSpecialXmlChars($oSubscription->Name).'</option>';
-//							}
-//
-//							if (0 < strlen($sSubscriptionOptions))
-//							{
-//								$sSubscriptionOptions = '<select name="selSubscribtions" id="selSubscribtions" class="wm_select override">'.
-//									$sSubscriptionOptions.'</select>';
-//							}
-//
-//							$oScreen->Data->SetValue('selSubscribtionsOptions', $sSubscriptionOptions);
-//						}
-//					}
-//				}
 			}
 		}
 	}

@@ -494,48 +494,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function updateTenantMainCapa($iTenantID)
 	{
-		$bResult = false;
-		if (0 < $iTenantID)
-		{
-			// TODO subscriptions
-			//$aCapa = array();
-			//$oSubscriptionsApi = /* @var $oSubscriptionsApi CApiSubscriptionsManager */ CApi::GetCoreManager('subscriptions');
-			//$aSubs = $oSubscriptionsApi ? $oSubscriptionsApi->getSubscriptions($iTenantID) : null;
-			//if (is_array($aSubs) && 0 < count($aSubs))
-			//{
-			//	foreach ($aSubs as /* @var $oSub CSubscription */ $oSub)
-			//	{
-			//		if ($oSub)
-			//		{
-			//			$sCapa = $oSub->Capa;
-			//			if ('' === $sCapa)
-			//			{
-			//				$aCapa = array();
-			//				break;
-			//			}
-			//			else
-			//			{
-			//				if (0 < strlen($oSub->Capa))
-			//				{
-			//					$aCapa = array_merge($aCapa, explode(' ', $oSub->Capa));
-			//				}
-			//			}
-			//		}
-			//	}
-			//}
-			//
-			//try
-			//{
-			//	$aCapa = array_unique($aCapa);
-			//	$bResult = $this->oStorage->updateTenantMainCapa($iTenantID, implode(' ', $aCapa));
-			//}
-			//catch (CApiBaseException $oException)
-			//{
-			//	$this->setLastException($oException);
-			//}
-		}
-		
-		return $bResult;
+		return false;
 	}
 
 	/**

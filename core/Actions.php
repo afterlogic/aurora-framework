@@ -18,11 +18,6 @@ class Actions
 	 * @var \CApiTenantsManager
 	 */
 	protected $oApiTenants;
-	
-	/**
-	 * @var \CApiWebmailManager
-	 */
-	protected $oApiWebMail;
 
 	/**
 	 * @var \CApiIntegratorManager
@@ -78,7 +73,6 @@ class Actions
 
 		$this->oApiUsers = \CApi::GetCoreManager('users');
 		$this->oApiTenants = \CApi::GetCoreManager('tenants');
-		$this->oApiWebMail = \CApi::Manager('webmail');
 		$this->oApiIntegrator = \CApi::GetCoreManager('integrator');
 		$this->oApiMail = \CApi::Manager('mail');
 		$this->oApiFileCache = \CApi::GetCoreManager('filecache');
@@ -1503,11 +1497,16 @@ class Actions
 
 		try
 		{
-			$oAccount = $this->oApiWebMail->CreateAccountProcess($sEmail, $sPassword, '', array(
-				'FriendlyName' => $sName,
-				'Question1' => $sQuestion,
-				'Answer1' => $sAnswer
-			), true);
+			$oAccount = \CApi::ExecuteMethod('Core::CreateAccount', array(
+				'Email' => $sEmail, 
+				'Password' => $sPassword, 
+				'Language' => '', 
+				'ExtValues' => array(
+					'FriendlyName' => $sName,
+					'Question1' => $sQuestion,
+					'Answer1' => $sAnswer
+				)
+			));
 			
 			if ($oAccount instanceof \CAccount)
 			{
@@ -1515,13 +1514,9 @@ class Actions
 			}
 			else
 			{
-				$oException = $this->oApiWebMail->GetLastException();
-
 				\CApi::Plugin()->RunHook('api-integrator-login-error-post-create-account-call', array(&$oException));
 
-				throw (is_object($oException))
-					? $oException
-					: new \CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
+				throw new \CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 			}
 		}
 		catch (\Exception $oException)

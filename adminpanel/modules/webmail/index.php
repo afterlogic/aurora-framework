@@ -8,11 +8,6 @@ $sCurrentModule = 'CWebMailModule';
 class CWebMailModule extends ap_Module
 {
 	/**
-	 * @var CApiWebmailManager
-	 */
-	protected $oWebmailApi;
-
-	/**
 	 * @var CApiCapabilityManager
 	 */
 	protected $oCapabilityApi;
@@ -41,7 +36,6 @@ class CWebMailModule extends ap_Module
 		$this->aTabs[] = AP_TAB_SYSTEM;
 
 		$this->oCapabilityApi = CApi::GetCoreManager('capability');
-		$this->oWebmailApi = CApi::Manager('webmail');
 		$this->oUsersApi = CApi::GetCoreManager('users');
 		$this->oLoggerApi = CApi::GetCoreManager('logger');
 

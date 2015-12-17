@@ -1357,6 +1357,11 @@ class MailModule extends AApiModule
 		return $this->oApiMailManager->getQuota($this->getAccountFromParam());
 	}
 	
+	public function ValidateAccountConnection()
+	{
+		return $this->oApiMailManager->ValidateAccountConnection($this->getParamValue('Account'));
+	}
+	
 }
 
 return new MailModule('1.0');
