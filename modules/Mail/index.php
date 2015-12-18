@@ -1043,7 +1043,7 @@ class MailModule extends AApiModule
 		}
 
 		$oIdentity = null;
-		$oApiUsers = CApi::GetCoreGetManager('users');
+		$oApiUsers = CApi::GetCoreManager('users');
 		if ($oApiUsers && !empty($sIdIdentity) && is_numeric($sIdIdentity) && 0 < (int) $sIdIdentity)
 		{
 			$oIdentity = $oApiUsers->getIdentity((int) $sIdIdentity);
