@@ -13,7 +13,8 @@ class DavModule extends AApiModule
 	
 	public function EntryDav()
 	{
-		set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
+		set_error_handler(function ($errno, $errstr, $errfile, $errline ) 
+		{
 			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 		});
 
@@ -27,8 +28,7 @@ class DavModule extends AApiModule
 			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
 		}
 		
-		$oServer = \afterlogic\DAV\Server::NewInstance($sBaseUri);
-		$oServer->exec();
+		\afterlogic\DAV\Server::NewInstance($sBaseUri)->exec();
 		return '';
 	}	
 	
@@ -111,6 +111,10 @@ class DavModule extends AApiModule
 		return $this->oApiDavManager->getVCardObject($sData);
 	}	
 	
+	public function GetPublicUser()
+	{
+		return \afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
+	}
 }
 
 return new DavModule('1.0');

@@ -175,7 +175,7 @@ class Service
 			
 			$mResult = $this->oModuleManager->RunEntry($sEntryPart);
 			
-			if (!$mResult)
+			if ($mResult === false)
 			{
 				@ob_start();
 				\CApi::Plugin()->RunServiceHandle($sEntryPart, $aPaths);

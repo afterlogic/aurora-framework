@@ -865,8 +865,7 @@ class MailModule extends AApiModule
 			if (0 < strlen($sFromEmail))
 			{
 				$oApiUsersManager = /* @var CApiUsersManager */ CApi::GetCoreManager('users');
-				$oSettings =& CApi::GetSettings();
-				$bAlwaysShowImagesInMessage = !!$oSettings->GetConf('WebMail/AlwaysShowImagesInMessage');
+				$bAlwaysShowImagesInMessage = !!\CApi::GetSettingsConf('WebMail/AlwaysShowImagesInMessage');
 				$oMessage->setSafety($bAlwaysShowImagesInMessage ? true : 
 						$oApiUsersManager->getSafetySender($oAccount->IdUser, $sFromEmail, true));
 			}
@@ -1044,8 +1043,8 @@ class MailModule extends AApiModule
 		}
 
 		$oIdentity = null;
-		$oApiUsers = $this->GetManager('users');
-		if (!empty($sIdIdentity) && is_numeric($sIdIdentity) && 0 < (int) $sIdIdentity)
+		$oApiUsers = CApi::GetCoreGetManager('users');
+		if ($oApiUsers && !empty($sIdIdentity) && is_numeric($sIdIdentity) && 0 < (int) $sIdIdentity)
 		{
 			$oIdentity = $oApiUsers->getIdentity((int) $sIdIdentity);
 		}

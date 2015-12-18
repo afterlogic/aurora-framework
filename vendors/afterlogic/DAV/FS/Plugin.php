@@ -19,11 +19,6 @@ class Plugin extends \Sabre\DAV\ServerPlugin {
     protected $oAccount = null;
 	
 	/**
-	 * @var \CApiFilestorageManager
-	 */
-    protected $oApiFilestorage = null;
-	
-	/**
 	 * @var \CApiTenantsManager
 	 */
 	protected $oApiTenants = null;	
@@ -44,15 +39,6 @@ class Plugin extends \Sabre\DAV\ServerPlugin {
 	protected $sNewPath = null;
 	protected $sNewID = null;
 
-	public function getFilestorageMan()
-	{
-		if ($this->oApiFilestorage == null)
-		{
-			$this->oApiFilestorage = \CApi::Manager('filestorage', 'sabredav');
-		}
-		return $this->oApiFilestorage;
-	}
-	
 	public function getTenantsMan()
 	{
 		if ($this->oApiTenants === null)

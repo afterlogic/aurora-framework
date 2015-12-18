@@ -73,8 +73,7 @@ class Utils
 
 	public static function GetAccountByLogin($sUserName)
 	{
-		$oUsersManager = self::getUsersManager();
-		return $oUsersManager->getAccountByEmail($sUserName);
+		return self::getUsersManager()->getAccountByEmail($sUserName);
 	}	
 
 	public static function CheckPrincipals($sUserName)

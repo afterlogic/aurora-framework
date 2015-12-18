@@ -303,9 +303,7 @@ class CApiCapabilityManager extends AApiManager
 
 		if ($bResult)
 		{
-			$oSettings = null;
-			$oSettings =& CApi::GetSettings();
-			$bResult = $oSettings && $oSettings->GetConf('Common/EnableMobileSync');
+			$bResult = \CApi::GetSettingsConf('Common/EnableMobileSync');
 		}
 			
 		if ($bResult && $oAccount)

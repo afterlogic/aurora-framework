@@ -57,12 +57,9 @@ class Basic extends \Sabre\DAV\Auth\Backend\AbstractBasic
 					\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
 				}
 
-				/* @var $oApiCalendarManager \CApiCalendarManager */
-				$oApiCalendarManager = \CApi::Manager('calendar');
-
 				if (($oAccount && $oAccount->IncomingMailPassword === $sPassword &&
 						(($bIsMobileSync && !$bIsOutlookSyncClient) || ($bIsOutlookSync && $bIsOutlookSyncClient))) ||
-					$bIsDemo || ($oApiCalendarManager && $sUserName === $oApiCalendarManager->getPublicUser())
+					$bIsDemo || ($sUserName === \CApi::ExecuteMethod('Dav::GetPublicUser'))
 				)
 				{
 					\afterlogic\DAV\Utils::CheckPrincipals($sUserName);

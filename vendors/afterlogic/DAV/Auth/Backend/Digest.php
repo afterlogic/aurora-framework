@@ -24,13 +24,10 @@ class Digest extends \Sabre\DAV\Auth\Backend\AbstractDigest
 	{
 		if (class_exists('CApi') && \CApi::IsValid())
 		{
-			/* @var $oApiCalendarManager \CApiCalendarManager */
-			$oApiCalendarManager = \CApi::Manager('calendar');
-
 			/* @var $oApiCapabilityManager \CApiCapabilityManager */
 			$oApiCapabilityManager = \CApi::GetCoreManager('capability');
 
-			if ($oApiCalendarManager && $oApiCapabilityManager)
+			if ($oApiCapabilityManager)
 			{
 				$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
 				if ($oAccount && $oAccount->IsDisabled)
@@ -51,11 +48,9 @@ class Digest extends \Sabre\DAV\Auth\Backend\AbstractDigest
 					
 					\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
 				}
-
+				
 				if (($oAccount && (($bIsMobileSync && !$bIsOutlookSyncClient) || ($bIsOutlookSync && $bIsOutlookSyncClient))) ||
-					$bIsDemo ||
-					$sUserName === $oApiCalendarManager->getPublicUser()
-				)
+					$bIsDemo || ($oApiCalendarManager && $sUserName === \CApi::ExecuteMethod('Dav::GetPublicUser')))
 				{
 					\afterlogic\DAV\Utils::CheckPrincipals($sUserName);
 					

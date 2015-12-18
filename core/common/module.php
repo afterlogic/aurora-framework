@@ -19,6 +19,11 @@ class CApiModuleManager
 	{
 	}
 	
+	public static function createInstance()
+	{
+		return new self();
+	}
+	
 	public function init()
 	{
 		$sModulesPath = $this->GetModulesPath();
@@ -149,7 +154,11 @@ class CApiModuleManager
 		}
 			
 		$oResult = $this->GetModule($sModule);
-		if (!$oResult)
+		if ($oResult && !$oResult->HasEntry($sEntryName))
+		{
+			$oResult = false;
+		}
+		if ($oResult === false)
 		{
 			foreach ($this->_aModules as $oModule)
 			{

@@ -169,7 +169,7 @@ class Server extends \Sabre\DAV\Server
 			}
 
 			/* Locks Plugin */
-//			$this->addPlugin(new \Sabre\DAV\Locks\Plugin(new \Sabre\DAV\Locks\Backend\File(\CApi::DataPath() . '/locks.dat')));
+			$this->addPlugin(new \Sabre\DAV\Locks\Plugin(new \Sabre\DAV\Locks\Backend\File(\CApi::DataPath() . '/locks.dat')));
 
 			$this->subscribeEvent('beforeGetProperties', array($this, 'beforeGetProperties'), 90);
 		}
@@ -180,7 +180,6 @@ class Server extends \Sabre\DAV\Server
 		if (null === $this->oAccount)
 		{
 			$sUser = \afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
-
 			if (!empty($sUser))
 			{
 				$this->oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUser);

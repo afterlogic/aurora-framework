@@ -133,9 +133,8 @@ class CApi
 			CApi::$oManager = new CApiGlobalManager();
 			CApi::$oPlugin = new CApiPluginManager(CApi::$oManager);
 			CApi::$bIsValid = CApi::validateApi();
-			CApi::$oModuleManager = new CApiModuleManager();
+			CApi::$oModuleManager = CApiModuleManager::createInstance();
 			CApi::$oModuleManager->init();
-
 			CApi::$oManager->PrepareStorageMap();
 
 			require_once CApi::LibrariesPath().'afterlogic/DAV/autoload.php';
@@ -213,6 +212,12 @@ class CApi
 
 	public static function GetModuleManager()
 	{
+		if (!isset(CApi::$oModuleManager))
+		{
+			CApi::$oModuleManager = CApiModuleManager::createInstance();
+			CApi::$oModuleManager->init();
+		}
+		
 		return CApi::$oModuleManager;
 	}
 	
@@ -224,7 +229,7 @@ class CApi
 		return CApi::$oManager;
 	}
 
-	public static function ExecuteMethod($sMethod, $aParameters)
+	public static function ExecuteMethod($sMethod, $aParameters = array())
 	{
 		list($sModuleName, $sMethod) = explode('::', $sMethod);
 		return CApi::GetModuleManager()->ExecuteMethod($sModuleName, $sMethod, $aParameters);

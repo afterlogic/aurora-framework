@@ -222,8 +222,6 @@ class CoreModule extends AApiModule
 	
 	public function EntryAutodiscover()
 	{
-		$oSettings =& \CApi::GetSettings();
-
 		$sInput = \file_get_contents('php://input');
 
 		\CApi::Log('#autodiscover:');
@@ -235,8 +233,8 @@ class CoreModule extends AApiModule
 		\preg_match("/\<EMailAddress\>(.*?)\<\/EMailAddress\>/", $sInput, $aEmailAddress);
 		if (!empty($aMatches[1]) && !empty($aEmailAddress[1]))
 		{
-			$sIncMailServer = trim($oSettings->GetConf('WebMail/ExternalHostNameOfLocalImap'));
-			$sOutMailServer = trim($oSettings->GetConf('WebMail/ExternalHostNameOfLocalSmtp'));
+			$sIncMailServer = trim(\CApi::GetSettingsConf('WebMail/ExternalHostNameOfLocalImap'));
+			$sOutMailServer = trim(\CApi::GetSettingsConf('WebMail/ExternalHostNameOfLocalSmtp'));
 
 			if (0 < \strlen($sIncMailServer) && 0 < \strlen($sOutMailServer))
 			{
@@ -316,15 +314,14 @@ class CoreModule extends AApiModule
 	{
 		if (\CApi::GetConf('labs.allow-post-login', false))
 		{
-			$oSettings =& \CApi::GetSettings();
 			$oApiIntegrator = \CApi::GetCoreManager('integrator');
 					
 			$sEmail = trim((string) $this->oHttp->GetRequest('Email', ''));
 			$sLogin = (string) $this->oHttp->GetRequest('Login', '');
 			$sPassword = (string) $this->oHttp->GetRequest('Password', '');
 
-			$sAtDomain = trim($oSettings->GetConf('WebMail/LoginAtDomainValue'));
-			if (\ELoginFormType::Login === (int) $oSettings->GetConf('WebMail/LoginFormType') && 0 < strlen($sAtDomain))
+			$sAtDomain = trim(\CApi::GetSettingsConf('WebMail/LoginAtDomainValue'));
+			if (\ELoginFormType::Login === (int) \CApi::GetSettingsConf('WebMail/LoginFormType') && 0 < strlen($sAtDomain))
 			{
 				$sEmail = \api_Utils::GetAccountNameFromEmail($sLogin).'@'.$sAtDomain;
 				$sLogin = $sEmail;
@@ -453,7 +450,7 @@ class CoreModule extends AApiModule
 //							? api_Utils::GetAccountNameFromEmail($sEmail) : $sEmail);
 										
 					$oAccountToCreate->IncomingMailLogin = (isset($aExtValues['Login']) ? $aExtValues['Login'] : $sEmail);
-					if ($this->oSettings->GetConf('WebMail/UseLoginWithoutDomain'))
+					if (\CApi::GetSettingsConf('WebMail/UseLoginWithoutDomain'))
 					{
 						$oAccountToCreate->IncomingMailLogin = api_Utils::GetAccountNameFromEmail($oAccountToCreate->IncomingMailLogin);
 					}

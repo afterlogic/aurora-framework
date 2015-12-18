@@ -69,14 +69,13 @@ class AuthModule extends AApiModule
 			throw $oException;
 		}
 
-		$oSettings =& \CApi::GetSettings();
-		$sAtDomain = trim($oSettings->GetConf('WebMail/LoginAtDomainValue'));
-		if ((\ELoginFormType::Email === (int) $oSettings->GetConf('WebMail/LoginFormType') || \ELoginFormType::Both === (int) $oSettings->GetConf('WebMail/LoginFormType')) && 0 === strlen($sAtDomain) && 0 < strlen($sEmail) && !\MailSo\Base\Validator::EmailString($sEmail))
+		$sAtDomain = trim(\CApi::GetSettingsConf('WebMail/LoginAtDomainValue'));
+		if ((\ELoginFormType::Email === (int) \CApi::GetSettingsConf('WebMail/LoginFormType') || \ELoginFormType::Both === (int) \CApi::GetSettingsConf('WebMail/LoginFormType')) && 0 === strlen($sAtDomain) && 0 < strlen($sEmail) && !\MailSo\Base\Validator::EmailString($sEmail))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 		}
 
-		if (\ELoginFormType::Login === (int) $oSettings->GetConf('WebMail/LoginFormType') && 0 < strlen($sAtDomain))
+		if (\ELoginFormType::Login === (int) \CApi::GetSettingsConf('WebMail/LoginFormType') && 0 < strlen($sAtDomain))
 		{
 			$sEmail = \api_Utils::GetAccountNameFromEmail($sIncLogin).'@'.$sAtDomain;
 			$sIncLogin = $sEmail;
