@@ -4,9 +4,10 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	App = require('core/js/App.js'),
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
+	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js'),
 	CJua = require('core/js/CJua.js')
@@ -82,6 +83,7 @@ CImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceiv
 
 		if (0 < iImportedCount)
 		{
+			Utils.log('CImportView', TextUtils.i18n('CONTACTS/CONTACT_IMPORT_HINT_PLURAL'));
 			Screens.showReport(TextUtils.i18n('CONTACTS/CONTACT_IMPORT_HINT_PLURAL', {
 				'NUM': iImportedCount
 			}, null, iImportedCount));

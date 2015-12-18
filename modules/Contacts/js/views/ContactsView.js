@@ -5,8 +5,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
@@ -1250,8 +1251,10 @@ CContactsView.prototype.onCreateContactResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
-		Screens.showReport(oResponse.Method === 'CreateContact' ?
-			TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED') : TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_UPDATED'));
+		var sReport = oResponse.Method === 'CreateContact' ?
+			TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED') : TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_UPDATED');
+		Utils.log('CContactsView', sReport);
+		Screens.showReport(sReport);
 			
 		this.requestContactList();
 	}
@@ -1382,6 +1385,7 @@ CContactsView.prototype.onCreateGroupResponse = function (oResponse, oRequest)
 			this.selector.itemSelected(null);
 		}
 
+		Utils.log('CContactsView', TextUtils.i18n('CONTACTS/REPORT_GROUP_SUCCESSFULLY_ADDED'));
 		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_GROUP_SUCCESSFULLY_ADDED'));
 
 		this.requestContactList();

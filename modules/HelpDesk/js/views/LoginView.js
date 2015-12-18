@@ -5,8 +5,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	Ajax = require('modules/HelpDesk/js/Ajax.js'),
@@ -142,6 +143,7 @@ CLoginView.prototype.onShow = function ()
 	
 	if (sReportText)
 	{
+		Utils.log('CLoginView', sReportText);
 		Screens.showReport(sReportText);
 		
 		Storage.removeData('ReportText');
@@ -319,6 +321,7 @@ CLoginView.prototype.onHelpdeskRegisterResponse = function (oResponse, oRequest)
 	}
 	else
 	{
+		Utils.log('CLoginView', TextUtils.i18n('HELPDESK/ACTIVATION_DESCRIPTION'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/ACTIVATION_DESCRIPTION', {
 			'EMAIL': this.regEmail()
 		}));
@@ -403,6 +406,7 @@ CLoginView.prototype.onHelpdeskForgotResponse = function (oResponse, oRequest)
 	}
 	else
 	{
+		Utils.log('CLoginView', TextUtils.i18n('HELPDESK/INFO_FORGOT_SUCCESSFULL'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/INFO_FORGOT_SUCCESSFULL'));
 
 		this.email(this.forgotEmail());

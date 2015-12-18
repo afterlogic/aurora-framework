@@ -6,6 +6,8 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
@@ -111,6 +113,7 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 	}
 	else
 	{
+		Utils.log('CCreateContactPopup', TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
 		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
 		ContactsCache.clearInfoAboutEmail(oParameters.HomeEmail);
 		ContactsCache.getContactsByEmails([oParameters.HomeEmail], this.fCallback);

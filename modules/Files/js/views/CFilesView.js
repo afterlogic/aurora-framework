@@ -427,6 +427,7 @@ CFilesView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceive
 				this.files.push(oFile);
 				if (this.uploadingFiles().length === 0)
 				{
+					Utils.log('CFilesView', TextUtils.i18n('COMPOSE/UPLOAD_COMPLETE'));
 					Screens.showReport(TextUtils.i18n('COMPOSE/UPLOAD_COMPLETE'));
 				}
 			}
@@ -457,6 +458,7 @@ CFilesView.prototype.onDrop = function (oFile, oEvent)
 	}
 	else
 	{
+		Utils.log('CFilesView', TextUtils.i18n('FILESTORAGE/INFO_CANNOT_UPLOAD_SEARCH_RESULT'));
 		Screens.showReport(TextUtils.i18n('FILESTORAGE/INFO_CANNOT_UPLOAD_SEARCH_RESULT'));
 	}
 };

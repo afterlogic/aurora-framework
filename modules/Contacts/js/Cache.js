@@ -144,9 +144,7 @@ CContactsCache.prototype.getVcard = function (sFile)
  */
 CContactsCache.prototype.markVcardsExistentByFile = function (sFile)
 {
-	console.log('sFile', sFile);
 	_.each(this.aVcardAttachments, function (oVcard) {
-		console.log('oVcard.file()', oVcard.file());
 		if (oVcard.file() === sFile)
 		{
 			oVcard.exists(true);

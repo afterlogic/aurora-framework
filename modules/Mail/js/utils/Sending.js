@@ -259,6 +259,7 @@ SendingUtils.onSendOrSaveMessageResponse = function (oResponse, oRequest, bRequi
 			{
 				if (oRequest.ShowReport && !bRequiresPostponedSending)
 				{
+					Utils.log('SendingUtils', TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SAVED'));
 					Screens.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SAVED'));
 				}
 
@@ -281,16 +282,19 @@ SendingUtils.onSendOrSaveMessageResponse = function (oResponse, oRequest, bRequi
 				}
 				else if (oRequest.IsQuickReply)
 				{
+					Utils.log('SendingUtils', TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
 					Screens.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
 				}
 				else
 				{
 					if (BaseTab)
 					{
+						Utils.log('SendingUtils', TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
 						BaseTab.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
 					}
 					else
 					{
+						Utils.log('SendingUtils', TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
 						Screens.showReport(TextUtils.i18n('COMPOSE/REPORT_MESSAGE_SENT'));
 					}
 				}
