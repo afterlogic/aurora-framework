@@ -1736,6 +1736,7 @@ CCalendarView.prototype.resizeEvent = function (oEventData, delta, revertFunc)
 CCalendarView.prototype.deleteEvent = function (oEventData)
 {
 	this.eventAction('DeleteEvent', this.getParamsFromEventData(oEventData));
+	CalendarCache.markIcalNotSaved(oEventData.uid);
 };
 
 /**

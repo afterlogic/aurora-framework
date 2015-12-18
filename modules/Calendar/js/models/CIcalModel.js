@@ -11,7 +11,7 @@ var
 	
 	Ajax = require('modules/Calendar/js/Ajax.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	HeaderItemView = App.isNewTab() ? require('modules/Calendar/js/views/HeaderItemView.js') : null,
+	HeaderItemView = (!App.isNewTab() && !App.isMobile()) ? require('modules/Calendar/js/views/HeaderItemView.js') : null,
 	
 	BaseTab = App.isNewTab() && window.opener ? window.opener.BaseTabCalendarMethods : null
 ;
@@ -233,6 +233,12 @@ CIcalModel.prototype.markNeededAction = function ()
 	this.calendarId('');
 	this.selectedCalendarId('');
 	this.changeConfig(Enums.IcalConfig.NeedsAction);
+};
+
+CIcalModel.prototype.markNotSaved = function ()
+{
+	this.calendarId('');
+	this.selectedCalendarId('');
 };
 
 CIcalModel.prototype.markTentative = function ()

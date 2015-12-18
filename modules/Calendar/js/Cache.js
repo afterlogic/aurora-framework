@@ -52,6 +52,16 @@ CCalendarCache.prototype.addIcal = function (oIcal)
 };
 
 /**
+ * @param {string} sFile
+ */
+CCalendarCache.prototype.getIcal = function (sFile)
+{
+	return _.find(this.icalAttachments, function (oIcal) {
+		return (sFile === oIcal.file());
+	});
+};
+
+/**
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
@@ -117,6 +127,19 @@ CCalendarCache.prototype.markIcalNonexistent = function (sUid)
 		if (sUid === oIcal.uid())
 		{
 			oIcal.markNeededAction();
+		}
+	});
+};
+
+/**
+ * @param {string} sUid
+ */
+CCalendarCache.prototype.markIcalNotSaved = function (sUid)
+{
+	_.each(this.icalAttachments, function (oIcal) {
+		if (sUid === oIcal.uid())
+		{
+			oIcal.markNotSaved();
 		}
 	});
 };

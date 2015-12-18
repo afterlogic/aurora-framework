@@ -7,6 +7,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
 	
+	CalendarCache = require('modules/Calendar/js/Cache.js'),
 	CIcalModel = require('modules/Calendar/js/models/CIcalModel.js')
 ;
 
@@ -35,12 +36,18 @@ CIcalAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps
 			return oRawIcal['@Object'] === 'Object/CApiMailIcs';
 		})
 	;
+	
 	if (oFoundRawIcal)
 	{
 		var
 			sAttendee = App.getAttendee(oMessageProps.aToEmails),
-			oIcal = new CIcalModel(oFoundRawIcal, sAttendee)
+			oIcal = CalendarCache.getIcal(oFoundRawIcal.File)
 		;
+		
+		if (!oIcal)
+		{
+			oIcal = new CIcalModel(oFoundRawIcal, sAttendee);
+		}
 		
 		// animation of buttons turns on with delay
 		// so it does not trigger when placing initial values
