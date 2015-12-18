@@ -3,8 +3,9 @@
 var
 	_ = require('underscore'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
 	Api = require('core/js/Api.js'),
@@ -41,11 +42,11 @@ SendingUtils.setReplyData = function (sText, sDraftUid)
  * @param {string} sMethod
  * @param {Object} oParameters
  * @param {boolean} bShowLoading
- * @param {Function} fMessageSendResponseHandler
- * @param {Object} oMessageSendResponseContext
+ * @param {Function} fSendMessageResponseHandler
+ * @param {Object} oSendMessageResponseContext
  * @param {boolean=} bPostponedSending = false
  */
-SendingUtils.send = function (sMethod, oParameters, bShowLoading, fMessageSendResponseHandler, oMessageSendResponseContext, bPostponedSending)
+SendingUtils.send = function (sMethod, oParameters, bShowLoading, fSendMessageResponseHandler, oSendMessageResponseContext, bPostponedSending)
 {
 	var
 		iAccountID = oParameters.AccountID,
@@ -112,13 +113,13 @@ SendingUtils.send = function (sMethod, oParameters, bShowLoading, fMessageSendRe
 	{
 		this.postponedMailData = {
 			'Parameters': oParameters,
-			'MessageSendResponseHandler': fMessageSendResponseHandler,
-			'MessageSendResponseContext': oMessageSendResponseContext
+			'SendMessageResponseHandler': fSendMessageResponseHandler,
+			'SendMessageResponseContext': oSendMessageResponseContext
 		};
 	}
 	else
 	{
-		Ajax.send(sMethod, oParameters, fMessageSendResponseHandler, oMessageSendResponseContext);
+		Ajax.send(sMethod, oParameters, fSendMessageResponseHandler, oSendMessageResponseContext);
 	}
 };
 
@@ -153,7 +154,7 @@ SendingUtils.sendPostponedMail = function (sDraftUid)
 	
 	if (this.postponedMailData)
 	{
-		Ajax.send(oParameters.Method, oParameters, oData.MessageSendResponseHandler, oData.MessageSendResponseContext);
+		Ajax.send(oParameters.Method, oParameters, oData.SendMessageResponseHandler, oData.SendMessageResponseContext);
 		this.postponedMailData = null;
 	}
 };
@@ -162,12 +163,12 @@ SendingUtils.sendPostponedMail = function (sDraftUid)
  * @param {string} sMethod
  * @param {string} sText
  * @param {string} sDraftUid
- * @param {Function} fMessageSendResponseHandler
- * @param {Object} oMessageSendResponseContext
+ * @param {Function} fSendMessageResponseHandler
+ * @param {Object} oSendMessageResponseContext
  * @param {boolean} bRequiresPostponedSending
  */
-SendingUtils.sendReplyMessage = function (sMethod, sText, sDraftUid, fMessageSendResponseHandler, 
-														oMessageSendResponseContext, bRequiresPostponedSending)
+SendingUtils.sendReplyMessage = function (sMethod, sText, sDraftUid, fSendMessageResponseHandler, 
+														oSendMessageResponseContext, bRequiresPostponedSending)
 {
 	var
 		oParameters = null,
@@ -199,7 +200,7 @@ SendingUtils.sendReplyMessage = function (sMethod, sText, sDraftUid, fMessageSen
 
 		oParameters.Attachments = this.convertAttachmentsForSending(oParameters.Attachments);
 
-		this.send(sMethod, oParameters, false, fMessageSendResponseHandler, oMessageSendResponseContext, bRequiresPostponedSending);
+		this.send(sMethod, oParameters, false, fSendMessageResponseHandler, oSendMessageResponseContext, bRequiresPostponedSending);
 	}
 };
 
@@ -232,7 +233,7 @@ SendingUtils.convertAttachmentsForSending = function (aAttachments)
  * 
  * @return {Object}
  */
-SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequiresPostponedSending)
+SendingUtils.onSendOrSaveMessageResponse = function (oResponse, oRequest, bRequiresPostponedSending)
 {
 	var
 		bResult = !!oResponse.Result,
@@ -267,7 +268,7 @@ SendingUtils.onMessageSendOrSaveResponse = function (oResponse, oRequest, bRequi
 				}
 			}
 			break;
-		case 'MessageSend':
+		case 'SendMessage':
 			if (!bResult && oResponse.ErrorCode !== Enums.Errors.NotSavedInSentItems)
 			{
 				Api.showErrorByCode(oResponse, TextUtils.i18n('COMPOSE/ERROR_MESSAGE_SENDING'));

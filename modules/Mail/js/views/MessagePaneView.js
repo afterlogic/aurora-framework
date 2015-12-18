@@ -870,9 +870,9 @@ CMessagePaneView.prototype.changeAddMenuVisibility = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CMessagePaneView.prototype.onMessageSendOrSaveResponse = function (oResponse, oRequest)
+CMessagePaneView.prototype.onSendOrSaveMessageResponse = function (oResponse, oRequest)
 {
-	var oResData = SendingUtils.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending());
+	var oResData = SendingUtils.onSendOrSaveMessageResponse(oResponse, oRequest, this.requiresPostponedSending());
 	switch (oResData.Method)
 	{
 		case 'SendMessage':
@@ -900,7 +900,7 @@ CMessagePaneView.prototype.executeSendQuickReply = function ()
 		this.replySendingStarted(true);
 		this.requiresPostponedSending(this.replyAutoSavingStarted());
 		SendingUtils.sendReplyMessage('SendMessage', this.getReplyHtmlText(), this.replyDraftUid(), 
-			this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
+			this.onSendOrSaveMessageResponse, this, this.requiresPostponedSending());
 
 		this.replyTextFocus(false);
 	}
@@ -927,7 +927,7 @@ CMessagePaneView.prototype.saveReplyMessage = function (bAutosave)
 			this.replySavingStarted(true);
 		}
 		SendingUtils.sendReplyMessage('SaveMessage', this.getReplyHtmlText(), this.replyDraftUid(), 
-			this.onMessageSendOrSaveResponse, this);
+			this.onSendOrSaveMessageResponse, this);
 	}
 };
 

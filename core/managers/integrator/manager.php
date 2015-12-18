@@ -2067,7 +2067,6 @@ class CApiIntegratorManager extends AApiManager
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 
 		return '<div class="pSevenMain">
-	<div id="pSevenLoading"></div>
 	<div id="pSevenContent">
 		<div class="screens"></div>
 		<div class="popups"></div>

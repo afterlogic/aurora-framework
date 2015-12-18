@@ -1,7 +1,7 @@
 'use strict';
 
 var
-	Api = require('core/js/Api.js'),
+	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
@@ -14,7 +14,7 @@ var
 
 var BaseTabMethods = {
 	showReport: function (sText) {
-		Api.showReport(sText);
+		Screens.showReport(sText);
 	},
 	
 	getFolderListItems: function () {
@@ -23,7 +23,6 @@ var BaseTabMethods = {
 	getUidList: function () {
 		return MailCache.uidList;
 	},
-	getAccounts: function () {},
 	prefetchNextPage: function (sCurrentUid) {
 		Prefetcher.prefetchNextPage(sCurrentUid);
 	},

@@ -9,6 +9,7 @@ var
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -1505,10 +1506,10 @@ CComposeView.prototype.getSendSaveParameters = function (bRemoveSignatureAnchor)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CComposeView.prototype.onMessageSendOrSaveResponse = function (oResponse, oRequest)
+CComposeView.prototype.onSendOrSaveMessageResponse = function (oResponse, oRequest)
 {
 	var
-		oResData = SendingUtils.onMessageSendOrSaveResponse(oResponse, oRequest, this.requiresPostponedSending()),
+		oResData = SendingUtils.onSendOrSaveMessageResponse(oResponse, oRequest, this.requiresPostponedSending()),
 		oParameters = JSON.parse(oRequest.Parameters)
 	;
 
@@ -1577,8 +1578,8 @@ CComposeView.prototype.executeSend = function (mParam)
 		fContinueSending = _.bind(function () {
 			this.sending(true);
 			this.requiresPostponedSending(!this.allowStartSending());
-
-			SendingUtils.send('SendMessage', this.getSendSaveParameters(true), true, this.onMessageSendOrSaveResponse, this, this.requiresPostponedSending());
+			
+			SendingUtils.send('SendMessage', this.getSendSaveParameters(true), true, this.onSendOrSaveMessageResponse, this, this.requiresPostponedSending());
 			
 			this.backToListOnSendOrSave(true);
 		}, this)
@@ -1620,13 +1621,13 @@ CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 	}
 
 	var
-		fOnMessageSaveResponse = bWaitResponse ? this.onMessageSendOrSaveResponse : SendingUtils.onMessageSendOrSaveResponse,
+		fOnSaveMessageResponse = bWaitResponse ? this.onSendOrSaveMessageResponse : SendingUtils.onSendOrSaveMessageResponse,
 		oContext = bWaitResponse ? this : SendingUtils,
 		fSave = _.bind(function (bSave) {
 			if (bSave)
 			{
 				this.saving(bWaitResponse);
-				SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), !bAutosave, fOnMessageSaveResponse, oContext);
+				SendingUtils.send('SaveMessage', this.getSendSaveParameters(false), !bAutosave, fOnSaveMessageResponse, oContext);
 			}
 		}, this),
 		bCancelSaving = false
