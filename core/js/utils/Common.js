@@ -4,8 +4,9 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
+	moment = require('moment'),
 	
-	Settings = require('core/js/Settings.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Utils = {}
 ;
@@ -245,7 +246,7 @@ Utils.desktopNotify = (function ()
 	return function (oData) {
 		var AppTab = require('core/js/AppTab.js');
 		
-		if (oData && Settings.DesktopNotifications && window.Notification && !AppTab.focused())
+		if (oData && UserSettings.DesktopNotifications && window.Notification && !AppTab.focused())
 		{
 			switch (oData.action)
 			{
@@ -529,5 +530,60 @@ Utils.getDateFormatForMoment = function (sDateFormat)
 	
 	return sMomentDateFormat;
 };
+
+Utils.log = (function () {
+
+	var
+		$log = null,
+		aLog = []
+	;
+
+	return function () {
+		var
+			TextUtils = require('core/js/utils/Text.js'),
+			Browser = require('core/js/Browser.js'),
+			aNewRow = []
+		;
+		
+		if (!UserSettings.ClientDebug || Browser.ie9AndBelow)
+		{
+			return;
+		}
+
+		function fCensor(mKey, mValue) {
+			if (typeof(mValue) === 'string' && mValue.length > 50)
+			{
+				return mValue.substring(0, 50);
+			}
+
+			return mValue;
+		}
+
+		if (!$log)
+		{
+			$log = $('<div style="display: none;"></div>').appendTo('body');
+		}
+		
+		_.each(arguments, function (mArg) {
+			var sRowPart = typeof(mArg) === 'string' ? mArg : JSON.stringify(mArg, fCensor);
+			if (aNewRow.length === 0)
+			{
+				sRowPart = ' *** ' + sRowPart + ' *** ';
+			}
+			aNewRow.push(sRowPart);
+		});
+
+		aNewRow.push(moment().format(' *** D MMMM, YYYY, HH:mm:ss *** '));
+
+		if (aLog.length > 200)
+		{
+			aLog.shift();
+		}
+
+		aLog.push(TextUtils.encodeHtml(aNewRow.join(', ')));
+
+		$log.html(aLog.join('<br /><br />'));
+	};
+}());
 
 module.exports = Utils;

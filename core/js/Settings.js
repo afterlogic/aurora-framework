@@ -132,5 +132,6 @@ module.exports = {
 	AutoRefreshIntervalMinutes: 1,
 	AllowMobile: AppData.AllowMobile,
 	IsMobile: AppData.IsMobile,
-	AttachmentSizeLimit: 0
+	AttachmentSizeLimit: 0,
+	ClientDebug: true
 };

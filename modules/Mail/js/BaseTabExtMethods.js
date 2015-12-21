@@ -14,6 +14,7 @@ var
 
 var BaseTabMethods = {
 	showReport: function (sText) {
+		Utils.log('BaseTabMethods', sText);
 		Screens.showReport(sText);
 	},
 	

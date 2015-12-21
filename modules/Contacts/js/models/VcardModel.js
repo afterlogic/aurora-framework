@@ -66,8 +66,6 @@ CVcardModel.prototype.addContact = function ()
 		this.isJustSaved(false);
 	}, this), 20000);
 	
-	console.log('HeaderItemView', HeaderItemView);
-	console.log('BaseTab', BaseTab);
 	if (HeaderItemView)
 	{
 		HeaderItemView.recivedAnim(true);

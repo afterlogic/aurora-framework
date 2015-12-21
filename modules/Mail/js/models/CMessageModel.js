@@ -732,6 +732,7 @@ CMessageModel.prototype.onSaveAttachmentsToFilesResponse = function (oResponse, 
 	}
 	else
 	{
+		Utils.log('CMessageModel', TextUtils.i18n('MESSAGE/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
 		Screens.showReport(TextUtils.i18n('MESSAGE/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
 	}
 };

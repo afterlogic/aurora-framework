@@ -4,8 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Screens = require('core/js/Screens.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
@@ -124,6 +125,7 @@ CEncryptPopup.prototype.executeSignEncrypt = function ()
 			{
 				if (!this.signAndSend())
 				{
+					Utils.log('CEncryptPopup', sOkReport);
 					Screens.showReport(sOkReport);
 				}
 				this.okCallback(oRes.result, this.encrypt());

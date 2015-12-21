@@ -4,8 +4,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	Ajax = require('core/js/Ajax.js')
@@ -198,6 +199,7 @@ CForgotView.prototype.onAccountChangeForgotPasswordResponse = function (oRespons
 	else
 	{
 		this.gotoForgot(false);
+		Utils.log('CForgotView', TextUtils.i18n('LOGIN/REPORT_PASSWORD_CHANGED'));
 		Screens.showReport(TextUtils.i18n('LOGIN/REPORT_PASSWORD_CHANGED'));
 	}
 };

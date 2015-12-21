@@ -5,9 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
@@ -482,6 +483,7 @@ CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 	else
 	{
 		this.posts.remove(this.postForDelete());
+		Utils.log('CHelpdeskView', TextUtils.i18n('HELPDESK/REPORT_POST_HAS_BEEN_DELETED'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_HAS_BEEN_DELETED'));
 	}
 
@@ -1144,6 +1146,7 @@ CHelpdeskView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result)
 	{
+		Utils.log('CHelpdeskView', TextUtils.i18n('HELPDESK/REPORT_THREAD_SUCCESSFULLY_CREATED'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_THREAD_SUCCESSFULLY_CREATED'));
 
 		if (oResponse.Result.ThreadIsNew)
@@ -1177,6 +1180,7 @@ CHelpdeskView.prototype.onCreatePostResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result)
 	{
+		Utils.log('CHelpdeskView', TextUtils.i18n('HELPDESK/REPORT_POST_SUCCESSFULLY_ADDED'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_SUCCESSFULLY_ADDED'));
 		this.cleanAll();
 		this.requestPosts();
