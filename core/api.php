@@ -60,7 +60,7 @@ class CApi
 
 	public static function Run()
 	{
-		include_once self::LibrariesPath().'MailSo/MailSo.php';
+		include_once self::LibrariesPath().'autoload.php';
 
 		CApi::$aI18N = null;
 		CApi::$aClientI18N = array();
@@ -136,8 +136,6 @@ class CApi
 			CApi::$oModuleManager = CApiModuleManager::createInstance();
 			CApi::$oModuleManager->init();
 			CApi::$oManager->PrepareStorageMap();
-
-			require_once CApi::LibrariesPath().'Afterlogic/DAV/autoload.php';
 		}
 	}
 
@@ -779,7 +777,7 @@ class CApi
 	 */
 	public static function LibrariesPath()
 	{
-		return CApi::RootPath().'../vendors/';
+		return CApi::RootPath().'../vendor/';
 	}
 
 	/**

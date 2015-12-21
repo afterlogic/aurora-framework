@@ -32,3 +32,4 @@
 /static/css/*.css
 /static/
 /build/
+/vendor/

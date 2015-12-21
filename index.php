@@ -32,14 +32,6 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 		$aClassesTree = array(
 			'core' => array(
 				'Core'
-			),
-			'vendors' => array(
-				'Symfony',
-				'Knp',
-				'PHPThumb',
-				'MailSo',
-				'Sabre',
-				'Afterlogic'
 			)
 		);
 		foreach ($aClassesTree as $sFolder => $aClasses)
