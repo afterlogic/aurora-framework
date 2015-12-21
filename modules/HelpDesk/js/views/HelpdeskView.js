@@ -339,7 +339,7 @@ function CHelpdeskView()
 		}, this);
 	}
 
-	this.simplePreviewPane = ko.computed(function () { //TODO on first load oItem is null therefore loaded the wrong template - Helpdesk_ViewThread
+	this.simplePreviewPane = ko.computed(function () { //TODO on first load oItem is null therefore loaded the wrong template - HelpDesk_ViewThread
 		var oItem = this.selectedItem();
 		return oItem ? oItem.ItsMe : !this.bAgent;
 	}, this);
@@ -362,7 +362,7 @@ function CHelpdeskView()
 
 _.extendOwn(CHelpdeskView.prototype, CAbstractScreenView.prototype);
 
-CHelpdeskView.prototype.ViewTemplate = 'Helpdesk_HelpdeskView';
+CHelpdeskView.prototype.ViewTemplate = 'HelpDesk_HelpdeskView';
 
 /**
  * @param {Object} koAddrDom
