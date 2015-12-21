@@ -113,38 +113,49 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$sResult = '';
-		$sT = 'templates/views';
-		$iL = strlen($sT) + 1;
+		$sPath = CApi::WebMailPath().'modules';
+		$aFolderItems = scandir($sPath);
 
-		$sDirName = CApi::WebMailPath().$sT;
-		$aList = $this->folderFiles($sDirName, '.html');
-
-		foreach ($aList as $sFileName)
+		foreach ($aFolderItems as $sItemName)
 		{
-			$sName = '';
-			$iPos = strpos($sFileName, $sT.'/');
-			if (false !== $iPos && 0 < $iPos)
+			if ($sItemName === '.' or $sItemName === '..')
 			{
-				$sName = substr($sFileName, $iPos + $iL);
+				continue;
 			}
-			else
+			
+			$sDirName = $sPath . '/' . $sItemName . '/templates';
+			$iDirNameLen = strlen($sDirName);
+			if (is_dir($sDirName))
 			{
-				$sName = '@errorName'.md5(rand(10000, 20000));
+				$aList = $this->folderFiles($sDirName, '.html');
+				foreach ($aList as $sFileName)
+				{
+					$sName = '';
+					$iPos = strpos($sFileName, $sDirName);
+					if ($iPos === 0)
+					{
+						$sName = substr($sFileName, $iDirNameLen + 1);
+					}
+					else
+					{
+						$sName = '@errorName'.md5(rand(10000, 20000));
+					}
+
+					$sTemplateID = $sItemName.'_'.preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
+					$sTemplateHtml = file_get_contents($sFileName);
+
+					$sTemplateHtml = CApi::Plugin()->ParseTemplate($sTemplateID, $sTemplateHtml);
+					$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
+
+					$sTemplateHtml = preg_replace('/<script([^>]*)>/', '&lt;script$1&gt;', $sTemplateHtml);
+					$sTemplateHtml = preg_replace('/<\/script>/', '&lt;/script&gt;', $sTemplateHtml);
+
+					$sResult .= '<script id="'.$sTemplateID.'" type="text/html">'.
+						preg_replace('/[\r\n\t]+/', ' ', $sTemplateHtml).'</script>';
+				}
 			}
-
-			$sTemplateID = preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
-			$sTemplateHtml = file_get_contents($sFileName);
-
-			$sTemplateHtml = CApi::Plugin()->ParseTemplate($sTemplateID, $sTemplateHtml);
-			$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
-
-			$sTemplateHtml = preg_replace('/<script([^>]*)>/', '&lt;script$1&gt;', $sTemplateHtml);
-			$sTemplateHtml = preg_replace('/<\/script>/', '&lt;/script&gt;', $sTemplateHtml);
-
-			$sResult .= '<script id="'.$sTemplateID.'" type="text/html">'.
-				preg_replace('/[\r\n\t]+/', ' ', $sTemplateHtml).'</script>';
 		}
-
+		
 		$aPluginsTemplates = CApi::Plugin()->GetPluginsTemplates();
 		foreach ($aPluginsTemplates as $aData)
 		{
