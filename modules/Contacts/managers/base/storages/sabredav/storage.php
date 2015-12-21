@@ -65,9 +65,9 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 			$this->ContactsCache = array();
 			$this->GroupsCache = array();
 
-			\afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
-			\afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
-			$aPrincipalProperties = \afterlogic\DAV\Backend::Principal()->getPrincipalByPath(\afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email);
+			\Afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
+			\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
+			$aPrincipalProperties = \Afterlogic\DAV\Backend::Principal()->getPrincipalByPath(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email);
 			if ($aPrincipalProperties)
 			{
 				if (isset($aPrincipalProperties['uri']))
@@ -114,7 +114,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	 * @param string $sAddressBookName
 	 * @return CContact | false
 	 */
-	public function getContactById($iUserId, $mContactId, $sAddressBookName = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME)
+	public function getContactById($iUserId, $mContactId, $sAddressBookName = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME)
 	{
 		$oContact = false;
 		if($this->init($iUserId))
@@ -189,7 +189,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		{
 			if($this->init($iUserId))
 			{
-				$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+				$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 				if ($oAddressBook)
 				{
 					if (!isset($this->aGroupItemsCache[$oAddressBook->getName()]))
@@ -239,8 +239,8 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		{
 			if (!isset($this->aAddressBooksCache[$iUserId][$sName]))
 			{
-				$oUserAddressBooks = new \afterlogic\DAV\CardDAV\UserAddressBooks(
-					\afterlogic\DAV\Backend::Carddav(), $this->Principal);
+				$oUserAddressBooks = new \Afterlogic\DAV\CardDAV\UserAddressBooks(
+					\Afterlogic\DAV\Backend::Carddav(), $this->Principal);
 
 				if ($oUserAddressBooks->childExists($sName))
 				{
@@ -259,7 +259,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 
 	/**
 	 * @param int $iUserId
-	 * @param \afterlogic\DAV\CardDAV\AddressBook $oAddressBook
+	 * @param \Afterlogic\DAV\CardDAV\AddressBook $oAddressBook
 	 * @return bool|array
 	 */
 	protected function getObjectItems($iUserId, $oAddressBook)
@@ -315,7 +315,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 
 	/**
 	 * @param int $iUserId
-	 * @param \afterlogic\DAV\CardDAV\AddressBook
+	 * @param \Afterlogic\DAV\CardDAV\AddressBook
 	 * @param string $sSearch
 	 * @param string $sFirstCharacter = ''
 	 * @param int $sGroupId
@@ -437,7 +437,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 
 	/**
 	 * @param int $iUserId
-	 * @param \afterlogic\DAV\CardDAV\AddressBook
+	 * @param \Afterlogic\DAV\CardDAV\AddressBook
 	 * @return bool|array
 	 */
 	protected function initGroupItems($iUserId, $oAddressBook)
@@ -536,7 +536,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	{
 		$aResult = array();
 
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		$aContactItems = $this->getObjectItems($iUserId, $oAddressBook);
 
 		foreach ($aContactItems as $oItem)
@@ -588,7 +588,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	 */
 	public function getContactItems($iUserId, $iSortField, $iSortOrder, $iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId = null, $bAll = false)
 	{
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		$aResult = $this->getItems($iUserId, $oAddressBook, $sSearch, $sFirstCharacter, $iGroupId);
 		$this->sortItems($aResult, $iSortField, $iSortOrder);
 
@@ -601,7 +601,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	 */
 	public function GetContactItemObjects($iUserId)
 	{
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		return $this->getObjectItems($iUserId, $oAddressBook);
 	}	
 
@@ -616,7 +616,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	public function getContactItemsCount($iUserId, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId = null, $bAll = false)
 	{
 		$iCount = 0;
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		if (false !== $oAddressBook)
 		{
 			$iCount = count($this->getItems($iUserId, $oAddressBook, $sSearch, $sFirstCharacter, $iGroupId));
@@ -658,7 +658,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		}
 		else
 		{
-			$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+			$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 			if (false !== $oAddressBook)
 			{
 				$sName = $oAddressBook->getName();
@@ -751,8 +751,8 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		$aResult = array();
 		$this->init($iUserId);
 
-		$oDefaultAB = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
-		$oCollectedAB = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
+		$oDefaultAB = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oCollectedAB = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
 
 		$aCollectedContactItems = $this->getObjectItems($iUserId, $oCollectedAB);
 		$aDefaultContactItems = $this->getObjectItems($iUserId, $oDefaultAB);
@@ -803,12 +803,12 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	{
 		$bResult = false;
 		
-		$sAddressBook = $oContact->SharedToAll ? \afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_NAME : \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+		$sAddressBook = $oContact->SharedToAll ? \Afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_NAME : \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
 		$oAddressBookFrom = $this->getAddressBook($oContact->IdUser, $sAddressBook);
 		$oContactItem = $this->geItem($oContact->IdUser, $oAddressBookFrom, $oContact->IdContactStr);
 		if ($oContactItem)
 		{
-			$oAddressBookTo = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+			$oAddressBookTo = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 			if ($oAddressBookTo)
 			{
 				try
@@ -836,7 +836,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	{
 		$bResult = false;
 		$iUserId = $oContact->IdUser;
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		$oContactItem = $this->geItem($iUserId, $oAddressBook, $oContact->IdContactStr);
 		if ($oContactItem)
 		{
@@ -885,7 +885,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		if (!empty($sGroupId))
 		{
 			// TODO sasha
-//			$oAddressBook = $this->getAddressBook($oGroup->IdUser, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+//			$oAddressBook = $this->getAddressBook($oGroup->IdUser, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 //
 //			if ($oAddressBook)
 //			{
@@ -974,7 +974,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		if (isset($oContact))
 		{
 			$this->init($oContact->IdUser);
-			$oAddressBook = $this->getAddressBook($oContact->IdUser, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+			$oAddressBook = $this->getAddressBook($oContact->IdUser, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 			if ($oAddressBook)
 			{
 				$sUUID = \Sabre\DAV\UUIDUtil::getUUID();
@@ -990,7 +990,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 				$bResult = true;
 			}
 
-			$oAddressBook = $this->getAddressBook($oContact->IdUser, \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
+			$oAddressBook = $this->getAddressBook($oContact->IdUser, \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
 			$aContactsIds = $this->searchContactItemsByEmail($oContact->IdUser, $oContact->ViewEmail, $oAddressBook);
 
 			$this->deleteContactsByAddressBook($oContact->IdUser, $aContactsIds, $oAddressBook);
@@ -1011,7 +1011,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	/**
 	 * @param int $iUserId
 	 * @param array $aContactsIds
-	 * @param \afterlogic\DAV\CardDAV\AddressBook
+	 * @param \Afterlogic\DAV\CardDAV\AddressBook
 	 * @return bool
 	 */
 	protected function deleteContactsByAddressBook($iUserId, $aContactsIds, $oAddressBook)
@@ -1041,7 +1041,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	public function deleteContacts($iUserId, $aContactsIds)
 	{
 		$this->init($iUserId);
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		return $this->deleteContactsByAddressBook($iUserId, $aContactsIds, $oAddressBook);
 	}
 
@@ -1053,7 +1053,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	public function deleteSuggestContacts($iUserId, $aContactsIds)
 	{
 		$this->init($iUserId);
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
 		return $this->deleteContactsByAddressBook($iUserId, $aContactsIds, $oAddressBook);
 	}
 	
@@ -1066,7 +1066,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 	{
 		$this->init($iUserId);
 
-		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 		$sName = $oAddressBook->getName();
 		if ($oAddressBook)
 		{
@@ -1123,8 +1123,8 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		$bResult = false;
 		$this->init($iUserId);
 
-		$oDefautltAB = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
-		$oCollectedAB = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
+		$oDefautltAB = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		$oCollectedAB = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME);
 		
 		$aCollectedContactItems = $this->getObjectItems($iUserId, $oCollectedAB);
 
@@ -1224,7 +1224,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 //	{
 //		$this->init($iUserId);
 //
-//		$oAddressBook = $this->getAddressBook($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+//		$oAddressBook = $this->getAddressBook($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 //		if ($oAddressBook)
 //		{
 //			$aContactItems = $this->getObjectItems($iUserId);
@@ -1270,7 +1270,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		$this->InitByAccount($oAccount);
 
 		$oAddressBooks = new \Sabre\CardDAV\UserAddressBooks(
-			\afterlogic\DAV\Backend::Carddav(), $this->Principal);
+			\Afterlogic\DAV\Backend::Carddav(), $this->Principal);
 
 		foreach ($oAddressBooks->getChildren() as $oAddressBook)
 		{

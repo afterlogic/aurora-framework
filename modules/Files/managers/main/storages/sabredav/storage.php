@@ -80,8 +80,8 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		{
 			if (!$this->initialized)
 			{
-				\afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
-				\afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
+				\Afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
+				\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
 				$this->initialized = true;
 			}
 			$bResult = true;
@@ -103,21 +103,21 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		if ($oAccount)
 		{
 			$sUser = $bUser ? '/' . $oAccount->Email : '';
-			$sRootPath = \CApi::DataPath() . \afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
-					\afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL . $sUser;
+			$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
+					\Afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL . $sUser;
 
 			if ($sType === \EFileStorageTypeStr::Corporate)
 			{
 				$iTenantId = $oAccount ? $oAccount->IdTenant : 0;
 
 				$sTenant = $bUser ? $sTenant = '/' . $iTenantId : '';
-				$sRootPath = \CApi::DataPath() . \afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
-					\afterlogic\DAV\Constants::FILESTORAGE_PATH_CORPORATE . $sTenant;
+				$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
+					\Afterlogic\DAV\Constants::FILESTORAGE_PATH_CORPORATE . $sTenant;
 			}
 			else if ($sType === \EFileStorageTypeStr::Shared)
 			{
-				$sRootPath = \CApi::DataPath() . \afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
-					\afterlogic\DAV\Constants::FILESTORAGE_PATH_SHARED . $sUser;
+				$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
+					\Afterlogic\DAV\Constants::FILESTORAGE_PATH_SHARED . $sUser;
 			}
 		}
 
@@ -129,7 +129,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 * @param string $sType
 	 * @param string $sPath
 	 *
-	 * @return afterlogic\DAV\FS\Directory|null
+	 * @return Afterlogic\DAV\FS\Directory|null
 	 */
 	protected function getDirectory($oAccount, $sType, $sPath = '')
 	{
@@ -141,15 +141,15 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 			
 			if ($sType === \EFileStorageTypeStr::Personal)
 			{
-				$oDirectory = new \afterlogic\DAV\FS\RootPersonal($sRootPath);
+				$oDirectory = new \Afterlogic\DAV\FS\RootPersonal($sRootPath);
 			}
 			if ($sType === \EFileStorageTypeStr::Corporate)
 			{
-				$oDirectory = new \afterlogic\DAV\FS\RootPublic($sRootPath);
+				$oDirectory = new \Afterlogic\DAV\FS\RootPublic($sRootPath);
 			}	
 			if ($sType === \EFileStorageTypeStr::Shared)
 			{
-				$oDirectory = new \afterlogic\DAV\FS\RootShared($sRootPath);
+				$oDirectory = new \Afterlogic\DAV\FS\RootShared($sRootPath);
 			}	
 			if ($oDirectory && $sPath !== '')
 			{
@@ -179,7 +179,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 				if($oDirectory->childExists($sName))
 				{
 					$oItem = $oDirectory->getChild($sName);
-					if ($oItem instanceof \afterlogic\DAV\FS\File)
+					if ($oItem instanceof \Afterlogic\DAV\FS\File)
 					{
 						$bResult = true;
 					}
@@ -261,7 +261,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 * @param string $sType
 	 * @param string $sPath
 	 *
-	 * @return afterlogic\DAV\FS\Directory|null
+	 * @return Afterlogic\DAV\FS\Directory|null
 	 */
 	public function getDirectoryInfo($oAccount, $sType, $sPath)
 	{
@@ -269,7 +269,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		if ($this->init($oAccount))
 		{
 			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
-			if ($oDirectory !== null && $oDirectory instanceof afterlogic\DAV\FS\Directory)
+			if ($oDirectory !== null && $oDirectory instanceof Afterlogic\DAV\FS\Directory)
 			{
 				$sResult = $oDirectory->getChildrenProperties();
 			}
@@ -284,7 +284,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 * @param string $sPath
 	 * @param string $sName
 	 *
-	 * @return afterlogic\DAV\FS\File|null
+	 * @return Afterlogic\DAV\FS\File|null
 	 */
 	public function getFile($oAccount, $sType, $sPath, $sName)
 	{
@@ -396,7 +396,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 					{
 						if (isset($oDirectoryInfo['Link']) && strpos($oDirectoryInfo['Name'], $sPattern) !== false)
 						{
-							$aItems[] = new \afterlogic\DAV\FS\File($oDirectory->getPath() . '/' . $oDirectoryInfo['@Name']);
+							$aItems[] = new \Afterlogic\DAV\FS\File($oDirectory->getPath() . '/' . $oDirectoryInfo['@Name']);
 						}
 					}
 				}
@@ -421,13 +421,13 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 					$oItem->FullPath = $oItem->Name !== '' ? $oItem->Path . '/' . $oItem->Name : $oItem->Path ;
 
 					$sID = '';
-					if ($oValue instanceof \afterlogic\DAV\FS\Directory)
+					if ($oValue instanceof \Afterlogic\DAV\FS\Directory)
 					{
 						$sID = $this->generateShareHash($oAccount, $sType, $sFilePath, $oValue->getName());
 						$oItem->IsFolder = true;
 					}
 
-					if ($oValue instanceof \afterlogic\DAV\FS\File)
+					if ($oValue instanceof \Afterlogic\DAV\FS\File)
 					{
 						$sID = $this->generateShareHash($oAccount, $sType, $sFilePath, $oValue->getName());
 						$oItem->IsFolder = false;
@@ -646,7 +646,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 			$oItem = $oDirectory->getChild($sName);
 			if ($oItem !== null)
 			{
-				if ($oItem instanceof \afterlogic\DAV\FS\Directory)
+				if ($oItem instanceof \Afterlogic\DAV\FS\Directory)
 				{
 					$this->updateMin($oAccount, $sType, $sPath, $sName, $sName, $oItem, true);
 				}
@@ -664,7 +664,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 * @param string $sPath
 	 * @param string $sName
 	 * @param string $sNewName
-	 * @param afterlogic\DAV\FS\File|afterlogic\DAV\FS\Directory
+	 * @param Afterlogic\DAV\FS\File|Afterlogic\DAV\FS\Directory
 	 * @param bool $bDelete Default value is **false**.
 	 *
 	 * @return bool
@@ -680,11 +680,11 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 			$sOldPath = $sPath . '/' . $sName;
 			$sNewPath = $sPath . '/' . $sNewName;
 
-			if ($oItem instanceof \afterlogic\DAV\FS\Directory)
+			if ($oItem instanceof \Afterlogic\DAV\FS\Directory)
 			{
 				foreach ($oItem->getChildren() as $oChild)
 				{
-					if ($oChild instanceof \afterlogic\DAV\FS\File)
+					if ($oChild instanceof \Afterlogic\DAV\FS\File)
 					{
 						$sChildPath = substr(dirname($oChild->getPath()), strlen($sRootPath));
 						$sID = $this->generateShareHash($oAccount, $sType, $sChildPath, $oChild->getName());
@@ -704,7 +704,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 							}					
 						}
 					}
-					if ($oChild instanceof \afterlogic\DAV\FS\Directory)
+					if ($oChild instanceof \Afterlogic\DAV\FS\Directory)
 					{
 						$this->updateMin($oAccount, $sType, $sPath, $sName, $sNewName, $oChild, $bDelete);
 					}
@@ -799,7 +799,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 				$oItem = $oFromDirectory->getChild($sName);
 				if ($oItem !== null)
 				{
-					if ($oItem instanceof \afterlogic\DAV\FS\File)
+					if ($oItem instanceof \Afterlogic\DAV\FS\File)
 					{
 						$oToDirectory->createFile($sNewName, $oItem->get());
 
@@ -830,7 +830,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 						}
 						$oItemNew->updateProperties($aProps);
 					}
-					if ($oItem instanceof \afterlogic\DAV\FS\Directory)
+					if ($oItem instanceof \Afterlogic\DAV\FS\Directory)
 					{
 						$oToDirectory->createDirectory($sNewName);
 						$oChildren = $oItem->getChildren();

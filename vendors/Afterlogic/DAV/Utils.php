@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV;
+namespace Afterlogic\DAV;
 
 class Utils
 {
@@ -20,7 +20,7 @@ class Utils
 	
 	public static function getCurrentAccount()
 	{
-		return self::getUsersManager()->getAccountByEmail(\afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser());
+		return self::getUsersManager()->getAccountByEmail(\Afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser());
 	}
 	
 	public static function getTenantUser($oAccount)
@@ -43,11 +43,11 @@ class Utils
 	{
 		$sTenantPrincipalUri = null;
 		
-		$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin(basename($principalUri));
+		$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin(basename($principalUri));
 		if ($oAccount)
 		{
 			$sTenantEmail = self::getTenantUser($oAccount);
-			$sTenantPrincipalUri = \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sTenantEmail;
+			$sTenantPrincipalUri = \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sTenantEmail;
 		}
 		
 		return $sTenantPrincipalUri;
@@ -85,7 +85,7 @@ class Utils
 			$oAccount = self::GetAccountByLogin($sUserName);
 			if ($oAccount)
 			{
-				$sPrincipal = \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sUserName;
+				$sPrincipal = \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sUserName;
 
 				$oStmt = $oPdo->prepare(
 					'SELECT id FROM '.$dbPrefix.Constants::T_PRINCIPALS.' WHERE uri = ? LIMIT 1'
@@ -211,11 +211,11 @@ class Utils
 		$sEmail = trim(str_ireplace("mailto:", "", $sEmail));
 		
 		$oPrincipalBackend = Backend::Principal();
-		$mPrincipalPath = $oPrincipalBackend->searchPrincipals(\afterlogic\DAV\Constants::PRINCIPALS_PREFIX, array('{http://sabredav.org/ns}email-address'=>$sEmail));
+		$mPrincipalPath = $oPrincipalBackend->searchPrincipals(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX, array('{http://sabredav.org/ns}email-address'=>$sEmail));
 		if(is_array($mPrincipalPath) && count($mPrincipalPath) === 0) 
 		{
-			\afterlogic\DAV\Utils::CheckPrincipals($sEmail);
-			$mPrincipalPath = $oPrincipalBackend->searchPrincipals(\afterlogic\DAV\Constants::PRINCIPALS_PREFIX, array('{http://sabredav.org/ns}email-address'=>$sEmail));
+			\Afterlogic\DAV\Utils::CheckPrincipals($sEmail);
+			$mPrincipalPath = $oPrincipalBackend->searchPrincipals(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX, array('{http://sabredav.org/ns}email-address'=>$sEmail));
 			if(is_array($mPrincipalPath) && count($mPrincipalPath) === 0) 
 			{
 				throw new \Exception("Unknown email address");
@@ -225,7 +225,7 @@ class Utils
 		$sPrincipal = null;
 		foreach ($mPrincipalPath as $aPrincipal)
 		{
-			if ($aPrincipal === \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail)
+			if ($aPrincipal === \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail)
 			{
 				$sPrincipal = $aPrincipal;
 				break;

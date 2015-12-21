@@ -2286,8 +2286,7 @@ class Actions
 			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
 		}
 		
-		$server = \afterlogic\DAV\Server::NewInstance($sBaseUri);
-		$server->exec();
+		\Afterlogic\DAV\Server::NewInstance($sBaseUri)->exec();
 	}
 
 	/**
@@ -3234,9 +3233,9 @@ class Actions
 						}
 					}
 
-					$mResult['Dav']['PersonalContactsUrl'] = $sDavServer.'/addressbooks/'.$sDavLogin.'/'.\afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
-					$mResult['Dav']['CollectedAddressesUrl'] = $sDavServer.'/addressbooks/'.$sDavLogin.'/'.\afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME;
-					$mResult['Dav']['SharedWithAllUrl'] = $sDavServer.'/addressbooks/'.$sDavLogin.'/'.\afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_NAME;
+					$mResult['Dav']['PersonalContactsUrl'] = $sDavServer.'/addressbooks/'.$sDavLogin.'/'.\Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+					$mResult['Dav']['CollectedAddressesUrl'] = $sDavServer.'/addressbooks/'.$sDavLogin.'/'.\Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME;
+					$mResult['Dav']['SharedWithAllUrl'] = $sDavServer.'/addressbooks/'.$sDavLogin.'/'.\Afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_NAME;
 					$mResult['Dav']['GlobalAddressBookUrl'] = $sDavServer.'/gab';
 				}
 			}

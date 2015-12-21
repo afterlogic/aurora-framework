@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Auth\Backend;
+namespace Afterlogic\DAV\Auth\Backend;
 
 class Digest extends \Sabre\DAV\Auth\Backend\AbstractDigest
 {
@@ -29,13 +29,13 @@ class Digest extends \Sabre\DAV\Auth\Backend\AbstractDigest
 
 			if ($oApiCapabilityManager)
 			{
-				$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
+				$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
 				if ($oAccount && $oAccount->IsDisabled)
 				{
 					return null;
 				}
 
-				$bIsOutlookSyncClient = \afterlogic\DAV\Utils::ValidateClient('outlooksync');
+				$bIsOutlookSyncClient = \Afterlogic\DAV\Utils::ValidateClient('outlooksync');
 
 				$bIsMobileSync = false;
 				$bIsOutlookSync = false;
@@ -52,7 +52,7 @@ class Digest extends \Sabre\DAV\Auth\Backend\AbstractDigest
 				if (($oAccount && (($bIsMobileSync && !$bIsOutlookSyncClient) || ($bIsOutlookSync && $bIsOutlookSyncClient))) ||
 					$bIsDemo || ($oApiCalendarManager && $sUserName === \CApi::ExecuteMethod('Dav::GetPublicUser')))
 				{
-					\afterlogic\DAV\Utils::CheckPrincipals($sUserName);
+					\Afterlogic\DAV\Utils::CheckPrincipals($sUserName);
 					
 					return md5($sUserName.':'.$sRealm.':'.($bIsDemo ? 'demo' : $oAccount->IncomingMailPassword));
 				}

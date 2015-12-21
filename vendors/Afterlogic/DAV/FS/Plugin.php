@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\FS;
+namespace Afterlogic\DAV\FS;
 
 class Plugin extends \Sabre\DAV\ServerPlugin {
 
@@ -105,17 +105,17 @@ class Plugin extends \Sabre\DAV\ServerPlugin {
 	
 	public static function getPersonalPath()
 	{
-		return ltrim(\afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . \afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL, '/');		
+		return ltrim(\Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL, '/');		
 	}	
 	
 	public static function getCorporatePath()
 	{
-		return ltrim(\afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . \afterlogic\DAV\Constants::FILESTORAGE_PATH_CORPORATE, '/');		
+		return ltrim(\Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_CORPORATE, '/');		
 	}	
 
 	public static function getSharedPath()
 	{
-		return ltrim(\afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . \afterlogic\DAV\Constants::FILESTORAGE_PATH_SHARED, '/');		
+		return ltrim(\Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_SHARED, '/');		
 	}	
 
 	public static function isFilestoragePrivate($path)

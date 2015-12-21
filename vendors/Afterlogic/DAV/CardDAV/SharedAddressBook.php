@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV;
+namespace Afterlogic\DAV\CardDAV;
 
 class SharedAddressBook extends AddressBook {
     
@@ -51,7 +51,7 @@ class SharedAddressBook extends AddressBook {
 		
 		if (null === $this->oAccount)
 		{
-			$this->oAccount = \afterlogic\DAV\Utils::GetAccountByLogin(basename($this->principalUri));
+			$this->oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin(basename($this->principalUri));
 		}
 		return $this->oAccount;
 	}
@@ -75,8 +75,8 @@ class SharedAddressBook extends AddressBook {
 		
 		if ($oAccount)
 		{
-			$aAddressBook = $this->carddavBackend->getAddressBookForUser(\afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email, 
-					\afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+			$aAddressBook = $this->carddavBackend->getAddressBookForUser(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email, 
+					\Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 			if ($aAddressBook)
 			{
 				$obj = $this->carddavBackend->getCard($aAddressBook['id'], $sContactId);

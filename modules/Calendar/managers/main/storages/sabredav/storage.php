@@ -74,19 +74,19 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		if (!$this->_initialized($oAccount))
 		{
 			$this->Account = $oAccount;
-			\afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
-			\afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
+			\Afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
+			\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
 
 			$this->Principal = $this->getPrincipalInfo($oAccount->Email);
 		}
 	}
 
 	/**
-	 * @return \afterlogic\DAV\
+	 * @return \Afterlogic\DAV\
 	 */
 	public function getBackend()
 	{
-		return \afterlogic\DAV\Backend::Caldav();
+		return \Afterlogic\DAV\Backend::Caldav();
 	}
 
 	/**
@@ -98,7 +98,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	{
 		$aPrincipal = array();
 
-		$aPrincipalProperties = \afterlogic\DAV\Backend::Principal()->getPrincipalByPath(\afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail);
+		$aPrincipalProperties = \Afterlogic\DAV\Backend::Principal()->getPrincipalByPath(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail);
 		if ($aPrincipalProperties)
 		{
 			if (isset($aPrincipalProperties['uri']))
@@ -143,7 +143,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		}
 		else
 		{
-			$oCalendars = new \afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
+			$oCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 			if (isset($oCalendars) && $oCalendars->childExists($sCalendarId))
 			{
 				$oCalendar = $oCalendars->getChild($sCalendarId);
@@ -275,7 +275,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	 */
 	public function getPublicUser()
 	{
-		return \afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
+		return \Afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
 	}
 
 	/**
@@ -297,18 +297,18 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	{
 		if (!isset($this->TenantUser))
 		{
-			$sPrincipal = 'default_' . \afterlogic\DAV\Constants::DAV_TENANT_PRINCIPAL;
+			$sPrincipal = 'default_' . \Afterlogic\DAV\Constants::DAV_TENANT_PRINCIPAL;
 			if ($oAccount->IdTenant > 0)
 			{
 				$oApiTenantsMan = CApi::GetCoreManager('tenants');
 				$oTenant = $oApiTenantsMan ? $oApiTenantsMan->getTenantById($oAccount->IdTenant) : null;
 				if ($oTenant)
 				{
-					$sPrincipal = $oTenant->Login . '_' . \afterlogic\DAV\Constants::DAV_TENANT_PRINCIPAL;
+					$sPrincipal = $oTenant->Login . '_' . \Afterlogic\DAV\Constants::DAV_TENANT_PRINCIPAL;
 				}
 			}
 
-			$this->TenantUser = \afterlogic\DAV\Backend::Principal()->getPrincipalByEmail($sPrincipal);
+			$this->TenantUser = \Afterlogic\DAV\Backend::Principal()->getPrincipalByEmail($sPrincipal);
 		}
 		return $this->TenantUser;
 	}
@@ -353,7 +353,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		}
 		else
 		{
-			$oUserCalendars = new \afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
+			$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 
 			foreach ($oUserCalendars->getChildren() as $oCalDAVCalendar)
 			{
@@ -405,7 +405,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	{
 		$this->init($oAccount);
 
-		$oUserCalendars = new \afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
+		$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 
 		$sSystemName = \Sabre\DAV\UUIDUtil::getUUID();
 		$oUserCalendars->createExtendedCollection($sSystemName, 
@@ -440,7 +440,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		
 		$bOnlyColor = ($sName === null && $sDescription === null && $iOrder === null);
 
-		$oUserCalendars = new \afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
+		$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 		if ($oUserCalendars->childExists($sCalendarId))
 		{
 			$oCalDAVCalendar = $oUserCalendars->getChild($sCalendarId);
@@ -528,7 +528,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	{
 		$this->init($oAccount);
 
-		$oUserCalendars = new \afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
+		$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 		if ($oUserCalendars->childExists($sCalendarId))
 		{
 			$oCalDAVCalendar = $oUserCalendars->getChild($sCalendarId);
@@ -562,7 +562,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 
 		if (is_array($this->Principal) && count($this->Principal))
 		{
-			$oUserCalendars = new \afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
+			$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 			foreach ($oUserCalendars->getChildren() as $oCalDAVCalendar)
 			{
 				if ($oCalDAVCalendar instanceof \Sabre\CalDAV\Calendar)
@@ -1300,27 +1300,27 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	
 	public function getReminders($start, $end)
 	{
-		return \afterlogic\DAV\Backend::Reminders()->getReminders($start, $end);
+		return \Afterlogic\DAV\Backend::Reminders()->getReminders($start, $end);
 	}
 
 	public function AddReminder($sEmail, $sCalendarUri, $sEventId, $time = null, $starttime = null)
 	{
-		return \afterlogic\DAV\Backend::Reminders()->addReminders($sEmail, $sCalendarUri, $sEventId, $time, $starttime);
+		return \Afterlogic\DAV\Backend::Reminders()->addReminders($sEmail, $sCalendarUri, $sEventId, $time, $starttime);
 	}
 	
 	public function updateReminder($sEmail, $sCalendarUri, $sEventId, $sData)
 	{
-		\afterlogic\DAV\Backend::Reminders()->updateReminder(trim($sCalendarUri, '/') . '/' . $sEventId . '.ics', $sData, $sEmail);
+		\Afterlogic\DAV\Backend::Reminders()->updateReminder(trim($sCalendarUri, '/') . '/' . $sEventId . '.ics', $sData, $sEmail);
 	}
 
 	public function deleteReminder($sEventId)
 	{
-		return \afterlogic\DAV\Backend::Reminders()->deleteReminder($sEventId);
+		return \Afterlogic\DAV\Backend::Reminders()->deleteReminder($sEventId);
 	}
 
 	public function deleteReminderByCalendar($sCalendarUri)
 	{
-		return \afterlogic\DAV\Backend::Reminders()->deleteReminderByCalendar($sCalendarUri);
+		return \Afterlogic\DAV\Backend::Reminders()->deleteReminderByCalendar($sCalendarUri);
 	}
 	
 }

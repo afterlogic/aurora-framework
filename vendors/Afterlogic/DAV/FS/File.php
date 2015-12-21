@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\FS;
+namespace Afterlogic\DAV\FS;
 
 class File extends \Sabre\DAV\FSExt\File{
 	

@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV;
+namespace Afterlogic\DAV\CardDAV;
 
 class AddressBookRoot extends \Sabre\CardDAV\AddressBookRoot
 {
@@ -12,7 +12,7 @@ class AddressBookRoot extends \Sabre\CardDAV\AddressBookRoot
 	{
 		if (null === $this->oAccount)
 		{
-			$this->oAccount = \afterlogic\DAV\Utils::GetAccountByLogin(basename($principalUri));
+			$this->oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin(basename($principalUri));
 		}
 		return $this->oAccount;
 	}

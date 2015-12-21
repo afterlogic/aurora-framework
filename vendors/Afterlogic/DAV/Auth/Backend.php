@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Auth;
+namespace Afterlogic\DAV\Auth;
 
 class Backend
 {

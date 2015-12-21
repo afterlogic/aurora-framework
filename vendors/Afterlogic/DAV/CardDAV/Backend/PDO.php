@@ -2,9 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV\Backend;
+namespace Afterlogic\DAV\CardDAV\Backend;
 
-use afterlogic\DAV\Constants;
+use Afterlogic\DAV\Constants;
 
 class PDO extends \Sabre\CardDAV\Backend\PDO {
 	
@@ -82,10 +82,10 @@ class PDO extends \Sabre\CardDAV\Backend\PDO {
 	{
 		return array(
 			'id'  => '0',
-			'uri' => \afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_NAME,
+			'uri' => \Afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_NAME,
 			'principaluri' => $sPrincipalUri,
-			'{DAV:}displayname' => \afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_DISPLAY_NAME,
-			'{' . \Sabre\CardDAV\Plugin::NS_CARDDAV . '}addressbook-description' => \afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_DISPLAY_NAME,
+			'{DAV:}displayname' => \Afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_DISPLAY_NAME,
+			'{' . \Sabre\CardDAV\Plugin::NS_CARDDAV . '}addressbook-description' => \Afterlogic\DAV\Constants::ADDRESSBOOK_SHARED_WITH_ALL_DISPLAY_NAME,
 			'{http://calendarserver.org/ns/}getctag' => date('Gi'),
 			'{' . \Sabre\CardDAV\Plugin::NS_CARDDAV . '}supported-address-data' =>
 				new \Sabre\CardDAV\Property\SupportedAddressData()

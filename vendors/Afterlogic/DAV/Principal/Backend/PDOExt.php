@@ -2,9 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Principal\Backend;
+namespace Afterlogic\DAV\Principal\Backend;
 
-use afterlogic\DAV\Constants;
+use Afterlogic\DAV\Constants;
 
 class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO 
 {
@@ -40,7 +40,7 @@ class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO
 		{
             $principals[] = array(
 				'id'  => $aUser->id_acct,
-				'uri' => \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $aUser->email,
+				'uri' => \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $aUser->email,
 				'{http://sabredav.org/ns}email-address' => $aUser->email,
 				'{DAV:}displayname' => $aUser->friendly_nm
 			);
@@ -61,12 +61,12 @@ class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO
     public function getPrincipalByPath($path) 
 	{
 
-		$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin(basename($path));
+		$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin(basename($path));
         if ($oAccount)
 		{
 			return array(
 				'id'  => $oAccount->IdAccount,
-				'uri' => \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email,
+				'uri' => \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email,
 				'{http://sabredav.org/ns}email-address' => $oAccount->Email,
 				'{DAV:}displayname' => $oAccount->FriendlyName,
 			);
@@ -108,7 +108,7 @@ class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO
             switch($property) {
 
                 case '{http://sabredav.org/ns}email-address' :
-					$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($value);
+					$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($value);
 					break;
                 default :
                     // Unsupported property
@@ -121,7 +121,7 @@ class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO
         $principals = array();
 		if ($oAccount)
 		{
-			$principals[] = \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email;
+			$principals[] = \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email;
 		}
 
         return $principals;
@@ -177,7 +177,7 @@ class PDOExt extends \Sabre\DAVACL\PrincipalBackend\PDO
 		
         $bResult = false;
 		
-		$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin(basename($uri));
+		$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin(basename($uri));
         if ($oAccount)
 		{
 			$bResult = true;

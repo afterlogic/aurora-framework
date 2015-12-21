@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CalDAV;
+namespace Afterlogic\DAV\CalDAV;
 
 class CalendarRootNode extends \Sabre\CalDAV\CalendarRootNode{
 

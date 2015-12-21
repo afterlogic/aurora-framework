@@ -341,7 +341,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 		}
 		else
 		{
-			$sName = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+			$sName = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
 			if (!isset($this->aGroupItemsCache[$sName]))
 			{
 				$this->getItems($iUserId, $sName);
@@ -423,7 +423,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 		$oContact = false;
 		if($this->init($iUserId))
 		{
-			$oContactItem = $this->getItem($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $mContactId);
+			$oContactItem = $this->getItem($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $mContactId);
 			if ($oContactItem)
 			{
 				$sVCardData = $oContactItem['data'];
@@ -500,7 +500,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 		{
 			if($this->init($iUserId))
 			{
-				$sAddressBook = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+				$sAddressBook = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
 				if (!isset($this->aGroupItemsCache[$sAddressBook]))
 				{
 					$this->getItems($iUserId, $sAddressBook);
@@ -553,7 +553,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 	{
 		$aResult = array();
 
-		$sAddressBook = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+		$sAddressBook = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
 		$aContactItems = $this->getItems($iUserId, $sAddressBook);
 
 		foreach ($aContactItems as $aItem)
@@ -595,7 +595,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 	 */
 	public function getContactItems($iUserId, $iSortField, $iSortOrder, $iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId = null, $bAll = false)
 	{
-		$aResult = $this->getItems($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $sSearch, $sFirstCharacter, $iGroupId);
+		$aResult = $this->getItems($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $sSearch, $sFirstCharacter, $iGroupId);
 		$this->sortItems($aResult, $iSortField, $iSortOrder);
 
 		return array_slice($aResult, $iOffset, $iRequestLimit);
@@ -610,7 +610,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 	 */
 	public function getContactItemsCount($iUserId, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId = null, $bAll = false)
 	{
-		return count($this->getItems($iUserId, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $sSearch, $sFirstCharacter, $iGroupId));
+		return count($this->getItems($iUserId, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $sSearch, $sFirstCharacter, $iGroupId));
 	}
 
 	/**
@@ -654,8 +654,8 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 		$aResult = array();
 		$this->init($iUserId);
 
-		$sDefaultAB = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
-		$sCollectedAB = \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME;
+		$sDefaultAB = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+		$sCollectedAB = \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME;
 
 		$aCollectedContactItems = $this->Dav->GetVcards($this->AddressBookHomeSet . $sCollectedAB);
 		$aDefaultContactItems = $this->Dav->GetVcards($this->AddressBookHomeSet . $sDefaultAB);
@@ -704,7 +704,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 	{
 		$bResult = false;
 		$this->init($oContact->IdUser);
-		$oContactItem = $this->getItem($oContact->IdUser, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $oContact->IdContact);
+		$oContactItem = $this->getItem($oContact->IdUser, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME, $oContact->IdContact);
 		if ($oContactItem)
 		{
 			try
@@ -713,7 +713,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 				if ($vCard)
 				{
 					CApiContactsVCardHelper::UpdateVCardFromContact($oContact, $vCard);
-					$this->Dav->UpdateItem($this->AddressBookHomeSet . \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContactItem['href'], $vCard->serialize(), $oContact->ETag);
+					$this->Dav->UpdateItem($this->AddressBookHomeSet . \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContactItem['href'], $vCard->serialize(), $oContact->ETag);
 					$bResult = true;
 				}
 				unset($vCard);
@@ -752,7 +752,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 
 		if (!empty($sGroupId))
 		{
-			$sAddressBook = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+			$sAddressBook = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
 
 			$aContactIds = $oGroup->ContactsIds;
 			foreach ($aContactIds as $sContactId)
@@ -790,7 +790,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 				}
 
 				$vCard->CATEGORIES->value = $sCategories;
-				$this->Dav->UpdateItem($this->AddressBookHomeSet . \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContact['href'], $vCard->serialize(), $oContact['etag']);
+				$this->Dav->UpdateItem($this->AddressBookHomeSet . \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContact['href'], $vCard->serialize(), $oContact['etag']);
 			}
 
 			$aContactIds = $oGroup->DeletedContactsIds;
@@ -825,7 +825,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 					{
 						$vCard->CATEGORIES->value = $sCategories;
 					}
-					$this->Dav->UpdateItem($this->AddressBookHomeSet . \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContact['href'], $vCard->serialize(), $oContact['etag']);
+					$this->Dav->UpdateItem($this->AddressBookHomeSet . \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContact['href'], $vCard->serialize(), $oContact['etag']);
 				}
 			}
 			$bResult = true;
@@ -852,7 +852,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 			$vCard = new \Sabre\VObject\Component('VCARD');
 			CApiContactsVCardHelper::UpdateVCardFromContact($oContact, $vCard);
 
-			$sUrl = $this->AddressBookHomeSet . \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContact->IdContact . '.vcf';
+			$sUrl = $this->AddressBookHomeSet . \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME . '/' . $oContact->IdContact . '.vcf';
 			$this->Dav->CreateItem($sUrl, $vCard->serialize());
 			$bResult = true;
 /*
@@ -885,7 +885,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 	public function deleteContacts($iUserId, $aContactsIds)
 	{
 		$this->init($iUserId);
-		return $this->deleteContactsByAddressBook($iUserId, $aContactsIds, \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
+		return $this->deleteContactsByAddressBook($iUserId, $aContactsIds, \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME);
 	}
 
 	/**
@@ -897,7 +897,7 @@ class CApiContactsBaseCarddavStorage extends CApiContactsBaseStorage
 	{
 		$this->init($iUserId);
 
-		$sName = \afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
+		$sName = \Afterlogic\DAV\Constants::ADDRESSBOOK_DEFAULT_NAME;
 		$this->getItems($iUserId, $sName);
 
 		foreach($aGroupsIds as $sGroupsId)

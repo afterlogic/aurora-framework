@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Auth\Backend;
+namespace Afterlogic\DAV\Auth\Backend;
 
 class Basic extends \Sabre\DAV\Auth\Backend\AbstractBasic
 {
@@ -37,13 +37,13 @@ class Basic extends \Sabre\DAV\Auth\Backend\AbstractBasic
 
 			if ($oApiCapabilityManager)
 			{
-				$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
+				$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
 				if ($oAccount && $oAccount->IsDisabled)
 				{
 					return false;
 				}
 
-				$bIsOutlookSyncClient = \afterlogic\DAV\Utils::ValidateClient('outlooksync');
+				$bIsOutlookSyncClient = \Afterlogic\DAV\Utils::ValidateClient('outlooksync');
 
 				$bIsMobileSync = false;
 				$bIsOutlookSync = false;
@@ -62,7 +62,7 @@ class Basic extends \Sabre\DAV\Auth\Backend\AbstractBasic
 					$bIsDemo || ($sUserName === \CApi::ExecuteMethod('Dav::GetPublicUser'))
 				)
 				{
-					\afterlogic\DAV\Utils::CheckPrincipals($sUserName);
+					\Afterlogic\DAV\Utils::CheckPrincipals($sUserName);
 					
 					return true;
 				}

@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Logs;
+namespace Afterlogic\DAV\Logs;
 
 class Plugin extends \Sabre\DAV\ServerPlugin
 {

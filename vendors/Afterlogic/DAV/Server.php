@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV;
+namespace Afterlogic\DAV;
 
 class_exists('CApi') || die();
 
@@ -16,7 +16,7 @@ class Server extends \Sabre\DAV\Server
 	public $oAccount = null;
 
 	/**
-	 * @return \afterlogic\DAV\Server
+	 * @return \Afterlogic\DAV\Server
 	 */
 	public static function NewInstance($baseUri = '/')
 	{
@@ -179,10 +179,10 @@ class Server extends \Sabre\DAV\Server
 	{
 		if (null === $this->oAccount)
 		{
-			$sUser = \afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
+			$sUser = \Afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
 			if (!empty($sUser))
 			{
-				$this->oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUser);
+				$this->oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($sUser);
 			}
 		}
 		return $this->oAccount;

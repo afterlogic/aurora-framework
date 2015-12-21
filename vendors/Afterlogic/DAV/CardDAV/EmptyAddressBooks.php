@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV;
+namespace Afterlogic\DAV\CardDAV;
 
 class EmptyAddressBooks extends \Sabre\CardDAV\UserAddressBooks{
 

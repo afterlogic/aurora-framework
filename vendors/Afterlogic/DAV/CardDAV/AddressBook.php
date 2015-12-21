@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV;
+namespace Afterlogic\DAV\CardDAV;
 
 class AddressBook extends \Sabre\CardDAV\AddressBook {
 
@@ -48,7 +48,7 @@ class AddressBook extends \Sabre\CardDAV\AddressBook {
 
 		$aContactIds = array();
 		
-		$oAccount = \afterlogic\DAV\Utils::getCurrentAccount();
+		$oAccount = \Afterlogic\DAV\Utils::getCurrentAccount();
 		if ($oAccount)
 		{
 			$oContactsManager = $this->getContactsManager();

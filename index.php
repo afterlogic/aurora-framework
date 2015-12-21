@@ -39,7 +39,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 				'PHPThumb',
 				'MailSo',
 				'Sabre',
-				'afterlogic'
+				'Afterlogic'
 			)
 		);
 		foreach ($aClassesTree as $sFolder => $aClasses)

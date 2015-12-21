@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Contacts;
+namespace Afterlogic\DAV\Contacts;
 
 class Plugin extends \Sabre\DAV\ServerPlugin
 {
@@ -59,7 +59,7 @@ class Plugin extends \Sabre\DAV\ServerPlugin
 		{
 			$sAddressBookName = basename(dirname($path));
 
-			if (basename(dirname($path)) === \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME)
+			if (basename(dirname($path)) === \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME)
 			{
 //				return false;	
 			}
@@ -76,7 +76,7 @@ class Plugin extends \Sabre\DAV\ServerPlugin
     {
 		if ('sabredav' !== \CApi::GetManager()->GetStorageByType('contacts'))
 		{
-			if (true)//(basename(dirname($path)) !== \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME)
+			if (true)//(basename(dirname($path)) !== \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME)
 			{
 				$oAccount = $this->server->getAccount();
 				if (isset($oAccount))
@@ -85,7 +85,7 @@ class Plugin extends \Sabre\DAV\ServerPlugin
 
 					if ($oContact)
 					{
-						if (true)//($sAddressBookName !== \afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME)
+						if (true)//($sAddressBookName !== \Afterlogic\DAV\Constants::ADDRESSBOOK_COLLECTED_NAME)
 						{
 							$this->oApiContactsManager->deleteContacts($oAccount->IdUser, array($oContact->IdContact));
 						}
@@ -126,7 +126,7 @@ class Plugin extends \Sabre\DAV\ServerPlugin
 				if (isset($oAccount))
 				{
 					$iUserId = $oAccount->IdUser;
-					$iTenantId = ($node instanceof \afterlogic\DAV\CardDAV\SharedCard) ? $oAccount->IdTenant : null;
+					$iTenantId = ($node instanceof \Afterlogic\DAV\CardDAV\SharedCard) ? $oAccount->IdTenant : null;
 
 					$sContactFileName = $node->getName();
 					$oContactDb = $this->oApiContactsManager->getContactByStrId($iUserId, $sContactFileName, $iTenantId);

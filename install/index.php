@@ -11,5 +11,4 @@
 
 	include WM_INSTALLER_PATH.'installer.php';
 
-	$oInstaller = new CInstaller();
-	$oInstaller->Run();
+	\CInstaller::createInstance()->Run();

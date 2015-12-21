@@ -2,9 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Principal\Backend;
+namespace Afterlogic\DAV\Principal\Backend;
 
-use afterlogic\DAV\Constants;
+use Afterlogic\DAV\Constants;
 
 class PDO extends \Sabre\DAVACL\PrincipalBackend\PDO 
 {
@@ -61,7 +61,7 @@ class PDO extends \Sabre\DAVACL\PrincipalBackend\PDO
      */
 	public function getPrincipalByEmail($sEmail)
 	{
-		$sUri = \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' .$sEmail;
+		$sUri = \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' .$sEmail;
 		if (!$this->existsPrincipal($sUri))
 		{
 			$this->createPrincipal($sUri, $sEmail, $sEmail);

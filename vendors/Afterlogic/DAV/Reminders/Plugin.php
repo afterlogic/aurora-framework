@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Reminders;
+namespace Afterlogic\DAV\Reminders;
 
 class Plugin extends \Sabre\DAV\ServerPlugin {
 

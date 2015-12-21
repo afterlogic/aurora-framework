@@ -23,4 +23,4 @@ function exception_error_handler($errno, $errstr, $errfile, $errline )
 // CApi::$bUseDbLog = false;
 
 $baseUri = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'],'/'.basename(__FILE__))).'/'.basename(__FILE__).'/';
-\afterlogic\DAV\Server::NewInstance($baseUri)->exec();
+\Afterlogic\DAV\Server::NewInstance($baseUri)->exec();

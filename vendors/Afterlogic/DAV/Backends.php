@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV;
+namespace Afterlogic\DAV;
 
 class Backends
 {
@@ -15,25 +15,25 @@ class Backends
 			$oBackend = null;
 			switch ($sName) {
 				case 'auth':
-					$oBackend = \afterlogic\DAV\Auth\Backend::getInstance();
+					$oBackend = \Afterlogic\DAV\Auth\Backend::getInstance();
 					break;
 				case 'principal':
-					$oBackend = new \afterlogic\DAV\Principal\Backend\PDO();
+					$oBackend = new \Afterlogic\DAV\Principal\Backend\PDO();
 					break;
 				case 'caldav':
-					$oBackend = new \afterlogic\DAV\CalDAV\Backend\PDO();
+					$oBackend = new \Afterlogic\DAV\CalDAV\Backend\PDO();
 					break;
 				case 'carddav':
-					$oBackend = new \afterlogic\DAV\CardDAV\Backend\PDO();
+					$oBackend = new \Afterlogic\DAV\CardDAV\Backend\PDO();
 					break;
 				case 'carddav-owncloud':
-					$oBackend = new \afterlogic\DAV\CardDAV\Backend\OwnCloudPDO();
+					$oBackend = new \Afterlogic\DAV\CardDAV\Backend\OwnCloudPDO();
 					break;
 				case 'lock':
-					$oBackend = new \afterlogic\DAV\Locks\Backend\PDO();
+					$oBackend = new \Afterlogic\DAV\Locks\Backend\PDO();
 					break;
 				case 'reminders':
-					$oBackend = new \afterlogic\DAV\Reminders\Backend\PDO();
+					$oBackend = new \Afterlogic\DAV\Reminders\Backend\PDO();
 					break;
 			}
 			if (isset($oBackend))

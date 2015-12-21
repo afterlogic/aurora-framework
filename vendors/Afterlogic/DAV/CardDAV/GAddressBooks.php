@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV;
+namespace Afterlogic\DAV\CardDAV;
 
 class GAddressBooks extends \Sabre\DAV\Collection implements \Sabre\CardDAV\IDirectory, \Sabre\DAV\IProperties, \Sabre\DAVACL\IACL {
 
@@ -37,8 +37,8 @@ class GAddressBooks extends \Sabre\DAV\Collection implements \Sabre\CardDAV\IDir
 	{
 		if ($this->account == null)
 		{
-			$sUser = \afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
-			$this->account = \afterlogic\DAV\Utils::GetAccountByLogin($sUser);
+			$sUser = \Afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
+			$this->account = \Afterlogic\DAV\Utils::GetAccountByLogin($sUser);
 		}
 		return $this->account;
 	}

@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CalDAV;
+namespace Afterlogic\DAV\CalDAV;
 
 class SharedCalendar extends \Sabre\CalDAV\SharedCalendar{
 
@@ -36,7 +36,7 @@ class SharedCalendar extends \Sabre\CalDAV\SharedCalendar{
      */
     public function getACL() {
 
-		$sTenantPrincipalUri = \afterlogic\DAV\Utils::getTenantPrincipalUri($this->principalInfo['uri']);
+		$sTenantPrincipalUri = \Afterlogic\DAV\Utils::getTenantPrincipalUri($this->principalInfo['uri']);
 
 		// The top-level ACL only contains access information for the true
         // owner of the calendar, so we need to add the information for the
@@ -100,7 +100,7 @@ class SharedCalendar extends \Sabre\CalDAV\SharedCalendar{
      */
     public function delete() {
 
-		$sTenantPrincipalUri = \afterlogic\DAV\Utils::getTenantPrincipalUri($this->principalInfo['uri']);
+		$sTenantPrincipalUri = \Afterlogic\DAV\Utils::getTenantPrincipalUri($this->principalInfo['uri']);
 		if ($sTenantPrincipalUri !== $this->calendarInfo['principaluri'])
 		{
 			$sEmail = basename($this->principalInfo['uri']);

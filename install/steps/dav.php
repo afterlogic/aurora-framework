@@ -56,12 +56,9 @@ class CDavStep extends AInstallerStep
 
 		$sAuto = false;
 
-		/* @var $oApiDavManager CApiDavManager */
-		$oApiDavManager = CApi::Manager('dav');
+		$bEnableMobileSync = \CApi::ExecuteMethod('Dav::IsMobileSyncEnabled');
 
-		$bEnableMobileSync = $oApiDavManager->isMobileSyncEnabled();
-
-		$sDAVUrl = $oApiDavManager->getServerUrl();
+		$sDAVUrl = \CApi::ExecuteMethod('Dav::GetServerUrl');
 		if (empty($sDAVUrl))
 		{
 			$sAuto = true;

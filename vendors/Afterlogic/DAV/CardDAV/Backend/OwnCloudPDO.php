@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CardDAV\Backend;
+namespace Afterlogic\DAV\CardDAV\Backend;
 
 class OwnCloudPDO extends \Sabre\CardDAV\Backend\PDO {
 	

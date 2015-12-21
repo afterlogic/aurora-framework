@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\FS;
+namespace Afterlogic\DAV\FS;
 
 class Directory extends \Sabre\DAV\FSExt\Directory {
     
@@ -59,8 +59,8 @@ class Directory extends \Sabre\DAV\FSExt\Directory {
 	{
 		if ($this->oAccount == null)
 		{
-			$sUser = \afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
-			$this->oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUser);
+			$sUser = \Afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
+			$this->oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($sUser);
 		}
 		
 		return $this->oAccount;
@@ -211,18 +211,18 @@ class Directory extends \Sabre\DAV\FSExt\Directory {
 		{
 			if ($sType === \EFileStorageTypeStr::Corporate)
 			{
-				$sRootPath = \CApi::DataPath() . \afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
-					\afterlogic\DAV\Constants::FILESTORAGE_PATH_CORPORATE . '/' . $oAccount->IdTenant;
+				$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
+					\Afterlogic\DAV\Constants::FILESTORAGE_PATH_CORPORATE . '/' . $oAccount->IdTenant;
 			}		
 			else if ($sType === \EFileStorageTypeStr::Shared)
 			{
-				$sRootPath = \CApi::DataPath() . \afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
-						\afterlogic\DAV\Constants::FILESTORAGE_PATH_SHARED . '/' . $oAccount->Email;
+				$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
+						\Afterlogic\DAV\Constants::FILESTORAGE_PATH_SHARED . '/' . $oAccount->Email;
 			}
 			else 
 			{
-				$sRootPath = \CApi::DataPath() . \afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
-						\afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL . '/' . $oAccount->Email;
+				$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
+						\Afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL . '/' . $oAccount->Email;
 			}
 		}
 		

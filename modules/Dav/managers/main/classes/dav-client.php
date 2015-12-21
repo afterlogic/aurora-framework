@@ -60,7 +60,7 @@ class CDAVClient
 	public $isCustomServer = false;
 	
 	/**
-	* @var \afterlogic\DAV\Client
+	* @var \Afterlogic\DAV\Client
 	*/
 	public $client;
 	
@@ -71,7 +71,7 @@ class CDAVClient
 	*/
 	public function __construct($baseUrl, $user, $pass)
  	{
-		$this->client = new \afterlogic\DAV\Client(
+		$this->client = new \Afterlogic\DAV\Client(
 				array(
 					'baseUri' => $baseUrl,
 					'userName' => $user,
@@ -813,7 +813,7 @@ $sFilter =
 			return false;		
 		}
 
-		$sProxyStr .= '<d:href>' . \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $to . '</d:href>';
+		$sProxyStr .= '<d:href>' . \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $to . '</d:href>';
 
 		return $this->client->propPatch($proxy, array('group-member-set'=>$sProxyStr));
 	}
@@ -833,7 +833,7 @@ $sFilter =
 			}
 		}
 
-		$sProxyStr = str_replace('<d:href>' . \afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $to . '</d:href>', '', $sProxyStr);
+		$sProxyStr = str_replace('<d:href>' . \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $to . '</d:href>', '', $sProxyStr);
 		
 		return $this->client->propPatch(
 				$proxy, 

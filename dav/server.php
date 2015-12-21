@@ -24,5 +24,5 @@ require_once \dirname(__FILE__).'/../core/api.php';
 $sBaseUri = false === \strpos($sRequestUri, 'dav/'.$sCurrentFile) ? '/' :
 	\substr($sRequestUri, 0, \strpos($sRequestUri,'/'.$sCurrentFile)).'/'.$sCurrentFile.'/';
 
-$oServer = \afterlogic\DAV\Server::NewInstance($sBaseUri);
+$oServer = \Afterlogic\DAV\Server::NewInstance($sBaseUri);
 $oServer->exec();

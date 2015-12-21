@@ -28,7 +28,7 @@ class DavModule extends AApiModule
 			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
 		}
 		
-		\afterlogic\DAV\Server::NewInstance($sBaseUri)->exec();
+		\Afterlogic\DAV\Server::NewInstance($sBaseUri)->exec();
 		return '';
 	}	
 	
@@ -113,7 +113,7 @@ class DavModule extends AApiModule
 	
 	public function GetPublicUser()
 	{
-		return \afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
+		return \Afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
 	}
 }
 

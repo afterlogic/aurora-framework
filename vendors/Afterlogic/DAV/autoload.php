@@ -5,7 +5,7 @@
 function DAVLibrariesAutoload($sClassName)
 {
 	$aClasses = array(
-		'afterlogic',
+		'Afterlogic',
 		'Sabre'
 	);
 	foreach ($aClasses as $sClass)

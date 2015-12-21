@@ -35,7 +35,7 @@ class CInstaller
 		'completed' => 'Completed',
 	);
 
-	function CInstaller()
+	function __construct()
 	{
 		$sName = 'WM_INSTALLER';
 		if (@session_name() !== $sName)
@@ -71,6 +71,14 @@ class CInstaller
 			unset($this->_aSteps['dav']);
 		}
 	}
+	
+	/**
+	 * @return CInstaller
+	 */
+	public static function createInstance()
+	{
+		return new self();
+	}	
 
 	function Run()
 	{

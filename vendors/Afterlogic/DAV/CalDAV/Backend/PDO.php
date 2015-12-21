@@ -2,9 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\CalDAV\Backend;
+namespace Afterlogic\DAV\CalDAV\Backend;
 
-use afterlogic\DAV\Constants;
+use Afterlogic\DAV\Constants;
 
 class PDO extends \Sabre\CalDAV\Backend\PDO implements \Sabre\CalDAV\Backend\SharingSupport
 {
@@ -133,7 +133,7 @@ class PDO extends \Sabre\CalDAV\Backend\PDO implements \Sabre\CalDAV\Backend\Sha
 				$aFields[':calendarid'] = $mCalendarId; 
 
 				// get the principal based on the supplied email address
-				$aPrincipal = \afterlogic\DAV\Utils::getPrincipalByEmail($aAddItem['href']);
+				$aPrincipal = \Afterlogic\DAV\Utils::getPrincipalByEmail($aAddItem['href']);
 
 				$aFieldNames[] = 'member';
 				$aFields[':member'] = $aPrincipal['id'];
@@ -190,7 +190,7 @@ class PDO extends \Sabre\CalDAV\Backend\PDO implements \Sabre\CalDAV\Backend\Sha
 			foreach($aRemove as $sRemoveItem) 
 			{
 				// get the principalid
-				$oPrincipal = \afterlogic\DAV\Utils::getPrincipalByEmail($sRemoveItem);
+				$oPrincipal = \Afterlogic\DAV\Utils::getPrincipalByEmail($sRemoveItem);
 				$aMembers[] = $oPrincipal['id'];
 			}	
 			$aParams[] = implode(',', $aMembers);
@@ -281,7 +281,7 @@ class PDO extends \Sabre\CalDAV\Backend\PDO implements \Sabre\CalDAV\Backend\Sha
 	
 		$aCalendars = $this->getOwnCalendarsForUser($principalUri);
 		$aSharedCalendars = $this->getSharedCalendarsForUser($principalUri);
-		$aSharedToAllCalendars = $this->getSharedCalendarsForUser(\afterlogic\DAV\Utils::getTenantPrincipalUri($principalUri));
+		$aSharedToAllCalendars = $this->getSharedCalendarsForUser(\Afterlogic\DAV\Utils::getTenantPrincipalUri($principalUri));
 		
 		foreach ($aSharedToAllCalendars as $iKey => $aSharedToAllCalendar)
 		{
@@ -353,13 +353,13 @@ class PDO extends \Sabre\CalDAV\Backend\PDO implements \Sabre\CalDAV\Backend\Sha
 			if ($bSharedToAll)
 			{
 				$sTenantPrincipalUri = $sPrincipalUri;
-				$sPrincipalUri = \afterlogic\DAV\Utils::getTenantPrincipalUri($sPrincipalUri);
+				$sPrincipalUri = \Afterlogic\DAV\Utils::getTenantPrincipalUri($sPrincipalUri);
 			}
 			
 			$sFields = $this->getCalendarFields();
 			$sShareFields = implode(', ', $this->sharesProperties);
 
-			$oPrincipalBackend = \afterlogic\DAV\Backend::Principal();
+			$oPrincipalBackend = \Afterlogic\DAV\Backend::Principal();
 			$aPrincipal = $oPrincipalBackend->getPrincipalByPath($sPrincipalUri);
 			if ($aPrincipal)
 			{

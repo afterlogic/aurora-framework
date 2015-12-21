@@ -2,9 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Reminders\Backend;
+namespace Afterlogic\DAV\Reminders\Backend;
 
-use afterlogic\DAV\Constants;
+use Afterlogic\DAV\Constants;
 
 class PDO
 {
@@ -228,7 +228,7 @@ class PDO
 						$iOffset = 0;
 						if ($bAllDay)
 						{
-							$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($user);
+							$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($user);
 							if ($oAccount)
 							{
 								$oClientTZ = new \DateTimeZone($oAccount->User->ClientTimeZone);

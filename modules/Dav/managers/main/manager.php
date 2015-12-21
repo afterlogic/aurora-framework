@@ -248,8 +248,8 @@ class CApiDavMainManager extends AApiManager
 	 */
 	public function deletePrincipal($oAccount)
 	{
-		$oPrincipalBackend = \afterlogic\DAV\Backend::Principal();
-		$oPrincipalBackend->deletePrincipal(\afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email);
+		$oPrincipalBackend = \Afterlogic\DAV\Backend::Principal();
+		$oPrincipalBackend->deletePrincipal(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email);
 	}
 
 	/**

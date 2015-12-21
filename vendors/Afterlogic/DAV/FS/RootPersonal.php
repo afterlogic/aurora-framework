@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\FS;
+namespace Afterlogic\DAV\FS;
 
 class RootPersonal extends Directory{
 	
@@ -10,7 +10,7 @@ class RootPersonal extends Directory{
 
 	public function initPath() {
 		
-		$username = \afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
+		$username = \Afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
 		if ($this->rootPath === null)
 		{
 			$this->rootPath = $this->path . '/' . $username;

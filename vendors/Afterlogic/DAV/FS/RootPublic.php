@@ -2,7 +2,7 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\FS;
+namespace Afterlogic\DAV\FS;
 
 class RootPublic extends Directory {
 	
@@ -10,12 +10,12 @@ class RootPublic extends Directory {
 
     public function initPath() {
 		
-		$sUserName = \afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
+		$sUserName = \Afterlogic\DAV\Auth\Backend::getInstance()->getCurrentUser();
 		if ($this->rootPath === null)
 		{
 			if (isset($sUserName))
 			{
-				$oAccount = \afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
+				$oAccount = \Afterlogic\DAV\Utils::GetAccountByLogin($sUserName);
 				if ($oAccount)
 				{
 					$this->rootPath = $this->path . '/' . $oAccount->IdTenant;

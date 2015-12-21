@@ -137,7 +137,7 @@ class CApi
 			CApi::$oModuleManager->init();
 			CApi::$oManager->PrepareStorageMap();
 
-			require_once CApi::LibrariesPath().'afterlogic/DAV/autoload.php';
+			require_once CApi::LibrariesPath().'Afterlogic/DAV/autoload.php';
 		}
 	}
 

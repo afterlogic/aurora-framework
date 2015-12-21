@@ -14,7 +14,7 @@ $sDbPrefix = $oSettings->GetConf('Common/DBPrefix');
 /* Database */
 $oPdo = \CApi::GetPDO();
 
-$sCalendarSharesTableName = $sDbPrefix . \afterlogic\DAV\Constants::T_CALENDARSHARES;
+$sCalendarSharesTableName = $sDbPrefix . \Afterlogic\DAV\Constants::T_CALENDARSHARES;
 
 $stmt1 = $oPdo->prepare("SELECT * FROM " . $sDbPrefix . "adav_delegates");
 $stmt1->execute();

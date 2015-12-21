@@ -2,9 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-namespace afterlogic\DAV\Locks\Backend;
+namespace Afterlogic\DAV\Locks\Backend;
 
-use afterlogic\DAV\Constants;
+use Afterlogic\DAV\Constants;
 
 class PDO extends \Sabre\DAV\Locks\Backend\PDO {
 
