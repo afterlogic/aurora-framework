@@ -1,21 +1,23 @@
 'use strict';
 
 module.exports = function (oSettings) {
+	require('modules/Calendar/js/enums.js');
 	require('fullcalendar');
 	require('modules/Calendar/js/BaseTabExtMethods.js');
 
 	var
-		_ = require('underscore'),
+		TextUtils = require('core/js/utils/Text.js'),
 		
-		Settings = require('modules/Calendar/js/Settings.js'),
-		
-		ManagerComponents = require('modules/Calendar/js/manager-components.js'),
-		ComponentsMethods = ManagerComponents()
+		Settings = require('modules/Calendar/js/Settings.js')
 	;
 	
 	Settings.init(oSettings);
 	
-	return _.extend({
+	return {
+		start: function (ModulesManager) {
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('Settings', 'registerSettingsTab', [require('modules/Calendar/js/views/CalendarSettingsTabView.js'), 'calendar', TextUtils.i18n('SETTINGS/TAB_CALENDAR')]);
+		},
 		screens: {
 			'main': function () {
 				return require('modules/Calendar/js/views/CalendarView.js');
@@ -27,5 +29,5 @@ module.exports = function (oSettings) {
 		getWeekStartsOn: function () {
 			return Settings.CalendarWeekStartsOn;
 		}
-	}, ComponentsMethods);
+	};
 };

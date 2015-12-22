@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
+	TextUtils = require('core/js/utils/Text.js'),
 	Settings = require('core/js/Settings.js'),
 	
 	oModules = {},
@@ -28,6 +29,8 @@ module.exports = {
 				oModules[sModuleName] = oAvaliableModules[sModuleName](oModuleSettings);
 			}
 		});
+		
+		this.run('Settings', 'registerSettingsTab', [require('core/js/views/CommonSettingsTabView.js'), 'common', TextUtils.i18n('SETTINGS/TAB_COMMON')]);
 		
 		_.each(oModules, _.bind(function (oModule) {
 			if ($.isFunction(oModule.start))

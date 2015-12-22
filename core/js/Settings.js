@@ -3,7 +3,7 @@
 var
 	$ = require('jquery'),
 	ko = require('knockout'),
-			
+	
 	AppData = window.pSevenAppData,
 	
 	bRtl = $('html').hasClass('rtl')
@@ -50,7 +50,7 @@ module.exports = {
 			JoinReplyPrefixes: true,
 			SaveRepliedToCurrFolder: false,
 			AttachmentSizeLimit: 0,
-			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'],
+			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp']
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
@@ -61,12 +61,12 @@ module.exports = {
 			CalendarPubHash: AppData.CalendarPubHash,
 			AllowCalendar: true,
 			CalendarSharing: true,
-			CalendarDefaultTab: 1,
-			CalendarShowWeekEnds: true,
-			CalendarWeekStartsOn: 7,
-			CalendarShowWorkDay: true,
-			CalendarWorkDayStarts: '09',
-			CalendarWorkDayEnds: '18',
+			CalendarDefaultTab: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarDefaultTab.toString() : '3',
+			CalendarShowWeekEnds: AppData.User && AppData.User.Calendar ? !!AppData.User.Calendar.CalendarShowWeekEnds: true,
+			CalendarWeekStartsOn: AppData.User && AppData.User.Calendar ? parseInt(AppData.User.Calendar.CalendarWeekStartsOn, 10) : 7,
+			CalendarShowWorkDay: AppData.User && AppData.User.Calendar ? !!AppData.User.Calendar.CalendarShowWorkDay : true,
+			CalendarWorkDayStarts: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarWorkDayStarts : '09',
+			CalendarWorkDayEnds: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarWorkDayEnds : '18',
 			CalendarAppointments: true
 		},
 		Files: {
@@ -114,6 +114,7 @@ module.exports = {
 	CustomLogo: '',
 	defaultTimeFormat: ko.observable('0'),
 	DefaultDateFormat: 'DD/MM/YYYY',
+	DateFormats: AppData.App.DateFormats,
 	IsFilesSupported: true,
 	DefaultFontName: 'Tahoma',
 	IdUser: AppData.IdUser,
@@ -122,16 +123,28 @@ module.exports = {
 	SiteName: 'AfterLogic WebMail',
 	IsRTL: bRtl,
 	CsrfToken: AppData.Token,
-	DesktopNotifications: true,
+	DesktopNotifications: AppData.User.DesktopNotifications,
 	AllowPrefetch: true,
 	IsDemo: false,
-	DefaultLanguage: 'English',
-	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
+//	DefaultLanguage: 'English',
+//	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
 	IdleSessionTimeout: 0,
 	TenantHash: AppData.TenantHash,
-	AutoRefreshIntervalMinutes: 1,
+	AutoRefreshIntervalMinutes: AppData.User.AutoCheckMailInterval,
 	AllowMobile: AppData.AllowMobile,
 	IsMobile: AppData.IsMobile,
 	AttachmentSizeLimit: 0,
-	ClientDebug: true
+	ClientDebug: true,
+	Themes: AppData.App.Themes,
+	DefaultTheme: AppData.User.DefaultTheme,
+	Languages: AppData.App.Languages,
+	DefaultLanguage: AppData.User.DefaultLanguage,
+	
+	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultLanguage, sDefaultTimeFormat, sDesktopNotifications) {
+		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
+		this.DefaultTheme = sDefaultTheme;
+		this.DefaultLanguage = sDefaultLanguage;
+		this.defaultTimeFormat(sDefaultTimeFormat);
+		this.DesktopNotifications = sDesktopNotifications === '1';
+	}
 };

@@ -16,6 +16,10 @@ module.exports = function (oSettings) {
 				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS'));
+		},
+		registerSettingsTab: function (oTabView, oTabName, oTabTitle) {
+			var SettingsView = require('modules/Settings/js/views/SettingsView.js');
+			SettingsView.registerTab(oTabView, oTabName, oTabTitle);
 		}
 	};
 };

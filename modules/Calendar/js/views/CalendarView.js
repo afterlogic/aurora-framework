@@ -193,23 +193,16 @@ function CCalendarView()
 	this.calendarSharing = Settings.AllowCalendar && Settings.CalendarSharing;
 	
 	this.defaultViewName = ko.computed(function () {
-		var 
-			viewName = 'month'
-		;
-		
 		switch (Settings.CalendarDefaultTab)
 		{
 			case Enums.CalendarDefaultTab.Day:
-				viewName = 'agendaDay';
-				break;
+				return 'agendaDay';
 			case Enums.CalendarDefaultTab.Week:
-				viewName = 'agendaWeek';
-				break;
+				return 'agendaWeek';
 			case Enums.CalendarDefaultTab.Month:
-				viewName = 'month';
-				break;
+			default:
+				return 'month';
 		}
-		return viewName;
 	}, this);
 	
 	this.iAutoReloadTimer = -1;
