@@ -17,9 +17,15 @@ module.exports = function (oSettings) {
 			;
 			return new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS'));
 		},
-		registerSettingsTab: function (oTabView, oTabName, oTabTitle) {
-			var SettingsView = require('modules/Settings/js/views/SettingsView.js');
+		registerSettingsTab: function (fGetTabView, oTabName, oTabTitle) {
+			var
+				SettingsView = require('modules/Settings/js/views/SettingsView.js'),
+				oTabView = fGetTabView()
+			;
 			SettingsView.registerTab(oTabView, oTabName, oTabTitle);
+		},
+		getAbstractSettingsTabViewClass: function () {
+			return require('modules/Settings/js/views/CAbstractSettingsTabView.js');
 		}
 	};
 };

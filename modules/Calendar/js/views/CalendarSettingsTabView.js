@@ -10,7 +10,8 @@ var
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
-	CAbstractSettingsTabView = require('core/js/views/CAbstractSettingsTabView.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
 	
 	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
 	

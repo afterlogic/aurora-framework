@@ -115,7 +115,7 @@ module.exports = {
 	defaultTimeFormat: ko.observable('0'),
 	DefaultDateFormat: 'DD/MM/YYYY',
 	DateFormats: AppData.App.DateFormats,
-	IsFilesSupported: true,
+	IsFilesSupported: AppData.User.IsFilesSupported,
 	DefaultFontName: 'Tahoma',
 	IdUser: AppData.IdUser,
 	AllowSaveAsPdf: false,

@@ -16,7 +16,7 @@ module.exports = function (oSettings) {
 	return {
 		start: function (ModulesManager) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
-			ModulesManager.run('Settings', 'registerSettingsTab', [require('modules/Calendar/js/views/CalendarSettingsTabView.js'), 'calendar', TextUtils.i18n('SETTINGS/TAB_CALENDAR')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Calendar/js/views/CalendarSettingsTabView.js'); }, 'calendar', TextUtils.i18n('SETTINGS/TAB_CALENDAR')]);
 		},
 		screens: {
 			'main': function () {
