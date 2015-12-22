@@ -6,8 +6,7 @@ $sCurrentFile = \basename(__FILE__);
 $sRequestUri = empty($_SERVER['REQUEST_URI']) ? '' : \trim($_SERVER['REQUEST_URI']);
 
 $iLen = 4 + \strlen($sCurrentFile);
-if (\strlen($sRequestUri) >= $iLen && 'dav/'.$sCurrentFile === \substr($sRequestUri, -$iLen))
-{
+if (\strlen($sRequestUri) >= $iLen && 'dav/'.$sCurrentFile === \substr($sRequestUri, -$iLen)) {
 	\header('Location: ./server.php/');
 	exit();
 }
