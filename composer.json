@@ -3,7 +3,7 @@
 		"google/recaptcha": "~1.1",
 		"sabre/dav": "~1.8.12",
 		"knplabs/knp-snappy": "*",
-		"symfony/filesystem": "~3.0",
+		"symfony/filesystem": "2.8",
 		"masterexploder/PHPThumb": "dev-master",
 		"PHPGangsta/GoogleAuthenticator" : "dev-master",
 		"phpzip/phpzip": ">=2.0.7",
