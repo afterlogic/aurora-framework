@@ -8,7 +8,7 @@
 		"PHPGangsta/GoogleAuthenticator" : "dev-master",
 		"phpzip/phpzip": ">=2.0.7",
 		"tijsverkoyen/css-to-inline-styles": "~1.3.0",
-		"afterlogic/dav": "dev-master",
-		"afterlogic/mailso": "dev-master"
+		"afterlogic/dav": "1.0",
+		"afterlogic/mailso": "1.3.3"
 	}	
 }
