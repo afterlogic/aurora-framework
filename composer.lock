@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/afterlogic/MailSo.git",
-                "reference": "07b2b10a5df9967460d552ba6caf3ff3365f3f87"
+                "reference": "e35246e09e80540fb91b9e0bf1155b87b166a68b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afterlogic/MailSo/zipball/07b2b10a5df9967460d552ba6caf3ff3365f3f87",
-                "reference": "07b2b10a5df9967460d552ba6caf3ff3365f3f87",
+                "url": "https://api.github.com/repos/afterlogic/MailSo/zipball/e35246e09e80540fb91b9e0bf1155b87b166a68b",
+                "reference": "e35246e09e80540fb91b9e0bf1155b87b166a68b",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
             ],
             "description": "Afterlogic MailSo",
             "homepage": "https://github.com/afterlogic/mailso",
-            "time": "2015-12-22 06:20:53"
+            "time": "2015-12-22 07:13:32"
         },
         {
             "name": "google/recaptcha",
