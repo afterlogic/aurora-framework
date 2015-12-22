@@ -93,7 +93,8 @@ module.exports = {
 			SocialTwitter: '',
 			SocialEmail: '',
 			SocialIsLoggedIn: false,
-			HelpdeskUserEmail: ''
+			HelpdeskUserEmail: '',
+			AllowHelpdeskNotifications: AppData.User.AllowHelpdeskNotifications
 		},
 		Settings: {},
 		dsbld_Phone: {
