@@ -555,6 +555,7 @@ abstract class AApiModule
 	{
 		@ob_start();
 		$aResponseItem = null;
+		$sModule = $this->oHttp->GetPost('Module', null);
 		$sMethod = $this->oHttp->GetPost('Method', null);
 		$sParameters = $this->oHttp->GetPost('Parameters', null);
 		try

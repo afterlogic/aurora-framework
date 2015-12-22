@@ -11,7 +11,7 @@ class IosModule extends AApiModule
 	
 	public function EntryIos()
 	{
-		$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Ios.html');
+		$sResult = file_get_contents($this->GetPath().'/templates/Ios.html');
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		$iUserId = $oApiIntegrator->getLogginedUserId();

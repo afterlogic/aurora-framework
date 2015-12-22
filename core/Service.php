@@ -55,8 +55,7 @@ class Service
 	
 	public function CheckApi()
 	{
-		if (!class_exists('\\CApi') || !\CApi::IsValid())
-		{
+		if (!class_exists('\\CApi') || !\CApi::IsValid()) {
 			echo 'AfterLogic API';
 			return '';
 		}
@@ -67,9 +66,9 @@ class Service
 		$oSettings =& \CApi::GetSettings();
 		$bRedirectToHttps = $oSettings->GetConf('Common/RedirectToHttps');
 		
-		$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));
-		if ($bRedirectToHttps && !$bHttps)
-		{
+		$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
+				(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));
+		if ($bRedirectToHttps && !$bHttps) {
 			header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 		}
 	}
@@ -81,29 +80,23 @@ class Service
 		
 		$oHttp = \MailSo\Base\Http::NewInstance();
 		$aPathInfo = array_filter(explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/'))));
-		if (0 < count($aPathInfo))
-		{
+		if (0 < count($aPathInfo)) {
 			$aQuery = $aPathInfo;
-		}
-		else 
-		{
+		} else {
 			$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
 
 			\CApi::Plugin()->RunQueryHandle($sQuery);
 
 			$iPos = \strpos($sQuery, '&');
-			if (0 < $iPos)
-			{
+			if (0 < $iPos) {
 				$sQuery = \substr($sQuery, 0, $iPos);
 			}
 			$aQuery = explode('/', $sQuery);
 		}
-		foreach ($aQuery as $sQueryItem)
-		{
+		foreach ($aQuery as $sQueryItem) {
 			$iPos = \strpos($sQueryItem, '=');
 			$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
 		}
-		
 		
 		return $aResult;
 	}
@@ -124,32 +117,31 @@ class Service
 		{
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
-			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox'))
-			{
+			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox')) {
 				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 			}
 			
-			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl'])))
-			{
+			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) {
 				setcookie('aft-cache-ctrl', '', time() - 3600);
 				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
-			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
-			if (is_string($sResult))
-			{
-				$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-				if (0 < \strlen($sFrameOptions))
-				{
-					@\header('X-Frame-Options: '.$sFrameOptions);
-				}
+			$oCoreModule = \CApi::GetModuleManager()->GetModule('Core');
+			if ($oCoreModule instanceof \AApiModule) {
+				$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
+				if (is_string($sResult)) {
+					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+					if (0 < \strlen($sFrameOptions)) {
+						@\header('X-Frame-Options: '.$sFrameOptions);
+					}
 
-				$sResult = strtr($sResult, array(
-					'{{AppVersion}}' => PSEVEN_APP_VERSION,
-					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-					'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
-				));
+					$sResult = strtr($sResult, array(
+						'{{AppVersion}}' => PSEVEN_APP_VERSION,
+						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
+					));
+				}
 			}
 		}
 
@@ -169,26 +161,21 @@ class Service
 
 		$aPaths = $this->GetPaths();
 		
-		if (0 < count($aPaths) && !empty($aPaths[0]))
-		{
+		if (0 < count($aPaths) && !empty($aPaths[0])) {
 			$sEntryPart = strtolower($aPaths[0]);
 			
 			$mResult = $this->oModuleManager->RunEntry($sEntryPart);
 			
-			if ($mResult === false)
-			{
+			if ($mResult === false) {
 				@ob_start();
 				\CApi::Plugin()->RunServiceHandle($sEntryPart, $aPaths);
 				$mResult = @ob_get_clean();
 
-				if (0 === strlen($mResult))
-				{
+				if (0 === strlen($mResult)) {
 					$mResult = $this->generateHTML();
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$mResult = $this->generateHTML();
 		}
 

@@ -509,7 +509,7 @@ class CalendarModule extends AApiModule
 					{
 						if (is_string($sResult))
 						{
-							$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/CalendarEventInviteExternal.html');
+							$sResult = file_get_contents($this->GetPath().'/templates/CalendarEventInviteExternal.html');
 
 							$dt = new \DateTime();
 							$dt->setTimestamp($oEvent[0]['startTS']);
@@ -626,21 +626,22 @@ class CalendarModule extends AApiModule
 				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
-			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
-			if (is_string($sResult))
-			{
-				$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-				if (0 < \strlen($sFrameOptions))
-				{
-					@\header('X-Frame-Options: '.$sFrameOptions);
-				}
+			$oCoreModule = \CApi::GetModuleManager()->GetModule('Core');
+			if ($oCoreModule instanceof \AApiModule) {
+				$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
+				if (is_string($sResult)) {
+					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+					if (0 < \strlen($sFrameOptions)) {
+						@\header('X-Frame-Options: '.$sFrameOptions);
+					}
 
-				$sResult = strtr($sResult, array(
-					'{{AppVersion}}' => PSEVEN_APP_VERSION,
-					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub')),
-					'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub'))
-				));
+					$sResult = strtr($sResult, array(
+						'{{AppVersion}}' => PSEVEN_APP_VERSION,
+						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub')),
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub'))
+					));
+				}
 			}
 		}
 

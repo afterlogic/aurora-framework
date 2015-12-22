@@ -557,6 +557,7 @@ class CCalendarHelper
 	 */
 	public static function createHtmlFromEvent($oEvent, $sAccountEmail, $sAttendee, $sCalendarName, $sStartDate)
 	{
+		$sHtml = '';
 		$aValues = array(
 			'attendee' => $sAttendee,
 			'organizer' => $sAccountEmail,
@@ -572,24 +573,28 @@ class CCalendarHelper
 		$sEncodedValueDecline = \CApi::EncodeKeyValues($aValues);
 
 		$sHref = rtrim(\MailSo\Base\Http::SingletonInstance()->GetFullUrl(), '\\/ ').'/?invite=';
-		$sHtml = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/CalendarEventInvite.html');
-		$sHtml = strtr($sHtml, array(
-			'{{INVITE/LOCATION}}'	=> \CApi::I18N('INVITE/LOCATION'),
-			'{{INVITE/WHEN}}'		=> \CApi::I18N('INVITE/WHEN'),
-			'{{INVITE/DESCRIPTION}}'=> \CApi::I18N('INVITE/DESCRIPTION'),
-			'{{INVITE/INFORMATION}}'=> \CApi::I18N('INVITE/INFORMATION', array('Email' => $sAttendee)),
-			'{{INVITE/ACCEPT}}'		=> \CApi::I18N('INVITE/ACCEPT'),
-			'{{INVITE/TENTATIVE}}'	=> \CApi::I18N('INVITE/TENTATIVE'),
-			'{{INVITE/DECLINE}}'	=> \CApi::I18N('INVITE/DECLINE'),
-			'{{Calendar}}'			=> $sCalendarName.' '.$sAccountEmail,
-			'{{Location}}'			=> $oEvent->Location,
-			'{{Start}}'				=> $sStartDate,
-			'{{Description}}'		=> $oEvent->Description,
-			'{{HrefAccept}}'		=> $sHref.$sEncodedValueAccept,
-			'{{HrefTentative}}'		=> $sHref.$sEncodedValueTentative,
-			'{{HrefDecline}}'		=> $sHref.$sEncodedValueDecline
-		));
-
+		$oCalendarModule = \CApi::GetModuleManager()->GetModule('Calendar');
+		if ($oCalendarModule instanceof AApiModule)
+		{
+			$sHtml = file_get_contents($oCalendarModule->GetPath().'/templates/CalendarEventInvite.html');
+			$sHtml = strtr($sHtml, array(
+				'{{INVITE/LOCATION}}'	=> \CApi::I18N('INVITE/LOCATION'),
+				'{{INVITE/WHEN}}'		=> \CApi::I18N('INVITE/WHEN'),
+				'{{INVITE/DESCRIPTION}}'=> \CApi::I18N('INVITE/DESCRIPTION'),
+				'{{INVITE/INFORMATION}}'=> \CApi::I18N('INVITE/INFORMATION', array('Email' => $sAttendee)),
+				'{{INVITE/ACCEPT}}'		=> \CApi::I18N('INVITE/ACCEPT'),
+				'{{INVITE/TENTATIVE}}'	=> \CApi::I18N('INVITE/TENTATIVE'),
+				'{{INVITE/DECLINE}}'	=> \CApi::I18N('INVITE/DECLINE'),
+				'{{Calendar}}'			=> $sCalendarName.' '.$sAccountEmail,
+				'{{Location}}'			=> $oEvent->Location,
+				'{{Start}}'				=> $sStartDate,
+				'{{Description}}'		=> $oEvent->Description,
+				'{{HrefAccept}}'		=> $sHref.$sEncodedValueAccept,
+				'{{HrefTentative}}'		=> $sHref.$sEncodedValueTentative,
+				'{{HrefDecline}}'		=> $sHref.$sEncodedValueDecline
+			));
+		}
+		
 		return $sHtml;
 	}
 

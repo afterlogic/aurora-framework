@@ -513,21 +513,22 @@ class FilesModule extends AApiModule
 
 			if ($oApiIntegrator)
 			{
-				$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/Index.html');
-				if (is_string($sResult))
-				{
-					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-					if (0 < \strlen($sFrameOptions))
-					{
-						@\header('X-Frame-Options: '.$sFrameOptions);
-					}
+				$oCoreModule = \CApi::GetModuleManager()->GetModule('Core');
+				if ($oCoreModule instanceof \AApiModule) {
+					$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
+					if (is_string($sResult)) {
+						$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+						if (0 < \strlen($sFrameOptions)) {
+							@\header('X-Frame-Options: '.$sFrameOptions);
+						}
 
-					$sResult = strtr($sResult, array(
-						'{{AppVersion}}' => PSEVEN_APP_VERSION,
-						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', '', $sFilesPub),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', '', $sFilesPub)
-					));
+						$sResult = strtr($sResult, array(
+							'{{AppVersion}}' => PSEVEN_APP_VERSION,
+							'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+							'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', '', $sFilesPub),
+							'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', '', $sFilesPub)
+						));
+					}
 				}
 			}
 		}
@@ -541,7 +542,7 @@ class FilesModule extends AApiModule
 				$sUrlRewriteBase = '<base href="'.$sUrlRewriteBase.'" />';
 			}
 
-			$sResult = file_get_contents(PSEVEN_APP_ROOT_PATH.'templates/FilesPub.html');
+			$sResult = file_get_contents($this->GetPath().'/templates/FilesPub.html');
 			if (is_string($sResult))
 			{
 				$sResult = strtr($sResult, array(

@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "34cc94491daa60885a187ac2bbd08097",
-    "content-hash": "9d2ba56535ffbc9413342a9f0d355bfa",
+    "hash": "207785616e66f824d9922da1016d436c",
+    "content-hash": "c42441908ff71fd25c98848c8092bb10",
     "packages": [
         {
             "name": "afterlogic/dav",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "http://github.com/afterlogic/dav",
-                "reference": "cbe717ee8e9ac78562761552eb98334d32597a13"
+                "url": "https://github.com/afterlogic/dav.git",
+                "reference": "8c480437b936a93042a083dd361cc0432c1c6f70"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afterlogic/dav/zipball/8c480437b936a93042a083dd361cc0432c1c6f70",
+                "reference": "8c480437b936a93042a083dd361cc0432c1c6f70",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
@@ -26,10 +32,11 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Afterlogic\\DAV": "lib/"
+                "psr-4": {
+                    "Afterlogic\\DAV\\": "lib/DAV/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "AfterLogic",
@@ -39,15 +46,21 @@
             ],
             "description": "Afterlogic DAV Server",
             "homepage": "https://github.com/afterlogic/dav",
-            "time": "2015-12-21 10:39:59"
+            "time": "2015-12-22 05:23:30"
         },
         {
             "name": "afterlogic/mailso",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "http://github.com/afterlogic/mailso",
+                "url": "https://github.com/afterlogic/MailSo.git",
                 "reference": "8cf10eae8a466ada10139bd9453eddc9f1facf76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afterlogic/MailSo/zipball/8cf10eae8a466ada10139bd9453eddc9f1facf76",
+                "reference": "8cf10eae8a466ada10139bd9453eddc9f1facf76",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
@@ -63,6 +76,7 @@
                     "MailSo\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "AfterLogic",
