@@ -4,7 +4,7 @@
 		"sabre/dav": "~1.8.12",
 		"knplabs/knp-snappy": "*",
 		"symfony/filesystem": "2.8",
-		"masterexploder/PHPThumb": "dev-master",
+		"masterexploder/PHPThumb": "2.1",
 		"PHPGangsta/GoogleAuthenticator" : "dev-master",
 		"phpzip/phpzip": ">=2.0.7",
 		"tijsverkoyen/css-to-inline-styles": "~1.3.0",
