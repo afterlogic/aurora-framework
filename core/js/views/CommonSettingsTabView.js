@@ -4,12 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
-	Ajax = require('core/js/Ajax.js'),
-	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass')
@@ -23,24 +19,22 @@ function CCommonSettingsTabView()
 	CAbstractSettingsTabView.call(this);
 	
 	this.aSkins = UserSettings.Themes;
-	this.selectedSkin = ko.observable(UserSettings.DefaultTheme);
-
 	this.aLanguages = UserSettings.Languages;
+	
+	/* Editable fields */
+	this.selectedSkin = ko.observable(UserSettings.DefaultTheme);
 	this.selectedLanguage = ko.observable(UserSettings.DefaultLanguage);
-
 	this.autoRefreshInterval = ko.observable(UserSettings.AutoRefreshIntervalMinutes);
-
 	this.timeFormat = ko.observable(UserSettings.defaultTimeFormat());
-
 	this.desktopNotifications = ko.observable(UserSettings.DesktopNotifications);
+	/*-- Editable fields */
+	
 	this.isDesktopNotificationsEnable = ko.observable((window.Notification && window.Notification.permission !== 'denied'));
 	this.desktopNotifications.subscribe(function (bChecked) {
 		var self = this;
-
 		if (bChecked && window.Notification.permission === 'default')
 		{
-			window.Notification.requestPermission(function (sPermission)
-			{
+			window.Notification.requestPermission(function (sPermission) {
 				if (sPermission === 'denied')
 				{
 					self.desktopNotifications(false);
@@ -55,82 +49,66 @@ _.extendOwn(CCommonSettingsTabView.prototype, CAbstractSettingsTabView.prototype
 
 CCommonSettingsTabView.prototype.ViewTemplate = 'Core_CommonSettingsTabView';
 
-CCommonSettingsTabView.prototype.getState = function ()
+/**
+ * Returns an array with the values of editable fields.
+ * 
+ * @returns {Array}
+ */
+CCommonSettingsTabView.prototype.getCurrentValues = function ()
 {
-	var aState = [
+	return [
 		this.selectedSkin(),
 		this.selectedLanguage(),
 		this.autoRefreshInterval(),
 		this.timeFormat(),
 		this.desktopNotifications()
 	];
-	
-	return aState.join(':');
 };
 
-CCommonSettingsTabView.prototype.revert = function ()
+/**
+ * Puts values from the global settings object to the editable fields.
+ */
+CCommonSettingsTabView.prototype.revertGlobalValues = function ()
 {
 	this.selectedSkin(UserSettings.DefaultTheme);
 	this.selectedLanguage(UserSettings.DefaultLanguage);
 	this.autoRefreshInterval(UserSettings.AutoRefreshIntervalMinutes);
 	this.timeFormat(UserSettings.defaultTimeFormat());
 	this.desktopNotifications(UserSettings.DesktopNotifications);
-	this.updateCurrentState();
 };
 
 /**
- * Sends a request to the server to save the settings.
+ * Gets values from the editable fields and prepares object for passing to the server and saving settings therein.
+ * 
+ * @returns {Object}
  */
-CCommonSettingsTabView.prototype.save = function ()
+CCommonSettingsTabView.prototype.getParametersForSave = function ()
 {
-	this.isSaving(true);
-	
-	this.updateCurrentState();
-	
-	Ajax.send('Core', 'UpdateSettings', {
+	return {
 		'AutoCheckMailInterval': Utils.pInt(this.autoRefreshInterval()),
 		'DefaultTheme': this.selectedSkin(),
 		'DefaultLanguage': this.selectedLanguage(),
 		'DefaultTimeFormat': this.timeFormat(),
 		'DesktopNotifications': this.desktopNotifications() ? '1' : '0'
-	}, this.onResponse, this);
+	};
 };
 
 /**
- * Parses the response from the server. If the settings are normally stored, then updates them. 
- * Otherwise an error message.
+ * Applies saved values of settings to the global settings object.
  * 
- * @param {Object} oResponse
- * @param {Object} oRequest
+ * @param {Object} oParameters Object that have been obtained by getParameters function.
  */
-CCommonSettingsTabView.prototype.onResponse = function (oResponse, oRequest)
+CCommonSettingsTabView.prototype.applySavedValues = function (oParameters)
 {
-	this.isSaving(false);
-
-	if (oResponse.Result === false)
+	if (oParameters.DefaultTheme !== UserSettings.DefaultTheme || oParameters.DefaultLanguage !== UserSettings.DefaultLanguage)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		window.location.reload();
 	}
 	else
 	{
-		var
-			oParameters = JSON.parse(oRequest.Parameters),
-			bNeedReload = (oParameters.DefaultTheme !== UserSettings.DefaultTheme ||
-				oParameters.DefaultLanguage !== UserSettings.DefaultLanguage)
-		;
-		
-		if (bNeedReload)
-		{
-			window.location.reload();
-		}
-		else
-		{
-			UserSettings.updateCommonSettings(oParameters.AutoCheckMailInterval,
-				oParameters.DefaultTheme, oParameters.DefaultLanguage,
-				oParameters.DefaultTimeFormat, oParameters.DesktopNotifications);
-
-			Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
-		}
+		UserSettings.updateCommonSettings(oParameters.AutoCheckMailInterval,
+			oParameters.DefaultTheme, oParameters.DefaultLanguage,
+			oParameters.DefaultTimeFormat, oParameters.DesktopNotifications);
 	}
 };
 

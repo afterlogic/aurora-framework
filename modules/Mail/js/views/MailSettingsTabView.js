@@ -4,18 +4,12 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
-	
-	Api = require('core/js/Api.js'),
 	Browser = require('core/js/Browser.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	UserSettings = require('core/js/Settings.js'),
 	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	
 	aRangeOfNumbers = [10, 20, 30, 50, 75, 100, 150, 200]
@@ -64,59 +58,34 @@ CMailSettingsTabView.prototype.registerMailto = function ()
 	MailUtils.registerMailto();
 };
 
-CMailSettingsTabView.prototype.getState = function()
+CMailSettingsTabView.prototype.getCurrentValues = function ()
 {
-	var aState = [
+	return [
 		this.messagesPerPage()
 	];
-	
-	return aState.join(':');
 };
 
-CMailSettingsTabView.prototype.revert = function()
+CMailSettingsTabView.prototype.revertGlobalValues = function ()
 {
 	this.setMessagesPerPage(Settings.MailsPerPage);
 	this.useThreads(Settings.useThreads());
 	this.saveRepliedToCurrFolder(Settings.SaveRepliedToCurrFolder);
 	this.allowChangeInputDirection(Settings.AllowChangeInputDirection);
-	
-	this.updateCurrentState();
 };
 
-CMailSettingsTabView.prototype.save = function ()
+CMailSettingsTabView.prototype.getParametersForSave = function ()
 {
-	this.isSaving(true);
-	
-	this.updateCurrentState();
-	
-	Ajax.send('UpdateSettings', {
+	return {
 		'MessagesPerPage': this.messagesPerPage(),
 		'UseThreads': this.useThreads(),
 		'SaveRepliedToCurrFolder': this.saveRepliedToCurrFolder(),
 		'AllowChangeInputDirection': this.allowChangeInputDirection()
-	}, this.onResponse, this);
+	};
 };
 
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CMailSettingsTabView.prototype.onResponse = function (oResponse, oRequest)
+CMailSettingsTabView.prototype.applySavedValues = function (oParameters)
 {
-	this.isSaving(false);
-
-	if (oResponse.Result === false)
-	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
-	}
-	else
-	{
-		var oParameters = JSON.parse(oRequest.Parameters);
-		
-		Settings.update(oParameters.MessagesPerPage, oParameters.UseThreads, oParameters.SaveRepliedToCurrFolder, oParameters.AllowChangeInputDirection);
-
-		Screens.showReport(Utils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
-	}
+	Settings.update(oParameters.MessagesPerPage, oParameters.UseThreads, oParameters.SaveRepliedToCurrFolder, oParameters.AllowChangeInputDirection);
 };
 
 module.exports = new CMailSettingsTabView();

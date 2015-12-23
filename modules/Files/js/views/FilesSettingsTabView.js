@@ -4,15 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
-	
-	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
 	
-	Ajax = require('modules/Files/js/Ajax.js'),
 	Settings = require('modules/Files/js/Settings.js')
 ;
 
@@ -30,50 +24,28 @@ _.extendOwn(CFilesSettingsTabView.prototype, CAbstractSettingsTabView.prototype)
 
 CFilesSettingsTabView.prototype.ViewTemplate = 'Files_FilesSettingsTabView';
 
-CFilesSettingsTabView.prototype.getState = function()
+CFilesSettingsTabView.prototype.getCurrentValues = function ()
 {
-	var aState = [
+	return [
 		this.enableFiles()
 	];
-	
-	return aState.join(':');
 };
 
-CFilesSettingsTabView.prototype.revert = function()
+CFilesSettingsTabView.prototype.revertGlobalValues = function ()
 {
 	this.enableFiles(Settings.filesEnable());
-	this.updateCurrentState();
 };
 
-CFilesSettingsTabView.prototype.save = function ()
+CFilesSettingsTabView.prototype.getParametersForSave = function ()
 {
-	this.isSaving(true);
-	
-	this.updateCurrentState();
-	
-	Ajax.send('UpdateSettings', { 'FilesEnable': this.enableFiles() ? '1' : '0' }, this.onResponse, this);
+	return {
+		'FilesEnable': this.enableFiles() ? '1' : '0'
+	};
 };
 
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CFilesSettingsTabView.prototype.onResponse = function (oResponse, oRequest)
+CFilesSettingsTabView.prototype.applySavedValues = function (oParameters)
 {
-	this.isSaving(false);
-
-	if (oResponse.Result === false)
-	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
-	}
-	else
-	{
-		var oParameters = JSON.parse(oRequest.Parameters);
-		
-		Settings.update(oParameters.FilesEnable);
-
-		Screens.showReport(Utils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
-	}
+	Settings.update(oParameters.FilesEnable);
 };
 
 module.exports = new CFilesSettingsTabView();

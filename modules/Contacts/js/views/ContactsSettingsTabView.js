@@ -4,15 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
-	
-	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js'),
 	Settings = require('modules/Contacts/js/Settings.js'),
 	
 	aRangeOfNumbers = [10, 20, 30, 50, 75, 100, 150, 200]
@@ -24,7 +18,6 @@ var
 function CContactsSettingsTabView()
 {
 	CAbstractSettingsTabView.call(this);
-
 	
 	this.contactsPerPageValues = ko.observableArray(aRangeOfNumbers);
 	this.contactsPerPage = ko.observable(aRangeOfNumbers[0]);
@@ -53,50 +46,28 @@ CContactsSettingsTabView.prototype.setContactsPerPage = function (iCpp)
 	this.contactsPerPage(iCpp);
 };
 
-CContactsSettingsTabView.prototype.getState = function()
+CContactsSettingsTabView.prototype.getCurrentValues = function ()
 {
-	var aState = [
+	return [
 		this.contactsPerPage()
 	];
-	
-	return aState.join(':');
 };
 
-CContactsSettingsTabView.prototype.revert = function()
+CContactsSettingsTabView.prototype.revertGlobalValues = function ()
 {
 	this.setContactsPerPage(Settings.ContactsPerPage);
-	this.updateCurrentState();
 };
 
-CContactsSettingsTabView.prototype.save = function ()
+CContactsSettingsTabView.prototype.getParametersForSave = function ()
 {
-	this.isSaving(true);
-	
-	this.updateCurrentState();
-	
-	Ajax.send('UpdateSettings', { 'ContactsPerPage': this.contactsPerPage() }, this.onResponse, this);
+	return {
+		'ContactsPerPage': this.contactsPerPage()
+	};
 };
 
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CContactsSettingsTabView.prototype.onResponse = function (oResponse, oRequest)
+CContactsSettingsTabView.prototype.applySavedValues = function (oParameters)
 {
-	this.isSaving(false);
-
-	if (oResponse.Result === false)
-	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
-	}
-	else
-	{
-		var oParameters = JSON.parse(oRequest.Parameters);
-		
-		Settings.update(oParameters.ContactsPerPage);
-
-		Screens.showReport(Utils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
-	}
+	Settings.update(oParameters.ContactsPerPage);
 };
 
 module.exports = new CContactsSettingsTabView();
