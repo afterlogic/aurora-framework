@@ -32,12 +32,25 @@ module.exports = function (oSettings) {
 	}
 	
 	return {
-		start: function () {
+		start: function (ModulesManager) {
+			var
+				TextUtils = require('core/js/utils/Text.js'),
+				Browser = require('core/js/Browser.js'),
+				MailUtils = require('modules/Mail/js/utils/Mail.js')
+			;
+			
 			require('modules/Mail/js/koBindings.js');
 			if (!App.isMobile())
 			{
 				require('modules/Mail/js/koBindingSearchHighlighter.js');
 			}
+			
+			if (Settings.AllowAppRegisterMailto)
+			{
+				MailUtils.registerMailto(Browser.firefox);
+			}
+			
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/MailSettingsTabView.js'); }, 'mail', TextUtils.i18n('TITLE/LOGIN')]);
 		},
 		screens: oScreens,
 		getHeaderItem: function () {

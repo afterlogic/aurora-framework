@@ -31,7 +31,7 @@ module.exports = {
 		},
 		Mail: {
 			ShowQuotaBar: true, //todo: account level
-			useThreads: ko.observable(true),
+			useThreads: ko.observable(AppData.User ? AppData.User.UseThreads : true),
 			MailsPerPage: 20,
 			AllowAutosaveInDrafts: true,
 			AutoSaveIntervalSeconds: 60,
@@ -44,13 +44,15 @@ module.exports = {
 			DefaultFontName: 'Tahoma',
 			DefaultFontSize: 3,
 			AllowInsertImage: true,
-			AllowChangeInputDirection: true,
+			AllowChangeInputDirection: AppData.User ? AppData.User.AllowChangeInputDirection : true,
 			ImageUploadSizeLimit: 0,
 			AutosignOutgoingEmails: false,
 			JoinReplyPrefixes: true,
-			SaveRepliedToCurrFolder: false,
+			SaveRepliedToCurrFolder: AppData.User ? AppData.User.SaveRepliedToCurrFolder : false,
 			AttachmentSizeLimit: 0,
-			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp']
+			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'],
+			ThreadsEnabled: AppData.User ? AppData.User.ThreadsEnabled : true,
+			AllowAppRegisterMailto: AppData.User ? AppData.App.AllowAppRegisterMailto : true
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
@@ -94,7 +96,7 @@ module.exports = {
 			SocialEmail: '',
 			SocialIsLoggedIn: false,
 			HelpdeskUserEmail: '',
-			AllowHelpdeskNotifications: AppData.User.AllowHelpdeskNotifications
+			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false
 		},
 		Settings: {},
 		dsbld_Phone: {
@@ -116,7 +118,7 @@ module.exports = {
 	defaultTimeFormat: ko.observable('0'),
 	DefaultDateFormat: 'DD/MM/YYYY',
 	DateFormats: AppData.App.DateFormats,
-	IsFilesSupported: AppData.User.IsFilesSupported,
+	IsFilesSupported: AppData.User ? AppData.User.IsFilesSupported : true,
 	DefaultFontName: 'Tahoma',
 	IdUser: AppData.IdUser,
 	AllowSaveAsPdf: false,
@@ -124,22 +126,20 @@ module.exports = {
 	SiteName: 'AfterLogic WebMail',
 	IsRTL: bRtl,
 	CsrfToken: AppData.Token,
-	DesktopNotifications: AppData.User.DesktopNotifications,
+	DesktopNotifications: AppData.User ? AppData.User.DesktopNotifications : true,
 	AllowPrefetch: true,
 	IsDemo: false,
-//	DefaultLanguage: 'English',
-//	Languages: [{name: 'English', value: 'English'}, {name: 'Русский', value: 'Russian'}],
 	IdleSessionTimeout: 0,
 	TenantHash: AppData.TenantHash,
-	AutoRefreshIntervalMinutes: AppData.User.AutoCheckMailInterval,
+	AutoRefreshIntervalMinutes: AppData.User ? AppData.User.AutoCheckMailInterval : 1,
 	AllowMobile: AppData.AllowMobile,
 	IsMobile: AppData.IsMobile,
 	AttachmentSizeLimit: 0,
 	ClientDebug: true,
 	Themes: AppData.App.Themes,
-	DefaultTheme: AppData.User.DefaultTheme,
+	DefaultTheme: AppData.User ? AppData.User.DefaultTheme : 'Default',
 	Languages: AppData.App.Languages,
-	DefaultLanguage: AppData.User.DefaultLanguage,
+	DefaultLanguage: AppData.User ? AppData.User.DefaultLanguage : 'English',
 	
 	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultLanguage, sDefaultTimeFormat, sDesktopNotifications) {
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;

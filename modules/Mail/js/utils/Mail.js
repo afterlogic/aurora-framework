@@ -4,6 +4,10 @@ var
 	$ = require('jquery'),
 			
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
+	Storage = require('core/js/Storage.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -60,6 +64,20 @@ MailUtils.deleteMessages = function (aUids, fAfterDelete)
 	else if (!oTrash)
 	{
 		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAILBOX/CONFIRM_MESSAGES_DELETE_NO_TRASH_FOLDER'), fDeleteMessages]);
+	}
+};
+
+MailUtils.registerMailto = function (bRegisterOnce)
+{
+	if (window.navigator && $.isFunction(window.navigator.registerProtocolHandler) && (!bRegisterOnce || Storage.getData('MailtoAsked') !== 1))
+	{
+		window.navigator.registerProtocolHandler(
+			'mailto',
+			Utils.getAppPath() + '#compose/to/%s',
+			UserSettings.SiteName !== '' ? UserSettings.SiteName : 'WebMail'
+		);
+
+		Storage.setData('MailtoAsked', 1);
 	}
 };
 
