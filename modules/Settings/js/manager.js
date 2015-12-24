@@ -24,6 +24,9 @@ module.exports = function (oSettings) {
 			;
 			SettingsView.registerTab(oTabView, oTabName, oTabTitle);
 		},
+		getSettingsUtils: function () {
+			return require('modules/Settings/js/utils/Settings.js');
+		},
 		getAbstractSettingsTabViewClass: function () {
 			return require('modules/Settings/js/views/CAbstractSettingsTabView.js');
 		}
