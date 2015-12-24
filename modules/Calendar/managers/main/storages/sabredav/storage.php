@@ -237,7 +237,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	 */
 	public function getPublicUser()
 	{
-		return \Afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
+		return \Afterlogic\DAV\Utils::getPrincipalByEmail(\Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
 	}
 
 	/**
@@ -360,18 +360,20 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 
 		$sSystemName = \Sabre\DAV\UUIDUtil::getUUID();
-		$oUserCalendars->createExtendedCollection($sSystemName, 
-				array(
-					'{DAV:}collection',
-					'{urn:ietf:params:xml:ns:caldav}calendar'
-				), 
-				array(
-					'{DAV:}displayname' => $sName,
-					'{'.\Sabre\CalDAV\Plugin::NS_CALENDARSERVER.'}getctag' => 1,
-					'{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description' => $sDescription,
-					'{http://apple.com/ns/ical/}calendar-color' => $sColor,
-					'{http://apple.com/ns/ical/}calendar-order' => $iOrder
-				)
+				$oUserCalendars->createExtendedCollection($sSystemName, 
+					new Sabre\DAV\MkCol(
+						[
+							'{DAV:}collection',
+							'{urn:ietf:params:xml:ns:caldav}calendar'
+						],
+						[
+							'{DAV:}displayname' => $sName,
+							'{'.\Sabre\CalDAV\Plugin::NS_CALENDARSERVER.'}getctag' => 1,
+							'{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description' => $sDescription,
+							'{http://apple.com/ns/ical/}calendar-color' => $sColor,
+							'{http://apple.com/ns/ical/}calendar-order' => $iOrder
+						]
+					)
 		);
 		return $sSystemName;
 	}
@@ -401,7 +403,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 						'{http://sabredav.org/ns}owner-principal'
 					)
 				);
-				$sPrincipal = isset($aCalendarProperties['principaluri']) ? $aCalendarProperties['principaluri'] : null; 
+				$sPrincipal = $oCalDAVCalendar->getOwner(); 
 
 				$sOwnerPrincipal = isset($aCalendarProperties['{http://sabredav.org/ns}owner-principal']) ? 
 						$aCalendarProperties['{http://sabredav.org/ns}owner-principal'] : $sPrincipal; 
@@ -435,7 +437,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 				}
 				unset($this->CalDAVCalendarsCache[$sCalendarId]);
 				unset($this->CalDAVCalendarObjectsCache[$sCalendarId]);
-				return $oCalDAVCalendar->updateProperties($aUpdateProperties);
+				return $oCalDAVCalendar->propPatch(new \Sabre\DAV\PropPatch($aUpdateProperties));
 				
 			}
 		}
