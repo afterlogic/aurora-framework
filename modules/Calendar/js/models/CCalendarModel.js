@@ -18,7 +18,7 @@ var
 function CCalendarModel()
 {
 	this.id = 0;
-	this.cTag = 0;
+	this.sSyncToken = '';
 	this.name = ko.observable('');
 	this.description = ko.observable('');
 	this.owner = ko.observable('');
@@ -96,7 +96,7 @@ CCalendarModel.prototype.parseCssColor = function (sColor)
 CCalendarModel.prototype.parse = function (oData)
 {
 	this.id = Utils.pString(oData.Id);
-	this.cTag = oData.CTag;
+	this.sSyncToken = oData.SyncToken;
 	this.name(Utils.pString(oData.Name));
 	this.description(Utils.pString(oData.Description));
 	this.owner(Utils.pString(oData.Owner));

@@ -33,3 +33,7 @@
 /static/
 /build/
 /vendor/
+/migrateto30.php
+/migrateto20.php
+/migrateto21.php
+/composer.phar

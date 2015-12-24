@@ -904,12 +904,11 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 	{
 		this.loaded = true;
 
-		//sets default calendar always fist in list
 		_.each(oResponse.Result.Calendars, function (oCalendarData) {
 			oCalendar = this.calendars.parseCalendar(oCalendarData);
 			aCalendarIds.push(oCalendar.id);
 			oClientCalendar = this.calendars.getCalendarById(oCalendar.id);
-			if (!oClientCalendar || (oCalendar && oClientCalendar && oClientCalendar.cTag !== oCalendar.cTag))
+			if ((oClientCalendar && oClientCalendar.sSyncToken) !== (oCalendar && oCalendar.sSyncToken))
 			{
 				oCalendar = this.calendars.parseAndAddCalendar(oCalendarData);
 				if (oCalendar)
@@ -926,7 +925,6 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 			}
 		}, this);
 
-
 		if (this.calendars.count() === 0 && this.isPublic && this.needsToReload)
 		{
 			this.browserTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
@@ -936,14 +934,15 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 		this.needsToReload = false;
 		this.calendars.expunge(aCalendarIds);
 
-		_.each(aCalendarIds, function (sCalendarId){
+		_.each(aCalendarIds, function (sCalendarId) {
 			oCalendar = this.calendars.getCalendarById(sCalendarId);
 			if (oCalendar && oCalendar.eventsCount() > 0)
 			{
 				oCalendar.reloadEvents();
 			}
 		}, this);
-		this.getEvents(aCalendarIds);
+		
+		this.getEvents(aNewCalendarIds);
 	}
 	else
 	{
@@ -1791,7 +1790,7 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 				oCalendar.addEvent(oEventData);
 			}, this);
 			
-			oCalendar.cTag = oResponse.Result.CTag;
+			oCalendar.sSyncToken = oResponse.Result.SyncToken;
 			
 			if (!oCalendar.active())
 			{
@@ -1808,7 +1807,7 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 		}
 		else if (oRequest.Method === 'DeleteEvent')
 		{
-			oCalendar.cTag = oResponse.Result; 
+			oCalendar.sSyncToken = oResponse.Result; 
 			if(oParameters.allEvents === Enums.CalendarEditRecurrenceEvent.OnlyThisInstance)
 			{
 				oCalendar.removeEvent(oParameters.id);
