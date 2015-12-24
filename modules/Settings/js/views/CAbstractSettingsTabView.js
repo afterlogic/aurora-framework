@@ -123,7 +123,7 @@ CAbstractSettingsTabView.prototype.save = function ()
 	
 	this.updateSavedState();
 	
-	Ajax.send('Settings', 'UpdateSettings', this.getParametersForSaving(), this.onResponse, this);
+	Ajax.send('Settings', 'UpdateSettings', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**

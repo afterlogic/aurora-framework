@@ -6,7 +6,11 @@ function IsPgpSupported()
 }
 
 module.exports = function (oSettings) {
-	var Settings = require('modules/OpenPgp/js/Settings.js');
+	var
+		TextUtils = require('core/js/utils/Text.js'),
+		
+		Settings = require('modules/OpenPgp/js/Settings.js')
+	;
 	Settings.init(oSettings);
 	
 	return {
@@ -15,6 +19,7 @@ module.exports = function (oSettings) {
 			{
 				ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/OpenPgp/js/views/MessageControlsView.js'), 'BeforeMessageHeaders']);
 				ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/OpenPgp/js/views/ComposeButtonsView.js')]);
+				ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/OpenPgp/js/views/OpenPgpSettingsTabView.js'); }, 'pgp', TextUtils.i18n('SETTINGS/TAB_OPENPGP')]);
 			}
 		}
 	};
