@@ -28,7 +28,7 @@ class DavModule extends AApiModule
 			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
 		}
 		
-		\Afterlogic\DAV\Server::NewInstance($sBaseUri)->exec();
+		\Afterlogic\DAV\Server::getInstance($sBaseUri)->exec();
 		return '';
 	}	
 	
@@ -113,7 +113,23 @@ class DavModule extends AApiModule
 	
 	public function GetPublicUser()
 	{
-		return \Afterlogic\DAV\Backend::Principal()->getPrincipalByEmail(\Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
+		$sEmail = \Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL;
+		$aPrincipalsPath = \Afterlogic\DAV\Backend::Principal()->searchPrincipals(
+				\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX, 
+				array(
+					'{http://sabredav.org/ns}email-address' => $sEmail
+				)
+		);
+		$aPrincipals = array_filter($aPrincipalsPath, function ($sPrincipalPath) use ($sEmail) {
+			return ($sPrincipalPath === \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail);
+		});
+		
+		if (count($aPrincipals) === 0) {
+			throw new \Exception("Unknown email address");
+		}
+		
+		return \Afterlogic\DAV\Backend::Principal()->getPrincipalByPath($aPrincipals[0]);
+				
 	}
 }
 

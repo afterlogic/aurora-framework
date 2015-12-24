@@ -2286,7 +2286,7 @@ class Actions
 			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
 		}
 		
-		\Afterlogic\DAV\Server::NewInstance($sBaseUri)->exec();
+		\Afterlogic\DAV\Server::getInstance($sBaseUri)->exec();
 	}
 
 	/**

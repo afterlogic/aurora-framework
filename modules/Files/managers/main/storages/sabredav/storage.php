@@ -80,7 +80,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		{
 			if (!$this->initialized)
 			{
-				\Afterlogic\DAV\Auth\Backend::getInstance()->setCurrentUser($oAccount->Email);
+				\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
 				\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
 				$this->initialized = true;
 			}
@@ -410,7 +410,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 				foreach ($aItems as $oValue) 
 				{
 					$sFilePath = str_replace($sRootPath, '', dirname($oValue->getPath()));
-					$aProps = $oValue->getProperties(array('Owner', 'Shared', 'Name' ,'Link', 'LinkType'));
+					$aProps = array();//TODO: $oValue->getProperties(array('Owner', 'Shared', 'Name' ,'Link', 'LinkType'));
 					$oItem /*@var $oItem \CFileStorageItem */ = new  \CFileStorageItem();
 					
 					$oItem->Type = $sType;

@@ -28,6 +28,7 @@ class CCalendar
 	public $IsPublic;
 	public $PubHash;
 	public $RealUrl;
+	public $SyncToken;
 
 	/**
 	 * @param string $sId
@@ -57,6 +58,7 @@ class CCalendar
 		$this->Shares = array();
 		$this->IsPublic = false;
 		$this->PubHash = null;
+		$this->SyncToken = null;
 	}
 
 	/**
@@ -102,8 +104,83 @@ class CCalendar
 			'PubHash' => $this->PubHash,
 			'Shares' => $this->Shares,
 			'CTag' => $this->CTag,
-			'Etag' => $this->ETag
+			'Etag' => $this->ETag,
+			'SyncToken' => $this->SyncToken
 		);
+	}
+	
+	public static function createCalendar(\Sabre\CalDAV\Calendar $oCalDAVCalendar)
+	{
+		if (!($oCalDAVCalendar instanceof \Sabre\CalDAV\Calendar))
+		{
+			return false;
+		}
+		$aProps = $oCalDAVCalendar->getProperties(array());
+		
+		$oCalendar = new self($oCalDAVCalendar->getName());
+		$oCalendar->IntId = 0;//TODO: $aProps['id'];
+
+		if ($oCalDAVCalendar instanceof \Sabre\CalDAV\SharedCalendar)
+		{
+			$oCalendar->Shared = true;
+			if (isset($aProps['{http://sabredav.org/ns}read-only']))
+			{
+				$oCalendar->Access = $aProps['{http://sabredav.org/ns}read-only'] ? ECalendarPermission::Read : ECalendarPermission::Write;
+			}
+			if (isset($aProps['{http://calendarserver.org/ns/}summary']))
+			{
+				$oCalendar->Description = $aProps['{http://calendarserver.org/ns/}summary'];
+			}
+		}
+		else 
+		{
+			if (isset($aProps['{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description']))
+			{
+				$oCalendar->Description = $aProps['{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description'];
+			}
+		}
+
+		if (isset($aProps['{DAV:}displayname']))
+		{
+			$oCalendar->DisplayName = $aProps['{DAV:}displayname'];
+		}
+		if (isset($aProps['{'.\Sabre\CalDAV\Plugin::NS_CALENDARSERVER.'}getctag']))
+		{
+			$oCalendar->CTag = $aProps['{'.\Sabre\CalDAV\Plugin::NS_CALENDARSERVER.'}getctag'];
+		}
+		if (isset($aProps['{http://apple.com/ns/ical/}calendar-color']))
+		{
+			$oCalendar->Color = $aProps['{http://apple.com/ns/ical/}calendar-color'];
+		}
+		if (isset($aProps['{http://apple.com/ns/ical/}calendar-order']))
+		{
+			$oCalendar->Order = $aProps['{http://apple.com/ns/ical/}calendar-order'];
+		}
+		if (isset($aProps['{http://sabredav.org/ns}owner-principal']))
+		{
+			$oCalendar->Principals = array($aProps['{http://sabredav.org/ns}owner-principal']);
+		}
+		else
+		{
+			$oCalendar->Principals = array($oCalDAVCalendar->getOwner());
+		}
+
+		$sPrincipal = $oCalendar->GetMainPrincipalUrl();
+		$sEmail = basename(urldecode($sPrincipal));
+
+		$oCalendar->Owner = (!empty($sEmail)) ? $sEmail : $this->Account->Email;
+		$oCalendar->Url = '/calendars/'.$this->Account->Email.'/'.$oCalDAVCalendar->getName();
+		$oCalendar->RealUrl = 'calendars/'.$oCalendar->Owner.'/'.$oCalDAVCalendar->getName();
+		$oCalendar->SyncToken = $oCalDAVCalendar->getSyncToken();
+
+		$aTenantPrincipal = \Afterlogic\DAV\Backend::Principal()->getPrincipalInfo($this->Account);
+		if($aTenantPrincipal && $aTenantPrincipal['uri'] === $oCalDAVCalendar->getOwner())
+		{
+			$oCalendar->SharedToAll = true;
+		}
+		
+		return $oCalendar;
+		
 	}
 	
 	

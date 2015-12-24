@@ -113,8 +113,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$oCalendar = $this->oStorage->getCalendar($oAccount, $sCalendarId);
-			if ($oCalendar)
-			{
+			if ($oCalendar) {
 				$oCalendar = $this->populateCalendarShares($oAccount, $oCalendar);
 			}
 		}
@@ -134,35 +133,26 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	 */
 	public function populateCalendarShares($oAccount, $oCalendar)
 	{
-		if (!$oCalendar->Shared || $oCalendar->Shared && $oCalendar->Access === \ECalendarPermission::Write || $oCalendar->IsCalendarOwner($oAccount))
-		{
+		if (!$oCalendar->Shared || $oCalendar->Shared && 
+				$oCalendar->Access === \ECalendarPermission::Write || $oCalendar->IsCalendarOwner($oAccount)) {
 			$oCalendar->PubHash = $this->getPublicCalendarHash($oCalendar->Id);
 			$aUsers = $this->getCalendarUsers($oAccount, $oCalendar);
 
 			$aShares = array();
-			if ($aUsers && is_array($aUsers))
-			{
-				foreach ($aUsers as $aUser)
-				{
-					if ($aUser['email'] === $this->GetPublicUser())
-					{
+			if ($aUsers && is_array($aUsers)) {
+				foreach ($aUsers as $aUser) {
+					if ($aUser['email'] === $this->GetPublicUser()) {
 						$oCalendar->IsPublic = true;
-					}
-					else if ($aUser['email'] === $this->getTenantUser($oAccount))
-					{
+					} else if ($aUser['email'] === $this->getTenantUser($oAccount)) {
 						$oCalendar->SharedToAll = true;
 						$oCalendar->SharedToAllAccess = (int) $aUser['access'];
-					}
-					else
-					{
+					} else {
 						$aShares[] = $aUser;
 					}
 				}
 			}
 			$oCalendar->Shares = $aShares;
-		}
-		else
-		{
+		} else {
 			$oCalendar->IsDefault = false;
 		}
 
@@ -481,8 +471,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	public function updateCalendarShares($oAccount, $sCalendarId, $aShares)
 	{
 		$oResult = null;
-		if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount))
-		{
+		if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount)) {
 			try
 			{
 				$oResult = $this->oStorage->updateCalendarShares($oAccount, $sCalendarId, $aShares);
@@ -560,8 +549,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	public function updateCalendarShare($oAccount, $sCalendarId, $sUserId, $iPermission)
 	{
 		$oResult = null;
-		if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount))
-		{
+		if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount)) {
 			try
 			{
 				$oResult = $this->oStorage->updateCalendarShare($oAccount, $sCalendarId, $sUserId, $iPermission);
@@ -657,11 +645,9 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 			$dFinish = ($dFinish != null) ? date('Ymd\T235959\Z', $dFinish) : null;
 			$mCalendarId = !is_array($mCalendarId) ? array($mCalendarId) : $mCalendarId;
 
-			foreach ($mCalendarId as $sCalendarId)
-			{
+			foreach ($mCalendarId as $sCalendarId) {
 				$aEvents = $this->oStorage->getEvents($oAccount, $sCalendarId, $dStart, $dFinish);
-				if ($aEvents && is_array($aEvents))
-				{
+				if ($aEvents && is_array($aEvents)) {
 					$aResult = array_merge($aResult, $aEvents);
 				}
 			}
@@ -690,10 +676,8 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		{
 			$mResult = array();
 			$aData = $this->oStorage->getEvent($oAccount, $sCalendarId, $sEventId);
-			if ($aData !== false)
-			{
-				if (isset($aData['vcal']))
-				{
+			if ($aData !== false) {
+				if (isset($aData['vcal'])) {
 					$oVCal = $aData['vcal'];
 					$oCalendar = $this->oStorage->getCalendar($oAccount, $sCalendarId);
 					$mResult = CalendarParser::parseEvent($oAccount, $oCalendar, $oVCal);
@@ -728,22 +712,18 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		{
 			$mResult = array();
 			$aData = $this->oStorage->getEvent($oAccount, $sCalendarId, $sEventId);
-			if ($aData !== false)
-			{
-				if (isset($aData['vcal']))
-				{
+			if ($aData !== false) {
+				if (isset($aData['vcal'])) {
 					$oVCal = $aData['vcal'];
 					$oVCalOriginal = clone $oVCal;
 					$oCalendar = $this->oStorage->getCalendar($oAccount, $sCalendarId);
 					$oVEvent = $oVCal->getBaseComponents('VEVENT');
-					if (isset($oVEvent[0]))
-					{
+					if (isset($oVEvent[0])) {
 						unset($oVCal->VEVENT);
 						$oVCal->VEVENT = $oVEvent[0];
 					}
 					$oEvent = CalendarParser::parseEvent($oAccount, $oCalendar, $oVCal, $oVCalOriginal);
-					if (isset($oEvent[0]))
-					{
+					if (isset($oEvent[0])) {
 						$mResult = $oEvent[0];
 					}
 				}
@@ -801,26 +781,19 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$oVCal = \Sabre\VObject\Reader::read($sData);
-			if ($oVCal && $oVCal->VEVENT)
-			{
-				if (!empty($sEventId))
-				{
+			if ($oVCal && $oVCal->VEVENT) {
+				if (!empty($sEventId)) {
 					$oResult = $this->oStorage->createEvent($oAccount, $sCalendarId, $sEventId, $oVCal);
-				}
-				else
-				{
-					foreach ($oVCal->VEVENT as $oVEvent)
-					{
+				} else {
+					foreach ($oVCal->VEVENT as $oVEvent) {
 						$sUid = (string)$oVEvent->UID;
-						if (!isset($aEvents[$sUid]))
-						{
+						if (!isset($aEvents[$sUid])) {
 							$aEvents[$sUid] = new \Sabre\VObject\Component\VCalendar();
 						}
 						$aEvents[$sUid]->add($oVEvent);
 					}
 
-					foreach ($aEvents as $sUid => $oVCalNew)
-					{
+					foreach ($aEvents as $sUid => $oVCalNew) {
 						$this->oStorage->createEvent($oAccount, $sCalendarId, $sUid, $oVCalNew);
 					}
 					$oResult = true;
@@ -862,8 +835,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 			$oResult = $this->oStorage->createEvent($oAccount, $oEvent->IdCalendar, $oEvent->Id, $oVCal);
 
-			if ($oResult)
-			{
+			if ($oResult) {
 				$this->updateEventGroups($oAccount, $oEvent);
 			}
 		}
@@ -889,14 +861,11 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 
 		$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
-		if ($oContactsModule)
-		{
-			foreach ($aGroups as $sGroup)
-			{
+		if ($oContactsModule) {
+			foreach ($aGroups as $sGroup) {
 				$sGroupName = ltrim($sGroup, '#');
 				$oGroup = $oContactsModule->ExecuteMethod('getGroupByName', array($oAccount->IdUser, $sGroupName));
-				if (!$oGroup)
-				{
+				if (!$oGroup) {
 					$oGroup = new \CGroup();
 					$oGroup->IdUser = $oAccount->IdUser;
 					$oGroup->Name = $sGroupName;
@@ -923,34 +892,27 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$aData = $this->oStorage->getEvent($oAccount, $oEvent->IdCalendar, $oEvent->Id);
-			if ($aData !== false)
-			{
+			if ($aData !== false) {
 				$oVCal = $aData['vcal'];
 
-				if ($oVCal)
-				{
+				if ($oVCal) {
 					$iIndex = CCalendarHelper::getBaseVEventIndex($oVCal->VEVENT);
-					if ($iIndex !== false)
-					{
+					if ($iIndex !== false) {
 						CCalendarHelper::populateVCalendar($oAccount, $oEvent, $oVCal->VEVENT[$iIndex]);
 					}
 					$oVCalCopy = clone $oVCal;
-					if (!isset($oEvent->RRule))
-					{
+					if (!isset($oEvent->RRule)) {
 						unset($oVCalCopy->VEVENT);
-						foreach ($oVCal->VEVENT as $oVEvent)
-						{
+						foreach ($oVCal->VEVENT as $oVEvent) {
                             $oVEvent->SEQUENCE = (int) $oVEvent->SEQUENCE->getValue() + 1;
-							if (!isset($oVEvent->{'RECURRENCE-ID'}))
-							{
+							if (!isset($oVEvent->{'RECURRENCE-ID'})) {
 								$oVCalCopy->add($oVEvent);
 							}
 						}
 					}
 
 					$oResult = $this->oStorage->updateEvent($oAccount, $oEvent->IdCalendar, $oEvent->Id, $oVCalCopy);
-					if ($oResult)
-					{
+					if ($oResult) {
 						$this->updateEventGroups($oAccount, $oEvent);
 					}
 
@@ -981,8 +943,8 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$aData = $this->oStorage->getEvent($oAccount, $sCalendarId, $sEventId);
-			if ($aData !== false && isset($aData['vcal']) && $aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar)
-			{
+			if ($aData !== false && isset($aData['vcal']) && 
+					$aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar) {
 				$oResult = $this->oStorage->moveEvent($oAccount, $sCalendarId, $sCalendarIdNew, $sEventId, $aData['vcal']->serialize());
 				$this->updateEventGroupByMoving($sCalendarId, $sEventId, $sCalendarIdNew);
 				return true;
@@ -1005,15 +967,11 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	public function updateEventGroupByMoving($sCalendarId, $sEventId, $sNewCalendarId)
 	{
 		$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
-		if ($oContactsModule)
-		{
+		if ($oContactsModule) {
 			$aEvents = $oContactsModule->ExecuteMethod('getGroupEvent', array($sCalendarId, $sEventId));
-			if (is_array($aEvents) && 0 < count($aEvents))
-			{
-				foreach ($aEvents as $aEvent)
-				{
-					if (isset($aEvent['id_group']))
-					{
+			if (is_array($aEvents) && 0 < count($aEvents)) {
+				foreach ($aEvents as $aEvent) {
+					if (isset($aEvent['id_group'])) {
 						$oContactsModule->ExecuteMethod('removeEventFromGroup', array($aEvent['id_group'], $sCalendarId, $sEventId));
 						$oContactsModule->ExecuteMethod('addEventToGroup', array($aEvent['id_group'], $sNewCalendarId, $sEventId));
 					}
@@ -1038,29 +996,25 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$aData = $this->oStorage->getEvent($oAccount, $oEvent->IdCalendar, $oEvent->Id);
-			if ($aData !== false && isset($aData['vcal']) && $aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar)
-			{
+			if ($aData !== false && isset($aData['vcal']) && 
+					$aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar) {
 				$oVCal = $aData['vcal'];
 				$iIndex = CCalendarHelper::getBaseVEventIndex($oVCal->VEVENT);
-				if ($iIndex !== false)
-				{
+				if ($iIndex !== false) {
 					$oVCal->VEVENT[$iIndex]->{'LAST-MODIFIED'} = new \DateTime('now', new \DateTimeZone('UTC'));
 
 					$oDTExdate = CCalendarHelper::prepareDateTime($sRecurrenceId, $oAccount->getDefaultStrTimeZone());
 					$oDTStart = $oVCal->VEVENT[$iIndex]->DTSTART->getDatetime();
 
 					$mIndex = CCalendarHelper::isRecurrenceExists($oVCal->VEVENT, $sRecurrenceId);
-					if ($bDelete)
-					{
+					if ($bDelete) {
 						// if exclude first event in occurrence
-						if ($oDTExdate == $oDTStart)
-						{
+						if ($oDTExdate == $oDTStart) {
 							$it = new \Sabre\VObject\RecurrenceIterator($oVCal, (string) $oVCal->VEVENT[$iIndex]->UID);
 							$it->fastForward($oDTStart);
 							$it->next();
 
-							if ($it->valid())
-							{
+							if ($it->valid()) {
 								$oEventObj = $it->getEventObject();
 							}
 
@@ -1070,42 +1024,32 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 						$oVCal->VEVENT[$iIndex]->add('EXDATE', $oDTExdate);
 
-						if (false !== $mIndex)
-						{
+						if (false !== $mIndex) {
 							$aVEvents = $oVCal->VEVENT;
 							unset($oVCal->VEVENT);
 
-							foreach($aVEvents as $oVEvent)
-							{
-								if ($oVEvent->{'RECURRENCE-ID'})
-								{
+							foreach($aVEvents as $oVEvent) {
+								if ($oVEvent->{'RECURRENCE-ID'}) {
 									$iRecurrenceId = CCalendarHelper::getStrDate($oVEvent->{'RECURRENCE-ID'}, $oAccount->getDefaultStrTimeZone(), 'Ymd');
-									if ($iRecurrenceId == (int) $sRecurrenceId)
-									{
+									if ($iRecurrenceId == (int) $sRecurrenceId) {
 										continue;
 									}
 								}
 								$oVCal->add($oVEvent);
 							}
 						}
-					}
-					else
-					{
+					} else {
 						$oVEventRecur = null;
-						if ($mIndex === false)
-						{
+						if ($mIndex === false) {
 							$oVEventRecur = $oVCal->add('VEVENT', array(
 								'SEQUENCE' => 1,
 								'TRANSP' => 'OPAQUE',
 								'RECURRENCE-ID' => $oDTExdate
 							));
-						}
-						else if (isset($oVCal->VEVENT[$mIndex]))
-						{
+						} else if (isset($oVCal->VEVENT[$mIndex])) {
 							$oVEventRecur = $oVCal->VEVENT[$mIndex];
 						}
-						if ($oVEventRecur)
-						{
+						if ($oVEventRecur) {
 							$oEvent->RRule = null;
 							CCalendarHelper::populateVCalendar($oAccount, $oEvent, $oVEventRecur);
 						}
@@ -1141,20 +1085,17 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$aData = $this->oStorage->getEvent($oAccount, $sCalendarId, $sEventId);
-			if ($aData !== false && isset($aData['vcal']) && $aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar)
-			{
+			if ($aData !== false && isset($aData['vcal']) && 
+					$aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar) {
 				$oVCal = $aData['vcal'];
 
 				$aVEvents = $oVCal->VEVENT;
 				unset($oVCal->VEVENT);
 
-				foreach($aVEvents as $oVEvent)
-				{
-					if (isset($oVEvent->{'RECURRENCE-ID'}))
-					{
+				foreach($aVEvents as $oVEvent) {
+					if (isset($oVEvent->{'RECURRENCE-ID'})) {
 						$iServerRecurrenceId = CCalendarHelper::getStrDate($oVEvent->{'RECURRENCE-ID'}, $oAccount->getDefaultStrTimeZone(), 'Ymd');
-						if ($iRecurrenceId == $iServerRecurrenceId)
-						{
+						if ($iRecurrenceId == $iServerRecurrenceId) {
 							continue;
 						}
 					}
@@ -1279,8 +1220,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$aData = $this->oStorage->getEvent($oAccount, $sCalendarId, $sEventId);
-			if ($aData !== false)
-			{
+			if ($aData !== false) {
 				$oVCal = $aData['vcal'];
 				$oVCal->METHOD = 'REQUEST';
 				return $this->appointmentAction($oAccount, $sAttendee, $sAction, $sCalendarId, $oVCal->serialize());
@@ -1316,31 +1256,23 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		$bDefaultAccountAsEmail = false;
 		$bIsDefaultAccount = false;
 				
-		if (isset($oAccount) && is_object($oAccount) &&  $oAccount instanceof \CAccount)
-		{
+		if (isset($oAccount) && is_object($oAccount) &&  $oAccount instanceof \CAccount) {
 			$bDefaultAccountAsEmail = false;
 			/* @var $oDefaultAccount CAccount */
 			$oDefaultAccount = $this->ApiUsersManager->getDefaultAccount($oAccount->IdUser);
 			$bIsDefaultAccount = true;
-		}
-		else
-		{
+		} else {
 			$oAttendeeAccount = $this->ApiUsersManager->getAccountByEmail($sAttendee);
-			if ($oAttendeeAccount)
-			{
+			if ($oAttendeeAccount) 	{
 				$bDefaultAccountAsEmail = false;
 				$oDefaultAccount = $oAttendeeAccount;
-			}
-			else
-			{
+			} else {
 				$bDefaultAccountAsEmail = true;
 			}
 		}
-		if (!$bDefaultAccountAsEmail && !$bIsDefaultAccount)
-		{
+		if (!$bDefaultAccountAsEmail && !$bIsDefaultAccount) {
 			$oCalendar = $this->getDefaultCalendar($oDefaultAccount);
-			if ($oCalendar)
-			{
+			if ($oCalendar) {
 				$sCalendarId = $oCalendar['Id'];
 			}
 		}
@@ -1352,27 +1284,22 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 			$sTo = $sSubject = $sBody = $sSummary = '';
 
 			$oVCal = \Sabre\VObject\Reader::read($sData);
-			if ($oVCal)
-			{
+			if ($oVCal) {
 				$sMethod = $sMethodOriginal = (string) $oVCal->METHOD;
 				$aVEvents = $oVCal->getBaseComponents('VEVENT');
 
-				if (isset($aVEvents) && count($aVEvents) > 0)
-				{
+				if (isset($aVEvents) && count($aVEvents) > 0) {
 					$oVEvent = $aVEvents[0];
 					$sEventId = (string)$oVEvent->UID;
 					$bAllDay = (isset($oVEvent->DTSTART) && !$oVEvent->DTSTART->hasTime());
 
-					if (isset($oVEvent->SUMMARY))
-					{
+					if (isset($oVEvent->SUMMARY)) {
 						$sSummary = (string)$oVEvent->SUMMARY;
 					}
-					if (isset($oVEvent->ORGANIZER))
-					{
+					if (isset($oVEvent->ORGANIZER)) {
 						$sTo = str_replace('mailto:', '', strtolower((string)$oVEvent->ORGANIZER));
 					}
-					if (strtoupper($sMethod) === 'REQUEST')
-					{
+					if (strtoupper($sMethod) === 'REQUEST') {
 						$sMethod = 'REPLY';
 						$sSubject = $sSummary;
 
@@ -1392,23 +1319,17 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 						}
 
 						$sCN = '';
-						if (isset($oDefaultAccount) && $sAttendee ===  $oDefaultAccount->Email)
-						{
-							if (!empty($oDefaultAccount->FriendlyName))
-							{
+						if (isset($oDefaultAccount) && $sAttendee ===  $oDefaultAccount->Email) {
+							if (!empty($oDefaultAccount->FriendlyName)) {
 								$sCN = $oDefaultAccount->FriendlyName;
-							}
-							else
-							{
+							} else {
 								$sCN = $sAttendee;
 							}
 						}
 						
-						foreach($oVEvent->ATTENDEE as $oAttendee)
-						{
+						foreach($oVEvent->ATTENDEE as $oAttendee) {
 							$sEmail = str_replace('mailto:', '', strtolower((string)$oAttendee));
-							if (strtolower($sEmail) === strtolower($sAttendee))
-							{
+							if (strtolower($sEmail) === strtolower($sAttendee)) {
 								$oAttendee['CN'] = $sCN;
 								$oAttendee['PARTSTAT'] = $sPartstat;
 								$oAttendee['RESPONDED-AT'] = gmdate("Ymd\THis\Z");
@@ -1430,60 +1351,44 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 					$sBody = $oVCal->serialize();
 
-					if ($sCalendarId !== false && $bExternal === false && !$bDefaultAccountAsEmail)
-					{
+					if ($sCalendarId !== false && $bExternal === false && !$bDefaultAccountAsEmail) {
 						unset($oVCal->METHOD);
-						if (strtoupper($sAction) == 'DECLINED' || strtoupper($sMethod) == 'CANCEL')
-						{
+						if (strtoupper($sAction) == 'DECLINED' || strtoupper($sMethod) == 'CANCEL') {
 							$this->deleteEvent($oDefaultAccount, $sCalendarId, $sEventId);
-						}
-						else
-						{
+						} else {
 							$this->oStorage->updateEventRaw($oDefaultAccount, $sCalendarId, $sEventId, $oVCal->serialize());
 						}
 					}
 
-					if (strtoupper($sMethodOriginal) == 'REQUEST'/* && (strtoupper($sAction) !== 'DECLINED')*/)
-					{
-						if (!empty($sTo) && !empty($sBody))
-						{
+					if (strtoupper($sMethodOriginal) == 'REQUEST'/* && (strtoupper($sAction) !== 'DECLINED')*/) {
+						if (!empty($sTo) && !empty($sBody)) {
 							$oToAccount = $this->ApiUsersManager->getAccountByEmail($sTo);
-							if ($oToAccount)
-							{
+							if ($oToAccount) {
 								$bResult = ($this->processICS($oToAccount, $sBody, $sAttendee, true) !== false);
 							}
-							if ((!$oToAccount || !$bResult) && $oDefaultAccount instanceof \CAccount)
-							{
-								if (!$oAttendeeAccount)
-								{
+							if ((!$oToAccount || !$bResult) && $oDefaultAccount instanceof \CAccount) {
+								if (!$oAttendeeAccount) {
 									$oAttendeeAccount = $this->getAccountFromAccountList($oAccount, $sAttendee);
 								}
-								if (!($oAttendeeAccount instanceof \CAccount))
-								{
+								if (!($oAttendeeAccount instanceof \CAccount)) {
 									$oAttendeeAccount = $oDefaultAccount;
 								}
 								$bResult = CCalendarHelper::sendAppointmentMessage($oAttendeeAccount, $sTo, $sSubject, $sBody, $sMethod);
 							}
 						}
-					}
-					else
-					{
+					} else {
 						$bResult = true;
 					}
 				}
 			}
 
-			if (!$bResult)
-			{
+			if (!$bResult) {
 				CApi::Log('Ics Appointment Action FALSE result!', ELogLevel::Error);
-				if ($oAccount)
-				{
+				if ($oAccount) {
 					CApi::Log('Email: '.$oAccount->Email.', Action: '. $sAction.', Data:', ELogLevel::Error);
 				}
 				CApi::Log($sData, ELogLevel::Error);
-			}
-			else
-			{
+			} else {
 				$bResult = $sEventId;
 			}
 
@@ -1506,14 +1411,8 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	 */
 	public function getDefaultCalendar($oAccount)
 	{
-		$mResult = false;
 		$aCalendars = $this->getCalendars($oAccount);
-		if (is_array($aCalendars) && isset($aCalendars[0]))
-		{
-			$mResult = $aCalendars[0];
-		}
-
-		return $mResult;
+		return (is_array($aCalendars) && isset($aCalendars[0])) ? $aCalendars[0] : false;
 	}
 
 	/**
@@ -1529,14 +1428,12 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 			$oCalendars = array();
 			$oCalendarsOwn = $this->oStorage->getCalendars($oAccount);
 
-			if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount))
-			{
+			if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount)) {
 				$oCalendarsSharedToAll = array();
 
 				$aCalendarsSharedToAllIds = array_map(
 					function($oCalendar) {
-						if ($oCalendar->SharedToAll)
-						{
+						if ($oCalendar->SharedToAll) {
 							return $oCalendar->IntId;
 						}
 					},
@@ -1544,8 +1441,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 				);
 				$aCalendarsOwnIds = array_map(
 					function($oCalendar) {
-						if (!$oCalendar->SharedToAll && !$oCalendar->Shared)
-						{
+						if (!$oCalendar->SharedToAll && !$oCalendar->Shared) {
 							return $oCalendar->IntId;
 						}
 					},
@@ -1560,27 +1456,21 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 					}
 					$oCalendarsSharedToAll[$oCalendarShared->IntId] = $oCalendarShared;
 				}*/
-				foreach ($oCalendarsOwn as $oCalendarOwn)
-				{
-					if (in_array($oCalendarOwn->IntId, $aCalendarsSharedToAllIds))
-					{
+				foreach ($oCalendarsOwn as $oCalendarOwn) {
+					if (in_array($oCalendarOwn->IntId, $aCalendarsSharedToAllIds)) {
 						$oCalendarOwn->Shared = true;
 						$oCalendarOwn->SharedToAll = true;
 					}
 					$oCalendarsSharedToAll[$oCalendarOwn->IntId] = $oCalendarOwn;
 				}
 				$oCalendars = $oCalendarsSharedToAll;
-			}
-			else
-			{
+			} else {
 				$oCalendars = $oCalendarsOwn;
 			}
 
 			$bDefault = false;
-			foreach ($oCalendars as $oCalendar)
-			{
-				if (!$bDefault && $oCalendar->Access !== ECalendarPermission::Read)
-				{
+			foreach ($oCalendars as $oCalendar) {
+				if (!$bDefault && $oCalendar->Access !== ECalendarPermission::Read) {
 					$oCalendar->IsDefault = $bDefault = true;
 				}
 				$oCalendar = $this->populateCalendarShares($oAccount, $oCalendar);
@@ -1619,22 +1509,19 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$aData = $this->oStorage->getEvent($oAccount, $sCalendarId, $sEventId);
-			if ($aData !== false && isset($aData['vcal']) && $aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar)
-			{
+			if ($aData !== false && isset($aData['vcal']) && 
+					$aData['vcal'] instanceof \Sabre\VObject\Component\VCalendar) {
 				$oVCal = $aData['vcal'];
 
 				$iIndex = CCalendarHelper::getBaseVEventIndex($oVCal->VEVENT);
-				if ($iIndex !== false)
-				{
+				if ($iIndex !== false) {
 					$oVEvent = $oVCal->VEVENT[$iIndex];
 
 					$sOrganizer = (isset($oVEvent->ORGANIZER)) ?
 							str_replace('mailto:', '', strtolower((string)$oVEvent->ORGANIZER)) : null;
 
-					if (isset($sOrganizer))
-					{
-						if ($sOrganizer === $oAccount->Email)
-						{
+					if (isset($sOrganizer)) {
+						if ($sOrganizer === $oAccount->Email) {
 							$oDateTimeNow = new DateTime("now");
 							$oDateTimeEvent = $oVEvent->DTSTART->getDateTime();
 							$oDateTimeRepeat = \CCalendarHelper::getNextRepeat($oDateTimeNow, $oVEvent);
@@ -1642,10 +1529,8 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 							$bEventFore = $oDateTimeEvent ? $oDateTimeEvent > $oDateTimeNow : false;
 							$bNextRepeatFore = $oDateTimeRepeat ? $oDateTimeRepeat > $oDateTimeNow : false;
 
-							if (isset($oVEvent->ATTENDEE) && ($bRrule ? $bNextRepeatFore : $bEventFore))
-							{
-								foreach($oVEvent->ATTENDEE as $oAttendee)
-								{
+							if (isset($oVEvent->ATTENDEE) && ($bRrule ? $bNextRepeatFore : $bEventFore)) {
+								foreach($oVEvent->ATTENDEE as $oAttendee) {
 									$sEmail = str_replace('mailto:', '', strtolower((string)$oAttendee));
 
 									$oVCal->METHOD = 'CANCEL';
@@ -1659,8 +1544,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 					}
 				}
 				$oResult = $this->oStorage->deleteEvent($oAccount, $sCalendarId, $sEventId);
-				if ($oResult)
-				{
+				if ($oResult) {
 					$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
 					$oContactsModule->ExecuteMethod('removeEventFromAllGroups', array($sCalendarId, $sEventId));
 				}
@@ -1691,33 +1575,25 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 		$aAccountEmails = array();
 		$aUserAccounts = $this->ApiUsersManager->getUserAccounts($oAccount->IdUser);
-		foreach ($aUserAccounts as $aUserAccount)
-		{
-			if (isset($aUserAccount) && isset($aUserAccount[1]))
-			{
+		foreach ($aUserAccounts as $aUserAccount) {
+			if (isset($aUserAccount) && isset($aUserAccount[1])) {
 				$aAccountEmails[] = $aUserAccount[1];
 			}
 		}
 		
 		$aFetchers = \CApi::ExecuteMethod('Mail::GetFetchers', array('Account' => $oDefaultAccount));
-		if (is_array($aFetchers) && 0 < count($aFetchers))
-		{
-			foreach ($aFetchers as /* @var $oFetcher \CFetcher */ $oFetcher)
-			{
-				if ($oFetcher)
-				{
+		if (is_array($aFetchers) && 0 < count($aFetchers)) {
+			foreach ($aFetchers as /* @var $oFetcher \CFetcher */ $oFetcher) {
+				if ($oFetcher) {
 					$aAccountEmails[] = !empty($oFetcher->Email) ? $oFetcher->Email : $oFetcher->IncomingMailLogin;
 				}
 			}
 		}
 			
 		$aIdentities = $this->ApiUsersManager->getUserIdentities($oAccount->IdUser);
-		if (is_array($aIdentities) && 0 < count($aIdentities))
-		{
-			foreach ($aIdentities as /* @var $oIdentity \CIdentity */ $oIdentity)
-			{
-				if ($oIdentity)
-				{
+		if (is_array($aIdentities) && 0 < count($aIdentities)) {
+			foreach ($aIdentities as /* @var $oIdentity \CIdentity */ $oIdentity) {
+				if ($oIdentity) {
 					$aAccountEmails[] = $oIdentity->Email;
 				}
 			}
@@ -1726,23 +1602,20 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		try
 		{
 			$oVCal = \Sabre\VObject\Reader::read($sData);
-			if ($oVCal)
-			{
+			if ($oVCal) {
 				$oVCalResult = $oVCal;
 
 				$oMethod = isset($oVCal->METHOD) ? $oVCal->METHOD : null;
 				$sMethod = isset($oMethod) ? (string) $oMethod : 'SAVE';
 
-				if (!in_array($sMethod, array('REQUEST', 'REPLY', 'CANCEL', 'PUBLISH', 'SAVE')))
-				{
+				if (!in_array($sMethod, array('REQUEST', 'REPLY', 'CANCEL', 'PUBLISH', 'SAVE'))) {
 					return false;
 				}
 
 				$aVEvents = $oVCal->getBaseComponents('VEVENT');
 				$oVEvent = (isset($aVEvents) && count($aVEvents) > 0) ? $aVEvents[0] : null;
 
-				if (isset($oVEvent))
-				{
+				if (isset($oVEvent)) {
 					$sCalendarId = '';
 					$oVEventResult = $oVEvent;
 
@@ -1751,55 +1624,43 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 					$aCalendars = $this->oStorage->GetCalendarNames($oDefaultAccount);
 					$aCalendarIds = $this->oStorage->findEventInCalendars($oDefaultAccount, $sEventId, $aCalendars);
 
-					if (is_array($aCalendarIds) && isset($aCalendarIds[0]))
-					{
+					if (is_array($aCalendarIds) && isset($aCalendarIds[0])) {
 						$sCalendarId = $aCalendarIds[0];
 						$aDataServer = $this->oStorage->getEvent($oDefaultAccount, $sCalendarId, $sEventId);
-						if ($aDataServer !== false)
-						{
+						if ($aDataServer !== false) {
 							$oVCalServer = $aDataServer['vcal'];
-							if (isset($oMethod))
-							{
+							if (isset($oMethod)) {
 								$oVCalServer->METHOD = $oMethod;
 							}
 							$aVEventsServer = $oVCalServer->getBaseComponents('VEVENT');
-							if (count($aVEventsServer) > 0)
-							{
+							if (count($aVEventsServer) > 0) {
 								$oVEventServer = $aVEventsServer[0];
 
-								if (isset($oVEvent->{'LAST-MODIFIED'}) && isset($oVEventServer->{'LAST-MODIFIED'}))
-								{
+								if (isset($oVEvent->{'LAST-MODIFIED'}) && 
+									isset($oVEventServer->{'LAST-MODIFIED'})) {
 									$lastModified = $oVEvent->{'LAST-MODIFIED'}->getDateTime();
 									$lastModifiedServer = $oVEventServer->{'LAST-MODIFIED'}->getDateTime();
 
                                     $sequence = isset($oVEvent->{'SEQUENCE'}) && $oVEvent->{'SEQUENCE'}->getValue() ? $oVEvent->{'SEQUENCE'}->getValue() : 0 ; // current sequence value
                                     $sequenceServer = isset($oVEventServer->{'SEQUENCE'}) && $oVEventServer->{'SEQUENCE'}->getValue() ? $oVEventServer->{'SEQUENCE'}->getValue() : 0; // accepted sequence value
 
-                                    if ($sequenceServer >= $sequence)
-                                    {
+                                    if ($sequenceServer >= $sequence) {
 										$oVCalResult = $oVCalServer;
 										$oVEventResult = $oVEventServer;
 									}
-									if (isset($sMethod) && !($lastModifiedServer >= $lastModified))
-									{
-										if ($sMethod === 'REPLY')
-										{
+									if (isset($sMethod) && !($lastModifiedServer >= $lastModified)) {
+										if ($sMethod === 'REPLY') {
 											$oVCalResult = $oVCalServer;
 											$oVEventResult = $oVEventServer;
 
-											if (isset($oVEvent->ATTENDEE) && $sequenceServer >= $sequence)
-											{
+											if (isset($oVEvent->ATTENDEE) && $sequenceServer >= $sequence) {
 												$oAttendee = $oVEvent->ATTENDEE[0];
 												$sAttendee = str_replace('mailto:', '', strtolower((string)$oAttendee));
-												if (isset($oVEventResult->ATTENDEE))
-												{
-													foreach ($oVEventResult->ATTENDEE as $oAttendeeResult)
-													{
+												if (isset($oVEventResult->ATTENDEE)) {
+													foreach ($oVEventResult->ATTENDEE as $oAttendeeResult) {
 														$sEmailResult = str_replace('mailto:', '', strtolower((string)$oAttendeeResult));
-														if ($sEmailResult === $sAttendee)
-														{
-															if (isset($oAttendee['PARTSTAT']))
-															{
+														if ($sEmailResult === $sAttendee) {
+															if (isset($oAttendee['PARTSTAT'])) {
 																$oAttendeeResult['PARTSTAT'] = $oAttendee['PARTSTAT']->getValue();
 															}
 															break;
@@ -1807,8 +1668,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 													}
 												}
 											}
-											if ($bUpdateAttendeeStatus)
-											{
+											if ($bUpdateAttendeeStatus) {
 												unset($oVCalResult->METHOD);
 												$oVEventResult->{'LAST-MODIFIED'} = new \DateTime('now', new \DateTimeZone('UTC'));
 												$mResult = $this->oStorage->updateEventRaw($oDefaultAccount, $sCalendarId, $sEventId, $oVCalResult->serialize());
@@ -1820,18 +1680,15 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 							}
 						}
 
-                        if ($sMethod === 'CANCEL' && $bUpdateAttendeeStatus)
-                        {
-                            if ($this->deleteEvent($oDefaultAccount, $sCalendarId, $sEventId))
-                            {
+                        if ($sMethod === 'CANCEL' && $bUpdateAttendeeStatus) {
+                            if ($this->deleteEvent($oDefaultAccount, $sCalendarId, $sEventId)) {
                                 $mResult = true;
                             }
                         }
 
 					}
 
-					if (!$bUpdateAttendeeStatus)
-					{
+					if (!$bUpdateAttendeeStatus) {
 						$sTimeFormat = (isset($oVEventResult->DTSTART) && !$oVEventResult->DTSTART->hasTime()) ? 'D, M d' : 'D, M d, Y, H:i';
 						$mResult = array(
 							'Calendars' => $aCalendars,
@@ -1846,13 +1703,10 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 						);
 
 						$aAccountEmails = ($sMethod === 'REPLY') ? array($mFromEmail) : $aAccountEmails;
-						if (isset($oVEventResult->ATTENDEE) && isset($sequenceServer) && isset($sequence) && $sequenceServer >= $sequence)
-						{
-							foreach($oVEventResult->ATTENDEE as $oAttendee)
-							{
+						if (isset($oVEventResult->ATTENDEE) && isset($sequenceServer) && isset($sequence) && $sequenceServer >= $sequence) {
+							foreach($oVEventResult->ATTENDEE as $oAttendee) {
 								$sAttendee = str_replace('mailto:', '', strtolower((string)$oAttendee));
-								if (in_array($sAttendee, $aAccountEmails) && isset($oAttendee['PARTSTAT']))
-								{
+								if (in_array($sAttendee, $aAccountEmails) && isset($oAttendee['PARTSTAT'])) {
 									$mResult['Attendee'] = $sAttendee;
 									$mResult['Action'] = $sMethod . '-' . $oAttendee['PARTSTAT']->getValue();
 								}
@@ -1885,20 +1739,16 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 		try
 		{
-			if ($oAccount)
-			{
+			if ($oAccount) {
 				$aUserAccounts = $this->ApiUsersManager->getUserAccounts($oAccount->IdUser);
-				foreach ($aUserAccounts as $iAccountId => $aUserAccount)
-				{
+				foreach ($aUserAccounts as $iAccountId => $aUserAccount) {
 					if (isset($aUserAccount) && isset($aUserAccount[1]) &&
-							strtolower($aUserAccount[1]) === strtolower($sEmail))
-					{
+							strtolower($aUserAccount[1]) === strtolower($sEmail)) {
 						$iResultAccountId = $iAccountId;
 						break;
 					}
 				}
-				if (0 < $iResultAccountId)
-				{
+				if (0 < $iResultAccountId) {
 					$oResult = $this->ApiUsersManager->getAccountById($iResultAccountId);
 				}
 			}
