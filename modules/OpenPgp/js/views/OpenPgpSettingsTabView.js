@@ -13,9 +13,9 @@ var
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
-//	CImportOpenPgpKeyPopup,
-//	CGenerateOpenPgpKeyPopup,
-//	CShowOpenPgpKeyArmorPopup,
+	ImportKeyPopup = require('modules/OpenPgp/js/popups/ImportKeyPopup.js'),
+	GenerateKeyPopup = require('modules/OpenPgp/js/popups/GenerateKeyPopup.js'),
+	ShowKeyArmorPopup = require('modules/OpenPgp/js/popups/ShowKeyArmorPopup.js'),
 	
 	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),
 	Settings = require('modules/OpenPgp/js/Settings.js')
@@ -66,12 +66,12 @@ OpenPgpSettingsTabView.prototype.ViewTemplate = 'OpenPgp_OpenPgpSettingsTabView'
 
 OpenPgpSettingsTabView.prototype.importKey = function ()
 {
-//	Popups.showPopup(CImportOpenPgpKeyPopup);
+	Popups.showPopup(ImportKeyPopup);
 };
 
 OpenPgpSettingsTabView.prototype.generateNewKey = function ()
 {
-//	Popups.showPopup(CGenerateOpenPgpKeyPopup);
+	Popups.showPopup(GenerateKeyPopup);
 };
 
 /**
@@ -105,7 +105,7 @@ OpenPgpSettingsTabView.prototype.removeOpenPgpKey = function (oKey)
  */
 OpenPgpSettingsTabView.prototype.showArmor = function (oKey)
 {
-//	Popups.showPopup(CShowOpenPgpKeyArmorPopup, [oKey]);
+	Popups.showPopup(ShowKeyArmorPopup, [oKey]);
 };
 
 OpenPgpSettingsTabView.prototype.getCurrentValues = function ()

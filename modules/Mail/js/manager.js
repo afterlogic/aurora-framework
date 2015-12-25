@@ -80,6 +80,10 @@ module.exports = function (oSettings) {
 		},
 		getSearchMessagesInCurrentFolder: function () {
 			return _.bind(Cache.searchMessagesInCurrentFolder, Cache);
+		},
+		getAllAccountsFullEmails: function () {
+			var Accounts = require('modules/Mail/js/AccountList.js');
+			return Accounts.getAllFullEmails();
 		}
 	};
 };
