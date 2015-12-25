@@ -53,7 +53,7 @@ module.exports = {
 			AttachmentSizeLimit: 0,
 			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'],
 			ThreadsEnabled: AppData.User ? AppData.User.ThreadsEnabled : true,
-			AllowAppRegisterMailto: AppData.User ? AppData.App.AllowAppRegisterMailto : true
+			AllowAppRegisterMailto: AppData.App.AllowAppRegisterMailto
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
@@ -99,7 +99,9 @@ module.exports = {
 			HelpdeskUserEmail: '',
 			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false
 		},
-		Settings: {},
+		Settings: {
+			TabsOrder: ['common', 'mail', 'contacts', 'calendar', 'cloud-storage', 'helpdesk', 'pgp']
+		},
 		dsbld_Phone: {
 			VoiceProvider: '',
 			SipRealm: '192.168.0.59',

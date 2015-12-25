@@ -5,7 +5,9 @@ var
 	ko = require('knockout'),
 	
 	Routing = require('core/js/Routing.js'),
-	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
+	
+	Settings = require('modules/Settings/js/Settings.js')
 ;
 
 /**
@@ -23,11 +25,18 @@ _.extendOwn(CSettingsView.prototype, CAbstractScreenView.prototype);
 CSettingsView.prototype.ViewTemplate = 'Settings_SettingsView';
 
 CSettingsView.prototype.registerTab = function (oTabView, oTabName, oTabTitle) {
+	var iLastIndex = Settings.TabsOrder.length;
+	
 	this.tabs.push({
 		view: oTabView,
 		name: oTabName,
 		title: oTabTitle
 	});
+	
+	this.tabs(_.sortBy(this.tabs(), function (oTab) {
+		var iIndex = _.indexOf(Settings.TabsOrder, oTab.name);
+		return iIndex !== -1 ? iIndex : iLastIndex;
+	}));
 };
 
 /**
