@@ -7,7 +7,7 @@
 
         <div data-bind="visible: (!isDefault() || isDefault() && allowUsersChangeEmailSettings) && isAllowMail()">
             <div class="row">
-				<!-- ko template: {name: 'Settings_ServerPropertiesViewModel', data: oIncoming} --><!-- /ko -->
+				<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
             </div>
 
             <div class="row">
@@ -19,7 +19,7 @@
                 <input class="value input" spellcheck="false" type="password" maxlength="255" data-bind="value: incomingMailPassword, onEnter: onSaveClick"/>
             </div>
             <div class="row">
-				<!-- ko template: {name: 'Settings_ServerPropertiesViewModel', data: oOutgoing} --><!-- /ko -->
+				<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oOutgoing} --><!-- /ko -->
             </div>
 
             <div class="row">

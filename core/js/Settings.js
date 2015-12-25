@@ -39,8 +39,8 @@ module.exports = {
 			AllowCompose: true,
 			AllowUsersChangeEmailSettings: true,
 			MailExpandFolders: true,
-			AllowFetcher: true,
-			AllowIdentities: true,
+			AllowFetcher: AppData.User ? AppData.User.AllowFetcher : true,
+			AllowIdentities: AppData.AllowIdentities,
 			MaxPrefetchBodiesSize: 50000,
 			DefaultFontName: 'Tahoma',
 			DefaultFontSize: 3,
@@ -53,7 +53,8 @@ module.exports = {
 			AttachmentSizeLimit: 0,
 			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'],
 			ThreadsEnabled: AppData.User ? AppData.User.ThreadsEnabled : true,
-			AllowAppRegisterMailto: AppData.App.AllowAppRegisterMailto
+			AllowAppRegisterMailto: AppData.App.AllowAppRegisterMailto,
+			AllowUsersAddNewAccounts: AppData.App.AllowUsersAddNewAccounts
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
@@ -100,7 +101,7 @@ module.exports = {
 			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false
 		},
 		Settings: {
-			TabsOrder: ['common', 'mail', 'contacts', 'calendar', 'cloud-storage', 'helpdesk', 'pgp']
+			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'helpdesk', 'pgp']
 		},
 		dsbld_Phone: {
 			VoiceProvider: '',

@@ -51,6 +51,7 @@ module.exports = function (oSettings) {
 			}
 			
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/MailSettingsTabView.js'); }, 'mail', TextUtils.i18n('TITLE/LOGIN')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/AccountsSettingsTabView.js'); }, 'accounts', TextUtils.i18n('SETTINGS/TAB_EMAIL_ACCOUNTS')]);
 		},
 		screens: oScreens,
 		getHeaderItem: function () {
