@@ -53,8 +53,8 @@ module.exports = {
 			AttachmentSizeLimit: 0,
 			ComposeToolbarOrder: ['back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'],
 			ThreadsEnabled: AppData.User ? AppData.User.ThreadsEnabled : true,
-			AllowAppRegisterMailto: AppData.App.AllowAppRegisterMailto,
-			AllowUsersAddNewAccounts: AppData.App.AllowUsersAddNewAccounts
+			AllowAppRegisterMailto: AppData.App ? AppData.App.AllowAppRegisterMailto : false,
+			AllowUsersAddNewAccounts: AppData.App ? AppData.App.AllowUsersAddNewAccounts : false
 		},
 		Contacts: {
 			Storages: ['personal', 'global', 'shared'],
@@ -121,7 +121,7 @@ module.exports = {
 	CustomLogo: '',
 	defaultTimeFormat: ko.observable('0'),
 	DefaultDateFormat: 'DD/MM/YYYY',
-	DateFormats: AppData.App.DateFormats,
+	DateFormats: AppData.App ? AppData.App.DateFormats : [],
 	IsFilesSupported: AppData.User ? AppData.User.IsFilesSupported : true,
 	DefaultFontName: 'Tahoma',
 	IdUser: AppData.IdUser,
@@ -140,9 +140,9 @@ module.exports = {
 	IsMobile: AppData.IsMobile,
 	AttachmentSizeLimit: 0,
 	ClientDebug: true,
-	Themes: AppData.App.Themes,
+	Themes: AppData.App ? AppData.App.Themes : [],
 	DefaultTheme: AppData.User ? AppData.User.DefaultTheme : 'Default',
-	Languages: AppData.App.Languages,
+	Languages: AppData.App ? AppData.App.Languages : [],
 	DefaultLanguage: AppData.User ? AppData.User.DefaultLanguage : 'English',
 	
 	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultLanguage, sDefaultTimeFormat, sDesktopNotifications) {

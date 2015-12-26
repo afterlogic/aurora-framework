@@ -44,7 +44,7 @@ Prefetcher.prefetchAll = function ()
 
 Prefetcher.doServerInitializations = function ()
 {
-	if (!App.isNewTab() && !bServerInitializationsDone)
+	if (App.isAuth() && !App.isNewTab() && !App.isPublic() && !bServerInitializationsDone)
 	{
 		Ajax.send('Core', 'DoServerInitializations', null);
 		bServerInitializationsDone = true;
