@@ -173,9 +173,7 @@ CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
 			this.editedId(iDefaultId);
 		}
 		
-		_.defer(function () {
-			oDefaultAccount.isDefault(true);
-		});
+		oDefaultAccount.isDefault(true);
 	}
 };
 

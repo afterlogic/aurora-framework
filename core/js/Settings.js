@@ -37,10 +37,10 @@ module.exports = {
 			AllowAutosaveInDrafts: true,
 			AutoSaveIntervalSeconds: 60,
 			AllowCompose: true,
-			AllowUsersChangeEmailSettings: true,
+			AllowUsersChangeEmailSettings: AppData.App ? AppData.App.AllowUsersChangeEmailSettings : true,
 			MailExpandFolders: true,
 			AllowFetcher: AppData.User ? AppData.User.AllowFetcher : true,
-			AllowIdentities: AppData.AllowIdentities,
+			AllowIdentities: false,//!!AppData.AllowIdentities,
 			MaxPrefetchBodiesSize: 50000,
 			DefaultFontName: 'Tahoma',
 			DefaultFontSize: 3,
@@ -67,9 +67,9 @@ module.exports = {
 			CalendarSharing: true,
 			CalendarDefaultTab: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarDefaultTab.toString() : '3',
 			CalendarShowWeekEnds: AppData.User && AppData.User.Calendar ? !!AppData.User.Calendar.CalendarShowWeekEnds: true,
-			CalendarWeekStartsOn: AppData.User && AppData.User.Calendar ? parseInt(AppData.User.Calendar.CalendarWeekStartsOn, 10) : 7,
+			CalendarWeekStartsOn: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarWeekStartsOn.toString() : '0',
 			CalendarShowWorkDay: AppData.User && AppData.User.Calendar ? !!AppData.User.Calendar.CalendarShowWorkDay : true,
-			CalendarWorkDayStarts: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarWorkDayStarts : '09',
+			CalendarWorkDayStarts: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarWorkDayStarts : '9',
 			CalendarWorkDayEnds: AppData.User && AppData.User.Calendar ? AppData.User.Calendar.CalendarWorkDayEnds : '18',
 			CalendarAppointments: true
 		},
@@ -144,6 +144,7 @@ module.exports = {
 	DefaultTheme: AppData.User ? AppData.User.DefaultTheme : 'Default',
 	Languages: AppData.App ? AppData.App.Languages : [],
 	DefaultLanguage: AppData.User ? AppData.User.DefaultLanguage : 'English',
+	AllowUsersChangeInterfaceSettings: AppData.App ? AppData.App.AllowUsersChangeInterfaceSettings : false,
 	
 	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultLanguage, sDefaultTimeFormat, sDesktopNotifications) {
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;

@@ -7,7 +7,7 @@
 						<div class="items_list" data-bind="foreach: tabs">
 							<div class="item canSelect" data-bind="visible: typeof(visible) !== 'undefined' ? visible() : true, 
 									attr: {'class': 'item canSelect ' + name, 'id': 'selenium_settings_' + name}, 
-									css: {'selected': view.isSelected()}, 
+									css: {'selected': $parent.currentTab() && $parent.currentTab().name === name}, 
 									click: function () { $parent.changeTab(name); }">
 								<span class="title">
 									<span class="icon"></span>
@@ -20,8 +20,8 @@
 			</div>
 		</div>
 		<div class="panel data">
-			<div class="panel_content" data-bind="foreach: tabs">
-				<div data-bind="attr: {'class': 'middle_bar ' + name}, visible: view.isSelected()">
+			<div class="panel_content" data-bind="with: currentTab">
+				<div data-bind="attr: {'class': 'middle_bar ' + name}">
 					<!-- ko template: {name: view.ViewTemplate, data: view} --><!-- /ko -->
 				</div>
 			</div>

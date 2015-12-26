@@ -19,7 +19,6 @@ var
 function CAbstractSettingsTabView()
 {
 	this.isSaving = ko.observable(false);
-	this.isSelected = ko.observable(false);
 }
 
 CAbstractSettingsTabView.prototype.ViewTemplate = ''; // should be overriden
@@ -27,7 +26,6 @@ CAbstractSettingsTabView.prototype.ViewTemplate = ''; // should be overriden
 CAbstractSettingsTabView.prototype.show = function ()
 {
 	this.revert();
-	this.isSelected(true);
 };
 
 /**
@@ -38,10 +36,9 @@ CAbstractSettingsTabView.prototype.hide = function (fAfterHideHandler, fRevertRo
 {
 	if (this.getCurrentState() !== this.sSavedState) // if values have been changed
 	{
-		Popups.showPopup(ConfirmPopup, ['Discard unsaved changes?', _.bind(function (bDiscard) {
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('COMPOSE/CONFIRM_DISCARD_CHANGES'), _.bind(function (bDiscard) {
 			if (bDiscard)
 			{
-				this.isSelected(false);
 				fAfterHideHandler();
 				this.revert();
 			}
@@ -53,7 +50,6 @@ CAbstractSettingsTabView.prototype.hide = function (fAfterHideHandler, fRevertRo
 	}
 	else
 	{
-		this.isSelected(false);
 		fAfterHideHandler();
 	}
 };

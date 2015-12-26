@@ -1,6 +1,6 @@
 <div class="fields">
 	<div class="fieldset">
-		<div data-bind="visible: available">
+		<div>
 			<div class="row enable">
 				<div>
 					<label class="custom_checkbox" data-bind="css: {'checked': enable}">
@@ -20,7 +20,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="buttons" data-bind="visible: available">
+	<div class="buttons">
 		<span class="button" data-bind="click: onSaveClick">
 			<span data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', visible: !loading()"></span>
 			<span data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading()"></span>

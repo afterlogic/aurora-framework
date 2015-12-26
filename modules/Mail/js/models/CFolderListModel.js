@@ -18,6 +18,7 @@ var
 function CFolderListModel()
 {
 	this.iAccountId = 0;
+	this.initialized = ko.observable(false);
 
 	this.expandFolders = ko.observable(false);
 	this.expandNames = ko.observableArray([]);
@@ -190,6 +191,7 @@ CFolderListModel.prototype.parse = function (iAccountId, oData, oNamedFolderList
 	}
 	
 	this.iAccountId = iAccountId;
+	this.initialized(true);
 
 	this.expandFolders(Settings.MailExpandFolders && !Storage.hasData('folderAccordion'));
 	if (!Storage.hasData('folderAccordion'))

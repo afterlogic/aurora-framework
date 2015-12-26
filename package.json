@@ -33,12 +33,14 @@
 		"fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
 		"customscroll": "./core/js/vendors/customscroll.js",
 		"modernizr": "./core/js/vendors/modernizr.js",
-		"jquery.cookie": "./core/js/vendors/jquery.cookie.js"
+		"jquery.cookie": "./core/js/vendors/jquery.cookie.js",
+		"knockout-sortable": "./modules/Mail/js/vendors/knockout-sortable.js"
 	},
 	"browserify-shim": {
 		"customscroll": { "depends": [ "jquery:jQuery" ] },
 		"modernizr": "Modernizr",
-		"jquery.cookie": { "depends": [ "jquery:jQuery" ] }
+		"jquery.cookie": { "depends": [ "jquery:jQuery" ] },
+		"knockout-sortable": { "depends": [ "knockout:ko" ] }
 	},
 	"browserify": {
 		"transform": [

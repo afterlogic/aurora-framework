@@ -95,7 +95,8 @@ function CAccountModel()
 			sHint = TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_DEFAULT_HINT', {'AND_OTHER': sAndOther});
 			
 			this.requireAccounts();
-			if (Accounts.collection().length > 1)
+			
+			if (Accounts.collection && Accounts.collection().length > 1)
 			{
 				sHint += TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_DEFAULT_NOTSINGLE_HINT');
 			}

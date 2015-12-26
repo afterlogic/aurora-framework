@@ -3,14 +3,14 @@
 		<div class="folders items_list">
 			
 			<!-- ko if: !showMovedWithMouseItem() -->
-				<!-- ko template: {name: 'Settings_AccountFolderItem', foreach: collection} --><!-- /ko -->
+				<!-- ko template: {name: 'Mail_Settings_AccountFolderItem', foreach: collection} --><!-- /ko -->
 			<!-- /ko -->
 			
 			<!-- ko if: showMovedWithMouseItem() -->
 			<div data-bind="sortable: {data: collection, connectClass: 'first_sortable_container', 
 				 afterMove: $root.afterSortableFolderMoveBinded, options: {axis: 'y', revert: true}}">
 				<div class="item canSelect canDrag" data-bind="visible: !bVirtual, 
-					 template: { name: 'Settings_AccountFolderItemMovedWithMouse'},
+					 template: { name: 'Mail_Settings_AccountFolderItemMovedWithMouse'},
 					 css: {'canSubscribe': canSubscribe, 'canRename': canRename, 'canDelete': canDelete}"></div>
 			</div>
 			<!-- /ko -->

@@ -2,12 +2,15 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
 	
 	Routing = require('core/js/Routing.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
-	Settings = require('modules/Settings/js/Settings.js')
+	Settings = require('modules/Settings/js/Settings.js'),
+	
+	$html = $('html')
 ;
 
 /**
@@ -18,6 +21,8 @@ function CSettingsView()
 	CAbstractScreenView.call(this);
 	
 	this.tabs = ko.observableArray([]);
+	
+	this.currentTab  = ko.observable(null);
 }
 
 _.extendOwn(CSettingsView.prototype, CAbstractScreenView.prototype);
@@ -39,15 +44,23 @@ CSettingsView.prototype.registerTab = function (oTabView, oTabName, oTabTitle) {
 	}));
 };
 
+CSettingsView.prototype.onShow = function ()
+{
+	$html.addClass('non-adjustable');
+};
+
+CSettingsView.prototype.onHide = function ()
+{
+	$html.removeClass('non-adjustable');
+};
+
 /**
  * @param {Array} aParams
  */
 CSettingsView.prototype.onRoute = function (aParams) {
 	var
 		sNewTabName = aParams.shift(),
-		oCurrentTab = _.find(this.tabs(), function (oTab) {
-			return oTab.view.isSelected();
-		}),
+		oCurrentTab = this.currentTab(),
 		oNewTab = _.find(this.tabs(), function (oTab) {
 			return oTab.name === sNewTabName;
 		}),
@@ -55,8 +68,9 @@ CSettingsView.prototype.onRoute = function (aParams) {
 			if (oNewTab)
 			{
 				oNewTab.view.show(aParams);
+				this.currentTab(oNewTab);
 			}
-		},
+		}.bind(this),
 		fRevertRouting = _.bind(function () {
 			if (oCurrentTab)
 			{

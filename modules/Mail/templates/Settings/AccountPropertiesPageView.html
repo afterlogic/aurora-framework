@@ -1,11 +1,11 @@
 <div class="fields">
 	<div class="fieldset">
-		<div class="row" data-bind="visible: !isAllowIdentities">
+		<div class="row" data-bind="visible: !bAllowIdentities">
 			<span class="label" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_YOUR_NAME" data-bind="i18n: 'text'"></span>
 			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: friendlyName, onEnter: onSaveClick"/>
 		</div>
 
-        <div data-bind="visible: (!isDefault() || isDefault() && allowUsersChangeEmailSettings) && isAllowMail()">
+        <div data-bind="visible: (!isDefault() || isDefault() && bAllowChangeEmailSettings) && isAllowMail()">
             <div class="row">
 				<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
             </div>
@@ -51,7 +51,7 @@
 
     </div>
 	
-	<div class="buttons" data-bind="visible: (!isDefault() || isDefault() && allowUsersChangeEmailSettings) && isAllowMail() || canBeRemoved() && !isDefault() || !isAllowIdentities">
+	<div class="buttons" data-bind="visible: (!isDefault() || isDefault() && bAllowChangeEmailSettings) && isAllowMail() || canBeRemoved() && !isDefault() || !bAllowIdentities">
 		<span class="button" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: !loading()"></span>
 		<span class="button" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', click: onSaveClick, visible: loading()"></span>
 	</div>
