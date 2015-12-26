@@ -65,8 +65,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 			$this->ContactsCache = array();
 			$this->GroupsCache = array();
 
-			\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
-			\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
+//			\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
 			$aPrincipalProperties = \Afterlogic\DAV\Backend::Principal()->getPrincipalByPath(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $oAccount->Email);
 			if ($aPrincipalProperties)
 			{

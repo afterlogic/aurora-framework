@@ -76,12 +76,9 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	public function init($oAccount)
 	{
 		$bResult = false;
-		if ($oAccount)
-		{
-			if (!$this->initialized)
-			{
-				\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
-				\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
+		if ($oAccount) {
+			if (!$this->initialized) {
+//				\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
 				$this->initialized = true;
 			}
 			$bResult = true;

@@ -73,8 +73,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	{
 		if (!$this->_initialized($oAccount)) {
 			$this->Account = $oAccount;
-			\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
-			\Afterlogic\DAV\Utils::CheckPrincipals($oAccount->Email);
+//			\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
 
 			$this->Principal = $this->getPrincipalInfo($oAccount->Email);
 		}
@@ -159,7 +158,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		$aProps = $oCalDAVCalendar->getProperties(array());
 		
 		$oCalendar = new \CCalendar($oCalDAVCalendar->getName());
-		$oCalendar->IntId = 0;//$aProps['id'];
+		$oCalendar->IntId = $oCalDAVCalendar->getId();
 
 		if ($oCalDAVCalendar instanceof \Sabre\CalDAV\SharedCalendar) {
 			$oCalendar->Shared = true;
@@ -237,7 +236,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	 */
 	public function getPublicUser()
 	{
-		return \Afterlogic\DAV\Utils::getPrincipalByEmail(\Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL);
+		return \Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL;
 	}
 
 	/**
@@ -360,20 +359,20 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		$oUserCalendars = new \Afterlogic\DAV\CalDAV\UserCalendars($this->getBackend(), $this->Principal);
 
 		$sSystemName = \Sabre\DAV\UUIDUtil::getUUID();
-				$oUserCalendars->createExtendedCollection($sSystemName, 
-					new Sabre\DAV\MkCol(
-						[
-							'{DAV:}collection',
-							'{urn:ietf:params:xml:ns:caldav}calendar'
-						],
-						[
-							'{DAV:}displayname' => $sName,
-							'{'.\Sabre\CalDAV\Plugin::NS_CALENDARSERVER.'}getctag' => 1,
-							'{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description' => $sDescription,
-							'{http://apple.com/ns/ical/}calendar-color' => $sColor,
-							'{http://apple.com/ns/ical/}calendar-order' => $iOrder
-						]
-					)
+		$oUserCalendars->createExtendedCollection($sSystemName, 
+			new Sabre\DAV\MkCol(
+				[
+					'{DAV:}collection',
+					'{urn:ietf:params:xml:ns:caldav}calendar'
+				],
+				[
+					'{DAV:}displayname' => $sName,
+					'{'.\Sabre\CalDAV\Plugin::NS_CALENDARSERVER.'}getctag' => 1,
+					'{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description' => $sDescription,
+					'{http://apple.com/ns/ical/}calendar-color' => $sColor,
+					'{http://apple.com/ns/ical/}calendar-order' => $iOrder
+				]
+			)
 		);
 		return $sSystemName;
 	}
@@ -398,11 +397,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		if ($oUserCalendars->childExists($sCalendarId)) {
 			$oCalDAVCalendar = $oUserCalendars->getChild($sCalendarId);
 			if ($oCalDAVCalendar) {
-				$aCalendarProperties = $oCalDAVCalendar->getProperties(array(
-						'principaluri',
-						'{http://sabredav.org/ns}owner-principal'
-					)
-				);
+				$aCalendarProperties = $oCalDAVCalendar->getProperties([]);
 				$sPrincipal = $oCalDAVCalendar->getOwner(); 
 
 				$sOwnerPrincipal = isset($aCalendarProperties['{http://sabredav.org/ns}owner-principal']) ? 
@@ -425,20 +420,24 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 						$aUpdateProperties['color'] = $sColor;
 					}
 				} else {
-					$aUpdateProperties = array(
-						'{http://apple.com/ns/ical/}calendar-color' => $sColor
-					);
-					if (!$bOnlyColor) {
-						$aUpdateProperties['{DAV:}displayname'] = $sName;
-						$aUpdateProperties['{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description'] = $sDescription;
-						$aUpdateProperties['{http://apple.com/ns/ical/}calendar-color'] = $sColor;
-						$aUpdateProperties['{http://apple.com/ns/ical/}calendar-order'] = $iOrder;
+					if ($bOnlyColor) {
+						$aUpdateProperties = array(
+							'{http://apple.com/ns/ical/}calendar-color' => $sColor
+						);
+					} else {
+						$aUpdateProperties = array(
+							'{DAV:}displayname' => $sName,
+							'{'.\Sabre\CalDAV\Plugin::NS_CALDAV.'}calendar-description' => $sDescription,
+							'{http://apple.com/ns/ical/}calendar-color' => $sColor,
+							'{http://apple.com/ns/ical/}calendar-order' => $iOrder
+						);
 					}
 				}
 				unset($this->CalDAVCalendarsCache[$sCalendarId]);
 				unset($this->CalDAVCalendarObjectsCache[$sCalendarId]);
-				return $oCalDAVCalendar->propPatch(new \Sabre\DAV\PropPatch($aUpdateProperties));
-				
+				$oPropPatch = new \Sabre\DAV\PropPatch($aUpdateProperties);
+				$oCalDAVCalendar->propPatch($oPropPatch);
+				return $oPropPatch->commit();
 			}
 		}
 		return false;
@@ -867,6 +866,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 				$oCalendar = $this->parseCalendar($oCalDAVCalendar);
 				$mResult['Events'] = $this->getEventsFromVCalendar($oAccount, $oCalendar, $oVCal, $dStart, $dEnd);
 				$mResult['CTag'] = $oCalendar->CTag;
+				$mResult['SyncToken'] = $oCalendar->SyncToken;
 			}
 		}
 		
