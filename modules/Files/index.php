@@ -7,6 +7,7 @@ class FilesModule extends AApiModule
 	public function init() 
 	{
 		$this->oApiFilesManager = $this->GetManager('main', 'sabredav');
+		
 		$this->AddEntry('files-pub', 'EntryFilesPub');
 	}
 	
@@ -144,6 +145,70 @@ class FilesModule extends AApiModule
 		return false;		
 	}
 	
+	public function UploadFile()
+	{
+		$oAccount = $this->getDefaultAccountFromParam();
+		$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
+
+		$aFileData = $this->getParamValue('FileData', null);
+		$mAdditionalData = $this->getParamValue('AdditionalData', '{}');
+		$mAdditionalData = @json_decode($mAdditionalData, true);
+		
+		$sError = '';
+		$aResponse = array();
+
+		if ($oAccount) {
+			
+			if (is_array($aFileData)) {
+				
+				$sUploadName = $aFileData['name'];
+				$iSize = (int) $aFileData['size'];
+				$sType = isset($mAdditionalData['Type']) ? $mAdditionalData['Type'] : 'personal';
+				$sPath = isset($mAdditionalData['Path']) ? $mAdditionalData['Path'] : '';
+				$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
+
+				$sSavedName = 'upload-post-'.md5($aFileData['name'].$aFileData['tmp_name']);
+				$rData = false;
+				if (is_resource($aFileData['tmp_name']))
+				{
+					$rData = $aFileData['tmp_name'];
+				}
+				else if ($oApiFileCacheManager->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name']))
+				{
+					$rData = $oApiFileCacheManager->getFile($oAccount, $sSavedName);
+				}
+				if ($rData)
+				{
+					$this->oApiFilesManager->createFile($oAccount, $sType, $sPath, $sUploadName, $rData, false);
+
+					$aResponse['File'] = array(
+						'Name' => $sUploadName,
+						'TempName' => $sSavedName,
+						'MimeType' => $sMimeType,
+						'Size' =>  (int) $iSize,
+						'Hash' => \CApi::EncodeKeyValues(array(
+							'TempFile' => true,
+							'AccountID' => $oAccount->IdAccount,
+							'Name' => $sUploadName,
+							'TempName' => $sSavedName
+						))
+					);
+				}
+			}
+		}
+		else
+		{
+			$sError = 'auth';
+		}
+
+		if (0 < strlen($sError))
+		{
+			$aResponse['Error'] = $sError;
+		}
+		
+		return $aResponse;
+	}
+
 	public function DownloadFile()
 	{
 		return $this->GetRawFile(true);
@@ -513,7 +578,7 @@ class FilesModule extends AApiModule
 
 			if ($oApiIntegrator)
 			{
-				$oCoreModule = \CApi::GetModuleManager()->GetModule('Core');
+				$oCoreModule = \CApi::GetModule('Core');
 				if ($oCoreModule instanceof \AApiModule) {
 					$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
 					if (is_string($sResult)) {

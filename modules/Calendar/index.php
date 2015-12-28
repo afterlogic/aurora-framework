@@ -626,7 +626,7 @@ class CalendarModule extends AApiModule
 				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
-			$oCoreModule = \CApi::GetModuleManager()->GetModule('Core');
+			$oCoreModule = \CApi::GetModule('Core');
 			if ($oCoreModule instanceof \AApiModule) {
 				$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
 				if (is_string($sResult)) {

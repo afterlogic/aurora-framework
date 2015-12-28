@@ -573,7 +573,7 @@ class CCalendarHelper
 		$sEncodedValueDecline = \CApi::EncodeKeyValues($aValues);
 
 		$sHref = rtrim(\MailSo\Base\Http::SingletonInstance()->GetFullUrl(), '\\/ ').'/?invite=';
-		$oCalendarModule = \CApi::GetModuleManager()->GetModule('Calendar');
+		$oCalendarModule = \CApi::GetModule('Calendar');
 		if ($oCalendarModule instanceof AApiModule)
 		{
 			$sHtml = file_get_contents($oCalendarModule->GetPath().'/templates/CalendarEventInvite.html');

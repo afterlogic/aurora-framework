@@ -860,7 +860,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 		$aGroups = array_merge($aGroups, $aGroupsLocation);
 
 
-		$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
+		$oContactsModule = \CApi::GetModule('Contacts');
 		if ($oContactsModule) {
 			foreach ($aGroups as $sGroup) {
 				$sGroupName = ltrim($sGroup, '#');
@@ -966,7 +966,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	 */
 	public function updateEventGroupByMoving($sCalendarId, $sEventId, $sNewCalendarId)
 	{
-		$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
+		$oContactsModule = \CApi::GetModule('Contacts');
 		if ($oContactsModule) {
 			$aEvents = $oContactsModule->ExecuteMethod('getGroupEvent', array($sCalendarId, $sEventId));
 			if (is_array($aEvents) && 0 < count($aEvents)) {
@@ -1545,7 +1545,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 				}
 				$oResult = $this->oStorage->deleteEvent($oAccount, $sCalendarId, $sEventId);
 				if ($oResult) {
-					$oContactsModule = \CApi::GetModuleManager()->GetModule('Contacts');
+					$oContactsModule = \CApi::GetModule('Contacts');
 					$oContactsModule->ExecuteMethod('removeEventFromAllGroups', array($sCalendarId, $sEventId));
 				}
 			}

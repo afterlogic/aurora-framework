@@ -1055,7 +1055,7 @@ class CApiContactsMainManager extends AApiManager
 			
 			if ($oAccount)
 			{
-				$oApiCalendarManager = CApi::GetModuleManager()->GetModule('Calendar');
+				$oApiCalendarManager = CApi::GetModule('Calendar');
 				if ($oApiCalendarManager)
 				{
 					foreach ($aEvents as $aEvent)

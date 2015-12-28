@@ -36,7 +36,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 	 */
 	public function getAccountByEmail($sEmail)
 	{
-		\CApi::LogObject('getAccountByEmail', \ELogLevel::Full, 'sabredav111-');
 		$oAccount = null;
 		try
 		{

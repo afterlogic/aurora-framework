@@ -9,15 +9,15 @@ class AuthModule extends AApiModule
 	{
 		$mResult = false;
 		$oAccount = $this->getAccountFromParam(false);
-		if ($oAccount)
-		{
+		if ($oAccount) {
+			
 			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
-			if ('' !== $sClientTimeZone)
-			{
+			if ('' !== $sClientTimeZone) {
+				
 				$oAccount->User->ClientTimeZone = $sClientTimeZone;
 				$oApiUsers = \CApi::GetCoreManager('users');
-				if ($oApiUsers)
-				{
+				if ($oApiUsers) {
+					
 					$oApiUsers->updateAccount($oAccount);
 				}
 			}
@@ -27,16 +27,15 @@ class AuthModule extends AApiModule
 
 			// extensions
 			if ($oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) &&
-				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe))
-			{
+				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe)) {
 				$oAccount->enableExtension(\CAccount::DisableManageSubscribe);
 			}
 
 			$aExtensions = $oAccount->getExtensionList();
-			foreach ($aExtensions as $sExtensionName)
-			{
-				if ($oAccount->isExtensionEnabled($sExtensionName))
-				{
+			foreach ($aExtensions as $sExtensionName) {
+				
+				if ($oAccount->isExtensionEnabled($sExtensionName)) {
+					
 					$mResult['Extensions'][] = $sExtensionName;
 				}
 			}
@@ -61,7 +60,10 @@ class AuthModule extends AApiModule
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		try
 		{
-			\CApi::Plugin()->RunHook('webmail-login-custom-data', array($this->getParamValue('CustomRequestData', null)));
+			\CApi::Plugin()->RunHook(
+					'webmail-login-custom-data', 
+					array($this->getParamValue('CustomRequestData', null))
+			);
 		}
 		catch (\Exception $oException)
 		{
@@ -81,25 +83,24 @@ class AuthModule extends AApiModule
 			$sIncLogin = $sEmail;
 		}
 
-		if (0 === strlen($sIncPassword) || 0 === strlen($sEmail.$sIncLogin))
-		{
-			\CApi::LogEvent(\EEvents::LoginFailed, $sEmail);
-			
-			\CApi::Log($sEmail, \ELogLevel::Full, 'a-');
-			\CApi::Log($sIncLogin, \ELogLevel::Full, 'a-');
-			\CApi::Log($sIncPassword, \ELogLevel::Full, 'a-');
+		if (0 === strlen($sIncPassword) || 0 === strlen($sEmail.$sIncLogin)) {
 			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
 		try
 		{
-			if (0 === strlen($sLanguage))
-			{
+			if (0 === strlen($sLanguage)) {
+				
 				$sLanguage = $oApiIntegrator->getLoginLanguage();
 			}
 
-			$oAccount = $oApiIntegrator->loginToAccount($sEmail, $sIncPassword, $sIncLogin, $sLanguage);
+			$oAccount = $oApiIntegrator->loginToAccount(
+					$sEmail, 
+					$sIncPassword, 
+					$sIncLogin, 
+					$sLanguage
+			);
 		}
 		catch (\Exception $oException)
 		{
@@ -147,10 +148,13 @@ class AuthModule extends AApiModule
 		{
 			$sAuthToken = '';
 			$bSetAccountAsLoggedIn = true;
-			\CApi::Plugin()->RunHook('api-integrator-set-account-as-logged-in', array(&$bSetAccountAsLoggedIn));
+			\CApi::Plugin()->RunHook(
+					'api-integrator-set-account-as-logged-in', 
+					array(&$bSetAccountAsLoggedIn)
+			);
 
-			if ($bSetAccountAsLoggedIn)
-			{
+			if ($bSetAccountAsLoggedIn) {
+				
 				\CApi::LogEvent(\EEvents::LoginSuccess, $oAccount);
 				$sAuthToken = $oApiIntegrator->setAccountAsLoggedIn($oAccount, $bSignMe);
 			}
@@ -176,8 +180,8 @@ class AuthModule extends AApiModule
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
 		if ($oAccount && $oAccount->User && 0 < $oAccount->User->IdHelpdeskUser &&
-			$this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
-		{
+			$this->oApiCapabilityManager->isHelpdeskSupported($oAccount)) {
+			
 			$oApiIntegrator->logoutHelpdeskUser();
 		}
 

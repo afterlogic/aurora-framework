@@ -13,8 +13,8 @@ class DavModule extends AApiModule
 	
 	public function EntryDav()
 	{
-		set_error_handler(function ($errno, $errstr, $errfile, $errline ) 
-		{
+		set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
+			
 			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 		});
 
@@ -22,8 +22,8 @@ class DavModule extends AApiModule
 
 		$sBaseUri = '/';
 		$oHttp = \MailSo\Base\Http::NewInstance();
-		if (false !== \strpos($oHttp->GetUrl(), 'index.php/dav/'))
-		{
+		if (false !== \strpos($oHttp->GetUrl(), 'index.php/dav/')) {
+			
 			$aPath = \trim($oHttp->GetPath(), '/\\ ');
 			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
 		}
@@ -45,39 +45,45 @@ class DavModule extends AApiModule
 	
 	public function GetServerUrl()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->getServerUrl($oAccount);
+		return $this->oApiDavManager->getServerUrl(
+			$this->getParamValue('Account', null)
+		);
 	}
 	
 	public function GetServerHost()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->getServerHost($oAccount);
+		return $this->oApiDavManager->getServerHost(
+			$this->getParamValue('Account', null)
+		);
 	}
 	
 	public function GetServerPort()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->getServerPort($oAccount);
+		return $this->oApiDavManager->getServerPort(
+			$this->getParamValue('Account', null)
+		);
 	}
 	
 	public function GetPrincipalUrl()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->getPrincipalUrl($oAccount);
+		return $this->oApiDavManager->getPrincipalUrl(
+			$this->getParamValue('Account', null)
+		);
 	}
 
 
 	public function IsUseSsl()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->IsUseSsl($oAccount);
+		return $this->oApiDavManager->IsUseSsl(
+			$this->getParamValue('Account', null)
+		);
 	}
 	
 	public function GetLogin()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->getLogin($oAccount);
+		return $this->oApiDavManager->getLogin(
+			$this->getParamValue('Account', null)
+		);
 	}
 	
 	public function IsMobileSyncEnabled()
@@ -95,41 +101,28 @@ class DavModule extends AApiModule
 	
 	public function TestConnection()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->testConnection($oAccount);
+		return $this->oApiDavManager->testConnection(
+			$this->getParamValue('Account', null)
+		);
 	}	
 	
 	public function DeletePrincipal()
 	{
-		$oAccount = $this->getParamValue('Account', null); 
-		return $this->oApiDavManager->deletePrincipal($oAccount);
+		return $this->oApiDavManager->deletePrincipal(
+			$this->getParamValue('Account', null)
+		);
 	}	
 	
 	public function GetVCardObject()
 	{
-		$sData = $this->getParamValue('Data', ''); 
-		return $this->oApiDavManager->getVCardObject($sData);
+		return $this->oApiDavManager->getVCardObject(
+			$this->getParamValue('Data', '')
+		);
 	}	
 	
 	public function GetPublicUser()
 	{
-		$sEmail = \Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL;
-		$aPrincipalsPath = \Afterlogic\DAV\Backend::Principal()->searchPrincipals(
-				\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX, 
-				array(
-					'{http://sabredav.org/ns}email-address' => $sEmail
-				)
-		);
-		$aPrincipals = array_filter($aPrincipalsPath, function ($sPrincipalPath) use ($sEmail) {
-			return ($sPrincipalPath === \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail);
-		});
-		
-		if (count($aPrincipals) === 0) {
-			throw new \Exception("Unknown email address");
-		}
-		
-		return \Afterlogic\DAV\Backend::Principal()->getPrincipalByPath($aPrincipals[0]);
-				
+		return \Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL;
 	}
 }
 

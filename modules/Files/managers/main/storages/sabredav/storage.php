@@ -58,7 +58,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		if ($this->oApiMinManager === null)
 		{
 			
-			$oMinModule = \CApi::GetModuleManager()->GetModule('Min');
+			$oMinModule = \CApi::GetModule('Min');
 			if ($oMinModule)
 			{
 				$this->oApiMinManager = $oMinModule->oApiMinManager;
@@ -136,21 +136,30 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		{
 			$sRootPath = $this->getRootPath($oAccount, $sType);
 			
-			if ($sType === \EFileStorageTypeStr::Personal)
-			{
+			if ($sType === \EFileStorageTypeStr::Personal) {
+				
 				$oDirectory = new \Afterlogic\DAV\FS\RootPersonal($sRootPath);
-			}
-			if ($sType === \EFileStorageTypeStr::Corporate)
-			{
+				
+			} else if ($sType === \EFileStorageTypeStr::Corporate) {
+				
 				$oDirectory = new \Afterlogic\DAV\FS\RootPublic($sRootPath);
-			}	
-			if ($sType === \EFileStorageTypeStr::Shared)
-			{
+				
+			} else if ($sType === \EFileStorageTypeStr::Shared) {
+				
 				$oDirectory = new \Afterlogic\DAV\FS\RootShared($sRootPath);
-			}	
-			if ($oDirectory && $sPath !== '')
-			{
-				$oDirectory = $oDirectory->getChild($sPath);
+				
+			}
+			
+			if ($oDirectory) {
+				
+				$oDirectory->setAccount($oAccount);
+				
+				if ($sPath !== '') {
+					
+					$oDirectory = $oDirectory->getChild($sPath);
+					
+				}
+				
 			}
 		}
 

@@ -97,11 +97,12 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 		$aPrincipal = array();
 
 		$aPrincipalProperties = \Afterlogic\DAV\Backend::Principal()->getPrincipalByPath(\Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail);
-		if ($aPrincipalProperties) {
-			if (isset($aPrincipalProperties['uri'])) {
-				$aPrincipal['uri'] = $aPrincipalProperties['uri'];
-				$aPrincipal['id'] = $aPrincipalProperties['id'];
-			}
+		if (isset($aPrincipalProperties['uri'])) {
+			$aPrincipal['uri'] = $aPrincipalProperties['uri'];
+			$aPrincipal['id'] = $aPrincipalProperties['id'];
+		} else {
+			$aPrincipal['uri'] = \Afterlogic\DAV\Constants::PRINCIPALS_PREFIX . '/' . $sEmail;
+			$aPrincipal['id'] = -1;
 		}
 		return $aPrincipal;
 	}
