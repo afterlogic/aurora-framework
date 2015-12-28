@@ -112,7 +112,7 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 	this.oFontColorPickerView = new CColorPickerView(TextUtils.i18n('HTMLEDITOR/TEXT_COLOR_CAPTION'), this.setTextColorFromPopup, this);
 	this.oBackColorPickerView = new CColorPickerView(TextUtils.i18n('HTMLEDITOR/BACKGROUND_COLOR_CAPTION'), this.setBackColorFromPopup, this);
 
-	this.activitySource = ko.observable(1);
+	this.activitySource = ko.observable('1');
 	this.activitySourceSubscription = null;
 	this.inactive = ko.observable(false);
 	this.inactive.subscribe(function () {
@@ -535,10 +535,10 @@ CHtmlEditorView.prototype.setActivitySource = function (koActivitySource)
 		this.activitySourceSubscription.dispose();
 	}
 	this.activitySourceSubscription = this.activitySource.subscribe(function () {
-		this.inactive(Utils.pInt(this.activitySource()) === 0);
+		this.inactive(this.activitySource() === '0');
 	}, this);
 
-	this.inactive(Utils.pInt(this.activitySource()) === 0);
+	this.inactive(this.activitySource() === '0');
 };
 
 CHtmlEditorView.prototype.onCreaFocus = function ()
@@ -546,7 +546,7 @@ CHtmlEditorView.prototype.onCreaFocus = function ()
 	if (this.oCrea)
 	{
 		this.closeAllPopups();
-		this.activitySource(1);
+		this.activitySource('1');
 		this.textFocused(true);
 	}
 };
@@ -1035,7 +1035,7 @@ CHtmlEditorView.prototype.onFileUploadComplete = function (sUid, bResponseReceiv
 CHtmlEditorView.prototype.setActive = function (oEvent)
 {
 	oEvent.stopPropagation();
-	this.activitySource(1);
+	this.activitySource('1');
 };
 
 module.exports = CHtmlEditorView;

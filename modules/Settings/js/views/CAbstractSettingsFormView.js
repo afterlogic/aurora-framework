@@ -2,6 +2,7 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
@@ -42,7 +43,7 @@ CAbstractSettingsFormView.prototype.hide = function (fAfterHideHandler, fRevertR
 				fAfterHideHandler();
 				this.revert();
 			}
-			else
+			else if ($.isFunction(fRevertRouting))
 			{
 				fRevertRouting();
 			}

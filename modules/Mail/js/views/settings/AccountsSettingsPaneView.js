@@ -96,15 +96,15 @@ function CAccountsSettingsPaneView()
 		}
 	];
 	
-	this.currentPage = ko.observable(this.getDefaultCurrentPage());
+	this.currentPage = ko.observable(null);
 	
 //	this.aIdentityPages = ['properties', 'signature'];
 //	this.aFetcherPages = ['incoming', 'outgoing', 'signature'];
 	
 	Accounts.editedId.subscribe(function () {
-		this.populate(Accounts.editedId());
+		this.populate();
 	}, this);
-	this.populate(Accounts.editedId());
+	this.populate();
 }
 
 CAccountsSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettingsPaneView';
@@ -115,9 +115,9 @@ CAccountsSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettin
  */
 CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertRouting)
 {
-	if ($.isFunction(this.currentPage.hide))
+	if (this.currentPage() && $.isFunction(this.currentPage().view.hide))
 	{
-		this.currentPage.hide(fAfterHideHandler, fRevertRouting);
+		this.currentPage().view.hide(fAfterHideHandler, fRevertRouting);
 	}
 	else
 	{
@@ -127,9 +127,9 @@ CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertR
 
 CAccountsSettingsPaneView.prototype.show = function ()
 {
-	if ($.isFunction(this.currentPage.show))
+	if (this.currentPage() && $.isFunction(this.currentPage().view.show))
 	{
-		this.currentPage.show();
+		this.currentPage().view.show();
 	}
 };
 
@@ -184,26 +184,49 @@ CAccountsSettingsPaneView.prototype.connectToMail = function (sId)
 	
 };
 
-CAccountsSettingsPaneView.prototype.showPage = function (sName)
+CAccountsSettingsPaneView.prototype.changePage = function (sName)
 {
 	var
-		oNewCurrentPage = _.find(this.aAccountPages, function (oPage) {
+		oCurrentPage = this.currentPage(),
+		oNewPage = _.find(this.aAccountPages, function (oPage) {
 			return oPage.visible() && oPage.name === sName;
-		});
+		}),
+		fShowNewPage = function () {
+			if (oNewPage)
+			{
+				if ($.isFunction(oNewPage.view.show))
+				{
+					oNewPage.view.show();
+				}
+				this.currentPage(oNewPage);
+			}
+		}.bind(this),
+		bShow = true
+	;
 	
-	if (oNewCurrentPage)
+	if (oNewPage)
 	{
-		this.currentPage(oNewCurrentPage);
+		if (oCurrentPage && $.isFunction(oCurrentPage.view.hide))
+		{
+			oCurrentPage.view.hide(fShowNewPage);
+			bShow = false;
+		}
+	}
+	else if (!oCurrentPage)
+	{
+		oNewPage = this.getDefaultCurrentPage();
+	}
+	
+	if (bShow)
+	{
+		fShowNewPage();
 	}
 };
 
-/**
- * @param {number} iAccountId
- */
-CAccountsSettingsPaneView.prototype.populate = function (iAccountId)
+CAccountsSettingsPaneView.prototype.populate = function ()
 {
 	var
-		oAccount = Accounts.getAccount(iAccountId)
+		oAccount = Accounts.getEdited()
 //		bAllowMail = !!oAccount && oAccount.allowMail(),
 //		bDefault = !!oAccount && oAccount.isDefault(),
 //		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension'),
@@ -224,7 +247,7 @@ CAccountsSettingsPaneView.prototype.populate = function (iAccountId)
 		this.allowAutoresponder(true);
 		this.allowFilters(true);
 		
-		if (!this.currentPage().visible())
+		if (!this.currentPage() || !this.currentPage().visible())
 		{
 			this.currentPage(this.getDefaultCurrentPage());
 		}
@@ -244,7 +267,7 @@ CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oRe
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
 	else
 	{
@@ -258,7 +281,7 @@ CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oRe
 			oAccount.updateExtended(oResponse.Result);
 			if (oAccount.id() === this.editedAccountId())
 			{
-				this.populate(oAccount.id());
+				this.populate();
 			}
 		}	
 	}

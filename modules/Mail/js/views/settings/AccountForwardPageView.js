@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	ko = require('knockout'),
 	
 	AddressUtils = require('core/js/utils/Address.js'),
@@ -9,6 +10,8 @@ var
 	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
@@ -22,125 +25,128 @@ var
  */
 function CAccountForwardPageView()
 {
-	this.account = ko.observable(0);
-	this.loading = ko.observable(false);
-
+	CAbstractSettingsFormView.call(this);
+	
 	this.enable = ko.observable(false);
 	this.email = ko.observable('');
 	this.emailFocus = ko.observable(false);
 
-	this.account.subscribe(function () {
-		this.getForward();
+	Accounts.editedId.subscribe(function () {
+		this.populate();
 	}, this);
-	
-	this.firstState = null;
+	this.populate();
 }
+
+_.extendOwn(CAccountForwardPageView.prototype, CAbstractSettingsFormView.prototype);
 
 CAccountForwardPageView.prototype.ViewTemplate = 'Mail_Settings_AccountForwardPageView';
 
-/**
- * @param {Object} oAccount
- */
-CAccountForwardPageView.prototype.onShow = function (oAccount)
+CAccountForwardPageView.prototype.getCurrentValues = function ()
 {
-	this.account(oAccount);
+	return [
+		this.enable(),
+		this.email()
+	];
 };
 
-CAccountForwardPageView.prototype.getState = function ()
+CAccountForwardPageView.prototype.revert = function ()
 {
-	return [this.enable(), this.email()].join(':');
+	this.populate();
 };
 
-CAccountForwardPageView.prototype.updateFirstState = function ()
+CAccountForwardPageView.prototype.getParametersForSave = function ()
 {
-	this.firstState = this.getState();
-};
-
-CAccountForwardPageView.prototype.isChanged = function()
-{
-	return this.firstState && this.getState() !== this.firstState;
-};
-
-CAccountForwardPageView.prototype.prepareParameters = function ()
-{
+	var oAccount = Accounts.getEdited();
 	return {
-		'Action': 'AccountForwardUpdate',
-		'AccountID': this.account().id(),
+		'AccountID': oAccount.id(),
 		'Enable': this.enable() ? '1' : '0',
 		'Email': this.email()
 	};
 };
 
-/**
- * @param {Object} oParameters
- */
-CAccountForwardPageView.prototype.saveData = function (oParameters)
+CAccountForwardPageView.prototype.applySavedValues = function (oParameters)
 {
-	this.updateFirstState();
-	Ajax.send(oParameters, this.onAccountForwardUpdateResponse, this);
+	var
+		oAccount = Accounts.getEdited(),
+		oForward = oAccount.forward()
+	;
+	
+	if (oForward)
+	{
+		oForward.enable = oParameters.Enable === '1';
+		oForward.email = oParameters.Email;
+	}
 };
 
-CAccountForwardPageView.prototype.onSaveClick = function ()
+CAccountForwardPageView.prototype.save = function ()
 {
-	if (this.account())
+	var
+		fSaveData = function() {
+			this.isSaving(true);
+
+			this.updateSavedState();
+
+			Ajax.send('AccountForwardUpdate', this.getParametersForSave(), this.onResponse, this);
+		}.bind(this)
+	;
+
+	if (this.enable() && this.email() === '')
 	{
-		var
-			self = this,
-			oForward = this.account().forward(),
-			fSaveData = function() {
-				if (oForward)
-				{
-					oForward.enable = self.enable();
-					oForward.email = self.email();
-				}
-
-				self.loading(true);
-				self.saveData(self.prepareParameters());
-			}
-		;
-
-		if (this.enable() && this.email() === '')
+		this.emailFocus(true);
+	}
+	else if (this.enable() && this.email() !== '')
+	{
+		if (!AddressUtils.isCorrectEmail(this.email()))
 		{
-			this.emailFocus(true);
-		}
-		else if (this.enable() && this.email() !== '')
-		{
-			if (!AddressUtils.isCorrectEmail(this.email()))
-			{
-				Popups.showPopup(AlertPopup, [TextUtils.i18n('COMPOSE/WARNING_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
-			}
-			else
-			{
-				fSaveData();
-			}
+			Popups.showPopup(AlertPopup, [TextUtils.i18n('COMPOSE/WARNING_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
 		}
 		else
 		{
 			fSaveData();
 		}
 	}
+	else
+	{
+		fSaveData();
+	}
 };
 
-CAccountForwardPageView.prototype.getForward = function()
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CAccountForwardPageView.prototype.onResponse = function (oResponse, oRequest)
 {
-	if (this.account())
+	this.isSaving(false);
+
+	if (oResponse.Result === false)
 	{
-		if (this.account().forward() !== null)
+		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+	}
+	else
+	{
+		var oParameters = JSON.parse(oRequest.Parameters);
+		
+		this.updateEditableValues(oParameters);
+		
+		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FORWARD_SUCCESS_REPORT'));
+	}
+};
+
+CAccountForwardPageView.prototype.populate = function ()
+{
+	var oAccount = Accounts.getEdited();
+	if (oAccount)
+	{
+		if (oAccount.forward() !== null)
 		{
-			this.enable(this.account().forward().enable);
-			this.email(this.account().forward().email);
-			this.firstState = this.getState();
+			this.enable(oAccount.forward().enable);
+			this.email(oAccount.forward().email);
+			this.updateSavedState();
 		}
 		else
 		{
-			var	oParameters = {
-					'Action': 'AccountForwardGet',
-					'AccountID': this.account().id()
-				};
-
-			this.loading(true);
-			this.updateFirstState();
-			Ajax.send(oParameters, this.onAccountForwardGetResponse, this);
+			Ajax.send('AccountForwardGet', {'AccountID': oAccount.id()}, this.onAccountForwardGetResponse, this);
 		}
 	}
 };
@@ -151,67 +157,24 @@ CAccountForwardPageView.prototype.getForward = function()
  */
 CAccountForwardPageView.prototype.onAccountForwardGetResponse = function (oResponse, oRequest)
 {
-	this.loading(false);
-
-	if (oRequest && oRequest.Action)
+	if (oResponse && oResponse.Result)
 	{
-		if (oResponse && oResponse.Result && oResponse.AccountID && this.account())
+		var
+			iAccountId = Utils.pInt(oResponse.AccountID),
+			oAccount = Accounts.getAccount(iAccountId),
+			oForward = new CForwardModel()
+		;
+
+		if (oAccount)
 		{
-			var
-				oAccount = null,
-				oForward = new CForwardModel(),
-				iAccountId = Utils.pInt(oResponse.AccountID)
-				;
+			oForward.parse(iAccountId, oResponse.Result);
+			oAccount.forward(oForward);
 
-			if (iAccountId)
+			if (iAccountId === Accounts.editedId())
 			{
-				oAccount = Accounts.getAccount(iAccountId);
-				if (oAccount)
-				{
-					oForward.parse(iAccountId, oResponse.Result);
-					oAccount.forward(oForward);
-
-					this.enable(oAccount.forward().enable);
-					this.email(oAccount.forward().email);
-
-					this.updateFirstState();
-
-					if (iAccountId === this.account().id())
-					{
-						this.getForward();
-					}
-				}
+				this.populate();
 			}
 		}
-	}
-	else
-	{
-		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
-	}
-};
-
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CAccountForwardPageView.prototype.onAccountForwardUpdateResponse = function (oResponse, oRequest)
-{
-	this.loading(false);
-
-	if (oRequest && oRequest.Action)
-	{
-		if (oResponse && oResponse.Result)
-		{
-			Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FORWARD_SUCCESS_REPORT'));
-		}
-		else
-		{
-			Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
-		}
-	}
-	else
-	{
-		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
 };
 

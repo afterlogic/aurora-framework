@@ -50,7 +50,7 @@
 			<div class="shortcuts">
 				<div data-bind="foreach: aAccountPages">
 					<span class="item" data-bind="attr: {'class': 'item ' + name + ((name === $parent.currentPage().name) ? ' selected' : '')}, visible: visible">
-						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.showPage(name); }, 
+						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.changePage(name); }, 
 								attr: {'id': 'selenium_settings_account_' + name + '_button'}"></a>
 					</span>
 				</div>

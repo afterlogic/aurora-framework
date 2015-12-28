@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
@@ -8,6 +9,8 @@ var
 	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js')
@@ -18,105 +21,108 @@ var
  */ 
 function CAccountAutoresponderPageView()
 {
-	this.account = ko.observable(0);
-	this.loading = ko.observable(false);
-
+	CAbstractSettingsFormView.call(this);
+	
 	this.enable = ko.observable(false);
 	this.subject = ko.observable('');
 	this.message = ko.observable('');
 
-	this.account.subscribe(function () {
-		this.getAutoresponder();
+	Accounts.editedId.subscribe(function () {
+		this.populate();
 	}, this);
-	
-	this.firstState = null;
+	this.populate();
 }
+
+_.extendOwn(CAccountAutoresponderPageView.prototype, CAbstractSettingsFormView.prototype);
 
 CAccountAutoresponderPageView.prototype.ViewTemplate = 'Mail_Settings_AccountAutoresponderPageView';
 
-/**
- * @param {Object} oAccount
- */
-CAccountAutoresponderPageView.prototype.onShow = function (oAccount)
+CAccountAutoresponderPageView.prototype.getCurrentValues = function ()
 {
-	this.account(oAccount);
-};
-
-CAccountAutoresponderPageView.prototype.getState = function ()
-{
-	var aState = [
+	return [
 		this.enable(),
 		this.subject(),
 		this.message()	
 	];
-	
-	return aState.join(':');
 };
 
-CAccountAutoresponderPageView.prototype.updateFirstState = function ()
+CAccountAutoresponderPageView.prototype.revert = function ()
 {
-	this.firstState = this.getState();
+	this.populate();
 };
 
-CAccountAutoresponderPageView.prototype.isChanged = function()
+CAccountAutoresponderPageView.prototype.getParametersForSave = function ()
 {
-	return this.firstState && this.getState() !== this.firstState;
-};
-
-CAccountAutoresponderPageView.prototype.prepareParameters = function ()
-{
+	var oAccount = Accounts.getEdited();
 	return {
-		'AccountID': this.account().id(),
+		'AccountID': oAccount.id(),
 		'Enable': this.enable() ? '1' : '0',
 		'Subject': this.subject(),
 		'Message': this.message()
 	};
 };
 
-/**
- * @param {Object} oParameters
- */
-CAccountAutoresponderPageView.prototype.saveData = function (oParameters)
+CAccountAutoresponderPageView.prototype.applySavedValues = function (oParameters)
 {
-	this.updateFirstState();
-	Ajax.send('AccountAutoresponderUpdate', oParameters, this.onAccountAutoresponderUpdateResponse, this);
-};
+	var
+		oAccount = Accounts.getEdited(),
+		oAutoresponder = oAccount.autoresponder()
+	;
 
-CAccountAutoresponderPageView.prototype.onSaveClick = function ()
-{
-	if (this.account())
+	if (oAutoresponder)
 	{
-		var oAutoresponder = this.account().autoresponder();
-
-		if (oAutoresponder)
-		{
-			oAutoresponder.enable = this.enable();
-			oAutoresponder.subject = this.subject();
-			oAutoresponder.message = this.message();
-		}
-
-		this.loading(true);
-		
-		this.saveData(this.prepareParameters());
+		oAutoresponder.enable = oParameters.Enable === '1';
+		oAutoresponder.subject = oParameters.Subject;
+		oAutoresponder.message = oParameters.Message;
 	}
 };
 
-CAccountAutoresponderPageView.prototype.getAutoresponder = function()
+CAccountAutoresponderPageView.prototype.save = function ()
 {
-	if (this.account())
+	this.isSaving(true);
+	
+	this.updateSavedState();
+	
+	Ajax.send('AccountAutoresponderUpdate', this.getParametersForSave(), this.onResponse, this);
+};
+
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
+CAccountAutoresponderPageView.prototype.onResponse = function (oResponse, oRequest)
+{
+	this.isSaving(false);
+
+	if (oResponse.Result === false)
 	{
-		if (this.account().autoresponder() !== null)
+		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+	}
+	else
+	{
+		var oParameters = JSON.parse(oRequest.Parameters);
+		
+		this.updateEditableValues(oParameters);
+		
+		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_AUTORESPONDER_SUCCESS_REPORT'));
+	}
+};
+
+CAccountAutoresponderPageView.prototype.populate = function()
+{
+	var oAccount = Accounts.getEdited();
+	if (oAccount)
+	{
+		if (oAccount.autoresponder() !== null)
 		{
-			this.enable(this.account().autoresponder().enable);
-			this.subject(this.account().autoresponder().subject);
-			this.message(this.account().autoresponder().message);
-			
-			this.updateFirstState();
+			this.enable(oAccount.autoresponder().enable);
+			this.subject(oAccount.autoresponder().subject);
+			this.message(oAccount.autoresponder().message);
+			this.updateSavedState();
 		}
 		else
 		{
-			this.loading(true);
-			Ajax.send('AccountAutoresponderGet', {AccountID: this.account().id()}, this.onAccountAutoresponderGetResponse, this);
+			Ajax.send('AccountAutoresponderGet', {'AccountID': oAccount.id()}, this.onAccountAutoresponderGetResponse, this);
 		}
 	}
 };
@@ -127,62 +133,24 @@ CAccountAutoresponderPageView.prototype.getAutoresponder = function()
  */
 CAccountAutoresponderPageView.prototype.onAccountAutoresponderGetResponse = function (oResponse, oRequest)
 {
-	this.loading(false);
-
-	if (oRequest && oRequest.Action)
+	if (oResponse && oResponse.Result)
 	{
-		if (oResponse && oResponse.Result && oResponse.AccountID && this.account())
+		var
+			iAccountId = Utils.pInt(oResponse.AccountID),
+			oAccount = Accounts.getAccount(iAccountId),
+			oAutoresponder = new CAutoresponderModel()
+		;
+
+		if (oAccount)
 		{
-			var
-				oAccount = null,
-				oAutoresponder = new CAutoresponderModel(),
-				iAccountId = Utils.pInt(oResponse.AccountID)
-			;
+			oAutoresponder.parse(iAccountId, oResponse.Result);
+			oAccount.autoresponder(oAutoresponder);
 
-			if (iAccountId)
+			if (iAccountId === Accounts.editedId())
 			{
-				oAccount = Accounts.getAccount(iAccountId);
-				if (oAccount)
-				{
-					oAutoresponder.parse(iAccountId, oResponse.Result);
-					oAccount.autoresponder(oAutoresponder);
-
-					if (iAccountId === this.account().id())
-					{
-						this.getAutoresponder();
-					}
-				}
+				this.populate();
 			}
 		}
-	}
-	else
-	{
-		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
-	}
-};
-
-/**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CAccountAutoresponderPageView.prototype.onAccountAutoresponderUpdateResponse = function (oResponse, oRequest)
-{
-	this.loading(false);
-
-	if (oRequest && oRequest.Action)
-	{
-		if (oResponse && oResponse.Result)
-		{
-			Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_AUTORESPONDER_SUCCESS_REPORT'));
-		}
-		else
-		{
-			Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
-		}
-	}
-	else
-	{
-		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
 };
 

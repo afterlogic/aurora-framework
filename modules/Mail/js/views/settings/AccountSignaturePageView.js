@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
@@ -8,99 +9,123 @@ var
 	Api = require('core/js/Api.js'),
 	Browser = require('core/js/Browser.js'),
 	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
+	Accounts = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js')
 ;
 
 /**
- * @param {?=} oParent
- *
  * @constructor
  */ 
-function CAccountSignaturePageView(oParent)
+function CAccountSignaturePageView()
 {
-	this.parent = oParent;
-
-	this.account = ko.observable(0);
-
+	CAbstractSettingsFormView.call(this);
+	
+	this.bInitialized = false;
+	
 	this.type = ko.observable(false);
-	this.useSignature = ko.observable(0);
+	this.useSignature = ko.observable('0');
 	this.signature = ko.observable('');
 
-	this.loading = ko.observable(false);
-
-	this.account.subscribe(function () {
-		this.getSignature();
-	}, this);
-	
 	this.oHtmlEditor = new CHtmlEditorView(true);
 	this.enableImageDragNDrop = ko.observable(false);
 
 	this.enabled = ko.observable(true);
 
-	this.signature.subscribe(function () {
-		this.oHtmlEditor.setText(this.signature());
+	Accounts.editedId.subscribe(function () {
+		this.populate();
 	}, this);
-	
-	this.getSignature();
-	
-	this.firstState = null;
+	this.populate();
 }
+
+_.extendOwn(CAccountSignaturePageView.prototype, CAbstractSettingsFormView.prototype);
 
 CAccountSignaturePageView.prototype.ViewTemplate = 'Mail_Settings_AccountSignaturePageView';
 
 CAccountSignaturePageView.prototype.__name = 'CAccountSignaturePageView';
 
-/**
- * @param {Object} oAccount
- */
-CAccountSignaturePageView.prototype.onShow = function (oAccount)
+CAccountSignaturePageView.prototype.show = function ()
 {
-	this.account(oAccount);
-
-	this.oHtmlEditor.initCrea(this.signature(), false, '');
-	this.oHtmlEditor.setActivitySource(this.useSignature);
-	this.oHtmlEditor.resize();
-	this.enableImageDragNDrop(this.oHtmlEditor.editorUploader.isDragAndDropSupported() && !Browser.ie10AndAbove);
-	
-	this.updateFirstState();
+	this.populate();
+	_.defer(this.init.bind(this));
 };
 
-CAccountSignaturePageView.prototype.getState = function ()
+CAccountSignaturePageView.prototype.init = function ()
 {
-	var aState = [
+	if (!this.bInitialized)
+	{
+		this.oHtmlEditor.initCrea(this.signature(), false, '');
+		this.oHtmlEditor.setActivitySource(this.useSignature);
+		this.oHtmlEditor.resize();
+		this.enableImageDragNDrop(this.oHtmlEditor.editorUploader.isDragAndDropSupported() && !Browser.ie10AndAbove);
+		this.bInitialized = true;
+	}
+};
+
+CAccountSignaturePageView.prototype.getCurrentValues = function ()
+{
+	this.signature(this.oHtmlEditor.getNotDefaultText());
+	return [
 		this.type(),
 		this.useSignature(),
-		this.oHtmlEditor.getText()
+		this.signature()
 	];
-	return aState.join(':');
 };
 
-CAccountSignaturePageView.prototype.updateFirstState = function ()
+CAccountSignaturePageView.prototype.revert = function ()
 {
-	this.firstState = this.getState();
+	this.populate();
 };
 
-CAccountSignaturePageView.prototype.isChanged = function ()
+CAccountSignaturePageView.prototype.getParametersForSave = function ()
 {
-	return this.firstState && this.getState() !== this.firstState;
+	var oAccount = Accounts.getEdited();
+	this.signature(this.oHtmlEditor.getNotDefaultText());
+	return {
+		'AccountID': oAccount ? oAccount.id() : 0,
+		'Type': this.type() ? 1 : 0,
+		'Options': this.useSignature(),
+		'Signature': this.signature()
+	};
 };
-	
-CAccountSignaturePageView.prototype.getSignature = function ()
+
+CAccountSignaturePageView.prototype.applySavedValues = function (oParameters)
 {
-	if (this.account())
+	var
+		oAccount = Accounts.getEdited(),
+		oSignature = oAccount ? oAccount.signature() : null
+	;
+	if (oSignature)
 	{
-		if (this.account().signature() !== null)
+		oSignature.type(oParameters.Type === 1);
+		oSignature.options(oParameters.Options);
+		oSignature.signature(oParameters.Signature);
+	}
+};
+
+CAccountSignaturePageView.prototype.populate = function ()
+{
+	var
+		oAccount = Accounts.getEdited(),
+		oSignature = oAccount ? oAccount.signature() : null
+	;
+	if (oAccount)
+	{
+		if (oSignature !== null)
 		{
-			this.type(this.account().signature().type());
-			this.useSignature(this.account().signature().options());
-			this.signature(this.account().signature().signature());
-			this.updateFirstState();
+			this.type(oSignature.type());
+			this.useSignature(!!oSignature.options() ? '1' : '0');
+			this.signature(oSignature.signature());
+			this.oHtmlEditor.setText(this.signature());
+			
+			this.updateSavedState();
 		}
 		else
 		{
-			Ajax.send('AccountSignatureGet', {'AccountID': this.account().id()}, this.onAccountSignatureGetResponse, this);
+			Ajax.send('AccountSignatureGet', {'AccountID': oAccount.id()}, this.onAccountSignatureGetResponse, this);
 		}
 	}
 };
@@ -111,40 +136,25 @@ CAccountSignaturePageView.prototype.getSignature = function ()
  */
 CAccountSignaturePageView.prototype.onAccountSignatureGetResponse = function (oResponse, oRequest)
 {
-	var
-		oSignature = null,
-		iAccountId = parseInt(oResponse.AccountID, 10)
-	;
-	
-	if (!oResponse.Result)
+	if (oResponse && oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse);
-	}
-	else
-	{
-		if (this.account() && iAccountId === this.account().id())
+		var
+			iAccountId = Utils.pInt(oResponse.AccountID),
+			oAccount = Accounts.getAccount(iAccountId),
+			oSignature = new CSignatureModel()
+		;
+
+		if (oAccount)
 		{
-			oSignature = new CSignatureModel();
 			oSignature.parse(iAccountId, oResponse.Result);
+			oAccount.signature(oSignature);
 
-			this.account().signature(oSignature);
-
-			this.type(this.account().signature().type());
-			this.useSignature(this.account().signature().options());
-			this.signature(this.account().signature().signature());
-			this.updateFirstState();
+			if (iAccountId === Accounts.editedId())
+			{
+				this.populate();
+			}
 		}
 	}
-};
-
-CAccountSignaturePageView.prototype.prepareParameters = function ()
-{
-	return {
-		'AccountID': this.account().id(),
-		'Type': this.type() ? 1 : 0,
-		'Options': this.useSignature(),
-		'Signature': this.signature()
-	};
 };
 
 /**
@@ -156,20 +166,13 @@ CAccountSignaturePageView.prototype.saveData = function (oParameters)
 	Ajax.send('AccountSignatureUpdate', oParameters, this.onAccountSignatureUpdateResponse, this);
 };
 
-CAccountSignaturePageView.prototype.onSaveClick = function ()
+CAccountSignaturePageView.prototype.save = function ()
 {
-	if (this.account())
-	{
-		this.loading(true);
-
-		this.signature(this.oHtmlEditor.getNotDefaultText());
-		
-		this.account().signature().type(this.type());
-		this.account().signature().options(this.useSignature());
-		this.account().signature().signature(this.signature());
-		
-		this.saveData(this.prepareParameters());
-	}
+	this.isSaving(true);
+	
+	this.updateSavedState();
+	
+	Ajax.send('AccountSignatureUpdate', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**
@@ -181,8 +184,6 @@ CAccountSignaturePageView.prototype.onSaveClick = function ()
  */
 CAccountSignaturePageView.prototype.onAccountSignatureUpdateResponse = function (oResponse, oRequest)
 {
-	this.loading(false);
-
 	if (oResponse.Result)
 	{
 		Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
