@@ -27,8 +27,8 @@ module.exports = function (oSettings) {
 		getSettingsUtils: function () {
 			return require('modules/Settings/js/utils/Settings.js');
 		},
-		getAbstractSettingsTabViewClass: function () {
-			return require('modules/Settings/js/views/CAbstractSettingsTabView.js');
+		getAbstractSettingsFormViewClass: function () {
+			return require('modules/Settings/js/views/CAbstractSettingsFormView.js');
 		}
 	};
 };

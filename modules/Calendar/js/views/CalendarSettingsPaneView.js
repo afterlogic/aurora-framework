@@ -8,7 +8,7 @@ var
 	
 	UserSettings = require('core/js/Settings.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
 	
@@ -19,9 +19,9 @@ var
 /**
  * @constructor
  */
-function CCalendarSettingsTabView()
+function CCalendarSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
+	CAbstractSettingsFormView.call(this);
 
 	this.availableTimes = ko.observableArray(CalendarUtils.getTimeListStepHour((UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
 	UserSettings.defaultTimeFormat.subscribe(function () {
@@ -38,11 +38,11 @@ function CCalendarSettingsTabView()
 	/*-- Editable fields */
 }
 
-_.extendOwn(CCalendarSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+_.extendOwn(CCalendarSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CCalendarSettingsTabView.prototype.ViewTemplate = 'Calendar_CalendarSettingsTabView';
+CCalendarSettingsPaneView.prototype.ViewTemplate = 'Calendar_CalendarSettingsPaneView';
 
-CCalendarSettingsTabView.prototype.getCurrentValues = function()
+CCalendarSettingsPaneView.prototype.getCurrentValues = function()
 {
 	return [
 		this.showWeekends(),
@@ -54,7 +54,7 @@ CCalendarSettingsTabView.prototype.getCurrentValues = function()
 	];
 };
 
-CCalendarSettingsTabView.prototype.revertGlobalValues = function()
+CCalendarSettingsPaneView.prototype.revertGlobalValues = function()
 {
 	this.showWeekends(Settings.CalendarShowWeekEnds);
 	this.selectedWorkdayStarts(Settings.CalendarWorkDayStarts);
@@ -64,7 +64,7 @@ CCalendarSettingsTabView.prototype.revertGlobalValues = function()
 	this.defaultTab(Settings.CalendarDefaultTab);
 };
 
-CCalendarSettingsTabView.prototype.getParametersForSave = function ()
+CCalendarSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'ShowWeekEnds': this.showWeekends() ? 1 : 0,
@@ -80,7 +80,7 @@ CCalendarSettingsTabView.prototype.getParametersForSave = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CCalendarSettingsTabView.prototype.applySavedValues = function (oParameters)
+CCalendarSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	CalendarCache.calendarSettingsChanged(true);
 
@@ -88,4 +88,4 @@ CCalendarSettingsTabView.prototype.applySavedValues = function (oParameters)
 					oParameters.WorkDayEnds, oParameters.WeekStartsOn, oParameters.DefaultTab);
 };
 
-module.exports = new CCalendarSettingsTabView();
+module.exports = new CCalendarSettingsPaneView();

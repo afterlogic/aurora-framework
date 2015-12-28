@@ -32,7 +32,7 @@ module.exports = {
 		
 		if (Settings.AllowUsersChangeInterfaceSettings)
 		{
-			this.run('Settings', 'registerSettingsTab', [function () { return require('core/js/views/CommonSettingsTabView.js'); }, 'common', TextUtils.i18n('SETTINGS/TAB_COMMON')]);
+			this.run('Settings', 'registerSettingsTab', [function () { return require('core/js/views/CommonSettingsPaneView.js'); }, 'common', TextUtils.i18n('SETTINGS/TAB_COMMON')]);
 		}
 		
 		_.each(oModules, _.bind(function (oModule) {

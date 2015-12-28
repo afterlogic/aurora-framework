@@ -7,7 +7,7 @@ var
 	Browser = require('core/js/Browser.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	UserSettings = require('core/js/Settings.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	SettingsUtils = ModulesManager.run('Settings', 'getSettingsUtils'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
@@ -17,9 +17,9 @@ var
 /**
  * @constructor
  */
-function CMailSettingsTabView()
+function CMailSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
+	CAbstractSettingsFormView.call(this);
 
 	this.bRtl = UserSettings.IsRTL;
 	this.bAllowThreads = Settings.ThreadsEnabled;
@@ -33,16 +33,16 @@ function CMailSettingsTabView()
 	this.allowChangeInputDirection = ko.observable(Settings.AllowChangeInputDirection);
 }
 
-_.extendOwn(CMailSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+_.extendOwn(CMailSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CMailSettingsTabView.prototype.ViewTemplate = 'Mail_MailSettingsTabView';
+CMailSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_MailSettingsPaneView';
 
-CMailSettingsTabView.prototype.registerMailto = function ()
+CMailSettingsPaneView.prototype.registerMailto = function ()
 {
 	MailUtils.registerMailto();
 };
 
-CMailSettingsTabView.prototype.getCurrentValues = function ()
+CMailSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.messagesPerPage(),
@@ -52,7 +52,7 @@ CMailSettingsTabView.prototype.getCurrentValues = function ()
 	];
 };
 
-CMailSettingsTabView.prototype.revertGlobalValues = function ()
+CMailSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.messagesPerPage(Settings.MailsPerPage);
 	this.useThreads(Settings.useThreads());
@@ -60,7 +60,7 @@ CMailSettingsTabView.prototype.revertGlobalValues = function ()
 	this.allowChangeInputDirection(Settings.AllowChangeInputDirection);
 };
 
-CMailSettingsTabView.prototype.getParametersForSave = function ()
+CMailSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'MessagesPerPage': this.messagesPerPage(),
@@ -70,9 +70,9 @@ CMailSettingsTabView.prototype.getParametersForSave = function ()
 	};
 };
 
-CMailSettingsTabView.prototype.applySavedValues = function (oParameters)
+CMailSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	Settings.update(oParameters.MessagesPerPage, oParameters.UseThreads, oParameters.SaveRepliedToCurrFolder, oParameters.AllowChangeInputDirection);
 };
 
-module.exports = new CMailSettingsTabView();
+module.exports = new CMailSettingsPaneView();

@@ -8,15 +8,15 @@ var
 	
 	UserSettings = require('core/js/Settings.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass')
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass')
 ;
 
 /**
  * @constructor
  */
-function CCommonSettingsTabView()
+function CCommonSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
+	CAbstractSettingsFormView.call(this);
 	
 	this.aSkins = UserSettings.Themes;
 	this.aLanguages = UserSettings.Languages;
@@ -45,16 +45,16 @@ function CCommonSettingsTabView()
 	}, this);
 }
 
-_.extendOwn(CCommonSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+_.extendOwn(CCommonSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CCommonSettingsTabView.prototype.ViewTemplate = 'Core_CommonSettingsTabView';
+CCommonSettingsPaneView.prototype.ViewTemplate = 'Core_CommonSettingsPaneView';
 
 /**
  * Returns an array with the values of editable fields.
  * 
  * @returns {Array}
  */
-CCommonSettingsTabView.prototype.getCurrentValues = function ()
+CCommonSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.selectedSkin(),
@@ -68,7 +68,7 @@ CCommonSettingsTabView.prototype.getCurrentValues = function ()
 /**
  * Puts values from the global settings object to the editable fields.
  */
-CCommonSettingsTabView.prototype.revertGlobalValues = function ()
+CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.selectedSkin(UserSettings.DefaultTheme);
 	this.selectedLanguage(UserSettings.DefaultLanguage);
@@ -82,7 +82,7 @@ CCommonSettingsTabView.prototype.revertGlobalValues = function ()
  * 
  * @returns {Object}
  */
-CCommonSettingsTabView.prototype.getParametersForSave = function ()
+CCommonSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'AutoCheckMailInterval': Utils.pInt(this.autoRefreshInterval()),
@@ -98,7 +98,7 @@ CCommonSettingsTabView.prototype.getParametersForSave = function ()
  * 
  * @param {Object} oParameters Object that have been obtained by getParameters function.
  */
-CCommonSettingsTabView.prototype.applySavedValues = function (oParameters)
+CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	if (oParameters.DefaultTheme !== UserSettings.DefaultTheme || oParameters.DefaultLanguage !== UserSettings.DefaultLanguage)
 	{
@@ -112,4 +112,4 @@ CCommonSettingsTabView.prototype.applySavedValues = function (oParameters)
 	}
 };
 
-module.exports = new CCommonSettingsTabView();
+module.exports = new CCommonSettingsPaneView();

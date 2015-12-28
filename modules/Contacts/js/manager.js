@@ -19,7 +19,7 @@ module.exports = function (oSettings) {
 	
 	return _.extend(ComponentsMethods, {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsTabView.js'); }, 'contacts', TextUtils.i18n('TITLE/CONTACTS')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('TITLE/CONTACTS')]);
 			if ($.isFunction(fComponentsStart))
 			{
 				fComponentsStart(ModulesManager);

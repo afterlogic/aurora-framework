@@ -16,14 +16,14 @@ var
 /**
  * @constructor
  */
-function CAbstractSettingsTabView()
+function CAbstractSettingsFormView()
 {
 	this.isSaving = ko.observable(false);
 }
 
-CAbstractSettingsTabView.prototype.ViewTemplate = ''; // should be overriden
+CAbstractSettingsFormView.prototype.ViewTemplate = ''; // should be overriden
 
-CAbstractSettingsTabView.prototype.show = function ()
+CAbstractSettingsFormView.prototype.show = function ()
 {
 	this.revert();
 };
@@ -32,7 +32,7 @@ CAbstractSettingsTabView.prototype.show = function ()
  * @param {Function} fAfterHideHandler
  * @param {Function} fRevertRouting
  */
-CAbstractSettingsTabView.prototype.hide = function (fAfterHideHandler, fRevertRouting)
+CAbstractSettingsFormView.prototype.hide = function (fAfterHideHandler, fRevertRouting)
 {
 	if (this.getCurrentState() !== this.sSavedState) // if values have been changed
 	{
@@ -61,7 +61,7 @@ CAbstractSettingsTabView.prototype.hide = function (fAfterHideHandler, fRevertRo
  * 
  * @returns {Array}
  */
-CAbstractSettingsTabView.prototype.getCurrentValues = function ()
+CAbstractSettingsFormView.prototype.getCurrentValues = function ()
 {
 	return [];
 };
@@ -69,14 +69,14 @@ CAbstractSettingsTabView.prototype.getCurrentValues = function ()
 /**
  * @returns {String}
  */
-CAbstractSettingsTabView.prototype.getCurrentState = function ()
+CAbstractSettingsFormView.prototype.getCurrentState = function ()
 {
 	var aState = this.getCurrentValues();
 	
 	return aState.join(':');
 };
 
-CAbstractSettingsTabView.prototype.updateSavedState = function()
+CAbstractSettingsFormView.prototype.updateSavedState = function()
 {
 	this.sSavedState = this.getCurrentState();
 };
@@ -86,12 +86,12 @@ CAbstractSettingsTabView.prototype.updateSavedState = function()
  * 
  * Should be overriden.
  */
-CAbstractSettingsTabView.prototype.revertGlobalValues = function ()
+CAbstractSettingsFormView.prototype.revertGlobalValues = function ()
 {
 	
 };
 
-CAbstractSettingsTabView.prototype.revert = function ()
+CAbstractSettingsFormView.prototype.revert = function ()
 {
 	this.revertGlobalValues();
 	
@@ -105,7 +105,7 @@ CAbstractSettingsTabView.prototype.revert = function ()
  * 
  * @returns {Object}
  */
-CAbstractSettingsTabView.prototype.getParametersForSave = function ()
+CAbstractSettingsFormView.prototype.getParametersForSave = function ()
 {
 	return {};
 };
@@ -113,7 +113,7 @@ CAbstractSettingsTabView.prototype.getParametersForSave = function ()
 /**
  * Sends a request to the server to save the settings.
  */
-CAbstractSettingsTabView.prototype.save = function ()
+CAbstractSettingsFormView.prototype.save = function ()
 {
 	this.isSaving(true);
 	
@@ -129,7 +129,7 @@ CAbstractSettingsTabView.prototype.save = function ()
  * 
  * @param {Object} oParameters Object that have been obtained by getParameters function.
  */
-CAbstractSettingsTabView.prototype.applySavedValues = function (oParameters)
+CAbstractSettingsFormView.prototype.applySavedValues = function (oParameters)
 {
 	
 };
@@ -142,7 +142,7 @@ CAbstractSettingsTabView.prototype.applySavedValues = function (oParameters)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAbstractSettingsTabView.prototype.onResponse = function (oResponse, oRequest)
+CAbstractSettingsFormView.prototype.onResponse = function (oResponse, oRequest)
 {
 	this.isSaving(false);
 
@@ -160,4 +160,4 @@ CAbstractSettingsTabView.prototype.onResponse = function (oResponse, oRequest)
 	}
 };
 
-module.exports = CAbstractSettingsTabView;
+module.exports = CAbstractSettingsFormView;

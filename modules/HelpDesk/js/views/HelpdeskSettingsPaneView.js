@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Settings = require('modules/HelpDesk/js/Settings.js')
 ;
@@ -13,9 +13,9 @@ var
 /**
  * @constructor
  */
-function CHelpdeskSettingsTabView()
+function CHelpdeskSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
+	CAbstractSettingsFormView.call(this);
 
 	this.allowNotifications = ko.observable(Settings.AllowHelpdeskNotifications);
 	this.signature = ko.observable(Settings.helpdeskSignature());
@@ -36,11 +36,11 @@ function CHelpdeskSettingsTabView()
 	}, this);
 }
 
-_.extendOwn(CHelpdeskSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+_.extendOwn(CHelpdeskSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CHelpdeskSettingsTabView.prototype.ViewTemplate = 'HelpDesk_HelpdeskSettingsTabView';
+CHelpdeskSettingsPaneView.prototype.ViewTemplate = 'HelpDesk_HelpdeskSettingsPaneView';
 
-CHelpdeskSettingsTabView.prototype.getCurrentValues = function ()
+CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.allowNotifications(),
@@ -49,14 +49,14 @@ CHelpdeskSettingsTabView.prototype.getCurrentValues = function ()
 	];
 };
 
-CHelpdeskSettingsTabView.prototype.revertGlobalValues = function ()
+CHelpdeskSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.allowNotifications(Settings.AllowHelpdeskNotifications);
 	this.signature(Settings.helpdeskSignature());
 	this.signatureEnable(Settings.helpdeskSignatureEnable() ? '1' : '0');
 };
 
-CHelpdeskSettingsTabView.prototype.getParametersForSave = function ()
+CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'AllowHelpdeskNotifications': this.allowNotifications() ? '1' : '0',
@@ -65,9 +65,9 @@ CHelpdeskSettingsTabView.prototype.getParametersForSave = function ()
 	};
 };
 
-CHelpdeskSettingsTabView.prototype.applySavedValues = function (oParameters)
+CHelpdeskSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	Settings.update(oParameters.AllowHelpdeskNotifications, oParameters.HelpdeskSignature, oParameters.HelpdeskSignatureEnable);
 };
 
-module.exports = new CHelpdeskSettingsTabView();
+module.exports = new CHelpdeskSettingsPaneView();

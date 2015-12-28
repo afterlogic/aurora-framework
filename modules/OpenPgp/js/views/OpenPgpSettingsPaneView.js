@@ -9,7 +9,7 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -24,9 +24,9 @@ var
 /**
  * @constructor
  */
-function OpenPgpSettingsTabView()
+function COpenPgpSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
+	CAbstractSettingsFormView.call(this);
 	
 	this.bAllowAutoSave = UserSettings.AutoSave;
 	
@@ -60,16 +60,16 @@ function OpenPgpSettingsTabView()
 	}, this);
 }
 
-_.extendOwn(OpenPgpSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+_.extendOwn(COpenPgpSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-OpenPgpSettingsTabView.prototype.ViewTemplate = 'OpenPgp_OpenPgpSettingsTabView';
+COpenPgpSettingsPaneView.prototype.ViewTemplate = 'OpenPgp_OpenPgpSettingsPaneView';
 
-OpenPgpSettingsTabView.prototype.importKey = function ()
+COpenPgpSettingsPaneView.prototype.importKey = function ()
 {
 	Popups.showPopup(ImportKeyPopup);
 };
 
-OpenPgpSettingsTabView.prototype.generateNewKey = function ()
+COpenPgpSettingsPaneView.prototype.generateNewKey = function ()
 {
 	Popups.showPopup(GenerateKeyPopup);
 };
@@ -77,7 +77,7 @@ OpenPgpSettingsTabView.prototype.generateNewKey = function ()
 /**
  * @param {Object} oKey
  */
-OpenPgpSettingsTabView.prototype.removeOpenPgpKey = function (oKey)
+COpenPgpSettingsPaneView.prototype.removeOpenPgpKey = function (oKey)
 {
 	var
 		sConfirm = '',
@@ -103,12 +103,12 @@ OpenPgpSettingsTabView.prototype.removeOpenPgpKey = function (oKey)
 /**
  * @param {Object} oKey
  */
-OpenPgpSettingsTabView.prototype.showArmor = function (oKey)
+COpenPgpSettingsPaneView.prototype.showArmor = function (oKey)
 {
 	Popups.showPopup(ShowKeyArmorPopup, [oKey]);
 };
 
-OpenPgpSettingsTabView.prototype.getCurrentValues = function ()
+COpenPgpSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.enableOpenPgp(),
@@ -116,13 +116,13 @@ OpenPgpSettingsTabView.prototype.getCurrentValues = function ()
 	];
 };
 
-OpenPgpSettingsTabView.prototype.revertGlobalValues = function ()
+COpenPgpSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.enableOpenPgp(Settings.enableOpenPgp());
 	this.allowAutosaveInDrafts(UserSettings.AllowAutosaveInDrafts);
 };
 
-OpenPgpSettingsTabView.prototype.getParametersForSave = function ()
+COpenPgpSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'EnableOpenPgp': this.enableOpenPgp(),
@@ -130,9 +130,9 @@ OpenPgpSettingsTabView.prototype.getParametersForSave = function ()
 	};
 };
 
-OpenPgpSettingsTabView.prototype.applySavedValues = function (oParameters)
+COpenPgpSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	Settings.update(oParameters.EnableOpenPgp, oParameters.AllowAutosaveInDrafts);
 };
 
-module.exports = new OpenPgpSettingsTabView();
+module.exports = new COpenPgpSettingsPaneView();

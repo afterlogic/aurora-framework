@@ -2,14 +2,13 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
 	CreateAccountPopup = require('modules/Mail/js/popups/CreateAccountPopup.js'),
@@ -28,10 +27,8 @@ var
 /**
  * @constructor
  */
-function CAccountsSettingsTabView()
+function CAccountsSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
-
 	this.bAllowAddNewAccounts = Settings.AllowUsersAddNewAccounts;
 	this.bAllowIdentities = !!Settings.AllowIdentities;
 	this.bAllowFetcher = !!Settings.AllowFetcher;
@@ -110,11 +107,33 @@ function CAccountsSettingsTabView()
 	this.populate(Accounts.editedId());
 }
 
-_.extendOwn(CAccountsSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+CAccountsSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettingsPaneView';
 
-CAccountsSettingsTabView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettingsTabView';
+/**
+ * @param {Function} fAfterHideHandler
+ * @param {Function} fRevertRouting
+ */
+CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertRouting)
+{
+	if ($.isFunction(this.currentPage.hide))
+	{
+		this.currentPage.hide(fAfterHideHandler, fRevertRouting);
+	}
+	else
+	{
+		fAfterHideHandler();
+	}
+};
 
-CAccountsSettingsTabView.prototype.getDefaultCurrentPage = function ()
+CAccountsSettingsPaneView.prototype.show = function ()
+{
+	if ($.isFunction(this.currentPage.show))
+	{
+		this.currentPage.show();
+	}
+};
+
+CAccountsSettingsPaneView.prototype.getDefaultCurrentPage = function ()
 {
 	var oCurrentPage = _.find(this.aAccountPages, function (oPage) {
 		return oPage.visible();
@@ -128,44 +147,44 @@ CAccountsSettingsTabView.prototype.getDefaultCurrentPage = function ()
 	return oCurrentPage;
 };
 
-CAccountsSettingsTabView.prototype.addAccount = function ()
+CAccountsSettingsPaneView.prototype.addAccount = function ()
 {
 	Popups.showPopup(CreateAccountPopup, [Enums.AccountCreationPopupType.TwoSteps, '', _.bind(function (iAccountId) {
 		this.editAccount(iAccountId);
 	}, this)]);
 };
 
-CAccountsSettingsTabView.prototype.editAccount = function (iAccountId)
+CAccountsSettingsPaneView.prototype.editAccount = function (iAccountId)
 {
 	Accounts.changeEditedAccount(iAccountId);
 };
 
-CAccountsSettingsTabView.prototype.addIdentity = function (sId)
+CAccountsSettingsPaneView.prototype.addIdentity = function (sId)
 {
 	
 };
 
-CAccountsSettingsTabView.prototype.editIdentity = function (oIdentity)
+CAccountsSettingsPaneView.prototype.editIdentity = function (oIdentity)
 {
 	
 };
 
-CAccountsSettingsTabView.prototype.addFetcher = function ()
+CAccountsSettingsPaneView.prototype.addFetcher = function ()
 {
 	
 };
 
-CAccountsSettingsTabView.prototype.editFetcher = function (sId)
+CAccountsSettingsPaneView.prototype.editFetcher = function (sId)
 {
 	
 };
 
-CAccountsSettingsTabView.prototype.connectToMail = function (sId)
+CAccountsSettingsPaneView.prototype.connectToMail = function (sId)
 {
 	
 };
 
-CAccountsSettingsTabView.prototype.showPage = function (sName)
+CAccountsSettingsPaneView.prototype.showPage = function (sName)
 {
 	var
 		oNewCurrentPage = _.find(this.aAccountPages, function (oPage) {
@@ -181,7 +200,7 @@ CAccountsSettingsTabView.prototype.showPage = function (sName)
 /**
  * @param {number} iAccountId
  */
-CAccountsSettingsTabView.prototype.populate = function (iAccountId)
+CAccountsSettingsPaneView.prototype.populate = function (iAccountId)
 {
 	var
 		oAccount = Accounts.getAccount(iAccountId)
@@ -221,7 +240,7 @@ CAccountsSettingsTabView.prototype.populate = function (iAccountId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountsSettingsTabView.prototype.onGetAccountSettingsResponse = function (oResponse, oRequest)
+CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oResponse, oRequest)
 {
 	if (!oResponse.Result)
 	{
@@ -245,4 +264,4 @@ CAccountsSettingsTabView.prototype.onGetAccountSettingsResponse = function (oRes
 	}
 };
 
-module.exports = new CAccountsSettingsTabView();
+module.exports = new CAccountsSettingsPaneView();

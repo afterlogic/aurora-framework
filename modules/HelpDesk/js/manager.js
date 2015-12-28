@@ -13,7 +13,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDesk/js/views/HelpdeskSettingsTabView.js'); }, 'helpdesk', TextUtils.i18n('SETTINGS/TAB_HELPDESK')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDesk/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('SETTINGS/TAB_HELPDESK')]);
 		},
 		screens: {
 			'main': function () {

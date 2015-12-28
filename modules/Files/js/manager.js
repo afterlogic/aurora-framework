@@ -13,7 +13,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Files/js/views/FilesSettingsTabView.js'); }, 'cloud-storage', TextUtils.i18n('SETTINGS/TAB_CLOUD_STORAGE')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Files/js/views/FilesSettingsPaneView.js'); }, 'cloud-storage', TextUtils.i18n('SETTINGS/TAB_CLOUD_STORAGE')]);
 		},
 		screens: {
 			'main': function () {

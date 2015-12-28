@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
-	CAbstractSettingsTabView = ModulesManager.run('Settings', 'getAbstractSettingsTabViewClass'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	SettingsUtils = ModulesManager.run('Settings', 'getSettingsUtils'),
 	
 	Settings = require('modules/Contacts/js/Settings.js')
@@ -14,41 +14,41 @@ var
 /**
  * @constructor
  */
-function CContactsSettingsTabView()
+function CContactsSettingsPaneView()
 {
-	CAbstractSettingsTabView.call(this);
+	CAbstractSettingsFormView.call(this);
 	
 	this.contactsPerPageValues = ko.observableArray(SettingsUtils.getAdaptedPerPageList(Settings.ContactsPerPage));
 	
 	this.contactsPerPage = ko.observable(Settings.ContactsPerPage);
 }
 
-_.extendOwn(CContactsSettingsTabView.prototype, CAbstractSettingsTabView.prototype);
+_.extendOwn(CContactsSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CContactsSettingsTabView.prototype.ViewTemplate = 'Contacts_ContactsSettingsTabView';
+CContactsSettingsPaneView.prototype.ViewTemplate = 'Contacts_ContactsSettingsPaneView';
 
-CContactsSettingsTabView.prototype.getCurrentValues = function ()
+CContactsSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.contactsPerPage()
 	];
 };
 
-CContactsSettingsTabView.prototype.revertGlobalValues = function ()
+CContactsSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.contactsPerPage(Settings.ContactsPerPage);
 };
 
-CContactsSettingsTabView.prototype.getParametersForSave = function ()
+CContactsSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'ContactsPerPage': this.contactsPerPage()
 	};
 };
 
-CContactsSettingsTabView.prototype.applySavedValues = function (oParameters)
+CContactsSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	Settings.update(oParameters.ContactsPerPage);
 };
 
-module.exports = new CContactsSettingsTabView();
+module.exports = new CContactsSettingsPaneView();
