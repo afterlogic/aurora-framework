@@ -288,15 +288,15 @@ class CProAjaxAction extends ap_CoreModuleHelper
 				}
 				else if (!CPost::get('chAllowMail') && !$this->oAdminPanel->XType)
 				{
-					$oAccount->AllowMail = false;
-					$sDomainPart = api_Utils::GetDomainFromEmail(CPost::get('txtNewEmail'));
+//					$oAccount->AllowMail = false;
+					if (!empty(CPost::get('txtNewEmail')))
+					{
+						$oAccount->initLoginAndEmail(CPost::get('txtNewEmail'));
+					}
+					$sDomainPart = api_Utils::GetDomainFromEmail($oAccount->Email);
 					if (empty($sDomainPart))
 					{
 						$this->LastError = \CApi::I18N('ADMIN_PANEL/MISSING_DOMAIN_PART');
-					}
-					else
-					{
-						$oAccount->initLoginAndEmail(CPost::get('txtNewEmail'));
 					}
 				}
 			}
