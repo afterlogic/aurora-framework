@@ -19,7 +19,7 @@ var
 /**
  * @constructor
  */ 
-function CAccountAutoresponderPageView()
+function CAccountAutoresponderPaneView()
 {
 	CAbstractSettingsFormView.call(this);
 	
@@ -33,11 +33,11 @@ function CAccountAutoresponderPageView()
 	this.populate();
 }
 
-_.extendOwn(CAccountAutoresponderPageView.prototype, CAbstractSettingsFormView.prototype);
+_.extendOwn(CAccountAutoresponderPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountAutoresponderPageView.prototype.ViewTemplate = 'Mail_Settings_AccountAutoresponderPageView';
+CAccountAutoresponderPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountAutoresponderPaneView';
 
-CAccountAutoresponderPageView.prototype.getCurrentValues = function ()
+CAccountAutoresponderPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.enable(),
@@ -46,12 +46,12 @@ CAccountAutoresponderPageView.prototype.getCurrentValues = function ()
 	];
 };
 
-CAccountAutoresponderPageView.prototype.revert = function ()
+CAccountAutoresponderPaneView.prototype.revert = function ()
 {
 	this.populate();
 };
 
-CAccountAutoresponderPageView.prototype.getParametersForSave = function ()
+CAccountAutoresponderPaneView.prototype.getParametersForSave = function ()
 {
 	var oAccount = Accounts.getEdited();
 	return {
@@ -62,7 +62,7 @@ CAccountAutoresponderPageView.prototype.getParametersForSave = function ()
 	};
 };
 
-CAccountAutoresponderPageView.prototype.applySavedValues = function (oParameters)
+CAccountAutoresponderPaneView.prototype.applySavedValues = function (oParameters)
 {
 	var
 		oAccount = Accounts.getEdited(),
@@ -77,7 +77,7 @@ CAccountAutoresponderPageView.prototype.applySavedValues = function (oParameters
 	}
 };
 
-CAccountAutoresponderPageView.prototype.save = function ()
+CAccountAutoresponderPaneView.prototype.save = function ()
 {
 	this.isSaving(true);
 	
@@ -90,7 +90,7 @@ CAccountAutoresponderPageView.prototype.save = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountAutoresponderPageView.prototype.onResponse = function (oResponse, oRequest)
+CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oRequest)
 {
 	this.isSaving(false);
 
@@ -108,7 +108,7 @@ CAccountAutoresponderPageView.prototype.onResponse = function (oResponse, oReque
 	}
 };
 
-CAccountAutoresponderPageView.prototype.populate = function()
+CAccountAutoresponderPaneView.prototype.populate = function()
 {
 	var oAccount = Accounts.getEdited();
 	
@@ -133,7 +133,7 @@ CAccountAutoresponderPageView.prototype.populate = function()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountAutoresponderPageView.prototype.onAccountAutoresponderGetResponse = function (oResponse, oRequest)
+CAccountAutoresponderPaneView.prototype.onAccountAutoresponderGetResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
@@ -156,4 +156,4 @@ CAccountAutoresponderPageView.prototype.onAccountAutoresponderGetResponse = func
 	}
 };
 
-module.exports = new CAccountAutoresponderPageView();
+module.exports = new CAccountAutoresponderPaneView();

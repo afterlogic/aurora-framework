@@ -21,7 +21,7 @@ var
 /**
  * @constructor
  */ 
-function CAccountPropertiesPageView()
+function CAccountPropertiesPaneView()
 {
 	this.bAllowChangeEmailSettings =  Settings.AllowUsersChangeEmailSettings;
 	this.bAllowIdentities = Settings.AllowIdentities;
@@ -60,23 +60,23 @@ function CAccountPropertiesPageView()
 	this.firstState = null;
 }
 
-CAccountPropertiesPageView.prototype.ViewTemplate = 'Mail_Settings_AccountPropertiesPageView';
+CAccountPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountPropertiesPaneView';
 
 /**
  * @param {Object} oAccount
  */
-CAccountPropertiesPageView.prototype.onShow = function (oAccount)
+CAccountPropertiesPaneView.prototype.onShow = function (oAccount)
 {
 	this.account(oAccount);
 	this.populate();
 };
 
-CAccountPropertiesPageView.prototype.onHide = function ()
+CAccountPropertiesPaneView.prototype.onHide = function ()
 {
 	this.isAllowMail(false);
 };
 
-CAccountPropertiesPageView.prototype.getState = function ()
+CAccountPropertiesPaneView.prototype.getState = function ()
 {
 	var aState = [
 		this.friendlyName(),
@@ -95,17 +95,17 @@ CAccountPropertiesPageView.prototype.getState = function ()
 	return aState.join(':');
 };
 
-CAccountPropertiesPageView.prototype.updateFirstState = function()
+CAccountPropertiesPaneView.prototype.updateFirstState = function()
 {
 	this.firstState = this.getState();
 };
 
-CAccountPropertiesPageView.prototype.isChanged = function()
+CAccountPropertiesPaneView.prototype.isChanged = function()
 {
 	return !!this.firstState && this.getState() !== this.firstState;
 };
 
-CAccountPropertiesPageView.prototype.populate = function ()
+CAccountPropertiesPaneView.prototype.populate = function ()
 {
 	var oAccount = this.account();
 	if (oAccount)
@@ -148,7 +148,7 @@ CAccountPropertiesPageView.prototype.populate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountPropertiesPageView.prototype.onAccountSettingsUpdateResponse = function (oResponse, oRequest)
+CAccountPropertiesPaneView.prototype.onAccountSettingsUpdateResponse = function (oResponse, oRequest)
 {
 	this.loading(false);
 
@@ -174,7 +174,7 @@ CAccountPropertiesPageView.prototype.onAccountSettingsUpdateResponse = function 
 /**
  * @return Object
  */
-CAccountPropertiesPageView.prototype.prepareParameters = function ()
+CAccountPropertiesPaneView.prototype.prepareParameters = function ()
 {
 	var
 		oParameters = {
@@ -201,7 +201,7 @@ CAccountPropertiesPageView.prototype.prepareParameters = function ()
 /**
  * @param {Object} oParameters
  */
-CAccountPropertiesPageView.prototype.saveData = function (oParameters)
+CAccountPropertiesPaneView.prototype.saveData = function (oParameters)
 {
 	if (this.isAllowMail())
 	{
@@ -213,7 +213,7 @@ CAccountPropertiesPageView.prototype.saveData = function (oParameters)
 /**
  * Sends a request to the server to save the settings.
  */
-CAccountPropertiesPageView.prototype.onSaveClick = function ()
+CAccountPropertiesPaneView.prototype.onSaveClick = function ()
 {
 	if (this.account() && this.isAllowMail())
 	{
@@ -223,9 +223,9 @@ CAccountPropertiesPageView.prototype.onSaveClick = function ()
 	}
 };
 
-CAccountPropertiesPageView.prototype.onChangePasswordClick = function ()
+CAccountPropertiesPaneView.prototype.onChangePasswordClick = function ()
 {
 	Popups.showPopup(ChangePasswordPopup, [false, true]);
 };
 
-module.exports = new CAccountPropertiesPageView();
+module.exports = new CAccountPropertiesPaneView();

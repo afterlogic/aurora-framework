@@ -16,12 +16,12 @@ var
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
-	AccountPropertiesPageView = require('modules/Mail/js/views/settings/AccountPropertiesPageView.js'),
-	AccountFoldersPageView = require('modules/Mail/js/views/settings/AccountFoldersPageView.js'),
-	AccountForwardPageView = require('modules/Mail/js/views/settings/AccountForwardPageView.js'),
-	AccountAutoresponderPageView = require('modules/Mail/js/views/settings/AccountAutoresponderPageView.js'),
-//	AccountFiltersPageView = require('modules/Mail/js/views/settings/AccountFiltersPageView.js'),
-	AccountSignaturePageView = require('modules/Mail/js/views/settings/AccountSignaturePageView.js')
+	AccountPropertiesPaneView = require('modules/Mail/js/views/settings/AccountPropertiesPaneView.js'),
+	AccountFoldersPaneView = require('modules/Mail/js/views/settings/AccountFoldersPaneView.js'),
+	AccountForwardPaneView = require('modules/Mail/js/views/settings/AccountForwardPaneView.js'),
+	AccountAutoresponderPaneView = require('modules/Mail/js/views/settings/AccountAutoresponderPaneView.js'),
+//	AccountFiltersPaneView = require('modules/Mail/js/views/settings/AccountFiltersPaneView.js'),
+	AccountSignaturePaneView = require('modules/Mail/js/views/settings/AccountSignaturePaneView.js')
 ;
 
 /**
@@ -57,49 +57,49 @@ function CAccountsSettingsPaneView()
 	this.allowFilters = ko.observable(false);
 	this.allowSignature = ko.observable(!Settings.AllowIdentities);
 	
-	this.aAccountPages = [
+	this.aAccountTabs = [
 		{
 			name: 'properties',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_PROPERTIES'),
-			view: AccountPropertiesPageView,
+			view: AccountPropertiesPaneView,
 			visible: this.allowProperties
 		},
 		{
 			name: 'folders',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_MANAGE_FOLDERS'),
-			view: AccountFoldersPageView,
+			view: AccountFoldersPaneView,
 			visible: this.allowFolders
 		},
 		{
 			name: 'forward',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_FORWARD'),
-			view: AccountForwardPageView,
+			view: AccountForwardPaneView,
 			visible: this.allowForward
 		},
 		{
 			name: 'autoresponder',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_AUTORESPONDER'),
-			view: AccountAutoresponderPageView,
+			view: AccountAutoresponderPaneView,
 			visible: this.allowAutoresponder
 		},
 //		{
 //			name: 'filters',
 //			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_FILTERS'),
-//			view: AccountFiltersPageView,
+//			view: AccountFiltersPaneView,
 //			visible: this.allowFilters
 //		},
 		{
 			name: 'signature',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_SIGNATURE'),
-			view: AccountSignaturePageView,
+			view: AccountSignaturePaneView,
 			visible: this.allowSignature
 		}
 	];
 	
-	this.currentPage = ko.observable(null);
+	this.currentAccountTab = ko.observable(null);
 	
-//	this.aIdentityPages = ['properties', 'signature'];
-//	this.aFetcherPages = ['incoming', 'outgoing', 'signature'];
+//	this.aIdentityTabs = ['properties', 'signature'];
+//	this.aFetcherTabs = ['incoming', 'outgoing', 'signature'];
 	
 	Accounts.editedId.subscribe(function () {
 		this.populate();
@@ -115,9 +115,9 @@ CAccountsSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettin
  */
 CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertRouting)
 {
-	if (this.currentPage() && $.isFunction(this.currentPage().view.hide))
+	if (this.currentAccountTab() && $.isFunction(this.currentAccountTab().view.hide))
 	{
-		this.currentPage().view.hide(fAfterHideHandler, fRevertRouting);
+		this.currentAccountTab().view.hide(fAfterHideHandler, fRevertRouting);
 	}
 	else
 	{
@@ -127,24 +127,24 @@ CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertR
 
 CAccountsSettingsPaneView.prototype.show = function ()
 {
-	if (this.currentPage() && $.isFunction(this.currentPage().view.show))
+	if (this.currentAccountTab() && $.isFunction(this.currentAccountTab().view.show))
 	{
-		this.currentPage().view.show();
+		this.currentAccountTab().view.show();
 	}
 };
 
-CAccountsSettingsPaneView.prototype.getDefaultCurrentPage = function ()
+CAccountsSettingsPaneView.prototype.getAutoselectedTab = function ()
 {
-	var oCurrentPage = _.find(this.aAccountPages, function (oPage) {
-		return oPage.visible();
+	var oCurrentTab = _.find(this.aAccountTabs, function (oTab) {
+		return oTab.visible();
 	});
 	
-	if (!oCurrentPage)
+	if (!oCurrentTab)
 	{
-		oCurrentPage = this.aAccountPages[0];
+		oCurrentTab = this.aAccountTabs[0];
 	}
 	
-	return oCurrentPage;
+	return oCurrentTab;
 };
 
 CAccountsSettingsPaneView.prototype.addAccount = function ()
@@ -184,42 +184,42 @@ CAccountsSettingsPaneView.prototype.connectToMail = function (sId)
 	
 };
 
-CAccountsSettingsPaneView.prototype.changePage = function (sName)
+CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 {
 	var
-		oCurrentPage = this.currentPage(),
-		oNewPage = _.find(this.aAccountPages, function (oPage) {
-			return oPage.visible() && oPage.name === sName;
+		oCurrentTab = this.currentAccountTab(),
+		oNewTab = _.find(this.aAccountTabs, function (oTab) {
+			return oTab.visible() && oTab.name === sName;
 		}),
-		fShowNewPage = function () {
-			if (oNewPage)
+		fShowNewTab = function () {
+			if (oNewTab)
 			{
-				if ($.isFunction(oNewPage.view.show))
+				if ($.isFunction(oNewTab.view.show))
 				{
-					oNewPage.view.show();
+					oNewTab.view.show();
 				}
-				this.currentPage(oNewPage);
+				this.currentAccountTab(oNewTab);
 			}
 		}.bind(this),
 		bShow = true
 	;
 	
-	if (oNewPage)
+	if (oNewTab)
 	{
-		if (oCurrentPage && $.isFunction(oCurrentPage.view.hide))
+		if (oCurrentTab && $.isFunction(oCurrentTab.view.hide))
 		{
-			oCurrentPage.view.hide(fShowNewPage);
+			oCurrentTab.view.hide(fShowNewTab);
 			bShow = false;
 		}
 	}
-	else if (!oCurrentPage)
+	else if (!oCurrentTab)
 	{
-		oNewPage = this.getDefaultCurrentPage();
+		oNewTab = this.getAutoselectedTab();
 	}
 	
 	if (bShow)
 	{
-		fShowNewPage();
+		fShowNewTab();
 	}
 };
 
@@ -247,9 +247,9 @@ CAccountsSettingsPaneView.prototype.populate = function ()
 		this.allowAutoresponder(true);
 		this.allowFilters(true);
 		
-		if (!this.currentPage() || !this.currentPage().visible())
+		if (!this.currentAccountTab() || !this.currentAccountTab().visible())
 		{
-			this.currentPage(this.getDefaultCurrentPage());
+			this.currentAccountTab(this.getAutoselectedTab());
 		}
 		
 		if (!oAccount.isExtended())

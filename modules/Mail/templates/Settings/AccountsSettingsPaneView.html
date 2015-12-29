@@ -48,16 +48,16 @@
 			<a class="tabs-links" data-bind="attr: {'name': 'settings/accounts/properties'}"></a>
 			<a class="tabs-links" data-bind="attr: {'name': 'settings/accounts/folders'}"></a>
 			<div class="shortcuts">
-				<div data-bind="foreach: aAccountPages">
-					<span class="item" data-bind="attr: {'class': 'item ' + name + ((name === $parent.currentPage().name) ? ' selected' : '')}, visible: visible">
-						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.changePage(name); }, 
+				<div data-bind="foreach: aAccountTabs">
+					<span class="item" data-bind="attr: {'class': 'item ' + name + ((name === $parent.currentAccountTab().name) ? ' selected' : '')}, visible: visible">
+						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.changeTab(name); }, 
 								attr: {'id': 'selenium_settings_account_' + name + '_button'}"></a>
 					</span>
 				</div>
 			</div>
 			<div class="tabs_container">
-				<div class="tab" data-bind="attr: {'class': 'tab ' + currentPage().name}">
-					<div data-bind="template: {name: currentPage().view.ViewTemplate, data: currentPage().view}"></div>
+				<div class="tab" data-bind="attr: {'class': 'tab ' + currentAccountTab().name}">
+					<div data-bind="template: {name: currentAccountTab().view.ViewTemplate, data: currentAccountTab().view}"></div>
 				</div>
 			</div>
 		</div>

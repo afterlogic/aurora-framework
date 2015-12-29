@@ -20,7 +20,7 @@ var
 /**
  * @constructor
  */ 
-function CAccountSignaturePageView()
+function CAccountSignaturePaneView()
 {
 	CAbstractSettingsFormView.call(this);
 	
@@ -41,19 +41,19 @@ function CAccountSignaturePageView()
 	this.populate();
 }
 
-_.extendOwn(CAccountSignaturePageView.prototype, CAbstractSettingsFormView.prototype);
+_.extendOwn(CAccountSignaturePaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountSignaturePageView.prototype.ViewTemplate = 'Mail_Settings_AccountSignaturePageView';
+CAccountSignaturePaneView.prototype.ViewTemplate = 'Mail_Settings_AccountSignaturePaneView';
 
-CAccountSignaturePageView.prototype.__name = 'CAccountSignaturePageView';
+CAccountSignaturePaneView.prototype.__name = 'CAccountSignaturePaneView';
 
-CAccountSignaturePageView.prototype.show = function ()
+CAccountSignaturePaneView.prototype.show = function ()
 {
 	this.populate();
 	_.defer(this.init.bind(this));
 };
 
-CAccountSignaturePageView.prototype.init = function ()
+CAccountSignaturePaneView.prototype.init = function ()
 {
 	if (!this.bInitialized)
 	{
@@ -65,7 +65,7 @@ CAccountSignaturePageView.prototype.init = function ()
 	}
 };
 
-CAccountSignaturePageView.prototype.getCurrentValues = function ()
+CAccountSignaturePaneView.prototype.getCurrentValues = function ()
 {
 	this.signature(this.oHtmlEditor.getNotDefaultText());
 	return [
@@ -75,12 +75,12 @@ CAccountSignaturePageView.prototype.getCurrentValues = function ()
 	];
 };
 
-CAccountSignaturePageView.prototype.revert = function ()
+CAccountSignaturePaneView.prototype.revert = function ()
 {
 	this.populate();
 };
 
-CAccountSignaturePageView.prototype.getParametersForSave = function ()
+CAccountSignaturePaneView.prototype.getParametersForSave = function ()
 {
 	var oAccount = Accounts.getEdited();
 	this.signature(this.oHtmlEditor.getNotDefaultText());
@@ -92,7 +92,7 @@ CAccountSignaturePageView.prototype.getParametersForSave = function ()
 	};
 };
 
-CAccountSignaturePageView.prototype.applySavedValues = function (oParameters)
+CAccountSignaturePaneView.prototype.applySavedValues = function (oParameters)
 {
 	var
 		oAccount = Accounts.getEdited(),
@@ -106,7 +106,7 @@ CAccountSignaturePageView.prototype.applySavedValues = function (oParameters)
 	}
 };
 
-CAccountSignaturePageView.prototype.populate = function ()
+CAccountSignaturePaneView.prototype.populate = function ()
 {
 	var
 		oAccount = Accounts.getEdited(),
@@ -135,7 +135,7 @@ CAccountSignaturePageView.prototype.populate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountSignaturePageView.prototype.onAccountSignatureGetResponse = function (oResponse, oRequest)
+CAccountSignaturePaneView.prototype.onAccountSignatureGetResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
@@ -158,7 +158,7 @@ CAccountSignaturePageView.prototype.onAccountSignatureGetResponse = function (oR
 	}
 };
 
-CAccountSignaturePageView.prototype.save = function ()
+CAccountSignaturePaneView.prototype.save = function ()
 {
 	this.isSaving(true);
 	
@@ -174,7 +174,7 @@ CAccountSignaturePageView.prototype.save = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountSignaturePageView.prototype.onAccountSignatureUpdateResponse = function (oResponse, oRequest)
+CAccountSignaturePaneView.prototype.onAccountSignatureUpdateResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result)
 	{
@@ -186,4 +186,4 @@ CAccountSignaturePageView.prototype.onAccountSignatureUpdateResponse = function 
 	}
 };
 
-module.exports = new CAccountSignaturePageView();
+module.exports = new CAccountSignaturePaneView();

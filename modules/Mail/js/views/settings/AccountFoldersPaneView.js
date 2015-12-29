@@ -22,7 +22,7 @@ require('knockout-sortable');
  *
  * @constructor
  */ 
-function CAccountFoldersPageView(oParent)
+function CAccountFoldersPaneView(oParent)
 {
 	this.parent = oParent;
 
@@ -55,9 +55,9 @@ function CAccountFoldersPageView(oParent)
 //	}
 }
 
-CAccountFoldersPageView.prototype.ViewTemplate = 'Mail_Settings_AccountFoldersPageView';
+CAccountFoldersPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountFoldersPaneView';
 
-CAccountFoldersPageView.prototype.onHide = function ()
+CAccountFoldersPaneView.prototype.onHide = function ()
 {
 	var iAccountId = Accounts.editedId();
 	_.delay(function () {
@@ -65,12 +65,12 @@ CAccountFoldersPageView.prototype.onHide = function ()
 	}, 3000);
 };
 
-CAccountFoldersPageView.prototype.onShow = function ()
+CAccountFoldersPaneView.prototype.onShow = function ()
 {
 	this.setTotalMessageCount();
 };
 
-CAccountFoldersPageView.prototype.setTotalMessageCount = function ()
+CAccountFoldersPaneView.prototype.setTotalMessageCount = function ()
 {
 	var oFolderList = MailCache.editedFolderList();
 	if (oFolderList.iAccountId === 0)
@@ -102,19 +102,19 @@ CAccountFoldersPageView.prototype.setTotalMessageCount = function ()
 /**
  * @return {boolean}
  */
-CAccountFoldersPageView.prototype.isChanged = function ()
+CAccountFoldersPaneView.prototype.isChanged = function ()
 {
 	return false;
 };
 
-CAccountFoldersPageView.prototype.onAddNewFolderClick = function ()
+CAccountFoldersPaneView.prototype.onAddNewFolderClick = function ()
 {
 	Popups.showPopup(FolderCreatePopup);
 };
 
-CAccountFoldersPageView.prototype.onSystemFoldersClick = function ()
+CAccountFoldersPaneView.prototype.onSystemFoldersClick = function ()
 {
 	Popups.showPopup(SystemFoldersPopup);
 };
 
-module.exports = new CAccountFoldersPageView();
+module.exports = new CAccountFoldersPaneView();

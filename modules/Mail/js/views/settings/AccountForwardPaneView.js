@@ -23,7 +23,7 @@ var
 /**
  * @constructor
  */
-function CAccountForwardPageView()
+function CAccountForwardPaneView()
 {
 	CAbstractSettingsFormView.call(this);
 	
@@ -37,11 +37,11 @@ function CAccountForwardPageView()
 	this.populate();
 }
 
-_.extendOwn(CAccountForwardPageView.prototype, CAbstractSettingsFormView.prototype);
+_.extendOwn(CAccountForwardPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountForwardPageView.prototype.ViewTemplate = 'Mail_Settings_AccountForwardPageView';
+CAccountForwardPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountForwardPaneView';
 
-CAccountForwardPageView.prototype.getCurrentValues = function ()
+CAccountForwardPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.enable(),
@@ -49,12 +49,12 @@ CAccountForwardPageView.prototype.getCurrentValues = function ()
 	];
 };
 
-CAccountForwardPageView.prototype.revert = function ()
+CAccountForwardPaneView.prototype.revert = function ()
 {
 	this.populate();
 };
 
-CAccountForwardPageView.prototype.getParametersForSave = function ()
+CAccountForwardPaneView.prototype.getParametersForSave = function ()
 {
 	var oAccount = Accounts.getEdited();
 	return {
@@ -64,7 +64,7 @@ CAccountForwardPageView.prototype.getParametersForSave = function ()
 	};
 };
 
-CAccountForwardPageView.prototype.applySavedValues = function (oParameters)
+CAccountForwardPaneView.prototype.applySavedValues = function (oParameters)
 {
 	var
 		oAccount = Accounts.getEdited(),
@@ -78,7 +78,7 @@ CAccountForwardPageView.prototype.applySavedValues = function (oParameters)
 	}
 };
 
-CAccountForwardPageView.prototype.save = function ()
+CAccountForwardPaneView.prototype.save = function ()
 {
 	var
 		fSaveData = function() {
@@ -115,7 +115,7 @@ CAccountForwardPageView.prototype.save = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountForwardPageView.prototype.onResponse = function (oResponse, oRequest)
+CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 {
 	this.isSaving(false);
 
@@ -133,7 +133,7 @@ CAccountForwardPageView.prototype.onResponse = function (oResponse, oRequest)
 	}
 };
 
-CAccountForwardPageView.prototype.populate = function ()
+CAccountForwardPaneView.prototype.populate = function ()
 {
 	var oAccount = Accounts.getEdited();
 	
@@ -157,7 +157,7 @@ CAccountForwardPageView.prototype.populate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountForwardPageView.prototype.onAccountForwardGetResponse = function (oResponse, oRequest)
+CAccountForwardPaneView.prototype.onAccountForwardGetResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
@@ -180,4 +180,4 @@ CAccountForwardPageView.prototype.onAccountForwardGetResponse = function (oRespo
 	}
 };
 
-module.exports = new CAccountForwardPageView();
+module.exports = new CAccountForwardPaneView();
