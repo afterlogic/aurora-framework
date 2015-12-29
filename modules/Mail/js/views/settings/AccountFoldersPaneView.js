@@ -8,8 +8,8 @@ var
 	App = require('core/js/App.js'),
 	
 	Popups = require('core/js/Popups.js'),
-	FolderCreatePopup,
-	SystemFoldersPopup,
+	CreateFolderPopup = require('modules/Mail/js/popups/CreateFolderPopup.js'),
+	SetSystemFoldersPopup = require('modules/Mail/js/popups/SetSystemFoldersPopup.js'),
 	
 	MailCache = require('modules/Mail/js/Cache.js'),
 	Accounts = require('modules/Mail/js/AccountList.js')
@@ -18,14 +18,10 @@ var
 require('knockout-sortable');
 
 /**
- * @param {?=} oParent
- *
  * @constructor
  */ 
-function CAccountFoldersPaneView(oParent)
+function CAccountFoldersPaneView()
 {
-	this.parent = oParent;
-
 	this.highlighted = ko.observable(false).extend({'autoResetToFalse': 500});
 
 	this.collection = ko.observableArray(MailCache.editedFolderList().collection());
@@ -41,8 +37,8 @@ function CAccountFoldersPaneView(oParent)
 		this.setTotalMessageCount();
 	}, this);
 	
-	this.addNewFolderCommand = Utils.createCommand(this, this.onAddNewFolderClick, this.enableButtons);
-	this.systemFoldersCommand = Utils.createCommand(this, this.onSystemFoldersClick, this.enableButtons);
+	this.addNewFolderCommand = Utils.createCommand(this, this.addNewFolder, this.enableButtons);
+	this.setSystemFoldersCommand = Utils.createCommand(this, this.setSystemFolders, this.enableButtons);
 	
 	this.showMovedWithMouseItem = ko.computed(function () {
 		var oAccount = Accounts.getEdited();
@@ -57,15 +53,20 @@ function CAccountFoldersPaneView(oParent)
 
 CAccountFoldersPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountFoldersPaneView';
 
-CAccountFoldersPaneView.prototype.onHide = function ()
+CAccountFoldersPaneView.prototype.hide = function (fAfterHideHandler)
 {
 	var iAccountId = Accounts.editedId();
 	_.delay(function () {
 		MailCache.getFolderList(iAccountId);
 	}, 3000);
+	
+	if ($.isFunction(fAfterHideHandler))
+	{
+		fAfterHideHandler();
+	}
 };
 
-CAccountFoldersPaneView.prototype.onShow = function ()
+CAccountFoldersPaneView.prototype.show = function ()
 {
 	this.setTotalMessageCount();
 };
@@ -99,22 +100,14 @@ CAccountFoldersPaneView.prototype.setTotalMessageCount = function ()
 	}
 };
 
-/**
- * @return {boolean}
- */
-CAccountFoldersPaneView.prototype.isChanged = function ()
+CAccountFoldersPaneView.prototype.addNewFolder = function ()
 {
-	return false;
+	Popups.showPopup(CreateFolderPopup);
 };
 
-CAccountFoldersPaneView.prototype.onAddNewFolderClick = function ()
+CAccountFoldersPaneView.prototype.setSystemFolders = function ()
 {
-	Popups.showPopup(FolderCreatePopup);
-};
-
-CAccountFoldersPaneView.prototype.onSystemFoldersClick = function ()
-{
-	Popups.showPopup(SystemFoldersPopup);
+	Popups.showPopup(SetSystemFoldersPopup);
 };
 
 module.exports = new CAccountFoldersPaneView();
