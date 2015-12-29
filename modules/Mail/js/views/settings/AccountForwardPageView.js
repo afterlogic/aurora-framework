@@ -136,19 +136,21 @@ CAccountForwardPageView.prototype.onResponse = function (oResponse, oRequest)
 CAccountForwardPageView.prototype.populate = function ()
 {
 	var oAccount = Accounts.getEdited();
+	
 	if (oAccount)
 	{
 		if (oAccount.forward() !== null)
 		{
 			this.enable(oAccount.forward().enable);
 			this.email(oAccount.forward().email);
-			this.updateSavedState();
 		}
 		else
 		{
 			Ajax.send('AccountForwardGet', {'AccountID': oAccount.id()}, this.onAccountForwardGetResponse, this);
 		}
 	}
+	
+	this.updateSavedState();
 };
 
 /**

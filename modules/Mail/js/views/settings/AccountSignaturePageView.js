@@ -112,6 +112,7 @@ CAccountSignaturePageView.prototype.populate = function ()
 		oAccount = Accounts.getEdited(),
 		oSignature = oAccount ? oAccount.signature() : null
 	;
+	
 	if (oAccount)
 	{
 		if (oSignature !== null)
@@ -120,14 +121,14 @@ CAccountSignaturePageView.prototype.populate = function ()
 			this.useSignature(!!oSignature.options() ? '1' : '0');
 			this.signature(oSignature.signature());
 			this.oHtmlEditor.setText(this.signature());
-			
-			this.updateSavedState();
 		}
 		else
 		{
 			Ajax.send('AccountSignatureGet', {'AccountID': oAccount.id()}, this.onAccountSignatureGetResponse, this);
 		}
 	}
+	
+	this.updateSavedState();
 };
 
 /**
@@ -155,15 +156,6 @@ CAccountSignaturePageView.prototype.onAccountSignatureGetResponse = function (oR
 			}
 		}
 	}
-};
-
-/**
- * @param {Object} oParameters
- */
-CAccountSignaturePageView.prototype.saveData = function (oParameters)
-{
-	this.updateFirstState();
-	Ajax.send('AccountSignatureUpdate', oParameters, this.onAccountSignatureUpdateResponse, this);
 };
 
 CAccountSignaturePageView.prototype.save = function ()

@@ -18,11 +18,8 @@ module.exports = function (oSettings) {
 			return new CHeaderItemView(TextUtils.i18n('HEADER/SETTINGS'));
 		},
 		registerSettingsTab: function (fGetTabView, oTabName, oTabTitle) {
-			var
-				SettingsView = require('modules/Settings/js/views/SettingsView.js'),
-				oTabView = fGetTabView()
-			;
-			SettingsView.registerTab(oTabView, oTabName, oTabTitle);
+			var SettingsView = require('modules/Settings/js/views/SettingsView.js');
+			SettingsView.registerTab(fGetTabView, oTabName, oTabTitle);
 		},
 		getSettingsUtils: function () {
 			return require('modules/Settings/js/utils/Settings.js');

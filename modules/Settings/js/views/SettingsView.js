@@ -29,11 +29,12 @@ _.extendOwn(CSettingsView.prototype, CAbstractScreenView.prototype);
 
 CSettingsView.prototype.ViewTemplate = 'Settings_SettingsView';
 
-CSettingsView.prototype.registerTab = function (oTabView, oTabName, oTabTitle) {
+CSettingsView.prototype.registerTab = function (fGetTabView, oTabName, oTabTitle) {
 	var iLastIndex = Settings.TabsOrder.length;
 	
 	this.tabs.push({
-		view: oTabView,
+		view: null,
+		getView: fGetTabView,
 		name: oTabName,
 		title: oTabTitle
 	});
@@ -67,6 +68,11 @@ CSettingsView.prototype.onRoute = function (aParams) {
 		fShowNewTab = function () {
 			if (oNewTab)
 			{
+				if (!oNewTab.view && $.isFunction(oNewTab.getView))
+				{
+					oNewTab.view = oNewTab.getView();
+					oNewTab.getView = undefined;
+				}
 				oNewTab.view.show(aParams);
 				this.currentTab(oNewTab);
 			}

@@ -111,6 +111,7 @@ CAccountAutoresponderPageView.prototype.onResponse = function (oResponse, oReque
 CAccountAutoresponderPageView.prototype.populate = function()
 {
 	var oAccount = Accounts.getEdited();
+	
 	if (oAccount)
 	{
 		if (oAccount.autoresponder() !== null)
@@ -118,13 +119,14 @@ CAccountAutoresponderPageView.prototype.populate = function()
 			this.enable(oAccount.autoresponder().enable);
 			this.subject(oAccount.autoresponder().subject);
 			this.message(oAccount.autoresponder().message);
-			this.updateSavedState();
 		}
 		else
 		{
 			Ajax.send('AccountAutoresponderGet', {'AccountID': oAccount.id()}, this.onAccountAutoresponderGetResponse, this);
 		}
 	}
+	
+	this.updateSavedState();
 };
 
 /**
