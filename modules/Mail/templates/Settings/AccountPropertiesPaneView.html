@@ -2,7 +2,7 @@
 	<div class="fieldset">
 		<div class="row" data-bind="visible: !bAllowIdentities">
 			<span class="label" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_YOUR_NAME" data-bind="i18n: 'text'"></span>
-			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: friendlyName, onEnter: onSaveClick"/>
+			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: friendlyName, onEnter: save"/>
 		</div>
 
         <div data-bind="visible: (!isDefault() || isDefault() && bAllowChangeEmailSettings) && isAllowMail()">
@@ -12,11 +12,11 @@
 
             <div class="row">
                 <span class="label required" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_LOGIN" data-bind="i18n: 'text'"></span>
-                <input class="value input" spellcheck="false" type="text" maxlength="255" data-bind="value: incomingMailLogin, hasfocus: incLoginFocused, onEnter: onSaveClick"/>
+                <input class="value input" spellcheck="false" type="text" maxlength="255" data-bind="value: incomingMailLogin, hasfocus: incLoginFocused, onEnter: save"/>
             </div>
             <div class="row">
                 <span class="label required" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_PASSWORD" data-bind="i18n: 'text'"></span>
-                <input class="value input" spellcheck="false" type="password" maxlength="255" data-bind="value: incomingMailPassword, onEnter: onSaveClick"/>
+                <input class="value input" spellcheck="false" type="password" maxlength="255" data-bind="value: incomingMailPassword, onEnter: save"/>
             </div>
             <div class="row">
 				<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oOutgoing} --><!-- /ko -->
@@ -35,7 +35,7 @@
 		</div>
 
 		<div class="buttons" data-bind="visible: allowChangePassword" style="text-align: left;">
-			<span class="button" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_CHANGE_PASSWORD" data-bind="i18n: 'text', click: onChangePasswordClick"></span>
+			<span class="button" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_CHANGE_PASSWORD" data-bind="i18n: 'text', click: changePassword"></span>
 		</div>
 
 		<div data-bind="visible: canBeRemoved() && !isDefault()">
@@ -52,7 +52,7 @@
     </div>
 	
 	<div class="buttons" data-bind="visible: (!isDefault() || isDefault() && bAllowChangeEmailSettings) && isAllowMail() || canBeRemoved() && !isDefault() || !bAllowIdentities">
-		<span class="button" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: !loading()"></span>
-		<span class="button" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', click: onSaveClick, visible: loading()"></span>
+		<span class="button" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
+		<span class="button" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', click: save, visible: isSaving()"></span>
 	</div>
 </div>

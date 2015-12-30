@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
@@ -8,9 +9,11 @@ var
 	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
-	ChangePasswordPopup,
+	ChangePasswordPopup = ModulesManager.run('ChangePassword', 'getChangePasswordPopup'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -23,13 +26,11 @@ var
  */ 
 function CAccountPropertiesPaneView()
 {
+	CAbstractSettingsFormView.call(this);
+	
 	this.bAllowChangeEmailSettings =  Settings.AllowUsersChangeEmailSettings;
 	this.bAllowIdentities = Settings.AllowIdentities;
 	
-	this.account = ko.observable(0);
-	
-	this.isAllowMail = ko.observable(false);
-
 	this.isInternal = ko.observable(true);
 	this.isLinked = ko.observable(true);
 	this.isDefault = ko.observable(false);
@@ -44,8 +45,7 @@ function CAccountPropertiesPaneView()
 	this.outgoingMailPassword = ko.observable('');
 	this.oOutgoing = new CServerPropertiesViewModel(25, 465, 'acc_edit_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
 
-	this.loading = ko.observable(false);
-
+	this.isAllowMail = ko.observable(true);
 	this.allowChangePassword = ko.observable(false);
 	this.useSmtpAuthentication = ko.observable(false);
 	
@@ -57,28 +57,19 @@ function CAccountPropertiesPaneView()
 		}
 	}, this);
 
-	this.firstState = null;
+	Accounts.editedId.subscribe(function () {
+		this.populate();
+	}, this);
+	this.populate();
 }
+
+_.extendOwn(CAccountPropertiesPaneView.prototype, CAbstractSettingsFormView.prototype);
 
 CAccountPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountPropertiesPaneView';
 
-/**
- * @param {Object} oAccount
- */
-CAccountPropertiesPaneView.prototype.onShow = function (oAccount)
+CAccountPropertiesPaneView.prototype.getCurrentValues = function ()
 {
-	this.account(oAccount);
-	this.populate();
-};
-
-CAccountPropertiesPaneView.prototype.onHide = function ()
-{
-	this.isAllowMail(false);
-};
-
-CAccountPropertiesPaneView.prototype.getState = function ()
-{
-	var aState = [
+	return [
 		this.friendlyName(),
 		this.email(),
 		this.incomingMailLogin(),
@@ -91,66 +82,88 @@ CAccountPropertiesPaneView.prototype.getState = function ()
 		this.oOutgoing.ssl(),
 		this.useSmtpAuthentication()
 	];
-
-	return aState.join(':');
 };
 
-CAccountPropertiesPaneView.prototype.updateFirstState = function()
+CAccountPropertiesPaneView.prototype.getParametersForSave = function ()
 {
-	this.firstState = this.getState();
-};
-
-CAccountPropertiesPaneView.prototype.isChanged = function()
-{
-	return !!this.firstState && this.getState() !== this.firstState;
+	var oAccount = Accounts.getEdited();
+	return {
+		'AccountID': oAccount.id(),
+		'FriendlyName': this.friendlyName(),
+		'Email': this.email(),
+		'IncomingMailLogin': this.incomingMailLogin(),
+		'IncomingMailServer': this.oIncoming.server(),
+		'IncomingMailPort': this.oIncoming.getIntPort(),
+		'IncomingMailSsl': this.oIncoming.getIntSsl(),
+		'OutgoingMailLogin': this.outgoingMailLogin(),
+		'OutgoingMailServer': this.oOutgoing.server(),
+		'OutgoingMailPort': this.oOutgoing.getIntPort(),
+		'OutgoingMailSsl': this.oOutgoing.getIntSsl(),
+		'OutgoingMailAuth': this.useSmtpAuthentication() ? 2 : 0,
+		'IncomingMailPassword': this.incomingMailPassword()
+	};
 };
 
 CAccountPropertiesPaneView.prototype.populate = function ()
 {
-	var oAccount = this.account();
+	var oAccount = Accounts.getEdited();
+	
 	if (oAccount)
 	{	
-		this.isAllowMail(oAccount.allowMail());
-		
-		this.allowChangePassword(oAccount.extensionExists('AllowChangePasswordExtension'));
+		this.allowChangePassword(!!ChangePasswordPopup);// && oAccount.extensionExists('AllowChangePasswordExtension'));
 
-		this.isInternal(oAccount.isInternal());
-		this.isLinked(oAccount.isLinked());
-		this.isDefault(oAccount.isDefault());
-		this.removeHint(oAccount.removeHint());
-		this.canBeRemoved(oAccount.canBeRemoved());
-		this.useSmtpAuthentication(Utils.pInt(oAccount.outgoingMailAuth()) === 2 ? true : false);
 		this.friendlyName(oAccount.friendlyName());
 		this.email(oAccount.email());
 		this.incomingMailLogin(oAccount.incomingMailLogin());
 		this.oIncoming.set(oAccount.incomingMailServer(), oAccount.incomingMailPort(), oAccount.incomingMailSsl());
 		this.outgoingMailLogin(oAccount.outgoingMailLogin());
 		this.oOutgoing.set(oAccount.outgoingMailServer(), oAccount.outgoingMailPort(), oAccount.outgoingMailSsl());
-
-		this.updateFirstState();
+		this.useSmtpAuthentication(Utils.pInt(oAccount.outgoingMailAuth()) === 2 ? true : false);
+		
+		this.isInternal(oAccount.isInternal());
+		this.isLinked(oAccount.isLinked());
+		this.isDefault(oAccount.isDefault());
+		this.removeHint(oAccount.removeHint());
+		this.canBeRemoved(oAccount.canBeRemoved());
 	}
 	else
 	{
 		this.allowChangePassword(false);
 
-		this.isLinked(true);
-		this.useSmtpAuthentication(true);
 		this.friendlyName('');
 		this.email('');
 		this.incomingMailLogin('');
 		this.oIncoming.clear();
 		this.outgoingMailLogin('');
 		this.oOutgoing.clear();
+		this.useSmtpAuthentication(true);
+		
+		this.isInternal(true);
+		this.isLinked(true);
+		this.isDefault(true);
+		this.removeHint('');
+		this.canBeRemoved(false);
 	}
+
+	this.updateSavedState();
+};
+
+CAccountPropertiesPaneView.prototype.save = function ()
+{
+	this.isSaving(true);
+	
+	this.updateSavedState();
+	
+	Ajax.send('AccountSettingsUpdate', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountPropertiesPaneView.prototype.onAccountSettingsUpdateResponse = function (oResponse, oRequest)
+CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 {
-	this.loading(false);
+	this.isSaving(false);
 
 	if (!oResponse.Result)
 	{
@@ -160,7 +173,7 @@ CAccountPropertiesPaneView.prototype.onAccountSettingsUpdateResponse = function 
 	{
 		var
 			iAccountId = Utils.pInt(oResponse.AccountID),
-			oAccount = 0 < iAccountId ? Accounts.getAccount(iAccountId) : null
+			oAccount = Accounts.getAccount(iAccountId)
 		;
 
 		if (oAccount)
@@ -171,61 +184,15 @@ CAccountPropertiesPaneView.prototype.onAccountSettingsUpdateResponse = function 
 	}
 };
 
-/**
- * @return Object
- */
-CAccountPropertiesPaneView.prototype.prepareParameters = function ()
+CAccountPropertiesPaneView.prototype.changePassword = function ()
 {
-	var
-		oParameters = {
-			'Action': 'AccountSettingsUpdate',
-			'AccountID': this.account().id(),
-			'FriendlyName': this.friendlyName(),
-			'Email': this.email(),
-			'IncomingMailLogin': this.incomingMailLogin(),
-			'IncomingMailServer': this.oIncoming.server(),
-			'IncomingMailPort': this.oIncoming.getIntPort(),
-			'IncomingMailSsl': this.oIncoming.getIntSsl(),
-			'OutgoingMailLogin': this.outgoingMailLogin(),
-			'OutgoingMailServer': this.oOutgoing.server(),
-			'OutgoingMailPort': this.oOutgoing.getIntPort(),
-			'OutgoingMailSsl': this.oOutgoing.getIntSsl(),
-			'OutgoingMailAuth': this.useSmtpAuthentication() ? 2 : 0,
-			'IncomingMailPassword': this.incomingMailPassword()
-		}
-	;
-	
-	return oParameters;
-};
-
-/**
- * @param {Object} oParameters
- */
-CAccountPropertiesPaneView.prototype.saveData = function (oParameters)
-{
-	if (this.isAllowMail())
+	if (ChangePasswordPopup)
 	{
-		this.updateFirstState();
-		Ajax.send(oParameters, this.onAccountSettingsUpdateResponse, this);
+		Popups.showPopup(ChangePasswordPopup, [{
+			sModule: 'Mail',
+			bHasOldPassword: true
+		}]);
 	}
-};
-
-/**
- * Sends a request to the server to save the settings.
- */
-CAccountPropertiesPaneView.prototype.onSaveClick = function ()
-{
-	if (this.account() && this.isAllowMail())
-	{
-		this.loading(true);
-
-		this.saveData(this.prepareParameters());
-	}
-};
-
-CAccountPropertiesPaneView.prototype.onChangePasswordClick = function ()
-{
-	Popups.showPopup(ChangePasswordPopup, [false, true]);
 };
 
 module.exports = new CAccountPropertiesPaneView();

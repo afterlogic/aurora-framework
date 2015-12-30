@@ -114,7 +114,11 @@ module.exports = {
 		dsbld_SessionTimeout: {
 			TimeoutSeconds: 20
 		},
-		MailSensitivity: {}
+		MailSensitivity: {},
+		ChangePassword: {
+			PasswordMinLength: AppData.App ? AppData.App.PasswordMinLength : 0,
+			PasswordMustBeComplex: AppData.App ? AppData.App.PasswordMustBeComplex : false
+		}
 	},
 	EntryModule: 'Mail',
 	Language: 'English',
