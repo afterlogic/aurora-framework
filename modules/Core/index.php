@@ -76,8 +76,8 @@ class CoreModule extends AApiModule
 
 		if ($bDoHepdeskClear && \CApi::GetModuleManager()->ModuleExists('Helpdesk'))
 		{
-			\CApi::GetModuleManager()->ExecuteMethod('Helpdesk', 'ClearUnregistredUsers');
-			\CApi::GetModuleManager()->ExecuteMethod('Helpdesk', 'ClearAllOnline');
+			\CApi::ExecuteMethod('Helpdesk::ClearUnregistredUsers');
+			\CApi::ExecuteMethod('Helpdesk::ClearAllOnline');
 		}
 
 		return $bResult;
@@ -538,7 +538,7 @@ class CoreModule extends AApiModule
 		catch (CApiBaseException $oException)
 		{
 			$mResult = false;
-			$this->setLastException($oException);
+//			$this->setLastException($oException);
 		}
 
 		return $mResult;

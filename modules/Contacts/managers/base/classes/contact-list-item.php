@@ -103,6 +103,11 @@ class CContactListItem
 	/**
 	 * @var int
 	 */
+	public $DateModified;
+	
+	/**
+	 * @var int
+	 */
 	public $AgeScore;
 	
 	public function __construct()
@@ -127,6 +132,7 @@ class CContactListItem
 		$this->SharedToAll = false;
 		$this->Events = array();
 		$this->AgeScore = 1;
+		$this->DateModified = 0;
 	}
 
 	/**
@@ -348,6 +354,9 @@ class CContactListItem
 					$this->Frequency = (int) $oRow->use_frequency;
 					$this->UseFriendlyName = (bool) $oRow->use_friendly_nm;
 
+					$dDateModified = new DateTime($oRow->date_modified);
+					$this->DateModified = $dDateModified->getTimestamp();
+					
 					if (null !== $mItsMeTypeId &&
 						(int) $oRow->type === EContactType::GlobalAccounts &&
 						(string) $oRow->type_id === (string) $mItsMeTypeId

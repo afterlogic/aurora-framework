@@ -265,21 +265,19 @@ class FilesModule extends AApiModule
 		$sPath = $this->getParamValue('Path', '');
 		
 		$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sHash));
-		if (!empty($mMin['__hash__']))
-		{
+		if (!empty($mMin['__hash__'])) {
+			
 			$oApiUsers = \CApi::GetCoreManager('users');
 			$oAccount = $oApiUsers->getAccountById($mMin['Account']);
-			if ($oAccount)
-			{
-				if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
-				{
+			if ($oAccount) {
+				
+				if (!$this->oApiCapabilityManager->isFilesSupported($oAccount)) {
+					
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 				}
-				$sType = $mMin['Type'];
-
 				$sPath =  implode('/', array($mMin['Path'], $mMin['Name']))  . $sPath;
 
-				$oResult['Items'] = $this->oApiFilesManager->getFiles($oAccount, $sType, $sPath);
+				$oResult['Items'] = $this->oApiFilesManager->getFiles($oAccount, $mMin['Type'], $sPath);
 				$oResult['Quota'] = $this->oApiFilesManager->getQuota($oAccount);
 				
 			}
@@ -291,21 +289,21 @@ class FilesModule extends AApiModule
 	public function GetQuota()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
-		{
+		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount)) {
+			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
 		return array(
-					'Quota' => $this->oApiFilesManager->getQuota($oAccount)
+				'Quota' => $this->oApiFilesManager->getQuota($oAccount)
 		);
 	}	
 
 	public function CreateFolder()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
-		{
+		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount)) {
+			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 

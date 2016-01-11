@@ -11,11 +11,6 @@
 class CApiContactsGlobalDbStorage extends CApiContactsGlobalStorage
 {
 	/**
-	 * @var CApiContactsMainManager
-	 */
-	protected $oApiContactsManager;
-
-	/**
 	 * @var CDbStorage
 	 */
 	protected $oConnection;
@@ -34,13 +29,11 @@ class CApiContactsGlobalDbStorage extends CApiContactsGlobalStorage
 	{
 		parent::__construct('db', $oManager);
 
-//		$this->oApiContactsManager = /* @var CApiContactsContactsManager */ CApi::Manager('contactsmain');
-		
 		$this->oConnection =& $oManager->GetGlobalManager()->GetConnection();
 		$this->oCommandCreator =& $oManager->GetCommandCreator(
 			$this, array(
-				EDbType::MySQL => 'CApiContactsGlobalCommandCreatorMySQL',
-				EDbType::PostgreSQL => 'CApiContactsGlobalCommandCreatorPostgreSQL'
+				EDbType::MySQL => 'CApiContactsGlobalDbCommandCreatorMySQL',
+				EDbType::PostgreSQL => 'CApiContactsGlobalDbCommandCreatorPostgreSQL'
 			)
 		);
 	}
@@ -86,6 +79,7 @@ class CApiContactsGlobalDbStorage extends CApiContactsGlobalStorage
 		$iSortField, $iSortOrder, $iOffset, $iRequestLimit, $sSearch)
 	{
 		$mContactItems = false;
+		
 		if ($this->oConnection->Execute($this->oCommandCreator->getContactItemsQuery(
 			$oAccount, $iSortField, $iSortOrder, $iOffset, $iRequestLimit, $sSearch)))
 		{
@@ -93,7 +87,7 @@ class CApiContactsGlobalDbStorage extends CApiContactsGlobalStorage
 
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oContactItem = /** @type CContactListItem */ $this->oApiContactsManager->createContactListItemObject();
+				$oContactItem = /** @type CContactListItem */ new \CContactListItem();
 				$oContactItem->InitByDbRowWithType('global', $oRow, $oAccount->IdUser);
 				$mContactItems[] = $oContactItem;
 				unset($oContactItem);

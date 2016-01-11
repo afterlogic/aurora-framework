@@ -72,7 +72,9 @@ class AuthModule extends AApiModule
 		}
 
 		$sAtDomain = trim(\CApi::GetSettingsConf('WebMail/LoginAtDomainValue'));
-		if ((\ELoginFormType::Email === (int) \CApi::GetSettingsConf('WebMail/LoginFormType') || \ELoginFormType::Both === (int) \CApi::GetSettingsConf('WebMail/LoginFormType')) && 0 === strlen($sAtDomain) && 0 < strlen($sEmail) && !\MailSo\Base\Validator::EmailString($sEmail))
+		if ((\ELoginFormType::Email === (int) \CApi::GetSettingsConf('WebMail/LoginFormType') || 
+				\ELoginFormType::Both === (int) \CApi::GetSettingsConf('WebMail/LoginFormType')) && 
+				0 === strlen($sAtDomain) && 0 < strlen($sEmail) && !\MailSo\Base\Validator::EmailString($sEmail))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 		}

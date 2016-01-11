@@ -53,10 +53,9 @@ class CApiDavMainManager extends AApiManager
 	 */
 	public function getServerUrl($oAccount = null)
 	{
-		$oSettings =& CApi::GetSettings();
 		return rtrim($oAccount
 			? $oAccount->Domain->ExternalHostNameOfDAVServer
-			: $oSettings->GetConf('WebMail/ExternalHostNameOfDAVServer'), '/');
+			: \CApi::GetSettingsConf('WebMail/ExternalHostNameOfDAVServer'), '/');
 	}
 
 	/**

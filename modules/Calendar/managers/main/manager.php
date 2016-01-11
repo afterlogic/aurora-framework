@@ -1439,23 +1439,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 					},
 					$oCalendarsOwn
 				);
-				$aCalendarsOwnIds = array_map(
-					function($oCalendar) {
-						if (!$oCalendar->SharedToAll && !$oCalendar->Shared) {
-							return $oCalendar->IntId;
-						}
-					},
-					$oCalendarsOwn
-				);
 
-				/*foreach ($oCalendarsShared as $oCalendarShared)
-				{
-					if (in_array($oCalendarShared->IntId, $aCalendarsSharedToAllIds))
-					{
-						$oCalendarShared->SharedToAll = true;
-					}
-					$oCalendarsSharedToAll[$oCalendarShared->IntId] = $oCalendarShared;
-				}*/
 				foreach ($oCalendarsOwn as $oCalendarOwn) {
 					if (in_array($oCalendarOwn->IntId, $aCalendarsSharedToAllIds)) {
 						$oCalendarOwn->Shared = true;
@@ -1476,14 +1460,6 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 				$oCalendar = $this->populateCalendarShares($oAccount, $oCalendar);
 				$oResult[] = $oCalendar;
 			}
-/*
-			if (is_array($oResult) && count($oResult) > 0)
-			{
-				$oResult[0]['IsDefault'] = true;
-			}
- * 
- */
-			//uasort($oResult['user'], array(&$this, '___qSortCallback'));
 		}
 		catch (Exception $oException)
 		{

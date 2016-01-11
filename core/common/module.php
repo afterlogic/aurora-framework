@@ -186,20 +186,20 @@ class CApiModuleManager
 	{
 		$mResult = false;
 		$oModule = $this->GetModuleByEntry($sEntryName);
-		if ($oModule instanceof AApiModule)
-		{
+		if ($oModule instanceof AApiModule) {
+			
 			$mResult = $oModule->RunEntry($sEntryName);
 		}
 		
 		return $mResult;
 	}
 
-	public function ExecuteMethod($sModuleName, $sMethod, $aParameters)
+	public function ExecuteMethod($sModuleName, $sMethod, $aParameters = array())
 	{
 		$mResult = false;
 		$oModule = $this->GetModule($sModuleName);
-		if ($oModule && $oModule instanceof AApiModule)
-		{
+		if ($oModule instanceof AApiModule) {
+			
 			$mResult = $oModule->ExecuteMethod($sMethod, $aParameters);
 		}
 		
@@ -343,6 +343,11 @@ abstract class AApiModule
 		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback);
 	}
 
+	public function broadcastEvent($sEvent, $aArguments = array())
+	{
+		\CApi::GetModuleManager()->broadcastEvent($sEvent, $aArguments);
+	}
+
 	/**
 	 * @param string $sName
 	 */
@@ -412,7 +417,7 @@ abstract class AApiModule
 		return $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
 	}
 
-	public function GetManager($sManagerName, $sForcedStorage = '')
+	public function GetManager($sManagerName, $sForcedStorage = 'db')
 	{
 		$mResult = false;
 		$sFileFullPath = '';
@@ -455,8 +460,8 @@ abstract class AApiModule
 	public function GetEntry($sName)
 	{
 		$mResult = false;
-		if (isset($this->aEntries[$sName]))
-		{
+		if (isset($this->aEntries[$sName])) {
+			
 			$mResult = $this->aEntries[$sName];
 		}
 		
@@ -466,10 +471,11 @@ abstract class AApiModule
 	public function RunEntry($sName)
 	{
 		$mResult = false;
-		$mEntry = $this->GetEntry($sName);
-		if ($mEntry && method_exists($this, $mEntry))
-		{
-			$mResult = call_user_func(array($this, $mEntry));
+		$mMethod = $this->GetEntry($sName);
+		
+		if ($mMethod) {
+			
+			$mResult = $this->ExecuteMethod($mMethod);
 		}			
 		
 		return $mResult;
@@ -806,19 +812,18 @@ abstract class AApiModule
 	{
 		$aResponseItem = $this->DefaultResponse($oAccount, $sMethod, false);
 
-		if (null !== $iErrorCode)
-		{
+		if (null !== $iErrorCode) {
+			
 			$aResponseItem['ErrorCode'] = (int) $iErrorCode;
-			if (null !== $sErrorMessage)
-			{
+			if (null !== $sErrorMessage) {
+				
 				$aResponseItem['ErrorMessage'] = null === $sErrorMessage ? '' : (string) $sErrorMessage;
 			}
 		}
 
-		if (is_array($aAdditionalParams))
-		{
-			foreach ($aAdditionalParams as $sKey => $mValue)
-			{
+		if (is_array($aAdditionalParams)) {
+			
+			foreach ($aAdditionalParams as $sKey => $mValue) {
 				$aResponseItem[$sKey] = $mValue;
 			}
 		}
@@ -841,32 +846,25 @@ abstract class AApiModule
 
 		$bShowError = \CApi::GetConf('labs.webmail.display-server-error-information', false);
 
-		if ($oException instanceof \Core\Exceptions\ClientException)
-		{
+		if ($oException instanceof \Core\Exceptions\ClientException) {
 			$iErrorCode = $oException->getCode();
 			$sErrorMessage = null;
-			if ($bShowError)
-			{
+			if ($bShowError) {
 				$sErrorMessage = $oException->getMessage();
-				if (empty($sErrorMessage) || 'ClientException' === $sErrorMessage)
-				{
+				if (empty($sErrorMessage) || 'ClientException' === $sErrorMessage) {
 					$sErrorMessage = null;
 				}
 			}
 		}
-		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException)
-		{
+		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) {
 			$iErrorCode = \Core\Notifications::MailServerError;
 			
 			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
-			if ($oResponse instanceof \MailSo\Imap\Response)
-			{
+			if ($oResponse instanceof \MailSo\Imap\Response) {
 				$sErrorMessage = $oResponse instanceof \MailSo\Imap\Response ?
 					$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : null;
 			}
-		}
-		else
-		{
+		} else {
 			$iErrorCode = \Core\Notifications::UnknownError;
 //			$sErrorMessage = $oException->getCode().' - '.$oException->getMessage();
 		}
@@ -884,15 +882,15 @@ abstract class AApiModule
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
 		$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
-		if (0 < $iUserId)
-		{
+		if (0 < $iUserId) {
+			
 			$oApiUsers = \CApi::GetCoreManager('users');
 			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
-			if (0 < $iAccountId)
-			{
+			if (0 < $iAccountId) {
+				
 				$oAccount = $oApiUsers->getAccountById($iAccountId);
-				if ($oAccount instanceof \CAccount && !$oAccount->IsDisabled)
-				{
+				if ($oAccount instanceof \CAccount && !$oAccount->IsDisabled) {
+					
 					$oResult = $oAccount;
 				}
 			}
@@ -913,14 +911,15 @@ abstract class AApiModule
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
 		$iUserId = $bVerifyLogginedUserId ? $oApiIntegrator->getLogginedUserId($sAuthToken) : 1;
-		if (0 < $iUserId)
-		{
+		if (0 < $iUserId) {
+			
 			$oApiUsers = \CApi::GetCoreManager('users');
 			
 			$oAccount = $oApiUsers->getAccountById($iAccountId);
 			if ($oAccount instanceof \CAccount && 
-				($bVerifyLogginedUserId && $oAccount->IdUser === $iUserId || !$bVerifyLogginedUserId) && !$oAccount->IsDisabled)
-			{
+				($bVerifyLogginedUserId && $oAccount->IdUser === $iUserId || !$bVerifyLogginedUserId) 
+					&& !$oAccount->IsDisabled) {
+				
 				$oResult = $oAccount;
 			}
 		}
@@ -937,8 +936,8 @@ abstract class AApiModule
 	{
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		$oResult = $this->GetDefaultAccount($sAuthToken);
-		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
-		{
+		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount)) {
+			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 		}
 
@@ -955,15 +954,15 @@ abstract class AApiModule
 	{
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
 		$sAccountID = (string) $this->getParamValue('AccountID', '');
-		if (0 === strlen($sAccountID) || !is_numeric($sAccountID))
-		{
+		if (0 === strlen($sAccountID) || !is_numeric($sAccountID)) {
+			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
 		$oResult = $this->getAccount((int) $sAccountID, $bVerifyLogginedUserId, $sAuthToken);
 
-		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
-		{
+		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount)) {
+			
 			$oApiUsers = \CApi::GetCoreManager('users');
 			$oExc = $oApiUsers->GetLastException();
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError,
@@ -973,11 +972,18 @@ abstract class AApiModule
 		return $oResult;
 	}	
 
-	public function ExecuteMethod($sMethod, $aParameters)
+	public function ExecuteMethod($sMethod, $aParameters = array())
 	{
+		$this->broadcastEvent($this->GetName() . '::' . $sMethod . '::' . 'before', array(&$aParameters));
+
 		$this->SetParameters($aParameters);
 		\CApiResponseManager::SetMethod($sMethod);
-		$mResult = CApiModuleMethod::createInstance($this, $sMethod, $this->aParameters)->Execute();
+		$mResult = \CApiModuleMethod::createInstance($this, $sMethod, $this->aParameters)->Execute();
+		
+		$aParameters['@Result'] = $mResult;
+		$this->broadcastEvent($this->GetName() . '::' . $sMethod . '::' . 'after', array(&$aParameters));
+		$mResult = $aParameters['@Result'];
+				
 		$this->aParameters = array();
 		return $mResult;
 	}

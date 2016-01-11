@@ -9,6 +9,8 @@ class DavModule extends AApiModule
 		parent::init();
 		$this->oApiDavManager = $this->GetManager('main');
 		$this->AddEntry('dav', 'EntryDav');
+		
+		$this->subscribeEvent('Calendar::GetCalendars::after', array($this, 'onAfterGetCalendars'));
 	}
 	
 	public function EntryDav()
@@ -123,6 +125,14 @@ class DavModule extends AApiModule
 	public function GetPublicUser()
 	{
 		return \Afterlogic\DAV\Constants::DAV_PUBLIC_PRINCIPAL;
+	}
+	
+	public function onAfterGetCalendars(&$aParameters)
+	{
+		if (isset($aParameters['@Result']) && $aParameters['@Result'] !== false) {
+			
+			$aParameters['@Result']['ServerUrl'] = $this->GetServerUrl();
+		}
 	}
 }
 

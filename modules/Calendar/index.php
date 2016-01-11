@@ -10,10 +10,10 @@ class CalendarModule extends AApiModule
 		$this->AddEntry('invite', 'EntryInvite');
 		$this->AddEntry('calendar-pub', 'EntryCalendarPub');
 		
-		$this->subscribeEvent('GetBodyStructureParts', array($this, 'GetBodyStructureParts'));
-		$this->subscribeEvent('ExtendMessageData', array($this, 'ExtendMessageData'));
+		$this->subscribeEvent('Mail::GetBodyStructureParts', array($this, 'onGetBodyStructureParts'));
+		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));
 	}
-
+	
 	/**
 	 * @return array
 	 */
@@ -25,27 +25,25 @@ class CalendarModule extends AApiModule
 		$bIsPublic = (bool) $this->getParamValue('IsPublic', false); 
 		$oAccount = null;
 				
-		if ($bIsPublic)
-		{
+		if ($bIsPublic) {
+			
 			$sPublicCalendarId = $this->getParamValue('PublicCalendarId', '');
 			$oCalendar = $this->oApiCalendarManager->getPublicCalendar($sPublicCalendarId);
 			$mCalendars = array($oCalendar);
-		}
-		else
-		{
+		} else {
+			
 			$oAccount = $this->getDefaultAccountFromParam();
-			if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
-			{
+			if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount)) {
+				
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 			}
+	
 			$mCalendars = $this->oApiCalendarManager->getCalendars($oAccount);
 		}
 		
-		if ($mCalendars)
-		{
-			$oApiDavManager = \CApi::GetCoreManager('dav');
+		if ($mCalendars) {
+			
 			$mResult['Calendars'] = $mCalendars;
-			$mResult['ServerUrl'] = $oApiDavManager && $oAccount ? $oApiDavManager->getServerUrl($oAccount) : '';
 		}
 		
 		return $mResult;
@@ -62,13 +60,13 @@ class CalendarModule extends AApiModule
 			$sRawKey = (string) $this->getParamValue('RawKey', '');
 			$aValues = \CApi::DecodeKeyValues($sRawKey);
 
-			if (isset($aValues['CalendarId']))
-			{
+			if (isset($aValues['CalendarId'])) {
+				
 				$sCalendarId = $aValues['CalendarId'];
 
 				$sOutput = $this->oApiCalendarManager->exportCalendarToIcs($oAccount, $sCalendarId);
-				if (false !== $sOutput)
-				{
+				if (false !== $sOutput) {
+					
 					header('Pragma: public');
 					header('Content-Type: text/calendar');
 					header('Content-Disposition: attachment; filename="'.$sCalendarId.'.ics";');
@@ -684,18 +682,83 @@ class CalendarModule extends AApiModule
 		return $this->oApiCalendarManager->processICS($oAccount, $sData, $sFromEmail);
 	}
 	
-	public function GetBodyStructureParts($aParts, &$aResultParts)
+	/**
+	 * @return array
+	 */
+	public function UploadCalendars()
 	{
-		foreach ($aParts as $oPart)
+		$oAccount = $this->getDefaultAccountFromParam();
+		
+		$aFileData = $this->getParamValue('FileData', null);
+		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
+		$aAdditionalData = @json_decode($sAdditionalData, true);
+		
+		$sCalendarId = isset($aAdditionalData['CalendarID']) ? $aAdditionalData['CalendarID'] : '';
+
+		$sError = '';
+		$aResponse = array(
+			'ImportedCount' => 0
+		);
+
+		if (is_array($aFileData))
 		{
-			if ($oPart instanceof \MailSo\Imap\BodyStructure && $oPart->ContentType() === 'text/calendar')
+			$bIsIcsExtension  = strtolower(pathinfo($aFileData['name'], PATHINFO_EXTENSION)) === 'ics';
+
+			if ($bIsIcsExtension)
 			{
+				$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
+				$sSavedName = 'import-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
+				if ($oApiFileCacheManager->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name'])) {
+					
+					$iImportedCount = $this->oApiCalendarManager->importToCalendarFromIcs(
+							$oAccount, 
+							$sCalendarId, 
+							$oApiFileCacheManager->generateFullFilePath($oAccount, $sSavedName)
+					);
+
+					if (false !== $iImportedCount && -1 !== $iImportedCount) {
+						$aResponse['ImportedCount'] = $iImportedCount;
+					} else {
+						$sError = 'unknown';
+					}
+
+					$oApiFileCacheManager->clear($oAccount, $sSavedName);
+				}
+				else
+				{
+					$sError = 'unknown';
+				}
+			}
+			else
+			{
+				throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
+			}
+		}
+		else
+		{
+			$sError = 'unknown';
+		}
+
+		if (0 < strlen($sError))
+		{
+			$aResponse['Error'] = $sError;
+		}		
+		
+		return $aResponse;
+	}		
+	
+	public function onGetBodyStructureParts($aParts, &$aResultParts)
+	{
+		foreach ($aParts as $oPart) {
+			if ($oPart instanceof \MailSo\Imap\BodyStructure && 
+					$oPart->ContentType() === 'text/calendar'){
+				
 				$aResultParts[] = $oPart;
 			}
 		}
 	}
 	
-	public function ExtendMessageData($oAccount, &$oMessage, $aData)
+	public function onExtendMessageData($oAccount, &$oMessage, $aData)
 	{
 		$oApiCapa = /* @var CApiCapabilityManager */ $this->oApiCapabilityManager;
 		$oApiFileCache = /* @var CApiFilecacheManager */ CApi::GetCoreManager('filecache');

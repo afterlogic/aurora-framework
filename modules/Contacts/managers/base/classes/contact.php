@@ -57,6 +57,7 @@
  * @property bool $Auto
  * @property bool $SharedToAll
  * @property bool $HideInGAB
+ * @property int $DateModified
  *
  * @ignore
  * @package Contactsmain

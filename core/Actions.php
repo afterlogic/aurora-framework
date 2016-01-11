@@ -25,11 +25,6 @@ class Actions
 	protected $oApiIntegrator;
 
 	/**
-	 * @var \CApiMailManager
-	 */
-	protected $oApiMail;
-
-	/**
 	 * @var \CApiFilecacheManager
 	 */
 	protected $oApiFileCache;
@@ -48,11 +43,6 @@ class Actions
 	 * @var \CApiFetchersManager
 	 */
 	protected $oApiFetchers;
-
-	/**
-	 * @var \CApiCalendarManager
-	 */
-	protected $oApiCalendar;
 
 	/**
 	 * @var \CApiCapabilityManager
@@ -74,7 +64,6 @@ class Actions
 		$this->oApiUsers = \CApi::GetCoreManager('users');
 		$this->oApiTenants = \CApi::GetCoreManager('tenants');
 		$this->oApiIntegrator = \CApi::GetCoreManager('integrator');
-		$this->oApiMail = \CApi::Manager('mail');
 		$this->oApiFileCache = \CApi::GetCoreManager('filecache');
 		$this->oApiSieve = \CApi::Manager('sieve');
 		$this->oApiCapability = \CApi::GetCoreManager('capability');
@@ -721,6 +710,7 @@ class Actions
 						$iUid = (int) isset($aValues['Uid']) ? $aValues['Uid'] : 0;
 						$sMimeIndex = (string) isset($aValues['MimeIndex']) ? $aValues['MimeIndex'] : '';
 
+/* TODO:
 						$this->oApiMail->directMessageToStream($oAccount,
 							function($rResource, $sContentType, $sFileName, $sMimeIndex = '') use ($oDefAccount, &$mResult, $sAttachment, $self, $oApiFilestorage) {
 
@@ -742,6 +732,8 @@ class Actions
 									$self->ApiFileCache()->clear($oDefAccount, $sTempName);
 								}
 							}, $sFolder, $iUid, $sMimeIndex);
+ * 
+ */
 					}
 				}
 			}
@@ -782,6 +774,7 @@ class Actions
 						$sTempName = md5($sAttachment);
 						if (!$this->ApiFileCache()->isFileExists($oAccount, $sTempName))
 						{
+/* TODO:							
 							$this->oApiMail->directMessageToStream($oAccount,
 								function($rResource, $sContentType, $sFileName, $sMimeIndex = '') use ($oAccount, &$mResult, $sTempName, $sAttachment, $self) {
 									if (is_resource($rResource))
@@ -795,12 +788,14 @@ class Actions
 										}
 									}
 								}, $sFolder, $iUid, $sMimeIndex);
+ 
+ */
 						}
 						else
 						{
 							$mResult[$sTempName] = $sAttachment;
 						}
-					}
+ 					}
 				}
 			}
 		}
@@ -1266,7 +1261,7 @@ class Actions
 				{
 					try
 					{
-						$mResult = $this->oApiMail->sendMessage($oNotificationAccount, $oMessage);
+						//TODO: $mResult = $this->oApiMail->sendMessage($oNotificationAccount, $oMessage);
 					}
 					catch (\CApiManagerException $oException)
 					{
@@ -1325,17 +1320,6 @@ class Actions
 		}
 
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxSystemGetAppData()
-	{
-		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
-		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
-		return $this->DefaultResponse(null, __FUNCTION__, 
-				$oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false);
 	}
 
 	/**
@@ -2056,158 +2040,6 @@ class Actions
 	}
 
 	/**
-	 * @return array
-	 */
-	public function AjaxAccountAutoresponderGet()
-	{
-		$mResult = false;
-		$oAccount = $this->getAccountFromParam();
-		
-		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::AutoresponderExtension))
-		{
-			$aAutoResponderValue = $this->ApiSieve()->getAutoresponder($oAccount);
-			if (isset($aAutoResponderValue['subject'], $aAutoResponderValue['body'], $aAutoResponderValue['enabled']))
-			{
-				$mResult = array(
-					'Enable' => (bool) $aAutoResponderValue['enabled'],
-					'Subject' => (string) $aAutoResponderValue['subject'],
-					'Message' => (string) $aAutoResponderValue['body']
-				);
-			}
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxAccountAutoresponderUpdate()
-	{
-		$bIsDemo = false;
-		$mResult = false;
-		$oAccount = $this->getAccountFromParam();
-		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::AutoresponderExtension))
-		{
-			\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
-			if (!$bIsDemo)
-			{
-				$bIsEnabled = '1' === $this->getParamValue('Enable', '0');
-				$sSubject = (string) $this->getParamValue('Subject', '');
-				$sMessage = (string) $this->getParamValue('Message', '');
-
-				$mResult = $this->ApiSieve()->setAutoresponder($oAccount, $sSubject, $sMessage, $bIsEnabled);
-			}
-			else
-			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
-			}
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxAccountForwardGet()
-	{
-		$mResult = false;
-		$oAccount = $this->getAccountFromParam();
-		
-		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::ForwardExtension))
-		{
-			$aForwardValue = /* @var $aForwardValue array */  $this->ApiSieve()->getForward($oAccount);
-			if (isset($aForwardValue['email'], $aForwardValue['enabled']))
-			{
-				$mResult = array(
-					'Enable' => (bool) $aForwardValue['enabled'],
-					'Email' => (string) $aForwardValue['email']
-				);
-			}
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxAccountForwardUpdate()
-	{
-		$mResult = false;
-		$bIsDemo = false;
-		$oAccount = $this->getAccountFromParam();
-
-		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::ForwardExtension))
-		{
-			\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
-			if (!$bIsDemo)
-			{
-				$bIsEnabled = '1' === $this->getParamValue('Enable', '0');
-				$sForwardEmail = (string) $this->getParamValue('Email', '');
-		
-				$mResult = $this->ApiSieve()->setForward($oAccount, $sForwardEmail, $bIsEnabled);
-			}
-			else
-			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
-			}
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxAccountSieveFiltersGet()
-	{
-		$mResult = false;
-		$oAccount = $this->getAccountFromParam();
-
-		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::SieveFiltersExtension))
-		{
-			$mResult = $this->ApiSieve()->getSieveFilters($oAccount);
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function AjaxAccountSieveFiltersUpdate()
-	{
-		$mResult = false;
-		$oAccount = $this->getAccountFromParam();
-
-		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::SieveFiltersExtension))
-		{
-			$aFilters = $this->getParamValue('Filters', array());
-			$aFilters = is_array($aFilters) ? $aFilters : array();
-
-			$mResult = array();
-			foreach ($aFilters as $aItem)
-			{
-				$oFilter = new \CFilter($oAccount);
-				$oFilter->Enable = '1' === (string) (isset($aItem['Enable']) ? $aItem['Enable'] : '1');
-				$oFilter->Field = (int) (isset($aItem['Field']) ? $aItem['Field'] : \EFilterFiels::From);
-				$oFilter->Filter = (string) (isset($aItem['Filter']) ? $aItem['Filter'] : '');
-				$oFilter->Condition = (int) (isset($aItem['Condition']) ? $aItem['Condition'] : \EFilterCondition::ContainSubstring);
-				$oFilter->Action = (int) (isset($aItem['Action']) ? $aItem['Action'] : \EFilterAction::DoNothing);
-				$oFilter->FolderFullName = (string) (isset($aItem['FolderFullName']) ? $aItem['FolderFullName'] : '');
-
-				$mResult[] = $oFilter;
-			}
-
-			$mResult = $this->ApiSieve()->updateSieveFilters($oAccount, $mResult);
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
-	}
-
-	/**
 	 * @param string $iError
 	 *
 	 * @return string
@@ -2270,167 +2102,6 @@ class Actions
 		
 		return true;
 	}
-
-	public function PathInfoDav()
-	{
-		set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
-			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-		});
-
-		@set_time_limit(3000);
-
-		$sBaseUri = '/';
-		if (false !== \strpos($this->oHttp->GetUrl(), 'index.php/dav/'))
-		{
-			$aPath = \trim($this->oHttp->GetPath(), '/\\ ');
-			$sBaseUri = (0 < \strlen($aPath) ? '/'.$aPath : '').'/index.php/dav/';
-		}
-		
-		\Afterlogic\DAV\Server::getInstance($sBaseUri)->exec();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function UploadContacts()
-	{
-		$oAccount = $this->getDefaultAccountFromParam();
-
-		if (!$this->oApiCapability->isPersonalContactsSupported($oAccount))
-		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
-		}
-		
-		$aFileData = $this->getParamValue('FileData', null);
-		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
-		$aAdditionalData = @json_decode($sAdditionalData, true);
-
-		$sError = '';
-		$aResponse = array(
-			'ImportedCount' => 0,
-			'ParsedCount' => 0
-		);
-
-		if (is_array($aFileData))
-		{
-			$sFileType = strtolower(\api_Utils::GetFileExtension($aFileData['name']));
-			$bIsCsvVcfExtension  = $sFileType === 'csv' || $sFileType === 'vcf';
-
-			if ($bIsCsvVcfExtension)
-			{
-				$sSavedName = 'import-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
-				if ($this->ApiFileCache()->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name'])) {
-					$oApiContactsManager = $this->ApiContacts();
-					if ($oApiContactsManager)
-					{
-						$iParsedCount = 0;
-
-						$iImportedCount = $oApiContactsManager->import(
-							$oAccount->IdUser,
-							$sFileType,
-							$this->ApiFileCache()->generateFullFilePath($oAccount, $sSavedName),
-							$iParsedCount,
-							$iGroupId = $aAdditionalData['GroupId'],
-							$bIsShared= $aAdditionalData['IsShared']
-						);
-					}
-
-					if (false !== $iImportedCount && -1 !== $iImportedCount)
-					{
-						$aResponse['ImportedCount'] = $iImportedCount;
-						$aResponse['ParsedCount'] = $iParsedCount;
-					}
-					else
-					{
-						$sError = 'unknown';
-					}
-
-					$this->ApiFileCache()->clear($oAccount, $sSavedName);
-				}
-				else
-				{
-					$sError = 'unknown';
-				}
-			}
-			else
-			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
-			}
-		}
-		else
-		{
-			$sError = 'unknown';
-		}
-
-		if (0 < strlen($sError))
-		{
-			$aResponse['Error'] = $sError;
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function UploadCalendars()
-	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		
-		$aFileData = $this->getParamValue('FileData', null);
-		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
-		$aAdditionalData = @json_decode($sAdditionalData, true);
-		
-		$sCalendarId = isset($aAdditionalData['CalendarID']) ? $aAdditionalData['CalendarID'] : '';
-
-		$sError = '';
-		$aResponse = array(
-			'ImportedCount' => 0
-		);
-
-		if (is_array($aFileData))
-		{
-			$bIsIcsExtension  = strtolower(pathinfo($aFileData['name'], PATHINFO_EXTENSION)) === 'ics';
-
-			if ($bIsIcsExtension)
-			{
-				$sSavedName = 'import-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
-				if ($this->ApiFileCache()->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name'])) {
-					$oApiCalendarManager = $this->oApiCalendar;
-					if ($oApiCalendarManager) {
-						$iImportedCount = $oApiCalendarManager->importToCalendarFromIcs($oAccount, $sCalendarId, $this->ApiFileCache()->generateFullFilePath($oAccount, $sSavedName));
-					}
-
-					if (false !== $iImportedCount && -1 !== $iImportedCount) {
-						$aResponse['ImportedCount'] = $iImportedCount;
-					} else {
-						$sError = 'unknown';
-					}
-
-					$this->ApiFileCache()->clear($oAccount, $sSavedName);
-				}
-				else
-				{
-					$sError = 'unknown';
-				}
-			}
-			else
-			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
-			}
-		}
-		else
-		{
-			$sError = 'unknown';
-		}
-
-		if (0 < strlen($sError))
-		{
-			$aResponse['Error'] = $sError;
-		}		
-		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
-	}	
 
 	/**
 	 * @return array
@@ -2505,121 +2176,6 @@ class Actions
 		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
 	}
 	
-	/**
-	 * @return array
-	 */
-	public function UploadFile()
-	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapability->isFilesSupported($oAccount))
-		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
-		}
-
-		$aFileData = $this->getParamValue('FileData', null);
-		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
-		$aAdditionalData = @json_decode($sAdditionalData, true);
-
-		$sError = '';
-		$aResponse = array();
-
-		if ($oAccount)
-		{
-			if (is_array($aFileData))
-			{
-				$sUploadName = $aFileData['name'];
-				$iSize = (int) $aFileData['size'];
-				$sType = isset($aAdditionalData['Type']) ? $aAdditionalData['Type'] : 'personal';
-				$sPath = isset($aAdditionalData['Path']) ? $aAdditionalData['Path'] : '';
-				$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
-
-				$sSavedName = 'upload-post-'.md5($aFileData['name'].$aFileData['tmp_name']);
-				if ($this->ApiFileCache()->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name']))
-				{
-					$rData = $this->ApiFileCache()->getFile($oAccount, $sSavedName);
-
-					$this->oApiFilestorage->createFile($oAccount, $sType, $sPath, $sUploadName, $rData, false);
-
-					$aResponse['File'] = array(
-						'Name' => $sUploadName,
-						'TempName' => $sSavedName,
-						'MimeType' => $sMimeType,
-						'Size' =>  (int) $iSize,
-						'Hash' => \CApi::EncodeKeyValues(array(
-							'TempFile' => true,
-							'AccountID' => $oAccount->IdAccount,
-							'Name' => $sUploadName,
-							'TempName' => $sSavedName
-						))
-					);
-				}
-			}
-		}
-		else
-		{
-			$sError = 'auth';
-		}
-
-		if (0 < strlen($sError))
-		{
-			$aResponse['Error'] = $sError;
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
-	}
-
-	public function UploadMessage()
-	{
-		$aFileData = $this->getParamValue('FileData', null);
-		$sAccountId = (int) $this->getParamValue('AccountID', '0');
-		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
-		$aAdditionalData = @json_decode($sAdditionalData, true);
-
-		$oAccount = $sAccountId ? $this->getAccount($sAccountId) : $this->getDefaultAccountFromParam();
-
-		$sError = '';
-		$aResponse = array();
-
-		if ($oAccount)
-		{
-			if (is_array($aFileData))
-			{
-				$sUploadName = $aFileData['name'];
-				$bIsEmlExtension  = strtolower(pathinfo($sUploadName, PATHINFO_EXTENSION)) === 'eml';
-
-				if ($bIsEmlExtension) {
-					$sFolder = isset($aAdditionalData['Folder']) ? $aAdditionalData['Folder'] : '';
-					$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
-
-					$sSavedName = 'upload-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
-					if ($this->ApiFileCache()->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name'])) {
-						$sSavedFullName = $this->ApiFileCache()->generateFullFilePath($oAccount, $sSavedName);
-						$this->oApiMail->appendMessageFromFile($oAccount, $sSavedFullName, $sFolder);
-
-						//$aResponse['File'] = $bIsMessage;
-					} else {
-						$sError = 'unknown';
-					}
-				}
-				else
-				{
-					throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
-				}
-			}
-		}
-		else
-		{
-			$sError = 'auth';
-		}
-
-		if (0 < strlen($sError))
-		{
-			$aResponse['Error'] = $sError;
-		}
-
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
-	}
-
 	/**
 	 * @return array
 	 */
@@ -3170,13 +2726,9 @@ class Actions
 			$oApiCapabilityManager = \CApi::GetCoreManager('capability');
 			/* @var $oApiCapabilityManager \CApiCapabilityManager */
 
-			$oApiCalendarManager = \CApi::Manager('calendar');
-
-			$bEnableMobileSync = $oApiCapabilityManager->isMobileSyncSupported($oAccount);
-
 			$mResult = array();
 
-			$mResult['EnableDav'] = $bEnableMobileSync;
+			$mResult['EnableDav'] = true; // TODO: 
 
 			$sDavLogin = $oApiDavManager->getLogin($oAccount);
 			$sDavServer = $oApiDavManager->getServerUrl();
@@ -3203,7 +2755,7 @@ class Actions
 
 					$mResult['Dav']['Calendars'] = array();
 
-					$aCalendars = $oApiCalendarManager ? $oApiCalendarManager->getCalendars($oAccount) : null;
+					$aCalendars = /*$oApiCalendarManager ? $oApiCalendarManager->getCalendars($oAccount) : */null; // TODO:
 
 //					if (isset($aCalendars['user']) && is_array($aCalendars['user']))
 //					{

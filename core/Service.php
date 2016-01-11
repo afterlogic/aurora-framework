@@ -113,8 +113,8 @@ class Service
 		
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
-		if ($oApiIntegrator)
-		{
+		if ($oApiIntegrator) {
+			
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
 			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox')) {
@@ -162,6 +162,7 @@ class Service
 		$aPaths = $this->GetPaths();
 		
 		if (0 < count($aPaths) && !empty($aPaths[0])) {
+			
 			$sEntryPart = strtolower($aPaths[0]);
 			
 			$mResult = $this->oModuleManager->RunEntry($sEntryPart);

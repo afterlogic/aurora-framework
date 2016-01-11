@@ -467,23 +467,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 						if ($oAccount && $oAccount->IsDefaultAccount)
 						{
-							/* @var $oApiContactsManager CApiContactsManager */
-							$oApiContactsManager = CApi::Manager('contactsmain');
-
-							if ($oApiContactsManager && 'db' === CApi::GetManager()->GetStorageByType('contactsmain'))
-							{
-								$oContact = $oApiContactsManager->createContactObject();
-								$oContact->BusinessEmail = $oAccount->Email;
-								$oContact->PrimaryEmail = EPrimaryEmailType::Business;
-								$oContact->FullName = $oAccount->FriendlyName;
-								$oContact->Type = EContactType::GlobalAccounts;
-
-								$oContact->IdTypeLink = $oAccount->IdUser;
-								$oContact->IdDomain = 0 < $oAccount->IdDomain ? $oAccount->IdDomain : 0;
-								$oContact->IdTenant = $oAccount->Domain ? $oAccount->Domain->IdTenant : 0;
-
-								$oApiContactsManager->createContact($oContact);
-							}
+							\CApi::GetModuleManager()->broadcastEvent('CreateAccount', array(&$oAccount));
 						}
 
 						CApi::Plugin()->RunHook('statistics.signup', array(&$oAccount));

@@ -768,7 +768,7 @@ class MailModule extends AApiModule
 
 			$aParts = $oBodyStructure->GetAllParts();
 					
-			\CApi::GetModuleManager()->broadcastEvent('GetBodyStructureParts', array($aParts, &$aCustomParts));
+			\CApi::GetModuleManager()->broadcastEvent('Mail::GetBodyStructureParts', array($aParts, &$aCustomParts));
 			
 			$bParseAsc = true;
 			if ($bParseAsc)
@@ -887,7 +887,7 @@ class MailModule extends AApiModule
 				);
 			}
 			
-			\CApi::GetModuleManager()->broadcastEvent('ExtendMessageData', array($oAccount, &$oMessage, $aData));
+			\CApi::GetModuleManager()->broadcastEvent('Mail::ExtendMessageData', array($oAccount, &$oMessage, $aData));
 		}
 
 		if (!($oMessage instanceof \CApiMailMessage))
@@ -1086,7 +1086,6 @@ class MailModule extends AApiModule
 			{
 				\CApi::Plugin()->RunHook('webmail.message-success-send', array(&$oAccount, &$oMessage));
 
-				$oModuleManager = \CApi::GetModuleManager();
 				$aCollection = $oMessage->GetRcpt();
 
 				$aEmails = array();
@@ -1098,7 +1097,7 @@ class MailModule extends AApiModule
 				{
 					\CApi::Plugin()->RunHook('webmail.message-suggest-email', array(&$oAccount, &$aEmails));
 
-					$oModuleManager->ExecuteMethod('Contacs', 'updateSuggestTable', array('Emails' => $aEmails));
+					\CApi::ExecuteMethod('Contacs::updateSuggestTable', array('Emails' => $aEmails));
 				}
 			}
 
@@ -1358,8 +1357,209 @@ class MailModule extends AApiModule
 	
 	public function ValidateAccountConnection()
 	{
-		return $this->oApiMailManager->ValidateAccountConnection($this->getParamValue('Account'));
+		return $this->oApiMailManager->ValidateAccountConnection(
+				$this->getParamValue('Account')
+		);
 	}
+	
+	public function UploadMessage()
+	{
+		$aFileData = $this->getParamValue('FileData', null);
+		$sAccountId = (int) $this->getParamValue('AccountID', '0');
+		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
+		$aAdditionalData = @json_decode($sAdditionalData, true);
+
+		$oAccount = $sAccountId ? $this->getAccount($sAccountId) : $this->getDefaultAccountFromParam();
+
+		$sError = '';
+		$aResponse = array();
+
+		if ($oAccount) {
+			
+			if (is_array($aFileData)) {
+				
+				$sUploadName = $aFileData['name'];
+				$bIsEmlExtension  = strtolower(pathinfo($sUploadName, PATHINFO_EXTENSION)) === 'eml';
+
+				if ($bIsEmlExtension) {
+					$sFolder = isset($aAdditionalData['Folder']) ? $aAdditionalData['Folder'] : '';
+					$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
+
+					$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
+					$sSavedName = 'upload-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
+					if ($oApiFileCacheManager->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name'])) {
+						$sSavedFullName = $oApiFileCacheManager->generateFullFilePath($oAccount, $sSavedName);
+						$this->oApiMailManager->appendMessageFromFile($oAccount, $sSavedFullName, $sFolder);
+
+						//$aResponse['File'] = $bIsMessage;
+					} else {
+						$sError = 'unknown';
+					}
+				}
+				else
+				{
+					throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
+				}
+			}
+		}
+		else
+		{
+			$sError = 'auth';
+		}
+
+		if (0 < strlen($sError))
+		{
+			$aResponse['Error'] = $sError;
+		}
+
+		return $aResponse;
+	}	
+	
+	public function GetAutoresponder()
+	{
+		$mResult = false;
+		$oAccount = $this->getAccountFromParam();
+		
+		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::AutoresponderExtension)) {
+			$aAutoResponderValue = $this->ApiSieve()->getAutoresponder($oAccount);
+			if (isset($aAutoResponderValue['subject'], 
+					$aAutoResponderValue['body'], $aAutoResponderValue['enabled'])) {
+				
+				$mResult = array(
+					'Enable' => (bool) $aAutoResponderValue['enabled'],
+					'Subject' => (string) $aAutoResponderValue['subject'],
+					'Message' => (string) $aAutoResponderValue['body']
+				);
+			}
+		}
+
+		return $mResult;
+	}
+	
+
+	/**
+	 * @return array
+	 */
+	public function UpdateAutoresponder()
+	{
+		$bIsDemo = false;
+		$mResult = false;
+		$oAccount = $this->getAccountFromParam();
+		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::AutoresponderExtension))
+		{
+			\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
+			if (!$bIsDemo) {
+				
+				$bIsEnabled = '1' === $this->getParamValue('Enable', '0');
+				$sSubject = (string) $this->getParamValue('Subject', '');
+				$sMessage = (string) $this->getParamValue('Message', '');
+
+				$mResult = $this->ApiSieve()->setAutoresponder($oAccount, $sSubject, $sMessage, $bIsEnabled);
+			} else {
+				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
+			}
+		}
+
+		return $mResult;
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function GetForward()
+	{
+		$mResult = false;
+		$oAccount = $this->getAccountFromParam();
+		
+		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::ForwardExtension)) {
+			
+			$aForwardValue = /* @var $aForwardValue array */  $this->ApiSieve()->getForward($oAccount);
+			if (isset($aForwardValue['email'], $aForwardValue['enabled'])) {
+				
+				$mResult = array(
+					'Enable' => (bool) $aForwardValue['enabled'],
+					'Email' => (string) $aForwardValue['email']
+				);
+			}
+		}
+
+		return $mResult;
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateForward()
+	{
+		$mResult = false;
+		$bIsDemo = false;
+		$oAccount = $this->getAccountFromParam();
+
+		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::ForwardExtension)) {
+			\CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
+			if (!$bIsDemo) {
+				
+				$bIsEnabled = '1' === $this->getParamValue('Enable', '0');
+				$sForwardEmail = (string) $this->getParamValue('Email', '');
+		
+				$mResult = $this->ApiSieve()->setForward($oAccount, $sForwardEmail, $bIsEnabled);
+			} else {
+				
+				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
+			}
+		}
+
+		return $mResult;
+	}	
+	
+
+	/**
+	 * @return array
+	 */
+	public function GetSieveFilters()
+	{
+		$mResult = false;
+		$oAccount = $this->getAccountFromParam();
+
+		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::SieveFiltersExtension)) {
+			$mResult = $this->ApiSieve()->getSieveFilters($oAccount);
+		}
+
+		return $mResult;
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UpdateSieveFilters()
+	{
+		$mResult = false;
+		$oAccount = $this->getAccountFromParam();
+
+		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::SieveFiltersExtension)) {
+			
+			$aFilters = $this->getParamValue('Filters', array());
+			$aFilters = is_array($aFilters) ? $aFilters : array();
+
+			$mResult = array();
+			foreach ($aFilters as $aItem) {
+				
+				$oFilter = new \CFilter($oAccount);
+				$oFilter->Enable = '1' === (string) (isset($aItem['Enable']) ? $aItem['Enable'] : '1');
+				$oFilter->Field = (int) (isset($aItem['Field']) ? $aItem['Field'] : \EFilterFiels::From);
+				$oFilter->Filter = (string) (isset($aItem['Filter']) ? $aItem['Filter'] : '');
+				$oFilter->Condition = (int) (isset($aItem['Condition']) ? $aItem['Condition'] : \EFilterCondition::ContainSubstring);
+				$oFilter->Action = (int) (isset($aItem['Action']) ? $aItem['Action'] : \EFilterAction::DoNothing);
+				$oFilter->FolderFullName = (string) (isset($aItem['FolderFullName']) ? $aItem['FolderFullName'] : '');
+
+				$mResult[] = $oFilter;
+			}
+
+			$mResult = $this->ApiSieve()->updateSieveFilters($oAccount, $mResult);
+		}
+
+		return $mResult;
+	}	
 	
 }
 

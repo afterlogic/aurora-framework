@@ -8,8 +8,9 @@ class ContactsModule extends AApiModule
 	{
 		$this->oApiContactsManager = $this->GetManager('main', 'db');
 		
-		$this->subscribeEvent('GetBodyStructureParts', array($this, 'GetBodyStructureParts'));
-		$this->subscribeEvent('ExtendMessageData', array($this, 'ExtendMessageData'));
+		$this->subscribeEvent('Mail::GetBodyStructureParts', array($this, 'onGetBodyStructureParts'));
+		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));
+		$this->subscribeEvent('CreateAccount', array($this, 'onCreateAccountEvent'));
 	}
 	
 	private function populateSortParams( &$iSortField, &$iSortOrder)
@@ -928,7 +929,7 @@ class ContactsModule extends AApiModule
 		
 	}
 	
-	public function GetBodyStructureParts($aParts, &$aResultParts)
+	public function onGetBodyStructureParts($aParts, &$aResultParts)
 	{
 		foreach ($aParts as $oPart)
 		{
@@ -940,19 +941,92 @@ class ContactsModule extends AApiModule
 		}
 	}
 	
-	public function ExtendMessageData($oAccount, &$oMessage, $aData)
+	public function UploadContacts()
+	{
+		$oAccount = $this->getDefaultAccountFromParam();
+
+		if (!$this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+		
+		$aFileData = $this->getParamValue('FileData', null);
+		$sAdditionalData = $this->getParamValue('AdditionalData', '{}');
+		$aAdditionalData = @json_decode($sAdditionalData, true);
+
+		$sError = '';
+		$aResponse = array(
+			'ImportedCount' => 0,
+			'ParsedCount' => 0
+		);
+
+		if (is_array($aFileData)) {
+			
+			$sFileType = strtolower(\api_Utils::GetFileExtension($aFileData['name']));
+			$bIsCsvVcfExtension  = $sFileType === 'csv' || $sFileType === 'vcf';
+
+			if ($bIsCsvVcfExtension) {
+				
+				$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
+				$sSavedName = 'import-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
+				if ($oApiFileCacheManager->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name'])) {
+						$iParsedCount = 0;
+
+						$iImportedCount = $this->oApiContactsManager->import(
+							$oAccount->IdUser,
+							$sFileType,
+							$oApiFileCacheManager->generateFullFilePath($oAccount, $sSavedName),
+							$iParsedCount,
+							$iGroupId = $aAdditionalData['GroupId'],
+							$bIsShared = $aAdditionalData['IsShared']
+						);
+
+					if (false !== $iImportedCount && -1 !== $iImportedCount) {
+						
+						$aResponse['ImportedCount'] = $iImportedCount;
+						$aResponse['ParsedCount'] = $iParsedCount;
+					} else {
+						
+						$sError = 'unknown';
+					}
+
+					$oApiFileCacheManager->clear($oAccount, $sSavedName);
+				} else {
+					
+					$sError = 'unknown';
+				}
+			} else {
+				
+				throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
+			}
+		}
+		else {
+			
+			$sError = 'unknown';
+		}
+
+		if (0 < strlen($sError)) {
+			
+			$aResponse['Error'] = $sError;
+		}
+
+		return $aResponse;
+		
+	}
+	
+	public function onExtendMessageData($oAccount, &$oMessage, $aData)
 	{
 		$oApiCapa = /* @var CApiCapabilityManager */ $this->oApiCapabilityManager;
 		$oApiFileCache = /* @var CApiFilecacheManager */ CApi::GetCoreManager('filecache');
 
-		foreach ($aData as $aDataItem)
-		{
+		foreach ($aData as $aDataItem) {
+			
 			if ($aDataItem['Part'] instanceof \MailSo\Imap\BodyStructure && 
-					($aDataItem['Part']->ContentType() === 'text/vcard' || $aDataItem['Part']->ContentType() === 'text/x-vcard'))
-			{
+					($aDataItem['Part']->ContentType() === 'text/vcard' || 
+					$aDataItem['Part']->ContentType() === 'text/x-vcard')) {
 				$sData = $aDataItem['Data'];
-				if (!empty($sData) && $oApiCapa->isContactsSupported($oAccount))
-				{
+				if (!empty($sData) && $oApiCapa->isContactsSupported($oAccount)) {
+					
 					$oContact = new CContact();
 					$oContact->InitFromVCardStr($oAccount->IdUser, $sData);
 					$oContact->initBeforeChange();
@@ -960,19 +1034,19 @@ class ContactsModule extends AApiModule
 					$oContact->IdContact = 0;
 
 					$bContactExists = false;
-					if (0 < strlen($oContact->ViewEmail))
-					{
+					if (0 < strlen($oContact->ViewEmail)) {
+						
 						$oLocalContact = $this->oApiContactsManager->getContactByEmail($oAccount->IdUser, $oContact->ViewEmail);
-						if ($oLocalContact)
-						{
+						if ($oLocalContact) {
+							
 							$oContact->IdContact = $oLocalContact->IdContact;
 							$bContactExists = true;
 						}
 					}
 
 					$sTemptFile = md5($sData).'.vcf';
-					if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $sData))
-					{
+					if ($oApiFileCache && $oApiFileCache->put($oAccount, $sTemptFile, $sData)) {
+						
 						$oVcard = CApiMailVcard::createInstance();
 
 						$oVcard->Uid = $oContact->IdContact;
@@ -982,15 +1056,32 @@ class ContactsModule extends AApiModule
 						$oVcard->Email = $oContact->ViewEmail;
 
 						$oMessage->addExtend('VCARD', $oVcard);
-					}
-					else
-					{
+					} else {
+						
 						CApi::Log('Can\'t save temp file "'.$sTemptFile.'"', ELogLevel::Error);
 					}					
 				}
 			}
 		}
 	}	
+	
+	public function onCreateAccountEvent($oAccount)
+	{
+		if ($oAccount instanceof \CAccount) {
+			
+			$oContact = $this->oApiContactsManager->createContactObject();
+			$oContact->BusinessEmail = $oAccount->Email;
+			$oContact->PrimaryEmail = EPrimaryEmailType::Business;
+			$oContact->FullName = $oAccount->FriendlyName;
+			$oContact->Type = EContactType::GlobalAccounts;
+
+			$oContact->IdTypeLink = $oAccount->IdUser;
+			$oContact->IdDomain = 0 < $oAccount->IdDomain ? $oAccount->IdDomain : 0;
+			$oContact->IdTenant = $oAccount->Domain ? $oAccount->Domain->IdTenant : 0;
+
+			$this->oApiContactsManager->createContact($oContact);
+		}
+	}
 	
 }
 

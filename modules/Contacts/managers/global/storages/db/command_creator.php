@@ -8,7 +8,7 @@
  * @package ContactsGlobal
  * @subpackage Storages
  */
-class CApiContactsGlobalCommandCreator extends api_CommandCreator
+class CApiContactsGlobalDbCommandCreator extends api_CommandCreator
 {
 	/**
 	 * Returns common part of most queries.
@@ -267,7 +267,7 @@ WHERE acc.hide_in_gab = 0 AND
  * @package ContactsGlobal
  * @subpackage Storages
  */
-class CApiContactsGlobalCommandCreatorMySQL extends CApiContactsGlobalCommandCreator
+class CApiContactsGlobalDbCommandCreatorMySQL extends CApiContactsGlobalDbCommandCreator
 {
 	/**
 	 * Returns query-string for obtaining all global contacts by search string for specified account.
@@ -288,7 +288,7 @@ class CApiContactsGlobalCommandCreatorMySQL extends CApiContactsGlobalCommandCre
 		$sSearchAdd = $this->_getSearchSubQuery($sSearch);
 
 		$sSql = 'SELECT id_addr, str_id, view_email, primary_email, h_email, b_email, other_email,
-fullname, use_frequency, firstname, surname, use_friendly_nm, type, type_id, b_phone, h_phone, h_mobile
+fullname, use_frequency, firstname, surname, use_friendly_nm, type, type_id, b_phone, h_phone, h_mobile, date_modified
 FROM %sawm_addr_book
 WHERE %s AND deleted = 0 AND hide_in_gab = 0 AND auto_create = 0%s
 ORDER BY %s
@@ -325,7 +325,7 @@ LIMIT %d OFFSET %d';
  * @package ContactsGlobal
  * @subpackage Storages
  */
-class CApiGcontactsCommandCreatorPostgreSQL extends CApiContactsGlobalCommandCreatorMySQL
+class CApiContactsGlobalDbCommandCreatorPostgreSQL extends CApiContactsGlobalDbCommandCreatorMySQL
 {
 	
 }
