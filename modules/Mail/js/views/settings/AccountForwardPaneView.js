@@ -146,7 +146,7 @@ CAccountForwardPaneView.prototype.populate = function ()
 		}
 		else
 		{
-			Ajax.send('AccountForwardGet', {'AccountID': oAccount.id()}, this.onAccountForwardGetResponse, this);
+			Ajax.send('GetForward', {'AccountID': oAccount.id()}, this.onGetForwardResponse, this);
 		}
 	}
 	
@@ -157,7 +157,7 @@ CAccountForwardPaneView.prototype.populate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountForwardPaneView.prototype.onAccountForwardGetResponse = function (oResponse, oRequest)
+CAccountForwardPaneView.prototype.onGetForwardResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
