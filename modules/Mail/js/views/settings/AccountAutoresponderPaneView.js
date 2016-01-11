@@ -122,7 +122,7 @@ CAccountAutoresponderPaneView.prototype.populate = function()
 		}
 		else
 		{
-			Ajax.send('AccountAutoresponderGet', {'AccountID': oAccount.id()}, this.onAccountAutoresponderGetResponse, this);
+			Ajax.send('GetAutoresponder', {'AccountID': oAccount.id()}, this.onGetAutoresponderResponse, this);
 		}
 	}
 	
@@ -133,7 +133,7 @@ CAccountAutoresponderPaneView.prototype.populate = function()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountAutoresponderPaneView.prototype.onAccountAutoresponderGetResponse = function (oResponse, oRequest)
+CAccountAutoresponderPaneView.prototype.onGetAutoresponderResponse = function (oResponse, oRequest)
 {
 	if (oResponse && oResponse.Result)
 	{
