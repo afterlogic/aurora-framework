@@ -1,0 +1,10 @@
+<div class="fieldgroup" data-bind="visible: visible">
+	<h2 class="subtitle" data-i18n="SETTINGS/MOBILE_DAVSYNC_HEADING_CALENDAR" data-bind="i18n: 'text'"></h2>
+
+	<!-- ko foreach: davCalendars -->
+	<div class="row">
+		<span class="label" data-bind="text: Name"></span>
+		<span class="value" data-bind="text: Url"></span>
+	</div>
+	<!-- /ko -->
+</div>

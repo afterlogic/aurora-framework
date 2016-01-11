@@ -30,6 +30,9 @@ module.exports = function (oSettings) {
 		},
 		getSelectFilesPopup: function () {
 			return require('modules/Files/js/popups/SelectFilesPopup.js');
+		},
+		getMobileSyncSettingsView: function () {
+			return require('modules/Files/js/views/MobileSyncSettingsView.js');
 		}
 	};
 };

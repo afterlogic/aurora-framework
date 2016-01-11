@@ -118,6 +118,9 @@ CApp.prototype.init = function ()
 			return oAccount ? oAccount.email() : '';
 		}, this);
 		
+		this.defaultAccount = ko.computed(function () {
+			return Accounts.getAccount(this.defaultAccountId());
+		}, this);
 		this.defaultAccountEmail = ko.computed(function () {
 			var oAccount = Accounts.getAccount(this.defaultAccountId());
 			return oAccount ? oAccount.email() : '';

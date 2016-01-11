@@ -28,6 +28,9 @@ module.exports = function (oSettings) {
 		},
 		getWeekStartsOn: function () {
 			return Settings.CalendarWeekStartsOn;
+		},
+		getMobileSyncSettingsView: function () {
+			return require('modules/Calendar/js/views/MobileSyncSettingsView.js');
 		}
 	};
 };

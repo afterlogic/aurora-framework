@@ -35,6 +35,9 @@ module.exports = function (oSettings) {
 		},
 		isGlobalContactsAllowed: function () {
 			return Settings.Storages.indexOf('global') !== -1;
+		},
+		getMobileSyncSettingsView: function () {
+			return require('modules/Contacts/js/views/MobileSyncSettingsView.js');
 		}
 	});
 };

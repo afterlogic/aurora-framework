@@ -1,0 +1,20 @@
+<div class="fieldgroup">
+	<h2 class="subtitle" data-i18n="SETTINGS/MOBILE_DAVSYNC_HEADING_CONTACTS" data-bind="i18n: 'text'"></h2>
+
+	<div class="row" data-bind="visible: bVisiblePersonalContacts">
+		<span class="label" data-i18n="SETTINGS/MOBILE_DAVSYNC_PERSONAL_CONTACTS" data-bind="i18n: 'text'"></span>
+		<span class="value" data-bind="text: davPersonalContactsUrl"></span>
+	</div>
+	<div class="row" data-bind="visible: bVisiblePersonalContacts">
+		<span class="label" data-i18n="SETTINGS/MOBILE_DAVSYNC_COLLECTED_ADDRESSES" data-bind="i18n: 'text'"></span>
+		<span class="value" data-bind="text: davCollectedAddressesUrl"></span>
+	</div>
+	<div class="row" data-bind="visible: bVisibleSharedWithAllContacts">
+		<span class="label" data-i18n="SETTINGS/MOBILE_DAVSYNC_SHARED_WITH_ALL" data-bind="i18n: 'text'"></span>
+		<span class="value" data-bind="text: davSharedWithAllUrl"></span>
+	</div>
+	<div class="row" data-bind="visible: bVisibleGlobalContacts">
+		<span class="label" data-i18n="SETTINGS/MOBILE_DAVSYNC_GLOBAL_ADDRESS_BOOK" data-bind="i18n: 'text'"></span>
+		<span class="value" data-bind="text: davGlobalAddressBookUrl"></span>
+	</div>
+</div>

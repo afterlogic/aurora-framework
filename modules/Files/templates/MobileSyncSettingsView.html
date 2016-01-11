@@ -1,0 +1,13 @@
+<div class="fieldset">
+	<h2 class="subtitle" data-i18n="SETTINGS/MOBILE_DAVSYNC_HEADING_FILES" data-bind="i18n: 'text'"></h2>
+	<div class="hint" data-i18n="SETTINGS/MOBILE_DAVSYNC_HINT_SPECIFY" data-bind="i18n: 'text'"></div>
+
+	<div class="fieldgroup">
+		<div class="row">
+			<span class="label" data-i18n="SETTINGS/MOBILE_DAVSYNC_FILES" data-bind="i18n: 'text'"></span>
+			<span class="value" data-bind="text: davServer() + '/files'"></span>
+		</div>
+	</div>
+	<div class="hint" data-bind="text: credentialsHintText"></div>
+	<div class="hint" data-bind="i18n: 'html', visible: isDemo" data-i18n="SETTINGS/DEMO_CREDENTIAL_HINT_HTML"></div>
+</div>

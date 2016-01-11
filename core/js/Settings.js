@@ -118,7 +118,8 @@ module.exports = {
 		ChangePassword: {
 			PasswordMinLength: AppData.App ? AppData.App.PasswordMinLength : 0,
 			PasswordMustBeComplex: AppData.App ? AppData.App.PasswordMustBeComplex : false
-		}
+		},
+		MobileSync: {}
 	},
 	EntryModule: 'Mail',
 	Language: 'English',

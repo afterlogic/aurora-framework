@@ -85,6 +85,9 @@ module.exports = function (oSettings) {
 		getAllAccountsFullEmails: function () {
 			var Accounts = require('modules/Mail/js/AccountList.js');
 			return Accounts.getAllFullEmails();
+		},
+		getCreateAccountPopup: function () {
+			return require('modules/Mail/js/popups/CreateAccountPopup.js');
 		}
 	};
 };
