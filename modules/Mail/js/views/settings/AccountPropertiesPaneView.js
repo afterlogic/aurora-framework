@@ -173,12 +173,13 @@ CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 	{
 		var
 			iAccountId = Utils.pInt(oResponse.AccountID),
-			oAccount = Accounts.getAccount(iAccountId)
+			oAccount = Accounts.getAccount(iAccountId),
+			oParameters = JSON.parse(oRequest.Parameters)
 		;
 
 		if (oAccount)
 		{
-			oAccount.updateExtended(oRequest);
+			oAccount.updateExtended(oParameters);
 			Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
 		}
 	}

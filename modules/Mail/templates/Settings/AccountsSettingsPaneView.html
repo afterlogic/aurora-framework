@@ -45,19 +45,17 @@
 			</div>
 		</div>
 		<div class="tabs">
-			<a class="tabs-links" data-bind="attr: {'name': 'settings/accounts/properties'}"></a>
-			<a class="tabs-links" data-bind="attr: {'name': 'settings/accounts/folders'}"></a>
 			<div class="shortcuts">
-				<div data-bind="foreach: aAccountTabs">
-					<span class="item" data-bind="attr: {'class': 'item ' + name + ((name === $parent.currentAccountTab().name) ? ' selected' : '')}, visible: visible">
+				<div data-bind="foreach: tabs">
+					<span class="item" data-bind="attr: {'class': 'item ' + name + ((name === $parent.currentTab().name) ? ' selected' : '')}, visible: visible">
 						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.changeTab(name); }, 
 								attr: {'id': 'selenium_settings_account_' + name + '_button'}"></a>
 					</span>
 				</div>
 			</div>
 			<div class="tabs_container">
-				<div class="tab" data-bind="attr: {'class': 'tab ' + currentAccountTab().name}">
-					<div data-bind="template: {name: currentAccountTab().view.ViewTemplate, data: currentAccountTab().view}"></div>
+				<div class="tab" data-bind="attr: {'class': 'tab ' + currentTab().name}">
+					<div data-bind="template: {name: currentTab().view.ViewTemplate, data: currentTab().view}"></div>
 				</div>
 			</div>
 		</div>

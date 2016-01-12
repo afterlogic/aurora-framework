@@ -54,6 +54,14 @@
 			<div class="hint row" data-bind="visible: window.Notification && !isDesktopNotificationsEnable()">
 				<span class="value offset" data-bind="i18n: 'text'" data-i18n="NOTIFICATION/DISABLED"></span>
 			</div>
+			<!--<div class="row" data-bind="visible: defaultAccountCanBeRemoved">
+				<span class="value">
+					<a class="link" href="javascript:void(0);" data-bind="i18n: 'text', click: removeDefaultAccount" data-i18n="SETTINGS/ACCOUNTS_LINK_DELETE"></a>
+				</span>
+			</div>
+			<div class="hint row" data-bind="visible: defaultAccountCanBeRemoved">
+				<span class="value" data-bind="text: defaultAccountRemoveHint"></span>
+			</div>-->
 		</div>
 		<div class="buttons">
 			<span class="button" data-bind="click: save">

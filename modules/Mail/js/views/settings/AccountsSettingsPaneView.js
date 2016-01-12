@@ -12,6 +12,7 @@ var
 	
 	Popups = require('core/js/Popups.js'),
 	CreateAccountPopup = require('modules/Mail/js/popups/CreateAccountPopup.js'),
+	CreateIdentityPopup = require('modules/Mail/js/popups/CreateIdentityPopup.js'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -21,7 +22,8 @@ var
 	AccountForwardPaneView = require('modules/Mail/js/views/settings/AccountForwardPaneView.js'),
 	AccountAutoresponderPaneView = require('modules/Mail/js/views/settings/AccountAutoresponderPaneView.js'),
 //	AccountFiltersPaneView = require('modules/Mail/js/views/settings/AccountFiltersPaneView.js'),
-	AccountSignaturePaneView = require('modules/Mail/js/views/settings/AccountSignaturePaneView.js')
+	AccountSignaturePaneView = require('modules/Mail/js/views/settings/AccountSignaturePaneView.js'),
+	CIdentityPropertiesPaneView = require('modules/Mail/js/views/settings/CIdentityPropertiesPaneView.js')
 ;
 
 /**
@@ -96,7 +98,29 @@ function CAccountsSettingsPaneView()
 		}
 	];
 	
-	this.currentAccountTab = ko.observable(null);
+	this.aIdentityTabs = [
+		{
+			name: 'properties',
+			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_PROPERTIES'),
+			view: new CIdentityPropertiesPaneView(),
+			visible: ko.observable(true)
+		},
+		{
+			name: 'signature',
+			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_SIGNATURE'),
+			view: AccountSignaturePaneView,
+			visible: ko.observable(true)
+		}
+	];
+	
+	this.currentTab = ko.observable(null);
+	this.tabs = ko.computed(function () {
+		if (this.editedIdentityId())
+		{
+			return this.aIdentityTabs;
+		}
+		return this.aAccountTabs;
+	}, this);
 	
 //	this.aIdentityTabs = ['properties', 'signature'];
 //	this.aFetcherTabs = ['incoming', 'outgoing', 'signature'];
@@ -115,9 +139,9 @@ CAccountsSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettin
  */
 CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertRouting)
 {
-	if (this.currentAccountTab() && $.isFunction(this.currentAccountTab().view.hide))
+	if (this.currentTab() && $.isFunction(this.currentTab().view.hide))
 	{
-		this.currentAccountTab().view.hide(fAfterHideHandler, fRevertRouting);
+		this.currentTab().view.hide(fAfterHideHandler, fRevertRouting);
 	}
 	else
 	{
@@ -127,21 +151,21 @@ CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertR
 
 CAccountsSettingsPaneView.prototype.show = function ()
 {
-	if (this.currentAccountTab() && $.isFunction(this.currentAccountTab().view.show))
+	if (this.currentTab() && $.isFunction(this.currentTab().view.show))
 	{
-		this.currentAccountTab().view.show();
+		this.currentTab().view.show();
 	}
 };
 
 CAccountsSettingsPaneView.prototype.getAutoselectedTab = function ()
 {
-	var oCurrentTab = _.find(this.aAccountTabs, function (oTab) {
+	var oCurrentTab = _.find(this.tabs(), function (oTab) {
 		return oTab.visible();
 	});
 	
 	if (!oCurrentTab)
 	{
-		oCurrentTab = this.aAccountTabs[0];
+		oCurrentTab = this.tabs()[0];
 	}
 	
 	return oCurrentTab;
@@ -156,17 +180,21 @@ CAccountsSettingsPaneView.prototype.addAccount = function ()
 
 CAccountsSettingsPaneView.prototype.editAccount = function (iAccountId)
 {
+	this.editedIdentityId(null);
 	Accounts.changeEditedAccount(iAccountId);
+	this.changeTab(this.getAutoselectedTab().name);
 };
 
-CAccountsSettingsPaneView.prototype.addIdentity = function (sId)
+CAccountsSettingsPaneView.prototype.addIdentity = function (iAccountId, oEv)
 {
-	
+	oEv.stopPropagation();
+	Popups.showPopup(CreateIdentityPopup, [iAccountId]);
 };
 
 CAccountsSettingsPaneView.prototype.editIdentity = function (oIdentity)
 {
-	
+	this.editedIdentityId(oIdentity.id());
+	this.changeTab(this.getAutoselectedTab().name);
 };
 
 CAccountsSettingsPaneView.prototype.addFetcher = function ()
@@ -187,8 +215,8 @@ CAccountsSettingsPaneView.prototype.connectToMail = function (sId)
 CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 {
 	var
-		oCurrentTab = this.currentAccountTab(),
-		oNewTab = _.find(this.aAccountTabs, function (oTab) {
+		oCurrentTab = this.currentTab(),
+		oNewTab = _.find(this.tabs(), function (oTab) {
 			return oTab.visible() && oTab.name === sName;
 		}),
 		fShowNewTab = function () {
@@ -198,7 +226,7 @@ CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 				{
 					oNewTab.view.show();
 				}
-				this.currentAccountTab(oNewTab);
+				this.currentTab(oNewTab);
 			}
 		}.bind(this),
 		bShow = true
@@ -247,9 +275,9 @@ CAccountsSettingsPaneView.prototype.populate = function ()
 		this.allowAutoresponder(true);
 		this.allowFilters(true);
 		
-		if (!this.currentAccountTab() || !this.currentAccountTab().visible())
+		if (!this.currentTab() || !this.currentTab().visible())
 		{
-			this.currentAccountTab(this.getAutoselectedTab());
+			this.currentTab(this.getAutoselectedTab());
 		}
 		
 		if (!oAccount.isExtended())
