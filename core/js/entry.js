@@ -18,7 +18,8 @@ $('body').ready(function () {
 			'MailSensitivity': require('modules/MailSensitivity/js/manager.js'),
 			'SessionTimeout': require('modules/SessionTimeout/js/manager.js'),
 			'ChangePassword': require('modules/ChangePassword/js/manager.js'),
-			'MobileSync': require('modules/MobileSync/js/manager.js')
+			'MobileSync': require('modules/MobileSync/js/manager.js'),
+			'OutlookSync': require('modules/OutlookSync/js/manager.js')
 		},
 		ModulesManager = require('core/js/ModulesManager.js'),
 		App = require('core/js/App.js'),

@@ -3,9 +3,9 @@
 </div>
 
 <div class="panel_center">
-	<div class="fields" data-bind="visible: visibleOutlookSync()">
+	<div class="fields">
 		
-		<!-- ko template: {name: 'Settings_ResetPasswordViewModel', data: oResetPasswordViewModel} --><!-- /ko -->
+		<!-- ko template: {name: oResetPasswordViewModel.ViewTemplate, data: oResetPasswordViewModel} --><!-- /ko -->
 		
 		<div class="fieldset">
 			
@@ -15,7 +15,7 @@
 				<span class="value" data-bind="text: server"></span>
 			</div>
 			<div class="hint" data-bind="text: credentialsHintText"></div>
-			<div class="hint" data-bind="i18n: 'html', visible: isDemo" data-i18n="SETTINGS/DEMO_CREDENTIAL_HINT_HTML"></div>
+			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="SETTINGS/DEMO_CREDENTIAL_HINT_HTML"></div>
 
 			<br />
 			<br />

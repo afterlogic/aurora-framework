@@ -101,7 +101,7 @@ module.exports = {
 			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false
 		},
 		Settings: {
-			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'helpdesk', 'pgp']
+			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp']
 		},
 		dsbld_Phone: {
 			VoiceProvider: '',
@@ -119,7 +119,12 @@ module.exports = {
 			PasswordMinLength: AppData.App ? AppData.App.PasswordMinLength : 0,
 			PasswordMustBeComplex: AppData.App ? AppData.App.PasswordMustBeComplex : false
 		},
-		MobileSync: {}
+		MobileSync: {},
+		OutlookSync: {
+			OutlookSyncPlugin32: AppData.Links && AppData.Links.OutlookSyncPlugin32 ? AppData.Links.OutlookSyncPlugin32 : '',
+			OutlookSyncPlugin64: AppData.Links && AppData.Links.OutlookSyncPlugin64 ? AppData.Links.OutlookSyncPlugin64 : '',
+			OutlookSyncPluginReadMore: AppData.Links && AppData.Links.OutlookSyncPluginReadMore ? AppData.Links.OutlookSyncPluginReadMore : ''
+		}
 	},
 	EntryModule: 'Mail',
 	Language: 'English',

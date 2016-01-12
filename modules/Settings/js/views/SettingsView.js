@@ -73,7 +73,10 @@ CSettingsView.prototype.onRoute = function (aParams) {
 					oNewTab.view = oNewTab.getView();
 					oNewTab.getView = undefined;
 				}
-				oNewTab.view.show(aParams);
+				if ($.isFunction(oNewTab.view.show))
+				{
+					oNewTab.view.show(aParams);
+				}
 				this.currentTab(oNewTab);
 			}
 		}.bind(this),
@@ -88,7 +91,7 @@ CSettingsView.prototype.onRoute = function (aParams) {
 	
 	if (oNewTab)
 	{
-		if (oCurrentTab)
+		if (oCurrentTab && $.isFunction(oCurrentTab.view.hide))
 		{
 			oCurrentTab.view.hide(fShowNewTab, fRevertRouting);
 			bShow = false;
