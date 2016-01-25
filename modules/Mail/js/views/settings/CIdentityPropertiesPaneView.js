@@ -9,6 +9,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
+	Browser = require('core/js/Browser.js'),
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
@@ -36,21 +37,12 @@ function CIdentityPropertiesPaneView(oParent, bCreate)
 
 	this.identity = ko.observable(null);
 
-	this.oHtmlEditor = new CHtmlEditorView(true);
-
 	this.enabled = ko.observable(true);
 	this.isDefault = ko.observable(false);
 	this.email = ko.observable('');
 	this.loyal = ko.observable(false);
 	this.friendlyName = ko.observable('');
 	this.friendlyNameHasFocus = ko.observable(false);
-	this.signature = ko.observable('');
-	this.useSignature = ko.observable(0);
-
-	this.enableImageDragNDrop = ko.observable(false);
-	this.signature.subscribe(function () {
-		this.oHtmlEditor.setText(this.signature());
-	}, this);
 }
 
 _.extendOwn(CIdentityPropertiesPaneView.prototype, CAbstractSettingsFormView.prototype);
@@ -59,25 +51,11 @@ CIdentityPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_IdentityProp
 
 CIdentityPropertiesPaneView.prototype.__name = 'CIdentityPropertiesPaneView';
 
-/**
- * @param {Array} aParams
- * @param {Object} oAccount
- */
-CIdentityPropertiesPaneView.prototype.onShow = function (aParams, oAccount)
-{
-	this.oHtmlEditor.initCrea(this.signature(), false, '');
-	this.oHtmlEditor.setActivitySource(this.useSignature);
-	this.oHtmlEditor.resize();
-	this.enableImageDragNDrop(this.oHtmlEditor.editorUploader.isDragAndDropSupported() && !App.browser.ie10AndAbove);
-};
-
 CIdentityPropertiesPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.friendlyName(),
-		this.email(),
-		this.useSignature(),
-		this.oHtmlEditor.getNotDefaultText()
+		this.email()
 	];
 };
 
@@ -85,29 +63,19 @@ CIdentityPropertiesPaneView.prototype.getParametersForSave = function ()
 {
 	var
 		iAccountId = this.identity().accountId(),
-		oAccount = Accounts.getAccount(iAccountId),
 		oParameters = {
 			'AccountID': iAccountId,
 			'Default': this.isDefault() ? 1 : 0,
 			'FriendlyName': this.friendlyName(),
-			'Loyal': this.identity().loyal() ? 1 : 0,
-			'Signature': this.signature()
+			'Loyal': this.identity().loyal() ? 1 : 0
 		}
 	;
 	
-	if (this.identity().loyal())
-	{
-		_.extendOwn(oParameters, {
-			'Options': this.useSignature(),
-			'Type': oAccount.signature().type() ? 1 : 0
-		});
-	}
-	else
+	if (!this.identity().loyal())
 	{
 		_.extendOwn(oParameters, {
 			'Email': this.email(),
-			'Enabled': this.enabled() ? 1 : 0,
-			'UseSignature': this.useSignature()
+			'Enabled': this.enabled() ? 1 : 0
 		});
 		
 		if (!this.bCreate)
@@ -123,8 +91,7 @@ CIdentityPropertiesPaneView.prototype.save = function ()
 {
 	var
 		oParameters = this.getParametersForSave(),
-		sMethod = this.identity().loyal() ? 'AccountIdentityLoyalUpdate' : (this.bCreate ? 'AccountIdentityCreate' : 'AccountIdentityUpdate'),
-		oAccount = Accounts.getAccount(this.identity().accountId())
+		sMethod = this.identity().loyal() ? 'AccountIdentityLoyalUpdate' : (this.bCreate ? 'AccountIdentityCreate' : 'AccountIdentityUpdate')
 	;
 
 	if (this.email() === '')
@@ -133,14 +100,6 @@ CIdentityPropertiesPaneView.prototype.save = function ()
 	}
 	else
 	{
-		this.signature(this.oHtmlEditor.getNotDefaultText());
-		
-		if (this.identity().loyal())
-		{
-			oAccount.signature().options(this.useSignature());
-			oAccount.signature().signature(this.signature());
-		}
-		
 		this.isSaving(true);
 
 		this.updateSavedState();
@@ -202,8 +161,6 @@ CIdentityPropertiesPaneView.prototype.populate = function (oIdentity)
 		this.email(oIdentity.email());
 		this.loyal(oIdentity.loyal());
 		this.friendlyName(oIdentity.friendlyName());
-		this.signature(oIdentity.signature());
-		this.useSignature(oIdentity.useSignature() ? 1 : 0);
 
 		this.disableCheckbox(oIdentity.isDefault());
 

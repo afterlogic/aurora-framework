@@ -22,7 +22,7 @@ var
 	AccountForwardPaneView = require('modules/Mail/js/views/settings/AccountForwardPaneView.js'),
 	AccountAutoresponderPaneView = require('modules/Mail/js/views/settings/AccountAutoresponderPaneView.js'),
 //	AccountFiltersPaneView = require('modules/Mail/js/views/settings/AccountFiltersPaneView.js'),
-	AccountSignaturePaneView = require('modules/Mail/js/views/settings/AccountSignaturePaneView.js'),
+	SignaturePaneView = require('modules/Mail/js/views/settings/SignaturePaneView.js'),
 	CIdentityPropertiesPaneView = require('modules/Mail/js/views/settings/CIdentityPropertiesPaneView.js')
 ;
 
@@ -93,7 +93,7 @@ function CAccountsSettingsPaneView()
 		{
 			name: 'signature',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_SIGNATURE'),
-			view: AccountSignaturePaneView,
+			view: SignaturePaneView,
 			visible: this.allowSignature
 		}
 	];
@@ -108,7 +108,7 @@ function CAccountsSettingsPaneView()
 		{
 			name: 'signature',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_SIGNATURE'),
-			view: AccountSignaturePaneView,
+			view: SignaturePaneView,
 			visible: ko.observable(true)
 		}
 	];
@@ -224,7 +224,7 @@ CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 			{
 				if ($.isFunction(oNewTab.view.show))
 				{
-					oNewTab.view.show();
+					oNewTab.view.show(this.editedIdentityId());
 				}
 				this.currentTab(oNewTab);
 			}
