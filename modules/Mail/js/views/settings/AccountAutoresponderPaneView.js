@@ -21,7 +21,7 @@ var
  */ 
 function CAccountAutoresponderPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Mail');
 	
 	this.enable = ko.observable(false);
 	this.subject = ko.observable('');
@@ -83,7 +83,7 @@ CAccountAutoresponderPaneView.prototype.save = function ()
 	
 	this.updateSavedState();
 	
-	Ajax.send('AccountAutoresponderUpdate', this.getParametersForSave(), this.onResponse, this);
+	Ajax.send('UpdateAutoresponder', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**

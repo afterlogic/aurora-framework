@@ -79,7 +79,7 @@ CCreateFolderPopup.prototype.create = function ()
 	this.folderNameFocus(false);
 	this.isCreating(true);
 
-	Ajax.send('FolderCreate', oParameters, this.onCreateFolderResponse, this);
+	Ajax.send('CreateFolder', oParameters, this.onCreateFolderResponse, this);
 };
 
 /**

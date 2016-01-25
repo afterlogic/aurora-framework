@@ -130,7 +130,7 @@ CCreateAccountPopup.prototype.onFirstSaveClick = function ()
 	{
 		this.loading(true);
 		
-		Ajax.send('DomainGetDataByEmail', { 'Email': this.email() }, this.onDomainGetDataByEmailResponse, this);
+		Ajax.send('GetDomainData', { 'Email': this.email() }, this.onDomainGetDataByEmailResponse, this);
 	}
 	else
 	{
@@ -165,7 +165,7 @@ CCreateAccountPopup.prototype.onSecondSaveClick = function ()
 
 		this.loading(true);
 
-		Ajax.send(bConfigureMail ? 'AccountConfigureMail' : 'AccountCreate', oParameters, this.onAccountCreateResponse, this);
+		Ajax.send(bConfigureMail ? 'ConfigureMailAccount' : 'CreateAccount', oParameters, this.onAccountCreateResponse, this);
 	}
 	else
 	{

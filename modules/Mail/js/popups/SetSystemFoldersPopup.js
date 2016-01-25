@@ -112,7 +112,7 @@ CSetSystemFoldersPopup.prototype.apply = function ()
 			'Trash': oFolderList.trashFolderFullName(),
 			'Spam': oFolderList.spamFolderFullName()
 		};
-		Ajax.send('FoldersSetupSystem', oParameters, this.onResponseFoldersSetupSystem, this);
+		Ajax.send('SetupSystemFolders', oParameters, this.onResponseFoldersSetupSystem, this);
 	}
 	
 	this.closePopup();

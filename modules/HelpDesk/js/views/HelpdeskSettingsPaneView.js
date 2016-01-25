@@ -15,7 +15,7 @@ var
  */
 function CHelpdeskSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Helpdesk');
 
 	this.allowNotifications = ko.observable(Settings.AllowHelpdeskNotifications);
 	this.signature = ko.observable(Settings.helpdeskSignature());

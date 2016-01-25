@@ -87,7 +87,7 @@ CResetPasswordView.prototype.onResetPasswordPopupAnswer = function (bReset)
 	if (bReset)
 	{
 		Screens.showLoading(TextUtils.i18n('COMPOSE/INFO_SENDING'));
-		Ajax.send('Mail', 'AccountResetPassword', {'UrlHash': Routing.currentHash()}, this.onResetPassword, this);
+		Ajax.send('Mail', 'ResetPassword', {'UrlHash': Routing.currentHash()}, this.onResetPassword, this);
 	}
 };
 

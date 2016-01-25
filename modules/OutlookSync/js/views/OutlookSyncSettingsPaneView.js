@@ -36,7 +36,7 @@ COutlookSyncSettingsPaneView.prototype.ViewTemplate = 'OutlookSync_OutlookSyncSe
 
 COutlookSyncSettingsPaneView.prototype.show = function ()
 {
-	Ajax.send('OutlookSync', 'GetInfo', this.onGetInfoResponse, this); // UserSettingsGetSync
+	Ajax.send('OutlookSync', 'GetInfo', this.onGetInfoResponse, this);
 };
 
 /**

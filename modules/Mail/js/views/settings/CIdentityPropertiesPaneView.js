@@ -9,14 +9,12 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	Browser = require('core/js/Browser.js'),
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js')
+	Ajax = require('modules/Mail/js/Ajax.js')
 ;
 
 /**
@@ -27,15 +25,24 @@ var
  */
 function CIdentityPropertiesPaneView(oParent, bCreate)
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Mail');
+	
+	this.editedIdentityId = ko.observable(null);
+	this.identity = ko.computed(function () {
+		var
+			oAccount = Accounts.getEdited(),
+			sEditedIdentityId = this.editedIdentityId()
+		;
+		return oAccount ? _.find(oAccount.identities(), function (oIdentityItem) {
+			return oIdentityItem.id() === sEditedIdentityId;
+		}) : null;
+	}, this);
 	
 	this.defaultAccountId = Accounts.defaultId;
 	this.oParent = oParent;
 	this.bCreate = bCreate;
 
 	this.disableCheckbox = ko.observable(false);
-
-	this.identity = ko.observable(null);
 
 	this.enabled = ko.observable(true);
 	this.isDefault = ko.observable(false);
@@ -50,6 +57,12 @@ _.extendOwn(CIdentityPropertiesPaneView.prototype, CAbstractSettingsFormView.pro
 CIdentityPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_IdentityPropertiesPaneView';
 
 CIdentityPropertiesPaneView.prototype.__name = 'CIdentityPropertiesPaneView';
+
+CIdentityPropertiesPaneView.prototype.show = function (sEditedIdentityId)
+{
+	this.editedIdentityId(sEditedIdentityId);
+	this.populate();
+};
 
 CIdentityPropertiesPaneView.prototype.getCurrentValues = function ()
 {
@@ -89,11 +102,6 @@ CIdentityPropertiesPaneView.prototype.getParametersForSave = function ()
 
 CIdentityPropertiesPaneView.prototype.save = function ()
 {
-	var
-		oParameters = this.getParametersForSave(),
-		sMethod = this.identity().loyal() ? 'AccountIdentityLoyalUpdate' : (this.bCreate ? 'AccountIdentityCreate' : 'AccountIdentityUpdate')
-	;
-
 	if (this.email() === '')
 	{
 		Screens.showError(Utils.i18n('WARNING/IDENTITY_CREATE_ERROR'));
@@ -104,7 +112,7 @@ CIdentityPropertiesPaneView.prototype.save = function ()
 
 		this.updateSavedState();
 
-		Ajax.send(sMethod, oParameters, this.onResponse, this);
+		Ajax.send(this.bCreate ? 'CreateIdentity' : 'UpdateIdentity', this.getParametersForSave(), this.onResponse, this);
 	}
 };
 
@@ -147,15 +155,12 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 	}
 };
 
-/**
- * @param {Object} oIdentity
- */
-CIdentityPropertiesPaneView.prototype.populate = function (oIdentity)
+CIdentityPropertiesPaneView.prototype.populate = function ()
 {
+	var oIdentity = this.identity();
+	console.log('oIdentity', oIdentity);
 	if (oIdentity)
 	{
-		this.identity(oIdentity);
-
 		this.enabled(oIdentity.enabled());
 		this.isDefault(oIdentity.isDefault());
 		this.email(oIdentity.email());
@@ -179,7 +184,7 @@ CIdentityPropertiesPaneView.prototype.remove = function ()
 			'IdIdentity': this.identity().id()
 		};
 
-		Ajax.send('AccountIdentityDelete', oParameters, this.onAccountIdentityDeleteResponse, this);
+		Ajax.send('DeleteIdentity', oParameters, this.onAccountIdentityDeleteResponse, this);
 
 		if (!this.bCreate && $.isFunction(this.oParent.onRemoveIdentity))
 		{

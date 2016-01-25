@@ -16,9 +16,12 @@ var
 
 /**
  * @constructor
+ * @param {string} sModule
  */
-function CAbstractSettingsFormView()
+function CAbstractSettingsFormView(sModule)
 {
+	this.sModule = sModule ? sModule : 'Core';
+	
 	this.isSaving = ko.observable(false);
 }
 
@@ -120,7 +123,7 @@ CAbstractSettingsFormView.prototype.save = function ()
 	
 	this.updateSavedState();
 	
-	Ajax.send('Settings', 'UpdateSettings', this.getParametersForSave(), this.onResponse, this);
+	Ajax.send(this.sModule, 'UpdateSettings', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**

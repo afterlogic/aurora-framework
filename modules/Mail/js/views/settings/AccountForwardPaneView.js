@@ -25,7 +25,7 @@ var
  */
 function CAccountForwardPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Mail');
 	
 	this.enable = ko.observable(false);
 	this.email = ko.observable('');
@@ -86,7 +86,7 @@ CAccountForwardPaneView.prototype.save = function ()
 
 			this.updateSavedState();
 
-			Ajax.send('AccountForwardUpdate', this.getParametersForSave(), this.onResponse, this);
+			Ajax.send('UpdateForward', this.getParametersForSave(), this.onResponse, this);
 		}.bind(this)
 	;
 

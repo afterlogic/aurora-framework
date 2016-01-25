@@ -21,7 +21,7 @@ var
  */
 function CCalendarSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Calendar');
 
 	this.availableTimes = ko.observableArray(CalendarUtils.getTimeListStepHour((UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
 	UserSettings.defaultTimeFormat.subscribe(function () {

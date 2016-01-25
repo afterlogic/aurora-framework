@@ -15,7 +15,7 @@ var
  */
 function CFilesSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Files');
 
 	this.enableFiles = ko.observable(Settings.filesEnable());
 }

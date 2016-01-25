@@ -88,7 +88,6 @@ CChangePasswordPopup.prototype.sendChangeRequest = function ()
 		oParameters.AccountID = App.defaultAccountId();
 	}
 	
-	// 'HelpdeskUserPasswordUpdate', 'AccountUpdatePassword'
 	Ajax.send(this.oParams.sModule, 'ChangePassword', oParameters, this.onUpdatePasswordResponse, this);
 };
 

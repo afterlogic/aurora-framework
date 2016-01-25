@@ -22,7 +22,7 @@ var
  */ 
 function CSignaturePaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Mail');
 	
 	this.bInitialized = false;
 	
@@ -147,7 +147,7 @@ CSignaturePaneView.prototype.populate = function ()
 			}
 			else
 			{
-				Ajax.send('AccountSignatureGet', {'AccountID': oAccount.id()}, this.onAccountSignatureGetResponse, this);
+				Ajax.send('GetSignature', {'AccountID': oAccount.id()}, this.onAccountSignatureGetResponse, this);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ CSignaturePaneView.prototype.save = function ()
 	
 	this.updateSavedState();
 	
-	Ajax.send('AccountSignatureUpdate', this.getParametersForSave(), this.onResponse, this);
+	Ajax.send('UpdateSignature', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**

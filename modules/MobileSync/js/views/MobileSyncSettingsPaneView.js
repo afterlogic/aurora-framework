@@ -44,7 +44,7 @@ CMobileSyncSettingsPaneView.prototype.ViewTemplate = 'MobileSync_MobileSyncSetti
 
 CMobileSyncSettingsPaneView.prototype.show = function ()
 {
-	Ajax.send('MobileSync', 'GetInfo', this.onGetInfoResponse, this); // UserSettingsGetSync
+	Ajax.send('MobileSync', 'GetInfo', this.onGetInfoResponse, this);
 };
 
 /**

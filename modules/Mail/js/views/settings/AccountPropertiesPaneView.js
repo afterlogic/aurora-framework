@@ -26,7 +26,7 @@ var
  */ 
 function CAccountPropertiesPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Mail');
 	
 	this.bAllowChangeEmailSettings =  Settings.AllowUsersChangeEmailSettings;
 	this.bAllowIdentities = Settings.AllowIdentities;
@@ -154,7 +154,7 @@ CAccountPropertiesPaneView.prototype.save = function ()
 	
 	this.updateSavedState();
 	
-	Ajax.send('AccountSettingsUpdate', this.getParametersForSave(), this.onResponse, this);
+	Ajax.send('UpdateAccount', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**

@@ -26,7 +26,7 @@ var
  */
 function COpenPgpSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'OpenPgp');
 	
 	this.bAllowAutoSave = UserSettings.AutoSave;
 	

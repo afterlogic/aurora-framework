@@ -19,7 +19,7 @@ var
  */
 function CMailSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this);
+	CAbstractSettingsFormView.call(this, 'Mail');
 
 	this.bRtl = UserSettings.IsRTL;
 	this.bAllowThreads = Settings.ThreadsEnabled;
