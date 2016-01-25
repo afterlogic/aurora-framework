@@ -50,7 +50,10 @@ function CAccountsSettingsPaneView()
 	
 	this.editedAccountId = Accounts.editedId;
 	this.editedFetcherId = ko.observable(null);
-	this.editedIdentityId = ko.observable(null);
+	this.editedIdentity = ko.observable(null);
+	this.editedIdentityId = ko.computed(function () {
+		return this.editedIdentity() ? this.editedIdentity().id() : null;
+	}, this);
 	
 	this.allowProperties = ko.observable(false);
 	this.allowFolders = ko.observable(false);
@@ -115,7 +118,7 @@ function CAccountsSettingsPaneView()
 	
 	this.currentTab = ko.observable(null);
 	this.tabs = ko.computed(function () {
-		if (this.editedIdentityId())
+		if (this.editedIdentity())
 		{
 			return this.aIdentityTabs;
 		}
@@ -180,7 +183,7 @@ CAccountsSettingsPaneView.prototype.addAccount = function ()
 
 CAccountsSettingsPaneView.prototype.editAccount = function (iAccountId)
 {
-	this.editedIdentityId(null);
+	this.editedIdentity(null);
 	Accounts.changeEditedAccount(iAccountId);
 	this.changeTab(this.getAutoselectedTab().name);
 };
@@ -193,7 +196,7 @@ CAccountsSettingsPaneView.prototype.addIdentity = function (iAccountId, oEv)
 
 CAccountsSettingsPaneView.prototype.editIdentity = function (oIdentity)
 {
-	this.editedIdentityId(oIdentity.id());
+	this.editedIdentity(oIdentity);
 	this.changeTab(this.getAutoselectedTab().name);
 };
 
@@ -224,7 +227,7 @@ CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 			{
 				if ($.isFunction(oNewTab.view.show))
 				{
-					oNewTab.view.show(this.editedIdentityId());
+					oNewTab.view.show(this.editedIdentity());
 				}
 				this.currentTab(oNewTab);
 			}

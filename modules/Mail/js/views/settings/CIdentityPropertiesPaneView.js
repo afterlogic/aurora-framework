@@ -27,16 +27,7 @@ function CIdentityPropertiesPaneView(oParent, bCreate)
 {
 	CAbstractSettingsFormView.call(this, 'Mail');
 	
-	this.editedIdentityId = ko.observable(null);
-	this.identity = ko.computed(function () {
-		var
-			oAccount = Accounts.getEdited(),
-			sEditedIdentityId = this.editedIdentityId()
-		;
-		return oAccount ? _.find(oAccount.identities(), function (oIdentityItem) {
-			return oIdentityItem.id() === sEditedIdentityId;
-		}) : null;
-	}, this);
+	this.identity = ko.observable(null);
 	
 	this.defaultAccountId = Accounts.defaultId;
 	this.oParent = oParent;
@@ -58,9 +49,12 @@ CIdentityPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_IdentityProp
 
 CIdentityPropertiesPaneView.prototype.__name = 'CIdentityPropertiesPaneView';
 
-CIdentityPropertiesPaneView.prototype.show = function (sEditedIdentityId)
+/**
+ * @param {Object} oIdentity
+ */
+CIdentityPropertiesPaneView.prototype.show = function (oIdentity)
 {
-	this.editedIdentityId(sEditedIdentityId);
+	this.identity(oIdentity);
 	this.populate();
 };
 
@@ -74,30 +68,35 @@ CIdentityPropertiesPaneView.prototype.getCurrentValues = function ()
 
 CIdentityPropertiesPaneView.prototype.getParametersForSave = function ()
 {
-	var
-		iAccountId = this.identity().accountId(),
-		oParameters = {
-			'AccountID': iAccountId,
-			'Default': this.isDefault() ? 1 : 0,
-			'FriendlyName': this.friendlyName(),
-			'Loyal': this.identity().loyal() ? 1 : 0
-		}
-	;
-	
-	if (!this.identity().loyal())
+	if (this.identity())
 	{
-		_.extendOwn(oParameters, {
-			'Email': this.email(),
-			'Enabled': this.enabled() ? 1 : 0
-		});
-		
-		if (!this.bCreate)
+		var
+			iAccountId = this.identity().accountId(),
+			oParameters = {
+				'AccountID': iAccountId,
+				'Default': this.isDefault() ? 1 : 0,
+				'FriendlyName': this.friendlyName(),
+				'Loyal': this.identity().loyal() ? 1 : 0
+			}
+		;
+
+		if (!this.identity().loyal())
 		{
-			oParameters.IdIdentity = this.identity().id();
+			_.extendOwn(oParameters, {
+				'Email': this.email(),
+				'Enabled': this.enabled() ? 1 : 0
+			});
+
+			if (!this.bCreate)
+			{
+				oParameters.IdIdentity = this.identity().id();
+			}
 		}
+
+		return oParameters;
 	}
 	
-	return oParameters;
+	return {};
 };
 
 CIdentityPropertiesPaneView.prototype.save = function ()
@@ -158,7 +157,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 CIdentityPropertiesPaneView.prototype.populate = function ()
 {
 	var oIdentity = this.identity();
-	console.log('oIdentity', oIdentity);
+	
 	if (oIdentity)
 	{
 		this.enabled(oIdentity.enabled());
@@ -177,7 +176,7 @@ CIdentityPropertiesPaneView.prototype.populate = function ()
 
 CIdentityPropertiesPaneView.prototype.remove = function ()
 {
-	if (!this.identity().loyal())
+	if (this.identity() && !this.identity().loyal())
 	{
 		var oParameters = {
 			'AccountID': this.identity().accountId(),

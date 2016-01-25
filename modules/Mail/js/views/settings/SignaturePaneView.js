@@ -26,16 +26,7 @@ function CSignaturePaneView()
 	
 	this.bInitialized = false;
 	
-	this.editedIdentityId = ko.observable(null);
-	this.identity = ko.computed(function () {
-		var
-			oAccount = Accounts.getEdited(),
-			sEditedIdentityId = this.editedIdentityId()
-		;
-		return oAccount ? _.find(oAccount.identities(), function (oIdentityItem) {
-			return oIdentityItem.id() === sEditedIdentityId;
-		}) : null;
-	}, this);
+	this.identity = ko.observable(null);
 	
 	this.type = ko.observable(false);
 	this.useSignature = ko.observable('0');
@@ -58,9 +49,12 @@ CSignaturePaneView.prototype.ViewTemplate = 'Mail_Settings_SignaturePaneView';
 
 CSignaturePaneView.prototype.__name = 'CSignaturePaneView';
 
-CSignaturePaneView.prototype.show = function (sEditedIdentityId)
+/**
+ * @param {Object} oIdentity
+ */
+CSignaturePaneView.prototype.show = function (oIdentity)
 {
-	this.editedIdentityId(sEditedIdentityId);
+	this.identity(oIdentity);
 	this.populate();
 	_.defer(_.bind(this.init, this));
 };
@@ -94,15 +88,24 @@ CSignaturePaneView.prototype.revert = function ()
 
 CSignaturePaneView.prototype.getParametersForSave = function ()
 {
-	var oAccount = Accounts.getEdited();
 	this.signature(this.oHtmlEditor.getNotDefaultText());
-	return {
-		'AccountID': oAccount ? oAccount.id() : 0,
-		'IdentityId': this.editedIdentityId(),
-		'Type': this.type() ? 1 : 0,
-		'Options': this.useSignature(),
-		'Signature': this.signature()
-	};
+	
+	var
+		oAccount = Accounts.getEdited(),
+		oParameters = {
+			'AccountID': oAccount ? oAccount.id() : 0,
+			'Type': this.type() ? 1 : 0,
+			'Options': this.useSignature(),
+			'Signature': this.signature()
+		}
+	;
+	
+	if (this.identity())
+	{
+		_.extendOwn(oParameters, { 'IdentityId': this.identity().id() });
+	}
+	
+	return oParameters;
 };
 
 CSignaturePaneView.prototype.applySavedValues = function (oParameters)
