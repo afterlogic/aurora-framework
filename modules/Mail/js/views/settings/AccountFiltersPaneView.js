@@ -1,16 +1,35 @@
+'use strict';
+
+var
+	_ = require('underscore'),
+	ko = require('knockout'),
+	
+	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
+	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
+	
+	MailCache = require('modules/Mail/js/Cache.js'),
+	Accounts = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
+	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js'),
+	СFilterModel = require('modules/Mail/js/models/СFilterModel.js')
+;
 
 /**
  * @constructor
  */
 function CAccountFiltersPaneView()
 {
-	this.bShown = false;
+	CAbstractSettingsFormView.call(this, 'Mail');
 	
-	this.oEditedAccount = null;
+	this.bShown = false;
 	
 	this.foldersOptions = ko.observableArray([]);
 	
-	App.MailCache.editedFolderList.subscribe(function () {
+	MailCache.editedFolderList.subscribe(function () {
 		if (this.bShown)
 		{
 			this.populate();
@@ -18,29 +37,28 @@ function CAccountFiltersPaneView()
 	}, this);
 	
 	this.loading = ko.observable(true);
-	this.saving = ko.observable(false);
 	this.collection = ko.observableArray([]);
 
 	this.fieldOptions = [
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_FROM'), 'value': 0},
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_TO'), 'value': 1},
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_SUBJECT'), 'value': 2}
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_FROM'), 'value': 0},
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_TO'), 'value': 1},
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_SUBJECT'), 'value': 2}
 	];
 
 	this.conditionOptions = [
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_CONTAIN_SUBSTR'), 'value': 0},
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_EQUAL_TO'), 'value': 1},
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_NOT_CONTAIN_SUBSTR'), 'value': 2}
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_CONTAIN_SUBSTR'), 'value': 0},
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_EQUAL_TO'), 'value': 1},
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_NOT_CONTAIN_SUBSTR'), 'value': 2}
 	];
 
 	this.actionOptions = [
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_ACTION_MOVE'), 'value': 3},
-		{'text': Utils.i18n('SETTINGS/ACCOUNT_FILTERS_ACTION_DELETE'), 'value': 1}
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_ACTION_MOVE'), 'value': 3},
+		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_ACTION_DELETE'), 'value': 1}
 	];
 	
 	this.phaseArray = [''];
 	
-	_.each(Utils.i18n('SETTINGS/ACCOUNT_FILTERS_PHRASE').split(/\s/), function (sItem) {
+	_.each(TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_PHRASE').split(/\s/), function (sItem) {
 		var iIndex = this.phaseArray.length - 1;
 		if (sItem.substr(0,1) === '%' || this.phaseArray[iIndex].substr(-1,1) === '%')
 		{
@@ -55,35 +73,36 @@ function CAccountFiltersPaneView()
 	this.firstState = null;
 }
 
+_.extendOwn(CAccountFiltersPaneView.prototype, CAbstractSettingsFormView.prototype);
+
+CAccountFiltersPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountFiltersPaneView';
+
 /**
  * @param {Object} oAccount
  */
-CAccountFiltersPaneView.prototype.onShow = function (oAccount)
+CAccountFiltersPaneView.prototype.show = function (oAccount)
 {
 	this.bShown = true;
-	this.oEditedAccount = oAccount;
 	this.populate();
 };
 
 CAccountFiltersPaneView.prototype.onHide = function ()
 {
 	this.bShown = false;
-	this.collection([]);
-	this.updateFirstState();
 };
 
 CAccountFiltersPaneView.prototype.populate = function ()
 {
 	var
-		oFolderList = App.MailCache.editedFolderList(),
+		oFolderList = MailCache.editedFolderList(),
 		aOptionList = []
 	;
 
-	if (oFolderList.iAccountId === this.oEditedAccount.id())
+	if (oFolderList.iAccountId === Accounts.editedId())
 	{
-		aOptionList = oFolderList.getOptions(Utils.i18n('SETTINGS/ACCOUNT_FOLDERS_NOT_SELECTED'), true, true, false, true);
+		aOptionList = oFolderList.getOptions(TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_NOT_SELECTED'), true, true, false, true);
 		this.foldersOptions(aOptionList);
-		this.getFilters();
+		this.populateFilters();
 	}
 	else
 	{
@@ -106,32 +125,14 @@ CAccountFiltersPaneView.prototype.commit = function ()
 	});
 };
 
-CAccountFiltersPaneView.prototype.getState = function ()
+CAccountFiltersPaneView.prototype.getCurrentValues = function ()
 {
-	var
-		sResult = ':',		
-		aState = _.map(this.collection(), function (oFilter) {
-			return oFilter.toString();
-		}, this)
-	;
-	if (aState.length > 0)
-	{
-		sResult = aState.join(':');
-	}
-	return sResult;
+	return _.map(this.collection(), function (oFilter) {
+		return oFilter.toString();
+	}, this);
 };
 
-CAccountFiltersPaneView.prototype.updateFirstState = function ()
-{
-	this.firstState = this.getState();
-};
-
-CAccountFiltersPaneView.prototype.isChanged = function()
-{
-	return this.firstState && (this.getState() !== this.firstState);
-};
-
-CAccountFiltersPaneView.prototype.prepareParameters = function ()
+CAccountFiltersPaneView.prototype.getParametersForSave = function ()
 {
 	var
 		aFilters =_.map(this.collection(), function (oItem) {
@@ -143,21 +144,16 @@ CAccountFiltersPaneView.prototype.prepareParameters = function ()
 				'Action': oItem.action(),
 				'FolderFullName': oItem.folder()
 			};
-		}),
-		oParameters = {
-			'Action': 'AccountSieveFiltersUpdate',
-			'AccountID': this.oEditedAccount.id(),
-			'Filters': aFilters
-		}
+		})
 	;
 	
-	return oParameters;
+	return {
+		'AccountID': Accounts.editedId(),
+		'Filters': aFilters
+	};
 };
 
-/**
- * @param {Object} oParameters
- */
-CAccountFiltersPaneView.prototype.saveData = function (oParameters)
+CAccountFiltersPaneView.prototype.save = function ()
 {
 	var bCantSave =_.some(this.collection(), function (oFilter) {
 		return oFilter.filter() === '' || (Utils.pString(oFilter.action()) === '3' /* Move */ && oFilter.folder() === '');
@@ -165,47 +161,34 @@ CAccountFiltersPaneView.prototype.saveData = function (oParameters)
 
 	if (bCantSave)
 	{
-		App.Api.showError(Utils.i18n('SETTINGS/ERROR_FILTERS_FIELDS_FILL'));
+		Screens.showError(TextUtils.i18n('SETTINGS/ERROR_FILTERS_FIELDS_FILL'));
 	}
 	else
 	{
-		this.saving(true);
+		this.isSaving(true);
 		this.commit();
-		this.updateFirstState();
-		App.Ajax.send(oParameters, this.onAccountSieveFiltersUpdateResponse, this);
+		this.updateSavedState();
+		Ajax.send('UpdateFilters', this.getParametersForSave(), this.onAccountSieveFiltersUpdateResponse, this);
 	}
 };
 
-CAccountFiltersPaneView.prototype.onSaveClick = function ()
+CAccountFiltersPaneView.prototype.populateFilters = function ()
 {
-	if (this.oEditedAccount)
+	var oAccount = Accounts.getEdited();
+	
+	if (oAccount)
 	{
-		this.saveData(this.prepareParameters());
-	}
-};
-
-CAccountFiltersPaneView.prototype.getFilters = function()
-{
-	if (this.oEditedAccount)
-	{
-		if (this.oEditedAccount.filters() !== null)
+		if (oAccount.filters() !== null)
 		{
 			this.loading(false);
-			this.collection(this.oEditedAccount.filters().collection());
-			this.updateFirstState();
+			this.collection(oAccount.filters().collection());
+			this.updateSavedState();
 		}
 		else
 		{
-			var
-				oParameters = {
-					'Action': 'AccountSieveFiltersGet',
-					'AccountID': this.oEditedAccount.id()
-				}
-			;
-
 			this.loading(true);
 			this.collection([]);
-			App.Ajax.send(oParameters, this.onAccountSieveFiltersGetResponse, this);
+			Ajax.send('GetFilters', { 'AccountID': oAccount.id() }, this.onGetFiltersResponse, this);
 		}
 	}
 };
@@ -220,11 +203,8 @@ CAccountFiltersPaneView.prototype.deleteFilter = function (oFilterToDelete)
 
 CAccountFiltersPaneView.prototype.addFilter = function ()
 {
-	if (this.oEditedAccount)
-	{
-		var oSieveFilter =  new CSieveFilterModel(this.oEditedAccount.id());
-		this.collection.push(oSieveFilter);
-	}
+	var oSieveFilter =  new СFilterModel(Accounts.editedId());
+	this.collection.push(oSieveFilter);
 };
 
 /**
@@ -304,39 +284,35 @@ CAccountFiltersPaneView.prototype.getDependedField = function (sText, oParent)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CAccountFiltersPaneView.prototype.onAccountSieveFiltersGetResponse = function (oResponse, oRequest)
+CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oRequest)
 {
 	this.loading(false);
 
 	if (oRequest && oRequest.Action)
 	{
-		if (oResponse && oResponse.Result && oResponse.AccountID && this.oEditedAccount)
+		if (oResponse && oResponse.Result && oResponse.AccountID)
 		{
 			var
-				oAccount = null,
-				oSieveFilters = new CSieveFiltersModel(),
-				iAccountId = Utils.pInt(oResponse.AccountID)
+				oSieveFilters = new СFiltersModel(),
+				iAccountId = Utils.pInt(oResponse.AccountID),
+				oAccount = Accounts.getAccount(iAccountId)
 			;
 
-			if (iAccountId)
+			if (oAccount)
 			{
-				oAccount = AppData.Accounts.getAccount(iAccountId);
-				if (oAccount)
-				{
-					oSieveFilters.parse(iAccountId, oResponse.Result);
-					oAccount.filters(oSieveFilters);
+				oSieveFilters.parse(iAccountId, oResponse.Result);
+				oAccount.filters(oSieveFilters);
 
-					if (iAccountId === this.oEditedAccount.id())
-					{
-						this.getFilters();
-					}
+				if (iAccountId === Accounts.editedId())
+				{
+					this.populateFilters();
 				}
 			}
 		}
 	}
 	else
 	{
-		App.Api.showError(Utils.i18n('WARNING/UNKNOWN_ERROR'));
+		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
 };
 
@@ -346,22 +322,22 @@ CAccountFiltersPaneView.prototype.onAccountSieveFiltersGetResponse = function (o
  */
 CAccountFiltersPaneView.prototype.onAccountSieveFiltersUpdateResponse = function (oResponse, oRequest)
 {
-	this.saving(false);
+	this.isSaving(false);
 
 	if (oRequest && oRequest.Action)
 	{
 		if (oResponse && oResponse.Result)
 		{
-			App.Api.showReport(Utils.i18n('SETTINGS/ACCOUNT_FILTERS_SUCCESS_REPORT'));
+			Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_SUCCESS_REPORT'));
 		}
 		else
 		{
-			App.Api.showError(Utils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+			Screens.showError(TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
 		}
 	}
 	else
 	{
-		App.Api.showError(Utils.i18n('WARNING/UNKNOWN_ERROR'));
+		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
 	}
 };
 

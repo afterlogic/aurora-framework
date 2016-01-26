@@ -22,7 +22,7 @@ var
 	AccountFoldersPaneView = require('modules/Mail/js/views/settings/AccountFoldersPaneView.js'),
 	AccountForwardPaneView = require('modules/Mail/js/views/settings/AccountForwardPaneView.js'),
 	AccountAutoresponderPaneView = require('modules/Mail/js/views/settings/AccountAutoresponderPaneView.js'),
-//	AccountFiltersPaneView = require('modules/Mail/js/views/settings/AccountFiltersPaneView.js'),
+	AccountFiltersPaneView = require('modules/Mail/js/views/settings/AccountFiltersPaneView.js'),
 	SignaturePaneView = require('modules/Mail/js/views/settings/SignaturePaneView.js'),
 	CIdentityPropertiesPaneView = require('modules/Mail/js/views/settings/CIdentityPropertiesPaneView.js'),
 	FetcherIncomingPaneView = require('modules/Mail/js/views/settings/FetcherIncomingPaneView.js'),
@@ -93,12 +93,12 @@ function CAccountsSettingsPaneView()
 			view: AccountAutoresponderPaneView,
 			visible: this.allowAutoresponder
 		},
-//		{
-//			name: 'filters',
-//			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_FILTERS'),
-//			view: AccountFiltersPaneView,
-//			visible: this.allowFilters
-//		},
+		{
+			name: 'filters',
+			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_FILTERS'),
+			view: AccountFiltersPaneView,
+			visible: this.allowFilters
+		},
 		{
 			name: 'signature',
 			title: TextUtils.i18n('SETTINGS/ACCOUNTS_TAB_SIGNATURE'),

@@ -15,7 +15,7 @@
 							<input type="checkbox" data-bind="checked: enable" />
 						</label>
 						<!-- ko foreach: $parent.phaseArray -->
-							<!-- ko template: {name: function () { return $parents[1].displayFilterPart($data, 'Settings_AccountFilterPart'); } } --><!-- /ko -->
+							<!-- ko template: {name: function () { return $parents[1].displayFilterPart($data, 'Mail_Settings_AccountFilterPart'); } } --><!-- /ko -->
 						<!-- /ko -->
 					</div>
 				</div>
@@ -25,10 +25,10 @@
 	</div>
 	<div class="buttons" data-bind="visible: !loading()">
 		<span class="button addlink" data-i18n="SETTINGS/ACCOUNT_FILTERS_ADD" data-bind="i18n: 'text', click: addFilter"></span>
-		<span class="button save" data-bind="click: onSaveClick, visible: !saving()">
+		<span class="button save" data-bind="click: save, visible: !isSaving()">
 			<span data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text'"></span>
 		</span>
-		<span class="button save" data-bind="visible: saving()">
+		<span class="button save" data-bind="visible: isSaving()">
 			<span data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text'"></span>
 		</span>
 	</div>
