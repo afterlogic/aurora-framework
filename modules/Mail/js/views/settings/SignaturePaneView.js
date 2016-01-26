@@ -24,8 +24,6 @@ function CSignaturePaneView()
 {
 	CAbstractSettingsFormView.call(this, 'Mail');
 	
-	this.bInitialized = false;
-	
 	this.fetcherOrIdentity = ko.observable(null);
 	
 	this.useSignatureRadio = ko.observable('0');
@@ -60,14 +58,11 @@ CSignaturePaneView.prototype.show = function (oFetcherOrIdentity)
 
 CSignaturePaneView.prototype.init = function ()
 {
-	if (!this.bInitialized)
-	{
-		this.oHtmlEditor.initCrea(this.signature(), false, '');
-		this.oHtmlEditor.setActivitySource(this.useSignatureRadio);
-		this.oHtmlEditor.resize();
-		this.enableImageDragNDrop(this.oHtmlEditor.editorUploader.isDragAndDropSupported() && !Browser.ie10AndAbove);
-		this.bInitialized = true;
-	}
+	this.oHtmlEditor.removeCrea();
+	this.oHtmlEditor.initCrea(this.signature(), false, '');
+	this.oHtmlEditor.setActivitySource(this.useSignatureRadio);
+	this.oHtmlEditor.resize();
+	this.enableImageDragNDrop(this.oHtmlEditor.editorUploader.isDragAndDropSupported() && !Browser.ie10AndAbove);
 };
 
 CSignaturePaneView.prototype.getCurrentValues = function ()

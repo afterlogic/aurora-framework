@@ -367,6 +367,11 @@ CHtmlEditorView.prototype.commit = function ()
 	this.textChanged(false);
 };
 
+CHtmlEditorView.prototype.removeCrea = function ()
+{
+	this.oCrea = null;
+};
+
 /**
  * @param {string} sText
  * @param {boolean} bPlain
