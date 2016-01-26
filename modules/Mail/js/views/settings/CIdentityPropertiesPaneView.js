@@ -54,7 +54,7 @@ CIdentityPropertiesPaneView.prototype.__name = 'CIdentityPropertiesPaneView';
  */
 CIdentityPropertiesPaneView.prototype.show = function (oIdentity)
 {
-	this.identity(oIdentity);
+	this.identity(oIdentity && !oIdentity.FETCHER ? oIdentity : null);
 	this.populate();
 };
 

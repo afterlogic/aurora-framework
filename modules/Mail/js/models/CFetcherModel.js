@@ -21,7 +21,7 @@ function CFetcherModel()
 	this.email = ko.observable('');
 	this.userName = ko.observable('');
 	this.folder = ko.observable('');
-	this.signatureOptions = ko.observable(false);
+	this.useSignature = ko.observable(false);
 	this.signature = ko.observable('');
 	this.incomingMailServer = ko.observable('');
 	this.incomingMailPort = ko.observable(0);
@@ -51,7 +51,7 @@ CFetcherModel.prototype.parse = function (oData)
 	this.email(Utils.pString(oData.Email));
 	this.userName(Utils.pString(oData.Name));
 	this.folder(Utils.pString(oData.Folder));
-	this.signatureOptions(!!oData.SignatureOptions);
+	this.useSignature(!!oData.SignatureOptions);
 	this.signature(Utils.pString(oData.Signature));
 	this.incomingMailServer(Utils.pString(oData.IncomingMailServer));
 	this.incomingMailPort(Utils.pInt(oData.IncomingMailPort));

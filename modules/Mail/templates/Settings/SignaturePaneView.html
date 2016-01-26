@@ -7,18 +7,18 @@
 	<div class="fieldset">
 		<div class="row">
 			<div>
-				<label class="custom_radio" data-bind="css: {'checked': useSignature() === '0'}">
+				<label class="custom_radio" data-bind="css: {'checked': useSignatureRadio() === '0'}">
 					<span class="icon"></span>
-					<input type="radio" value="0" data-bind="checked: useSignature, attr: {'id': 'noSignature' + __name}" />
+					<input type="radio" value="0" data-bind="checked: useSignatureRadio, attr: {'id': 'noSignature' + __name}" />
 				</label>
 				<label data-i18n="SETTINGS/ACCOUNT_SIGNATURE_NO_SIGNATURE" data-bind="i18n: 'text', attr: {'for': 'noSignature' + __name}"></label>
 			</div>
 		</div>
 			
 		<div class="row editor_row">
-			<label class="custom_radio" data-bind="css: {'checked': useSignature() === '1'}">
+			<label class="custom_radio" data-bind="css: {'checked': useSignatureRadio() === '1'}">
 				<span class="icon"></span>
-				<input type="radio" id="useSignature" value="1" data-bind="checked: useSignature, enable: enabled" />
+				<input type="radio" value="1" data-bind="checked: useSignatureRadio, enable: enabled" />
 			</label>
 			
 			<div class="editor" data-bind="template: {name: oHtmlEditor.ViewTemplate, data: oHtmlEditor}"></div>

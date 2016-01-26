@@ -508,24 +508,16 @@ SendingUtils.getClearSignature = function (iAccountId, oFetcherOrIdentity)
 {
 	var
 		oAccount = Accounts.getAccount(iAccountId),
-		bUseSignature = !!(oFetcherOrIdentity ? (oFetcherOrIdentity.useSignature ? oFetcherOrIdentity.useSignature() : oFetcherOrIdentity.signatureOptions()) : true),
 		sSignature = ''
 	;
 
-	if (oAccount)
+	if (oFetcherOrIdentity && oFetcherOrIdentity.accountId() === iAccountId && oFetcherOrIdentity.useSignature())
 	{
-		if (bUseSignature)
-		{
-			if (oFetcherOrIdentity && oFetcherOrIdentity.accountId() === oAccount.id())
-			{
-				sSignature = oFetcherOrIdentity.signature();
-			}
-			else
-			{
-				sSignature = (oAccount.signature() && parseInt(oAccount.signature().options())) ?
-					oAccount.signature().signature() : '';
-			}
-		}
+		sSignature = oFetcherOrIdentity.signature();
+	}
+	else if (oAccount && oAccount.useSignature())
+	{
+		sSignature = oAccount.signature();
 	}
 
 	return sSignature;

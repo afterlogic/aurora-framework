@@ -29,18 +29,18 @@
 
 		<div class="row name">
 			<span class="label" data-i18n="SETTINGS/ACCOUNT_FETCHER_LABEL_NAME" data-bind="i18n: 'text', css: {'disabled': !outgoingMailAuth()}"></span>
-			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: userName, onEnter: onSaveClick, enable: outgoingMailAuth, css: {'disabled': !outgoingMailAuth()}"/>
+			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: userName, onEnter: save, enable: outgoingMailAuth, css: {'disabled': !outgoingMailAuth()}"/>
 		</div>
 
 		<div class="row email">
 			<span class="label required" data-i18n="SETTINGS/ACCOUNT_FETCHER_LABEL_EMAIL" data-bind="i18n: 'text', css: {'disabled': !outgoingMailAuth()}"></span>
-			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: email, hasfocus: focusEmail, onEnter: onSaveClick, enable: outgoingMailAuth, css: {'disabled': !outgoingMailAuth()}"/>
+			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: email, hasfocus: focusEmail, onEnter: save, enable: outgoingMailAuth, css: {'disabled': !outgoingMailAuth()}"/>
 		</div>
 	</div>
 
 	<div class="buttons">
-		<span class="button" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: !loading()"></span>
-		<span class="button" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', click: onSaveClick, visible: loading()"></span>
+		<span class="button" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
+		<span class="button" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', click: save, visible: isSaving()"></span>
 	</div>
 
 </div>

@@ -19,8 +19,7 @@ var
 	
 	Accounts = null,
 	Settings = require('modules/Mail/js/Settings.js'),
-	Cache = null,
-	CSignatureModel = require('modules/Mail/js/models/CSignatureModel.js')
+	Cache = null
 ;
 
 /**
@@ -50,7 +49,8 @@ function CAccountModel()
 	this.outgoingMailPort = ko.observable(25);
 	this.outgoingMailSsl = ko.observable(false);
 	this.isExtended = ko.observable(false);
-	this.signature = ko.observable(null);
+	this.signature = ko.observable('');
+	this.useSignature = ko.observable(false);
 	this.autoresponder = ko.observable(null);
 	this.forward = ko.observable(null);
 	this.filters = ko.observable(null);
@@ -163,7 +163,6 @@ CAccountModel.prototype.init = function (iId, sEmail, sFriendlyName)
 	this.id(iId);
 	this.email(sEmail);
 	this.friendlyName(sFriendlyName);
-	this.signature(new CSignatureModel());
 };
 
 /**
@@ -205,10 +204,19 @@ CAccountModel.prototype.parse = function (oData, iDefaultId)
 
 	this.passwordSpecified(!!oData.IsPasswordSpecified);
 
-	this.signature().parse(this.id(), oData.Signature);
+	this.parseSignature(oData.Signature);
 
 	this.isCurrent(iDefaultId === this.id());
 	this.isEdited(iDefaultId === this.id());
+};
+
+/**
+ * @param {Object} oData
+ */
+CAccountModel.prototype.parseSignature = function (oData)
+{
+	this.useSignature(!!oData.Options);
+	this.signature(Utils.pString(oData.Signature));
 };
 
 CAccountModel.prototype.requestExtensions = function ()

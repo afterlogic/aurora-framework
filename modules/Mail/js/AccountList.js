@@ -384,8 +384,8 @@ CAccountListModel.prototype.onGetIdentitiesResponse = function (oResponse, oRequ
 			FriendlyName: oAccount.friendlyName(),
 			IdAccount: oAccount.id(),
 			IdIdentity: oAccount.id() * 100000,
-			Signature: oAccount.signature() ? oAccount.signature().signature() : '',
-			UseSignature: oAccount.signature() ? !!oAccount.signature().options() : false
+			Signature: oAccount.signature(),
+			UseSignature: oAccount.useSignature()
 		});
 		aIdentities.unshift(oIdentity);
 
@@ -404,6 +404,7 @@ CAccountListModel.prototype.populateIdentitiesFromSourceAccount = function (oSrc
 				oAccount.fetchers(oSrcAccount.fetchers());
 				oAccount.identities(oSrcAccount.identities());
 				oAccount.signature(oSrcAccount.signature());
+				oAccount.useSignature(oSrcAccount.useSignature());
 			}
 		});
 	}

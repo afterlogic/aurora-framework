@@ -33,7 +33,7 @@
 
 					<!-- ko if: fetchers() -->
 						<!-- ko foreach: fetchers().collection -->
-							<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedFetcherId()}, click: function () {$parents[1].editFetcher($data.id());}">
+							<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedFetcherId()}, click: function () {$parents[1].editFetcher($data);}">
 								<span class="icon fetcher"></span>
 								<span class="label" data-i18n="SETTINGS/ACCOUNT_FETCHER_FETCH_FROM" data-bind="i18n: 'text'"></span>
 								<span class="title" data-bind="text: incomingMailServer() + ' / ' + incomingMailLogin()"></span>

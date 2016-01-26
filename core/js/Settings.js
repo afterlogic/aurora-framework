@@ -39,7 +39,7 @@ module.exports = {
 			AllowCompose: true,
 			AllowUsersChangeEmailSettings: AppData.App ? AppData.App.AllowUsersChangeEmailSettings : true,
 			MailExpandFolders: true,
-			AllowFetcher: AppData.User ? AppData.User.AllowFetcher : true,
+			AllowFetcher: true,//AppData.User ? AppData.User.AllowFetcher : true,
 			AllowIdentities: !!AppData.AllowIdentities,
 			MaxPrefetchBodiesSize: 50000,
 			DefaultFontName: 'Tahoma',
