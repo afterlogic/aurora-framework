@@ -1,1 +1,0 @@
-App = new AppMobile();
