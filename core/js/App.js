@@ -2,6 +2,7 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
 	modernizr = require('modernizr'),
 	
@@ -157,6 +158,13 @@ CApp.prototype.init = function ()
 	Storage.setData('AuthToken', Storage.getData('AuthToken'));
 	
 	this.useGoogleAnalytics();
+
+	if (!this.bMobile)
+	{
+		$(window).unload(function() {
+			WindowOpener.closeAll();
+		});
+	}
 };
 
 /**
