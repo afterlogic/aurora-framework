@@ -17,7 +17,7 @@ var
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
-	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
+	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
@@ -37,7 +37,7 @@ var
 	CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
-	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods,
+	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods,
 	bMobileApp = App.isMobile(),
 	
 	$html = $('html')
@@ -385,7 +385,7 @@ function CComposeView()
 		return this.hasSomethingToSave() ? TextUtils.i18n('COMPOSE/TOOL_SAVE_CLOSE') : TextUtils.i18n('COMPOSE/TOOL_CLOSE');
 	}, this);
 
-	if (BaseTab)
+	if (MainTab)
 	{
 		setTimeout(function() {
 			window.onbeforeunload = function () {
@@ -648,7 +648,7 @@ CComposeView.prototype.fillDefault = function (aParams)
 {
 	var
 		sSignature = SendingUtils.getSignatureText(this.senderAccountId(), this.selectedFetcherOrIdentity(), true),
-		oComposedMessage = BaseTab ? BaseTab.getComposedMessage(window.name) : null,
+		oComposedMessage = MainTab ? MainTab.getComposedMessage(window.name) : null,
 		oToAddr = (this.routeType() === 'to' && aParams.length === 2) ? LinksUtils.parseToAddr(aParams[1]) : null
 	;
 
@@ -1767,7 +1767,7 @@ CComposeView.prototype.openInNewWindow = function ()
 	}
 	else
 	{
-		BaseTabExtMethods.passComposedMessage(sWinName, oMessageParametersFromCompose);
+		MainTabExtMethods.passComposedMessage(sWinName, oMessageParametersFromCompose);
 		oWin = WindowOpener.openTab('?message-newtab' + sHash, sWinName);
 	}
 

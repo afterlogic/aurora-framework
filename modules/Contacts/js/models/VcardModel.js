@@ -10,7 +10,7 @@ var
 	
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
 	HeaderItemView = !App.isNewTab() ? require('modules/Contacts/js/views/HeaderItemView.js') : null,
-	BaseTab = (App.isNewTab() && window.opener) ? window.opener.BaseTabContactsMethods : null
+	MainTab = (App.isNewTab() && window.opener) ? window.opener.MainTabContactsMethods : null
 ;
 
 /**
@@ -70,9 +70,9 @@ CVcardModel.prototype.addContact = function ()
 	{
 		HeaderItemView.recivedAnim(true);
 	}
-	else if (BaseTab)
+	else if (MainTab)
 	{
-		BaseTab.markVcardsExistentByFile(this.file());
+		MainTab.markVcardsExistentByFile(this.file());
 	}
 };
 

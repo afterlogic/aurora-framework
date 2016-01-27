@@ -53,8 +53,8 @@ module.exports = function (oSettings) {
 			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;
 		},
 		getSearchMessagesInCurrentFolder: function () {
-			var BaseTab = window.opener && window.opener.BaseTabMethods;
-			return BaseTab ? _.bind(BaseTab.searchMessagesInCurrentFolder, BaseTab) : false;
+			var MainTab = window.opener && window.opener.MainTabMailMethods;
+			return MainTab ? _.bind(MainTab.searchMessagesInCurrentFolder, MainTab) : false;
 		}
 	};
 };

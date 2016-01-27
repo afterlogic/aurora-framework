@@ -13,7 +13,7 @@ var
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
 	HeaderItemView = (!App.isNewTab() && !App.isMobile()) ? require('modules/Calendar/js/views/HeaderItemView.js') : null,
 	
-	BaseTab = App.isNewTab() && window.opener ? window.opener.BaseTabCalendarMethods : null
+	MainTab = App.isNewTab() && window.opener ? window.opener.MainTabCalendarMethods : null
 ;
 
 /**
@@ -216,9 +216,9 @@ CIcalModel.prototype.changeAndSaveConfig = function (sConfig)
 CIcalModel.prototype.changeConfig = function (sConfig)
 {
 	this.type(this.icalType() + '-' + sConfig);
-	if (BaseTab)
+	if (MainTab)
 	{
-		BaseTab.markIcalTypeByFile(this.file(), this.type(), this.cancelDecision(),
+		MainTab.markIcalTypeByFile(this.file(), this.type(), this.cancelDecision(),
 									this.replyDecision(), this.calendarId(), this.selectedCalendarId());
 	}
 	else
@@ -352,9 +352,9 @@ CIcalModel.prototype.showChanges = function ()
 
 CIcalModel.prototype.markChanges = function ()
 {
-	if (BaseTab)
+	if (MainTab)
 	{
-		BaseTab.markCalendarChanged();
+		MainTab.markCalendarChanged();
 	}
 	else
 	{

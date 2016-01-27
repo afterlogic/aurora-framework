@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Contacts/js/BaseTabExtMethods.js');
+	require('modules/Contacts/js/MainTabExtMethods.js');
 	
 	var
 		_ = require('underscore'),

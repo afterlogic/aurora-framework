@@ -6,7 +6,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	App = require('core/js/App.js'),
-	BaseTab = App.isNewTab() && window.opener ? window.opener.BaseTabMethods : null,
+	MainTab = App.isNewTab() && window.opener ? window.opener.MainTabMailMethods : null,
 	Routing = require('core/js/Routing.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -522,9 +522,9 @@ var AccountList = new CAccountListModel(Utils.pInt(window.pSevenAppData.Default)
 
 AccountList.parse(window.pSevenAppData.Default, window.pSevenAppData.Accounts);
 
-if (BaseTab)
+if (MainTab)
 {
-	AccountList.populateIdentitiesFromSourceAccount(BaseTab.getAccountList());
+	AccountList.populateIdentitiesFromSourceAccount(MainTab.getAccountList());
 }
 
 module.exports = AccountList;

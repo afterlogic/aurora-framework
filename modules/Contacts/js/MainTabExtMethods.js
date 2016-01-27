@@ -2,13 +2,13 @@
 
 var
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	BaseTabMethods = {
+	MainTabContactsMethods = {
 		markVcardsExistentByFile: function (sFile) {
 				ContactsCache.markVcardsExistentByFile(sFile);
 		}
 	}
 ;
 
-window.BaseTabContactsMethods = BaseTabMethods;
+window.MainTabContactsMethods = MainTabContactsMethods;
 
 module.exports = {};

@@ -3,7 +3,7 @@
 module.exports = function (oSettings) {
 	require('modules/Calendar/js/enums.js');
 	require('fullcalendar');
-	require('modules/Calendar/js/BaseTabExtMethods.js');
+	require('modules/Calendar/js/MainTabExtMethods.js');
 
 	var
 		TextUtils = require('core/js/utils/Text.js'),

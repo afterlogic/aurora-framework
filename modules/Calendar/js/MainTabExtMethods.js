@@ -2,7 +2,7 @@
 
 var
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	BaseTabMethods = {
+	MainTabCalendarMethods = {
 		markIcalTypeByFile: function (sFile, sType, sCancelDecision, sReplyDecision, sCalendarId, sSelectedCalendar) {
 			CalendarCache.markIcalTypeByFile(sFile, sType, sCancelDecision, sReplyDecision, sCalendarId, sSelectedCalendar);
 		},
@@ -13,6 +13,6 @@ var
 	}
 ;
 
-window.BaseTabCalendarMethods = BaseTabMethods;
+window.MainTabCalendarMethods = MainTabCalendarMethods;
 
 module.exports = {};

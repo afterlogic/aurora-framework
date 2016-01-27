@@ -17,7 +17,7 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Storage = require('core/js/Storage.js'),
 	Pulse = require('core/js/Pulse.js'),
-	BaseTabExtMethods = require('modules/Mail/js/BaseTabExtMethods.js'),
+	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
@@ -30,7 +30,7 @@ var
 	Settings = require('modules/Mail/js/Settings.js'),
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
-	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods
+	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods
 ;
 
 /**
@@ -391,7 +391,7 @@ CMessagePaneView.prototype.passReplyDataToNewTab = function (sUniq)
 {
 	if (this.currentMessage() && this.currentMessage().sUniq === sUniq && this.replyText() !== '')
 	{
-		BaseTabExtMethods.passReplyData(sUniq, {
+		MainTabExtMethods.passReplyData(sUniq, {
 			'ReplyText': this.replyText(),
 			'ReplyDraftUid': this.replyDraftUid()
 		});
@@ -409,9 +409,9 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 		oReplyData = null
 	;
 	
-	if (BaseTab)
+	if (MainTab)
 	{
-		oReplyData = BaseTab.getReplyData(oMessage.sUniq);
+		oReplyData = MainTab.getReplyData(oMessage.sUniq);
 		if (oReplyData)
 		{
 			this.replyText(oReplyData.ReplyText);
@@ -739,9 +739,9 @@ CMessagePaneView.prototype.executeDeleteMessage = function ()
 {
 	if (this.currentMessage())
 	{
-		if (BaseTab)
+		if (MainTab)
 		{
-			BaseTab.deleteMessage(this.currentMessage().uid(), function () { window.close(); });
+			MainTab.deleteMessage(this.currentMessage().uid(), function () { window.close(); });
 		}
 		else if (App.isMobile())
 		{

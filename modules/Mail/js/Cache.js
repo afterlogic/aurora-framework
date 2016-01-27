@@ -26,7 +26,7 @@ var
 	CUidListModel = require('modules/Mail/js/models/CUidListModel.js'),
 	CFolderListModel = require('modules/Mail/js/models/CFolderListModel.js'),
 	
-	BaseTab = App.isNewTab() && window.opener && window.opener.BaseTabMethods
+	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods
 ;
 
 /**
@@ -168,10 +168,10 @@ CMailCache.prototype.init = function ()
 		}, 10);
 	});
 	
-	if (BaseTab)
+	if (MainTab)
 	{
-		this.oFolderListItems = BaseTab.getFolderListItems();
-		this.uidList = BaseTab.getUidList();
+		this.oFolderListItems = MainTab.getFolderListItems();
+		this.uidList = MainTab.getUidList();
 		
 		if (window.name)
 		{
@@ -179,7 +179,7 @@ CMailCache.prototype.init = function ()
 			
 			if (iAccountId === 0)
 			{
-				iAccountId = BaseTab.getComposedMessageAccountId(window.name);
+				iAccountId = MainTab.getComposedMessageAccountId(window.name);
 			}
 			
 			if (iAccountId !== 0)
@@ -251,9 +251,9 @@ CMailCache.prototype.calcNextMessageUid = function ()
 			{
 				sNextUid = '';
 			}
-			if (sNextUid === '' && BaseTab)
+			if (sNextUid === '' && MainTab)
 			{
-				BaseTab.prefetchNextPage(sCurrentUid);
+				MainTab.prefetchNextPage(sCurrentUid);
 			}
 		}
 	}
@@ -312,9 +312,9 @@ CMailCache.prototype.calcPrevMessageUid = function ()
 			{
 				sPrevUid = '';
 			}
-			if (sPrevUid === '' && BaseTab)
+			if (sPrevUid === '' && MainTab)
 			{
-				BaseTab.prefetchPrevPage(sCurrentUid);
+				MainTab.prefetchPrevPage(sCurrentUid);
 			}
 		}
 	}

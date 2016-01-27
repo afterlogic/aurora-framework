@@ -13,7 +13,7 @@ var
 	aReplyData = []
 ;
 
-var BaseTabMethods = {
+var MainTabMailMethods = {
 	showReport: function (sText) {
 		Screens.showReport(sText);
 	},
@@ -66,7 +66,7 @@ var BaseTabMethods = {
 	}
 };
 
-window.BaseTabMethods = BaseTabMethods;
+window.MainTabMailMethods = MainTabMailMethods;
 
 module.exports = {
 	passReplyData: function (sUniq, oReplyData) {
