@@ -155,6 +155,8 @@ CApp.prototype.init = function ()
 	}
 	
 	Storage.setData('AuthToken', Storage.getData('AuthToken'));
+	
+	this.useGoogleAnalytics();
 };
 
 /**
@@ -213,6 +215,28 @@ CApp.prototype.checkMobile = function () {
 	}
 	
 	return false;
+};
+
+CApp.prototype.useGoogleAnalytics = function ()
+{
+	var
+		oGoogleAnalytics = null,
+		oFirstScript = null
+	;
+	
+	if (Settings.GoogleAnalyticsAccount && 0 < Settings.GoogleAnalyticsAccount.length)
+	{
+		window._gaq = window._gaq || [];
+		window._gaq.push(['_setAccount', Settings.GoogleAnalyticsAccount]);
+		window._gaq.push(['_trackPageview']);
+
+		oGoogleAnalytics = document.createElement('script');
+		oGoogleAnalytics.type = 'text/javascript';
+		oGoogleAnalytics.async = true;
+		oGoogleAnalytics.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		oFirstScript = document.getElementsByTagName('script')[0];
+		oFirstScript.parentNode.insertBefore(oGoogleAnalytics, oFirstScript);
+	}
 };
 
 var App = new CApp();
