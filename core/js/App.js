@@ -165,6 +165,13 @@ CApp.prototype.init = function ()
 			WindowOpener.closeAll();
 		});
 	}
+	
+	if (Browser.ie8AndBelow)
+	{
+		$('body').css('overflow', 'hidden');
+	}
+	
+	ModulesManager.run('Auth', 'afterAppRunning');
 };
 
 /**
