@@ -5,6 +5,8 @@ var
 	ko = require('knockout'),
 	
 	Utils = require('core/js/utils/Common.js'),
+	App = require('core/js/App.js'),
+	BaseTab = App.isNewTab() && window.opener ? window.opener.BaseTabMethods : null,
 	Routing = require('core/js/Routing.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -393,6 +395,9 @@ CAccountListModel.prototype.onGetIdentitiesResponse = function (oResponse, oRequ
 	});
 };
 
+/**
+ * @param {Object} oSrcAccounts
+ */
 CAccountListModel.prototype.populateIdentitiesFromSourceAccount = function (oSrcAccounts)
 {
 	if (oSrcAccounts)
@@ -516,5 +521,10 @@ CAccountListModel.prototype.getAttendee = function (aEmails)
 var AccountList = new CAccountListModel(Utils.pInt(window.pSevenAppData.Default));
 
 AccountList.parse(window.pSevenAppData.Default, window.pSevenAppData.Accounts);
+
+if (BaseTab)
+{
+	AccountList.populateIdentitiesFromSourceAccount(BaseTab.getAccountList());
+}
 
 module.exports = AccountList;

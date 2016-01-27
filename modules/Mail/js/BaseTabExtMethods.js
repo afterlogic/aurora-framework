@@ -5,6 +5,7 @@ var
 	Routing = require('core/js/Routing.js'),
 	
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
 	Prefetcher = require('modules/Mail/js/Prefetcher.js'),
 	
@@ -14,10 +15,11 @@ var
 
 var BaseTabMethods = {
 	showReport: function (sText) {
-		Utils.log('BaseTabMethods', sText);
 		Screens.showReport(sText);
 	},
-	
+	getAccountList: function () {
+		return AccountList;
+	},
 	getFolderListItems: function () {
 		return MailCache.oFolderListItems;
 	},
