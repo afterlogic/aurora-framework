@@ -261,9 +261,22 @@ CAccountsSettingsPaneView.prototype.editFetcher = function (oFetcher)
 	this.changeTab(this.getAutoselectedTab().name);
 };
 
-CAccountsSettingsPaneView.prototype.connectToMail = function (sId)
+/**
+ * @param {string} sId
+ * @param {Object} oEv
+ */
+CAccountsSettingsPaneView.prototype.connectToMail = function (sId, oEv)
 {
+	oEv.stopPropagation();
 	
+	var oDefaultAccount = Accounts.getDefault();
+	
+	if (oDefaultAccount && !oDefaultAccount.allowMail())
+	{
+		Popups.showPopup(CreateAccountPopup, [Enums.AccountCreationPopupType.ConnectToMail, '', _.bind(function (iAccountId) {
+			this.editAccount(iAccountId);
+		}, this)]);
+	}
 };
 
 CAccountsSettingsPaneView.prototype.changeTab = function (sName)
