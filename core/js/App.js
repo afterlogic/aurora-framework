@@ -171,6 +171,8 @@ CApp.prototype.init = function ()
 		$('body').css('overflow', 'hidden');
 	}
 	
+	this.checkCookies();
+	
 	ModulesManager.run('Auth', 'afterAppRunning');
 };
 
@@ -252,6 +254,21 @@ CApp.prototype.useGoogleAnalytics = function ()
 		oFirstScript = document.getElementsByTagName('script')[0];
 		oFirstScript.parentNode.insertBefore(oGoogleAnalytics, oFirstScript);
 	}
+};
+
+/**
+ * @returns {Boolean}
+ */
+CApp.prototype.checkCookies = function ()
+{
+	$.cookie('checkCookie', '1', { path: '/' });
+	var bResult = $.cookie('checkCookie') === '1';
+	if (!bResult)
+	{
+		App.Screens.showError(Utils.i18n('WARNING/COOKIES_DISABLED'), false, true);
+	}
+
+	return bResult;
 };
 
 var App = new CApp();
