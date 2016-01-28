@@ -4,11 +4,18 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	TextUtils = require('core/js/utils/Text.js'),
 	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
 	MainTab = App.isNewTab() && window.opener ? window.opener.MainTabMailMethods : null,
 	Routing = require('core/js/Routing.js'),
+	Storage = require('core/js/Storage.js'),
+	UserSettings = require('core/js/Settings.js'),
+	
+	Popups = require('core/js/Popups.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	CreateAccountPopup = require('modules/Mail/js/popups/CreateAccountPopup.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
@@ -519,6 +526,36 @@ CAccountListModel.prototype.getAttendee = function (aEmails)
 	return sAttendee;
 };
 
+CAccountListModel.prototype.displaySocialWelcome = function ()
+{
+	var
+		oDefaultAccount = this.getDefault(),
+		bHasMailAccount = this.hasMailAccount()
+	;
+	
+	if (!bHasMailAccount && oDefaultAccount && !Storage.hasData('SocialWelcomeShowed' + oDefaultAccount.id()) && UserSettings.SocialName !== '')
+	{
+		Popups.showPopup(ConfirmPopup, [
+			TextUtils.i18n('MAILBOX/INFO_SOCIAL_WELCOME', {
+				'SOCIALNAME': UserSettings.SocialName,
+				'SITENAME': UserSettings.SiteName,
+				'EMAIL': oDefaultAccount.email()
+			}),
+			function (bConfigureMail) {
+				if (bConfigureMail && !oDefaultAccount.allowMail())
+				{
+					Popups.showPopup(CreateAccountPopup, [Enums.AccountCreationPopupType.ConnectToMail, oDefaultAccount.email()]);
+				}
+			},
+			'',
+			TextUtils.i18n('MAILBOX/BUTTON_CONFIGURE_MAIL'),
+			TextUtils.i18n('MAIN/BUTTON_CLOSE')
+		]);
+		
+		Storage.setData('SocialWelcomeShowed' + oDefaultAccount.id(), '1');
+	}
+};
+
 var AccountList = new CAccountListModel(Types.pInt(window.pSevenAppData.Default));
 
 AccountList.parse(window.pSevenAppData.Default, window.pSevenAppData.Accounts);
@@ -529,5 +566,6 @@ if (MainTab)
 }
 
 AccountList.unlockEditedWhenCurrentChange();
+AccountList.displaySocialWelcome();
 
 module.exports = AccountList;

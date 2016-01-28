@@ -8,7 +8,6 @@ var
 	AddressUtils = require('core/js/utils/Address.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
