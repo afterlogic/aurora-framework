@@ -102,7 +102,9 @@ module.exports = {
 			SocialIsLoggedIn: false,
 			HelpdeskUserEmail: '',
 			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false,
-			HelpdeskRedirect: AppData.HelpdeskRedirect
+			HelpdeskRedirect: AppData.HelpdeskRedirect,
+			HelpdeskSiteName: AppData.HelpdeskSiteName,
+			HelpdeskActivatedEmail: AppData.HelpdeskActivatedEmail // showReport(Utils.i18n('HELPDESK/ACCOUNT_ACTIVATED'));
 		},
 		Settings: {
 			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp']
