@@ -4,6 +4,8 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	Types = require('core/js/utils/Types.js'),
+	
 	AppData = window.pSevenAppData,
 	
 	bRtl = $('html').hasClass('rtl')
@@ -160,6 +162,7 @@ module.exports = {
 	GoogleAnalyticsAccount: AppData.App ? AppData.App.GoogleAnalyticsAccount : '',
 	IosDetectOnLogin: AppData.App ? AppData.App.IosDetectOnLogin : '',
 	AllowIosProfile: AppData.App ? AppData.App.AllowIosProfile : '',
+	LastErrorCode: Types.pString(AppData.LastErrorCode),
 	
 	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultLanguage, sDefaultTimeFormat, sDesktopNotifications) {
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;

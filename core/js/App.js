@@ -9,6 +9,7 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
+	Api = require('core/js/Api.js'),
 	Settings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
@@ -181,6 +182,26 @@ CApp.prototype.init = function ()
 	}
 	
 	this.checkCookies();
+	
+	this.showLastErrorOnLogin();
+};
+
+CApp.prototype.showLastErrorOnLogin = function ()
+{
+	if (!this.bAuth)
+	{
+		var iError = Types.pInt(Utils.getRequestParam('error'));
+
+		if (iError !== 0)
+		{
+			Api.showErrorByCode({'ErrorCode': iError, 'ErrorMessage': ''}, '', true);
+		}
+		
+		if (Settings.LastErrorCode === Enums.Errors.AuthError)
+		{
+			Screens.showError(Utils.i18n('WARNING/AUTH_PROBLEM'), false, true);
+		}
+	}
 };
 
 /**
