@@ -5,6 +5,8 @@ module.exports = function (oSettings) {
 
 	var
 		_ = require('underscore'),
+				
+		Utils = require('core/js/utils/Common.js'),
 		
 		Ajax = require('modules/Auth/js/Ajax.js'),
 		Settings = require('modules/Auth/js/Settings.js'),
@@ -30,7 +32,11 @@ module.exports = function (oSettings) {
 			
 			Ajax.send('Logout', oParameters, fOnLogoutResponse, oContext);
 		},
-		afterAppRunning: function () {
+		beforeAppRunning: function (bAuth) {
+			if (!bAuth && Utils.isNonEmptyString(Settings.CustomLoginUrl))
+			{
+				window.location.href = Settings.CustomLoginUrl;
+			}
 			Storage.setData('AuthToken', Storage.getData('AuthToken'));
 		}
 	};

@@ -24,7 +24,8 @@ module.exports = {
 			DemoWebMailLogin: '',
 			DemoWebMailPassword: '',
 			RegistrationQuestions: [],
-			RegistrationDomains: []
+			RegistrationDomains: [],
+			CustomLoginUrl: AppData.App ? AppData.App.CustomLoginUrl : true
 		},
 		OpenPgp: {
 			enableOpenPgp: ko.observable(true)
@@ -98,7 +99,8 @@ module.exports = {
 			SocialEmail: '',
 			SocialIsLoggedIn: false,
 			HelpdeskUserEmail: '',
-			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false
+			AllowHelpdeskNotifications: AppData.User ? AppData.User.AllowHelpdeskNotifications : false,
+			HelpdeskRedirect: AppData.HelpdeskRedirect
 		},
 		Settings: {
 			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp']

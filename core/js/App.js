@@ -106,6 +106,8 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
+	ModulesManager.run('Auth', 'beforeAppRunning', [this.bAuth]);
+	
 	if (Browser.iosDevice && this.bAuth && Settings.IosDetectOnLogin && Settings.AllowIosProfile)
 	{
 		window.location.href = '?ios';
@@ -177,8 +179,6 @@ CApp.prototype.init = function ()
 	}
 	
 	this.checkCookies();
-	
-	ModulesManager.run('Auth', 'afterAppRunning');
 };
 
 /**
