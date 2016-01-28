@@ -156,6 +156,8 @@ module.exports = {
 	DefaultLanguage: AppData.User ? AppData.User.DefaultLanguage : 'English',
 	AllowUsersChangeInterfaceSettings: AppData.App ? AppData.App.AllowUsersChangeInterfaceSettings : false,
 	GoogleAnalyticsAccount: AppData.App ? AppData.App.GoogleAnalyticsAccount : '',
+	IosDetectOnLogin: AppData.App ? AppData.App.IosDetectOnLogin : '',
+	AllowIosProfile: AppData.App ? AppData.App.AllowIosProfile : '',
 	
 	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultLanguage, sDefaultTimeFormat, sDesktopNotifications) {
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;

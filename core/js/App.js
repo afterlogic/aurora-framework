@@ -106,6 +106,11 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
+	if (Browser.iosDevice && this.bAuth && Settings.IosDetectOnLogin && Settings.AllowIosProfile)
+	{
+		window.location.href = '?ios';
+	}
+	
 	if (this.bAuth && !this.bPublic)
 	{
 		var Accounts = require('modules/Mail/js/AccountList.js');
