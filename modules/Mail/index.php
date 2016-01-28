@@ -4,6 +4,7 @@ class MailModule extends AApiModule
 {
 	public $oApiMailManager = null;
 	public $oApiFetchersManager = null;
+	public $oApiSieveManager = null;
 	
 	public function init() 
 	{
@@ -286,6 +287,17 @@ class MailModule extends AApiModule
 
 		return $this->TrueResponse($oAccount, $sFunctionName);
 	}	
+	
+	
+	private function GetSieveManager()
+	{
+		if (null === $this->oApiSieveManager)
+		{
+			$this->oApiSieveManager = $this->GetManager('sieve');
+		}
+		
+		return $this->oApiSieveManager;
+	}
 	
 	public function GetExtensions()
 	{
@@ -1027,8 +1039,7 @@ class MailModule extends AApiModule
 		{
 			$iFetcherID = (int) $sFetcherID;
 
-			$oApiFetchers = $this->ApiFetchers();
-			$aFetchers = $oApiFetchers->getFetchers($oAccount);
+			$aFetchers = $this->oApiFetchersManager->getFetchers($oAccount);
 			if (is_array($aFetchers) && 0 < count($aFetchers))
 			{
 				foreach ($aFetchers as /* @var $oFetcherItem \CFetcher */ $oFetcherItem)
@@ -1421,7 +1432,7 @@ class MailModule extends AApiModule
 		$oAccount = $this->getAccountFromParam();
 		
 		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::AutoresponderExtension)) {
-			$aAutoResponderValue = $this->ApiSieve()->getAutoresponder($oAccount);
+			$aAutoResponderValue = $this->GetSieveManager()->getAutoresponder($oAccount);
 			if (isset($aAutoResponderValue['subject'], 
 					$aAutoResponderValue['body'], $aAutoResponderValue['enabled'])) {
 				
@@ -1454,7 +1465,7 @@ class MailModule extends AApiModule
 				$sSubject = (string) $this->getParamValue('Subject', '');
 				$sMessage = (string) $this->getParamValue('Message', '');
 
-				$mResult = $this->ApiSieve()->setAutoresponder($oAccount, $sSubject, $sMessage, $bIsEnabled);
+				$mResult = $this->GetSieveManager()->setAutoresponder($oAccount, $sSubject, $sMessage, $bIsEnabled);
 			} else {
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
 			}
@@ -1473,7 +1484,7 @@ class MailModule extends AApiModule
 		
 		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::ForwardExtension)) {
 			
-			$aForwardValue = /* @var $aForwardValue array */  $this->ApiSieve()->getForward($oAccount);
+			$aForwardValue = /* @var $aForwardValue array */  $this->GetSieveManager()->getForward($oAccount);
 			if (isset($aForwardValue['email'], $aForwardValue['enabled'])) {
 				
 				$mResult = array(
@@ -1502,7 +1513,7 @@ class MailModule extends AApiModule
 				$bIsEnabled = '1' === $this->getParamValue('Enable', '0');
 				$sForwardEmail = (string) $this->getParamValue('Email', '');
 		
-				$mResult = $this->ApiSieve()->setForward($oAccount, $sForwardEmail, $bIsEnabled);
+				$mResult = $this->GetSieveManager()->setForward($oAccount, $sForwardEmail, $bIsEnabled);
 			} else {
 				
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
@@ -1522,7 +1533,7 @@ class MailModule extends AApiModule
 		$oAccount = $this->getAccountFromParam();
 
 		if ($oAccount && $oAccount->isExtensionEnabled(\CAccount::SieveFiltersExtension)) {
-			$mResult = $this->ApiSieve()->getSieveFilters($oAccount);
+			$mResult = $this->GetSieveManager()->getSieveFilters($oAccount);
 		}
 
 		return $mResult;
@@ -1555,7 +1566,7 @@ class MailModule extends AApiModule
 				$mResult[] = $oFilter;
 			}
 
-			$mResult = $this->ApiSieve()->updateSieveFilters($oAccount, $mResult);
+			$mResult = $this->GetSieveManager()->updateSieveFilters($oAccount, $mResult);
 		}
 
 		return $mResult;
