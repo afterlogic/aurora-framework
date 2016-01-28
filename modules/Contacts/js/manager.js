@@ -34,7 +34,7 @@ module.exports = function (oSettings) {
 			return require('modules/Contacts/js/views/HeaderItemView.js');
 		},
 		isGlobalContactsAllowed: function () {
-			return Settings.Storages.indexOf('global') !== -1;
+			return _.indexOf(Settings.Storages, 'global') !== -1;
 		},
 		getMobileSyncSettingsView: function () {
 			return require('modules/Contacts/js/views/MobileSyncSettingsView.js');
