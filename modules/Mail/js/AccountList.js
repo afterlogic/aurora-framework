@@ -528,4 +528,6 @@ if (MainTab)
 	AccountList.populateIdentitiesFromSourceAccount(MainTab.getAccountList());
 }
 
+AccountList.unlockEditedWhenCurrentChange();
+
 module.exports = AccountList;
