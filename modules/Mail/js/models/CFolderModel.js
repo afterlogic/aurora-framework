@@ -6,8 +6,10 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Storage = require('core/js/Storage.js'),
 	Routing = require('core/js/Routing.js'),
@@ -329,7 +331,7 @@ CFolderModel.prototype.parseAndCacheMessage = function (oRawMessage, bThreadPart
 {
 	var
 		sUid = oRawMessage.Uid.toString(),
-		bNewMessage = Utils.isUnd(this.oMessages[sUid]),
+		bNewMessage = !this.oMessages[sUid],
 		oMessage = bNewMessage ? new CMessageModel() : this.oMessages[sUid]
 	;
 	
@@ -690,12 +692,12 @@ CFolderModel.prototype.parse = function (oData, sParentFullName, bDisableManageS
 
 	if (oData['@Object'] === 'Object/Folder')
 	{
-		sName = Utils.pString(oData.Name);
+		sName = Types.pString(oData.Name);
 		
 		this.name(sName);
 		this.nameForEdit(sName);
-		this.fullName(Utils.pString(oData.FullNameRaw));
-		this.fullNameHash(Utils.pString(oData.FullNameHash));
+		this.fullName(Types.pString(oData.FullNameRaw));
+		this.fullNameHash(Types.pString(oData.FullNameHash));
 		this.sDelimiter = oData.Delimiter;
 		this.type(oData.Type);
 		this.bNamespace = (sNamespaceFolder === this.fullName());

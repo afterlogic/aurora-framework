@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	UserSettings = require('core/js/Settings.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
@@ -85,7 +85,7 @@ CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 CCommonSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'AutoCheckMailInterval': Utils.pInt(this.autoRefreshInterval()),
+		'AutoCheckMailInterval': Types.pInt(this.autoRefreshInterval()),
 		'DefaultTheme': this.selectedSkin(),
 		'DefaultLanguage': this.selectedLanguage(),
 		'DefaultTimeFormat': this.timeFormat(),

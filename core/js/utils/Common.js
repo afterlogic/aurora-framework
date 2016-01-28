@@ -12,111 +12,12 @@ var
 ;
 
 /**
- * @param {*} mValue
- * 
- * @return {boolean}
- */
-Utils.isUnd = function (mValue)
-{
-	return undefined === mValue;
-};
-
-/**
- * @param {*} oValue
- * 
- * @return {boolean}
- */
-Utils.isNull = function (oValue)
-{
-	return null === oValue;
-};
-
-/**
- * @param {*} oValue
- * 
- * @return {boolean}
- */
-Utils.isNormal = function (oValue)
-{
-	return !Utils.isUnd(oValue) && !Utils.isNull(oValue);
-};
-
-/**
- * @param {(string|number)} mValue
- * 
- * @return {boolean}
- */
-Utils.isNumeric = function (mValue)
-{
-	return Utils.isNormal(mValue) ? (/^[1-9]+[0-9]*$/).test(mValue.toString()) : false;
-};
-
-/**
- * @param {*} aValue
- * @param {number=} iArrayLen
- * 
- * @return {boolean}
- */
-Utils.isNonEmptyArray = function (aValue, iArrayLen)
-{
-	iArrayLen = iArrayLen || 1;
-	
-	return _.isArray(aValue) && iArrayLen <= aValue.length;
-};
-
-/**
- * @param {*} mValue
- * 
- * @return {boolean}
- */
-Utils.isNonEmptyString = function (mValue)
-{
-	return typeof mValue === 'string' && mValue !== '';
-};
-
-/**
- * @param {*} mValue
- * 
- * @return {number}
- */
-Utils.pInt = function (mValue)
-{
-	var iValue = window.parseInt(mValue, 10);
-	if (isNaN(iValue))
-	{
-		iValue = 0;
-	}
-	return iValue;
-};
-
-/**
- * @param {*} mValue
- * 
- * @return {string}
- */
-Utils.pString = function (mValue)
-{
-	return Utils.isNormal(mValue) ? mValue.toString() : '';
-};
-
-/**
- * @param {number} iNum
- * @param {number} iDec
- * 
- * @return {number}
- */
-Utils.roundNumber = function (iNum, iDec)
-{
-	return Math.round(iNum * Math.pow(10, iDec)) / Math.pow(10, iDec);
-};
-
-/**
  * @param {(Object|null|undefined)} oContext
  * @param {Function} fExecute
- * @param {(Function|boolean|null)=} fCanExecute
+ * @param {(Function|boolean|null)=} mCanExecute
  * @return {Function}
  */
-Utils.createCommand = function (oContext, fExecute, fCanExecute)
+Utils.createCommand = function (oContext, fExecute, mCanExecute)
 {
 	var
 		fResult = fExecute ? function () {
@@ -130,17 +31,16 @@ Utils.createCommand = function (oContext, fExecute, fCanExecute)
 
 	fResult.enabled = ko.observable(true);
 
-	fCanExecute = Utils.isUnd(fCanExecute) ? true : fCanExecute;
-	if ($.isFunction(fCanExecute))
+	if ($.isFunction(mCanExecute))
 	{
 		fResult.canExecute = ko.computed(function () {
-			return fResult.enabled() && fCanExecute.call(oContext);
+			return fResult.enabled() && mCanExecute.call(oContext);
 		});
 	}
 	else
 	{
 		fResult.canExecute = ko.computed(function () {
-			return fResult.enabled() && !!fCanExecute;
+			return fResult.enabled() && !!mCanExecute;
 		});
 	}
 	
@@ -495,14 +395,11 @@ Utils.getFileNameWithoutExtension = function (sFile)
  */
 Utils.defaultOptionsAfterRender = function (oElement, oItem)
 {
-	if (oItem)
+	if (oItem && oItem.disable !== undefined)
 	{
-		if (!Utils.isUnd(oItem.disable))
-		{
-			ko.applyBindingsToNode(oElement, {
-				'disable': oItem.disable
-			}, oItem);
-		}
+		ko.applyBindingsToNode(oElement, {
+			'disable': !!oItem.disable
+		}, oItem);
 	}
 };
 

@@ -48,7 +48,7 @@ CImportCalendarPopup.prototype.onShow = function (fCallback, oCalendar)
 	{
 		this.fCallback = fCallback;
 	}
-	if (!Utils.isUnd(oCalendar))
+	if (oCalendar)
 	{
 		this.color(oCalendar.color ? oCalendar.color() : '');
 		this.calendarId(oCalendar.id ? oCalendar.id : '');

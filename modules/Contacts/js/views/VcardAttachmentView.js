@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
 	CVcardModel = require('modules/Contacts/js/models/VcardModel.js')
@@ -28,7 +28,7 @@ CVcardAttachmentView.prototype.ViewTemplate = 'Contacts_VcardAttachmentView';
 CVcardAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
 	var
-		aExtend = (oMessageProps && Utils.isNonEmptyArray(oMessageProps.aExtend)) ? oMessageProps.aExtend : [],
+		aExtend = (oMessageProps && Types.isNonEmptyArray(oMessageProps.aExtend)) ? oMessageProps.aExtend : [],
 		oFoundRawVcard = _.find(aExtend, function (oRawVcard) {
 			return oRawVcard['@Object'] === 'Object/CApiMailVcard';
 		})

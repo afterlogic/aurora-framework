@@ -5,8 +5,8 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js')
 ;
 
 
@@ -33,9 +33,9 @@ var CustomTooltip = {
 			this._$Text = $('<span class="custom_tooltip_text"></span>').appendTo(this._$Region);
 			this._$ArrowBottom = $('<span class="custom_tooltip_arrow bottom"></span>').appendTo(this._$Region);
 			
-			this._iArrowMarginLeft = Utils.pInt(this._$ArrowTop.css('margin-left'));
-			this._iArrowBorderLeft = Utils.pInt(this._$ArrowTop.css('border-left-width'));
-			this._iLeftShift = Utils.pInt(this._$Region.css('margin-left')) + this._iArrowMarginLeft + this._iArrowBorderLeft;
+			this._iArrowMarginLeft = Types.pInt(this._$ArrowTop.css('margin-left'));
+			this._iArrowBorderLeft = Types.pInt(this._$ArrowTop.css('border-left-width'));
+			this._iLeftShift = Types.pInt(this._$Region.css('margin-left')) + this._iArrowMarginLeft + this._iArrowBorderLeft;
 			
 			this._bInitialized = true;
 		}
@@ -58,7 +58,7 @@ var CustomTooltip = {
 			oItemOffset = $ItemToAlign.offset(),
 			iItemWidth = $ItemToAlign.width(),
 			iItemHalfWidth = (iItemWidth < 70) ? iItemWidth/2 : iItemWidth/4,
-			iItemPaddingLeft = Utils.pInt($ItemToAlign.css('padding-left')),
+			iItemPaddingLeft = Types.pInt($ItemToAlign.css('padding-left')),
 			jqBody = $('body')
 		;
 		
@@ -95,7 +95,7 @@ var CustomTooltip = {
 					'margin-left': (iItemHalfWidth + oItemOffset.left - this._$Region.offset().left - this._iArrowBorderLeft) + 'px'
 				});
 				this._$ArrowBottom.css({
-					'margin-left': (iItemHalfWidth + oItemOffset.left - this._$Region.offset().left - this._iArrowBorderLeft + Utils.pInt(this._$Region.css('margin-right'))) + 'px'
+					'margin-left': (iItemHalfWidth + oItemOffset.left - this._$Region.offset().left - this._iArrowBorderLeft + Types.pInt(this._$Region.css('margin-right'))) + 'px'
 				});
 			}
 		}.bind(this), 1);

@@ -5,8 +5,8 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -72,12 +72,12 @@ function CThreadListModel()
 CThreadListModel.prototype.parse = function (oData)
 {
 	this.Id = oData.IdHelpdeskThread;
-	this.ThreadHash = Utils.pString(oData.ThreadHash);
+	this.ThreadHash = Types.pString(oData.ThreadHash);
 	this.IdOwner = oData.IdOwner;
 	this.ItsMe = !!oData.ItsMe;
-	this.sSubject = Utils.pString(oData.Subject);
-	this.time(Utils.pInt(oData.Updated));
-	this.aOwner = Utils.isNonEmptyArray(oData.Owner) ? oData.Owner : ['', ''];
+	this.sSubject = Types.pString(oData.Subject);
+	this.time(Types.pInt(oData.Updated));
+	this.aOwner = Types.isNonEmptyArray(oData.Owner) ? oData.Owner : ['', ''];
 	this.sEmail = this.aOwner[0] || '';
 	this.sName = this.aOwner[1] || '';
 	this.sFrom = this.sName || this.sEmail;

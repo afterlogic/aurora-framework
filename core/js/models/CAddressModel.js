@@ -3,8 +3,8 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	AddressUtils = require('core/js/utils/Address.js')
+	AddressUtils = require('core/js/utils/Address.js'),
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -30,12 +30,9 @@ CAddressModel.prototype.parse = function (oData)
 {
 	if (oData !== null)
 	{
-		this.sName = Utils.pString(oData.DisplayName);
-		
-		this.sEmail = Utils.pString(oData.Email);
-		
+		this.sName = Types.pString(oData.DisplayName);
+		this.sEmail = Types.pString(oData.Email);
 		this.sDisplay = (this.sName.length > 0) ? this.sName : this.sEmail;
-		
 		this.sFull = AddressUtils.getFullEmail(this.sName, this.sEmail);
 	}
 };

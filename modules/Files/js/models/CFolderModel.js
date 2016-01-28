@@ -3,7 +3,8 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')
 ;
 
@@ -37,12 +38,12 @@ function CFolderModel()
 CFolderModel.prototype.parse = function (oData, sPublicHash)
 {
 	this.shared(!!oData.Shared);
-	this.fileName(Utils.pString(oData.Name));
-	this.fullPath(Utils.pString(oData.FullPath));
-	this.path(Utils.pString(oData.Path));
-	this.storageType(Utils.pString(oData.Type));
+	this.fileName(Types.pString(oData.Name));
+	this.fullPath(Types.pString(oData.FullPath));
+	this.path(Types.pString(oData.Path));
+	this.storageType(Types.pString(oData.Type));
 	this.displayName(this.fileName());
-	this.id(Utils.pString(oData.Id));
+	this.id(Types.pString(oData.Id));
 };
 
 CFolderModel.prototype.eventDragStart = CAbstractFileModel.prototype.eventDragStart;

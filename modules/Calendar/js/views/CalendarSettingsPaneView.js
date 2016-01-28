@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	UserSettings = require('core/js/Settings.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
@@ -69,10 +69,10 @@ CCalendarSettingsPaneView.prototype.getParametersForSave = function ()
 	return {
 		'ShowWeekEnds': this.showWeekends() ? 1 : 0,
 		'ShowWorkDay': this.showWorkday() ? 1 : 0,
-		'WorkDayStarts': Utils.pInt(this.selectedWorkdayStarts()),
-		'WorkDayEnds': Utils.pInt(this.selectedWorkdayEnds()),
-		'WeekStartsOn': Utils.pInt(this.weekStartsOn()),
-		'DefaultTab': Utils.pInt(this.defaultTab())
+		'WorkDayStarts': Types.pInt(this.selectedWorkdayStarts()),
+		'WorkDayEnds': Types.pInt(this.selectedWorkdayEnds()),
+		'WeekStartsOn': Types.pInt(this.weekStartsOn()),
+		'DefaultTab': Types.pInt(this.defaultTab())
 	};
 };
 

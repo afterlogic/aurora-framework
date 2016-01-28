@@ -4,7 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	Ajax = require('modules/Contacts/js/Ajax.js'),
 	
@@ -33,10 +34,10 @@ CVcardModel.prototype.parse = function (oData)
 {
 	if (oData && oData['@Object'] === 'Object/CApiMailVcard')
 	{
-		this.uid(Utils.pString(oData.Uid));
-		this.file(Utils.pString(oData.File));
-		this.name(Utils.pString(oData.Name));
-		this.email(Utils.pString(oData.Email));
+		this.uid(Types.pString(oData.Uid));
+		this.file(Types.pString(oData.File));
+		this.name(Types.pString(oData.Name));
+		this.email(Types.pString(oData.Email));
 		this.exists(!!oData.Exists);
 		
 		ContactsCache.addVcard(this);

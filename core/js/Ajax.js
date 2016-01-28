@@ -1,12 +1,13 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	Settings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js')
@@ -59,8 +60,8 @@ CAjax.prototype.getOpenedRequest = function (sModule, sMethod)
  */
 CAjax.prototype.hasOpenedRequests = function (sModule, sMethod)
 {
-	sModule = Utils.isUnd(sModule) ? '' : sModule;
-	sMethod = Utils.isUnd(sMethod) ? '' : sMethod;
+	sModule = Types.pString(sModule);
+	sMethod = Types.pString(sMethod);
 	
 	if (sMethod === '')
 	{
@@ -177,7 +178,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		success: doneFunc,
 		error: failFunc,
 		complete: alwaysFunc,
-		timeout: Utils.isUnd(iTimeout) ? 50000 : iTimeout
+		timeout: iTimeout === undefined ? 50000 : iTimeout
 	});
 	
 	this.requests().push({ Request: oRequest, Xhr: oXhr });

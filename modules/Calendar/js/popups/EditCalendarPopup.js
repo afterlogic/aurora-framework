@@ -5,8 +5,8 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
@@ -48,7 +48,7 @@ CEditCalendarPopup.prototype.onShow = function (fCallback, aColors, oCalendar)
 {
 	this.fCallback = fCallback;
 	
-	if (Utils.isNonEmptyArray(aColors))
+	if (Types.isNonEmptyArray(aColors))
 	{
 		this.colors(aColors);
 		this.selectedColor(aColors[0]);		

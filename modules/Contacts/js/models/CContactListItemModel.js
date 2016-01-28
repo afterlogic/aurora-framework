@@ -3,8 +3,8 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	AddressUtils = require('core/js/utils/Address.js')
+	AddressUtils = require('core/js/utils/Address.js'),
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -36,11 +36,11 @@ function CContactListItemModel()
  */
 CContactListItemModel.prototype.parse = function (oData)
 {
-	this.sId = Utils.pString(oData.Id);
-	this.sName = Utils.pString(oData.Name);
-	this.sEmail = Utils.pString(oData.Email);
+	this.sId = Types.pString(oData.Id);
+	this.sName = Types.pString(oData.Name);
+	this.sEmail = Types.pString(oData.Email);
 	
-	if (Utils.isNonEmptyArray(oData.Emails))
+	if (Types.isNonEmptyArray(oData.Emails))
 	{
 		this.aEmails = oData.Emails;
 	}

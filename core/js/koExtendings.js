@@ -3,7 +3,7 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -52,7 +52,7 @@ ko.extenders.autoResetToFalse = function (oTarget, iOption)
 			oTarget.iTimeout = window.setTimeout(function () {
 				oTarget.iTimeout = 0;
 				oTarget(false);
-			}, Utils.pInt(iOption));
+			}, Types.pInt(iOption));
 		}
 	});
 

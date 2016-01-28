@@ -1,12 +1,14 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	
@@ -104,7 +106,7 @@ CPhone.prototype.onGetScript = function (sStatus)
  */
 CPhone.prototype.showError = function (iErrCode)
 {
-	if (1 === Utils.pInt(iErrCode))
+	if (1 === Types.pInt(iErrCode))
 	{
 		Screens.showError(TextUtils.i18n('PHONE/ERROR_SERVER_UNAVAILABLE'), false, true);
 	}
@@ -174,7 +176,7 @@ CPhone.prototype.incomingCall = function (sNumber)
 {
 	this.action(Enums.PhoneAction.Incoming);
 
-	if (Utils.isNonEmptyString(sNumber))
+	if (Types.isNonEmptyString(sNumber))
 	{
 		var fShowAll = _.bind(function (sText) {
 			this.report(TextUtils.i18n('PHONE/INCOMING_CALL_FROM') + ' ' + sText);
@@ -195,7 +197,7 @@ CPhone.prototype.incomingCall = function (sNumber)
 		if (ModulesManager.isModuleIncluded('Contacts'))
 		{
 			ModulesManager.run('Contacts', 'requestUserByPhone', function (sUser) {
-				if (Utils.isNonEmptyString(sUser))
+				if (Types.isNonEmptyString(sUser))
 				{
 					fShowAll(sUser);
 				}

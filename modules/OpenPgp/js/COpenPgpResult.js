@@ -71,7 +71,7 @@ COpenPgpResult.prototype.addExceptionMessage = function (e, iErrorCode, sErrorMe
 		this.exceptions.push('' + (e.name || 'unknown') + ': ' + (e.message || ''));
 	}
 
-	if (!Utils.isUnd(iErrorCode))
+	if (iErrorCode)
 	{
 		this.addError(iErrorCode, sErrorMessage);
 	}

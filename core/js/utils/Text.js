@@ -3,7 +3,8 @@
 var
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	oSettings = require('core/js/Settings.js'),
 	
 	I18n = window.pSevenI18N,
@@ -43,31 +44,31 @@ TextUtils.htmlStartsWithBlockquote = function (sHtml)
  * @param {string} sKey
  * @param {?Object=} oValueList
  * @param {?string=} sDefaultValue
- * @param {number=} nPluralCount
+ * @param {number=} iPluralCount
  * 
  * @return {string}
  */
-TextUtils.i18n = function (sKey, oValueList, sDefaultValue, nPluralCount) {
+TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 	var
 		sValueName = '',
-		sResult = Utils.isUnd(I18n[sKey]) ? (Utils.isNormal(sDefaultValue) ? sDefaultValue : sKey) : I18n[sKey]
+		sResult = Types.isNonEmptyString(I18n[sKey]) ? I18n[sKey] : (Types.isNonEmptyString(sDefaultValue) ? sDefaultValue : sKey)
 	;
 
-	if (!Utils.isUnd(nPluralCount))
+	if (Types.isPositiveNumber(iPluralCount))
 	{
-		sResult = (function (nPluralCount, sResult) {
+		sResult = (function (iPluralCount, sResult) {
 			var
-				nPlural = TextUtils.getPlural(oSettings.Language, nPluralCount),
+				nPlural = TextUtils.getPlural(oSettings.Language, iPluralCount),
 				aPluralParts = sResult.split('|')
 			;
 
 			return (aPluralParts && aPluralParts[nPlural]) ? aPluralParts[nPlural] : (
 				aPluralParts && aPluralParts[0] ? aPluralParts[0] : sResult);
 
-		}(nPluralCount, sResult));
+		}(iPluralCount, sResult));
 	}
 
-	if (Utils.isNormal(oValueList))
+	if (oValueList)
 	{
 		for (sValueName in oValueList)
 		{
@@ -93,7 +94,7 @@ TextUtils.i18n = function (sKey, oValueList, sDefaultValue, nPluralCount) {
 TextUtils.getPlural = function (sLang, iNumber)
 {
 	var iResult = 0;
-	iNumber = Utils.pInt(iNumber);
+	iNumber = Types.pInt(iNumber);
 
 	switch (sLang)
 	{
@@ -223,19 +224,19 @@ TextUtils.getFriendlySize = function (iSizeInBytes)
 		iBytesInGb = iBytesInKb * iBytesInKb * iBytesInKb
 	;
 
-	iSizeInBytes = Utils.pInt(iSizeInBytes);
+	iSizeInBytes = Types.pInt(iSizeInBytes);
 
 	if (iSizeInBytes >= iBytesInGb)
 	{
-		return Utils.roundNumber(iSizeInBytes / iBytesInGb, 1) + TextUtils.i18n('MAIN/GIGABYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInGb, 1) + TextUtils.i18n('MAIN/GIGABYTES');
 	}
 	else if (iSizeInBytes >= iBytesInMb)
 	{
-		return Utils.roundNumber(iSizeInBytes / iBytesInMb, 1) + TextUtils.i18n('MAIN/MEGABYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInMb, 1) + TextUtils.i18n('MAIN/MEGABYTES');
 	}
 	else if (iSizeInBytes >= iBytesInKb)
 	{
-		return Utils.roundNumber(iSizeInBytes / iBytesInKb, 0) + TextUtils.i18n('MAIN/KILOBYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInKb, 0) + TextUtils.i18n('MAIN/KILOBYTES');
 	}
 
 	return iSizeInBytes + TextUtils.i18n('MAIN/BYTES');

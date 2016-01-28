@@ -171,8 +171,7 @@ CInformationView.prototype.selfHideError = function ()
  */
 CInformationView.prototype.hideError = function (bGray)
 {
-	bGray = Utils.isUnd(bGray) ? false : !!bGray;
-	if (bGray === this.gray())
+	if (this.gray() === !!bGray)
 	{
 		this.selfHideError();
 	}

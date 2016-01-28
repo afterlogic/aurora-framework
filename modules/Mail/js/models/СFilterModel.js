@@ -3,7 +3,7 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -30,11 +30,11 @@ CFilterModel.prototype.parse = function (oData)
 {
 	this.enable(!!oData.Enable);
 
-	this.field(Utils.pInt(oData.Field));
-	this.condition(Utils.pInt(oData.Condition));
-	this.filter(Utils.pString(oData.Filter));
-	this.action(Utils.pInt(oData.Action));
-	this.folder(Utils.pString(oData.FolderFullName));
+	this.field(Types.pInt(oData.Field));
+	this.condition(Types.pInt(oData.Condition));
+	this.filter(Types.pString(oData.Filter));
+	this.action(Types.pInt(oData.Action));
+	this.folder(Types.pString(oData.FolderFullName));
 	this.commit();
 };
 

@@ -6,9 +6,11 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
 	DateUtils = require('core/js/utils/Date.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
@@ -180,7 +182,6 @@ function CEditEventPopup()
 	this.dateEdit = ko.observable(false);
 	this.repeatEdit = ko.observable(false);
 	this.guestsEdit = ko.observable(false);
-	this.defaultOptionsAfterRender = Utils.defaultOptionsAfterRender;
 	this.isEditForm = ko.computed(function () {
 		return !!this.id();
 	}, this);
@@ -281,7 +282,7 @@ CEditEventPopup.prototype.onShow = function (oParameters)
 		sCalendarOwner = ''
 	;
 	
-	this.differenceInMinutes = null;
+	this.iDiffInMinutes = null;
 
 	this.FCMoment = oParameters.FCMoment;
 
@@ -1075,9 +1076,9 @@ CEditEventPopup.prototype.selectStartDate = function ()
 			oEndMomentDate = fFCMoment(oEndDate)
 		;
 		
-		if (Utils.isNormal(this.differenceInMinutes))
+		if (Types.isNumber(this.iDiffInMinutes))
 		{
-			oEndMomentDate = oStartMomentDate.clone().add(this.differenceInMinutes, 'minutes');
+			oEndMomentDate = oStartMomentDate.clone().add(this.iDiffInMinutes, 'minutes');
 			oEndDate = oEndMomentDate.toDate();
 			this.setEndDate(oEndMomentDate, true);
 			this.endTime(oEndMomentDate.format(this.timeFormatMoment));
@@ -1143,13 +1144,13 @@ CEditEventPopup.prototype.selectEndDate = function ()
 			oEndMomentDate = fFCMoment(oEndDate)
 		;
 		
-		this.differenceInMinutes = oEndMomentDate.diff(oStartMomentDate, 'minutes');
+		this.iDiffInMinutes = oEndMomentDate.diff(oStartMomentDate, 'minutes');
 		
-		if (this.differenceInMinutes < 0)
+		if (this.iDiffInMinutes < 0)
 		{
 			this.setStartDate(oEndMomentDate, true);
 			this.startTime(oEndMomentDate.format(this.timeFormatMoment));
-			this.differenceInMinutes = 0;
+			this.iDiffInMinutes = 0;
 		}
 
 		this.isEvOneDay(oEndMomentDate.diff(oStartMomentDate, 'days') === 0);
@@ -1221,7 +1222,7 @@ CEditEventPopup.prototype.setActualTime = function ()
 			oEndMomentDate.add((60 - oEndMomentDate.minutes()), 'minutes');
 		}
 		
-		this.differenceInMinutes = oEndMomentDate.diff(oStartMomentDate, 'minutes');
+		this.iDiffInMinutes = oEndMomentDate.diff(oStartMomentDate, 'minutes');
 		
 		this.setStartDate(oStartMomentDate, true);
 		this.startTime(oStartMomentDate.format(this.timeFormatMoment));

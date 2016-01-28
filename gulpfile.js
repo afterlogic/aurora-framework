@@ -166,7 +166,7 @@ for (name in cfg.paths.js)
 
 gulp.task('default', ['js:app']);
 
-gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext', 'js:message_newtab']);
+gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext', 'js:message_newtab', 'js:mobile']);
 
 gulp.task('files', ['js:app', 'js:files_pub']);
 

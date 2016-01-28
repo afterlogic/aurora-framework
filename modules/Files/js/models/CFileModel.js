@@ -6,7 +6,7 @@ var
 	
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Browser = require('core/js/Browser.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
@@ -154,14 +154,14 @@ CFileModel.prototype.parseLink = function (oData, sLinkUrl)
 {
 	this.isPopupItem(true);
 	this.linkUrl(sLinkUrl);
-	this.fileName(Utils.pString(oData.Name));
-	this.size(Utils.pInt(oData.Size));
-	this.linkType(Enums.has('FileStorageLinkType', Utils.pInt(oData.LinkType)) ? Utils.pInt(oData.LinkType) : Enums.FileStorageLinkType.Unknown);
+	this.fileName(Types.pString(oData.Name));
+	this.size(Types.pInt(oData.Size));
+	this.linkType(Enums.has('FileStorageLinkType', Types.pInt(oData.LinkType)) ? Types.pInt(oData.LinkType) : Enums.FileStorageLinkType.Unknown);
 	this.allowDownload(false);
 	if (oData.Thumb)
 	{
 		this.thumb(true);
-		this.thumbnailSrc(Utils.pString(oData.Thumb));
+		this.thumbnailSrc(Types.pString(oData.Thumb));
 	}
 };
 
@@ -184,11 +184,11 @@ CFileModel.prototype.parse = function (oData, bPopup)
 	this.isPopupItem(bPopup);
 		
 	this.isLink(!!oData.IsLink);
-	this.fileName(Utils.pString(oData.Name));
-	this.id(Utils.pString(oData.Id));
-	this.path(Utils.pString(oData.Path));
-	this.fullPath(Utils.pString(oData.FullPath));
-	this.storageType(Utils.pString(oData.Type));
+	this.fileName(Types.pString(oData.Name));
+	this.id(Types.pString(oData.Id));
+	this.path(Types.pString(oData.Path));
+	this.fullPath(Types.pString(oData.FullPath));
+	this.storageType(Types.pString(oData.Type));
 	this.shared(!!oData.Shared);
 	this.isExternal(!!oData.IsExternal);
 
@@ -196,17 +196,17 @@ CFileModel.prototype.parse = function (oData, bPopup)
 	
 	if (this.isLink())
 	{
-		this.linkUrl(Utils.pString(oData.LinkUrl));
-		this.linkType(Utils.pInt(oData.LinkType));
+		this.linkUrl(Types.pString(oData.LinkUrl));
+		this.linkType(Types.pInt(oData.LinkType));
 	}
 	
-	this.size(Utils.pInt(oData.Size));
+	this.size(Types.pInt(oData.Size));
 	oDateModel.parse(oData['LastModified']);
 	this.lastModified(oDateModel.getShortDate());
-	this.owner(Utils.pString(oData.Owner));
+	this.owner(Types.pString(oData.Owner));
 	this.thumb(!!oData.Thumb);
-	this.thumbnailExternalLink(Utils.pString(oData.ThumbnailLink));
-	this.hash(Utils.pString(oData.Hash));
+	this.thumbnailExternalLink(Types.pString(oData.ThumbnailLink));
+	this.hash(Types.pString(oData.Hash));
 	this.sHtmlEmbed(oData.OembedHtml ? oData.OembedHtml : '');
 	
 	if (this.thumb() && this.thumbnailExternalLink() === '')
@@ -214,7 +214,7 @@ CFileModel.prototype.parse = function (oData, bPopup)
 		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
 	}
 	
-	this.content(Utils.pString(oData.Content));
+	this.content(Types.pString(oData.Content));
 };
 
 /**

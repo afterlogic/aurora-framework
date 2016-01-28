@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
@@ -1070,7 +1071,7 @@ CContactsView.prototype.mailGroup = function (oGroup)
 		}, function (oResponse) {
 			var
 				aList = oResponse && oResponse.Result && oResponse.Result.List,
-				aEmails = Utils.isNonEmptyArray(aList) ? _.compact(_.map(aList, function (oRawContactItem) {
+				aEmails = Types.isNonEmptyArray(aList) ? _.compact(_.map(aList, function (oRawContactItem) {
 					var oContactItem = new CContactListItemModel();
 					oContactItem.parse(oRawContactItem);
 					return oContactItem.getFullEmail();
@@ -1200,7 +1201,7 @@ CContactsView.prototype.composeMessageToContact = function (oContact)
 CContactsView.prototype.composeMessage = function () {
 	var
 		aList = this.selector.listCheckedOrSelected(),
-		aEmails = Utils.isNonEmptyArray(aList) ? _.compact(_.map(aList, function (oItem) {
+		aEmails = Types.isNonEmptyArray(aList) ? _.compact(_.map(aList, function (oItem) {
 			return oItem.getFullEmail();
 		})) : [],
 		sEmails = aEmails.join(', ')
@@ -1271,8 +1272,8 @@ CContactsView.prototype.onGetContactsResponse = function (oResponse, oRequest)
 	if (oResult)
 	{
 		var
-			iContactCount = Utils.pInt(oResult.ContactCount),
-			aNewCollection = Utils.isNonEmptyArray(oResult.List) ? _.compact(_.map(oResult.List, function (oRawContactItem) {
+			iContactCount = Types.pInt(oResult.ContactCount),
+			aNewCollection = Types.isNonEmptyArray(oResult.List) ? _.compact(_.map(oResult.List, function (oRawContactItem) {
 				var oContactItem = new CContactListItemModel();
 				oContactItem.parse(oRawContactItem);
 				return oContactItem;
@@ -1287,7 +1288,7 @@ CContactsView.prototype.onGetContactsResponse = function (oResponse, oRequest)
 			}) : []
 		;
 
-		if (Utils.isNonEmptyArray(aCheckedIds))
+		if (Types.isNonEmptyArray(aCheckedIds))
 		{
 			_.each(aNewCollection, function (oContactItem) {
 				oContactItem.checked(-1 < $.inArray(oContactItem.Id(), aCheckedIds));
@@ -1377,7 +1378,7 @@ CContactsView.prototype.onCreateGroupResponse = function (oResponse, oRequest)
 			return [oItem.Id(), oItem.Global() ? '1' : '0'];
 		});
 		
-		this.executeAddContactsToGroupId(Utils.pString(oResponse.Result.IdGroup), aCheckedIds);
+		this.executeAddContactsToGroupId(Types.pString(oResponse.Result.IdGroup), aCheckedIds);
 
 		if (!App.isMobile())
 		{
@@ -1475,7 +1476,7 @@ CContactsView.prototype.onGetGroupResponse = function (oResponse, oRequest)
 	{
 		var oGroup = oResponse.Result;
 		this.oGroupModel
-			.idGroup(Utils.pString(oGroup.IdGroup))
+			.idGroup(Types.pString(oGroup.IdGroup))
 			.name(oGroup.Name)
 			.isOrganization(oGroup.IsOrganization)
 			.company(oGroup.Company)

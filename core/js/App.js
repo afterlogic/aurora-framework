@@ -6,7 +6,9 @@ var
 	ko = require('knockout'),
 	modernizr = require('modernizr'),
 	
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
+	
 	Settings = require('core/js/Settings.js'),
 	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
@@ -141,7 +143,7 @@ CApp.prototype.init = function ()
 		this.getAttendee = function (aAttendees) {
 			return Accounts.getAttendee(
 				_.map(aAttendees, function (mAttendee) {
-					return Utils.isNonEmptyString(mAttendee) ? mAttendee : mAttendee.email;
+					return Types.isString(mAttendee) ? mAttendee : mAttendee.email;
 				}, this)
 			);
 		};
@@ -202,7 +204,7 @@ CApp.prototype.onLogout = function ()
 	
 	Routing.finalize();
 	
-	if (Utils.isNonEmptyString(Settings.CustomLogoutUrl))
+	if (Types.isNonEmptyString(Settings.CustomLogoutUrl))
 	{
 		window.location.href = Settings.CustomLogoutUrl;
 	}

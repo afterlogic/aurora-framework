@@ -3,8 +3,10 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	Ajax = require('core/js/Ajax.js'),
@@ -24,7 +26,7 @@ function CRegisterView()
 	this.question = ko.observable('');
 	this.yourQuestion = ko.observable('');
 	this.answer = ko.observable('');
-	this.allowQuestionPart = Utils.isNonEmptyArray(Settings.RegistrationQuestions);
+	this.allowQuestionPart = Types.isNonEmptyArray(Settings.RegistrationQuestions);
 	this.visibleYourQuestion = ko.computed(function () {
 		return (this.question() === TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION'));
 	}, this);
@@ -37,7 +39,7 @@ function CRegisterView()
 	this.answerFocus = ko.observable(false);
 	this.yourQuestionFocus = ko.observable(false);
 	
-	this.domains = ko.observable(Utils.isNonEmptyArray(Settings.RegistrationDomains) ? Settings.RegistrationDomains : []);
+	this.domains = ko.observable(Types.isNonEmptyArray(Settings.RegistrationDomains) ? Settings.RegistrationDomains : []);
 	this.domain = ko.computed(function () {
 		return (this.domains().length === 1) ? this.domains()[0] : '';
 	}, this);

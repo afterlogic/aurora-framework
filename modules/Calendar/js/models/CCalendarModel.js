@@ -5,7 +5,9 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	Storage = require('core/js/Storage.js'),
 	
@@ -66,7 +68,7 @@ function CCalendarModel()
  */
 CCalendarModel.prototype.parseCssColor = function (sColor)
 {
-	var sCssColor = Utils.pString(sColor);
+	var sCssColor = Types.pString(sColor);
 	
 	if (sCssColor.length > 7)
 	{
@@ -95,11 +97,11 @@ CCalendarModel.prototype.parseCssColor = function (sColor)
  */
 CCalendarModel.prototype.parse = function (oData)
 {
-	this.id = Utils.pString(oData.Id);
+	this.id = Types.pString(oData.Id);
 	this.sSyncToken = oData.SyncToken;
-	this.name(Utils.pString(oData.Name));
-	this.description(Utils.pString(oData.Description));
-	this.owner(Utils.pString(oData.Owner));
+	this.name(Types.pString(oData.Name));
+	this.description(Types.pString(oData.Description));
+	this.owner(Types.pString(oData.Owner));
 	this.active(Storage.hasData(this.id) ? Storage.getData(this.id) : true);
 	this.isDefault = !!oData.IsDefault;
 	this.access(oData.Access);
@@ -109,26 +111,14 @@ CCalendarModel.prototype.parse = function (oData)
 	this.isPublic(!!oData.IsPublic);
 
 	this.color(this.parseCssColor(oData.Color));
-	this.url(Utils.pString(oData.Url));
-	this.exportUrl(Utils.getAppPath() + '?/Download/Calendar/DownloadCalendar/' + Utils.pString(oData.ExportHash));
-	this.pubUrl(Utils.getAppPath() + '?calendar-pub=' + Utils.pString(oData.PubHash));
+	this.url(Types.pString(oData.Url));
+	this.exportUrl(Utils.getAppPath() + '?/Download/Calendar/DownloadCalendar/' + Types.pString(oData.ExportHash));
+	this.pubUrl(Utils.getAppPath() + '?calendar-pub=' + Types.pString(oData.PubHash));
 	this.shares(oData.Shares || []);
 	
 	_.each(oData.Events, function (oEvent) {
 		this.addEvent(oEvent);
 	}, this);
-};
-
-/**
- * @param {string} sId
- * 
- * @return {?}
- */
-CCalendarModel.prototype.eventExists = function (sId)
-{
-	return _.find(this.events(), function(oEvent){ 
-		return (sId === oEvent.id); 
-	});
 };
 
 /**
@@ -162,9 +152,19 @@ CCalendarModel.prototype.addEvent = function (oEvent)
  */
 CCalendarModel.prototype.getEvent = function (sId)
 {
-	return _.find(this.events(), function(oEvent){ 
+	return _.find(this.events(), function (oEvent) { 
 		return oEvent.id === sId;
 	}, this);
+};
+
+/**
+ * @param {string} sId
+ * 
+ * @return {boolean}
+ */
+CCalendarModel.prototype.eventExists = function (sId)
+{
+	return !!this.getEvent(sId);
 };
 
 /**
@@ -186,11 +186,8 @@ CCalendarModel.prototype.getEvents = function (start, end)
 				iEventEnd <= iEnd && iEventEnd >= iStart 
 		;
 	}, this);
-	if (Utils.isUnd(aResult))
-	{
-		aResult = [];
-	}
-	return aResult;
+	
+	return aResult || [];
 };
 
 /**
@@ -205,15 +202,10 @@ CCalendarModel.prototype.removeEvent = function (sId)
 
 /**
  * @param {string} sUid
- * @param {boolean} bSkipExcluded
+ * @param {boolean=} bSkipExcluded = false
  */
 CCalendarModel.prototype.removeEventByUid = function (sUid, bSkipExcluded)
 {
-	if (Utils.isUnd(bSkipExcluded))
-	{
-		bSkipExcluded = false;
-	}
-	
 	this.events(_.filter(this.events(), function(oEvent){ 
 		return (oEvent.uid !== sUid && (!bSkipExcluded || !oEvent.excluded));
 	}, this));
@@ -290,7 +282,7 @@ CCalendarModel.prototype.parseEvent = function (oEvent)
 			return sItem !== 'fc-event-repeat'; 
 		});		
 	}
-	if (Utils.isNonEmptyArray(oEvent.attendees))
+	if (Types.isNonEmptyArray(oEvent.attendees))
 	{
 		oEvent.className.push('fc-event-appointment');
 	}

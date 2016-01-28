@@ -4,7 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Ajax = require('core/js/Ajax.js'),
@@ -29,7 +30,7 @@ function CHeaderView()
 			if (oTab.isCurrent)
 			{
 				oTab.isCurrent(Screens.currentScreen() === oTab.sName);
-				if (oTab.isCurrent() && Utils.isNonEmptyString(Routing.currentHash()))
+				if (oTab.isCurrent() && Types.isNonEmptyString(Routing.currentHash()))
 				{
 					oTab.hash('#' + Routing.currentHash());
 				}

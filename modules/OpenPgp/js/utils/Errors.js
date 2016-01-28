@@ -3,7 +3,6 @@
 var
 	_ = require('underscore'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Screens = require('core/js/Screens.js'),
 	
@@ -19,8 +18,8 @@ var
 ErrorsUtils.showPgpErrorByCode = function (oRes, sPgpAction, sDefaultError)
 {
 	var
-		aErrors = Utils.isNonEmptyArray(oRes.errors) ? oRes.errors : [],
-		aNotices = Utils.isNonEmptyArray(oRes.notices) ? oRes.notices : [],
+		aErrors = _.isArray(oRes.errors) ? oRes.errors : [],
+		aNotices = _.isArray(oRes.notices) ? oRes.notices : [],
 		aEmailsWithoutPublicKey = [],
 		aEmailsWithoutPrivateKey = [],
 		sError = '',

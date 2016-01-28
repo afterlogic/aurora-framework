@@ -5,6 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
@@ -79,7 +80,7 @@ CImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceiv
 
 	if (!bError)
 	{
-		iImportedCount = Utils.pInt(oResponse.Result.ImportedCount);
+		iImportedCount = Types.pInt(oResponse.Result.ImportedCount);
 
 		if (0 < iImportedCount)
 		{

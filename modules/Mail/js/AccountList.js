@@ -4,7 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	MainTab = App.isNewTab() && window.opener ? window.opener.MainTabMailMethods : null,
 	Routing = require('core/js/Routing.js'),
@@ -323,7 +324,7 @@ CAccountListModel.prototype.onGetFetchersResponse = function (oResponse, oReques
 		oDefaultAccount = this.getDefault()
 	;
 
-	if (Utils.isNonEmptyArray(oResponse.Result))
+	if (Types.isNonEmptyArray(oResponse.Result))
 	{
 		oFetcherList = new CFetcherListModel();
 		oFetcherList.parse(this.defaultId(), oResponse.Result);
@@ -348,7 +349,7 @@ CAccountListModel.prototype.onGetIdentitiesResponse = function (oResponse, oRequ
 {
 	var oIdentities = {};
 	
-	if (Utils.isNonEmptyArray(oResponse.Result))
+	if (Types.isNonEmptyArray(oResponse.Result))
 	{
 		_.each(oResponse.Result, function (oIdentityData) {
 			var
@@ -372,7 +373,7 @@ CAccountListModel.prototype.onGetIdentitiesResponse = function (oResponse, oRequ
 			oIdentity = new CIdentityModel()
 		;
 
-		if (!Utils.isNonEmptyArray(aIdentities))
+		if (!Types.isNonEmptyArray(aIdentities))
 		{
 			aIdentities = [];
 		}
@@ -430,7 +431,7 @@ CAccountListModel.prototype.getAllFullEmails = function ()
 		if (oAccount)
 		{
 			aFullEmails.push(oAccount.fullEmail());
-			if (oAccount.fetchers() && Utils.isNonEmptyArray(oAccount.fetchers().collection()))
+			if (oAccount.fetchers() && Types.isNonEmptyArray(oAccount.fetchers().collection()))
 			{
 				_.each(oAccount.fetchers().collection(), function (oFetcher) {
 					if (oFetcher.isOutgoingEnabled() && oFetcher.fullEmail() !== '')
@@ -439,7 +440,7 @@ CAccountListModel.prototype.getAllFullEmails = function ()
 					}
 				});
 			}
-			if (Utils.isNonEmptyArray(oAccount.identities()))
+			if (Types.isNonEmptyArray(oAccount.identities()))
 			{
 				_.each(oAccount.identities(), function (oIdentity) {
 					aFullEmails.push(oIdentity.fullEmail());
@@ -518,7 +519,7 @@ CAccountListModel.prototype.getAttendee = function (aEmails)
 	return sAttendee;
 };
 
-var AccountList = new CAccountListModel(Utils.pInt(window.pSevenAppData.Default));
+var AccountList = new CAccountListModel(Types.pInt(window.pSevenAppData.Default));
 
 AccountList.parse(window.pSevenAppData.Default, window.pSevenAppData.Accounts);
 

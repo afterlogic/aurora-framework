@@ -118,19 +118,17 @@ CCalendarListModel.prototype.hideOtherCalendars = function (iCalendarId)
  */
 CCalendarListModel.prototype.getCalendarById = function (sCalendarId)
 {
-	var oCalendar = _.find(this.collection(), function(oCalendar) {
+	return _.find(this.collection(), function(oCalendar) {
 		return oCalendar.id === sCalendarId;
 	}, this);
-	
-	return oCalendar;
 };
 
 /**
- * @param {Object} start
- * @param {Object} end
+ * @param {Object=} oStart
+ * @param {Object=} oEnd
  * @return {Array}
  */
-CCalendarListModel.prototype.getEvents = function (start, end)
+CCalendarListModel.prototype.getEvents = function (oStart, oEnd)
 {
 	var
 		aCalendarsEvents = [],
@@ -140,9 +138,9 @@ CCalendarListModel.prototype.getEvents = function (start, end)
 	_.each(this.collection(), function (oCalendar) {
 		if (oCalendar && oCalendar.active())
 		{
-			if (!Utils.isUnd(start) && !Utils.isUnd(end))
+			if (oStart && oEnd)
 			{
-				aCalendarEvents = oCalendar.getEvents(start, end);
+				aCalendarEvents = oCalendar.getEvents(oStart, oEnd);
 			}
 			else
 			{

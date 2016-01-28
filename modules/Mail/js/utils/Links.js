@@ -1,7 +1,8 @@
 'use strict';
 
 var
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	LinksUtils = {}
 ;
 
@@ -37,10 +38,10 @@ LinksUtils.getMailbox = function (sFolder, iPage, sUid, sSearch, sFilters)
 {
 	var	aResult = ['mail'];
 	
-	iPage = Utils.isNormal(iPage) ? Utils.pInt(iPage) : 1;
-	sUid = Utils.isNormal(sUid) ? Utils.pString(sUid) : '';
-	sSearch = Utils.isNormal(sSearch) ? Utils.pString(sSearch) : '';
-	sFilters = Utils.isNormal(sFilters) ? Utils.pString(sFilters) : '';
+	iPage = Types.pInt(iPage, 1);
+	sUid = Types.pString(sUid);
+	sSearch = Types.pString(sSearch);
+	sFilters = Types.pString(sFilters);
 
 	if (sFolder && '' !== sFolder)
 	{
@@ -95,14 +96,14 @@ LinksUtils.parseMailbox = function (aParams)
 		iIndex = 0
 	;
 	
-	if (Utils.isNonEmptyArray(aParams))
+	if (Types.isNonEmptyArray(aParams))
 	{
-		sFolder = Utils.pString(aParams[iIndex]);
+		sFolder = Types.pString(aParams[iIndex]);
 		iIndex++;
 
 		if (aParams.length > iIndex)
 		{
-			sTemp = Utils.pString(aParams[iIndex]);
+			sTemp = Types.pString(aParams[iIndex]);
 			if (sTemp === 'filter:' + Enums.FolderFilter.Flagged)
 			{
 				sFilters = Enums.FolderFilter.Flagged;
@@ -117,10 +118,10 @@ LinksUtils.parseMailbox = function (aParams)
 
 		if (aParams.length > iIndex)
 		{
-			sTemp = Utils.pString(aParams[iIndex]);
+			sTemp = Types.pString(aParams[iIndex]);
 			if (IsPageParam(sTemp))
 			{
-				iPage = Utils.pInt(sTemp.substr(1));
+				iPage = Types.pInt(sTemp.substr(1));
 				if (iPage <= 0)
 				{
 					iPage = 1;
@@ -131,7 +132,7 @@ LinksUtils.parseMailbox = function (aParams)
 		
 		if (aParams.length > iIndex)
 		{
-			sTemp = Utils.pString(aParams[iIndex]);
+			sTemp = Types.pString(aParams[iIndex]);
 			if (IsMsgParam(sTemp))
 			{
 				sUid = sTemp.substr(3);
@@ -141,7 +142,7 @@ LinksUtils.parseMailbox = function (aParams)
 
 		if (aParams.length > iIndex)
 		{
-			sSearch = Utils.pString(aParams[iIndex]);
+			sSearch = Types.pString(aParams[iIndex]);
 		}
 	}
 	
@@ -201,7 +202,7 @@ LinksUtils.getComposeWithToField = function (sTo)
 LinksUtils.parseToAddr = function (mToAddr)
 {
 	var
-		sToAddr = decodeURI(Utils.pString(mToAddr)),
+		sToAddr = decodeURI(Types.pString(mToAddr)),
 		bHasMailTo = sToAddr.indexOf('mailto:') !== -1,
 		aMailto = [],
 		aMessageParts = [],

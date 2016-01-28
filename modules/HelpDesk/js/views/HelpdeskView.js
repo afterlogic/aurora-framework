@@ -7,6 +7,7 @@ var
 	
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
@@ -622,7 +623,7 @@ CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 		iIndex = 0,
 		iLen = 0,
 		oSelectedItem = this.selectedItem(),
-		sSelectedId = oSelectedItem ? Utils.pString(oSelectedItem.Id) : '',
+		sSelectedId = oSelectedItem ? Types.pString(oSelectedItem.Id) : '',
 		aList = [],
 		oObject = null,
 		oThreadForSelect = null,
@@ -643,9 +644,9 @@ CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 			{
 				oObject = new CThreadListModel();
 				oObject.parse(aThreadList[iIndex]);
-				oObject.OwnerIsMe = Utils.pString(oObject.IdOwner);
+				oObject.OwnerIsMe = Types.pString(oObject.IdOwner);
 
-				if (sSelectedId === Utils.pString(oObject.Id))
+				if (sSelectedId === Types.pString(oObject.Id))
 				{
 					oSelectedItem.postsCount(oObject.postsCount());
 
@@ -670,7 +671,7 @@ CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 		this.threads(aList);
 		this.setUnseenCount();
 
-		this.oPageSwitcher.setCount(Utils.pInt(oResponse.Result.ItemsCount));
+		this.oPageSwitcher.setCount(Types.pInt(oResponse.Result.ItemsCount));
 
 		if (Settings.HelpdeskThreadId)
 		{
@@ -725,7 +726,7 @@ CHelpdeskView.prototype.onGetThreadResponse = function (oResponse, oRequest)
 	if (oResponse.Result)
 	{
 		oItem.parse(oResponse.Result);
-		oItem.OwnerIsMe = Utils.pString(oItem.IdOwner);
+		oItem.OwnerIsMe = Types.pString(oItem.IdOwner);
 		this.onItemSelect(oItem);
 	}
 };
@@ -785,7 +786,7 @@ CHelpdeskView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 	{
 		if (this.selectedItem() && oResult.ThreadId === this.selectedItem().Id)
 		{
-			this.selectedItem().postsCount(Utils.pInt(oResult.ItemsCount));
+			this.selectedItem().postsCount(Types.pInt(oResult.ItemsCount));
 
 			for (iLen = aPostList.length; iIndex < iLen; iIndex++)
 			{

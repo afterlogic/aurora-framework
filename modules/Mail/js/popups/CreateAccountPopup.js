@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
@@ -230,7 +230,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 	else
 	{
 		var
-			iAccountId = Utils.pInt(oResponse.Result.IdAccount),
+			iAccountId = Types.pInt(oResponse.Result.IdAccount),
 			oAccount = Accounts.getAccount(iAccountId) || new CAccountModel()
 		;
 		

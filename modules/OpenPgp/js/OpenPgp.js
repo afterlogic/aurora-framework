@@ -5,7 +5,8 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	UserSettings = require('core/js/Settings.js'),
 	
 	Pgp = require('modules/OpenPgp/js/vendors/openpgp.js'),
@@ -118,7 +119,7 @@ COpenPgp.prototype.decryptKeyHelper = function (oResult, oKey, sPassword, sKeyEm
 	{
 		try
 		{
-			oKey.decrypt(Utils.pString(sPassword));
+			oKey.decrypt(Types.pString(sPassword));
 			if (!oKey || !oKey.primaryKey || !oKey.primaryKey.isDecrypted)
 			{
 				oResult.addError(Enums.OpenPgpErrors.KeyIsNotDecodedError, sKeyEmail || '');
@@ -228,7 +229,7 @@ COpenPgp.prototype.generateKey = function (sUserID, sPassword, nKeyLength)
 	{
 		mKeyPair = Pgp.generateKeyPair({
 			'userId': sUserID,
-			'numBits': Utils.pInt(nKeyLength),
+			'numBits': Types.pInt(nKeyLength),
 			'passphrase': $.trim(sPassword)
 		});
 	}

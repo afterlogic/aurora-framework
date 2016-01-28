@@ -5,7 +5,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	Browser = require('core/js/Browser.js')
 ;
@@ -31,10 +33,10 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.fDeleteCallback = fDeleteCallback || function() {};
 	this.fDblClickCallback = (!App.isMobile() && fDblClickCallback) ? fDblClickCallback : function() {};
 	this.fEnterCallback = fEnterCallback || function() {};
-	this.bResetCheckedOnClick = Utils.isUnd(bResetCheckedOnClick) ? false : !!bResetCheckedOnClick;
-	this.bCheckOnSelect = Utils.isUnd(bCheckOnSelect) ? false : !!bCheckOnSelect;
-	this.bUnselectOnCtrl = Utils.isUnd(bUnselectOnCtrl) ? false : !!bUnselectOnCtrl;
-	this.bDisableMultiplySelection = Utils.isUnd(bDisableMultiplySelection) ? false : !!bDisableMultiplySelection;
+	this.bResetCheckedOnClick = !!bResetCheckedOnClick;
+	this.bCheckOnSelect = !!bCheckOnSelect;
+	this.bUnselectOnCtrl = !!bUnselectOnCtrl;
+	this.bDisableMultiplySelection = !!bDisableMultiplySelection;
 
 	this.useKeyboardKeys = ko.observable(false);
 
@@ -71,7 +73,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 		}
 		else
 		{
-			this.iFactor = Utils.pInt(this.multiplyLineFactor);
+			this.iFactor = Types.pInt(this.multiplyLineFactor);
 		}
 
 		this.KeyUp = Enums.Key.Up;
@@ -442,7 +444,7 @@ CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectabel
 
 			if (bClick)
 			{
-				self.onSelect(oItem);
+				self.onSelect(oItem, true);
 				self.scrollToSelected();
 			}
 		}
@@ -720,7 +722,7 @@ CSelector.prototype.clickNewSelectPosition = function (iEventKeyCode, bShiftKey)
 
 			this.iTimer = window.setTimeout(function () {
 				self.iTimer = 0;
-				self.onSelect(oResult);
+				self.onSelect(oResult, true);
 			}, iTimeout);
 
 			this.scrollToSelected();
@@ -834,11 +836,10 @@ CSelector.prototype.selectionFunc = function (oItem)
 
 /**
  * @param {Object} oItem
- * @param {boolean=} bCheckBefore = true
+ * @param {boolean} bCheckBefore
  */
 CSelector.prototype.onSelect = function (oItem, bCheckBefore)
 {
-	bCheckBefore = Utils.isUnd(bCheckBefore) ? true : !!bCheckBefore;
 	if (this.fBeforeSelectCallback && bCheckBefore)
 	{
 		var self = this;

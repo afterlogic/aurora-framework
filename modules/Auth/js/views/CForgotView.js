@@ -5,6 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
@@ -108,7 +109,7 @@ CForgotView.prototype.onAccountGetForgotQuestionResponse = function (oResponse, 
 	}
 	else
 	{
-		sQuestion = Utils.pString(oResponse.Result.Question);
+		sQuestion = Types.pString(oResponse.Result.Question);
 		
 		if (sQuestion === '')
 		{

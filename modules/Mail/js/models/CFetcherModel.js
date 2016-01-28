@@ -3,8 +3,8 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	AddressUtils = require('core/js/utils/Address.js')
+	AddressUtils = require('core/js/utils/Address.js'),
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -44,23 +44,23 @@ function CFetcherModel()
  */
 CFetcherModel.prototype.parse = function (oData)
 {
-	this.id(Utils.pInt(oData.IdFetcher));
-	this.accountId(Utils.pInt(oData.IdAccount));
+	this.id(Types.pInt(oData.IdFetcher));
+	this.accountId(Types.pInt(oData.IdAccount));
 	this.isEnabled(!!oData.IsEnabled);
 	this.isLocked(!!oData.IsLocked);
-	this.email(Utils.pString(oData.Email));
-	this.userName(Utils.pString(oData.Name));
-	this.folder(Utils.pString(oData.Folder));
+	this.email(Types.pString(oData.Email));
+	this.userName(Types.pString(oData.Name));
+	this.folder(Types.pString(oData.Folder));
 	this.useSignature(!!oData.SignatureOptions);
-	this.signature(Utils.pString(oData.Signature));
-	this.incomingMailServer(Utils.pString(oData.IncomingMailServer));
-	this.incomingMailPort(Utils.pInt(oData.IncomingMailPort));
+	this.signature(Types.pString(oData.Signature));
+	this.incomingMailServer(Types.pString(oData.IncomingMailServer));
+	this.incomingMailPort(Types.pInt(oData.IncomingMailPort));
 	this.incomingMailSsl(!!oData.IncomingMailSsl);
-	this.incomingMailLogin(Utils.pString(oData.IncomingMailLogin));
+	this.incomingMailLogin(Types.pString(oData.IncomingMailLogin));
 	this.leaveMessagesOnServer(!!oData.LeaveMessagesOnServer);
 	this.isOutgoingEnabled(!!oData.IsOutgoingEnabled);
-	this.outgoingMailServer(Utils.pString(oData.OutgoingMailServer));
-	this.outgoingMailPort(Utils.pInt(oData.OutgoingMailPort));
+	this.outgoingMailServer(Types.pString(oData.OutgoingMailServer));
+	this.outgoingMailPort(Types.pInt(oData.OutgoingMailPort));
 	this.outgoingMailSsl(!!oData.OutgoingMailSsl);
 	this.outgoingMailAuth(!!oData.OutgoingMailAuth);
 };

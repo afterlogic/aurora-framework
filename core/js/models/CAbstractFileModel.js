@@ -7,6 +7,7 @@ var
 	
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Ajax = require('core/js/Ajax.js'),
@@ -191,20 +192,20 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 {
 	if (oData['@Object'] === this.dataObjectName)
 	{
-		this.fileName(Utils.pString(oData.FileName));
-		this.tempName(Utils.pString(oData.TempName));
+		this.fileName(Types.pString(oData.FileName));
+		this.tempName(Types.pString(oData.TempName));
 		if (this.tempName() === '')
 		{
 			this.tempName(this.fileName());
 		}
 
-		this.type(Utils.pString(oData.MimeType));
+		this.type(Types.pString(oData.MimeType));
 		this.size(oData.EstimatedSize ? parseInt(oData.EstimatedSize, 10) : parseInt(oData.SizeInBytes, 10));
-		this.content(Utils.pString(oData.Content));
+		this.content(Types.pString(oData.Content));
 
 		this.thumb(!!oData.Thumb);
 
-		this.hash(Utils.pString(oData.Hash));
+		this.hash(Types.pString(oData.Hash));
 		this.accountId(iAccountId);
 		this.allowExpandSubFiles(!!oData.Expand);
 		
@@ -249,7 +250,7 @@ CAbstractFileModel.prototype.downloadFile = function ()
 CAbstractFileModel.prototype.onFileExpandResponse = function (oResponse, oRequest)
 {
 	this.subFiles([]);
-	if (Utils.isNonEmptyArray(oResponse.Result))
+	if (Types.isNonEmptyArray(oResponse.Result))
 	{
 		_.each(oResponse.Result, _.bind(function (oRawFile) {
 			var oFile = this.getInstance();
@@ -346,7 +347,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
 	var oWin = null;
 	
-	if (Utils.isUnd(sUrl))
+	if (!Types.isNonEmptyString(sUrl))
 	{
 		sUrl = Utils.getAppPath() + this.viewLink();
 	}
@@ -407,9 +408,9 @@ CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
  */
 CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData)
 {
-	this.fileName(Utils.pString(oFileData['FileName']));
-	this.type(Utils.pString(oFileData['Type']));
-	this.size(Utils.pInt(oFileData['Size']));
+	this.fileName(Types.pString(oFileData['FileName']));
+	this.type(Types.pString(oFileData['Type']));
+	this.size(Types.pInt(oFileData['Size']));
 
 	this.uploadUid(sFileUid);
 	this.uploaded(false);

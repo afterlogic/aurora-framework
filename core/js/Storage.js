@@ -3,7 +3,7 @@
 var
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -41,7 +41,7 @@ CStorage.prototype.getData = function (sKey)
 {
 	var sValue = this.bHtml5 ? localStorage.getItem(sKey) : $.cookie(sKey);
 	
-	return Utils.isNonEmptyString(sValue) ? $.parseJSON(sValue) : '';
+	return Types.isNonEmptyString(sValue) ? $.parseJSON(sValue) : '';
 };
 
 /**

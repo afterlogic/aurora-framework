@@ -5,8 +5,10 @@ var
 	ko = require('knockout'),
 	
 	AddressUtils = require('core/js/utils/Address.js'),
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	App = null,
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Api = require('core/js/Api.js'),
@@ -173,8 +175,8 @@ CAccountModel.prototype.onGetQuotaResponse = function (oResult, oRequest)
 {
 	if (_.isArray(oResult.Result) && 1 < oResult.Result.length)
 	{
-		this.quota(Utils.pInt(oResult.Result[1]));
-		this.usedSpace(Utils.pInt(oResult.Result[0]));
+		this.quota(Types.pInt(oResult.Result[1]));
+		this.usedSpace(Types.pInt(oResult.Result[0]));
 		
 		this.requireCache();
 		Cache.quotaChangeTrigger(!Cache.quotaChangeTrigger());
@@ -198,7 +200,7 @@ CAccountModel.prototype.updateQuotaParams = function ()
  */
 CAccountModel.prototype.parse = function (oData, iDefaultId)
 {
-	this.init(parseInt(oData.AccountID, 10), Utils.pString(oData.Email), Utils.pString(oData.FriendlyName));
+	this.init(parseInt(oData.AccountID, 10), Types.pString(oData.Email), Types.pString(oData.FriendlyName));
 		
 	this.allowMail(!!oData.AllowMail);
 
@@ -216,7 +218,7 @@ CAccountModel.prototype.parse = function (oData, iDefaultId)
 CAccountModel.prototype.parseSignature = function (oData)
 {
 	this.useSignature(!!oData.Options);
-	this.signature(Utils.pString(oData.Signature));
+	this.signature(Types.pString(oData.Signature));
 };
 
 CAccountModel.prototype.requestExtensions = function ()
@@ -300,58 +302,20 @@ CAccountModel.prototype.updateExtended = function (ExtendedData)
 	{
 		this.isExtended(true);
 		
-		if (Utils.isNormal(ExtendedData.FriendlyName))
-		{
-			this.friendlyName(ExtendedData.FriendlyName);
-		}
-		if (Utils.isNormal(ExtendedData.IncomingMailLogin))
-		{
-			this.incomingMailLogin(ExtendedData.IncomingMailLogin);
-		}
-		if (Utils.isNormal(ExtendedData.IncomingMailServer))
-		{
-			this.incomingMailServer(ExtendedData.IncomingMailServer);
-		}
-		if (Utils.isNormal(ExtendedData.IncomingMailPort))
-		{
-			this.incomingMailPort(ExtendedData.IncomingMailPort); 
-		}		
-		if (Utils.isNormal(ExtendedData.IncomingMailSsl))
-		{
-			this.incomingMailSsl(!!ExtendedData.IncomingMailSsl);
-		}
-		if (Utils.isNormal(ExtendedData.IsInternal))
-		{
-			this.isInternal(ExtendedData.IsInternal);
-		}
-		if (Utils.isNormal(ExtendedData.IsLinked))
-		{
-			this.isLinked(ExtendedData.IsLinked);
-		}
-		if (Utils.isNormal(ExtendedData.IsDefault))
-		{
-			this.isDefault(ExtendedData.IsDefault);
-		}
-		if (Utils.isNormal(ExtendedData.OutgoingMailAuth))
-		{
-			this.outgoingMailAuth(ExtendedData.OutgoingMailAuth);
-		}
-		if (Utils.isNormal(ExtendedData.OutgoingMailLogin))
-		{
-			this.outgoingMailLogin(ExtendedData.OutgoingMailLogin);
-		}
-		if (Utils.isNormal(ExtendedData.OutgoingMailServer))
-		{
-			this.outgoingMailServer(ExtendedData.OutgoingMailServer);
-		}
-		if (Utils.isNormal(ExtendedData.OutgoingMailPort))
-		{
-			this.outgoingMailPort(ExtendedData.OutgoingMailPort);
-		}
-		if (Utils.isNormal(ExtendedData.OutgoingMailSsl))
-		{
-			this.outgoingMailSsl(!!ExtendedData.OutgoingMailSsl);
-		}
+		this.friendlyName(Types.pString(ExtendedData.FriendlyName));
+		this.incomingMailLogin(Types.pString(ExtendedData.IncomingMailLogin));
+		this.incomingMailServer(Types.pString(ExtendedData.IncomingMailServer));
+		this.incomingMailPort(Types.pInt(ExtendedData.IncomingMailPort));
+		this.incomingMailSsl(!!ExtendedData.IncomingMailSsl);
+		this.isInternal(!!ExtendedData.IsInternal);
+		this.isLinked(!!ExtendedData.IsLinked);
+		this.isDefault(!!ExtendedData.IsDefault);
+		this.outgoingMailAuth(!!ExtendedData.OutgoingMailAuth);
+		this.outgoingMailLogin(Types.pString(ExtendedData.OutgoingMailLogin));
+		this.outgoingMailServer(Types.pString(ExtendedData.OutgoingMailServer));
+		this.outgoingMailPort(Types.pInt(ExtendedData.OutgoingMailPort));
+		this.outgoingMailSsl(!!ExtendedData.OutgoingMailSsl);
+		
 		this.setExtensions(ExtendedData.Extensions);
 	}
 };

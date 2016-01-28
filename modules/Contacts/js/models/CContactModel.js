@@ -9,7 +9,8 @@ var
 	AddressUtils = require('core/js/utils/Address.js'),
 	DateUtils = require('core/js/utils/Date.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	CDateModel = require('core/js/models/CDateModel.js')
 ;
@@ -58,7 +59,7 @@ function CContactModel()
 	this.mainPrimaryEmail = ko.computed({
 		'read': this.primaryEmail,
 		'write': function (mValue) {
-			if (!Utils.isUnd(mValue) && 0 <= $.inArray(mValue, [Enums.ContactEmailType.Personal, Enums.ContactEmailType.Business, Enums.ContactEmailType.Other]))
+			if (mValue && 0 <= $.inArray(mValue, [Enums.ContactEmailType.Personal, Enums.ContactEmailType.Business, Enums.ContactEmailType.Other]))
 			{
 				this.primaryEmail(mValue);
 			}
@@ -73,7 +74,7 @@ function CContactModel()
 	this.mainPrimaryPhone = ko.computed({
 		'read': this.primaryPhone,
 		'write': function (mValue) {
-			if (!Utils.isUnd(mValue) && 0 <= $.inArray(mValue, [Enums.ContactPhoneType.Mobile, Enums.ContactPhoneType.Personal, Enums.ContactPhoneType.Business]))
+			if (mValue && 0 <= $.inArray(mValue, [Enums.ContactPhoneType.Mobile, Enums.ContactPhoneType.Personal, Enums.ContactPhoneType.Business]))
 			{
 				this.primaryPhone(mValue);
 			}
@@ -88,7 +89,7 @@ function CContactModel()
 	this.mainPrimaryAddress = ko.computed({
 		'read': this.primaryAddress,
 		'write': function (mValue) {
-			if (!Utils.isUnd(mValue) && 0 <= $.inArray(mValue, [Enums.ContactAddressType.Personal, Enums.ContactAddressType.Business]))
+			if (mValue && 0 <= $.inArray(mValue, [Enums.ContactAddressType.Personal, Enums.ContactAddressType.Business]))
 			{
 				this.primaryAddress(mValue);
 			}
@@ -147,9 +148,9 @@ function CContactModel()
 	this.otherBirthday = ko.computed(function () {
 		var
 			sBirthday = '',
-			iYear = Utils.pInt(this.otherBirthdayYear()),
-			iMonth = Utils.pInt(this.otherBirthdayMonth()),
-			iDay = Utils.pInt(this.otherBirthdayDay()),
+			iYear = Types.pInt(this.otherBirthdayYear()),
+			iMonth = Types.pInt(this.otherBirthdayMonth()),
+			iDay = Types.pInt(this.otherBirthdayDay()),
 			oDateModel = new CDateModel()
 		;
 		
@@ -388,7 +389,7 @@ function CContactModel()
 
 		var
 			iIndex = 1,
-			iLen = Utils.pInt(DateUtils.daysInMonth(this.otherBirthdayMonth(), this.otherBirthdayYear())),
+			iLen = Types.pInt(DateUtils.daysInMonth(this.otherBirthdayMonth(), this.otherBirthdayYear())),
 			sIndex = '',
 			aList = [{'text': TextUtils.i18n('DATETIME/DAY'), 'value': '0'}]
 		;
@@ -597,22 +598,22 @@ CContactModel.prototype.parse = function (oData)
 		iPrimaryAddress = 0
 	;
 
-	this.idContact(Utils.pString(oData.IdContact));
-	this.idUser(Utils.pString(oData.IdUser));
+	this.idContact(Types.pString(oData.IdContact));
+	this.idUser(Types.pString(oData.IdUser));
 
 	this.global(!!oData.Global);
 	this.itsMe(!!oData.ItsMe);
 	this.readOnly(!!oData.ReadOnly);
 
-	this.displayName(Utils.pString(oData.FullName));
-	this.firstName(Utils.pString(oData.FirstName));
-	this.lastName(Utils.pString(oData.LastName));
-	this.nickName(Utils.pString(oData.NickName));
+	this.displayName(Types.pString(oData.FullName));
+	this.firstName(Types.pString(oData.FirstName));
+	this.lastName(Types.pString(oData.LastName));
+	this.nickName(Types.pString(oData.NickName));
 
-	this.skype(Utils.pString(oData.Skype));
-	this.facebook(Utils.pString(oData.Facebook));
+	this.skype(Types.pString(oData.Skype));
+	this.facebook(Types.pString(oData.Facebook));
 
-	iPrimaryEmail = Utils.pInt(oData.PrimaryEmail);
+	iPrimaryEmail = Types.pInt(oData.PrimaryEmail);
 	switch (iPrimaryEmail)
 	{
 		case 1:
@@ -628,7 +629,7 @@ CContactModel.prototype.parse = function (oData)
 	}
 	this.primaryEmail(iPrimaryEmail);
 
-	iPrimaryPhone = Utils.pInt(oData.PrimaryPhone);
+	iPrimaryPhone = Types.pInt(oData.PrimaryPhone);
 	switch (iPrimaryPhone)
 	{
 		case 2:
@@ -644,7 +645,7 @@ CContactModel.prototype.parse = function (oData)
 	}
 	this.primaryPhone(iPrimaryPhone);
 
-	iPrimaryAddress = Utils.pInt(oData.PrimaryAddress);
+	iPrimaryAddress = Types.pInt(oData.PrimaryAddress);
 	switch (iPrimaryAddress)
 	{
 		case 1:
@@ -657,38 +658,38 @@ CContactModel.prototype.parse = function (oData)
 	}
 	this.primaryAddress(iPrimaryAddress);
 
-	this.personalEmail(Utils.pString(oData.HomeEmail));
-	this.personalStreetAddress(Utils.pString(oData.HomeStreet));
-	this.personalCity(Utils.pString(oData.HomeCity));
-	this.personalState(Utils.pString(oData.HomeState));
-	this.personalZipCode(Utils.pString(oData.HomeZip));
-	this.personalCountry(Utils.pString(oData.HomeCountry));
-	this.personalWeb(Utils.pString(oData.HomeWeb));
-	this.personalFax(Utils.pString(oData.HomeFax));
-	this.personalPhone(Utils.pString(oData.HomePhone));
-	this.personalMobile(Utils.pString(oData.HomeMobile));
+	this.personalEmail(Types.pString(oData.HomeEmail));
+	this.personalStreetAddress(Types.pString(oData.HomeStreet));
+	this.personalCity(Types.pString(oData.HomeCity));
+	this.personalState(Types.pString(oData.HomeState));
+	this.personalZipCode(Types.pString(oData.HomeZip));
+	this.personalCountry(Types.pString(oData.HomeCountry));
+	this.personalWeb(Types.pString(oData.HomeWeb));
+	this.personalFax(Types.pString(oData.HomeFax));
+	this.personalPhone(Types.pString(oData.HomePhone));
+	this.personalMobile(Types.pString(oData.HomeMobile));
 
-	this.businessEmail(Utils.pString(oData.BusinessEmail));
-	this.businessCompany(Utils.pString(oData.BusinessCompany));
-	this.businessDepartment(Utils.pString(oData.BusinessDepartment));
-	this.businessJob(Utils.pString(oData.BusinessJobTitle));
-	this.businessOffice(Utils.pString(oData.BusinessOffice));
-	this.businessStreetAddress(Utils.pString(oData.BusinessStreet));
-	this.businessCity(Utils.pString(oData.BusinessCity));
-	this.businessState(Utils.pString(oData.BusinessState));
-	this.businessZipCode(Utils.pString(oData.BusinessZip));
-	this.businessCountry(Utils.pString(oData.BusinessCountry));
-	this.businessWeb(Utils.pString(oData.BusinessWeb));
-	this.businessFax(Utils.pString(oData.BusinessFax));
-	this.businessPhone(Utils.pString(oData.BusinessPhone));
+	this.businessEmail(Types.pString(oData.BusinessEmail));
+	this.businessCompany(Types.pString(oData.BusinessCompany));
+	this.businessDepartment(Types.pString(oData.BusinessDepartment));
+	this.businessJob(Types.pString(oData.BusinessJobTitle));
+	this.businessOffice(Types.pString(oData.BusinessOffice));
+	this.businessStreetAddress(Types.pString(oData.BusinessStreet));
+	this.businessCity(Types.pString(oData.BusinessCity));
+	this.businessState(Types.pString(oData.BusinessState));
+	this.businessZipCode(Types.pString(oData.BusinessZip));
+	this.businessCountry(Types.pString(oData.BusinessCountry));
+	this.businessWeb(Types.pString(oData.BusinessWeb));
+	this.businessFax(Types.pString(oData.BusinessFax));
+	this.businessPhone(Types.pString(oData.BusinessPhone));
 
-	this.otherEmail(Utils.pString(oData.OtherEmail));
-	this.otherBirthdayMonth(Utils.pString(oData.BirthdayMonth));
-	this.otherBirthdayDay(Utils.pString(oData.BirthdayDay));
-	this.otherBirthdayYear(Utils.pString(oData.BirthdayYear));
-	this.otherNotes(Utils.pString(oData.Notes));
+	this.otherEmail(Types.pString(oData.OtherEmail));
+	this.otherBirthdayMonth(Types.pString(oData.BirthdayMonth));
+	this.otherBirthdayDay(Types.pString(oData.BirthdayDay));
+	this.otherBirthdayYear(Types.pString(oData.BirthdayYear));
+	this.otherNotes(Types.pString(oData.Notes));
 
-	this.etag(Utils.pString(oData.ETag));
+	this.etag(Types.pString(oData.ETag));
 
 	this.sharedToAll(!!oData.SharedToAll);
 
@@ -696,7 +697,7 @@ CContactModel.prototype.parse = function (oData)
 	{
 		this.groups(
 			_.map(oData.GroupsIds, function (sItem) {
-				return Utils.pString(sItem);
+				return Types.pString(sItem);
 			})
 		);
 	}
@@ -708,7 +709,7 @@ CContactModel.prototype.parse = function (oData)
  */
 CContactModel.prototype.getFullEmail = function (sEmail)
 {
-	if (!Utils.isNonEmptyString(sEmail))
+	if (!Types.isNonEmptyString(sEmail))
 	{
 		sEmail = this.email();
 	}

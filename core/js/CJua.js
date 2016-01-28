@@ -5,6 +5,8 @@ var
 	_ = require('underscore'),
 
 	queue = require('core/js/vendors/queue.js'),
+	
+	Types = require('core/js/utils/Types.js'),
 
 	iDefLimit = 20
 ;
@@ -92,24 +94,6 @@ function setValue(oOwner, sPublicName, mObject)
 }
 
 /**
- * @param {*} aData
- * @return {boolean}
- */
-function isNonEmptyArray(aData)
-{
-	return aData && aData.length && 0 < aData.length ? true : false;
-}
-
-/**
- * @param {*} mValue
- * @return {number}
- */
-function pInt(mValue)
-{
-	return parseInt(mValue || 0, 10);
-}
-
-/**
  * @param {Function} fFunction
  * @param {Object=} oScope
  * @return {Function}
@@ -133,7 +117,7 @@ function fakeMd5(iLen)
 		sLine = '0123456789abcdefghijklmnopqrstuvwxyz'
 	;
 
-	iLen = isUndefined(iLen) ? 32 : pInt(iLen);
+	iLen = isUndefined(iLen) ? 32 : Types.pInt(iLen);
 
 	while (sResult.length < iLen)
 	{
@@ -224,7 +208,7 @@ function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop
 					if (oDirReader && oDirReader['readEntries'])
 					{
 						oDirReader['readEntries'](function (aEntries) {
-							if (aEntries && isNonEmptyArray(aEntries))
+							if (aEntries && Types.isNonEmptyArray(aEntries))
 							{
 								for (iIndex = 0, iLen = aEntries.length; iIndex < iLen; iIndex++)
 								{
@@ -241,7 +225,7 @@ function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop
 	bAllowFolderDragAndDrop = isUndefined(bAllowFolderDragAndDrop) ? true : !!bAllowFolderDragAndDrop;
 
 	bEntry = isUndefined(bEntry) ? false : !!bEntry;
-	iLimit = isUndefined(iLimit) ? iDefLimit : pInt(iLimit);
+	iLimit = isUndefined(iLimit) ? iDefLimit : Types.pInt(iLimit);
 	iInputLimit = iLimit;
 	bUseLimit = 0 < iLimit;
 
@@ -886,7 +870,7 @@ function CJua(oOptions)
 		'hiddenElementsPosition': 'left'
 	}, oOptions);
 
-	self.oQueue = queue(pInt(getValue(self.oOptions, 'queueSize', 10)));
+	self.oQueue = queue(Types.pInt(getValue(self.oOptions, 'queueSize', 10)));
 	if (self.runEvent('onCompleteAll'))
 	{
 		self.oQueue.await(function () {

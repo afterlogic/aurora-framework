@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Screens = require('core/js/Screens.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
@@ -67,7 +67,7 @@ CImportKeyPopup.prototype.checkArmor = function ()
 	{
 		aRes = OpenPgp.getArmorInfo(this.keyArmor());
 		
-		if (Utils.isNonEmptyArray(aRes))
+		if (Types.isNonEmptyArray(aRes))
 		{
 			_.each(aRes, function (oKey) {
 				if (oKey)

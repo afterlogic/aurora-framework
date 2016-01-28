@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
@@ -156,7 +156,7 @@ CAccountFiltersPaneView.prototype.getParametersForSave = function ()
 CAccountFiltersPaneView.prototype.save = function ()
 {
 	var bCantSave =_.some(this.collection(), function (oFilter) {
-		return oFilter.filter() === '' || (Utils.pString(oFilter.action()) === '3' /* Move */ && oFilter.folder() === '');
+		return oFilter.filter() === '' || (Types.pString(oFilter.action()) === '3' /* Move */ && oFilter.folder() === '');
 	});
 
 	if (bCantSave)
@@ -253,7 +253,7 @@ CAccountFiltersPaneView.prototype.displayFilterPart = function (sPart, sPrefix)
  */
 CAccountFiltersPaneView.prototype.getDependedText = function (sText)
 {	
-	sText = Utils.pString(sText);
+	sText = Types.pString(sText);
 	
 	if (sText)
 	{
@@ -269,7 +269,7 @@ CAccountFiltersPaneView.prototype.getDependedText = function (sText)
  */
 CAccountFiltersPaneView.prototype.getDependedField = function (sText, oParent)
 {	
-	sText = Utils.pString(sText);
+	sText = Types.pString(sText);
 	
 	if (sText)
 	{
@@ -277,7 +277,7 @@ CAccountFiltersPaneView.prototype.getDependedField = function (sText, oParent)
 		sText = sText.toLowerCase();
 	}
 
-	return Utils.isUnd(oParent[sText]) ? false : oParent[sText]();
+	return oParent[sText] ? oParent[sText]() : false;
 };
 
 /**
@@ -294,7 +294,7 @@ CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oR
 		{
 			var
 				oSieveFilters = new СFiltersModel(),
-				iAccountId = Utils.pInt(oResponse.AccountID),
+				iAccountId = Types.pInt(oResponse.AccountID),
 				oAccount = Accounts.getAccount(iAccountId)
 			;
 

@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
@@ -131,7 +132,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 	{
 		var
 			oParameters = JSON.parse(oRequest.Parameters),
-			iAccountId = Utils.pInt(oResponse.AccountID),
+			iAccountId = Types.pInt(oResponse.AccountID),
 			oAccount = 0 < iAccountId ? Accounts.getAccount(iAccountId) : null
 		;
 		

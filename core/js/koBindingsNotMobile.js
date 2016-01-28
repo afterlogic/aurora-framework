@@ -49,7 +49,7 @@ ko.bindingHandlers.customScrollbar = {
 			oCommand['oScroll'] = oScroll;
 		}
 
-		if (!Utils.isUnd(oCommand.reset))
+		if (!oCommand.reset)
 		{
 			oElement._customscroll_reset = _.throttle(function () {
 				oScroll.reset();
@@ -91,7 +91,7 @@ ko.bindingHandlers.customScrollbar = {
 		{
 			oElement._customscroll_reset();
 		}
-		if (!Utils.isUnd(fValueAccessor().top))
+		if (fValueAccessor().top)
 		{
 
 			$(oElement).data('customscroll')['vertical'].set(fValueAccessor().top);
@@ -423,7 +423,7 @@ ko.bindingHandlers.customSelect = {
 				var item = _.find(oCommand['options'], function (item) {
 					return item[oCommand['optionsValue']] === value;
 				});
-				if (Utils.isUnd(item))
+				if (!item)
 				{
 					item = oCommand['options'][0];
 				}

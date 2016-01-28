@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	MessageUtils = {}
 ;
@@ -144,7 +144,7 @@ MessageUtils.joinReplyPrefixesInSubject = function (sSubject, sRePrefix, sFwdPre
 				{
 					bRe = _.indexOf(aRePrefixes, oMatch[1].toUpperCase()) !== -1;
 					bFwd = _.indexOf(aFwdPrefixes, oMatch[1].toUpperCase()) !== -1;
-					iCount = Utils.pInt(oMatch[2]);
+					iCount = Types.pInt(oMatch[2]);
 				}
 			}
 

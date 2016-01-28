@@ -6,8 +6,10 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -175,7 +177,7 @@ CMailCache.prototype.init = function ()
 		
 		if (window.name)
 		{
-			var iAccountId = Utils.pInt(window.name);
+			var iAccountId = Types.pInt(window.name);
 			
 			if (iAccountId === 0)
 			{
@@ -232,7 +234,7 @@ CMailCache.prototype.calcNextMessageUid = function ()
 							sNextUid = aCollection[iIndex - 1];
 						}
 					});
-					if (Utils.isUnd(sNextUid) || sNextUid === '')
+					if (!Types.isNonEmptyString(sNextUid))
 					{
 						sNextUid = oParentMessage.uid();
 					}
@@ -244,13 +246,9 @@ CMailCache.prototype.calcNextMessageUid = function ()
 			_.each(this.uidList().collection(), function (sUid, iIndex, aCollection) {
 				if (sUid === sCurrentUid && iIndex > 0)
 				{
-					sNextUid = aCollection[iIndex - 1];
+					sNextUid = aCollection[iIndex - 1] || '';
 				}
 			});
-			if (Utils.isUnd(sNextUid))
-			{
-				sNextUid = '';
-			}
 			if (sNextUid === '' && MainTab)
 			{
 				MainTab.prefetchNextPage(sCurrentUid);
@@ -286,13 +284,9 @@ CMailCache.prototype.calcPrevMessageUid = function ()
 					_.each(oParentMessage.threadUids(), function (sUid, iIndex, aCollection) {
 						if (sUid === sCurrentUid && (iIndex + 1) < aCollection.length)
 						{
-							sPrevUid = aCollection[iIndex + 1];
+							sPrevUid = aCollection[iIndex + 1] || '';
 						}
 					});
-					if (Utils.isUnd(sPrevUid))
-					{
-						sPrevUid = '';
-					}
 				}
 			}
 			else if (this.currentMessage().threadCount() > 0)
@@ -305,13 +299,9 @@ CMailCache.prototype.calcPrevMessageUid = function ()
 			_.each(this.uidList().collection(), function (sUid, iIndex, aCollection) {
 				if (sUid === sCurrentUid && (iIndex + 1) < aCollection.length)
 				{
-					sPrevUid = aCollection[iIndex + 1];
+					sPrevUid = aCollection[iIndex + 1] || '';
 				}
 			});
-			if (Utils.isUnd(sPrevUid))
-			{
-				sPrevUid = '';
-			}
 			if (sPrevUid === '' && MainTab)
 			{
 				MainTab.prefetchPrevPage(sCurrentUid);
@@ -759,9 +749,8 @@ CMailCache.prototype.onClearFolder = function (oFolder)
 /**
  * @param {string} sToFolderFullName
  * @param {Array} aUids
- * @param {boolean} bAnimateRecive
  */
-CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids, bAnimateRecive)
+CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 {
 	if (aUids.length > 0)
 	{
@@ -788,10 +777,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids, 
 				oDiffs = oCurrFolder.markDeletedByUids(aUids);
 				oToFolder.addMessagesCountsDiff(oDiffs.MinusDiff, oDiffs.UnseenMinusDiff);
 
-				if (Utils.isUnd(bAnimateRecive) ? true : !!bAnimateRecive)
-				{
-					oToFolder.recivedAnim(true);
-				}
+				oToFolder.recivedAnim(true);
 
 				this.excludeDeletedMessages();
 
@@ -838,7 +824,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids, 
 	}
 };
 
-CMailCache.prototype.copyMessagesToFolder = function (sToFolderFullName, aUids, bAnimateRecive)
+CMailCache.prototype.copyMessagesToFolder = function (sToFolderFullName, aUids)
 {
 	if (aUids.length > 0)
 	{
@@ -854,10 +840,7 @@ CMailCache.prototype.copyMessagesToFolder = function (sToFolderFullName, aUids, 
 
 		if (oCurrFolder && oToFolder)
 		{
-			if (Utils.isUnd(bAnimateRecive) ? true : !!bAnimateRecive)
-			{
-				oToFolder.recivedAnim(true);
-			}
+			oToFolder.recivedAnim(true);
 
 			oToFolder.markHasChanges();
 
@@ -1364,7 +1347,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 
 		if (iNewLength === 1)
 		{
-			if (Utils.isNonEmptyString(oResponse.Result.New[0].Subject))
+			if (Types.isNonEmptyString(oResponse.Result.New[0].Subject))
 			{
 				aBody.push(TextUtils.i18n('MESSAGE/HEADER_SUBJECT') + ': ' + oResponse.Result.New[0].Subject);
 			}
@@ -1372,7 +1355,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 			sFrom = (_.map(oResponse.Result.New[0].From, function(oFrom) {
 				return oFrom.DisplayName !== '' ? oFrom.DisplayName : oFrom.Email;
 			})).join(', ');
-			if (Utils.isNonEmptyString(sFrom))
+			if (Types.isNonEmptyString(sFrom))
 			{
 				aBody.push(TextUtils.i18n('MESSAGE/HEADER_FROM') + ': ' + sFrom);
 			}

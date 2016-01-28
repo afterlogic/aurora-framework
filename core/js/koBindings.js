@@ -7,6 +7,7 @@ var
 	
 	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Browser = require('core/js/Browser.js')
 ;
 
@@ -58,7 +59,7 @@ ko.bindingHandlers.dropdown = {
 			iLeft,
 			iFitToScreenOffset,
 			fCallback = function () {
-				if (!Utils.isUnd(oCommand['callback']))
+				if ($.isFunction(oCommand['callback']))
 				{
 					oCommand['callback'].call(
 						oViewModel,
@@ -77,7 +78,7 @@ ko.bindingHandlers.dropdown = {
 				}
 			},
 			fToggleExpand = function (bValue) {
-				if (Utils.isUnd(bValue))
+				if (bValue === undefined)
 				{
 					bValue = !jqElement.hasClass(oCommand['expand']);
 				}
@@ -100,7 +101,7 @@ ko.bindingHandlers.dropdown = {
 			},
 			fFitToScreen = function (iOffsetLeft) {
 				oOffset = jqDropHelper.offset();
-				if (!Utils.isUnd(oOffset))
+				if (oOffset)
 				{
 					iLeft = oOffset.left + 10;
 					iFitToScreenOffset = $(window).width() - (iLeft + jqDropHelper.outerWidth(true));

@@ -3,8 +3,9 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	CDateModel = require('core/js/models/CDateModel.js'),
 	
 	CHelpdeskAttachmentModel = require('modules/HelpDesk/js/models/CHelpdeskAttachmentModel.js')
@@ -43,11 +44,11 @@ CPostModel.prototype.parse = function (oData)
 	this.IdThread = oData.IdHelpdeskThread;
 	this.IdOwner = oData.IdOwner;
 	this.bThreadOwner = oData.IsThreadOwner;
-	this.sFrom = Utils.isNonEmptyArray(oData.Owner) ? oData.Owner[1] || oData.Owner[0] || '' : TextUtils.i18n('HELPDESK/THREAD_DELETED_USER');
+	this.sFrom = Types.isNonEmptyArray(oData.Owner) ? oData.Owner[1] || oData.Owner[0] || '' : TextUtils.i18n('HELPDESK/THREAD_DELETED_USER');
 	this.sDate = CDateModel.prototype.convertDate(oData.Created);
 	this.iType = oData.Type;
 	this.bSysType = oData.SystemType;
-	this.sText = Utils.pString(oData.Text);
+	this.sText = Types.pString(oData.Text);
 
 	this.itsMe(oData.ItsMe);
 

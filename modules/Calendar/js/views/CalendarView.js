@@ -6,9 +6,10 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
 	DateUtils = require('core/js/utils/Date.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),
@@ -275,9 +276,15 @@ CCalendarView.prototype.getDateFromCurrentView = function (sDateType)
 	return (oDate && oDate['unix']) ? oView[sDateType]['unix']() : 0;
 };
 
-CCalendarView.prototype.eventsSource = function (start, end, timezone, callback)
+/**
+ * @param {Object} oStart
+ * @param {Object} oEnd
+ * @param {*} mTimezone
+ * @param {Function} fCallback
+ */
+CCalendarView.prototype.eventsSource = function (oStart, oEnd, mTimezone, fCallback)
 {
-	callback(this.calendars.getEvents(start, end));
+	fCallback(this.calendars.getEvents(oStart, oEnd));
 };
 
 CCalendarView.prototype.initFullCalendar = function ()
@@ -913,7 +920,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 				oCalendar = this.calendars.parseAndAddCalendar(oCalendarData);
 				if (oCalendar)
 				{
-					oCalendar.davUrl(Utils.pString(oResponse.Result.ServerUrl));
+					oCalendar.davUrl(Types.pString(oResponse.Result.ServerUrl));
 					if (this.isPublic)
 					{
 						var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
@@ -994,8 +1001,8 @@ CCalendarView.prototype.onGetEventsResponse = function (oResponse, oRequest)
 			if (oCalendar)
 			{
 				aEvents.push(oEventData.id);
-				var oEvent = oCalendar.eventExists(oEventData.id);
-				if (Utils.isUnd(oEvent))
+				var oEvent = oCalendar.getEvent(oEventData.id);
+				if (!oEvent)
 				{
 					oCalendar.addEvent(oEventData);
 				}
@@ -1438,7 +1445,7 @@ CCalendarView.prototype.getParamsFromEventData = function (oEventData)
 		id: oEventData.id,
 		uid: oEventData.uid,
 		calendarId: oEventData.calendarId,
-		newCalendarId: !Utils.isUnd(oEventData.newCalendarId) ? oEventData.newCalendarId : oEventData.calendarId,
+		newCalendarId: oEventData.newCalendarId || oEventData.calendarId,
 		subject: oEventData.subject,
 		allDay: oEventData.allDay ? 1 : 0,
 		location: oEventData.location,
@@ -1744,14 +1751,14 @@ CCalendarView.prototype.onEventActionResponseWithSubThrottle = function (oData, 
 	}
 	else
 	{
-		this.onEventActionResponse(oData, oParameters);
+		this.onEventActionResponse(oData, oParameters, true);
 	}
 };
 
 /**
  * @param {Object} oResponse
  * @param {Object} oRequest
- * @param {boolean=} bDoRefresh
+ * @param {boolean} bDoRefresh
  */
 CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, bDoRefresh)
 {
@@ -1762,17 +1769,14 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 		iScrollTop = 0
 	;
 	
-	bDoRefresh = Utils.isUnd(bDoRefresh) ? true : !!bDoRefresh;
-	
-	if (oResponse && oResponse.Result && !Utils.isUnd(oCalendar))
+	if (oResponse && oResponse.Result && oCalendar)
 	{
 		iScrollTop = $('.calendar .fc-widget-content .scroll-inner').scrollTop();
 		if (oRequest.Method === 'CreateEvent' || oRequest.Method === 'UpdateEvent')
 		{
 			oEvent = oCalendar.getEvent(oParameters.id);
 			
-			if (((!Utils.isUnd(oEvent) && !Utils.isUnd(oEvent.rrule)) || oParameters.rrule) && 
-					oParameters.allEvents === Enums.CalendarEditRecurrenceEvent.AllEvents)
+			if ((oEvent && oEvent.rrule || oParameters.rrule) && oParameters.allEvents === Enums.CalendarEditRecurrenceEvent.AllEvents)
 			{
 				oCalendar.removeEventByUid(oParameters.uid, true);
 			}
@@ -1825,7 +1829,7 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 			this.restoreScroll(iScrollTop);
 		}
 	}
-	else if (oRequest.Method === 'UpdateEvent' && !oResponse.Result && 1155 === Utils.pInt(oResponse.ErrorCode))
+	else if (oRequest.Method === 'UpdateEvent' && !oResponse.Result && 1155 === Types.pInt(oResponse.ErrorCode))
 	{
 		this.revertFunction = null;
 	}

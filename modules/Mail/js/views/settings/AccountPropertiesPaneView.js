@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
@@ -118,7 +118,7 @@ CAccountPropertiesPaneView.prototype.populate = function ()
 		this.oIncoming.set(oAccount.incomingMailServer(), oAccount.incomingMailPort(), oAccount.incomingMailSsl());
 		this.outgoingMailLogin(oAccount.outgoingMailLogin());
 		this.oOutgoing.set(oAccount.outgoingMailServer(), oAccount.outgoingMailPort(), oAccount.outgoingMailSsl());
-		this.useSmtpAuthentication(Utils.pInt(oAccount.outgoingMailAuth()) === 2 ? true : false);
+		this.useSmtpAuthentication(Types.pInt(oAccount.outgoingMailAuth()) === 2 ? true : false);
 		
 		this.isInternal(oAccount.isInternal());
 		this.isLinked(oAccount.isLinked());
@@ -172,7 +172,7 @@ CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 	else
 	{
 		var
-			iAccountId = Utils.pInt(oResponse.AccountID),
+			iAccountId = Types.pInt(oResponse.AccountID),
 			oAccount = Accounts.getAccount(iAccountId),
 			oParameters = JSON.parse(oRequest.Parameters)
 		;

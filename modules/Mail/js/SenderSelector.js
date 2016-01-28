@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 			
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	Accounts = require('modules/Mail/js/AccountList.js')
@@ -27,7 +27,7 @@ function CSenderSelector()
 				oFetcherOrIdentity = null
 			;
 			
-			if (Utils.isNonEmptyString(sId))
+			if (Types.isNonEmptyString(sId))
 			{
 				if (sId.indexOf('fetcher') === 0)
 				{
@@ -35,14 +35,14 @@ function CSenderSelector()
 					{
 						sId = sId.replace('fetcher', '');
 						oFetcherOrIdentity = _.find(oAccount.fetchers().collection(), function (oFtchr) {
-							return oFtchr.id() === Utils.pInt(sId);
+							return oFtchr.id() === Types.pInt(sId);
 						});
 					}
 				}
 				else
 				{
 					oFetcherOrIdentity = _.find(oAccount.identities(), function (oIdnt) {
-						return oIdnt.id() === Utils.pInt(sId);
+						return oIdnt.id() === Types.pInt(sId);
 					});
 				}
 			}
@@ -59,7 +59,7 @@ CSenderSelector.prototype.changeSelectedSender = function (oFetcherOrIdentity)
 {
 	if (oFetcherOrIdentity)
 	{
-		var sSelectedSenderId = Utils.pString(oFetcherOrIdentity.id());
+		var sSelectedSenderId = Types.pString(oFetcherOrIdentity.id());
 
 		if (oFetcherOrIdentity.FETCHER)
 		{
@@ -126,7 +126,7 @@ CSenderSelector.prototype.fillSenderList = function (oFetcherOrIdentity)
 			_.each(oAccount.identities(), function (oIdentity) {
 				if (oIdentity.enabled())
 				{
-					aSenderList.push({fullEmail: oIdentity.fullEmail(), id: Utils.pString(oIdentity.id())});
+					aSenderList.push({fullEmail: oIdentity.fullEmail(), id: Types.pString(oIdentity.id())});
 				}
 			}, this);
 		}

@@ -5,7 +5,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Settings = require('core/js/Settings.js')
@@ -57,7 +57,7 @@ CScreens.prototype.init = function ()
 	if (this.sDefaultScreen === '')
 	{
 		aKeys = _.keys(this.oGetScreenFunctions);
-		if (Utils.isNonEmptyArray(aKeys))
+		if (Types.isNonEmptyArray(aKeys))
 		{
 			this.sDefaultScreen = aKeys[0];
 		}

@@ -4,8 +4,8 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	AddressUtils = require('core/js/utils/Address.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Ajax = require('modules/Contacts/js/Ajax.js')
 ;
@@ -173,7 +173,7 @@ function RequestUserByPhone(sNumber, fCallBack, oContext)
 		var
 			oResult = oResponse.Result,
 			sUser = '',
-			oUser = Utils.isNonEmptyArray(oResult.List) ? oResult.List[0] : null
+			oUser = Types.isNonEmptyArray(oResult.List) ? oResult.List[0] : null
 		;
 		
 		if (oUser && oUser.Phones)

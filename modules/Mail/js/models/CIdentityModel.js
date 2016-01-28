@@ -3,8 +3,8 @@
 var
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	AddressUtils = require('core/js/utils/Address.js')
+	AddressUtils = require('core/js/utils/Address.js'),
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -36,11 +36,11 @@ CIdentityModel.prototype.parse = function (oData)
 		this.loyal(!!oData.Loyal);
 		this.isDefault(!!oData.Default);
 		this.enabled(!!oData.Enabled);
-		this.email(Utils.pString(oData.Email));
-		this.friendlyName(Utils.pString(oData.FriendlyName));
-		this.accountId(Utils.pInt(oData.IdAccount));
-		this.id(Utils.pInt(oData.IdIdentity));
-		this.signature(Utils.pString(oData.Signature));
+		this.email(Types.pString(oData.Email));
+		this.friendlyName(Types.pString(oData.FriendlyName));
+		this.accountId(Types.pInt(oData.IdAccount));
+		this.id(Types.pInt(oData.IdIdentity));
+		this.signature(Types.pString(oData.Signature));
 		this.useSignature(!!oData.UseSignature);
 	}
 };

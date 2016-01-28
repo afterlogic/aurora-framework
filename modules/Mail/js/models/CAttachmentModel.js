@@ -5,8 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')
@@ -91,10 +93,10 @@ CAttachmentModel.prototype.isVisibleViewLink = function ()
  */
 CAttachmentModel.prototype.additionalParse = function (oData)
 {
-	this.mimePartIndex(Utils.pString(oData.MimePartIndex));
+	this.mimePartIndex(Types.pString(oData.MimePartIndex));
 
-	this.cid(Utils.pString(oData.CID));
-	this.contentLocation(Utils.pString(oData.ContentLocation));
+	this.cid(Types.pString(oData.CID));
+	this.contentLocation(Types.pString(oData.ContentLocation));
 	this.inline(!!oData.IsInline);
 	this.linked(!!oData.IsLinked);
 };

@@ -5,9 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
-	TextUtils = require('core/js/utils/Text.js'),
 	DateUtils = require('core/js/utils/Date.js'),
+	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	Browser = require('core/js/Browser.js'),
@@ -341,7 +342,7 @@ CMessageListView.prototype.createDatePickerObject = function (oElement)
 		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
-		firstDay: Utils.pInt(ModulesManager.run('Calendar', 'getWeekStartsOn')),
+		firstDay: Types.pInt(ModulesManager.run('Calendar', 'getWeekStartsOn')),
 		showOn: 'focus',
 		dateFormat: this.dateFormatDatePicker
 	});

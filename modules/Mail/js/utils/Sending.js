@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -59,7 +60,7 @@ SendingUtils.send = function (sMethod, oParameters, bShowLoading, fSendMessageRe
 			oParameters.Bcc.indexOf(sCurrEmail) > -1)
 	;
 	
-	if (Settings.SaveRepliedToCurrFolder && !bSelfRecipient && Utils.isNonEmptyArray(oParameters.DraftInfo, 3))
+	if (Settings.SaveRepliedToCurrFolder && !bSelfRecipient && Types.isNonEmptyArray(oParameters.DraftInfo, 3))
 	{
 		sSentFolder = oParameters.DraftInfo[2];
 	}

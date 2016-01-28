@@ -89,7 +89,7 @@ CShareCalendarPopup.prototype.onShow = function (fCallback, oCalendar)
 	{
 		this.fCallback = fCallback;
 	}
-	if (!Utils.isUnd(oCalendar))
+	if (oCalendar)
 	{
 		this.selectedColor(oCalendar.color());
 		this.calendarId(oCalendar.id);

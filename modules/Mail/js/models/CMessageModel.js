@@ -8,6 +8,7 @@ var
 	
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
@@ -387,11 +388,11 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 		
 		this.accountId(iAccountId);
 		this.folder(oData.Folder);
-		this.uid(Utils.pString(oData.Uid));
+		this.uid(Types.pString(oData.Uid));
 		this.sUniq = this.accountId() + this.folder() + this.uid();
 		
-		this.subject(Utils.pString(oData.Subject));
-		this.messageId(Utils.pString(oData.MessageId));
+		this.subject(Types.pString(oData.Subject));
+		this.messageId(Types.pString(oData.MessageId));
 		this.size(oData.Size);
 		this.textSize(oData.TextSize);
 		this.oDateModel.parse(oData.TimeStampInUTC);
@@ -420,12 +421,12 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			}, this));
 		}
 		
-		this.importance(Utils.pInt(oData.Priority));
+		this.importance(Types.pInt(oData.Priority));
 		if (!Enums.has('Importance', this.importance()))
 		{
 			this.importance(Enums.Importance.Normal);
 		}
-		this.sensitivity(Utils.pInt(oData.Sensitivity));
+		this.sensitivity(Types.pInt(oData.Sensitivity));
 		if (!Enums.has('Sensitivity', this.sensitivity()))
 		{
 			this.sensitivity(Enums.Sensitivity.Nothing);
@@ -434,7 +435,7 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 		{
 			this.draftInfo(oData.DraftInfo);
 		}
-		this.hash(Utils.pString(oData.Hash));
+		this.hash(Types.pString(oData.Hash));
 		
 		if (oData['@Object'] === 'Object/Message')
 		{
@@ -443,8 +444,8 @@ CMessageModel.prototype.parse = function (oData, iAccountId, bThreadPart, bTrust
 			this.inReplyTo(oData.InReplyTo);
 			this.references(oData.References);
 			this.readingConfirmation(oData.ReadingConfirmation);
-			sHtml = Utils.pString(oData.Html);
-			sPlain = Utils.pString(oData.Plain);
+			sHtml = Types.pString(oData.Html);
+			sPlain = Types.pString(oData.Plain);
 			if (sHtml !== '')
 			{
 				this.text(sHtml);
@@ -545,7 +546,7 @@ CMessageModel.prototype.parseAttachments = function (oData, iAccountId)
 	
 	this.attachments([]);
 	
-	if (Utils.isNonEmptyArray(aCollection) > 0)
+	if (Types.isNonEmptyArray(aCollection))
 	{
 		var sThumbSessionUid = Date.now().toString();
 
@@ -677,7 +678,7 @@ CMessageModel.prototype.onGetAttachmentsZipHashResponse = function (oResponse, o
 {
 	if (oResponse.Result)
 	{
-		this.sAllAttachmentsHash = Utils.pString(oResponse.Result);
+		this.sAllAttachmentsHash = Types.pString(oResponse.Result);
 		Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
 	}
 };

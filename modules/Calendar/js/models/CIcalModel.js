@@ -4,8 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	Api = require('core/js/Api.js'),
 	
@@ -25,17 +26,17 @@ function CIcalModel(oRawIcal, sAttendee)
 {
 	this.oRawIcal = oRawIcal;
 	
-	this.uid = ko.observable(Utils.pString(oRawIcal.Uid));
+	this.uid = ko.observable(Types.pString(oRawIcal.Uid));
 	this.lastModification = ko.observable(true);
-	this.sSequence = Utils.pInt(oRawIcal.Sequence);
-	this.file = ko.observable(Utils.pString(oRawIcal.File));
-	this.attendee = ko.observable(Utils.pString(oRawIcal.Attendee) || sAttendee);
-	this.type = ko.observable(Utils.pString(oRawIcal.Type));
-	this.location = ko.observable(Utils.pString(oRawIcal.Location));
-	this.description = ko.observable(Utils.pString(oRawIcal.Description).replace(/\r/g, '').replace(/\n/g,"<br />"));
-	this.when = ko.observable(Utils.pString(oRawIcal.When));
-	this.calendarId = ko.observable(Utils.pString(oRawIcal.CalendarId));
-	this.selectedCalendarId = ko.observable(Utils.pString(oRawIcal.CalendarId));
+	this.sSequence = Types.pInt(oRawIcal.Sequence);
+	this.file = ko.observable(Types.pString(oRawIcal.File));
+	this.attendee = ko.observable(Types.pString(oRawIcal.Attendee) || sAttendee);
+	this.type = ko.observable(Types.pString(oRawIcal.Type));
+	this.location = ko.observable(Types.pString(oRawIcal.Location));
+	this.description = ko.observable(Types.pString(oRawIcal.Description).replace(/\r/g, '').replace(/\n/g,"<br />"));
+	this.when = ko.observable(Types.pString(oRawIcal.When));
+	this.calendarId = ko.observable(Types.pString(oRawIcal.CalendarId));
+	this.selectedCalendarId = ko.observable(Types.pString(oRawIcal.CalendarId));
 	CalendarCache.addIcal(this);
 	
 	this.icalType = ko.observable('');

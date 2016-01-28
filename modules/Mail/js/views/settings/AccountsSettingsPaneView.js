@@ -371,7 +371,7 @@ CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oRe
 			oAccount = Accounts.getAccount(oParameters.AccountID)
 		;
 		
-		if (!Utils.isUnd(oAccount))
+		if (oAccount)
 		{
 			oAccount.updateExtended(oResponse.Result);
 			if (oAccount.id() === this.editedAccountId())

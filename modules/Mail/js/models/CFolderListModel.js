@@ -4,7 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	Storage = require('core/js/Storage.js'),
 	
 	Settings = require('modules/Mail/js/Settings.js'),
@@ -182,7 +183,7 @@ CFolderListModel.prototype.getFolderByFullName = function (sFolderFullName)
 CFolderListModel.prototype.parse = function (iAccountId, oData, oNamedFolderListOld)
 {
 	var
-		sNamespace = Utils.pString(oData.Namespace),
+		sNamespace = Types.pString(oData.Namespace),
 		aCollection = oData.Folders['@Collection']
 	;
 	if (sNamespace.length > 0)
@@ -248,7 +249,7 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 
 	sParentFullName = sParentFullName || '';
 	
-	if (Utils.isUnd(iLevel))
+	if (iLevel === undefined)
 	{
 		iLevel = -1;
 	}
@@ -258,7 +259,7 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 	{
 		for (iLen = aRawCollection.length; iIndex < iLen; iIndex++)
 		{
-			sFolderFullName = Utils.pString(aRawCollection[iIndex].FullNameRaw);
+			sFolderFullName = Types.pString(aRawCollection[iIndex].FullNameRaw);
 			oFolderOld = oNamedFolderListOld[sFolderFullName];
 			oFolder = new CFolderModel(this.iAccountId);
 			oSubFolders = oFolder.parse(aRawCollection[iIndex], sParentFullName, bDisableManageSubscribe, this.sNamespaceFolder);
@@ -271,7 +272,7 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 			if (bExpandFolders && oSubFolders !== null)
 			{
 				oFolder.expanded(true);
-				this.expandNames().push(Utils.pString(aRawCollection[iIndex].Name));
+				this.expandNames().push(Types.pString(aRawCollection[iIndex].Name));
 			}
 
 			oFolder.setLevel(iLevel);
@@ -393,10 +394,10 @@ CFolderListModel.prototype.repopulateLinedCollection = function ()
  */
 CFolderListModel.prototype.getOptions = function (sFirstItem, bEnableSystem, bHideInbox, bIgnoreCanBeSelected, bIgnoreUnsubscribed)
 {
-	bEnableSystem = bEnableSystem || false;
-	bHideInbox = bHideInbox || false;
-	bIgnoreCanBeSelected = bIgnoreCanBeSelected || false;
-	bIgnoreUnsubscribed = bIgnoreUnsubscribed || false;
+	bEnableSystem = !!bEnableSystem;
+	bHideInbox = !!bHideInbox;
+	bIgnoreCanBeSelected = !!bIgnoreCanBeSelected;
+	bIgnoreUnsubscribed = !!bIgnoreUnsubscribed;
 	
 	var
 		sDeepPrefix = '\u00A0\u00A0\u00A0\u00A0',

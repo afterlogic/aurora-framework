@@ -96,7 +96,7 @@ CDateModel.prototype.getShortDate = function (bTime)
 				sResult = this.oMoment.format('MMM D, YYYY');
 			}
 
-			if (Utils.isUnd(bTime) ? false : !!bTime)
+			if (!!bTime)
 			{
 				sResult += ', ' + this.oMoment.format(this.getTimeFormat());
 			}

@@ -8,6 +8,7 @@ var
 	AddressUtils = require('core/js/utils/Address.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
@@ -1319,7 +1320,7 @@ CComposeView.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 {
 	var oAttach;
 
-	if (FilesUtils.showErrorIfAttachmentSizeLimit(oFileData.FileName, Utils.pInt(oFileData.Size)))
+	if (FilesUtils.showErrorIfAttachmentSizeLimit(oFileData.FileName, Types.pInt(oFileData.Size)))
 	{
 		return false;
 	}
@@ -1520,7 +1521,7 @@ CComposeView.prototype.onSendOrSaveMessageResponse = function (oResponse, oReque
 		case 'SaveMessage':
 			if (oResData.Result && oParameters.DraftUid === this.draftUid())
 			{
-				this.draftUid(Utils.pString(oResData.NewUid));
+				this.draftUid(Types.pString(oResData.NewUid));
 				
 				if (this instanceof CComposeView)// it is screen, not popup
 				{
@@ -1612,8 +1613,8 @@ CComposeView.prototype.executeSaveCommand = function ()
  */
 CComposeView.prototype.executeSave = function (bAutosave, bWaitResponse)
 {
-	bAutosave = Utils.isUnd(bAutosave) ? false : bAutosave;
-	bWaitResponse = Utils.isUnd(bWaitResponse) ? true : bWaitResponse;
+	bAutosave = !!bAutosave;
+	bWaitResponse = (bWaitResponse === undefined) ? true : bWaitResponse;
 
 	if (bAutosave && MailCache.disableComposeAutosave())
 	{

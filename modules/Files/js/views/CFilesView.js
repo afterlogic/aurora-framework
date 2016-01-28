@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
@@ -297,7 +298,7 @@ CFilesView.prototype.initUploader = function ()
 				'Parameters':  function (oFile) {
 					return JSON.stringify({
 						'Type': self.storageType(),
-						'SubPath': oFile && !Utils.isUnd(oFile['Folder']) ? oFile['Folder'] : '',
+						'SubPath': oFile && oFile.Folder || '',
 						'Path': self.dropPath()
 					});
 				}
@@ -349,7 +350,7 @@ CFilesView.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 			sFileNameExt = '.' + sFileNameExt;
 		}
 
-		while (!Utils.isUnd(this.getFileByName(sFileName)))
+		while (this.getFileByName(sFileName))
 		{
 			sFileName = sFileNameWoExt + '_' + iIndex + sFileNameExt;
 			iIndex++;
@@ -433,7 +434,7 @@ CFilesView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceive
 			}
 		}
 
-		this.getFiles(this.storageType(), this.getPathItemByIndex(this.iPathIndex()), this.searchPattern(), false);
+		this.getFiles(this.storageType(), this.getPathItemByIndex(this.iPathIndex()), this.searchPattern(), true);
 	}
 };
 
@@ -972,9 +973,9 @@ CFilesView.prototype.onGetExternalStoragesResponse = function (oResponse, oReque
  * @param {string} sType
  * @param {object=} oPath = ''
  * @param {string=} sPattern = ''
- * @param {boolean=} bLoading = true
+ * @param {boolean=} bNotLoading = false
  */
-CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
+CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bNotLoading)
 {
 	var 
 		self = this,
@@ -989,7 +990,7 @@ CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
 	this.error(false);
 	this.storageType(sType);
 	self.loadedFiles(false);
-	if (Utils.isUnd(bLoading) || !Utils.isUnd(bLoading) && bLoading)
+	if (bNotLoading)
 	{
 		this.timerId = setTimeout(function() {
 			if (!self.loadedFiles() && !self.error())
@@ -1001,8 +1002,8 @@ CFilesView.prototype.getFiles = function (sType, oPath, sPattern, bLoading)
 		}, 1500);				
 	}
 	
-	this.searchPattern(Utils.isUnd(sPattern) ? '' : Utils.pString(sPattern));
-	if (Utils.isUnd(oPath) || oPath.id() === '')
+	this.searchPattern(Types.pString(sPattern));
+	if (oPath === undefined || oPath.id() === '')
 	{
 		this.pathItems.removeAll();
 		oFolder.displayName(this.rootPath());
@@ -1038,7 +1039,7 @@ CFilesView.prototype.getPublicFiles = function (oPath)
 		iPathIndex = this.iPathIndex(),
 		oFolder = new CFolderModel()
 	;
-	if (Utils.isUnd(oPath) || oPath.id() === '')
+	if (oPath === undefined || oPath.id() === '')
 	{
 		this.pathItems.removeAll();
 		oFolder.displayName(this.rootPath());
@@ -1192,19 +1193,9 @@ CFilesView.prototype.deleteUploadFileByUid = function (sFileUid)
  */
 CFilesView.prototype.getUploadingFiles = function ()
 {
-	var 
-		aResult = [],
-		uploadingFiles = this.uploadingFiles(),
-		self = this
-	;
-	
-	if (!Utils.isUnd(uploadingFiles))
-	{
-		aResult = _.filter(uploadingFiles, function(oItem){
-			return oItem.path() === self.path() && oItem.storageType() === self.storageType();
-		});	
-	}
-	return aResult;
+	return _.filter(this.uploadingFiles(), _.bind(function (oItem) {
+		return oItem.path() === this.path() && oItem.storageType() === this.storageType();
+	}), this);	
 };
 
 /**

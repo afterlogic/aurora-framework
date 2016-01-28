@@ -7,6 +7,7 @@ var
 	
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
@@ -76,10 +77,10 @@ function CMessagePaneView()
 	this.nextMessageUid = MailCache.nextMessageUid;
 
 	this.isEnablePrevMessage = ko.computed(function () {
-		return App.isNewTab() && Utils.isNonEmptyString(this.prevMessageUid());
+		return App.isNewTab() && Types.isNonEmptyString(this.prevMessageUid());
 	}, this);
 	this.isEnableNextMessage = ko.computed(function () {
-		return App.isNewTab() && Utils.isNonEmptyString(this.nextMessageUid());
+		return App.isNewTab() && Types.isNonEmptyString(this.nextMessageUid());
 	}, this);
 	
 	this.isEnableDelete = this.isCurrentMessage;

@@ -5,7 +5,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -58,7 +58,7 @@ CPopups.prototype.showPopup = function (oPopup, aParameters)
 {
 	if (oPopup)
 	{
-		if (!oPopup.$popupDom && Utils.isNonEmptyString(oPopup.PopupTemplate))
+		if (!oPopup.$popupDom && Types.isNonEmptyString(oPopup.PopupTemplate))
 		{
 			var $templatePlace = $('<!-- ko template: { name: \'' + oPopup.PopupTemplate + '\' } --><!-- /ko -->').appendTo(this.$popupsPlace);
 

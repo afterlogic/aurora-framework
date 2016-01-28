@@ -1,12 +1,13 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	ModulesManager = require('core/js/ModulesManager.js'),
 	
 	Phone = require('modules/Phone/js/Phone.js')
@@ -186,7 +187,7 @@ CPhoneView.prototype.getLogs = function ()
  */
 CPhoneView.prototype.onLogsResponse = function (oResponse, oRequest)
 {
-	if (Utils.isNonEmptyArray(oResponse.Result))
+	if (Types.isNonEmptyArray(oResponse.Result))
 	{
 		this.logs([]);
 

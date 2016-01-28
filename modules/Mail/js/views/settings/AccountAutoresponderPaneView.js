@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
@@ -138,7 +138,7 @@ CAccountAutoresponderPaneView.prototype.onGetAutoresponderResponse = function (o
 	if (oResponse && oResponse.Result)
 	{
 		var
-			iAccountId = Utils.pInt(oResponse.AccountID),
+			iAccountId = Types.pInt(oResponse.AccountID),
 			oAccount = Accounts.getAccount(iAccountId),
 			oAutoresponder = new CAutoresponderModel()
 		;

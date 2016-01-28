@@ -4,7 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	App = require('core/js/App.js'),
 	
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
@@ -31,7 +32,7 @@ CIcalAttachmentView.prototype.ViewTemplate = 'Calendar_IcalAttachmentView';
 CIcalAttachmentView.prototype.doAfterPopulatingMessage = function (oMessageProps)
 {
 	var
-		aExtend = (oMessageProps && Utils.isNonEmptyArray(oMessageProps.aExtend)) ? oMessageProps.aExtend : [],
+		aExtend = (oMessageProps && Types.isNonEmptyArray(oMessageProps.aExtend)) ? oMessageProps.aExtend : [],
 		oFoundRawIcal = _.find(aExtend, function (oRawIcal) {
 			return oRawIcal['@Object'] === 'Object/CApiMailIcs';
 		})

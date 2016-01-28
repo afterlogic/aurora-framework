@@ -1,6 +1,6 @@
 'use strict';
 
-var Utils = require('core/js/utils/Common.js');
+var Types = require('core/js/utils/Types.js');
 
 /**
  * @constructor
@@ -31,7 +31,7 @@ CBrowser.prototype.getIeVersion = function ()
 {
 	var
 		sUa = navigator.userAgent.toLowerCase(),
-		iVersion = Utils.pInt(sUa.slice(sUa.indexOf('msie') + 4, sUa.indexOf(';', sUa.indexOf('msie') + 4)))
+		iVersion = Types.pInt(sUa.slice(sUa.indexOf('msie') + 4, sUa.indexOf(';', sUa.indexOf('msie') + 4)))
 	;
 	
 	if (this.ie11)

@@ -3,7 +3,8 @@
 var
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
+	
 	LinksUtils = {}
 ;
 
@@ -34,7 +35,7 @@ LinksUtils.getContacts = function (iType, sGroupId, sSearch, iPage, sUid)
 		aParams.push(sSearch);
 	}
 	
-	if (Utils.isNumeric(iPage))
+	if (Types.isNumber(iPage))
 	{
 		aParams.push('p' + iPage);
 	}
@@ -64,9 +65,9 @@ LinksUtils.parseContacts = function (aParam)
 		sUid = ''
 	;
 
-	if (Utils.isNonEmptyArray(aParam))
+	if (Types.isNonEmptyArray(aParam))
 	{
-		iType = Utils.pInt(aParam[iIndex]);
+		iType = Types.pInt(aParam[iIndex]);
 		iIndex++;
 		if (-1 === $.inArray(iType, aGroupTypes))
 		{
@@ -77,7 +78,7 @@ LinksUtils.parseContacts = function (aParam)
 		{
 			if (aParam.length > iIndex)
 			{
-				sGroupId = Utils.pString(aParam[iIndex]);
+				sGroupId = Types.pString(aParam[iIndex]);
 				iIndex++;
 			}
 			else
@@ -88,13 +89,13 @@ LinksUtils.parseContacts = function (aParam)
 		
 		if (aParam.length > iIndex && !LinksUtils.isPageParam(aParam[iIndex]) && !LinksUtils.isContactParam(aParam[iIndex]))
 		{
-			sSearch = Utils.pString(aParam[iIndex]);
+			sSearch = Types.pString(aParam[iIndex]);
 			iIndex++;
 		}
 		
 		if (aParam.length > iIndex && LinksUtils.isPageParam(aParam[iIndex]))
 		{
-			iPage = Utils.pInt(aParam[iIndex].substr(1));
+			iPage = Types.pInt(aParam[iIndex].substr(1));
 			iIndex++;
 			if (iPage <= 0)
 			{
@@ -104,7 +105,7 @@ LinksUtils.parseContacts = function (aParam)
 		
 		if (aParam.length > iIndex && LinksUtils.isContactParam(aParam[iIndex]))
 		{
-			sUid = Utils.pString(aParam[iIndex].substr(3));
+			sUid = Types.pString(aParam[iIndex].substr(3));
 			iIndex++;
 		}
 	}
