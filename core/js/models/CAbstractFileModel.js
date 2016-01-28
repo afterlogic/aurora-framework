@@ -12,9 +12,9 @@ var
 	
 	Ajax = require('core/js/Ajax.js'),
 	App = require('core/js/App.js'),
+	Browser = require('core/js/Browser.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
 	
-	bIsIosDevice = false,
 	aViewMimeTypes = [
 		'image/jpeg', 'image/png', 'image/gif',
 		'text/html', 'text/plain', 'text/css',
@@ -36,7 +36,7 @@ if ($('html').hasClass('pdf'))
  */
 function CAbstractFileModel(sModuleName)
 {
-	this.isIosDevice = bIsIosDevice;
+	this.isIosDevice = Browser.iosDevice;
 
 	this.isLink = ko.observable(false);
 	this.isPopupItem = ko.observable(false);

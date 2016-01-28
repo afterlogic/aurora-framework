@@ -9,6 +9,7 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
+	Browser = require('core/js/Browser.js'),
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	
@@ -151,11 +152,11 @@ CPhone.prototype.phoneSupport = function (bIsWebrtc, sFlashVersion)
 		return '0,0,0';
 	};
 
-	if (bIsWebrtc && !Browser.chrome && !sFlashVersion && !bIsIosDevice)
+	if (bIsWebrtc && !Browser.chrome && !sFlashVersion && !Browser.iosDevice)
 	{
 		this.log('*************** Browser not supported');
 	}
-	else if (bIsIosDevice)
+	else if (Browser.iosDevice)
 	{
 		this.log('*************** Device not supported');
 	}
