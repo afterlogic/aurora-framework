@@ -470,3 +470,363 @@ ko.bindingHandlers.onEnter = {
 		});
 	}
 };
+
+ko.bindingHandlers.onFocusSelect = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
+		ko.bindingHandlers.event.init(oElement, function () {
+			return {
+				'focus': function () {
+					oElement.select();
+				}
+			};
+		}, fAllBindingsAccessor, oViewModel);
+	}
+};
+
+//helpdesk
+ko.bindingHandlers.watchWidth = {
+	'init': function (oElement, fValueAccessor) {
+		var bTriggered = false;
+
+		if (!bTriggered)
+		{
+			fValueAccessor().subscribe(function () {
+				fValueAccessor()($(oElement).outerWidth());
+				bTriggered = true;
+			}, this);
+		}
+	}
+};
+
+//files
+ko.bindingHandlers.columnCalc = {
+	'init': function (oElement, fValueAccessor) {
+		var
+			$oElement = $(oElement),
+			oProp = fValueAccessor()['prop'],
+			$oItem = null,
+			iWidth = 0
+		;
+			
+		$oItem = $oElement.find(fValueAccessor()['itemSelector']);
+
+		if ($oItem[0] === undefined)
+		{
+			return;
+		}
+		
+		iWidth = $oItem.outerWidth(true);
+		iWidth = 1 >= iWidth ? 1 : iWidth;
+		
+		if (oProp)
+		{
+			$(window).bind('resize', function () {
+				var iW = $oElement.width();
+				oProp(0 < iW ? Math.floor(iW / iWidth) : 1);
+			});
+		}
+	}
+};
+
+//calendar
+ko.bindingHandlers.autosize = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+		var
+			jqEl = $(oElement),
+			oOptions = fValueAccessor(),
+			iHeight = jqEl.height(),
+			iOuterHeight = jqEl.outerHeight(),
+			iInnerHeight = jqEl.innerHeight(),
+			iBorder = iOuterHeight - iInnerHeight,
+			iPaddingTB = iInnerHeight - iHeight,
+			iMinHeight = oOptions.minHeight ? oOptions.minHeight : 0,
+			iMaxHeight = oOptions.maxHeight ? oOptions.maxHeight : 0,
+			iScrollableHeight = oOptions.scrollableHeight ? oOptions.scrollableHeight : 1000,// max-height of .scrollable_field
+			oAutosizeTrigger = oOptions.autosizeTrigger ? oOptions.autosizeTrigger : null,
+				
+			/**
+			 * @param {boolean=} bIgnoreScrollableHeight
+			 */
+			fResize = function (bIgnoreScrollableHeight) {
+				var iPadding = 0;
+
+				if (App.browser.firefox)
+				{
+					iPadding = parseInt(jqEl.css('padding-top'), 10) * 2;
+				}
+
+				if (iMaxHeight)
+				{
+					/* 0-timeout to get the already changed text */
+					setTimeout(function () {
+						if (jqEl.prop('scrollHeight') < iMaxHeight)
+						{
+							jqEl.height(iMinHeight - iPaddingTB - iBorder);
+							jqEl.height(jqEl.prop('scrollHeight') + iPadding - iPaddingTB);
+						}
+						else
+						{
+							jqEl.height(iMaxHeight - iPaddingTB - iBorder);
+						}
+					}, 100);
+				}
+				else if (bIgnoreScrollableHeight || jqEl.prop('scrollHeight') < iScrollableHeight)
+				{
+					setTimeout(function () {
+						jqEl.height(iMinHeight - iPaddingTB - iBorder);
+						jqEl.height(jqEl.prop('scrollHeight') + iPadding - iPaddingTB);
+						//$('.calendar_event .scrollable_field').scrollTop(jqEl.height('scrollHeight'))
+					}, 100);
+				}
+			}
+		;
+
+		jqEl.on('keydown', function(oEvent, oData) {
+			fResize();
+		});
+		jqEl.on('paste', function(oEvent, oData) {
+			fResize();
+		});
+		/*jqEl.on('input', function(oEvent, oData) {
+			fResize();
+		});
+		ko.bindingHandlers.event.init(oElement, function () {
+			return {
+				'keydown': function (oData, oEvent) {
+					fResize();
+					return true;
+				}
+			};
+		}, fAllBindingsAccessor, oViewModel);*/
+
+		if (oAutosizeTrigger)
+		{
+			oAutosizeTrigger.subscribe(function (arg) {
+				fResize(arg);
+			}, this);
+		}
+
+		fResize();
+	}
+};
+
+//calendar
+ko.bindingHandlers.customBind = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+		var
+			oOptions = fValueAccessor(),
+			oKeydown = oOptions.onKeydown ? oOptions.onKeydown : null,
+			oKeyup = oOptions.onKeyup ? oOptions.onKeyup : null,
+			oPaste = oOptions.onPaste ? oOptions.onPaste : null,
+			oInput = oOptions.onInput ? oOptions.onInput : null,
+			oValueObserver = oOptions.valueObserver ? oOptions.valueObserver : null
+		;
+
+		ko.bindingHandlers.event.init(oElement, function () {
+			return {
+				'keydown': function (oData, oEvent) {
+					if(oKeydown)
+					{
+						oKeydown.call(this, oElement, oEvent, oValueObserver);
+					}
+					return true;
+				},
+				'keyup': function (oData, oEvent) {
+					if(oKeyup)
+					{
+						oKeyup.call(this, oElement, oEvent, oValueObserver);
+					}
+					return true;
+				},
+				'paste': function (oData, oEvent) {
+					if(oPaste)
+					{
+						oPaste.call(this, oElement, oEvent, oValueObserver);
+					}
+					return true;
+				},
+				'input': function (oData, oEvent) {
+					if(oInput)
+					{
+						oInput.call(this, oElement, oEvent, oValueObserver);
+					}
+					return true;
+				}
+			};
+		}, fAllBindingsAccessor, oViewModel);
+	}
+};
+
+//calendar
+ko.bindingHandlers.fade = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+		var jqEl = $(oElement),
+			jqElFaded = $('<span class="faded"></span>'),
+			oOptions = _.defaults(
+				fValueAccessor(), {
+					'color': null,
+					'css': 'fadeout'
+				}
+			),
+			oColor = oOptions.color,
+			sCss = oOptions.css,
+			updateColor = function (sColor)
+			{
+				if (sColor === '')
+				{
+					return;
+				}
+
+				var
+					oHex2Rgb = hex2Rgb(sColor),
+					sRGBColor = "rgba(" + oHex2Rgb.r + "," + oHex2Rgb.g + "," + oHex2Rgb.b
+				;
+
+				colorIt(sColor, sRGBColor);
+			},
+			hex2Rgb = function (sHex) {
+				// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+				var
+					shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+					result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(sHex)
+				;
+				sHex = sHex.replace(shorthandRegex, function(m, r, g, b) {
+					return r + r + g + g + b + b;
+				});
+
+				return result ? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16)
+				} : null;
+			},
+			colorIt = function (hex, rgb) {
+				if (Utils.isRTL())
+				{
+					jqElFaded
+						.css("filter", "progid:DXImageTransform.Microsoft.gradient(startColorstr='" + hex + "', endColorstr='" + hex + "',GradientType=1 )")
+						.css("background-image", "-webkit-gradient(linear, left top, right top, color-stop(0%," + rgb + ",1)" + "), color-stop(100%," + rgb + ",0)" + "))")
+						.css("background-image", "-moz-linear-gradient(left, " + rgb + ",1)" + "0%, " + rgb + ",0)" + "100%)")
+						.css("background-image", "-webkit-linear-gradient(left, " + rgb + "1)" + "0%," + rgb + ",0)" + "100%)")
+						.css("background-image", "-o-linear-gradient(left, " + rgb + ",1)" + "0%," + rgb + ",0)" + "100%)")
+						.css("background-image", "-ms-linear-gradient(left, " + rgb + ",1)" + "0%," + rgb + ",0)" + "100%)")
+						.css("background-image", "linear-gradient(left, " + rgb + ",1)" + "0%," + rgb + ",0)" + "100%)");
+				}
+				else
+				{
+					jqElFaded
+						.css("filter", "progid:DXImageTransform.Microsoft.gradient(startColorstr='" + hex + "', endColorstr='" + hex + "',GradientType=1 )")
+						.css("background-image", "-webkit-gradient(linear, left top, right top, color-stop(0%," + rgb + ",0)" + "), color-stop(100%," + rgb + ",1)" + "))")
+						.css("background-image", "-moz-linear-gradient(left, " + rgb + ",0)" + "0%, " + rgb + ",1)" + "100%)")
+						.css("background-image", "-webkit-linear-gradient(left, " + rgb + ",0)" + "0%," + rgb + ",1)" + "100%)")
+						.css("background-image", "-o-linear-gradient(left, " + rgb + ",0)" + "0%," + rgb + ",1)" + "100%)")
+						.css("background-image", "-ms-linear-gradient(left, " + rgb + ",0)" + "0%," + rgb + ",1)" + "100%)")
+						.css("background-image", "linear-gradient(left, " + rgb + ",0)" + "0%," + rgb + ",1)" + "100%)");
+				}
+			}
+		;
+
+		jqEl.parent().addClass(sCss);
+		jqEl.after(jqElFaded);
+
+		if (oOptions.color.subscribe !== undefined)
+		{
+			updateColor(oColor());
+			oColor.subscribe(function (sColor) {
+				updateColor(sColor);
+			}, this);
+		}
+	}
+};
+
+//helpdesk
+ko.bindingHandlers.quoteText = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+		var
+			jqEl = $(oElement),
+			jqButton = $('<span class="button_quote">' + TextUtils.i18n('HELPDESK/BUTTON_QUOTE') + '</span>'),
+			oOptions = fValueAccessor(),
+			fActionHandler = oOptions.actionHandler,
+			bIsQuoteArea = false,
+			oSelection = null,
+			sText = ''
+		;
+
+		$('#pSevenContent').append(jqButton);
+
+		$(document.body).on('click', function(oEvent) {
+
+			bIsQuoteArea = !!(($(oEvent.target)).parents('.posts')[0]);
+			if (document.getSelection)
+			{
+				oSelection = document.getSelection();
+				if (oSelection)
+				{
+					sText = oSelection.toString();
+				}
+			}
+			else
+			{
+				sText = document.selection.createRange().text;
+			}
+
+			if(bIsQuoteArea)
+			{
+				if(sText.replace(/[\n\r\s]/, '') !== '') //replace - for dbl click on empty area
+				{
+					jqButton.css({
+						'top': oEvent.clientY + 20, //20 - custom indent
+						'left': oEvent.clientX + 20
+					}).show();
+				}
+				else
+				{
+					jqButton.hide();
+				}
+			}
+			else
+			{
+				jqButton.hide();
+			}
+		});
+
+		jqButton.on('click', function(oEvent) {
+			fActionHandler.call(oViewModel, sText);
+		});
+	}
+};
+
+//settings
+ko.bindingHandlers.adjustHeightToContent = {
+	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+		var
+			jqEl = $(oElement),
+			jqTargetEl = null,
+			jqParentEl = null,
+			jqNearEl = null
+		;
+
+		_.delay(_.bind(function(){
+			jqTargetEl = $(_.max(jqEl.find('.title .text'), function(domEl){
+				return domEl.offsetWidth;
+			}));
+
+			jqParentEl = jqTargetEl.parent();
+			jqNearEl = jqParentEl.find('.icon');
+
+			jqEl.css('min-width',
+				parseInt(jqParentEl.css("margin-left")) +
+				parseInt(jqParentEl.css("padding-left")) +
+				parseInt(jqNearEl.width()) +
+				parseInt(jqNearEl.css("margin-left")) +
+				parseInt(jqNearEl.css("margin-right")) +
+				parseInt(jqNearEl.css("padding-left")) +
+				parseInt(jqNearEl.css("padding-right")) +
+				parseInt(jqTargetEl.width()) +
+				parseInt(jqTargetEl.css("margin-left")) +
+				parseInt(jqTargetEl.css("padding-left")) +
+				10
+			);
+		},this), 1);
+	}
+};
