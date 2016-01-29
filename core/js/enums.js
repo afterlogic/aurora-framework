@@ -90,34 +90,6 @@ Enums.MobilePanel = {
 /**
  * @enum {number}
  */
-Enums.Errors = {
-	'InvalidToken': 101,
-	'AuthError': 102,
-	'DataBaseError': 104,
-	'LicenseProblem': 105,
-	'DemoLimitations': 106,
-	'Captcha': 107,
-	'AccessDenied': 108,
-	'CanNotGetMessage': 202,
-	'ImapQuota': 205,
-	'NotSavedInSentItems': 304,
-	'NoRequestedMailbox': 305,
-	'CanNotChangePassword': 502,
-	'AccountOldPasswordNotCorrect': 503,
-	'FetcherIncServerNotAvailable': 702,
-	'FetcherLoginNotCorrect': 703,
-	'HelpdeskThrowInWebmail': 805,
-	'HelpdeskUserNotExists': 807,
-	'HelpdeskUserNotActivated': 808,
-	'IncorrectFileExtension': 811,
-	'MailServerError': 901,
-	'DataTransferFailed': 1100,
-	'NotDisplayedError': 1155
-};
-
-/**
- * @enum {number}
- */
 Enums.TimeFormat = {
 	'F24': '0',
 	'F12': '1'

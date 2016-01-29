@@ -20,15 +20,6 @@ Enums.HelpdeskThreadStates = {
 /**
  * @enum {number}
  */
-Enums.HelpdeskPostType = {
-	'Normal': 0,
-	'Internal': 1,
-	'System': 2
-};
-
-/**
- * @enum {number}
- */
 Enums.HelpdeskFilters = {
 	'All': 0,
 	'Pending': 1,
