@@ -1069,18 +1069,6 @@ CFolderModel.prototype.clearFolder = function (bOkAnswer)
 	}
 };
 
-CFolderModel.prototype.getNameWhithLevel = function ()
-{
-	var iLevel = this.iLevel;
-	
-	if (!this.bNamespace && iLevel > 0)
-	{
-		iLevel--;
-	}
-	
-	return Utils.strRepeat("\u00A0", iLevel * 3) + this.name();
-};
-
 /**
  * @param {Object} oFolder
  * @param {Object} oEvent
