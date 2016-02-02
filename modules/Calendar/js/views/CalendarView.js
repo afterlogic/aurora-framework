@@ -852,6 +852,8 @@ CCalendarView.prototype.setAutoReloadTimer = function ()
 
 CCalendarView.prototype.reloadAll = function ()
 {
+	this.startDateTime = 0;
+	this.endDateTime = 0;
 	this.needsToReload = true;
 	
 	this.getCalendars();
@@ -864,9 +866,30 @@ CCalendarView.prototype.getTimeLimits = function ()
 		iEnd = this.getDateFromCurrentView('end')
 	;
 	
-	this.startDateTime = iStart;
-	this.endDateTime = iEnd;
-	this.needsToReload = true;
+	if (this.startDateTime === 0 && this.endDateTime === 0)
+	{
+		this.startDateTime = iStart;
+		this.endDateTime = iEnd;
+		this.needsToReload = true;
+	}
+	else if (iStart < this.startDateTime && iEnd > this.endDateTime)
+	{
+		this.startDateTime = iStart;
+		this.endDateTime = iEnd;
+		this.needsToReload = true;
+	}
+	else if (iStart < this.startDateTime)
+	{
+		iEnd= this.startDateTime;
+		this.startDateTime = iStart;
+		this.needsToReload = true;
+	}
+	else if (iEnd > this.endDateTime)
+	{
+		iStart = this.endDateTime;
+		this.endDateTime = iEnd;
+		this.needsToReload = true;
+	}
 };
 
 CCalendarView.prototype.getCalendars = function ()
@@ -911,7 +934,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 			oCalendar = this.calendars.parseCalendar(oCalendarData);
 			aCalendarIds.push(oCalendar.id);
 			oClientCalendar = this.calendars.getCalendarById(oCalendar.id);
-			if ((oClientCalendar && oClientCalendar.sSyncToken) !== (oCalendar && oCalendar.sSyncToken))
+			if (this.needsToReload || (oClientCalendar && oClientCalendar.sSyncToken) !== (oCalendar && oCalendar.sSyncToken))
 			{
 				oCalendar = this.calendars.parseAndAddCalendar(oCalendarData);
 				if (oCalendar)
