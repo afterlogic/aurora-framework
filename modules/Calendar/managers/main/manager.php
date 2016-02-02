@@ -1353,8 +1353,11 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 
 					if ($sCalendarId !== false && $bExternal === false && !$bDefaultAccountAsEmail) {
 						unset($oVCal->METHOD);
-						if (strtoupper($sAction) == 'DECLINED' || strtoupper($sMethod) == 'CANCEL') {
-							$this->deleteEvent($oDefaultAccount, $sCalendarId, $sEventId);
+						
+						if ($sAttendee === $oDefaultAccount->Email) {
+							if (strtoupper($sAction) == 'DECLINED' || strtoupper($sMethod) == 'CANCEL') {
+								$this->deleteEvent($oDefaultAccount, $sCalendarId, $sEventId);
+							}
 						} else {
 							$this->oStorage->updateEventRaw($oDefaultAccount, $sCalendarId, $sEventId, $oVCal->serialize());
 						}

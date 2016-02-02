@@ -132,7 +132,14 @@ class FilesModule extends AApiModule
 					}
 					else
 					{
-						\MailSo\Base\Utils::FpassthruWithTimeLimitReset($mResult);
+						if ($sContentType === 'text/html')
+						{
+							echo(\MailSo\Base\HtmlUtils::ClearHtmlSimple(stream_get_contents($mResult)));
+						}
+						else
+						{
+							\MailSo\Base\Utils::FpassthruWithTimeLimitReset($mResult);
+						}
 					}
 					
 					@fclose($mResult);
