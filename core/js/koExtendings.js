@@ -58,3 +58,21 @@ ko.extenders.autoResetToFalse = function (oTarget, iOption)
 
 	return oTarget;
 };
+
+//calendar
+ko.extenders.disableLinebreaks = function (oTarget, bDisable) {
+	if (bDisable)
+	{
+		var oResult = ko.computed({
+			'read': function () {
+				return oTarget();
+			},
+			'write': function(sNewValue) {
+				oTarget(sNewValue.replace(/[\r\n\t]+/gm, ' '));
+			}
+		});
+		oResult(oTarget());
+		return oResult;
+	}
+	return oTarget;
+};

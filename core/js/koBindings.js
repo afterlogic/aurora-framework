@@ -552,7 +552,7 @@ ko.bindingHandlers.autosize = {
 			fResize = function (bIgnoreScrollableHeight) {
 				var iPadding = 0;
 
-				if (App.browser.firefox)
+				if (Browser.firefox)
 				{
 					iPadding = parseInt(jqEl.css('padding-top'), 10) * 2;
 				}
@@ -609,53 +609,6 @@ ko.bindingHandlers.autosize = {
 		}
 
 		fResize();
-	}
-};
-
-//calendar
-ko.bindingHandlers.customBind = {
-	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
-		var
-			oOptions = fValueAccessor(),
-			oKeydown = oOptions.onKeydown ? oOptions.onKeydown : null,
-			oKeyup = oOptions.onKeyup ? oOptions.onKeyup : null,
-			oPaste = oOptions.onPaste ? oOptions.onPaste : null,
-			oInput = oOptions.onInput ? oOptions.onInput : null,
-			oValueObserver = oOptions.valueObserver ? oOptions.valueObserver : null
-		;
-
-		ko.bindingHandlers.event.init(oElement, function () {
-			return {
-				'keydown': function (oData, oEvent) {
-					if(oKeydown)
-					{
-						oKeydown.call(this, oElement, oEvent, oValueObserver);
-					}
-					return true;
-				},
-				'keyup': function (oData, oEvent) {
-					if(oKeyup)
-					{
-						oKeyup.call(this, oElement, oEvent, oValueObserver);
-					}
-					return true;
-				},
-				'paste': function (oData, oEvent) {
-					if(oPaste)
-					{
-						oPaste.call(this, oElement, oEvent, oValueObserver);
-					}
-					return true;
-				},
-				'input': function (oData, oEvent) {
-					if(oInput)
-					{
-						oInput.call(this, oElement, oEvent, oValueObserver);
-					}
-					return true;
-				}
-			};
-		}, fAllBindingsAccessor, oViewModel);
 	}
 };
 

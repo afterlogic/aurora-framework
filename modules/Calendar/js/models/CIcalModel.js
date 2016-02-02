@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Common.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
 	Api = require('core/js/Api.js'),

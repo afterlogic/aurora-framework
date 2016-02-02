@@ -67,7 +67,7 @@ function CEditEventPopup()
 	this.yearlyDayText = ko.observable('');
 	this.monthlyDayText = ko.observable('');
 
-	this.subject = ko.observable('');
+	this.subject = ko.observable('').extend({'disableLinebreaks': true});
 	this.description = ko.observable('');
 
 	this.lockSelectStartEndDate = ko.observable(false);
@@ -98,7 +98,7 @@ function CEditEventPopup()
 
 	this.isRepeat = ko.observable(false);
 
-	this.location = ko.observable('');
+	this.location = ko.observable('').extend({'disableLinebreaks': true});
 
 	this.repeatPeriodOptions = ko.observableArray(this.getDisplayedPeriods());
 	this.repeatWeekIntervalOptions = ko.observableArray([1, 2, 3, 4]);
@@ -983,48 +983,6 @@ CEditEventPopup.prototype.onMainPanelClick = function ()
 	{
 		this.dateEdit(false);
 	}
-};
-
-/**
- * Prevents multiline values of fields Subject and Location.
- * 
- * @param {Object} oEl
- * @param {Object} oEv
- */
-CEditEventPopup.prototype.onKeydown = function (oEl, oEv)
-{
-	if (oEv.keyCode === Enums.Key.Enter)
-	{
-		oEv.preventDefault();
-	}
-};
-
-/**
- * Saves event by pressing enter in fields Subject and Location.
- * 
- * @param {Object} oEl
- * @param {Object} oEv
- */
-CEditEventPopup.prototype.onKeyup = function (oEl, oEv)
-{
-	if (oEv.keyCode === Enums.Key.Enter)
-	{
-		this.onSaveClick();
-	}
-};
-
-/**
- * Replaces line breaks with spaces in fields Subject and Location if the text was pasted.
- * 
- * @param {type} oEl
- * @param {type} oEv
- * @param {type} oValueObserver
- */
-CEditEventPopup.prototype.onPaste = function (oEl, oEv, oValueObserver)
-{
-	var sWithoutLineBreaks = oValueObserver().replace(/[\r\n\t]+/gm, ' ');
-
-	oValueObserver(sWithoutLineBreaks);
 };
 
 /**
