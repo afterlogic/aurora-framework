@@ -28,7 +28,7 @@ function CAccountPropertiesPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'Mail');
 	
-	this.bAllowChangeEmailSettings =  Settings.AllowUsersChangeEmailSettings;
+	this.bAllowChangeEmailSettings =  Settings.AllowChangeEmailSettings;
 	this.bAllowIdentities = Settings.AllowIdentities;
 	
 	this.isInternal = ko.observable(true);

@@ -11,10 +11,10 @@
 			<span class="value">
 				<input id="reg_login" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: login, hasfocus: loginFocus, valueUpdate: 'afterkeydown'" />
 			</span>
-			<span class="value suffix" data-bind="visible: domains().length > 0">
+			<span class="value suffix" data-bind="visible: aDomains.length > 0">
 				<span class="text">@</span>
-				<span class="text" data-bind="text: domain, visible: domains().length === 1"></span>
-				<select data-bind="visible: domains().length > 1, options: domains, value: selectedDomain"></select>
+				<span class="text" data-bind="text: domain, visible: aDomains.length === 1"></span>
+				<select data-bind="visible: aDomains.length > 1, options: aDomains, value: selectedDomain"></select>
 			</span>
 		</div>
 		<div class="row password" data-bind="css: {'focused': passwordFocus(), 'filled': password().length > 0}">
@@ -29,11 +29,11 @@
 				<input id="reg_confirm_password" class="input" autocomplete="off" spellcheck="false" type="password" data-bind="value: confirmPassword, hasfocus: confirmPasswordFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
-		<!-- ko if: allowQuestionPart -->
+		<!-- ko if: bAllowQuestionPart -->
 		<div class="row question" data-bind="css: {'focused': questionFocus(), 'filled': question().length > 0}">
 			<label class="title placeholder" data-i18n="LOGIN/LABEL_SELECT_QUESTION" data-bind="i18n: 'text'"></label>
 			<span class="value">
-				<span class="custom_selector input" data-bind="customSelect: {'control': false, 'expand': 'expand', 'expandState': questionFocus, 'options': registrationQuestions, value: question, optionsText: 'text', optionsValue: 'value'}">
+				<span class="custom_selector input" data-bind="customSelect: {'control': false, 'expand': 'expand', 'expandState': questionFocus, 'options': aRegistrationQuestions, value: question, optionsText: 'text', optionsValue: 'value'}">
 					<span class="name" data-bind="text: question"></span>
 					<span class="control">
 						<span class="icon"></span>

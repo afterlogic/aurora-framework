@@ -5,8 +5,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Browser = require('core/js/Browser.js'),
 	Storage = require('core/js/Storage.js'),
@@ -22,8 +23,8 @@ var
  */
 function CLoginView()
 {
-	this.allowRegistration = Settings.AllowRegistration;
-	this.allowPasswordReset = Settings.AllowPasswordReset;
+	this.bAllowRegistration = Settings.AllowRegistration;
+	this.bAllowResetPassword = Settings.AllowResetPassword;
 
 	this.email = ko.observable('');
 	this.login = ko.observable('');
@@ -42,27 +43,18 @@ function CLoginView()
 		}
 	}, this);
 
-	this.loginFormType = ko.observable(Settings.LoginFormType);
-	this.loginAtDomainValue = ko.observable(Settings.LoginAtDomainValue);
-	this.loginAtDomainValueWithAt = ko.computed(function () {
-		var sV = this.loginAtDomainValue();
-		return '' === sV ? '' : '@' + sV;
-	}, this);
+	this.sLoginAtDomain = Settings.LoginAtDomain !== '' ? '@' + Settings.LoginAtDomain : '';
 
 	this.emailVisible = ko.computed(function () {
-		return Enums.LoginFormType.Login !== this.loginFormType();
+		return Enums.LoginFormType.Login !== Settings.LoginFormType;
 	}, this);
 	
 	this.loginVisible = ko.computed(function () {
-		return Enums.LoginFormType.Email !== this.loginFormType();
+		return Enums.LoginFormType.Email !== Settings.LoginFormType;
 	}, this);
 
-	this.signMeType = ko.observable(Settings.LoginSignMeType);
-	
-	this.signMe = ko.observable(Enums.LoginSignMeType.DefaultOn === this.signMeType());
-	this.signMeType.subscribe(function () {
-		this.signMe(Enums.LoginSignMeType.DefaultOn === this.signMeType());
-	}, this);
+	this.bUseSignMe = (Settings.LoginSignMeType === Enums.LoginSignMeType.Unuse);
+	this.signMe = ko.observable(Enums.LoginSignMeType.DefaultOn === Settings.LoginSignMeType);
 	this.signMeFocused = ko.observable(false);
 
 	this.emailDom = ko.observable(null);
@@ -81,8 +73,8 @@ function CLoginView()
 
 	this.loginCommand = Utils.createCommand(this, this.signIn, this.canBeLogin);
 
-	this.email(Settings.DemoWebMailLogin || '');
-	this.password(Settings.DemoWebMailPassword || '');
+	this.email(Settings.DemoLogin || '');
+	this.password(Settings.DemoPassword || '');
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{
@@ -129,16 +121,15 @@ CLoginView.prototype.signIn = function ()
 	$('.check_autocomplete_input').trigger('input').trigger('change').trigger('keydown');
 
 	var
-		iLoginType = this.loginFormType(),
 		sEmail = this.email(),
 		sLogin = this.login(),
 		sPassword = this.password()
 	;
 
 	if (!this.loading() && !this.changingLanguage() && '' !== $.trim(sPassword) && (
-		(Enums.LoginFormType.Login === iLoginType && '' !== $.trim(sLogin)) ||
-		(Enums.LoginFormType.Email === iLoginType && '' !== $.trim(sEmail)) ||
-		(Enums.LoginFormType.Both === iLoginType && '' !== $.trim(sEmail))
+		(Enums.LoginFormType.Login === Settings.LoginFormType && '' !== $.trim(sLogin)) ||
+		(Enums.LoginFormType.Email === Settings.LoginFormType && '' !== $.trim(sEmail)) ||
+		(Enums.LoginFormType.Both === Settings.LoginFormType && '' !== $.trim(sEmail))
 	))
 	{
 		this.sendRequest();

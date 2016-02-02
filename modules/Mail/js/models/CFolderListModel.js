@@ -21,7 +21,7 @@ function CFolderListModel()
 	this.iAccountId = 0;
 	this.initialized = ko.observable(false);
 
-	this.expandFolders = ko.observable(false);
+	this.bExpandFolders = false;
 	this.expandNames = ko.observableArray([]);
 	this.collection = ko.observableArray([]);
 	this.options = ko.observableArray([]);
@@ -194,7 +194,7 @@ CFolderListModel.prototype.parse = function (iAccountId, oData, oNamedFolderList
 	this.iAccountId = iAccountId;
 	this.initialized(true);
 
-	this.expandFolders(Settings.MailExpandFolders && !Storage.hasData('folderAccordion'));
+	this.bExpandFolders = Settings.AllowExpandFolders && !Storage.hasData('folderAccordion');
 	if (!Storage.hasData('folderAccordion'))
 	{
 		Storage.setData('folderAccordion', []);
@@ -226,7 +226,6 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 		sFolderFullName = '',
 		oSubFolders = null,
 		aSubfolders = [],
-		bExpandFolders = this.expandFolders(),
 		oAccount = Accounts.getAccount(this.iAccountId),
 		bDisableManageSubscribe = oAccount.extensionExists('DisableManageSubscribe'),
 		fDetectSpamFolder = function () {
@@ -269,7 +268,7 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 					oFolderOld.messageCount(), oFolderOld.unseenMessageCount(), false);
 			}
 
-			if (bExpandFolders && oSubFolders !== null)
+			if (this.bExpandFolders && oSubFolders !== null)
 			{
 				oFolder.expanded(true);
 				this.expandNames().push(Types.pString(aRawCollection[iIndex].Name));
@@ -343,7 +342,7 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 			}
 		}
 
-		if (bExpandFolders)
+		if (this.bExpandFolders)
 		{
 			Storage.setData('folderAccordion', this.expandNames());
 		}

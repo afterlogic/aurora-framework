@@ -60,7 +60,7 @@ SendingUtils.send = function (sMethod, oParameters, bShowLoading, fSendMessageRe
 			oParameters.Bcc.indexOf(sCurrEmail) > -1)
 	;
 	
-	if (Settings.SaveRepliedToCurrFolder && !bSelfRecipient && Types.isNonEmptyArray(oParameters.DraftInfo, 3))
+	if (Settings.SaveRepliesToCurrFolder && !bSelfRecipient && Types.isNonEmptyArray(oParameters.DraftInfo, 3))
 	{
 		sSentFolder = oParameters.DraftInfo[2];
 	}

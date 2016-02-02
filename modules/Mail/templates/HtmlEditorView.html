@@ -91,7 +91,7 @@
 			</a>
 
 			<a href="javascript:void(0);" class="item image" data-bind="click: insertImage, 
-					visible: allowInsertImage, css: {'expand': visibleInsertImagePopup}, initDom: insertImageDropdownDom, customTooltip: 'HTMLEDITOR/INSERT_IMAGE'">
+					visible: bAllowInsertImage, css: {'expand': visibleInsertImagePopup}, initDom: insertImageDropdownDom, customTooltip: 'HTMLEDITOR/INSERT_IMAGE'">
 				<span class="icon"></span>
 
 				<span class="dropdown">
@@ -122,10 +122,10 @@
 				<span class="icon"></span>
 			</a>
 			
-			<a href="javascript:void(0);" class="item rtl" data-bind="visible: allowChangeInputDirection, click: function () { oCrea.setRtlDirection(); }, customTooltip: 'HTMLEDITOR/RTL_DIRECTION'">
+			<a href="javascript:void(0);" class="item rtl" data-bind="visible: bAllowChangeInputDirection, click: function () { oCrea.setRtlDirection(); }, customTooltip: 'HTMLEDITOR/RTL_DIRECTION'">
 				<span class="icon">rtl</span>
 			</a>
-			<a href="javascript:void(0);" class="item ltr" data-bind="visible: allowChangeInputDirection, click: function () { oCrea.setLtrDirection(); }, customTooltip: 'HTMLEDITOR/LTR_DIRECTION'">
+			<a href="javascript:void(0);" class="item ltr" data-bind="visible: bAllowChangeInputDirection, click: function () { oCrea.setLtrDirection(); }, customTooltip: 'HTMLEDITOR/LTR_DIRECTION'">
 				<span class="icon">ltr</span>
 			</a>
 		</div>

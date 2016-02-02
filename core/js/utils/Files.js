@@ -6,7 +6,7 @@ var
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	
-	Settings = require('core/js/Settings.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	FilesUtils = {}
 ;
@@ -116,11 +116,11 @@ FilesUtils.showErrorIfAttachmentSizeLimit = function (sFileName, iSize)
 	var
 		sWarning = TextUtils.i18n('COMPOSE/UPLOAD_ERROR_FILENAME_SIZE', {
 			'FILENAME': sFileName,
-			'MAXSIZE': TextUtils.getFriendlySize(Settings.AttachmentSizeLimit)
+			'MAXSIZE': TextUtils.getFriendlySize(UserSettings.AttachmentSizeLimit)
 		})
 	;
 	
-	if (Settings.AttachmentSizeLimit > 0 && iSize > Settings.AttachmentSizeLimit)
+	if (UserSettings.AttachmentSizeLimit > 0 && iSize > UserSettings.AttachmentSizeLimit)
 	{
 		Popups.showPopup(AlertPopup, [sWarning]);
 		return true;

@@ -31,10 +31,9 @@ function CLoginView()
 	this.signMeType = ko.observable(true);
 	this.signMe = ko.observable(true);
 	
-	this.loginDescription = ko.observable('');
 	this.loginProcess = ko.observable(false);
 
-	this.loginCustomLogo = ko.observable(Settings.HelpdeskStyleImage);
+	this.sLogoUrl = Settings.LoginLogoUrl;
 	
 	this.activationDescription = ko.observable('');
 	
@@ -105,14 +104,11 @@ function CLoginView()
 	this.gotoRegister = ko.observable(false);
 	this.gotoSignin = ko.observable(false);
 	this.gotoSocialRegister = ko.observable(false);
-	this.gotoChangepass = ko.observable(Settings.HelpdeskForgotHash ? true : false);
+	this.gotoChangepass = ko.observable(Settings.ForgotHash ? true : false);
 
-	this.socialFacebook = ko.observable(Settings.SocialFacebook);
-	this.socialGoogle = ko.observable(Settings.SocialGoogle);
-	this.socialTwitter = ko.observable(Settings.SocialTwitter);
-
-	this.socialEmail = ko.observable(Settings.SocialEmail);
-	this.socialIsLoggedIn = ko.observable(Settings.SocialIsLoggedIn);
+	this.bAllowFacebookAuth = Settings.AllowFacebookAuth;
+	this.sAllowGoogleAuth = Settings.AllowGoogleAuth;
+	this.sAllowTwitterAuth = Settings.AllowTwitterAuth;
 
 	this.shake = ko.observable(false).extend({'autoResetToFalse': 800});
 
@@ -186,9 +182,10 @@ CLoginView.prototype.onHide = function ()
 
 CLoginView.prototype.socialNetworkLogin = function ()
 {
-	this.regSocialEmail(this.socialEmail());
+	this.regSocialEmail(Settings.SocialEmail);
 
-	if (this.socialIsLoggedIn()) {
+	if (Settings.SocialIsLoggedIn)
+	{
 		this.gotoSocialRegister(true);
 	}
 };
@@ -448,7 +445,7 @@ CLoginView.prototype.actionChangepass = function ()
 		this.changingPasswordProcess(true);
 
 		Ajax.send('ChangePassword', {
-			'ActivateHash': Settings.HelpdeskForgotHash,
+			'ActivateHash': Settings.ForgotHash,
 			'NewPassword': this.changepassNewpass()
 		}, this.onHelpdeskForgotChangePasswordResponse, this);
 	}

@@ -63,10 +63,7 @@ function CCalendarView()
 	this.linkRow = 0;
 	this.linkColumn = 0;
 	
-	this.publicCalendarId = (this.isPublic) ? Settings.CalendarPubHash : '';
-
-	this.timeFormat = (UserSettings.defaultTimeFormat() === Enums.TimeFormat.F24) ? 'HH:mm' : 'hh:mm A';
-	this.dateFormat = UserSettings.DefaultDateFormat;
+	this.sTimeFormat = (UserSettings.timeFormat() === Enums.TimeFormat.F24) ? 'HH:mm' : 'hh:mm A';
 
 	this.topPositionToday = ko.observable('.fc-widget-content.fc-today');
 	this.loadOnce = false;
@@ -191,10 +188,10 @@ function CCalendarView()
 
 	this.revertFunction = null;
 	
-	this.calendarSharing = Settings.AllowCalendar && Settings.CalendarSharing;
+	this.bAllowShare = Settings.AllowShare;
 	
 	this.defaultViewName = ko.computed(function () {
-		switch (Settings.CalendarDefaultTab)
+		switch (Settings.DefaultTab)
 		{
 			case Enums.CalendarDefaultTab.Day:
 				return 'agendaDay';
@@ -294,17 +291,16 @@ CCalendarView.prototype.initFullCalendar = function ()
 
 CCalendarView.prototype.applyCalendarSettings = function ()
 {
-	this.timeFormat = (UserSettings.defaultTimeFormat() === Enums.TimeFormat.F24) ? 'HH:mm' : 'hh:mm A';
-	this.dateFormat = UserSettings.DefaultDateFormat;
+	this.sTimeFormat = (UserSettings.timeFormat() === Enums.TimeFormat.F24) ? 'HH:mm' : 'hh:mm A';
 
 	this.calendarGridDom().removeClass("fc-show-weekends");
-	if (Settings.CalendarShowWeekEnds)
+	if (Settings.HighlightWorkingDays)
 	{
 		this.calendarGridDom().addClass("fc-show-weekends");
 	}
 
-	this.fullcalendarOptions.timeFormat = this.timeFormat;
-	this.fullcalendarOptions.axisFormat = this.timeFormat;
+	this.fullcalendarOptions.timeFormat = this.sTimeFormat;
+	this.fullcalendarOptions.axisFormat = this.sTimeFormat;
 	this.fullcalendarOptions.defaultView = this.defaultViewName();
 	this.fullcalendarOptions.lang = moment.locale();
 	
@@ -325,14 +321,14 @@ CCalendarView.prototype.applyFirstDay = function ()
 
 	if (App.isAuth())
 	{
-		this.fullcalendarOptions.firstDay = Settings.CalendarWeekStartsOn;
+		this.fullcalendarOptions.firstDay = Settings.WeekStartsOn;
 	}
 	
 	_.each(this.aDayNames, function (sDayName) {
 		aDayNames.push(sDayName);
 	});
 	
-	switch (Settings.CalendarWeekStartsOn)
+	switch (Settings.WeekStartsOn)
 	{
 		case 1:
 			sLastDay = aDayNames.shift();
@@ -344,7 +340,7 @@ CCalendarView.prototype.applyFirstDay = function ()
 			break;
 	}
 	
-	this.$datePicker.datepicker('option', 'firstDay', Settings.CalendarWeekStartsOn);
+	this.$datePicker.datepicker('option', 'firstDay', Settings.WeekStartsOn);
 };
 
 CCalendarView.prototype.initDatePicker = function ()
@@ -543,15 +539,15 @@ CCalendarView.prototype.viewRenderCallback = function (oView, oElement)
 	} 
 	catch(err) { }	
 	
-	if (oView.name !== 'month' && Settings.CalendarShowWorkDay)
+	if (oView.name !== 'month' && Settings.HighlightWorkingHours)
 	{
 		$('.fc-slats tr').each(function() {
 			$('tr .fc-time span').each(function() {
 				var 
 					theValue = $(this).eq(0).text(),
 					theDate = (theValue !== '') ? Date.parse(constDate + theValue) : prevDate,
-					rangeTimeFrom = Date.parse(constDate + Settings.CalendarWorkDayStarts + ':00'),
-					rangeTimeTo = Date.parse(constDate + Settings.CalendarWorkDayEnds + ':00')
+					rangeTimeFrom = Date.parse(constDate + Settings.WorkdayStarts + ':00'),
+					rangeTimeTo = Date.parse(constDate + Settings.WorkdayEnds + ':00')
 				;
 				prevDate = theDate;
 				if(theDate < rangeTimeFrom || theDate >= rangeTimeTo)
@@ -880,7 +876,7 @@ CCalendarView.prototype.getCalendars = function ()
 
 	Ajax.send('GetCalendars', {
 			'IsPublic': this.isPublic ? 1 : 0,
-			'PublicCalendarId': this.publicCalendarId
+			'PublicCalendarId': Settings.PublicCalendarId
 		}, this.onGetCalendarsResponse, this
 	);
 };
@@ -1513,8 +1509,8 @@ CCalendarView.prototype.openEventPopup = function (oCalendar, oStart, oEnd, bAll
 			Start: oStart,
 			End: oEnd,
 			AllDay: bAllDay,
-			TimeFormat: this.timeFormat,
-			DateFormat: this.dateFormat,
+			TimeFormat: this.sTimeFormat,
+			DateFormat: UserSettings.DateFormat,
 			CallbackAttendeeActionDecline: _.bind(this.attendeeActionDecline, this)
 		}]);
 	}
@@ -1563,8 +1559,8 @@ CCalendarView.prototype.eventClickCallback = function (oEventData)
 					Owner: oEventData.owner,
 					Appointment: oEventData.appointment,
 					OwnerName: oEventData.ownerName,
-					TimeFormat: this.timeFormat,
-					DateFormat: this.dateFormat,
+					TimeFormat: this.sTimeFormat,
+					DateFormat: UserSettings.DateFormat,
 					AllEvents: iResult,
 					CallbackSave: _.bind(this.updateEvent, this),
 					CallbackDelete: _.bind(this.deleteEvent, this),

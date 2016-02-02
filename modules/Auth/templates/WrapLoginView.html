@@ -1,9 +1,9 @@
 <div class="screen LoginLayout" style="display: none;">
 	<div class="login_panel" data-bind="css: {'email': emailVisible, 'login': loginVisible, 'flipForgot': gotoForgot(), 'flipRegister': gotoRegister()}">
 		<div class="login_panel_content" style="backface-visibility: inherit;">
-			<div class="header" data-bind="css: {'custom_logo': loginCustomLogo()}">
-				<!-- ko if: loginCustomLogo() === '' --><span class="icon"></span><!-- /ko -->
-				<!-- ko if: loginCustomLogo() !== '' --><img data-bind="attr: {'src': loginCustomLogo()}"/><!-- /ko -->
+			<div class="header" data-bind="css: {'custom_logo': sCustomLogoUrl}">
+				<!-- ko if: sCustomLogoUrl === '' --><span class="icon"></span><!-- /ko -->
+				<!-- ko if: sCustomLogoUrl !== '' --><img data-bind="attr: {'src': sCustomLogoUrl}"/><!-- /ko -->
 				<span class="text" data-i18n="LOGIN/HEADING" data-bind="i18n: 'text'"></span>
 			</div>
 
@@ -19,13 +19,13 @@
 					<!-- ko template: {name: oLoginView.ViewTemplate, data: oLoginView} --><!-- /ko -->
 					<div class="clear"></div>
 				</div>
-				<!-- ko if: allowRegistration -->
+				<!-- ko if: bAllowRegistration -->
 				<div class="content register clearfix">
 					<!-- ko template: {name: oRegisterView.ViewTemplate, data: oRegisterView} --><!-- /ko -->
 					<div class="clear"></div>
 				</div>
 				<!-- /ko -->
-				<!-- ko if: allowPasswordReset -->
+				<!-- ko if: bAllowResetPassword -->
 				<div class="content forgot clearfix">
 					<!-- ko template: {name: oForgotView.ViewTemplate, data: oForgotView} --><!-- /ko -->
 					<div class="clear"></div>
@@ -34,12 +34,12 @@
 			<!-- /ko -->
 
 			<!--{%INCLUDE-START/Login-Before-Description/INCLUDE-END%}-->
-			<div class="description" data-bind="visible: '' !== loginDescription(), html: loginDescription"></div>
+			<div class="description" data-bind="visible: sInfoText !== '', html: sInfoText"></div>
 			<!--{%INCLUDE-START/Login-After-Description/INCLUDE-END%}-->
 			<div class="clear"></div>
 
 
-			<div class="languages demo" data-bind="visible: allowLanguages() && !viewLanguagesAsDropdown()">
+			<div class="languages demo" data-bind="visible: bAllowChangeLanguage && bUseFlagsLanguagesView">
 				<div class="title" data-i18n="LOGIN/LANGUAGE_SELECTOR_TITLE" data-bind="i18n: 'text'"></div>
 				<div data-bind="foreach: aLanguages">
 					<span class="item" data-bind="css: value + ($parent.currentLanguage() === value ? ' selected' : ''), click: function () { $parent.changeLanguage(value); }">
@@ -52,7 +52,7 @@
 			</div>
 		</div>
 
-		<div class="languages" data-bind="visible: allowLanguages() && viewLanguagesAsDropdown()">
+		<div class="languages" data-bind="visible: bAllowChangeLanguage && !bUseFlagsLanguagesView">
 			<span class="custom_selector" data-bind="dropdown: {'control': false}, css: {'right': rtl()}">
 				<span class="name" data-bind="css: currentLanguage">
 					<span class="icon"></span>

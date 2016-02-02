@@ -9,8 +9,8 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
-	Settings = require('core/js/Settings.js'),
-	Screens = require('core/js/Screens.js')
+	Screens = require('core/js/Screens.js'),
+	UserSettings = require('core/js/Settings.js')
 ;
 
 /**
@@ -136,14 +136,14 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		{
 			oRequest.AccountID = App.defaultAccountId();
 		}
-		else if (Settings.TenantHash)
+		else if (UserSettings.TenantHash)
 		{
-			oRequest.TenantHash = Settings.TenantHash;
+			oRequest.TenantHash = UserSettings.TenantHash;
 		}
 		
-		if (Settings.CsrfToken)
+		if (UserSettings.CsrfToken)
 		{
-			oRequest.Token = Settings.CsrfToken;
+			oRequest.Token = UserSettings.CsrfToken;
 		}
 		
 		this.abortRequests(oRequest);

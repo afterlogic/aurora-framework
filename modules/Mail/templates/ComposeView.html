@@ -20,7 +20,7 @@
 
 								<span class="table-compressor" data-bind="visible: bAllowHeadersCompressing, click: changeHeadersCompressed, css: { 'compressed': headersCompressed }"></span>
 
-								<div class="notice" data-bind="visible: isDemo, i18n: 'text'" data-i18n="DEMO/WARNING_SEND_EMAIL_TO_DEMO_ONLY"></div>
+								<div class="notice" data-bind="visible: bDemo, i18n: 'text'" data-i18n="DEMO/WARNING_SEND_EMAIL_TO_DEMO_ONLY"></div>
 								<table class="fields">
 									<tr class="first_row from" data-bind="visible: visibleFrom() && !headersCompressed()">
 										<td class="label">

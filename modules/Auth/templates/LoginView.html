@@ -15,7 +15,7 @@
 					type="text" spellcheck="false" data-bind="value: login, hasfocus: loginFocus, valueUpdate: 'afterkeydown', initDom: loginDom, i18n: 'placeholder'" />
 			</span>
 			<span class="value suffix">
-				<span class="text" data-bind="text: loginAtDomainValueWithAt"></span>
+				<span class="text" data-bind="text: sLoginAtDomain"></span>
 			</span>
 		</div>
 		<!-- /ko -->
@@ -31,7 +31,7 @@
 	<div class="row buttons">
 		<button type="submit" tabindex="5" class="button login" data-bind="text: signInButtonText, command: loginCommand" id="selenium_login_signin_button"></button>
 	</div>
-	<div class="row signme" data-bind="visible: signMeType() !== Enums.LoginSignMeType.Unuse">
+	<div class="row signme" data-bind="visible: bUseSignMe">
 		<span>
 			<label class="custom_checkbox" data-bind="css: {'checked': signMe, 'focus': signMeFocused}">
 				<span class="icon"></span>
@@ -41,11 +41,11 @@
 		</span>
 	</div>
 	<div class="row links">
-		<div class="forgot" data-bind="visible: allowPasswordReset">
+		<div class="forgot" data-bind="visible: bAllowResetPassword">
 			<span class="link" data-bind="click: function () {$parent.gotoForgot(true);}, i18n: 'text'"
 				  data-i18n="LOGIN/LINK_FORGOT"></span>
 		</div>
-		<div class="register" data-bind="visible: allowRegistration">
+		<div class="register" data-bind="visible: bAllowRegistration">
 			<span class="link" data-bind="click: function () {$parent.gotoRegister(true);}, i18n: 'text'"
 				  data-i18n="LOGIN/LINK_REGISTER"></span>
 		</div>

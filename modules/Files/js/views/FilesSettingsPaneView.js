@@ -17,7 +17,7 @@ function CFilesSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'Files');
 
-	this.enableFiles = ko.observable(Settings.filesEnable());
+	this.enableFiles = ko.observable(Settings.enableFiles());
 }
 
 _.extendOwn(CFilesSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
@@ -33,7 +33,7 @@ CFilesSettingsPaneView.prototype.getCurrentValues = function ()
 
 CFilesSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.enableFiles(Settings.filesEnable());
+	this.enableFiles(Settings.enableFiles());
 };
 
 CFilesSettingsPaneView.prototype.getParametersForSave = function ()

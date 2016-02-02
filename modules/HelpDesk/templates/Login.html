@@ -1,10 +1,9 @@
 <div class="panels">
-	<!-- loginCustomLogo -->
 	<div class="login_panel" data-bind="css: {'flipForgot': gotoForgot(), 'flipRegister': gotoRegister(), 'flipSocialRegister': gotoSocialRegister(), 'flipChangepass': gotoChangepass()}">
 		<div class="login_panel_content">
-			<div class="header" data-bind="css: {'custom_logo': loginCustomLogo()}">
-				<!-- ko if: loginCustomLogo() === '' --><span class="icon"></span><!-- /ko -->
-				<!-- ko if: loginCustomLogo() !== '' --><img data-bind="attr: {'src': loginCustomLogo()}"/><!-- /ko -->
+			<div class="header" data-bind="css: {'custom_logo': sLogoUrl}">
+				<!-- ko if: sLogoUrl === '' --><span class="icon"></span><!-- /ko -->
+				<!-- ko if: sLogoUrl !== '' --><img data-bind="attr: {'src': sLogoUrl}"/><!-- /ko -->
 				<span class="text" data-i18n="LOGIN/HEADING" data-bind="i18n: 'text'"></span>
 			</div>
 			<!--<div class="content clearfix" data-bind="css: {'flipIn': gotoForgot() && forgotAnimation(), 'flipOut': !gotoForgot() && forgotAnimation()}">-->
@@ -45,7 +44,6 @@
 					   {%INCLUDE-START/Login-Before-Description/INCLUDE-END%}
 						
 					</form>
-					<div class="description" data-bind="visible: '' !== loginDescription(), html: loginDescription"></div>
 					<div class="clear"></div>
 				</div>
 
@@ -133,13 +131,13 @@
 							  data-i18n="HELPDESK/BUTTON_BACK"></span>
 					</div>
 					<div class="row social links">
-						<div class="facebook" data-bind="visible: socialFacebook, click: function () {onSocialClick('facebook');}">
+						<div class="facebook" data-bind="visible: bAllowFacebookAuth, click: function () {onSocialClick('facebook');}">
 							<span class="text" data-bind="i18n: 'text'" data-i18n="Log In"></span>
 						</div>
-						<div class="google" data-bind="visible: socialGoogle, click: function () {onSocialClick('google');}">
+						<div class="google" data-bind="visible: sAllowGoogleAuth, click: function () {onSocialClick('google');}">
 							<span class="text" data-bind="i18n: 'text'" data-i18n="Log In"></span>
 						</div>
-						<div class="twitter" data-bind="visible: socialTwitter, click: function () {onSocialClick('twitter');}">
+						<div class="twitter" data-bind="visible: sAllowTwitterAuth, click: function () {onSocialClick('twitter');}">
 							<span class="text" data-bind="i18n: 'text'" data-i18n="Log In"></span>
 						</div>
 					</div>

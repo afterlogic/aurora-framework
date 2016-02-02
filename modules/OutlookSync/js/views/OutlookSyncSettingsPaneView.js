@@ -25,9 +25,9 @@ function COutlookSyncSettingsPaneView()
 	
 	this.bDemo = UserSettings.IsDemo;
 
-	this.outlookSyncPlugin32 = Settings.OutlookSyncPlugin32;
-	this.outlookSyncPlugin64 = Settings.OutlookSyncPlugin64;
-	this.outlookSyncPluginReadMore = Settings.OutlookSyncPluginReadMore;
+	this.sPlugin32DownloadLink = Settings.Plugin32DownloadLink;
+	this.sPlugin64DownloadLink = Settings.Plugin64DownloadLink;
+	this.sPluginReadMoreLink = Settings.PluginReadMoreLink;
 
 	this.credentialsHintText = ko.observable(TextUtils.i18n('SETTINGS/MOBILE_CREDENTIALS_TITLE', {'EMAIL': App.defaultAccountEmail()}));
 }

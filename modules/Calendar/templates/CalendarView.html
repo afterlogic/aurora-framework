@@ -23,7 +23,7 @@
 									<!-- ko template: {name: 'Calendar_CalendarItemView'} --><!-- /ko -->
 								<!-- /ko -->
 							</div>
-							<div class="items_list calendars" data-bind="visible: (calendars.sharedCount() > 0 && calendarSharing)">
+							<div class="items_list calendars" data-bind="visible: (calendars.sharedCount() > 0 && bAllowShare)">
 								<span class="section_title">
 									<span class="title shared">
 										<span class="icon"></span>
@@ -34,7 +34,7 @@
 									<!-- ko template: {name: 'Calendar_CalendarItemView'} --><!-- /ko -->
 								<!-- /ko -->						
 							</div>
-							<div class="items_list calendars" data-bind="visible: (calendars.sharedToAllCount() > 0 && calendarSharing)">
+							<div class="items_list calendars" data-bind="visible: (calendars.sharedToAllCount() > 0 && bAllowShare)">
 								<span class="section_title">
 									<span class="title shared-all">
 										<span class="icon"></span>

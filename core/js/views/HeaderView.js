@@ -6,13 +6,14 @@ var
 	
 	Types = require('core/js/utils/Types.js'),
 	
-	App = require('core/js/App.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
 	Ajax = require('core/js/Ajax.js'),
-	Screens = require('core/js/Screens.js'),
+	App = require('core/js/App.js'),
+	Browser = require('core/js/Browser.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Routing = require('core/js/Routing.js'),
 	Settings = require('core/js/Settings.js'),
-	Browser = require('core/js/Browser.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
 ;
 
@@ -40,7 +41,7 @@ function CHeaderView()
 	
 	this.showLogout = App.isAuth() && !App.isPublic();
 
-	this.appCustomLogo = Settings.CustomLogo;
+	this.sLogoUrl = Settings.LogoUrl;
 	
 	this.mobileDevice = Browser.mobileDevice;
 	

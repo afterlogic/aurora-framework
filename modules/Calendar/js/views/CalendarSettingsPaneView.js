@@ -23,18 +23,18 @@ function CCalendarSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'Calendar');
 
-	this.availableTimes = ko.observableArray(CalendarUtils.getTimeListStepHour((UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
-	UserSettings.defaultTimeFormat.subscribe(function () {
-		this.availableTimes(CalendarUtils.getTimeListStepHour((UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
+	this.availableTimes = ko.observableArray(CalendarUtils.getTimeListStepHour((UserSettings.timeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
+	UserSettings.timeFormat.subscribe(function () {
+		this.availableTimes(CalendarUtils.getTimeListStepHour((UserSettings.timeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
 	}, this);
 
 	/* Editable fields */
-	this.showWeekends = ko.observable(Settings.CalendarShowWeekEnds);
-	this.selectedWorkdayStarts = ko.observable(Settings.CalendarWorkDayStarts);
-	this.selectedWorkdayEnds = ko.observable(Settings.CalendarWorkDayEnds);
-	this.showWorkday = ko.observable(Settings.CalendarShowWorkDay);
+	this.showWeekends = ko.observable(Settings.HighlightWorkingDays);
+	this.selectedWorkdayStarts = ko.observable(Settings.WorkdayStarts);
+	this.selectedWorkdayEnds = ko.observable(Settings.WorkdayEnds);
+	this.showWorkday = ko.observable(Settings.HighlightWorkingHours);
 	this.weekStartsOn = ko.observable(Settings.CalendarWeekStartsOn);
-	this.defaultTab = ko.observable(Settings.CalendarDefaultTab);
+	this.defaultTab = ko.observable(Settings.DefaultTab);
 	/*-- Editable fields */
 }
 
@@ -56,18 +56,18 @@ CCalendarSettingsPaneView.prototype.getCurrentValues = function()
 
 CCalendarSettingsPaneView.prototype.revertGlobalValues = function()
 {
-	this.showWeekends(Settings.CalendarShowWeekEnds);
-	this.selectedWorkdayStarts(Settings.CalendarWorkDayStarts);
-	this.selectedWorkdayEnds(Settings.CalendarWorkDayEnds);
-	this.showWorkday(Settings.CalendarShowWorkDay);
-	this.weekStartsOn(Settings.CalendarWeekStartsOn);
-	this.defaultTab(Settings.CalendarDefaultTab);
+	this.showWeekends(Settings.HighlightWorkingDays);
+	this.selectedWorkdayStarts(Settings.WorkdayStarts);
+	this.selectedWorkdayEnds(Settings.WorkdayEnds);
+	this.showWorkday(Settings.HighlightWorkingHours);
+	this.weekStartsOn(Settings.WeekStartsOn);
+	this.defaultTab(Settings.DefaultTab);
 };
 
 CCalendarSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'ShowWeekEnds': this.showWeekends() ? 1 : 0,
+		'HighlightWorkingDays': this.showWeekends() ? 1 : 0,
 		'ShowWorkDay': this.showWorkday() ? 1 : 0,
 		'WorkDayStarts': Types.pInt(this.selectedWorkdayStarts()),
 		'WorkDayEnds': Types.pInt(this.selectedWorkdayEnds()),

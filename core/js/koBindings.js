@@ -1,14 +1,16 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
 	$ = require('jquery'),
+	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
 	Types = require('core/js/utils/Types.js'),
-	Browser = require('core/js/Browser.js')
+	Utils = require('core/js/utils/Common.js'),
+	
+	Browser = require('core/js/Browser.js'),
+	UserSettings = require('core/js/Settings.js')
 ;
 
 ko.bindingHandlers.i18n = {
@@ -701,7 +703,7 @@ ko.bindingHandlers.fade = {
 				} : null;
 			},
 			colorIt = function (hex, rgb) {
-				if (Utils.isRTL())
+				if (UserSettings.IsRTL)
 				{
 					jqElFaded
 						.css("filter", "progid:DXImageTransform.Microsoft.gradient(startColorstr='" + hex + "', endColorstr='" + hex + "',GradientType=1 )")

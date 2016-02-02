@@ -5,6 +5,7 @@ var
 	$ = require('jquery'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	Settings = require('core/js/Settings.js'),
 	
 	oModules = {},
@@ -30,7 +31,7 @@ module.exports = {
 			}
 		});
 		
-		if (Settings.AllowUsersChangeInterfaceSettings)
+		if (Settings.AllowChangeSettings)
 		{
 			this.run('Settings', 'registerSettingsTab', [function () { return require('core/js/views/CommonSettingsPaneView.js'); }, 'common', TextUtils.i18n('SETTINGS/TAB_COMMON')]);
 		}

@@ -47,8 +47,6 @@ function CFilesView(bPopup)
 	this.error = ko.observable(false);
 	this.loaded = ko.observable(false);
 	this.isPublic = App.isPublic();
-	this.IsCollaborationSupported = Settings.IsCollaborationSupported;
-	this.AllowFilesSharing = Settings.AllowFilesSharing;
 	
 	this.storages = ko.observableArray();
 	this.folders = ko.observableArray();
@@ -62,7 +60,7 @@ function CFilesView(bPopup)
 		
 		if (this.isPublic)
 		{
-			this.rootPath(Settings.FileStoragePubParams.Name);
+			this.rootPath(Settings.PublicName);
 		}
 		else
 		{
@@ -157,7 +155,7 @@ function CFilesView(bPopup)
 	
 	ko.computed(function () {
 		
-		if (!Settings.ShowQuotaBar)
+		if (!UserSettings.ShowQuotaBar)
 		{
 			return true;
 		}
@@ -327,10 +325,10 @@ CFilesView.prototype.initUploader = function ()
  */
 CFilesView.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 {
-	if (Settings.FileSizeLimit > 0 && oFileData.Size/(1024*1024) > Settings.FileSizeLimit)
+	if (Settings.UploadSizeLimitMb > 0 && oFileData.Size/(1024*1024) > Settings.UploadSizeLimitMb)
 	{
 		Popups.showPopup(AlertPopup, [
-			TextUtils.i18n('FILESTORAGE/ERROR_SIZE_LIMIT', {'SIZE': Settings.FileSizeLimit})
+			TextUtils.i18n('FILESTORAGE/ERROR_SIZE_LIMIT', {'SIZE': Settings.UploadSizeLimitMb})
 		]);
 		return false;
 	}	
@@ -907,10 +905,10 @@ CFilesView.prototype.getStorages = function ()
 	if (!this.isPublic)
 	{
 		this.addStorageIfNot('personal');
-		if (this.IsCollaborationSupported)
+		if (Settings.AllowCollaboration)
 		{
 			this.addStorageIfNot('corporate');
-			if (this.AllowFilesSharing)
+			if (Settings.AllowSharing)
 			{
 				this.addStorageIfNot('shared');
 			}
@@ -1060,7 +1058,7 @@ CFilesView.prototype.getPublicFiles = function (oPath)
 	}
 	
 	Ajax.send('GetPublicFiles', {
-			'Hash': Settings.FileStoragePubHash,
+			'Hash': Settings.PublicHash,
 			'Path': this.path()
 		}, this.onGetFilesResponse, this
 	);

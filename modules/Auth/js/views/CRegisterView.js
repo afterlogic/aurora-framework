@@ -26,7 +26,7 @@ function CRegisterView()
 	this.question = ko.observable('');
 	this.yourQuestion = ko.observable('');
 	this.answer = ko.observable('');
-	this.allowQuestionPart = Types.isNonEmptyArray(Settings.RegistrationQuestions);
+	this.bAllowQuestionPart = Types.isNonEmptyArray(Settings.RegistrationQuestions);
 	this.visibleYourQuestion = ko.computed(function () {
 		return (this.question() === TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION'));
 	}, this);
@@ -39,21 +39,21 @@ function CRegisterView()
 	this.answerFocus = ko.observable(false);
 	this.yourQuestionFocus = ko.observable(false);
 	
-	this.domains = ko.observable(Types.isNonEmptyArray(Settings.RegistrationDomains) ? Settings.RegistrationDomains : []);
+	this.aDomains = Settings.RegistrationDomains;
 	this.domain = ko.computed(function () {
-		return (this.domains().length === 1) ? this.domains()[0] : '';
+		return (this.aDomains.length === 1) ? this.aDomains[0] : '';
 	}, this);
-	this.selectedDomain = ko.observable((this.domains().length > 0) ? this.domains()[0] : '');
+	this.selectedDomain = ko.observable((this.aDomains.length > 0) ? this.aDomains[0] : '');
 	
-	this.registrationQuestions = [];
-	if (this.allowQuestionPart)
+	this.aRegistrationQuestions = [];
+	if (this.bAllowQuestionPart)
 	{
-		this.registrationQuestions = _.map(_.union('', _.without(Settings.RegistrationQuestions, '*')), function (sQuestion) {
+		this.aRegistrationQuestions = _.map(_.union('', _.without(Settings.RegistrationQuestions, '*')), function (sQuestion) {
 			return {text: (sQuestion !== '') ? sQuestion : TextUtils.i18n('LOGIN/LABEL_SELECT_QUESTION'), value: sQuestion};
 		});
 		if (_.indexOf(Settings.RegistrationQuestions, '*') !== -1)
 		{
-			this.registrationQuestions.push({text: TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION'), value: TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION')});
+			this.aRegistrationQuestions.push({text: TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION'), value: TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION')});
 		}
 	}
 	
@@ -67,7 +67,7 @@ function CRegisterView()
 			sQuestion = $.trim(this.visibleYourQuestion() ? this.yourQuestion() : this.question()),
 			sAnswer = $.trim(this.answer()),
 			bEmptyFields = (sLogin === '' || sPassword === '' || sConfirmPassword === '' || 
-					this.allowQuestionPart && (sQuestion === '' || sAnswer === ''))
+					this.bAllowQuestionPart && (sQuestion === '' || sAnswer === ''))
 		;
 
 		return !this.loading() && !bEmptyFields;
@@ -102,8 +102,8 @@ CRegisterView.prototype.registerAccount = function ()
 				'Name': this.name(),
 				'Email': this.login() + '@' + this.selectedDomain(),
 				'Password': this.password(),
-				'Question': this.allowQuestionPart ? (this.visibleYourQuestion() ? this.yourQuestion() : this.question()) : '',
-				'Answer': this.allowQuestionPart ? this.answer() : ''
+				'Question': this.bAllowQuestionPart ? (this.visibleYourQuestion() ? this.yourQuestion() : this.question()) : '',
+				'Answer': this.bAllowQuestionPart ? this.answer() : ''
 			}
 		;
 

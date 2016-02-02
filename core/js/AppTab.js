@@ -2,13 +2,13 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	App = require('core/js/App.js'),
-	CFavico = require('core/js/vendors/favico.js'),
 	
+	App = require('core/js/App.js'),
+	Browser = require('core/js/Browser.js'),
+	CFavico = require('core/js/vendors/favico.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Screens = require('core/js/Screens.js'),
-	Browser = require('core/js/Browser.js'),
-	Settings = require('core/js/Settings.js')
+	UserSettings = require('core/js/Settings.js')
 ;
 
 function CAppTab()
@@ -77,11 +77,11 @@ CAppTab.prototype.setTitle = function (sTitle)
 {
 	if (sTitle === '')
 	{
-		sTitle = Settings.SiteName;
+		sTitle = UserSettings.SiteName;
 	}
 	else
 	{
-		sTitle += (Settings.SiteName !== '') ? ' - ' + Settings.SiteName : '';
+		sTitle += (UserSettings.SiteName !== '') ? ' - ' + UserSettings.SiteName : '';
 	}
 	
 	document.title = '.';

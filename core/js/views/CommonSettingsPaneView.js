@@ -6,8 +6,9 @@ var
 	
 	Types = require('core/js/utils/Types.js'),
 	
-	UserSettings = require('core/js/Settings.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	UserSettings = require('core/js/Settings.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass')
 ;
 
@@ -18,15 +19,15 @@ function CCommonSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this);
 	
-	this.aSkins = UserSettings.Themes;
-	this.aLanguages = UserSettings.Languages;
+	this.aSkins = UserSettings.ThemeList;
+	this.aLanguages = UserSettings.LanguageList;
 	
 	/* Editable fields */
-	this.selectedSkin = ko.observable(UserSettings.DefaultTheme);
-	this.selectedLanguage = ko.observable(UserSettings.DefaultLanguage);
+	this.selectedSkin = ko.observable(UserSettings.Theme);
+	this.selectedLanguage = ko.observable(UserSettings.Language);
 	this.autoRefreshInterval = ko.observable(UserSettings.AutoRefreshIntervalMinutes);
-	this.timeFormat = ko.observable(UserSettings.defaultTimeFormat());
-	this.desktopNotifications = ko.observable(UserSettings.DesktopNotifications);
+	this.timeFormat = ko.observable(UserSettings.timeFormat());
+	this.desktopNotifications = ko.observable(UserSettings.AllowDesktopNotifications);
 	/*-- Editable fields */
 	
 	this.isDesktopNotificationsEnable = ko.observable((window.Notification && window.Notification.permission !== 'denied'));
@@ -70,11 +71,11 @@ CCommonSettingsPaneView.prototype.getCurrentValues = function ()
  */
 CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.selectedSkin(UserSettings.DefaultTheme);
-	this.selectedLanguage(UserSettings.DefaultLanguage);
+	this.selectedSkin(UserSettings.Theme);
+	this.selectedLanguage(UserSettings.Language);
 	this.autoRefreshInterval(UserSettings.AutoRefreshIntervalMinutes);
-	this.timeFormat(UserSettings.defaultTimeFormat());
-	this.desktopNotifications(UserSettings.DesktopNotifications);
+	this.timeFormat(UserSettings.timeFormat());
+	this.desktopNotifications(UserSettings.AllowDesktopNotifications);
 };
 
 /**
@@ -86,10 +87,10 @@ CCommonSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'AutoCheckMailInterval': Types.pInt(this.autoRefreshInterval()),
-		'DefaultTheme': this.selectedSkin(),
-		'DefaultLanguage': this.selectedLanguage(),
-		'DefaultTimeFormat': this.timeFormat(),
-		'DesktopNotifications': this.desktopNotifications() ? '1' : '0'
+		'Theme': this.selectedSkin(),
+		'Language': this.selectedLanguage(),
+		'TimeFormat': this.timeFormat(),
+		'AllowDesktopNotifications': this.desktopNotifications() ? '1' : '0'
 	};
 };
 
@@ -100,15 +101,15 @@ CCommonSettingsPaneView.prototype.getParametersForSave = function ()
  */
 CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
-	if (oParameters.DefaultTheme !== UserSettings.DefaultTheme || oParameters.DefaultLanguage !== UserSettings.DefaultLanguage)
+	if (oParameters.Theme !== UserSettings.Theme || oParameters.Language !== UserSettings.Language)
 	{
 		window.location.reload();
 	}
 	else
 	{
 		UserSettings.updateCommonSettings(oParameters.AutoCheckMailInterval,
-			oParameters.DefaultTheme, oParameters.DefaultLanguage,
-			oParameters.DefaultTimeFormat, oParameters.DesktopNotifications);
+			oParameters.Theme, oParameters.Language,
+			oParameters.TimeFormat, oParameters.AllowDesktopNotifications);
 	}
 };
 

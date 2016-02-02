@@ -4,11 +4,12 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	App = require('core/js/App.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
-	Settings = require('modules/Mail/js/Settings.js')
+	MailCache = require('modules/Mail/js/Cache.js')
 ;
 
 /**
@@ -29,7 +30,7 @@ function CFolderListView()
 	this.quotaProc = ko.observable(-1);
 	this.quotaDesc = ko.observable('');
 
-	if (Settings.ShowQuotaBar)
+	if (UserSettings.ShowQuotaBar)
 	{
 		ko.computed(function () {
 

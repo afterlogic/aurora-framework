@@ -14,6 +14,7 @@ var
 	Api = require('core/js/Api.js'),
 	Ajax = null,
 	Browser = require('core/js/Browser.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
@@ -71,7 +72,7 @@ function CAccountModel()
 	this.extensionsRequested = ko.observable(false);
 	
 	this.canBeRemoved = ko.computed(function () {
-		return !this.isInternal() && (!this.isDefault() || this.isDefault() && Settings.AllowUsersChangeEmailSettings);
+		return !this.isInternal() && (!this.isDefault() || this.isDefault() && Settings.AllowChangeEmailSettings);
 	}, this);
 	
 	this.removeHint = ko.computed(function () {
@@ -187,7 +188,7 @@ CAccountModel.prototype.onGetQuotaResponse = function (oResult, oRequest)
 
 CAccountModel.prototype.updateQuotaParams = function ()
 {
-	if (Settings.ShowQuotaBar && this.allowMail())
+	if (UserSettings.ShowQuotaBar && this.allowMail())
 	{
 		this.requireAjax();
 		Ajax.send('GetQuota', { 'AccountID': this.id() }, this.onGetQuotaResponse, this);

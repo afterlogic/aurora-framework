@@ -146,7 +146,7 @@ Utils.desktopNotify = (function ()
 	return function (oData) {
 		var AppTab = require('core/js/AppTab.js');
 		
-		if (oData && UserSettings.DesktopNotifications && window.Notification && !AppTab.focused())
+		if (oData && UserSettings.AllowDesktopNotifications && window.Notification && !AppTab.focused())
 		{
 			switch (oData.action)
 			{
@@ -442,7 +442,7 @@ Utils.log = (function () {
 			aNewRow = []
 		;
 		
-		if (!UserSettings.ClientDebug || Browser.ie9AndBelow)
+		if (!UserSettings.AllowClientDebug || Browser.ie9AndBelow)
 		{
 			return;
 		}

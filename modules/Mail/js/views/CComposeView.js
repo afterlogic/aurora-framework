@@ -12,31 +12,35 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	Screens = require('core/js/Screens.js'),
-	Routing = require('core/js/Routing.js'),
-	WindowOpener = require('core/js/WindowOpener.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	UserSettings = require('core/js/Settings.js'),
+	WindowOpener = require('core/js/WindowOpener.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	SelectFilesPopup = ModulesManager.run('Files', 'getSelectFilesPopup'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
+	
 	Accounts = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
+	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
 	SenderSelector = require('modules/Mail/js/SenderSelector.js'),
-	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js'),
+	Settings = require('modules/Mail/js/Settings.js'),
+	
 	CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
+	
+	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods,
 	bMobileApp = App.isMobile(),
@@ -76,7 +80,7 @@ function CComposeView()
 	}, this);
 
 	this.bNewTab = App.isNewTab();
-	this.isDemo = ko.observable(UserSettings.IsDemo);
+	this.bDemo = UserSettings.IsDemo;
 
 	this.sending = ko.observable(false);
 	this.saving = ko.observable(false);
@@ -1430,7 +1434,7 @@ CComposeView.prototype.initUploader = function ()
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'clickElement': this.composeUploaderButton(),
-			'hiddenElementsPosition': UserSettings.isRTL ? 'right' : 'left',
+			'hiddenElementsPosition': UserSettings.IsRTL ? 'right' : 'left',
 			'dragAndDropElement': this.composeUploaderDropPlace(),
 			'disableAjaxUpload': false,
 			'disableFolderDragAndDrop': false,

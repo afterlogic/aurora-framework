@@ -69,13 +69,11 @@ function CHelpdeskView()
 	this.iAutoCheckTimer = 0;
 
 	this.bExtApp = bExtApp;
-	this.bAgent = Settings.IsHelpdeskAgent;
+	this.bAgent = Settings.IsAgent;
 	this.bNewTab = App.isNewTab();
 
-	this.externalUrl = ko.observable(Settings.HelpdeskIframeUrl);
-
-	this.signature = Settings.helpdeskSignature;
-	this.signatureEnable = Settings.helpdeskSignatureEnable;
+	this.signature = Settings.signature;
+	this.signatureEnable = Settings.useSignature;
 	this.isSignatureVisible = ko.computed(function () {
 		return this.signature() !== '' && this.signatureEnable() === '1';
 	}, this);
@@ -211,7 +209,7 @@ function CHelpdeskView()
 
 	this.externalContentUrl = ko.observable('');
 
-	if (Settings.HelpdeskIframeUrl)
+	if (Settings.ClientDetailsUrl)
 	{
 		if (this.bAgent)
 		{
@@ -220,13 +218,13 @@ function CHelpdeskView()
 					oSelected = this.selectedItem(),
 					sEmail = oSelected ? oSelected.Email() : ''
 				;
-				return sEmail ? Settings.HelpdeskIframeUrl.replace(/\[EMAIL\]/g, sEmail) : '';
+				return sEmail ? Settings.ClientDetailsUrl.replace(/\[EMAIL\]/g, sEmail) : '';
 			}, this);
 		}
-		else if (Settings.HelpdeskUserEmail)
+		else if (Settings.UserEmail)
 		{
 			this.externalContentUrl = ko.computed(function () {
-				return Settings.HelpdeskIframeUrl.replace(/\[EMAIL\]/g, Settings.HelpdeskUserEmail);
+				return Settings.ClientDetailsUrl.replace(/\[EMAIL\]/g, Settings.UserEmail);
 			}, this);
 		}
 	}
@@ -673,10 +671,10 @@ CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 
 		this.oPageSwitcher.setCount(Types.pInt(oResponse.Result.ItemsCount));
 
-		if (Settings.HelpdeskThreadId)
+		if (Settings.SelectedThreadId)
 		{
 			oThreadForSelect = _.find(aList, function (oThreadItem) {
-				return oThreadItem.Id === Settings.HelpdeskThreadId;
+				return oThreadItem.Id === Settings.SelectedThreadId;
 			}, this);
 
 			if (oThreadForSelect)
@@ -685,20 +683,18 @@ CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 			}
 			else if (aList.length)
 			{
-				this.requestThreadByIdOrHash(Settings.HelpdeskThreadId);
+				this.requestThreadByIdOrHash(Settings.SelectedThreadId);
 			}
 		}
 
-		if (Settings.HelpdeskThreadAction)
+		switch (Settings.AfterThreadsReceivingAction)
 		{
-			if (Settings.HelpdeskThreadAction === 'add')
-			{
+			case 'add':
 				this.iHaveMoreToSay();
-			}
-			else if (Settings.HelpdeskThreadAction === 'close')
-			{
+				break;
+			case 'close':
 				this.closeCommand();
-			}
+				break;
 		}
 	}
 };

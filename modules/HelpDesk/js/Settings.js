@@ -6,9 +6,9 @@ module.exports = {
 	init: function (oSettings) {
 		_.extendOwn(this, oSettings);
 	},
-	update: function (sAllowHelpdeskNotifications, sHelpdeskSignature, sHelpdeskSignatureEnable) {
-		this.AllowHelpdeskNotifications = sAllowHelpdeskNotifications === '1';
-		this.helpdeskSignature(sHelpdeskSignature);
-		this.helpdeskSignatureEnable(sHelpdeskSignatureEnable === '1');
+	update: function (sAllowEmailNotifications, sHelpdeskSignature, sHelpdeskSignatureEnable) {
+		this.AllowEmailNotifications = sAllowEmailNotifications === '1';
+		this.signature(sHelpdeskSignature);
+		this.useSignature(sHelpdeskSignatureEnable === '1');
 	}
 };

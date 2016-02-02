@@ -314,7 +314,7 @@ CAbstractFileModel.prototype.importFile = function ()
 //		}, this)
 //	;
 //	
-//	App.Api.pgp(fPgpCallback, AppData.User.IdUser);
+//	App.Api.pgp(fPgpCallback, UserSettings.UserId);
 };
 
 /**

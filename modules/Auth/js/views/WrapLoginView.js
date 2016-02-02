@@ -1,19 +1,21 @@
 'use strict';
 
 var
-	ko = require('knockout'),
 	_ = require('underscore'),
+	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
-	UserSettings = require('core/js/Settings.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	Ajax = require('core/js/Ajax.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Settings = require('modules/Auth/js/Settings.js'),
-	CLoginView = require('modules/Auth/js/views/CLoginView.js'),
-	CRegisterView = require('modules/Auth/js/views/CRegisterView.js'),
+	
+	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	CForgotView = require('modules/Auth/js/views/CForgotView.js'),
-	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
+	CLoginView = require('modules/Auth/js/views/CLoginView.js'),
+	CRegisterView = require('modules/Auth/js/views/CRegisterView.js')
 ;
 
 /**
@@ -31,32 +33,32 @@ function CWrapLoginView()
 	
 	this.rtl = ko.observable(UserSettings.isRTL);
 	
-	this.allowRegistration = Settings.AllowRegistration;
-	this.allowPasswordReset = Settings.AllowPasswordReset;
+	this.bAllowRegistration = Settings.AllowRegistration;
+	this.bAllowResetPassword = Settings.AllowResetPassword;
 	
 	this.oLoginView = new CLoginView();
-	if (this.allowRegistration)
+	if (this.bAllowRegistration)
 	{
 		this.oRegisterView = new CRegisterView();
 	}
-	if (this.allowPasswordReset)
+	if (this.bAllowResetPassword)
 	{
 		this.oForgotView = new CForgotView();
 	}
-	this.gotoForgot = this.allowPasswordReset ? this.oForgotView.gotoForgot : ko.observable(false);
+	this.gotoForgot = this.bAllowResetPassword ? this.oForgotView.gotoForgot : ko.observable(false);
 	this.gotoRegister = ko.observable(false);
 
 	this.emailVisible = this.oLoginView.emailVisible;
 	this.loginVisible = this.oLoginView.loginVisible;
-	this.loginDescription = ko.observable(Settings.LoginDescription);
+	this.sInfoText = Settings.InfoText;
 
-	this.aLanguages = UserSettings.Languages;
-	this.currentLanguage = ko.observable(UserSettings.DefaultLanguage);
+	this.aLanguages = UserSettings.LanguageList;
+	this.currentLanguage = ko.observable(UserSettings.Language);
 	
-	this.allowLanguages = ko.observable(Settings.AllowLanguageOnLogin);
-	this.viewLanguagesAsDropdown = ko.observable(!Settings.FlagsLangSelect);
+	this.bAllowChangeLanguage = Settings.AllowChangeLanguage;
+	this.bUseFlagsLanguagesView = Settings.UseFlagsLanguagesView;
 
-	this.loginCustomLogo = ko.observable(Settings.LoginStyleImage);
+	this.sCustomLogoUrl = Settings.CustomLogoUrl;
 	
 //	if (AfterLogicApi.runPluginHook)
 //	{
@@ -84,7 +86,7 @@ CWrapLoginView.prototype.onBind = function ()
  */
 CWrapLoginView.prototype.changeLanguage = function (sLanguage)
 {
-	if (sLanguage && this.allowLanguages())
+	if (sLanguage && this.bAllowChangeLanguage)
 	{
 		this.currentLanguage(sLanguage);
 		this.oLoginView.changingLanguage(true);

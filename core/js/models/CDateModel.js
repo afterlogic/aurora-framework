@@ -3,8 +3,9 @@
 var
 	moment = require('moment'),
 			
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	UserSettings = require('core/js/Settings.js')
 ;
 
@@ -41,7 +42,7 @@ CDateModel.prototype.setDate = function (iYear, iMonth, iDay)
  */
 CDateModel.prototype.getTimeFormat = function ()
 {
-	return (UserSettings.defaultTimeFormat() === Enums.TimeFormat.F24) ?
+	return (UserSettings.timeFormat() === Enums.TimeFormat.F24) ?
 		'HH:mm' : 'hh:mm A';
 };
 
@@ -129,7 +130,7 @@ CDateModel.prototype.getTime = function ()
  */
 CDateModel.prototype.convertDate = function (iDate)
 {
-	var sFormat = Utils.getDateFormatForMoment(UserSettings.DefaultDateFormat) + ' ' + this.getTimeFormat();
+	var sFormat = Utils.getDateFormatForMoment(UserSettings.DateFormat) + ' ' + this.getTimeFormat();
 	
 	return moment(iDate * 1000).format(sFormat);
 };

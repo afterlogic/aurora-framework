@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	UserSettings = require('core/js/Settings.js'),
 	
 	SettingsUtils = {}
@@ -14,7 +15,7 @@ var
  */
 SettingsUtils.getDateFormatsForSelector = function ()
 {
-	return _.map(UserSettings.DateFormats, function (sDateFormat) {
+	return _.map(UserSettings.DateFormatList, function (sDateFormat) {
 		switch (sDateFormat)
 		{
 			case 'MM/DD/YYYY':

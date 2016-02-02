@@ -11,24 +11,27 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
-	Screens = require('core/js/Screens.js'),
+	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	Pulse = require('core/js/Pulse.js'),
 	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	Storage = require('core/js/Storage.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	Storage = require('core/js/Storage.js'),
-	Pulse = require('core/js/Pulse.js'),
-	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
-	MailUtils = require('modules/Mail/js/utils/Mail.js'),
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
+	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	MailUtils = require('modules/Mail/js/utils/Mail.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	
 	Accounts = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
+	
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods
@@ -49,7 +52,7 @@ function CMessagePaneView()
 	this.messages.subscribe(this.onMessagesSubscribe, this);
 	this.currentMessage = MailCache.currentMessage;
 	this.currentMessage.subscribe(this.onCurrentMessageSubscribe, this);
-	UserSettings.defaultTimeFormat.subscribe(this.onCurrentMessageSubscribe, this);
+	UserSettings.timeFormat.subscribe(this.onCurrentMessageSubscribe, this);
 	this.displayedMessageUid = ko.observable('');
 	
 	this.browserTitle = ko.computed(function () {
@@ -91,10 +94,9 @@ function CMessagePaneView()
 	this.isEnablePrint = this.isCurrentMessageLoaded;
 	this.isEnableSave = this.isCurrentMessage;
 	
-	this.allowSaveAsPdf =  ko.observable(Settings.AllowSaveAsPdf);
-	
+	this.bAllowSaveMessageAsPdf = Settings.AllowSaveMessageAsPdf;
 	this.isEnableSaveAsPdf = ko.computed(function () {
-		return this.isCurrentMessageLoaded() && this.allowSaveAsPdf();
+		return this.bAllowSaveMessageAsPdf && this.isCurrentMessageLoaded();
 	}, this);
 
 	this.deleteCommand = Utils.createCommand(this, this.executeDeleteMessage, this.isEnableDelete);
@@ -209,9 +211,9 @@ function CMessagePaneView()
 		});
 	}, this);
 	this.visibleDownloadAllAttachments = ko.computed(function () {
-		return Settings.ZipAttachments && this.notInlineAttachments().length > 1;
+		return Settings.AllowZipAttachments && this.notInlineAttachments().length > 1;
 	}, this);
-	this.visibleSaveAttachmentsToFiles = UserSettings.IsFilesSupported;
+	this.visibleSaveAttachmentsToFiles = ModulesManager.isModuleIncluded('Files');
 	this.visibleDownloadAllAttachmentsSeparately = ko.computed(function () {
 		return this.notInlineAttachments().length > 1;
 	}, this);
@@ -318,7 +320,7 @@ function CMessagePaneView()
 		this.visibleAttachments(true);
 	};
 	
-	this.defaultFontName = UserSettings.DefaultFontName;
+	this.sDefaultFontName = Settings.DefaultFontName;
 	
 	Pulse.registerDayOfMonthFunction(_.bind(this.updateMomentDate, this));
 	
@@ -717,7 +719,7 @@ CMessagePaneView.prototype.openInNewWindow = function ()
 
 CMessagePaneView.prototype.getReplyHtmlText = function ()
 {
-	return '<div style="font-family: ' + this.defaultFontName + '; font-size: 16px">' + SendingUtils.getHtmlFromText(this.replyText()) + '</div>';
+	return '<div style="font-family: ' + this.sDefaultFontName + '; font-size: 16px">' + SendingUtils.getHtmlFromText(this.replyText()) + '</div>';
 };
 
 /**

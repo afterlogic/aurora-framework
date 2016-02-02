@@ -13,7 +13,7 @@
 				<div class="item account" data-bind="css: {'selected': id() === $parent.editedAccountId() && !$parent.editedFetcherId() && !$parent.editedIdentityId()},  click: function () {$parent.editAccount(id());}">
 					<!-- ko if: allowMail() -->
 						<span class="link fetcher" data-i18n="SETTINGS/ACCOUNTS_LINK_ADD_IDENTITY" data-bind="i18n: 'text', visible: $parent.bAllowIdentities, click: function (oModel, oEv) {$parent.addIdentity(id(), oEv);}"></span>
-						<span class="link fetcher" data-i18n="SETTINGS/ACCOUNTS_LINK_ADD_FETCHER" data-bind="i18n: 'text', visible: (isDefault() && $parent.bAllowFetcher), click: $parent.addFetcher"></span>
+						<span class="link fetcher" data-i18n="SETTINGS/ACCOUNTS_LINK_ADD_FETCHER" data-bind="i18n: 'text', visible: (isDefault() && $parent.bAllowFetchers), click: $parent.addFetcher"></span>
 					<!-- /ko -->
 					<!-- ko if: !allowMail() -->
 						<span class="link fetcher" data-i18n="SETTINGS/ACCOUNTS_LINK_CONNECT_TO_MAIL" data-bind="i18n: 'text', click: function (oModel, oEv) {$parent.connectToMail(id(), oEv);}"></span>

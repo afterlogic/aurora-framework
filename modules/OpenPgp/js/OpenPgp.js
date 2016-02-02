@@ -20,7 +20,7 @@ var
  */
 function COpenPgp()
 {
-	var sPrefix = 'user_' + (UserSettings.IdUser || '0') + '_';
+	var sPrefix = 'user_' + (UserSettings.UserId || '0') + '_';
 	this.pgpKeyring = new Pgp.Keyring(new Pgp.Keyring.localstore(sPrefix));
 	
 	this.keys = ko.observableArray([]);

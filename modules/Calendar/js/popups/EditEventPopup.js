@@ -11,19 +11,20 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
-	App = require('core/js/App.js'),
 	Api = require('core/js/Api.js'),
+	App = require('core/js/App.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
-	Ajax = require('modules/Calendar/js/Ajax.js'),
 	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
+	
+	Ajax = require('modules/Calendar/js/Ajax.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
 	Settings = require('modules/Calendar/js/Settings.js')
 ;
@@ -104,9 +105,9 @@ function CEditEventPopup()
 	this.repeatMonthIntervalOptions = ko.observableArray(this.getDisplayedIntervals());
 	this.defaultAlarms = ko.observableArray([5, 10, 15, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440, 2880, 4320, 5760, 10080, 20160]);
 	this.alarmOptions = ko.observableArray([]);
-	this.timeOptions = ko.observableArray(CalendarUtils.getTimeListStepHalfHour((UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
-	UserSettings.defaultTimeFormat.subscribe(function () {
-		this.timeOptions(CalendarUtils.getTimeListStepHalfHour((UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
+	this.timeOptions = ko.observableArray(CalendarUtils.getTimeListStepHalfHour((UserSettings.timeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
+	UserSettings.timeFormat.subscribe(function () {
+		this.timeOptions(CalendarUtils.getTimeListStepHalfHour((UserSettings.timeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
 	}, this);
 
 	this.displayedAlarms = ko.observableArray([]);
@@ -188,7 +189,7 @@ function CEditEventPopup()
 
 	this.callbackAttendeeActionDecline = null;
 
-	this.calendarAppointments = Settings.AllowCalendar && Settings.CalendarAppointments;
+	this.bAllowAppointments = Settings.AllowAppointments;
 
 	this.allChanges = ko.computed(function () {
 		this.subject();
@@ -242,7 +243,7 @@ CEditEventPopup.prototype.createDatePickerObject = function (oElement, fSelect)
 		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
-		firstDay: Settings.CalendarWeekStartsOn,
+		firstDay: Settings.WeekStartsOn,
 		showOn: 'both',
 		buttonText: '',
 		buttonImage: 'skins/Default/images/calendar-icon.png',
@@ -303,7 +304,7 @@ CEditEventPopup.prototype.onShow = function (oParameters)
 	this.dateFormatMoment = Utils.getDateFormatForMoment(oParameters.DateFormat);
 	this.dateFormatDatePicker = CalendarUtils.getDateFormatForDatePicker(oParameters.DateFormat);
 	
-	this.ampmTimeFormat(UserSettings.defaultTimeFormat() !== Enums.TimeFormat.F24);
+	this.ampmTimeFormat(UserSettings.timeFormat() !== Enums.TimeFormat.F24);
 	
 	this.initializeDatePickers();
 	

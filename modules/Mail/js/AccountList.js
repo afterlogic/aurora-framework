@@ -314,7 +314,7 @@ CAccountListModel.prototype.populateFetchersIdentities = function ()
 
 CAccountListModel.prototype.populateFetchers = function ()
 {
-	if (Settings.AllowFetcher)
+	if (Settings.AllowFetchers)
 	{
 		Ajax.send('GetFetchers', { 'AccountID': this.defaultId() }, this.onGetFetchersResponse, this);
 	}

@@ -10,16 +10,17 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	
 	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 			
 	Accounts = require('modules/Mail/js/AccountList.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
 	CCrea = require('modules/Mail/js/CCrea.js'),
+	Settings = require('modules/Mail/js/Settings.js'),
+	
 	CColorPickerView = require('modules/Mail/js/views/CColorPickerView.js')
 ;
 
@@ -57,7 +58,7 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 
 	this.bInsertImageAsBase64 = bInsertImageAsBase64;
 	this.bAllowFileUpload = !(bInsertImageAsBase64 && window.File === undefined);
-	this.allowInsertImage = ko.observable(Settings.AllowInsertImage);
+	this.bAllowInsertImage = Settings.AllowInsertImage;
 	this.lockFontSubscribing = ko.observable(false);
 	this.bAllowImageDragAndDrop = !Browser.ie10AndAbove;
 
@@ -137,7 +138,7 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 		}
 	}, this);
 	
-	this.allowChangeInputDirection = UserSettings.isRTL || Settings.AllowChangeInputDirection;
+	this.bAllowChangeInputDirection = UserSettings.IsRTL || Settings.AllowChangeInputDirection;
 	this.disabled = ko.observable(false);
 	
 	this.textChanged = ko.observable(false);
@@ -386,7 +387,7 @@ CHtmlEditorView.prototype.initCrea = function (sText, bPlain, sTabIndex)
 			'fontNameArray': this.aFonts,
 			'defaultFontName': this.sDefaultFont,
 			'defaultFontSize': this.iDefaultSize,
-			'isRtl': UserSettings.isRTL,
+			'isRtl': UserSettings.IsRTL,
 			'enableDrop': false,
 			'onChange': _.bind(this.textChanged, this, true),
 			'onCursorMove': _.bind(this.setFontValuesFromText, this),
@@ -724,7 +725,7 @@ CHtmlEditorView.prototype.setBackColorFromPopup = function (sColor)
 CHtmlEditorView.prototype.insertImage = function (oViewModel, oEvent)
 {
 	this.setActive(oEvent);
-	if (this.allowInsertImage() && !this.visibleInsertImagePopup())
+	if (Settings.AllowInsertImage && !this.visibleInsertImagePopup())
 	{
 		this.imagePathFromWeb('');
 		this.closeAllPopups();
@@ -741,7 +742,7 @@ CHtmlEditorView.prototype.insertImage = function (oViewModel, oEvent)
  */
 CHtmlEditorView.prototype.insertWebImageFromPopup = function (oCurrentViewModel, event)
 {
-	if (this.allowInsertImage() && this.imagePathFromWeb().length > 0)
+	if (Settings.AllowInsertImage && this.imagePathFromWeb().length > 0)
 	{
 		this.oCrea.insertImage(this.imagePathFromWeb());
 	}
@@ -760,7 +761,7 @@ CHtmlEditorView.prototype.insertComputerImageFromPopup = function (sUid, oAttach
 		bResult = false
 	;
 
-	if (this.allowInsertImage() && sViewLink.length > 0)
+	if (Settings.AllowInsertImage && sViewLink.length > 0)
 	{
 		bResult = this.oCrea.insertImage(sViewLink);
 		if (bResult)
@@ -803,7 +804,7 @@ CHtmlEditorView.prototype.initUploader = function ()
 			'name': 'jua-uploader',
 			'queueSize': 2,
 			'clickElement': this.imageUploaderButton(),
-			'hiddenElementsPosition': UserSettings.isRTL ? 'right' : 'left',
+			'hiddenElementsPosition': UserSettings.IsRTL ? 'right' : 'left',
 			'disableMultiple': true,
 			'disableAjaxUpload': false,
 			'disableDragAndDrop': true,

@@ -6,7 +6,6 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
 	
@@ -34,13 +33,13 @@ var
  */
 function CAccountsSettingsPaneView()
 {
-	this.bAllowAddNewAccounts = Settings.AllowUsersAddNewAccounts;
+	this.bAllowAddNewAccounts = Settings.AllowAddNewAccounts;
 	this.bAllowIdentities = !!Settings.AllowIdentities;
-	this.bAllowFetcher = !!Settings.AllowFetcher;
+	this.bAllowFetchers = !!Settings.AllowFetchers;
 	
 	this.accounts = Accounts.collection;
 	this.onlyOneAccount = ko.computed(function () {
-		var bOnlyOneAccount = this.accounts().length === 1 && !Settings.AllowUsersAddNewAccounts;
+		var bOnlyOneAccount = this.accounts().length === 1 && !Settings.AllowAddNewAccounts;
 //		if (bOnlyOneAccount)
 //		{
 //			this.TabTitle = Utils.i18n('SETTINGS/TAB_EMAIL_ACCOUNT');
@@ -321,26 +320,20 @@ CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 CAccountsSettingsPaneView.prototype.populate = function ()
 {
 	var
-		oAccount = Accounts.getEdited()
-//		bAllowMail = !!oAccount && oAccount.allowMail(),
-//		bDefault = !!oAccount && oAccount.isDefault(),
-//		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension'),
-//		bCanBeRemoved =  !!oAccount && oAccount.canBeRemoved() && !oAccount.isDefault()
+		oAccount = Accounts.getEdited(),
+		bAllowMail = !!oAccount && oAccount.allowMail(),
+		bDefault = !!oAccount && oAccount.isDefault(),
+		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension'),
+		bCanBeRemoved =  !!oAccount && oAccount.canBeRemoved() && !oAccount.isDefault()
 	;
 	
 	if (oAccount)
 	{
-//		this.allowProperties((!bDefault || bDefault && Settings.AllowUsersChangeEmailSettings) && bAllowMail || !Settings.AllowIdentities || bChangePass || bCanBeRemoved);
-//		this.allowFolders(bAllowMail);
-//		this.allowForward(bAllowMail && oAccount.extensionExists('AllowForwardExtension') && oAccount.forward());
-//		this.allowAutoresponder(bAllowMail && oAccount.extensionExists('AllowAutoresponderExtension') && oAccount.autoresponder());
-//		this.allowFilters(bAllowMail && oAccount.extensionExists('AllowSieveFiltersExtension'));
-		
-		this.allowProperties(!oAccount.isDefault());
-		this.allowFolders(true);
-		this.allowForward(true);
-		this.allowAutoresponder(true);
-		this.allowFilters(true);
+		this.allowProperties((!bDefault || bDefault && Settings.AllowChangeEmailSettings) && bAllowMail || !Settings.AllowIdentities || bChangePass || bCanBeRemoved);
+		this.allowFolders(bAllowMail);
+		this.allowForward(bAllowMail && oAccount.extensionExists('AllowForwardExtension') && oAccount.forward());
+		this.allowAutoresponder(bAllowMail && oAccount.extensionExists('AllowAutoresponderExtension') && oAccount.autoresponder());
+		this.allowFilters(bAllowMail && oAccount.extensionExists('AllowSieveFiltersExtension'));
 		
 		if (!this.currentTab() || !this.currentTab().visible())
 		{

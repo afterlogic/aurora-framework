@@ -1,7 +1,7 @@
 <div class="popup calendar_popup calendar_event" style="display: none;">
 	<div class="mask clear" data-bind="visible: dateEdit(), click: onMainPanelClick"></div>
 	<div class="mask" data-bind="click: cancelPopup"></div>
-	<div class="popup_panel" data-bind="css: {'show_side_panel': calendarAppointments && (guestsEdit() || attendees().length > 0), 'editable': isEditable, 'offset': dateEdit()}">
+	<div class="popup_panel" data-bind="css: {'show_side_panel': bAllowAppointments && (guestsEdit() || attendees().length > 0), 'editable': isEditable, 'offset': dateEdit()}">
 
 		<div class="panel_wrap clearfix">
 			<div class="side_panel fields">
@@ -279,7 +279,7 @@
 								<span class="icon"></span>
 								<span class="text" data-i18n="CALENDAR/EVENT_REMINDER" data-bind="i18n: 'text'"></span>
 							</span>
-							<span class="item guests" data-bind="visible: calendarAppointments && isEditableReminders(), click: isEditable() ? showGuests : '', 
+							<span class="item guests" data-bind="visible: bAllowAppointments && isEditableReminders(), click: isEditable() ? showGuests : '', 
 									css: {'selected': guestsEdit() || attendees().length > 0, 'readonly': !isEditable()},
 									customTooltip: 'CALENDAR/EVENT_GUESTS'">
 								<span class="icon"></span>

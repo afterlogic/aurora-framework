@@ -17,9 +17,9 @@ function CHelpdeskSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'Helpdesk');
 
-	this.allowNotifications = ko.observable(Settings.AllowHelpdeskNotifications);
-	this.signature = ko.observable(Settings.helpdeskSignature());
-	this.signatureEnable = ko.observable(Settings.helpdeskSignatureEnable() ? '1' : '0');
+	this.allowNotifications = ko.observable(Settings.AllowEmailNotifications);
+	this.signature = ko.observable(Settings.Signature);
+	this.signatureEnable = ko.observable(Settings.useSignature() ? '1' : '0');
 	
 	this.signatureEnable.subscribe(function () {
 		if (this.signatureEnable() === '1' && !this.signatureFocused())
@@ -51,15 +51,15 @@ CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
 
 CHelpdeskSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.allowNotifications(Settings.AllowHelpdeskNotifications);
-	this.signature(Settings.helpdeskSignature());
-	this.signatureEnable(Settings.helpdeskSignatureEnable() ? '1' : '0');
+	this.allowNotifications(Settings.AllowEmailNotifications);
+	this.signature(Settings.signature());
+	this.signatureEnable(Settings.useSignature() ? '1' : '0');
 };
 
 CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'AllowHelpdeskNotifications': this.allowNotifications() ? '1' : '0',
+		'AllowEmailNotifications': this.allowNotifications() ? '1' : '0',
 		'HelpdeskSignature': this.signature(),
 		'HelpdeskSignatureEnable': this.signatureEnable()
 	};
@@ -67,7 +67,7 @@ CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()
 
 CHelpdeskSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
-	Settings.update(oParameters.AllowHelpdeskNotifications, oParameters.HelpdeskSignature, oParameters.HelpdeskSignatureEnable);
+	Settings.update(oParameters.AllowEmailNotifications, oParameters.HelpdeskSignature, oParameters.HelpdeskSignatureEnable);
 };
 
 module.exports = new CHelpdeskSettingsPaneView();

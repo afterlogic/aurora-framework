@@ -3,10 +3,11 @@
 var
 	_ = require('underscore'),
 	
-	Ajax = require('modules/Mail/js/Ajax.js'),
 	App = require('core/js/App.js'),
+	UserSettings = require('core/js/Settings.js'),
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
 	
@@ -16,7 +17,7 @@ var
 
 Prefetcher.prefetchFetchersIdentities = function ()
 {
-	if (!App.isNewTab() && !bFetchersIdentitiesPrefetched && (Settings.AllowFetcher || Settings.AllowIdentities))
+	if (!App.isNewTab() && !bFetchersIdentitiesPrefetched && (Settings.AllowFetchers || Settings.AllowIdentities))
 	{
 		Accounts.populateFetchersIdentities();
 		bFetchersIdentitiesPrefetched = true;
@@ -218,7 +219,7 @@ Prefetcher.startMessagesPrefetch = function ()
 		iAccountId = MailCache.currentAccountId(),
 		oCurrFolder = MailCache.getCurrentFolder(),
 		iTotalSize = 0,
-		iMaxSize = Settings.MaxPrefetchBodiesSize,
+		iMaxSize = Settings.MaxMessagesBodiesSizeToPrefetch,
 		aUids = [],
 		oParameters = null,
 		iJsonSizeOf1Message = 2048,
@@ -285,11 +286,10 @@ Prefetcher.prefetchAccountQuota = function ()
 {
 	var
 		oAccount = Accounts.getCurrent(),
-		bShowQuotaBar = Settings.ShowQuotaBar,
 		bNeedQuotaRequest = oAccount && !oAccount.quotaRecieved()
 	;
 	
-	if (bShowQuotaBar && bNeedQuotaRequest)
+	if (UserSettings.ShowQuotaBar && bNeedQuotaRequest)
 	{
 		oAccount.updateQuotaParams();
 		return true;

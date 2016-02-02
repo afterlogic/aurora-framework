@@ -10,13 +10,13 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	Settings = require('core/js/Settings.js'),
-	Screens = require('core/js/Screens.js'),
-	Routing = require('core/js/Routing.js'),
-	WindowOpener = require('core/js/WindowOpener.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
 	Browser = require('core/js/Browser.js'),
-	Storage = require('core/js/Storage.js')
+	ModulesManager = require('core/js/ModulesManager.js'),
+	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	Storage = require('core/js/Storage.js'),
+	UserSettings = require('core/js/Settings.js'),
+	WindowOpener = require('core/js/WindowOpener.js')
 ;
 
 require('core/js/koBindings.js');
@@ -111,7 +111,7 @@ CApp.prototype.init = function ()
 {
 	ModulesManager.run('Auth', 'beforeAppRunning', [this.bAuth]);
 	
-	if (Browser.iosDevice && this.bAuth && Settings.IosDetectOnLogin && Settings.AllowIosProfile)
+	if (Browser.iosDevice && this.bAuth && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
 		window.location.href = '?ios';
 	}
@@ -197,7 +197,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 			Api.showErrorByCode({'ErrorCode': iError, 'ErrorMessage': ''}, '', true);
 		}
 		
-		if (Settings.LastErrorCode === Enums.Errors.AuthError)
+		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)
 		{
 			Screens.showError(Utils.i18n('WARNING/AUTH_PROBLEM'), false, true);
 		}
@@ -225,9 +225,9 @@ CApp.prototype.onLogout = function ()
 	
 	Routing.finalize();
 	
-	if (Types.isNonEmptyString(Settings.CustomLogoutUrl))
+	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
 	{
-		window.location.href = Settings.CustomLogoutUrl;
+		window.location.href = UserSettings.CustomLogoutUrl;
 	}
 	else
 	{
@@ -237,12 +237,12 @@ CApp.prototype.onLogout = function ()
 
 CApp.prototype.checkMobile = function () {
 	/**
-	 * Settings.IsMobile:
+	 * UserSettings.IsMobile:
 	 *	-1 - first time, mobile is not determined
 	 *	0 - mobile is switched off
 	 *	1 - mobile is switched on
 	 */
-	if (Settings.AllowMobile && Settings.IsMobile === -1)
+	if (UserSettings.AllowMobile && UserSettings.IsMobile === -1)
 	{
 		var
 			Ajax = require('core/js/Ajax.js'),
@@ -269,10 +269,10 @@ CApp.prototype.useGoogleAnalytics = function ()
 		oFirstScript = null
 	;
 	
-	if (Settings.GoogleAnalyticsAccount && 0 < Settings.GoogleAnalyticsAccount.length)
+	if (UserSettings.GoogleAnalyticsAccount && 0 < UserSettings.GoogleAnalyticsAccount.length)
 	{
 		window._gaq = window._gaq || [];
-		window._gaq.push(['_setAccount', Settings.GoogleAnalyticsAccount]);
+		window._gaq.push(['_setAccount', UserSettings.GoogleAnalyticsAccount]);
 		window._gaq.push(['_trackPageview']);
 
 		oGoogleAnalytics = document.createElement('script');

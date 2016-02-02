@@ -49,7 +49,7 @@ function CContactsView()
 		return this.bDragActive();
 	}, this);
 
-	this.importingHelpLink = Settings.ImportingContactsLink;
+	this.sImportContactsLink = Settings.ImportContactsLink;
 
 	this.allowSendEmails = ko.observable(true);
 //	this.allowSendEmails = ko.computed(function () {
