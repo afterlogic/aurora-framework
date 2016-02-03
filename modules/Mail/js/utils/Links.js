@@ -36,7 +36,11 @@ function IsMsgParam(sTemp)
  */
 LinksUtils.getMailbox = function (sFolder, iPage, sUid, sSearch, sFilters)
 {
-	var	aResult = ['mail'];
+	var
+		AccountList = require('modules/Mail/js/AccountList.js'),
+		oCurrAccount = AccountList.getCurrent(),
+		aResult = ['mail', oCurrAccount ? oCurrAccount.hash() : '']
+	;
 	
 	iPage = Types.pInt(iPage, 1);
 	sUid = Types.pString(sUid);
@@ -72,14 +76,6 @@ LinksUtils.getMailbox = function (sFolder, iPage, sUid, sSearch, sFilters)
 };
 
 /**
- * @return {Array}
- */
-LinksUtils.getInbox = function ()
-{
-	return this.getMailbox();
-};
-
-/**
  * @param {Array} aParams
  * 
  * @return {Object}
@@ -87,6 +83,7 @@ LinksUtils.getInbox = function ()
 LinksUtils.parseMailbox = function (aParams)
 {
 	var
+		sAccountHash = '',
 		sFolder = 'INBOX',
 		iPage = 1,
 		sUid = '',
@@ -96,6 +93,12 @@ LinksUtils.parseMailbox = function (aParams)
 		iIndex = 0
 	;
 	
+	if (Types.isNonEmptyArray(aParams))
+	{
+		sAccountHash = Types.pString(aParams[iIndex]);
+		iIndex++;
+	}
+
 	if (Types.isNonEmptyArray(aParams))
 	{
 		sFolder = Types.pString(aParams[iIndex]);
@@ -147,6 +150,7 @@ LinksUtils.parseMailbox = function (aParams)
 	}
 	
 	return {
+		'AccountHash': sAccountHash,
 		'Folder': sFolder,
 		'Page': iPage,
 		'Uid': sUid,
@@ -244,6 +248,5 @@ LinksUtils.parseToAddr = function (mToAddr)
 		'body': sBody
 	};
 };
-
 
 module.exports = LinksUtils;

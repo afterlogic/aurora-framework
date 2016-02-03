@@ -20,9 +20,10 @@ var
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
+	
 	CAccountModel = require('modules/Mail/js/models/CAccountModel.js'),
-	CIdentityModel = require('modules/Mail/js/models/CIdentityModel.js'),
-	CFetcherListModel = require('modules/Mail/js/models/CFetcherListModel.js')
+	CFetcherListModel = require('modules/Mail/js/models/CFetcherListModel.js'),
+	CIdentityModel = require('modules/Mail/js/models/CIdentityModel.js')
 ;
 
 /**
@@ -77,6 +78,21 @@ CAccountListModel.prototype.unlockEditedWhenCurrentChange = function ()
 };
 
 /**
+ * @param {string} sNewCurrentHash
+ */
+CAccountListModel.prototype.changeCurrentAccountByHash = function (sNewCurrentHash)
+{
+	var oAccount = _.find(this.collection(), function (oAcct) {
+		return oAcct.hash() === sNewCurrentHash;
+	}, this);
+	
+	if (oAccount.id() !== this.currentId())
+	{
+		this.changeCurrentAccount(oAccount.id(), false);
+	}
+};
+
+/**
  * Changes current account. Sets hash to show new account data.
  * 
  * @param {number} iNewCurrentId
@@ -98,7 +114,7 @@ CAccountListModel.prototype.changeCurrentAccount = function (iNewCurrentId, bPas
 	
 	if (bPassToMail)
 	{
-		Routing.setHash(LinksUtils.getInbox());
+		Routing.setHash(LinksUtils.getMailbox());
 	}
 };
 
@@ -142,7 +158,7 @@ CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
 	{
 		this.collection(_.map(aAccounts, function (oRawAccount)
 		{
-			var oTempAccount = new CAccountModel();
+			var oTempAccount = new CAccountModel(aAccounts.length === 1);
 			oTempAccount.parse(oRawAccount, iDefaultId);
 			if (oTempAccount.id() === iDefaultId)
 			{

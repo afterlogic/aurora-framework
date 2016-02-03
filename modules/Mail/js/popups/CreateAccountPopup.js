@@ -231,7 +231,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 	{
 		var
 			iAccountId = Types.pInt(oResponse.Result.IdAccount),
-			oAccount = Accounts.getAccount(iAccountId) || new CAccountModel()
+			oAccount = Accounts.getAccount(iAccountId) || new CAccountModel(false)
 		;
 		
 		oAccount.init(iAccountId, oRequest.Email, oRequest.FriendlyName);

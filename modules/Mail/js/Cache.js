@@ -10,23 +10,25 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
-	UserSettings = require('core/js/Settings.js'),
-	WindowOpener = require('core/js/WindowOpener.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
 	App = require('core/js/App.js'),
-	Routing = require('core/js/Routing.js'),
 	Pulse = require('core/js/Pulse.js'),
+	Routing = require('core/js/Routing.js'),
+	UserSettings = require('core/js/Settings.js'),
+	WindowOpener = require('core/js/WindowOpener.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
-	Prefetcher = null,
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	
+	AccountList = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
+	Prefetcher = null,
 	Settings = require('modules/Mail/js/Settings.js'),
-	CUidListModel = require('modules/Mail/js/models/CUidListModel.js'),
+	
 	CFolderListModel = require('modules/Mail/js/models/CFolderListModel.js'),
+	CUidListModel = require('modules/Mail/js/models/CUidListModel.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods
 ;
@@ -36,11 +38,11 @@ var
  */
 function CMailCache()
 {
-	this.currentAccountId = Accounts.currentId;
+	this.currentAccountId = AccountList.currentId;
 
 	this.currentAccountId.subscribe(function (iCurrAccountId) {
 		var
-			oAccount = Accounts.getAccount(iCurrAccountId),
+			oAccount = AccountList.getAccount(iCurrAccountId),
 			oFolderList = this.oFolderListItems[iCurrAccountId]
 		;
 		if (oAccount)
@@ -64,7 +66,7 @@ function CMailCache()
 		}
 	}, this);
 	
-	this.editedAccountId = Accounts.editedId;
+	this.editedAccountId = AccountList.editedId;
 	this.editedAccountId.subscribe(function (iEditedAccountId) {
 		var oFolderList = this.oFolderListItems[iEditedAccountId];
 		
@@ -117,7 +119,7 @@ function CMailCache()
 //		if (this.currentMessage())
 //		{
 //			AfterLogicApi.runPluginHook('view-message', 
-//				[Accounts.currentId(), this.currentMessage().folder(), this.currentMessage().uid()]);
+//				[AccountList.currentId(), this.currentMessage().folder(), this.currentMessage().uid()]);
 //		}
 //	}, this);
 	
@@ -338,7 +340,7 @@ CMailCache.prototype.getFolderByFullName = function (iAccountId, sFolderFullName
 CMailCache.prototype.checkCurrentFolderList = function ()
 {
 	var
-		oCurrAccount = Accounts.getCurrent(),
+		oCurrAccount = AccountList.getCurrent(),
 		oFolderList = this.oFolderListItems[oCurrAccount.id()]
 	;
 	
@@ -355,7 +357,7 @@ CMailCache.prototype.checkCurrentFolderList = function ()
  */
 CMailCache.prototype.getFolderList = function (iAccountID)
 {
-	var oAccount = Accounts.getAccount(iAccountID);
+	var oAccount = AccountList.getAccount(iAccountID);
 	
 	if (oAccount && oAccount.allowMail())
 	{
@@ -511,7 +513,7 @@ CMailCache.prototype.executeCheckMail = function (bAbortPrevious)
 {
 	var
 		oFolderList = this.oFolderListItems[this.currentAccountId()],
-		aFoldersFromAccount = Accounts.getCurrentFetchersAndFiltersFolderNames(),
+		aFoldersFromAccount = AccountList.getCurrentFetchersAndFiltersFolderNames(),
 		aFolders = oFolderList ? [oFolderList.inboxFolderFullName(), oFolderList.spamFolderFullName(), oFolderList.currentFolderFullName()] : [],
 		iAccountID = oFolderList ? oFolderList.iAccountId : 0,
 		bCurrentAccountCheckmailStarted = this.checkMailStarted() && (this.checkMailStartedAccountId() === iAccountID),
@@ -788,13 +790,13 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 //				if (oToFolder && oToFolder.type() === Enums.FolderTypes.Trash)
 //				{
 //					AfterLogicApi.runPluginHook('move-messages-to-trash', 
-//						[Accounts.currentId(), oParameters.Folder, aUids]);
+//						[AccountList.currentId(), oParameters.Folder, aUids]);
 //				}
 //
 //				if (oToFolder && oToFolder.type() === Enums.FolderTypes.Spam)
 //				{
 //					AfterLogicApi.runPluginHook('move-messages-to-spam', 
-//						[Accounts.currentId(), oParameters.Folder, aUids]);
+//						[AccountList.currentId(), oParameters.Folder, aUids]);
 //				}
 			}, this)
 		;
@@ -849,13 +851,13 @@ CMailCache.prototype.copyMessagesToFolder = function (sToFolderFullName, aUids)
 //			if (oToFolder && oToFolder.type() === Enums.FolderTypes.Trash)
 //			{
 //				AfterLogicApi.runPluginHook('copy-messages-to-trash',
-//					[Accounts.currentId(), oParameters.Folder, aUids]);
+//					[AccountList.currentId(), oParameters.Folder, aUids]);
 //			}
 //
 //			if (oToFolder && oToFolder.type() === Enums.FolderTypes.Spam)
 //			{
 //				AfterLogicApi.runPluginHook('copy-messages-to-spam',
-//					[Accounts.currentId(), oParameters.Folder, aUids]);
+//					[AccountList.currentId(), oParameters.Folder, aUids]);
 //			}
 		}
 	}
@@ -965,7 +967,7 @@ CMailCache.prototype.deleteMessagesFromFolder = function (oFolder, aUids)
 	Ajax.send('DeleteMessages', oParameters, this.onMoveMessagesResponse, this);
 	
 //	AfterLogicApi.runPluginHook('delete-messages', 
-//		[Accounts.currentId(), oParameters.Folder, aUids]);
+//		[AccountList.currentId(), oParameters.Folder, aUids]);
 };
 
 /**
@@ -1174,7 +1176,8 @@ CMailCache.prototype.onGetFoldersResponse = function (oResponse, oRequest)
 	var
 		oParameters = JSON.parse(oRequest.Parameters),
 		oFolderList = new CFolderListModel(),
-		iAccountId = parseInt(oResponse.AccountID, 10),
+//		iAccountId = Types.pInt(oResponse.AccountID),
+		iAccountId = oParameters.AccountID,
 		oFolderListOld = this.oFolderListItems[iAccountId],
 		oNamedFolderListOld = oFolderListOld ? oFolderListOld.oNamedCollection : {}
 	;		
@@ -1208,26 +1211,13 @@ CMailCache.prototype.onGetFoldersResponse = function (oResponse, oRequest)
 		{
 			this.editedFolderList(oFolderList);
 		}
-		if (Accounts.defaultId() === iAccountId)
+		if (AccountList.defaultId() === iAccountId)
 		{
 			this.defaultFolderList(oFolderList);
 		}
 	}
 	
 	this.folderListLoading.remove(iAccountId);
-};
-
-/**
- * @param {Object} oFolderList
- */
-CMailCache.prototype.setCurrentFolderList = function (oFolderList)
-{
-	var iAccountId = oFolderList.iAccountId;
-	
-	if (iAccountId === this.currentAccountId() && iAccountId !== this.folderList().iAccountId)
-	{
-		this.folderList(oFolderList);
-	}
 };
 
 /**
@@ -1258,7 +1248,8 @@ CMailCache.prototype.onGetRelevantFoldersInformationResponse = function (oRespon
 {
 	var
 		bCheckMailStarted = false,
-		iAccountId = oResponse.AccountID,
+//		iAccountId = oResponse.AccountID,
+		iAccountId = oRequest.AccountID,
 		oFolderList = this.oFolderListItems[iAccountId],
 		sCurrentFolderName = this.folderList().currentFolderFullName(),
 		bSameAccount = this.currentAccountId() === iAccountId
@@ -1413,12 +1404,14 @@ CMailCache.prototype.parseMessageList = function (oResponse, oRequest)
 	var
 		oResult = oResponse.Result,
 		oParameters = JSON.parse(oRequest.Parameters),
-		oFolderList = this.oFolderListItems[oResponse.AccountID],
+//		iAccountId = oResponse.AccountID,
+		iAccountId = oParameters.AccountID,
+		oFolderList = this.oFolderListItems[iAccountId],
 		oFolder = null,
 		oUidList = null,
 		bTrustThreadInfo = (oParameters.UseThreads === '1'),
 		bHasFolderChanges = false,
-		bCurrentFolder = this.currentAccountId() === oResponse.AccountID &&
+		bCurrentFolder = this.currentAccountId() === iAccountId &&
 				this.folderList().currentFolderFullName() === oResult.FolderName,
 		bCurrentList = bCurrentFolder &&
 				this.uidList().search() === oResult.Search &&

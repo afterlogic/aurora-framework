@@ -9,29 +9,43 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
-	App = null,
-	ModulesManager = require('core/js/ModulesManager.js'),
-	Api = require('core/js/Api.js'),
 	Ajax = null,
+	Api = require('core/js/Api.js'),
+	App = null,
 	Browser = require('core/js/Browser.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	UserSettings = require('core/js/Settings.js'),
 	
 	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
-	Accounts = null,
-	Settings = require('modules/Mail/js/Settings.js'),
-	Cache = null
+	AccountList = null,
+	Cache = null,
+	Settings = require('modules/Mail/js/Settings.js')
 ;
 
 /**
  * @constructor
+ * @param {boolean} bSingle
  */
-function CAccountModel()
+function CAccountModel(bSingle)
 {
 	this.id = ko.observable(0);
 	this.email = ko.observable('');
+	this.hash = ko.computed(function () {
+		var
+			sUniqVal = this.id() + this.email(),
+			iHash = 0,
+			iIndex = 0,
+			iLen = sUniqVal.length
+		;
+		while (iIndex < iLen)
+		{
+			iHash  = ((iHash << 5) - iHash + sUniqVal.charCodeAt(iIndex++)) << 0;
+		}
+		return Types.pString(iHash);
+	}, this);
 	this.allowMail = ko.observable(true);
 	this.passwordSpecified = ko.observable(true);
 	
@@ -96,10 +110,7 @@ function CAccountModel()
 				sAndOther = TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_CONTACTS_HINT');
 			}
 			sHint = TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_DEFAULT_HINT', {'AND_OTHER': sAndOther});
-			
-			this.requireAccounts();
-			
-			if (Accounts.collection && Accounts.collection().length > 1)
+			if (!bSingle)
 			{
 				sHint += TextUtils.i18n('SETTINGS/ACCOUNTS_REMOVE_DEFAULT_NOTSINGLE_HINT');
 			}
@@ -126,9 +137,9 @@ function CAccountModel()
 
 CAccountModel.prototype.requireAccounts = function ()
 {
-	if (Accounts === null)
+	if (AccountList === null)
 	{
-		Accounts = require('modules/Mail/js/AccountList.js');
+		AccountList = require('modules/Mail/js/AccountList.js');
 	}
 };
 
@@ -324,7 +335,7 @@ CAccountModel.prototype.updateExtended = function (ExtendedData)
 CAccountModel.prototype.changeAccount = function()
 {
 	this.requireAccounts();
-	Accounts.changeCurrentAccount(this.id(), true);
+	AccountList.changeCurrentAccount(this.id(), true);
 };
 
 CAccountModel.prototype.getDefaultIdentity = function()
@@ -407,7 +418,7 @@ CAccountModel.prototype.onAccountDeleteResponse = function (oResponse, oRequest)
 		App.Api.closeComposePopup();
 		
 		this.requireAccounts();
-		Accounts.deleteAccount(this.id());
+		AccountList.deleteAccount(this.id());
 		
 		if (this.isDefault())
 		{

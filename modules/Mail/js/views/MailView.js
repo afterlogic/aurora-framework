@@ -5,18 +5,22 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Utils = require('core/js/utils/Common.js'),
+	
 	App = require('core/js/App.js'),
 	Routing = require('core/js/Routing.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
+	
 	CFolderListView = require('modules/Mail/js/views/CFolderListView.js'),
 	CMessageListView = require('modules/Mail/js/views/CMessageListView.js'),
 	MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js')
@@ -30,7 +34,7 @@ function CMailView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('TITLE/MAILBOX');
 	});
 	
 	this.folderList = MailCache.folderList;
@@ -46,9 +50,9 @@ function CMailView()
 	this.isEnableGroupOperations = this.oMessageList.isEnableGroupOperations;
 
 	this.composeLink = ko.observable(Routing.buildHashFromArray(LinksUtils.getCompose()));
-	this.composeCommand = Utils.createCommand(this, this.executeCompose, Accounts.isCurrentAllowsMail);
+	this.composeCommand = Utils.createCommand(this, this.executeCompose, AccountList.isCurrentAllowsMail);
 
-	this.checkMailCommand = Utils.createCommand(this, this.executeCheckMail, Accounts.isCurrentAllowsMail);
+	this.checkMailCommand = Utils.createCommand(this, this.executeCheckMail, AccountList.isCurrentAllowsMail);
 	this.checkMailIndicator = ko.observable(true).extend({ throttle: 50 });
 	ko.computed(function () {
 		this.checkMailIndicator(MailCache.checkMailStarted() || MailCache.messagesLoading());
@@ -87,12 +91,12 @@ function CMailView()
 	}, this);
 	
 	this.allowedSpamAction = ko.computed(function () {
-		var oAccount = Accounts.getCurrent();
+		var oAccount = AccountList.getCurrent();
 		return oAccount ? oAccount.extensionExists('AllowSpamFolderExtension') && !this.isSpamFolder() : false;
 	}, this);
 	
 	this.allowedNotSpamAction = ko.computed(function () {
-		var oAccount = Accounts.getCurrent();
+		var oAccount = AccountList.getCurrent();
 		return oAccount ? oAccount.extensionExists('AllowSpamFolderExtension') && this.isSpamFolder() : false;
 	}, this);
 	
@@ -220,6 +224,10 @@ CMailView.prototype.resizeDblClick = function (oData, oEvent)
  */
 CMailView.prototype.onRoute = function (aParams)
 {
+	var oParams = LinksUtils.parseMailbox(aParams);
+	
+	AccountList.changeCurrentAccountByHash(oParams.AccountHash);
+	
 	this.oMessageList.onRoute(aParams);
 	MessagePaneView.onRoute(aParams);
 };
