@@ -146,6 +146,11 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 			oRequest.Token = UserSettings.CsrfToken;
 		}
 		
+		if (UserSettings.UserId)
+		{
+			oRequest.UserId = UserSettings.UserId;
+		}
+		
 		this.abortRequests(oRequest);
 	
 		this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
