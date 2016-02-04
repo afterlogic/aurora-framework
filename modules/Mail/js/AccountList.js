@@ -86,7 +86,7 @@ CAccountListModel.prototype.changeCurrentAccountByHash = function (sNewCurrentHa
 		return oAcct.hash() === sNewCurrentHash;
 	}, this);
 	
-	if (oAccount.id() !== this.currentId())
+	if (oAccount && oAccount.id() !== this.currentId())
 	{
 		this.changeCurrentAccount(oAccount.id(), false);
 	}
