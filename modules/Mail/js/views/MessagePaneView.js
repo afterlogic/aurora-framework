@@ -970,7 +970,7 @@ CMessagePaneView.prototype.saveAttachmentsToFiles = function ()
 {
 	if (this.currentMessage())
 	{
-		this.currentMessage().saveAttachmentsToFiles();
+		ModulesManager.run('Files', 'saveFilesByHashes', [this.currentMessage().getAttachmentsHashes()]);
 	}
 };
 

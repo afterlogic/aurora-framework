@@ -683,7 +683,10 @@ CMessageModel.prototype.onGetAttachmentsZipHashResponse = function (oResponse, o
 	}
 };
 
-CMessageModel.prototype.saveAttachmentsToFiles = function ()
+/**
+ * @returns {Array}
+ */
+CMessageModel.prototype.getAttachmentsHashes = function ()
 {
 	var
 		aNotInlineAttachments = _.filter(this.attachments(), function (oAttach) {
@@ -694,8 +697,7 @@ CMessageModel.prototype.saveAttachmentsToFiles = function ()
 		})
 	;
 
-	App.filesRecievedAnim(true);
-	Ajax.send('SaveAttachmentsToFiles', { 'Attachments': aHashes }, this.onSaveAttachmentsToFilesResponse, this);
+	return aHashes;
 };
 
 /**

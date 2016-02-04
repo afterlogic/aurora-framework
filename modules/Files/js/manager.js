@@ -6,7 +6,10 @@ module.exports = function (oSettings) {
 	var
 		TextUtils = require('core/js/utils/Text.js'),
 				
-		Settings = require('modules/Files/js/Settings.js')
+		Ajax = require('modules/Files/js/Ajax.js'),
+		Settings = require('modules/Files/js/Settings.js'),
+		
+		HeaderItemView = null
 	;
 	
 	Settings.init(oSettings);
@@ -26,13 +29,23 @@ module.exports = function (oSettings) {
 				TextUtils = require('core/js/utils/Text.js'),
 				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 			;
-			return new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'));
+			
+			HeaderItemView = new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'));
+			
+			return HeaderItemView;
 		},
 		getSelectFilesPopup: function () {
 			return require('modules/Files/js/popups/SelectFilesPopup.js');
 		},
 		getMobileSyncSettingsView: function () {
 			return require('modules/Files/js/views/MobileSyncSettingsView.js');
+		},
+		saveFilesByHashes: function (aHashes) {
+			if (HeaderItemView)
+			{
+				HeaderItemView.recivedAnim(true);
+			}
+			Ajax.send('SaveFilesByHashes', { 'Hashes': aHashes }, this.onSaveAttachmentsToFilesResponse, this);
 		}
 	};
 };
