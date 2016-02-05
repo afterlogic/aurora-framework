@@ -8,16 +8,18 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	Screens = require('core/js/Screens.js'),
 	Api = require('core/js/Api.js'),
-	Routing = require('core/js/Routing.js'),
 	App = require('core/js/App.js'),
+	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAddressModel = require('core/js/models/CAddressModel.js'),
 	CAddressListModel = require('core/js/models/CAddressListModel.js'),
 	
 	MessageUtils = require('modules/Mail/js/utils/Message.js'),
+	
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods,
@@ -55,7 +57,7 @@ SendingUtils.send = function (sMethod, oParameters, bShowLoading, fSendMessageRe
 		sLoadingMessage = '',
 		sSentFolder = oFolderList ? oFolderList.sentFolderFullName() : '',
 		sDraftFolder = oFolderList ? oFolderList.draftsFolderFullName() : '',
-		sCurrEmail = Accounts.getEmail(iAccountID),
+		sCurrEmail = AccountList.getEmail(iAccountID),
 		bSelfRecipient = (oParameters.To.indexOf(sCurrEmail) > -1 || oParameters.Cc.indexOf(sCurrEmail) > -1 || 
 			oParameters.Bcc.indexOf(sCurrEmail) > -1)
 	;
@@ -508,7 +510,7 @@ function GetReplyMessageBody(oMessage, iAccountId, oFetcherOrIdentity, bPasteSig
 SendingUtils.getClearSignature = function (iAccountId, oFetcherOrIdentity)
 {
 	var
-		oAccount = Accounts.getAccount(iAccountId),
+		oAccount = AccountList.getAccount(iAccountId),
 		sSignature = ''
 	;
 
@@ -552,7 +554,7 @@ SendingUtils.getSignatureText = function (iAccountId, oFetcherOrIdentity, bPaste
 SendingUtils.getFirstFetcherOrIdentityByRecipientsOrDefault = function (aRecipients, iAccountId)
 {
 	var
-		oAccount = Accounts.getAccount(iAccountId),
+		oAccount = AccountList.getAccount(iAccountId),
 		aList = this.getAccountFetchersIdentitiesList(oAccount),
 		aEqualEmailList = [],
 		oFoundFetcherOrIdentity = null
@@ -678,7 +680,7 @@ function GetReplyAllCcAddr(oMessage, iAccountId, oFetcherOrIdentity)
 		oAddressList = new CAddressListModel(),
 		aAddrCollection = _.union(oMessage.oTo.aCollection, oMessage.oCc.aCollection, 
 			oMessage.oBcc.aCollection),
-		oCurrAccount = _.find(Accounts.collection(), function (oAccount) {
+		oCurrAccount = _.find(AccountList.collection(), function (oAccount) {
 			return oAccount.id() === iAccountId;
 		}, this),
 		oCurrAccAddress = new CAddressModel(),

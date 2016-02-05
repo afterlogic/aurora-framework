@@ -9,7 +9,7 @@ var
 	Storage = require('core/js/Storage.js'),
 	
 	Settings = require('modules/Mail/js/Settings.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	CFolderModel = require('modules/Mail/js/models/CFolderModel.js')
 ;
 
@@ -226,7 +226,7 @@ CFolderListModel.prototype.parseRecursively = function (aRawCollection, oNamedFo
 		sFolderFullName = '',
 		oSubFolders = null,
 		aSubfolders = [],
-		oAccount = Accounts.getAccount(this.iAccountId),
+		oAccount = AccountList.getAccount(this.iAccountId),
 		bDisableManageSubscribe = oAccount.extensionExists('DisableManageSubscribe'),
 		fDetectSpamFolder = function () {
 			var oSpamFolder = self.spamFolder();

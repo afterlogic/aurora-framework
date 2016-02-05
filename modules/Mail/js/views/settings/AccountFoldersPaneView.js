@@ -14,7 +14,7 @@ var
 	SetSystemFoldersPopup = require('modules/Mail/js/popups/SetSystemFoldersPopup.js'),
 	
 	MailCache = require('modules/Mail/js/Cache.js'),
-	Accounts = require('modules/Mail/js/AccountList.js')
+	AccountList = require('modules/Mail/js/AccountList.js')
 ;
 
 require('knockout-sortable');
@@ -43,7 +43,7 @@ function CAccountFoldersPaneView()
 	this.setSystemFoldersCommand = Utils.createCommand(this, this.setSystemFolders, this.enableButtons);
 	
 	this.showMovedWithMouseItem = ko.computed(function () {
-		var oAccount = Accounts.getEdited();
+		var oAccount = AccountList.getEdited();
 		return oAccount ? !App.isMobile() && !oAccount.extensionExists('DisableFoldersManualSort') : false;
 	}, this);
 	
@@ -57,7 +57,7 @@ CAccountFoldersPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountFoldersPa
 
 CAccountFoldersPaneView.prototype.hide = function (fAfterHideHandler)
 {
-	var iAccountId = Accounts.editedId();
+	var iAccountId = AccountList.editedId();
 	_.delay(function () {
 		MailCache.getFolderList(iAccountId);
 	}, 3000);

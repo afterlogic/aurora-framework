@@ -14,7 +14,7 @@ var
  * @param {string} sLabel
  * @param {function} fGetDefaultServerValue
  */
-function CServerPropertiesViewModel(iDefaultPort, iDefaultSslPort, sId, sLabel, fGetDefaultServerValue)
+function CServerPropertiesView(iDefaultPort, iDefaultSslPort, sId, sLabel, fGetDefaultServerValue)
 {
 	this.server = ko.observable('');
 	this.label = sLabel;
@@ -59,28 +59,28 @@ function CServerPropertiesViewModel(iDefaultPort, iDefaultSslPort, sId, sLabel, 
  * @param {number} iPort
  * @param {boolean} bSsl
  */
-CServerPropertiesViewModel.prototype.set = function (sServer, iPort, bSsl)
+CServerPropertiesView.prototype.set = function (sServer, iPort, bSsl)
 {
 	this.server(sServer);
 	this.port(iPort);
 	this.ssl(bSsl);
 };
 
-CServerPropertiesViewModel.prototype.clear = function ()
+CServerPropertiesView.prototype.clear = function ()
 {
 	this.server('');
 	this.port(this.defaultPort());
 	this.ssl(false);
 };
 
-CServerPropertiesViewModel.prototype.getIntPort = function ()
+CServerPropertiesView.prototype.getIntPort = function ()
 {
 	return parseInt(this.port(), 10);
 };
 
-CServerPropertiesViewModel.prototype.getIntSsl = function ()
+CServerPropertiesView.prototype.getIntSsl = function ()
 {
 	return this.ssl() ? 1 : 0;
 };
 
-module.exports = CServerPropertiesViewModel;
+module.exports = CServerPropertiesView;

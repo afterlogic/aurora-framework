@@ -9,13 +9,15 @@ var
 	
 	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	MailCache = require('modules/Mail/js/Cache.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js'),
-	СFilterModel = require('modules/Mail/js/models/СFilterModel.js')
+	MailCache = require('modules/Mail/js/Cache.js'),
+	
+	СFilterModel = require('modules/Mail/js/models/СFilterModel.js'),
+	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js')
 ;
 
 /**
@@ -98,7 +100,7 @@ CAccountFiltersPaneView.prototype.populate = function ()
 		aOptionList = []
 	;
 
-	if (oFolderList.iAccountId === Accounts.editedId())
+	if (oFolderList.iAccountId === AccountList.editedId())
 	{
 		aOptionList = oFolderList.getOptions(TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_NOT_SELECTED'), true, true, false, true);
 		this.foldersOptions(aOptionList);
@@ -148,7 +150,7 @@ CAccountFiltersPaneView.prototype.getParametersForSave = function ()
 	;
 	
 	return {
-		'AccountID': Accounts.editedId(),
+		'AccountID': AccountList.editedId(),
 		'Filters': aFilters
 	};
 };
@@ -174,7 +176,7 @@ CAccountFiltersPaneView.prototype.save = function ()
 
 CAccountFiltersPaneView.prototype.populateFilters = function ()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	
 	if (oAccount)
 	{
@@ -203,7 +205,7 @@ CAccountFiltersPaneView.prototype.deleteFilter = function (oFilterToDelete)
 
 CAccountFiltersPaneView.prototype.addFilter = function ()
 {
-	var oSieveFilter =  new СFilterModel(Accounts.editedId());
+	var oSieveFilter =  new СFilterModel(AccountList.editedId());
 	this.collection.push(oSieveFilter);
 };
 
@@ -295,7 +297,7 @@ CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oR
 			var
 				oSieveFilters = new СFiltersModel(),
 				iAccountId = Types.pInt(oResponse.AccountID),
-				oAccount = Accounts.getAccount(iAccountId)
+				oAccount = AccountList.getAccount(iAccountId)
 			;
 
 			if (oAccount)
@@ -303,7 +305,7 @@ CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oR
 				oSieveFilters.parse(iAccountId, oResponse.Result);
 				oAccount.filters(oSieveFilters);
 
-				if (iAccountId === Accounts.editedId())
+				if (iAccountId === AccountList.editedId())
 				{
 					this.populateFilters();
 				}

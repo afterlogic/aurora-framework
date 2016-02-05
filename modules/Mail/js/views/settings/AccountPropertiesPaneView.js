@@ -8,17 +8,19 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
 	ChangePasswordPopup = ModulesManager.run('ChangePassword', 'getChangePasswordPopup'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
-	CServerPropertiesViewModel = require('modules/Mail/js/views/CServerPropertiesViewModel.js')
+	
+	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -40,10 +42,10 @@ function CAccountPropertiesPaneView()
 	this.email = ko.observable('');
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesViewModel(143, 993, 'acc_edit_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_INCOMING_MAIL'));
+	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_edit_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_INCOMING_MAIL'));
 	this.outgoingMailLogin = ko.observable('');
 	this.outgoingMailPassword = ko.observable('');
-	this.oOutgoing = new CServerPropertiesViewModel(25, 465, 'acc_edit_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_edit_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
 
 	this.isAllowMail = ko.observable(true);
 	this.allowChangePassword = ko.observable(false);
@@ -57,7 +59,7 @@ function CAccountPropertiesPaneView()
 		}
 	}, this);
 
-	Accounts.editedId.subscribe(function () {
+	AccountList.editedId.subscribe(function () {
 		this.populate();
 	}, this);
 	this.populate();
@@ -86,7 +88,7 @@ CAccountPropertiesPaneView.prototype.getCurrentValues = function ()
 
 CAccountPropertiesPaneView.prototype.getParametersForSave = function ()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	return {
 		'AccountID': oAccount.id(),
 		'FriendlyName': this.friendlyName(),
@@ -106,7 +108,7 @@ CAccountPropertiesPaneView.prototype.getParametersForSave = function ()
 
 CAccountPropertiesPaneView.prototype.populate = function ()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	
 	if (oAccount)
 	{	
@@ -173,7 +175,7 @@ CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 	{
 		var
 			iAccountId = Types.pInt(oResponse.AccountID),
-			oAccount = Accounts.getAccount(iAccountId),
+			oAccount = AccountList.getAccount(iAccountId),
 			oParameters = JSON.parse(oRequest.Parameters)
 		;
 

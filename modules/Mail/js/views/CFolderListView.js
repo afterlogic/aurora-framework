@@ -8,7 +8,7 @@ var
 	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js')
 ;
 
@@ -17,7 +17,7 @@ var
  */
 function CFolderListView()
 {
-	this.accounts = Accounts.collection; // todo: only mobile version
+	this.accounts = AccountList.collection; // todo: only mobile version
 	
 	this.folderList = MailCache.folderList;
 	
@@ -37,7 +37,7 @@ function CFolderListView()
 			MailCache.quotaChangeTrigger();
 
 			var
-				oAccount = Accounts.getCurrent(),
+				oAccount = AccountList.getCurrent(),
 				iQuota = oAccount ? oAccount.quota() : 0,
 				iUsed = oAccount ? oAccount.usedSpace() : 0,
 				iProc = 0 < iQuota ? Math.ceil((iUsed / iQuota) * 100) : -1
@@ -57,7 +57,7 @@ function CFolderListView()
 		}, this);
 	}
 	
-	this.isCurrentAllowsMail = Accounts.isCurrentAllowsMail; // todo: manage folders
+	this.isCurrentAllowsMail = AccountList.isCurrentAllowsMail; // todo: manage folders
 }
 
 CFolderListView.prototype.ViewTemplate = App.isMobile() ? 'Mail_FoldersMobileView' : 'Mail_FoldersView';

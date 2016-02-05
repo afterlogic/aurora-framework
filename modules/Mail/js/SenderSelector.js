@@ -7,14 +7,14 @@ var
 	Types = require('core/js/utils/Types.js'),
 			
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
-	Accounts = require('modules/Mail/js/AccountList.js')
+	AccountList = require('modules/Mail/js/AccountList.js')
 ;
 
 function CSenderSelector()
 {
 	this.senderList = ko.observableArray([]);
 	
-	this.senderAccountId = ko.observable(Accounts.currentId());
+	this.senderAccountId = ko.observable(AccountList.currentId());
 	this.selectedFetcherOrIdentity = ko.observable(null);
 	this.lockSelectedSender = ko.observable(false);
 	this.selectedSender = ko.observable('');
@@ -22,7 +22,7 @@ function CSenderSelector()
 		if (!this.lockSelectedSender())
 		{
 			var
-				oAccount = Accounts.getAccount(this.senderAccountId()),
+				oAccount = AccountList.getAccount(this.senderAccountId()),
 				sId = this.selectedSender(),
 				oFetcherOrIdentity = null
 			;
@@ -85,14 +85,14 @@ CSenderSelector.prototype.changeSenderAccountId = function (iId, oFetcherOrIdent
 	var bChanged = false;
 	if (this.senderAccountId() !== iId)
 	{
-		if (Accounts.hasAccountWithId(iId))
+		if (AccountList.hasAccountWithId(iId))
 		{
 			this.senderAccountId(iId);
 			bChanged = true;
 		}
-		else if (!Accounts.hasAccountWithId(this.senderAccountId()))
+		else if (!AccountList.hasAccountWithId(this.senderAccountId()))
 		{
-			this.senderAccountId(Accounts.currentId());
+			this.senderAccountId(AccountList.currentId());
 			bChanged = true;
 		}
 	}
@@ -116,7 +116,7 @@ CSenderSelector.prototype.fillSenderList = function (oFetcherOrIdentity)
 {
 	var
 		aSenderList = [],
-		oAccount = Accounts.getAccount(this.senderAccountId())
+		oAccount = AccountList.getAccount(this.senderAccountId())
 	;
 
 	if (oAccount)

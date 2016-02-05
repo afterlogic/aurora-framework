@@ -10,19 +10,21 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
-	Routing = require('core/js/Routing.js'),
 	Browser = require('core/js/Browser.js'),
-	Screens = require('core/js/Screens.js'),
-	UserSettings = require('core/js/Settings.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	UserSettings = require('core/js/Settings.js'),
+	
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
 	
+	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
-	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings  = require('modules/Mail/js/Settings.js')
 ;
@@ -271,7 +273,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 			this.firstCompleteCollection(false);
 		}
 	}, this);
-	this.currentAccountId = Accounts.currentId;
+	this.currentAccountId = AccountList.currentId;
 	this.listChanged = ko.computed(function () {
 		return [
 			this.firstCompleteCollection(),
@@ -316,7 +318,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 		this.createDatePickerObject(this.searchDateEndDom());
 	}, this), 1000);
 	
-	this.isCurrentAllowsMail = Accounts.isCurrentAllowsMail;
+	this.isCurrentAllowsMail = AccountList.isCurrentAllowsMail;
 	
 	var aAddingInfo = TextUtils.i18n('MAILBOX/INFO_ADDING_NEW_ACCOUNT').split(/%STARTLINK%|%ENDLINK%/);
 	this.sAddingInfo1 = aAddingInfo.length > 0 ? aAddingInfo[0] : '';
@@ -330,7 +332,7 @@ CMessageListView.prototype.ViewTemplate = 'Mail_MessagesView';
 
 CMessageListView.prototype.addNewAccount = function ()
 {
-	App.Api.createMailAccount(Accounts.getEmail());
+	App.Api.createMailAccount(AccountList.getEmail());
 };
 
 CMessageListView.prototype.createDatePickerObject = function (oElement)

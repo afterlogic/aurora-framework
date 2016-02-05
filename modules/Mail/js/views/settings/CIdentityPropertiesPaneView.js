@@ -10,11 +10,12 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js')
 ;
 
@@ -30,7 +31,7 @@ function CIdentityPropertiesPaneView(oParent, bCreate)
 	
 	this.identity = ko.observable(null);
 	
-	this.defaultAccountId = Accounts.defaultId;
+	this.defaultAccountId = AccountList.defaultId;
 	this.oParent = oParent;
 	this.bCreate = bCreate;
 
@@ -133,10 +134,10 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 		var
 			oParameters = JSON.parse(oRequest.Parameters),
 			iAccountId = Types.pInt(oResponse.AccountID),
-			oAccount = 0 < iAccountId ? Accounts.getAccount(iAccountId) : null
+			oAccount = 0 < iAccountId ? AccountList.getAccount(iAccountId) : null
 		;
 		
-		Accounts.populateIdentities();
+		AccountList.populateIdentities();
 		
 		if (this.bCreate && $.isFunction(this.oParent.closePopup))
 		{
@@ -203,7 +204,7 @@ CIdentityPropertiesPaneView.prototype.onAccountIdentityDeleteResponse = function
 	{
 		Api.showErrorByCode(oResponse, Utils.i18n('SETTINGS/ACCOUNTS_IDENTITY_DELETING_ERROR'));
 	}
-	Accounts.populateIdentities();
+	AccountList.populateIdentities();
 };
 
 CIdentityPropertiesPaneView.prototype.cancel = function ()

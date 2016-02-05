@@ -30,7 +30,7 @@ var
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
 	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
@@ -56,7 +56,7 @@ function CComposeView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/COMPOSE');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('TITLE/COMPOSE');
 	});
 	
 	var self = this;
@@ -1866,7 +1866,7 @@ CComposeView.prototype.getExtInterface = function ()
 		}, this),
 		getPlainText: _.bind(this.oHtmlEditor.getPlainText, this.oHtmlEditor),
 		getFromEmail: _.bind(function () {
-			return Accounts.getEmail(this.senderAccountId());
+			return AccountList.getEmail(this.senderAccountId());
 		}, this),
 		getRecipientEmails: _.bind(function () {
 			return this.recipientEmails();

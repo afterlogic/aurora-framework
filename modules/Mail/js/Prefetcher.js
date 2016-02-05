@@ -6,7 +6,7 @@ var
 	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
@@ -19,7 +19,7 @@ Prefetcher.prefetchFetchersIdentities = function ()
 {
 	if (!App.isNewTab() && !bFetchersIdentitiesPrefetched && (Settings.AllowFetchers || Settings.AllowIdentities))
 	{
-		Accounts.populateFetchersIdentities();
+		AccountList.populateFetchersIdentities();
 		bFetchersIdentitiesPrefetched = true;
 		
 		return true;
@@ -121,7 +121,7 @@ Prefetcher.startOtherFoldersPrefetch = function ()
 	var
 		oFolderList = MailCache.folderList(),
 		sCurrFolder = oFolderList.currentFolderFullName(),
-		aFoldersFromAccount = Accounts.getCurrentFetchersAndFiltersFolderNames(),
+		aFoldersFromAccount = AccountList.getCurrentFetchersAndFiltersFolderNames(),
 		aSystemFolders = oFolderList ? [oFolderList.inboxFolderFullName(), oFolderList.sentFolderFullName(), oFolderList.draftsFolderFullName(), oFolderList.spamFolderFullName()] : [],
 		aOtherFolders = (aFoldersFromAccount.length < 3) ? this.getOtherFolderNames(3 - aFoldersFromAccount.length) : [],
 		aFolders = _.uniq(_.compact(_.union(aSystemFolders, aFoldersFromAccount, aOtherFolders))),
@@ -285,7 +285,7 @@ Prefetcher.onGetMessagesBodiesResponse = function (oResponse, oRequest)
 Prefetcher.prefetchAccountQuota = function ()
 {
 	var
-		oAccount = Accounts.getCurrent(),
+		oAccount = AccountList.getCurrent(),
 		bNeedQuotaRequest = oAccount && !oAccount.quotaRecieved()
 	;
 	

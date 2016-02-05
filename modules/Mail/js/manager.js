@@ -83,8 +83,8 @@ module.exports = function (oSettings) {
 			return _.bind(Cache.searchMessagesInCurrentFolder, Cache);
 		},
 		getAllAccountsFullEmails: function () {
-			var Accounts = require('modules/Mail/js/AccountList.js');
-			return Accounts.getAllFullEmails();
+			var AccountList = require('modules/Mail/js/AccountList.js');
+			return AccountList.getAllFullEmails();
 		},
 		getCreateAccountPopup: function () {
 			return require('modules/Mail/js/popups/CreateAccountPopup.js');

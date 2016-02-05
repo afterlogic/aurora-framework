@@ -9,11 +9,12 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
-	Ajax = require('modules/Mail/js/Ajax.js')
+	AccountList = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
+	MailCache = require('modules/Mail/js/Cache.js')
 ;
 
 /**
@@ -69,7 +70,7 @@ CCreateFolderPopup.prototype.create = function ()
 	var
 		sParentFolder = (this.parentFolder() === '' ? MailCache.editedFolderList().sNamespaceFolder : this.parentFolder()),
 		oParameters = {
-			'AccountID': Accounts.editedId(),
+			'AccountID': AccountList.editedId(),
 			'FolderNameInUtf8': this.folderName(),
 			'FolderParentFullNameRaw': sParentFolder,
 			'Delimiter': MailCache.editedFolderList().sDelimiter
@@ -95,7 +96,7 @@ CCreateFolderPopup.prototype.onCreateFolderResponse = function (oResponse, oRequ
 	}
 	else
 	{
-		MailCache.getFolderList(Accounts.editedId());
+		MailCache.getFolderList(AccountList.editedId());
 	}
 };
 

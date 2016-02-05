@@ -10,10 +10,10 @@ var
 	Api = require('core/js/Api.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	
-	CServerPropertiesViewModel = require('modules/Mail/js/views/CServerPropertiesViewModel.js')
+	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -23,7 +23,7 @@ function CCreateAccountPopup()
 {
 	CAbstractPopup.call(this);
 	
-	this.defaultAccountId = Accounts.defaultId;
+	this.defaultAccountId = AccountList.defaultId;
 
 	this.loading = ko.observable(false);
 
@@ -32,11 +32,11 @@ function CCreateAccountPopup()
 	this.incomingMailLogin = ko.observable('');
 	this.incomingLoginFocused = ko.observable(false);
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesViewModel(143, 993, 'acc_create_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_INCOMING_MAIL'));
+	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_create_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_INCOMING_MAIL'));
 	
 	this.outgoingMailLogin = ko.observable('');
 	this.outgoingMailPassword = ko.observable('');
-	this.oOutgoing = new CServerPropertiesViewModel(25, 465, 'acc_create_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_create_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
 	
 	this.useSmtpAuthentication = ko.observable(true);
 	this.friendlyNameFocus = ko.observable(false);
@@ -144,7 +144,7 @@ CCreateAccountPopup.prototype.onSecondSaveClick = function ()
 	if (!this.isEmptySecondFields())
 	{
 		var
-			oDefaultAccount = Accounts.getDefault(),
+			oDefaultAccount = AccountList.getDefault(),
 			bConfigureMail = this.isConnectToMailType() || !oDefaultAccount.allowMail() && oDefaultAccount.email() === this.email(),
 			oParameters = {
 				'AccountID': this.defaultAccountId(),
@@ -232,7 +232,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 	{
 		var
 			iAccountId = Types.pInt(oResponse.Result.IdAccount),
-			oAccount = Accounts.getAccount(iAccountId) || new CAccountModel(false)
+			oAccount = AccountList.getAccount(iAccountId) || new CAccountModel(false)
 		;
 		
 		oAccount.init(iAccountId, oRequest.Email, oRequest.FriendlyName);
@@ -242,16 +242,16 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 		if (oRequest.Action === 'AccountConfigureMail')
 		{
 			oAccount.allowMailAfterConfiguring();
-			Accounts.collection.valueHasMutated();
-			Accounts.initCurrentAccount();
-			Accounts.populateIdentities();
-			Accounts.currentId.valueHasMutated();
+			AccountList.collection.valueHasMutated();
+			AccountList.initCurrentAccount();
+			AccountList.populateIdentities();
+			AccountList.currentId.valueHasMutated();
 		}
 		else
 		{
-			Accounts.addAccount(oAccount);
-			Accounts.populateIdentities();
-			Accounts.changeEditedAccount(iAccountId);
+			AccountList.addAccount(oAccount);
+			AccountList.populateIdentities();
+			AccountList.changeEditedAccount(iAccountId);
 		}
 		
 		if (this.fCallback)

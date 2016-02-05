@@ -8,11 +8,12 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js')
 ;
 
@@ -27,7 +28,7 @@ function CAccountAutoresponderPaneView()
 	this.subject = ko.observable('');
 	this.message = ko.observable('');
 
-	Accounts.editedId.subscribe(function () {
+	AccountList.editedId.subscribe(function () {
 		this.populate();
 	}, this);
 	this.populate();
@@ -53,7 +54,7 @@ CAccountAutoresponderPaneView.prototype.revert = function ()
 
 CAccountAutoresponderPaneView.prototype.getParametersForSave = function ()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	return {
 		'AccountID': oAccount.id(),
 		'Enable': this.enable() ? '1' : '0',
@@ -65,7 +66,7 @@ CAccountAutoresponderPaneView.prototype.getParametersForSave = function ()
 CAccountAutoresponderPaneView.prototype.applySavedValues = function (oParameters)
 {
 	var
-		oAccount = Accounts.getEdited(),
+		oAccount = AccountList.getEdited(),
 		oAutoresponder = oAccount.autoresponder()
 	;
 
@@ -110,7 +111,7 @@ CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oReque
 
 CAccountAutoresponderPaneView.prototype.populate = function()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	
 	if (oAccount)
 	{
@@ -139,7 +140,7 @@ CAccountAutoresponderPaneView.prototype.onGetAutoresponderResponse = function (o
 	{
 		var
 			iAccountId = Types.pInt(oResponse.AccountID),
-			oAccount = Accounts.getAccount(iAccountId),
+			oAccount = AccountList.getAccount(iAccountId),
 			oAutoresponder = new CAutoresponderModel()
 		;
 
@@ -148,7 +149,7 @@ CAccountAutoresponderPaneView.prototype.onGetAutoresponderResponse = function (o
 			oAutoresponder.parse(iAccountId, oResponse.Result);
 			oAccount.autoresponder(oAutoresponder);
 
-			if (iAccountId === Accounts.editedId())
+			if (iAccountId === AccountList.editedId())
 			{
 				this.populate();
 			}

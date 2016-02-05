@@ -13,13 +13,16 @@ var
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('core/js/Screens.js'),
-	CDateModel = require('core/js/models/CDateModel.js'),
-	CAddressListModel = require('core/js/models/CAddressListModel.js'),
 	
+	CAddressListModel = require('core/js/models/CAddressListModel.js'),
+	CDateModel = require('core/js/models/CDateModel.js'),
+	
+	MessageUtils = require('modules/Mail/js/utils/Message.js'),
+	
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	MailCache = null,
 	Settings = require('modules/Mail/js/Settings.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
-	MessageUtils = require('modules/Mail/js/utils/Message.js'),
+	
 	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js')
 ;
 
@@ -28,7 +31,7 @@ var
  */
 function CMessageModel()
 {
-	this.accountId = ko.observable(Accounts.currentId());
+	this.accountId = ko.observable(AccountList.currentId());
 	this.folder = ko.observable('');
 	this.uid = ko.observable('');
 	this.sUniq = '';
@@ -274,7 +277,7 @@ CMessageModel.prototype.fillFromOrToText = function ()
 	this.requireMailCache();
 	var
 		oFolder = MailCache.getFolderByFullName(this.accountId(), this.folder()),
-		oAccount = Accounts.getAccount(this.accountId())
+		oAccount = AccountList.getAccount(this.accountId())
 	;
 	
 	if (oFolder.type() === Enums.FolderTypes.Drafts || oFolder.type() === Enums.FolderTypes.Sent)

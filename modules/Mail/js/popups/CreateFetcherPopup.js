@@ -13,10 +13,11 @@ var
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	CreateFolderPopup = require('modules/Mail/js/popups/CreateFolderPopup.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	CServerPropertiesViewModel = require('modules/Mail/js/views/CServerPropertiesViewModel.js')
+	MailCache = require('modules/Mail/js/Cache.js'),
+	
+	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -31,7 +32,7 @@ function CCreateFetcherPopup()
 
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesViewModel(110, 995, 'fectcher_add_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_POP3_SERVER'));
+	this.oIncoming = new CServerPropertiesView(110, 995, 'fectcher_add_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_POP3_SERVER'));
 
 	this.folder = ko.observable('');
 	this.options = ko.observableArray([]);
@@ -89,7 +90,7 @@ CCreateFetcherPopup.prototype.save = function ()
 	else
 	{
 		var oParameters = {
-			'AccountID': Accounts.defaultId(),
+			'AccountID': AccountList.defaultId(),
 			'Folder': this.folder(),
 			'IncomingMailLogin': this.incomingMailLogin(),
 			'IncomingMailPassword': (this.incomingMailPassword() === '') ? '******' : this.incomingMailPassword(),
@@ -119,7 +120,7 @@ CCreateFetcherPopup.prototype.onCreateFetcherResponse = function (oResponse, oRe
 	}
 	else
 	{
-		Accounts.populateFetchers();
+		AccountList.populateFetchers();
 
 		this.closePopup();
 	}

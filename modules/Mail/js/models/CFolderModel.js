@@ -19,7 +19,7 @@ var
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
 	MailCache = null,
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	CUidListModel = require('modules/Mail/js/models/CUidListModel.js'),
 	CMessageModel = require('modules/Mail/js/models/CMessageModel.js')
@@ -249,7 +249,7 @@ CFolderModel.prototype.computeThreadData = function (oMessage)
 			if ((sThreadEmail !== sMainEmail) && (-1 === $.inArray(sThreadEmail, aEmails)))
 			{
 				aEmails.push(sThreadEmail);
-				if (sThreadEmail === Accounts.getEmail())
+				if (sThreadEmail === AccountList.getEmail())
 				{
 					aSenders.push(TextUtils.i18n('MESSAGE/ME_SENDER'));
 				}

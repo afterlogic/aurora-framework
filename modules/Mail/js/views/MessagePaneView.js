@@ -27,7 +27,7 @@ var
 	MailUtils = require('modules/Mail/js/utils/Mail.js'),
 	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	MailCache  = require('modules/Mail/js/Cache.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
@@ -61,7 +61,7 @@ function CMessagePaneView()
 			sSubject = oMessage ? oMessage.subject() : '',
 			sPrefix = sSubject ? sSubject + ' - ' : ''
 		;
-		return sPrefix + Accounts.getEmail() + ' - ' + TextUtils.i18n('TITLE/VIEW_MESSAGE');
+		return sPrefix + AccountList.getEmail() + ' - ' + TextUtils.i18n('TITLE/VIEW_MESSAGE');
 	}, this);
 	
 	this.isCurrentMessage = ko.computed(function () {
@@ -361,7 +361,7 @@ CMessagePaneView.prototype.notifySender = function ()
 			'Confirmation': this.currentMessage().readingConfirmation(),
 			'Subject': TextUtils.i18n('MESSAGE/RETURN_RECEIPT_MAIL_SUBJECT'),
 			'Text': TextUtils.i18n('MESSAGE/RETURN_RECEIPT_MAIL_TEXT', {
-				'EMAIL': Accounts.getEmail(),
+				'EMAIL': AccountList.getEmail(),
 				'SUBJECT': this.subject()
 			}),
 			'ConfirmFolder': this.currentMessage().folder(),
@@ -408,7 +408,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 {
 	var
 		oMessage = this.currentMessage(),
-		oAccount = oMessage ? Accounts.getAccount(oMessage.accountId()) : null,
+		oAccount = oMessage ? AccountList.getAccount(oMessage.accountId()) : null,
 		oReplyData = null
 	;
 	
@@ -1110,7 +1110,7 @@ CMessagePaneView.prototype.doAfterPopulatingMessage = function ()
 			bPlain: oMessage.isPlain(),
 			sRawText: oMessage.textRaw(),
 			sText: oMessage.text(),
-			sAccountEmail: Accounts.getEmail(oMessage.accountId()),
+			sAccountEmail: AccountList.getEmail(oMessage.accountId()),
 			sFromEmail: oMessage.oFrom.getFirstEmail(),
 			iSensitivity: oMessage.sensitivity(),
 			aExtend: oMessage.aExtend

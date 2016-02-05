@@ -9,14 +9,15 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js')
 ;
 
@@ -31,7 +32,7 @@ function CAccountForwardPaneView()
 	this.email = ko.observable('');
 	this.emailFocus = ko.observable(false);
 
-	Accounts.editedId.subscribe(function () {
+	AccountList.editedId.subscribe(function () {
 		this.populate();
 	}, this);
 	this.populate();
@@ -56,7 +57,7 @@ CAccountForwardPaneView.prototype.revert = function ()
 
 CAccountForwardPaneView.prototype.getParametersForSave = function ()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	return {
 		'AccountID': oAccount.id(),
 		'Enable': this.enable() ? '1' : '0',
@@ -67,7 +68,7 @@ CAccountForwardPaneView.prototype.getParametersForSave = function ()
 CAccountForwardPaneView.prototype.applySavedValues = function (oParameters)
 {
 	var
-		oAccount = Accounts.getEdited(),
+		oAccount = AccountList.getEdited(),
 		oForward = oAccount.forward()
 	;
 	
@@ -135,7 +136,7 @@ CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 
 CAccountForwardPaneView.prototype.populate = function ()
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	
 	if (oAccount)
 	{
@@ -163,7 +164,7 @@ CAccountForwardPaneView.prototype.onGetForwardResponse = function (oResponse, oR
 	{
 		var
 			iAccountId = Types.pInt(oResponse.AccountID),
-			oAccount = Accounts.getAccount(iAccountId),
+			oAccount = AccountList.getAccount(iAccountId),
 			oForward = new CForwardModel()
 		;
 
@@ -172,7 +173,7 @@ CAccountForwardPaneView.prototype.onGetForwardResponse = function (oResponse, oR
 			oForward.parse(iAccountId, oResponse.Result);
 			oAccount.forward(oForward);
 
-			if (iAccountId === Accounts.editedId())
+			if (iAccountId === AccountList.editedId())
 			{
 				this.populate();
 			}

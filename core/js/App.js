@@ -118,30 +118,30 @@ CApp.prototype.init = function ()
 	
 	if (this.bAuth && !this.bPublic)
 	{
-		var Accounts = require('modules/Mail/js/AccountList.js');
-		this.currentAccountId = Accounts.currentId;
-		this.defaultAccountId = Accounts.defaultId;
-		this.hasAccountWithId = _.bind(Accounts.hasAccountWithId, Accounts);
+		var AccountList = require('modules/Mail/js/AccountList.js');
+		this.currentAccountId = AccountList.currentId;
+		this.defaultAccountId = AccountList.defaultId;
+		this.hasAccountWithId = _.bind(AccountList.hasAccountWithId, AccountList);
 		
 		this.currentAccountEmail = ko.computed(function () {
-			var oAccount = Accounts.getAccount(this.currentAccountId());
+			var oAccount = AccountList.getAccount(this.currentAccountId());
 			return oAccount ? oAccount.email() : '';
 		}, this);
 		
 		this.defaultAccount = ko.computed(function () {
-			return Accounts.getAccount(this.defaultAccountId());
+			return AccountList.getAccount(this.defaultAccountId());
 		}, this);
 		this.defaultAccountEmail = ko.computed(function () {
-			var oAccount = Accounts.getAccount(this.defaultAccountId());
+			var oAccount = AccountList.getAccount(this.defaultAccountId());
 			return oAccount ? oAccount.email() : '';
 		}, this);
 		this.defaultAccountFriendlyName = ko.computed(function () {
-			var oAccount = Accounts.getAccount(this.defaultAccountId());
+			var oAccount = AccountList.getAccount(this.defaultAccountId());
 			return oAccount ? oAccount.friendlyName() : '';
 		}, this);
 		
 		this.getAttendee = function (aAttendees) {
-			return Accounts.getAttendee(
+			return AccountList.getAttendee(
 				_.map(aAttendees, function (mAttendee) {
 					return Types.isString(mAttendee) ? mAttendee : mAttendee.email;
 				}, this)

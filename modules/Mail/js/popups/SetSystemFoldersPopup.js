@@ -12,8 +12,8 @@ var
 	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	Accounts = require('modules/Mail/js/AccountList.js'),
 	MailCache = require('modules/Mail/js/Cache.js')
 ;
 
@@ -37,7 +37,7 @@ function CSetSystemFoldersPopup()
 	
 	this.allowSpamFolderEditing = ko.computed(function () {
 		var
-			oAccount = Accounts.getEdited(),
+			oAccount = AccountList.getEdited(),
 			bAllowSpamFolderExtension = oAccount.extensionExists('AllowSpamFolderExtension')
 		;
 		return bAllowSpamFolderExtension && !UserSettings.IsMailsuite;
@@ -72,7 +72,7 @@ CSetSystemFoldersPopup.prototype.onResponseFoldersSetupSystem = function (oRespo
 	if (oResponse.Result === false)
 	{
 		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_ERROR_SETUP_SPECIAL_FOLDERS'));
-		MailCache.getFolderList(Accounts.editedId());
+		MailCache.getFolderList(AccountList.editedId());
 	}
 };
 
@@ -108,7 +108,7 @@ CSetSystemFoldersPopup.prototype.apply = function ()
 	if (bHasChanges)
 	{
 		oParameters = {
-			'AccountID': Accounts.editedId(),
+			'AccountID': AccountList.editedId(),
 			'Sent': oFolderList.sentFolderFullName(),
 			'Drafts': oFolderList.draftsFolderFullName(),
 			'Trash': oFolderList.trashFolderFullName(),

@@ -8,14 +8,16 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	MailCache = require('modules/Mail/js/Cache.js'),
-	CServerPropertiesViewModel = require('modules/Mail/js/views/CServerPropertiesViewModel.js')
+	
+	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -34,7 +36,7 @@ function CFetcherIncomingPaneView()
 
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesViewModel(110, 995, 'fetcher_edit_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_POP3_SERVER'));
+	this.oIncoming = new CServerPropertiesView(110, 995, 'fetcher_edit_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_POP3_SERVER'));
 
 	this.sFetcherFolder = '';
 	this.folder = ko.observable('');
@@ -105,7 +107,7 @@ CFetcherIncomingPaneView.prototype.getParametersForSave = function ()
 	if (this.fetcher())
 	{
 		return {
-			'AccountID': Accounts.defaultId(),
+			'AccountID': AccountList.defaultId(),
 			'FetcherID': this.idFetcher(),
 			'IsEnabled': this.isEnabled() ? 1 : 0,
 			'Folder': this.folder(),
@@ -150,7 +152,7 @@ CFetcherIncomingPaneView.prototype.onResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		Accounts.populateFetchers();
+		AccountList.populateFetchers();
 		
 		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_SUCCESSFULLY_SAVED'));
 	}

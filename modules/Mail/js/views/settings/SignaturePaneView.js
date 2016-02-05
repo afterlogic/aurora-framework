@@ -9,12 +9,14 @@ var
 	
 	Api = require('core/js/Api.js'),
 	Browser = require('core/js/Browser.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
+	
 	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js')
 ;
 
@@ -35,7 +37,7 @@ function CSignaturePaneView()
 
 	this.enabled = ko.observable(true);
 
-	Accounts.editedId.subscribe(function () {
+	AccountList.editedId.subscribe(function () {
 		this.populate();
 	}, this);
 	this.populate();
@@ -85,7 +87,7 @@ CSignaturePaneView.prototype.getParametersForSave = function ()
 	this.signature(this.oHtmlEditor.getNotDefaultText());
 	
 	var
-		oAccount = Accounts.getEdited(),
+		oAccount = AccountList.getEdited(),
 		oParameters = {
 			'AccountID': oAccount ? oAccount.id() : 0,
 			'UseSignature': !!this.useSignatureRadio() ? 1 : 0,
@@ -113,7 +115,7 @@ CSignaturePaneView.prototype.getParametersForSave = function ()
  */
 CSignaturePaneView.prototype.applySavedValues = function (oParameters)
 {
-	var oAccount = Accounts.getEdited();
+	var oAccount = AccountList.getEdited();
 	
 	if (oAccount)
 	{
@@ -125,7 +127,7 @@ CSignaturePaneView.prototype.applySavedValues = function (oParameters)
 CSignaturePaneView.prototype.populate = function ()
 {
 	var
-		oAccount = Accounts.getEdited(),
+		oAccount = AccountList.getEdited(),
 		oSignature = this.fetcherOrIdentity() || oAccount
 	;
 	
@@ -153,14 +155,14 @@ CSignaturePaneView.prototype.onGetSignatureResponse = function (oResponse, oRequ
 	{
 		var
 			iAccountId = Types.pInt(oResponse.AccountID),
-			oAccount = Accounts.getAccount(iAccountId)
+			oAccount = AccountList.getAccount(iAccountId)
 		;
 
 		if (oAccount)
 		{
 			this.parseSignature(oResponse.Result);
 
-			if (iAccountId === Accounts.editedId())
+			if (iAccountId === AccountList.editedId())
 			{
 				this.populate();
 			}

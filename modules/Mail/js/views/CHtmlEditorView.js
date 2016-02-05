@@ -17,7 +17,7 @@ var
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 			
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	CCrea = require('modules/Mail/js/CCrea.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	
@@ -813,7 +813,7 @@ CHtmlEditorView.prototype.initUploader = function ()
 				'Method': 'UploadAttachment',
 				'Token': UserSettings.CsrfToken,
 				'AccountID': function () {
-					return Accounts.currentId();
+					return AccountList.currentId();
 				}
 			}
 		});
@@ -872,7 +872,7 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 					'Method': 'UploadAttachment',
 					'Token': UserSettings.CsrfToken,
 					'AccountID': function () {
-						return Accounts.currentId();
+						return AccountList.currentId();
 					}
 				}
 			});

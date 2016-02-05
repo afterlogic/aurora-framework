@@ -5,7 +5,8 @@ var
 			
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
+	
 	CIdentityModel = require('modules/Mail/js/models/CIdentityModel.js'),
 	CIdentityPropertiesPaneView = require('modules/Mail/js/views/settings/CIdentityPropertiesPaneView.js')
 ;
@@ -30,7 +31,7 @@ CCreateIdentityPopup.prototype.PopupTemplate = 'Mail_Settings_CreateIdentityPopu
 CCreateIdentityPopup.prototype.onShow = function (iAccountId)
 {
 	var
-		oAccount = Accounts.getAccount(iAccountId),
+		oAccount = AccountList.getAccount(iAccountId),
 		oIdentity = new CIdentityModel()
 	;
 	

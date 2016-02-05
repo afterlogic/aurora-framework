@@ -7,13 +7,15 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	CServerPropertiesViewModel = require('modules/Mail/js/views/CServerPropertiesViewModel.js')
+	
+	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -23,7 +25,7 @@ function CFetcherOutgoingPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'Mail');
 	
-	this.defaultAccountId = Accounts.defaultId;
+	this.defaultAccountId = AccountList.defaultId;
 
 	this.fetcher = ko.observable(null);
 
@@ -40,7 +42,7 @@ function CFetcherOutgoingPaneView()
 
 	this.focusEmail = ko.observable(false);
 
-	this.oOutgoing = new CServerPropertiesViewModel(25, 465, 'fetcher_edit_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_SMTP_SERVER'));
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'fetcher_edit_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_SMTP_SERVER'));
 	this.outgoingMailAuth = ko.observable(false);
 
 	this.firstState = null;
@@ -122,7 +124,7 @@ CFetcherOutgoingPaneView.prototype.onResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		Accounts.populateFetchers();
+		AccountList.populateFetchers();
 		
 		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_SUCCESSFULLY_SAVED'));
 	}
