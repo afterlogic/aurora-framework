@@ -8,24 +8,26 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	
 	Api = require('core/js/Api.js'),
+	Routing = require('core/js/Routing.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CreateAccountPopup = require('modules/Mail/js/popups/CreateAccountPopup.js'),
 	CreateIdentityPopup = require('modules/Mail/js/popups/CreateIdentityPopup.js'),
 	CreateFetcherPopup = require('modules/Mail/js/popups/CreateFetcherPopup.js'),
 	
-	Accounts = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
-	AccountPropertiesPaneView = require('modules/Mail/js/views/settings/AccountPropertiesPaneView.js'),
-	AccountFoldersPaneView = require('modules/Mail/js/views/settings/AccountFoldersPaneView.js'),
-	AccountForwardPaneView = require('modules/Mail/js/views/settings/AccountForwardPaneView.js'),
+	
 	AccountAutoresponderPaneView = require('modules/Mail/js/views/settings/AccountAutoresponderPaneView.js'),
 	AccountFiltersPaneView = require('modules/Mail/js/views/settings/AccountFiltersPaneView.js'),
-	SignaturePaneView = require('modules/Mail/js/views/settings/SignaturePaneView.js'),
+	AccountFoldersPaneView = require('modules/Mail/js/views/settings/AccountFoldersPaneView.js'),
+	AccountForwardPaneView = require('modules/Mail/js/views/settings/AccountForwardPaneView.js'),
+	AccountPropertiesPaneView = require('modules/Mail/js/views/settings/AccountPropertiesPaneView.js'),
 	CIdentityPropertiesPaneView = require('modules/Mail/js/views/settings/CIdentityPropertiesPaneView.js'),
 	FetcherIncomingPaneView = require('modules/Mail/js/views/settings/FetcherIncomingPaneView.js'),
-	FetcherOutgoingPaneView = require('modules/Mail/js/views/settings/FetcherOutgoingPaneView.js')
+	FetcherOutgoingPaneView = require('modules/Mail/js/views/settings/FetcherOutgoingPaneView.js'),
+	SignaturePaneView = require('modules/Mail/js/views/settings/SignaturePaneView.js')
 ;
 
 /**
@@ -37,7 +39,7 @@ function CAccountsSettingsPaneView()
 	this.bAllowIdentities = !!Settings.AllowIdentities;
 	this.bAllowFetchers = !!Settings.AllowFetchers;
 	
-	this.accounts = Accounts.collection;
+	this.accounts = AccountList.collection;
 	this.onlyOneAccount = ko.computed(function () {
 		var bOnlyOneAccount = this.accounts().length === 1 && !Settings.AllowAddNewAccounts;
 //		if (bOnlyOneAccount)
@@ -50,7 +52,7 @@ function CAccountsSettingsPaneView()
 		return this.onlyOneAccount() ? TextUtils.i18n('SETTINGS/TITLE_EMAIL_ACCOUNT') : TextUtils.i18n('SETTINGS/TITLE_EMAIL_ACCOUNTS');
 	}, this);
 	
-	this.editedAccountId = Accounts.editedId;
+	this.editedAccountId = AccountList.editedId;
 	this.editedFetcher = ko.observable(null);
 	this.editedFetcherId = ko.computed(function () {
 		return this.editedFetcher() ? this.editedFetcher().id() : null;
@@ -156,7 +158,7 @@ function CAccountsSettingsPaneView()
 	}, this);
 	
 	
-	Accounts.editedId.subscribe(function () {
+	AccountList.editedId.subscribe(function () {
 		this.populate();
 	}, this);
 	this.populate();
@@ -180,8 +182,33 @@ CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertR
 	}
 };
 
-CAccountsSettingsPaneView.prototype.show = function ()
+/**
+ * @param {Array} aParams
+ */
+CAccountsSettingsPaneView.prototype.show = function (aParams)
 {
+	this.onRoute(aParams);
+};
+
+CAccountsSettingsPaneView.prototype.onRoute = function (aParams)
+{
+	var
+		sType = aParams.length > 0 ? aParams[0] : 'account',
+		oEditedAccount = AccountList.getEdited(),
+		sHash = aParams.length > 1 ? aParams[1] : (oEditedAccount ? oEditedAccount.hash() : ''),
+		sTab = aParams.length > 2 ? aParams[2] : ''
+	;
+	
+	this.editedIdentity(sType === 'identity' ? (AccountList.getIdentityByHash(sHash) || null) : null);
+	this.editedFetcher(sType === 'fetcher' ? (AccountList.getFetcherByHash(sHash) || null) : null);
+	
+	if (sType === 'account')
+	{
+		AccountList.changeEditedAccountByHash(sHash);
+	}
+	
+	this.changeTab(sTab || this.getAutoselectedTab().name);
+	
 	if (this.currentTab() && $.isFunction(this.currentTab().view.show))
 	{
 		this.currentTab().view.show();
@@ -210,14 +237,11 @@ CAccountsSettingsPaneView.prototype.addAccount = function ()
 };
 
 /**
- * @param {number} iAccountId
+ * @param {string} sHash
  */
-CAccountsSettingsPaneView.prototype.editAccount = function (iAccountId)
+CAccountsSettingsPaneView.prototype.editAccount = function (sHash)
 {
-	this.editedIdentity(null);
-	this.editedFetcher(null);
-	Accounts.changeEditedAccount(iAccountId);
-	this.changeTab(this.getAutoselectedTab().name);
+	Routing.setHash(['settings', 'accounts', 'account', sHash]);
 };
 
 /**
@@ -231,13 +255,11 @@ CAccountsSettingsPaneView.prototype.addIdentity = function (iAccountId, oEv)
 };
 
 /**
- * @param {Object} oIdentity
+ * @param {string} sHash
  */
-CAccountsSettingsPaneView.prototype.editIdentity = function (oIdentity)
+CAccountsSettingsPaneView.prototype.editIdentity = function (sHash)
 {
-	this.editedFetcher(null);
-	this.editedIdentity(oIdentity);
-	this.changeTab(this.getAutoselectedTab().name);
+	Routing.setHash(['settings', 'accounts', 'identity', sHash]);
 };
 
 /**
@@ -251,13 +273,11 @@ CAccountsSettingsPaneView.prototype.addFetcher = function (iAccountId, oEv)
 };
 
 /**
- * @param {Object} oFetcher
+ * @param {string} sHash
  */
-CAccountsSettingsPaneView.prototype.editFetcher = function (oFetcher)
+CAccountsSettingsPaneView.prototype.editFetcher = function (sHash)
 {
-	this.editedIdentity(null);
-	this.editedFetcher(oFetcher);
-	this.changeTab(this.getAutoselectedTab().name);
+	Routing.setHash(['settings', 'accounts', 'fetcher', sHash]);
 };
 
 /**
@@ -268,7 +288,7 @@ CAccountsSettingsPaneView.prototype.connectToMail = function (sId, oEv)
 {
 	oEv.stopPropagation();
 	
-	var oDefaultAccount = Accounts.getDefault();
+	var oDefaultAccount = AccountList.getDefault();
 	
 	if (oDefaultAccount && !oDefaultAccount.allowMail())
 	{
@@ -278,6 +298,29 @@ CAccountsSettingsPaneView.prototype.connectToMail = function (sId, oEv)
 	}
 };
 
+/**
+ * @param {string} sTabName
+ */
+CAccountsSettingsPaneView.prototype.changeRoute = function (sTabName)
+{
+	if (this.editedIdentity())
+	{
+		Routing.setHash(['settings', 'accounts', 'identity', this.editedIdentity().hash(), sTabName]);
+	}
+	else if (this.editedFetcher())
+	{
+		Routing.setHash(['settings', 'accounts', 'fetcher', this.editedFetcher().hash(), sTabName]);
+	}
+	else
+	{
+		var oEditedAccount = AccountList.getEdited();
+		Routing.setHash(['settings', 'accounts', 'account', oEditedAccount ? oEditedAccount.hash() : '', sTabName]);
+	}
+};
+
+/**
+ * @param {string} sName
+ */
 CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 {
 	var
@@ -320,7 +363,7 @@ CAccountsSettingsPaneView.prototype.changeTab = function (sName)
 CAccountsSettingsPaneView.prototype.populate = function ()
 {
 	var
-		oAccount = Accounts.getEdited(),
+		oAccount = AccountList.getEdited(),
 		bAllowMail = !!oAccount && oAccount.allowMail(),
 		bDefault = !!oAccount && oAccount.isDefault(),
 		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension'),
@@ -361,7 +404,7 @@ CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oRe
 	{
 		var
 			oParameters = JSON.parse(oRequest.Parameters),
-			oAccount = Accounts.getAccount(oParameters.AccountID)
+			oAccount = AccountList.getAccount(oParameters.AccountID)
 		;
 		
 		if (oAccount)

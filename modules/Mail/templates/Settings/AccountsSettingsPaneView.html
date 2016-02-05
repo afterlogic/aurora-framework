@@ -10,7 +10,7 @@
 	<div>
 		<div class="items_list accounts_list">
 			<div data-bind="foreach: accounts">
-				<div class="item account" data-bind="css: {'selected': id() === $parent.editedAccountId() && !$parent.editedFetcherId() && !$parent.editedIdentityId()},  click: function () {$parent.editAccount(id());}">
+				<div class="item account" data-bind="css: {'selected': id() === $parent.editedAccountId() && !$parent.editedFetcherId() && !$parent.editedIdentityId()},  click: function () {$parent.editAccount(hash());}">
 					<!-- ko if: allowMail() -->
 						<span class="link fetcher" data-i18n="SETTINGS/ACCOUNTS_LINK_ADD_IDENTITY" data-bind="i18n: 'text', visible: $parent.bAllowIdentities, click: function (oModel, oEv) {$parent.addIdentity(id(), oEv);}"></span>
 						<span class="link fetcher" data-i18n="SETTINGS/ACCOUNTS_LINK_ADD_FETCHER" data-bind="i18n: 'text', visible: (isDefault() && $parent.bAllowFetchers), click: $parent.addFetcher"></span>
@@ -23,7 +23,7 @@
 
 				<!-- ko if: allowMail() -->
 					<!-- ko foreach: identities -->
-					<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedIdentityId()}, click: function () {$parents[1].editIdentity($data);}">
+					<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedIdentityId()}, click: function () {$parents[1].editIdentity($data.hash());}">
 						<span class="icon fetcher"></span>
 						<span class="label" data-i18n="SETTINGS/ACCOUNTS_IDENTITY_TEXT" data-bind="i18n: 'text'"></span>
 						<span class="title" data-bind="text: fullEmail"></span>
@@ -33,7 +33,7 @@
 
 					<!-- ko if: fetchers() -->
 						<!-- ko foreach: fetchers().collection -->
-							<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedFetcherId()}, click: function () {$parents[1].editFetcher($data);}">
+							<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedFetcherId()}, click: function () {$parents[1].editFetcher($data.hash());}">
 								<span class="icon fetcher"></span>
 								<span class="label" data-i18n="SETTINGS/ACCOUNT_FETCHER_FETCH_FROM" data-bind="i18n: 'text'"></span>
 								<span class="title" data-bind="text: incomingMailServer() + ' / ' + incomingMailLogin()"></span>
@@ -48,7 +48,7 @@
 			<div class="shortcuts">
 				<div data-bind="foreach: tabs">
 					<span class="item" data-bind="attr: {'class': 'item ' + name + ((name === $parent.currentTab().name) ? ' selected' : '')}, visible: visible">
-						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.changeTab(name); }, 
+						<a href="javascript: void(0);" data-bind="text: title, click: function () { $parent.changeRoute(name); }, 
 								attr: {'id': 'selenium_settings_account_' + name + '_button'}"></a>
 					</span>
 				</div>

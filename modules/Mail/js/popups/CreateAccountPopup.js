@@ -12,6 +12,7 @@ var
 	
 	Accounts = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),
+	
 	CServerPropertiesViewModel = require('modules/Mail/js/views/CServerPropertiesViewModel.js')
 ;
 
@@ -242,7 +243,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 		{
 			oAccount.allowMailAfterConfiguring();
 			Accounts.collection.valueHasMutated();
-			Accounts.checkIfMailAllowed();
+			Accounts.initCurrentAccount();
 			Accounts.populateIdentities();
 			Accounts.currentId.valueHasMutated();
 		}

@@ -4,7 +4,8 @@ var
 	ko = require('knockout'),
 	
 	AddressUtils = require('core/js/utils/Address.js'),
-	Types = require('core/js/utils/Types.js')
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js')
 ;
 
 /**
@@ -16,6 +17,9 @@ function CFetcherModel()
 	
 	this.id = ko.observable(0);
 	this.accountId = ko.observable(0);
+	this.hash = ko.computed(function () {
+		return Utils.getHash(this.accountId() + 'fetcher' + this.id());
+	}, this);
 	this.isEnabled = ko.observable(false);
 	this.isLocked = ko.observable(false).extend({'autoResetToFalse': 1000});
 	this.email = ko.observable('');

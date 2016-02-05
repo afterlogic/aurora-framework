@@ -38,43 +38,31 @@ function CAccountListModel(iDefaultAccountId)
 	
 	this.isCurrentAllowsMail = ko.observable(true);
 	
-	this.bLockEditedWhenCurrentChange = true;
-
-	this.currentId.subscribe(function(value) {
-		var oCurrentAccount = this.getCurrent();
-		if (oCurrentAccount)
-		{
-			oCurrentAccount.requestExtensions();
-
-			this.checkIfMailAllowed();
-
-			if (!this.bLockEditedWhenCurrentChange)
-			{
-				// deferred execution to edited account has changed a bit later and did not make a second request 
-				// of the folder list of the same account.
-				_.delay(_.bind(function () {
-					this.editedId(value);
-				}, this), 1000);
-			}
-		}
+	this.currentId.subscribe(function() {
+		this.initCurrentAccount();
 	}, this);
 
 	this.collection = ko.observableArray([]);
 }
 
-CAccountListModel.prototype.checkIfMailAllowed = function ()
+CAccountListModel.prototype.initCurrentAccount = function ()
 {
 	var oCurrentAccount = this.getCurrent();
-	this.isCurrentAllowsMail(oCurrentAccount.allowMail());
+	if (oCurrentAccount)
+	{
+		oCurrentAccount.requestExtensions();
+		this.isCurrentAllowsMail(oCurrentAccount.allowMail());
+	}
 };
 
 /**
- * Sets a flag that indicates whether it is necessary to change editable account during changing the current account.
- * No need to change the edited account during application first running.
+ * @param {string} sHash
  */
-CAccountListModel.prototype.unlockEditedWhenCurrentChange = function ()
+CAccountListModel.prototype.getAccountByHash = function (sHash)
 {
-	this.bLockEditedWhenCurrentChange = false;
+	return _.find(this.collection(), function (oAcct) {
+		return oAcct.hash() === sHash;
+	}, this);
 };
 
 /**
@@ -82,9 +70,7 @@ CAccountListModel.prototype.unlockEditedWhenCurrentChange = function ()
  */
 CAccountListModel.prototype.changeCurrentAccountByHash = function (sNewCurrentHash)
 {
-	var oAccount = _.find(this.collection(), function (oAcct) {
-		return oAcct.hash() === sNewCurrentHash;
-	}, this);
+	var oAccount = this.getAccountByHash(sNewCurrentHash);
 	
 	if (oAccount && oAccount.id() !== this.currentId())
 	{
@@ -119,6 +105,19 @@ CAccountListModel.prototype.changeCurrentAccount = function (iNewCurrentId, bPas
 };
 
 /**
+ * @param {string} sNewEditedHash
+ */
+CAccountListModel.prototype.changeEditedAccountByHash = function (sNewEditedHash)
+{
+	var oAccount = this.getAccountByHash(sNewEditedHash);
+	
+	if (oAccount && oAccount.id() !== this.editedId())
+	{
+		this.changeEditedAccount(oAccount.id());
+	}
+};
+
+/**
  * Changes editable account.
  * 
  * @param {number} iNewEditedId
@@ -136,6 +135,46 @@ CAccountListModel.prototype.changeEditedAccount = function (iNewEditedId)
 		this.editedId(iNewEditedId);
 		oNewEditedAccount.isEdited(true);
 	}
+};
+
+/**
+ * @param {type} sHash
+ * @returns {Object}
+ */
+CAccountListModel.prototype.getIdentityByHash = function(sHash)
+{
+	var oIdentity = null;
+	
+	_.each(this.collection(), function (oAccount) {
+		if (!oIdentity)
+		{
+			oIdentity = _.find(oAccount.identities() || [], function (oIdnt) {
+				return oIdnt.hash() === sHash;
+			});
+		}
+	}, this);
+	
+	return oIdentity;
+};
+
+/**
+ * @param {type} sHash
+ * @returns {Object}
+ */
+CAccountListModel.prototype.getFetcherByHash = function(sHash)
+{
+	var oFetcher = null;
+	
+	_.each(this.collection(), function (oAccount) {
+		if (!oFetcher)
+		{
+			oFetcher = _.find(oAccount.fetchers() || [], function (oFtch) {
+				return oFtch.hash() === sHash;
+			});
+		}
+	}, this);
+	
+	return oFetcher;
 };
 
 /**
@@ -201,6 +240,8 @@ CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
 		
 		oDefaultAccount.isDefault(true);
 	}
+	
+	this.initCurrentAccount();
 };
 
 /**
@@ -581,7 +622,6 @@ if (MainTab)
 	AccountList.populateIdentitiesFromSourceAccount(MainTab.getAccountList());
 }
 
-AccountList.unlockEditedWhenCurrentChange();
 AccountList.displaySocialWelcome();
 
 module.exports = AccountList;

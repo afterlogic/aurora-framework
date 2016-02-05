@@ -34,17 +34,7 @@ function CAccountModel(bSingle)
 	this.id = ko.observable(0);
 	this.email = ko.observable('');
 	this.hash = ko.computed(function () {
-		var
-			sUniqVal = this.id() + this.email(),
-			iHash = 0,
-			iIndex = 0,
-			iLen = sUniqVal.length
-		;
-		while (iIndex < iLen)
-		{
-			iHash  = ((iHash << 5) - iHash + sUniqVal.charCodeAt(iIndex++)) << 0;
-		}
-		return Types.pString(iHash);
+		return Utils.getHash(this.id() + this.email());
 	}, this);
 	this.allowMail = ko.observable(true);
 	this.passwordSpecified = ko.observable(true);

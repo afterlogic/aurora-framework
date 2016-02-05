@@ -4,7 +4,8 @@ var
 	ko = require('knockout'),
 	
 	AddressUtils = require('core/js/utils/Address.js'),
-	Types = require('core/js/utils/Types.js')
+	Types = require('core/js/utils/Types.js'),
+	Utils = require('core/js/utils/Common.js')
 ;
 
 /**
@@ -24,6 +25,9 @@ function CIdentityModel()
 	this.id = ko.observable(-1);
 	this.signature = ko.observable('');
 	this.useSignature = ko.observable(false);
+	this.hash = ko.computed(function () {
+		return Utils.getHash(this.accountId() + 'identity' + this.id());
+	}, this);
 }
 
 /**

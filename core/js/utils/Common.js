@@ -6,6 +6,8 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
+	Types = require('core/js/utils/Types.js'),
+	
 	UserSettings = require('core/js/Settings.js'),
 	
 	Utils = {}
@@ -482,5 +484,24 @@ Utils.log = (function () {
 		$log.html(aLog.join('<br /><br />'));
 	};
 }());
+
+/**
+ * @param {string} sUniqVal
+ */
+Utils.getHash = function (sUniqVal)
+{
+	var
+		iHash = 0,
+		iIndex = 0,
+		iLen = sUniqVal.length
+	;
+	
+	while (iIndex < iLen)
+	{
+		iHash  = ((iHash << 5) - iHash + sUniqVal.charCodeAt(iIndex++)) << 0;
+	}
+	
+	return Types.pString(iHash);
+};
 
 module.exports = Utils;
