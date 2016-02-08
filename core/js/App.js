@@ -302,7 +302,6 @@ CApp.prototype.checkCookies = function ()
 CApp.prototype.getCommonRequestParameters = function ()
 {
 	var oParameters = {
-		AuthToken: Storage.getData('AuthToken'),
 		Token: UserSettings.CsrfToken
 	};
 	
