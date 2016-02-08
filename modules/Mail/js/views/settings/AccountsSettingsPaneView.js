@@ -8,7 +8,7 @@ var
 	TextUtils = require('core/js/utils/Text.js'),
 	
 	Api = require('core/js/Api.js'),
-	Routing = require('core/js/Routing.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CreateAccountPopup = require('modules/Mail/js/popups/CreateAccountPopup.js'),
@@ -185,11 +185,6 @@ CAccountsSettingsPaneView.prototype.hide = function (fAfterHideHandler, fRevertR
 /**
  * @param {Array} aParams
  */
-CAccountsSettingsPaneView.prototype.show = function (aParams)
-{
-	this.onRoute(aParams);
-};
-
 CAccountsSettingsPaneView.prototype.onRoute = function (aParams)
 {
 	var
@@ -241,7 +236,7 @@ CAccountsSettingsPaneView.prototype.addAccount = function ()
  */
 CAccountsSettingsPaneView.prototype.editAccount = function (sHash)
 {
-	Routing.setHash(['settings', 'accounts', 'account', sHash]);
+	ModulesManager.run('Settings', 'setAddHash', [['account', sHash]]);
 };
 
 /**
@@ -259,7 +254,7 @@ CAccountsSettingsPaneView.prototype.addIdentity = function (iAccountId, oEv)
  */
 CAccountsSettingsPaneView.prototype.editIdentity = function (sHash)
 {
-	Routing.setHash(['settings', 'accounts', 'identity', sHash]);
+	ModulesManager.run('Settings', 'setAddHash', [['identity', sHash]]);
 };
 
 /**
@@ -277,7 +272,7 @@ CAccountsSettingsPaneView.prototype.addFetcher = function (iAccountId, oEv)
  */
 CAccountsSettingsPaneView.prototype.editFetcher = function (sHash)
 {
-	Routing.setHash(['settings', 'accounts', 'fetcher', sHash]);
+	ModulesManager.run('Settings', 'setAddHash', [['fetcher', sHash]]);
 };
 
 /**
@@ -303,19 +298,19 @@ CAccountsSettingsPaneView.prototype.connectToMail = function (sId, oEv)
  */
 CAccountsSettingsPaneView.prototype.changeRoute = function (sTabName)
 {
+	var
+		oEditedAccount = AccountList.getEdited(),
+		aAddHash = ['account', oEditedAccount ? oEditedAccount.hash() : '', sTabName]
+	;
 	if (this.editedIdentity())
 	{
-		Routing.setHash(['settings', 'accounts', 'identity', this.editedIdentity().hash(), sTabName]);
+		aAddHash = ['identity', this.editedIdentity().hash(), sTabName];
 	}
 	else if (this.editedFetcher())
 	{
-		Routing.setHash(['settings', 'accounts', 'fetcher', this.editedFetcher().hash(), sTabName]);
+		aAddHash = ['fetcher', this.editedFetcher().hash(), sTabName];
 	}
-	else
-	{
-		var oEditedAccount = AccountList.getEdited();
-		Routing.setHash(['settings', 'accounts', 'account', oEditedAccount ? oEditedAccount.hash() : '', sTabName]);
-	}
+	ModulesManager.run('Settings', 'setAddHash', [aAddHash]);
 };
 
 /**

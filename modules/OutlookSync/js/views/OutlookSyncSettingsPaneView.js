@@ -34,7 +34,7 @@ function COutlookSyncSettingsPaneView()
 
 COutlookSyncSettingsPaneView.prototype.ViewTemplate = 'OutlookSync_OutlookSyncSettingsPaneView';
 
-COutlookSyncSettingsPaneView.prototype.show = function ()
+COutlookSyncSettingsPaneView.prototype.onRoute = function ()
 {
 	Ajax.send('OutlookSync', 'GetInfo', this.onGetInfoResponse, this);
 };

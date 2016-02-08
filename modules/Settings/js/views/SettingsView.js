@@ -58,7 +58,8 @@ CSettingsView.prototype.onHide = function ()
 /**
  * @param {Array} aParams
  */
-CSettingsView.prototype.onRoute = function (aParams) {
+CSettingsView.prototype.onRoute = function (aParams)
+{
 	var
 		sNewTabName = aParams.shift(),
 		oCurrentTab = this.currentTab(),
@@ -73,9 +74,9 @@ CSettingsView.prototype.onRoute = function (aParams) {
 					oNewTab.view = oNewTab.getView();
 					oNewTab.getView = undefined;
 				}
-				if ($.isFunction(oNewTab.view.show))
+				if ($.isFunction(oNewTab.view.onRoute))
 				{
-					oNewTab.view.show(aParams);
+					oNewTab.view.onRoute(aParams);
 				}
 				this.currentTab(oNewTab);
 			}
@@ -110,8 +111,20 @@ CSettingsView.prototype.onRoute = function (aParams) {
 	}
 };
 
-CSettingsView.prototype.changeTab = function (sTabName) {
+/**
+ * @param {string} sTabName
+ */
+CSettingsView.prototype.changeTab = function (sTabName)
+{
 	Routing.setHash(['settings', sTabName]);
+};
+
+/**
+ * @param {Array} aAddHash
+ */
+CSettingsView.prototype.setAddHash = function (aAddHash)
+{
+	Routing.setHash(_.union(['settings', this.currentTab() ? this.currentTab().name : ''], aAddHash));
 };
 
 module.exports = new CSettingsView();

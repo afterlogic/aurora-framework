@@ -26,6 +26,10 @@ module.exports = function (oSettings) {
 		},
 		getAbstractSettingsFormViewClass: function () {
 			return require('modules/Settings/js/views/CAbstractSettingsFormView.js');
+		},
+		setAddHash: function (aAddHash) {
+			var SettingsView = require('modules/Settings/js/views/SettingsView.js');
+			SettingsView.setAddHash(aAddHash);
 		}
 	};
 };

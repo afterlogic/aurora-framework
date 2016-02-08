@@ -42,7 +42,7 @@ function CMobileSyncSettingsPaneView()
 
 CMobileSyncSettingsPaneView.prototype.ViewTemplate = 'MobileSync_MobileSyncSettingsPaneView';
 
-CMobileSyncSettingsPaneView.prototype.show = function ()
+CMobileSyncSettingsPaneView.prototype.onRoute = function ()
 {
 	Ajax.send('MobileSync', 'GetInfo', this.onGetInfoResponse, this);
 };

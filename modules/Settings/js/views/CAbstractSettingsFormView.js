@@ -27,7 +27,7 @@ function CAbstractSettingsFormView(sModule)
 
 CAbstractSettingsFormView.prototype.ViewTemplate = ''; // should be overriden
 
-CAbstractSettingsFormView.prototype.show = function ()
+CAbstractSettingsFormView.prototype.onRoute = function ()
 {
 	this.revert();
 };
