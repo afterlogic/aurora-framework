@@ -416,7 +416,7 @@ CEditEventPopup.prototype.onSaveClick = function ()
 		if (this.callbackSave)
 		{
 			var
-				iPeriod = parseInt(this.repeatPeriod()),
+				iPeriod = Types.pInt(this.repeatPeriod()),
 				sDate = '',
 				iUnixDate = null,
 				iInterval = 0,
@@ -440,7 +440,7 @@ CEditEventPopup.prototype.onSaveClick = function ()
 					owner: this.owner(),
 					modified: this.modified
 				},
-				iAlways = parseInt(this.always())
+				iAlways = Types.pInt(this.always())
 			;
 			
 			if (this.allDay())

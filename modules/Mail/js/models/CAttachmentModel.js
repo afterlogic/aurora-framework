@@ -11,14 +11,16 @@ var
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js')
 ;
 
 /**
  * @constructor
  * @extends CCommonFileModel
+ * @param {number} iAccountId
  */
-function CAttachmentModel()
+function CAttachmentModel(iAccountId)
 {
 	this.folderName = ko.observable('');
 	this.messageUid = ko.observable('');
@@ -38,6 +40,8 @@ function CAttachmentModel()
 		this.mimePartIndex();
 		return (this.type() === 'message/rfc822' && this.mimePartIndex() !== '');
 	}, this);
+	
+	this.accountId(iAccountId);
 }
 
 _.extendOwn(CAttachmentModel.prototype, CAbstractFileModel.prototype);
@@ -66,7 +70,6 @@ CAttachmentModel.prototype.copyProperties = function (oSource)
 	this.fileName(oSource.fileName());
 	this.tempName(oSource.tempName());
 	this.size(oSource.size());
-	this.accountId(oSource.accountId());
 	this.hash(oSource.hash());
 	this.type(oSource.type());
 	this.cid(oSource.cid());
@@ -118,6 +121,7 @@ CAttachmentModel.prototype.setMessageData = function (sFolderName, sMessageUid)
 CAttachmentModel.prototype.onGetMessageResponse = function (oResult, oRequest)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		oResult = oResult.Result,
 		CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
 		oMessage = new CMessageModel()
@@ -125,7 +129,7 @@ CAttachmentModel.prototype.onGetMessageResponse = function (oResult, oRequest)
 	
 	if (oResult && this.oNewWindow)
 	{
-		oMessage.parse(oResult, oRequest.AccountID, false, true);
+		oMessage.parse(oResult, oParameters.AccountID, false, true);
 		this.messagePart(oMessage);
 		this.messagePart().viewMessage(this.oNewWindow);
 		this.oNewWindow = undefined;
@@ -223,24 +227,21 @@ CAttachmentModel.prototype.fillDataAfterUploadComplete = function (oResult, sFil
 	this.size(oResult.Result.Attachment.Size);
 	this.hash(oResult.Result.Attachment.Hash);
 	this.iframedView(oResult.Result.Attachment.Iframed);
-	this.accountId(oResult.AccountID);
 };
 
 /**
  * Parses contact attachment data from server.
  *
  * @param {AjaxFileDataResponse} oData
- * @param {number} iAccountId
  */
-CAttachmentModel.prototype.parseFromUpload = function (oData, iAccountId)
+CAttachmentModel.prototype.parseFromUpload = function (oData)
 {
 	this.fileName(oData.Name.toString());
 	this.tempName(oData.TempName ? oData.TempName.toString() : this.fileName());
 	this.type(oData.MimeType.toString());
-	this.size(parseInt(oData.Size, 10));
+	this.size(Types.pInt(oData.Size));
 
 	this.hash(oData.Hash);
-	this.accountId(iAccountId);
 
 	this.uploadUid(this.hash());
 	this.uploaded(true);

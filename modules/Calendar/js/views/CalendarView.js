@@ -11,28 +11,30 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js'),
 	Browser = require('core/js/Browser.js'),
 	CJua = require('core/js/CJua.js'),
+	Screens = require('core/js/Screens.js'),
+	UserSettings = require('core/js/Settings.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	EditCalendarPopup = require('modules/Calendar/js/popups/EditCalendarPopup.js'),
-	ImportCalendarPopup = require('modules/Calendar/js/popups/ImportCalendarPopup.js'),
-	GetCalendarLinkPopup = require('modules/Calendar/js/popups/GetCalendarLinkPopup.js'),
-	ShareCalendarPopup = require('modules/Calendar/js/popups/ShareCalendarPopup.js'),
 	EditEventPopup = require('modules/Calendar/js/popups/EditEventPopup.js'),
 	EditEventRecurrencePopup = require('modules/Calendar/js/popups/EditEventRecurrencePopup.js'),
+	GetCalendarLinkPopup = require('modules/Calendar/js/popups/GetCalendarLinkPopup.js'),
+	ImportCalendarPopup = require('modules/Calendar/js/popups/ImportCalendarPopup.js'),
 	SelectCalendarPopup = require('modules/Calendar/js/popups/SelectCalendarPopup.js'),
+	ShareCalendarPopup = require('modules/Calendar/js/popups/ShareCalendarPopup.js'),
 	
 	Ajax = require('modules/Calendar/js/Ajax.js'),
-	Settings = require('modules/Calendar/js/Settings.js'),
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js'),
+	Settings = require('modules/Calendar/js/Settings.js'),
+	
 	CCalendarListModel = require('modules/Calendar/js/models/CCalendarListModel.js'),
+	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js'),
 	
 	bMobileDevice = false
 ;
@@ -136,7 +138,7 @@ function CCalendarView()
 				height = oElement.outerHeight()
 			;
 
-			self.currentCalendarDropdownOffset(parseInt(position.top, 10) + height);
+			self.currentCalendarDropdownOffset(Types.pInt(position.top) + height);
 		}
 
 		self.currentCalendarDropdown(bValue);
@@ -382,8 +384,8 @@ CCalendarView.prototype.onBind = function ()
 					$popup = $('body').find('.fc-popover.fc-more-popover'),
 					$parent = $this.closest('tr'),
 					$superParent = $this.closest('.fc-day-grid'),
-					indexColumn = parseInt($parent.find('.fc-more-cell.active').index('.fc-more-cell')),
-					indexRow = parseInt($superParent.find('.fc-row.fc-week.active').index('.fc-row.fc-week'))
+					indexColumn = Types.pInt($parent.find('.fc-more-cell.active').index('.fc-more-cell')),
+					indexRow = Types.pInt($superParent.find('.fc-row.fc-week.active').index('.fc-row.fc-week'))
 				;
 				if ($popup.length > 0)
 				{
@@ -1903,17 +1905,15 @@ CCalendarView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'disableAutoUploadOnDrop': true,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Calendar',
 				'Method': 'UploadCalendar',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': App.defaultAccountId(),
 				'Parameters':  function () {
 					return JSON.stringify({
 						'CalendarID': self.uploadCalendarId()
 					});
 				}
-			}
+			}, App.getCommonRequestParameters())
 		});
 
 		this.oJua

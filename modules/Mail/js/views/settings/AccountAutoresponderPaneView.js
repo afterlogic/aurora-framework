@@ -54,9 +54,8 @@ CAccountAutoresponderPaneView.prototype.revert = function ()
 
 CAccountAutoresponderPaneView.prototype.getParametersForSave = function ()
 {
-	var oAccount = AccountList.getEdited();
 	return {
-		'AccountID': oAccount.id(),
+		'AccountID': AccountList.editedId(),
 		'Enable': this.enable() ? '1' : '0',
 		'Subject': this.subject(),
 		'Message': this.message()
@@ -139,7 +138,8 @@ CAccountAutoresponderPaneView.prototype.onGetAutoresponderResponse = function (o
 	if (oResponse && oResponse.Result)
 	{
 		var
-			iAccountId = Types.pInt(oResponse.AccountID),
+			oParameters = JSON.parse(oRequest.Parameters),
+			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = AccountList.getAccount(iAccountId),
 			oAutoresponder = new CAutoresponderModel()
 		;

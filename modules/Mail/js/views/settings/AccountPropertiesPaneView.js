@@ -174,9 +174,9 @@ CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 	else
 	{
 		var
-			iAccountId = Types.pInt(oResponse.AccountID),
-			oAccount = AccountList.getAccount(iAccountId),
-			oParameters = JSON.parse(oRequest.Parameters)
+			oParameters = JSON.parse(oRequest.Parameters),
+			iAccountId = Types.pInt(oParameters.AccountID),
+			oAccount = AccountList.getAccount(iAccountId)
 		;
 
 		if (oAccount)

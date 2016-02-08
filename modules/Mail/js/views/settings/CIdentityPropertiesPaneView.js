@@ -73,9 +73,8 @@ CIdentityPropertiesPaneView.prototype.getParametersForSave = function ()
 	if (this.identity())
 	{
 		var
-			iAccountId = this.identity().accountId(),
 			oParameters = {
-				'AccountID': iAccountId,
+				'AccountID': this.identity().accountId(),
 				'Default': this.isDefault() ? 1 : 0,
 				'FriendlyName': this.friendlyName(),
 				'Loyal': this.identity().loyal() ? 1 : 0
@@ -133,7 +132,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 	{
 		var
 			oParameters = JSON.parse(oRequest.Parameters),
-			iAccountId = Types.pInt(oResponse.AccountID),
+			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = 0 < iAccountId ? AccountList.getAccount(iAccountId) : null
 		;
 		

@@ -11,30 +11,33 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
+	App = require('core/js/App.js'),
+	Browser = require('core/js/Browser.js'),
+	CJua = require('core/js/CJua.js'),
+	CSelector = require('core/js/CSelector.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
-	App = require('core/js/App.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	Ajax = require('modules/HelpDesk/js/Ajax.js'),
 	Storage = require('core/js/Storage.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
-	Browser = require('core/js/Browser.js'),
 	Pulse = require('core/js/Pulse.js'),
-	CJua = require('core/js/CJua.js'),
-	CSelector = require('core/js/CSelector.js'),
-	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
+	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
+	Ajax = require('modules/HelpDesk/js/Ajax.js'),
 	Settings = require('modules/HelpDesk/js/Settings.js'),
-	HeaderItemView = require('modules/HelpDesk/js/views/HeaderItemView.js'),
-	CThreadListModel = require('modules/HelpDesk/js/models/CThreadListModel.js'),
-	CPostModel = require('modules/HelpDesk/js/models/CPostModel.js'),
+	
 	CHelpdeskAttachmentModel = require('modules/HelpDesk/js/models/CHelpdeskAttachmentModel.js'),
+	CPostModel = require('modules/HelpDesk/js/models/CPostModel.js'),
+	CThreadListModel = require('modules/HelpDesk/js/models/CThreadListModel.js'),
+	
+	HeaderItemView = require('modules/HelpDesk/js/views/HeaderItemView.js'),
 	
 	bExtApp = false
 ;
@@ -1260,16 +1263,10 @@ CHelpdeskView.prototype.createJuaObject = function (oButton)
 			'disableAjaxUpload': false,
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Helpdesk',
-				'Method': 'UploadAttachment',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': (this.bExtApp || !App.defaultAccountId) ? 0 : App.defaultAccountId(),
-				'Parameters': JSON.stringify({
-					'TenantHash': this.bExtApp ? UserSettings.TenantHash : '',
-					'IsExt': this.bExtApp ? '1' : '0'
-				})
-			}
+				'Method': 'UploadAttachment'
+			}, App.getCommonRequestParameters())
 		});
 
 		oJua

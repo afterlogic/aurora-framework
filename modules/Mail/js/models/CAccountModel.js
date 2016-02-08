@@ -202,7 +202,7 @@ CAccountModel.prototype.updateQuotaParams = function ()
  */
 CAccountModel.prototype.parse = function (oData, iDefaultId)
 {
-	this.init(parseInt(oData.AccountID, 10), Types.pString(oData.Email), Types.pString(oData.FriendlyName));
+	this.init(Types.pInt(oData.AccountID), Types.pString(oData.Email), Types.pString(oData.FriendlyName));
 		
 	this.allowMail(!!oData.AllowMail);
 

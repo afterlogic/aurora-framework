@@ -473,7 +473,7 @@ CMessagePaneView.prototype.onCurrentMessageSubscribe = function ()
 			/*jshint onevar: true*/
 
 			_.each(oMessage.attachments(), _.bind(function (oAttach) {
-				var oCopy = new CAttachmentModel();
+				var oCopy = new CAttachmentModel(oMessage.accountId());
 				oCopy.copyProperties(oAttach);
 				oCopy.getInThumbQueue(sThumbSessionUid);
 				aAtachments.push(oCopy);

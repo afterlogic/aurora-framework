@@ -974,7 +974,7 @@ CComposeView.prototype.addDataAsAttachment = function (sData, sFileName)
 			'FileName': sFileName,
 			'Hash': sHash
 		},
-		oAttach = new CAttachmentModel()
+		oAttach = new CAttachmentModel(this.senderAccountId())
 	;
 
 	this.subject(sFileName.substr(0, sFileName.length - 4));
@@ -997,8 +997,9 @@ CComposeView.prototype.addDataAsAttachment = function (sData, sFileName)
 CComposeView.prototype.onDataAsAttachmentUpload = function (oResponse, oRequest)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		oResult = oResponse.Result,
-		sHash = oRequest.Hash,
+		sHash = oParameters.Hash,
 		oAttachment = _.find(this.attachments(), function (oAttach) {
 			return oAttach.hash() === sHash;
 		})
@@ -1010,7 +1011,7 @@ CComposeView.prototype.onDataAsAttachmentUpload = function (oResponse, oRequest)
 	{
 		if (oResult && oResult.Attachment)
 		{
-			oAttachment.parseFromUpload(oResult.Attachment, oResponse.AccountID);
+			oAttachment.parseFromUpload(oResult.Attachment);
 		}
 		else
 		{
@@ -1031,7 +1032,7 @@ CComposeView.prototype.addFilesAsAttachment = function (aFiles)
 	;
 
 	_.each(aFiles, function (oFile) {
-		oAttach = new CAttachmentModel();
+		oAttach = new CAttachmentModel(this.senderAccountId());
 		oAttach.fileName(oFile.fileName());
 		oAttach.hash(oFile.hash());
 		oAttach.thumb(oFile.thumb());
@@ -1062,8 +1063,9 @@ CComposeView.prototype.addFilesAsAttachment = function (aFiles)
 CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		aResult = oResponse.Result,
-		aHashes = oRequest.Hashes,
+		aHashes = oParameters.Hashes,
 		sThumbSessionUid = Date.now().toString()
 	;
 	
@@ -1077,7 +1079,7 @@ CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 
 			if (oAttachment)
 			{
-				oAttachment.parseFromUpload(oFileData, oResponse.AccountID);
+				oAttachment.parseFromUpload(oFileData);
 				oAttachment.hash(oFileData.NewHash);
 				oAttachment.getInThumbQueue(sThumbSessionUid);
 			}
@@ -1104,7 +1106,7 @@ CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 CComposeView.prototype.addContactAsAttachment = function (oContact)
 {
 	var
-		oAttach = new CAttachmentModel(),
+		oAttach = new CAttachmentModel(this.senderAccountId()),
 		oParameters = null
 	;
 
@@ -1136,6 +1138,7 @@ CComposeView.prototype.addContactAsAttachment = function (oContact)
 CComposeView.prototype.onContactVCardUpload = function (oResponse, oRequest)
 {
 	var
+		oParameters = JSON.parse(oRequest.Parameters),
 		oResult = oResponse.Result,
 		oAttach = null
 	;
@@ -1150,13 +1153,13 @@ CComposeView.prototype.onContactVCardUpload = function (oResponse, oRequest)
 
 		if (oAttach)
 		{
-			oAttach.parseFromUpload(oResult, oResponse.AccountID);
+			oAttach.parseFromUpload(oResult);
 		}
 	}
 	else
 	{
 		oAttach = _.find(this.attachments(), function (oAttach) {
-			return oAttach.fileName() === oRequest.Name && oAttach.uploadStarted();
+			return oAttach.fileName() === oParameters.Name && oAttach.uploadStarted();
 		});
 
 		if (oAttach)
@@ -1247,7 +1250,7 @@ CComposeView.prototype.setMessageDataInNewTab = function (oParameters)
 	this.setRecipient(this.bccAddr, oParameters.bccAddr);
 	this.subject(oParameters.subject);
 	this.attachments(_.map(oParameters.attachments, function (oRawAttach) {
-		var oAttach = new CAttachmentModel();
+		var oAttach = new CAttachmentModel(this.senderAccountId());
 		oAttach.parse(oRawAttach, this.senderAccountId());
 		return oAttach;
 	}, this));
@@ -1329,7 +1332,7 @@ CComposeView.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 		return false;
 	}
 	
-	oAttach = new CAttachmentModel();
+	oAttach = new CAttachmentModel(this.senderAccountId());
 	oAttach.onUploadSelect(sFileUid, oFileData);
 	this.attachments.push(oAttach);
 
@@ -1439,14 +1442,15 @@ CComposeView.prototype.initUploader = function ()
 			'disableAjaxUpload': false,
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Mail',
 				'Method': 'UploadAttachment',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': function () {
-					return App.currentAccountId();
+				'Parameters':  function () {
+					return JSON.stringify({
+						'AccountID': App.currentAccountId()
+					});
 				}
-			}
+			}, App.getCommonRequestParameters())
 		});
 
 		this.oJua

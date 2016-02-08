@@ -163,7 +163,8 @@ CAccountForwardPaneView.prototype.onGetForwardResponse = function (oResponse, oR
 	if (oResponse && oResponse.Result)
 	{
 		var
-			iAccountId = Types.pInt(oResponse.AccountID),
+			oParameters = JSON.parse(oRequest.Parameters),
+			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = AccountList.getAccount(iAccountId),
 			oForward = new CForwardModel()
 		;

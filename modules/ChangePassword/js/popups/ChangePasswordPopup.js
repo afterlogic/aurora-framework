@@ -9,8 +9,8 @@ var
 	
 	Ajax = require('core/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
-	App = require('core/js/App.js'),
 	Screens = require('core/js/Screens.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	Settings = require('modules/ChangePassword/js/Settings.js')
@@ -81,11 +81,6 @@ CChangePasswordPopup.prototype.sendChangeRequest = function ()
 	if (Settings.ResetPassHash)
 	{
 		oParameters.Hash = Settings.ResetPassHash;
-	}
-	
-	if (App.isAuth())
-	{
-		oParameters.AccountID = App.defaultAccountId();
 	}
 	
 	Ajax.send(this.oParams.sModule, 'ChangePassword', oParameters, this.onUpdatePasswordResponse, this);

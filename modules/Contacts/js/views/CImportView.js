@@ -9,9 +9,9 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
+	CJua = require('core/js/CJua.js'),
 	UserSettings = require('core/js/Settings.js'),
-	Screens = require('core/js/Screens.js'),
-	CJua = require('core/js/CJua.js')
+	Screens = require('core/js/Screens.js')
 ;
 
 /**
@@ -44,12 +44,10 @@ CImportView.prototype.onBind = function ()
 		'disableAjaxUpload': false,
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
-		'hidden': {
+		'hidden': _.extendOwn({
 			'Module': 'Contacts',
-			'Method': 'UploadContacts',
-			'Token': UserSettings.CsrfToken,
-			'AccountID': App.defaultAccountId()
-		}
+			'Method': 'UploadContacts'
+		}, App.getCommonRequestParameters())
 	});
 
 	this.oJua

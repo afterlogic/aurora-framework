@@ -1,11 +1,13 @@
 'use strict';
 
 var
-	jQuery = require('jquery'),
 	_ = require('underscore'),
+	jQuery = require('jquery'),
 	
-	Storage = require('core/js/Storage.js'),
-	Browser = require('core/js/Browser.js')
+	Types = require('core/js/utils/Types.js'),
+	
+	Browser = require('core/js/Browser.js'),
+	Storage = require('core/js/Storage.js')
 ;
 
 (function ($) {
@@ -107,7 +109,7 @@ var
 				var sum = 0, i = 1;
 				for (; i < arguments.length; i++)
 				{
-					sum += window.Math.max(window.parseInt(elem.css(arguments[i]), 10) || 0, 0);
+					sum += window.Math.max(Types.pInt(elem.css(arguments[i])) || 0, 0);
 				}
 				
 				return sum;
@@ -148,7 +150,7 @@ var
 			this._min = opts['min' + this._paneName] || dimSum(this.$, 'min-' + opts['split']);
 			this._max = opts['max' + this._paneName] || dimSum(this.$, 'max-' + opts['split']) || 9999;
 			this._init = opts['size' + this._paneName] === undefined ?
-				window.parseInt($.css(this, opts['split']), 10) : opts['size' + this._paneName];
+				Types.pInt($.css(this, opts['split'])) : opts['size' + this._paneName];
 		});
 
 		// Determine initial position, get from cookie if specified
@@ -258,3 +260,5 @@ var
 };
 
 })(jQuery);
+
+module.exports = {};

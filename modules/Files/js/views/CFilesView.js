@@ -10,22 +10,24 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
-	Screens = require('core/js/Screens.js'),
-	UserSettings = require('core/js/Settings.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
+	Screens = require('core/js/Screens.js'),
+	UserSettings = require('core/js/Settings.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
-	RenamePopup = require('modules/Files/js/popups/RenamePopup.js'),
-	SharePopup = require('modules/Files/js/popups/SharePopup.js'),
 	CreateFolderPopup = require('modules/Files/js/popups/CreateFolderPopup.js'),
 	CreateLinkPopup = require('modules/Files/js/popups/CreateLinkPopup.js'),
+	RenamePopup = require('modules/Files/js/popups/RenamePopup.js'),
+	SharePopup = require('modules/Files/js/popups/SharePopup.js'),
 	
 	Ajax = require('modules/Files/js/Ajax.js'),
 	Settings = require('modules/Files/js/Settings.js'),
+	
 	CFileModel = require('modules/Files/js/models/CFileModel.js'),
 	CFolderModel = require('modules/Files/js/models/CFolderModel.js')
 ;
@@ -288,11 +290,9 @@ CFilesView.prototype.initUploader = function ()
 			'disableAjaxUpload': this.isPublic ? true : false,
 			'disableFolderDragAndDrop': this.isPublic ? true : false,
 			'disableDragAndDrop': this.isPublic ? true : false,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Files',
 				'Method': 'UploadFile',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': App.defaultAccountId ? App.defaultAccountId() : 0,
 				'Parameters':  function (oFile) {
 					return JSON.stringify({
 						'Type': self.storageType(),
@@ -300,7 +300,7 @@ CFilesView.prototype.initUploader = function ()
 						'Path': self.dropPath()
 					});
 				}
-			}
+			}, App.getCommonRequestParameters())
 		});
 
 		this.oJua

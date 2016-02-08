@@ -5,12 +5,13 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	App = require('core/js/App.js'),
+	CJua = require('core/js/CJua.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
-	CJua = require('core/js/CJua.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
@@ -70,17 +71,15 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 		'disableAjaxUpload': false,
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
-		'hidden': {
+		'hidden': _.extendOwn({
 			'Module': 'Calendar',
 			'Method': 'UploadCalendar',
-			'Token': UserSettings.CsrfToken,
-			'AccountID': App.defaultAccountId(),
 			'Parameters':  function () {
 				return JSON.stringify({
 					'CalendarID': self.calendarId()
 				});
 			}
-		}
+		}, App.getCommonRequestParameters())
 	});
 
 	this.oJua

@@ -7,7 +7,6 @@ var
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	Types = require('core/js/utils/Types.js'),
-	Utils = require('core/js/utils/Common.js'),
 	
 	Browser = require('core/js/Browser.js'),
 	UserSettings = require('core/js/Settings.js')
@@ -114,7 +113,7 @@ ko.bindingHandlers.dropdown = {
 					}
 
 					jqDropHelper.css('left', iOffsetLeft || iFitToScreenOffset + 'px');
-					jqDropArrow.css('left', iOffsetLeft || Math.abs(iFitToScreenOffset ? iFitToScreenOffset + parseInt(jqDropArrow.css('margin-left')) : 0) + 'px');
+					jqDropArrow.css('left', iOffsetLeft || Math.abs(iFitToScreenOffset ? iFitToScreenOffset + Types.pInt(jqDropArrow.css('margin-left')) : 0) + 'px');
 				}
 			},
 			fControlClick = function (oEv) {
@@ -554,7 +553,7 @@ ko.bindingHandlers.autosize = {
 
 				if (Browser.firefox)
 				{
-					iPadding = parseInt(jqEl.css('padding-top'), 10) * 2;
+					iPadding = Types.pInt(jqEl.css('padding-top')) * 2;
 				}
 
 				if (iMaxHeight)
@@ -770,18 +769,20 @@ ko.bindingHandlers.adjustHeightToContent = {
 			jqNearEl = jqParentEl.find('.icon');
 
 			jqEl.css('min-width',
-				parseInt(jqParentEl.css("margin-left")) +
-				parseInt(jqParentEl.css("padding-left")) +
-				parseInt(jqNearEl.width()) +
-				parseInt(jqNearEl.css("margin-left")) +
-				parseInt(jqNearEl.css("margin-right")) +
-				parseInt(jqNearEl.css("padding-left")) +
-				parseInt(jqNearEl.css("padding-right")) +
-				parseInt(jqTargetEl.width()) +
-				parseInt(jqTargetEl.css("margin-left")) +
-				parseInt(jqTargetEl.css("padding-left")) +
+				Types.pInt(jqParentEl.css("margin-left")) +
+				Types.pInt(jqParentEl.css("padding-left")) +
+				Types.pInt(jqNearEl.width()) +
+				Types.pInt(jqNearEl.css("margin-left")) +
+				Types.pInt(jqNearEl.css("margin-right")) +
+				Types.pInt(jqNearEl.css("padding-left")) +
+				Types.pInt(jqNearEl.css("padding-right")) +
+				Types.pInt(jqTargetEl.width()) +
+				Types.pInt(jqTargetEl.css("margin-left")) +
+				Types.pInt(jqTargetEl.css("padding-left")) +
 				10
 			);
 		},this), 1);
 	}
 };
+
+module.exports = {};

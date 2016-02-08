@@ -288,28 +288,23 @@ CAccountFiltersPaneView.prototype.getDependedField = function (sText, oParent)
  */
 CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oRequest)
 {
+	var
+		oParameters = JSON.parse(oRequest.Parameters),
+		iAccountId = Types.pInt(oParameters.AccountID),
+		oAccount = AccountList.getAccount(iAccountId),
+		oSieveFilters = new СFiltersModel()
+	;
+	
 	this.loading(false);
 
-	if (oRequest && oRequest.Action)
+	if (oResponse && oResponse.Result && oAccount)
 	{
-		if (oResponse && oResponse.Result && oResponse.AccountID)
+		oSieveFilters.parse(iAccountId, oResponse.Result);
+		oAccount.filters(oSieveFilters);
+
+		if (iAccountId === AccountList.editedId())
 		{
-			var
-				oSieveFilters = new СFiltersModel(),
-				iAccountId = Types.pInt(oResponse.AccountID),
-				oAccount = AccountList.getAccount(iAccountId)
-			;
-
-			if (oAccount)
-			{
-				oSieveFilters.parse(iAccountId, oResponse.Result);
-				oAccount.filters(oSieveFilters);
-
-				if (iAccountId === AccountList.editedId())
-				{
-					this.populateFilters();
-				}
-			}
+			this.populateFilters();
 		}
 	}
 	else

@@ -10,26 +10,29 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	Routing = require('core/js/Routing.js'),
-	Screens = require('core/js/Screens.js'),
 	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
 	CJua = require('core/js/CJua.js'),
 	CSelector = require('core/js/CSelector.js'),
-	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
+	ModulesManager = require('core/js/ModulesManager.js'),
+	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
+	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js'),
 	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
-	Settings = require('modules/Contacts/js/Settings.js'),
+	
+	Ajax = require('modules/Contacts/js/Ajax.js'),
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
+	Settings = require('modules/Contacts/js/Settings.js'),
+	
 	CContactListItemModel = require('modules/Contacts/js/models/CContactListItemModel.js'),
 	CContactModel = require('modules/Contacts/js/models/CContactModel.js'),
 	CGroupModel = require('modules/Contacts/js/models/CGroupModel.js'),
+	
 	CImportView = require('modules/Contacts/js/views/CImportView.js')
 ;
 
@@ -1525,18 +1528,16 @@ CContactsView.prototype.initUploader = function ()
 			'disableAjaxUpload': false,
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Contacts',
 				'Method': 'UploadContacts',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': App.defaultAccountId(),
 				'Parameters':  function () {
 					return JSON.stringify({
 						'GroupId': self.selectedGroupType() === Enums.ContactsGroupListType.SubGroup ? self.currentGroupId() : '',
 						'IsShared': self.selectedGroupType() === Enums.ContactsGroupListType.SharedToAll
 					});
 				}
-			}
+			}, App.getCommonRequestParameters())
 		});
 
 		this.oJua

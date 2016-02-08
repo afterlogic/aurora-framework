@@ -2,7 +2,9 @@
 
 var
 	$ = require('jquery'),
-	ko = require('knockout')
+	ko = require('knockout'),
+	
+	Types = require('core/js/utils/Types.js')
 ;
 
 /**
@@ -75,7 +77,7 @@ CServerPropertiesView.prototype.clear = function ()
 
 CServerPropertiesView.prototype.getIntPort = function ()
 {
-	return parseInt(this.port(), 10);
+	return Types.pInt(this.port());
 };
 
 CServerPropertiesView.prototype.getIntSsl = function ()

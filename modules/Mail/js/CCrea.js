@@ -4,6 +4,8 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
+	Types = require('core/js/utils/Types.js'),
+	
 	Browser = require('core/js/Browser.js')
 ;
 
@@ -1454,7 +1456,7 @@ CCrea.prototype.convertFontSizeToPixels = function (iFontSizeInNumber)
 CCrea.prototype.convertFontSizeToNumber = function (sFontSizeInPixels)
 {
 	var
-		iFontSizeInPixels = parseInt(sFontSizeInPixels, 10),
+		iFontSizeInPixels = Types.pInt(sFontSizeInPixels),
 		iFontSizeInNumber = 0
 	;
 
@@ -1486,7 +1488,7 @@ CCrea.prototype.getFontSizeInNumber = function ()
 	if (this.bEditable)
 	{
 		sFontSizeInNumber = window.document.queryCommandValue('FontSize');
-		iFontSizeInNumber = parseInt(sFontSizeInNumber, 10);
+		iFontSizeInNumber = Types.pInt(sFontSizeInNumber);
 	}
 
 	if (isNaN(iFontSizeInNumber) || iFontSizeInNumber <= 0)

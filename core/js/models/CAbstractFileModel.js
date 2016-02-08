@@ -200,7 +200,7 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 		}
 
 		this.type(Types.pString(oData.MimeType));
-		this.size(oData.EstimatedSize ? parseInt(oData.EstimatedSize, 10) : parseInt(oData.SizeInBytes, 10));
+		this.size(oData.EstimatedSize ? Types.pInt(oData.EstimatedSize) : Types.pInt(oData.SizeInBytes));
 		this.content(Types.pString(oData.Content));
 
 		this.thumb(!!oData.Thumb);

@@ -8,6 +8,7 @@ var
 	AddressUtils = require('core/js/utils/Address.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
 	Browser = require('core/js/Browser.js'),
@@ -17,7 +18,6 @@ var
 	Popups = require('core/js/Popups.js'),
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 			
-	AccountList = require('modules/Mail/js/AccountList.js'),
 	CCrea = require('modules/Mail/js/CCrea.js'),
 	Settings = require('modules/Mail/js/Settings.js'),
 	
@@ -688,9 +688,9 @@ CHtmlEditorView.prototype.colorToHex = function (sColor)
 	/*jslint bitwise: true*/
 	var
 		aDigits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(sColor),
-		iRed = parseInt(aDigits[2], 10),
-		iGreen = parseInt(aDigits[3], 10),
-		iBlue = parseInt(aDigits[4], 10),
+		iRed = Types.pInt(aDigits[2]),
+		iGreen = Types.pInt(aDigits[3]),
+		iBlue = Types.pInt(aDigits[4]),
 		iRgb = iBlue | (iGreen << 8) | (iRed << 16),
 		sRgb = iRgb.toString(16)
 	;
@@ -808,14 +808,15 @@ CHtmlEditorView.prototype.initUploader = function ()
 			'disableMultiple': true,
 			'disableAjaxUpload': false,
 			'disableDragAndDrop': true,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Mail',
 				'Method': 'UploadAttachment',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': function () {
-					return AccountList.currentId();
+				'Parameters':  function () {
+					return JSON.stringify({
+						'AccountID': App.currentAccountId()
+					});
 				}
-			}
+			}, App.getCommonRequestParameters())
 		});
 
 		if (this.bInsertImageAsBase64)
@@ -867,14 +868,15 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 				'disableMultiple': true,
 				'disableAjaxUpload': false,
 				'disableDragAndDrop': !this.bAllowImageDragAndDrop,
-				'hidden': {
+				'hidden': _.extendOwn({
 					'Module': 'Mail',
 					'Method': 'UploadAttachment',
-					'Token': UserSettings.CsrfToken,
-					'AccountID': function () {
-						return AccountList.currentId();
+					'Parameters':  function () {
+						return JSON.stringify({
+							'AccountID': App.currentAccountId()
+						});
 					}
-				}
+				}, App.getCommonRequestParameters())
 			});
 
 			this.editorUploader

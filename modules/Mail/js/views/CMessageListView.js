@@ -16,7 +16,6 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
-	UserSettings = require('core/js/Settings.js'),
 	
 	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
 	
@@ -848,19 +847,16 @@ CMessageListView.prototype.initUploader = function ()
 			'disableAjaxUpload': false,
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
-			'hidden': {
+			'hidden': _.extendOwn({
 				'Module': 'Mail',
 				'Method': 'UploadMessage',
-				'Token': UserSettings.CsrfToken,
-				'AccountID': function () {
-					return App.currentAccountId();
-				},
 				'Parameters':  function () {
 					return JSON.stringify({
+						'AccountID': App.currentAccountId(),
 						'Folder': self.folderFullName()
 					});
 				}
-			}
+			}, App.getCommonRequestParameters())
 		});
 
 		this.oJua

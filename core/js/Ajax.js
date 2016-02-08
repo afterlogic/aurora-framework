@@ -9,8 +9,7 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
-	Screens = require('core/js/Screens.js'),
-	UserSettings = require('core/js/Settings.js')
+	Screens = require('core/js/Screens.js')
 ;
 
 /**
@@ -113,10 +112,10 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 {
 	if (this.bAllowRequests && !this.bInternetConnectionProblem)
 	{
-		var oRequest = {
+		var oRequest = _.extendOwn({
 			Module: sModule,
 			Method: sMethod
-		};
+		}, App.getCommonRequestParameters());
 		
 //		if (AfterLogicApi.runPluginHook)
 //		{
@@ -126,29 +125,6 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		if (oParameters)
 		{
 			oRequest.Parameters = JSON.stringify(oParameters);
-		}
-		
-		if (oParameters && oParameters.AccountID)
-		{
-			oRequest.AccountID = oParameters.AccountID;
-		}
-		else if (App.isAuth() && App.defaultAccountId)
-		{
-			oRequest.AccountID = App.defaultAccountId();
-		}
-		else if (UserSettings.TenantHash)
-		{
-			oRequest.TenantHash = UserSettings.TenantHash;
-		}
-		
-		if (UserSettings.CsrfToken)
-		{
-			oRequest.Token = UserSettings.CsrfToken;
-		}
-		
-		if (UserSettings.UserId)
-		{
-			oRequest.UserId = UserSettings.UserId;
 		}
 		
 		this.abortRequests(oRequest);
@@ -236,8 +212,6 @@ CAjax.prototype.abortAllRequests = function ()
  */
 CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr)
 {
-	var bDefaultAccount = App.isAuth() && !App.isPublic() && (oRequest.AccountID === App.defaultAccountId());
-	
 	if (oResponse && !oResponse.Result)
 	{
 		switch (oResponse.ErrorCode)
@@ -247,12 +221,9 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 				App.tokenProblem();
 				break;
 			case Enums.Errors.AuthError:
-				if (bDefaultAccount)
-				{
-					this.bAllowRequests = false;
-					this.abortAllRequests();
-					App.authProblem();
-				}
+				this.bAllowRequests = false;
+				this.abortAllRequests();
+				App.authProblem();
 				break;
 		}
 	}

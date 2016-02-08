@@ -1176,7 +1176,6 @@ CMailCache.prototype.onGetFoldersResponse = function (oResponse, oRequest)
 	var
 		oParameters = JSON.parse(oRequest.Parameters),
 		oFolderList = new CFolderListModel(),
-//		iAccountId = Types.pInt(oResponse.AccountID),
 		iAccountId = oParameters.AccountID,
 		oFolderListOld = this.oFolderListItems[iAccountId],
 		oNamedFolderListOld = oFolderListOld ? oFolderListOld.oNamedCollection : {}
@@ -1248,8 +1247,8 @@ CMailCache.prototype.onGetRelevantFoldersInformationResponse = function (oRespon
 {
 	var
 		bCheckMailStarted = false,
-//		iAccountId = oResponse.AccountID,
-		iAccountId = oRequest.AccountID,
+		oParameters = JSON.parse(oRequest.Parameters),
+		iAccountId = oParameters.AccountID,
 		oFolderList = this.oFolderListItems[iAccountId],
 		sCurrentFolderName = this.folderList().currentFolderFullName(),
 		bSameAccount = this.currentAccountId() === iAccountId
@@ -1404,7 +1403,6 @@ CMailCache.prototype.parseMessageList = function (oResponse, oRequest)
 	var
 		oResult = oResponse.Result,
 		oParameters = JSON.parse(oRequest.Parameters),
-//		iAccountId = oResponse.AccountID,
 		iAccountId = oParameters.AccountID,
 		oFolderList = this.oFolderListItems[iAccountId],
 		oFolder = null,
@@ -1440,7 +1438,7 @@ CMailCache.prototype.parseMessageList = function (oResponse, oRequest)
 		}, this);
 		
 //		AfterLogicApi.runPluginHook('response-custom-messages', 
-//			[oResponse.AccountID, oFolder.fullName(), aNewFolderMessages]);
+//			[oParameters.AccountID, oFolder.fullName(), aNewFolderMessages]);
 
 		if (bCurrentList)
 		{

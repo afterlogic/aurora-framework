@@ -298,6 +298,20 @@ CApp.prototype.checkCookies = function ()
 	return bResult;
 };
 
+CApp.prototype.getCommonRequestParameters = function ()
+{
+	var oParameters = {
+		AuthToken: Storage.getData('AuthToken')
+	};
+	
+	if (UserSettings.TenantHash)
+	{
+		oParameters.TenantHash = UserSettings.TenantHash;
+	}
+	
+	return oParameters;
+};
+
 var App = new CApp();
 
 module.exports = App;

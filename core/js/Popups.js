@@ -96,7 +96,7 @@ CPopups.prototype.keyupPopup = function (oEvent)
 	
 	if (oEvent && oPopup && (!oPopup.minimized || !oPopup.minimized()))
 	{
-		var iKeyCode = window.parseInt(oEvent.keyCode, 10);
+		var iKeyCode = Types.pInt(oEvent.keyCode);
 		
 		if (Enums.Key.Esc === iKeyCode)
 		{
