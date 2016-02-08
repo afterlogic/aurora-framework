@@ -310,8 +310,8 @@ class CApiIntegratorManager extends AApiManager
 	private function getCookiePath()
 	{
 		static $sPath = false;
-		if (false === $sPath)
-		{
+		if (false === $sPath) {
+			
 			$sPath = CApi::GetConf('labs.app-cookie-path', '/');
 		}
 
@@ -345,26 +345,23 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$iUserId = 0;
 		$sKey = '';
-		if (strlen($sAuthToken) !== 0)
-		{
+		if (strlen($sAuthToken) !== 0) {
+			
 			$sKey = \CApi::Cacher()->get('AUTHTOKEN:'.$sAuthToken);
-		}
-		else
-		{
+		} else {
+			
 			$sKey = empty($_COOKIE[self::AUTH_KEY]) ? '' : $_COOKIE[self::AUTH_KEY];
 		}
-		if (!empty($sKey) && is_string($sKey))
-		{
+		if (!empty($sKey) && is_string($sKey)) {
+			
 			$aAccountHashTable = CApi::DecodeKeyValues($sKey);
 			if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
 				'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id']) && 
-					is_int($aAccountHashTable['id']) && isset($aAccountHashTable['email']))
-			{
-				$oApiUsersManager = \CApi::GetCoreManager('users');
+					is_int($aAccountHashTable['id']) && isset($aAccountHashTable['email'])) {
 				
-				$oAccount = $oApiUsersManager->getAccountByEmail($aAccountHashTable['email']);
-				if ($oAccount && $oAccount->IdUser == $aAccountHashTable['id'])
-				{
+				$oAccount = \CApi::GetCoreManager('users')->getAccountByEmail($aAccountHashTable['email']);
+				if ($oAccount && $oAccount->IdUser == $aAccountHashTable['id']) {
+					
 					$iUserId = $aAccountHashTable['id'];
 				}
 			}
@@ -397,10 +394,10 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return CAccount|null
 	 */
-	public function getLogginedDefaultAccount()
+	public function getLogginedDefaultAccount($sAuthToken = '')
 	{
 		$oResult = null;
-		$iUserId = $this->getLogginedUserId();
+		$iUserId = $this->getLogginedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
 			$oApiUsers = CApi::GetCoreManager('users');
@@ -1639,7 +1636,7 @@ class CApiIntegratorManager extends AApiManager
 		$oAccount = null;
 		if (!empty($sCalendarPubHash))
 		{
-			$oAccount = $this->getLogginedDefaultAccount();
+			$oAccount = $this->getLogginedDefaultAccount($sAuthToken);
 			if ($oAccount)
 			{
 				$aAppData['Auth'] = true;

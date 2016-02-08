@@ -206,7 +206,7 @@ class CalendarModule extends AApiModule
 		$sCalendarId = $this->getParamValue('Id');
 		$mResult = $this->oApiCalendarManager->deleteCalendar($oAccount, $sCalendarId);
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}	
 	
 	/**

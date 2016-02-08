@@ -978,7 +978,7 @@ class HelpDeskModule extends AApiModule
 			$this->ApiHelpdesk()->updateUser($oHelpdeskUser);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);*/
+		return $this->DefaultResponse(__FUNCTION__, $bResult);*/
 
 		$oAccount = $this->getAccountFromParam();
 

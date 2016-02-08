@@ -391,7 +391,7 @@ class Actions
 	public function AjaxAccountFetcherGetList()
 	{
 		$oAccount = $this->getAccountFromParam();
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->ApiFetchers()->getFetchers($oAccount));
+		return $this->DefaultResponse(__FUNCTION__, $this->ApiFetchers()->getFetchers($oAccount));
 	}
 
 	/**
@@ -472,7 +472,7 @@ class Actions
 		$bResult = $oFetcher ? $this->ApiFetchers()->updateFetcher($oAccount, $oFetcher) : false;
 		if ($bResult || !$oFetcher)
 		{
-			return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+			return $this->DefaultResponse(__FUNCTION__, $bResult);
 		}
 
 		$oExc = $this->ApiFetchers()->GetLastException();
@@ -500,7 +500,7 @@ class Actions
 		$oAccount = $this->getAccountFromParam();
 
 		$iFetcherID = (int) $this->getParamValue('FetcherID', 0);
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->ApiFetchers()->deleteFetcher($oAccount, $iFetcherID));
+		return $this->DefaultResponse(__FUNCTION__, $this->ApiFetchers()->deleteFetcher($oAccount, $iFetcherID));
 	}
 	
 	/**
@@ -520,7 +520,7 @@ class Actions
 		$oApiDomains = /* @var $oApiDomains \CApiDomainsManager */ \CApi::GetCoreManager('domains');
 		$oDomain = $oApiDomains->getDomainByName($sDomainName);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $oDomain ? array(
+		return $this->DefaultResponse(__FUNCTION__, $oDomain ? array(
 			'IsInternal' => $oDomain->IsInternal,
 			'IncomingMailServer' => $oDomain->IncomingMailServer,
 			'IncomingMailPort' => $oDomain->IncomingMailPort,
@@ -587,7 +587,7 @@ class Actions
 
 		}, false, $oAccount);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 
 	/**
@@ -641,7 +641,7 @@ class Actions
 			));
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 
 	/**
@@ -743,7 +743,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::MailServerError, $oException);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 
 	/**
@@ -804,7 +804,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::MailServerError, $oException);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 
 	/**
@@ -826,7 +826,7 @@ class Actions
 			}
 		}
 		
-		return $this->DefaultResponse(null, __FUNCTION__, $bResult);
+		return $this->DefaultResponse(__FUNCTION__, $bResult);
 	}
 
 	/**
@@ -835,7 +835,7 @@ class Actions
 	public function AjaxAccountSignatureGet()
 	{
 		$oAccount = $this->getAccountFromParam();
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return $this->DefaultResponse(__FUNCTION__, array(
 			'Type' => $oAccount->SignatureType,
 			'Options' => $oAccount->SignatureOptions,
 			'Signature' => $oAccount->Signature
@@ -853,7 +853,7 @@ class Actions
 		$oAccount->SignatureType = (string) $this->oHttp->GetPost('Type', $oAccount->SignatureType);
 		$oAccount->SignatureOptions = (string) $this->oHttp->GetPost('Options', $oAccount->SignatureOptions);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->updateAccount($oAccount));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->updateAccount($oAccount));
 	}
 
 	/**
@@ -868,7 +868,7 @@ class Actions
 		$oAccount->SignatureType = (string) $this->oHttp->GetPost('Type', $oAccount->SignatureType);
 		$oAccount->SignatureOptions = (string) $this->oHttp->GetPost('Options', $oAccount->SignatureOptions);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->updateAccount($oAccount, ('1' === (string) $this->oHttp->GetPost('Default', '0'))));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->updateAccount($oAccount, ('1' === (string) $this->oHttp->GetPost('Default', '0'))));
 	}
 
 	/**
@@ -902,7 +902,7 @@ class Actions
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+		return $this->DefaultResponse(__FUNCTION__, $bResult);
 	}
 
 	/**
@@ -1011,7 +1011,7 @@ class Actions
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $bResult);
+		return $this->DefaultResponse(__FUNCTION__, $bResult);
 	}
 
 	/**
@@ -1084,7 +1084,7 @@ class Actions
 			$mResult = false;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 	
 	/**
@@ -1195,7 +1195,7 @@ class Actions
 			$mResult = false;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);		
+		return $this->DefaultResponse(__FUNCTION__, $mResult);		
 	}	
 
 	/**
@@ -1270,7 +1270,7 @@ class Actions
 				}
 			}
 		}
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);		
+		return $this->DefaultResponse(__FUNCTION__, $mResult);		
 	}
 	
 	
@@ -1319,7 +1319,7 @@ class Actions
 			}
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+		return $this->DefaultResponse(__FUNCTION__, $aResult);
 	}
 
 	/**
@@ -1333,7 +1333,7 @@ class Actions
 			'Outlook' => $this->outlookSyncSettings($oAccount)
 		);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+		return $this->DefaultResponse(__FUNCTION__, $aResult);
 	}
 
 	/**
@@ -1346,7 +1346,7 @@ class Actions
 
 		$this->populateAccountFromHttpPost(true, $oAccount);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->updateAccount($oAccount));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->updateAccount($oAccount));
 	}
 
 	/**
@@ -1428,7 +1428,7 @@ class Actions
 			$oCalUser->DefaultTab = (int) $this->oHttp->GetPost('DefaultTab', $oCalUser->DefaultTab);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->updateAccount($oAccount) &&
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->updateAccount($oAccount) &&
 			$oCalUser && $this->oApiUsers->updateCalUser($oCalUser));
 	}
 
@@ -1445,7 +1445,7 @@ class Actions
 			'SignatureEnable' => $oHelpdeskUser->SignatureEnable
 		);
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResult);
+		return $this->DefaultResponse(__FUNCTION__, $aResult);
 	}*/
 
 	/**
@@ -1574,7 +1574,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter); // TODO
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, array(
+		return $this->DefaultResponse(__FUNCTION__, array(
 			'Email' => $oAccount->Email,
 			'Question' => $oAccount->User->Question1
 		));
@@ -1602,7 +1602,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter); // TODO
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, 
+		return $this->DefaultResponse(__FUNCTION__, 
 			$oAccount->User->Question1 === $sQuestion && $oAccount->User->Answer1 === $sAnswer);
 	}
 
@@ -1633,7 +1633,7 @@ class Actions
 		$oAccount->PreviousMailPassword = $oAccount->IncomingMailPassword;
 		$oAccount->IncomingMailPassword = $sPassword;
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->updateAccount($oAccount));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->updateAccount($oAccount));
 	}
 
 	/**
@@ -1755,7 +1755,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 	
 	/**
@@ -1860,7 +1860,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 
 	/**
@@ -1926,7 +1926,7 @@ class Actions
 						'TempName' => $sTempName
 					));
 
-					return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+					return $this->DefaultResponse(__FUNCTION__, $mResult);
 				}
 			}
 
@@ -1937,7 +1937,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}
 
 	/**
@@ -1954,7 +1954,7 @@ class Actions
 			$oApiVoiceManager = CApi::Manager('voice');
 			if ($oApiVoiceManager)
 			{
-				return $this->DefaultResponse($oAccount, __FUNCTION__,
+				return $this->DefaultResponse(__FUNCTION__,
 					$oApiVoiceManager->getNamesByCallersNumbers($oAccount, $aPhones));
 			}
 		}
@@ -1968,7 +1968,7 @@ class Actions
 	public function AjaxAccountIdentitiesGet()
 	{
 		$oAccount = $this->getAccountFromParam();
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->getUserIdentities($oAccount->IdUser));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->getUserIdentities($oAccount->IdUser));
 	}
 
 	/**
@@ -1993,7 +1993,7 @@ class Actions
 		$oIdentity->UseSignature = '1' === (string) $this->getParamValue('UseSignature', '0');
 		$oIdentity->FriendlyName = (string) $this->getParamValue('FriendlyName', '');
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->createIdentity($oIdentity));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->createIdentity($oIdentity));
 	}
 
 	/**
@@ -2018,7 +2018,7 @@ class Actions
 		$oIdentity->UseSignature = '1' === (string)$this->getParamValue('UseSignature', '0');
 		$oIdentity->FriendlyName = (string)$this->getParamValue('FriendlyName', '');
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->updateIdentity($oIdentity));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->updateIdentity($oIdentity));
 	}
 
 	/**
@@ -2036,7 +2036,7 @@ class Actions
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 		
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $this->oApiUsers->deleteIdentity($iIdentityId));
+		return $this->DefaultResponse(__FUNCTION__, $this->oApiUsers->deleteIdentity($iIdentityId));
 	}
 
 	/**
@@ -2173,7 +2173,7 @@ class Actions
 			$aResponse['Error'] = $sError;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
+		return $this->DefaultResponse(__FUNCTION__, $aResponse);
 	}
 	
 	/**
@@ -2234,7 +2234,7 @@ class Actions
 			$aResponse['Error'] = $sError;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
+		return $this->DefaultResponse(__FUNCTION__, $aResponse);
 	}
 
 	/**
@@ -2914,7 +2914,7 @@ class Actions
 				}
 			}
 
-			return $this->DefaultResponse(null, __FUNCTION__, $bResult);
+			return $this->DefaultResponse(__FUNCTION__, $bResult);
 		}
 
 		return $this->FalseResponse(null, __FUNCTION__);
@@ -2937,7 +2937,7 @@ class Actions
 			$oApiSocial /* @var $oApiSocial \CApiSocialManager */ = \CApi::Manager('social');
 			$mResult = $oApiSocial->getSocial($oAccount->IdAccount, $sType);
 		}
-		return $this->DefaultResponse(null, __FUNCTION__, $mResult);
+		return $this->DefaultResponse(__FUNCTION__, $mResult);
 	}	
 	
 	/**
@@ -3012,6 +3012,6 @@ class Actions
 			$aResponse['Error'] = $sError;
 		}
 
-		return $this->DefaultResponse($oAccount, __FUNCTION__, $aResponse);
+		return $this->DefaultResponse(__FUNCTION__, $aResponse);
 	}
 }

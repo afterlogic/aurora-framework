@@ -70,12 +70,10 @@ class CApiModuleManager
      */
     public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
 	{
-        if (!isset($this->_aEventSubscriptions[$sEvent])) 
-		{
+        if (!isset($this->_aEventSubscriptions[$sEvent])) {
             $this->_aEventSubscriptions[$sEvent] = array();
         }
-        while(isset($this->_aEventSubscriptions[$sEvent][$iPriority]))
-		{
+        while(isset($this->_aEventSubscriptions[$sEvent][$iPriority]))	{
 			$iPriority++;
 		}
         $this->_aEventSubscriptions[$sEvent][$iPriority] = $fCallback;
@@ -95,19 +93,18 @@ class CApiModuleManager
      */
     public function broadcastEvent($sEvent, $aArguments = array()) 
 	{
-        if (isset($this->_aEventSubscriptions[$sEvent])) 
-		{
-            foreach($this->_aEventSubscriptions[$sEvent] as $fCallback) 
-			{
+        $bResult = true;
+		if (isset($this->_aEventSubscriptions[$sEvent])) {
+            foreach($this->_aEventSubscriptions[$sEvent] as $fCallback) {
                 $result = call_user_func_array($fCallback, $aArguments);
-                if ($result === false)
-				{
-					return false;
+                if ($result === false) {
+					$bResult = false;
+					break;
 				}
             }
         }
 
-        return true;
+        return $bResult;
     }	
 
 	/**
@@ -143,27 +140,20 @@ class CApiModuleManager
 	{
 		$sModule = '';
 		$oHttp = \MailSo\Base\Http::NewInstance();
-		if ($oHttp->IsPost())
-		{
+		if ($oHttp->IsPost()) {
 			$sModule = $oHttp->GetPost('Module', null);
-		}
-		else
-		{
+		} else {
 			$aPath = \Core\Service::GetPaths();
 			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
 		}
 			
 		$oResult = $this->GetModule($sModule);
-		if ($oResult && !$oResult->HasEntry($sEntryName))
-		{
+		if ($oResult && !$oResult->HasEntry($sEntryName)) {
 			$oResult = false;
 		}
-		if ($oResult === false)
-		{
-			foreach ($this->_aModules as $oModule)
-			{
-				if ($oModule instanceof AApiModule && $oModule->HasEntry($sEntryName))
-				{
+		if ($oResult === false) {
+			foreach ($this->_aModules as $oModule) {
+				if ($oModule instanceof AApiModule && $oModule->HasEntry($sEntryName)) {
 					$oResult = $oModule;
 					break;
 				}
@@ -212,8 +202,8 @@ class CApiModuleManager
 	public function Hash()
 	{
 		$sResult = md5(CApi::Version());
-		foreach ($this->_aModules as $oModule)
-		{
+		foreach ($this->_aModules as $oModule) {
+			
 			$sResult = md5($sResult.$oModule->GetPath().$oModule->GetName().$oModule->GetHash());
 		}
 
@@ -264,8 +254,8 @@ class CApiModuleMethod
 	public function Execute()
 	{
 		$mResult = false;
-		if ($this->Exists())
-		{
+		if ($this->Exists()) {
+			
 			$mResult = call_user_func(array($this->oClass, $this->sMethodName));
 		}
 		return $mResult;
@@ -489,8 +479,8 @@ abstract class AApiModule
 		$sAction = $this->oHttp->GetPost('Action', null);
 
 		$sModule = $this->oHttp->GetPost('Module', null);
-		if (strtolower($sModule) === strtolower($this->GetName()))
-		{
+		if (strtolower($sModule) === strtolower($this->GetName())) {
+			
 			$sMethod = $this->oHttp->GetPost('Method', null);
 			$sParameters = $this->oHttp->GetPost('Parameters', null);
 			try
@@ -500,17 +490,17 @@ abstract class AApiModule
 				\CApi::Log('Method: '. $sMethod);
 
 				if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'SystemGetAppData' &&
-					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\Core\Service::validateToken())
-				{
+					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\Core\Service::validateToken()) {
+					
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidToken);
-				}
-				else if (!empty($sModule) && !empty($sMethod))
-				{
+				} else if (!empty($sModule) && !empty($sMethod)) {
+					
 					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
-					$aParameters['AccountID'] = $this->oHttp->GetPost('AccountID', '');
 					$aParameters['AuthToken'] = $this->oHttp->GetPost('AuthToken', '');
+					
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
-					$aResponseItem = $this->DefaultResponse($this->GetDefaultAccount(), $sMethod, $mResult);
+					
+					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
 
 	/*						
 					else if (\CApi::Plugin()->JsonHookExists($sMethodName))
@@ -521,8 +511,8 @@ abstract class AApiModule
 	*/
 				}
 
-				if (!is_array($aResponseItem))
-				{
+				if (!is_array($aResponseItem)) {
+					
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
 				}
 			}
@@ -541,8 +531,8 @@ abstract class AApiModule
 				$sAction = empty($sAction) ? 'Unknown' : $sAction;
 
 				$aAdditionalParams = null;
-				if ($oException instanceof \Core\Exceptions\ClientException)
-				{
+				if ($oException instanceof \Core\Exceptions\ClientException) {
+					
 					$aAdditionalParams = $oException->GetObjectParams();
 				}
 
@@ -650,8 +640,7 @@ abstract class AApiModule
 
 		try
 		{
-			if (!empty($sMethod))
-			{
+			if (!empty($sMethod)) {
 				$aParameters = array(
 					'RawKey' => empty($aPaths[3]) ? '' : $aPaths[3],
 					'IsExt' => empty($aPaths[4]) ? '0' : ('1' === (string) $aPaths[4] ? '1' : 0),
@@ -684,23 +673,18 @@ abstract class AApiModule
 		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName]))
-		{
+		if (isset($aCache[$sFileName])) {
 			return true;
-		}
-		else
-		{
+		} else {
 			$sFileFullPath = $this->GetPath().'/managers/'.$sFileName.'.php';
-			if (@file_exists($sFileFullPath))
-			{
+			if (@file_exists($sFileFullPath)) {
 				$aCache[$sFileName] = true;
 				include_once $sFileFullPath;
 				return true;
 			}
 		}
 
-		if ($bDoExitOnError)
-		{
+		if ($bDoExitOnError) {
 			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
 		
@@ -720,8 +704,8 @@ abstract class AApiModule
 	
 	public function setParamValue($sKey, $mValue)
 	{
-		if (is_array($this->aParameters))
-		{
+		if (is_array($this->aParameters)) {
+			
 			$this->aParameters[$sKey] = $mValue;
 		}
 	}
@@ -762,25 +746,19 @@ abstract class AApiModule
 	}	
 	
 	/**
-	 * @param \CAccount $oAccount
 	 * @param string $sMethod
 	 * @param mixed $mResult = false
 	 *
 	 * @return array
 	 */
-	public function DefaultResponse($oAccount, $sMethod, $mResult = false)
+	public function DefaultResponse($sMethod, $mResult = false)
 	{
 		$aResult = array(
 			'Module' => $this->GetName(),
 			'Method' => $sMethod
 		);
-		if ($oAccount instanceof \CAccount)
-		{
-			$aResult['AccountID'] = $oAccount->IdAccount;
-		}
 
 		$aResult['Result'] = \CApiResponseManager::GetResponseObject($mResult, array(
-			'Account' => $oAccount,
 			'Module' => $this->GetName(),
 			'Method' => $sMethod
 		));
@@ -789,18 +767,16 @@ abstract class AApiModule
 	}	
 	
 	/**
-	 * @param \CAccount $oAccount
 	 * @param string $sMethod
 	 *
 	 * @return array
 	 */
-	public function TrueResponse($oAccount, $sMethod)
+	public function TrueResponse($sMethod)
 	{
-		return $this->DefaultResponse($oAccount, $sMethod, true);
+		return $this->DefaultResponse($sMethod, true);
 	}
 
 	/**
-	 * @param \CAccount $oAccount
 	 * @param string $sMethod
 	 * @param int $iErrorCode
 	 * @param string $sErrorMessage
@@ -808,9 +784,9 @@ abstract class AApiModule
 	 *
 	 * @return array
 	 */
-	public function FalseResponse($oAccount, $sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null)
+	public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null)
 	{
-		$aResponseItem = $this->DefaultResponse($oAccount, $sMethod, false);
+		$aResponseItem = $this->DefaultResponse($sMethod, false);
 
 		if (null !== $iErrorCode) {
 			
@@ -832,14 +808,13 @@ abstract class AApiModule
 	}	
 	
 	/**
-	 * @param \CAccount $oAccount
 	 * @param string $sActionName
 	 * @param \Exception $oException
 	 * @param array $aAdditionalParams = null
 	 *
 	 * @return array
 	 */
-	public function ExceptionResponse($oAccount, $sActionName, $oException, $aAdditionalParams = null)
+	public function ExceptionResponse($sActionName, $oException, $aAdditionalParams = null)
 	{
 		$iErrorCode = null;
 		$sErrorMessage = null;
@@ -869,7 +844,7 @@ abstract class AApiModule
 //			$sErrorMessage = $oException->getCode().' - '.$oException->getMessage();
 		}
 
-		return $this->FalseResponse($oAccount, $sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams);
+		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams);
 	}	
 	
 	/**
