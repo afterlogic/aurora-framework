@@ -290,6 +290,7 @@ CApp.prototype.checkCookies = function ()
 {
 	$.cookie('checkCookie', '1', { path: '/' });
 	var bResult = $.cookie('checkCookie') === '1';
+	
 	if (!bResult)
 	{
 		App.Screens.showError(Utils.i18n('WARNING/COOKIES_DISABLED'), false, true);
@@ -301,7 +302,8 @@ CApp.prototype.checkCookies = function ()
 CApp.prototype.getCommonRequestParameters = function ()
 {
 	var oParameters = {
-		AuthToken: Storage.getData('AuthToken')
+		AuthToken: Storage.getData('AuthToken'),
+		Token: UserSettings.CsrfToken
 	};
 	
 	if (UserSettings.TenantHash)
