@@ -8,7 +8,7 @@ class AuthModule extends AApiModule
 	public function IsAuth()
 	{
 		$mResult = false;
-		$oAccount = $this->getAccountFromParam(false);
+		$oAccount = $this->getDefaultAccountFromParam(false);
 		if ($oAccount) {
 			
 			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
@@ -177,7 +177,7 @@ class AuthModule extends AApiModule
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
-		$oAccount = $this->getAccountFromParam(false);
+		$oAccount = $this->getDefaultAccountFromParam(false);
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 

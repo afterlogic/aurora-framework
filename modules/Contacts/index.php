@@ -233,6 +233,21 @@ class ContactsModule extends AApiModule
 		return false;
 	}	
 	
+	/**
+	 * @return array
+	 */
+	public function GetContact()
+	{
+		$sStorage = $this->getParamValue('Storage', 'personal');
+		$sMethod = 'Get' . ucfirst($sStorage) . 'Contact';
+		if (method_exists($this, $sMethod))
+		{
+			return call_user_func(array($this, $sMethod));
+		}
+		
+		return false;
+	}	
+
 	public function GetAllContacts()
 	{
 		$this->setParamValue('All', '1');
@@ -408,26 +423,51 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetContact()
+	public function GetGlobalContact()
 	{
 		$oContact = false;
 		$oAccount = $this->getDefaultAccountFromParam();
+		$sContactId = (string) $this->getParamValue('ContactId', '');
+		
+		if ($this->oApiCapabilityManager->isGlobalContactsSupported($oAccount)) {
 
-		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		{
-			$sContactId = (string) $this->getParamValue('ContactId', '');
-			$bSharedToAll = '1' === (string) $this->getParamValue('SharedToAll', '0');
-			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+			$oApiGlobalContacts = $this->GetManager('global');
+			$oContact = $oApiGlobalContacts->getContactById($oAccount, $sContactId);
 
-			$oContact = $this->oApiContactsManager->getContactById($oAccount->IdUser, $sContactId, false, $iTenantId);
-		}
-		else
-		{
+		} else {
+
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
 		}
 
 		return $oContact;
 	}	
+	
+	public function GetPersonalContact()
+	{
+		$oContact = false;
+		$oAccount = $this->getDefaultAccountFromParam();
+		$sContactId = (string) $this->getParamValue('ContactId', '');
+
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount)) {
+
+			$bSharedToAll = '1' === (string) $this->getParamValue('SharedToAll', '0');
+			$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+
+			$oContact = $this->oApiContactsManager->getContactById($oAccount->IdUser, $sContactId, false, $iTenantId);
+		} else {
+
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+		}
+		
+		return $oContact;
+	}
+	
+	public function GetSharedContact()
+	{
+		$this->setParamValue('SharedToAll', '1');
+		return $this->GetPersonalContact();
+	}
+	
 	
 	public function DownloadContactsAsCSV()
 	{
@@ -449,16 +489,16 @@ class ContactsModule extends AApiModule
 		
 		$sEmail = (string) $this->getParamValue('Email', '');
 
-		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		{
+		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount)) {
+			
 			$oContact = $this->oApiContactsManager->getContactByEmail($oAccount->IdUser, $sEmail);
 		}
 
-		if (!$oContact && $this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
-		{
+		if (!$oContact && $this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true)) {
+			
 			$oApiGContacts = $this->GetManager('global');
-			if ($oApiGContacts)
-			{
+			if ($oApiGContacts) {
+				
 				$oContact = $oApiGContacts->getContactByEmail($oAccount, $sEmail);
 			}
 		}
@@ -641,7 +681,7 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateSharedToAll()
+	public function UpdateShared()
 	{
 		$oAccount = $this->getDefaultAccountFromParam();
 		
@@ -700,7 +740,7 @@ class ContactsModule extends AApiModule
 	 */
 	public function AddContactsFromFile()
 	{
-		$oAccount = $this->getAccountFromParam();
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		$mResult = false;
 
@@ -826,7 +866,7 @@ class ContactsModule extends AApiModule
 	 */
 	public function AddContactsToGroup()
 	{
-		$oAccount = $this->getAccountFromParam();
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
@@ -893,7 +933,7 @@ class ContactsModule extends AApiModule
 	 */
 	public function RemoveContactsFromGroup()
 	{
-		$oAccount = $this->getAccountFromParam();
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount) ||
 			$this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))

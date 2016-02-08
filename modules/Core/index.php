@@ -21,7 +21,7 @@ class CoreModule extends AApiModule
 	 */
 	public function DoServerInitializations()
 	{
-		$oAccount = $this->getAccountFromParam();
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		$bResult = false;
 

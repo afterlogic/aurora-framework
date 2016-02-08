@@ -401,7 +401,7 @@ class CalendarModule extends AApiModule
 	 */
 	public function AddEventsFromFile()
 	{
-		$oAccount = $this->getAccountFromParam();
+		$oAccount = $this->getDefaultAccountFromParam();
 
 		$mResult = false;
 

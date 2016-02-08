@@ -238,7 +238,7 @@ class CApiContactsBaseSabredavStorage extends CApiContactsBaseStorage
 		{
 			if (!isset($this->aAddressBooksCache[$iUserId][$sName]))
 			{
-				$oUserAddressBooks = new \Afterlogic\DAV\CardDAV\UserAddressBooks(
+				$oUserAddressBooks = new \Afterlogic\DAV\CardDAV\AddressBookHome(
 					\Afterlogic\DAV\Backend::Carddav(), $this->Principal);
 
 				if ($oUserAddressBooks->childExists($sName))
