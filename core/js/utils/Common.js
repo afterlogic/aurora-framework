@@ -41,6 +41,10 @@ Utils.createCommand = function (oContext, fExecute, mCanExecute)
 	}
 	else
 	{
+		if (mCanExecute === undefined)
+		{
+			mCanExecute = true;
+		}
 		fResult.canExecute = ko.computed(function () {
 			return fResult.enabled() && !!mCanExecute;
 		});
