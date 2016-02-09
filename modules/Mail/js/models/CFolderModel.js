@@ -77,8 +77,6 @@ function CFolderModel(iAccountId)
 	
 	this.hasChanges = ko.observable(false);
 	
-	this.unseenFilterCommand = Utils.createCommand(this, this.executeUnseenFilter, this.showUnseenMessages);
-	
 	this.relevantInformationLastMoment = null;
 }
 
@@ -1096,13 +1094,22 @@ CFolderModel.prototype.onAccordion = function (oFolder, oEvent)
 	this.requireMailCache();
 	MailCache.countMessages(this);
 	
-	oEvent.stopPropagation();
+	if (oEvent)
+	{
+		oEvent.stopPropagation();
+	}
 };
 
 CFolderModel.prototype.executeUnseenFilter = function ()
 {
 	var bNotChanged = false;
-	if (this.showUnseenMessages())
+	
+	if (this.messageCountToShow() > this.unseenMessageCount())
+	{
+		this.onAccordion();
+	}
+	
+	if (this.showUnseenMessages() && this.unseenMessageCount() > 0)
 	{
 		this.requireMailCache();
 		MailCache.waitForUnseenMessages(true);
@@ -1114,6 +1121,7 @@ CFolderModel.prototype.executeUnseenFilter = function ()
 		}
 		return false;
 	}
+	
 	return true;
 };
 

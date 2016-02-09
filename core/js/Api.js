@@ -23,7 +23,7 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 	switch (iErrorCode)
 	{
 		default:
-			sResultError = sDefaultError;
+			sResultError = sDefaultError || TextUtils.i18n('WARNING/UNKNOWN_ERROR');
 			break;
 		case Enums.Errors.AuthError:
 			sResultError = TextUtils.i18n('WARNING/LOGIN_PASS_INCORRECT');

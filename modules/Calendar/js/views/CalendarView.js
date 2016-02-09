@@ -1360,7 +1360,7 @@ CCalendarView.prototype.onDeleteCalendarResponse = function (oResponse, oRequest
 		{
 			if (this.calendars.currentCal().id === oCalendar.id)
 			{
-				this.calendars.currentCal(null);
+				this.calendars.pickCurrentCalendar();
 			}
 
 			this.calendars.removeCalendar(oCalendar.id);
@@ -1424,6 +1424,7 @@ CCalendarView.prototype.onEventResizeStop = function ()
 
 CCalendarView.prototype.createEventInCurrentCalendar = function ()
 {
+	this.calendars.pickCurrentCalendar();
 	this.createEventToday(this.calendars.currentCal());
 };
 
@@ -1509,9 +1510,8 @@ CCalendarView.prototype.getEventDataFromParams = function (aParameters)
  */
 CCalendarView.prototype.createEventFromGrid = function (oStart, oEnd)
 {
-	var 
-		bAllDay = !oStart.hasTime()
-	;
+	var bAllDay = !oStart.hasTime();
+	this.calendars.pickCurrentCalendar();
 	this.openEventPopup(this.calendars.currentCal(), oStart.local(), oEnd.local(), bAllDay);
 };
 
@@ -1638,7 +1638,7 @@ CCalendarView.prototype.eventAction = function (sMethod, oParameters, fRevertFun
 {
 	var oCalendar = this.calendars.getCalendarById(oParameters.calendarId);
 	
-	if (oCalendar.access() === Enums.CalendarAccess.Read)
+	if (!oCalendar.isEditable())
 	{
 		if (fRevertFunc)
 		{
@@ -1828,7 +1828,7 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 			}
 
 			this.restoreScroll(iScrollTop);
-			this.calendars.currentCal(oCalendar);
+			this.calendars.pickCurrentCalendar();
 		}
 		else if (oRequest.Method === 'DeleteEvent')
 		{
@@ -1850,13 +1850,19 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 			this.restoreScroll(iScrollTop);
 		}
 	}
-	else if (oRequest.Method === 'UpdateEvent' && !oResponse.Result && 1155 === Types.pInt(oResponse.ErrorCode))
+	else if (oRequest.Method === 'UpdateEvent' && !oResponse.Result &&
+		Enums.Errors.NotDisplayedError === Types.pInt(oResponse.ErrorCode))
 	{
 		this.revertFunction = null;
 	}
-	else if (this.revertFunction)
+	else
 	{
-		this.revertFunction();
+		App.Api.showErrorByCode(oResponse, TextUtils.i18n('CALENDAR/ERROR_EVENT_UPDATING'));
+		
+		if (this.revertFunction)
+		{
+			this.revertFunction();
+		}
 	}
 	
 	this.revertFunction = null;

@@ -76,23 +76,23 @@ function CCalendarListModel(oParameters)
 }
 
 /**
- * @param {Object} oPickCalendar
+ * @param {Object=} oPickCalendar
  */
 CCalendarListModel.prototype.pickCurrentCalendar = function (oPickCalendar)
 {
 	var
 		oFirstActiveCal = _.find(this.collection(), function (oCalendar) {
-			return oCalendar.active() && (oCalendar.access() === Enums.CalendarAccess.Write);
+			return oCalendar.active() && oCalendar.isEditable();
 		}, this)
 	;
 	
 	if (!this.currentCal() || !this.currentCal().active())
 	{
-		if (oPickCalendar && oPickCalendar.active())
+		if (oPickCalendar && oPickCalendar.active() && oPickCalendar.isEditable())
 		{
 			this.currentCal(oPickCalendar);
 		}
-		else if (this.defaultCal() && (this.defaultCal().active() || !oFirstActiveCal))
+		else if (this.defaultCal() && (this.defaultCal().active() && this.defaultCal().isEditable() || !oFirstActiveCal))
 		{
 			this.currentCal(this.defaultCal());
 		}

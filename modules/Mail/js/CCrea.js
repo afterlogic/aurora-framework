@@ -251,9 +251,25 @@ CCrea.prototype.start = function (bEditable)
 					break;
 			}
 		}
-		else if (!bAltKey && !bShiftKey && !oEvent.altKey)
+		else if (!bAltKey && !bShiftKey && !bCtrlKey)
 		{
-			if (iKey === Enums.Key.Space || iKey === Enums.Key.Enter)
+			if (iKey === Enums.Key.Del || iKey === Enums.Key.Backspace)
+			{
+				self.editableSave();
+			}
+		}
+	});
+	this.$editableArea.on('keyup', function(oEvent) {
+		var
+			iKey = oEvent.keyCode || oEvent.which || oEvent.charCode || 0,
+			bCtrlKey = oEvent.ctrlKey || oEvent.metaKey,
+			bAltKey =  oEvent.altKey,
+			bShiftKey = oEvent.shiftKey
+		;
+
+		if (!bAltKey && !bShiftKey && !bCtrlKey)
+		{
+			if (iKey === Enums.Key.Space || iKey === Enums.Key.Enter || iKey === Enums.Key.Del || iKey === Enums.Key.Backspace)
 			{
 				self.editableSave();
 			}
@@ -304,7 +320,12 @@ CCrea.prototype.editableSave = function ()
 
 CCrea.prototype.editableUndo = function ()
 {
-	if (this.iUndoRedoPosition === this.aEditableAreaHtml.length - 1)
+	var
+		sEditableHtml = this.$editableArea.html(),
+		oCurrSaved = this.aEditableAreaHtml[this.iUndoRedoPosition],
+		sCurrSaved = oCurrSaved ? oCurrSaved[0] : ''
+	;
+	if (sEditableHtml !== sCurrSaved)
 	{
 		this.editableSave();
 	}

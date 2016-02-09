@@ -732,6 +732,7 @@ CEditEventPopup.prototype.getDisplayedAlarms = function (aMinutes)
 			koAlarm.subscribe(function () {
 				//alarm observable value not actual
 				this.disableAlarms();
+				this.modified = true;
 			}, this);
 
 			if (iMinutes > 0 && iMinutes < 60)

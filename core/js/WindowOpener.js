@@ -88,7 +88,7 @@ module.exports = {
 		});
 		
 		var aDraftUids = _.map(aOpenedWins, function (oWin) {
-			return oWin.App ? oWin.App.MailCache.editedDraftUid() : '';
+			return (oWin.App && (window.location.origin === oWin.location.origin)) ? oWin.App.MailCache.editedDraftUid() : '';
 		});
 		
 		if (Popups.hasOpenedMinimizedPopups())

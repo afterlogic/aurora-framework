@@ -759,7 +759,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 		var
 			oCurrFolder = this.folderList().currentFolder(),
 			bDraftsFolder = oCurrFolder && oCurrFolder.type() === Enums.FolderTypes.Drafts,
-			aOpenedDraftUids = WindowOpener.getOpenedDraftUids(),
+			aOpenedDraftUids = bDraftsFolder && WindowOpener.getOpenedDraftUids(),
 			bTryToDeleteEditedDraft = bDraftsFolder && _.find(aUids, _.bind(function (sUid) {
 				return -1 !== $.inArray(sUid, aOpenedDraftUids);
 			}, this)),

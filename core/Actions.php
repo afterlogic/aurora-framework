@@ -2581,7 +2581,19 @@ class Actions
 			if (isset($aValues['Iframed'], $aValues['MimeType'], $aValues['FileName']) && $aValues['Iframed'] &&
 				\CApi::isIframedMimeTypeSupported($aValues['MimeType'], $aValues['FileName']))
 			{
-				$oAccount = $this->getAccountFromParam(false);
+				$sHash = isset($aParts[5]) ? (string) $aParts[5] : '';
+				$oMin = \CApi::Manager('min');
+				$mMin = $oMin->getMinByHash($sHash);
+				$oAccount = null;
+				if (!empty($mMin['__hash__']))
+				{
+					$oAccount = $this->oApiUsers->getAccountById($mMin['Account']);
+				}
+				else
+				{
+					$oAccount = $this->getAccountFromParam(false);
+				}
+				
 				if ($oAccount)
 				{
 					$sNewUrl = '';
@@ -2589,8 +2601,8 @@ class Actions
 					$sResultUrl = '';
 					
 					$aSubParts = \CApi::DecodeKeyValues($aParts[3]);
-					if (isset($aSubParts['Iframed']) && (int) $aParts[2] === (int) $oAccount->IdAccount &&
-						0 < $oAccount->IdAccount)
+
+					if (isset($aSubParts['Iframed']))
 					{
 						$aSubParts['Time'] = \time();
 						$sNewHash = \CApi::EncodeKeyValues($aSubParts);

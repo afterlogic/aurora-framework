@@ -15,6 +15,7 @@ var
  * @enum {number}
  */
 Enums.Key = {
+	'Backspace': 8,
 	'Tab': 9,
 	'Enter': 13,
 	'Shift': 16,

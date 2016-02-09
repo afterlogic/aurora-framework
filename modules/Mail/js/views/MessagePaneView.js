@@ -545,60 +545,47 @@ CMessagePaneView.prototype.setMessageBody = function ()
 		var
 			oMessage = this.currentMessage(),
 			sText = oMessage.text(),
-			$body = $(this.domTextBody())
+			$body = $(this.domTextBody()),
+			oDom = null,
+			sHtml = '',
+			sLen = sText.length,
+			sMaxLen = 5000000,
+			aCollapsedStatuses = []
 		;
-		
-		$body.empty();
-		
+
 		this.textBody(sText);
 		
-		_.defer(_.bind(function () {
-			if (this.currentMessage())
+		if ($body.data('displayed-message-uid') === oMessage.uid())
+		{
+			aCollapsedStatuses = this.getBlockquotesStatus();
+		}
+
+		$body.empty();
+
+		if (oMessage.isPlain() || sLen > sMaxLen)
+		{
+			$body.html(sText);
+
+			this.visiblePicturesControl(false);
+		}
+		else
+		{
+			oDom = oMessage.getDomText();
+			sHtml = oDom.length > 0 ? oDom.html() : '';
+
+			$body.append(sHtml);
+
+			this.visiblePicturesControl(oMessage.hasExternals() && !oMessage.isExternalsAlwaysShown());
+			this.visibleShowPicturesLink(!oMessage.isExternalsShown());
+
+			if (!TextUtils.htmlStartsWithBlockquote(sHtml))
 			{
-				var
-					oMessage = this.currentMessage(),
-					sText = oMessage.text(),
-					oDom = null,
-					sHtml = '',
-					sLen = sText.length,
-					sMaxLen = 5000000,
-					aCollapsedStatuses = []
-				;
-				
-				if ($body.data('displayed-message-uid') === oMessage.uid())
-				{
-					aCollapsedStatuses = this.getBlockquotesStatus();
-				}
-
-				$body.empty();
-				
-				if (oMessage.isPlain() || sLen > sMaxLen)
-				{
-					$body.html(sText);
-					
-					this.visiblePicturesControl(false);
-				}
-				else
-				{
-					oDom = oMessage.getDomText();
-					
-					sHtml = oDom.length > 0 ? oDom.html() : '';
-					
-					$body.append(sHtml);
-
-					this.visiblePicturesControl(oMessage.hasExternals() && !oMessage.isExternalsAlwaysShown());
-					this.visibleShowPicturesLink(!oMessage.isExternalsShown());
-
-					if (!TextUtils.htmlStartsWithBlockquote(sHtml))
-					{
-						this.doHidingBlockquotes(aCollapsedStatuses);
-					}
-				}
-				
-				$body.data('displayed-message-uid', oMessage.uid());
-				this.displayedMessageUid(oMessage.uid());
+				this.doHidingBlockquotes(aCollapsedStatuses);
 			}
-		}, this));
+		}
+
+		$body.data('displayed-message-uid', oMessage.uid());
+		this.displayedMessageUid(oMessage.uid());
 	}
 };
 

@@ -361,13 +361,14 @@ CAccountsSettingsPaneView.prototype.populate = function ()
 		oAccount = AccountList.getEdited(),
 		bAllowMail = !!oAccount && oAccount.allowMail(),
 		bDefault = !!oAccount && oAccount.isDefault(),
+		bLinked = !!oAccount && oAccount.isLinked(),
 		bChangePass = !!oAccount && oAccount.extensionExists('AllowChangePasswordExtension'),
-		bCanBeRemoved =  !!oAccount && oAccount.canBeRemoved() && !oAccount.isDefault()
+		bCanBeRemoved = !!oAccount && oAccount.canBeRemoved() && !oAccount.isDefault()
 	;
 	
 	if (oAccount)
 	{
-		this.allowProperties((!bDefault || bDefault && Settings.AllowChangeEmailSettings) && bAllowMail || !Settings.AllowIdentities || bChangePass || bCanBeRemoved);
+		this.allowProperties((!bDefault || bDefault && !bLinked && Settings.AllowUsersChangeEmailSettings) && bAllowMail || !Settings.AllowIdentities || bChangePass || bCanBeRemoved);
 		this.allowFolders(bAllowMail);
 		this.allowForward(bAllowMail && oAccount.extensionExists('AllowForwardExtension') && oAccount.forward());
 		this.allowAutoresponder(bAllowMail && oAccount.extensionExists('AllowAutoresponderExtension') && oAccount.autoresponder());
