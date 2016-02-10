@@ -12,17 +12,17 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @type string
 	 */
-	const AUTH_KEY = 'aurora-auth';
-
-	/**
-	 * @type string
-	 */
 	const MOBILE_KEY = 'aurora-mobile';
 
 	/**
 	 * @type string
 	 */
 	const AUTH_HD_KEY = 'aurora-hd-auth';
+
+	/**
+	 * @type string
+	 */
+	const AUTH_TOKEN_KEY = 'AuthToken';
 
 	/**
 	 * @type string
@@ -348,9 +348,6 @@ class CApiIntegratorManager extends AApiManager
 		if (strlen($sAuthToken) !== 0) {
 			
 			$sKey = \CApi::Cacher()->get('AUTHTOKEN:'.$sAuthToken);
-		} else {
-			
-			$sKey = empty($_COOKIE[self::AUTH_KEY]) ? '' : $_COOKIE[self::AUTH_KEY];
 		}
 		if (!empty($sKey) && is_string($sKey)) {
 			
@@ -359,11 +356,7 @@ class CApiIntegratorManager extends AApiManager
 				'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id']) && 
 					is_int($aAccountHashTable['id']) && isset($aAccountHashTable['email'])) {
 				
-				$oAccount = \CApi::GetCoreManager('users')->getAccountByEmail($aAccountHashTable['email']);
-				if ($oAccount && $oAccount->IdUser == $aAccountHashTable['id']) {
-					
 					$iUserId = $aAccountHashTable['id'];
-				}
 			}
 			CApi::Plugin()->RunHook('api-integrator-get-loggined-user-id', array(&$iUserId));
 		}
@@ -487,7 +480,7 @@ class CApiIntegratorManager extends AApiManager
 			$sKey = \CApi::Cacher()->Delete('AUTHTOKEN:'.$sAuthToken);
 		}
 		
-		@setcookie(self::AUTH_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
+		@setcookie(self::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
 		@setcookie(self::TOKEN_LANGUAGE, '', 0, $this->getCookiePath());
 		return true;
 	}
@@ -616,8 +609,6 @@ class CApiIntegratorManager extends AApiManager
 		
 		$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
 		$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
-		$_COOKIE[self::AUTH_KEY] = $sAccountHashTable;
-		@setcookie(self::AUTH_KEY, $sAccountHashTable, $iTime, $this->getCookiePath(), null, null, true);
 		
 		$sAuthToken = \md5($oAccount->IdUser.$oAccount->IncomingMailLogin.\microtime(true).\rand(10000, 99999));
 		
@@ -682,23 +673,6 @@ class CApiIntegratorManager extends AApiManager
 
 	public function resetCookies()
 	{
-		$sAccountHash = !empty($_COOKIE[self::AUTH_KEY]) ? $_COOKIE[self::AUTH_KEY] : '';
-		if (0 < strlen($sAccountHash))
-		{
-			$aAccountHashTable = CApi::DecodeKeyValues($sAccountHash);
-			if (isset($aAccountHashTable['sign-me']) && $aAccountHashTable['sign-me'])
-			{
-				@setcookie(self::AUTH_KEY, CApi::EncodeKeyValues($aAccountHashTable),
-					time() + 60 * 60 * 24 * 30, $this->getCookiePath(), null, null, true);
-			}
-
-			$sToken = !empty($_COOKIE[self::TOKEN_KEY]) ? $_COOKIE[self::TOKEN_KEY] : null;
-			if (null !== $sToken)
-			{
-				@setcookie(self::TOKEN_KEY, $sToken, time() + 60 * 60 * 24 * 30, $this->getCookiePath(), null, null, true);
-			}
-		}
-
 		$sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
 		if (0 < strlen($sHelpdeskHash))
 		{
@@ -1868,9 +1842,9 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return string
 	 */
-	private function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+	private function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAccessToken = '')
 	{
-		return '<script>window.pSevenAppData='.@json_encode($this->appData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash)).';</script>';
+		return '<script>window.pSevenAppData='.@json_encode($this->appData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $sAccessToken)).';</script>';
 	}
 
 	/**
@@ -2072,6 +2046,8 @@ class CApiIntegratorManager extends AApiManager
 		
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 
+		$sAccessToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
+		
 		return '<div class="pSevenMain">
 	<div id="pSevenContent">
 		<div class="screens"></div>
@@ -2081,16 +2057,11 @@ class CApiIntegratorManager extends AApiManager
 '<div>'.
 $this->compileTemplates().
 $this->compileLanguage($sLanguage).
-$this->compileAppData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash).
+$this->compileAppData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $sAccessToken).
 '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
 	(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
 '</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'
 		;
-	}
-	
-	public static function getAuthKey()
-	{
-		return self::AUTH_KEY;
 	}
 	
 }

@@ -860,15 +860,7 @@ abstract class AApiModule
 		if (0 < $iUserId) {
 			
 			$oApiUsers = \CApi::GetCoreManager('users');
-			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
-			if (0 < $iAccountId) {
-				
-				$oAccount = $oApiUsers->getAccountById($iAccountId);
-				if ($oAccount instanceof \CAccount && !$oAccount->IsDisabled) {
-					
-					$oResult = $oAccount;
-				}
-			}
+			$oResult = $oApiUsers->getDefaultAccount($iUserId);
 		}
 
 		return $oResult;

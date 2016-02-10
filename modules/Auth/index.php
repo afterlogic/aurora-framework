@@ -28,6 +28,7 @@ class AuthModule extends AApiModule
 			// extensions
 			if ($oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) &&
 				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe)) {
+				
 				$oAccount->enableExtension(\CAccount::DisableManageSubscribe);
 			}
 
