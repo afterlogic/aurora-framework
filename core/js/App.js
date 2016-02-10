@@ -163,9 +163,7 @@ CApp.prototype.init = function ()
 	{
 		require('core/js/Prefetcher.js');
 	}
-	
-	Storage.setData('AuthToken', Storage.getData('AuthToken'));
-	
+
 	this.useGoogleAnalytics();
 
 	if (!this.bMobile)
@@ -302,6 +300,7 @@ CApp.prototype.checkCookies = function ()
 CApp.prototype.getCommonRequestParameters = function ()
 {
 	var oParameters = {
+		AuthToken: $.cookie('AuthToken'),
 		Token: UserSettings.CsrfToken
 	};
 	

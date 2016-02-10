@@ -23,21 +23,13 @@ module.exports = function (oSettings) {
 		},
 		logout: function (iLastErrorCode, fOnLogoutResponse, oContext)
 		{
-			var oParameters = {'AuthToken': Storage.getData('AuthToken')};
-			
-			if (iLastErrorCode)
-			{
-				_.extendOwn(oParameters, {'LastErrorCode': iLastErrorCode});
-			}
-			
-			Ajax.send('Logout', oParameters, fOnLogoutResponse, oContext);
+			Ajax.send('Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, fOnLogoutResponse, oContext);
 		},
 		beforeAppRunning: function (bAuth) {
 			if (!bAuth && Types.isNonEmptyString(Settings.CustomLoginUrl))
 			{
 				window.location.href = Settings.CustomLoginUrl;
 			}
-			Storage.setData('AuthToken', Storage.getData('AuthToken'));
 		}
 	};
 };
