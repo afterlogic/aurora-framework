@@ -572,7 +572,6 @@ abstract class AApiModule
 					{
 						$aParameters = array_merge($aParameters, 
 							array(
-								'AccountID' => $this->oHttp->GetPost('AccountID', ''),
 								'FileData' => $_FILES[$sInputName],
 								'IsExt' => '1' === (string) $this->oHttp->GetPost('IsExt', '0') ? '1' : '0',
 								'TenantHash' => (string) $this->oHttp->GetPost('TenantHash', ''),
@@ -615,6 +614,10 @@ abstract class AApiModule
 		if (0 < strlen($sError))
 		{
 			$aResponseItem['Error'] = $sError;
+		}
+		else 
+		{
+			$aResponseItem = $this->DefaultResponse($sMethod, $aResponseItem);
 		}
 
 		@ob_get_clean();

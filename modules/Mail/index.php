@@ -985,7 +985,7 @@ class MailModule extends AApiModule
 		$oIdentity = null;
 		if (!empty($sIdIdentity) && is_numeric($sIdIdentity) && 0 < (int) $sIdIdentity)
 		{
-			$oApiUsers = $this->GetManager('users');
+			$oApiUsers = \CApi::GetCoreManager('users');
 			$oIdentity = $oApiUsers->getIdentity((int) $sIdIdentity);
 		}
 
@@ -1411,6 +1411,81 @@ class MailModule extends AApiModule
 				{
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
 				}
+			}
+		}
+		else
+		{
+			$sError = 'auth';
+		}
+
+		if (0 < strlen($sError))
+		{
+			$aResponse['Error'] = $sError;
+		}
+
+		return $aResponse;
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function UploadAttachment()
+	{
+		$oAccount = $this->getAccountFromParam();
+
+		$oSettings =& \CApi::GetSettings();
+		$aFileData = $this->getParamValue('FileData', null);
+
+		$iSizeLimit = !!$oSettings->GetConf('WebMail/EnableAttachmentSizeLimit', false) ?
+			(int) $oSettings->GetConf('WebMail/AttachmentSizeLimit', 0) : 0;
+
+		$sError = '';
+		$aResponse = array();
+
+		if ($oAccount)
+		{
+			if (is_array($aFileData))
+			{
+				if (0 < $iSizeLimit && $iSizeLimit < (int) $aFileData['size'])
+				{
+					$sError = 'size';
+				}
+				else
+				{
+					$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
+
+					$sSavedName = 'upload-post-'.md5($aFileData['name'].$aFileData['tmp_name']);
+					if ($oApiFileCacheManager->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name']))
+					{
+						$sUploadName = $aFileData['name'];
+						$iSize = $aFileData['size'];
+						$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
+
+						$bIframed = \CApi::isIframedMimeTypeSupported($sMimeType, $sUploadName);
+						$aResponse['Attachment'] = array(
+							'Name' => $sUploadName,
+							'TempName' => $sSavedName,
+							'MimeType' => $sMimeType,
+							'Size' =>  (int) $iSize,
+							'Iframed' => $bIframed,
+							'Hash' => \CApi::EncodeKeyValues(array(
+								'TempFile' => true,
+								'AccountID' => $oAccount->IdAccount,
+								'Iframed' => $bIframed,
+								'Name' => $sUploadName,
+								'TempName' => $sSavedName
+							))
+						);
+					}
+					else
+					{
+						$sError = 'unknown';
+					}
+				}
+			}
+			else
+			{
+				$sError = 'unknown';
 			}
 		}
 		else

@@ -215,7 +215,7 @@ class FilesModule extends AApiModule
 		
 		return $aResponse;
 	}
-
+	
 	public function DownloadFile()
 	{
 		return $this->GetRawFile(true);
