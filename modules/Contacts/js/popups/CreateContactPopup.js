@@ -9,13 +9,16 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
 	Routing = require('core/js/Routing.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	
+	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
 	
 	Ajax = require('modules/Contacts/js/Ajax.js'),
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
+	
 	HeaderItemView = require('modules/Contacts/js/views/HeaderItemView.js')
 ;
 
@@ -109,7 +112,7 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/CREATING_ACCOUNT_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 	}
 	else
 	{

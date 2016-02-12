@@ -42,10 +42,10 @@ function CAccountPropertiesPaneView()
 	this.email = ko.observable('');
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_edit_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_INCOMING_MAIL'));
+	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_edit_incoming', TextUtils.i18n('MAIL/LABEL_IMAP_SERVER'));
 	this.outgoingMailLogin = ko.observable('');
 	this.outgoingMailPassword = ko.observable('');
-	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_edit_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_edit_outgoing', TextUtils.i18n('MAIL/LABEL_SMTP_SERVER'), this.oIncoming.server);
 
 	this.isAllowMail = ko.observable(true);
 	this.allowChangePassword = ko.observable(false);
@@ -169,7 +169,7 @@ CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_SAVING_SETTINGS_FAILED'));
 	}
 	else
 	{
@@ -182,7 +182,7 @@ CAccountPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest)
 		if (oAccount)
 		{
 			oAccount.updateExtended(oParameters);
-			Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
+			Screens.showReport(TextUtils.i18n('MAIL/REPORT_SETTINGS_UPDATE_SUCCESS'));
 		}
 	}
 };

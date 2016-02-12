@@ -50,7 +50,7 @@
 	 'scrollToTopTrigger': scrollToTopTrigger}">
 	<div class="thread_content scroll-inner">
 		<div class="notification" data-bind="visible: loadingViewPane, i18n: 'text'" 
-			 data-i18n="HELPDESK/INFO_LOADING"></div>
+			 data-i18n="CORE/INFO_LOADING"></div>
 		<div class="link more" data-bind="visible: hasMorePosts() && !loadingMoreMessages() && !loadingViewPane(), 
 			 click: commandGetOlderPosts, i18n: 'text'" data-i18n="HELPDESK/THREAD_MORE_MESSAGES"></div>
 		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: 'text'"
@@ -72,10 +72,7 @@
 				</div>
 			</div>
 		</div>
-		<!--<div class="buttons" data-bind="visible: posts().length > 0">-->
 		<div class="buttons" data-bind="css: {'no_posts': posts().length === 0}">
-			<!--<span class="button new_post" data-bind="click: function () { iHaveMoreToSay(); },
-				  visible: isQuickReplyHidden(), i18n: 'text'" data-i18n="HELPDESK/THREAD_BUTTON_SAY_MORE"></span>-->
 			<span class="button new_post" data-bind="click: function () { iHaveMoreToSay(); },
 				  visible: !isQuickReplyActive(), i18n: 'text'" data-i18n="HELPDESK/THREAD_BUTTON_SAY_MORE"></span>
 			<span class="button resolve" data-bind="command: closeCommand, i18n: 'text', visible: state() !== Enums.HelpdeskThreadStates.Resolved"

@@ -43,7 +43,7 @@ function CContactsView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/CONTACTS'));
+	this.browserTitle = ko.observable(TextUtils.i18n('CONTACTS/BROWSER_TITLE'));
 	
 	this.contactCount = ko.observable(0);
 	this.uploaderArea = ko.observable(null);
@@ -1564,7 +1564,7 @@ CContactsView.prototype.onContactUploadComplete = function (sFileUid, bResponseR
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+			Screens.showError(TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 		}
 	}
 };

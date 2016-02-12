@@ -16,7 +16,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Files/js/views/FilesSettingsPaneView.js'); }, 'cloud-storage', TextUtils.i18n('SETTINGS/TAB_CLOUD_STORAGE')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Files/js/views/FilesSettingsPaneView.js'); }, 'cloud-storage', TextUtils.i18n('FILES/SETTINGS_TABNAME')]);
 		},
 		screens: {
 			'main': function () {
@@ -30,7 +30,7 @@ module.exports = function (oSettings) {
 				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 			;
 			
-			HeaderItemView = new CHeaderItemView(TextUtils.i18n('HEADER/FILESTORAGE'));
+			HeaderItemView = new CHeaderItemView(TextUtils.i18n('FILES/HEADER_TABNAME'));
 			
 			return HeaderItemView;
 		},

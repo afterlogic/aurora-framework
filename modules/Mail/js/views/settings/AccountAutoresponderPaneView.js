@@ -96,7 +96,7 @@ CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oReque
 
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_SAVING_SETTINGS_FAILED'));
 	}
 	else
 	{
@@ -104,7 +104,7 @@ CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oReque
 		
 		this.updateEditableValues(oParameters);
 		
-		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_AUTORESPONDER_SUCCESS_REPORT'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_AUTORESPONDER_UPDATE_SUCCESS'));
 	}
 };
 

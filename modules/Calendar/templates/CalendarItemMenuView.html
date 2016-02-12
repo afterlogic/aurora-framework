@@ -3,8 +3,6 @@
 		<span class="dropdown_helper">
 			<span class="dropdown_arrow"><span></span></span>
 			<span class="dropdown_content" data-bind="style: {backgroundColor: color}">
-				<!--span class="item" data-i18n="CALENDAR/ACTION_CREATE_EVENT" data-bind="visible: (access !== 2), i18n: 'text', click: function (item) {$parent.createEventInCalendar(id);}"></span>
-				<span class="item" data-i18n="CALENDAR/ACTION_HIDE_OTHER" data-bind="i18n: 'text', click: function () {$parent.calendars.hideOtherCalendars(id);}"></span-->
 				<span class="item" data-i18n="CALENDAR/ACTION_EDIT_CALENDAR" data-bind="visible: isEditable(), i18n: 'text', click: function (oItem) {$parent.openUpdateCalendarForm(oItem);}"></span>
 				<span class="item" data-i18n="CALENDAR/ACTION_IMPORT_CALENDAR" data-bind="visible: isEditable(), i18n: 'text', click: function (oItem) {$parent.openImportCalendarForm(oItem);}"></span>
 				<span class="item" data-i18n="CALENDAR/ACTION_GETLINK_CALENDAR" data-bind="i18n: 'text', visible: (!isShared() || isOwner()), click: function (oItem, eEvent) {$parent.openGetLinkCalendarForm(oItem, eEvent);}"></span>

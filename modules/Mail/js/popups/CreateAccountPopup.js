@@ -32,11 +32,11 @@ function CCreateAccountPopup()
 	this.incomingMailLogin = ko.observable('');
 	this.incomingLoginFocused = ko.observable(false);
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_create_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_INCOMING_MAIL'));
+	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_create_incoming', TextUtils.i18n('MAIL/LABEL_IMAP_SERVER'));
 	
 	this.outgoingMailLogin = ko.observable('');
 	this.outgoingMailPassword = ko.observable('');
-	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_create_outgoing', TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_OUTGOING_MAIL'), this.oIncoming.server);
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_create_outgoing', TextUtils.i18n('MAIL/LABEL_SMTP_SERVER'), this.oIncoming.server);
 	
 	this.useSmtpAuthentication = ko.observable(true);
 	this.friendlyNameFocus = ko.observable(false);
@@ -226,7 +226,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/CREATING_ACCOUNT_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/CREATING_ACCOUNT_ERROR'));
 	}
 	else
 	{

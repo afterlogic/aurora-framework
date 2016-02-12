@@ -58,7 +58,7 @@ CCreateFolderPopup.prototype.PopupTemplate = 'Mail_Settings_CreateFolderPopup';
  */
 CCreateFolderPopup.prototype.onShow = function (fCallback)
 {
-	this.options(MailCache.editedFolderList().getOptions(TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_NO_PARENT'), true, false, true));
+	this.options(MailCache.editedFolderList().getOptions(TextUtils.i18n('MAIL/OPTION_NO_PARENT_FOLDER'), true, false, true));
 	
 	this.fCallback = fCallback;
 	this.folderName('');
@@ -92,7 +92,7 @@ CCreateFolderPopup.prototype.onCreateFolderResponse = function (oResponse, oRequ
 	if (!oResponse.Result)
 	{
 		this.isCreating(false);
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_CANT_CREATE_FOLDER'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_CREATE_FOLDER'));
 	}
 	else
 	{

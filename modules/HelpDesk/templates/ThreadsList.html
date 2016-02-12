@@ -7,7 +7,7 @@
 			</span>
 			<span class="search_block">
 				<span class="input" data-bind="css: {'focus': isSearchFocused}">
-					<span class="icon search" data-i18n="HEPLDESK/BUTTON_SEARCH" data-bind="click: onSearch, i18n: 'text'"></span>
+					<span class="icon search" data-i18n="CORE/BUTTON_SEARCH" data-bind="click: onSearch, i18n: 'text'"></span>
 					<input class="field" type="text" spellcheck="false" data-bind="value: search, onEnter: onSearch, hasfocus: isSearchFocused" />
 				</span>
 			</span>
@@ -22,7 +22,7 @@
 	<div class="threads_scroll scroll-inner">
 		<div class="items_list">
 			<span class="list_notification" data-bind="visible: isSearch()">
-				<span class="link" data-i18n="HELPDESK/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearch"></span>
+				<span class="link" data-i18n="CORE/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearch"></span>
 				<span class="description" data-bind="text: searchText"></span>
 			</span>
 			
@@ -48,7 +48,7 @@
 				<img src="http://www.encinitas101.com/wp-content/uploads/2011/06/meditation.jpg" alt="Mountain View" style="width:100px;height:100px">
 				<img src="https://thepracticeoflivingawareness.files.wordpress.com/2013/08/meditation-icon.png" alt="Mountain View" style="width:100px;height:100px">
 				<img src="http://www.kishanshah.com/wp-content/themes/bigbangwp/images/icons/Meditation_iconColor.png" alt="Mountain View" style="width:100px;height:100px">-->
-				<span class="icon meditation">
+				<span class="icon meditation"></span>
 			</span>
 		</div>
 	</div>
@@ -58,4 +58,3 @@
 	<a href="javascript: void(0);" data-bind="css: {'selected': listFilter() === Enums.HelpdeskFilters.All}, click: function () { listFilter(Enums.HelpdeskFilters.All); }, i18n: 'text'" data-i18n="HELPDESK/THREADS_LIST_FILTER_ALL"></a>
 	<a href="javascript: void(0);" data-bind="css: {'selected': listFilter() === Enums.HelpdeskFilters.Open}, click: function () { listFilter(Enums.HelpdeskFilters.Open); }, i18n: 'text'" data-i18n="HELPDESK/THREADS_LIST_FILTER_OPEN"></a>
 </div>
-

@@ -56,7 +56,7 @@ function CComposeView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return AccountList.getEmail() + ' - ' + TextUtils.i18n('TITLE/COMPOSE');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/BROWSER_COMPOSE_TITLE');
 	});
 	
 	var self = this;
@@ -247,7 +247,7 @@ function CComposeView()
 		{
 			self.iUploadAttachmentsTimer = window.setTimeout(function () {
 				self.bUploadStatus = true;
-				Screens.showLoading(TextUtils.i18n('COMPOSE/INFO_ATTACHMENTS_LOADING'));
+				Screens.showLoading(TextUtils.i18n('MAIL/INFO_ATTACHMENTS_LOADING'));
 			}, 4000);
 		}
 		else
@@ -363,14 +363,14 @@ function CComposeView()
 	this.bAllowHeadersCompressing = !bMobileApp;
 
 	this.aHotkeys = [
-		{ value: 'Ctrl+Enter', action: TextUtils.i18n('COMPOSE/HOTKEY_SEND') },
-		{ value: 'Ctrl+S', action: TextUtils.i18n('COMPOSE/HOTKEY_SAVE') },
-		{ value: 'Ctrl+Z', action: TextUtils.i18n('COMPOSE/HOTKEY_UNDO') },
-		{ value: 'Ctrl+Y', action: TextUtils.i18n('COMPOSE/HOTKEY_REDO') },
-		{ value: 'Ctrl+K', action: TextUtils.i18n('COMPOSE/HOTKEY_LINK') },
-		{ value: 'Ctrl+B', action: TextUtils.i18n('COMPOSE/HOTKEY_BOLD') },
-		{ value: 'Ctrl+I', action: TextUtils.i18n('COMPOSE/HOTKEY_ITALIC') },
-		{ value: 'Ctrl+U', action: TextUtils.i18n('COMPOSE/HOTKEY_UNDERLINE') }
+		{ value: 'Ctrl+Enter', action: TextUtils.i18n('MAIL/HOTKEY_SEND') },
+		{ value: 'Ctrl+S', action: TextUtils.i18n('MAIL/HOTKEY_SAVE') },
+		{ value: 'Ctrl+Z', action: TextUtils.i18n('MAIL/HOTKEY_UNDO') },
+		{ value: 'Ctrl+Y', action: TextUtils.i18n('MAIL/HOTKEY_REDO') },
+		{ value: 'Ctrl+K', action: TextUtils.i18n('MAIL/HOTKEY_LINK') },
+		{ value: 'Ctrl+B', action: TextUtils.i18n('MAIL/HOTKEY_BOLD') },
+		{ value: 'Ctrl+I', action: TextUtils.i18n('MAIL/HOTKEY_ITALIC') },
+		{ value: 'Ctrl+U', action: TextUtils.i18n('MAIL/HOTKEY_UNDERLINE') }
 	];
 
 	this.allowFiles = !!SelectFilesPopup;
@@ -387,7 +387,7 @@ function CComposeView()
 	}, this);
 
 	this.saveAndCloseTooltip = ko.computed(function () {
-		return this.hasSomethingToSave() ? TextUtils.i18n('COMPOSE/TOOL_SAVE_CLOSE') : TextUtils.i18n('COMPOSE/TOOL_CLOSE');
+		return this.hasSomethingToSave() ? TextUtils.i18n('MAIL/TOOL_SAVE_CLOSE') : TextUtils.i18n('MAIL/TOOL_CLOSE');
 	}, this);
 
 	if (MainTab)
@@ -765,7 +765,7 @@ CComposeView.prototype.focusAfterFilling = function ()
 CComposeView.prototype.beforeHide = function (fContinueScreenChanging)
 {
 	var
-		sConfirm = TextUtils.i18n('COMPOSE/CONFIRM_DISCARD_CHANGES'),
+		sConfirm = TextUtils.i18n('MAIL/CONFIRM_DISCARD_CHANGES'),
 		fOnConfirm = _.bind(function (bOk) {
 			if (bOk && $.isFunction(fContinueScreenChanging))
 			{
@@ -1217,7 +1217,7 @@ CComposeView.prototype.onMessageUploadAttachmentsResponse = function (oResponse,
 				oAttachment.errorFromUpload();
 			}
 		}, this);
-		Screens.showError(TextUtils.i18n('COMPOSE/UPLOAD_ERROR_REPLY_ATTACHMENTS'));
+		Screens.showError(TextUtils.i18n('MAIL/UPLOAD_ERROR_REPLY_ATTACHMENTS'));
 	}
 };
 
@@ -1565,7 +1565,7 @@ CComposeView.prototype.verifyDataForSending = function ()
 		aCcIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.ccAddr()),
 		aBccIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.bccAddr()),
 		aIncorrect = _.union(aToIncorrect, aCcIncorrect, aBccIncorrect),
-		sWarning = TextUtils.i18n('COMPOSE/WARNING_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
+		sWarning = TextUtils.i18n('MAIL/WARNING_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
 	;
 
 	if (aIncorrect.length > 0)

@@ -6,13 +6,14 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	Browser = require('core/js/Browser.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	ConfirmAnotherMessageComposedPopup = require('modules/Mail/js/popups/ConfirmAnotherMessageComposedPopup.js'),
 	
-	CComposeView = require('modules/Mail/js/views/CComposeView.js'),
-	ConfirmAnotherMessageComposedPopup = require('modules/Mail/js/popups/ConfirmAnotherMessageComposedPopup.js')
+	CComposeView = require('modules/Mail/js/views/CComposeView.js')
 ;
 
 /**
@@ -53,7 +54,7 @@ function CComposePopup()
 	}, this);
 	
 	this.minimizedTitle = ko.computed(function () {
-		return this.subject() || TextUtils.i18n('COMPOSE/TITLE_MINIMIZED_NEW_MESSAGE');
+		return this.subject() || TextUtils.i18n('MAIL/TITLE_MINIMIZED_NEW_MESSAGE');
 	}, this);
 }
 

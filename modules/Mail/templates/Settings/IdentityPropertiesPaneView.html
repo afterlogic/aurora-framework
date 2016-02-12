@@ -25,7 +25,7 @@
 			<input class="value input" spellcheck="false" type="text" data-bind="value: friendlyName, onEnter: save, hasFocus: friendlyNameHasFocus"/>
 		</div>
 		<div class="row">
-			<span class="label" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_EMAIL" data-bind="i18n: 'text'"></span>
+			<span class="label" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
 			<input class="value input" spellcheck="false" type="text" data-bind="value: email, onEnter: save, disable: loyal"/>
 		</div>
 		<div class="row remove_account" data-bind="visible: !bCreate && !loyal()">
@@ -34,8 +34,8 @@
 	</div>
 
 	<div class="buttons">
-		<span class="button save" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
-		<span class="button save" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', visible: isSaving()"></span>
-		<span class="button cancel secondary" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancel, visible: bCreate"></span>
+		<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
+		<span class="button save" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: isSaving()"></span>
+		<span class="button cancel secondary" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancel, visible: bCreate"></span>
 	</div>
 </div>

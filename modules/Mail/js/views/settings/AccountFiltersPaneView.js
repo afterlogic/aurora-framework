@@ -42,25 +42,25 @@ function CAccountFiltersPaneView()
 	this.collection = ko.observableArray([]);
 
 	this.fieldOptions = [
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_FROM'), 'value': 0},
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_TO'), 'value': 1},
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_FIELD_SUBJECT'), 'value': 2}
+		{'text': TextUtils.i18n('MAIL/FILTER_FIELD_FROM'), 'value': 0},
+		{'text': TextUtils.i18n('MAIL/FILTER_FIELD_TO'), 'value': 1},
+		{'text': TextUtils.i18n('MAIL/FILTER_FIELD_SUBJECT'), 'value': 2}
 	];
 
 	this.conditionOptions = [
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_CONTAIN_SUBSTR'), 'value': 0},
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_EQUAL_TO'), 'value': 1},
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_COND_NOT_CONTAIN_SUBSTR'), 'value': 2}
+		{'text': TextUtils.i18n('MAIL/FILTER_COND_CONTAIN'), 'value': 0},
+		{'text': TextUtils.i18n('MAIL/FILTER_COND_EQUAL_TO'), 'value': 1},
+		{'text': TextUtils.i18n('MAIL/FILTER_COND_NOT_CONTAIN'), 'value': 2}
 	];
 
 	this.actionOptions = [
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_ACTION_MOVE'), 'value': 3},
-		{'text': TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_ACTION_DELETE'), 'value': 1}
+		{'text': TextUtils.i18n('MAIL/FILTER_ACTION_MOVE'), 'value': 3},
+		{'text': TextUtils.i18n('MAIL/FILTER_ACTION_DELETE'), 'value': 1}
 	];
 	
 	this.phaseArray = [''];
 	
-	_.each(TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_PHRASE').split(/\s/), function (sItem) {
+	_.each(TextUtils.i18n('MAIL/FILTER_PHRASE').split(/\s/), function (sItem) {
 		var iIndex = this.phaseArray.length - 1;
 		if (sItem.substr(0,1) === '%' || this.phaseArray[iIndex].substr(-1,1) === '%')
 		{
@@ -102,7 +102,7 @@ CAccountFiltersPaneView.prototype.populate = function ()
 
 	if (oFolderList.iAccountId === AccountList.editedId())
 	{
-		aOptionList = oFolderList.getOptions(TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_NOT_SELECTED'), true, true, false, true);
+		aOptionList = oFolderList.getOptions(TextUtils.i18n('MAIL/FOLDERS_OPTION_NOT_SELECTED'), true, true, false, true);
 		this.foldersOptions(aOptionList);
 		this.populateFilters();
 	}
@@ -163,7 +163,7 @@ CAccountFiltersPaneView.prototype.save = function ()
 
 	if (bCantSave)
 	{
-		Screens.showError(TextUtils.i18n('SETTINGS/ERROR_FILTERS_FIELDS_FILL'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_FILTER_FIELDS_EMPTY'));
 	}
 	else
 	{
@@ -309,7 +309,7 @@ CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oR
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+		Screens.showError(TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 	}
 };
 
@@ -325,16 +325,16 @@ CAccountFiltersPaneView.prototype.onAccountSieveFiltersUpdateResponse = function
 	{
 		if (oResponse && oResponse.Result)
 		{
-			Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FILTERS_SUCCESS_REPORT'));
+			Screens.showReport(TextUtils.i18n('MAIL/REPORT_FILTERS_UPDATE_SUCCESS'));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+			Screens.showError(TextUtils.i18n('CORE/ERROR_SAVING_SETTINGS_FAILED'));
 		}
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+		Screens.showError(TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 	}
 };
 

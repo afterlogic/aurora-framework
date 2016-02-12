@@ -16,12 +16,12 @@ var
 
 function CHeaderItemView()
 {
-	CAbstractHeaderItemView.call(this, TextUtils.i18n('TITLE/MAILBOX_TAB'));
+	CAbstractHeaderItemView.call(this, TextUtils.i18n('MAIL/HEADER_TABNAME'));
 	
 	this.unseenCount = Cache.newMessagesCount;
 	
 	this.inactiveTitle = ko.computed(function () {
-		return TextUtils.i18n('TITLE/HAS_UNSEEN_MESSAGES_PLURAL', {'COUNT': this.unseenCount()}, null, this.unseenCount()) + ' - ' + AccountList.getEmail();
+		return TextUtils.i18n('MAIL/HAS_UNSEEN_MESSAGES_PLURAL', {'COUNT': this.unseenCount()}, null, this.unseenCount()) + ' - ' + AccountList.getEmail();
 	}, this);
 	
 	this.accounts = AccountList.collection;

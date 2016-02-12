@@ -18,7 +18,7 @@
 								'declined': status === 2,
 								'tentative': status === 3
 							 }">
-							<span class="control remove" data-bind="visible: $parent.isEditable(), click: $parent.removeGuest.bind($parent), customTooltip: 'CALENDAR/EVENT_GUESTS_REMOVE'"></span>
+							<span class="control remove" data-bind="visible: $parent.isEditable(), click: $parent.removeGuest.bind($parent), customTooltip: 'CORE/BUTTON_REMOVE'"></span>
 							<!--<span class="name" data-bind="css: {'recivedAnim': $parent.recivedAnim}">-->
 							<span class="name" data-bind="css: {'recivedAnim': $parent.recivedAnim() && email === $parent.whomAnimate()}">
 								<span class="icon status" data-bind="customTooltip: function () { return $parent.getAttenderTextStatus(status); }"></span>
@@ -28,17 +28,17 @@
 						</div>
 					</div>
 					<div class="row add_attender" data-bind="visible: isEditable(), css: {'focused': guestEmailFocus()}">
-						<span class="control add" data-bind="customTooltip: 'CALENDAR/EVENT_ADD_GUEST', click: onAddGuestClick"></span>
+						<span class="control add" data-bind="customTooltip: 'CALENDAR/TOOLTIP_EVENT_ADD_GUEST', click: onAddGuestClick"></span>
 						<label for="add_attender_input" class="label placeholder" data-i18n="CALENDAR/LABEL_WEB_EMAIL_OR_NAME" data-bind="i18n: 'text', visible: guestAutocomplete() === ''"></label>
 						<input id="add_attender_input" class="value input" spellcheck="false"  type="text" autocomplete="on" data-bind="value: guestAutocomplete, hasfocus: guestEmailFocus, valueUpdate: ['blur', 'afterkeydown'], autocompleteSimple: {callback: autocompleteCallback.bind($data), dataAccessor: guestAutocompleteItem, deleteAccessor: autocompleteDeleteItem}" />
 					</div>
 					<div class="row" data-bind="visible: isAppointmentButtonsVisible">
 						<div class="buttons">
-							<span class="button" data-i18n="MESSAGE/APPOINTMENT_BUTTON_ACCEPT"
+							<span class="button" data-i18n="CALENDAR/APPOINTMENT_BUTTON_ACCEPT"
 							  data-bind="i18n: 'text', css: {'state': attenderStatus() === Enums.IcalConfigInt.Accepted}, click: function(){ setAppointmentAction(Enums.IcalConfig.Accepted); }"></span>
-							<span class="button" data-i18n="MESSAGE/APPOINTMENT_BUTTON_TENTATIVE"
+							<span class="button" data-i18n="CALENDAR/APPOINTMENT_BUTTON_TENTATIVE"
 							  data-bind="i18n: 'text', css: {'state': attenderStatus() === Enums.IcalConfigInt.Tentative}, click: function(){ setAppointmentAction(Enums.IcalConfig.Tentative); }"></span>
-							<span class="button" data-i18n="MESSAGE/APPOINTMENT_BUTTON_DECLINE"
+							<span class="button" data-i18n="CALENDAR/APPOINTMENT_BUTTON_DECLINE"
 							  data-bind="i18n: 'text', css: {'state': attenderStatus() === Enums.IcalConfigInt.Declined}, click: function(){ setAppointmentAction(Enums.IcalConfig.Declined); }"></span>
 						</div>
 					</div>
@@ -287,8 +287,8 @@
 								<span class="arrow"></span>
 							</span>
 						</div>
-						<span class="button save" data-i18n="CALENDAR/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: isEditable() || isEditableReminders()"></span>
-						<span class="link remove" data-i18n="CALENDAR/LINK_REMOVE" data-bind="i18n: 'text', click: onDeleteClick, visible: isEditForm() && isEditable()"></span>
+						<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: isEditable() || isEditableReminders()"></span>
+						<span class="link remove" data-i18n="CORE/BUTTON_REMOVE" data-bind="i18n: 'text', click: onDeleteClick, visible: isEditForm() && isEditable()"></span>
 					</div>
 
 				</div>

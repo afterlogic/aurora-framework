@@ -4,7 +4,6 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	Storage = require('core/js/Storage.js'),
 	
 	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js')
@@ -101,16 +100,6 @@ CCalendarListModel.prototype.pickCurrentCalendar = function (oPickCalendar)
 			this.currentCal(oFirstActiveCal);
 		}
 	}
-};
-
-/**
- * @param {number} iCalendarId
- */
-CCalendarListModel.prototype.hideOtherCalendars = function (iCalendarId)
-{
-	_.each(this.collection(), function (oCalendar) {
-		oCalendar.active(oCalendar.id === iCalendarId);
-	}, this);
 };
 
 /**

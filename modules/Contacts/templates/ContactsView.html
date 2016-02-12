@@ -5,7 +5,7 @@
 	</label>
 	<span class="search_block">
 		<span class="input" data-bind="css: {'focus': isSearchFocused}">
-			<span class="icon search" data-i18n="CONTACTS/BUTTON_SEARCH" data-bind="i18n: 'text', click: searchSubmitCommand"></span>
+			<span class="icon search" data-i18n="CORE/BUTTON_SEARCH" data-bind="i18n: 'text', click: searchSubmitCommand"></span>
 			<input class="field" type="text" data-bind="value: searchInput, onEnter: searchSubmitCommand, hasfocus: isSearchFocused" />
 		</span>
 	</span>
@@ -19,11 +19,11 @@
 					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_DESC" data-bind="i18n: 'text'"></span>
 				</span>
 				<span class="list_notification" data-bind="visible: !isSearch() && inGroup()">
-					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_IN_GROUP" data-bind="i18n: 'text'"></span>
+					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS" data-bind="i18n: 'text'"></span>
 					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_IN_GROUP_DESC" data-bind="i18n: 'text', visible: bVisibleDragNDropDescription"></span>
 				</span>
 				<span class="list_notification" data-bind="visible: isSearch()">
-					<span class="link" data-i18n="MAILBOX/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearchClick"></span>
+					<span class="link" data-i18n="CORE/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearchClick"></span>
 					<span class="description" data-i18n="CONTACTS/LABEL_NO_CONTACTS_FOUND" data-bind="i18n: 'text'"></span>
 				</span>
 			</div>
@@ -33,7 +33,7 @@
 			</span>
 
 			<span class="list_notification" data-bind="visible: isSearch() && !isEmptyList()">
-				<span class="link" data-i18n="MAILBOX/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearchClick"></span>
+				<span class="link" data-i18n="CORE/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearchClick"></span>
 				<span class="description" data-bind="text: searchText"></span>
 			</span>
 

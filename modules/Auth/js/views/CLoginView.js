@@ -10,7 +10,6 @@ var
 	
 	Api = require('core/js/Api.js'),
 	Browser = require('core/js/Browser.js'),
-	Storage = require('core/js/Storage.js'),
 	
 	Ajax = require('modules/Auth/js/Ajax.js'),
 	Settings = require('modules/Auth/js/Settings.js'),
@@ -68,7 +67,7 @@ function CLoginView()
 	}, this);
 
 	this.signInButtonText = ko.computed(function () {
-		return this.loading() ? TextUtils.i18n('LOGIN/BUTTON_SIGNING_IN') : TextUtils.i18n('LOGIN/BUTTON_SIGN_IN');
+		return this.loading() ? TextUtils.i18n('CORE/BUTTON_SIGNING_IN') : TextUtils.i18n('CORE/BUTTON_SIGN_IN');
 	}, this);
 
 	this.loginCommand = Utils.createCommand(this, this.signIn, this.canBeLogin);
@@ -154,7 +153,7 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 		this.loading(false);
 		this.shake(true);
 		
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/LOGIN_PASS_INCORRECT'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_PASS_INCORRECT'));
 	}
 	else
 	{

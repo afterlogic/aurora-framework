@@ -6,11 +6,11 @@
 
 		<div class="fields">
 			<div class="row">
-				<span class="label" data-i18n="OPENPGP/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
+				<span class="label" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
 				<select class="input" data-bind="options: emails, value: selectedEmail"></select>
 			</div>
 			<div class="row">
-				<span class="label" data-i18n="OPENPGP/LABEL_PASSWORD" data-bind="i18n: 'text'"></span>
+				<span class="label" data-i18n="CORE/LABEL_PASSWORD" data-bind="i18n: 'text'"></span>
 				<input type="password" class="value input" data-bind="value: password" />
 			</div>
 			<div class="row">
@@ -20,7 +20,7 @@
 			<div class="buttons">
 				<span class="button" data-i18n="OPENPGP/BUTTON_GENERATE" data-bind="visible: !process(), i18n: 'text', click: generate"></span>
 				<span class="button" data-i18n="OPENPGP/BUTTON_GENERATING" data-bind="visible: process, i18n: 'text'"></span>
-				<span class="button" data-i18n="MAIN/BUTTON_CANCEL" data-bind="visible: !process(), i18n: 'text', click: cancelPopup"></span>
+				<span class="button" data-i18n="CORE/BUTTON_CANCEL" data-bind="visible: !process(), i18n: 'text', click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

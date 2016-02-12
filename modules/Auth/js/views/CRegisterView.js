@@ -9,9 +9,9 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
+	Ajax = require('core/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
-	Ajax = require('core/js/Ajax.js'),
 	
 	Settings = require('modules/Auth/js/Settings.js')
 ;
@@ -30,7 +30,7 @@ function CRegisterView()
 	this.answer = ko.observable('');
 	this.bAllowQuestionPart = Types.isNonEmptyArray(Settings.RegistrationQuestions);
 	this.visibleYourQuestion = ko.computed(function () {
-		return (this.question() === TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION'));
+		return (this.question() === TextUtils.i18n('AUTH/OPTION_YOUR_QUESTION'));
 	}, this);
 	
 	this.nameFocus = ko.observable(false);
@@ -51,11 +51,11 @@ function CRegisterView()
 	if (this.bAllowQuestionPart)
 	{
 		this.aRegistrationQuestions = _.map(_.union('', _.without(Settings.RegistrationQuestions, '*')), function (sQuestion) {
-			return {text: (sQuestion !== '') ? sQuestion : TextUtils.i18n('LOGIN/LABEL_SELECT_QUESTION'), value: sQuestion};
+			return {text: (sQuestion !== '') ? sQuestion : TextUtils.i18n('AUTH/LABEL_SELECT_QUESTION'), value: sQuestion};
 		});
 		if (_.indexOf(Settings.RegistrationQuestions, '*') !== -1)
 		{
-			this.aRegistrationQuestions.push({text: TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION'), value: TextUtils.i18n('LOGIN/OPTION_YOUR_QUESTION')});
+			this.aRegistrationQuestions.push({text: TextUtils.i18n('AUTH/OPTION_YOUR_QUESTION'), value: TextUtils.i18n('AUTH/OPTION_YOUR_QUESTION')});
 		}
 	}
 	
@@ -76,7 +76,7 @@ function CRegisterView()
 	}, this);
 
 	this.registerButtonText = ko.computed(function () {
-		return this.loading() ? TextUtils.i18n('LOGIN/BUTTON_REGISTERING') : TextUtils.i18n('LOGIN/BUTTON_REGISTER');
+		return this.loading() ? TextUtils.i18n('CORE/BUTTON_REGISTERING') : TextUtils.i18n('CORE/BUTTON_REGISTER');
 	}, this);
 	
 	this.registerCommand = Utils.createCommand(this, this.registerAccount, this.canBeRegister);
@@ -94,7 +94,7 @@ CRegisterView.prototype.registerAccount = function ()
 {
 	if (this.password() !== this.confirmPassword())
 	{
-		Screens.showError(TextUtils.i18n('WARNING/PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
 	}
 	else
 	{
@@ -125,7 +125,7 @@ CRegisterView.prototype.onAccountRegisterResponse = function (oResponse, oReques
 	{
 		this.loading(false);
 		
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/LOGIN_PASS_INCORRECT'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_PASS_INCORRECT'));
 	}
 	else
 	{

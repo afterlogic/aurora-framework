@@ -4,8 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Utils = require('core/js/utils/Common.js'),
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js')
 ;
 
@@ -51,7 +51,7 @@ CInformationView.prototype.showLoading = function (sMessage)
 	}
 	else
 	{
-		this.loadingMessage(TextUtils.i18n('MAIN/LOADING'));
+		this.loadingMessage(TextUtils.i18n('CORE/INFO_LOADING'));
 	}
 	this.loadingVisible(true);
 	_.defer(_.bind(function () {

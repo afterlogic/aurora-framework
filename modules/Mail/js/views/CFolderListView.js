@@ -47,7 +47,7 @@ function CFolderListView()
 
 			this.quotaProc(iProc);
 			this.quotaDesc(-1 < iProc ?
-				TextUtils.i18n('MAILBOX/QUOTA_TOOLTIP', {
+				TextUtils.i18n('CORE/QUOTA_TOOLTIP', {
 					'PROC': iProc,
 					'QUOTA': TextUtils.getFriendlySize(iQuota * 1024)
 				}) : '');

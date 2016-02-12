@@ -3,13 +3,13 @@
 		<div class="items_list">
 			<div class="details" data-bind="visible: !clientDetailsVisible() && '' !== externalContentUrl()">
 				<div class="details_content">
-					<span class="link details_show" data-i18n="HELPDESK/ACTION_SHOW_DETAILS" 
+					<span class="link details_show" data-i18n="CORE/ACTION_SHOW_DETAILS" 
 						data-bind="i18n: 'text', click: showClientDetails"></span>
 				</div>
 			</div>
 			<div class="details" data-bind="visible: clientDetailsVisible() && '' !== externalContentUrl()">
 				<div class="details_content">
-					<span class="link details_hide" data-i18n="HELPDESK/ACTION_HIDE_DETAILS"
+					<span class="link details_hide" data-i18n="CORE/ACTION_HIDE_DETAILS"
 						data-bind="i18n: 'text', click: hideClientDetails"></span>
 					<!-- ko if: '' !== externalContentUrl() -->
 						<iframe class="external_content" src="javascript:void(0);"
@@ -18,7 +18,7 @@
 				</div>
 			</div>
 			<span class="list_notification" data-bind="visible: isSearch() && !isEmptyList()">
-				<span class="link" data-i18n="MAILBOX/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearch"></span>
+				<span class="link" data-i18n="CORE/LINK_CLEAR_SEARCH" data-bind="i18n: 'text', click: onClearSearch"></span>
 				<span class="description" data-bind="text: searchText"></span>
 			</span>
 			

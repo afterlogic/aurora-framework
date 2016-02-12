@@ -14,7 +14,6 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Routing = require('core/js/Routing.js'),
 	Screens = require('core/js/Screens.js'),
-	Storage = require('core/js/Storage.js'),
 	UserSettings = require('core/js/Settings.js'),
 	WindowOpener = require('core/js/WindowOpener.js')
 ;
@@ -196,7 +195,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 		
 		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)
 		{
-			Screens.showError(Utils.i18n('WARNING/AUTH_PROBLEM'), false, true);
+			Screens.showError(Utils.i18n('CORE/ERROR_AUTH_PROBLEM'), false, true);
 		}
 	}
 };
@@ -291,7 +290,7 @@ CApp.prototype.checkCookies = function ()
 	
 	if (!bResult)
 	{
-		App.Screens.showError(Utils.i18n('WARNING/COOKIES_DISABLED'), false, true);
+		App.Screens.showError(Utils.i18n('CORE/ERROR_COOKIES_DISABLED'), false, true);
 	}
 
 	return bResult;

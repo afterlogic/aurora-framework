@@ -14,7 +14,7 @@
 							<div class="items_list calendars">
 								<span class="section_title">
 									<span class="control" data-bind="click: openCreateCalendarForm, customTooltip: 'CALENDAR/TOOLTIP_CREATE_CALENDAR'"></span>
-									<span class="title personal" data-bind="i18n: 'text', visible: (calendars.ownCount() > 0)">
+									<span class="title personal" data-bind="visible: (calendars.ownCount() > 0)">
 										<span class="icon"></span>
 										<span class="text" data-i18n="CALENDAR/TITLE_CALENDARS" data-bind="i18n: 'text'"></span>
 									</span>
@@ -83,7 +83,7 @@
 							<span class="icon"></span>
 						</span>
 						<span class="item current passive">
-							<span class="helper" data-bind="foreach: dateTitleHelper, css: {'week': selectedView() === 'agendaWeek', 'day': selectedView() === 'agendaDay'}">
+							<span class="helper" data-bind="foreach: aMonthNames, css: {'week': selectedView() === 'agendaWeek', 'day': selectedView() === 'agendaDay'}">
 								<span class="text" data-bind="text: $parent.selectedView() === 'agendaWeek' ? '' + $data + $data : $data"></span><br />
 							</span>
 							<span class="text" data-bind="text: dateTitle"></span>

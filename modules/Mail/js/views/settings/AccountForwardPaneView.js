@@ -99,7 +99,7 @@ CAccountForwardPaneView.prototype.save = function ()
 	{
 		if (!AddressUtils.isCorrectEmail(this.email()))
 		{
-			Popups.showPopup(AlertPopup, [TextUtils.i18n('COMPOSE/WARNING_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
+			Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/WARNING_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
 		}
 		else
 		{
@@ -122,7 +122,7 @@ CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_SAVING_SETTINGS_FAILED'));
 	}
 	else
 	{
@@ -130,7 +130,7 @@ CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 		
 		this.updateEditableValues(oParameters);
 		
-		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FORWARD_SUCCESS_REPORT'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_FORWARD_UPDATE_SUCCESS'));
 	}
 };
 

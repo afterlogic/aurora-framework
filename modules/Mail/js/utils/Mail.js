@@ -54,7 +54,7 @@ MailUtils.deleteMessages = function (aUids, fAfterDelete)
 	}
 	else if (bInTrash)
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAILBOX/CONFIRM_MESSAGES_DELETE'), fDeleteMessages]);
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('CORE/CONFIRM_ARE_YOU_SURE'), fDeleteMessages]);
 	}
 	else if (oTrash)
 	{
@@ -63,7 +63,7 @@ MailUtils.deleteMessages = function (aUids, fAfterDelete)
 	}
 	else if (!oTrash)
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAILBOX/CONFIRM_MESSAGES_DELETE_NO_TRASH_FOLDER'), fDeleteMessages]);
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAIL/CONFIRM_MESSAGES_DELETE_NO_TRASH_FOLDER'), fDeleteMessages]);
 	}
 };
 

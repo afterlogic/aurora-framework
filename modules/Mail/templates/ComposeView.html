@@ -20,11 +20,11 @@
 
 								<span class="table-compressor" data-bind="visible: bAllowHeadersCompressing, click: changeHeadersCompressed, css: { 'compressed': headersCompressed }"></span>
 
-								<div class="notice" data-bind="visible: bDemo, i18n: 'text'" data-i18n="DEMO/WARNING_SEND_EMAIL_TO_DEMO_ONLY"></div>
+								<div class="notice" data-bind="visible: bDemo, i18n: 'text'" data-i18n="MAIL/WARNING_SEND_EMAIL_TO_DEMO_ONLY"></div>
 								<table class="fields">
 									<tr class="first_row from" data-bind="visible: visibleFrom() && !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_FROM"></span>:
+											<span data-bind="i18n: 'text'" data-i18n="MAIL/LABEL_FROM"></span>:
 										</td>
 										<td class="value">
 											<select class="input" tabindex="1" data-bind="foreach: senderList, value: selectedSender">
@@ -34,7 +34,7 @@
 									</tr>
 									<tr class="to">
 										<td class="label">
-											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_TO"></span>:
+											<span data-bind="i18n: 'text'" data-i18n="MAIL/LABEL_TO"></span>:
 										</td>
 										<td class="value">
 											<table class="fields">
@@ -63,7 +63,7 @@
 									</tr>
 									<tr class="cc" data-bind="visible: visibleCc() && !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_CC"></span>:
+											<span data-bind="i18n: 'text'" data-i18n="CORE/LABEL_CC"></span>:
 										</td>
 										<td class="value">
 											<div class="input inputosaurus">
@@ -78,7 +78,7 @@
 									</tr>
 									<tr class="bcc" data-bind="visible: visibleBcc() && !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_BCC"></span>:
+											<span data-bind="i18n: 'text'" data-i18n="CORE/LABEL_BCC"></span>:
 										</td>
 										<td class="value">
 											<div class="input inputosaurus">
@@ -93,7 +93,7 @@
 									</tr>
 									<tr class="last_row subject" data-bind="visible: !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_SUBJECT"></span>:
+											<span data-bind="i18n: 'text'" data-i18n="MAIL/LABEL_SUBJECT"></span>:
 										</td>
 										<td class="value">
 											<input type="text" class="input" maxlength="255" tabindex="5" id="selenium_compose_subject"
@@ -102,7 +102,7 @@
 									</tr>
 									<tr class="counter" data-bind="visible: visibleCounter() && !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: 'text'" data-i18n="COMPOSE/HEADER_COUNTER"></span>:
+											<span data-bind="i18n: 'text'" data-i18n="MAIL/LABEL_COUNTER"></span>:
 										</td>
 										<td class="value">
 											<input type="text" class="input" size="3" value="600" disabled="" tabindex="6"

@@ -2,6 +2,8 @@
 
 module.exports = function (oSettings) {
 	require('modules/HelpDesk/js/enums.js');
+	
+	require('modules/HelpDesk/js/koBindings.js');
 
 	var
 		TextUtils = require('core/js/utils/Text.js'),
@@ -13,7 +15,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDesk/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('SETTINGS/TAB_HELPDESK')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDesk/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('HELPDESK/SETTINGS_TABNAME')]);
 		},
 		screens: {
 			'main': function () {

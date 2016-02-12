@@ -193,11 +193,11 @@ CSignaturePaneView.prototype.onResponse = function (oResponse, oRequest)
 	
 	if (oResponse.Result)
 	{
-		Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SETTINGS_UPDATE_SUCCESS'));
 	}
 	else
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_SAVING_SETTINGS_FAILED'));
 	}
 };
 

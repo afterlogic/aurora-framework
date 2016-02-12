@@ -89,7 +89,7 @@ CImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceiv
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('WARNING/CONTACTS_IMPORT_NO_CONTACTS'));
+			Screens.showError(TextUtils.i18n('CONTACTS/CONTACTS_IMPORT_NO_CONTACTS'));
 		}
 	}
 	else
@@ -100,7 +100,7 @@ CImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceiv
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('WARNING/ERROR_UPLOAD_FILE'));
+			Screens.showError(TextUtils.i18n('CORE/ERROR_UPLOAD_FILE'));
 		}
 	}
 };

@@ -104,7 +104,7 @@ CIdentityPropertiesPaneView.prototype.save = function ()
 {
 	if (this.email() === '')
 	{
-		Screens.showError(Utils.i18n('WARNING/IDENTITY_CREATE_ERROR'));
+		Screens.showError(Utils.i18n('MAIL/ERROR_IDENTITY_FIELDS_BLANK'));
 	}
 	else
 	{
@@ -126,7 +126,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ACCOUNTS_IDENTITY_ADDING_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_IDENTITY_ADDING'));
 	}
 	else
 	{
@@ -151,7 +151,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 
 		this.disableCheckbox(this.isDefault());
 		
-		Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SETTINGS_UPDATE_SUCCESS'));
 	}
 };
 
@@ -201,7 +201,7 @@ CIdentityPropertiesPaneView.prototype.onAccountIdentityDeleteResponse = function
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, Utils.i18n('SETTINGS/ACCOUNTS_IDENTITY_DELETING_ERROR'));
+		Api.showErrorByCode(oResponse, Utils.i18n('MAIL/ERROR_IDENTITY_DELETING'));
 	}
 	AccountList.populateIdentities();
 };

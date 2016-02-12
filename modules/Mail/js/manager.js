@@ -50,8 +50,8 @@ module.exports = function (oSettings) {
 				MailUtils.registerMailto(Browser.firefox);
 			}
 			
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/MailSettingsPaneView.js'); }, 'mail', TextUtils.i18n('TITLE/LOGIN')]);
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/AccountsSettingsPaneView.js'); }, 'accounts', TextUtils.i18n('SETTINGS/TAB_EMAIL_ACCOUNTS')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/MailSettingsPaneView.js'); }, 'mail', TextUtils.i18n('MAIL/SETTINGS_TABNAME')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/AccountsSettingsPaneView.js'); }, 'accounts', TextUtils.i18n('MAIL/SETTINGS_ACCOUNTS_TABNAME')]);
 		},
 		screens: oScreens,
 		getHeaderItem: function () {

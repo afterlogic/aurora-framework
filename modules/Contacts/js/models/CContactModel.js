@@ -12,6 +12,7 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	App = require('core/js/App.js'),
+	
 	CDateModel = require('core/js/models/CDateModel.js')
 ;
 
@@ -391,7 +392,7 @@ function CContactModel()
 			iIndex = 1,
 			iLen = Types.pInt(DateUtils.daysInMonth(this.otherBirthdayMonth(), this.otherBirthdayYear())),
 			sIndex = '',
-			aList = [{'text': TextUtils.i18n('DATETIME/DAY'), 'value': '0'}]
+			aList = [{'text': TextUtils.i18n('CORE/DAY'), 'value': '0'}]
 		;
 
 		for (; iIndex <= iLen; iIndex++)
@@ -418,26 +419,26 @@ function CContactModel()
 	}, this);
 }
 
-CContactModel.birthdayMonths = DateUtils.getMonthNamesArray();
+CContactModel.aBirthdayMonths = DateUtils.getMonthNamesArray();
 
 CContactModel.birthdayMonthSelect = [
-	{'text': TextUtils.i18n('DATETIME/MONTH'), value: '0'},
-	{'text': CContactModel.birthdayMonths[0], value: '1'},
-	{'text': CContactModel.birthdayMonths[1], value: '2'},
-	{'text': CContactModel.birthdayMonths[2], value: '3'},
-	{'text': CContactModel.birthdayMonths[3], value: '4'},
-	{'text': CContactModel.birthdayMonths[4], value: '5'},
-	{'text': CContactModel.birthdayMonths[5], value: '6'},
-	{'text': CContactModel.birthdayMonths[6], value: '7'},
-	{'text': CContactModel.birthdayMonths[7], value: '8'},
-	{'text': CContactModel.birthdayMonths[8], value: '9'},
-	{'text': CContactModel.birthdayMonths[9], value: '10'},
-	{'text': CContactModel.birthdayMonths[10], value: '11'},
-	{'text': CContactModel.birthdayMonths[11], value: '12'}
+	{'text': TextUtils.i18n('CORE/MONTH'), value: '0'},
+	{'text': CContactModel.aBirthdayMonths[0], value: '1'},
+	{'text': CContactModel.aBirthdayMonths[1], value: '2'},
+	{'text': CContactModel.aBirthdayMonths[2], value: '3'},
+	{'text': CContactModel.aBirthdayMonths[3], value: '4'},
+	{'text': CContactModel.aBirthdayMonths[4], value: '5'},
+	{'text': CContactModel.aBirthdayMonths[5], value: '6'},
+	{'text': CContactModel.aBirthdayMonths[6], value: '7'},
+	{'text': CContactModel.aBirthdayMonths[7], value: '8'},
+	{'text': CContactModel.aBirthdayMonths[8], value: '9'},
+	{'text': CContactModel.aBirthdayMonths[9], value: '10'},
+	{'text': CContactModel.aBirthdayMonths[10], value: '11'},
+	{'text': CContactModel.aBirthdayMonths[11], value: '12'}
 ];
 
 CContactModel.birthdayYearSelect = [
-	{'text': TextUtils.i18n('DATETIME/YEAR'), 'value': '0'}
+	{'text': TextUtils.i18n('CONTACTS/YEAR'), 'value': '0'}
 ];
 
 CContactModel.prototype.clear = function ()

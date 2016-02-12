@@ -8,21 +8,22 @@ var
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	Types = require('core/js/utils/Types.js'),
-	Utils = require('core/js/utils/Common.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	Storage = require('core/js/Storage.js'),
-	Routing = require('core/js/Routing.js'),
 	Api = require('core/js/Api.js'),
+	Routing = require('core/js/Routing.js'),
+	Storage = require('core/js/Storage.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
-	MailCache = null,
-	AccountList = require('modules/Mail/js/AccountList.js'),
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	CUidListModel = require('modules/Mail/js/models/CUidListModel.js'),
-	CMessageModel = require('modules/Mail/js/models/CMessageModel.js')
+	
+	AccountList = require('modules/Mail/js/AccountList.js'),
+	MailCache = null,
+	
+	CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
+	CUidListModel = require('modules/Mail/js/models/CUidListModel.js')
 ;
 
 /**
@@ -249,7 +250,7 @@ CFolderModel.prototype.computeThreadData = function (oMessage)
 				aEmails.push(sThreadEmail);
 				if (sThreadEmail === AccountList.getEmail())
 				{
-					aSenders.push(TextUtils.i18n('MESSAGE/ME_SENDER'));
+					aSenders.push(TextUtils.i18n('MAIL/ME_SENDER'));
 				}
 				else
 				{
@@ -669,7 +670,7 @@ CFolderModel.prototype.initStarredFolder = function (iLevel, sFullName)
 	this.bVirtual = true;
 	this.setLevel(iLevel);
 	this.fullName(sFullName);
-	this.name(TextUtils.i18n('MAIN/FOLDER_STARRED'));
+	this.name(TextUtils.i18n('MAIL/FOLDER_STARRED'));
 	this.type(Enums.FolderTypes.Starred);
 	this.initSubscriptions('');
 	this.initComputedFields(true);
@@ -844,28 +845,28 @@ CFolderModel.prototype.initComputedFields = function (bDisableManageSubscribe)
 	this.subscribeButtonHint = ko.computed(function () {
 		if (this.canSubscribe())
 		{
-			return this.subscribed() ? TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_HIDE_FOLDER_HINT') : TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_SHOW_FOLDER_HINT');
+			return this.subscribed() ? TextUtils.i18n('MAIL/HINT_HIDE_FOLDER') : TextUtils.i18n('MAIL/HINT_SHOW_FOLDER');
 		}
 		return '';
 	}, this);
 	
 	this.deleteButtonHint = ko.computed(function () {
-		return this.canDelete() ? TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_DELETE_FOLDER_HINT') : '';
+		return this.canDelete() ? TextUtils.i18n('MAIL/HINT_DELETE_FOLDER') : '';
 	}, this);
 	
 	this.usedAs = ko.computed(function () {
 		switch (this.type())
 		{
 			case Enums.FolderTypes.Inbox:
-				return TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_USED_AS_INBOX');
+				return TextUtils.i18n('MAIL/HINT_USED_AS_INBOX');
 			case Enums.FolderTypes.Sent:
-				return TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_USED_AS_SENT');
+				return TextUtils.i18n('MAIL/HINT_USED_AS_SENT');
 			case Enums.FolderTypes.Drafts:
-				return TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_USED_AS_DRAFTS');
+				return TextUtils.i18n('MAIL/HINT_USED_AS_DRAFTS');
 			case Enums.FolderTypes.Trash:
-				return TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_USED_AS_TRASH');
+				return TextUtils.i18n('MAIL/HINT_USED_AS_SPAM');
 			case Enums.FolderTypes.Spam:
-				return TextUtils.i18n('SETTINGS/ACCOUNT_FOLDERS_USED_AS_SPAM');
+				return TextUtils.i18n('MAIL/HINT_USED_AS_TRASH');
 		}
 		return '';
 	}, this);
@@ -874,21 +875,21 @@ CFolderModel.prototype.initComputedFields = function (bDisableManageSubscribe)
 		switch (this.type())
 		{
 			case Enums.FolderTypes.Inbox:
-				return TextUtils.i18n('MAIN/FOLDER_INBOX');
+				return TextUtils.i18n('MAIL/FOLDER_INBOX');
 			case Enums.FolderTypes.Sent:
-				return TextUtils.i18n('MAIN/FOLDER_SENT');
+				return TextUtils.i18n('MAIL/FOLDER_SENT');
 			case Enums.FolderTypes.Drafts:
-				return TextUtils.i18n('MAIN/FOLDER_DRAFTS');
+				return TextUtils.i18n('MAIL/FOLDER_DRAFTS');
 			case Enums.FolderTypes.Trash:
-				return TextUtils.i18n('MAIN/FOLDER_TRASH');
+				return TextUtils.i18n('MAIL/FOLDER_TRASH');
 			case Enums.FolderTypes.Spam:
-				return TextUtils.i18n('MAIN/FOLDER_SPAM');
+				return TextUtils.i18n('MAIL/FOLDER_SPAM');
 		}
 		return this.name();
 	}, this);
 	
 	this.unseenMessagesTitle = ko.computed(function () {
-		return this.showUnseenMessages() ? TextUtils.i18n('MAILBOX/TITLE_UNSEEN_MESSAGES_ONLY') : '';
+		return this.showUnseenMessages() ? TextUtils.i18n('MAIL/TITLE_UNSEEN_MESSAGES_ONLY') : '';
 	}, this);
 };
 
@@ -911,7 +912,7 @@ CFolderModel.prototype.onGetMessageResponse = function (oResponse, oRequest)
 	{
 		if (bSelected)
 		{
-			Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+			Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 			Routing.replaceHashWithoutMessageUid(sUid);
 		}
 		
@@ -1041,7 +1042,7 @@ CFolderModel.prototype.executeGroupOperation = function (sField, aUids, bSetActi
 CFolderModel.prototype.emptyFolder = function ()
 {
 	var
-		sWarning = TextUtils.i18n('MAILBOX/CONFIRM_EMPTY_FOLDER'),
+		sWarning = TextUtils.i18n('MAIL/CONFIRM_EMPTY_FOLDER'),
 		fCallBack = _.bind(this.clearFolder, this)
 	;
 	

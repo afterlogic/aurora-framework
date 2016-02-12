@@ -2,8 +2,9 @@
 
 var
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	CHeaderItemView = require('core/js/views/CHeaderItemView.js'),
-	HeaderItemView = new CHeaderItemView(TextUtils.i18n('HEADER/HELPDESK'))
+	HeaderItemView = new CHeaderItemView(TextUtils.i18n('HELPDESK/SETTINGS_TABNAME'))
 ;
 
 //HeaderItemView.allowChangeTitle(true);

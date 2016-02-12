@@ -1,8 +1,8 @@
 <div class="toolbar">
 	<span class="content">
 		<span class="item close" data-bind="click: $parent.gotoMessageList.bind($parent)">
-			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_BACK_TO_LIST'"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_BACK_TO_LIST"></span>
+			<span class="icon"></span>
+			<span class="text"></span>
 		</span>
 		
 		<!-- ko template: {name: 'Mail_Message_ReplyButtonsView'} --><!-- /ko -->
@@ -10,8 +10,8 @@
 		<!-- ko template: {name: 'Mail_Message_ForwardButtonView'} --><!-- /ko -->
 		
 		<span class="item delete" data-bind="command: deleteCommand">
-			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_DELETE'"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_DELETE"></span>
+			<span class="icon" data-bind="customTooltip: 'MAIL/TOOL_DELETE'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_DELETE"></span>
 		</span>
 	</span>
 </div>

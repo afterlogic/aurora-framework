@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
@@ -19,7 +20,7 @@ function CAlertPopup()
 	this.alertDesc = ko.observable('');
 	this.closeCallback = null;
 	this.title = ko.observable('');
-	this.okButtonText = ko.observable(TextUtils.i18n('MAIN/BUTTON_OK'));
+	this.okButtonText = ko.observable(TextUtils.i18n('CORE/BUTTON_OK'));
 }
 
 _.extendOwn(CAlertPopup.prototype, CAbstractPopup.prototype);
@@ -37,7 +38,7 @@ CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sTitle, sOkButto
 	this.alertDesc(sDesc);
 	this.closeCallback = fCloseCallback || null;
 	this.title(sTitle || '');
-	this.okButtonText(sOkButtonText || TextUtils.i18n('MAIN/BUTTON_OK'));
+	this.okButtonText(sOkButtonText || TextUtils.i18n('CORE/BUTTON_OK'));
 };
 
 CAlertPopup.prototype.onEnterHandler = function ()

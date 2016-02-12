@@ -49,7 +49,7 @@ function CHelpdeskView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/HELPDESK'));
+	this.browserTitle = ko.observable(TextUtils.i18n('HELPDESK/BROWSER_TITLE'));
 	
 	var
 		self = this,
@@ -197,7 +197,7 @@ function CHelpdeskView()
 	});
 	this.createThreadButtonText = ko.computed(function () {
 		return this.newThreadCreating() ?
-			TextUtils.i18n('MAIN/BUTTON_SENDING') :
+			TextUtils.i18n('HELPDESK/BUTTON_SENDING') :
 			TextUtils.i18n('HELPDESK/BUTTON_CREATE');
 	}, this);
 
@@ -485,7 +485,6 @@ CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 	else
 	{
 		this.posts.remove(this.postForDelete());
-		Utils.log('CHelpdeskView', TextUtils.i18n('HELPDESK/REPORT_POST_HAS_BEEN_DELETED'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_HAS_BEEN_DELETED'));
 	}
 
@@ -1146,7 +1145,6 @@ CHelpdeskView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result)
 	{
-		Utils.log('CHelpdeskView', TextUtils.i18n('HELPDESK/REPORT_THREAD_SUCCESSFULLY_CREATED'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_THREAD_SUCCESSFULLY_CREATED'));
 
 		if (oResponse.Result.ThreadIsNew)
@@ -1180,7 +1178,6 @@ CHelpdeskView.prototype.onCreatePostResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result)
 	{
-		Utils.log('CHelpdeskView', TextUtils.i18n('HELPDESK/REPORT_POST_SUCCESSFULLY_ADDED'));
 		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_SUCCESSFULLY_ADDED'));
 		this.cleanAll();
 		this.requestPosts();
@@ -1320,7 +1317,7 @@ CHelpdeskView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
 	var
 		oAttach,
 		sWarningCountLimit = TextUtils.i18n('HELPDESK/ERROR_UPLOAD_FILES_COUNT'),
-		sButtonCountLimit = TextUtils.i18n('MAIN/BUTTON_CLOSE'),
+		sButtonCountLimit = TextUtils.i18n('CORE/BUTTON_CLOSE'),
 		iAttachCount = this.uploadedFiles().length
 	;
 

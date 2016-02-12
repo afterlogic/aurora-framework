@@ -41,7 +41,7 @@ function CMessageModel()
 		return ($.trim(this.subject()) === '');
 	}, this);
 	this.subjectForDisplay = ko.computed(function () {
-		return this.emptySubject() ? TextUtils.i18n('MAILBOX/EMPTY_SUBJECT') : this.subject();
+		return this.emptySubject() ? TextUtils.i18n('MAIL/EMPTY_SUBJECT') : this.subject();
 	}, this);
 	this.messageId = ko.observable('');
 	this.size = ko.observable(0);
@@ -113,7 +113,7 @@ function CMessageModel()
 
 			if (aSenders.length > 3)
 			{
-				this.threadMoreSendersText(TextUtils.i18n('MAILBOX/THREAD_MORE_SENDERS', {'COUNT': aSenders.length - 1}));
+				this.threadMoreSendersText(TextUtils.i18n('MAIL/THREAD_MORE_SENDERS', {'COUNT': aSenders.length - 1}));
 				return ', ' + aSenders[0];
 			}
 			else
@@ -152,17 +152,17 @@ function CMessageModel()
 		{
 			if (this.threadOpened())
 			{
-				return  TextUtils.i18n('MAILBOX/THREAD_TOOLTIP_FOLD');
+				return  TextUtils.i18n('MAIL/THREAD_TOOLTIP_FOLD');
 			}
 			else
 			{
 				if (this.threadUnreadCount() > 0)
 				{
-					return  TextUtils.i18n('MAILBOX/THREAD_TOOLTIP_HAS_UNSEEN_PLURAL', {}, null, this.threadUnreadCount());
+					return  TextUtils.i18n('MAIL/THREAD_TOOLTIP_HAS_UNSEEN_PLURAL', {}, null, this.threadUnreadCount());
 				}
 				else
 				{
-					return  TextUtils.i18n('MAILBOX/THREAD_TOOLTIP_UNFOLD');
+					return  TextUtils.i18n('MAIL/THREAD_TOOLTIP_UNFOLD');
 				}
 			}
 		}
@@ -282,11 +282,11 @@ CMessageModel.prototype.fillFromOrToText = function ()
 	
 	if (oFolder.type() === Enums.FolderTypes.Drafts || oFolder.type() === Enums.FolderTypes.Sent)
 	{
-		this.fromOrToText(this.oTo.getDisplay(TextUtils.i18n('MESSAGE/ME_RECIPIENT'), oAccount.email()));
+		this.fromOrToText(this.oTo.getDisplay(TextUtils.i18n('MAIL/ME_RECIPIENT'), oAccount.email()));
 	}
 	else
 	{
-		this.fromOrToText(this.oFrom.getDisplay(TextUtils.i18n('MESSAGE/ME_SENDER'), oAccount.email()));
+		this.fromOrToText(this.oFrom.getDisplay(TextUtils.i18n('MAIL/ME_SENDER'), oAccount.email()));
 	}
 };
 
@@ -727,19 +727,18 @@ CMessageModel.prototype.onSaveAttachmentsToFilesResponse = function (oResponse, 
 	
 	if (iSavedCount === 0)
 	{
-		Screens.showError(TextUtils.i18n('MESSAGE/ERROR_ATTACHMENTS_SAVED_TO_FILES'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_ATTACHMENTS_SAVED_TO_FILES'));
 	}
 	else if (iSavedCount < iTotalCount)
 	{
-		Screens.showError(TextUtils.i18n('MESSAGE/WARNING_ATTACHMENTS_SAVED_TO_FILES', {
+		Screens.showError(TextUtils.i18n('MAIL/WARNING_ATTACHMENTS_SAVED_TO_FILES', {
 			'SAVED_COUNT': iSavedCount,
 			'TOTAL_COUNT': iTotalCount
 		}));
 	}
 	else
 	{
-		Utils.log('CMessageModel', TextUtils.i18n('MESSAGE/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
-		Screens.showReport(TextUtils.i18n('MESSAGE/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
 	}
 };
 

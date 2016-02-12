@@ -2,13 +2,14 @@
 
 var
 	TextUtils = require('core/js/utils/Text.js'),
+			
 	DateUtils = {}
 ;
 
 DateUtils.getMonthNamesArray = function ()
 {
 	var
-		aMonthes = TextUtils.i18n('DATETIME/MONTH_NAMES').split(' '),
+		aMonthes = TextUtils.i18n('CORE/MONTH_NAMES').split(' '),
 		iLen = 12,
 		iIndex = aMonthes.length
 	;

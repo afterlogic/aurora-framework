@@ -1,7 +1,7 @@
 <div class="toolbar">
 	<span class="content">
 		<a href="javascript: void(0)" class="item compose" id="selenium_new_message_button" data-bind="command: $parent.composeCommand, visible: $parent.bVisibleComposeMessage">
-			<span data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_NEW_MESSAGE"></span>
+			<span data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_NEW_MESSAGE"></span>
 		</a>
 	</span>
 </div>
@@ -18,7 +18,7 @@
 	</div>
 	<div class="panel_bottom">
 		<div class="manage_folders" data-bind="visible: isCurrentAllowsMail">
-			<a href="javascript: void(0)" data-i18n="MAILBOX/LINK_MANAGE_FOLDERS" data-bind="i18n: 'text',
+			<a href="javascript: void(0)" data-i18n="MAIL/LINK_MANAGE_FOLDERS" data-bind="i18n: 'text',
 				attr: {href: manageFoldersHash}"></a>
 		</div>
 		<span class="volumer" data-bind="visible: -1 < quotaProc()">

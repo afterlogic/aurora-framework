@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<a class="link cancel" data-bind="click: cancelNewThread, i18n: 'text'" data-i18n="HELPDESK/BUTTON_CANCEL"></a>
+	<a class="link cancel" data-bind="click: cancelNewThread, i18n: 'text'" data-i18n="CORE/BUTTON_CANCEL"></a>
 	<h2 class="title" data-bind="i18n: 'text'" data-i18n="HELPDESK/TITLE_NEW_THREAD"></h2>
 </div>
 <div class="panel_center">
@@ -19,27 +19,24 @@
 			<tbody>
 			<tr>
 				<td class="label">
-					<span data-i18n="COMPOSE/HEADER_CC" data-bind="i18n: 'text'"></span>
+					<span data-i18n="CORE/LABEL_CC" data-bind="i18n: 'text'"></span>
 				</td>
 				<td>
 					<div class="input inputosaurus">
-						<!--<div class="disable_mask" data-bind="visible: internalNote"></div>-->
 						<div data-bind="customScrollbar: {x: false}">
 							<div class="scroll-inner">
-								<!--<label for="helpdesk_cc" class="label placeholder" data-i18n="COMPOSE/HEADER_CC" data-bind="i18n: 'text'"></label>-->
 								<input id="helpdesk_cc" type="text" spellcheck="false" tabindex="2" data-bind="initDom: ccAddrDom" />
 							</div>
 						</div>
 					</div>
 				</td>
 				<td class="label">
-					<span data-i18n="COMPOSE/HEADER_BCC" data-bind="i18n: 'text'"></span>
+					<span data-i18n="CORE/LABEL_BCC" data-bind="i18n: 'text'"></span>
 				</td>
 				<td>
 					<div class="input inputosaurus">
 						<div data-bind="customScrollbar: {x: false}">
 							<div class="scroll-inner">
-								<!--<label for="helpdesk_bcc" class="label placeholder" data-i18n="COMPOSE/HEADER_BCC" data-bind="i18n: 'text'"></label>-->
 								<input id="helpdesk_bcc" type="text" spellcheck="false" tabindex="3" data-bind="initDom: bccAddrDom" />
 							</div>
 						</div>
@@ -54,7 +51,7 @@
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/ACTION_ADD_ATTACHMENT"></span>
 			</span>
-			<span class="button ccbcc" data-bind="visible: !ccbccVisible(), i18n: 'text', click: changeCcbccVisibility" >
+			<span class="button ccbcc" data-bind="visible: !ccbccVisible(), click: changeCcbccVisibility" >
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/ACTION_ADD_CCBCC"></span>
 			</span>

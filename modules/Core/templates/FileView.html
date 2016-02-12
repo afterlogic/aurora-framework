@@ -50,33 +50,32 @@
 			<!--ko if: isIosDevice -->
 			<a class="button view" href="javascript: void(0)"
 			   data-bind="i18n: 'text', click: function () {downloadFile();}"
-			   data-i18n="MESSAGE/ATTACHMENT_VIEW"></a>
+			   data-i18n="CORE/ATTACHMENT_VIEW"></a>
 			<!-- /ko -->
 			<!--ko if: !isIosDevice -->
-			<a class="button download" href="javascript: void(0)" data-bind="visible: visibleDownloadLink(), click: function () { downloadFile(); }, i18n: 'text'" data-i18n="MESSAGE/ATTACHMENT_DOWNLOAD"></a>
-			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink(), click: function () { openLink(); }, i18n: 'text'" data-i18n="MESSAGE/ATTACHMENT_LINK_OPEN"></a>
+			<a class="button download" href="javascript: void(0)" data-bind="visible: visibleDownloadLink(), click: function () { downloadFile(); }, i18n: 'text'" data-i18n="CORE/ATTACHMENT_DOWNLOAD"></a>
+			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink(), click: function () { openLink(); }, i18n: 'text'" data-i18n="CORE/ATTACHMENT_LINK_OPEN"></a>
 			<a class="button view" href="javascript: void(0)"
 			   data-bind="
 					visible: (visibleViewLink() && !visibleImportLink()), 
 					i18n: 'text', 
 					click: viewFile"
-			   data-i18n="MESSAGE/ATTACHMENT_VIEW"></a>
+			   data-i18n="CORE/ATTACHMENT_VIEW"></a>
 			<a class="button view" href="javascript: void(0)"
 			   data-bind="
 					visible: visibleImportLink(), 
 					i18n: 'text', 
 					click: importFile"
-			   data-i18n="MESSAGE/ATTACHMENT_IMPORT"></a>
+			   data-i18n="CORE/BUTTON_IMPORT"></a>
 			<!-- /ko -->
 			<a class="button view" href="javascript: void(0)"
 			   data-bind="visible: visibleExpandLink(), i18n: 'text', click: expandFile"
-			   data-i18n="MESSAGE/ATTACHMENT_EXPAND"></a>
+			   data-i18n="CORE/ATTACHMENT_EXPAND"></a>
 			<span data-bind="visible: visibleExpandingText(), i18n: 'text'"
-			   data-i18n="MESSAGE/ATTACHMENT_EXPANDING"></span>
+			   data-i18n="CORE/INFO_LOADING"></span>
 			<a class="button view" href="javascript: void(0)"
 			   data-bind="visible: subFilesCollapsed(), i18n: 'text', click: collapseFile"
-			   data-i18n="MESSAGE/ATTACHMENT_COLLAPSE"></a>
-			
+			   data-i18n="CORE/ATTACHMENT_COLLAPSE"></a>
 		</div>
 	</span>
 

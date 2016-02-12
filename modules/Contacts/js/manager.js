@@ -8,6 +8,7 @@ module.exports = function (oSettings) {
 		$ = require('jquery'),
 		
 		TextUtils = require('core/js/utils/Text.js'),
+		
 		Settings = require('modules/Contacts/js/Settings.js'),
 		
 		ManagerComponents = require('modules/Contacts/js/manager-components.js'),
@@ -19,7 +20,7 @@ module.exports = function (oSettings) {
 	
 	return _.extend(ComponentsMethods, {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('TITLE/CONTACTS')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('CONTACTS/SETTINGS_TABNAME')]);
 			if ($.isFunction(fComponentsStart))
 			{
 				fComponentsStart(ModulesManager);

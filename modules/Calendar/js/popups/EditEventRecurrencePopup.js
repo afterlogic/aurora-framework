@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
 ;
 
@@ -20,7 +21,7 @@ function CEditEventRecurrencePopup()
 	this.confirmDesc = TextUtils.i18n('CALENDAR/EDIT_RECURRENCE_CONFIRM_DESCRIPTION');
 	this.onlyThisInstanceButtonText = ko.observable(TextUtils.i18n('CALENDAR/ONLY_THIS_INSTANCE'));
 	this.allEventsButtonText = ko.observable(TextUtils.i18n('CALENDAR/ALL_EVENTS_IN_THE_SERIES'));
-	this.cancelButtonText = ko.observable(TextUtils.i18n('MAIN/BUTTON_CANCEL'));
+	this.cancelButtonText = ko.observable(TextUtils.i18n('CORE/BUTTON_CANCEL'));
 }
 
 _.extendOwn(CEditEventRecurrencePopup.prototype, CAbstractPopup.prototype);

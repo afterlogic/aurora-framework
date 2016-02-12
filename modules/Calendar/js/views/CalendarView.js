@@ -46,7 +46,7 @@ function CCalendarView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('TITLE/CALENDAR'));
+	this.browserTitle = ko.observable(TextUtils.i18n('CALENDAR/BROWSER_TITLE'));
 	
 	var self = this;
 	this.initialized = ko.observable(false);
@@ -59,7 +59,7 @@ function CCalendarView()
 	}, this);
 	
 	this.todayDate = new Date();
-	this.aDayNames = TextUtils.i18n('DATETIME/DAY_NAMES').split(' ');
+	this.aDayNames = TextUtils.i18n('CORE/DAY_NAMES').split(' ');
 
 	this.popUpStatus = false;
 	this.linkRow = 0;
@@ -73,7 +73,7 @@ function CCalendarView()
 	this.scrollHeight = 0;
 	
 	this.dateTitle = ko.observable('');
-	this.dateTitleHelper = ko.observableArray(TextUtils.i18n('DATETIME/MONTH_NAMES').split(' '));
+	this.aMonthNames = DateUtils.getMonthNamesArray();
 	this.selectedView = ko.observable('');
 	this.visibleWeekdayHeader = ko.computed(function () {
 		return this.selectedView() === 'month';
@@ -350,8 +350,8 @@ CCalendarView.prototype.initDatePicker = function ()
 	this.$datePicker.datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
-		monthNames: DateUtils.getMonthNamesArray(),
-		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
+		monthNames: this.aMonthNames,
+		dayNamesMin: TextUtils.i18n('CORE/DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
 		onChangeMonthYear: _.bind(this.changeMonthYearFromDatePicker, this),
@@ -1429,14 +1429,6 @@ CCalendarView.prototype.createEventInCurrentCalendar = function ()
 };
 
 /**
- * @param {string} sCalendarId
- */
-CCalendarView.prototype.createEventInCalendar = function (sCalendarId)
-{
-	this.createEventToday(this.calendars.getCalendarById(sCalendarId));
-};
-
-/**
  * @param {Object} oCalendar
  */
 CCalendarView.prototype.createEventToday = function (oCalendar)
@@ -1967,11 +1959,11 @@ CCalendarView.prototype.onFileUploadComplete = function (sFileUid, bResponseRece
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('CONTACTS/ERROR_INCORRECT_FILE_EXTENSION'));
+			Screens.showError(TextUtils.i18n('CALENDAR/ERROR_INCORRECT_FILE_EXTENSION'));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('WARNING/ERROR_UPLOAD_FILE'));
+			Screens.showError(TextUtils.i18n('CORE/ERROR_UPLOAD_FILE'));
 		}
 	}
 };

@@ -1,37 +1,37 @@
 <div class="toolbar">
 	<span class="content">
 
-		<span class="item delete" data-bind="command: deleteCommand, visible: bNewTab, customTooltip: 'MAILBOX/TOOL_DELETE'">
+		<span class="item delete" data-bind="command: deleteCommand, visible: bNewTab, customTooltip: 'MAIL/TOOL_DELETE'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_DELETE"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_DELETE"></span>
 		</span>
 		<span class="item prev" data-bind="command: nextMessageCommand, visible: bNewTab">
-			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_NEXT_MESSAGE'"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_NEXT_MESSAGE"></span>
+			<span class="icon" data-bind="customTooltip: 'MAIL/TOOL_NEXT_MESSAGE'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_NEXT_MESSAGE"></span>
 		</span>
 		<span class="item next" data-bind="command: prevMessageCommand, visible: bNewTab">
-			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_PREV_MESSAGE'"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_PREV_MESSAGE"></span>
+			<span class="icon" data-bind="customTooltip: 'MAIL/TOOL_PREV_MESSAGE'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_PREV_MESSAGE"></span>
 		</span>
 		
 		<!-- ko template: {name: 'Mail_Message_ReplyButtonsView'} --><!-- /ko -->
 		
 		<span class="item resend" data-bind="command: resendCommand, visible: isVisibleResendTool">
-			<span class="icon" data-bind="customTooltip: 'MAILBOX/TOOL_RESEND'"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_RESEND"></span>
+			<span class="icon" data-bind="customTooltip: 'MAIL/TOOL_RESEND'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_RESEND"></span>
 		</span>
 		
 		<!-- ko template: {name: 'Mail_Message_ForwardButtonView'} --><!-- /ko -->
 
 		<a class="item new_window" href="javascript: void(0);" 
 			data-bind="click: openInNewWindow, visible: !bNewTab">
-			<span class="icon" data-bind="customTooltip: 'MESSAGE/ACTION_OPEN_IN_NEW_WINDOW'"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MESSAGE/ACTION_OPEN_IN_NEW_WINDOW"></span>
+			<span class="icon" data-bind="customTooltip: 'MAIL/ACTION_OPEN_IN_NEW_WINDOW'"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/ACTION_OPEN_IN_NEW_WINDOW"></span>
 		</a>
 
-		<span class="item more" data-bind="dropdown: {control: false}, command: moreCommand, customTooltip: 'MAILBOX/TOOL_MORE_ACTIONS'">
+		<span class="item more" data-bind="dropdown: {control: false}, command: moreCommand, customTooltip: 'MAIL/TOOL_MORE_ACTIONS'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_MORE_ACTIONS"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_MORE_ACTIONS"></span>
 			<span class="dropdown">
 				<span class="dropdown_helper">
 					<span class="dropdown_arrow">
@@ -40,22 +40,22 @@
 					<span class="dropdown_content">
 						<span class="item print" data-bind="command: printCommand">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_PRINT"></span>
+							<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_PRINT"></span>
 						</span>
 
 						<span class="item save" data-bind="command: saveCommand">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_SAVE"></span>
+							<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_SAVE_AS_EML"></span>
 						</span>
 
 						<span class="item save_as_pdf" data-bind="visible: bAllowSaveMessageAsPdf, command: saveAsPdfCommand">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_SAVE_AS_PDF"></span>
+							<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_SAVE_AS_PDF"></span>
 						</span>
 
 						<span class="item headers" data-bind="visible: currentMessage() && currentMessage().completelyFilled(), click: showSourceHeaders">
 							<span class="icon"></span>
-							<span class="text" data-i18n="MESSAGE/LINK_VIEW_MESSAGE_HEADERS" data-bind="i18n: 'text'"></span>
+							<span class="text" data-i18n="MAIL/LINK_VIEW_MESSAGE_HEADERS" data-bind="i18n: 'text'"></span>
 						</span>
 
 						{%INCLUDE-START/Message-Pane-More-Actions-Menu/INCLUDE-END%}

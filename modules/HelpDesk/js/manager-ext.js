@@ -2,6 +2,8 @@
 
 module.exports = function (oSettings) {
 	require('modules/HelpDesk/js/enums.js');
+	
+	require('modules/HelpDesk/js/koBindings.js');
 
 	var Settings = require('modules/HelpDesk/js/Settings.js');
 	Settings.init(oSettings);

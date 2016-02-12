@@ -102,7 +102,6 @@ function CEditEventPopup()
 
 	this.repeatPeriodOptions = ko.observableArray(this.getDisplayedPeriods());
 	this.repeatWeekIntervalOptions = ko.observableArray([1, 2, 3, 4]);
-	this.repeatMonthIntervalOptions = ko.observableArray(this.getDisplayedIntervals());
 	this.defaultAlarms = ko.observableArray([5, 10, 15, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440, 2880, 4320, 5760, 10080, 20160]);
 	this.alarmOptions = ko.observableArray([]);
 	this.timeOptions = ko.observableArray(CalendarUtils.getTimeListStepHalfHour((UserSettings.timeFormat() !== Enums.TimeFormat.F24) ? 'hh:mm A' : 'HH:mm'));
@@ -240,7 +239,7 @@ CEditEventPopup.prototype.createDatePickerObject = function (oElement, fSelect)
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		monthNames: DateUtils.getMonthNamesArray(),
-		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
+		dayNamesMin: TextUtils.i18n('CORE/DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
 		firstDay: Settings.WeekStartsOn,
@@ -791,26 +790,6 @@ CEditEventPopup.prototype.getDisplayedPeriods = function ()
 	];
 };
 
-CEditEventPopup.prototype.getDisplayedIntervals = function ()
-{
-	var
-		i = 1,
-		aDisplayedIntervals = []
-	;
-
-	for (; i <= 30; i++ )
-	{
-		aDisplayedIntervals.push(
-			{
-				label: i + TextUtils.i18n('th'),
-				value: i
-			}
-		);
-	}
-
-	return aDisplayedIntervals;
-};
-
 /**
  * @param {Array} aDisplayedAlarms
  */
@@ -1202,7 +1181,7 @@ CEditEventPopup.prototype.onSetAppointmentActionResponse = function (oResponse, 
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 	}
 };
 

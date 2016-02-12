@@ -6,6 +6,7 @@ var
 	
 	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
+	
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
 	
@@ -32,7 +33,7 @@ function CCreateFetcherPopup()
 
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(110, 995, 'fectcher_add_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_POP3_SERVER'));
+	this.oIncoming = new CServerPropertiesView(110, 995, 'fectcher_add_incoming', TextUtils.i18n('MAIL/LABEL_POP3_SERVER'));
 
 	this.folder = ko.observable('');
 	this.options = ko.observableArray([]);
@@ -85,7 +86,7 @@ CCreateFetcherPopup.prototype.save = function ()
 {
 	if (this.isEmptyRequiredFields())
 	{
-		Screens.showError(TextUtils.i18n('WARNING/FETCHER_CREATE_ERROR'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_FETCHER_FIELDS_EMPTY'));
 	}
 	else
 	{
@@ -116,7 +117,7 @@ CCreateFetcherPopup.prototype.onCreateFetcherResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 	}
 	else
 	{

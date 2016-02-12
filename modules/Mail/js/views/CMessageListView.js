@@ -161,7 +161,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 	this.searchText = ko.computed(function () {
 
-		return TextUtils.i18n('MAILBOX/INFO_SEARCH_RESULT', {
+		return TextUtils.i18n('MAIL/INFO_SEARCH_RESULT', {
 			'SEARCH': this.calculateSearchStringForDescription(),
 			'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 		});
@@ -172,13 +172,13 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 		if (this.search() === '')
 		{
-			return TextUtils.i18n('MAILBOX/INFO_UNSEEN_FILTER_RESULT', {
+			return TextUtils.i18n('MAIL/INFO_UNSEEN_FILTER_RESULT', {
 				'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 			});
 		}
 		else
 		{
-			return TextUtils.i18n('MAILBOX/INFO_SEARCH_UNSEEN_FILTER_RESULT', {
+			return TextUtils.i18n('MAIL/INFO_SEARCH_UNSEEN_FILTER_RESULT', {
 				'SEARCH': this.calculateSearchStringForDescription(),
 				'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 			});
@@ -190,11 +190,11 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 		if (this.search() === '')
 		{
-			return TextUtils.i18n('MAILBOX/INFO_UNSEEN_FILTER_EMPTY');
+			return TextUtils.i18n('MAIL/INFO_UNSEEN_FILTER_EMPTY');
 		}
 		else
 		{
-			return TextUtils.i18n('MAILBOX/INFO_SEARCH_UNSEEN_FILTER_EMPTY');
+			return TextUtils.i18n('MAIL/INFO_SEARCH_UNSEEN_FILTER_EMPTY');
 		}
 		
 	}, this);
@@ -309,7 +309,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.searchDateEnd = ko.observable('');
 	this.dateFormatDatePicker = 'yy.mm.dd';
 	this.attachmentsPlaceholder = ko.computed(function () {
-		return TextUtils.i18n('MAILBOX/SEARCH_FIELD_HAS_ATTACHMENTS');
+		return TextUtils.i18n('MAIL/SEARCH_FIELD_HAS_ATTACHMENTS');
 	}, this);
 
 	_.delay(_.bind(function(){
@@ -319,7 +319,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	
 	this.isCurrentAllowsMail = AccountList.isCurrentAllowsMail;
 	
-	var aAddingInfo = TextUtils.i18n('MAILBOX/INFO_ADDING_NEW_ACCOUNT').split(/%STARTLINK%|%ENDLINK%/);
+	var aAddingInfo = TextUtils.i18n('MAIL/INFO_ADDING_NEW_ACCOUNT').split(/%STARTLINK%|%ENDLINK%/);
 	this.sAddingInfo1 = aAddingInfo.length > 0 ? aAddingInfo[0] : '';
 	this.sAddingInfo2 = aAddingInfo.length > 1 ? aAddingInfo[1] : '';
 	this.sAddingInfo3 = aAddingInfo.length > 2 ? aAddingInfo[2] : '';
@@ -340,7 +340,7 @@ CMessageListView.prototype.createDatePickerObject = function (oElement)
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		monthNames: DateUtils.getMonthNamesArray(),
-		dayNamesMin: TextUtils.i18n('DATETIME/DAY_NAMES_MIN').split(' '),
+		dayNamesMin: TextUtils.i18n('CORE/DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
 		firstDay: Types.pInt(ModulesManager.run('Calendar', 'getWeekStartsOn')),
@@ -872,7 +872,7 @@ CMessageListView.prototype.onFileDrop = function (oData)
 {
 	if (!(oData && oData.File && oData.File.type && oData.File.type.indexOf('message/') === 0))
 	{
-		Screens.showError(TextUtils.i18n('MAILBOX/ERROR_INCORRECT_FILE_EXTENSION'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_INCORRECT_FILE_EXTENSION'));
 	}
 };
 
@@ -888,11 +888,11 @@ CMessageListView.prototype.onFileUploadComplete = function (sFileUid, bResponseR
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('CONTACTS/ERROR_INCORRECT_FILE_EXTENSION'));
+			Screens.showError(TextUtils.i18n('MAIL/ERROR_INCORRECT_FILE_EXTENSION'));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('WARNING/ERROR_UPLOAD_FILE'));
+			Screens.showError(TextUtils.i18n('CORE/ERROR_UPLOAD_FILE'));
 		}
 	}
 };

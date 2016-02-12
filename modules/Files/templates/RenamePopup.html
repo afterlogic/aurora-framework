@@ -6,7 +6,7 @@
 		<div class="fields">
 			<div class="fieldset">
 				<div class="row">
-					<span class="label" data-i18n="FILESTORAGE/NAME" data-bind="i18n: 'text'"></span>
+					<span class="label" data-i18n="FILES/NAME" data-bind="i18n: 'text'"></span>
 					<input class="value input" spellcheck="false" type="text" maxlength="200"
 						data-bind="hasfocus: focused, valueUpdate: 'afterkeydown', value: name, onEnter: onOKClick, css: {'error': '' !== error()}" />
 					<div style="color:red;margin-top:10px;margin-left:150px" data-bind="visible: '' !== error(), text: error"></div>
@@ -14,8 +14,8 @@
 			</div>
 
 			<div class="buttons">
-				<span class="button save" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: onOKClick"></span>
-				<span class="button cancel secondary" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
+				<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: onOKClick"></span>
+				<span class="button cancel secondary" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

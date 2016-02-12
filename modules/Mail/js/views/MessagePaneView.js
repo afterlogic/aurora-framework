@@ -61,7 +61,7 @@ function CMessagePaneView()
 			sSubject = oMessage ? oMessage.subject() : '',
 			sPrefix = sSubject ? sSubject + ' - ' : ''
 		;
-		return sPrefix + AccountList.getEmail() + ' - ' + TextUtils.i18n('TITLE/VIEW_MESSAGE');
+		return sPrefix + AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/BROWSER_MESSAGE_TITLE');
 	}, this);
 	
 	this.isCurrentMessage = ko.computed(function () {
@@ -152,7 +152,7 @@ function CMessagePaneView()
 		return ($.trim(this.subject()) === '');
 	}, this);
 	this.subjectForDisplay = ko.computed(function () {
-		return this.emptySubject() ? TextUtils.i18n('MAILBOX/EMPTY_SUBJECT') : this.subject();
+		return this.emptySubject() ? TextUtils.i18n('MAIL/EMPTY_SUBJECT') : this.subject();
 	}, this);
 	this.importance = ko.observable(Enums.Importance.Normal);
 	this.oFromAddr = ko.observable(null);
@@ -167,8 +167,8 @@ function CMessagePaneView()
 	this.aBccAddr = ko.observableArray([]);
 	this.allRecipients = ko.observableArray([]);
 	this.currentAccountEmail = ko.observable();
-	this.meSender = TextUtils.i18n('MESSAGE/ME_SENDER');
-	this.meRecipient = TextUtils.i18n('MESSAGE/ME_RECIPIENT');
+	this.meSender = TextUtils.i18n('MAIL/ME_SENDER');
+	this.meRecipient = TextUtils.i18n('MAIL/ME_RECIPIENT');
 	
 	this.fullDate = ko.observable('');
 	this.midDate = ko.observable('');
@@ -223,7 +223,7 @@ function CMessagePaneView()
 	
 	this.detailsVisible = ko.observable(Storage.getData('MessageDetailsVisible') === '1');
 	this.detailsTooltip = ko.computed(function () {
-		return this.detailsVisible() ? TextUtils.i18n('MESSAGE/ACTION_HIDE_DETAILS') : TextUtils.i18n('MESSAGE/ACTION_SHOW_DETAILS');
+		return this.detailsVisible() ? TextUtils.i18n('CORE/ACTION_HIDE_DETAILS') : TextUtils.i18n('CORE/ACTION_SHOW_DETAILS');
 	}, this);
 
 	this.hasNotInlineAttachments = ko.computed(function () {
@@ -267,17 +267,17 @@ function CMessagePaneView()
 	}, this);
 	
 	this.saveButtonText = ko.computed(function () {
-		return this.replyAutoSavingStarted() ? TextUtils.i18n('COMPOSE/TOOL_SAVING') : TextUtils.i18n('COMPOSE/TOOL_SAVE');
+		return this.replyAutoSavingStarted() ? TextUtils.i18n('MAIL/TOOL_SAVING') : TextUtils.i18n('MAIL/TOOL_SAVE');
 	}, this);
 	this.replyDraftUid = ko.observable('');
 	this.replyLoadingText = ko.computed(function () {
 		if (this.replySendingStarted())
 		{
-			return TextUtils.i18n('COMPOSE/INFO_SENDING');
+			return TextUtils.i18n('CORE/INFO_SENDING');
 		}
 		else if (this.replySavingStarted())
 		{
-			return TextUtils.i18n('COMPOSE/INFO_SAVING');
+			return TextUtils.i18n('MAIL/INFO_SAVING');
 		}
 		return '';
 	}, this);
@@ -359,8 +359,8 @@ CMessagePaneView.prototype.notifySender = function ()
 	{
 		Ajax.send('SendConfirmationMessage', {
 			'Confirmation': this.currentMessage().readingConfirmation(),
-			'Subject': TextUtils.i18n('MESSAGE/RETURN_RECEIPT_MAIL_SUBJECT'),
-			'Text': TextUtils.i18n('MESSAGE/RETURN_RECEIPT_MAIL_TEXT', {
+			'Subject': TextUtils.i18n('MAIL/RETURN_RECEIPT_MAIL_SUBJECT'),
+			'Text': TextUtils.i18n('MAIL/RETURN_RECEIPT_MAIL_TEXT', {
 				'EMAIL': AccountList.getEmail(),
 				'SUBJECT': this.subject()
 			}),
@@ -620,7 +620,7 @@ CMessagePaneView.prototype.doHidingBlockquotes = function (aCollapsedStatuses)
 		var
 			$blockquote = $(this),
 			$parentBlockquotes = $blockquote.parents('blockquote'),
-			$switchButton = $('<span class="blockquote_toggle"></span>').html(TextUtils.i18n('MESSAGE/SHOW_QUOTED_TEXT')),
+			$switchButton = $('<span class="blockquote_toggle"></span>').html(TextUtils.i18n('MAIL/SHOW_QUOTED_TEXT')),
 			bHidden = true
 		;
 		if ($parentBlockquotes.length === 0)
@@ -636,13 +636,13 @@ CMessagePaneView.prototype.doHidingBlockquotes = function (aCollapsedStatuses)
 					if (bHidden)
 					{
 						$blockquote.height('auto');
-						$switchButton.html(TextUtils.i18n('MESSAGE/HIDE_QUOTED_TEXT'));
+						$switchButton.html(TextUtils.i18n('MAIL/HIDE_QUOTED_TEXT'));
 						bHidden = false;
 					}
 					else
 					{
 						$blockquote.height(iHiddenHeight);
-						$switchButton.html(TextUtils.i18n('MESSAGE/SHOW_QUOTED_TEXT'));
+						$switchButton.html(TextUtils.i18n('MAIL/SHOW_QUOTED_TEXT'));
 						bHidden = true;
 					}
 					
@@ -844,7 +844,7 @@ CMessagePaneView.prototype.executeSaveAsPdf = function ()
 			}
 			else
 			{
-				Screens.showError(TextUtils.i18n('WARNING/CREATING_PDF_ERROR'));
+				Screens.showError(TextUtils.i18n('MAIL/ERROR_CREATING_PDF'));
 			}
 		}, this);
 	}

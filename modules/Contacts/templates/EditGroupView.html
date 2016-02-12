@@ -25,7 +25,7 @@
 				</div>				
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_GROUP_EMAIL"></span>:
+						<span data-bind="i18n: 'text'" data-i18n="CORE/LABEL_EMAIL"></span>:
 					</span>
 					<input class="value input" type="text" id="selenium_contacts_edit_group_email"
 						   data-bind="value: email, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
@@ -94,10 +94,10 @@
 <div class="panel_bottom">
 	<div class="buttons">
 		<span class="button save" data-bind="command: $root.saveCommand" id="selenium_contacts_edit_group_save_button">
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/BUTTON_SAVE_CONTACT"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="CORE/BUTTON_SAVE"></span>
 		</span>
 		<span class="button secondary cancel" data-bind="click: function () { $root.executeCancel(); }">
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/BUTTON_CANCEL_CONTACT"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="CORE/BUTTON_CANCEL"></span>
 		</span>
 	</div>
 </div>

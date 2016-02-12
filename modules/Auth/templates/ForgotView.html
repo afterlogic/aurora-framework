@@ -3,7 +3,7 @@
 	
 	<div class="fieldset">
 		<div class="row email" data-bind="css: {'focused': emailFocus(), 'filled': email().length > 0}">
-			<label for="forgot_email" class="title placeholder" data-i18n="LOGIN/LABEL_EMAIL" data-bind="i18n: 'text'"></label>
+			<label for="forgot_email" class="title placeholder" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></label>
 			<span class="value">
 				<input id="forgot_email" class="input" type="email" spellcheck="false" autocomplete="off" data-bind="value: email, hasfocus: emailFocus, valueUpdate: 'afterkeydown'" />
 			</span>
@@ -20,7 +20,7 @@
 	<div class="fieldset">
 		<div class="subtitle hint" data-bind="text: question"></div>
 		<div class="row answer" data-bind="css: {'focused': answerFocus(), 'filled': answer().length > 0}">
-			<label for="forgot_answer" class="title placeholder" data-i18n="LOGIN/LABEL_ANSWER_QUESTION" data-bind="i18n: 'text'"></label>
+			<label for="forgot_answer" class="title placeholder" data-i18n="AUTH/LABEL_ANSWER_QUESTION" data-bind="i18n: 'text'"></label>
 			<span class="value">
 				<input id="forgot_answer" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: answer, hasfocus: answerFocus, valueUpdate: 'afterkeydown'" />
 			</span>
@@ -35,13 +35,13 @@
 	
 	<div class="fieldset">
 		<div class="row password" data-bind="css: {'focused': passwordFocus(), 'filled': password().length > 0}">
-			<label for="forgot_password" class="title placeholder" data-i18n="LOGIN/LABEL_NEW_PASSWORD" data-bind="i18n: 'text'"></label>
+			<label for="forgot_password" class="title placeholder" data-i18n="CORE/LABEL_NEW_PASSWORD" data-bind="i18n: 'text'"></label>
 			<span class="value">
 				<input id="forgot_password" class="input" autocomplete="off" spellcheck="false" type="password" data-bind="value: password, hasfocus: passwordFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
 		<div class="row password" data-bind="css: {'focused': confirmPasswordFocus(), 'filled': confirmPassword().length > 0}">
-			<label for="forgot_confirm_password" class="title placeholder" data-i18n="LOGIN/LABEL_CONFIRM_PASSWORD" data-bind="i18n: 'text'"></label>
+			<label for="forgot_confirm_password" class="title placeholder" data-i18n="CORE/LABEL_CONFIRM_PASSWORD" data-bind="i18n: 'text'"></label>
 			<span class="value">
 				<input id="forgot_confirm_password" class="input" autocomplete="off" spellcheck="false" type="password" data-bind="value: confirmPassword, hasfocus: confirmPasswordFocus, valueUpdate: 'afterkeydown'" />
 			</span>
@@ -55,7 +55,6 @@
 
 <div class="row links">
 	<div class="forgot">
-		<span class="link" data-bind="click: function () {gotoForgot(false);}, i18n: 'text'"
-			  data-i18n="LOGIN/LINK_BACK"></span>
+		<span class="link" data-bind="click: function () {gotoForgot(false);}, i18n: 'text'" data-i18n="AUTH/LINK_BACK"></span>
 	</div>
 </div>

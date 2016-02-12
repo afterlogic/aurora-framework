@@ -10,6 +10,7 @@ var
 	
 	Browser = require('core/js/Browser.js'),
 	WindowOpener = require('core/js/WindowOpener.js'),
+	
 	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
 	CDateModel = require('core/js/models/CDateModel.js'),
 	
@@ -70,13 +71,13 @@ function CFileModel()
 	this.owner = ko.observable('');
 	
 	this.ownerHeaderText = ko.computed(function () {
-		return TextUtils.i18n('FILESTORAGE/OWNER_HEADER_EMAIL', {
+		return TextUtils.i18n('FILES/OWNER_HEADER_EMAIL', {
 			'OWNER': this.owner()
 		});
 	}, this);
 	
 	this.lastModifiedHeaderText = ko.computed(function () {
-		return TextUtils.i18n('FILESTORAGE/OWNER_HEADER_LAST_MODIFIED_DATE_TEXT', {
+		return TextUtils.i18n('FILES/OWNER_HEADER_LAST_MODIFIED_DATE_TEXT', {
 			'LASTMODIFIED': this.lastModified()
 		});
 	}, this);

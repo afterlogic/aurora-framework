@@ -32,14 +32,14 @@ function CResetPasswordView()
 	this.resetPasswordButtonText = ko.computed(function () {
 		if (this.oDefaultAccount.passwordSpecified())
 		{
-			return TextUtils.i18n('LOGIN/BUTTON_RESET_PASSWORD');
+			return TextUtils.i18n('CORE/BUTTON_RESET_PASSWORD');
 		}
 		else
 		{
-			return TextUtils.i18n('SETTINGS/ACCOUNT_PROPERTIES_SET_PASSWORD');
+			return TextUtils.i18n('CHANGEPASSWORD/BUTTON_SET_PASSWORD');
 		}
 	}, this);
-	var aHintSetPassword = TextUtils.i18n('SETTINGS/MOBILE_HINT_SET_PASSWORD').split(/%STARTLINK%|%ENDLINK%/);
+	var aHintSetPassword = TextUtils.i18n('CHANGEPASSWORD/HINT_SET_PASSWORD').split(/%STARTLINK%|%ENDLINK%/);
 	this.sHintSetPassword1 = aHintSetPassword.length > 0 ? aHintSetPassword[0] : '';
 	this.sHintSetPassword2 = aHintSetPassword.length > 1 ? aHintSetPassword[1] : '';
 	this.sHintSetPassword3 = aHintSetPassword.length > 2 ? aHintSetPassword[2] : '';
@@ -60,11 +60,11 @@ CResetPasswordView.prototype.resetPassword = function ()
 	if (Settings.ResetPassHash === '' && !this.oDefaultAccount.passwordSpecified())
 	{
 		Popups.showPopup(ConfirmPopup, [
-			TextUtils.i18n('SETTINGS/ACCOUNTS_RESET_PASSWORD_POPUP_DESC', {'EMAIL': this.oDefaultAccount.email()}),
+			TextUtils.i18n('CHANGEPASSWORD/RESET_PASSWORD_POPUP_DESC', {'EMAIL': this.oDefaultAccount.email()}),
 			_.bind(this.onResetPasswordPopupAnswer, this),
-			this.oDefaultAccount.passwordSpecified() ? TextUtils.i18n('SETTINGS/ACCOUNTS_RESET_PASSWORD_POPUP_TITLE') : TextUtils.i18n('SETTINGS/ACCOUNTS_SET_PASSWORD_POPUP_TITLE'),
-			TextUtils.i18n('MAIN/BUTTON_SEND'),
-			TextUtils.i18n('MAIN/BUTTON_CANCEL')
+			this.oDefaultAccount.passwordSpecified() ? TextUtils.i18n('CHANGEPASSWORD/RESET_PASSWORD_POPUP_TITLE') : TextUtils.i18n('CHANGEPASSWORD/SET_PASSWORD_POPUP_TITLE'),
+			TextUtils.i18n('CORE/BUTTON_SEND'),
+			TextUtils.i18n('CORE/BUTTON_CANCEL')
 		]);
 	}
 	else
@@ -86,7 +86,7 @@ CResetPasswordView.prototype.onResetPasswordPopupAnswer = function (bReset)
 {
 	if (bReset)
 	{
-		Screens.showLoading(TextUtils.i18n('COMPOSE/INFO_SENDING'));
+		Screens.showLoading(TextUtils.i18n('CORE/INFO_SENDING'));
 		Ajax.send('Mail', 'ResetPassword', {'UrlHash': Routing.currentHash()}, this.onResetPassword, this);
 	}
 };
@@ -104,7 +104,7 @@ CResetPasswordView.prototype.onResetPassword = function (oResponse, oRequest)
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNTS_RESET_PASSWORD_INFO_AFTER'));
+		Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/RESET_PASSWORD_INFO_AFTER'));
 	}
 };
 

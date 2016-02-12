@@ -228,18 +228,18 @@ TextUtils.getFriendlySize = function (iSizeInBytes)
 
 	if (iSizeInBytes >= iBytesInGb)
 	{
-		return Types.roundNumber(iSizeInBytes / iBytesInGb, 1) + TextUtils.i18n('MAIN/GIGABYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInGb, 1) + TextUtils.i18n('CORE/GIGABYTES');
 	}
 	else if (iSizeInBytes >= iBytesInMb)
 	{
-		return Types.roundNumber(iSizeInBytes / iBytesInMb, 1) + TextUtils.i18n('MAIN/MEGABYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInMb, 1) + TextUtils.i18n('CORE/MEGABYTES');
 	}
 	else if (iSizeInBytes >= iBytesInKb)
 	{
-		return Types.roundNumber(iSizeInBytes / iBytesInKb, 0) + TextUtils.i18n('MAIN/KILOBYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInKb, 0) + TextUtils.i18n('CORE/KILOBYTES');
 	}
 
-	return iSizeInBytes + TextUtils.i18n('MAIN/BYTES');
+	return iSizeInBytes + TextUtils.i18n('CORE/BYTES');
 };
 
 

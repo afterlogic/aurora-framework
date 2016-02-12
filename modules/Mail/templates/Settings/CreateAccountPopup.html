@@ -17,7 +17,7 @@
 						   id="selenium_settings_create_account_name" />
 				</div>
 				<div class="row email">
-					<span class="label required" data-i18n="SETTINGS/ACCOUNT_PROPERTIES_EMAIL" data-bind="i18n: 'text'"></span>
+					<span class="label required" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
 					<input class="value input" spellcheck="false"  type="text" maxlength="65" 
 						   data-bind="value: email, hasfocus: emailFocus, onEnter: onSaveClick, disable: isConnectToMailType"
 						   id="selenium_settings_create_account_email" />
@@ -54,10 +54,10 @@
 				<span class="button save" data-i18n="SETTINGS/BUTTON_ADD" 
 					  data-bind="i18n: 'text', click: onFirstSaveClick, visible: !loading() && isFirstStep()"
 					  id="selenium_settings_create_account_add_button"></span>
-				<span class="button save" data-i18n="SETTINGS/BUTTON_SAVE" data-bind="i18n: 'text', click: onSecondSaveClick, visible: !loading() && !isFirstStep()"></span>
+				<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: onSecondSaveClick, visible: !loading() && !isFirstStep()"></span>
 				<span class="button save" data-i18n="SETTINGS/BUTTON_ADDING" data-bind="i18n: 'text', visible: loading() && isFirstStep()"></span>
-				<span class="button save" data-i18n="SETTINGS/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading() && !isFirstStep()"></span>
-				<span class="button cancel secondary" data-i18n="SETTINGS/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
+				<span class="button save" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading() && !isFirstStep()"></span>
+				<span class="button cancel secondary" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

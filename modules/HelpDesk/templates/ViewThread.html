@@ -80,13 +80,13 @@
 	<div class="thread_content scroll-inner">
 		<div class="details" data-bind="visible: !clientDetailsVisible() && '' !== externalContentUrl()">
 			<div class="details_content">
-				<span class="link details_show" data-i18n="HELPDESK/ACTION_SHOW_DETAILS"
+				<span class="link details_show" data-i18n="CORE/ACTION_SHOW_DETAILS"
 					data-bind="i18n: 'text', click: showClientDetails"></span>
 			</div>
 		</div>
 		<div class="details" data-bind="visible: clientDetailsVisible() && '' !== externalContentUrl()">
 			<div class="details_content">
-				<span class="link details_hide" data-i18n="HELPDESK/ACTION_HIDE_DETAILS"
+				<span class="link details_hide" data-i18n="CORE/ACTION_HIDE_DETAILS"
 					data-bind="i18n: 'text', click: hideClientDetails"></span>
 				<!-- ko if: '' !== externalContentUrl() -->
 					<iframe class="external_content" src="javascript:void(0);"
@@ -96,7 +96,7 @@
 		</div>
 
 		<div class="notification" data-bind="visible: loadingViewPane, i18n: 'text'"
-			 data-i18n="HELPDESK/INFO_LOADING"></div>
+			 data-i18n="CORE/INFO_LOADING"></div>
 		
 		<div class="link more" data-bind="visible: hasMorePosts() && !loadingMoreMessages() && !loadingViewPane(), 
 			 click: commandGetOlderPosts, i18n: 'text'" data-i18n="HELPDESK/THREAD_MORE_MESSAGES"></div>

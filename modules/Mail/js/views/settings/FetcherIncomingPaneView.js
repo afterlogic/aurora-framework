@@ -36,7 +36,7 @@ function CFetcherIncomingPaneView()
 
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(110, 995, 'fetcher_edit_incoming', TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_POP3_SERVER'));
+	this.oIncoming = new CServerPropertiesView(110, 995, 'fetcher_edit_incoming', TextUtils.i18n('MAIL/LABEL_POP3_SERVER'));
 
 	this.sFetcherFolder = '';
 	this.folder = ko.observable('');
@@ -126,7 +126,7 @@ CFetcherIncomingPaneView.prototype.save = function ()
 {
 	if (this.isEmptyRequiredFields())
 	{
-		Screens.showError(TextUtils.i18n('WARNING/FETCHER_CREATE_ERROR'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_FETCHER_FIELDS_EMPTY'));
 	}
 	else
 	{
@@ -148,13 +148,13 @@ CFetcherIncomingPaneView.prototype.onResponse = function (oResponse, oRequest)
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('WARNING/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
 	}
 	else
 	{
 		AccountList.populateFetchers();
 		
-		Screens.showReport(TextUtils.i18n('SETTINGS/ACCOUNT_FETCHER_SUCCESSFULLY_SAVED'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SUCCESSFULLY_SAVED'));
 	}
 };
 

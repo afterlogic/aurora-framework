@@ -15,7 +15,7 @@ var
 function CMobileSyncSettingsView()
 {
 	this.davServer = ko.observable('');
-	this.credentialsHintText = ko.observable(TextUtils.i18n('SETTINGS/MOBILE_CREDENTIALS_TITLE', {'EMAIL': App.defaultAccountEmail()}));
+	this.credentialsHintText = ko.observable(TextUtils.i18n('FILES/MOBILE_CREDENTIALS_TITLE', {'EMAIL': App.defaultAccountEmail()}));
 	this.bDemo = UserSettings.IsDemo;
 }
 

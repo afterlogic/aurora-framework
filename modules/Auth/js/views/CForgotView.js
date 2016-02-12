@@ -8,9 +8,9 @@ var
 	Types = require('core/js/utils/Types.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
+	Ajax = require('core/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
-	Ajax = require('core/js/Ajax.js')
+	Screens = require('core/js/Screens.js')
 ;
 
 /**
@@ -30,7 +30,7 @@ function CForgotView()
 	this.emailFocus = ko.observable(false);
 	this.gettingQuestion = ko.observable(false);
 	this.getQuestionButtonText = ko.computed(function () {
-		return this.gettingQuestion() ? TextUtils.i18n('LOGIN/BUTTON_GETTING_QUESTION') : TextUtils.i18n('LOGIN/BUTTON_GET_QUESTION');
+		return this.gettingQuestion() ? TextUtils.i18n('AUTH/BUTTON_GETTING_QUESTION') : TextUtils.i18n('AUTH/BUTTON_GET_QUESTION');
 	}, this);
 	this.allowGetQuestion = ko.computed(function () {
 		return !this.gettingQuestion() && $.trim(this.email()) !== '';
@@ -43,7 +43,7 @@ function CForgotView()
 	this.answerFocus = ko.observable(false);
 	this.validatingAnswer = ko.observable(false);
 	this.validateAnswerButtonText = ko.computed(function () {
-		return this.validatingAnswer() ? TextUtils.i18n('LOGIN/BUTTON_VALIDATING_ANSWER') : TextUtils.i18n('LOGIN/BUTTON_VALIDATE_ANSWER');
+		return this.validatingAnswer() ? TextUtils.i18n('AUTH/BUTTON_VALIDATING_ANSWER') : TextUtils.i18n('AUTH/BUTTON_VALIDATE_ANSWER');
 	}, this);
 	this.allowValidatingAnswer = ko.computed(function () {
 		return !this.validatingAnswer() && $.trim(this.answer()) !== '';
@@ -57,7 +57,7 @@ function CForgotView()
 	this.confirmPasswordFocus = ko.observable(false);
 	this.changingPassword = ko.observable(false);
 	this.changePasswordButtonText = ko.computed(function () {
-		return this.changingPassword() ? TextUtils.i18n('LOGIN/BUTTON_RESETTING_PASSWORD') : TextUtils.i18n('LOGIN/BUTTON_RESET_PASSWORD');
+		return this.changingPassword() ? TextUtils.i18n('AUTH/BUTTON_RESETTING_PASSWORD') : TextUtils.i18n('CORE/BUTTON_RESET_PASSWORD');
 	}, this);
 	this.allowChangePassword = ko.computed(function () {
 		var
@@ -105,7 +105,7 @@ CForgotView.prototype.onAccountGetForgotQuestionResponse = function (oResponse, 
 	
 	if (false === oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('LOGIN/ERROR_GETTING_QUESTION'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('AUTH/ERROR_GETTING_QUESTION'));
 	}
 	else
 	{
@@ -113,7 +113,7 @@ CForgotView.prototype.onAccountGetForgotQuestionResponse = function (oResponse, 
 		
 		if (sQuestion === '')
 		{
-			Screens.showError(TextUtils.i18n('LOGIN/ERROR_PASSWORD_RESET_NOT_AVAILABLE'));
+			Screens.showError(TextUtils.i18n('AUTH/ERROR_PASSWORD_RESET_NOT_AVAILABLE'));
 		}
 		else
 		{
@@ -151,7 +151,7 @@ CForgotView.prototype.onAccountValidateForgotQuestionResponse = function (oRespo
 	
 	if (false === oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('LOGIN/ERROR_WRONG_ANSWER'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('AUTH/ERROR_WRONG_ANSWER'));
 	}
 	else
 	{
@@ -165,7 +165,7 @@ CForgotView.prototype.executeChangePassword = function ()
 {
 	if (this.password() !== this.confirmPassword())
 	{
-		Screens.showError(TextUtils.i18n('WARNING/PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
 	}
 	else
 	{
@@ -195,13 +195,13 @@ CForgotView.prototype.onAccountChangeForgotPasswordResponse = function (oRespons
 	
 	if (false === oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('LOGIN/ERROR_RESETTING_PASSWORD'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('AUTH/ERROR_RESETTING_PASSWORD'));
 	}
 	else
 	{
 		this.gotoForgot(false);
-		Utils.log('CForgotView', TextUtils.i18n('LOGIN/REPORT_PASSWORD_CHANGED'));
-		Screens.showReport(TextUtils.i18n('LOGIN/REPORT_PASSWORD_CHANGED'));
+		Utils.log('CForgotView', TextUtils.i18n('AUTH/REPORT_PASSWORD_CHANGED'));
+		Screens.showReport(TextUtils.i18n('AUTH/REPORT_PASSWORD_CHANGED'));
 	}
 };
 

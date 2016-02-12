@@ -10,6 +10,7 @@ var
 	Ajax = require('core/js/Ajax.js'),
 	Api = require('core/js/Api.js'),
 	Screens = require('core/js/Screens.js'),
+	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js')
 ;
@@ -152,7 +153,7 @@ CAbstractSettingsFormView.prototype.onResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('SETTINGS/ERROR_SETTINGS_SAVING_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_SAVING_SETTINGS_FAILED'));
 	}
 	else
 	{
@@ -160,7 +161,7 @@ CAbstractSettingsFormView.prototype.onResponse = function (oResponse, oRequest)
 		
 		this.updateEditableValues(oParameters);
 		
-		Screens.showReport(TextUtils.i18n('SETTINGS/COMMON_REPORT_UPDATED_SUCCESSFULLY'));
+		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SETTINGS_UPDATE_SUCCESS'));
 	}
 };
 

@@ -2,6 +2,7 @@
 
 var
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	Screens = require('core/js/Screens.js'),
 			
 	Api = {}
@@ -23,49 +24,47 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 	switch (iErrorCode)
 	{
 		default:
-			sResultError = sDefaultError || TextUtils.i18n('WARNING/UNKNOWN_ERROR');
+			sResultError = sDefaultError || TextUtils.i18n('CORE/UNKNOWN_ERROR');
 			break;
 		case Enums.Errors.AuthError:
-			sResultError = TextUtils.i18n('WARNING/LOGIN_PASS_INCORRECT');
+			sResultError = TextUtils.i18n('CORE/ERROR_PASS_INCORRECT');
 			break;
 		case Enums.Errors.DataBaseError:
-			sResultError = TextUtils.i18n('WARNING/DATABASE_ERROR');
+			sResultError = TextUtils.i18n('CORE/DATABASE_ERROR');
 			break;
 		case Enums.Errors.LicenseProblem:
-			sResultError = TextUtils.i18n('WARNING/INVALID_LICENSE');
+			sResultError = TextUtils.i18n('CORE/ERROR_INVALID_LICENSE');
 			break;
 		case Enums.Errors.DemoLimitations:
-			sResultError = TextUtils.i18n('DEMO/WARNING_THIS_FEATURE_IS_DISABLED');
+			sResultError = TextUtils.i18n('CORE/DEMO_WARNING_THIS_FEATURE_IS_DISABLED');
 			break;
 		case Enums.Errors.Captcha:
-			sResultError = TextUtils.i18n('WARNING/CAPTCHA_IS_INCORRECT');
+			sResultError = TextUtils.i18n('CORE/ERROR_CAPTCHA_IS_INCORRECT');
 			break;
 		case Enums.Errors.CanNotGetMessage:
-			sResultError = TextUtils.i18n('MESSAGE/ERROR_MESSAGE_DELETED');
+			sResultError = TextUtils.i18n('CORE/ERROR_MESSAGE_DELETED');
 			break;
 		case Enums.Errors.NoRequestedMailbox:
-			sResultError = sDefaultError + ' ' + TextUtils.i18n('COMPOSE/ERROR_INVALID_ADDRESS', {'ADDRESS': (oResponse.Mailbox || '')});
+			sResultError = sDefaultError + ' ' + TextUtils.i18n('CORE/ERROR_INVALID_ADDRESS', {'ADDRESS': (oResponse.Mailbox || '')});
 			break;
 		case Enums.Errors.CanNotChangePassword:
-			sResultError = TextUtils.i18n('WARNING/UNABLE_CHANGE_PASSWORD');
+			sResultError = TextUtils.i18n('CORE/ERROR_UNABLE_CHANGE_PASSWORD');
 			break;
 		case Enums.Errors.AccountOldPasswordNotCorrect:
-			sResultError = TextUtils.i18n('WARNING/CURRENT_PASSWORD_NOT_CORRECT');
+			sResultError = TextUtils.i18n('CORE/ERROR_CURRENT_PASSWORD_NOT_CORRECT');
 			break;
 		case Enums.Errors.FetcherIncServerNotAvailable:
-			sResultError = TextUtils.i18n('WARNING/FETCHER_SAVE_ERROR');
-			break;
 		case Enums.Errors.FetcherLoginNotCorrect:
-			sResultError = TextUtils.i18n('WARNING/FETCHER_SAVE_ERROR');
+			sResultError = TextUtils.i18n('CORE/FETCHER_SAVE_ERROR');
 			break;
 		case Enums.Errors.HelpdeskUserNotExists:
-			sResultError = TextUtils.i18n('HELPDESK/ERROR_FORGOT_NO_ACCOUNT');
+			sResultError = TextUtils.i18n('CORE/ERROR_FORGOT_NO_ACCOUNT');
 			break;
 		case Enums.Errors.MailServerError:
-			sResultError = TextUtils.i18n('WARNING/CANT_CONNECT_TO_SERVER');
+			sResultError = TextUtils.i18n('CORE/ERROR_CANT_CONNECT_TO_SERVER');
 			break;
 		case Enums.Errors.DataTransferFailed:
-			sResultError = TextUtils.i18n('WARNING/DATA_TRANSFER_FAILED');
+			sResultError = TextUtils.i18n('CORE/ERROR_DATA_TRANSFER_FAILED');
 			break;
 		case Enums.Errors.NotDisplayedError:
 			sResultError = '';

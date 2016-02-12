@@ -1,6 +1,6 @@
 <span class="item importance" data-bind="dropdown: {'control': false}">
-	<span class="icon" data-bind="customTooltip: 'COMPOSE/TOOL_IMPORTANCE'"></span>
-	<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/TOOL_IMPORTANCE"></span>
+	<span class="icon" data-bind="customTooltip: 'MAIL/TOOL_IMPORTANCE'"></span>
+	<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_IMPORTANCE"></span>
 	<span class="icon arrow"></span>
 	<span class="dropdown">
 		<span class="dropdown_helper">
@@ -9,15 +9,15 @@
 				<span class="item" data-bind="click: function () {selectedImportance(Enums.Importance.Low);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedImportance() === Enums.Importance.Low}"
-					data-i18n="COMPOSE/TOOL_LOW_IMPORTANCE"></span>
+					data-i18n="MAIL/TOOL_LOW_IMPORTANCE"></span>
 				<span class="item" data-bind="click: function () {selectedImportance(Enums.Importance.Normal);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedImportance() === Enums.Importance.Normal}"
-					data-i18n="COMPOSE/TOOL_NORMAL_IMPORTANCE"></span>
+					data-i18n="MAIL/TOOL_NORMAL_IMPORTANCE"></span>
 				<span class="item" data-bind="click: function () {selectedImportance(Enums.Importance.High);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedImportance() === Enums.Importance.High}"
-					data-i18n="COMPOSE/TOOL_HIGH_IMPORTANCE"></span>
+					data-i18n="MAIL/TOOL_HIGH_IMPORTANCE"></span>
 			</span>
 		</span>
 	</span>

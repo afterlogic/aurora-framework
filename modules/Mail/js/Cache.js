@@ -806,7 +806,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 			if (bTryToDeleteEditedDraft)
 			{
 				this.disableComposeAutosave(true);
-				Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAILBOX/CONFIRM_MESSAGE_FOR_DELETE_IS_EDITED'), 
+				Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAIL/CONFIRM_MESSAGE_FOR_DELETE_IS_EDITED'), 
 					_.bind(function (bOk) {
 						if (bOk)
 						{
@@ -815,7 +815,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 						}
 						this.disableComposeAutosave(false);
 					}, this), 
-					'', TextUtils.i18n('MAILBOX/BUTTON_CLOSE_DELETE_DRAFT')
+					'', TextUtils.i18n('MAIL/BUTTON_CLOSE_DELETE_DRAFT')
 				]);
 			}
 			else
@@ -1325,7 +1325,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 		oParameters = {
 			action:'show',
 			icon: 'skins/wm_logo_140x140.png',
-			title: TextUtils.i18n('NOTIFICATION/NEW_MESSAGE_PLURAL', {
+			title: TextUtils.i18n('MAIL/NOTIFICATION_NEW_MESSAGE_PLURAL', {
 				'COUNT': iNewLength
 			}, null, iNewLength),
 			timeout: 5000,
@@ -1339,7 +1339,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 		{
 			if (Types.isNonEmptyString(oResponse.Result.New[0].Subject))
 			{
-				aBody.push(TextUtils.i18n('MESSAGE/HEADER_SUBJECT') + ': ' + oResponse.Result.New[0].Subject);
+				aBody.push(TextUtils.i18n('MAIL/LABEL_SUBJECT') + ': ' + oResponse.Result.New[0].Subject);
 			}
 			
 			sFrom = (_.map(oResponse.Result.New[0].From, function(oFrom) {
@@ -1347,7 +1347,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 			})).join(', ');
 			if (Types.isNonEmptyString(sFrom))
 			{
-				aBody.push(TextUtils.i18n('MESSAGE/HEADER_FROM') + ': ' + sFrom);
+				aBody.push(TextUtils.i18n('MAIL/LABEL_FROM') + ': ' + sFrom);
 			}
 			
 			oParameters.body = aBody.join('\r\n');
@@ -1488,8 +1488,8 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 		bToFolderTrash = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Trash)),
 		bToFolderSpam = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Spam)),
 		oDiffs = null,
-		sConfirm = bToFolderTrash ? TextUtils.i18n('MAILBOX/CONFIRM_MESSAGES_DELETE_WITHOUT_TRASH') :
-			TextUtils.i18n('MAILBOX/CONFIRM_MESSAGES_MARK_SPAM_WITHOUT_SPAM'),
+		sConfirm = bToFolderTrash ? TextUtils.i18n('MAIL/CONFIRM_MESSAGES_DELETE_WITHOUT_TRASH') :
+			TextUtils.i18n('MAIL/CONFIRM_MESSAGES_MARK_SPAM_WITHOUT_SPAM'),
 		fDeleteMessages = _.bind(function (bResult) {
 			if (bResult && oFolder)
 			{
@@ -1513,12 +1513,12 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 			}
 			else
 			{
-				Api.showErrorByCode(oResponse, TextUtils.i18n('MAILBOX/ERROR_MOVING_MESSAGES'));
+				Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_MOVING_MESSAGES'));
 			}
 		}
 		else
 		{
-			Api.showErrorByCode(oResponse, TextUtils.i18n('MAILBOX/ERROR_DELETING_MESSAGES'));
+			Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_DELETING_MESSAGES'));
 		}
 		bFillMessages = true;
 	}
@@ -1574,7 +1574,7 @@ CMailCache.prototype.onCopyMessagesResponse = function (oResponse, oRequest)
 
 	if (oResult === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAILBOX/ERROR_COPYING_MESSAGES'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_COPYING_MESSAGES'));
 	}
 
 	if (sCurrFolderFullName === oFolder.fullName() || oToFolder && sCurrFolderFullName === oToFolder.fullName())

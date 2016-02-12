@@ -47,28 +47,28 @@
 				
 				<div class="message_info message_detail_info" data-bind="visible: detailsVisible()">
 					<div class="message_info_line">
-						<span class="title" data-i18n="MESSAGE/HEADER_FROM" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-i18n="MAIL/LABEL_FROM" data-bind="i18n: 'text'"></span>: 
 						<span class="from control address" data-bind="text: fullFrom, 
 								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}">
 						</span>
 					</div>
 				
 					<div class="message_info_line" data-bind="visible: aToAddr().length > 0">
-						<span class="title" data-i18n="MESSAGE/HEADER_TO" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-i18n="MAIL/LABEL_TO" data-bind="i18n: 'text'"></span>: 
 						<!-- ko foreach: aToAddr -->
 						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aToAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aCcAddr().length > 0">
-						<span class="title" data-i18n="MESSAGE/HEADER_CC" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-i18n="CORE/LABEL_CC" data-bind="i18n: 'text'"></span>: 
 						<!-- ko foreach: aCcAddr -->
 						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aCcAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aBccAddr().length > 0">
-						<span class="title" data-i18n="MESSAGE/HEADER_BCC" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-i18n="CORE/LABEL_BCC" data-bind="i18n: 'text'"></span>: 
 						<!-- ko foreach: aBccAddr -->
 						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aBccAddr().length > $index() + 1">, </span>
@@ -137,7 +137,7 @@
 						<div class="message_body_secondary_info" data-i18n="MESSAGE/INFO_SINGLE_DOUBLE_CLICK" 
 							 data-bind="i18n: 'text'"></div>
 					</div>
-					<div class="message_body_info" data-i18n="MESSAGE/INFO_LOADING" 
+					<div class="message_body_info" data-i18n="CORE/INFO_LOADING" 
 						 data-bind="visible: isLoading, i18n: 'text'"></div>
 					<div class="message_body html" data-bind="initDom: domTextBody, attr: {'dir': rtlMessage() ? 'rtl' : 'ltr'}"></div>
 				</div>
