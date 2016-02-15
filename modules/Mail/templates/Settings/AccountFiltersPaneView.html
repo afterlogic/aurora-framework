@@ -2,8 +2,8 @@
 	<div class="fieldset">
 		<div>
 
-			<div class="hint" data-i18n="SETTINGS/ACCOUNT_FILTERS_NO_SPECIFIED" data-bind="i18n: 'text', visible: (0 === collection().length && !loading())"></div>
-			<div class="hint" data-i18n="SETTINGS/ACCOUNT_FILTERS_LOADING" data-bind="i18n: 'text', visible: (0 === collection().length && loading())"></div>
+			<div class="hint" data-i18n="MAIL/INFO_NO_FILTERS_SPECIFIED" data-bind="i18n: 'text', visible: (0 === collection().length && !loading())"></div>
+			<div class="hint" data-i18n="MAIL/INFO_LOADING_FILTERS" data-bind="i18n: 'text', visible: (0 === collection().length && loading())"></div>
 			
 			<!-- ko foreach: collection -->
 			<div class="row filter">
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="buttons" data-bind="visible: !loading()">
-		<span class="button addlink" data-i18n="SETTINGS/ACCOUNT_FILTERS_ADD" data-bind="i18n: 'text', click: addFilter"></span>
+		<span class="button addlink" data-i18n="MAIL/BUTTON_ADD_FILTERS" data-bind="i18n: 'text', click: addFilter"></span>
 		<span class="button save" data-bind="click: save, visible: !isSaving()">
 			<span data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text'"></span>
 		</span>

@@ -6,8 +6,9 @@ var
 	ko = require('knockout'),
 	
 	CustomTooltip = require('core/js/CustomTooltip.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
+	
 	ComposeMessageToAddressesFunc = ModulesManager.run('Mail', 'getComposeMessageToAddresses'),
 	SearchMessagesInCurrentFolderFunc = ModulesManager.run('Mail', 'getSearchMessagesInCurrentFolder'),
 	
@@ -153,7 +154,7 @@ function OnContactResponse(aElements, aContacts)
 			{
 				var $add = $('<span class="add_contact"></span>');
 				$Element.after($add);
-				CustomTooltip.init($add, 'MESSAGE/ACTION_ADD_TO_CONTACTS');
+				CustomTooltip.init($add, 'MAIL/ACTION_ADD_TO_CONTACTS');
 				$add.on('click', function () {
 					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sEmail, function (aContacts) {
 						_.each(aElements, function ($El) {

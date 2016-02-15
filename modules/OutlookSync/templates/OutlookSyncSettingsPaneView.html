@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="title" data-i18n="SETTINGS/TITLE_OUTLOOK_SYNC" data-bind="i18n: 'text'"></h2>
+	<h2 class="title" data-i18n="OUTLOOKSYNC/SETTINGS_HEADING" data-bind="i18n: 'text'"></h2>
 </div>
 
 <div class="panel_center">
@@ -8,33 +8,31 @@
 		<!-- ko template: {name: oResetPasswordViewModel.ViewTemplate, data: oResetPasswordViewModel} --><!-- /ko -->
 		
 		<div class="fieldset">
-			
-			<div class="hint" data-i18n="SETTINGS/OUTLOOKSYNC_HEADING" data-bind="i18n: 'text'"></div>
+			<div class="hint" data-i18n="OUTLOOKSYNC/HINT_SYNC_PLUGIN" data-bind="i18n: 'text'"></div>
 			<div class="row">
-				<span class="label" data-i18n="SETTINGS/OUTLOOKSYNC_SERVER" data-bind="i18n: 'text'"></span>
+				<span class="label" data-i18n="OUTLOOKSYNC/LABEL_DAV_SERVER" data-bind="i18n: 'text'"></span>
 				<span class="value" data-bind="text: server"></span>
 			</div>
 			<div class="hint" data-bind="text: credentialsHintText"></div>
-			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="SETTINGS/DEMO_CREDENTIAL_HINT_HTML"></div>
+			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="CORE/HINT_DEMO_MOBILE_CREDENTIALS_HTML"></div>
 
 			<br />
 			<br />
 
-			<div class="hint" data-i18n="SETTINGS/OUTLOOKSYNC_PLUGIN_VERSION_DESC_1" data-bind="i18n: 'text', visible: sPlugin32DownloadLink || sPlugin64DownloadLink"></div>
+			<div class="hint" data-i18n="OUTLOOKSYNC/HINT_PLUGIN_SUPPORTS" data-bind="i18n: 'text', visible: sPlugin32DownloadLink || sPlugin64DownloadLink"></div>
 			<div>
-				- <a class="link" href="#" target="_blank" data-i18n="SETTINGS/OUTLOOKSYNC_PLUGIN_VERSION_32_LINK"
+				- <a class="link" href="#" target="_blank" data-i18n="OUTLOOKSYNC/LINK_PLUGIN_VERSION_32"
 					data-bind="i18n: 'text', visible: sPlugin32DownloadLink, attr: {href: sPlugin32DownloadLink}"></a>
 				<br />
-				- <a class="link" href="#" target="_blank" data-i18n="SETTINGS/OUTLOOKSYNC_PLUGIN_VERSION_64_LINK"
+				- <a class="link" href="#" target="_blank" data-i18n="OUTLOOKSYNC/LINK_PLUGIN_VERSION_64"
 					data-bind="i18n: 'text', visible: sPlugin64DownloadLink, attr: {href: sPlugin64DownloadLink}"></a>
 			</div>
 			<br />
 			<div class="hint" data-bind="visible: sPluginReadMoreLink">
-				<span data-i18n="SETTINGS/OUTLOOKSYNC_PLUGIN_VERSION_DESC_2" data-bind="i18n: 'text'"></span>
-				<a class="link" href="#" target="_blank" data-i18n="SETTINGS/OUTLOOKSYNC_PLUGIN_VERSION_READ_MORE_LINK"
+				<span data-i18n="OUTLOOKSYNC/HINT_PLUGIN_VERSION" data-bind="i18n: 'text'"></span>
+				<a class="link" href="#" target="_blank" data-i18n="OUTLOOKSYNC/LINK_PLUGIN_READ_MORE"
 					data-bind="i18n: 'text', attr: {href: sPluginReadMoreLink}"></a>
 			</div>
-
 		</div>
 	</div>
 </div>

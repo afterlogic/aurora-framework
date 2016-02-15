@@ -8,11 +8,13 @@ var
 	Types = require('core/js/utils/Types.js'),
 	
 	Screens = require('core/js/Screens.js'),
+	
 	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
 	
 	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
-	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),
-	Enums = require('modules/OpenPgp/js/Enums.js')
+	
+	Enums = require('modules/OpenPgp/js/Enums.js'),
+	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js')
 ;
 
 /**

@@ -37,7 +37,7 @@ function CMobileSyncSettingsPaneView()
 		return !!this.oCalendarMobileSyncSettingsView && this.oCalendarMobileSyncSettingsView.visible() || !!this.oContactsMobileSyncSettingsView;
 	}, this);
 
-	this.credentialsHintText = ko.observable(TextUtils.i18n('SETTINGS/MOBILE_CREDENTIALS_TITLE', {'EMAIL': App.defaultAccountEmail()}));
+	this.credentialsHintText = ko.observable(TextUtils.i18n('CORE/HINT_MOBILE_CREDENTIALS', {'EMAIL': App.defaultAccountEmail()}));
 }
 
 CMobileSyncSettingsPaneView.prototype.ViewTemplate = 'MobileSync_MobileSyncSettingsPaneView';

@@ -3,27 +3,27 @@
 	<!-- ko if: bAllowToolbar -->
 	<div class="toolbar" data-bind="initDom: toolbarDom">
 		<div class="content">
-			<a href="javascript:void(0);" class="item undo" data-bind="click: function () { oCrea.undo(); return false; }, customTooltip: 'HTMLEDITOR/UNDO'">
+			<a href="javascript:void(0);" class="item undo" data-bind="click: function () { oCrea.undo(); return false; }, customTooltip: 'MAIL/HINT_UNDO'">
 				<span class="icon"></span>
 			</a>
 
-			<a href="javascript:void(0);" class="item redo" data-bind="click: function () { oCrea.redo(); return false; }, customTooltip: 'HTMLEDITOR/REDO'">
+			<a href="javascript:void(0);" class="item redo" data-bind="click: function () { oCrea.redo(); return false; }, customTooltip: 'MAIL/HINT_REDO'">
 				<span class="icon"></span>
 			</a>
 
-			<a href="javascript:void(0);" class="item bold" data-bind="click: function () { oCrea.bold(); return false; }, customTooltip: 'HTMLEDITOR/BOLD'">
+			<a href="javascript:void(0);" class="item bold" data-bind="click: function () { oCrea.bold(); return false; }, customTooltip: 'MAIL/HINT_BOLD'">
 				<span class="icon"></span>
 			</a>
 
-			<a href="javascript:void(0);" class="item italic" data-bind="click: function () { oCrea.italic();  return false; }, customTooltip: 'HTMLEDITOR/ITALIC'">
+			<a href="javascript:void(0);" class="item italic" data-bind="click: function () { oCrea.italic();  return false; }, customTooltip: 'MAIL/HINT_ITALIC'">
 				<span class="icon"></span>
 			</a>
 
-			<a href="javascript:void(0);" class="item underline" data-bind="click: function () { oCrea.underline(); return false; }, customTooltip: 'HTMLEDITOR/UNDERLINE'">
+			<a href="javascript:void(0);" class="item underline" data-bind="click: function () { oCrea.underline(); return false; }, customTooltip: 'MAIL/HINT_UNDERLINE'">
 				<span class="icon"></span>
 			</a>
 
-			<a href="javascript:void(0);" class="item strike_through" data-bind="click: function () { oCrea.strikeThrough(); return false; }, customTooltip: 'HTMLEDITOR/STRIKETHROUGH'">
+			<a href="javascript:void(0);" class="item strike_through" data-bind="click: function () { oCrea.strikeThrough(); return false; }, customTooltip: 'MAIL/HINT_STRIKETHROUGH'">
 				<span class="icon"></span>
 			</a>
 			
@@ -118,14 +118,14 @@
 				</span>
 			</a>
 
-			<a href="javascript:void(0);" class="item clear" data-bind="click: function () { oCrea.removeFormat(); }, customTooltip: 'HTMLEDITOR/REMOVE_FORMAT'">
+			<a href="javascript:void(0);" class="item clear" data-bind="click: function () { oCrea.removeFormat(); }, customTooltip: 'MAIL/HINT_REMOVE_FORMAT'">
 				<span class="icon"></span>
 			</a>
 			
-			<a href="javascript:void(0);" class="item rtl" data-bind="visible: bAllowChangeInputDirection, click: function () { oCrea.setRtlDirection(); }, customTooltip: 'HTMLEDITOR/RTL_DIRECTION'">
+			<a href="javascript:void(0);" class="item rtl" data-bind="visible: bAllowChangeInputDirection, click: function () { oCrea.setRtlDirection(); }, customTooltip: 'MAIL/HINT_RTL_DIRECTION'">
 				<span class="icon">rtl</span>
 			</a>
-			<a href="javascript:void(0);" class="item ltr" data-bind="visible: bAllowChangeInputDirection, click: function () { oCrea.setLtrDirection(); }, customTooltip: 'HTMLEDITOR/LTR_DIRECTION'">
+			<a href="javascript:void(0);" class="item ltr" data-bind="visible: bAllowChangeInputDirection, click: function () { oCrea.setLtrDirection(); }, customTooltip: 'MAIL/HINT_LTR_DIRECTION'">
 				<span class="icon">ltr</span>
 			</a>
 		</div>
@@ -162,5 +162,4 @@
 		<span class="button" data-i18n="MAIL/BUTTON_ORIGINAL_IMAGE" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Original); }"></span>
 		<span class="button" data-i18n="CORE/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentImage(); }"></span>
 	</div>
-	
 </div>

@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	
 	TextUtils = require('core/js/utils/Text.js'),
+	
 	Screens = require('core/js/Screens.js'),
 	
 	Enums = require('modules/OpenPgp/js/Enums.js'),

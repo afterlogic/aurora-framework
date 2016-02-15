@@ -41,7 +41,7 @@ CAbstractSettingsFormView.prototype.hide = function (fAfterHideHandler, fRevertR
 {
 	if (this.getCurrentState() !== this.sSavedState) // if values have been changed
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('COMPOSE/CONFIRM_DISCARD_CHANGES'), _.bind(function (bDiscard) {
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('CORE/CONFIRM_DISCARD_CHANGES'), _.bind(function (bDiscard) {
 			if (bDiscard)
 			{
 				fAfterHideHandler();
@@ -161,7 +161,7 @@ CAbstractSettingsFormView.prototype.onResponse = function (oResponse, oRequest)
 		
 		this.updateEditableValues(oParameters);
 		
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SETTINGS_UPDATE_SUCCESS'));
+		Screens.showReport(TextUtils.i18n('CORE/REPORT_SETTINGS_UPDATE_SUCCESS'));
 	}
 };
 

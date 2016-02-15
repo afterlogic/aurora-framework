@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="title" data-i18n="SETTINGS/TITLE_MOBILE_SYNC" data-bind="i18n: 'text'"></h2>
+	<h2 class="title" data-i18n="MOBILESYNC/SETTINGS_HEADING" data-bind="i18n: 'text'"></h2>
 </div>
 
 <div class="panel_center">
@@ -8,15 +8,15 @@
 		<!-- ko template: {name: oResetPasswordViewModel.ViewTemplate, data: oResetPasswordViewModel} --><!-- /ko -->
 		
 		<div class="fieldset" data-bind="visible: enableDav">
-			<h2 class="subtitle" data-i18n="SETTINGS/MOBILE_DAVSYNC_HEADING" data-bind="i18n: 'text'"></h2>
-			<div class="hint" data-i18n="SETTINGS/MOBILE_DAVSYNC_HINT" data-bind="i18n: 'text'"></div>
+			<h2 class="subtitle" data-i18n="MOBILESYNC/HEADING_DAVSYNC" data-bind="i18n: 'text'"></h2>
+			<div class="hint" data-i18n="MOBILESYNC/HINT_DAVSYNC" data-bind="i18n: 'text'"></div>
 			
 			<div class="row">
-				<span class="label" data-i18n="SETTINGS/MOBILE_DAVSYNC_SERVER" data-bind="i18n: 'text'"></span>
+				<span class="label" data-i18n="MOBILESYNC/LABEL_DAV_SERVER" data-bind="i18n: 'text'"></span>
 				<span class="value" data-bind="text: davServer"></span>
 			</div>
 			<div class="hint" data-bind="text: credentialsHintText"></div>
-			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="SETTINGS/DEMO_CREDENTIAL_HINT_HTML"></div>
+			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="CORE/HINT_DEMO_MOBILE_CREDENTIALS_HTML"></div>
 		</div>
 		
 		<div class="fieldset ios_profile" data-bind="visible: bIosDevice">
@@ -26,7 +26,7 @@
 				<span class="value">
 					<a class="link" href="./?Profile">
 						<span class="icon"></span>
-						<span class="text" data-i18n="SETTINGS/MOBILE_IOS_LINK" data-bind="i18n: 'text'"></span>
+						<span class="text" data-i18n="MOBILESYNC/LINK_IOS_PROFILE" data-bind="i18n: 'text'"></span>
 					</a>
 				</span>
 			</div>
@@ -35,13 +35,13 @@
 		<!-- ko template: {name: oCalendarMobileSyncSettingsView.ViewTemplate, data: oCalendarMobileSyncSettingsView} --><!-- /ko -->
 			
 		<div class="fieldset" data-bind="visible: visibleDavViaUrls">
-			<h2 class="subtitle" data-i18n="SETTINGS/MOBILE_DAVSYNC_SEPARATE_URLS_HEADING" data-bind="i18n: 'text'"></h2>
-			<div class="hint" data-i18n="SETTINGS/MOBILE_DAVSYNC_HINT_URLS" data-bind="i18n: 'text'"></div>
+			<h2 class="subtitle" data-i18n="MOBILESYNC/HEADING_DAVSYNC_URLS" data-bind="i18n: 'text'"></h2>
+			<div class="hint" data-i18n="MOBILESYNC/HINT_DAVSYNC_URLS" data-bind="i18n: 'text'"></div>
 		
 			<!-- ko template: {name: oContactsMobileSyncSettingsView.ViewTemplate, data: oContactsMobileSyncSettingsView} --><!-- /ko -->
 			
 			<div class="hint" data-bind="text: credentialsHintText"></div>
-			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="SETTINGS/DEMO_CREDENTIAL_HINT_HTML"></div>
+			<div class="hint" data-bind="i18n: 'html', visible: bDemo" data-i18n="CORE/HINT_DEMO_MOBILE_CREDENTIALS_HTML"></div>
 		</div>
 		
 		<!-- ko template: {name: oFilesMobileSyncSettingsView.ViewTemplate, data: oFilesMobileSyncSettingsView} --><!-- /ko -->

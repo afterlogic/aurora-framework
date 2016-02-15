@@ -48,7 +48,7 @@ function CPhoneView()
 				this.tooltip(TextUtils.i18n('PHONE/NOT_CONNECTED'));
 				break;
 			case Enums.PhoneAction.OfflineError:
-				this.tooltip(TextUtils.i18n('Connection error'));
+				this.tooltip(TextUtils.i18n('PHONE/ERROR_CONNECTION'));
 				break;
 			case Enums.PhoneAction.OfflineInit:
 				this.tooltip(TextUtils.i18n('PHONE/CONNECTING'));
@@ -67,12 +67,12 @@ function CPhoneView()
 				this.timer('start');
 				break;
 			case Enums.PhoneAction.OutgoingConnect:
-				this.tooltip(TextUtils.i18n('In Call'));
+				this.tooltip(TextUtils.i18n('PHONE/HINT_IN_CALL'));
 				break;
 			case Enums.PhoneAction.Incoming:
 				break;
 			case Enums.PhoneAction.IncomingConnect:
-				this.tooltip(TextUtils.i18n('In Call'));
+				this.tooltip(TextUtils.i18n('PHONE/HINT_IN_CALL'));
 				this.report('');
 				this.timer('start');
 				break;

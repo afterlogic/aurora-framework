@@ -765,7 +765,7 @@ CComposeView.prototype.focusAfterFilling = function ()
 CComposeView.prototype.beforeHide = function (fContinueScreenChanging)
 {
 	var
-		sConfirm = TextUtils.i18n('MAIL/CONFIRM_DISCARD_CHANGES'),
+		sConfirm = TextUtils.i18n('CORE/CONFIRM_DISCARD_CHANGES'),
 		fOnConfirm = _.bind(function (bOk) {
 			if (bOk && $.isFunction(fContinueScreenChanging))
 			{

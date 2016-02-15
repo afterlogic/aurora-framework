@@ -1,8 +1,3 @@
-<!--
-	Attention!
-	This template is used with view models 
-	CSignaturePaneView, CFetcherSignatureViewModel.
--->
 <div class="fields">
 	<div class="fieldset">
 		<div class="row">
@@ -23,7 +18,7 @@
 			
 			<div class="editor" data-bind="template: {name: oHtmlEditor.ViewTemplate, data: oHtmlEditor}"></div>
 		</div>
-		<div class="hint" data-i18n="HTMLEDITOR/UPLOAD_HINT_IMAGE_DRAGNDROP" data-bind="visible: enableImageDragNDrop, i18n: 'text'"></div>
+		<div class="hint" data-i18n="MAIL/HINT_IMAGE_DRAGNDROP" data-bind="visible: enableImageDragNDrop, i18n: 'text'"></div>
 	</div>
 	<div class="buttons">
 		<span class="button" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>

@@ -68,7 +68,7 @@
 				</tr>
 				<tr>
 					<td class="wm_print_title">
-						<span data-i18n="MESSAGE/HEADER_DATE" data-bind="i18n: 'text'"></span>: 
+						<span data-i18n="MAIL/LABEL_DATE" data-bind="i18n: 'text'"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: fullDate" colspan="2"></td>
 				</tr>
@@ -80,7 +80,7 @@
 				</tr>
 				<tr data-bind="visible: attachments().length > 0">
 					<td class="wm_print_title">
-						<span data-i18n="MESSAGE/HEADER_ATTACHMENTS" data-bind="i18n: 'text'"></span>: 
+						<span data-i18n="MAIL/LABEL_ATTACHMENTS" data-bind="i18n: 'text'"></span>: 
 					</td>
 					<!-- ko if: usesAttachmentString -->
 					<td class="wm_print_value">
@@ -96,7 +96,7 @@
 							<span data-bind="visible: visibleViewLink">
 								(<a href="javascript: void(0);" data-bind="i18n: 'text', 
 									attr: {'data-hash': 'view-' + hash()}" 
-									data-i18n="MESSAGE/ATTACHMENT_VIEW"></a>)
+									data-i18n="CORE/ATTACHMENT_VIEW"></a>)
 							</span>
 							<!-- ko if: isMessageType() && messagePart() -->
 								<!-- ko template: {name: 'Mail_PrintMessageView', data: messagePart} --><!-- /ko -->

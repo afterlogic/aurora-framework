@@ -1,11 +1,11 @@
 <div class="panel_top">
-	<h2 class="title" data-i18n="TITLE/LOGIN" data-bind="i18n: 'text'"></h2>
+	<h2 class="title" data-i18n="MAIL/SETTINGS_TITLE" data-bind="i18n: 'text'"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
 		<div class="fieldset">
 			<div class="row">
-				<span class="label" data-i18n="SETTINGS/COMMON_MESSAGES_PER_PAGE" data-bind="i18n: 'text'"></span>
+				<span class="label" data-i18n="MAIL/LABEL_MESSAGES_PER_PAGE" data-bind="i18n: 'text'"></span>
 				<select class="value input" data-bind="options: messagesPerPageValues, value: messagesPerPage"></select>
 			</div>
 			<div class="row" data-bind="visible: bAllowThreads">
@@ -14,7 +14,7 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="useThreads" data-bind="checked: useThreads" />
 					</label>
-					<label for="useThreads" data-i18n="SETTINGS/COMMON_USE_THREADING" data-bind="i18n: 'text'"></label>
+					<label for="useThreads" data-i18n="MAIL/LABEL_USE_THREADING" data-bind="i18n: 'text'"></label>
 				</span>
 			</div>
 			<div class="row">
@@ -23,11 +23,11 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="saveRepliesToCurrFolder" data-bind="checked: saveRepliesToCurrFolder" />
 					</label>
-					<label for="saveRepliesToCurrFolder" data-i18n="SETTINGS/COMMON_SAVE_REPLIED_TO_CURR_FOLDER" data-bind="i18n: 'text'"></label>
+					<label for="saveRepliesToCurrFolder" data-i18n="MAIL/LABEL_SAVE_REPLIED_TO_CURR_FOLDER" data-bind="i18n: 'text'"></label>
 				</span>
 			</div>
 			<div class="hint row">
-				<span class="value offset" data-bind="i18n: 'text'" data-i18n="SETTINGS/COMMON_SAVE_REPLIED_TO_CURR_FOLDER_HINT"></span>
+				<span class="value offset" data-bind="i18n: 'text'" data-i18n="MAIL/HINT_SAVE_REPLIED_TO_CURR_FOLDER"></span>
 			</div>
 			<div class="row" data-bind="visible: bRtl">
 				<span class="value offset">
@@ -35,20 +35,20 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="allowChangeInputDirection" data-bind="checked: allowChangeInputDirection" />
 					</label>
-					<label for="allowChangeInputDirection" data-i18n="SETTINGS/COMMON_SHOW_INPUT_DIRECTION_BUTTONS" data-bind="i18n: 'text'"></label>
+					<label for="allowChangeInputDirection" data-i18n="MAIL/LABEL_SHOW_INPUT_DIRECTION_BUTTONS" data-bind="i18n: 'text'"></label>
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: bRtl">
-				<span class="value offset" data-bind="i18n: 'text'" data-i18n="SETTINGS/COMMON_SHOW_INPUT_DIRECTION_BUTTONS_HINT"></span>
+				<span class="value offset" data-bind="i18n: 'text'" data-i18n="MAIL/HINT_SHOW_INPUT_DIRECTION_BUTTONS"></span>
 			</div>
 			
 			<div class="row" data-bind="visible: bAllowMailto">
 				<span class="value offset">
-					<a class="link" href="javascript:void(0);" data-bind="i18n: 'text', click: registerMailto" data-i18n="SETTINGS/COMMON_REGISTER_MAILTO"></a>
+					<a class="link" href="javascript:void(0);" data-bind="i18n: 'text', click: registerMailto" data-i18n="MAIL/BUTTON_REGISTER_MAILTO"></a>
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: bAllowMailto">
-				<span class="value offset" data-bind="i18n: 'html'" data-i18n="SETTINGS/COMMON_REGISTER_MAILTO_HINT"></span>
+				<span class="value offset" data-bind="i18n: 'html'" data-i18n="MAIL/HINT_REGISTER_MAILTO"></span>
 			</div>
 		</div>
 		<div class="buttons">

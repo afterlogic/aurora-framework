@@ -6,10 +6,11 @@ var
 	$ = require('jquery'),
 	
 	Utils = require('core/js/utils/Common.js'),
+	
 	Screens = require('core/js/Screens.js'),
 	
-	Settings = require('modules/Phone/js/Settings.js'),
-	Phone = require('modules/Phone/js/Phone.js')
+	Phone = require('modules/Phone/js/Phone.js'),
+	Settings = require('modules/Phone/js/Settings.js')
 ;
 
 /**

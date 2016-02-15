@@ -11,7 +11,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/MobileSync/js/views/MobileSyncSettingsPaneView.js'); }, 'mobile_sync', TextUtils.i18n('SETTINGS/TAB_MOBILE_SYNC')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/MobileSync/js/views/MobileSyncSettingsPaneView.js'); }, 'mobile_sync', TextUtils.i18n('MOBILESYNC/SETTINGS_TABNAME')]);
 		}
 	};
 };

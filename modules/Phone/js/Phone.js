@@ -10,8 +10,8 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Browser = require('core/js/Browser.js'),
-	Screens = require('core/js/Screens.js'),
 	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('core/js/Screens.js'),
 	
 	Popups = require('core/js/Popups.js'),
 	PhonePopup = require('modules/Phone/js/popups/PhonePopup.js'),
@@ -186,8 +186,8 @@ CPhone.prototype.incomingCall = function (sNumber)
 			
 			Utils.desktopNotify({
 				action: 'show',
-				title: sText + TextUtils.i18n(' calling...'),
-				body: TextUtils.i18n('Click here to answer.\r\n To drop the call, click End in the web interface.'),
+				title: TextUtils.i18n('PHONE/NOTIFICATION_INFO_CALLING', {'USER' : sText}),
+				body: TextUtils.i18n('PHONE/NOTIFICATION_CLICK_TO_ANSWER'),
 				callback: _.bind(function() {
 					this.action(Enums.PhoneAction.IncomingConnect);
 				}, this),

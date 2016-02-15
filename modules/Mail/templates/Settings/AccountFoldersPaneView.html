@@ -19,17 +19,17 @@
 				<span class="title">
 					<span class="count" data-bind="text: totalMessageCount"></span>
 					<span class="name">
-						<span class="text" data-i18n="SETTINGS/ACCOUNT_FOLDERS_TOTAL" data-bind="i18n: 'text'"></span>
+						<span class="text" data-i18n="MAIL/LABEL_TOTAL" data-bind="i18n: 'text'"></span>
 					</span>
 				</span>
 			</div>
 		</div>
 
-		<div class="hint" data-i18n="SETTINGS/ACCOUNT_FOLDERS_INFO_DELETING_NONEMPTY_FOLDERS" data-bind="i18n: 'text', css: {'highlight': highlighted}"></div>
-		<div class="hint" data-i18n="SETTINGS/ACCOUNT_FOLDERS_INFO_SETUP_SPECIAL_FOLDERS" data-bind="i18n: 'text'"></div>
+		<div class="hint" data-i18n="MAIL/HINT_DELETING_NONEMPTY_FOLDERS" data-bind="i18n: 'text', css: {'highlight': highlighted}"></div>
+		<div class="hint" data-i18n="MAIL/HINT_SETUP_SPECIAL_FOLDERS" data-bind="i18n: 'text'"></div>
 		<div class="buttons">
-			<span class="button" data-i18n="SETTINGS/ACCOUNT_FOLDERS_BUTTON_ADD_NEW_FOLDER" data-bind="i18n: 'text', command: addNewFolderCommand"></span>
-			<span class="button" data-i18n="SETTINGS/ACCOUNT_FOLDERS_BUTTON_SETUP_SPECIAL_FOLDERS" data-bind="i18n: 'text', command: setSystemFoldersCommand"></span>
+			<span class="button" data-i18n="MAIL/BUTTON_ADD_NEW_FOLDER" data-bind="i18n: 'text', command: addNewFolderCommand"></span>
+			<span class="button" data-i18n="MAIL/BUTTON_SETUP_SPECIAL_FOLDERS" data-bind="i18n: 'text', command: setSystemFoldersCommand"></span>
 		</div>
 		{%INCLUDE-START/Account-Folders-After-Buttons/INCLUDE-END%}
 	</div>

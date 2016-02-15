@@ -34,13 +34,13 @@ CMessageControlView.prototype.doAfterPopulatingMessage = function (oMessageProps
 		switch (oMessageProps.iSensitivity)
 		{
 			case Enums.Sensitivity.Confidential:
-				this.sensitivityText(TextUtils.i18n('MESSAGE/SENSITIVITY_CONFIDENTIAL'));
+				this.sensitivityText(TextUtils.i18n('MAILSENSITIVITY/INFO_CONFIDENTIAL'));
 				break;
 			case Enums.Sensitivity.Personal:
-				this.sensitivityText(TextUtils.i18n('MESSAGE/SENSITIVITY_PERSONAL'));
+				this.sensitivityText(TextUtils.i18n('MAILSENSITIVITY/INFO_PERSONAL'));
 				break;
 			case Enums.Sensitivity.Private:
-				this.sensitivityText(TextUtils.i18n('MESSAGE/SENSITIVITY_PRIVATE'));
+				this.sensitivityText(TextUtils.i18n('MAILSENSITIVITY/INFO_PRIVATE'));
 				break;
 		}
 		this.visible(true);

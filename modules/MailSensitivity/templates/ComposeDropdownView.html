@@ -1,6 +1,6 @@
 <span class="item sensitivity" data-bind="dropdown: {'control': false}">
-	<span class="icon" data-bind="customTooltip: 'COMPOSE/TOOL_SENSITIVITY'"></span>
-	<span class="text" data-bind="i18n: 'text'" data-i18n="COMPOSE/TOOL_SENSITIVITY"></span>
+	<span class="icon" data-bind="customTooltip: 'MAILSENSITIVITY/LABEL_SENSITIVITY'"></span>
+	<span class="text" data-bind="i18n: 'text'" data-i18n="MAILSENSITIVITY/LABEL_SENSITIVITY"></span>
 	<span class="icon arrow"></span>
 	<span class="dropdown">
 		<span class="dropdown_helper">
@@ -9,19 +9,19 @@
 				<span class="item" data-bind="click: function () {selectedSensitivity(Enums.Sensitivity.Nothing);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedSensitivity() === Enums.Sensitivity.Nothing}"
-					data-i18n="COMPOSE/TOOL_NOTHING_SENSITIVITY"></span>
+					data-i18n="MAILSENSITIVITY/OPTION_NOTHING"></span>
 				<span class="item" data-bind="click: function () {selectedSensitivity(Enums.Sensitivity.Confidential);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedSensitivity() === Enums.Sensitivity.Confidential}"
-					data-i18n="COMPOSE/TOOL_CONFIDENTIAL_SENSITIVITY"></span>
+					data-i18n="MAILSENSITIVITY/OPTION_CONFIDENTIAL"></span>
 				<span class="item" data-bind="click: function () {selectedSensitivity(Enums.Sensitivity.Private);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedSensitivity() === Enums.Sensitivity.Private}"
-					data-i18n="COMPOSE/TOOL_PRIVATE_SENSITIVITY"></span>
+					data-i18n="MAILSENSITIVITY/OPTION_PRIVATE"></span>
 				<span class="item" data-bind="click: function () {selectedSensitivity(Enums.Sensitivity.Personal);}, 
 					  i18n: 'text', 
 					  css: {'selected': selectedSensitivity() === Enums.Sensitivity.Personal}"
-					data-i18n="COMPOSE/TOOL_PERSONAL_SENSITIVITY"></span>
+					data-i18n="MAILSENSITIVITY/OPTION_PERSONAL"></span>
 			</span>
 		</span>
 	</span>

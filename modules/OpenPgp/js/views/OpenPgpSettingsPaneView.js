@@ -9,12 +9,13 @@ var
 	ModulesManager = require('core/js/ModulesManager.js'),
 	Screens = require('core/js/Screens.js'),
 	UserSettings = require('core/js/Settings.js'),
+	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('core/js/Popups.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
-	ImportKeyPopup = require('modules/OpenPgp/js/popups/ImportKeyPopup.js'),
 	GenerateKeyPopup = require('modules/OpenPgp/js/popups/GenerateKeyPopup.js'),
+	ImportKeyPopup = require('modules/OpenPgp/js/popups/ImportKeyPopup.js'),
 	ShowKeyArmorPopup = require('modules/OpenPgp/js/popups/ShowKeyArmorPopup.js'),
 	
 	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),

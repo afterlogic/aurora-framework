@@ -193,7 +193,7 @@ CSignaturePaneView.prototype.onResponse = function (oResponse, oRequest)
 	
 	if (oResponse.Result)
 	{
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SETTINGS_UPDATE_SUCCESS'));
+		Screens.showReport(TextUtils.i18n('CORE/REPORT_SETTINGS_UPDATE_SUCCESS'));
 	}
 	else
 	{

@@ -2,16 +2,16 @@
 	<span class="resizer" data-bind="event: { 'dblclick': resizeDblClick}"></span>
 	<span class="content">
 		<span class="item checkstate" data-bind="command: checkMailCommand, checkstate: {'activeClass': 'process', 'state': checkMailIndicator(), 'duration': 800}, 
-				customTooltip: 'MAILBOX/TOOL_CHECK_MAIL'" id="selenium_mail_check_button">
+				customTooltip: 'MAIL/TOOL_CHECK_MAIL'" id="selenium_mail_check_button">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_CHECK_MAIL"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_CHECK_MAIL"></span>
 		</span>
 		
 		<!-- ko template: {name: 'Mail_Messages_MarkButtonView'} --><!-- /ko -->
 		
-		<span class="item move" id="selenium_move_to_folder" data-bind="dropdown: {control: false, scrollToTopContainer: '.scroll-inner'}, command: moveToFolderCommand, customTooltip: 'MAILBOX/TOOL_MOVE_TO_FOLDER'">
+		<span class="item move" id="selenium_move_to_folder" data-bind="dropdown: {control: false, scrollToTopContainer: '.scroll-inner'}, command: moveToFolderCommand, customTooltip: 'MAIL/TOOL_MOVE_TO_FOLDER'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_MOVE_TO_FOLDER"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_MOVE_TO_FOLDER"></span>
 			<span class="icon arrow"></span>
 			<span class="dropdown" data-bind="initDom: domFoldersMoveTo">
 				<span class="dropdown_helper">
@@ -27,13 +27,13 @@
 		
 		<!-- ko template: {name: 'Mail_Messages_DeleteButtonView'} --><!-- /ko -->
 		
-		<span class="item empty_trash" data-bind="command: emptyTrashCommand, visible: isTrashFolder(), customTooltip: 'MAILBOX/TOOL_EMPTY_TRASH'">
+		<span class="item empty_trash" data-bind="command: emptyTrashCommand, visible: isTrashFolder(), customTooltip: 'MAIL/TOOL_EMPTY_TRASH'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_EMPTY_TRASH"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_EMPTY_TRASH"></span>
 		</span>
-		<span class="item empty_spam" data-bind="command: emptySpamCommand, visible: isSpamFolder(), customTooltip: 'MAILBOX/TOOL_EMPTY_SPAM'">
+		<span class="item empty_spam" data-bind="command: emptySpamCommand, visible: isSpamFolder(), customTooltip: 'MAIL/TOOL_EMPTY_SPAM'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="MAILBOX/TOOL_EMPTY_SPAM"></span>
+			<span class="text" data-bind="i18n: 'text'" data-i18n="MAIL/TOOL_EMPTY_SPAM"></span>
 		</span>
 		
 		<!-- ko template: {name: 'Mail_Messages_SpamButtonsView'} --><!-- /ko -->
