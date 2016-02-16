@@ -1647,6 +1647,285 @@ class MailModule extends AApiModule
 		return $mResult;
 	}	
 	
+	
+	/**
+	 * @return bool
+	 */
+	private function rawCallback($fCallback, $bCache = true, &$oAccount = null, &$oHelpdeskUser = null)
+	{
+		$sFolder = '';
+		$iUid = 0;
+		$sMimeIndex = '';
+
+		$oAccount = null;
+		$oHelpdeskUser = null;
+		$oHelpdeskUserFromAttachment = null;
+
+		
+		$mAccountID = $this->getParamValue('AccountID');
+		
+		$mHelpdeskUserID = $this->getParamValue('HelpdeskUserID');
+		$mHelpdeskTenantID = $this->getParamValue('HelpdeskTenantID');
+		
+		if (isset($mHelpdeskUserID, $mHelpdeskTenantID))
+		{
+			$oAccount = null;
+			$oHelpdeskUser = $this->getHelpdeskAccountFromParam($oAccount);
+
+			if ($oHelpdeskUser && $oHelpdeskUser->IdTenant === $mHelpdeskTenantID)
+			{
+				$oApiHelpdesk = $this->ApiHelpdesk();
+				if ($oApiHelpdesk)
+				{
+					if ($oHelpdeskUser->IdHelpdeskUser === $mHelpdeskUserID)
+					{
+						$oHelpdeskUserFromAttachment = $oHelpdeskUser;
+					}
+					else if ($oHelpdeskUser->IsAgent)
+					{
+						$oHelpdeskUserFromAttachment = $oApiHelpdesk->getUserById($mHelpdeskTenantID, $mHelpdeskUserID);
+					}
+				}
+			}
+		}
+		else if (isset($mAccountID))
+		{
+			$mIframed = $this->getParamValue('Iframed');
+			$mTime = $this->getParamValue('Time');
+			
+			$oAccount = $this->getAccountFromParam(true,
+				!(isset($mIframed, $mTime) && $mIframed && $mTime > \Core\Base\Utils::iframedTimestamp())
+			);
+			
+			if (!$oAccount || $mAccountID !== $oAccount->IdAccount)
+			{
+				return false;
+			}
+		}
+
+		$mFilestorageFile = $this->getParamValue('FilestorageFile');
+		$mStorageType = $this->getParamValue('StorageType');
+		$mPath = $this->getParamValue('Path');
+		$mName = $this->getParamValue('Name');
+		
+		$mTempFile = $this->getParamValue('TempFile');
+		$mTempName = $this->getParamValue('TempName');
+
+		if ($oHelpdeskUserFromAttachment && isset($mFilestorageFile, $mStorageType, $mPath, $mName))
+		{
+			if ($bCache)
+			{
+//				$this->verifyCacheByKey($sRawKey); todo
+			}
+			
+			$bResult = false;
+			$mResult = false;
+			
+			if (is_numeric($mStorageType))
+			{
+				$iStorageType = (int) $mStorageType;
+				switch ($iStorageType)
+				{
+					case \EFileStorageType::Personal: 
+						$sStorageType = \EFileStorageTypeStr::Personal;
+						break;
+					case \EFileStorageType::Corporate: 
+						$sStorageType = \EFileStorageTypeStr::Corporate;
+						break;
+					case \EFileStorageType::Shared: 
+						$sStorageType = \EFileStorageTypeStr::Shared;
+						break;
+				}
+			}
+					
+			if ($this->oApiFilestorage->isFileExists(
+				$oHelpdeskUserFromAttachment,
+				$sStorageType, $mPath, $mName
+			))
+			{
+				$mResult = $this->oApiFilestorage->getFile(
+					$oHelpdeskUserFromAttachment,
+					$sStorageType, $mPath, $mName
+				);
+				if (is_resource($mResult))
+				{
+					if ($bCache)
+					{
+						// $this->cacheByKey($sRawKey); todo
+					}
+
+					$bResult = true;
+					$sFileName = $mName;
+
+					$sContentType = (empty($sFileName)) ? 'text/plain' : \MailSo\Base\Utils::MimeContentType($sFileName);
+//					$sFileName = $this->clearFileName($sFileName, $sContentType);
+
+					call_user_func_array($fCallback, array(
+						$oAccount, $sContentType, $sFileName, $mResult, $oHelpdeskUser
+					));
+				}
+			}
+			else
+			{
+				$this->oHttp->StatusHeader(404);
+				exit();
+			}
+			return $bResult;
+		}
+		else  if (isset($mTempFile, $mTempName, $mName) && ($oHelpdeskUserFromAttachment || $oAccount))
+		{
+			if ($bCache)
+			{
+//				$this->verifyCacheByKey($sRawKey); todo
+			}
+
+			$bResult = false;
+			$mResult = $this->ApiFileCache()->getFile($oHelpdeskUserFromAttachment ? $oHelpdeskUserFromAttachment : $oAccount, $mTempName);
+
+			if (is_resource($mResult))
+			{
+				if ($bCache)
+				{
+//					$this->cacheByKey($sRawKey); todo
+				}
+
+				$bResult = true;
+				$sFileName = $mName;
+				$sContentType = (empty($sFileName)) ? 'text/plain' : \MailSo\Base\Utils::MimeContentType($sFileName);
+//				$sFileName = $this->clearFileName($sFileName, $sContentType);
+
+				call_user_func_array($fCallback, array(
+					$oAccount, $sContentType, $sFileName, $mResult, $oHelpdeskUser
+				));
+			}
+
+			return $bResult;
+		}
+		else
+		{
+			$this->getParamValue('Folder', '');
+
+			$sFolder = $this->getParamValue('Folder', '');
+			$iUid = (int) $this->getParamValue('Uid', 0);
+			$sMimeIndex = (string) $this->getParamValue('MimeIndex', '');
+		}
+
+		if ($bCache && 0 < strlen($sFolder) && 0 < $iUid)
+		{
+//			$this->verifyCacheByKey($sRawKey); todo
+		}
+
+		$sContentTypeIn = (string) $this->getParamValue('MimeType', '');
+		$sFileNameIn = (string) $this->getParamValue('FileName', '');
+
+		if (!$oAccount)
+		{
+			return false;
+		}
+
+		$self = $this;
+		$oModuleManager = \CApi::GetModuleManager();
+		$oMailModule = $oModuleManager->GetModule('Mail');
+		$oMailManager = false;
+		if ($oMailModule)
+		{
+			$oMailManager = $oMailModule->GetManager('main');
+		}
+		if (!$oMailManager)
+		{
+			return false;
+		}
+		return $oMailManager->directMessageToStream($oAccount,
+			function($rResource, $sContentType, $sFileName, $sMimeIndex = '') use ($self, $oAccount, $fCallback, $bCache, $sContentTypeIn, $sFileNameIn) {
+				if (is_resource($rResource)) {
+					
+					$sContentTypeOut = $sContentTypeIn;
+					if (empty($sContentTypeOut)) {
+						
+						$sContentTypeOut = $sContentType;
+						if (empty($sContentTypeOut)) {
+							
+							$sContentTypeOut = (empty($sFileName)) ? 'text/plain' : \MailSo\Base\Utils::MimeContentType($sFileName);
+						}
+					}
+
+					$sFileNameOut = $sFileNameIn;
+					if (empty($sFileNameOut) || '.' === $sFileNameOut{0}) {
+						
+						$sFileNameOut = $sFileName;
+					}
+
+//					$sFileNameOut = $self->clearFileName($sFileNameOut, $sContentType, $sMimeIndex);
+
+					if ($bCache) {
+						
+//						$self->cacheByKey($sRawKey); todo
+					}
+
+					call_user_func_array($fCallback, array(
+						$oAccount, $sContentTypeOut, $sFileNameOut, $rResource
+					));
+				}
+			}, $sFolder, $iUid, $sMimeIndex);
+	}	
+	
+	private function raw($bDownload = true, $bThumbnail = false)
+	{
+		$self = $this;
+		return $this->rawCallback(
+				function ($oAccount, $sContentType, $sFileName, $rResource, $oHelpdeskUser = null) use ($self, $bDownload, $bThumbnail) {
+			
+			\CApiResponseManager::OutputHeaders($bDownload, $sContentType, $sFileName);
+
+			if (!$bDownload && 'text/html' === $sContentType) {
+				
+				$sHtml = stream_get_contents($rResource);
+				if ($sHtml) {
+					
+					$sCharset = '';
+					$aMacth = array();
+					if (preg_match('/charset[\s]?=[\s]?([^\s"\']+)/i', $sHtml, $aMacth) && !empty($aMacth[1])) {
+						
+						$sCharset = $aMacth[1];
+					}
+
+					if ('' !== $sCharset && \MailSo\Base\Enumerations\Charset::UTF_8 !== $sCharset) {
+						
+						$sHtml = \MailSo\Base\Utils::ConvertEncoding($sHtml,
+							\MailSo\Base\Utils::NormalizeCharset($sCharset, true), \MailSo\Base\Enumerations\Charset::UTF_8);
+					}
+
+					$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+					$oCssToInlineStyles->setEncoding('utf-8');
+					$oCssToInlineStyles->setUseInlineStylesBlock(true);
+
+					echo '<html><head></head><body>'.
+						\MailSo\Base\HtmlUtils::ClearHtmlSimple($oCssToInlineStyles->convert(), true, true).
+						'</body></html>';
+				}
+			} else {
+				
+				if ($bThumbnail && !$bDownload) {
+					
+					\CApiResponseManager::GetThumbResource($oAccount ? $oAccount : $oHelpdeskUser, $rResource, $sFileName);
+				} else {
+					
+					\MailSo\Base\Utils::FpassthruWithTimeLimitReset($rResource);
+				}
+			}
+			
+		}, !$bDownload);
+	}
+	
+	public function DownloadFile()
+	{
+		$this->raw(true);
+	}
+	
+	public function ViewFile()
+	{
+		$this->raw(false);
+	}
 }
 
 return new MailModule('1.0');

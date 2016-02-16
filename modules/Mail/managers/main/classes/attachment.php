@@ -270,7 +270,7 @@ class CApiMailAttachment
 	
 	public function toResponseArray($aParameters = array())
 	{
-		$oAccount = isset($aParameters['Account']) ? $aParameters['Account'] : null;
+		$iAccountID = isset($aParameters['AccountID']) ? $aParameters['AccountID'] : null;
 		$mFoundedCIDs = isset($aParameters['FoundedCIDs']) && is_array($aParameters['FoundedCIDs'])
 			? $aParameters['FoundedCIDs'] : null;
 
@@ -323,7 +323,7 @@ class CApiMailAttachment
 
 		$mResult['Hash'] = \CApi::EncodeKeyValues(array(
 			'Iframed' => $mResult['Iframed'],
-			'AccountID' => $oAccount ? $oAccount->IdAccount : 0, 
+			'AccountID' => $iAccountID, 
 			'Folder' => $this->getFolder(),
 			'Uid' => $this->getUid(),
 			'MimeIndex' => $sMimeIndex,

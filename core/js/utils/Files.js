@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	$ = require('jquery'),
 	TextUtils = require('core/js/utils/Text.js'),
 	
 	Popups = require('core/js/Popups.js'),
@@ -21,7 +22,7 @@ var
  */
 FilesUtils.getDownloadLink = function (sModuleName, sHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/DownloadFile/' + sHash + '/' : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/DownloadFile/' + sHash + '/' + $.cookie('AuthToken') : '';
 };
 
 /**
@@ -34,7 +35,7 @@ FilesUtils.getDownloadLink = function (sModuleName, sHash)
  */
 FilesUtils.getViewLink = function (sModuleName, sHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' + $.cookie('AuthToken') : '';
 };
 
 /**
@@ -60,7 +61,7 @@ FilesUtils.getIframeWrappwer = function (iAccountId, sUrl)
  */
 FilesUtils.getThumbnailLink = function (sModuleName, sHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' + $.cookie('AuthToken') : '';
 };
 
 FilesUtils.thumbQueue = (function () {

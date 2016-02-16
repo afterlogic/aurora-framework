@@ -644,12 +644,10 @@ abstract class AApiModule
 		try
 		{
 			if (!empty($sMethod)) {
-				$aParameters = array(
-					'RawKey' => empty($aPaths[3]) ? '' : $aPaths[3],
-					'IsExt' => empty($aPaths[4]) ? '0' : ('1' === (string) $aPaths[4] ? '1' : 0),
-					'TenantHash' => empty($aPaths[5]) ? '' : $aPaths[5],
-					'AuthToken' => empty($aPaths[6]) ? '' : $aPaths[6]
-				);						
+				
+				$sRawKey = empty($aPaths[3]) ? '' : $aPaths[3];
+				$aParameters = CApi::DecodeKeyValues($sRawKey);				
+				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
 
 				$mResult = $this->ExecuteMethod($sMethod, $aParameters);
 			}
@@ -763,7 +761,8 @@ abstract class AApiModule
 
 		$aResult['Result'] = \CApiResponseManager::GetResponseObject($mResult, array(
 			'Module' => $this->GetName(),
-			'Method' => $sMethod
+			'Method' => $sMethod,
+			'Parameters' => $this->aParameters
 		));
 		$aResult['@Time'] = microtime(true) - PSEVEN_APP_START;
 		return $aResult;
@@ -954,7 +953,6 @@ abstract class AApiModule
 		$this->broadcastEvent($this->GetName() . '::' . $sMethod . '::' . 'after', array(&$aParameters));
 		$mResult = $aParameters['@Result'];
 				
-		$this->aParameters = array();
 		return $mResult;
 	}
 }

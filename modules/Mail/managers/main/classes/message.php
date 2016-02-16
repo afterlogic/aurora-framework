@@ -1052,7 +1052,7 @@ class CApiMailMessage
 	public function toResponseArray($aParameters = array())
 	{
 		$iTrimmedLimit = \CApi::GetConf('labs.message-body-size-limit', 0);
-		$oAccount = isset($aParameters['Account']) ?  $aParameters['Account'] : null;
+		$iAccountID = isset($aParameters['Parameters']['AccountID']) ?  $aParameters['Parameters']['AccountID'] : null;
 
 		$oAttachments = $this->getAttachments();
 
@@ -1102,7 +1102,7 @@ class CApiMailMessage
 		}
 
 		$mResult['Hash'] = \CApi::EncodeKeyValues(array(
-			'AccountID' => $oAccount ? $oAccount->IdAccount : 0,
+			'AccountID' => $iAccountID,
 			'Folder' => $mResult['Folder'],
 			'Uid' => $mResult['Uid'],
 			'MimeType' => 'message/rfc822',
@@ -1226,7 +1226,7 @@ class CApiMailMessage
 			$mResult['FoundedContentLocationUrls'] = $aFoundedContentLocationUrls;
 			$mResult['Attachments'] = \CApiResponseManager::GetResponseObject($oAttachments,
 					array(
-						'Account' => isset($oAccount) ? $oAccount : null,
+						'AccountID' => $iAccountID,
 						'FoundedCIDs' => $aFoundedCIDs,
 						'FoundedContentLocationUrls' => $aFoundedContentLocationUrls
 					)

@@ -16,6 +16,10 @@ class FilesModule extends AApiModule
 		$sRawKey = (string) $this->getParamValue('RawKey', '');
 		$aValues = \CApi::DecodeKeyValues($sRawKey);
 
+		$sType = (string) $this->getParamValue('Type');
+		$sPath = (string) $this->getParamValue('Path');
+		$sName = (string) $this->getParamValue('Name');
+
 		if ($bThumbnail)
 		{
 //			$this->verifyCacheByKey($sRawKey); // todo
@@ -26,33 +30,31 @@ class FilesModule extends AApiModule
 
 		$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sHash));
 		$oAccount = null;
-		if (!empty($mMin['__hash__']))
-		{
+		if (!empty($mMin['__hash__'])) {
+			
 			$oAccount = $oApiUsers->getAccountById($mMin['Account']);
-		}
-		else
-		{
-			if (isset($aValues['Iframed'], $aValues['Time']) && $aValues['Iframed'] && $aValues['Time'])
-			{
-				$oAccount = $this->getAccountFromParam(true,
-					!($aValues['Time'] > \api_Utils::iframedTimestamp())
-				);
+		} else {
+			
+			$mIframed = $this->getParamValue('Iframed');
+			$mTime = $this->getParamValue('Time');
 
-				if (!$oAccount->IsDefaultAccount)
-				{
+			if (isset($mIframed, $mTime) && $mIframed && $mTime) {
+				
+				$oAccount = $this->getAccountFromParam(true, !($mTime > \api_Utils::iframedTimestamp()));
+
+				if (!$oAccount->IsDefaultAccount) {
+					
 					$iAccountId = $oApiUsers->getDefaultAccountId($oAccount->IdUser);
-					if (0 < $iAccountId)
-					{
+					if (0 < $iAccountId) {
+						
 						$oAccount = $oApiUsers->getAccountById($iAccountId);
-					}
-					else
-					{
+					} else {
+						
 						throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 					}
 				}
-			}
-			else
-			{
+			} else {
+				
 				$oAccount = $this->getDefaultAccountFromParam();
 			}
 		}
@@ -60,48 +62,46 @@ class FilesModule extends AApiModule
 		$oTenant = null;
 		$oApiTenants = \CApi::GetCoreManager('tenants');
 		
-		if ($oAccount && $oApiTenants)
-		{
+		if ($oAccount && $oApiTenants) {
 			$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
 				$oApiTenants->getDefaultGlobalTenant();
 		}
 		
-		if ($this->oApiCapabilityManager->isFilesSupported($oAccount) && $oTenant &&
-			isset($aValues['Type'], $aValues['Path'], $aValues['Name']))
-		{
+		if ($this->oApiCapabilityManager->isFilesSupported($oAccount) && 
+				$oTenant && isset($sType, $sPath, $sName)) {
+			
 			$mResult = false;
 			
-			$sFileName = $aValues['Name'];
+			$sFileName = $sName;
 			$sContentType = (empty($sFileName)) ? 'text/plain' : \MailSo\Base\Utils::MimeContentType($sFileName);
 			
-			$oFileInfo = $this->oApiFilesManager->getFileInfo($oAccount, $aValues['Type'], $aValues['Path'], $aValues['Name']);
-			if ($oFileInfo->IsLink)
-			{
+			$oFileInfo = $this->oApiFilesManager->getFileInfo($oAccount, $sType, $sPath, $sName);
+			if ($oFileInfo->IsLink) {
+				
 				$iLinkType = \api_Utils::GetLinkType($oFileInfo->LinkUrl);
 
-				if (isset($iLinkType))
-				{
-					if (\EFileStorageLinkType::GoogleDrive === $iLinkType)
-					{
+				if (isset($iLinkType)) {
+					
+					if (\EFileStorageLinkType::GoogleDrive === $iLinkType) {
+						
 						$oSocial = $oTenant->getSocialByName('google');
-						if ($oSocial)
-						{
+						if ($oSocial) {
+							
 							$oInfo = \api_Utils::GetGoogleDriveFileInfo($oFileInfo->LinkUrl, $oSocial->SocialApiKey);
 							$sFileName = isset($oInfo->title) ? $oInfo->title : $sFileName;
 							$sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
 
-							if (isset($oInfo->downloadUrl))
-							{
+							if (isset($oInfo->downloadUrl)) {
+								
 								$mResult = \MailSo\Base\ResourceRegistry::CreateMemoryResource();
 								$this->oHttp->SaveUrlToFile($oInfo->downloadUrl, $mResult); // todo
 								rewind($mResult);
 							}
 						}
-					}
-					else/* if (\EFileStorageLinkType::DropBox === (int)$aFileInfo['LinkType'])*/
-					{
-						if (\EFileStorageLinkType::DropBox === $iLinkType)
-						{
+					} else/* if (\EFileStorageLinkType::DropBox === (int)$aFileInfo['LinkType'])*/ {
+						
+						if (\EFileStorageLinkType::DropBox === $iLinkType) {
+							
 							$oFileInfo->LinkUrl = str_replace('www.dropbox.com', 'dl.dropboxusercontent.com', $oFileInfo->LinkUrl);
 						}
 						$mResult = \MailSo\Base\ResourceRegistry::CreateMemoryResource();
@@ -112,34 +112,28 @@ class FilesModule extends AApiModule
 						rewind($mResult);
 					}
 				}
+			} else {
+				
+				$mResult = $this->oApiFilesManager->getFile($oAccount, $sType, $sPath, $sName);
 			}
-			else
-			{
-				$mResult = $this->oApiFilesManager->getFile($oAccount, $aValues['Type'], $aValues['Path'], $aValues['Name']);
-			}
-			if (false !== $mResult)
-			{
-				if (is_resource($mResult))
-				{
+			if (false !== $mResult) {
+				
+				if (is_resource($mResult)) {
+					
 //					$sFileName = $this->clearFileName($oFileInfo->Name, $sContentType); // todo
 					$sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
 					\CApiResponseManager::OutputHeaders($bDownload, $sContentType, $sFileName);
 			
-					if ($bThumbnail)
-					{
+					if ($bThumbnail) {
+						
 //						$this->cacheByKey($sRawKey);	// todo
 						\CApiResponseManager::GetThumbResource($oAccount, $mResult, $sFileName);
-					}
-					else
-					{
-						if ($sContentType === 'text/html')
-						{
-							echo(\MailSo\Base\HtmlUtils::ClearHtmlSimple(stream_get_contents($mResult)));
-						}
-						else
-						{
-							\MailSo\Base\Utils::FpassthruWithTimeLimitReset($mResult);
-						}
+					} else if ($sContentType === 'text/html') {
+						
+						echo(\MailSo\Base\HtmlUtils::ClearHtmlSimple(stream_get_contents($mResult)));
+					} else {
+						
+						\MailSo\Base\Utils::FpassthruWithTimeLimitReset($mResult);
 					}
 					
 					@fclose($mResult);
@@ -158,8 +152,9 @@ class FilesModule extends AApiModule
 		$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
 
 		$aFileData = $this->getParamValue('FileData', null);
-		$mAdditionalData = $this->getParamValue('AdditionalData', '{}');
-		$mAdditionalData = @json_decode($mAdditionalData, true);
+		$mAdditionalData = @json_decode(
+				$this->getParamValue('AdditionalData', '{}'), true
+		);
 		
 		$sError = '';
 		$aResponse = array();
