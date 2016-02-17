@@ -1,0 +1,1 @@
+@gulp langs --modules Auth,Calendar,ChangePassword,Contacts,Files,HelpDesk,Mail,MailSensitivity,MobileSync,OpenPgp,OutlookSync,Phone,Settings --leng English

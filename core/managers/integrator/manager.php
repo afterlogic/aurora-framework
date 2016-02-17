@@ -217,30 +217,9 @@ class CApiIntegratorManager extends AApiManager
 		return $sLanguage;
 	}
 
-	/**
-	 * @param string $sLanguage
-	 *
-	 * @return string
-	 */
-	private function compileLanguage($sLanguage)
+	private function getMomentLanguageString($sLanguage)
 	{
-
-		$sLanguage = $this->validatedLanguageValue($sLanguage);
-		
-		$sCacheFileName = '';
-		if (CApi::GetConf('labs.cache.i18n', $this->bCache))
-		{
-			$sCacheFileName = 'i18n-'.$sLanguage.'-'.md5(CApi::Version()).'.cache';
-			$sCacheFullFileName = CApi::DataPath().'/cache/'.$sCacheFileName;
-			if (file_exists($sCacheFullFileName))
-			{
-				return file_get_contents($sCacheFullFileName);
-			}
-		}
-
-		$aResultLang = array();
 		$sMomentLanguage = api_Utils::ConvertLanguageNameToShort($sLanguage);
-		$sFileName = CApi::WebMailPath().'i18n/'.$sLanguage.'.ini';
 		if ($sLanguage === 'Arabic' || $sLanguage === 'Persian')
 		{
 			$sMoment = 'window.moment && window.moment.locale && window.moment.locale(\'en\');';
@@ -249,59 +228,35 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$sMoment = 'window.moment && window.moment.locale && window.moment.locale(\'' . $sMomentLanguage . '\');';
 		}
+	}
 
-		$aLang = null;
-		$sData = @file_get_contents($sFileName);
-		if (false !== $sData)
+	/**
+	 * @param string $sLanguage
+	 *
+	 * @return string
+	 */
+	private function getLanguageString($sLanguage)
+	{
+		$sFileName = CApi::WebMailPath().'static/i18n/'.$sLanguage.'.json';
+		if (!file_exists($sFileName))
 		{
-			$aLang = @parse_ini_string(trim($sData), true);
+			$sFileName = CApi::WebMailPath().'static/i18n/English.json';
 		}
-
-		if (is_array($aLang))
-		{
-			foreach ($aLang as $sKey => $mValue)
-			{
-				if (is_array($mValue))
-				{
-					foreach ($mValue as $sSecKey => $mSecValue)
-					{
-						$aResultLang[$sKey.'/'.$sSecKey] = $mSecValue;
-					}
-				}
-				else
-				{
-					$aResultLang[$sKey] = $mValue;
-				}
-			}
-		}
-
-		CApi::Plugin()->ParseLangs($sLanguage, $aResultLang);
 		
-		$sLangJs = '';
-		$aLangKeys = array_keys($aResultLang);
-		foreach ($aLangKeys as $sKey)
-		{
-			$sString = isset($aResultLang[$sKey]) ? $aResultLang[$sKey] : $sKey;
-
-			$sLangJs .= '"'.str_replace('"', '\\"', str_replace('\\', '\\\\', $sKey)).'":'
-				.'"'.str_replace(array("\r", "\n", "\t"), array('\r', '\n', '\t'), str_replace('"', '\\"', str_replace('\\', '\\\\', $sString))).'",';
-		}
-
-		$sResult = empty($sLangJs) ? 'null' : '{'.substr($sLangJs, 0, -1).'}';
-		$sResult = '<script>window.pSevenLang=\''.$sLanguage.'\';window.pSevenI18N='.$sResult.';'.$sMoment.'</script>';
-
-		if (CApi::GetConf('labs.cache.i18n', $this->bCache))
-		{
-			if (!is_dir(dirname($sCacheFullFileName)))
-			{
-				mkdir(dirname($sCacheFullFileName), 0777);
-			}
-
-			$sResult = '<!-- '.$sCacheFileName.' -->'.$sResult;
-			@file_put_contents($sCacheFullFileName, $sResult);
-		}
-
-		return $sResult;
+		$sFileContent = @file_get_contents($sFileName);
+		
+		return str_replace("\r\n", "", $sFileContent);
+	}
+	
+	/**
+	 * @param string $sLanguage
+	 *
+	 * @return string
+	 */
+	private function compileLanguage($sLanguage)
+	{
+		$sLanguage = $this->validatedLanguageValue($sLanguage);
+		return '<script>window.auroraI18n='.$this->getLanguageString($sLanguage).';'.$this->getMomentLanguageString($sLanguage).'</script>';
 	}
 
 	/**

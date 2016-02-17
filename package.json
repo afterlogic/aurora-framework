@@ -76,7 +76,9 @@
 		"watchify": "*",
 		"reactify": "*",
 		"vinyl-source-stream": "*",
-		"vinyl-buffer": "*"
+		"vinyl-buffer": "*",
+		
+		"cascade-ini": "*"
 	},
 	"license": "Custom"
 }

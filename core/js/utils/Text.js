@@ -7,7 +7,7 @@ var
 	
 	oSettings = require('core/js/Settings.js'),
 	
-	I18n = window.pSevenI18N,
+	I18n = window.auroraI18n,
 	
 	TextUtils = {}
 ;
