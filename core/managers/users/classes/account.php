@@ -36,9 +36,6 @@
  * @property int $SignatureType **0** for plaintext signature, **1** for HTML one.
  * @property int $SignatureOptions **0** means signature isn't used, **1** means signature is added to new messages only, **2** - added to all messages.
  * @property int $GlobalAddressBook Defines mode of presenting the account in global address book.
- * @property bool $AllowCompose **true** if composing new messages is allowed for the account.
- * @property bool $AllowReply **true** if replying to messages is allowed for the account.
- * @property bool $AllowForward **true** if forwarding messages is allowed for the account. 
  * @property bool $DetectSpecialFoldersWithXList If set to **true**, WebMail attempts to locate system folders using XLIST extension of IMAP.
  * @property mixed $CustomFields
  * @property bool $ForceSaveOnLogin If set to **true**, account settings will always be updated on login. Default value is **false**.
@@ -139,10 +136,6 @@ class CAccount extends api_AContainer
 
 			'GlobalAddressBook'	=> $oDomain->GlobalAddressBook,
 
-			'AllowCompose'		=> true,
-			'AllowReply'		=> true,
-			'AllowForward'		=> true,
-			
 			'DetectSpecialFoldersWithXList' => $oDomain->DetectSpecialFoldersWithXList,
 
 			'CustomFields'		=> '',
@@ -452,9 +445,6 @@ class CAccount extends api_AContainer
 
 			'GlobalAddressBook'	=> array('int'),
 
-			'AllowCompose'		=> array('bool'),
-			'AllowReply'		=> array('bool'),
-			'AllowForward'		=> array('bool'),
 			'DetectSpecialFoldersWithXList' => array('bool'),
 
 			'CustomFields'		=> array('serialize', 'custom_fields'),
