@@ -7,10 +7,10 @@
 	css: { 'internal': internalNote(), 'hidden': isQuickReplyHidden() }">
 
 	<div class="status">
-		<div class="text" data-bind="i18n: 'text'" data-i18n="CORE/INFO_SENDING"></div>
+		<div class="text" data-bind="i18n: {'key': 'CORE/INFO_SENDING'}"></div>
 	</div>
 	<div class="row" data-bind="css: {'focused': replyTextFocus(), 'filled': replyText().length > 0}">
-		<label for="reply_text" class="title placeholder" data-bind="i18n: 'text'" data-i18n="HELPDESK/REPLY_FORM_PLACEHOLDER"></label>
+		<label for="reply_text" class="title placeholder" data-bind="i18n: {'key': 'HELPDESK/REPLY_FORM_PLACEHOLDER'}"></label>
 		<textarea id="reply_text" class="input" tabindex="1" data-bind="value: replyText, hasfocus: replyTextFocus, onCtrlEnter: postCommand, valueUpdate: 'afterkeydown', initDom: domQuickReplyTextarea"></textarea>
 	</div>
 
@@ -24,7 +24,7 @@
 		<tbody>
 			<tr>
 				<td class="label">
-					<span data-i18n="CORE/LABEL_CC" data-bind="i18n: 'text'"></span>
+					<span data-bind="i18n: {'key': 'CORE/LABEL_CC'}"></span>
 				</td>
 				<td>
 					<div class="input inputosaurus">
@@ -36,7 +36,7 @@
 					</div>
 				</td>
 				<td class="label">
-					<span data-i18n="CORE/LABEL_BCC" data-bind="i18n: 'text'"></span>
+					<span data-bind="i18n: {'key': 'CORE/LABEL_BCC'}"></span>
 				</td>
 				<td>
 					<div class="input inputosaurus">
@@ -58,20 +58,20 @@
 				<span class="icon"></span>
 				<input type="checkbox" data-bind="checked: internalNote" id="internal" />
 			</label>
-			<label for="internal" data-i18n="HELPDESK/REPLY_FORM_INTERNAL_NOTE" data-bind="i18n: 'text'"></label>
+			<label for="internal" data-bind="i18n: {'key': 'HELPDESK/REPLY_FORM_INTERNAL_NOTE'}"></label>
 		</span>
 	</div>
 
 	<div class="buttons">
 		<span class="button upload" data-bind="visible: uploadedFiles().length < 5, initDom: uploaderButton, css: {'dragOver': bDragActive}" >
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/ACTION_ADD_ATTACHMENT"></span>
+			<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_ADD_ATTACHMENT'}"></span>
 		</span>
 		<span class="button ccbcc" data-bind="visible: !ccbccVisible(), click: changeCcbccVisibility" >
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/ACTION_ADD_CCBCC"></span>
+			<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_ADD_CCBCC'}"></span>
 		</span>
-		<span class="button send" data-bind="command: postCommand, i18n: 'text'" data-i18n="CORE/BUTTON_SEND"></span>
-		<span class="text hint" data-i18n="CORE/HINT_SEND_HOTKEY" data-bind="i18n: 'text'"></span>
+		<span class="button send" data-bind="command: postCommand, i18n: {'key': 'CORE/BUTTON_SEND'}"></span>
+		<span class="text hint" data-bind="i18n: {'key': 'CORE/HINT_SEND_HOTKEY'}"></span>
 	</div>
 </div>

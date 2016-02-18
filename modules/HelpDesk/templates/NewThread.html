@@ -1,11 +1,11 @@
 <div class="panel_top">
-	<a class="link cancel" data-bind="click: cancelNewThread, i18n: 'text'" data-i18n="CORE/BUTTON_CANCEL"></a>
-	<h2 class="title" data-bind="i18n: 'text'" data-i18n="HELPDESK/TITLE_NEW_THREAD"></h2>
+	<a class="link cancel" data-bind="click: cancelNewThread, i18n: {'key': 'CORE/BUTTON_CANCEL'}"></a>
+	<h2 class="title" data-bind="i18n: {'key': 'HELPDESK/TITLE_NEW_THREAD'}"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
 		<div class="row" data-bind="css: { 'filled': newThreadText().length > 0 }">
-			<label class="title placeholder" data-bind="i18n: 'text'" data-i18n="HELPDESK/CREATE_FORM_PLACEHOLDER"></label>
+			<label class="title placeholder" data-bind="i18n: {'key': 'HELPDESK/CREATE_FORM_PLACEHOLDER'}"></label>
 			<span class="value">
 				<textarea class="input" data-bind="value: newThreadText, valueUpdate: 'afterkeydown', attr: {'disabled': newThreadCreating}, initDom: domNewThreadTextarea, hasfocus: newThreadTextFocus"></textarea>
 			</span>
@@ -19,7 +19,7 @@
 			<tbody>
 			<tr>
 				<td class="label">
-					<span data-i18n="CORE/LABEL_CC" data-bind="i18n: 'text'"></span>
+					<span data-bind="i18n: {'key': 'CORE/LABEL_CC'}"></span>
 				</td>
 				<td>
 					<div class="input inputosaurus">
@@ -31,7 +31,7 @@
 					</div>
 				</td>
 				<td class="label">
-					<span data-i18n="CORE/LABEL_BCC" data-bind="i18n: 'text'"></span>
+					<span data-bind="i18n: {'key': 'CORE/LABEL_BCC'}"></span>
 				</td>
 				<td>
 					<div class="input inputosaurus">
@@ -47,13 +47,13 @@
 		</table>
 		
 		<div class="buttons">
-			<span class="button upload" data-bind="visible: uploadedFiles().length < 5, i18n: 'text', initDom: uploaderButtonCompose, css: {'dragOver': bDragActive}" >
+			<span class="button upload" data-bind="visible: uploadedFiles().length < 5, initDom: uploaderButtonCompose, css: {'dragOver': bDragActive}">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/ACTION_ADD_ATTACHMENT"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_ADD_ATTACHMENT'}"></span>
 			</span>
 			<span class="button ccbcc" data-bind="visible: !ccbccVisible(), click: changeCcbccVisibility" >
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/ACTION_ADD_CCBCC"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_ADD_CCBCC'}"></span>
 			</span>
 			<button class="button create" data-bind="command: createThreadCommand, text: createThreadButtonText"></button>
 		</div>

@@ -37,10 +37,10 @@
 
 			<div class="item select font_size">
 				<select class="input" data-bind="value: selectedSize" style="height: 21px;">
-					<option value="2" data-i18n="MAIL/OPTION_TEXTSIZE_SMALL" data-bind="i18n: 'text'" style="font-size: 13px;"></option>
-					<option value="3" data-i18n="MAIL/OPTION_TEXTSIZE_NORMAL" data-bind="i18n: 'text'" style="font-size: 16px;"></option>
-					<option value="5" data-i18n="MAIL/OPTION_TEXTSIZE_LARGE" data-bind="i18n: 'text'" style="font-size: 24px;"></option>
-					<option value="7" data-i18n="MAIL/OPTION_TEXTSIZE_HUGE" data-bind="i18n: 'text'" style="font-size: 48px;"></option>
+					<option value="2" data-bind="i18n: {'key': 'MAIL/OPTION_TEXTSIZE_SMALL'}" style="font-size: 13px;"></option>
+					<option value="3" data-bind="i18n: {'key': 'MAIL/OPTION_TEXTSIZE_NORMAL'}" style="font-size: 16px;"></option>
+					<option value="5" data-bind="i18n: {'key': 'MAIL/OPTION_TEXTSIZE_LARGE'}" style="font-size: 24px;"></option>
+					<option value="7" data-bind="i18n: {'key': 'MAIL/OPTION_TEXTSIZE_HUGE'}" style="font-size: 48px;"></option>
 				</select>
 			</div>
 
@@ -76,15 +76,10 @@
 				<span class="dropdown">
 					<span class="dropdown_helper">
 						<span class="dropdown_content">
-							<span data-i18n="MAIL/URL_HEADING" data-bind="i18n: 'text'"></span>:
-							<input class="input" type="text" data-bind="value: linkForInsert, 
-								   hasfocus: linkFocused, onFocusSelect: true, 
-								   onEnter: insertLinkFromPopup" />
-
-							<span class="button" data-bind="click: insertLinkFromPopup, i18n: 'text'" 
-								  data-i18n="MAIL/BUTTON_INSERT"></span>
-							<span class="button" data-bind="click: closeInsertLinkPopup, i18n: 'text'" 
-								  data-i18n="CORE/BUTTON_CANCEL"></span>
+							<span data-bind="i18n: {'key': 'MAIL/URL_HEADING'}"></span>:
+							<input class="input" type="text" data-bind="value: linkForInsert, hasfocus: linkFocused, onFocusSelect: true, onEnter: insertLinkFromPopup" />
+							<span class="button" data-bind="click: insertLinkFromPopup, i18n: {'key': 'MAIL/BUTTON_INSERT'}"></span>
+							<span class="button" data-bind="click: closeInsertLinkPopup, i18n: {'key': 'CORE/BUTTON_CANCEL'}"></span>
 						</span>
 					</span>
 				</span>
@@ -98,21 +93,17 @@
 					<span class="dropdown_helper">
 						<span class="dropdown_content">
 							<span data-bind="visible: bAllowFileUpload">
-								<span data-i18n="MAIL/LABEL_SELECT_IMAGE" data-bind="i18n: 'text'"></span>:
+								<span data-bind="i18n: {'key': 'MAIL/LABEL_SELECT_IMAGE'}"></span>:
 								<br />
-								<span class="button" data-bind="initDom: imageUploaderButton, i18n: 'text'" 
-									  data-i18n="MAIL/BUTTON_CHOOSE_IMAGE"></span>
+								<span class="button" data-bind="initDom: imageUploaderButton, i18n: {'key': 'MAIL/BUTTON_CHOOSE_IMAGE'}"></span>
 								<br />
-								<span data-i18n="MAIL/LABEL_ENTER_IMAGE_URL" data-bind="i18n: 'text'"></span>:
+								<span data-bind="i18n: {'key': 'MAIL/LABEL_ENTER_IMAGE_URL'}"></span>:
 							</span>
-							<span data-bind="visible: !bAllowFileUpload, i18n: 'text'" data-i18n="MAIL/LABEL_ENTER_IMAGE_URL_ONLY"></span>
+							<span data-bind="visible: !bAllowFileUpload, i18n: {'key': 'MAIL/LABEL_ENTER_IMAGE_URL_ONLY'}"></span>
 							<br />
-							<input class="input" type="text" data-bind="value: imagePathFromWeb" 
-								   style="width: 200px;" />
-							<span class="button" data-bind="click: insertWebImageFromPopup, i18n: 'text'" 
-								  data-i18n="MAIL/BUTTON_INSERT"></span>
-							<span class="button" data-bind="click: closeInsertImagePopup, i18n: 'text'" 
-								  data-i18n="CORE/BUTTON_CANCEL"></span>
+							<input class="input" type="text" data-bind="value: imagePathFromWeb" style="width: 200px;" />
+							<span class="button" data-bind="click: insertWebImageFromPopup, i18n: {'key': 'MAIL/BUTTON_INSERT'}"></span>
+							<span class="button" data-bind="click: closeInsertImagePopup, i18n: {'key': 'CORE/BUTTON_CANCEL'}"></span>
 						</span>
 					</span>
 				</span>
@@ -146,20 +137,20 @@
 	
 	<div class="inline_popup" data-bind="visible: visibleLinkPopup, initDom: linkPopupDom">
 		<a target="_blank" data-bind="text: linkHref, attr: {'href': linkHref}"></a>
-		<span class="button" data-i18n="MAIL/BUTTON_CHANGE_URL" data-bind="i18n: 'text', click: showChangeLink"></span>
-		<span class="button" data-i18n="CORE/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentLink(); }"></span>
+		<span class="button" data-bind="i18n: {'key': 'MAIL/BUTTON_CHANGE_URL'}, click: showChangeLink"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_REMOVE'}, click: function () { oCrea.removeCurrentLink(); }"></span>
 	</div>
 	<div class="inline_popup" data-bind="visible: visibleLinkHref, initDom: linkHrefDom">
 		<input type="text" spellcheck="false" data-bind="value: linkHref" />
-		<span class="button" data-i18n="CORE/BUTTON_OK" data-bind="i18n: 'text', click: changeLink"></span>
-		<span class="button" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: hideChangeLink"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_OK'}, click: changeLink"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: hideChangeLink"></span>
 	</div>
 	<div class="inline_popup" data-bind="visible: visibleImagePopup, 
 			style: {'top': imagePopupTop() + 'px', 'left': imagePopupLeft() + 'px'}">
-		<span class="button" data-i18n="MAIL/BUTTON_SMALL_IMAGE" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Small); }"></span>
-		<span class="button" data-i18n="MAIL/BUTTON_MEDIUM_IMAGE" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Medium); }"></span>
-		<span class="button" data-i18n="MAIL/BUTTON_LARGE_IMAGE" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Large); }"></span>
-		<span class="button" data-i18n="MAIL/BUTTON_ORIGINAL_IMAGE" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Original); }"></span>
-		<span class="button" data-i18n="CORE/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentImage(); }"></span>
+		<span class="button" data-bind="i18n: {'key': 'MAIL/BUTTON_SMALL_IMAGE'}, click: function () { resizeImage(Enums.HtmlEditorImageSizes.Small); }"></span>
+		<span class="button" data-bind="i18n: {'key': 'MAIL/BUTTON_MEDIUM_IMAGE'}, click: function () { resizeImage(Enums.HtmlEditorImageSizes.Medium); }"></span>
+		<span class="button" data-bind="i18n: {'key': 'MAIL/BUTTON_LARGE_IMAGE'}, click: function () { resizeImage(Enums.HtmlEditorImageSizes.Large); }"></span>
+		<span class="button" data-bind="i18n: {'key': 'MAIL/BUTTON_ORIGINAL_IMAGE'}, click: function () { resizeImage(Enums.HtmlEditorImageSizes.Original); }"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_REMOVE'}, click: function () { oCrea.removeCurrentImage(); }"></span>
 	</div>
 </div>

@@ -15,19 +15,26 @@ var
 ko.bindingHandlers.i18n = {
 	'init': function (oElement, fValueAccessor) {
 		var
-			sKey = $(oElement).data('i18n'),
-			sValue = sKey ? TextUtils.i18n(sKey) : sKey
+			oCommand = fValueAccessor(),
+			sKey = oCommand.key,
+			sType = oCommand.type || 'text',
+			sValue = TextUtils.i18n(sKey)
 		;
 
 		if ('' !== sValue)
 		{
-			switch (fValueAccessor())
+			switch (sType)
 			{
-				case 'value': $(oElement).val(sValue); break;
-				case 'text': $(oElement).text(sValue); break;
-				case 'html': $(oElement).html(sValue); break;
-				case 'title': $(oElement).attr('title', sValue); break;
-				case 'placeholder': $(oElement).attr({'placeholder': sValue}); break;
+				case 'html':
+					$(oElement).html(sValue);
+					break;
+				case 'placeholder':
+					$(oElement).attr({'placeholder': sValue});
+					break;
+				case 'text':
+				default:
+					$(oElement).text(sValue);
+					break;
 			}
 		}
 	}

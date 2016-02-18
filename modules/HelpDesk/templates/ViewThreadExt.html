@@ -31,15 +31,15 @@
 			
 			<span class="item delete" data-bind="command: deleteCommand, customTooltip: 'HELPDESK/TOOL_DELETE'">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_DELETE"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/TOOL_DELETE'}"></span>
 			</span>
 			<span class="item resolve" data-bind="command: closeCommand, customTooltip: 'HELPDESK/THREAD_BUTTON_CLOSE_ISSUE', visible: state() !== Enums.HelpdeskThreadStates.Resolved">
 				<span class="icon"></span>
-				<span class="text" data-i18n="HELPDESK/THREAD_BUTTON_CLOSE_ISSUE" data-bind="i18n: 'text'"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/THREAD_BUTTON_CLOSE_ISSUE'}"></span>
 			</span>
 			<span class="item resolved" data-bind="customTooltip: 'HELPDESK/THREAD_BUTTON_CLOSE_ISSUE', visible: state() === Enums.HelpdeskThreadStates.Resolved">
 				<span class="icon"></span>
-				<span class="text" data-i18n="HELPDESK/THREAD_BUTTON_CLOSE_ISSUE" data-bind="i18n: 'text'"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/THREAD_BUTTON_CLOSE_ISSUE'}"></span>
 			</span>
 		</span>
 	</div>
@@ -49,17 +49,12 @@
 <div class="panel_center" data-bind="customScrollbar: {'scrollToBottomTrigger': scrollToBottomTrigger, 
 	 'scrollToTopTrigger': scrollToTopTrigger}">
 	<div class="thread_content scroll-inner">
-		<div class="notification" data-bind="visible: loadingViewPane, i18n: 'text'" 
-			 data-i18n="CORE/INFO_LOADING"></div>
+		<div class="notification" data-bind="visible: loadingViewPane, i18n: {'key': 'CORE/INFO_LOADING'}"></div>
 		<div class="link more" data-bind="visible: hasMorePosts() && !loadingMoreMessages() && !loadingViewPane(), 
-			 click: commandGetOlderPosts, i18n: 'text'" data-i18n="HELPDESK/THREAD_MORE_MESSAGES"></div>
-		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: 'text'"
-			 data-i18n="HELPDESK/THREAD_LOADING_MESSAGES"></div>
+			 click: commandGetOlderPosts, i18n: {'key': 'HELPDESK/THREAD_MORE_MESSAGES'}"></div>
+		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: {'key': 'HELPDESK/THREAD_LOADING_MESSAGES'}"></div>
 		<div class="posts" data-bind="foreach: posts(), quoteText: {actionHandler: quoteText}">
-			<div class="post request" data-bind="css: {
-					'request': bThreadOwner,
-					'response': !bThreadOwner
-				}">
+			<div class="post request" data-bind="css: {'request': bThreadOwner, 'response': !bThreadOwner}">
 				<div class="header">
 					<span class="close" data-bind="css: {'canBeDeleted': canBeDeleted}, click: function (oPost) { $root.deletePost(oPost); }"></span>
 					<span class="date" data-bind="text: sDate"></span>
@@ -73,10 +68,8 @@
 			</div>
 		</div>
 		<div class="buttons" data-bind="css: {'no_posts': posts().length === 0}">
-			<span class="button new_post" data-bind="click: function () { iHaveMoreToSay(); },
-				  visible: !isQuickReplyActive(), i18n: 'text'" data-i18n="HELPDESK/THREAD_BUTTON_SAY_MORE"></span>
-			<span class="button resolve" data-bind="command: closeCommand, i18n: 'text', visible: state() !== Enums.HelpdeskThreadStates.Resolved"
-				  data-i18n="HELPDESK/THREAD_BUTTON_CLOSE_ISSUE"></span>
+			<span class="button new_post" data-bind="click: function () { iHaveMoreToSay(); }, visible: !isQuickReplyActive(), i18n: {'key': 'HELPDESK/THREAD_BUTTON_SAY_MORE'}"></span>
+			<span class="button resolve" data-bind="command: closeCommand, i18n: {'key': 'HELPDESK/THREAD_BUTTON_CLOSE_ISSUE'}, visible: state() !== Enums.HelpdeskThreadStates.Resolved"></span>
 		</div>
 	</div>
 </div>

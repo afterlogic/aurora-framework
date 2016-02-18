@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="title" data-i18n="CONTACTS/LABEL_IMPORT_CONTACTS" data-bind="i18n: 'text'"></h2>
+	<h2 class="title" data-bind="i18n: {'key': 'CONTACTS/LABEL_IMPORT_CONTACTS'}"></h2>
 </div>
 <div class="decor"></div>
 <div class="panel_center">
@@ -7,17 +7,17 @@
 		<div class="contact_data_groups">
 			<div class="fields clearfix">
 				<div class="hint">
-					<span data-i18n="CONTACTS/IMPORT_DESC" data-bind="i18n: 'text'"></span>
+					<span data-bind="i18n: {'key': 'CONTACTS/IMPORT_DESC'}"></span>
 				</div>
 				<div class="row">
-					<span data-bind="visible: importing, i18n: 'text'" data-i18n="CORE/BUTTON_IMPORTING"></span>
+					<span data-bind="visible: importing, i18n: {'key': 'CORE/BUTTON_IMPORTING'}"></span>
 					<div class="buttons" data-bind="visible: !importing()">
-						<span class="button import" data-i18n="CORE/BUTTON_IMPORT" data-bind="i18n: 'text', initDom: importButtonDom"></span>
+						<span class="button import" data-bind="i18n: {'key': 'CORE/BUTTON_IMPORT'}, initDom: importButtonDom"></span>
 					</div>
 				</div>
 				<div class="row" data-bind="visible: '' !== $root.sImportContactsLink">
 					<a class="link" href="#" target="_blank" data-bind="attr: {href: $root.sImportContactsLink}">
-						<span data-i18n="CONTACTS/LINK_LEARN_MORE" data-bind="i18n: 'text'"></span>
+						<span data-bind="i18n: {'key': 'CONTACTS/LINK_LEARN_MORE'}"></span>
 					</a>
 				</div>
 			</div>
@@ -30,7 +30,7 @@
 		<span class="content">
 			<span class="item close" href="javascript: void(0)" data-bind="click: function () {$root.gotoContactList();}">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="CORE/BUTTON_CLOSE"></span>
+				<span class="text" data-bind="i18n: {'key': 'CORE/BUTTON_CLOSE'}"></span>
 			</span>
 		</span>
 	</div>

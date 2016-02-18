@@ -4,19 +4,17 @@
 	<div class="message_header" data-bind="initDom: domMessageHeader, visible: isCurrentMessage, event: {'dblclick': resizeDblClick}">
 		<div class="notice" data-bind="visible: visiblePicturesControl">
 			<span class="item">
-				<span data-i18n="MAIL/INFO_MESSAGE_BLOCKED" data-bind="i18n: 'text'"></span>
-				<span class="link" data-i18n="MAIL/ACTION_SHOW_PICTURES" 
-				   data-bind="i18n: 'text', click: showPictures, visible: visibleShowPicturesLink"></span>
+				<span data-bind="i18n: {'key': 'MAIL/INFO_MESSAGE_BLOCKED'}"></span>
+				<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_SHOW_PICTURES'}, click: showPictures, visible: visibleShowPicturesLink"></span>
 			</span>
 			<span class="item">
-				<span class="link" data-i18n="MAIL/ACTION_ALWAYS_SHOW_PICTURE_THIS_SENDER" 
-				   data-bind="i18n: 'text', click: alwaysShowPictures"></span>
+				<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_ALWAYS_SHOW_PICTURE_THIS_SENDER'}, click: alwaysShowPictures"></span>
 			</span>
 		</div>
 
 		<div class="notice" data-bind="visible: visibleConfirmationControl">
-			<span data-i18n="MAIL/INFO_SENDER_ASKED_NOTIFY" data-bind="i18n: 'text'"></span>
-			<span class="link" data-i18n="MAIL/ACTION_NOTIFY_SENDER" data-bind="i18n: 'text', click: notifySender"></span>
+			<span data-bind="i18n: {'key': 'MAIL/INFO_SENDER_ASKED_NOTIFY'}"></span>
+			<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_NOTIFY_SENDER'}, click: notifySender"></span>
 		</div>
 
 		<!-- ko foreach: topControllers -->
@@ -36,7 +34,7 @@
 					<div class="message_info_line">
 						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, 
 								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
-						<span data-i18n="MAIL/SHORT_LINE_TO" data-bind="i18n: 'text', visible: allRecipients().length > 0"></span>
+						<span data-bind="i18n: {'key': 'MAIL/SHORT_LINE_TO'}, visible: allRecipients().length > 0"></span>
 						<span data-bind="foreach: allRecipients">
 							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, 
 									attr: {'data-email': sEmail, 'data-name': sName}">
@@ -47,35 +45,35 @@
 				
 				<div class="message_info message_detail_info" data-bind="visible: detailsVisible()">
 					<div class="message_info_line">
-						<span class="title" data-i18n="MAIL/LABEL_FROM" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-bind="i18n: {'key': 'MAIL/LABEL_FROM'}"></span>: 
 						<span class="from control address" data-bind="text: fullFrom, 
 								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}">
 						</span>
 					</div>
 				
 					<div class="message_info_line" data-bind="visible: aToAddr().length > 0">
-						<span class="title" data-i18n="MAIL/LABEL_TO" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-bind="i18n: {'key': 'MAIL/LABEL_TO'}"></span>: 
 						<!-- ko foreach: aToAddr -->
 						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aToAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aCcAddr().length > 0">
-						<span class="title" data-i18n="CORE/LABEL_CC" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-bind="i18n: {'key': 'CORE/LABEL_CC'}"></span>: 
 						<!-- ko foreach: aCcAddr -->
 						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aCcAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aBccAddr().length > 0">
-						<span class="title" data-i18n="CORE/LABEL_BCC" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-bind="i18n: {'key': 'CORE/LABEL_BCC'}"></span>: 
 						<!-- ko foreach: aBccAddr -->
 						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
 						</span><span data-bind="visible: $parent.aBccAddr().length > $index() + 1">, </span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line">
-						<span class="title" data-i18n="MAIL/LABEL_DATE" data-bind="i18n: 'text'"></span>: 
+						<span class="title" data-bind="i18n: {'key': 'MAIL/LABEL_DATE'}"></span>: 
 						<span data-bind="text: fullDate"></span>
 					</div>
 				</div>
@@ -98,22 +96,22 @@
 					<div class="download_menu">
 						<span class="link hover" data-bind="visible: visibleExtendedDownload">
 							<span class="icon"></span>
-							<span class="text" data-i18n="MAIL/ATTACHMENT_DOWNLOAD_ALL" data-bind="i18n: 'text'"></span>
+							<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_DOWNLOAD_ALL'}"></span>
 						</span>
 						
 						<div class="content">
 							<span class="link all" data-bind="click: downloadAllAttachments, visible: visibleDownloadAllAttachments">
 								<span class="icon"></span>
-								<span class="text" data-i18n="MAIL/ATTACHMENT_DOWNLOAD_AS_ZIP" data-bind="i18n: 'text'"></span>
+								<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_DOWNLOAD_AS_ZIP'}"></span>
 							</span>
 							<span class="link separately"
 							   data-bind="click: downloadAllAttachmentsSeparately, visible: visibleDownloadAllAttachmentsSeparately">
 								<span class="icon"></span>
-								<span class="text" data-i18n="MAIL/ATTACHMENT_DOWNLOAD_ALL_SEPARATELY" data-bind="i18n: 'text'"></span>
+								<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_DOWNLOAD_ALL_SEPARATELY'}"></span>
 							</span>
 							<span class="link to_filestorage" data-bind="click: saveAttachmentsToFiles, visible: visibleSaveAttachmentsToFiles">
 								<span class="icon"></span>
-								<span class="text" data-i18n="MAIL/ATTACHMENT_SAVE_TO_FILES" data-bind="i18n: 'text'"></span>
+								<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_SAVE_TO_FILES'}"></span>
 							</span>
 						</div>
 					</div>
@@ -132,13 +130,10 @@
 					<!-- /ko -->
 
 					<div class="message_body_info" data-bind="visible: visibleNoMessageSelectedText">
-						<div data-i18n="MAIL/INFO_NO_MESSAGE_SELECTED" 
-							 data-bind="i18n: 'text'"></div>
-						<div class="message_body_secondary_info" data-i18n="MAIL/INFO_SINGLE_DOUBLE_CLICK" 
-							 data-bind="i18n: 'text'"></div>
+						<div data-bind="i18n: {'key': 'MAIL/INFO_SINGLE_DOUBLE_CLICK'}"></div>
+						<div class="message_body_secondary_info" data-bind="i18n: {'key': 'MAIL/INFO_SINGLE_DOUBLE_CLICK'}"></div>
 					</div>
-					<div class="message_body_info" data-i18n="CORE/INFO_LOADING" 
-						 data-bind="visible: isLoading, i18n: 'text'"></div>
+					<div class="message_body_info" data-bind="visible: isLoading, i18n: {'key': 'CORE/INFO_LOADING'}"></div>
 					<div class="message_body html" data-bind="initDom: domTextBody, attr: {'dir': rtlMessage() ? 'rtl' : 'ltr'}"></div>
 				</div>
 			</div>

@@ -44,43 +44,43 @@
 			<tbody>
 				<tr>
 					<td width="60px" class="wm_print_title">
-						<span data-i18n="MAIL/LABEL_FROM" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'MAIL/LABEL_FROM'}"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: fullFrom" colspan="2"></td>
 				</tr>
 				<tr>
 					<td class="wm_print_title">
-						<span data-i18n="MAIL/LABEL_TO" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'MAIL/LABEL_TO'}"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: to" colspan="2"></td>
 				</tr>
 				<tr data-bind="visible: cc() !== ''">
 					<td class="wm_print_title">
-						<span data-i18n="CORE/LABEL_CC" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'CORE/LABEL_CC'}"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: cc" colspan="2"></td>
 				</tr>
 				<tr data-bind="visible: bcc() !== ''">
 					<td class="wm_print_title">
-						<span data-i18n="CORE/LABEL_BCC" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'CORE/LABEL_BCC'}"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: bcc" colspan="2"></td>
 				</tr>
 				<tr>
 					<td class="wm_print_title">
-						<span data-i18n="MAIL/LABEL_DATE" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'MAIL/LABEL_DATE'}"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: fullDate" colspan="2"></td>
 				</tr>
 				<tr>
 					<td class="wm_print_title">
-						<span data-i18n="MAIL/LABEL_SUBJECT" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'MAIL/LABEL_SUBJECT'}"></span>: 
 					</td>
 					<td class="wm_print_value" data-bind="text: subject" colspan="2"></td>
 				</tr>
 				<tr data-bind="visible: attachments().length > 0">
 					<td class="wm_print_title">
-						<span data-i18n="MAIL/LABEL_ATTACHMENTS" data-bind="i18n: 'text'"></span>: 
+						<span data-bind="i18n: {'key': 'MAIL/LABEL_ATTACHMENTS'}"></span>: 
 					</td>
 					<!-- ko if: usesAttachmentString -->
 					<td class="wm_print_value">
@@ -94,9 +94,7 @@
 							<a href="javascript: void(0);" data-bind="text: fileName, 
 							   attr: {'data-hash': 'download-' + hash()}"></a>
 							<span data-bind="visible: visibleViewLink">
-								(<a href="javascript: void(0);" data-bind="i18n: 'text', 
-									attr: {'data-hash': 'view-' + hash()}" 
-									data-i18n="CORE/ATTACHMENT_VIEW"></a>)
+								(<a href="javascript: void(0);" data-bind="i18n: {'key': 'CORE/ATTACHMENT_VIEW'}, attr: {'data-hash': 'view-' + hash()}"></a>)
 							</span>
 							<!-- ko if: isMessageType() && messagePart() -->
 								<!-- ko template: {name: 'Mail_PrintMessageView', data: messagePart} --><!-- /ko -->

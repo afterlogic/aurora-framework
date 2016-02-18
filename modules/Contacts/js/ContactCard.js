@@ -154,7 +154,7 @@ function OnContactResponse(aElements, aContacts)
 			{
 				var $add = $('<span class="add_contact"></span>');
 				$Element.after($add);
-				CustomTooltip.init($add, 'MAIL/ACTION_ADD_TO_CONTACTS');
+				CustomTooltip.init($add, 'CONTACTS/ACTION_ADD_TO_CONTACTS');
 				$add.on('click', function () {
 					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sEmail, function (aContacts) {
 						_.each(aElements, function ($El) {

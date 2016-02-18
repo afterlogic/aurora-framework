@@ -4,7 +4,7 @@
 			<div class="header" data-bind="css: {'custom_logo': sCustomLogoUrl}">
 				<!-- ko if: sCustomLogoUrl === '' --><span class="icon"></span><!-- /ko -->
 				<!-- ko if: sCustomLogoUrl !== '' --><img data-bind="attr: {'src': sCustomLogoUrl}"/><!-- /ko -->
-				<span class="text" data-i18n="CORE/HEADING_LOGIN" data-bind="i18n: 'text'"></span>
+				<span class="text" data-bind="i18n: {'key': 'CORE/HEADING_LOGIN'}"></span>
 			</div>
 
 			<!-- ko if: bSocialInviteMode -->
@@ -40,7 +40,7 @@
 
 
 			<div class="languages demo" data-bind="visible: bAllowChangeLanguage && bUseFlagsLanguagesView">
-				<div class="title" data-i18n="AUTH/LANGUAGE_SELECTOR_TITLE" data-bind="i18n: 'text'"></div>
+				<div class="title" data-bind="i18n: {'key': 'AUTH/LANGUAGE_SELECTOR_TITLE'}"></div>
 				<div data-bind="foreach: aLanguages">
 					<span class="item" data-bind="css: value + ($parent.currentLanguage() === value ? ' selected' : ''), click: function () { $parent.changeLanguage(value); }">
 						<span class="item_content">

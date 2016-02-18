@@ -8,18 +8,18 @@
 			selectedGroupType() !== Enums.ContactsGroupListType.SharedToAll,
 			command: newGroupCommand, customTooltip: 'CONTACTS/TOOL_NEW_GROUP'" id="selenium_contacts_new_group_button">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/TOOL_NEW_GROUP"></span>
+			<span class="text" data-bind="i18n: {'key': 'CONTACTS/TOOL_NEW_GROUP'}"></span>
 		</span>
 
 		<!-- ko template: {name: 'Contacts_Toolbar_ContactsCommonPartView'} --><!-- /ko -->
 
 		<span class="item share-all" data-bind="visible: visibleShareCommand, command: shareCommand, customTooltip: 'CONTACTS/TOOL_SHARE'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/TOOL_SHARE"></span>
+			<span class="text" data-bind="i18n: {'key': 'CONTACTS/TOOL_SHARE'}"></span>
 		</span>
 		<span class="item unshare-all" data-bind="visible: visibleUnshareCommand, command: shareCommand, customTooltip: 'CONTACTS/TOOL_UNSHARE'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/TOOL_UNSHARE"></span>
+			<span class="text" data-bind="i18n: {'key': 'CONTACTS/TOOL_UNSHARE'}"></span>
 		</span>
 
 		<span class="item control" data-bind="visible: showPersonalContacts() && selectedGroupType() === Enums.ContactsGroupListType.Personal, dropdown: {control: false}">
@@ -28,9 +28,9 @@
 				<span class="dropdown_helper">
 					<span class="dropdown_arrow"><span></span></span>
 					<span class="dropdown_content">
-						<span class="item export" data-bind="i18n: 'text', command: exportCSVCommand" data-i18n="CONTACTS/TOOL_EXPORT_CSV"></span>
-						<span class="item export" data-bind="i18n: 'text', command: exportVCFCommand" data-i18n="CONTACTS/TOOL_EXPORT_VCF"></span>
-						<span class="item import" data-bind="i18n: 'text', command: importCommand" data-i18n="CORE/BUTTON_IMPORT"></span>
+						<span class="item export" data-bind="i18n: {'key': 'CONTACTS/TOOL_EXPORT_CSV'}, command: exportCSVCommand"></span>
+						<span class="item export" data-bind="i18n: {'key': 'CONTACTS/TOOL_EXPORT_VCF'}, command: exportVCFCommand"></span>
+						<span class="item import" data-bind="i18n: {'key': 'CORE/BUTTON_IMPORT'}, command: importCommand"></span>
 					</span>
 				</span>
 			</span>

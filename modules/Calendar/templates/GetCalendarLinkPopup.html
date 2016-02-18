@@ -2,16 +2,16 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: 'text'" data-i18n="CALENDAR/TITLE_GETLINK_CALENDAR"></span>
+		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/TITLE_GETLINK_CALENDAR'}"></span>
 
 		<div class="fields">
 			<div class="fieldset dav_access">
 				<div class="row">
-					<label for="dav_url" class="label" data-i18n="CALENDAR/URL_DAV" data-bind="i18n: 'text'"></label>
+					<label for="dav_url" class="label" data-bind="i18n: {'key': 'CALENDAR/URL_DAV'}"></label>
 					<input id="dav_url" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: calendarUrl(), click: function () {$element.select();}" readonly />
 				</div>
 				<div class="row">
-					<label for="ics_link" class="label" data-i18n="CALENDAR/URL_ICS" data-bind="i18n: 'text'"></label>
+					<label for="ics_link" class="label" data-bind="i18n: {'key': 'CALENDAR/URL_ICS'}"></label>
 					<input id="ics_link" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: icsLink(), click: function () {$element.select();}"  readonly />
 					<a class="control download" data-bind="attr: {href: exportUrl()}"></a>
 				</div>
@@ -22,15 +22,15 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="make_public_access" data-bind="checked: isPublic(), click: function (){isPublic(!isPublic());}" />
 					</label>
-					<label for="make_public_access" data-i18n="CALENDAR/LABEL_WEB_ACCESS" data-bind="i18n: 'text'"></label>
+					<label for="make_public_access" data-bind="i18n: {'key': 'CALENDAR/LABEL_WEB_ACCESS'}"></label>
 				</div>
 				<div class="row" data-bind="visible: isPublic()">
-					<label for="public_link" class="label" data-i18n="CALENDAR/LABEL_WEB_LINK" data-bind="i18n: 'text'"></label>
+					<label for="public_link" class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_WEB_LINK'}"></label>
 					<input id="public_link" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: pubUrl(), click: function () {$element.select();}" readonly />
 				</div>
 			</div>		
 			<div class="buttons">
-				<span class="button save" data-i18n="CORE/BUTTON_CLOSE" data-bind="i18n: 'text', click: cancelPopup"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_CLOSE'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

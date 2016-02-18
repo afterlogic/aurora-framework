@@ -1,51 +1,51 @@
 <div class="popup contact_create_popup" style="display: none;">
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
-		<span class="title" data-i18n="CONTACTS/LABEL_NEW_CONTACT" data-bind="i18n: 'text'"></span>
+		<span class="title" data-bind="i18n: {'key': 'CONTACTS/LABEL_NEW_CONTACT'}"></span>
 		<div class="fields">
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_DISPLAY_NAME"></span>:
+					<span data-bind="i18n: {'key': 'CONTACTS/LABEL_DISPLAY_NAME'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: displayName, hasfocus: focusDisplayName" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: 'text'" data-i18n="CORE/LABEL_EMAIL"></span>:
+					<span data-bind="i18n: {'key': 'CONTACTS/LABEL_EMAIL'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: email" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_PHONE"></span>:
+					<span data-bind="i18n: {'key': 'CONTACTS/LABEL_PHONE'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: phone" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_ADDRESS"></span>:
+					<span data-bind="i18n: {'key': 'CONTACTS/LABEL_ADDRESS'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: address" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_SKYPE"></span>:
+					<span data-bind="i18n: {'key': 'CONTACTS/LABEL_SKYPE'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: skype" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: 'text'" data-i18n="CONTACTS/LABEL_FACEBOOK"></span>:
+					<span data-bind="i18n: {'key': 'CONTACTS/LABEL_FACEBOOK'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: facebook" />
 			</div>
 			<div class="clear"></div>
 		</div>
-		<span class="link" data-bind="i18n: 'text', click: goToContacts" data-i18n="CONTACTS/BUTTON_SHOW_ADDITIONAL_FIELDS"></span>
+		<span class="link" data-bind="i18n: {'key': 'CONTACTS/BUTTON_SHOW_ADDITIONAL_FIELDS'}, click: goToContacts"></span>
 		<div class="buttons">
-			<span class="button" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick, visible: !loading()"></span>
-			<span class="button" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading()"></span>
-			<span class="button" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup, visible: !loading()"></span>
+			<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: onSaveClick, visible: !loading()"></span>
+			<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: loading()"></span>
+			<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup, visible: !loading()"></span>
 		</div>
 	</div>
 	<span class="helper"></span>

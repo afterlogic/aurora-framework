@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: 'text'" data-i18n="CALENDAR/TITLE_SHARE_CALENDAR"></span>
+		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/TITLE_SHARE_CALENDAR'}"></span>
 
 		<div class="fields">
 			<div class="fieldset shares_personal">
@@ -10,7 +10,7 @@
 					<tbody>
 						<tr class="row guests">
 							<td class="label">
-								<span data-i18n="CALENDAR/LABEL_CAN_SEE" data-bind="i18n: 'text'"></span>
+								<span data-bind="i18n: {'key': 'CALENDAR/LABEL_CAN_SEE'}"></span>
 							</td>
 							<td>
 								<div class="input inputosaurus">
@@ -25,7 +25,7 @@
 						</tr>
 						<tr class="row owners">
 							<td class="label">
-								<span data-i18n="CALENDAR/LABEL_CAN_EDIT" data-bind="i18n: 'text'"></span>
+								<span data-bind="i18n: {'key': 'CALENDAR/LABEL_CAN_EDIT'}"></span>
 							</td>
 							<td>
 								<div class="input inputosaurus">
@@ -51,18 +51,18 @@
 							<input type="checkbox" id="share_to_all_item_input" data-bind="checked: sharedToAll" />
 						</label>
 						<span>
-							<label for="share_to_all_item_input" data-i18n="CALENDAR/TITLE_SHARE_WITH_ALL_CALENDARS" data-bind="i18n: 'text'"></label>
+							<label for="share_to_all_item_input" data-bind="i18n: {'key': 'CALENDAR/TITLE_SHARE_WITH_ALL_CALENDARS'}"></label>
 						</span>
 					</div>
 					<select class="value input" data-bind="visible: sharedToAll, value: sharedToAllAccess, options: aAccess, optionsText: 'display', optionsValue: 'value'"></select>
 				</div>
 				<div class="row">
-					<span class="hint" data-i18n="CALENDAR/TITLE_DESCRIPTION_SHARED_WITH_ALL_CALENDARS" data-bind="visible: sharedToAll, i18n: 'text'"></span>
+					<span class="hint" data-bind="visible: sharedToAll, i18n: {'key': 'CALENDAR/TITLE_DESCRIPTION_SHARED_WITH_ALL_CALENDARS'}"></span>
 				</div>
 			</div>
 
 			<div class="buttons">
-				<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: onSaveClick"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: onSaveClick"></span>
 			</div>
 		</div>
 	</div>

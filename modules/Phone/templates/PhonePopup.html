@@ -5,17 +5,17 @@
 
 		<div class="fields">
 			<div class="row" data-bind="visible: action() === Enums.PhoneAction.Settings">
-				<span class="title" data-i18n="PHONE/HEADING_ACCESS_TO_MICROPHONE" data-bind="i18n: 'text'"></span>
+				<span class="title" data-bind="i18n: {'key': 'PHONE/HEADING_ACCESS_TO_MICROPHONE'}"></span>
 				<div id="fake_flash" style="margin-bottom: 10px"></div>
-				<span class="hint" data-i18n='PHONE/HINT_ACCESS_TO_MICROPHONE' data-bind="i18n: 'text'"></span>
+				<span class="hint" data-bind="i18n: {'key': 'PHONE/HINT_ACCESS_TO_MICROPHONE'}"></span>
 			</div>
 			<div class="row" data-bind="visible: action() === Enums.PhoneAction.Incoming">
 				<span class="text call_report" data-bind="text: report"></span>
 			</div>
 			<div class="buttons">
-				<span class="button" data-i18n="CORE/BUTTON_OK" data-bind="i18n: 'text', visible: action() === Enums.PhoneAction.Settings, click: onOKClick"></span>
-				<span class="button answer" data-i18n="PHONE/BUTTON_ANSWER" data-bind="i18n: 'text', visible: action() === Enums.PhoneAction.Incoming, click: answer"></span>
-				<span class="button hangup" data-i18n="PHONE/BUTTON_END_CALL" data-bind="i18n: 'text', visible: action() === Enums.PhoneAction.Incoming, click: hangup"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_OK'}, visible: action() === Enums.PhoneAction.Settings, click: onOKClick"></span>
+				<span class="button answer" data-bind="i18n: {'key': 'PHONE/BUTTON_ANSWER'}, visible: action() === Enums.PhoneAction.Incoming, click: answer"></span>
+				<span class="button hangup" data-bind="i18n: {'key': 'PHONE/BUTTON_END_CALL'}, visible: action() === Enums.PhoneAction.Incoming, click: hangup"></span>
 			</div>
 		</div>
 	</div>

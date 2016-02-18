@@ -6,7 +6,7 @@
 					<span class="icon"></span>
 					<input type="radio" value="0" data-bind="checked: useSignatureRadio, attr: {'id': 'noSignature' + __name}" />
 				</label>
-				<label data-i18n="CORE/LABEL_NO_SIGNATURE" data-bind="i18n: 'text', attr: {'for': 'noSignature' + __name}"></label>
+				<label data-bind="i18n: {'key': 'CORE/LABEL_NO_SIGNATURE'}, attr: {'for': 'noSignature' + __name}"></label>
 			</div>
 		</div>
 			
@@ -18,10 +18,10 @@
 			
 			<div class="editor" data-bind="template: {name: oHtmlEditor.ViewTemplate, data: oHtmlEditor}"></div>
 		</div>
-		<div class="hint" data-i18n="MAIL/HINT_IMAGE_DRAGNDROP" data-bind="visible: enableImageDragNDrop, i18n: 'text'"></div>
+		<div class="hint" data-bind="visible: enableImageDragNDrop, i18n: {'key': 'MAIL/HINT_IMAGE_DRAGNDROP'}"></div>
 	</div>
 	<div class="buttons">
-		<span class="button" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
-		<span class="button" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: save, visible: !isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: isSaving()"></span>
 	</div>
 </div>

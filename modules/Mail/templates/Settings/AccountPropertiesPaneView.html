@@ -1,7 +1,7 @@
 <div class="fields">
 	<div class="fieldset">
 		<div class="row" data-bind="visible: !bAllowIdentities">
-			<span class="label" data-i18n="MAIL/LABEL_YOUR_NAME" data-bind="i18n: 'text'"></span>
+			<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_YOUR_NAME'}"></span>
 			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: friendlyName, onEnter: save"/>
 		</div>
 
@@ -11,11 +11,11 @@
             </div>
 
             <div class="row">
-                <span class="label required" data-i18n="MAIL/LABEL_LOGIN" data-bind="i18n: 'text'"></span>
+                <span class="label required" data-bind="i18n: {'key': 'MAIL/LABEL_LOGIN'}"></span>
                 <input class="value input" spellcheck="false" type="text" maxlength="255" data-bind="value: incomingMailLogin, hasfocus: incLoginFocused, onEnter: save"/>
             </div>
             <div class="row">
-                <span class="label required" data-i18n="CORE/LABEL_PASSWORD" data-bind="i18n: 'text'"></span>
+                <span class="label required" data-bind="i18n: {'key': 'CORE/LABEL_PASSWORD'}"></span>
                 <input class="value input" spellcheck="false" type="password" maxlength="255" data-bind="value: incomingMailPassword, onEnter: save"/>
             </div>
             <div class="row">
@@ -28,20 +28,19 @@
                         <span class="icon"></span>
                         <input type="checkbox" id="mail_out_auth" data-bind="checked: useSmtpAuthentication" />
                     </label>
-                    <label for="mail_out_auth" data-i18n="MAIL/LABEL_USE_SMTP_AUTHENTICATION" data-bind="i18n: 'text'"></label>
+                    <label for="mail_out_auth" data-bind="i18n: {'key': 'MAIL/LABEL_USE_SMTP_AUTHENTICATION'}"></label>
                 </div>
             </div>
 			<div class="row"></div>
 		</div>
 
 		<div class="buttons" data-bind="visible: allowChangePassword" style="text-align: left;">
-			<span class="button" data-i18n="CORE/BUTTON_CHANGE_PASS" data-bind="i18n: 'text', click: changePassword"></span>
+			<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CHANGE_PASS'}, click: changePassword"></span>
 		</div>
 
 		<div data-bind="visible: canBeRemoved() && !isDefault()">
             <div class="row remove_account">
-				<span class="link" data-i18n="CORE/BUTTON_REMOVE_ACCOUNT"
-					  data-bind="i18n: 'text', click: function () { $parent.removeEditedAccount(); }, attr: {'id': 'selenium_settings_delete_account_' + email()}">
+				<span class="link" data-bind="i18n: {'key': 'CORE/BUTTON_REMOVE_ACCOUNT'}, click: function () { $parent.removeEditedAccount(); }, attr: {'id': 'selenium_settings_delete_account_' + email()}">
 				</span>
             </div>
             <div class="hint">
@@ -52,7 +51,7 @@
     </div>
 	
 	<div class="buttons" data-bind="visible: (!isDefault() || isDefault() && bAllowChangeEmailSettings) && isAllowMail() || canBeRemoved() && !isDefault() || !bAllowIdentities">
-		<span class="button" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
-		<span class="button" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', click: save, visible: isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: save, visible: !isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, click: save, visible: isSaving()"></span>
 	</div>
 </div>

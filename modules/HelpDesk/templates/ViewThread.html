@@ -32,7 +32,7 @@
 			<span class="group resolve" data-bind="dropdown: {}">
 				<span class="item" data-bind="command: closeCommand, customTooltip: 'HELPDESK/TOOL_CLOSE', visible: state() !== Enums.HelpdeskThreadStates.Resolved">
 					<span class="icon"></span>
-					<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_CLOSE"></span>
+					<span class="text" data-bind="i18n: {'key': 'HELPDESK/TOOL_CLOSE'}"></span>
 				</span>
 				<span class="item control">
 					<span class="icon arrow"></span>
@@ -41,27 +41,24 @@
 					<span class="dropdown_helper">
 						<span class="dropdown_arrow"><span></span></span>
 						<span class="dropdown_content">
-							<span class="item allread" data-bind="command: pendingCommand, i18n: 'text'"
-								  data-i18n="HELPDESK/THREAD_STATE_PENDING"></span>
-							<span class="item unread" data-bind="command: deferCommand, i18n: 'text'"
-								  data-i18n="HELPDESK/THREAD_STATE_DEFERRED"></span>
-							<span class="item unread" data-bind="command: answerCommand, i18n: 'text'"
-								  data-i18n="HELPDESK/THREAD_STATE_ANSWERED"></span>
+							<span class="item allread" data-bind="command: pendingCommand, i18n: {'key': 'HELPDESK/THREAD_STATE_PENDING'}"></span>
+							<span class="item unread" data-bind="command: deferCommand, i18n: {'key': 'HELPDESK/THREAD_STATE_DEFERRED'}"></span>
+							<span class="item unread" data-bind="command: answerCommand, i18n: {'key': 'HELPDESK/THREAD_STATE_ANSWERED'}"></span>
 						</span>
 					</span>
 				</span>
 			</span>
 			<span class="item wait_client" data-bind="command: waitCommand, customTooltip: 'HELPDESK/TOOL_WAITING'">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_WAITING"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/TOOL_WAITING'}"></span>
 			</span>
 			<span class="item delete" data-bind="command: deleteCommand, visible: !bNewTab, customTooltip: 'HELPDESK/TOOL_DELETE'">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_DELETE"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/TOOL_DELETE'}"></span>
 			</span>
 			<span class="item new_window" data-bind="command: openNewWindowCommand, visible: !bNewTab, customTooltip: 'HELPDESK/TOOL_NEW_WINDOW'">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: 'text'" data-i18n="HELPDESK/TOOL_NEW_WINDOW"></span>
+				<span class="text" data-bind="i18n: {'key': 'HELPDESK/TOOL_NEW_WINDOW'}"></span>
 			</span>
 		</span>
 	</div>
@@ -72,22 +69,19 @@
 					attr: {'data-email': selectedItem() ? selectedItem().sEmail : '', 'data-name': selectedItem() ? selectedItem().sName : ''}"></span>
 		</span>
 	</div>
-	<a class="link" href="javascript:void(0);" data-bind="i18n: 'text', click: onShowThreadsByOwner,
-	   visible: !bNewTab" data-i18n="HELPDESK/SHOW_ALL_THREADS"></a>
+	<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'HELPDESK/SHOW_ALL_THREADS'}, click: onShowThreadsByOwner, visible: !bNewTab"></a>
 </div>
 <div class="panel_center" data-bind="customScrollbar: {'scrollToBottomTrigger': scrollToBottomTrigger,
 	 'scrollToTopTrigger': scrollToTopTrigger}">
 	<div class="thread_content scroll-inner">
 		<div class="details" data-bind="visible: !clientDetailsVisible() && '' !== externalContentUrl()">
 			<div class="details_content">
-				<span class="link details_show" data-i18n="CORE/ACTION_SHOW_DETAILS"
-					data-bind="i18n: 'text', click: showClientDetails"></span>
+				<span class="link details_show" data-bind="i18n: {'key': 'CORE/ACTION_SHOW_DETAILS'}, click: showClientDetails"></span>
 			</div>
 		</div>
 		<div class="details" data-bind="visible: clientDetailsVisible() && '' !== externalContentUrl()">
 			<div class="details_content">
-				<span class="link details_hide" data-i18n="CORE/ACTION_HIDE_DETAILS"
-					data-bind="i18n: 'text', click: hideClientDetails"></span>
+				<span class="link details_hide" data-bind="i18n: {'key': 'CORE/ACTION_HIDE_DETAILS'}, click: hideClientDetails"></span>
 				<!-- ko if: '' !== externalContentUrl() -->
 					<iframe class="external_content" src="javascript:void(0);"
 						data-bind="attr: { 'src': externalContentUrl }"></iframe>
@@ -95,14 +89,12 @@
 			</div>
 		</div>
 
-		<div class="notification" data-bind="visible: loadingViewPane, i18n: 'text'"
-			 data-i18n="CORE/INFO_LOADING"></div>
+		<div class="notification" data-bind="visible: loadingViewPane, i18n: {'key': 'CORE/INFO_LOADING'}"></div>
 		
 		<div class="link more" data-bind="visible: hasMorePosts() && !loadingMoreMessages() && !loadingViewPane(), 
-			 click: commandGetOlderPosts, i18n: 'text'" data-i18n="HELPDESK/THREAD_MORE_MESSAGES"></div>
+			 click: commandGetOlderPosts, i18n: {'key': 'HELPDESK/THREAD_MORE_MESSAGES'}"></div>
 
-		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: 'text'"
-			 data-i18n="HELPDESK/THREAD_LOADING_MESSAGES"></div>
+		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: {'key': 'HELPDESK/THREAD_LOADING_MESSAGES'}"></div>
 		
 		<div class="posts" data-bind="foreach: posts(), quoteText: {actionHandler: quoteText}">
 			<div class="post request" data-bind="css: {

@@ -2,24 +2,24 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-i18n="MAIL/HEADING_NEW_FOLDER" data-bind="i18n: 'text'"></span>
+		<span class="title" data-bind="i18n: {'key': 'MAIL/HEADING_NEW_FOLDER'}"></span>
 
 		<div class="fields">
 			<div class="row">
-				<span class="label" data-i18n="MAIL/LABEL_PARENT_FOLDER" data-bind="i18n: 'text'"></span>
+				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_PARENT_FOLDER'}"></span>
 				<select class="value input" data-bind="value: parentFolder, options: options,
 					optionsText: 'translatedDisplayName', optionsValue: 'fullName', optionsAfterRender: defaultOptionsAfterRender,
 					valueUpdate: ['blur', 'afterkeydown']">
 				</select>
 			</div>
 			<div class="row">
-				<span class="label" data-i18n="MAIL/LABEL_FOLDER_NAME" data-bind="i18n: 'text'"></span>
+				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_FOLDER_NAME'}"></span>
 				<input type="text" class="value input" spellcheck="false" maxlength="30" data-bind="value: folderName, hasfocus: folderNameFocus, onEnter: create" />
 			</div>
 			<div class="buttons">
-				<span class="button" data-i18n="CORE/BUTTON_OK" data-bind="i18n: 'text', click: create, visible: !isCreating()"></span>
-				<span class="button" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', click: create, visible: isCreating()"></span>
-				<span class="button" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup, visible: !isCreating()"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_OK'}, click: create, visible: !isCreating()"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, click: create, visible: isCreating()"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup, visible: !isCreating()"></span>
 			</div>
 		</div>
 	</div>

@@ -6,25 +6,25 @@
 					<span class="icon"></span>
 					<input type="checkbox" data-bind="checked: isDefault, enable: !disableCheckbox(), attr: {'id': 'identity_default_' + bCreate}" />
 				</label>
-				<label data-i18n="MAIL/LABEL_IDENTITY_SET_DEFAULT" data-bind="i18n: 'text', attr: {'for': 'identity_default_' + bCreate}"></label>
+				<label data-bind="i18n: {'key': 'MAIL/LABEL_IDENTITY_SET_DEFAULT'}, attr: {'for': 'identity_default_' + bCreate}"></label>
 			</div>
 		</div>
 		<div class="row">
-			<span class="label" data-i18n="MAIL/LABEL_YOUR_NAME" data-bind="i18n: 'text'"></span>
+			<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_YOUR_NAME'}"></span>
 			<input class="value input" spellcheck="false" type="text" data-bind="value: friendlyName, onEnter: save, hasFocus: friendlyNameHasFocus"/>
 		</div>
 		<div class="row">
-			<span class="label" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
+			<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_EMAIL'}"></span>
 			<input class="value input" spellcheck="false" type="text" data-bind="value: email, onEnter: save, disable: loyal"/>
 		</div>
 		<div class="row remove_account" data-bind="visible: !bCreate && !loyal()">
-			<span class="link" data-bind="i18n: 'text', click: remove" data-i18n="MAIL/BUTTON_REMOVE_IDENTITY"></span>
+			<span class="link" data-bind="i18n: {'key': 'MAIL/LABEL_LOGIN'}, click: remove"></span>
 		</div>
 	</div>
 
 	<div class="buttons">
-		<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !isSaving()"></span>
-		<span class="button save" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: isSaving()"></span>
-		<span class="button cancel secondary" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancel, visible: bCreate"></span>
+		<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: save, visible: !isSaving()"></span>
+		<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: isSaving()"></span>
+		<span class="button cancel secondary" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancel, visible: bCreate"></span>
 	</div>
 </div>

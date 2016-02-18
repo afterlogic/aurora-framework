@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-i18n="MAIL/HEADING_ADD_NEW_FETCHER" data-bind="i18n: 'text'"></span>
+		<span class="title" data-bind="i18n: {'key': 'MAIL/HEADING_ADD_NEW_FETCHER'}"></span>
 
 		<div class="fields">
 			<div class="fieldset">
@@ -11,27 +11,27 @@
 				</div>
 
 				<div class="row login">
-					<span class="label required" data-i18n="MAIL/LABEL_LOGIN" data-bind="i18n: 'text'"></span>
+					<span class="label required" data-bind="i18n: {'key': 'MAIL/LABEL_LOGIN'}"></span>
 					<input class="value input" spellcheck="false" type="text" maxlength="255" data-bind="value: incomingMailLogin, onEnter: save, hasFocus: loginIsSelected"/>
 				</div>
 				<div class="row password">
-					<span class="label required" data-i18n="CORE/LABEL_PASSWORD" data-bind="i18n: 'text'"></span>
+					<span class="label required" data-bind="i18n: {'key': 'CORE/LABEL_PASSWORD'}"></span>
 					<input class="value input" spellcheck="false" type="password" maxlength="255" data-bind="value: incomingMailPassword, onEnter: save, hasFocus: passwordIsSelected"/>
 				</div>
 
 				<div class="row hint">
-					<span class="" data-i18n="MAIL/HINT_FETCHER_STORE" data-bind="i18n: 'text'"></span>
+					<span class="" data-bind="i18n: {'key': 'MAIL/HINT_FETCHER_STORE'}"></span>
 				</div>
 
 				<div class="row folder">
-					<span class="label required" data-i18n="MAIL/LABEL_TARGET_FOLDER" data-bind="i18n: 'text'"></span>
-					<span class="" data-i18n="MAIL/INFO_WAITING_FOLDER_LIST" data-bind="i18n: 'text', visible: options().length === 0"></span>
+					<span class="label required" data-bind="i18n: {'key': 'MAIL/LABEL_TARGET_FOLDER'}"></span>
+					<span data-bind="i18n: {'key': 'MAIL/INFO_WAITING_FOLDER_LIST'}, visible: options().length === 0"></span>
 					<select class="value input" data-bind="visible: options().length > 1,
 						value: folder, options: options, optionsText: 'translatedDisplayName', optionsValue: 'fullName', 
 						optionsAfterRender: defaultOptionsAfterRender, valueUpdate: ['blur', 'afterkeydown']
 					"></select>
 
-					<span class="link" data-i18n="MAIL/BUTTON_ADD_NEW_FOLDER" data-bind="i18n: 'text', command: addNewFolderCommand, visible: options().length > 1"></span>
+					<span class="link" data-bind="i18n: {'key': 'MAIL/BUTTON_ADD_NEW_FOLDER'}, command: addNewFolderCommand, visible: options().length > 1"></span>
 				</div>
 
 				<div class="row">
@@ -40,15 +40,15 @@
 							<span class="icon"></span>
 							<input type="checkbox" id="popup_leave_essages_on_server" data-bind="checked: leaveMessagesOnServer" />
 						</label>
-						<label for="popup_leave_essages_on_server" data-i18n="MAIL/LABEL_LAVE_MESSAGES_ON_SERVER" data-bind="i18n: 'text'"></label>
+						<label for="popup_leave_essages_on_server" data-bind="i18n: {'key': 'MAIL/LABEL_LAVE_MESSAGES_ON_SERVER'}"></label>
 					</div>
 				</div>
 			</div>
 
 			<div class="buttons">
-				<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: save, visible: !loading()"></span>
-				<span class="button save" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading()"></span>
-				<span class="button cancel secondary" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: save, visible: !loading()"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: loading()"></span>
+				<span class="button cancel secondary" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

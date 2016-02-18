@@ -2,25 +2,25 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-i18n="OPENPGP/POPUP_TITLE_GENERATE_NEW_KEY" data-bind="i18n: 'text'"></span>
+		<span class="title" data-bind="i18n: {'key': 'OPENPGP/POPUP_TITLE_GENERATE_NEW_KEY'}"></span>
 
 		<div class="fields">
 			<div class="row">
-				<span class="label" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
+				<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_EMAIL'}"></span>
 				<select class="input" data-bind="options: emails, value: selectedEmail"></select>
 			</div>
 			<div class="row">
-				<span class="label" data-i18n="CORE/LABEL_PASSWORD" data-bind="i18n: 'text'"></span>
+				<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_PASSWORD'}"></span>
 				<input type="password" class="value input" data-bind="value: password" />
 			</div>
 			<div class="row">
-				<span class="label" data-i18n="OPENPGP/LABEL_KEY_LENGTH" data-bind="i18n: 'text'"></span>
+				<span class="label" data-bind="i18n: {'key': 'OPENPGP/LABEL_KEY_LENGTH'}"></span>
 				<select class="value input" data-bind="value: selectedKeyLength, options: keyLengthOptions"></select>
 			</div>
 			<div class="buttons">
-				<span class="button" data-i18n="OPENPGP/BUTTON_GENERATE" data-bind="visible: !process(), i18n: 'text', click: generate"></span>
-				<span class="button" data-i18n="OPENPGP/BUTTON_GENERATING" data-bind="visible: process, i18n: 'text'"></span>
-				<span class="button" data-i18n="CORE/BUTTON_CANCEL" data-bind="visible: !process(), i18n: 'text', click: cancelPopup"></span>
+				<span class="button" data-bind="visible: !process(), i18n: {'key': 'OPENPGP/BUTTON_GENERATE'}, click: generate"></span>
+				<span class="button" data-bind="visible: process, i18n: {'key': 'OPENPGP/BUTTON_GENERATING'}"></span>
+				<span class="button" data-bind="visible: !process(), i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

@@ -4,30 +4,30 @@
 
 		<span class="close" data-bind="click: cancelPopup"></span>
 
-		<span class="title" data-i18n="SETTINGS/HEADING_CONNECT_TO_MAIL" data-bind="i18n: 'text', visible: isConnectToMailType()"></span>
-		<span class="title" data-i18n="SETTINGS/HEADING_ADD_NEW_ACCOUNT" data-bind="i18n: 'text', visible: !isConnectToMailType() && isFirstTitle()"></span>
-		<span class="title" data-i18n="SETTINGS/HEADING_ADD_NEW_ACCOUNT_LAST_STEP" data-bind="i18n: 'text', visible: !isConnectToMailType() && !isFirstTitle()"></span>
+		<span class="title" data-bind="i18n: {'key': 'MAIL/HEADING_CONNECT_TO_MAIL'}, visible: isConnectToMailType()"></span>
+		<span class="title" data-bind="i18n: {'key': 'MAIL/HEADING_ADD_NEW_ACCOUNT'}, visible: !isConnectToMailType() && isFirstTitle()"></span>
+		<span class="title" data-bind="i18n: {'key': 'MAIL/HEADING_ADD_NEW_ACCOUNT_LAST_STEP'}, visible: !isConnectToMailType() && !isFirstTitle()"></span>
 
 		<div class="fields">
 			<div class="fieldset">
 				<div class="row name">
-					<span class="label" data-i18n="MAIL/LABEL_YOUR_NAME" data-bind="i18n: 'text'"></span>
+					<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_YOUR_NAME'}"></span>
 					<input class="value input" spellcheck="false"  type="text" maxlength="65" 
 						   data-bind="value: friendlyName, hasfocus: friendlyNameFocus, valueUpdate: 'afterkeydown', onEnter: onSaveClick"
 						   id="selenium_settings_create_account_name" />
 				</div>
 				<div class="row email">
-					<span class="label required" data-i18n="CORE/LABEL_EMAIL" data-bind="i18n: 'text'"></span>
+					<span class="label required" data-bind="i18n: {'key': 'CORE/LABEL_EMAIL'}"></span>
 					<input class="value input" spellcheck="false"  type="text" maxlength="65" 
 						   data-bind="value: email, hasfocus: emailFocus, onEnter: onSaveClick, disable: isConnectToMailType"
 						   id="selenium_settings_create_account_email" />
 				</div>
 				<div class="row login" data-bind="visible: !isFirstStep()">
-					<span class="label required" data-i18n="MAIL/LABEL_LOGIN" data-bind="i18n: 'text'"></span>
+					<span class="label required" data-bind="i18n: {'key': 'MAIL/LABEL_LOGIN'}"></span>
 					<input class="value input" spellcheck="false"  type="text" maxlength="255" data-bind="value: incomingMailLogin, hasfocus: incomingLoginFocused, onEnter: onSaveClick"/>
 				</div>
 				<div class="row password">
-					<span class="label required" data-i18n="CORE/LABEL_PASSWORD" data-bind="i18n: 'text'"></span>
+					<span class="label required" data-bind="i18n: {'key': 'CORE/LABEL_PASSWORD'}"></span>
 					<input class="value input" spellcheck="false"  type="password" maxlength="255" 
 						   data-bind="value: incomingMailPassword, hasfocus: incomingPasswordFocus, onEnter: onSaveClick"
 						   id="selenium_settings_create_account_password" />
@@ -45,19 +45,18 @@
 							<span class="icon"></span>
 							<input type="checkbox" id="add_new_account_mail_out_auth" data-bind="checked: useSmtpAuthentication" />
 						</label>
-						<label for="add_new_account_mail_out_auth" data-i18n="MAIL/LABEL_USE_SMTP_AUTHENTICATION" data-bind="i18n: 'text'"></label>
+						<label for="add_new_account_mail_out_auth" data-bind="i18n: {'key': 'MAIL/LABEL_USE_SMTP_AUTHENTICATION'}"></label>
 					</div>	
 				</div>
 			</div>
 
 			<div class="buttons">
-				<span class="button save" data-i18n="MAIL/BUTTON_ADD" 
-					  data-bind="i18n: 'text', click: onFirstSaveClick, visible: !loading() && isFirstStep()"
+				<span class="button save" data-bind="i18n: {'key': 'MAIL/BUTTON_ADD'}, click: onFirstSaveClick, visible: !loading() && isFirstStep()"
 					  id="selenium_settings_create_account_add_button"></span>
-				<span class="button save" data-i18n="CORE/BUTTON_SAVE" data-bind="i18n: 'text', click: onSecondSaveClick, visible: !loading() && !isFirstStep()"></span>
-				<span class="button save" data-i18n="MAIL/BUTTON_ADDING" data-bind="i18n: 'text', visible: loading() && isFirstStep()"></span>
-				<span class="button save" data-i18n="CORE/BUTTON_SAVING" data-bind="i18n: 'text', visible: loading() && !isFirstStep()"></span>
-				<span class="button cancel secondary" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: cancelPopup"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: onSecondSaveClick, visible: !loading() && !isFirstStep()"></span>
+				<span class="button save" data-bind="i18n: {'key': 'MAIL/BUTTON_ADDING'}, visible: loading() && isFirstStep()"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: loading() && !isFirstStep()"></span>
+				<span class="button cancel secondary" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

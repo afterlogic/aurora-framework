@@ -1,11 +1,11 @@
 <div class="toolbar">
 	<span class="content">
 		<a class="item mail_to" href="javascript: void(0)" data-bind="visible: hasEmails() && allowSendEmails(), click: sendThisContact">
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/BUTTON_SEND_THIS_CONTACT"></span>
+			<span class="text" data-bind="i18n: {'key': 'CONTACTS/BUTTON_SEND_THIS_CONTACT'}"></span>
 		</a>
 		<a class="item mail_to" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail()" style="display: none;">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: 'text'" data-i18n="CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT"></span>
+			<span class="text" data-bind="i18n: {'key': 'CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT'}"></span>
 		</a>
 	</span>
 </div>
