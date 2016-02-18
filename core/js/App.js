@@ -292,6 +292,10 @@ CApp.prototype.checkCookies = function ()
 	{
 		App.Screens.showError(Utils.i18n('CORE/ERROR_COOKIES_DISABLED'), false, true);
 	}
+	else
+	{
+		$.cookie('AuthToken', $.cookie('AuthToken'), { expires: 30 });
+	}
 
 	return bResult;
 };

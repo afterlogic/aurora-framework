@@ -157,7 +157,7 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		$.cookie('AuthToken', oResponse.Result.AuthToken);
+		$.cookie('AuthToken', oResponse.Result.AuthToken, { expires: 30 });
 		
 		if (window.location.search !== '' &&
 			Utils.getRequestParam('reset-pass') === null &&

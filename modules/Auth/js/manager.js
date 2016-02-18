@@ -4,13 +4,10 @@ module.exports = function (oSettings) {
 	require('modules/Auth/js/enums.js');
 
 	var
-		_ = require('underscore'),
-				
 		Types = require('core/js/utils/Types.js'),
 		
 		Ajax = require('modules/Auth/js/Ajax.js'),
-		Settings = require('modules/Auth/js/Settings.js'),
-		Storage = require('core/js/Storage.js')
+		Settings = require('modules/Auth/js/Settings.js')
 	;
 
 	Settings.init(oSettings);
