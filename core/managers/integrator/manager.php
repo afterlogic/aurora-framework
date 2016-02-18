@@ -1195,10 +1195,6 @@ class CApiIntegratorManager extends AApiManager
 			$aResult['DefaultDateFormat'] = $oAccount->User->DefaultDateFormat;
 			$aResult['DefaultTimeFormat'] = $oAccount->User->DefaultTimeFormat;
 
-			$aResult['AllowCompose'] = (bool) $oAccount->AllowCompose;
-			$aResult['AllowReply'] = (bool) $oAccount->AllowReply;
-			$aResult['AllowForward'] = (bool) $oAccount->AllowForward;
-
 			$aFetcherDomains = CApi::GetConf('labs.fetchers.domains', array());
 			$aResult['AllowFetcher'] = CApi::GetConf('labs.fetchers', false) &&
 				($oAccount->Domain->IsInternal || \in_array($oAccount->IncomingMailServer, $aFetcherDomains));
