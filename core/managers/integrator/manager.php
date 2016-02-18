@@ -22,11 +22,6 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @type string
 	 */
-	const AUTH_TOKEN_KEY = 'AuthToken';
-
-	/**
-	 * @type string
-	 */
 	const TOKEN_KEY = 'aurora-token';
 
 	/**
@@ -435,7 +430,7 @@ class CApiIntegratorManager extends AApiManager
 			$sKey = \CApi::Cacher()->Delete('AUTHTOKEN:'.$sAuthToken);
 		}
 		
-		@setcookie(self::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
+		@setcookie(\Core\Service::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
 		@setcookie(self::TOKEN_LANGUAGE, '', 0, $this->getCookiePath());
 		return true;
 	}
@@ -1801,7 +1796,7 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return array
 	 */
-	private function getThemeAndLanguage()
+	private function getThemeAndLanguage($sAccessToken = '')
 	{
 		static $sLanguage = false;
 		static $sTheme = false;
@@ -1815,7 +1810,8 @@ class CApiIntegratorManager extends AApiManager
 			$sLanguage = $oSettings->GetConf('Common/DefaultLanguage');
 			$sTheme = $oSettings->GetConf('WebMail/DefaultSkin');
 
-			$oAccount = $this->getLogginedDefaultAccount();
+			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
+			
 			if ($oAccount)
 			{
 				$sSiteName = $oAccount->Domain->SiteName;
@@ -1913,9 +1909,9 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return string
 	 */
-	public function IsRtl()
+	public function IsRtl($sAccessToken = '')
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
 		return \in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian'));
 	}
 
@@ -1925,9 +1921,9 @@ class CApiIntegratorManager extends AApiManager
 	 * @param string $sFileStoragePubHash Default value is empty string.
 	 * @return string
 	 */
-	public function buildHeadersLink($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+	public function buildHeadersLink($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage(!empty($sHelpdeskHash));
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
 		
 		$sS = 
@@ -1962,7 +1958,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return string
 	 */
-	public function buildBody($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+	public function buildBody($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
 	{
 		$oHttp = \MailSo\Base\Http::NewInstance();
 		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
@@ -1995,10 +1991,8 @@ class CApiIntegratorManager extends AApiManager
 			$sPostfix = $sPostfix.'.min';
 		}
 		
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
 
-		$sAccessToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
-		
 		return '<div class="pSevenMain">
 	<div id="pSevenContent">
 		<div class="screens"></div>

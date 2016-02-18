@@ -587,11 +587,12 @@ class FilesModule extends AApiModule
 							@\header('X-Frame-Options: '.$sFrameOptions);
 						}
 
+						$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
 						$sResult = strtr($sResult, array(
 							'{{AppVersion}}' => PSEVEN_APP_VERSION,
-							'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-							'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('', '', $sFilesPub),
-							'{{IntegratorBody}}' => $oApiIntegrator->buildBody('', '', $sFilesPub)
+							'{{IntegratorDir}}' => $oApiIntegrator->isRtl($sAuthToken) ? 'rtl' : 'ltr',
+							'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink($sAuthToken, '', '', $sFilesPub),
+							'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sAuthToken, '', '', $sFilesPub)
 						));
 					}
 				}

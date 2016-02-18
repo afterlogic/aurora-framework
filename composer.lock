@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f47963683855c2a2816dcd6c672c49b7",
-    "content-hash": "0bf70c3f35ab6e2f16c8b3d4bf9d0e3f",
+    "hash": "eba8e8f9aa807412b0cbccc5aa803e47",
+    "content-hash": "76ccc59424954c8a124eda2baf1576ef",
     "packages": [
         {
             "name": "afterlogic/dav",
@@ -50,16 +50,16 @@
         },
         {
             "name": "afterlogic/mailso",
-            "version": "1.3.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afterlogic/MailSo.git",
-                "reference": "e35246e09e80540fb91b9e0bf1155b87b166a68b"
+                "reference": "91785e87d3ff5e5a1c9c2e4c5b0d3ff12c0c11d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afterlogic/MailSo/zipball/e35246e09e80540fb91b9e0bf1155b87b166a68b",
-                "reference": "e35246e09e80540fb91b9e0bf1155b87b166a68b",
+                "url": "https://api.github.com/repos/afterlogic/MailSo/zipball/91785e87d3ff5e5a1c9c2e4c5b0d3ff12c0c11d5",
+                "reference": "91785e87d3ff5e5a1c9c2e4c5b0d3ff12c0c11d5",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
             ],
             "description": "Afterlogic MailSo",
             "homepage": "https://github.com/afterlogic/mailso",
-            "time": "2015-12-22 07:13:32"
+            "time": "2016-02-11 13:43:14"
         },
         {
             "name": "google/recaptcha",
@@ -996,7 +996,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "phpgangsta/googleauthenticator": 20,
-        "afterlogic/dav": 20
+        "afterlogic/dav": 20,
+        "afterlogic/mailso": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
