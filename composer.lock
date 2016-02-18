@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/afterlogic/dav.git",
-                "reference": "f1664ec58143061f921412bb1631f7f1fcac2e0a"
+                "reference": "df6102d72a198fc4d2f9ddc02ad829df2c8bda0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afterlogic/dav/zipball/f1664ec58143061f921412bb1631f7f1fcac2e0a",
-                "reference": "f1664ec58143061f921412bb1631f7f1fcac2e0a",
+                "url": "https://api.github.com/repos/afterlogic/dav/zipball/df6102d72a198fc4d2f9ddc02ad829df2c8bda0b",
+                "reference": "df6102d72a198fc4d2f9ddc02ad829df2c8bda0b",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
             ],
             "description": "Afterlogic DAV Server",
             "homepage": "https://github.com/afterlogic/dav",
-            "time": "2015-12-22 13:16:07"
+            "time": "2016-02-16 07:55:49"
         },
         {
             "name": "afterlogic/mailso",
@@ -483,16 +483,16 @@
         },
         {
             "name": "sabre/dav",
-            "version": "3.0.5",
+            "version": "3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-dav.git",
-                "reference": "69c1b5c9c19e52e2da15dc8920fce9ea9df9abcc"
+                "reference": "294b6e133f3b4cf644b9637a734b53f82d46d7f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/69c1b5c9c19e52e2da15dc8920fce9ea9df9abcc",
-                "reference": "69c1b5c9c19e52e2da15dc8920fce9ea9df9abcc",
+                "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/294b6e133f3b4cf644b9637a734b53f82d46d7f7",
+                "reference": "294b6e133f3b4cf644b9637a734b53f82d46d7f7",
                 "shasum": ""
             },
             "require": {
@@ -509,7 +509,7 @@
                 "sabre/event": "~2.0",
                 "sabre/http": "~4.0",
                 "sabre/uri": "~1.0",
-                "sabre/vobject": ">=3.3.4,<4",
+                "sabre/vobject": "^3.3.4",
                 "sabre/xml": "~1.0"
             },
             "require-dev": {
@@ -560,7 +560,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2015-09-15 19:24:48"
+            "time": "2016-01-12 22:41:05"
         },
         {
             "name": "sabre/event",
@@ -615,22 +615,22 @@
         },
         {
             "name": "sabre/http",
-            "version": "4.1.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-http.git",
-                "reference": "5874c9c449e690242cf32884da9d32a3369a2c78"
+                "reference": "2e93bc8321524c67be4ca5b8415daebd4c8bf85e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-http/zipball/5874c9c449e690242cf32884da9d32a3369a2c78",
-                "reference": "5874c9c449e690242cf32884da9d32a3369a2c78",
+                "url": "https://api.github.com/repos/fruux/sabre-http/zipball/2e93bc8321524c67be4ca5b8415daebd4c8bf85e",
+                "reference": "2e93bc8321524c67be4ca5b8415daebd4c8bf85e",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=5.4",
-                "sabre/event": ">=1.0.0,<3.0.0",
+                "sabre/event": ">=1.0.0,<4.0.0",
                 "sabre/uri": "~1.0"
             },
             "require-dev": {
@@ -666,7 +666,7 @@
             "keywords": [
                 "http"
             ],
-            "time": "2015-09-04 21:56:22"
+            "time": "2016-01-06 23:00:08"
         },
         {
             "name": "sabre/uri",
@@ -721,16 +721,16 @@
         },
         {
             "name": "sabre/vobject",
-            "version": "3.4.7",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-vobject.git",
-                "reference": "7b3690545451159fc608dfac6696110f6770ff5d"
+                "reference": "061dd47ce40074bf63da8e3d6dbe7f18b5a4f3a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-vobject/zipball/7b3690545451159fc608dfac6696110f6770ff5d",
-                "reference": "7b3690545451159fc608dfac6696110f6770ff5d",
+                "url": "https://api.github.com/repos/fruux/sabre-vobject/zipball/061dd47ce40074bf63da8e3d6dbe7f18b5a4f3a4",
+                "reference": "061dd47ce40074bf63da8e3d6dbe7f18b5a4f3a4",
                 "shasum": ""
             },
             "require": {
@@ -783,20 +783,20 @@
                 "jCard",
                 "vCard"
             ],
-            "time": "2015-09-04 15:17:58"
+            "time": "2016-01-11 18:13:23"
         },
         {
             "name": "sabre/xml",
-            "version": "1.2.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruux/sabre-xml.git",
-                "reference": "a3eeef9f3f13ee42503a1e06e5df3a6fc95b479b"
+                "reference": "fb07d78e232ec37f5760f579e15694d150ff0da6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruux/sabre-xml/zipball/a3eeef9f3f13ee42503a1e06e5df3a6fc95b479b",
-                "reference": "a3eeef9f3f13ee42503a1e06e5df3a6fc95b479b",
+                "url": "https://api.github.com/repos/fruux/sabre-xml/zipball/fb07d78e232ec37f5760f579e15694d150ff0da6",
+                "reference": "fb07d78e232ec37f5760f579e15694d150ff0da6",
                 "shasum": ""
             },
             "require": {
@@ -815,7 +815,11 @@
             "autoload": {
                 "psr-4": {
                     "Sabre\\Xml\\": "lib/"
-                }
+                },
+                "files": [
+                    "lib/Deserializer/functions.php",
+                    "lib/Serializer/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -827,9 +831,14 @@
                     "email": "me@evertpot.com",
                     "homepage": "http://evertpot.com/",
                     "role": "Developer"
+                },
+                {
+                    "name": "Markus Staab",
+                    "email": "markus.staab@redaxo.de",
+                    "role": "Developer"
                 }
             ],
-            "description": "The Sabre XML parser is the only XML library that you may not hate.",
+            "description": "sabre/xml is an XML library that you may not hate.",
             "homepage": "https://sabre.io/xml/",
             "keywords": [
                 "XMLReader",
@@ -837,7 +846,7 @@
                 "dom",
                 "xml"
             ],
-            "time": "2015-08-30 07:57:48"
+            "time": "2016-02-14 23:37:39"
         },
         {
             "name": "symfony/filesystem",
@@ -890,16 +899,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.0.0",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "01383ed02a1020759bc8ee5d975fcec04ba16fbf"
+                "reference": "dfecef47506179db2501430e732adbf3793099c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/01383ed02a1020759bc8ee5d975fcec04ba16fbf",
-                "reference": "01383ed02a1020759bc8ee5d975fcec04ba16fbf",
+                "url": "https://api.github.com/repos/symfony/process/zipball/dfecef47506179db2501430e732adbf3793099c8",
+                "reference": "dfecef47506179db2501430e732adbf3793099c8",
                 "shasum": ""
             },
             "require": {
@@ -935,7 +944,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-30 12:36:17"
+            "time": "2016-02-02 13:44:19"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
