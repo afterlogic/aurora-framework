@@ -78,7 +78,8 @@
 		"vinyl-source-stream": "*",
 		"vinyl-buffer": "*",
 		
-		"cascade-ini": "*"
+		"cascade-ini": "*",
+		"file-exists": "*"
 	},
 	"license": "Custom"
 }

@@ -185,7 +185,8 @@ gulp.task('w', ['js:all:watch']);
 
 var
 	_ = require('underscore'),
-	ini = require('cascade-ini')
+	ini = require('cascade-ini'),
+	fileExists = require('file-exists')
 ;
 
 /**
@@ -199,7 +200,7 @@ function GetParameterFromArgv(sParamName, sDefault)
 	var sParamValue = sDefault || '';
 	
 	_.each(process.argv, function (sArg, iIndex) {
-		if (sArg === sParamName)
+		if (sArg === sParamName && process.argv[iIndex + 1])
 		{
 			sParamValue = process.argv[iIndex + 1];
 		}
@@ -220,7 +221,8 @@ gulp.task('langs', function() {
 		sLanguage = GetParameterFromArgv('--lang', 'English'),
 		aModulesNames = GetModulesFromArgv(),
 		aModules = _.map(aModulesNames, function (sModuleName) {
-			return './modules/' + sModuleName + '/i18n/' + sLanguage + '.ini';
+			var sFilePath = './modules/' + sModuleName + '/i18n/' + sLanguage + '.ini';
+			return fileExists(sFilePath) ? sFilePath : './modules/' + sModuleName + '/i18n/English.ini';
 		}),
 		stream = source(sLanguage + '.json'),
 		iCount = 0,
