@@ -1,4 +1,4 @@
-<div class="item" data-bind="visible: visible(),
+<div data-bind="visible: visible(), attr: {'class': 'item folder-level' + (iLevel + 1)},
 	 css: { 'selected': selected, 'canSelect': bSelectable, 'canNotSelect': !bSelectable, 'exists': bExists, 'subscribed': subscribed,
 		'system': isSystem, 'user': !isSystem(), 'virtualEmpty': virtualEmpty, 'accordion': subfolders().length !== 0, 'expanded': expanded(), 'collapsed': !expanded()}">
 	<a class="title" href="javascript: void(0);" data-bind="

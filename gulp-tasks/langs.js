@@ -1,5 +1,6 @@
 var
 	_ = require('underscore'),
+	argv = require('./argv.js'),
 	buffer = require('vinyl-buffer'),
 	fileExists = require('file-exists'),
 	gulp = require('gulp'),
@@ -7,37 +8,10 @@ var
 	source = require('vinyl-source-stream')
 ;
 
-/**
- * 
- * @param {string} sParamName
- * @param {string} sDefault
- * @returns {string}
- */
-function GetParameterFromArgv(sParamName, sDefault)
-{
-	var sParamValue = sDefault || '';
-	
-	_.each(process.argv, function (sArg, iIndex) {
-		if (sArg === sParamName && process.argv[iIndex + 1])
-		{
-			sParamValue = process.argv[iIndex + 1];
-		}
-	});
-	
-	return sParamValue;
-}
-
-function GetModulesFromArgv()
-{
-	var sModules = GetParameterFromArgv('--modules');
-	
-	return _.union(['Core'], sModules.split(','));
-}
-
 gulp.task('langs', function() {
 	var
-		sLanguage = GetParameterFromArgv('--lang', 'English'),
-		aModulesNames = GetModulesFromArgv(),
+		sLanguage = argv.getParameter('--lang', 'English'),
+		aModulesNames = argv.getModules(),
 		aModules = _.map(aModulesNames, function (sModuleName) {
 			var sFilePath = './modules/' + sModuleName + '/i18n/' + sLanguage + '.ini';
 			return fileExists(sFilePath) ? sFilePath : './modules/' + sModuleName + '/i18n/English.ini';

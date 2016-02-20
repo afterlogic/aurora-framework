@@ -183,3 +183,5 @@ gulp.task('min', ['lint', 'js:all:min']);
 gulp.task('w', ['js:all:watch']);
 
 require('./gulp-tasks/langs.js');
+
+require('./gulp-tasks/styles.js');
