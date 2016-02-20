@@ -71,8 +71,6 @@ function CMailView()
 	this.spamCommand = Utils.createCommand(this.oMessageList, this.oMessageList.executeSpam, this.isEnableGroupOperations);
 	this.notSpamCommand = Utils.createCommand(this.oMessageList, this.oMessageList.executeNotSpam, this.isEnableGroupOperations);
 
-	this.bVisibleComposeMessage = Settings.AllowCompose;
-	
 	this.isVisibleReplyTool = ko.computed(function () {
 		return (this.folderList().currentFolder() &&
 			this.folderList().currentFolderFullName().length > 0 &&

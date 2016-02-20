@@ -38,7 +38,6 @@ module.exports = {
 			AllowAutosaveInDrafts: AppData.User ? !!AppData.User.AllowAutosaveInDrafts : true, // ??? changes in OpenPgp
 			AllowChangeEmailSettings: AppData.App ? !!AppData.App.AllowUsersChangeEmailSettings : true,
 			AllowChangeInputDirection: AppData.User ? !!AppData.User.AllowChangeInputDirection : true,
-			AllowCompose: AppData.User ? !!AppData.User.AllowCompose : true,
 			AllowExpandFolders: !!AppData.MailExpandFolders,
 			AllowFetchers: AppData.User ? !!AppData.User.AllowFetcher : true,
 			AllowIdentities: !!AppData.AllowIdentities,
@@ -171,8 +170,6 @@ module.exports = {
 	MaxSubjectSize: AppData.App ? Types.pInt(AppData.App.MaxSubjectSize) : 0,
 	ServerUrlRewriteBase: AppData.App ? Types.pString(AppData.App.ServerUrlRewriteBase) : '',
 	ServerUseUrlRewrite: AppData.App ? Types.pString(AppData.App.ServerUseUrlRewrite) : '',
-	AllowForward: AppData.User ? !!AppData.User.AllowForward : true,
-	AllowReply: AppData.User ? !!AppData.User.AllowReply : true,
 	AllowVoice: AppData.User ? !!AppData.User.AllowVoice : true,
 	CanLoginWithPassword: AppData.User ? !!AppData.User.CanLoginWithPassword : true,
 	DefaultEditor: AppData.User ? Types.pInt(AppData.User.DefaultEditor) : 1,
