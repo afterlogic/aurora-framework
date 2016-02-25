@@ -11,33 +11,33 @@
 			<div class="items_list message_list" data-bind="initDom: messagesContainer">
 				<span data-bind="visible: isCurrentAllowsMail">
 					<span class="list_notification" data-bind="visible: visibleInfoSearchLoading">
-						<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_STOP_SEARCH'}, click: onStopSearchClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_STOP_SEARCH'}, click: onStopSearchClick"></span>
 						<span class="description" data-bind="html: searchText"></span>
 					</span>
 
 					<span class="list_notification search_results" data-bind="visible: visibleInfoSearchList">
-						<span class="link" data-bind="i18n: {'key': 'CORE/LINK_CLEAR_SEARCH'}, click: onClearSearchClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'CORE/ACTION_CLEAR_SEARCH'}, click: onClearSearchClick"></span>
 						<span class="description" data-bind="html: searchText"></span>
 					</span>
 
 					<span class="list_notification" data-bind="visible: visibleInfoSearchEmpty">
-						<span class="link" data-bind="i18n: {'key': 'CORE/LINK_CLEAR_SEARCH'}, click: onClearSearchClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'CORE/ACTION_CLEAR_SEARCH'}, click: onClearSearchClick"></span>
 						<span class="description" data-bind="i18n: {'key': 'MAIL/INFO_SEARCH_EMPTY'}"></span>
 					</span>
 
 					<span class="list_notification" data-bind="visible: visibleInfoSearchError">
-						<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_RETRY'}, click: onRetryClick"></span>
-						<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_SWITCH_TO_MESSAGE_LIST'}, click: onClearSearchClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_RETRY'}, click: onRetryClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_SWITCH_TO_MESSAGE_LIST'}, click: onClearSearchClick"></span>
 						<span class="description" data-bind="i18n: {'key': 'MAIL/INFO_SEARCH_ERROR'}"></span>
 					</span>
 
 					<span class="list_notification" data-bind="visible: visibleInfoUnseenFilterList">
-						<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_CLEAR_FILTER'}, click: onClearFilterClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_CLEAR_FILTER'}, click: onClearFilterClick"></span>
 						<span class="description" data-bind="html: unseenFilterText"></span>
 					</span>
 
 					<span class="list_notification" data-bind="visible: visibleInfoUnseenFilterEmpty">
-						<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_CLEAR_FILTER'}, click: onClearFilterClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_CLEAR_FILTER'}, click: onClearFilterClick"></span>
 						<span class="description" data-bind="text: unseenFilterEmptyText"></span>
 					</span>
 
@@ -50,14 +50,14 @@
 					</span>
 
 					<span class="list_notification" data-bind="visible: visibleInfoMessageListError">
-						<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_RETRY'}, click: onRetryClick"></span>
+						<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_RETRY'}, click: onRetryClick"></span>
 						<span class="description" data-bind="i18n: {'key': 'MAIL/INFO_MESSAGE_LIST_ERROR'}"></span>
 					</span>
 				</span>
 				<span data-bind="visible: !isCurrentAllowsMail()">
 					<span class="list_notification">
 						<span class="description">
-							<span data-bind="i18n: {'key': 'MAIL/INFO_MAIL_NOT_CONFIGURED'}"></span>
+							<span data-bind="i18n: {'key': 'MAIL/INFO_MAIL_NOT_CONNECTED'}"></span>
 							<span data-bind="text: sAddingInfo1"></span><a href="javascript: void();" data-bind="text: sAddingInfo2, click: addNewAccount">
 							</a><span data-bind="text: sAddingInfo3"></span>
 						</span>

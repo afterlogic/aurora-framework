@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	TextUtils = require('core/js/utils/Text.js'),
 	Types = require('core/js/utils/Types.js'),
 	
 	ModulesManager = require('core/js/ModulesManager.js'),
@@ -26,6 +27,16 @@ function CCommonSettingsPaneView()
 	this.selectedSkin = ko.observable(UserSettings.Theme);
 	this.selectedLanguage = ko.observable(UserSettings.Language);
 	this.autoRefreshInterval = ko.observable(UserSettings.AutoRefreshIntervalMinutes);
+	this.aRefreshIntervals = [
+		{name: TextUtils.i18n('CORE/LABEL_REFRESH_OFF'), value: 0},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 1}, null, 1), value: 1},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 3}, null, 3), value: 3},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 5}, null, 5), value: 5},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 10}, null, 10), value: 10},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 15}, null, 15), value: 15},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 20}, null, 20), value: 20},
+		{name: TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': 30}, null, 30), value: 30}
+	];
 	this.timeFormat = ko.observable(UserSettings.timeFormat());
 	this.desktopNotifications = ko.observable(UserSettings.AllowDesktopNotifications);
 	/*-- Editable fields */

@@ -172,13 +172,13 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 		if (this.search() === '')
 		{
-			return TextUtils.i18n('MAIL/INFO_UNSEEN_FILTER_RESULT', {
+			return TextUtils.i18n('MAIL/INFO_UNREAD_MESSAGES', {
 				'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 			});
 		}
 		else
 		{
-			return TextUtils.i18n('MAIL/INFO_SEARCH_UNSEEN_FILTER_RESULT', {
+			return TextUtils.i18n('MAIL/INFO_UNREAD_MESSAGES_SEARCH_RESULT', {
 				'SEARCH': this.calculateSearchStringForDescription(),
 				'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 			});
@@ -190,11 +190,11 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 		if (this.search() === '')
 		{
-			return TextUtils.i18n('MAIL/INFO_UNSEEN_FILTER_EMPTY');
+			return TextUtils.i18n('MAIL/INFO_NO_UNREAD_MESSAGES');
 		}
 		else
 		{
-			return TextUtils.i18n('MAIL/INFO_SEARCH_UNSEEN_FILTER_EMPTY');
+			return TextUtils.i18n('MAIL/INFO_NO_UNREAD_MESSAGES_FOUND');
 		}
 		
 	}, this);
@@ -309,7 +309,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.searchDateEnd = ko.observable('');
 	this.dateFormatDatePicker = 'yy.mm.dd';
 	this.attachmentsPlaceholder = ko.computed(function () {
-		return TextUtils.i18n('MAIL/SEARCH_FIELD_HAS_ATTACHMENTS');
+		return TextUtils.i18n('MAIL/LABEL_HAS_ATTACHMENTS');
 	}, this);
 
 	_.delay(_.bind(function(){
@@ -340,7 +340,7 @@ CMessageListView.prototype.createDatePickerObject = function (oElement)
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		monthNames: DateUtils.getMonthNamesArray(),
-		dayNamesMin: TextUtils.i18n('CORE/DAY_NAMES_MIN').split(' '),
+		dayNamesMin: TextUtils.i18n('CORE/LIST_DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
 		firstDay: Types.pInt(ModulesManager.run('Calendar', 'getWeekStartsOn')),
@@ -872,7 +872,7 @@ CMessageListView.prototype.onFileDrop = function (oData)
 {
 	if (!(oData && oData.File && oData.File.type && oData.File.type.indexOf('message/') === 0))
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_INCORRECT_FILE_EXTENSION'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_FILE_NOT_EML'));
 	}
 };
 
@@ -888,7 +888,7 @@ CMessageListView.prototype.onFileUploadComplete = function (sFileUid, bResponseR
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('MAIL/ERROR_INCORRECT_FILE_EXTENSION'));
+			Screens.showError(TextUtils.i18n('MAIL/ERROR_FILE_NOT_EML'));
 		}
 		else
 		{

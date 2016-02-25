@@ -4,7 +4,7 @@
 		<div class="panel_content">
 			<div class="toolbar">
 				<span class="content" data-bind="visible: !isPublic">
-					<span class="item" data-bind="i18n: {'key': 'CALENDAR/BUTTON_NEW_EVENT'}, click: createEventInCurrentCalendar"></span>
+					<span class="item" data-bind="i18n: {'key': 'CALENDAR/ACTION_CREATE_EVENT'}, click: createEventInCurrentCalendar"></span>
 				</span>
 			</div>
 			<div class="middle_bar">
@@ -13,10 +13,10 @@
 						<div class="scroll-inner">
 							<div class="items_list calendars">
 								<span class="section_title">
-									<span class="control" data-bind="click: openCreateCalendarForm, customTooltip: 'CALENDAR/TOOLTIP_CREATE_CALENDAR'"></span>
+									<span class="control" data-bind="click: openCreateCalendarForm, customTooltip: 'CALENDAR/ACTION_CREATE_CALENDAR'"></span>
 									<span class="title personal" data-bind="visible: (calendars.ownCount() > 0)">
 										<span class="icon"></span>
-										<span class="text" data-bind="i18n: {'key': 'CALENDAR/TITLE_CALENDARS'}"></span>
+										<span class="text" data-bind="i18n: {'key': 'CALENDAR/HEADING_MY_CALENDARS'}"></span>
 									</span>
 								</span>
 								<!-- ko foreach: calendars.own() -->
@@ -27,7 +27,7 @@
 								<span class="section_title">
 									<span class="title shared">
 										<span class="icon"></span>
-										<span class="text" data-bind="i18n: {'key': 'CALENDAR/TITLE_SHARED_CALENDARS'}"></span>
+										<span class="text" data-bind="i18n: {'key': 'CALENDAR/HEADING_SHARED_WITH_ME'}"></span>
 									</span>
 								</span>
 								<!-- ko foreach: calendars.shared() -->
@@ -38,7 +38,7 @@
 								<span class="section_title">
 									<span class="title shared-all">
 										<span class="icon"></span>
-										<span class="text" data-bind="i18n: {'key': 'CALENDAR/TITLE_SHARED_WITH_ALL_CALENDARS'}"></span>
+										<span class="text" data-bind="i18n: {'key': 'CALENDAR/HEADING_SHARED_WITH_ALL'}"></span>
 									</span>
 								</span>
 								<!-- ko foreach: calendars.sharedToAll() -->
@@ -65,16 +65,16 @@
 					</span>
 					<span class="group range_select">
 						<span class="item" data-bind="click: displayToday">
-							<span class="text" data-bind="i18n: {'key': 'CALENDAR/BUTTON_TODAY'}"></span>
+							<span class="text" data-bind="i18n: {'key': 'CALENDAR/ACTION_SHOW_TODAY'}"></span>
 						</span>
 						<span class="item" data-bind="click: function(){changeView('agendaDay');}, css: {'selected passive': selectedView() === 'agendaDay'}">
-							<span class="text" data-bind="i18n: {'key': 'CALENDAR/BUTTON_DAY_VIEW'}"></span>
+							<span class="text" data-bind="i18n: {'key': 'CALENDAR/ACTION_SHOW_DAY_VIEW'}"></span>
 						</span>
 						<span class="item" data-bind="click: function(){changeView('agendaWeek');}, css: {'selected passive': selectedView() === 'agendaWeek'}">
-							<span class="text" data-bind="i18n: {'key': 'CALENDAR/BUTTON_WEEK_VIEW'}"></span>
+							<span class="text" data-bind="i18n: {'key': 'CALENDAR/ACTION_SHOW_WEEK_VIEW'}"></span>
 						</span>
 						<span class="item" data-bind="click: function(){changeView('month');}, css: {'selected passive': selectedView() === 'month'}">
-							<span class="text" data-bind="i18n: {'key': 'CALENDAR/BUTTON_MONTH_VIEW'}"></span>
+							<span class="text" data-bind="i18n: {'key': 'CALENDAR/ACTION_SHOW_MONTH_VIEW'}"></span>
 						</span>
 					</span>
 					

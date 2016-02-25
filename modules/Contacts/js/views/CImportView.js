@@ -82,21 +82,20 @@ CImportView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceiv
 
 		if (0 < iImportedCount)
 		{
-			Utils.log('CImportView', TextUtils.i18n('CONTACTS/CONTACT_IMPORT_HINT_PLURAL'));
-			Screens.showReport(TextUtils.i18n('CONTACTS/CONTACT_IMPORT_HINT_PLURAL', {
+			Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACTS_IMPORTED_PLURAL', {
 				'NUM': iImportedCount
 			}, null, iImportedCount));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('CONTACTS/CONTACTS_IMPORT_NO_CONTACTS'));
+			Screens.showError(TextUtils.i18n('CONTACTS/ERROR_IMPORT_NO_CONTACT'));
 		}
 	}
 	else
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('CONTACTS/ERROR_INCORRECT_FILE_EXTENSION'));
+			Screens.showError(TextUtils.i18n('CONTACTS/ERROR_FILE_NOT_CSV_OR_VCF'));
 		}
 		else
 		{

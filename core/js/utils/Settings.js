@@ -19,11 +19,11 @@ SettingsUtils.getDateFormatsForSelector = function ()
 		switch (sDateFormat)
 		{
 			case 'MM/DD/YYYY':
-				return {name: TextUtils.i18n('CORE/DATEFORMAT_MMDDYYYY'), value: sDateFormat};
+				return {name: TextUtils.i18n('CORE/LABEL_DATEFORMAT_MMDDYYYY'), value: sDateFormat};
 			case 'DD/MM/YYYY':
-				return {name: TextUtils.i18n('CORE/DATEFORMAT_DDMMYYYY'), value: sDateFormat};
+				return {name: TextUtils.i18n('CORE/LABEL_DATEFORMAT_DDMMYYYY'), value: sDateFormat};
 			case 'DD Month YYYY':
-				return {name: TextUtils.i18n('CORE/DATEFORMAT_DDMONTHYYYY'), value: sDateFormat};
+				return {name: TextUtils.i18n('CORE/LABEL_DATEFORMAT_DDMONTHYYYY'), value: sDateFormat};
 			default:
 				return {name: sDateFormat, value: sDateFormat};
 		}

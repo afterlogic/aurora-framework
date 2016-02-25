@@ -1,45 +1,36 @@
 <div class="panel_top">
-	<h2 class="title" data-bind="i18n: {'key': 'CORE/COMMON_SETTINGS_TITLE'}"></h2>
+	<h2 class="title" data-bind="i18n: {'key': 'CORE/HEADING_COMMON_SETTINGS'}"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
 		<div class="fieldset">
 			<div class="row" data-bind="visible: aSkins.length > 1">
-				<span class="label" data-bind="i18n: {'key': 'CORE/COMMON_SKIN'}"></span>
+				<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_SKIN'}"></span>
 				<select class="value input" data-bind="value: selectedSkin, options: aSkins"></select>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORE/COMMON_LANGUAGE'}"></span>
+				<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_LANGUAGE'}"></span>
 				<select class="value input" data-bind="value: selectedLanguage, options: aLanguages, optionsText: 'name', optionsValue: 'value'"></select>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_EVERY'}"></span>
-				<select class="value input" data-bind="value: autoRefreshInterval">
-					<option value="0" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_OFF'}"></option>
-					<option value="1" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_1'}"></option>
-					<option value="3" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_3'}"></option>
-					<option value="5" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_5'}"></option>
-					<option value="10" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_10'}"></option>
-					<option value="15" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_15'}"></option>
-					<option value="20" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_20'}"></option>
-					<option value="30" data-bind="i18n: {'key': 'CORE/COMMON_AUTOCHECKMAIL_30'}"></option>
-				</select>
+				<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_REFRESH_EVERY'}"></span>
+				<select class="value input" data-bind="value: autoRefreshInterval, options: aRefreshIntervals"></select>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORE/COMMON_TIME_FORMAT'}"></span>
+				<span class="label" data-bind="i18n: {'key': 'CORE/LABEL_TIME_FORMAT'}"></span>
 				
 				<span class="value">
 					<label class="custom_radio" data-bind="css: {'checked': timeFormat() === Enums.TimeFormat.F12}">
 						<span class="icon"></span>
 						<input type="radio" id="timeformat_12" data-bind="checked: timeFormat, attr: {'value': Enums.TimeFormat.F12}" />
 					</label>
-					<label for="timeformat_12" data-bind="i18n: {'key': 'CORE/COMMON_TIME_FORMAT_12'}"></label>
+					<label for="timeformat_12" data-bind="i18n: {'key': 'CORE/LABEL_TIME_FORMAT_12'}"></label>
 
 					<label class="custom_radio" data-bind="css: {'checked': timeFormat() === Enums.TimeFormat.F24}">
 						<span class="icon"></span>
 						<input type="radio" id="timeformat_24" data-bind="checked: timeFormat, attr: {'value': Enums.TimeFormat.F24}" />
 					</label>
-					<label for="timeformat_24" data-bind="i18n: {'key': 'CORE/COMMON_TIME_FORMAT_24'}"></label>
+					<label for="timeformat_24" data-bind="i18n: {'key': 'CORE/LABEL_TIME_FORMAT_24'}"></label>
 				</span>
 			</div>
 			<div class="row" data-bind="visible: window.Notification">
@@ -48,15 +39,15 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="desktopNotifications" data-bind="checked: desktopNotifications, enable: isDesktopNotificationsEnable()" />
 					</label>
-					<label for="desktopNotifications" data-bind="i18n: {'key': 'CORE/ENABLE_NOTIFICATION'}"></label>
+					<label for="desktopNotifications" data-bind="i18n: {'key': 'CORE/LABEL_ENABLE_NOTIFICATION'}"></label>
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: window.Notification && !isDesktopNotificationsEnable()">
-				<span class="value offset" data-bind="i18n: {'key': 'CORE/NOTIFICATION_DISABLED'}"></span>
+				<span class="value offset" data-bind="i18n: {'key': 'CORE/INFO_NOTIFICATION_DISABLED'}"></span>
 			</div>
 			<!--<div class="row" data-bind="visible: defaultAccountCanBeRemoved">
 				<span class="value">
-					<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'CORE/BUTTON_REMOVE_ACCOUNT'}, click: removeDefaultAccount"></a>
+					<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'CORE/ACTION_REMOVE_ACCOUNT'}, click: removeDefaultAccount"></a>
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: defaultAccountCanBeRemoved">
@@ -65,8 +56,8 @@
 		</div>
 		<div class="buttons">
 			<span class="button" data-bind="click: save">
-				<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, visible: !isSaving()"></span>
-				<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, visible: !isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: isSaving()"></span>
 			</span>
 		</div>
 	</div>

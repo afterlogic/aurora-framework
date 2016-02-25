@@ -1,7 +1,7 @@
 <div class="panel_top">
-	<h2 class="title" data-bind="visible: !edited() && !isNew(), i18n: {'key': 'CONTACTS/LABEL_VIEW_CONTACT'}"></h2>
-	<h2 class="title" data-bind="visible: edited() && !isNew(), i18n: {'key': 'CONTACTS/LABEL_EDIT_CONTACT'}"></h2>
-	<h2 class="title" data-bind="visible: isNew(), i18n: {'key': 'CONTACTS/LABEL_NEW_CONTACT'}"></h2>
+	<h2 class="title" data-bind="visible: !edited() && !isNew(), i18n: {'key': 'CONTACTS/HEADING_VIEW_CONTACT'}"></h2>
+	<h2 class="title" data-bind="visible: edited() && !isNew(), i18n: {'key': 'CONTACTS/HEADING_EDIT_CONTACT'}"></h2>
+	<h2 class="title" data-bind="visible: isNew(), i18n: {'key': 'CONTACTS/HEADING_NEW_CONTACT'}"></h2>
 </div>
 <div class="decor"></div>
 <div class="panel_center" data-bind="customScrollbar: {}">
@@ -16,13 +16,13 @@
 				</div>
 				<div class="row" data-bind="visible: !itsMe()">
 					<span class="label">
-						<span class="text" data-bind="i18n: {'key': 'CONTACTS/LABEL_EMAIL'}"></span>:
+						<span class="text" data-bind="i18n: {'key': 'CORE/LABEL_EMAIL'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: email" id="selenium_contacts_edit_email" />
 				</div>
 				<div class="row" data-bind="visible: itsMe()">
 					<span class="label">
-						<span class="text" data-bind="i18n: {'key': 'CONTACTS/LABEL_EMAIL'}"></span>:
+						<span class="text" data-bind="i18n: {'key': 'CORE/LABEL_EMAIL'}"></span>:
 					</span>
 					<span class="value" data-bind="text: email"></span>
 				</div>
@@ -53,7 +53,7 @@
 
 				<div class="clear"></div>
 				<div class="fields_switcher">
-					<span class="link" data-bind="i18n: {'key': 'CONTACTS/BUTTON_SHOW_ADDITIONAL_FIELDS'}, click: function () { extented(true); }"></span>
+					<span class="link" data-bind="i18n: {'key': 'CONTACTS/ACTION_SHOW_ADDITIONAL_FIELDS'}, click: function () { extented(true); }"></span>
 				</div>
 			</div>
 
@@ -67,7 +67,7 @@
 					</div>
 					<div class="row">
 						<span class="label">
-							<span class="text" data-bind="i18n: {'key': 'CONTACTS/LABEL_EMAIL'}"></span>:
+							<span class="text" data-bind="i18n: {'key': 'CORE/LABEL_EMAIL'}"></span>:
 						</span>
 						<span class="value" data-bind="visible: 0 === emails().length">
 							<span class="text" data-bind="i18n: {'key': 'CONTACTS/LABEL_NOT_SPECIFIED_YET'}"></span>
@@ -115,7 +115,7 @@
 				<div class="clear"></div>
 
 				<div class="fields_switcher">
-					<span class="link" data-bind="i18n: {'key': 'CONTACTS/BUTTON_HIDE_ADDITIONAL_FIELDS'}, click: function () { extented(false); }"></span>
+					<span class="link" data-bind="i18n: {'key': 'CONTACTS/ACTION_HIDE_ADDITIONAL_FIELDS'}, click: function () { extented(false); }"></span>
 				</div>
 
 				<div class="fieldset" data-bind="css: {'collapsed': personalCollapsed}">
@@ -139,7 +139,7 @@
 						<input class="value input" type="text" data-bind="value: nickName" />
 					</div>
 
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADER_HOME'}, click: function () { personalCollapsed(!personalCollapsed()); }"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_HOME'}, click: function () { personalCollapsed(!personalCollapsed()); }"></h2>
 					
 					<div class="row">
 						<span class="label">
@@ -205,7 +205,7 @@
 
 				<div class="fieldset" data-bind="css: {'collapsed': businessCollapsed}">
 
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADER_BUSINESS'}, click: function () { businessCollapsed(!businessCollapsed()); }"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_BUSINESS'}, click: function () { businessCollapsed(!businessCollapsed()); }"></h2>
 
 					<div class="row" data-bind="visible: !itsMe()">
 						<span class="label">
@@ -295,7 +295,7 @@
 
 				<div class="fieldset" data-bind="css: {'collapsed': otherCollapsed}">
 
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/LABEL_NO_CONTACTS'}, click: function () { otherCollapsed(!otherCollapsed()); }"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_OTHER'}, click: function () { otherCollapsed(!otherCollapsed()); }"></h2>
 
 					<div class="row">
 						<span class="label">
@@ -324,9 +324,9 @@
 				<div class="fieldset" data-bind="visible: !global() && $root.groupFullCollection().length, css: {'collapsed': groupsCollapsed}">
 
 					<h2 class="subtitle" data-bind="click: function () { groupsCollapsed(!groupsCollapsed()); }"
-						data-bind="i18n: {'key': 'CONTACTS/LABEL_CONTACT_GROUPS'}"></h2>
+						data-bind="i18n: {'key': 'CONTACTS/HEADING_GROUPS'}"></h2>
 
-					<div class="hint" data-bind="i18n: {'key': 'CONTACTS/CONTACT_GROUPS_HINT'}"></div>
+					<div class="hint" data-bind="i18n: {'key': 'CONTACTS/INFO_CONTACT_GROUPS_MARKED'}"></div>
 					<div class="row">
 						<div class="value" data-bind="foreach: $root.groupFullCollection()"><span
 							data-bind="visible: $index() !== 0">,</span>
@@ -347,10 +347,10 @@
 <div class="panel_bottom">
 	<div class="buttons">
 		<span class="button save" data-bind="command: $root.saveCommand" id="selenium_contacts_edit_save_button">
-			<span class="text" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}"></span>
+			<span class="text" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}"></span>
 		</span>
 		<span class="button secondary cancel" data-bind="click: function () { $root.executeCancel(); }">
-			<span class="text" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}"></span>
+			<span class="text" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}"></span>
 		</span>
 	</div>
 </div>

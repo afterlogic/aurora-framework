@@ -35,12 +35,12 @@
 		</div>
 
 		<div class="buttons" data-bind="visible: allowChangePassword" style="text-align: left;">
-			<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CHANGE_PASS'}, click: changePassword"></span>
+			<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_CHANGE_PASSWORD'}, click: changePassword"></span>
 		</div>
 
 		<div data-bind="visible: canBeRemoved() && !isDefault()">
             <div class="row remove_account">
-				<span class="link" data-bind="i18n: {'key': 'CORE/BUTTON_REMOVE_ACCOUNT'}, click: function () { $parent.removeEditedAccount(); }, attr: {'id': 'selenium_settings_delete_account_' + email()}">
+				<span class="link" data-bind="i18n: {'key': 'CORE/ACTION_REMOVE_ACCOUNT'}, click: function () { $parent.removeEditedAccount(); }, attr: {'id': 'selenium_settings_delete_account_' + email()}">
 				</span>
             </div>
             <div class="hint">
@@ -51,7 +51,7 @@
     </div>
 	
 	<div class="buttons" data-bind="visible: (!isDefault() || isDefault() && bAllowChangeEmailSettings) && isAllowMail() || canBeRemoved() && !isDefault() || !bAllowIdentities">
-		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: save, visible: !isSaving()"></span>
-		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, click: save, visible: isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: save, visible: !isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, click: save, visible: isSaving()"></span>
 	</div>
 </div>

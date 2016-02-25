@@ -90,7 +90,7 @@ SendingUtils.send = function (sMethod, oParameters, bShowLoading, fSendMessageRe
 			}
 			break;
 		case 'SaveMessage':
-			sLoadingMessage = TextUtils.i18n('COMPOSE/INFO_SAVING');
+			sLoadingMessage = TextUtils.i18n('MAIL/INFO_SAVING');
 			oParameters.DraftFolder = sDraftFolder;
 			MailCache.savingDraftUid(oParameters.DraftUid);
 			if (MainTab)
@@ -279,7 +279,7 @@ SendingUtils.onSendOrSaveMessageResponse = function (oResponse, oRequest, bRequi
 			{
 				if (!bResult && oResponse.ErrorCode === Enums.Errors.NotSavedInSentItems)
 				{
-					Screens.showError(TextUtils.i18n('MAIL/SENT_EMAIL_NOT_SAVED'));
+					Screens.showError(TextUtils.i18n('MAIL/ERROR_SENT_EMAIL_NOT_SAVED'));
 				}
 				else if (oRequest.IsQuickReply)
 				{
@@ -484,7 +484,7 @@ SendingUtils.getReplyReferences = function (oMessage)
 function GetReplyMessageBody(oMessage, iAccountId, oFetcherOrIdentity, bPasteSignatureAnchor)
 {
 	var
-		sReplyTitle = TextUtils.i18n('MAIL/REPLY_MESSAGE_TITLE', {
+		sReplyTitle = TextUtils.i18n('MAIL/TEXT_REPLY_MESSAGE', {
 			'DATE': oMessage.oDateModel.getDate(),
 			'TIME': oMessage.oDateModel.getTime(),
 			'SENDER': TextUtils.encodeHtml(oMessage.oFrom.getFull())
@@ -645,8 +645,8 @@ SendingUtils.getForwardMessageBody = function (oMessage, iAccountId, oFetcherOrI
 {
 	var
 		sCcAddr = TextUtils.encodeHtml(oMessage.oCc.getFull()),
-		sCcPart = (sCcAddr !== '') ? TextUtils.i18n('MAIL/FORWARD_MESSAGE_BODY_CC', {'CCADDR': sCcAddr}) : '',
-		sForwardTitle = TextUtils.i18n('MAIL/FORWARD_MESSAGE_TITLE', {
+		sCcPart = (sCcAddr !== '') ? TextUtils.i18n('MAIL/TEXT_FORWARD_MESSAGE_CCPART', {'CCADDR': sCcAddr}) : '',
+		sForwardTitle = TextUtils.i18n('MAIL/TEXT_FORWARD_MESSAGE', {
 			'FROMADDR': TextUtils.encodeHtml(oMessage.oFrom.getFull()),
 			'TOADDR': TextUtils.encodeHtml(oMessage.oTo.getFull()),
 			'CCPART': sCcPart,
@@ -703,8 +703,8 @@ function GetReplyAllCcAddr(oMessage, iAccountId, oFetcherOrIdentity)
 SendingUtils.getReplySubject = function (sSubject, bReply)
 {
 	var
-		sRePrefix = TextUtils.i18n('MAIL/REPLY_PREFIX'),
-		sFwdPrefix = TextUtils.i18n('MAIL/FORWARD_PREFIX'),
+		sRePrefix = TextUtils.i18n('MAIL/TEXT_REPLY_PREFIX'),
+		sFwdPrefix = TextUtils.i18n('MAIL/TEXT_FORWARD_PREFIX'),
 		sPrefix = bReply ? sRePrefix : sFwdPrefix,
 		sReSubject = sPrefix + ': ' + sSubject
 	;

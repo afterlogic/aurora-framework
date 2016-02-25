@@ -593,7 +593,7 @@ CAccountListModel.prototype.displaySocialWelcome = function ()
 	if (!bHasMailAccount && oDefaultAccount && !Storage.hasData('SocialWelcomeShowed' + oDefaultAccount.id()) && UserSettings.SocialName !== '')
 	{
 		Popups.showPopup(ConfirmPopup, [
-			TextUtils.i18n('MAIL/INFO_SOCIAL_WELCOME', {
+			TextUtils.i18n('MAIL/CONFIRM_SOCIAL_WELCOME', {
 				'SOCIALNAME': UserSettings.SocialName,
 				'SITENAME': UserSettings.SiteName,
 				'EMAIL': oDefaultAccount.email()
@@ -605,8 +605,8 @@ CAccountListModel.prototype.displaySocialWelcome = function ()
 				}
 			},
 			'',
-			TextUtils.i18n('MAIL/BUTTON_CONFIGURE_MAIL'),
-			TextUtils.i18n('CORE/BUTTON_CLOSE')
+			TextUtils.i18n('MAIL/ACTION_CONNECT_MAIL'),
+			TextUtils.i18n('CORE/ACTION_CLOSE')
 		]);
 		
 		Storage.setData('SocialWelcomeShowed' + oDefaultAccount.id(), '1');

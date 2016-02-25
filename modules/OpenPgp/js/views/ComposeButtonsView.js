@@ -123,7 +123,7 @@ CComposeButtonsView.prototype.doBeforeSave = function (fContinueSaving)
 {
 	if (this.pgpSecured())
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('OPENPGP/CONFIRM_SAVE_ENCRYPTED_DRAFT'), fContinueSaving, '', TextUtils.i18n('COMPOSE/TOOL_SAVE')]);
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('OPENPGP/CONFIRM_SAVE_ENCRYPTED_DRAFT'), fContinueSaving, '', TextUtils.i18n('COMPOSE/ACTION_SAVE')]);
 		
 		return true;
 	}

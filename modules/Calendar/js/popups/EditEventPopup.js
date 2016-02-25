@@ -220,7 +220,7 @@ function CEditEventPopup()
 		this.modified = true;
 	}, this);
 
-	this.aReminderPhrase = TextUtils.i18n('CALENDAR/REMINDER_PHRASE').split('%');
+	this.aReminderPhrase = TextUtils.i18n('CALENDAR/INFO_REMINDER').split('%');
 
 	this.isAppointmentButtonsVisible = ko.observable(false);
 }
@@ -239,7 +239,7 @@ CEditEventPopup.prototype.createDatePickerObject = function (oElement, fSelect)
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		monthNames: DateUtils.getMonthNamesArray(),
-		dayNamesMin: TextUtils.i18n('CORE/DAY_NAMES_MIN').split(' '),
+		dayNamesMin: TextUtils.i18n('CORE/LIST_DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
 		firstDay: Settings.WeekStartsOn,
@@ -405,7 +405,7 @@ CEditEventPopup.prototype.onSaveClick = function ()
 {
 	if (this.subject() === '')
 	{
-		Popups.showPopup(AlertPopup, [TextUtils.i18n('CALENDAR/WARNING_EVENT_BLANK_SUBJECT'),
+		Popups.showPopup(AlertPopup, [TextUtils.i18n('CALENDAR/ERROR_SUBJECT_BLANK'),
 			_.bind(function () {
 				this.subjectFocus(true);
 			}, this)]);
@@ -636,7 +636,7 @@ CEditEventPopup.prototype.showGuests = function ()
 	if (this.attendees().length > 0)
 	{
 		var
-			sConfirm = TextUtils.i18n('CALENDAR/CONFIRM_CLOSE_ATTENDEERS'),
+			sConfirm = TextUtils.i18n('CALENDAR/CONFIRM_REMOVE_ALL_ATTENDEES'),
 			fAction = _.bind(function (bResult) {
 				if (bResult)
 				{
@@ -670,7 +670,7 @@ CEditEventPopup.prototype.onAddGuestClick = function ()
 
 	if (oItem.email === '')
 	{
-		Screens.showError(TextUtils.i18n('CALENDAR/EVENT_ERROR_ENTER_EMAIL'));
+		Screens.showError(TextUtils.i18n('CALENDAR/ERROR_EMAIL_BLANK'));
 	}
 	else if (oItem.email === this.owner())
 	{
@@ -736,19 +736,19 @@ CEditEventPopup.prototype.getDisplayedAlarms = function (aMinutes)
 
 			if (iMinutes > 0 && iMinutes < 60)
 			{
-				sText = (TextUtils.i18n('CALENDAR/ALARM_MINUTES_PLURAL', {'COUNT': iMinutes}, null, iMinutes));
+				sText = (TextUtils.i18n('CORE/LABEL_MINUTES_PLURAL', {'COUNT': iMinutes}, null, iMinutes));
 			}
 			else if (iMinutes >= 60 && iMinutes < 1440)
 			{
-				sText = (TextUtils.i18n('CALENDAR/ALARM_HOURS_PLURAL', {'COUNT': iMinutes / 60}, null, iMinutes / 60));
+				sText = (TextUtils.i18n('CALENDAR/LABEL_HOURS_PLURAL', {'COUNT': iMinutes / 60}, null, iMinutes / 60));
 			}
 			else if (iMinutes >= 1440 && iMinutes < 10080)
 			{
-				sText = (TextUtils.i18n('CALENDAR/ALARM_DAYS_PLURAL', {'COUNT': iMinutes / 1440}, null, iMinutes / 1440));
+				sText = (TextUtils.i18n('CALENDAR/LABEL_DAYS_PLURAL', {'COUNT': iMinutes / 1440}, null, iMinutes / 1440));
 			}
 			else
 			{
-				sText = (TextUtils.i18n('CALENDAR/ALARM_WEEKS_PLURAL', {'COUNT': iMinutes / 10080}, null, iMinutes / 10080));
+				sText = (TextUtils.i18n('CALENDAR/LABEL_WEEKS_PLURAL', {'COUNT': iMinutes / 10080}, null, iMinutes / 10080));
 			}
 
 			aDisplayedAlarms.push({
@@ -768,23 +768,23 @@ CEditEventPopup.prototype.getDisplayedPeriods = function ()
 {
 	return [
 		{
-			label: TextUtils.i18n('CALENDAR/EVENT_REPEAT_NEVER'),
+			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_NEVER'),
 			value: 0
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/EVENT_REPEAT_DAILY'),
+			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_DAILY'),
 			value: 1
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/EVENT_REPEAT_WEEKLY'),
+			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_WEEKLY'),
 			value: 2
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/EVENT_REPEAT_MONTHLY'),
+			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_MONTHLY'),
 			value: 3
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/EVENT_REPEAT_YEARLY'),
+			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_YEARLY'),
 			value: 4
 		}
 	];
@@ -813,7 +813,7 @@ CEditEventPopup.prototype.addFirstAlarm = function ()
 	else
 	{
 		var
-			sConfirm = TextUtils.i18n('CALENDAR/CONFIRM_CLOSE_ALARMS'),
+			sConfirm = TextUtils.i18n('CALENDAR/CONFIRM_REMOVE_ALL_ALARMS'),
 			fAction = _.bind(function (bResult) {
 				if (bResult)
 				{
@@ -995,8 +995,8 @@ CEditEventPopup.prototype.setStartDate = function (oMomentDate, bChangeInDatepic
 	}
 	this.startDate(this.getDateWithoutYearIfMonthWord($(this.startDom()).val()));
 	
-	this.yearlyDayText(TextUtils.i18n('CALENDAR/EVENT_REPEAT_YEARLY_DAYMONTH', {'DAYMONTH': oMomentDate.format(this.getDateMonthFormat())}));
-	this.monthlyDayText(TextUtils.i18n('CALENDAR/EVENT_REPEAT_MONTHLY_DAY', {'DAY': oMomentDate.format('DD')}));
+	this.yearlyDayText(TextUtils.i18n('CALENDAR/LABEL_REPEAT_YEARLY_DAYMONTH', {'DAYMONTH': oMomentDate.format(this.getDateMonthFormat())}));
+	this.monthlyDayText(TextUtils.i18n('CALENDAR/LABEL_REPEAT_MONTHLY_DAY', {'DAY': oMomentDate.format('DD')}));
 };
 
 CEditEventPopup.prototype.selectStartDate = function ()
@@ -1181,7 +1181,7 @@ CEditEventPopup.prototype.onSetAppointmentActionResponse = function (oResponse, 
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 };
 

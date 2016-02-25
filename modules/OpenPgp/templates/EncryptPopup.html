@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="i18n: {'key': 'OPENPGP/POPUP_TITLE_ENCRYPT'}"></span>
+		<span class="title" data-bind="i18n: {'key': 'OPENPGP/HEADING_SIGN_ENCRYPT'}"></span>
 
 		<div class="fields">
 			<div class="row">
@@ -27,7 +27,7 @@
 			</div>
 			<div class="buttons">
 				<span class="button" data-bind="text: signEncryptButtonText, command: signEncryptCommand, visible: isEnableSignEncrypt"></span>
-				<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

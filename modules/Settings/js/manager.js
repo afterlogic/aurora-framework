@@ -15,7 +15,7 @@ module.exports = function (oSettings) {
 				TextUtils = require('core/js/utils/Text.js'),
 				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 			;
-			return new CHeaderItemView(TextUtils.i18n('CORE/HEADER_SETTINGS_TABNAME'));
+			return new CHeaderItemView(TextUtils.i18n('CORE/HEADING_SETTINGS_TABNAME'));
 		},
 		registerSettingsTab: function (fGetTabView, oTabName, oTabTitle) {
 			var SettingsView = require('modules/Settings/js/views/SettingsView.js');

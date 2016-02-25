@@ -46,7 +46,7 @@ function CCalendarView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('CALENDAR/BROWSER_TITLE'));
+	this.browserTitle = ko.observable(TextUtils.i18n('CALENDAR/HEADING_BROWSER_TAB'));
 	
 	var self = this;
 	this.initialized = ko.observable(false);
@@ -59,7 +59,7 @@ function CCalendarView()
 	}, this);
 	
 	this.todayDate = new Date();
-	this.aDayNames = TextUtils.i18n('CORE/DAY_NAMES').split(' ');
+	this.aDayNames = TextUtils.i18n('CORE/LIST_DAY_NAMES').split(' ');
 
 	this.popUpStatus = false;
 	this.linkRow = 0;
@@ -154,7 +154,7 @@ function CCalendarView()
 		header: false,
 		editable: !this.isPublic,
 		selectable: !this.isPublic,
-		allDayText: TextUtils.i18n('CALENDAR/TITLE_ALLDAY'),
+		allDayText: TextUtils.i18n('CALENDAR/LABEL_ALL_DAY'),
 		dayNames: this.aDayNames,
 		isRTL: UserSettings.IsRTL,
 		scrollTime: moment.duration(8, 'hours'),
@@ -351,7 +351,7 @@ CCalendarView.prototype.initDatePicker = function ()
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		monthNames: this.aMonthNames,
-		dayNamesMin: TextUtils.i18n('CORE/DAY_NAMES_MIN').split(' '),
+		dayNamesMin: TextUtils.i18n('CORE/LIST_DAY_NAMES_MIN').split(' '),
 		nextText: '',
 		prevText: '',
 		onChangeMonthYear: _.bind(this.changeMonthYearFromDatePicker, this),
@@ -955,8 +955,8 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 
 		if (this.calendars.count() === 0 && this.isPublic && this.needsToReload)
 		{
-			this.browserTitle(TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
-			Api.showErrorByCode(0, TextUtils.i18n('CALENDAR/NO_CALENDAR_FOUND'));
+			this.browserTitle(TextUtils.i18n('CALENDAR/INFO_NO_CALENDAR_FOUND'));
+			Api.showErrorByCode(0, TextUtils.i18n('CALENDAR/INFO_NO_CALENDAR_FOUND'));
 		}
 
 		this.needsToReload = false;
@@ -1849,7 +1849,7 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 	}
 	else
 	{
-		App.Api.showErrorByCode(oResponse, TextUtils.i18n('CALENDAR/ERROR_EVENT_UPDATING'));
+		App.Api.showErrorByCode(oResponse, TextUtils.i18n('CALENDAR/ERROR_EVENT_NOT_UPDATED'));
 		
 		if (this.revertFunction)
 		{
@@ -1959,7 +1959,7 @@ CCalendarView.prototype.onFileUploadComplete = function (sFileUid, bResponseRece
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('CALENDAR/ERROR_INCORRECT_FILE_EXTENSION'));
+			Screens.showError(TextUtils.i18n('CALENDAR/ERROR_FILE_NOT_ICS'));
 		}
 		else
 		{

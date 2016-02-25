@@ -4,26 +4,26 @@
 			<div data-bind="visible: lastModification">
 				<div class="buttons" data-bind="visible: visibleRequestButtons,
 				  css: {'touched': isAccepted() || isTentative() || isDeclined(), 'animation': animation}">
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_BUTTON_ACCEPT'}, css: {'state': isAccepted}, click: acceptAppointment"></span>
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_BUTTON_TENTATIVE'}, css: {'state': isTentative}, click: tentativeAppointment"></span>
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_BUTTON_DECLINE'}, css: {'state': isDeclined}, click: declineAppointment"></span>
+				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ACCEPT_APPOINTMENT'}, css: {'state': isAccepted}, click: acceptAppointment"></span>
+				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_TENTATIVE_APPOINTMENT'}, css: {'state': isTentative}, click: tentativeAppointment"></span>
+				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_DECLINE_APPOINTMENT'}, css: {'state': isDeclined}, click: declineAppointment"></span>
 				</div>
 			</div>
 			<div data-bind="visible: isRequestType() && !lastModification()">
-				<span data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_OLD_VERSION_INVITATION'}"></span>
+				<span data-bind="i18n: {'key': 'CALENDAR/INFO_OLD_VERSION_INVITATION'}"></span>
 			</div>
 			<span data-bind="text: cancelDecision, visible: isCancelType"></span>
 			<span data-bind="text: replyDecision, visible: isReplyType"></span>
 			<div class="buttons" data-bind="visible: isSaveType() && !calendarIsChosen()">
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ICAL_BUTTON_ADD'}, click: addEvents"></span>
+				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ADD_ICAL'}, click: addEvents"></span>
 			</div>
 			<span data-bind="visible: isSaveType() && calendarIsChosen()">
-				<span data-bind="i18n: {'key': 'CALENDAR/ICAL_INFO_SAVED'}, visible: isJustSaved"></span>
-				<span data-bind="i18n: {'key': 'CALENDAR/ICAL_INFO_EXISTS'}, visible: !isJustSaved()"></span>
+				<span data-bind="i18n: {'key': 'CALENDAR/REPORT_EVENT_SAVED'}, visible: isJustSaved"></span>
+				<span data-bind="i18n: {'key': 'CALENDAR/REPORT_EVENT_EXISTS'}, visible: !isJustSaved()"></span>
 			</span>
 		</div>
 		<div class="row fluid calendar" data-bind="visible: visibleCalendarRow">
-			<span class="label" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_CALENDAR'}"></span>:
+			<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_CALENDAR'}"></span>:
 			<span class="value">
 				<select class="value input" data-bind="visible: visibleCalendarDropdown, options: calendars,
 						optionsValue: 'id', optionsText: 'name', value: selectedCalendarId"></select>
@@ -32,15 +32,15 @@
 			</span>
 		</div>
 		<div class="row fluid location" data-bind="visible: location() !== ''">
-			<span class="label" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_LOCATION'}"></span>:
+			<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_LOCATION'}"></span>:
 			<span class="value" data-bind="text: location"></span>
 		</div>
 		<div class="row fluid when">
-			<span class="label" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_WHEN'}"></span>:
+			<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_WHEN'}"></span>:
 			<span class="value" data-bind="text: when"></span>
 		</div>
 		<div class="row fluid description" data-bind="visible: description() !== ''">
-			<span class="label" data-bind="i18n: {'key': 'CALENDAR/APPOINTMENT_DESCRIPTION'}"></span>:
+			<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_DESCRIPTION'}"></span>:
 			<span class="value" data-bind="html: description"></span>
 		</div>
 	</div>

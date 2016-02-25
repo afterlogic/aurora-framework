@@ -49,7 +49,7 @@ function CHelpdeskView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('HELPDESK/BROWSER_TITLE'));
+	this.browserTitle = ko.observable(TextUtils.i18n('HELPDESK/HEADING_BROWSER_TAB'));
 	
 	var
 		self = this,
@@ -197,8 +197,8 @@ function CHelpdeskView()
 	});
 	this.createThreadButtonText = ko.computed(function () {
 		return this.newThreadCreating() ?
-			TextUtils.i18n('HELPDESK/BUTTON_SENDING') :
-			TextUtils.i18n('HELPDESK/BUTTON_CREATE');
+			TextUtils.i18n('HELPDESK/ACTION_CREATE_IN_PROGRESS') :
+			TextUtils.i18n('HELPDESK/ACTION_CREATE');
 	}, this);
 
 	this.commandGetOlderPosts = function () {
@@ -1317,7 +1317,7 @@ CHelpdeskView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
 	var
 		oAttach,
 		sWarningCountLimit = TextUtils.i18n('HELPDESK/ERROR_UPLOAD_FILES_COUNT'),
-		sButtonCountLimit = TextUtils.i18n('CORE/BUTTON_CLOSE'),
+		sButtonCountLimit = TextUtils.i18n('CORE/ACTION_CLOSE'),
 		iAttachCount = this.uploadedFiles().length
 	;
 

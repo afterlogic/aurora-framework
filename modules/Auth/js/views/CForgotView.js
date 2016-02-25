@@ -30,7 +30,7 @@ function CForgotView()
 	this.emailFocus = ko.observable(false);
 	this.gettingQuestion = ko.observable(false);
 	this.getQuestionButtonText = ko.computed(function () {
-		return this.gettingQuestion() ? TextUtils.i18n('AUTH/BUTTON_GETTING_QUESTION') : TextUtils.i18n('AUTH/BUTTON_GET_QUESTION');
+		return this.gettingQuestion() ? TextUtils.i18n('AUTH/ACTION_GET_QUESTION_IN_PROGRESS') : TextUtils.i18n('AUTH/ACTION_GET_QUESTION');
 	}, this);
 	this.allowGetQuestion = ko.computed(function () {
 		return !this.gettingQuestion() && $.trim(this.email()) !== '';
@@ -43,7 +43,7 @@ function CForgotView()
 	this.answerFocus = ko.observable(false);
 	this.validatingAnswer = ko.observable(false);
 	this.validateAnswerButtonText = ko.computed(function () {
-		return this.validatingAnswer() ? TextUtils.i18n('AUTH/BUTTON_VALIDATING_ANSWER') : TextUtils.i18n('AUTH/BUTTON_VALIDATE_ANSWER');
+		return this.validatingAnswer() ? TextUtils.i18n('AUTH/ACTION_VALIDATE_ANSWER_IN_PROGRESS') : TextUtils.i18n('AUTH/ACTION_VALIDATE_ANSWER');
 	}, this);
 	this.allowValidatingAnswer = ko.computed(function () {
 		return !this.validatingAnswer() && $.trim(this.answer()) !== '';
@@ -57,7 +57,7 @@ function CForgotView()
 	this.confirmPasswordFocus = ko.observable(false);
 	this.changingPassword = ko.observable(false);
 	this.changePasswordButtonText = ko.computed(function () {
-		return this.changingPassword() ? TextUtils.i18n('AUTH/BUTTON_RESETTING_PASSWORD') : TextUtils.i18n('CORE/BUTTON_RESET_PASSWORD');
+		return this.changingPassword() ? TextUtils.i18n('CORE/ACTION_RESET_PASSWORD_IN_PROGRESS') : TextUtils.i18n('CORE/ACTION_RESET_PASSWORD');
 	}, this);
 	this.allowChangePassword = ko.computed(function () {
 		var
@@ -165,7 +165,7 @@ CForgotView.prototype.executeChangePassword = function ()
 {
 	if (this.password() !== this.confirmPassword())
 	{
-		Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('CORE/ERROR_PASSWORDS_DO_NOT_MATCH'));
 	}
 	else
 	{

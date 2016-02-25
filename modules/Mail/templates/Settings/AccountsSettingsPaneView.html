@@ -1,6 +1,6 @@
 <div class="panel_top">
 	<div class="buttons" data-bind="visible: bAllowAddNewAccounts">
-		<span class="button special add_new_account" data-bind="i18n: {'key': 'MAIL/BUTTON_ADD_NEW_ACCOUNT'}, click: addAccount" id="selenium_settings_create_account_button"></span>
+		<span class="button special add_new_account" data-bind="i18n: {'key': 'MAIL/ACTION_ADD_NEW_ACCOUNT'}, click: addAccount" id="selenium_settings_create_account_button"></span>
 	</div>
 	<h2 class="title" data-bind="text: title"></h2>
 </div>
@@ -11,11 +11,11 @@
 			<div data-bind="foreach: accounts">
 				<div class="item account" data-bind="css: {'selected': id() === $parent.editedAccountId() && !$parent.editedFetcherId() && !$parent.editedIdentityId()},  click: function () {$parent.editAccount(hash());}">
 					<!-- ko if: allowMail() -->
-						<span class="link fetcher" data-bind="i18n: {'key': 'MAIL/LINK_ADD_IDENTITY'}, visible: $parent.bAllowIdentities, click: function (oModel, oEv) {$parent.addIdentity(id(), oEv);}"></span>
-						<span class="link fetcher" data-bind="i18n: {'key': 'MAIL/LINK_ADD_FETCHER'}, visible: (isDefault() && $parent.bAllowFetchers), click: $parent.addFetcher"></span>
+						<span class="link fetcher" data-bind="i18n: {'key': 'MAIL/ACTION_ADD_IDENTITY'}, visible: $parent.bAllowIdentities, click: function (oModel, oEv) {$parent.addIdentity(id(), oEv);}"></span>
+						<span class="link fetcher" data-bind="i18n: {'key': 'MAIL/ACTION_ADD_FETCHER'}, visible: (isDefault() && $parent.bAllowFetchers), click: $parent.addFetcher"></span>
 					<!-- /ko -->
 					<!-- ko if: !allowMail() -->
-						<span class="link fetcher" data-bind="i18n: {'key': 'MAIL/LINK_CONNECT_TO_MAIL'}, click: function (oModel, oEv) {$parent.connectToMail(id(), oEv);}"></span>
+						<span class="link fetcher" data-bind="i18n: {'key': 'MAIL/ACTION_CONNECT_MAIL'}, click: function (oModel, oEv) {$parent.connectToMail(id(), oEv);}"></span>
 					<!-- /ko -->
 					<span class="title" data-bind="text: email()"></span>
 				</div>

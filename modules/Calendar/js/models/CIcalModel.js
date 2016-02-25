@@ -160,18 +160,18 @@ CIcalModel.prototype.parseType = function ()
 
 CIcalModel.prototype.fillDecisions = function ()
 {
-	this.cancelDecision(TextUtils.i18n('CALENDAR/APPOINTMENT_CANCELED', {'SENDER': App.currentAccountEmail()}));
+	this.cancelDecision(TextUtils.i18n('CALENDAR/INFO_CANCELED_APPOINTMENT', {'SENDER': App.currentAccountEmail()}));
 	
 	switch (this.icalConfig())
 	{
 		case Enums.IcalConfig.Accepted:
-			this.replyDecision(TextUtils.i18n('CALENDAR/APPOINTMENT_ACCEPTED', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('CALENDAR/INFO_ACCEPTED_APPOINTMENT', {'ATTENDEE': this.attendee()}));
 			break;
 		case Enums.IcalConfig.Declined:
 			this.replyDecision(TextUtils.i18n('CALENDAR/APPOINTMENT_DECLINED', {'ATTENDEE': this.attendee()}));
 			break;
 		case Enums.IcalConfig.Tentative:
-			this.replyDecision(TextUtils.i18n('CALENDAR/APPOINTMENT_TENTATIVELY_ACCEPTED', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('CALENDAR/INFO_TENTATIVELY_ACCEPTED_APPOINTMENT', {'ATTENDEE': this.attendee()}));
 			break;
 	}
 };
@@ -271,7 +271,7 @@ CIcalModel.prototype.onSetAppointmentActionResponse = function (oResponse, oRequ
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 	else
 	{

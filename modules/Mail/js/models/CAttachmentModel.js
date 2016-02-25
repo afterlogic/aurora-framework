@@ -159,7 +159,7 @@ CAttachmentModel.prototype.viewMessageFile = function ()
 	var
 		oWin = null,
 		sLoadingText = '<div style="margin: 30px; text-align: center; font: normal 14px Tahoma;">' + 
-			TextUtils.i18n('MAIL/INFO_LOADING') + '</div>'
+			TextUtils.i18n('CORE/INFO_LOADING') + '</div>'
 	;
 	
 	oWin = WindowOpener.open('', this.fileName());
@@ -254,7 +254,7 @@ CAttachmentModel.prototype.errorFromUpload = function ()
 	this.uploaded(true);
 	this.uploadError(true);
 	this.uploadStarted(false);
-	this.statusText(TextUtils.i18n('CORE/UPLOAD_ERROR_UNKNOWN'));
+	this.statusText(TextUtils.i18n('CORE/ERROR_UPLOAD_UNKNOWN'));
 };
 
 module.exports = CAttachmentModel;

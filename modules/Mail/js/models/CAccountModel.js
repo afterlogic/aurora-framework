@@ -89,25 +89,25 @@ function CAccountModel(bSingle)
 		{
 			if (ModulesManager.isModuleIncluded('Calendar') && ModulesManager.isModuleIncluded('Contacts'))
 			{
-				sAndOther = TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_CONTACTS_CALENDARS_HINT');
+				sAndOther = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT_CONTACTS_CALENDARS');
 			}
 			else if (ModulesManager.isModuleIncluded('Calendar'))
 			{
-				sAndOther = TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_CALENDARS_HINT');
+				sAndOther = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT_CALENDARS');
 			}
 			else if (ModulesManager.isModuleIncluded('Contacts'))
 			{
-				sAndOther = TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_CONTACTS_HINT');
+				sAndOther = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT_CONTACTS');
 			}
-			sHint = TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_DEFAULT_HINT', {'AND_OTHER': sAndOther});
+			sHint = TextUtils.i18n('MAIL/INFO_REMOVE_DEFAULT_ACCOUNT', {'AND_OTHER': sAndOther});
 			if (!bSingle)
 			{
-				sHint += TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_DEFAULT_NOTSINGLE_HINT');
+				sHint += TextUtils.i18n('MAIL/INFO_REMOVE_DEFAULT_ACCOUNT_NOTSINGLE');
 			}
 		}
 		else
 		{
-			sHint = TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_HINT');
+			sHint = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT');
 		}
 		
 		return sHint;
@@ -116,7 +116,7 @@ function CAccountModel(bSingle)
 	this.removeConfirmation = ko.computed(function () {
 		if (this.isDefault())
 		{
-			return this.removeHint() + TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_DEFAULT_CONFIRMATION');
+			return this.removeHint() + TextUtils.i18n('MAIL/CONFIRM_REMOVE_ACCOUNTED');
 		}
 		else
 		{
@@ -282,9 +282,9 @@ CAccountModel.prototype.allowMailAfterConfiguring = function ()
 		if (this.passwordSpecified())
 		{
 			Popups.showPopup(AlertPopup, [
-				TextUtils.i18n('MAIL/ACCOUNTS_WARNING_AFTER_CONFIG_MAIL_HTML', {'EMAIL': this.email()}),
+				TextUtils.i18n('MAIL/INFO_AFTER_CONNECT_MAIL_HTML', {'EMAIL': this.email()}),
 				null,
-				TextUtils.i18n('MAIL/ACCOUNTS_WARNING_AFTER_CONFIG_MAIL_TITLE', {'EMAIL': this.email()})
+				TextUtils.i18n('MAIL/HEADING_AFTER_CONNECT_MAIL_HTML', {'EMAIL': this.email()})
 			]);
 		}
 		
@@ -401,7 +401,7 @@ CAccountModel.prototype.onAccountDeleteResponse = function (oResponse, oRequest)
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/REMOVING_ACCOUNT_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_REMOVE_ACCOUNT'));
 	}
 	else
 	{

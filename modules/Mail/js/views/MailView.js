@@ -34,7 +34,7 @@ function CMailView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/BROWSER_TITLE');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/HEADING_BROWSER_TAB');
 	});
 	
 	this.folderList = MailCache.folderList;
@@ -312,7 +312,7 @@ CMailView.prototype.dragAndDropHelper = function (oMessage, bCtrl)
 	oHelper.data('p7-message-list-folder', this.folderList().currentFolderFullName());
 	oHelper.data('p7-message-list-uids', aUids);
 
-	$('.count-text', oHelper).text(TextUtils.i18n('MAIL/DRAG_TEXT_PLURAL', {
+	$('.count-text', oHelper).text(TextUtils.i18n('MAIL/LABEL_DRAG_MESSAGES_PLURAL', {
 		'COUNT': bCtrl ? '+ ' + iCount : iCount
 	}, null, iCount));
 

@@ -1,11 +1,11 @@
 <div class="panel_top">
-	<a class="link cancel" data-bind="click: cancelNewThread, i18n: {'key': 'CORE/BUTTON_CANCEL'}"></a>
-	<h2 class="title" data-bind="i18n: {'key': 'HELPDESK/TITLE_NEW_THREAD'}"></h2>
+	<a class="link cancel" data-bind="click: cancelNewThread, i18n: {'key': 'CORE/ACTION_CANCEL'}"></a>
+	<h2 class="title" data-bind="i18n: {'key': 'HELPDESK/HEADING_CREATE_REQUEST'}"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
 		<div class="row" data-bind="css: { 'filled': newThreadText().length > 0 }">
-			<label class="title placeholder" data-bind="i18n: {'key': 'HELPDESK/CREATE_FORM_PLACEHOLDER'}"></label>
+			<label class="title placeholder" data-bind="i18n: {'key': 'HELPDESK/LABEL_YOUR_REQUEST'}"></label>
 			<span class="value">
 				<textarea class="input" data-bind="value: newThreadText, valueUpdate: 'afterkeydown', attr: {'disabled': newThreadCreating}, initDom: domNewThreadTextarea, hasfocus: newThreadTextFocus"></textarea>
 			</span>

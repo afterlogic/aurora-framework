@@ -25,11 +25,11 @@ function CWrapLoginView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('AUTH/BROWSER_TITLE'));
+	this.browserTitle = ko.observable(TextUtils.i18n('AUTH/HEADING_BROWSER_TAB'));
 	
 	this.bSocialInviteMode = typeof Utils.getRequestParam('invite-auth') === 'string';
-	this.socialInviteTitle = TextUtils.i18n('AUTH/SOCIAL_INVITE_TITLE', {'SITENAME': UserSettings.SiteName});
-	this.socialInviteText = TextUtils.i18n('AUTH/SOCIAL_INVITE_TEXT');
+	this.socialInviteTitle = TextUtils.i18n('AUTH/HEADING_SOCIAL_INVITE', {'SITENAME': UserSettings.SiteName});
+	this.socialInviteText = TextUtils.i18n('AUTH/INFO_SOCIAL_INVITE');
 	
 	this.rtl = ko.observable(UserSettings.isRTL);
 	

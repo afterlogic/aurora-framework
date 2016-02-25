@@ -76,7 +76,7 @@ function CRegisterView()
 	}, this);
 
 	this.registerButtonText = ko.computed(function () {
-		return this.loading() ? TextUtils.i18n('CORE/BUTTON_REGISTERING') : TextUtils.i18n('CORE/BUTTON_REGISTER');
+		return this.loading() ? TextUtils.i18n('CORE/ACTION_REGISTER_IN_PROGRESS') : TextUtils.i18n('CORE/ACTION_REGISTER');
 	}, this);
 	
 	this.registerCommand = Utils.createCommand(this, this.registerAccount, this.canBeRegister);
@@ -94,7 +94,7 @@ CRegisterView.prototype.registerAccount = function ()
 {
 	if (this.password() !== this.confirmPassword())
 	{
-		Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('CORE/ERROR_PASSWORDS_DO_NOT_MATCH'));
 	}
 	else
 	{

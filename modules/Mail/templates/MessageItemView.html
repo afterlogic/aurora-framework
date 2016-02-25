@@ -38,7 +38,7 @@
 <!-- ko if: threadNextLoadingVisible() -->
 <div class="item threaded thread_more_messages" data-bind="css:{'show': threadShowAnimation(), 'deleted': threadHideAnimation()}">
 	<div class="item_content">
-		<span class="link" data-bind="i18n: {'key': 'MAIL/LINK_LOAD_NEXT_THREAD_MESSAGES'}, click: loadNextMessages, visible: threadNextLoadingLinkVisible()"></span>
+		<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_LOAD_MORE_MESSAGES'}, click: loadNextMessages, visible: threadNextLoadingLinkVisible()"></span>
 		<span style="color: #999999; font-size: 15px;" data-bind="i18n: {'key': 'CORE/INFO_LOADING'}, visible: !threadNextLoadingLinkVisible()"></span>
 	</div>
 </div>

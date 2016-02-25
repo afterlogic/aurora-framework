@@ -10,15 +10,15 @@
 	</div>
 	<div class="row" data-bind="css: {'focused': replyTextFocus(),
 		 'filled': replyText().length > 0}">
-		<label for="reply_text" class="title placeholder"  data-bind="i18n: {'key': 'MAIL/PLACEHOLDER_QUICK_REPLY'}"></label>
+		<label for="reply_text" class="title placeholder"  data-bind="i18n: {'key': 'MAIL/LABEL_QUICK_REPLY'}"></label>
 		<textarea id="reply_text" class="input" data-bind="value: replyText, 
 			hasfocus: replyTextFocus, onCtrlEnter: executeSendQuickReply, 
 			valueUpdate: 'afterkeydown', style: {'fontFamily': sDefaultFontName}"></textarea>
 	</div>
 	<div class="buttons">
-		<span class="button send" data-bind="i18n: {'key': 'MAIL/TOOL_SEND'}, command: sendQuickReplyCommand"></span>
+		<span class="button send" data-bind="i18n: {'key': 'MAIL/ACTION_SEND'}, command: sendQuickReplyCommand"></span>
 		<span class="button save" data-bind="text: saveButtonText, command: saveQuickReplyCommand"></span>
-		<span class="text hint" data-bind="i18n: {'key': 'CORE/HINT_SEND_HOTKEY'}"></span>
-		<a class="link full_form" href="javascript: void(0);" data-bind="i18n: {'key': 'MAIL/BUTTON_OPEN_FULL_REPLY'}, command: replyAllCommand"></a>
+		<span class="text hint" data-bind="i18n: {'key': 'CORE/LABEL_SEND_HOTKEY'}"></span>
+		<a class="link full_form" href="javascript: void(0);" data-bind="i18n: {'key': 'MAIL/ACTION_OPEN_FULL_REPLY'}, command: replyAllCommand"></a>
 	</div>
 </div>

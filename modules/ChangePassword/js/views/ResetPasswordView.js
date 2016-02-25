@@ -32,14 +32,14 @@ function CResetPasswordView()
 	this.resetPasswordButtonText = ko.computed(function () {
 		if (this.oDefaultAccount.passwordSpecified())
 		{
-			return TextUtils.i18n('CORE/BUTTON_RESET_PASSWORD');
+			return TextUtils.i18n('CORE/ACTION_RESET_PASSWORD');
 		}
 		else
 		{
-			return TextUtils.i18n('CHANGEPASSWORD/BUTTON_SET_PASSWORD');
+			return TextUtils.i18n('CHANGEPASSWORD/ACTION_SET_PASSWORD');
 		}
 	}, this);
-	var aHintSetPassword = TextUtils.i18n('CHANGEPASSWORD/HINT_SET_PASSWORD').split(/%STARTLINK%|%ENDLINK%/);
+	var aHintSetPassword = TextUtils.i18n('CHANGEPASSWORD/INFO_SET_PASSWORD').split(/%STARTLINK%|%ENDLINK%/);
 	this.sHintSetPassword1 = aHintSetPassword.length > 0 ? aHintSetPassword[0] : '';
 	this.sHintSetPassword2 = aHintSetPassword.length > 1 ? aHintSetPassword[1] : '';
 	this.sHintSetPassword3 = aHintSetPassword.length > 2 ? aHintSetPassword[2] : '';
@@ -60,11 +60,11 @@ CResetPasswordView.prototype.resetPassword = function ()
 	if (Settings.ResetPassHash === '' && !this.oDefaultAccount.passwordSpecified())
 	{
 		Popups.showPopup(ConfirmPopup, [
-			TextUtils.i18n('CHANGEPASSWORD/RESET_PASSWORD_POPUP_DESC', {'EMAIL': this.oDefaultAccount.email()}),
+			TextUtils.i18n('CHANGEPASSWORD/CONFIRM_SEND_RESET_INSTRUCTIONS', {'EMAIL': this.oDefaultAccount.email()}),
 			_.bind(this.onResetPasswordPopupAnswer, this),
-			this.oDefaultAccount.passwordSpecified() ? TextUtils.i18n('CHANGEPASSWORD/RESET_PASSWORD_POPUP_TITLE') : TextUtils.i18n('CHANGEPASSWORD/SET_PASSWORD_POPUP_TITLE'),
-			TextUtils.i18n('CORE/BUTTON_SEND'),
-			TextUtils.i18n('CORE/BUTTON_CANCEL')
+			this.oDefaultAccount.passwordSpecified() ? TextUtils.i18n('CHANGEPASSWORD/HEADING_RESET_PASSWORD') : TextUtils.i18n('CHANGEPASSWORD/HEADING_SET_PASSWORD'),
+			TextUtils.i18n('CORE/ACTION_SEND'),
+			TextUtils.i18n('CORE/ACTION_CANCEL')
 		]);
 	}
 	else
@@ -104,7 +104,7 @@ CResetPasswordView.prototype.onResetPassword = function (oResponse, oRequest)
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/RESET_PASSWORD_INFO_AFTER'));
+		Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/REPORT_INSTRUCTIONS_SENT'));
 	}
 };
 

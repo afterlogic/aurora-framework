@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/TITLE_SHARE_CALENDAR'}"></span>
+		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/HEADING_SHARE_CALENDAR'}"></span>
 
 		<div class="fields">
 			<div class="fieldset shares_personal">
@@ -51,18 +51,18 @@
 							<input type="checkbox" id="share_to_all_item_input" data-bind="checked: sharedToAll" />
 						</label>
 						<span>
-							<label for="share_to_all_item_input" data-bind="i18n: {'key': 'CALENDAR/TITLE_SHARE_WITH_ALL_CALENDARS'}"></label>
+							<label for="share_to_all_item_input" data-bind="i18n: {'key': 'CALENDAR/LABEL_SHARE_WITH_ALL'}"></label>
 						</span>
 					</div>
 					<select class="value input" data-bind="visible: sharedToAll, value: sharedToAllAccess, options: aAccess, optionsText: 'display', optionsValue: 'value'"></select>
 				</div>
 				<div class="row">
-					<span class="hint" data-bind="visible: sharedToAll, i18n: {'key': 'CALENDAR/TITLE_DESCRIPTION_SHARED_WITH_ALL_CALENDARS'}"></span>
+					<span class="hint" data-bind="visible: sharedToAll, i18n: {'key': 'CALENDAR/INFO_SHARED_WITH_ALL'}"></span>
 				</div>
 			</div>
 
 			<div class="buttons">
-				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: onSaveClick"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: onSaveClick"></span>
 			</div>
 		</div>
 	</div>

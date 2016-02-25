@@ -115,7 +115,7 @@ FilesUtils.thumbQueue = (function () {
 FilesUtils.showErrorIfAttachmentSizeLimit = function (sFileName, iSize)
 {
 	var
-		sWarning = TextUtils.i18n('CORE/UPLOAD_ERROR_FILENAME_SIZE', {
+		sWarning = TextUtils.i18n('CORE/ERROR_UPLOAD_SIZE_DETAILED', {
 			'FILENAME': sFileName,
 			'MAXSIZE': TextUtils.getFriendlySize(UserSettings.AttachmentSizeLimit)
 		})

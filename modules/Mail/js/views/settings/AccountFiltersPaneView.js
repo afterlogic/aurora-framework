@@ -42,25 +42,25 @@ function CAccountFiltersPaneView()
 	this.collection = ko.observableArray([]);
 
 	this.fieldOptions = [
-		{'text': TextUtils.i18n('MAIL/FILTER_FIELD_FROM'), 'value': 0},
-		{'text': TextUtils.i18n('MAIL/FILTER_FIELD_TO'), 'value': 1},
-		{'text': TextUtils.i18n('MAIL/FILTER_FIELD_SUBJECT'), 'value': 2}
+		{'text': TextUtils.i18n('MAIL/LABEL_FROM'), 'value': 0},
+		{'text': TextUtils.i18n('MAIL/LABEL_TO'), 'value': 1},
+		{'text': TextUtils.i18n('MAIL/LABEL_SUBJECT'), 'value': 2}
 	];
 
 	this.conditionOptions = [
-		{'text': TextUtils.i18n('MAIL/FILTER_COND_CONTAIN'), 'value': 0},
-		{'text': TextUtils.i18n('MAIL/FILTER_COND_EQUAL_TO'), 'value': 1},
-		{'text': TextUtils.i18n('MAIL/FILTER_COND_NOT_CONTAIN'), 'value': 2}
+		{'text': TextUtils.i18n('MAIL/LABEL_CONTAINING'), 'value': 0},
+		{'text': TextUtils.i18n('MAIL/LABEL_EQUAL_TO'), 'value': 1},
+		{'text': TextUtils.i18n('MAIL/LABEL_NOT_CONTAINING'), 'value': 2}
 	];
 
 	this.actionOptions = [
-		{'text': TextUtils.i18n('MAIL/FILTER_ACTION_MOVE'), 'value': 3},
-		{'text': TextUtils.i18n('MAIL/FILTER_ACTION_DELETE'), 'value': 1}
+		{'text': TextUtils.i18n('MAIL/LABEL_MOVE_FILTER_ACTION'), 'value': 3},
+		{'text': TextUtils.i18n('MAIL/LABEL_DELETE_FILTER_ACTION'), 'value': 1}
 	];
 	
 	this.phaseArray = [''];
 	
-	_.each(TextUtils.i18n('MAIL/FILTER_PHRASE').split(/\s/), function (sItem) {
+	_.each(TextUtils.i18n('MAIL/INFO_FILTER').split(/\s/), function (sItem) {
 		var iIndex = this.phaseArray.length - 1;
 		if (sItem.substr(0,1) === '%' || this.phaseArray[iIndex].substr(-1,1) === '%')
 		{
@@ -102,7 +102,7 @@ CAccountFiltersPaneView.prototype.populate = function ()
 
 	if (oFolderList.iAccountId === AccountList.editedId())
 	{
-		aOptionList = oFolderList.getOptions(TextUtils.i18n('MAIL/FOLDERS_OPTION_NOT_SELECTED'), true, true, false, true);
+		aOptionList = oFolderList.getOptions(TextUtils.i18n('MAIL/LABEL_FOLDER_NOT_SELECTED'), true, true, false, true);
 		this.foldersOptions(aOptionList);
 		this.populateFilters();
 	}
@@ -309,7 +309,7 @@ CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oR
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Screens.showError(TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 };
 
@@ -334,7 +334,7 @@ CAccountFiltersPaneView.prototype.onAccountSieveFiltersUpdateResponse = function
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Screens.showError(TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 };
 

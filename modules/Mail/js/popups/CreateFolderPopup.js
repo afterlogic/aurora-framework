@@ -58,7 +58,7 @@ CCreateFolderPopup.prototype.PopupTemplate = 'Mail_Settings_CreateFolderPopup';
  */
 CCreateFolderPopup.prototype.onShow = function (fCallback)
 {
-	this.options(MailCache.editedFolderList().getOptions(TextUtils.i18n('MAIL/OPTION_NO_PARENT_FOLDER'), true, false, true));
+	this.options(MailCache.editedFolderList().getOptions(TextUtils.i18n('MAIL/LABEL_NO_PARENT_FOLDER'), true, false, true));
 	
 	this.fCallback = fCallback;
 	this.folderName('');

@@ -44,12 +44,12 @@ function CAccountsSettingsPaneView()
 		var bOnlyOneAccount = this.accounts().length === 1 && !Settings.AllowAddNewAccounts;
 //		if (bOnlyOneAccount)
 //		{
-//			this.TabTitle = Utils.i18n('MAIL/SETTINGS_ACCOUNT_TABNAME');
+//			this.TabTitle = Utils.i18n('MAIL/LABEL_ACCOUNT_SETTINGS_TAB');
 //		}
 		return bOnlyOneAccount;
 	}, this);
 	this.title = ko.computed(function () {
-		return this.onlyOneAccount() ? TextUtils.i18n('MAIL/SETTINGS_ACCOUNT_TITLE') : TextUtils.i18n('MAIL/SETTINGS_ACCOUNTS_TITLE');
+		return this.onlyOneAccount() ? TextUtils.i18n('MAIL/HEADING_ACCOUNT_SETTINGS') : TextUtils.i18n('MAIL/HEADING_ACCOUNTS_SETTINGS');
 	}, this);
 	
 	this.editedAccountId = AccountList.editedId;
@@ -72,25 +72,25 @@ function CAccountsSettingsPaneView()
 	this.aAccountTabs = [
 		{
 			name: 'properties',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_PROPERTIES'),
+			title: TextUtils.i18n('MAIL/LABEL_PROPERTIES_TAB'),
 			view: AccountPropertiesPaneView,
 			visible: this.allowProperties
 		},
 		{
 			name: 'folders',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_MANAGE_FOLDERS'),
+			title: TextUtils.i18n('MAIL/LABEL_MANAGE_FOLDERS_TAB'),
 			view: AccountFoldersPaneView,
 			visible: this.allowFolders
 		},
 		{
 			name: 'forward',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_FORWARD'),
+			title: TextUtils.i18n('MAIL/LABEL_FORWARD_TAB'),
 			view: AccountForwardPaneView,
 			visible: this.allowForward
 		},
 		{
 			name: 'autoresponder',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_AUTORESPONDER'),
+			title: TextUtils.i18n('MAIL/LABEL_AUTORESPONDER_TAB'),
 			view: AccountAutoresponderPaneView,
 			visible: this.allowAutoresponder
 		},
@@ -102,7 +102,7 @@ function CAccountsSettingsPaneView()
 		},
 		{
 			name: 'signature',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_SIGNATURE'),
+			title: TextUtils.i18n('MAIL/LABEL_SIGNATURE_TAB'),
 			view: SignaturePaneView,
 			visible: this.allowSignature
 		}
@@ -111,13 +111,13 @@ function CAccountsSettingsPaneView()
 	this.aIdentityTabs = [
 		{
 			name: 'properties',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_PROPERTIES'),
+			title: TextUtils.i18n('MAIL/LABEL_PROPERTIES_TAB'),
 			view: new CIdentityPropertiesPaneView(),
 			visible: ko.observable(true)
 		},
 		{
 			name: 'signature',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_SIGNATURE'),
+			title: TextUtils.i18n('MAIL/LABEL_SIGNATURE_TAB'),
 			view: SignaturePaneView,
 			visible: ko.observable(true)
 		}
@@ -126,19 +126,19 @@ function CAccountsSettingsPaneView()
 	this.aFetcherTabs = [
 		{
 			name: 'incoming',
-			title: TextUtils.i18n('MAIL/FETCHER_TAB_POP3_SETTINGS'),
+			title: TextUtils.i18n('MAIL/LABEL_POP3_SETTINGS_TAB'),
 			view: FetcherIncomingPaneView,
 			visible: ko.observable(true)
 		},
 		{
 			name: 'outgoing',
-			title: TextUtils.i18n('MAIL/FETCHER_TAB_SMTP_SETTINGS'),
+			title: TextUtils.i18n('MAIL/LABEL_SMTP_SETTINGS_TAB'),
 			view: FetcherOutgoingPaneView,
 			visible: ko.observable(true)
 		},
 		{
 			name: 'signature',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_SIGNATURE'),
+			title: TextUtils.i18n('MAIL/LABEL_SIGNATURE_TAB'),
 			view: SignaturePaneView,
 			visible: ko.observable(true)
 		}
@@ -394,7 +394,7 @@ CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oRe
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 	else
 	{

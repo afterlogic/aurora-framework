@@ -1,7 +1,7 @@
 <div class="toolbar">
 	<span class="content">
 		<a href="javascript: void(0)" class="item compose" id="selenium_new_message_button" data-bind="command: $parent.composeCommand">
-			<span data-bind="i18n: {'key': 'MAIL/TOOL_NEW_MESSAGE'}"></span>
+			<span data-bind="i18n: {'key': 'MAIL/ACTION_NEW_MESSAGE'}"></span>
 		</a>
 	</span>
 </div>
@@ -18,7 +18,7 @@
 	</div>
 	<div class="panel_bottom">
 		<div class="manage_folders" data-bind="visible: isCurrentAllowsMail">
-			<a href="javascript: void(0)" data-bind="i18n: {'key': 'MAIL/LINK_MANAGE_FOLDERS'}, attr: {href: manageFoldersHash}"></a>
+			<a href="javascript: void(0)" data-bind="i18n: {'key': 'MAIL/ACTION_MANAGE_FOLDERS'}, attr: {href: manageFoldersHash}"></a>
 		</div>
 		<span class="volumer" data-bind="visible: -1 < quotaProc()">
 			<span class="volumer_conteiner" data-bind="customTooltip: quotaDesc">

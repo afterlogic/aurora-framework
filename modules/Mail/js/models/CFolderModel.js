@@ -250,7 +250,7 @@ CFolderModel.prototype.computeThreadData = function (oMessage)
 				aEmails.push(sThreadEmail);
 				if (sThreadEmail === AccountList.getEmail())
 				{
-					aSenders.push(TextUtils.i18n('MAIL/ME_SENDER'));
+					aSenders.push(TextUtils.i18n('MAIL/LABEL_ME_SENDER'));
 				}
 				else
 				{
@@ -670,7 +670,7 @@ CFolderModel.prototype.initStarredFolder = function (iLevel, sFullName)
 	this.bVirtual = true;
 	this.setLevel(iLevel);
 	this.fullName(sFullName);
-	this.name(TextUtils.i18n('MAIL/FOLDER_STARRED'));
+	this.name(TextUtils.i18n('MAIL/LABEL_FOLDER_STARRED'));
 	this.type(Enums.FolderTypes.Starred);
 	this.initSubscriptions('');
 	this.initComputedFields(true);
@@ -845,28 +845,28 @@ CFolderModel.prototype.initComputedFields = function (bDisableManageSubscribe)
 	this.subscribeButtonHint = ko.computed(function () {
 		if (this.canSubscribe())
 		{
-			return this.subscribed() ? TextUtils.i18n('MAIL/HINT_HIDE_FOLDER') : TextUtils.i18n('MAIL/HINT_SHOW_FOLDER');
+			return this.subscribed() ? TextUtils.i18n('MAIL/ACTION_HIDE_FOLDER') : TextUtils.i18n('MAIL/ACTION_SHOW_FOLDER');
 		}
 		return '';
 	}, this);
 	
 	this.deleteButtonHint = ko.computed(function () {
-		return this.canDelete() ? TextUtils.i18n('MAIL/HINT_DELETE_FOLDER') : '';
+		return this.canDelete() ? TextUtils.i18n('MAIL/ACTION_DELETE_FOLDER') : '';
 	}, this);
 	
 	this.usedAs = ko.computed(function () {
 		switch (this.type())
 		{
 			case Enums.FolderTypes.Inbox:
-				return TextUtils.i18n('MAIL/HINT_USED_AS_INBOX');
+				return TextUtils.i18n('MAIL/LABEL_USED_AS_INBOX');
 			case Enums.FolderTypes.Sent:
-				return TextUtils.i18n('MAIL/HINT_USED_AS_SENT');
+				return TextUtils.i18n('MAIL/LABEL_USED_AS_SENT');
 			case Enums.FolderTypes.Drafts:
-				return TextUtils.i18n('MAIL/HINT_USED_AS_DRAFTS');
+				return TextUtils.i18n('MAIL/LABEL_USED_AS_DRAFTS');
 			case Enums.FolderTypes.Trash:
-				return TextUtils.i18n('MAIL/HINT_USED_AS_SPAM');
+				return TextUtils.i18n('MAIL/LABEL_USED_AS_SPAM');
 			case Enums.FolderTypes.Spam:
-				return TextUtils.i18n('MAIL/HINT_USED_AS_TRASH');
+				return TextUtils.i18n('MAIL/LABEL_USED_AS_TRASH');
 		}
 		return '';
 	}, this);
@@ -875,21 +875,21 @@ CFolderModel.prototype.initComputedFields = function (bDisableManageSubscribe)
 		switch (this.type())
 		{
 			case Enums.FolderTypes.Inbox:
-				return TextUtils.i18n('MAIL/FOLDER_INBOX');
+				return TextUtils.i18n('MAIL/LABEL_FOLDER_INBOX');
 			case Enums.FolderTypes.Sent:
-				return TextUtils.i18n('MAIL/FOLDER_SENT');
+				return TextUtils.i18n('MAIL/LABEL_FOLDER_SENT');
 			case Enums.FolderTypes.Drafts:
-				return TextUtils.i18n('MAIL/FOLDER_DRAFTS');
+				return TextUtils.i18n('MAIL/LABEL_FOLDER_DRAFTS');
 			case Enums.FolderTypes.Trash:
-				return TextUtils.i18n('MAIL/FOLDER_TRASH');
+				return TextUtils.i18n('MAIL/LABEL_FOLDER_TRASH');
 			case Enums.FolderTypes.Spam:
-				return TextUtils.i18n('MAIL/FOLDER_SPAM');
+				return TextUtils.i18n('MAIL/LABEL_FOLDER_SPAM');
 		}
 		return this.name();
 	}, this);
 	
 	this.unseenMessagesTitle = ko.computed(function () {
-		return this.showUnseenMessages() ? TextUtils.i18n('MAIL/TITLE_UNSEEN_MESSAGES_ONLY') : '';
+		return this.showUnseenMessages() ? TextUtils.i18n('MAIL/ACTION_SHOW_UNREAD_MESSAGES') : '';
 	}, this);
 };
 
@@ -912,7 +912,7 @@ CFolderModel.prototype.onGetMessageResponse = function (oResponse, oRequest)
 	{
 		if (bSelected)
 		{
-			Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+			Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 			Routing.replaceHashWithoutMessageUid(sUid);
 		}
 		

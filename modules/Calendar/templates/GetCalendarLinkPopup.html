@@ -2,16 +2,16 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/TITLE_GETLINK_CALENDAR'}"></span>
+		<span class="title" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/HEADING_GET_CALENDAR_LINK'}"></span>
 
 		<div class="fields">
 			<div class="fieldset dav_access">
 				<div class="row">
-					<label for="dav_url" class="label" data-bind="i18n: {'key': 'CALENDAR/URL_DAV'}"></label>
+					<label for="dav_url" class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_DAV_URL'}"></label>
 					<input id="dav_url" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: calendarUrl(), click: function () {$element.select();}" readonly />
 				</div>
 				<div class="row">
-					<label for="ics_link" class="label" data-bind="i18n: {'key': 'CALENDAR/URL_ICS'}"></label>
+					<label for="ics_link" class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_ICS_LINK'}"></label>
 					<input id="ics_link" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: icsLink(), click: function () {$element.select();}"  readonly />
 					<a class="control download" data-bind="attr: {href: exportUrl()}"></a>
 				</div>
@@ -30,7 +30,7 @@
 				</div>
 			</div>		
 			<div class="buttons">
-				<span class="button save" data-bind="i18n: {'key': 'CORE/BUTTON_CLOSE'}, click: cancelPopup"></span>
+				<span class="button save" data-bind="i18n: {'key': 'CORE/ACTION_CLOSE'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

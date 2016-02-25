@@ -226,7 +226,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/CREATING_ACCOUNT_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_CREATE_ACCOUNT'));
 	}
 	else
 	{

@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="title" data-bind="i18n: {'key': 'MAIL/SETTINGS_TITLE'}"></h2>
+	<h2 class="title" data-bind="i18n: {'key': 'MAIL/HEADING_SETTINGS_TAB'}"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
@@ -27,7 +27,7 @@
 				</span>
 			</div>
 			<div class="hint row">
-				<span class="value offset" data-bind="i18n: {'key': 'MAIL/HINT_SAVE_REPLIED_TO_CURR_FOLDER'}"></span>
+				<span class="value offset" data-bind="i18n: {'key': 'MAIL/INFO_SAVE_REPLIED_TO_CURR_FOLDER'}"></span>
 			</div>
 			<div class="row" data-bind="visible: bRtl">
 				<span class="value offset">
@@ -39,22 +39,22 @@
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: bRtl">
-				<span class="value offset" data-bind="i18n: {'key': 'MAIL/HINT_SHOW_INPUT_DIRECTION_BUTTONS'}"></span>
+				<span class="value offset" data-bind="i18n: {'key': 'MAIL/INFO_SHOW_INPUT_DIRECTION_BUTTONS'}"></span>
 			</div>
 			
 			<div class="row" data-bind="visible: bAllowMailto">
 				<span class="value offset">
-					<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'MAIL/BUTTON_REGISTER_MAILTO'}, click: registerMailto"></a>
+					<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'MAIL/ACTION_REGISTER_MAILTO'}, click: registerMailto"></a>
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: bAllowMailto">
-				<span class="value offset" data-bind="i18n: {'key': 'MAIL/HINT_REGISTER_MAILTO', 'type': 'html'}"></span>
+				<span class="value offset" data-bind="i18n: {'key': 'MAIL/INFO_REGISTER_MAILTO', 'type': 'html'}"></span>
 			</div>
 		</div>
 		<div class="buttons">
 			<span class="button" data-bind="click: save">
-				<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, visible: !isSaving()"></span>
-				<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, visible: !isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: isSaving()"></span>
 			</span>
 		</div>
 	</div>

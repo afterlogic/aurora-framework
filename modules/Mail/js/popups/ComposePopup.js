@@ -54,7 +54,7 @@ function CComposePopup()
 	}, this);
 	
 	this.minimizedTitle = ko.computed(function () {
-		return this.subject() || TextUtils.i18n('MAIL/TITLE_MINIMIZED_NEW_MESSAGE');
+		return this.subject() || TextUtils.i18n('MAIL/HEADING_MINIMIZED_NEW_MESSAGE');
 	}, this);
 }
 

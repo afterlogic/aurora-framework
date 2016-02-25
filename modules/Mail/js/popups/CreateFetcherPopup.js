@@ -117,7 +117,7 @@ CCreateFetcherPopup.prototype.onCreateFetcherResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 	else
 	{

@@ -11,7 +11,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/OutlookSync/js/views/OutlookSyncSettingsPaneView.js'); }, 'outlook_sync', TextUtils.i18n('OUTLOOKSYNC/SETTINGS_TABNAME')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/OutlookSync/js/views/OutlookSyncSettingsPaneView.js'); }, 'outlook_sync', TextUtils.i18n('OUTLOOKSYNC/LABEL_SETTINGS_TAB')]);
 		}
 	};
 };

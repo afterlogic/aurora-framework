@@ -2,7 +2,7 @@
 <div class="panel_top">
 	<!-- ko template: { name: $root.sContactToolbarTemplate} --><!-- /ko -->
 	<h2 class="title" data-bind="visibility: '' !== displayName(), text: displayName()"></h2>
-	<span class="item mail_to_title" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail(), customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/BUTTON_EMAIL_TO_THIS_CONTACT' : ''">
+	<span class="item mail_to_title" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail(), customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/ACTION_EMAIL_TO_CONTACT' : ''">
 		<span class="title email" data-bind="text: email()"></span>
 	</span>
 </div>
@@ -10,7 +10,7 @@
 <div class="panel_center">
 	<div class="buttons" data-bind="visible: !readOnly()">
 		<span class="button edit" data-bind="click: function () { edited(true); }">
-			<span class="text" data-bind="i18n: {'key': 'CONTACTS/BUTTON_EDIT_CONTACT'}"></span>
+			<span class="text" data-bind="i18n: {'key': 'CONTACTS/ACTION_EDIT_CONTACT'}"></span>
 		</span>
 	</div>
 	<div data-bind="customScrollbar: {}">
@@ -51,7 +51,7 @@
 				</div>
 
 				<div class="fields basic" data-bind="visible: !personalIsEmpty()">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADER_BASIC_INFO'}"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_BASIC_INFO'}"></h2>
 
 					<div class="fieldset">
 						<div class="row email" data-bind="visible: '' !== personalEmail()">
@@ -127,7 +127,7 @@
 				</div>
 
 				<div class="fields business" data-bind="visible: !businessIsEmpty()">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADER_BUSINESS_INFO'}"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_BUSINESS_INFO'}"></h2>
 
 					<div class="fieldset">
 						<div class="row email" data-bind="visible: '' !== businessEmail()">
@@ -212,7 +212,7 @@
 				</div>
 
 				<div class="fields other" data-bind="visible: !otherIsEmpty()">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADER_OTHER_INFO'}"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_OTHER_INFO'}"></h2>
 
 					<div class="fieldset">
 						<div class="row birthday" data-bind="visible: !birthdayIsEmpty()">
@@ -239,7 +239,7 @@
 				</div>
 
 				<div class="fields groups" data-bind="visible: !global() && 0 < $root.groupsInContactView($data).length">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/LABEL_CONTACTS_GROUPS'}"></h2>
+					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_GROUPS'}"></h2>
 					<div class="fieldset">
 						<div class="row" data-bind="foreach: $root.groupsInContactView($data)"><span
 							data-bind="visible: $index() !== 0">, </span>
@@ -248,7 +248,7 @@
 				</div>
 			</div>
 			<div class="fields_switcher" data-bind="visible: $root.bAllowSearchMessagesInInbox && hasEmails()">
-				<span class="link" data-bind="i18n: {'key': 'CONTACTS/BUTTON_SEE_EMAILS_WITH_THIS_CONTACTS'}, click: function () {$root.searchMessagesInInbox('email:' + getEmailsString());}"></span>
+				<span class="link" data-bind="i18n: {'key': 'CONTACTS/ACTION_SEE_EMAILS_WITH_CONTACT'}, click: function () {$root.searchMessagesInInbox('email:' + getEmailsString());}"></span>
 			</div>
 		</div>
 	</div>

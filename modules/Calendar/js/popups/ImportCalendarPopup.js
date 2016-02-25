@@ -115,7 +115,7 @@ CImportCalendarPopup.prototype.onFileUploadComplete = function (sFileUid, bRespo
 	{
 		if (oResponse && oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('CALENDAR/ERROR_INCORRECT_FILE_EXTENSION'));
+			Screens.showError(TextUtils.i18n('CALENDAR/ERROR_FILE_NOT_ICS'));
 		}
 		else
 		{

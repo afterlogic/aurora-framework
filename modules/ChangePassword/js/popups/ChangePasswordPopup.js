@@ -55,15 +55,15 @@ CChangePasswordPopup.prototype.change = function ()
 {
 	if (this.confirmPassword() !== this.newPassword())
 	{
-		Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('CORE/ERROR_PASSWORDS_DO_NOT_MATCH'));
 	}
 	else if (Settings.PasswordMinLength > 0 && this.newPassword().length < Settings.PasswordMinLength) 
 	{ 
-		Screens.showError(TextUtils.i18n('CHANGEPASSWORD/PASSWORDS_MIN_LENGTH_ERROR').replace('%N%', Settings.PasswordMinLength));
+		Screens.showError(TextUtils.i18n('CHANGEPASSWORD/ERROR_PASSWORD_TOO_SHORT').replace('%N%', Settings.PasswordMinLength));
 	}
 	else if (Settings.PasswordMustBeComplex && (!this.newPassword().match(/([0-9])/) || !this.newPassword().match(/([!,%,&,@,#,$,^,*,?,_,~])/)))
 	{
-		Screens.showError(TextUtils.i18n('CHANGEPASSWORD/PASSWORD_MUST_BE_COMPLEX'));
+		Screens.showError(TextUtils.i18n('CHANGEPASSWORD/ERROR_PASSWORD_TOO_SIMPLE'));
 	}
 	else
 	{
@@ -94,17 +94,17 @@ CChangePasswordPopup.prototype.onUpdatePasswordResponse = function (oResponse, o
 {
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CHANGEPASSWORD/NEW_PASSWORD_UPDATE_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CHANGEPASSWORD/ERROR_PASSWORD_NOT_SAVED'));
 	}
 	else
 	{
 		if (this.hasOldPassword())
 		{
-			Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/CHANGE_PASSWORD_SUCCESS'));
+			Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/REPORT_PASSWORD_CHANGED'));
 		}
 		else
 		{
-			Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/SET_PASSWORD_SUCCESS'));
+			Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/REPORT_PASSWORD_SET'));
 		}
 		
 		this.closePopup();

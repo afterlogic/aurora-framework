@@ -1,20 +1,20 @@
 <div class="fieldgroup">
-	<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/MOBILE_DAVSYNC_HEADING_CONTACTS'}"></h2>
+	<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_CARDDAV_ACCESS'}"></h2>
 
 	<div class="row" data-bind="visible: bVisiblePersonalContacts">
-		<span class="label" data-bind="i18n: {'key': 'CONTACTS/MOBILE_DAVSYNC_PERSONAL_CONTACTS'}"></span>
+		<span class="label" data-bind="i18n: {'key': 'CONTACTS/LABEL_PERSONAL_CONTACTS'}"></span>
 		<span class="value" data-bind="text: davPersonalContactsUrl"></span>
 	</div>
 	<div class="row" data-bind="visible: bVisiblePersonalContacts">
-		<span class="label" data-bind="i18n: {'key': 'CONTACTS/MOBILE_DAVSYNC_COLLECTED_ADDRESSES'}"></span>
+		<span class="label" data-bind="i18n: {'key': 'CONTACTS/LABEL_COLLECTED_ADDRESSES'}"></span>
 		<span class="value" data-bind="text: davCollectedAddressesUrl"></span>
 	</div>
 	<div class="row" data-bind="visible: bVisibleSharedWithAllContacts">
-		<span class="label" data-bind="i18n: {'key': 'CONTACTS/MOBILE_DAVSYNC_SHARED_WITH_ALL'}"></span>
+		<span class="label" data-bind="i18n: {'key': 'CONTACTS/LABEL_SHARED_ADDRESS_BOOK'}"></span>
 		<span class="value" data-bind="text: davSharedWithAllUrl"></span>
 	</div>
 	<div class="row" data-bind="visible: bVisibleGlobalContacts">
-		<span class="label" data-bind="i18n: {'key': 'CONTACTS/MOBILE_DAVSYNC_GLOBAL_ADDRESS_BOOK'}"></span>
+		<span class="label" data-bind="i18n: {'key': 'CONTACTS/LABEL_GLOBAL_ADDRESS_BOOK'}"></span>
 		<span class="value" data-bind="text: davGlobalAddressBookUrl"></span>
 	</div>
 </div>

@@ -56,7 +56,7 @@ function CComposeView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/BROWSER_COMPOSE_TITLE');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/HEADING_COMPOSE_BROWSER_TAB');
 	});
 	
 	var self = this;
@@ -363,14 +363,14 @@ function CComposeView()
 	this.bAllowHeadersCompressing = !bMobileApp;
 
 	this.aHotkeys = [
-		{ value: 'Ctrl+Enter', action: TextUtils.i18n('MAIL/HOTKEY_SEND') },
-		{ value: 'Ctrl+S', action: TextUtils.i18n('MAIL/HOTKEY_SAVE') },
-		{ value: 'Ctrl+Z', action: TextUtils.i18n('MAIL/HOTKEY_UNDO') },
-		{ value: 'Ctrl+Y', action: TextUtils.i18n('MAIL/HOTKEY_REDO') },
-		{ value: 'Ctrl+K', action: TextUtils.i18n('MAIL/HOTKEY_LINK') },
-		{ value: 'Ctrl+B', action: TextUtils.i18n('MAIL/HOTKEY_BOLD') },
-		{ value: 'Ctrl+I', action: TextUtils.i18n('MAIL/HOTKEY_ITALIC') },
-		{ value: 'Ctrl+U', action: TextUtils.i18n('MAIL/HOTKEY_UNDERLINE') }
+		{ value: 'Ctrl+Enter', action: TextUtils.i18n('MAIL/LABEL_SEND_HOTKEY') },
+		{ value: 'Ctrl+S', action: TextUtils.i18n('MAIL/LABEL_SAVE_HOTKEY') },
+		{ value: 'Ctrl+Z', action: TextUtils.i18n('MAIL/LABEL_UNDO_HOTKEY') },
+		{ value: 'Ctrl+Y', action: TextUtils.i18n('MAIL/LABEL_REDO_HOTKEY') },
+		{ value: 'Ctrl+K', action: TextUtils.i18n('MAIL/LABEL_LINK_HOTKEY') },
+		{ value: 'Ctrl+B', action: TextUtils.i18n('MAIL/LABEL_BOLD_HOTKEY') },
+		{ value: 'Ctrl+I', action: TextUtils.i18n('MAIL/LABEL_ITALIC_HOTKEY') },
+		{ value: 'Ctrl+U', action: TextUtils.i18n('MAIL/LABEL_UNDERLINE_HOTKEY') }
 	];
 
 	this.allowFiles = !!SelectFilesPopup;
@@ -387,7 +387,7 @@ function CComposeView()
 	}, this);
 
 	this.saveAndCloseTooltip = ko.computed(function () {
-		return this.hasSomethingToSave() ? TextUtils.i18n('MAIL/TOOL_SAVE_CLOSE') : TextUtils.i18n('MAIL/TOOL_CLOSE');
+		return this.hasSomethingToSave() ? TextUtils.i18n('MAIL/ACTION_SAVE_CLOSE') : TextUtils.i18n('MAIL/ACTION_CLOSE');
 	}, this);
 
 	if (MainTab)
@@ -1217,7 +1217,7 @@ CComposeView.prototype.onMessageUploadAttachmentsResponse = function (oResponse,
 				oAttachment.errorFromUpload();
 			}
 		}, this);
-		Screens.showError(TextUtils.i18n('MAIL/UPLOAD_ERROR_REPLY_ATTACHMENTS'));
+		Screens.showError(TextUtils.i18n('MAIL/ERROR_UPLOAD_FORWARD_ATTACHMENTS'));
 	}
 };
 
@@ -1565,7 +1565,7 @@ CComposeView.prototype.verifyDataForSending = function ()
 		aCcIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.ccAddr()),
 		aBccIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.bccAddr()),
 		aIncorrect = _.union(aToIncorrect, aCcIncorrect, aBccIncorrect),
-		sWarning = TextUtils.i18n('MAIL/WARNING_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
+		sWarning = TextUtils.i18n('MAIL/ERROR_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
 	;
 
 	if (aIncorrect.length > 0)

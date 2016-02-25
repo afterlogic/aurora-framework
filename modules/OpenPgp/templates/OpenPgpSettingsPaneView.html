@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="title" data-bind="i18n: {'key': 'OPENPGP/SETTINGS_TITLE'}"></h2>
+	<h2 class="title" data-bind="i18n: {'key': 'OPENPGP/HEADING_SETTINGS_TAB'}"></h2>
 </div>
 
 <div class="panel_center">
@@ -24,13 +24,13 @@
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: bAllowAutoSave">
-				<span class="value offset" data-bind="i18n: {'key': 'OPENPGP/HINT_ALLOW_AUTOSAVE'}"></span>
+				<span class="value offset" data-bind="i18n: {'key': 'OPENPGP/INFO_ALLOW_AUTOSAVE'}"></span>
 			</div>
 		</div>
 		<div class="buttons">
 			<span class="button" data-bind="click: save">
-				<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, visible: !isSaving()"></span>
-				<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, visible: !isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: isSaving()"></span>
 			</span>
 		</div>
 			
@@ -72,10 +72,10 @@
 		</div>
 		<div class="buttons" data-bind="visible: enableOpenPgp">
 			<span data-bind="click: importKey" class="button">
-				<span data-bind="i18n: {'key': 'OPENPGP/BUTTON_IMPORT_KEY'}"></span>
+				<span data-bind="i18n: {'key': 'OPENPGP/ACTION_IMPORT_KEY'}"></span>
 			</span>
 			<span data-bind="click: generateNewKey" class="button">
-				<span data-bind="i18n: {'key': 'OPENPGP/BUTTON_GENERATE_NEW_KEY'}"></span>
+				<span data-bind="i18n: {'key': 'OPENPGP/ACTION_GENERATE_NEW_KEY'}"></span>
 			</span>
 		</div>
 	</div>

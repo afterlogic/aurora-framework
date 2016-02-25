@@ -67,7 +67,7 @@ function CLoginView()
 	}, this);
 
 	this.signInButtonText = ko.computed(function () {
-		return this.loading() ? TextUtils.i18n('CORE/BUTTON_SIGNING_IN') : TextUtils.i18n('CORE/BUTTON_SIGN_IN');
+		return this.loading() ? TextUtils.i18n('CORE/ACTION_SIGN_IN_IN_PROGRESS') : TextUtils.i18n('CORE/ACTION_SIGN_IN');
 	}, this);
 
 	this.loginCommand = Utils.createCommand(this, this.signIn, this.canBeLogin);

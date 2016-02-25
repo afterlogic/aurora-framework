@@ -99,7 +99,7 @@ CAccountForwardPaneView.prototype.save = function ()
 	{
 		if (!AddressUtils.isCorrectEmail(this.email()))
 		{
-			Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/WARNING_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
+			Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/ERROR_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
 		}
 		else
 		{

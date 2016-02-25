@@ -61,7 +61,7 @@ function CMessagePaneView()
 			sSubject = oMessage ? oMessage.subject() : '',
 			sPrefix = sSubject ? sSubject + ' - ' : ''
 		;
-		return sPrefix + AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/BROWSER_MESSAGE_TITLE');
+		return sPrefix + AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/HEADING_MESSAGE_BROWSER_TAB');
 	}, this);
 	
 	this.isCurrentMessage = ko.computed(function () {
@@ -152,7 +152,7 @@ function CMessagePaneView()
 		return ($.trim(this.subject()) === '');
 	}, this);
 	this.subjectForDisplay = ko.computed(function () {
-		return this.emptySubject() ? TextUtils.i18n('MAIL/EMPTY_SUBJECT') : this.subject();
+		return this.emptySubject() ? TextUtils.i18n('MAIL/LABEL_NO_SUBJECT') : this.subject();
 	}, this);
 	this.importance = ko.observable(Enums.Importance.Normal);
 	this.oFromAddr = ko.observable(null);
@@ -167,8 +167,8 @@ function CMessagePaneView()
 	this.aBccAddr = ko.observableArray([]);
 	this.allRecipients = ko.observableArray([]);
 	this.currentAccountEmail = ko.observable();
-	this.meSender = TextUtils.i18n('MAIL/ME_SENDER');
-	this.meRecipient = TextUtils.i18n('MAIL/ME_RECIPIENT');
+	this.meSender = TextUtils.i18n('MAIL/LABEL_ME_SENDER');
+	this.meRecipient = TextUtils.i18n('MAIL/LABEL_ME_RECIPIENT');
 	
 	this.fullDate = ko.observable('');
 	this.midDate = ko.observable('');
@@ -267,7 +267,7 @@ function CMessagePaneView()
 	}, this);
 	
 	this.saveButtonText = ko.computed(function () {
-		return this.replyAutoSavingStarted() ? TextUtils.i18n('MAIL/TOOL_SAVING') : TextUtils.i18n('MAIL/TOOL_SAVE');
+		return this.replyAutoSavingStarted() ? TextUtils.i18n('MAIL/ACTION_SAVE_IN_PROGRESS') : TextUtils.i18n('MAIL/ACTION_SAVE');
 	}, this);
 	this.replyDraftUid = ko.observable('');
 	this.replyLoadingText = ko.computed(function () {
@@ -359,8 +359,8 @@ CMessagePaneView.prototype.notifySender = function ()
 	{
 		Ajax.send('SendConfirmationMessage', {
 			'Confirmation': this.currentMessage().readingConfirmation(),
-			'Subject': TextUtils.i18n('MAIL/RETURN_RECEIPT_MAIL_SUBJECT'),
-			'Text': TextUtils.i18n('MAIL/RETURN_RECEIPT_MAIL_TEXT', {
+			'Subject': TextUtils.i18n('MAIL/LABEL_RETURN_RECEIPT_MAIL_SUBJECT'),
+			'Text': TextUtils.i18n('MAIL/LABEL_RETURN_RECEIPT_MAIL_TEXT', {
 				'EMAIL': AccountList.getEmail(),
 				'SUBJECT': this.subject()
 			}),
@@ -620,7 +620,7 @@ CMessagePaneView.prototype.doHidingBlockquotes = function (aCollapsedStatuses)
 		var
 			$blockquote = $(this),
 			$parentBlockquotes = $blockquote.parents('blockquote'),
-			$switchButton = $('<span class="blockquote_toggle"></span>').html(TextUtils.i18n('MAIL/SHOW_QUOTED_TEXT')),
+			$switchButton = $('<span class="blockquote_toggle"></span>').html(TextUtils.i18n('MAIL/ACTION_SHOW_QUOTED_TEXT')),
 			bHidden = true
 		;
 		if ($parentBlockquotes.length === 0)
@@ -636,13 +636,13 @@ CMessagePaneView.prototype.doHidingBlockquotes = function (aCollapsedStatuses)
 					if (bHidden)
 					{
 						$blockquote.height('auto');
-						$switchButton.html(TextUtils.i18n('MAIL/HIDE_QUOTED_TEXT'));
+						$switchButton.html(TextUtils.i18n('MAIL/ACTION_HIDE_QUOTED_TEXT'));
 						bHidden = false;
 					}
 					else
 					{
 						$blockquote.height(iHiddenHeight);
-						$switchButton.html(TextUtils.i18n('MAIL/SHOW_QUOTED_TEXT'));
+						$switchButton.html(TextUtils.i18n('MAIL/ACTION_SHOW_QUOTED_TEXT'));
 						bHidden = true;
 					}
 					

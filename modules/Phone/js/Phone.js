@@ -180,14 +180,14 @@ CPhone.prototype.incomingCall = function (sNumber)
 	if (Types.isNonEmptyString(sNumber))
 	{
 		var fShowAll = _.bind(function (sText) {
-			this.report(TextUtils.i18n('PHONE/INCOMING_CALL_FROM') + ' ' + sText);
+			this.report(TextUtils.i18n('PHONE/INFO_INCOMING_CALL_FROM') + ' ' + sText);
 			
 			Popups.showPopup(PhonePopup, [sText]);
 			
 			Utils.desktopNotify({
 				action: 'show',
-				title: TextUtils.i18n('PHONE/NOTIFICATION_INFO_CALLING', {'USER' : sText}),
-				body: TextUtils.i18n('PHONE/NOTIFICATION_CLICK_TO_ANSWER'),
+				title: TextUtils.i18n('PHONE/INFO_USER_CALLING', {'USER' : sText}),
+				body: TextUtils.i18n('PHONE/INFO_CLICK_TO_ANSWER'),
 				callback: _.bind(function() {
 					this.action(Enums.PhoneAction.IncomingConnect);
 				}, this),

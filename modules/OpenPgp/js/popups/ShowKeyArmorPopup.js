@@ -27,8 +27,8 @@ function CShowKeyArmorPopup()
 	this.private = ko.observable(false);
 	this.titleText = ko.computed(function () {
 		return this.private() ?
-			TextUtils.i18n('OPENPGP/POPUP_TITLE_VIEW_PRIVATE_KEY', {'USER': this.user()}) :
-			TextUtils.i18n('OPENPGP/POPUP_TITLE_VIEW_PUBLIC_KEY', {'USER': this.user()});
+			TextUtils.i18n('OPENPGP/HEADING_VIEW_PRIVATE_KEY', {'USER': this.user()}) :
+			TextUtils.i18n('OPENPGP/HEADING_VIEW_PUBLIC_KEY', {'USER': this.user()});
 	}, this);
 	
 	this.downloadLinkHref = ko.computed(function() {
@@ -49,7 +49,7 @@ function CShowKeyArmorPopup()
 	this.downloadLinkFilename = ko.computed(function () {
 		var
 			sConvertedUser = this.user().replace(/</g, '').replace(/>/g, ''),
-			sLangKey = this.private() ? 'OPENPGP/PRIVATE_KEY_FILENAME' : 'OPENPGP/PUBLIC_KEY_FILENAME'
+			sLangKey = this.private() ? 'OPENPGP/TEXT_PRIVATE_KEY_FILENAME' : 'OPENPGP/TEXT_PUBLIC_KEY_FILENAME'
 		;
 		return TextUtils.i18n(sLangKey, {'USER': sConvertedUser}) + '.asc';
 	}, this);

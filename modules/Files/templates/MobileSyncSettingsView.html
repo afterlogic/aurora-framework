@@ -1,13 +1,13 @@
 <div class="fieldset">
-	<h2 class="subtitle" data-bind="i18n: {'key': 'FILES/MOBILE_DAVSYNC_HEADING_FILES'}"></h2>
-	<div class="hint" data-bind="i18n: {'key': 'FILES/MOBILE_DAVSYNC_HINT_SPECIFY'}"></div>
+	<h2 class="subtitle" data-bind="i18n: {'key': 'FILES/HEADING_DAV_ACCESS'}"></h2>
+	<div class="hint" data-bind="i18n: {'key': 'FILES/INFO_DAV_ACCESS'}"></div>
 
 	<div class="fieldgroup">
 		<div class="row">
-			<span class="label" data-bind="i18n: {'key': 'FILES/MOBILE_DAVSYNC_FILES'}"></span>
+			<span class="label" data-bind="i18n: {'key': 'FILES/LABEL_FILES'}"></span>
 			<span class="value" data-bind="text: davServer() + '/files'"></span>
 		</div>
 	</div>
 	<div class="hint" data-bind="text: credentialsHintText"></div>
-	<div class="hint" data-bind="i18n: {'key': 'CORE/HINT_DEMO_MOBILE_CREDENTIALS_HTML', 'type': 'html'}, visible: bDemo"></div>
+	<div class="hint" data-bind="i18n: {'key': 'CORE/INFO_DEMO_MOBILE_CREDENTIALS_HTML', 'type': 'html'}, visible: bDemo"></div>
 </div>

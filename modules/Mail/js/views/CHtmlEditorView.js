@@ -109,8 +109,8 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 	this.imagePathFromWeb = ko.observable('');
 
 	this.visibleFontColorPopup = ko.observable(false);
-	this.oFontColorPickerView = new CColorPickerView(TextUtils.i18n('MAIL/TEXT_COLOR_CAPTION'), this.setTextColorFromPopup, this);
-	this.oBackColorPickerView = new CColorPickerView(TextUtils.i18n('MAIL/BACKGROUND_COLOR_CAPTION'), this.setBackColorFromPopup, this);
+	this.oFontColorPickerView = new CColorPickerView(TextUtils.i18n('MAIL/LABEL_TEXT_COLOR'), this.setTextColorFromPopup, this);
+	this.oBackColorPickerView = new CColorPickerView(TextUtils.i18n('MAIL/LABEL_BACKGROUND_COLOR'), this.setBackColorFromPopup, this);
 
 	this.activitySource = ko.observable('1');
 	this.activitySourceSubscription = null;
@@ -122,7 +122,7 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 		{
 			if (sText === '' || sText === '&nbsp;')
 			{
-				this.setText('<span style="color: #AAAAAA;">' + TextUtils.i18n('MAIL/SIGNATURE_PLACEHOLDER') + '</span>');
+				this.setText('<span style="color: #AAAAAA;">' + TextUtils.i18n('MAIL/LABEL_ENTER_SIGNATURE_HERE') + '</span>');
 				if (this.oCrea)
 				{
 					this.oCrea.setBlur();
@@ -131,7 +131,7 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 		}
 		else
 		{
-			if (sText === TextUtils.i18n('MAIL/SIGNATURE_PLACEHOLDER'))
+			if (sText === TextUtils.i18n('MAIL/LABEL_ENTER_SIGNATURE_HERE'))
 			{
 				this.setText('');
 			}
@@ -327,7 +327,7 @@ CHtmlEditorView.prototype.onImageOver = function (oEvent)
 	{
 		this.imageSelected(true);
 		
-		this.tooltipText(TextUtils.i18n('MAIL/CLICK_TO_EDIT_IMAGE'));
+		this.tooltipText(TextUtils.i18n('MAIL/ACTION_CLICK_TO_EDIT_IMAGE'));
 		
 		var 
 			self = this,
@@ -517,7 +517,7 @@ CHtmlEditorView.prototype.getNotDefaultText = function ()
 {
 	var sText = this.getText();
 
-	return this.removeAllTags(sText) !== TextUtils.i18n('MAIL/SIGNATURE_PLACEHOLDER') ? sText : '';
+	return this.removeAllTags(sText) !== TextUtils.i18n('MAIL/LABEL_ENTER_SIGNATURE_HERE') ? sText : '';
 };
 
 /**
@@ -929,7 +929,7 @@ CHtmlEditorView.prototype.onEditorDrop = function (sUid, oData) {
 			oFile = oData.File;
 			if (Settings.ImageUploadSizeLimit > 0 && oFile.size > Settings.ImageUploadSizeLimit)
 			{
-				Popups.showPopup(AlertPopup, [TextUtils.i18n('CORE/UPLOAD_ERROR_SIZE')]);
+				Popups.showPopup(AlertPopup, [TextUtils.i18n('CORE/ERROR_UPLOAD_SIZE')]);
 			}
 			else
 			{
@@ -963,7 +963,7 @@ CHtmlEditorView.prototype.onEditorDrop = function (sUid, oData) {
 			}
 			else if (!Browser.ie10AndAbove)
 			{
-				Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/UPLOAD_ERROR_NOT_IMAGE')]);
+				Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/ERROR_NOT_IMAGE_CHOOSEN')]);
 			}
 		}
 	}
@@ -1000,7 +1000,7 @@ CHtmlEditorView.prototype.onFileUploadSelect = function (sUid, oFile)
 {
 	if (!this.isFileImage(oFile))
 	{
-		Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/UPLOAD_ERROR_NOT_IMAGE')]);
+		Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/ERROR_NOT_IMAGE_CHOOSEN')]);
 		return false;
 	}
 	
@@ -1022,8 +1022,8 @@ CHtmlEditorView.prototype.onFileUploadComplete = function (sUid, bResponseReceiv
 		if (oData.Result.Error)
 		{
 			sError = oData.Result.Error === 'size' ?
-				TextUtils.i18n('CORE/UPLOAD_ERROR_SIZE') :
-				TextUtils.i18n('CORE/UPLOAD_ERROR_UNKNOWN');
+				TextUtils.i18n('CORE/ERROR_UPLOAD_SIZE') :
+				TextUtils.i18n('CORE/ERROR_UPLOAD_UNKNOWN');
 
 			Popups.showPopup(AlertPopup, [sError]);
 		}
@@ -1035,7 +1035,7 @@ CHtmlEditorView.prototype.onFileUploadComplete = function (sUid, bResponseReceiv
 	}
 	else
 	{
-		Popups.showPopup(AlertPopup, [TextUtils.i18n('CORE/UPLOAD_ERROR_UNKNOWN')]);
+		Popups.showPopup(AlertPopup, [TextUtils.i18n('CORE/ERROR_UPLOAD_UNKNOWN')]);
 	}
 };
 

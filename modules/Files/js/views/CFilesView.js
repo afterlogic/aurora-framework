@@ -40,7 +40,7 @@ function CFilesView(bPopup)
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('FILES/BROWSER_TITLE'));
+	this.browserTitle = ko.observable(TextUtils.i18n('FILES/HEADING_BROWSER_TAB'));
 	
 	this.allowSendEmails = ko.computed(function () {
 		return false;//!!(AppData.App && AppData.App.AllowWebMail && AppData.Accounts && AppData.Accounts.isCurrentAllowsMail());
@@ -55,7 +55,7 @@ function CFilesView(bPopup)
 	this.files = ko.observableArray();
 	this.uploadingFiles = ko.observableArray();
 
-	this.rootPath = ko.observable(TextUtils.i18n('FILES/TAB_PERSONAL_FILES'));
+	this.rootPath = ko.observable(TextUtils.i18n('FILES/LABEL_PERSONAL_STORAGE'));
 	this.storageType = ko.observable(Enums.FileStorageType.Personal);
 	this.storageType.subscribe(function () {
 		var  oStorage = null;
@@ -171,7 +171,7 @@ function CFilesView(bPopup)
 		
 		this.quotaProc(iProc);
 		this.quotaDesc(-1 < iProc ?
-			TextUtils.i18n('CORE/QUOTA_TOOLTIP', {
+			TextUtils.i18n('CORE/INFO_QUOTA', {
 				'PROC': iProc,
 				'QUOTA': TextUtils.getFriendlySize(iQuota)
 			}) : '');
@@ -204,7 +204,7 @@ function CFilesView(bPopup)
 				{
 					if (this.searchPattern() !== '' || this.isPublic)
 					{
-						sInfoText = TextUtils.i18n('FILES/INFO_NO_ITEMS_FOUND');
+						sInfoText = TextUtils.i18n('FILES/INFO_NOTHING_FOUND');
 					}
 					else
 					{
@@ -214,7 +214,7 @@ function CFilesView(bPopup)
 						}
 						else if (this.bAllowDragNDrop)
 						{
-							sInfoText = TextUtils.i18n('FILES/INFO_FILESTORAGE_IS_EMPTY');
+							sInfoText = TextUtils.i18n('FILES/INFO_DRAGNDROP_FILES_OR_CREATE_FOLDER');
 						}
 					}
 				}
@@ -222,7 +222,7 @@ function CFilesView(bPopup)
 		}
 		else if (this.error())
 		{
-			sInfoText = TextUtils.i18n('FILES/ERROR_FILESTORAGE');
+			sInfoText = TextUtils.i18n('FILES/ERROR_FILES_NOT_RECEIVED');
 		}
 		
 		return sInfoText;
@@ -426,8 +426,7 @@ CFilesView.prototype.onFileUploadComplete = function (sFileUid, bResponseReceive
 				this.files.push(oFile);
 				if (this.uploadingFiles().length === 0)
 				{
-					Utils.log('CFilesView', TextUtils.i18n('CORE/UPLOAD_COMPLETE'));
-					Screens.showReport(TextUtils.i18n('CORE/UPLOAD_COMPLETE'));
+					Screens.showReport(TextUtils.i18n('CORE/REPORT_UPLOAD_COMPLETE'));
 				}
 			}
 		}
@@ -457,7 +456,6 @@ CFilesView.prototype.onDrop = function (oFile, oEvent)
 	}
 	else
 	{
-		Utils.log('CFilesView', TextUtils.i18n('FILES/INFO_CANNOT_UPLOAD_SEARCH_RESULT'));
 		Screens.showReport(TextUtils.i18n('FILES/INFO_CANNOT_UPLOAD_SEARCH_RESULT'));
 	}
 };
@@ -573,15 +571,15 @@ CFilesView.prototype.dragAndDropHelper = function (oFile)
 	
 	if (nFilesCount !== 0 && nFoldersCount !== 0)
 	{
-		sText = TextUtils.i18n('FILES/DRAG_ITEMS_TEXT_PLURAL', {'COUNT': nCount}, null, nCount);
+		sText = TextUtils.i18n('FILES/LABEL_DRAG_ITEMS_PLURAL', {'COUNT': nCount}, null, nCount);
 	}
 	else if (nFilesCount === 0)
 	{
-		sText = TextUtils.i18n('FILES/DRAG_FOLDERS_TEXT_PLURAL', {'COUNT': nFoldersCount}, null, nFoldersCount);
+		sText = TextUtils.i18n('FILES/LABEL_DRAG_FOLDERS_PLURAL', {'COUNT': nFoldersCount}, null, nFoldersCount);
 	}
 	else if (nFoldersCount === 0)
 	{
-		sText = TextUtils.i18n('FILES/DRAG_TEXT_PLURAL', {'COUNT': nFilesCount}, null, nFilesCount);
+		sText = TextUtils.i18n('FILES/LABEL_DRAG_FILES_PLURAL', {'COUNT': nFilesCount}, null, nFilesCount);
 	}
 	
 	$('.count-text', oHelper).text(sText);
@@ -747,7 +745,7 @@ CFilesView.prototype.renameItem = function (sName)
 	if (!Utils.validateFileOrFolderName(sName))
 	{
 		return oItem instanceof CFolderModel ?
-			TextUtils.i18n('FILES/INVALID_FOLDER_NAME') : TextUtils.i18n('FILES/INVALID_FILE_NAME');
+			TextUtils.i18n('FILES/ERROR_INVALID_FOLDER_NAME') : TextUtils.i18n('FILES/ERROR_INVALID_FILE_NAME');
 	}
 	else
 	{
@@ -885,9 +883,9 @@ CFilesView.prototype.addStorageIfNot = function (sStorageType)
 	
 	switch (sStorageType)
 	{
-		case 'personal': sDisplayName = TextUtils.i18n('FILES/TAB_PERSONAL_FILES'); break;
-		case 'corporate': sDisplayName = TextUtils.i18n('FILES/TAB_CORPORATE_FILES'); break;
-		case 'shared': sDisplayName = TextUtils.i18n('FILES/TAB_SHARED_FILES'); break;
+		case 'personal': sDisplayName = TextUtils.i18n('FILES/LABEL_PERSONAL_STORAGE'); break;
+		case 'corporate': sDisplayName = TextUtils.i18n('FILES/LABEL_CORPORATE_STORAGE'); break;
+		case 'shared': sDisplayName = TextUtils.i18n('FILES/LABEL_SHARED_STORAGE'); break;
 	}
 	
 	if (!this.getStorageByType(sStorageType))
@@ -1225,7 +1223,7 @@ CFilesView.prototype.createFolder = function (sFolderName)
 	sFolderName = $.trim(sFolderName);
 	if (!Utils.validateFileOrFolderName(sFolderName))
 	{
-		return TextUtils.i18n('FILES/INVALID_FOLDER_NAME');
+		return TextUtils.i18n('FILES/ERROR_INVALID_FOLDER_NAME');
 	}
 	else
 	{

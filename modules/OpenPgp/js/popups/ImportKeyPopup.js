@@ -77,7 +77,7 @@ CImportKeyPopup.prototype.checkArmor = function ()
 					var
 						oSameKey = OpenPgp.findKeyByID(oKey.getId(), oKey.isPublic()),
 						bHasSameKey = (oSameKey !== null),
-						sAddInfoLangKey = oKey.isPublic() ? 'OPENPGP/PUBLIC_KEY_ADD_INFO' : 'OPENPGP/PRIVATE_KEY_ADD_INFO'
+						sAddInfoLangKey = oKey.isPublic() ? 'OPENPGP/INFO_PUBLIC_KEY_LENGTH' : 'OPENPGP/INFO_PRIVATE_KEY_LENGTH'
 					;
 					bHasExistingKeys = bHasExistingKeys || bHasSameKey;
 					aKeys.push({

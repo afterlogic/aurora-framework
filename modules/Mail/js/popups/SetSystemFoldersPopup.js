@@ -52,7 +52,7 @@ CSetSystemFoldersPopup.prototype.onShow = function ()
 {
 	var oFolderList = MailCache.editedFolderList();
 	
-	this.options(oFolderList.getOptions(TextUtils.i18n('MAIL/OPTION_NO_FOLDER_USAGE_ASSIGNED'), false, false, false));
+	this.options(oFolderList.getOptions(TextUtils.i18n('MAIL/LABEL_NO_FOLDER_USAGE_ASSIGNED'), false, false, false));
 
 	this.sentFolderFullName(oFolderList.sentFolderFullName());
 	this.draftsFolderFullName(oFolderList.draftsFolderFullName());

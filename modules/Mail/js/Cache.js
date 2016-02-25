@@ -815,7 +815,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 						}
 						this.disableComposeAutosave(false);
 					}, this), 
-					'', TextUtils.i18n('MAIL/BUTTON_CLOSE_DELETE_DRAFT')
+					'', TextUtils.i18n('MAIL/ACTION_CLOSE_DELETE_DRAFT')
 				]);
 			}
 			else
@@ -1325,7 +1325,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 		oParameters = {
 			action:'show',
 			icon: 'skins/wm_logo_140x140.png',
-			title: TextUtils.i18n('MAIL/NOTIFICATION_NEW_MESSAGE_PLURAL', {
+			title: TextUtils.i18n('MAIL/INFO_NEW_MESSAGES_PLURAL', {
 				'COUNT': iNewLength
 			}, null, iNewLength),
 			timeout: 5000,

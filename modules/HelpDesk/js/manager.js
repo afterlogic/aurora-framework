@@ -15,7 +15,7 @@ module.exports = function (oSettings) {
 	
 	return {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDesk/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('HELPDESK/SETTINGS_TABNAME')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDesk/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('HELPDESK/LABEL_SETTINGS_TAB')]);
 		},
 		screens: {
 			'main': function () {

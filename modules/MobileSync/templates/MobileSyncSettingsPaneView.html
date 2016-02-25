@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="title" data-bind="i18n: {'key': 'MOBILESYNC/SETTINGS_TITLE'}"></h2>
+	<h2 class="title" data-bind="i18n: {'key': 'MOBILESYNC/HEADING_SETTINGS_TAB'}"></h2>
 </div>
 
 <div class="panel_center">
@@ -9,14 +9,14 @@
 		
 		<div class="fieldset" data-bind="visible: enableDav">
 			<h2 class="subtitle" data-bind="i18n: {'key': 'MOBILESYNC/HEADING_DAVSYNC'}"></h2>
-			<div class="hint" data-bind="i18n: {'key': 'MOBILESYNC/HINT_DAVSYNC'}"></div>
+			<div class="hint" data-bind="i18n: {'key': 'MOBILESYNC/INFO_DAVSYNC'}"></div>
 			
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': 'MOBILESYNC/LABEL_DAV_SERVER'}"></span>
 				<span class="value" data-bind="text: davServer"></span>
 			</div>
 			<div class="hint" data-bind="text: credentialsHintText"></div>
-			<div class="hint" data-bind="i18n: {'key': 'CORE/HINT_DEMO_MOBILE_CREDENTIALS_HTML', 'type': 'html'}, visible: bDemo"></div>
+			<div class="hint" data-bind="i18n: {'key': 'CORE/INFO_DEMO_MOBILE_CREDENTIALS_HTML', 'type': 'html'}, visible: bDemo"></div>
 		</div>
 		
 		<div class="fieldset ios_profile" data-bind="visible: bIosDevice">
@@ -26,7 +26,7 @@
 				<span class="value">
 					<a class="link" href="./?Profile">
 						<span class="icon"></span>
-						<span class="text" data-bind="i18n: {'key': 'MOBILESYNC/LINK_IOS_PROFILE'}"></span>
+						<span class="text" data-bind="i18n: {'key': 'MOBILESYNC/ACTION_GET_IOS_PROFILE'}"></span>
 					</a>
 				</span>
 			</div>
@@ -36,12 +36,12 @@
 			
 		<div class="fieldset" data-bind="visible: visibleDavViaUrls">
 			<h2 class="subtitle" data-bind="i18n: {'key': 'MOBILESYNC/HEADING_DAVSYNC_URLS'}"></h2>
-			<div class="hint" data-bind="i18n: {'key': 'MOBILESYNC/HINT_DAVSYNC_URLS'}"></div>
+			<div class="hint" data-bind="i18n: {'key': 'MOBILESYNC/INFO_DAVSYNC_URLS'}"></div>
 		
 			<!-- ko template: {name: oContactsMobileSyncSettingsView.ViewTemplate, data: oContactsMobileSyncSettingsView} --><!-- /ko -->
 			
 			<div class="hint" data-bind="text: credentialsHintText"></div>
-			<div class="hint" data-bind="i18n: {'key': 'CORE/HINT_DEMO_MOBILE_CREDENTIALS_HTML', 'type': 'html'}, visible: bDemo"></div>
+			<div class="hint" data-bind="i18n: {'key': 'CORE/INFO_DEMO_MOBILE_CREDENTIALS_HTML', 'type': 'html'}, visible: bDemo"></div>
 		</div>
 		
 		<!-- ko template: {name: oFilesMobileSyncSettingsView.ViewTemplate, data: oFilesMobileSyncSettingsView} --><!-- /ko -->

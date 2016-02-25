@@ -4,23 +4,23 @@
 		<span class="close" data-bind="click: cancelPopup"></span>
 		<span class="title" data-bind="style: {backgroundColor: color}">
 			<span class="text fadeout">
-				<span data-bind="i18n: {'key': 'CALENDAR/TITLE_IMPORT_CALENDAR'}, fade: {color: color}"></span>
+				<span data-bind="i18n: {'key': 'CALENDAR/HEADING_IMPORT_ICALENDAR'}, fade: {color: color}"></span>
 			</span>
 		</span>
 		<div class="fields">
 			<div class="fieldset">
 				<div class="hint" data-bind="visible: allowDragNDrop">
-					<span data-bind="i18n: {'key': 'CALENDAR/HINT_DRAGNDROP_EVENTS'}"></span>
+					<span data-bind="i18n: {'key': 'CALENDAR/INFO_SELECT_OR_DRAGNDROP'}"></span>
 				</div>
 				<div class="hint">
-					<span data-bind="i18n: {'key': 'CALENDAR/HINT_IMPORT_CALENDAR'}"></span>
+					<span data-bind="i18n: {'key': 'CALENDAR/INFO_EXISTING_EVENTS'}"></span>
 				</div>
 				<div class="row">
 					<div class="buttons without_border_top" data-bind="visible: importing">
-						<span class="button import" data-bind="i18n: {'key': 'CORE/BUTTON_IMPORTING'}"></span>
+						<span class="button import" data-bind="i18n: {'key': 'CORE/ACTION_IMPORT_IN_PROGRESS'}"></span>
 					</div>
 					<div class="buttons without_border_top" data-bind="visible: !importing()">
-						<span class="button import" data-bind="i18n: {'key': 'CORE/BUTTON_IMPORT'}, initDom: importButtonDom"></span>
+						<span class="button import" data-bind="i18n: {'key': 'CORE/ACTION_IMPORT'}, initDom: importButtonDom"></span>
 					</div>
 				</div>
 			</div>

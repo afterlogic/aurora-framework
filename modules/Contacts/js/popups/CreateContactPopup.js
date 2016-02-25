@@ -71,7 +71,7 @@ CCreateContactPopup.prototype.onSaveClick = function ()
 {
 	if (!this.canBeSave())
 	{
-		Screens.showError(TextUtils.i18n('CONTACTS/ERROR_EMPTY_CONTACT'));
+		Screens.showError(TextUtils.i18n('CONTACTS/ERROR_EMAIL_OR_NAME_BLANK'));
 	}
 	else if (!this.loading())
 	{
@@ -112,11 +112,10 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 	else
 	{
-		Utils.log('CCreateContactPopup', TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
 		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
 		ContactsCache.clearInfoAboutEmail(oParameters.HomeEmail);
 		ContactsCache.getContactsByEmails([oParameters.HomeEmail], this.fCallback);

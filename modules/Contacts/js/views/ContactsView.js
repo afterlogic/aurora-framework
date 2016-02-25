@@ -43,7 +43,7 @@ function CContactsView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('CONTACTS/BROWSER_TITLE'));
+	this.browserTitle = ko.observable(TextUtils.i18n('CONTACTS/HEADING_BROWSER_TAB'));
 	
 	this.contactCount = ko.observable(0);
 	this.uploaderArea = ko.observable(null);
@@ -451,7 +451,7 @@ CContactsView.prototype.executeSave = function (oData)
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('CONTACTS/ERROR_EMPTY_CONTACT'));
+		Screens.showError(TextUtils.i18n('CONTACTS/ERROR_EMAIL_OR_NAME_BLANK'));
 	}
 };
 
@@ -486,7 +486,7 @@ CContactsView.prototype.deleteContact = function ()
 				return !oItem.ReadOnly();
 			}),
 			iCount = aChecked.length,
-			sConfirmText = TextUtils.i18n('CONTACTS/CONFIRM_DELETE_CONTACT_PLURAL', {}, null, iCount),
+			sConfirmText = TextUtils.i18n('CONTACTS/CONFIRM_DELETE_CONTACTS_PLURAL', {}, null, iCount),
 			fDeleteContacts = _.bind(function (bResult) {
 				if (bResult)
 				{
@@ -1117,7 +1117,7 @@ CContactsView.prototype.dragAndDropHelper = function (oContact)
 	oHelper.data('p7-contatcs-type', this.selectedGroupType());
 	oHelper.data('p7-contatcs-uids', aUids);
 	
-	$('.count-text', oHelper).text(TextUtils.i18n('CONTACTS/DRAG_TEXT_PLURAL', {
+	$('.count-text', oHelper).text(TextUtils.i18n('CONTACTS/LABEL_DRAG_CONTACTS_PLURAL', {
 		'COUNT': nCount
 	}, null, nCount));
 
@@ -1560,11 +1560,11 @@ CContactsView.prototype.onContactUploadComplete = function (sFileUid, bResponseR
 	{
 		if (bResponse.ErrorCode)
 		{
-			Api.showErrorByCode(bResponse, TextUtils.i18n('CONTACTS/ERROR_INCORRECT_FILE_EXTENSION'));
+			Api.showErrorByCode(bResponse, TextUtils.i18n('CONTACTS/ERROR_FILE_NOT_CSV_OR_VCF'));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+			Screens.showError(TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 		}
 	}
 };

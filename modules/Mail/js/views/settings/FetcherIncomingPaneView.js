@@ -148,7 +148,7 @@ CFetcherIncomingPaneView.prototype.onResponse = function (oResponse, oRequest)
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/UNKNOWN_ERROR'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('CORE/ERROR_UNKNOWN'));
 	}
 	else
 	{

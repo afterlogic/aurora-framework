@@ -19,7 +19,7 @@ module.exports = function (oSettings) {
 			{
 				ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/OpenPgp/js/views/MessageControlsView.js'), 'BeforeMessageHeaders']);
 				ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/OpenPgp/js/views/ComposeButtonsView.js')]);
-				ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/OpenPgp/js/views/OpenPgpSettingsPaneView.js'); }, 'pgp', TextUtils.i18n('OPENPGP/SETTINGS_TABNAME')]);
+				ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/OpenPgp/js/views/OpenPgpSettingsPaneView.js'); }, 'pgp', TextUtils.i18n('OPENPGP/LABEL_SETTINGS_TAB')]);
 			}
 		}
 	};

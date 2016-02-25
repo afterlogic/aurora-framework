@@ -34,14 +34,14 @@ function CEncryptPopup()
 	this.passwordFocused = ko.observable(false);
 	this.encrypt = ko.observable(true);
 	this.signEncryptButtonText = ko.computed(function () {
-		var sText = TextUtils.i18n('OPENPGP/BUTTON_SIGN_ENCRYPT');
+		var sText = TextUtils.i18n('OPENPGP/ACTION_SIGN_ENCRYPT');
 		if (this.sign() && !this.encrypt())
 		{
-			sText = TextUtils.i18n('OPENPGP/BUTTON_SIGN');
+			sText = TextUtils.i18n('OPENPGP/ACTION_SIGN');
 		}
 		if (!this.sign() && this.encrypt())
 		{
-			sText = TextUtils.i18n('OPENPGP/BUTTON_ENCRYPT');
+			sText = TextUtils.i18n('OPENPGP/ACTION_ENCRYPT');
 		}
 		return sText;
 	}, this);

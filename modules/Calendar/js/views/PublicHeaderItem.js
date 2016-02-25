@@ -5,7 +5,7 @@ var
 			
 	CHeaderItemView = require('core/js/views/CHeaderItemView.js'),
 	
-	PublicHeaderItem = new CHeaderItemView(TextUtils.i18n('CALENDAR/HEADER_TABNAME'))
+	PublicHeaderItem = new CHeaderItemView(TextUtils.i18n('CALENDAR/ACTION_SHOW_CALENDAR'))
 ;
 
 module.exports = PublicHeaderItem;

@@ -6,4 +6,4 @@ var
 	CHeaderItemView = require('core/js/views/CHeaderItemView.js')
 ;
 
-module.exports = new CHeaderItemView(TextUtils.i18n('CONTACTS/HEADER_TABNAME'));
+module.exports = new CHeaderItemView(TextUtils.i18n('CONTACTS/ACTION_SHOW_CONTACTS'));

@@ -25,7 +25,7 @@
 
 	<span class="item_content ui-droppable dragHandle">
 
-		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: 'CORE/BUTTON_CANCEL'"></span>
+		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: 'CORE/ACTION_CANCEL'"></span>
 
 		<span class="image">
 			<!-- ko if: thumb() -->
@@ -49,17 +49,17 @@
 		<div class="buttons" data-bind="visible: !isPopupItem(), css: {'hide': statusText().length > 0 || !uploaded()}">
 			<!--ko if: isIosDevice -->
 			<a class="button view" href="javascript: void(0)"
-			   data-bind="i18n: {'key': 'CORE/ATTACHMENT_VIEW'}, click: function () {downloadFile();}"></a>
+			   data-bind="i18n: {'key': 'CORE/ACTION_VIEW_FILE'}, click: function () {downloadFile();}"></a>
 			<!-- /ko -->
 			<!--ko if: !isIosDevice -->
-			<a class="button download" href="javascript: void(0)" data-bind="visible: visibleDownloadLink(), click: function () { downloadFile(); }, i18n: {'key': 'CORE/ATTACHMENT_DOWNLOAD'}"></a>
-			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink(), click: function () { openLink(); }, i18n: {'key': 'CORE/ATTACHMENT_LINK_OPEN'}"></a>
-			<a class="button view" href="javascript: void(0)" data-bind="visible: (visibleViewLink() && !visibleImportLink()), i18n: {'key': 'CORE/ATTACHMENT_VIEW'}, click: viewFile"></a>
-			<a class="button view" href="javascript: void(0)" data-bind="visible: visibleImportLink(), i18n: {'key': 'CORE/BUTTON_IMPORT'}, click: importFile" ></a>
+			<a class="button download" href="javascript: void(0)" data-bind="visible: visibleDownloadLink(), click: function () { downloadFile(); }, i18n: {'key': 'CORE/ACTION_DOWNLOAD_FILE'}"></a>
+			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink(), click: function () { openLink(); }, i18n: {'key': 'CORE/ACTION_OPEN_LINK'}"></a>
+			<a class="button view" href="javascript: void(0)" data-bind="visible: (visibleViewLink() && !visibleImportLink()), i18n: {'key': 'CORE/ACTION_VIEW_FILE'}, click: viewFile"></a>
+			<a class="button view" href="javascript: void(0)" data-bind="visible: visibleImportLink(), i18n: {'key': 'CORE/ACTION_IMPORT'}, click: importFile" ></a>
 			<!-- /ko -->
-			<a class="button view" href="javascript: void(0)" data-bind="visible: visibleExpandLink(), i18n: {'key': 'CORE/ATTACHMENT_EXPAND'}, click: expandFile"></a>
+			<a class="button view" href="javascript: void(0)" data-bind="visible: visibleExpandLink(), i18n: {'key': 'CORE/ACTION_EXPAND_FILE'}, click: expandFile"></a>
 			<span data-bind="visible: visibleExpandingText(), i18n: {'key': 'CORE/INFO_LOADING'}"></span>
-			<a class="button view" href="javascript: void(0)" data-bind="visible: subFilesCollapsed(), i18n: {'key': 'CORE/ATTACHMENT_COLLAPSE'}, click: collapseFile"></a>
+			<a class="button view" href="javascript: void(0)" data-bind="visible: subFilesCollapsed(), i18n: {'key': 'CORE/ACTION_COLLAPSE_FILE'}, click: collapseFile"></a>
 		</div>
 	</span>
 

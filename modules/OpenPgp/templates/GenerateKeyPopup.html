@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="i18n: {'key': 'OPENPGP/POPUP_TITLE_GENERATE_NEW_KEY'}"></span>
+		<span class="title" data-bind="i18n: {'key': 'OPENPGP/HEADING_GENERATE_NEW_KEY'}"></span>
 
 		<div class="fields">
 			<div class="row">
@@ -18,9 +18,9 @@
 				<select class="value input" data-bind="value: selectedKeyLength, options: keyLengthOptions"></select>
 			</div>
 			<div class="buttons">
-				<span class="button" data-bind="visible: !process(), i18n: {'key': 'OPENPGP/BUTTON_GENERATE'}, click: generate"></span>
-				<span class="button" data-bind="visible: process, i18n: {'key': 'OPENPGP/BUTTON_GENERATING'}"></span>
-				<span class="button" data-bind="visible: !process(), i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup"></span>
+				<span class="button" data-bind="visible: !process(), i18n: {'key': 'OPENPGP/ACTION_GENERATE'}, click: generate"></span>
+				<span class="button" data-bind="visible: process, i18n: {'key': 'OPENPGP/ACTION_GENERATE_IN_PROGRESS'}"></span>
+				<span class="button" data-bind="visible: !process(), i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

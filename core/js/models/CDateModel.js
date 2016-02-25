@@ -86,7 +86,7 @@ CDateModel.prototype.getShortDate = function (bTime)
 		{
 			if (oMomentNow.clone().subtract(1, 'days').format('L') === this.oMoment.format('L'))
 			{
-				sResult = TextUtils.i18n('CORE/YESTERDAY');
+				sResult = TextUtils.i18n('CORE/LABEL_YESTERDAY');
 			}
 			else if (oMomentNow.year() === this.oMoment.year())
 			{

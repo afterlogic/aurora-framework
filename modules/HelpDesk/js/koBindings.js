@@ -11,7 +11,7 @@ ko.bindingHandlers.quoteText = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
 		var
 			jqEl = $(oElement),
-			jqButton = $('<span class="button_quote">' + TextUtils.i18n('HELPDESK/BUTTON_QUOTE') + '</span>'),
+			jqButton = $('<span class="button_quote">' + TextUtils.i18n('HELPDESK/ACTION_QUOTE') + '</span>'),
 			oOptions = fValueAccessor(),
 			fActionHandler = oOptions.actionHandler,
 			bIsQuoteArea = false,

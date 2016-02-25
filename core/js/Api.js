@@ -24,19 +24,19 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 	switch (iErrorCode)
 	{
 		default:
-			sResultError = sDefaultError || TextUtils.i18n('CORE/UNKNOWN_ERROR');
+			sResultError = sDefaultError || TextUtils.i18n('CORE/ERROR_UNKNOWN');
 			break;
 		case Enums.Errors.AuthError:
 			sResultError = TextUtils.i18n('CORE/ERROR_PASS_INCORRECT');
 			break;
 		case Enums.Errors.DataBaseError:
-			sResultError = TextUtils.i18n('CORE/DATABASE_ERROR');
+			sResultError = TextUtils.i18n('CORE/ERROR_DATABASE');
 			break;
 		case Enums.Errors.LicenseProblem:
 			sResultError = TextUtils.i18n('CORE/ERROR_INVALID_LICENSE');
 			break;
 		case Enums.Errors.DemoLimitations:
-			sResultError = TextUtils.i18n('CORE/DEMO_WARNING_THIS_FEATURE_IS_DISABLED');
+			sResultError = TextUtils.i18n('CORE/INFO_DEMO_THIS_FEATURE_IS_DISABLED');
 			break;
 		case Enums.Errors.Captcha:
 			sResultError = TextUtils.i18n('CORE/ERROR_CAPTCHA_IS_INCORRECT');
@@ -55,10 +55,10 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			break;
 		case Enums.Errors.FetcherIncServerNotAvailable:
 		case Enums.Errors.FetcherLoginNotCorrect:
-			sResultError = TextUtils.i18n('CORE/FETCHER_SAVE_ERROR');
+			sResultError = TextUtils.i18n('CORE/ERROR_FETCHER_NOT_SAVED');
 			break;
 		case Enums.Errors.HelpdeskUserNotExists:
-			sResultError = TextUtils.i18n('CORE/ERROR_FORGOT_NO_ACCOUNT');
+			sResultError = TextUtils.i18n('CORE/ERROR_FORGOT_NO_HELPDESK_ACCOUNT');
 			break;
 		case Enums.Errors.MailServerError:
 			sResultError = TextUtils.i18n('CORE/ERROR_CANT_CONNECT_TO_SERVER');

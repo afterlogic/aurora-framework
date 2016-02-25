@@ -29,7 +29,7 @@ function COutlookSyncSettingsPaneView()
 	this.sPlugin64DownloadLink = Settings.Plugin64DownloadLink;
 	this.sPluginReadMoreLink = Settings.PluginReadMoreLink;
 
-	this.credentialsHintText = ko.observable(TextUtils.i18n('CORE/HINT_MOBILE_CREDENTIALS', {'EMAIL': App.defaultAccountEmail()}));
+	this.credentialsHintText = ko.observable(TextUtils.i18n('CORE/INFO_MOBILE_CREDENTIALS', {'EMAIL': App.defaultAccountEmail()}));
 }
 
 COutlookSyncSettingsPaneView.prototype.ViewTemplate = 'OutlookSync_OutlookSyncSettingsPaneView';

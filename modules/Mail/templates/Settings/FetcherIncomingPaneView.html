@@ -10,7 +10,7 @@
 			</div>
 		</div>
 		<div class="row hint">
-			<span data-bind="i18n: {'key': 'MAIL/HINT_POP3_FETCHER'}"></span>
+			<span data-bind="i18n: {'key': 'MAIL/INFO_POP3_FETCHER'}"></span>
 		</div>
 		<div class="row incoming">
 			<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="row hint">
-			<span data-bind="i18n: {'key': 'MAIL/HINT_FETCHER_STORE'}"></span>
+			<span data-bind="i18n: {'key': 'MAIL/INFO_FETCHER_STORE'}"></span>
 		</div>
 
 		<div class="row folder">
@@ -42,15 +42,15 @@
 					<span class="icon"></span>
 					<input type="checkbox" id="leave_messages_on_server" data-bind="checked: leaveMessagesOnServer, enable: isEnabled" />
 				</label>
-				<label for="leave_messages_on_server" data-bind="i18n: {'key': 'MAIL/LABEL_LAVE_MESSAGES_ON_SERVER'}"></label>
+				<label for="leave_messages_on_server" data-bind="i18n: {'key': 'MAIL/LABEL_LEAVE_MESSAGES_ON_SERVER'}"></label>
 			</div>
 		</div>
 		<div class="row">
-			<span class="link" data-bind="i18n: {'key': 'MAIL/BUTTON_REMOVE_FETCHER'}, click: function () { $parent.onFetcherDeleteClick($data); }"></span>
+			<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_REMOVE_FETCHER'}, click: function () { $parent.onFetcherDeleteClick($data); }"></span>
 		</div>
 	</div>
 	<div class="buttons">
-		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVE'}, click: save, visible: !isSaving()"></span>
-		<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, click: save, visible: isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: save, visible: !isSaving()"></span>
+		<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, click: save, visible: isSaving()"></span>
 	</div>
 </div>

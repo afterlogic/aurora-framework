@@ -59,16 +59,16 @@ function CLoginView()
 	this.helpdeskQuestionFocus = ko.observable('');
 
 	this.signInButtonText = ko.computed( function () {
-		return this.registeringProcess() ? TextUtils.i18n('CORE/BUTTON_SIGNING_IN') : TextUtils.i18n('CORE/BUTTON_SIGN_IN');
+		return this.registeringProcess() ? TextUtils.i18n('CORE/ACTION_SIGN_IN_IN_PROGRESS') : TextUtils.i18n('CORE/ACTION_SIGN_IN');
 	}, this);
 
 	this.regButtonText = ko.computed( function () {
-		return this.registeringProcess() ? TextUtils.i18n('CORE/BUTTON_REGISTERING') : TextUtils.i18n('CORE/BUTTON_REGISTER');
+		return this.registeringProcess() ? TextUtils.i18n('CORE/ACTION_REGISTER_IN_PROGRESS') : TextUtils.i18n('CORE/ACTION_REGISTER');
 	}, this);
 
 	this.sendingPasswordProcess = ko.observable(false);
 	this.forgotButtonText = ko.computed(function () {
-		return this.sendingPasswordProcess() ? TextUtils.i18n('HELPDESK/BUTTON_SENDING') : TextUtils.i18n('HELPDESK/BUTTON_SEND_PASSWORD');
+		return this.sendingPasswordProcess() ? TextUtils.i18n('CORE/ACTION_RESET_PASSWORD_IN_PROGRESS') : TextUtils.i18n('CORE/ACTION_RESET_PASSWORD');
 	}, this);
 	this.forgotEmailFocus = ko.observable(false);
 	this.forgotEmail = ko.observable('');
@@ -76,8 +76,8 @@ function CLoginView()
 	this.changingPasswordProcess = ko.observable(false);
 	this.changepassButtonText = ko.computed(function () {
 		return this.changingPasswordProcess() ?
-			TextUtils.i18n('HELPDESK/BUTTON_CHANGING_PASS') :
-			TextUtils.i18n('CORE/BUTTON_CHANGE_PASS');
+			TextUtils.i18n('CORE/ACTION_CHANGE_PASSWORD_IN_PROGRESS') :
+			TextUtils.i18n('CORE/ACTION_CHANGE_PASSWORD');
 	}, this);
 	this.changepassNewpassFocus = ko.observable(false);
 	this.changepassNewpass = ko.observable('');
@@ -123,7 +123,6 @@ CLoginView.prototype.onShow = function ()
 	
 	if (sReportText)
 	{
-		Utils.log('CLoginView', sReportText);
 		Screens.showReport(sReportText);
 		
 		Storage.removeData('ReportText');
@@ -266,7 +265,7 @@ CLoginView.prototype.actionRegister = function ()
 {
 	if (this.regPassword() !== this.regConfirmPassword())
 	{
-		Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('CORE/ERROR_PASSWORDS_DO_NOT_MATCH'));
 		this.regPasswordFocus(true);
 	}
 	else
@@ -302,7 +301,7 @@ CLoginView.prototype.onHelpdeskRegisterResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('HELPDESK/ACTIVATION_DESCRIPTION', {
+		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_CONFIRMATION_SENT', {
 			'EMAIL': this.regEmail()
 		}));
 
@@ -386,7 +385,7 @@ CLoginView.prototype.onHelpdeskForgotResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('HELPDESK/INFO_FORGOT_SUCCESSFULL'));
+		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_RESET_INSTRUCTIONS_SENT'));
 
 		this.email(this.forgotEmail());
 		this.passwordFocus(true);
@@ -419,7 +418,7 @@ CLoginView.prototype.actionChangepass = function ()
 
 		if (this.changepassNewpass() !== this.changepassConfirmpass())
 		{
-			Screens.showError(TextUtils.i18n('CORE/WARNING_PASSWORDS_DO_NOT_MATCH'));
+			Screens.showError(TextUtils.i18n('CORE/ERROR_PASSWORDS_DO_NOT_MATCH'));
 			this.changepassNewpassFocus(true);
 			return;
 		}
@@ -454,7 +453,7 @@ CLoginView.prototype.onHelpdeskForgotChangePasswordResponse = function (oRespons
 	}
 	else
 	{
-		Storage.setData('ReportText', TextUtils.i18n('HELPDESK/INFO_CHANGEPASS_SUCCESSFULL'));
+		Storage.setData('ReportText', TextUtils.i18n('HELPDESK/REPORT_CHANGEPASS_SUCCESSFULL'));
 		
 		this.backToLogin();
 	}

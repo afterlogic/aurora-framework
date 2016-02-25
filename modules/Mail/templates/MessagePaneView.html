@@ -34,7 +34,7 @@
 					<div class="message_info_line">
 						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, 
 								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
-						<span data-bind="i18n: {'key': 'MAIL/SHORT_LINE_TO'}, visible: allRecipients().length > 0"></span>
+						<span data-bind="i18n: {'key': 'MAIL/LABEL_TO_SHORT_LINE'}, visible: allRecipients().length > 0"></span>
 						<span data-bind="foreach: allRecipients">
 							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, 
 									attr: {'data-email': sEmail, 'data-name': sName}">
@@ -96,22 +96,22 @@
 					<div class="download_menu">
 						<span class="link hover" data-bind="visible: visibleExtendedDownload">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_DOWNLOAD_ALL'}"></span>
+							<span class="text" data-bind="i18n: {'key': 'MAIL/ACTION_GET_ALL_ATTACHMENTS'}"></span>
 						</span>
 						
 						<div class="content">
 							<span class="link all" data-bind="click: downloadAllAttachments, visible: visibleDownloadAllAttachments">
 								<span class="icon"></span>
-								<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_DOWNLOAD_AS_ZIP'}"></span>
+								<span class="text" data-bind="i18n: {'key': 'MAIL/ACTION_DOWNLOAD_ATTACHMENTS_ZIP'}"></span>
 							</span>
 							<span class="link separately"
 							   data-bind="click: downloadAllAttachmentsSeparately, visible: visibleDownloadAllAttachmentsSeparately">
 								<span class="icon"></span>
-								<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_DOWNLOAD_ALL_SEPARATELY'}"></span>
+								<span class="text" data-bind="i18n: {'key': 'MAIL/ACTION_DOWNLOAD_ATTACHMENTS_SEPARATELY'}"></span>
 							</span>
 							<span class="link to_filestorage" data-bind="click: saveAttachmentsToFiles, visible: visibleSaveAttachmentsToFiles">
 								<span class="icon"></span>
-								<span class="text" data-bind="i18n: {'key': 'MAIL/ATTACHMENT_SAVE_TO_FILES'}"></span>
+								<span class="text" data-bind="i18n: {'key': 'MAIL/ACTION_SAVE_ATTACHMENTS_TO_FILES'}"></span>
 							</span>
 						</div>
 					</div>
@@ -130,7 +130,7 @@
 					<!-- /ko -->
 
 					<div class="message_body_info" data-bind="visible: visibleNoMessageSelectedText">
-						<div data-bind="i18n: {'key': 'MAIL/INFO_SINGLE_DOUBLE_CLICK'}"></div>
+						<div data-bind="i18n: {'key': 'MAIL/INFO_NO_MESSAGE_SELECTED'}"></div>
 						<div class="message_body_secondary_info" data-bind="i18n: {'key': 'MAIL/INFO_SINGLE_DOUBLE_CLICK'}"></div>
 					</div>
 					<div class="message_body_info" data-bind="visible: isLoading, i18n: {'key': 'CORE/INFO_LOADING'}"></div>

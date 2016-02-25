@@ -7,7 +7,7 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="enable_fwd" data-bind="checked: enable" />
 					</label>
-					<label for="enable_fwd" data-bind="i18n: {'key': 'MAIL/LABEL_FORWARD_ENABLE'}"></label>
+					<label for="enable_fwd" data-bind="i18n: {'key': 'MAIL/LABEL_ENABLE_FORWARD'}"></label>
 				</div>
 			</div>
 			<div class="row">
@@ -18,8 +18,8 @@
 	</div>
 	<div class="buttons">
 		<span class="button">
-			<span data-bind="click: save, i18n: {'key': 'CORE/BUTTON_SAVE'}, visible: !isSaving()"></span>
-			<span data-bind="i18n: {'key': 'CORE/BUTTON_SAVING'}, visible: isSaving()"></span>
+			<span data-bind="click: save, i18n: {'key': 'CORE/ACTION_SAVE'}, visible: !isSaving()"></span>
+			<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: isSaving()"></span>
 		</span>
 	</div>
 </div>

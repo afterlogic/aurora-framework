@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="title" data-bind="i18n: {'key': 'OPENPGP/POPUP_TITLE_IMPORT_KEY'}"></span>
+		<span class="title" data-bind="i18n: {'key': 'OPENPGP/HEADING_IMPORT_KEY'}"></span>
 
 		<div class="fields">
 			<div class="row" data-bind="visible: keys().length === 0">
@@ -22,12 +22,12 @@
 						</label>
 					</div>
 				</div>
-				<div class="hint" data-bind="i18n: {'key': 'OPENPGP/HINT_EXISTING_KEYS_GREYED'}, visible: hasExistingKeys"></div>
+				<div class="hint" data-bind="i18n: {'key': 'OPENPGP/INFO_EXISTING_KEYS_GREYED'}, visible: hasExistingKeys"></div>
 			</div>
 			<div class="buttons">
-				<span class="button" data-bind="i18n: {'key': 'OPENPGP/BUTTON_CHECK'}, click: checkArmor, visible: keys().length === 0"></span>
-				<span class="button" data-bind="i18n: {'key': 'OPENPGP/BUTTON_IMPORT'}, click: importKey, visible: keys().length > 0"></span>
-				<span class="button" data-bind="i18n: {'key': 'CORE/BUTTON_CANCEL'}, click: cancelPopup"></span>
+				<span class="button" data-bind="i18n: {'key': 'OPENPGP/ACTION_CHECK'}, click: checkArmor, visible: keys().length === 0"></span>
+				<span class="button" data-bind="i18n: {'key': 'OPENPGP/ACTION_IMPORT_KEYS'}, click: importKey, visible: keys().length > 0"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

@@ -20,7 +20,7 @@ module.exports = function (oSettings) {
 	
 	return _.extend(ComponentsMethods, {
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('CONTACTS/SETTINGS_TABNAME')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('CONTACTS/LABEL_SETTINGS_TAB')]);
 			if ($.isFunction(fComponentsStart))
 			{
 				fComponentsStart(ModulesManager);
