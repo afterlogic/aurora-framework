@@ -88,11 +88,10 @@ module.exports = function(grunt) {
 			css_libs: {
 				nonull: true,
 				src: [
-					"dev/Styles/normalize/normalize.css",
-					"dev/Vendors/jquery-ui-1.10.4.custom/css/smoothness/jquery-ui-1.10.4.custom.min.css",
-					"dev/Vendors/fullcalendar-2.2.3/fullcalendar.min.css",
-//					"dev/Vendors/fullcalendar-3.2.1/fullcalendar.min.css",
-					"dev/Vendors/inputosaurus/inputosaurus.css"
+					"skins/Default/Vendors/normalize.css",
+					"skins/Default/Vendors/jquery-ui-1.10.4.custom.min.css",
+					"skins/Default/Vendors/fullcalendar.min.css",
+					"skins/Default/Vendors/inputosaurus.css"
 				],
 				dest: 'static/css/libs.css'
 			}

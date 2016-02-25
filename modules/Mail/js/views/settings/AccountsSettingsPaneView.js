@@ -96,7 +96,7 @@ function CAccountsSettingsPaneView()
 		},
 		{
 			name: 'filters',
-			title: TextUtils.i18n('MAIL/ACCOUNTS_TAB_FILTERS'),
+			title: TextUtils.i18n('MAIL/LABEL_FILTERS_TAB'),
 			view: AccountFiltersPaneView,
 			visible: this.allowFilters
 		},

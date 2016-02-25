@@ -54,7 +54,7 @@ function CThreadListModel()
 				sText = TextUtils.i18n('HELPDESK/LABEL_ANSWERED_STATE' + sLangSuffix);
 				break;
 			case Enums.HelpdeskThreadStates.Deferred:
-				sText = TextUtils.i18n('HELPDESK/THREAD_STATE_DEFERRED' + sLangSuffix);
+				sText = TextUtils.i18n('HELPDESK/LABEL_DEFERRED_STATE' + sLangSuffix);
 				break;
 		}
 		

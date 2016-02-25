@@ -186,7 +186,7 @@ function InitCustomTooltip(oElement, oCommand)
 }
 
 ko.bindingHandlers.customTooltip = {
-	'init': function (oElement, fValueAccessor) {
+	'update': function (oElement, fValueAccessor) {
 		InitCustomTooltip(oElement, fValueAccessor());
 	}
 };

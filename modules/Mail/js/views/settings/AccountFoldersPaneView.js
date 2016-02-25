@@ -5,16 +5,19 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	TextUtils = require('core/js/utils/Text.js'),
 	Utils = require('core/js/utils/Common.js'),
 	
 	App = require('core/js/App.js'),
 	
 	Popups = require('core/js/Popups.js'),
+	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	CreateFolderPopup = require('modules/Mail/js/popups/CreateFolderPopup.js'),
 	SetSystemFoldersPopup = require('modules/Mail/js/popups/SetSystemFoldersPopup.js'),
 	
-	MailCache = require('modules/Mail/js/Cache.js'),
-	AccountList = require('modules/Mail/js/AccountList.js')
+	AccountList = require('modules/Mail/js/AccountList.js'),
+	Ajax = require('modules/Mail/js/Ajax.js'),
+	MailCache = require('modules/Mail/js/Cache.js')
 ;
 
 require('knockout-sortable');
@@ -110,6 +113,52 @@ CAccountFoldersPaneView.prototype.addNewFolder = function ()
 CAccountFoldersPaneView.prototype.setSystemFolders = function ()
 {
 	Popups.showPopup(SetSystemFoldersPopup);
+};
+
+/**
+ * @param {Object} oFolder
+ */
+CAccountFoldersPaneView.prototype.onSubscribeFolderClick = function (oFolder)
+{
+	var
+		oParameters = {
+			'AccountID': AccountList.editedId(),
+			'Folder': oFolder.fullName(),
+			'SetAction': oFolder.subscribed() ? 0 : 1
+		}
+	;
+
+	if (oFolder && oFolder.canSubscribe())
+	{
+		oFolder.subscribed(!oFolder.subscribed());
+		Ajax.send('SubscribeFolder', oParameters, this.onResponseFolderChanges, this);
+	}
+};
+
+/**
+ * @param {Object} oFolder
+ */
+CAccountFoldersPaneView.prototype.onDeleteFolderClick = function (oFolder)
+{
+	var
+		sWarning = TextUtils.i18n('MAIL/CONFIRM_DELETE_FOLDER'),
+		oFolderList = MailCache.editedFolderList(),
+		fCallBack = _.bind(oFolderList.deleteFolder, oFolderList, oFolder)
+	;
+	
+	if (oFolder && oFolder.canDelete())
+	{
+		Popups.showPopup(ConfirmPopup, [sWarning, fCallBack]);
+	}
+	else
+	{
+		this.highlighted(true);
+	}
+};
+
+CAccountFoldersPaneView.prototype.onResponseFolderChanges = function ()
+{
+	//todo
 };
 
 module.exports = new CAccountFoldersPaneView();
