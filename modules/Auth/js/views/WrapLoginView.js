@@ -8,6 +8,7 @@ var
 	Utils = require('core/js/utils/Common.js'),
 	
 	Ajax = require('core/js/Ajax.js'),
+	App = require('core/js/App.js'),
 	UserSettings = require('core/js/Settings.js'),
 	
 	Settings = require('modules/Auth/js/Settings.js'),
@@ -55,7 +56,7 @@ function CWrapLoginView()
 	this.aLanguages = UserSettings.LanguageList;
 	this.currentLanguage = ko.observable(UserSettings.Language);
 	
-	this.bAllowChangeLanguage = Settings.AllowChangeLanguage;
+	this.bAllowChangeLanguage = Settings.AllowChangeLanguage && !App.isMobile();
 	this.bUseFlagsLanguagesView = Settings.UseFlagsLanguagesView;
 
 	this.sCustomLogoUrl = Settings.CustomLogoUrl;

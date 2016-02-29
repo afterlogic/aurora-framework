@@ -1,20 +1,10 @@
 <div class="panel_top">
-	<div class="toolbar">
-		<span class="content">
-			<span class="item delete" data-bind="">
-				<span class="icon"></span>
-				<span class="text" id="selenium_contacts_delete_group_button"
-					data-bind="i18n: {'key': 'CONTACTS/ACTION_DELETE_GROUP'}, click: function() { $root.deleteGroup(idGroup()); }"></span>
-			</span>
-			<span class="item edit" data-bind="">
-				<span class="icon"></span>
-				<span class="text" data-bind="i18n: {'key': 'CONTACTS/ACTION_EDIT_GROUP'}, click: function (oItem) { $root.editGroup(oItem); }"></span>
-			</span>
-			<span class="item mail_to" data-bind="visible: $root.bAllowComposeMessageToAddresses">
-				<span class="icon"></span>
-				<span class="text" data-bind="i18n: {'key': 'CONTACTS/ACTION_EMAIL_TO_GROUP'}, click: function() { $root.mailGroup($data); }"></span>
-			</span>
-		</span>
+	<div class="buttons">
+		<span class="button clear_button" id="selenium_contacts_delete_group_button" data-bind="i18n: {'key': 'CONTACTS/ACTION_DELETE_GROUP'}, 
+				click: function() { $root.deleteGroup(idGroup()); }"></span>
+		<span class="button clear_button" data-bind="i18n: {'key': 'CONTACTS/ACTION_EDIT_GROUP'}, click: function (oItem) { $root.editGroup(oItem); }"></span>
+		<span class="button" data-bind="visible: $root.bAllowComposeMessageToAddresses, i18n: {'key': 'CONTACTS/ACTION_EMAIL_TO_GROUP'}, 
+				click: function() { $root.mailGroup($data); }"></span>
 	</div>
 	<h2 class="title" data-bind="i18n: {'key': 'CONTACTS/HEADING_VIEW_GROUP'}, visible: !isNew()"></h2>
 </div>

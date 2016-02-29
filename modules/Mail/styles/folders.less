@@ -20,4 +20,62 @@
 		opacity: 1 !important;
 	}
 }
+
+.folders {
+	.title .icon.type1 {
+		&:before {
+			content: "\e616";
+		}
+	}
+	.title .icon.type2 {
+		&:before {
+			content: "\e615";
+		}
+	}
+	.title .icon.type3 {
+		&:before {
+			content: "\e617";
+		}
+	}
+	.title .icon.type4 {
+		&:before {
+			content: "\e614";
+		}
+	}
+	.title .icon.type5 {
+		&:before {
+			content: "\e612";
+		}
+	}
+	.item .icon.type10 {
+		&:before {
+			content: "\e66c";
+		}
+	}
+
+	.title .icon.type7,
+	.selected .title .icon.type7 {
+		&:before {
+			color: #ffb736;
+			content: "\e613";
+			margin-top: -0.1ex;
+		}
+	}
+	
+	.item:not(.virtualEmpty) .title .icon.type7 {
+		text-shadow: none;
+	}
+	
+	.virtualEmpty .title .icon.type7 {
+		&:before {
+			color: #727272 !important;
+		}
+	}
+	.virtualEmpty.selected .title .icon.type7 {
+		&:before {
+			color: #fff !important;
+		}
+	}
+}
+
 /*=== END Folder offsets CSS ===*/

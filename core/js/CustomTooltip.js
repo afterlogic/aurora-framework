@@ -31,7 +31,7 @@ var CustomTooltip = {
 			this._$Region = $('<span class="custom_tooltip"></span>').appendTo('body').hide();
 			this._$ArrowTop = $('<span class="custom_tooltip_arrow top"></span>').appendTo(this._$Region);
 			this._$Text = $('<span class="custom_tooltip_text"></span>').appendTo(this._$Region);
-			this._$ArrowBottom = $('<span class="custom_tooltip_arrow bottom"></span>').appendTo(this._$Region);
+			this._$ArrowBottom = $('<span class="custom_tooltip_arrow bottom_arrow"></span>').appendTo(this._$Region);
 			
 			this._iArrowMarginLeft = Types.pInt(this._$ArrowTop.css('margin-left'));
 			this._iArrowBorderLeft = Types.pInt(this._$ArrowTop.css('border-left-width'));

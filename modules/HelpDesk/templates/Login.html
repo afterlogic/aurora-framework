@@ -57,7 +57,7 @@
 							</div>
 						</div>
 						<div class="row buttons">
-							<button type="submit" class="button send" data-bind="command: forgotCommand, text: forgotButtonText()"></button>
+							<button type="submit" class="button send_button" data-bind="command: forgotCommand, text: forgotButtonText()"></button>
 						</div>
 						<div class="row signme forgot">
 							<span class="link" data-bind="click: function () {gotoForgot(false);}, i18n: {'key': 'HELPDESK/ACTION_GO_BACK'}"></span>
@@ -68,7 +68,7 @@
 			</div>
 
 			<div class="col left">
-				<div class="content send clearfix">
+				<div class="content send_question clearfix">
 					<form class="form fields" action="#/" onsubmit="return false;">
 
 						<div class="fieldset">
@@ -78,7 +78,7 @@
 						</div>
 
 						<div class="row buttons">
-							<button type="submit" class="button send" data-bind="i18n: {'key': 'CORE/ACTION_SEND'}, command: sendCommand"></button>
+							<button type="submit" class="button send_button" data-bind="i18n: {'key': 'CORE/ACTION_SEND'}, command: sendCommand"></button>
 						</div>
 
 						<div class="row links">
@@ -121,7 +121,7 @@
 						</div>
 					</div>
 					<div class="row buttons">
-						<button type="submit" class="button send" data-bind="command: registerCommand, text: regButtonText()"></button>
+						<button type="submit" class="button send_button" data-bind="command: registerCommand, text: regButtonText()"></button>
 					</div>
 					<div class="row signme forgot">
 						<span class="link" data-bind="click: function () {gotoRegister(false);}, i18n: {'key': 'HELPDESK/ACTION_GO_BACK'}"></span>
@@ -153,7 +153,7 @@
 						</div>
 					</div>
 					<div class="row buttons">
-						<button type="submit" class="button send" data-bind="click: actionSocialRegister, text: regButtonText()"></button>
+						<button type="submit" class="button send_button" data-bind="click: actionSocialRegister, text: regButtonText()"></button>
 					</div>
 					<div class="row signme forgot">
 						<span class="link" data-bind="click: function () {gotoSocialRegister(false);}, i18n: {'key': 'HELPDESK/ACTION_GO_BACK'}"></span>
@@ -178,7 +178,7 @@
 						</div>
 					</div>
 					<div class="row buttons">
-						<button type="submit" class="button send" data-bind="click: actionChangepass, text: changepassButtonText()"></button>
+						<button type="submit" class="button send_button" data-bind="click: actionChangepass, text: changepassButtonText()"></button>
 					</div>
 					<div class="row signme forgot">
 						<span class="link" data-bind="click: backToLogin, i18n: {'key': 'HELPDESK/ACTION_BACK_TO_LOGIN'}"></span>

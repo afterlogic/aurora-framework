@@ -1,0 +1,54 @@
+.panel_top {
+	.buttons {
+		float: right;
+		margin: 0;
+
+		.button {
+			margin-right: 5px;
+
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+.panel_center {
+	.buttons {
+		position: relative;
+		z-index: 1;
+		margin: 0px;
+
+		.button {
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			margin: 20px 40px 0px 0px;
+
+			html.rtl & {
+				right: auto;
+				left: 0px;
+				margin-right: 0px;
+				margin-left: 40px;
+			}
+		}
+	}
+}
+
+.panel_bottom {
+	.buttons {
+		text-align: right;
+		margin: 0px 20px;
+		padding: 20px 0px;
+		border-top: 1px solid #D9D9D9;
+
+		html.rtl & {
+			text-align: left;
+		}
+	}
+}
+
+.import .contact_data_groups .buttons {
+	text-align: left;
+	margin-top: 0px;
+}

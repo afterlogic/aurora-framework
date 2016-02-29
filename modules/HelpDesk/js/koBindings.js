@@ -10,7 +10,6 @@ var
 ko.bindingHandlers.quoteText = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
 		var
-			jqEl = $(oElement),
 			jqButton = $('<span class="button_quote">' + TextUtils.i18n('HELPDESK/ACTION_QUOTE') + '</span>'),
 			oOptions = fValueAccessor(),
 			fActionHandler = oOptions.actionHandler,
@@ -19,7 +18,7 @@ ko.bindingHandlers.quoteText = {
 			sText = ''
 		;
 
-		$('#pSevenContent').append(jqButton);
+		$('#auroraContent').append(jqButton);
 
 		$(document.body).on('click', function(oEvent) {
 

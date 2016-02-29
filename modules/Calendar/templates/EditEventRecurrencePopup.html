@@ -1,4 +1,4 @@
-<div class="popup calendar_popup calendar_recurrence" style="display: none;">
+<div class="popup calendar_recurrence" style="display: none;">
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
@@ -6,7 +6,7 @@
 		<div class="buttons">
 			<span class="button success" data-bind="click: onlyThisInstanceButtonClick, text: onlyThisInstanceButtonText"></span>
 			<span class="button success" data-bind="click: allEventsButtonClick, text: allEventsButtonText"></span>
-			<span class="button secondary cancel" data-bind="click: cancelButtonClick, text: cancelPopup"></span>
+			<span class="button secondary cancel" data-bind="click: cancelPopup, text: cancelButtonText"></span>
 		</div>
 	</div>
 	<span class="helper"></span>

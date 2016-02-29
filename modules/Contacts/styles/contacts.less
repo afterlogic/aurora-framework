@@ -1,7 +1,7 @@
 .ContactsLayout .panel_helper {
 	width: 85%;
 }
-.panel.groups {
+.panel.groups_panel {
 	width: 15%;
 
 	.ui-droppable-disabled {
@@ -10,8 +10,7 @@
 }
 
 /*=== Contacts screen CSS ===*/
-.panel.contacts {
-	
+.panel.contacts_panel {
 	.panel_content {
 		margin-right: 0px;
 	}
@@ -31,7 +30,6 @@
 	}
 	
 	.item {
-		
 		.me {
 			background: #F1F1F1;
 			border-radius: 10px 10px 10px 10px;
@@ -115,53 +113,11 @@
 		float: right;
 		margin-top: -25px;
 	}
-	
-	.right_panel {
-		overflow-x: hidden;
-		overflow-y: auto;
-		height: 100%;
-	}
-	
-	.contact_form {
-		border: 3px solid #69A8F5;
-		background: #69A8F5;
-		border-radius: 4px;
-		
-		.contact_content{
-			padding: 20px;
-			background: #fff;
-			border-radius: 2px;
-		}
-		
-		.title{
-			margin-top: 0px;
-			font-weight: normal;
-		}
-		
-		.subtitle {
-			font-size: 11pt;
-			color: #636C78;
-
-		}
-		
-		.buttons {
-			border-top: 0px;
-			margin-top: 0px;
-			padding: 10px 0px 0px;
-		}
-		
-		.value {
-			font-weight: bold;
-			font-size: 12pt;
-		}
-	}
 }
-
 /*=== END Contacts screen CSS ===*/
 
 /*=== Contact viewer CSS ===*/
 .panel.contact_viewer {
-	
 	.panel_content {
 		background: url("images/contacts-bg.png?%VERSION%") repeat 0 0;
 		margin: 0 !important;
@@ -193,17 +149,6 @@
 		background: none;
 		padding: 0px;
 		height: auto;
-		
-		.buttons {
-			text-align: right;
-			margin: 0px 20px;
-			padding: 20px 0px;
-			border-top: 1px solid #D9D9D9;
-			
-			html.rtl & {
-				text-align: left;
-			}
-		}
 	}
 	
 	.contact_content {
@@ -232,70 +177,12 @@
 			font-size: 10.5pt;
 			font-weight: bold;
 		}
-
-//		.fadeout_text(@theme-list-item-bg);
-	}
-
-
-	.toolbar {
-		background: none;
-		filter: none;
-		float: right;
-		padding: 0;
-		border-radius: 0px;
-		border: 0px;
-		
-		html.rtl & {
-			float: left;
-		}
 	}
 	
 	.item.mail_to_title {
 		text-decoration: none;
 		float: left;
 		clear: left;
-	}
-	
-	.panel_center {
-		
-		.buttons {
-			position: relative;
-			z-index: 1;
-			margin: 0px;
-			
-			.button {
-				position: absolute;
-				right: 0px;
-				top: 0px;
-				margin: 20px 40px 0px 0px;
-				
-				html.rtl & {
-					right: auto;
-					left: 0px;
-					margin-right: 0px;
-					margin-left: 40px;
-				}
-			}
-		}
-	}
-	
-	.contact_content .toolbar {
-		margin: 20px 30px 0px 0px;
-	}
-	
-	.toolbar {
-		
-		.content {
-			padding: 0;
-		}
-		
-		.icon {
-			display: none;
-		}
-		
-		.text {
-			display: inline-block;
-		}
 	}
 	
 	.decor {
@@ -306,7 +193,6 @@
 		margin: 0px 20px;
 	}
 }
-
 
 .contact_data_groups {
 	color: #626262;
@@ -383,7 +269,6 @@
 				}
 			}
 		}
-		
 	}
 	
 	.mobile .label,
@@ -422,22 +307,6 @@
 	}
 	
 }
-
-.contact_card {
-	
-	.link.call {
-		margin-left: 4px;
-	}
-	
-	.groups .row {
-		font-size: 9pt;
-	}
-}
-
-.import .contact_data_groups .buttons {
-	text-align: left;
-	margin-top: 0px;
-}
 /*=== END Contact viewer CSS ===*/
 
 /*=== contact popup CSS ===*/
@@ -457,6 +326,5 @@
 		text-align: right;
 		display: block;
 	}
-
 }
 /*=== END contact popup CSS ===*/

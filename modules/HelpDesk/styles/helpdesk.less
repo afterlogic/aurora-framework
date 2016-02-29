@@ -26,12 +26,15 @@
 		}
 	}
 
-	.AgentArea .panel .panel_content {
+	.agent_area .panel .panel_content {
 		.resize_compensation_top(0px);
 	}
 
-	.AgentArea .panel.threads {
-
+	.user_area .panel.threads_panel {
+		.panelClear();
+	}
+		
+	.agent_area .panel.threads_panel {
 		.toolbar {
 			background: none;
 			filter: none;
@@ -90,13 +93,13 @@
 		}
 	}
 
-	.panel.threads .toolbar .checkstate:hover {
+	.panel.threads_panel .toolbar .checkstate:hover {
 		background: none;
 	}
 
-	.UserArea {
+	.user_area {
 
-		.panel.threads .toolbar {
+		.panel.threads_panel .toolbar {
 
 			.new_request {
 				display: inline-block;
@@ -114,11 +117,11 @@
 	}
 }
 
-.panel.threads .middle_bar {
+.panel.threads_panel .middle_bar {
 	.resize_compensation_top(53px);
 	.resize_compensation_bottom(41px);
 
-	.HelpdeskLayout .UserArea & {
+	.HelpdeskLayout .user_area & {
 		.resize_compensation_top(0px);
 		.resize_compensation_bottom(0px);
 
@@ -314,11 +317,6 @@
 			&.expand {
 				position: relative;
 				overflow: visible;
-				.contact_card{
-					&.helpdesk{
-						left: 13px;
-					}
-				}
 			}
 			.text {
 				overflow: hidden;
@@ -663,7 +661,7 @@
 	}
 }
 
-.panel.threads {
+.panel.threads_panel {
 	width: 40%;
 
 	.panel_top .search_block {
@@ -704,7 +702,7 @@
 			color: #606060;
 			font-size: 11pt;
 
-			.HelpdeskLayout .UserArea & {
+			.HelpdeskLayout .user_area & {
 				font-size: 13pt;
 				font-weight: normal;
 			}
@@ -767,10 +765,6 @@
 				border: 1px solid #e0e0e0;
 				box-shadow: 0 2px 2px #E7E7E7 inset;
 			}
-		}
-
-		.pagination {
-			float: right;
 		}
 	}
 }
@@ -867,5 +861,22 @@
 		min-height: 490px;
 		overflow: hidden;
 	}
+}
+
+.button_quote {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+	z-index: 1;
+	cursor: pointer;
+	background-color: #fafafa;
+	border: 1px solid #c5c5c5;
+	border-radius: 4px;
+	font-size: 9pt;
+	text-decoration: none;
+	padding: 4px 6px;
+	color: #626262;
+	font-weight: bold;
 }
 /*=== END Helpdesk screen CSS ===*/

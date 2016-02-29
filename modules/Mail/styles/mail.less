@@ -2,7 +2,7 @@
 	width: 85%;
 }
 /*=== Folders List CSS ===*/
-.panel.folders  {
+.panel.folders_panel  {
 	width: 15%;
 	
 	.middle_bar {
@@ -43,8 +43,7 @@
 /*=== END Folders List CSS ===*/
 
 /*=== Message List CSS ===*/
-.messages {
-	
+.messages_panel {
 	.middle_bar {
 		.resize_compensation_top(39px);
 		.resize_compensation_bottom(47px);
@@ -291,7 +290,33 @@
 	}
 }
 
-.messages .items_list .not_use_threads .item {
+.messages_panel .items_list .item {
+	.from {
+		margin-bottom: 6px !important;
+	}
+	.thread {
+		margin-top: 2px !important;
+	}
+}
+
+@media
+	only screen and (-webkit-min-device-pixel-ratio: 1.3),
+    only screen and (-moz-min-device-pixel-ratio: 1.3),
+    only screen and (~"-o-min-device-pixel-ratio: 1.3 / 1"),
+    only screen and (min-resolution: 1.3dppx),
+    only screen and (min-resolution: 125dpi)
+{
+	.file .icon,
+	.messages_panel .items_list .item .marker,
+	.panel.files .items_list .folder .icon,
+	.html_editor .toolbar .item .icon
+	{
+		background-image: url("images/sprites2x.png?%VERSION%");
+		background-size: 1440px 560px;
+	}
+}
+
+.messages_panel .items_list .not_use_threads .item {
 	& .thread_loading,
 	&.thread_more_messages,
 	& .thread {
@@ -303,6 +328,15 @@
 
 /*=== Message viewer CSS ===*/
 .message_viewer {
+	.customscroll-scrollbar-vertical {
+		margin-right: -2px;
+	}
+
+	.has_attachments {
+		.customscroll-scrollbar-vertical {
+			margin-right: -@pannels-overlap-offset;
+		}
+	}
 	
 	.panel_center {
 		.box-sizing;
@@ -608,45 +642,23 @@
 			color: #929292;
 			padding-left: 5px;
 		}
-
-		.buttons {
-			display: inline-block;
-			margin-top: 7px;
-
-			.button {
-				margin-right: 5px;
-			}
-
-			&.animation .button {
-				.transition(~"opacity 200ms ease, background 200ms ease, color 200ms ease");
-			}
-
-			&.touched .button {
-				opacity: 0.4;
-
-				&:hover,
-				&.state {
-					opacity: 1;
-				}
-			}
-		}
 	}
 	
 	.panels.has_attachments {
 		padding-right: 170px;
 		
-		.left_panel {
+		.message_panel {
 			border-right: 1px solid #E2E2E2;
 		}
 	}
 	
-	.left_panel {
+	.message_panel {
 		box-shadow: none;
 		border-radius: 0px;
 		width: 100%;
 	}
 	
-	.right_panel {
+	.attachments_panel {
 		box-shadow: none;
 		width: 170px;
 		margin-right: -170px;
@@ -692,9 +704,7 @@
 }
 /*=== END Message viewer CSS ===*/
 
-
-.messages {
-	
+.messages_panel {
 	.middle_bar {
 		.transition(~"margin-top 500ms ease 0ms, padding-top 500ms ease 0ms");
 		

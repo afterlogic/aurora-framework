@@ -12,7 +12,7 @@
 			</div>
 
 			<div class="panels" data-bind="splitter: {name: 'compose_attachments', sizeRight: 250, minLeft: 645, minRight: 250, resizeToWidth: true}, initDom: splitterDom">
-				<div class="panel left_panel">
+				<div class="panel message_panel">
 					<div class="resize_handler"></div>
 					<div class="panel_content">
 						<div class="middle_bar" data-bind="heightAdjust: {'location': 'bottom', 'delay': '0', 'elements': [messageFields, bottomPanel], 'triggers': [visibleBcc(), visibleCc(), toAddr(), bccAddr(), notInlineAttachments(), senderList(), headersCompressed()]}">

@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = function (oSettings) {
+	require('modules/Calendar/js/koBindings.js');
 	require('modules/Calendar/js/enums.js');
 	require('fullcalendar');
 	require('modules/Calendar/js/MainTabExtMethods.js');

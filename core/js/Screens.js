@@ -179,7 +179,7 @@ CScreens.prototype.initView = function (sScreenId, fGetScreen)
 	
 	if (oScreen.ViewTemplate)
 	{
-		var $templatePlace = $('<!-- ko template: { name: \'' + oScreen.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'));
+		var $templatePlace = $('<!-- ko template: { name: \'' + oScreen.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#auroraContent .screens'));
 		if ($templatePlace.length > 0)
 		{
 			ko.applyBindings(oScreen, $templatePlace[0]);
@@ -203,7 +203,7 @@ CScreens.prototype.showAnyView = function (oView)
 {
 	if (oView.ViewTemplate)
 	{
-		var $templatePlace = $('<!-- ko template: { name: \'' + oView.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#pSevenContent .screens'));
+		var $templatePlace = $('<!-- ko template: { name: \'' + oView.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#auroraContent .screens'));
 		if ($templatePlace.length > 0)
 		{
 			ko.applyBindings(oView, $templatePlace[0]);

@@ -380,7 +380,7 @@ function CComposeView()
 
 	this.minHeightAdjustTrigger = ko.observable(false).extend({'autoResetToFalse': 105});
 	this.minHeightRemoveTrigger = ko.observable(false).extend({'autoResetToFalse': 105});
-	this.jqContainers = $('.pSevenMain:first, .popup.compose_popup');
+	this.jqContainers = $('.auroraMain:first, .popup.compose_popup');
 	
 	this.hasSomethingToSave = ko.computed(function () {
 		return this.isChanged() && this.isEnableSaving();
@@ -503,7 +503,7 @@ CComposeView.prototype.onBind = function ()
 		}, 200);
 	}, this);
 	
-	this.jqContainers = $('.pSevenMain:first, .popup.compose_popup');
+	this.jqContainers = $('.auroraMain:first, .popup.compose_popup');
 	
 	(this.$popupDom || this.$viewDom).find('.panel_content').on('resize', _.debounce(_.bind(function () {
 		this.oHtmlEditor.resize();

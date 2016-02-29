@@ -25,7 +25,7 @@ function CPhoneView()
 	this.logs = ko.observableArray([]);
 	this.logsToShow = ko.observableArray([]);
 	this.spinner = ko.observable(true);
-	this.tooltip = ko.observable(TextUtils.i18n('PHONE/INFO_NOT_CONNECTED'));
+	this.statusText = ko.observable(TextUtils.i18n('PHONE/INFO_NOT_CONNECTED'));
 	this.indicator = ko.observable(TextUtils.i18n('PHONE/INFO_MISSED_CALLS'));
 	this.dropdownShow = ko.observable(false);
 	this.input = ko.observable('');
@@ -45,18 +45,18 @@ function CPhoneView()
 		switch (sAction)
 		{
 			case Enums.PhoneAction.Offline:
-				this.tooltip(TextUtils.i18n('PHONE/INFO_NOT_CONNECTED'));
+				this.statusText(TextUtils.i18n('PHONE/INFO_NOT_CONNECTED'));
 				break;
 			case Enums.PhoneAction.OfflineError:
-				this.tooltip(TextUtils.i18n('PHONE/ERROR_CONNECTION'));
+				this.statusText(TextUtils.i18n('PHONE/ERROR_CONNECTION'));
 				break;
 			case Enums.PhoneAction.OfflineInit:
-				this.tooltip(TextUtils.i18n('PHONE/INFO_CONNECTING'));
+				this.statusText(TextUtils.i18n('PHONE/INFO_CONNECTING'));
 				break;
 			case Enums.PhoneAction.OfflineActive:
 				break;
 			case Enums.PhoneAction.Online:
-				this.tooltip(TextUtils.i18n('PHONE/INFO_CONNECTED'));
+				this.statusText(TextUtils.i18n('PHONE/INFO_CONNECTED'));
 				this.input('');
 				this.report('');
 				this.timer('stop');
@@ -67,12 +67,12 @@ function CPhoneView()
 				this.timer('start');
 				break;
 			case Enums.PhoneAction.OutgoingConnect:
-				this.tooltip(TextUtils.i18n('PHONE/INFO_IN_CALL'));
+				this.statusText(TextUtils.i18n('PHONE/INFO_IN_CALL'));
 				break;
 			case Enums.PhoneAction.Incoming:
 				break;
 			case Enums.PhoneAction.IncomingConnect:
-				this.tooltip(TextUtils.i18n('PHONE/INFO_IN_CALL'));
+				this.statusText(TextUtils.i18n('PHONE/INFO_IN_CALL'));
 				this.report('');
 				this.timer('start');
 				break;

@@ -1,4 +1,4 @@
-<span class="item phone" data-bind="css: {
+<span class="item phone_block" data-bind="css: {
 		'init':		(action() === Enums.PhoneAction.OfflineInit),
 		'error':	(action() === Enums.PhoneAction.OfflineError),
 		'offline':	(action() === Enums.PhoneAction.Offline || action() === Enums.PhoneAction.OfflineActive || action() === Enums.PhoneAction.OfflineInit || action() === Enums.PhoneAction.OfflineError),
@@ -16,7 +16,7 @@
 		<input class="input" spellcheck="false" data-bind="value: input, hasfocus: inputFocus, onEnter: multiAction, valueUpdate: ['blur', 'afterkeydown'], autocompleteSimple: {callback: autocompleteCallback.bind($data), dataAccessor: phoneAutocompleteItem}" />
 
 		<span class="buttons">
-			<span class="button" data-bind="customTooltip: tooltip, click: multiAction, css: {'hangup': action() === 'connected_out' || action() === 'connected_in'}">
+			<span class="button" data-bind="customTooltip: statusText, click: multiAction, css: {'hangup': action() === 'connected_out' || action() === 'connected_in'}">
 				<span class="icon"></span>
 			</span>
 		</span>

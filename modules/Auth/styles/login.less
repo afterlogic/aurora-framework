@@ -99,7 +99,7 @@
 				width: 260px;
 			}
 
-			&.send {
+			&.send_question {
 				.transform(rotateY(0deg));
 
 				.question {
@@ -125,13 +125,8 @@
 				text-align: center;
 			}
 
-			&.social_register .fieldset,
-			&.send .fieldset {
-//				margin-top: 20px;
-			}
-
 			&.social_register .question_title,
-			&.send .question_title {
+			&.send_question .question_title {
 				display: block;
 				font-size: 11pt;
 				color: #929292;
@@ -161,14 +156,13 @@
 	}
 		
 	&.flipForgot .content.login,
-	&.flipChangepass .content.send,
-		//&.flipForgot .content.send,
+	&.flipChangepass .content.send_question,
 	&.flipRegister .content.login,
-	&.flipRegister .content.send,
+	&.flipRegister .content.send_question,
 	&.flipRegister.flipForgot .content.forgot,
 	&.flipSignin .content.login,
 	&.flipSocialRegister .content.login,
-	&.flipSocialRegister .content.send,
+	&.flipSocialRegister .content.send_question,
 	&.flipActivation .content.login,
 	&.flipChangepass .content.login {
 		.transform(rotateY(180deg));
@@ -191,19 +185,6 @@
 		visibility: visible;
 		opacity: 1;
 		margin-top: 0px;
-	}
-	
-	.languages {
-		position: fixed;
-		top: 20px;
-		right: 20px;
-		border-radius: 5px;
-		padding: 10px 16px;
-		
-		html.rtl & {
-			right: auto;
-			left: 20px;
-		}
 	}
 	
 	.description {
@@ -386,24 +367,6 @@
 		}
 	}
 
-	.buttons {
-		padding: 0px;
-		margin-top: 20px;
-		border: 0px;
-		background: none;
-
-		.button{
-			display: block;
-			padding: 10px;
-			font-size: 12pt;
-			width: 100%;
-		}
-
-		.button:focus {
-			border: 1px solid #eee;
-		}
-	}
-	
 	.signme,
 	.links {
 		font-size: 9pt;

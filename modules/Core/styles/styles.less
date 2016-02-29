@@ -1,12 +1,12 @@
 /*=== Common css part ===*/
-@import "@mixins.less";
-@import "@theme.less";
-@import "text-fade.less";
-@import "fonts.less";
+@import "./common/@mixins.less";
+@import "./common/@theme.less";
+@import "./common/text-fade.less";
+@import "./common/fonts.less";
 
 /*=== Library part ===*/
-@import "helpers.less";
-@import "keyframes.less";
+@import "./common/helpers.less";
+@import "./common/keyframes.less";
 @import "grid.less";
 	
 /* Controls */
@@ -19,20 +19,19 @@
 @import "./controls/jquery-ui-overrides.less";
 
 @import "attachments.less";
-@import "notifications.less";
-@import "popups.less";
-@import "files.less";
+@import "./common/notifications.less";
+@import "./common/popups.less";
+@import "./common/files.less";
 
 /*=== Common blocks part ===*/
-@import "search-block.less";
-@import "phone-block.less";
-@import "contact-card.less";
+@import "./common/search-block.less";
 @import "quick-reply.less";
-@import "tabsbar.less";
-@import "volumer.less";
-@import "blockquote.less";
+@import "./common/tabsbar.less";
+@import "./common/volumer.less";
+@import "custom-tooltip.less";
 
 /*=== Screen overrides part ===*/
+@import "./common/base.less";
 @import "base.less";
 
 /*=== Develop part ===*/

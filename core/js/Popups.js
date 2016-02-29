@@ -14,7 +14,7 @@ var
 function CPopups()
 {
 	this.popups = [];
-	this.$popupsPlace = $('#pSevenContent .popups');
+	this.$popupsPlace = $('#auroraContent .popups');
 }
 
 CPopups.prototype.hasOpenedMinimizedPopups = function ()

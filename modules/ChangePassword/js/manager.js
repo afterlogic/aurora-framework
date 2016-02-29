@@ -8,6 +8,9 @@ module.exports = function (oSettings) {
 	return {
 		getChangePasswordPopup: function () {
 			return require('modules/ChangePassword/js/popups/ChangePasswordPopup.js');
+		},
+		getResetPasswordView: function () {
+			return require('modules/ChangePassword/js/views/ResetPasswordView.js');
 		}
 	};
 };

@@ -16,45 +16,39 @@
 		
 		.transition(background 200ms ease 0s);
 		
-		& {
-			//6FA8DE
-			@background: #81C54B; 
-			@border: 1px solid darken(@background, 10%);
-			@textShadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
-			@textColor: #fff;
-			
-			background: @background;
-			border: @border;
-			color: @textColor;
-			text-shadow: @textShadow;
-			
-			&:hover {
-				background: darken(@background, 5%);
-			}
-		
-			&.disabled {
-				color: mix(@background, #fff, 50%);
-				text-shadow: none !important;
-				cursor: default;
+		@background: #81C54B; 
+		@border: 1px solid darken(@background, 10%);
+		@textShadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+		@textColor: #fff;
 
-				&:hover {
-					background: @background;
-				}
-			}
-			
-			.primaryButton();
+		background: @background;
+		border: @border;
+		color: @textColor;
+		text-shadow: @textShadow;
+
+		&:hover {
+			background: darken(@background, 5%);
 		}
+
+		&.disabled {
+			color: mix(@background, #fff, 50%);
+			text-shadow: none !important;
+			cursor: default;
+
+			&:hover {
+				background: @background;
+			}
+		}
+
+		.primaryButton();
 		
 		&.secondary {
-			@background: #E3B856;
-			@border: 1px solid darken(@background, 10%);
-			@textColor: #fff;
-			@textShadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+			.secondaryButton();
 			
 			background: @background;
-			border: @border;
-			color: @textColor;
-			text-shadow: @textShadow;
+			border: 1px solid darken(@background, 10%);
+			color: #fff;
+			text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 			
 			&:hover {
 				background: darken(@background, 5%);
@@ -68,7 +62,6 @@
 				}
 			}
 			
-			.secondaryButton();
 		}
 		
 		&.special {
@@ -118,6 +111,34 @@
 			}
 			
 			.stateButton();
+		}
+		
+		&.clear_button {
+			background: transparent;
+			border: none;
+			color: #7f7f7f;
+			text-shadow: none;
+			padding: 5px 7px;
+		}
+		
+		&.send_button {
+			background: none repeat scroll 0 0 #88CF50;
+			border: 1px solid #7BBE45;
+			border-radius: 5px;
+			color: #FFFFFF;
+			display: inline-block;
+			font-size: 13pt;
+			font-weight: bold;
+			padding: 10px 30px;
+			box-shadow: none;
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+			margin: 10px 11px;
+			cursor: pointer;
+			
+			&.disabled {
+				cursor: default;
+				opacity: 0.5;
+			}
 		}
 	}
 	

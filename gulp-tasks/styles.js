@@ -3,6 +3,7 @@ var
 	argv = require('./argv.js'),
 	buffer = require('vinyl-buffer'),
 	del = require('delete'),
+	fileExists = require('file-exists'),
 	gulp = require('gulp'),
 	less = require('gulp-less'),
 	source = require('vinyl-source-stream')
@@ -15,7 +16,10 @@ gulp.task('styles', function () {
 	;
 	
 	_.each(aModulesNames, function (sModuleName) {
-		stream.write('@import "./modules/' + sModuleName + '/styles/styles.less";\r\n');
+		if (fileExists('./modules/' + sModuleName + '/styles/styles.less'))
+		{
+			stream.write('@import "./modules/' + sModuleName + '/styles/styles.less";\r\n');
+		}
 	});
 	
 	process.nextTick(function() {

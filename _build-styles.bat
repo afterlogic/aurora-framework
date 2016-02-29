@@ -1,1 +1,1 @@
-@gulp styles --modules Mail
+@gulp styles --modules Auth,Calendar,ChangePassword,Contacts,Files,HelpDesk,Mail,MailSensitivity,MobileSync,OpenPgp,OutlookSync,Phone,Settings

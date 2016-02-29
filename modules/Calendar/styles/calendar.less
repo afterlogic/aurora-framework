@@ -20,7 +20,7 @@
 }
 
 /*=== Calendar manager CSS ===*/
-.panel.calendar_manager {
+.panel.calendars_panel {
 	width: 20%;
 	
 	.panel_top {
@@ -706,7 +706,6 @@ fc-month-view .fc-content,
 
 /*=== Calendar Popups CSS ===*/
 .popup.calendar_popup {
-	
 	.mask {
 		background: #000;
 	}
@@ -778,36 +777,6 @@ fc-month-view .fc-content,
 		}
 	}
 	
-	.buttons {
-		margin: 16px 0px 0px;
-		padding-top: 20px;
-		border-top: 1px solid #e2e2e2;
-
-		&.without_border_top {
-			border-top: 0;
-		}
-		
-		.button {
-			float: left;
-			margin-right: 6px;
-			
-			html.rtl & {
-				float: right;
-				margin-right: 0px;
-				margin-left: 6px;
-			}
-		}
-		
-		.colors {
-			display: inline-block;
-			margin-top: 4px;
-			
-			.item {
-				display: inline-block;
-			}
-		}
-	}
-
 	.dropdown .dropdown_arrow span {
 		top: 1px;
 	}
@@ -816,7 +785,11 @@ fc-month-view .fc-content,
 
 .popup.calendar_create,
 .popup.calendar_event {
-
+	.autosize {
+		overflow: hidden;
+		resize: none;
+	}
+	
 	.fieldset.main {
 		margin-left: -8px;
 	}
@@ -1113,18 +1086,6 @@ fc-month-view .fc-content,
 		}
 	}
 		
-	.buttons {
-		text-align: left;
-
-		html.rtl & {
-			text-align: right;
-		}
-
-		.button {
-			float: none;
-		}
-	}
-	
 	.additional_buttons {
 		margin-top: 4px;
 		float: right;
@@ -1342,7 +1303,7 @@ fc-month-view .fc-content,
 				float: right;
 			}
 
-			.custom_selector{
+			.custom_selector {
 				display: inline-block;
 				position: relative;
 				vertical-align: middle;
@@ -1685,4 +1646,3 @@ fc-month-view .fc-content,
 	-webkit-line-clamp: 3;//number of lines to show
 	-webkit-box-orient: vertical;
 }
-

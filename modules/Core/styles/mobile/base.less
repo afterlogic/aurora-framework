@@ -1,0 +1,52 @@
+html {
+	&.non-adjustable {
+		height: auto;
+		min-height: 100%;
+	}
+}
+
+body {
+	html.screen-login-helpdesk &,
+	html.screen-login-langblock & {
+		min-height: 580px;
+	}
+	
+	html.screen-login-langblock.screen-login-description & {
+		min-height: 734px;
+	}
+	
+	html.non-adjustable & {
+		height: auto;
+		min-height: inherit;
+		min-height: 100%;
+		overflow: visible;
+	}
+	
+	html.non-adjustable-valign & {
+		min-height: inherit;
+	}
+}
+
+.auroraMain {
+	html.non-adjustable-valign & {
+		overflow: auto;
+	}
+	
+	position: relative;
+}
+
+.scroll-inner {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.panel.center_panel {
+	.customscroll-scrollbar-vertical {
+		margin-right: 6px;
+
+		html.rtl & {
+			margin-right: 0px;
+			margin-left: 6px;
+		}
+	}
+}

@@ -1,0 +1,74 @@
+.popup.calendar_popup {
+	.buttons {
+		margin: 16px 0px 0px;
+		padding-top: 20px;
+		border-top: 1px solid #e2e2e2;
+
+		&.without_border_top {
+			border-top: 0;
+		}
+		
+		.button {
+			float: left;
+			margin-right: 6px;
+			
+			html.rtl & {
+				float: right;
+				margin-right: 0px;
+				margin-left: 6px;
+			}
+		}
+		
+		.colors {
+			display: inline-block;
+			margin-top: 4px;
+			
+			.item {
+				display: inline-block;
+			}
+		}
+	}
+}
+
+.popup.calendar_select,
+.popup.calendar_event {
+	.buttons {
+		text-align: left;
+
+		html.rtl & {
+			text-align: right;
+		}
+
+		.button {
+			float: none;
+		}
+	}
+}
+
+.appointment {
+	.buttons {
+		display: inline-block;
+		margin-top: 7px;
+
+		.button {
+			margin-right: 5px;
+
+			&.state {
+				padding: 4px 8px;
+			}
+		}
+
+		&.animation .button {
+			.transition(~"opacity 200ms ease, background 200ms ease, color 200ms ease");
+		}
+
+		&.touched .button {
+			opacity: 0.4;
+
+			&:hover,
+			&.state {
+				opacity: 1;
+			}
+		}
+	}
+}

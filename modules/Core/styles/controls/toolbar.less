@@ -21,8 +21,7 @@
 		font-size: 0.1px;
 		padding: 11px;
 
-		& > .item,
-		.group > .item {
+		& > .item {
 			@background: #fafafa;
 			
 			display: inline-block;
@@ -116,11 +115,8 @@
 
 			&.passive,
 			&.passive:hover {
-				//color: #888888;
 				cursor: default;
 				box-shadow: none;
-				//background: inherit;
-				//border: inherit;
 				
 				.text {
 					color: inherit;
@@ -238,7 +234,7 @@
 	
 	.group,
 	.item {
-		@import "_toolbar_icons.less";
+		@import "toolbar-icons.less";
 	}
 	
 	.theme-common-panel-toolbar();
@@ -249,10 +245,10 @@
 }
 
 .mobile {
-	.messages .panel_top .search_block {
+	.messages_panel .panel_top .search_block {
 		padding-right: 58px;
 	}
-	.messages .panel_top .toolbar {
+	.messages_panel .panel_top .toolbar {
 		background: none;
 		border: 0;
 		border-radius: 0;

@@ -1993,8 +1993,8 @@ class CApiIntegratorManager extends AApiManager
 		
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
 
-		return '<div class="pSevenMain">
-	<div id="pSevenContent">
+		return '<div class="auroraMain">
+	<div id="auroraContent">
 		<div class="screens"></div>
 		<div class="popups"></div>
 	</div>
