@@ -575,12 +575,6 @@ CComposeView.prototype.getMessageOnRoute = function ()
  */
 CComposeView.prototype.onShow = function ()
 {
-	if (App.isNewTab())
-	{
-		var AppTab = require('core/js/AppTab.js');
-		AppTab.changeFavicon('favicon-single-compose.ico');
-	}
-	
 	var sFocusedField = this.focusedField();
 
 	$(this.splitterDom()).trigger('resize');
