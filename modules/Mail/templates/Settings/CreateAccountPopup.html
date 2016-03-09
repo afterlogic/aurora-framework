@@ -51,12 +51,12 @@
 			</div>
 
 			<div class="buttons">
-				<span class="button save" data-bind="i18n: {'key': 'MAIL/ACTION_ADD'}, click: onFirstSaveClick, visible: !loading() && isFirstStep()"
+				<span class="button" data-bind="i18n: {'key': 'MAIL/ACTION_ADD'}, click: onFirstSaveClick, visible: !loading() && isFirstStep()"
 					  id="selenium_settings_create_account_add_button"></span>
-				<span class="button save" data-bind="i18n: {'key': 'MAIL/ACTION_ADD_IN_PROGRESS'}, visible: loading() && isFirstStep()"></span>
-				<span class="button save" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: onSecondSaveClick, visible: !loading() && !isFirstStep()"></span>
-				<span class="button save" data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: loading() && !isFirstStep()"></span>
-				<span class="button cancel secondary" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
+				<span class="button" data-bind="i18n: {'key': 'MAIL/ACTION_ADD_IN_PROGRESS'}, visible: loading() && isFirstStep()"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: onSecondSaveClick, visible: !loading() && !isFirstStep()"></span>
+				<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: loading() && !isFirstStep()"></span>
+				<span class="button secondary_button" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>
 	</div>

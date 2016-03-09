@@ -1,3 +1,22 @@
+.button_mixin(@background) {
+	background: @background;
+    border: 1px solid darken(@background, 10%);
+    color: #ffffff;
+	text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+	
+	&:hover {
+		background: darken(@background, 5%);
+	}
+
+	&.disabled {
+		color: mix(@background, #fff, 50%);
+
+		&:hover {
+			background: @background;
+		}
+	}
+}
+
 .buttons {
     margin-top: 15px;
     text-align: right;
@@ -7,133 +26,39 @@
 	}
 	
 	.button {
+		border-radius: 4px;
+		cursor: pointer;
 		display: inline-block;
 		font: bold 10pt Helvetica,Tahoma,Arial,sans-serif;
 		padding: 5px 12px;
-		cursor: pointer;
-		border-radius: 4px;
 		text-align: center;
+		
+		&.disabled {
+			cursor: default;
+			text-shadow: none !important;
+		}
 		
 		.transition(background 200ms ease 0s);
 		
-		@background: #81C54B; 
-		@border: 1px solid darken(@background, 10%);
-		@textShadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
-		@textColor: #fff;
-
-		background: @background;
-		border: @border;
-		color: @textColor;
-		text-shadow: @textShadow;
-
-		&:hover {
-			background: darken(@background, 5%);
-		}
-
-		&.disabled {
-			color: mix(@background, #fff, 50%);
-			text-shadow: none !important;
-			cursor: default;
-
-			&:hover {
-				background: @background;
-			}
-		}
-
-		.primaryButton();
+		.button_mixin(@theme-buttons-primary-background);
 		
-		&.secondary {
-			.secondaryButton();
-			
-			background: @background;
-			border: 1px solid darken(@background, 10%);
-			color: #fff;
-			text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
-			
-			&:hover {
-				background: darken(@background, 5%);
-			}
-			
-			&.disabled {
-				color: mix(@background, #fff, 50%);
-				
-				&:hover {
-					background: @background;
-				}
-			}
-			
-		}
-		
-		&.special {
-			@background: #6FA8DE;
-			@border: 1px solid darken(@background, 10%);
-			@textColor: #fff;
-			@textShadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
-			
-			background: @background;
-			border: @border;
-			color: @textColor;
-			text-shadow: @textShadow;
-			
-			&:hover {
-				background: darken(@background, 5%);
-			}
-			
-			&.disabled {
-				color: mix(@background, #fff, 50%);
-				
-				&:hover {
-					background: @background;
-				}
-			}
-			
-			.specialButton();
-		}
-		
-		&.state {
-			@background: #FFFFFF;
-			@border: 1px solid #6FA8DE;
-			@textColor: #4F88BE;
-			
-			text-shadow: none;
-			cursor: default;
-			
-			background: @background;
-			border: @border;
-			color: @textColor;
-			
-			&.disabled {
-				color: mix(@background, #000, 50%);
-				
-				&:hover {
-					background: @background;
-				}
-			}
-			
-			.stateButton();
-		}
-		
-		&.clear_button {
-			background: transparent;
-			border: none;
-			color: #7f7f7f;
-			text-shadow: none;
-			padding: 5px 7px;
+		&.secondary_button {
+			.button_mixin(@theme-buttons-secondary-background);
 		}
 		
 		&.send_button {
 			background: none repeat scroll 0 0 #88CF50;
 			border: 1px solid #7BBE45;
 			border-radius: 5px;
+			box-shadow: none;
 			color: #FFFFFF;
+			cursor: pointer;
 			display: inline-block;
 			font-size: 13pt;
 			font-weight: bold;
-			padding: 10px 30px;
-			box-shadow: none;
-			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 			margin: 10px 11px;
-			cursor: pointer;
+			padding: 10px 30px;
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 			
 			&.disabled {
 				cursor: default;
@@ -141,6 +66,4 @@
 			}
 		}
 	}
-	
-	.theme-buttons();
 }

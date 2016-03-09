@@ -34,11 +34,11 @@
 					</div>
 					<div class="row" data-bind="visible: isAppointmentButtonsVisible">
 						<div class="buttons">
-							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ACCEPT_APPOINTMENT'}, css: {'state': attenderStatus() === Enums.IcalConfigInt.Accepted},
+							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ACCEPT_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Accepted},
 									click: function(){ setAppointmentAction(Enums.IcalConfig.Accepted); }"></span>
-							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_TENTATIVE_APPOINTMENT'}, css: {'state': attenderStatus() === Enums.IcalConfigInt.Tentative},
+							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_TENTATIVE_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Tentative},
 									click: function(){ setAppointmentAction(Enums.IcalConfig.Tentative); }"></span>
-							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_DECLINE_APPOINTMENT'}, css: {'state': attenderStatus() === Enums.IcalConfigInt.Declined},
+							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_DECLINE_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Declined},
 									click: function(){ setAppointmentAction(Enums.IcalConfig.Declined); }"></span>
 						</div>
 					</div>
@@ -287,7 +287,7 @@
 								<span class="arrow"></span>
 							</span>
 						</div>
-						<span class="button save" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: onSaveClick, visible: isEditable() || isEditableReminders()"></span>
+						<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: onSaveClick, visible: isEditable() || isEditableReminders()"></span>
 						<span class="link remove" data-bind="i18n: {'key': 'CORE/ACTION_REMOVE'}, click: onDeleteClick, visible: isEditForm() && isEditable()"></span>
 					</div>
 

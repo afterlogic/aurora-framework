@@ -38,35 +38,8 @@
 	//@fontSize: ;
 }
 
-.theme-buttons() {
-	.primaryButton() {
-		@background: #81C54B; 
-		@textShadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
-		@textColor: #fff;
-		//@background:; 
-		//@border:;
-		//@textShadow:;
-		//@textColor:;
-	}
-
-	.secondaryButton() {
-		@background: #A7AFB9;
-		//@border:;
-		//@textColor:;
-	}
-	
-	.specialButton() {
-		//@background:;
-		//@border:;
-		//@textColor
-	}
-
-	.stateButton() {
-		//@background:;
-		//@border:;
-		//@textColor:;
-	}
-}
+@theme-buttons-primary-background: #81C54B;
+@theme-buttons-secondary-background: #A7AFB9;
 
 .theme-panel() {
 	
@@ -96,15 +69,11 @@
 		
 		&.send_button,
 		&.mailto_button {
-			@background: #D59C7A;
-			@border: 1px solid darken(@background, 10%);
-			@textColor: #fff;
-			.theme-buttons > .primaryButton();
+			@background: @theme-buttons-primary-background;
 			
 			background: @background;
-			border: @border;
-			color: @textColor;
-			
+			border: 1px solid darken(@background, 10%);
+			color: #fff;
 			padding-left: 20px;
 			padding-right: 20px;
 		}
@@ -126,14 +95,11 @@
 		
 		&.send_button,
 		&.mailto_button {
-			@background: #D59C7A;
-			@border: 1px solid darken(@background, 10%);
-			@textColor: #fff;
-			.theme-buttons > .primaryButton();
+			@background: @theme-buttons-primary-background;
 			
 			background: darken(@background, 5%);
 			border: 1px solid darken(@background, 15%);
-			color: @textColor;
+			color: #fff;
 		}
 		
 		&.new_window,

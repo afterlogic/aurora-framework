@@ -53,8 +53,20 @@
 		.button {
 			margin-right: 5px;
 
-			&.state {
-				padding: 4px 8px;
+			&.selected_button {
+				background: #FFFFFF;
+				border: 1px solid #6FA8DE;
+				color: #4F88BE;
+				cursor: default;
+				text-shadow: none;
+
+				&.disabled {
+					color: mix(#FFFFFF, #000, 50%);
+
+					&:hover {
+						background: #FFFFFF;
+					}
+				}
 			}
 		}
 
@@ -66,7 +78,7 @@
 			opacity: 0.4;
 
 			&:hover,
-			&.state {
+			&.selected_button {
 				opacity: 1;
 			}
 		}

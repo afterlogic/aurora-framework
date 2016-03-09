@@ -4,9 +4,9 @@
 			<div data-bind="visible: lastModification">
 				<div class="buttons" data-bind="visible: visibleRequestButtons,
 					css: {'touched': isAccepted() || isTentative() || isDeclined(), 'animation': animation}">
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ACCEPT_APPOINTMENT'}, css: {'state': isAccepted}, click: acceptAppointment"></span>
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_TENTATIVE_APPOINTMENT'}, css: {'state': isTentative}, click: tentativeAppointment"></span>
-				<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_DECLINE_APPOINTMENT'}, css: {'state': isDeclined}, click: declineAppointment"></span>
+					<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ACCEPT_APPOINTMENT'}, css: {'selected_button': isAccepted}, click: acceptAppointment"></span>
+					<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_TENTATIVE_APPOINTMENT'}, css: {'selected_button': isTentative}, click: tentativeAppointment"></span>
+					<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_DECLINE_APPOINTMENT'}, css: {'selected_button': isDeclined}, click: declineAppointment"></span>
 				</div>
 			</div>
 			<div data-bind="visible: isRequestType() && !lastModification()">

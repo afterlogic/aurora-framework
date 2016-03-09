@@ -25,10 +25,10 @@
 	</div>
 	<div class="buttons" data-bind="visible: !loading()">
 		<span class="button addlink" data-bind="i18n: {'key': 'MAIL/ACTION_ADD_FILTER'}, click: addFilter"></span>
-		<span class="button save" data-bind="click: save, visible: !isSaving()">
+		<span class="button" data-bind="click: save, visible: !isSaving()">
 			<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}"></span>
 		</span>
-		<span class="button save" data-bind="visible: isSaving()">
+		<span class="button" data-bind="visible: isSaving()">
 			<span data-bind="i18n: {'key': 'MAIL/INFO_SAVING'}"></span>
 		</span>
 	</div>
