@@ -1,6 +1,8 @@
 'use strict';
 
 var
+	_ = require('underscore'),
+	
 	Types = require('core/js/utils/Types.js'),
 	
 	LinksUtils = {}
@@ -227,7 +229,7 @@ LinksUtils.parseToAddr = function (mToAddr)
 				var aParts = sPart.split('=');
 				if (aParts.length === 2)
 				{
-					switch (aParts[0])
+					switch (aParts[0].toLowerCase())
 					{
 						case 'subject': sSubject = aParts[1]; break;
 						case 'cc': sCcAddr = aParts[1]; break;

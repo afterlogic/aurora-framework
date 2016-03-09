@@ -999,7 +999,7 @@ CMessagePaneView.prototype.onBind = function ($MailViewDom)
 			var sHref = $(this).attr('href');
 			if (sHref && 'mailto:' === sHref.toString().toLowerCase().substr(0, 7))
 			{
-				ComposeUtils.composeMessageToAddresses(sHref.toString().substr(7));
+				ComposeUtils.composeMessageToAddresses(sHref.toString());
 				return false;
 			}
 		}
