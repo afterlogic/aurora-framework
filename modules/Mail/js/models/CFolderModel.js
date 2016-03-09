@@ -773,7 +773,7 @@ CFolderModel.prototype.initComputedFields = function (bDisableManageSubscribe)
 		}
 		else
 		{
-			return Routing.buildHashFromArray(['mail', this.fullName()]);
+			return Routing.buildHashFromArray(LinksUtils.getMailbox(this.fullName()));
 		}
 	}, this);
 	
