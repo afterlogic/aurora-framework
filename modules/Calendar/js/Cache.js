@@ -32,17 +32,17 @@ function CCalendarCache()
 CCalendarCache.prototype.addIcal = function (oIcal)
 {
 	_.each(this.icalAttachments, function (oIcalItem) {
-//		if (oIcalItem.uid() === oIcal.uid())
-//		{
-//			if (oIcal.sSequence >= oIcalItem.sSequence)
-//			{
-//				oIcalItem.lastModification(false);
-//			}
-//			else
-//			{
-//				oIcal.lastModification(false);
-//			}
-//		}
+		if (oIcalItem.uid() === oIcal.uid())
+		{
+			if (oIcal.sSequence >= oIcalItem.sSequence)
+			{
+				oIcalItem.lastModification(false);
+			}
+			else
+			{
+				oIcal.lastModification(false);
+			}
+		}
 	});
 	this.icalAttachments.push(oIcal);
 	if (this.calendars().length === 0)

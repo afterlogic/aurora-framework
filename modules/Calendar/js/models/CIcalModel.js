@@ -119,7 +119,7 @@ function CIcalModel(oRawIcal, sAttendee)
 	}, this);
 	
 	this.visibleRequestButtons = ko.computed(function () {
-		return true;//this.isRequestType() && this.attendee() !== '';
+		return this.isRequestType() && this.attendee() !== '';
 	}, this);
 	
 	// animation of buttons turns on with delay
