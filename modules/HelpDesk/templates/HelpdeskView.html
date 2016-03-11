@@ -4,12 +4,9 @@
 			<div class="panel center_panel threads_panel">
 				<div class="resize_handler"></div>
 				<div class="panel_content">
-					<div class="toolbar" data-bind="if: !bAgent">
-						<span class="content">
-							<span class="item new_request" data-bind="click: openNewThread">
-								<span class="icon" data-bind="customTooltip: 'HELPDESK/ACTION_NEW_REQUEST'"></span>
-								<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_NEW_REQUEST'}"></span>
-							</span>
+					<div class="buttons big_single_button" data-bind="if: !bAgent">
+						<span class="button" data-bind="click: openNewThread">
+							<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_NEW_REQUEST'}"></span>
 						</span>
 					</div>
 					<div class="middle_bar" data-bind="visible: bAgent, template: {name: 'HelpDesk_ThreadsList'}"></div>

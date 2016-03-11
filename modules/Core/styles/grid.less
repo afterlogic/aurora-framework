@@ -137,37 +137,6 @@
 	box-shadow: none;
 	border-radius: 0px;
 	
-	.toolbar {
-		background: none;
-		border: 0px;
-		border-radius: 0px;
-		filter: none;
-		
-		.content {
-			display: block;
-			text-align: center;
-			padding-left:  16px;
-			padding-right:  17px;
-			
-			.item {
-				display: block;
-				border-radius: 5px;
-				border-color: #7bbe45;
-				color: #fff;
-				font-size: 10pt;
-				font-weight: bold;
-				text-shadow: 0px 1px 0px rgba(0,0,0,0.3);
-				box-shadow: none;
-				padding-top: 5px;
-				padding-bottom: 2px;
-				overflow: hidden;
-			}
-
-		}
-		
-		.theme-clear-panel-toolbar();
-	}
-	
 	.panel_center {
 		border: 0px;
 		background: none;
@@ -562,8 +531,8 @@
 }
 
 .items_list_group_style() {
-	@fontSize: 10pt;
-	@fontWeight: bold;
+	@fontSize: 11pt;
+	@fontWeight: normal;
 	@fontColor: #777;
 	@fontShadow: 0px 1px 0px #fff;
 	
@@ -611,6 +580,7 @@
 				.text {
 					display: inline-block;
 					vertical-align: middle;
+					padding-top: 2px;
 				}
 
 				.icon {

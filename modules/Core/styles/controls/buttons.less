@@ -66,4 +66,27 @@
 			}
 		}
 	}
+	
+	&.big_single_button {
+		margin: 0;
+		text-align: center;
+		padding: 10px 16px;
+		
+		.button {
+			.gradient(lighten(#81C653, 5%), #81C653, lighten(#81C653, 5%));
+			box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+			border-color: darken(#81C653, 5%);
+			padding: 5px 0;
+			font-size: 13pt;
+			font-weight: normal;
+			display: block;
+			border-radius: 5px;
+			height: 30px;
+			line-height: 30px;
+			
+			&.enable:hover {
+				.gradient(#81C653, darken(#81C653, 5%), #81C653);
+			}
+		}
+	}
 }
