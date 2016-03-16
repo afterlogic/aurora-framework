@@ -1,86 +1,88 @@
 {
-	"name": "p8",
-	"title": "AfterLogic Aurora",
-	"version": "8.0.0",
-	"release": "700",
-	"title": "AfterLogic Aurora Project",
-	"main": "Gruntfile.js",
-	"homepage": "http://afterlogic.com",
-	"author": {
-		"name": "AfterLogic",
-		"email": "support@afterlogic.com",
-		"web": "http://afterlogic.com"
-	},
-	"engines": {
-		"node": ">= 0.8.0"
-	},
-	"dependencies": {
-		"signals": "~1.0.0",
-		"hasher": "~1.2.0",
-		"underscore" : "~1.8.3",
-		"knockout": "~3.3.0",
-		"moment": "~2.10.6",
-		"jquery": "~1.11.3",
-		"jquery-ui": "~1.10.5",
-		"fullcalendar": "~2.4.0"
-	},
-	"browser": {
-		"signals": "./node_modules/signals/dist/signals.min.js",
-		"hasher": "./node_modules/hasher/dist/js/hasher.min.js",
-		"underscore": "./node_modules/underscore/underscore-min.js",
-		"knockout": "./node_modules/knockout/build/output/knockout-latest.js",
-		"moment": "./node_modules/moment/min/moment-with-locales.min.js",
-		"fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
-		"customscroll": "./core/js/vendors/customscroll.js",
-		"modernizr": "./core/js/vendors/modernizr.js",
-		"jquery.cookie": "./core/js/vendors/jquery.cookie.js",
-		"knockout-sortable": "./modules/Mail/js/vendors/knockout-sortable.js"
-	},
-	"browserify-shim": {
-		"customscroll": { "depends": [ "jquery:jQuery" ] },
-		"modernizr": "Modernizr",
-		"jquery.cookie": { "depends": [ "jquery:jQuery" ] },
-		"knockout-sortable": { "depends": [ "knockout:ko" ] }
-	},
-	"browserify": {
-		"transform": [
-			"browserify-shim"
-		]
-	},
-	"devDependencies": {
-		"wrench": "*",
-		"jshint-summary": "*",
-		"grunt": "~0.4.1",
-		"grunt-css": "*",
-		"grunt-contrib-jshint": "*",
-		"grunt-contrib-compress": "*",
-		"grunt-contrib-concat": "*",
-		"grunt-contrib-uglify": "*",
-		"grunt-contrib-watch": "*",
-		"grunt-contrib-less": "~0.5.2",
-		"gulp": "*",
-		"gulp-util": "2.2.20",
-		"gulp-uglify": "*",
-		"gulp-jshint": "*",
-		"gulp-less": "*",
-		"gulp-rename": "*",
-		"gulp-header": "*",
-		"gulp-footer": "*",
-		"gulp-eol": "*",
-		"gulp-expect-file": "*",
-		"gulp-minify-css": "*",
-		"gulp-concat-util": "*",
-		
-		"browserify": "*",
-		"browserify-shim": "*",
-		"watchify": "*",
-		"reactify": "*",
-		"vinyl-source-stream": "*",
-		"vinyl-buffer": "*",
-		
-		"cascade-ini": "*",
-		"file-exists": "*",
-		"delete": "*"
-	},
-	"license": "Custom"
+  "name": "p8",
+  "title": "AfterLogic Aurora Project",
+  "version": "8.0.0",
+  "release": "700",
+  "main": "gulpfile.js",
+  "homepage": "http://afterlogic.com",
+  "author": {
+    "name": "AfterLogic",
+    "email": "support@afterlogic.com",
+    "web": "http://afterlogic.com"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "signals": "~1.0.0",
+    "hasher": "~1.2.0",
+    "underscore": "~1.8.3",
+    "knockout": "~3.3.0",
+    "moment": "~2.10.6",
+    "jquery": "~1.11.3",
+    "jquery-ui": "~1.10.5",
+    "fullcalendar": "~2.4.0"
+  },
+  "browser": {
+    "signals": "./node_modules/signals/dist/signals.min.js",
+    "hasher": "./node_modules/hasher/dist/js/hasher.min.js",
+    "underscore": "./node_modules/underscore/underscore-min.js",
+    "knockout": "./node_modules/knockout/build/output/knockout-latest.js",
+    "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
+    "customscroll": "./core/js/vendors/customscroll.js",
+    "modernizr": "./core/js/vendors/modernizr.js",
+    "jquery.cookie": "./core/js/vendors/jquery.cookie.js",
+    "knockout-sortable": "./modules/Mail/js/vendors/knockout-sortable.js"
+  },
+  "browserify-shim": {
+    "customscroll": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "modernizr": "Modernizr",
+    "jquery.cookie": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "knockout-sortable": {
+      "depends": [
+        "knockout:ko"
+      ]
+    }
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "devDependencies": {
+    "wrench": "*",
+    "jshint-summary": "*",
+    "gulp": "*",
+    "gulp-util": "2.2.20",
+    "gulp-uglify": "*",
+    "gulp-jshint": "*",
+    "gulp-less": "*",
+    "gulp-rename": "*",
+    "gulp-header": "*",
+    "gulp-footer": "*",
+    "gulp-eol": "*",
+    "gulp-expect-file": "*",
+    "gulp-minify-css": "*",
+    "gulp-concat-util": "*",
+    "browserify": "*",
+    "browserify-shim": "*",
+    "watchify": "*",
+    "vinyl-source-stream": "*",
+    "vinyl-buffer": "*",
+    "cascade-ini": "*",
+    "file-exists": "*",
+    "delete": "*",
+    "webpack": "~1.12.14",
+    "imports-loader": "~0.6.5",
+    "exports-loader": "~0.6.3"
+  },
+  "license": "Custom"
 }

@@ -1,3 +1,5 @@
+var jQuery = require('jquery');
+
 (function ($) {
 
 /**
@@ -58,3 +60,5 @@
 		this.menu[ direction ]( event );
 	};
 })(jQuery);
+
+module.exports = {};

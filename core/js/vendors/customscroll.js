@@ -1,3 +1,5 @@
+var jQuery = require('jquery');
+
 (function ($) {
 	// Augment jQuery prototype.
 	$.fn.customscroll = function (options) {
@@ -465,3 +467,5 @@
   };
 
 })(jQuery);
+
+module.exports = {};

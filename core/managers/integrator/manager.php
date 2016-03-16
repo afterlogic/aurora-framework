@@ -1962,11 +1962,16 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$oHttp = \MailSo\Base\Http::NewInstance();
 		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
+		$sAdminPanel = $oHttp->GetQuery('adminpanel');
 		$sPostfix = '';
 		
 		$bMobile = \CApi::IsMobileApplication();
 		$bHelpdesk = !empty($sHelpdeskHash); 		
-		if ($bMobile && !$bHelpdesk)
+		if (isset($sAdminPanel))
+		{
+			$sPostfix = '-adminpanel';
+		} 
+		else if ($bMobile && !$bHelpdesk)
 		{
 			$sPostfix = '-mobile';
 		}
