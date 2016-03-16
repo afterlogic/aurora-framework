@@ -1,19 +1,12 @@
 /*=== Toolbar CSS ===*/
 .toolbar {
-	@bottomBorder: 1px solid #cacfd5;
-	@background: #e0e7ef;
-	
-	.theme-item-hover() {
-		box-shadow: inset 0px -1px 4px #eee, inset 0px 1px 0px #d5d5d5;
-	};
-	
-	background: @background;
-	border-bottom: @bottomBorder;
-	border-radius: 4px 4px 0 0;
+	background: @theme-toolbar-background;
+	border: @theme-toolbar-border;
+	border-radius: @theme-toolbar-border-radius;
 	white-space: nowrap;
 
 	.resizer {
-		height: 55px;
+		height: @theme-toolbar-height;
 	}
 
 	.content {
@@ -21,27 +14,17 @@
 		font-size: 0.1px;
 		padding: 11px;
 
-		& > .item {
-			@background: #fafafa;
-			
+		& > .item,
+		.group > .item {
+			cursor: pointer;
 			display: inline-block;
-			vertical-align: middle;
-			background-color: @background;
-			box-shadow: inset 0px -1px 4px #eee, inset 0px 1px 0px #fff;
-			border: 1px solid #c5c5c5;
-			border-radius: 4px;
-			
+			font-size: 10pt;
 			height: 30px;
 			line-height: 30px;
+			margin-right: 8px;
 			padding: 0 6px;
 			position: relative;
-			cursor: pointer;
-			
-			font-size: 10pt;
-			color: #626262;
-			text-decoration: none;
-			
-			margin-right: 8px;
+			vertical-align: middle;
 			
 			&:last-child {
 				margin-right: 0px;
@@ -60,30 +43,19 @@
 				position: static;
 			}
 			
-			// don't write in one line because it increase selector priority
-			.screen &.enable:hover,
-			&.expand {
-				@background: #eee;
-				
-				background: @background;
-				
-				.theme-item-hover();
-				
-				.hint {
-					background-color: darken(@background, 10%);
-				}
-			}
-			
 			& > .icon {
+				color: @theme-toolbar-icon-color;
 				display: inline-block;
-				vertical-align: middle;
-				text-align: center;
-				width: 28px;
-				height: 28px;
 				font-size: 27px;
-				color: rgba(0,0,0, 0.5);
+				height: 28px;
+				text-align: center;
+				text-shadow: @theme-toolbar-icon-shadow;
+				vertical-align: middle;
+				width: 28px;
 				
-				text-shadow: 0 1px 0 #ffffff, 0 0 0 #505050;
+				&:hover {
+					color: darken(@theme-toolbar-icon-color, 10%);
+				}
 				
 				.iconFontInit();
 				.iconFontInit(after);
@@ -113,47 +85,40 @@
 				}
 			}
 
-			&.passive,
-			&.passive:hover {
-				cursor: default;
-				box-shadow: none;
-				
-				.text {
-					color: inherit;
-				}
-				
-				.theme-item();
-			}
-
 			.arrow {
 				height: 14px !important;
 				width: 14px !important;
 				
 				&:before {
-					vertical-align: top;
 					content: "\e66d" !important;
 					font-size: 16px;
+					vertical-align: top;
 				}
 			}	
 
+			& > .text,
+			& .button .text {
+				font-weight: normal;
+				font-size: 13pt;
+			}
+			
 			& > .text {
-				display: inline-block;
 				display: none;
-				vertical-align: baseline;
-				font-weight: bold;
+				color: #7f7f7f;
 			}
 
 			.hint {
-				background-color: darken(@background, 30%);
-				border-radius: 3px;
-				color: #FFFFFF;
-				padding: 0 5px;
-				vertical-align: middle;
+				background: lighten(@theme-toolbar-hint-background, 10%);
+				border-radius: 6px;
+				color: @theme-toolbar-hint-color;
 				display: inline-block;
 				line-height: 22px;
+				padding: 0 5px;
+				vertical-align: middle;
 			}
-			
-			.theme-item();
+			&:hover .hint {
+				background: lighten(@theme-toolbar-hint-background, 5%);
+			}
 		}
 	   
 		.group {
@@ -205,18 +170,6 @@
 					}
 				}
 			}
-
-			&.expand > .item {
-				@background: #eee;
-				
-				background: @background;
-				
-				.theme-item-hover();
-				
-				.hint {
-					background-color: darken(@background, 10%);
-				}
-			}
 		}
 	}
 
@@ -225,49 +178,15 @@
 		.opacity(0.3);
 		color: #888888;
 		cursor: default;
-		
-		//&:hover {
-			//background: #fafafa;
-			//box-shadow: 0 -1px 4px #EEEEEE inset, 0 1px 0 #FFFFFF inset;
-		//}
 	}
 	
 	.group,
 	.item {
 		@import "toolbar-icons.less";
 	}
-	
-	.theme-common-panel-toolbar();
 }
 
 .cssanimations .toolbar .item.process .icon:before {
 	.animation(cycle 0.8s linear infinite);
-}
-
-.mobile {
-	.messages_panel .panel_top .search_block {
-		padding-right: 58px;
-	}
-	.messages_panel .panel_top .toolbar {
-		background: none;
-		border: 0;
-		border-radius: 0;
-		display: inline-block;
-		filter: none;
-		float: right;
-		margin-top: -29px;
-		padding: 0;
-
-		.content {
-			padding: 0;
-
-			.item.checkstate {
-				padding: 0 2px;
-				background: none;
-				border: 0;
-				box-shadow: none;
-			}
-		}
-	}
 }
 /*=== END Toolbar CSS ===*/

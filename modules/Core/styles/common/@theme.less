@@ -1,10 +1,7 @@
-//@import url('//fonts.googleapis.com/css?family=Ubuntu+Condensed&subset=latin,cyrillic-ext,cyrillic,latin-ext');
-//@import url('//fonts.googleapis.com/css?family=Roboto+Condensed&subset=latin,cyrillic');
-
 @theme-tabs-height: 70px;
 @theme-common-link-color: #4477BB;
 @theme-common-link-hover-color: #c74747;
-@pannels-overlap-offset: 2px;
+@pannels-overlap-offset: -4px;
 
 @theme-use-text-fade: true;
 
@@ -53,68 +50,14 @@
 
 //*=== Toolbar CSS ===*/
 @theme-toolbar-height: 55px;
+@theme-toolbar-background: #fbfbf9;
+@theme-toolbar-border: none;
+@theme-toolbar-border-radius: 4px 4px 0 0;
+@theme-toolbar-hint-background: #78b8f0;
+@theme-toolbar-hint-color: #ffffff;
+@theme-toolbar-icon-color: #78b8f0;
+@theme-toolbar-icon-shadow: none;
 
-.theme-common-panel-toolbar() {
-	.gradient(#e0e7ef, #dbe3eb, #e6edf5);
-	
-	.theme-item() {
-		color: #7f7f7f;
-		background: transparent;
-		border-color: transparent;
-		box-shadow: none;
-
-		&:first-child {
-			margin-left: 0px;
-		}
-		
-		&.send_button,
-		&.mailto_button {
-			@background: @theme-buttons-primary-background;
-			
-			background: @background;
-			border: 1px solid darken(@background, 10%);
-			color: #fff;
-			padding-left: 20px;
-			padding-right: 20px;
-		}
-		
-		&.mailto_button {
-			padding: 5px 12px;
-			height: auto;
-			line-height: inherit;
-			span {
-				line-height: inherit;
-			}
-		}
-	}
-	
-	.theme-item-hover() {
-		background: transparent;
-		box-shadow: none;
-		color: #676767;
-		
-		&.send_button,
-		&.mailto_button {
-			@background: @theme-buttons-primary-background;
-			
-			background: darken(@background, 5%);
-			border: 1px solid darken(@background, 15%);
-			color: #fff;
-		}
-		
-		&.new_window,
-		&.save_and_close,
-		&.minimize,
-		&.maximize {
-			box-shadow: none;
-			background: none !important;
-		}
-		
-		& > .icon {
-			.makeIconBevel(#000);
-		}
-	}
-}
 //*=== END Toolbar CSS ===*/
 //*=== Clear Panel CSS ===*/
 .theme-clear-panel-toolbar() {
@@ -189,17 +132,6 @@
 @theme-group-style-selected-item-bg-color: #95bada;
 @theme-group-style-selected-item-bg: #95bada;
 
-.theme-group-style-item() {
-	//@fontSize: ;
-	//@fontWeight: ;
-	.hover() {
-	}
-	
-	.name .icon {
-		height: 21px !important;
-	}
-}
-
 .theme-group-style-selected-item() {
 	text-shadow: 0px 1px 0px #678197;
 }
@@ -226,14 +158,6 @@
 	//@textAreaBorder: ;
 }
 //*=== END Quick Reply CSS ===*/
-//*=== Compose screen CSS ===*/
-.theme-compose-minimized-toolbar () {
-	background: #d7f0c3;
-	border: 1px solid #cacfd5;
-}
-.theme-compose-screen () {
-}
-//*=== END Compose screen CSS ===*/
 //*=== Calendar screen CSS ===*/
 @theme-smallCalendarHeight: 229px;
 
@@ -241,16 +165,6 @@
 	@currentPeriodBgColor: #d3d1ca;
 	@todayBgColor: #fff4cf;
 }
-.theme-panel-calendar() {
-	.toolbar .range_select {
-		.item.passive,
-		.item.passive:hover {
-			background-color: #fff;
-			border-radius: 3px;
-		}
-	}
-}
-
 //*=== END Calendar screen CSS ===*/
 .theme-panel-files() {
 }

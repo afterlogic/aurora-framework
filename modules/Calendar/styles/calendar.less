@@ -271,8 +271,6 @@
 					}
 				}
 			}
-			
-			.theme-group-style-item();
 		}
 	}
 	
@@ -456,14 +454,18 @@
 					margin-right: 10ex;
 				}
 			}
-		}
-
-		.range_select .item {
-
+			
 			&.passive,
 			&.passive:hover {
-				background-color: #e3e3e3;
+				cursor: default;
+				box-shadow: none;
 			}
+		}
+		
+		.range_select .item.passive,
+		.range_select .item.passive:hover {
+			background-color: #f0f0f0;
+			border-radius: 3px;
 		}
 
 		.date_select .item {
@@ -514,8 +516,6 @@
 			}
 		}
 	}
-	
-	.theme-panel-calendar();
 }
 
 .colors {

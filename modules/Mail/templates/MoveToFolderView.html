@@ -1,4 +1,4 @@
-<span class="item" data-bind="visible: visible() && !bVirtual, css: {'system': isSystem, 'user': !isSystem()}">
+<span data-bind="visible: visible() && !bVirtual, attr: {'class': 'item folder-level' + (iLevel + 1)}, css: {'system': isSystem, 'user': !isSystem()}">
 	<span class="folder" data-bind="attr: {'data-folder': fullName}, 
 		  css: {'disabled': selected, 'unselectable': !bCanBeSelected}">
 		<span class="title" data-bind="text: displayName, attr: {'id':	(type() === Enums.FolderTypes.Inbox) ? 'selenium_moveto_folder_inbox' :

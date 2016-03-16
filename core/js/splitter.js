@@ -95,9 +95,10 @@ var
 						)
 					);
 				}
-
+				
+				var iAddPx = (panes.get(0).$.outerWidth(true) - panes.get(0).$.innerWidth()) + (panes.get(1).$.outerWidth(true) - panes.get(1).$.innerWidth());
 				panes.get(0).$.css(opts['split'], newPosition);
-				panes.get(1).$.css(opts['split'], splitter._overallWidth - newPosition);
+				panes.get(1).$.css(opts['split'], splitter._overallWidth - newPosition - iAddPx);
 				
 				if (!Browser.ie8AndBelow)
 				{
