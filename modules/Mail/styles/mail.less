@@ -72,7 +72,6 @@
 		.from {
 			display: block;
 			overflow: hidden;
-			/* height: 1.4em; */
 		}
 
 		.subject {
@@ -378,11 +377,13 @@
 	}
 	
 	.message_header {
-		background: #f8f8f8;
+		background: #ffffff;
 		border-bottom: 1px solid #e2e2e2;
 		color: #4D4D4D;
+		padding-bottom: 6px;
+		position: relative;
 
-		.nosubject .subject{
+		.nosubject .subject {
 			color: #888888;
 			.opacity(0.3);
 		}
@@ -428,14 +429,6 @@
 					
 					&:last-child {
 						margin-right: 0px;
-					}
-					
-					& > .icon {
-						color: #929292 !important;
-						
-						&:hover {
-							color: #727272 !important;
-						}
 					}
 					
 					.icon.arrow {
@@ -523,12 +516,13 @@
 		}
 		
 		.subject {
-			display: inline-block;
-			margin: 0px;
-			padding: 0px;
 			color: #4d4d4d;
+			display: inline-block;
 			font-size: 14pt;
 			font-weight: normal;
+			margin: 0px;
+			padding: 0px;
+			width: 82%;
 		}
 		
 		.icon {

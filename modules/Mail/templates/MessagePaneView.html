@@ -2,6 +2,10 @@
 
 <div class="panel_center" data-bind="heightAdjust: {'elements': [domMessageHeader, domQuickReply], 'triggers': [detailsVisible(), currentMessage(), replyPaneVisible(), replyTextFocusThrottled()]}">
 	<div class="message_header" data-bind="initDom: domMessageHeader, visible: isCurrentMessage, event: {'dblclick': resizeDblClick}">
+		<span data-bind="click: switchDetailsVisibility, css: { 'compressed': !detailsVisible() }" class="table-compressor">
+			<span class="arrow" data-bind="customTooltip: detailsTooltip"></span>
+		</span>
+		
 		<div class="notice" data-bind="visible: visiblePicturesControl">
 			<span class="item">
 				<span data-bind="i18n: {'key': 'MAIL/INFO_MESSAGE_BLOCKED'}"></span>
@@ -27,14 +31,11 @@
 			<div class="header_row">
 				<!-- ko template: {name: sToolbarViewTemplate} --><!-- /ko -->
 				
-				<span class="link" data-bind="css: {'details_show': !detailsVisible(), 'details_hide': detailsVisible()}, 
-					customTooltip: detailsTooltip, click: switchDetailsVisibility"></span>
-				
 				<div class="message_info" data-bind="visible: !detailsVisible()">
 					<div class="message_info_line">
 						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, 
 								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
-						<span data-bind="i18n: {'key': 'MAIL/LABEL_TO_SHORT_LINE'}, visible: allRecipients().length > 0"></span>
+						<span data-bind="visible: allRecipients().length > 0">&#8594;</span>
 						<span data-bind="foreach: allRecipients">
 							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, 
 									attr: {'data-email': sEmail, 'data-name': sName}">

@@ -9,46 +9,9 @@
 	background: #ece9e0;
 }
 
-.theme-tabsbar() {
-	//@fontSize: ;
-	//@itemTopOffset: ;
-	
-	.theme-tabsbar-item() {
-	}
-	
-	.theme-tabsbar-item-hover() {
-	}
-	
-	.theme-current() {
-		color: @fontColorHover;
-		font-weight: bold;
-	}
-	
-	.theme-dropdown() {
-	}
-	
-	.theme-unseen-marker() {
-	}
-}
-
-.theme-common-link() {
-	//@fontSize: ;
-}
-
 @theme-buttons-primary-background: #81C54B;
 @theme-buttons-secondary-background: #A7AFB9;
 
-.theme-panel() {
-	
-	.theme-resize-handler () {
-	}
-	
-	&.item_viewer {
-		.box-sizing(content-box);
-	}
-}
-
-//*=== Toolbar CSS ===*/
 @theme-toolbar-height: 55px;
 @theme-toolbar-background: #fbfbf9;
 @theme-toolbar-border: none;
@@ -58,18 +21,17 @@
 @theme-toolbar-icon-color: #78b8f0;
 @theme-toolbar-icon-shadow: none;
 
-//*=== END Toolbar CSS ===*/
 //*=== Clear Panel CSS ===*/
 .theme-clear-panel-toolbar() {
-
 	.content {
-		padding-top: 10px;
 		padding-bottom: 10px;
+		padding-top: 10px;
 
 		.item {
 			.gradient(lighten(#81C653, 5%), #81C653, lighten(#81C653, 5%));
-			box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+			
 			border-color: darken(#81C653, 5%);
+			box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
 			padding-bottom: 5px;
 			padding-top: 5px;
 			font-size: 13pt;
@@ -77,19 +39,16 @@
 
 			&.enable:hover {
 				.gradient(#81C653, darken(#81C653, 5%), #81C653);
+				
 				box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
-
-				color: #fff;
+				color: #ffffff;
 			}
 		}
 	}
 }
 
-.theme-clear-panel() {
-}
-
 .theme-clear-panel-list-item() {
-	&.canNotSelect .collapse_handler{
+	&.canNotSelect .collapse_handler {
 		color: #777777;
 		cursor: pointer
 	}
@@ -109,22 +68,16 @@
 }
 //*=== END Clear Panel CSS ===*/
 //*=== Common Items List CSS ===*/
-@theme-list-item-bg: #fff;
+@theme-list-item-bg: #ffffff;
 @theme-list-selected-item-bg: #78B8F0;
-@theme-list-selected-item-color: #fff;
+@theme-list-selected-item-color: #ffffff;
 @theme-list-checked-item-bg: #EBF7CB;
 @theme-list-unseen-item-bg: #F4F6F7;
 
 .theme-list-item() {
 	.subject {
 		font-size: 13pt !important;
-		// font-family: 'Roboto Condensed', sans-serif;
-		// color: #3E3E3E !important;
 	}
-}
-
-.theme-list-selected-item() {
-	//background-color: @theme-list-selected-item-bg;
 }
 //*=== END Common Items List CSS ===*/
 //*=== Group Style Items List CSS ===*/
@@ -135,38 +88,13 @@
 .theme-group-style-selected-item() {
 	text-shadow: 0px 1px 0px #678197;
 }
-
-.theme-group-style-section() {
-}
 //*=== END Group Style Items List CSS ===*/
-//*=== Dropdown CSS ===*/
-.theme-dropdown() {
-}
-//*=== END Dropdown CSS ===*/
-//*=== Search Block CSS ===*/
-.theme-seach-block() {
-}
-//*=== END Search Block CSS ===*/
-//*=== HTML editor CSS ===*/
-.theme-html-editor () {
-}
-//*=== END HTML editor CSS ===*/
-//*=== Quick Reply CSS ===*/
-.theme-quick-reply() {
-	//@background: ;
-	//@borderTop: ;
-	//@textAreaBorder: ;
-}
-//*=== END Quick Reply CSS ===*/
 //*=== Calendar screen CSS ===*/
 @theme-smallCalendarHeight: 229px;
 
 .theme-small-calendar() {
 	@currentPeriodBgColor: #d3d1ca;
 	@todayBgColor: #fff4cf;
-}
-//*=== END Calendar screen CSS ===*/
-.theme-panel-files() {
 }
 
 .theme-messages-list-item() {
@@ -209,18 +137,7 @@
 			}
 		}
 	}
-	
-	.theme-fieldset () {
-	}
 }
-
-.theme-notifications() {
-	.theme-content () {
-	}
-}
-
-.theme-autocomplete() {
-};
 
 .ui-widget-content a:hover {
   color: inherit

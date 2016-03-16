@@ -33,15 +33,10 @@
 	
 	.middle_bar {
 		.resize_compensation_bottom(0px);
-		//.resize_compensation_bottom(30px);
-		
-		//&.quota_visible {
-		//	.resize_compensation_bottom(47px);
-		//}
 	}
 	
 	.panel_bottom {
-		.box-sizing();
+		.box-sizing;
 		background-color: transparent;
 		border-top: 0px;
 		bottom: 60px;
@@ -51,12 +46,6 @@
 		text-align: center;
 		white-space: nowrap;
 		width: 100%;
-		
-		//height: 30px;
-		//border: 0px;
-		//border-radius: 0px;
-		//background: none;
-		//padding: 0px;
 		
 		.manage_folders {
 			line-height: 16px;
@@ -97,11 +86,10 @@
 	
 	.middle_bar {
 		.resize_compensation_top(39px);
-		//.resize_compensation_bottom(41px);
 	}
 	
 	.panel_bottom {
-		.box-sizing();
+		.box-sizing;
 		background-color: transparent;
 		border-top: 0px;
 		bottom: 60px;
@@ -136,7 +124,6 @@
 		.from {
 			display: block;
 			overflow: hidden;
-			/* height: 1.4em; */
 		}
 		
 		.subject{
@@ -513,22 +500,20 @@
 		}
 		
 		.details_hide {
-			//background-position: -260px -80px;
 			&:before {
 				content: "\e66e";
 			}
 		}
 		
 		.title {
-			/* font-size: 10.5pt; */
 			color: #777777;
 		}
 		
 		.subject {
+			color: #4d4d4d;
+			font-size: 10.5pt;
 			margin: 0px;
 			padding: 0px;
-			font-size: 10.5pt;
-			color: #4d4d4d;
 		}
 		
 		.icon {
@@ -683,7 +668,7 @@
 			font-size: 9pt;
 			white-space: normal;
 			display: inline-block;
-			.box-sizing();
+			.box-sizing;
 			width: 50%;
 			padding: 10px 16px;
 			border-bottom: 0px solid #ccc;

@@ -17,8 +17,9 @@
 					<div class="panel_content">
 						<div class="middle_bar" data-bind="heightAdjust: {'location': 'bottom', 'delay': '0', 'elements': [messageFields, bottomPanel], 'triggers': [visibleBcc(), visibleCc(), toAddr(), bccAddr(), notInlineAttachments(), senderList(), headersCompressed()]}">
 							<div class="panel_top" data-bind="initDom: messageFields, minHeightAdjust: {'adjustElement': jqContainers, 'minHeight': 450, 'trigger': minHeightAdjustTrigger(), 'removeTrigger': minHeightRemoveTrigger()}">
-
-								<span class="table-compressor" data-bind="visible: bAllowHeadersCompressing, click: changeHeadersCompressed, css: { 'compressed': headersCompressed }"></span>
+								<span class="table-compressor" data-bind="visible: bAllowHeadersCompressing, click: changeHeadersCompressed, css: { 'compressed': headersCompressed }">
+									<span class="arrow"></span>
+								</span>
 
 								<div class="notice" data-bind="visible: bDemo, i18n: {'key': 'MAIL/INFO_SEND_EMAIL_TO_DEMO_ONLY'}"></div>
 								<table class="fields">

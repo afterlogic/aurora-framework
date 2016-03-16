@@ -1,39 +1,38 @@
-/*=== Search Block CSS ===*/
 .search_block {
 	.box-sizing;
 
-	font-size: 0px;
-	vertical-align: middle;
-	padding-right: 20px;
 	display: inline-block;
-	width: 100%;
+	font-size: 0px;
 	height: 100%;
+	padding-right: 20px;
+	vertical-align: middle;
+	width: 100%;
 
 	html.rtl & {
-		padding-right: 0px;
 		padding-left: 20px;
+		padding-right: 0px;
 	}
 
 	& > .input {
 		.box-sizing;
 
-		position: relative;
-		border: 1px solid #c5c7c8;
-		border-radius:10px;
-		outline: none;
-		width: 100%;
-		height: 100%;
-		display: inline-block;
-		vertical-align: middle;
+		border: 1px solid #fff;
+		border-radius: 10px;
 		box-shadow: none;
+		display: inline-block;
+		height: 100%;
+		min-height: 26px;
+		outline: none;
 		overflow: hidden;
 		padding-left: 30px;
-		min-height: 26px;
 		padding-top: 3px;
+		position: relative;
+		vertical-align: middle;
+		width: 100%;
 
 		html.rtl & {
-			padding-right: 30px;
 			padding-left: 0px;
+			padding-right: 30px;
 		}
 
 		&.focus {
@@ -42,32 +41,29 @@
 		}
 
 		.row {
+			border: 0px;
+			display: inline-block;
 			font-size: 11pt;
 			line-height: 160%;
-			display: inline-block;
-			vertical-align: middle;
-			width: 100%;
-//			height: 24px;
 			overflow: hidden;
-			white-space:nowrap;
 			padding: 0px;
-			border: 0px;
+			vertical-align: middle;
+			white-space:nowrap;
+			width: 100%;
 		}
 
 		.field {
-//			position: absolute;
-			font-size: 11pt;
-//			line-height: 160%;
-			display: inline-block;
-			vertical-align: middle;
-			width: 100%;
-			height: 20px;
-			overflow: hidden;
-			white-space:nowrap;
-			padding: 0px;
 			border: 0px;
+			display: inline-block;
+			font-size: 11pt;
+			height: 20px;
 			opacity: 1;
+			overflow: hidden;
+			padding: 0px;
+			vertical-align: middle;
 			visibility: visible;
+			white-space: nowrap;
+			width: 100%;
 
 			.transition(~"opacity 500ms ease 0ms, visibility 500ms linear 10ms");
 		}
@@ -79,15 +75,15 @@
 		}
 		
 		.icon.search {
-			position: absolute;
-			left: 0px;
-			top: 0px;
-			font-size: 11pt;
-			width: 30px;
-			height: 24px;
 			display: inline-block;
-			vertical-align: top;
+			font-size: 11pt;
+			height: 24px;
+			left: 0px;
 			overflow: hidden;
+			position: absolute;
+			top: 0px;
+			vertical-align: top;
+			width: 30px;
 
 			html.rtl & {
 				left: initial;
@@ -101,8 +97,8 @@
 				display: block;
 				font-size: 20px;
 				height: 20px;
-				width: 20px;
 				margin: 3px 0px 0px 5px;
+				width: 20px;
 
 				html.rtl & {
 					margin: 3px 5px 0px 0px;
@@ -110,19 +106,21 @@
 			}
 		}
 	}
+	
 	.expand .field {
 		opacity: 0;
 		visibility: hidden;
+		
 		.transition(~"opacity 500ms ease 0ms, visibility 10ms linear 500ms");
 	}
 
 	.control .icon {
+		cursor: pointer;
 		display: inline-block;
+		height: 100%;
+		margin-top: -6px;
 		vertical-align: top;
 		width: 20px;
-		cursor: pointer;
-		margin-top: -6px;
-		height: 100%;
 		
 		.iconFontInit();
 		&:before {
@@ -131,13 +129,11 @@
 			display: inline-block;
 			font-size: 18px;
 			height: 20px;
-			width: 20px;
 			margin: 10px 2px 0px;
+			width: 20px;
 		}
 
 		&.expand {
-
-
 			&:before {
 				content: "\e66e";
 			}
@@ -148,27 +144,24 @@
 		color: #ccc;
 	}
 
-	.theme-seach-block();
-
 	.expand .extended {
-//		min-height: 110px;
 		opacity: 1;
 		visibility: visible;
+		
 		.transition(~"opacity 500ms ease 0ms, visibility 10ms linear 0s");
 	}
 
 	.extended {
 		.box-sizing;
 
-		width: 100%;
-		height: 100%;
-//		display: inline-block;
 		display: block;
+		height: 100%;
 		margin-top: -24px;
-		overflow: hidden;
 		opacity: 0;
+		overflow: hidden;
 		visibility: hidden;
-//		.transition(~"min-height 800ms ease 0ms, opacity 500ms ease 0ms");
+		width: 100%;
+		
 		.transition(~"opacity 500ms ease 0ms, visibility 10ms linear 500ms");
 
 		.search_fieldset {
@@ -179,10 +172,10 @@
 				.box-sizing;
 
 				display: inline-block;
-				width: 50%;
 				overflow: hidden;
 				padding-right: 20px;
 				vertical-align: top;
+				width: 50%;
 
 				html.rtl & {
 					padding-left: 20px;
@@ -190,16 +183,15 @@
 				}
 
 				.row {
-					line-height: 230%;
-					height: 28px;
 					display: block;
-					padding-right: 2px;
+					height: 28px;
+					line-height: 230%;
 					overflow: visible;
+					padding-right: 2px;
 
 					html.rtl & {
-//						padding: 0 2px 0 78px;
-						padding-right: 0px;
 						padding-left: 2px;
+						padding-right: 0px;
 					}
 
 					&.text {
@@ -207,12 +199,11 @@
 					}
 
 					&.attachments {
-
 						.custom_checkbox {
+							line-height: 1;
 							margin: 0;
 							margin-bottom: 1px;
 							vertical-align: middle;
-							line-height: 1;
 						}
 
 						.attachment_name {
@@ -222,27 +213,24 @@
 
 					.date {
 						display: inline-block;
-						padding: 0;
-//						width: 50%;
 						margin-left: 0px;
+						padding: 0;
 					}
 
 					.label {
-//						margin-left: -78px;
-
 						html.rtl & {
 							text-align: right;
 						}
 					}
 
 					.input {
-						border-radius: 0px;
 						border: none;
+						border-radius: 0px;
 						box-shadow: none;
+						color: #555566;
+						font: normal 11pt Helvetica, Tahoma, Arial, sans-serif;
 						padding: 0;
 						width: 100%;
-						font: normal 11pt Helvetica, Tahoma, Arial, sans-serif;
-						color: #555566;
 					}
 				}
 			}
@@ -253,10 +241,10 @@
 			}
 			
 			.buttons {
-				margin: 0px 18px 0px 0px;
-				padding: 10px 0px 0px 0px;
 				border-top: 1px solid #EAE7E7;
 				display: block;
+				margin: 0px 18px 0px 0px;
+				padding: 10px 0px 0px 0px;
 				width: auto;
 
 				html.rtl & {
@@ -271,4 +259,3 @@
 		}
 	}
 }
-/*=== END Search Block CSS ===*/

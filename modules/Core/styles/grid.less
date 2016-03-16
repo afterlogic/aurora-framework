@@ -24,7 +24,7 @@
 .panels .panel_helper {
 	vertical-align: top;
 	display: inline-block;
-	.box-sizing();
+	.box-sizing;
 }
 .panel {
 	font-size: 9pt;
@@ -34,7 +34,7 @@
 	box-shadow: -1px 0 2px rgba(0,0,0,0.11);
 	border-radius: 5px;
 	position: relative;
-	.box-sizing();
+	.box-sizing;
 	
 	.rtl & {
 		box-shadow: 1px 0 2px rgba(0,0,0,0.11);
@@ -50,7 +50,7 @@
 
 		float: right;
 		width: 6px;
-		margin-right: -6px;
+		margin-right: -8px;
 		height: 100%;
 		cursor: e-resize;
 
@@ -67,8 +67,6 @@
 			left: -50px;
 			margin-right: -100px;
 		}
-		
-		.theme-resize-handler();
 	}
 	
 	.panel_content {
@@ -92,7 +90,7 @@
 	}
 	
 	.panel_top {
-		background: #f8f8f8;
+		background: #f1f1f1;
 		white-space: nowrap;
 		border-bottom: 1px solid #e2e2e2;
 		color: #555566;
@@ -118,19 +116,21 @@
 	
 	.panel_center {
 		height: 100%;
-		background: #fff;
+		background: #ffffff;
 	}
 	
 	.panel_bottom {
-		background-color: #F8F8F8;
-		border-radius: 0 0 0 4px;
+		background-color: #ffffff;
+		border-radius: 0 0 4px 4px;
 		border-top: 1px solid #E2E2E2;
 		height: 26px;
 		line-height: 26px;
 		padding: 10px 20px;
 	}
 	
-	.theme-panel();
+	&.item_viewer {
+		.box-sizing(content-box);
+	}
 }
 
 .panelClear () {
@@ -151,8 +151,6 @@
 			.theme-clear-panel-list-item();
 		}
 	}
-	
-	.theme-clear-panel();
 }
 /*=== END Panels CSS ===*/
 /*=== Panel Item Viewer CSS ===*/
@@ -369,8 +367,6 @@
 				border-color: mix(@theme-list-selected-item-bg, #000, 70%);
 				box-shadow: 0 1px 0 lighten(@theme-list-selected-item-bg, 15%);
 			}
-			
-			.theme-list-selected-item();
 		}
 		
 		.item_content {
@@ -537,11 +533,6 @@
 	@fontShadow: 0px 1px 0px #fff;
 	
 	.items_list {
-		
-		.section_title {
-			.theme-group-style-section();
-		}
-		
 		.item {
 			font-size: 10pt;
 			background: none;

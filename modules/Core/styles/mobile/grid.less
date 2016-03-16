@@ -54,7 +54,7 @@
 	}
 	
 	.panel_top {
-		background: #f8f8f8;
+		background: #f1f1f1;
 		white-space: nowrap;
 		border-bottom: 1px solid #e2e2e2;
 		color: #555566;
@@ -80,19 +80,21 @@
 	
 	.panel_center {
 		height: 100%;
-		background: #fff;
+		background: #ffffff;
 		min-height: 100px;
 	}
 	
 	.panel_bottom {
-		background-color: #F8F8F8;
-		border-radius: 0 0 0 4px;
+		background-color: #ffffff;
+		border-radius: 0 0 4px 4px;
 		border-top: 1px solid #E2E2E2;
 		height: 26px;
 		padding: 14px 20px 0
 	}
 	
-	.theme-panel();
+	&.item_viewer {
+		.box-sizing(content-box);
+	}
 }
 
 .panelClear () {
@@ -288,8 +290,6 @@
 				border-color: #577da1;
 				box-shadow: 0 1px 0 #AAD2F8;
 			}
-			
-			.theme-list-selected-item();
 		}
 		
 		.item_content {
