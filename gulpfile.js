@@ -29,6 +29,8 @@ crlf +
 ' */' + crlf + crlf,
 		paths: {},
 		watch: [],
+		all: [],
+		min: [],
 		summary: {
 			verbose: true,
 			reasonCol: 'cyan,bold',
@@ -127,13 +129,14 @@ function jsTask(sName, oData)
 {
 	if (oData && oData.src)
 	{
+		cfg.all.push('js:' + sName);
+		
 		if (oData.webpack)
 		{
 			gulp.task('js:' + sName, function() {
 				var 
 					compiler = webpack({
-						//context: './', // исходная директория
-						entry: oData.src, // файл для сборки, если несколько - указываем hash (entry name => filename)
+						entry: oData.src,
 						output: {
 							path: oData.dest,
 							filename: oData.name
@@ -150,7 +153,8 @@ function jsTask(sName, oData)
 									loader: "imports?this=>window!exports?window.Modernizr"
 								}
 							]
-						}
+						},
+						devtool: 'source-map'
 					}),
 					compileCallback = function (err, stats) {
 						if (err)
@@ -162,7 +166,7 @@ function jsTask(sName, oData)
 							//context: true,
 							hash: false,
 							version: false,
-							timings: false,
+							timings: true,
 							assets: false,
 							chunks: false,
 							chunkModules: false,
@@ -222,17 +226,74 @@ function jsTask(sName, oData)
 //			});
 //		}
 
-//		if (oData.min)
-//		{
-//			gulp.task('js:' + sName + ':min', function() {
+		if (oData.min)
+		{
+			cfg.min.push('js:' + sName + ':min');
+			gulp.task('js:' + sName + ':min', function() {
 //				return gulp.src(oData.dest + oData.name)
 //					.pipe(rename(oData.min))
 //					.pipe(uglify(cfg.uglify))
 //					.pipe(eol('\n', true))
 //					.pipe(gulp.dest(oData.dest))
 //					.on('error', gutil.log);
-//			});
-		//}
+
+				var 
+					compiler = webpack({
+						entry: oData.src,
+						output: {
+							path: oData.dest,
+							filename: oData.min
+						},
+						resolve: {
+							root: [
+								path.resolve('./')
+							]
+						},
+						module: {
+							loaders: [
+								{ 
+									test: /[\\\/]modernizr\.js$/,
+									loader: "imports?this=>window!exports?window.Modernizr"
+								}
+							]
+						},
+						plugins: [
+							new webpack.optimize.UglifyJsPlugin({
+								compress: {
+									warnings: false,
+									drop_console: true,
+									unsafe: true
+								}
+							})
+						]
+					})
+				;
+
+				compiler.run(function (err, stats) {
+					if (err)
+					{ 
+						throw new gutil.PluginError('js:' + sName, err);
+					}
+					gutil.log('js:' + sName, stats.toString({
+						colors: true,
+						//context: true,
+						hash: false,
+						version: false,
+						timings: true,
+						assets: false,
+						chunks: false,
+						chunkModules: false,
+						modules: false,
+						children: false,
+						cached: false,
+						reasons: false,
+						source: false,
+						errorDetails: false,
+						chunkOrigins: false
+					}));
+				});
+			});
+		}
 	}
 }
 
@@ -250,9 +311,10 @@ for (name in cfg.paths.js)
 	}
 }
 
-gulp.task('default', ['js:app']);
+gulp.task('all', cfg.all);
+gulp.task('min', cfg.min);
 
-gulp.task('all', ['js:app', 'js:files_pub', 'js:calendar_pub', 'js:helpdesk_ext', 'js:message_newtab', 'js:mobile', 'js:adminpanel' ]);
+gulp.task('default', ['js:app']);
 
 gulp.task('files', ['js:app', 'js:files_pub']);
 
@@ -265,8 +327,6 @@ gulp.task('msg', ['js:app', 'js:message_newtab']);
 gulp.task('mob', ['js:app', 'js:mobile']);
 
 gulp.task('adm', ['js:adminpanel']);
-
-gulp.task('min', ['lint', 'js:all:min']);
 
 gulp.task('w', ['js:all:watch']);
 
