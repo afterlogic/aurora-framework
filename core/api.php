@@ -74,6 +74,7 @@ class CApi
 					'common.utils',
 					'common.crypt',
 					'common.container',
+					'common.propertybag',
 					'common.manager',
 					'common.module',
 					'common.response',
