@@ -1,42 +1,47 @@
 var
-	_ = require('underscore'),
 	argv = require('./argv.js'),
-	buffer = require('vinyl-buffer'),
-	del = require('delete'),
 	fileExists = require('file-exists'),
 	gulp = require('gulp'),
 	less = require('gulp-less'),
-	source = require('vinyl-source-stream')
+	gutil = require('gulp-util'),
+	concat = require('gulp-concat-util'),
+	plumber = require('gulp-plumber'),
+
+	aModulesNames = argv.getModules(),
+	aModulesFiles = [],
+	aModulesWatchPaths = []
 ;
+	
+aModulesNames.forEach(function (sModuleName) {
+	if (fileExists('./modules/' + sModuleName + '/styles/styles.less'))
+	{
+		aModulesFiles.push('./modules/' + sModuleName + '/styles/styles.less');
+		aModulesWatchPaths.push('./modules/' + sModuleName + '/styles/**/*.less');
+	}
+});
 
 gulp.task('styles', function () {
-	var
-		stream = source('styles.less'),
-		aModulesNames = argv.getModules()
-	;
 	
-	_.each(aModulesNames, function (sModuleName) {
-		if (fileExists('./modules/' + sModuleName + '/styles/styles.less'))
-		{
-			stream.write('@import "./modules/' + sModuleName + '/styles/styles.less";\r\n');
-		}
-	});
-	
-	process.nextTick(function() {
-		stream.end();
-	});
-	
-	stream
-		.pipe(buffer())
-		.pipe(gulp.dest('./gulp-tasks/'))
-		.on('end', function() {
-			gulp.src('./gulp-tasks/styles.less')
-				.pipe(less())
-				.pipe(gulp.dest('./skins/Default'))
-				.on('end', function () {
-					del('./gulp-tasks/styles.less');
-				});
-		});
+	gulp.src(aModulesFiles)
+		.pipe(concat('styles.css', {
+			process: function(src, filePath) {
+				return '@import "' + filePath + '";\r\n'; 
+			}
+		}))
+		.pipe(plumber({
+			errorHandler: function (err) {
+				console.log(err.toString());
+				gutil.beep();
+				this.emit('end');
+			}
+		}))
+		.pipe(less())
+		.pipe(gulp.dest('./skins/Default'))
+		.on('error', gutil.log);
+});
+
+gulp.task('styles:watch', ['styles'], function () {
+	gulp.watch(aModulesWatchPaths, {interval: 500}, ['styles']);
 });
 
 module.exports = {};

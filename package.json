@@ -55,7 +55,8 @@
     "delete": "*",
     "webpack": "~1.12.14",
     "imports-loader": "~0.6.5",
-    "exports-loader": "~0.6.3"
+    "exports-loader": "~0.6.3",
+    "gulp-plumber": "~1.1.0"
   },
   "license": "Custom"
 }
