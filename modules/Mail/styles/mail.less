@@ -398,6 +398,9 @@
 	
 		.header_row {
 			clear: both;
+			&:last-child {
+				margin-top: 18px; 
+			}
 		}
 		
 		.toolbar {
@@ -449,12 +452,11 @@
 		}
 		
 		.header_content {
-			padding: 14px 18px;
+			padding: 12px 18px 8px;
 		}
 		
 		.message_info {
 			position: relative;
-			margin-left: 14px;
 			font-size: 10pt;
 			padding-top: 1px; /* fix nested element negative margin */
 			
@@ -463,14 +465,11 @@
 			}
 			
 			.message_info_line {
-				margin: 4px 0 0 4px;
+				margin: 4px 0 0 0;
 				top: -4px;
 				position: relative;
 				white-space: nowrap;
 				overflow: hidden;
-				
-				.fadeout_text_init();
-				.fadeout_text(#f8f8f8);
 			}
 			
 			&.message_detail_info .message_info_line {
@@ -557,9 +556,7 @@
 		}
 		
 		.from {
-			color: @theme-common-link-color;
 			font-weight: bold;
-			padding-left: 7px;
 			
 			html.rtl & {
 				padding-right: 7px;

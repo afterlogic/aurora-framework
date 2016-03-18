@@ -46,7 +46,6 @@
     "gulp-footer": "*",
     "gulp-eol": "*",
     "gulp-expect-file": "*",
-    "gulp-minify-css": "*",
     "gulp-concat-util": "*",
     "vinyl-source-stream": "*",
     "vinyl-buffer": "*",

@@ -33,13 +33,17 @@
 				
 				<div class="message_info" data-bind="visible: !detailsVisible()">
 					<div class="message_info_line">
-						<span class="from control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, 
-								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
-						<span data-bind="visible: allRecipients().length > 0">&#8594;</span>
+						<span class="from contact address_capsule">
+							<span class="control address" data-bind="text: currentAccountEmail() === fromEmail() ? meSender : from, 
+									attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}"></span>
+						</span>
+						<span class="to_arrow" data-bind="visible: allRecipients().length > 0">&#8594;</span>
 						<span data-bind="foreach: allRecipients">
-							<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, 
-									attr: {'data-email': sEmail, 'data-name': sName}">
-							</span><span data-bind="visible: $parent.allRecipients().length > $index() + 1">, </span>
+							<span class="contact address_capsule">
+								<span class="address" data-bind="text: $parent.currentAccountEmail() === sEmail ? $parent.meRecipient : sDisplay, 
+										attr: {'data-email': sEmail, 'data-name': sName}">
+								</span>
+							</span>
 						</span>
 					</div>
 				</div>

@@ -690,7 +690,7 @@ var inputosaurustext = {
 
 		if (name !== undefined)
 		{
-			li = $('<li data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
+			li = $('<li class="address_capsule" data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
 			if (!widget.options.mobileDevice)
 			{
 				li.data('full', fullValue);

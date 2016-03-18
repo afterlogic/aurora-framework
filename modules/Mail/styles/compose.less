@@ -1,42 +1,42 @@
 .compose-toolbar() {
-		background: #f7f7f7;
-		filter: none;
+	background: #f7f7f7;
+	filter: none;
 
-		.text {
-			display: inline-block;
-		}
+	.text {
+		display: inline-block;
+	}
 
-		.back .text {
-			display: none;
-		}
+	.back .text {
+		display: none;
+	}
 
-		.icon {
-			display: none;
-		}
+	.icon {
+		display: none;
+	}
 
-		.back .icon,
-		.new_window .icon,
-		.save_and_close .icon,
-		.minimize .icon,
-		.maximize .icon,
-		.confirmation .icon,
-		.pgp .icon {
-			display: inline-block;
-			color: rgba(0, 0, 0, 0.5);
-		}
-		
-		.new_window,
-		.minimize, .maximize, 
-		.save_and_close, {
-			border: 0px;
-			background: transparent;
-			box-shadow: none;
-			float: right;
+	.back .icon,
+	.new_window .icon,
+	.save_and_close .icon,
+	.minimize .icon,
+	.maximize .icon,
+	.confirmation .icon,
+	.pgp .icon {
+		display: inline-block;
+		color: rgba(0, 0, 0, 0.5);
+	}
 
-			html.rtl & {
-				float: left;
-			}
+	.new_window,
+	.minimize, .maximize, 
+	.save_and_close, {
+		border: 0px;
+		background: transparent;
+		box-shadow: none;
+		float: right;
+
+		html.rtl & {
+			float: left;
 		}
+	}
 }
 
 
@@ -54,7 +54,6 @@
 	
 	.panel.message_panel,
 	.panel.attachments_panel {
-		
 		.panel_content {
 			.resize_compensation_top(0px);
 		}
@@ -63,10 +62,13 @@
 	.message_panel {
 		z-index: 2;
 		width: 80%;
-		border-radius: 0px;
-		box-shadow: none;
-		border-right: 1px solid #E2E2E2;
+		box-shadow: 3px 0 2px #f1f1f1;
+		
 		.box-sizing;
+		
+		.resize_handler {
+			margin-right: -10px;
+		}
 		
 		.middle_bar {
 			.resize_compensation_top(0px);
@@ -145,37 +147,41 @@
 	}
 	
 	.attachments_panel {
-		width: 20%;
+		background: #fafafa;
 		border-radius: 0px;
 		box-shadow: none;
-		position: relative;
 		overflow: hidden;
+		position: relative;
+		width: 20%;
 		
 		.middle_bar {
 			.resize_compensation_top(37px);
 			
 			.panel_top {
-				padding: 6px 10px;
-				text-align: center;
+				background-color: inherit;
+				border: none;
 				line-height: 180%;
+				padding: 35px 10px 6px;
+				text-align: center;
 				
 				.uploader_button {
-					display: inline;
-					vertical-align: middle;
-					color: #999;
+					color: #aaa;
 					cursor: pointer;
-					margin-right: 10px;
+					display: inline;
+					margin-right: 21px;
+					vertical-align: middle;
 					
 					&:hover {
-						color: #444;
+						color: #888;
 					}
 					
 					.icon {
 						display: inline-block;
+						font-size: 28px;
+						height: 24px;
 						vertical-align: middle;
 						width: 24px;
-						height: 24px;
-						font-size: 24px;
+						
 						.iconFontInit();
 					}
 					
@@ -196,7 +202,10 @@
 						display: none;
 					}
 				}
-				
+			}
+			
+			.panel_center {
+				background-color: inherit;
 			}
 		}
 	}
