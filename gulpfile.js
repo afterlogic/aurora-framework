@@ -1,12 +1,8 @@
 var
-	browserify = require('browserify'),
-	watchify = require('watchify'),
 	gulp = require('gulp'),
-	//reactify = require('reactify'),
 	source = require('vinyl-source-stream'),
 	buffer = require('vinyl-buffer'),
 	jshint = require('gulp-jshint'),
-	uglify = require('gulp-uglify'),
 	header = require('gulp-header'),
 	rename = require('gulp-rename'),
 	eol = require('gulp-eol'),
@@ -35,12 +31,6 @@ crlf +
 			verbose: true,
 			reasonCol: 'cyan,bold',
 			codeCol: 'green'
-		},
-		uglify: {
-			mangle: true,
-			compress: true,
-			drop_console: true,
-			preserveComments: 'some'
 		}
 	}
 ;
@@ -54,8 +44,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./core/js/entry.js"
-		],
-		webpack: true
+		]
 	},
 	mobile: {
 		dest: './static/js/',
@@ -65,8 +54,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./core/js/entry-mobile.js"
-		],
-		webpack: true
+		]
 	},
 	message_newtab: {
 		dest: './static/js/',
@@ -76,8 +64,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./modules/Mail/js/entry-newtab.js"
-		],
-		webpack: true
+		]
 	},
 	adminpanel: {
 		dest: './static/js/',
@@ -87,8 +74,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./modules/AdminPanel/js/entry.js"
-		],
-		webpack: true
+		]
 	},
 	files_pub: {
 		dest: './static/js/',
@@ -98,8 +84,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./modules/Files/js/entry-pub.js"
-		],
-		webpack: true
+		]
 	},
 	calendar_pub: {
 		dest: './static/js/',
@@ -109,8 +94,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./modules/Calendar/js/entry-pub.js"
-		],
-		webpack: true
+		]
 	},
 	helpdesk_ext: {
 		dest: './static/js/',
@@ -120,8 +104,7 @@ cfg.paths.js = {
 		watch: true,
 		src: [
 			"./modules/HelpDesk/js/entry-ext.js"
-		],
-		webpack: true
+		]
 	}
 };
 
@@ -129,168 +112,93 @@ function jsTask(sName, oData)
 {
 	if (oData && oData.src)
 	{
+		var 
+			oWebPackConfig = {
+				entry: oData.src,
+				output: {
+					path: oData.dest,
+					filename: oData.name
+				},
+				resolve: {
+					root: [
+						path.resolve('./')
+					]
+				},
+				module: {
+					loaders: [
+						{ 
+							test: /[\\\/]modernizr\.js$/,
+							loader: "imports?this=>window!exports?window.Modernizr"
+						}
+					]
+				},
+				devtool: 'source-map'
+			},
+			compileCallback = function (sTaskName, err, stats) {
+				if (err)
+				{ 
+					throw new gutil.PluginError(sTaskName, err);
+				}
+				gutil.log(sTaskName, stats.toString({
+					colors: true,
+					//context: true,
+					hash: false,
+					version: false,
+					timings: true,
+					assets: false,
+					chunks: false,
+					chunkModules: false,
+					modules: false,
+					children: false,
+					cached: false,
+					reasons: false,
+					source: false,
+					errorDetails: false,
+					chunkOrigins: false
+				}));
+			}
+		;
+		
 		cfg.all.push('js:' + sName);
 		
-		if (oData.webpack)
+		gulp.task('js:' + sName, function() {
+			webpack(oWebPackConfig).run(function (err, stats) {
+				compileCallback.call(null, 'js:' + sName, err, stats);
+			});
+		});
+		
+		if (oData.watch)
 		{
-			gulp.task('js:' + sName, function() {
-				var 
-					compiler = webpack({
-						entry: oData.src,
-						output: {
-							path: oData.dest,
-							filename: oData.name
-						},
-						resolve: {
-							root: [
-								path.resolve('./')
-							]
-						},
-						module: {
-							loaders: [
-								{ 
-									test: /[\\\/]modernizr\.js$/,
-									loader: "imports?this=>window!exports?window.Modernizr"
-								}
-							]
-						},
-						devtool: 'source-map'
-					}),
-					compileCallback = function (err, stats) {
-						if (err)
-						{ 
-							throw new gutil.PluginError('js:' + sName, err);
-						}
-						gutil.log('js:' + sName, stats.toString({
-							colors: true,
-							//context: true,
-							hash: false,
-							version: false,
-							timings: true,
-							assets: false,
-							chunks: false,
-							chunkModules: false,
-							modules: false,
-							children: false,
-							cached: false,
-							reasons: false,
-							source: false,
-							errorDetails: false,
-							chunkOrigins: false
-						}));
-					}
-				;
-				//compiler.run(compileCallback);
-				//Or
-				compiler.watch({ // watch options:
+			cfg.watch.push('js:' + sName + ':watch');
+			gulp.task('js:' + sName + ':watch', function() {
+				webpack(oWebPackConfig).watch({ // watch options:
 					aggregateTimeout: 300, // wait so long for more changes
 					poll: true // use polling instead of native watchers
 					// pass a number to set the polling interval
-				}, compileCallback);
-			});
-		}
-		else
-		{
-			gulp.task('js:' + sName, function() {
-				var b = browserify(oData.src, {
-					//transform: [reactify],
-					paths: ['./']
+				}, function (err, stats) {
+					compileCallback.call(null, 'js:' + sName + ':watch', err, stats);
 				});
-				return b.bundle()
-					.pipe(source(oData.name))
-					.pipe(buffer())
-					.pipe(header(((oData.afterlogic ? cfg.license : '') || '') + jshintEnd))
-					.pipe(eol('\n', true))
-					.pipe(gulp.dest(oData.dest));
 			});
 		}
-		
-
-		//if (oData.watch)
-		//{
-		//	gulp.task('js:' + sName + ':watch', function() {
-		//		var bundler = watchify(browserify(oData.src));
-				
-		//		function rebundle() {
-		//			return bundler.bundle()
-		//				.pipe(source(oData.name))
-		//				.pipe(buffer())
-		//				.pipe(header(((oData.afterlogic ? cfg.license : '') || '') + jshintEnd))
-		//				.pipe(eol('\n', true))
-		//				.pipe(gulp.dest(oData.dest));
-		//		}
-		//		
-		//		bundler.on('update', rebundle);
-//
-//				return rebundle();
-//			});
-//		}
 
 		if (oData.min)
 		{
 			cfg.min.push('js:' + sName + ':min');
 			gulp.task('js:' + sName + ':min', function() {
-//				return gulp.src(oData.dest + oData.name)
-//					.pipe(rename(oData.min))
-//					.pipe(uglify(cfg.uglify))
-//					.pipe(eol('\n', true))
-//					.pipe(gulp.dest(oData.dest))
-//					.on('error', gutil.log);
-
-				var 
-					compiler = webpack({
-						entry: oData.src,
-						output: {
-							path: oData.dest,
-							filename: oData.min
-						},
-						resolve: {
-							root: [
-								path.resolve('./')
-							]
-						},
-						module: {
-							loaders: [
-								{ 
-									test: /[\\\/]modernizr\.js$/,
-									loader: "imports?this=>window!exports?window.Modernizr"
-								}
-							]
-						},
-						plugins: [
-							new webpack.optimize.UglifyJsPlugin({
-								compress: {
-									warnings: false,
-									drop_console: true,
-									unsafe: true
-								}
-							})
-						]
+				oWebPackConfig.output.filename = oData.min;
+				oWebPackConfig.plugins = [
+					new webpack.optimize.UglifyJsPlugin({
+						compress: {
+							warnings: false,
+							drop_console: true,
+							unsafe: true
+						}
 					})
-				;
-
-				compiler.run(function (err, stats) {
-					if (err)
-					{ 
-						throw new gutil.PluginError('js:' + sName, err);
-					}
-					gutil.log('js:' + sName, stats.toString({
-						colors: true,
-						//context: true,
-						hash: false,
-						version: false,
-						timings: true,
-						assets: false,
-						chunks: false,
-						chunkModules: false,
-						modules: false,
-						children: false,
-						cached: false,
-						reasons: false,
-						source: false,
-						errorDetails: false,
-						chunkOrigins: false
-					}));
+				];
+				delete oWebPackConfig.devtool;
+				
+				webpack(oWebPackConfig).run(function (err, stats) {
+					compileCallback.call(null, 'js:' + sName + ':min', err, stats);
 				});
 			});
 		}
@@ -313,22 +221,21 @@ for (name in cfg.paths.js)
 
 gulp.task('all', cfg.all);
 gulp.task('min', cfg.min);
+gulp.task('w', cfg.watch);
 
-gulp.task('default', ['js:app']);
+gulp.task('default', ['js:app:watch']);
 
-gulp.task('files', ['js:app', 'js:files_pub']);
+gulp.task('files', ['js:app:watch', 'js:files_pub:watch']);
 
-gulp.task('cal', ['js:app', 'js:calendar_pub']);
+gulp.task('cal', ['js:app:watch', 'js:calendar_pub:watch']);
 
-gulp.task('helpdesk', ['js:app', 'js:helpdesk_ext']);
+gulp.task('helpdesk', ['js:app:watch', 'js:helpdesk_ext:watch']);
 
-gulp.task('msg', ['js:app', 'js:message_newtab']);
+gulp.task('msg', ['js:app:watch', 'js:message_newtab:watch']);
 
-gulp.task('mob', ['js:app', 'js:mobile']);
+gulp.task('mob', ['js:app:watch', 'js:mobile:watch']);
 
-gulp.task('adm', ['js:adminpanel']);
-
-gulp.task('w', ['js:all:watch']);
+gulp.task('adm', ['js:adminpanel:watch']);
 
 require('./gulp-tasks/langs.js');
 

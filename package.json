@@ -34,35 +34,11 @@
     "jquery.cookie": "./core/js/vendors/jquery.cookie.js",
     "knockout-sortable": "./modules/Mail/js/vendors/knockout-sortable.js"
   },
-  "browserify-shim": {
-    "customscroll": {
-      "depends": [
-        "jquery:jQuery"
-      ]
-    },
-    "modernizr": "Modernizr",
-    "jquery.cookie": {
-      "depends": [
-        "jquery:jQuery"
-      ]
-    },
-    "knockout-sortable": {
-      "depends": [
-        "knockout:ko"
-      ]
-    }
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
   "devDependencies": {
     "wrench": "*",
     "jshint-summary": "*",
     "gulp": "*",
     "gulp-util": "2.2.20",
-    "gulp-uglify": "*",
     "gulp-jshint": "*",
     "gulp-less": "*",
     "gulp-rename": "*",
@@ -72,9 +48,6 @@
     "gulp-expect-file": "*",
     "gulp-minify-css": "*",
     "gulp-concat-util": "*",
-    "browserify": "*",
-    "browserify-shim": "*",
-    "watchify": "*",
     "vinyl-source-stream": "*",
     "vinyl-buffer": "*",
     "cascade-ini": "*",
