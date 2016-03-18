@@ -43,7 +43,7 @@
 /*=== Compose screen CSS ===*/
 .MailComposeLayout .panels,
 .compose_popup .panels {
-	background: #f9f9f9;
+	background: #ffffff;
 }
 .panel.compose {
 	background: #f9f9f9;
@@ -74,9 +74,10 @@
 		}
 		
 		.panel_top {
-			border: 0px;
 			background: none;
-			padding: 6px 11px;
+			border: 0px;
+			margin-bottom: 6px;
+			padding: 6px 11px 0px;
 			position: relative;
 		}
 		
@@ -230,17 +231,15 @@
 		border-bottom: 1px solid #F5EDD4;
 	}
 
-	.input {
-		border: 1px solid #ccc;
-		box-shadow: none;
-	}
-
 	table.fields {
 		width: 100%;
-		margin-top: 10px;
 		
-		table.fields {
-			margin-top: 0px;
+		& > tbody > tr {
+			border-bottom: 1px solid #e2e2e2;
+		}
+		
+		table {
+			width: 100%;
 		}
 		
 		td {
@@ -252,22 +251,31 @@
 		}
 		
 		.label {
+			color: #bababa;
+			font-size: 13pt;
+			padding: 4px 10px 4px 0px;
 			text-align: right;
 			width: 90px;
-			padding-right: 10px;
-
+			
 			html.rtl & {
 				text-align: left;
 			}
 		}
 		
+		.value {
+			padding: 4px 0px;
+		}
+		
 		.input {
-			padding: 8px 10px;
-			font-size: 11pt;
-			border-radius: 2px;
-			
+			border: none;
+			box-shadow: none;
 			min-width: 100%;
-		    width: 100px !important;
+			padding: 8px 10px;
+		}
+		
+		.input, .inputosaurus input {
+			color: #444;
+			font-size: 13pt;
 		}
 		
 		textarea.input {
@@ -323,7 +331,6 @@
 	
 	.attachments {
 		z-index: 1;
-		//float: right;
 		
 		.uploader_mask {
 			.box-sizing;

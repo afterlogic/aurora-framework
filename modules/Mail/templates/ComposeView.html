@@ -23,7 +23,7 @@
 
 								<div class="notice" data-bind="visible: bDemo, i18n: {'key': 'MAIL/INFO_SEND_EMAIL_TO_DEMO_ONLY'}"></div>
 								<table class="fields">
-									<tr class="first_row from" data-bind="visible: visibleFrom() && !headersCompressed()">
+									<tr class="from" data-bind="visible: visibleFrom() && !headersCompressed()">
 										<td class="label">
 											<span data-bind="i18n: {'key': 'MAIL/LABEL_FROM'}"></span>:
 										</td>
@@ -38,7 +38,7 @@
 											<span data-bind="i18n: {'key': 'MAIL/LABEL_TO'}"></span>:
 										</td>
 										<td class="value">
-											<table class="fields">
+											<table>
 												<tr>
 													<td class="value" style="width: 100%;" id="selenium_compose_toaddr">
 														<div class="input inputosaurus">
@@ -58,10 +58,6 @@
 										</td>
 									</tr>
 									<!-- ko template: {name: sCcBccSwitchersMobileViewTemplate} --><!-- /ko -->
-									<tr class="cc" style="display: none;">
-										<td class="label"></td>
-										<td class="value"></td>
-									</tr>
 									<tr class="cc" data-bind="visible: visibleCc() && !headersCompressed()">
 										<td class="label">
 											<span data-bind="i18n: {'key': 'CORE/LABEL_CC'}"></span>:
@@ -92,7 +88,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr class="last_row subject" data-bind="visible: !headersCompressed()">
+									<tr class="subject" data-bind="visible: !headersCompressed()">
 										<td class="label">
 											<span data-bind="i18n: {'key': 'MAIL/LABEL_SUBJECT'}"></span>:
 										</td>
@@ -101,7 +97,7 @@
 												   data-bind="value: subject, hasfocus: subjectFocused, valueUpdate: 'afterkeydown'"/>
 										</td>
 									</tr>
-									<tr class="counter" data-bind="visible: visibleCounter() && !headersCompressed()">
+									<tr class="counter" data-bind="visible: bVisibleCounter && !headersCompressed()">
 										<td class="label">
 											<span data-bind="i18n: {'key': 'MAIL/LABEL_COUNTER'}"></span>:
 										</td>

@@ -102,7 +102,7 @@ function CComposeView()
 			$(this.ccAddrDom()).inputosaurus('resizeInput');
 		}, this));
 	}, this);
-	this.visibleCounter = ko.observable(false);
+	this.bVisibleCounter = false;
 
 	this.readingConfirmation = ko.observable(false);
 
