@@ -82,9 +82,9 @@ class CApiEavManager extends AApiManagerWithStorage
 		if (0 < count($aMap))
 		{
 			$aProperties = array();
-			foreach ($aMap as $sKey => $sType)
+			foreach ($aMap as $sKey => $aType)
 			{
-				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey});
+				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $aType[0]);
 			}
 			try 
 			{

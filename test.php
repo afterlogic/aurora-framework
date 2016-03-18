@@ -70,8 +70,8 @@ $aObjects = $oEavManager->getObjectsByType('Account',
 		array(), 
 		'Sort', \ESortOrder::ASC
 );
-print_r($aObjects);
 
+print_r($aObjects);
 
 $oAccount->Description = 'Description';
 
