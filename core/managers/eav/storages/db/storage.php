@@ -46,7 +46,7 @@ class CApiEavDbStorage extends CApiEavStorage
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
 			{
-				$bResult = 0 < (int) $oRow->object_count;
+				$bResult = 0 < (int) $oRow->objects_count;
 			}
 
 			$this->oConnection->FreeResult();
@@ -74,12 +74,19 @@ class CApiEavDbStorage extends CApiEavStorage
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oObject['obj_id'] = $oRow->obj_id;
-				$oObject['obj_type'] = $oRow->obj_type;
-				$oObject['obj_module'] = $oRow->obj_module;
-				if (isset($oRow->prop_key))
+				if (!isset($oObject))
 				{
-					$oObject['prop_'.$oRow->prop_key] = $oRow->prop_value;
+					$oObject = call_user_func($oRow->obj_type . '::createInstanse', $oRow->obj_module);
+				}
+
+				if (isset($oObject))
+				{
+					$oObject->iObjectId = $oRow->obj_id;
+
+					if (isset($oRow->prop_key) && $oObject->IsProperty($oRow->prop_key))
+					{
+						$oObject->{$oRow->prop_key} = $oRow->{'prop_value_' . $oRow->prop_type};
+					}
 				}
 			}			
 			$this->oConnection->FreeResult();
@@ -107,7 +114,21 @@ class CApiEavDbStorage extends CApiEavStorage
 			$mResult = array();
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$mResult[$oRow->obj_id] = $oRow;
+				$oObject = call_user_func($sType . '::createInstanse');
+
+				$oObject->iObjectId = $oRow->obj_id;
+				$oObject->sModuleName =  $oRow->obj_module;
+				
+				$aMap = $oObject->getMap();
+				foreach($aMap as $sKey => $aMapItem)
+				{
+					if (isset($oRow->{'prop_' . $sKey}))
+					{
+						$oObject->{$sKey} = $oRow->{'prop_' . $sKey};
+					}
+				}
+
+				$mResult[$oRow->obj_id] = $oObject;
 			}
 		}
 		$this->throwDbExceptionIfExist();

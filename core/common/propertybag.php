@@ -122,7 +122,6 @@ abstract class api_APropertyBag
 
 	/**
 	 * @param string $sPropertyName
-	 * @param mixed $mValue
 	 * @return bool
 	 */
 	public function IsProperty($sPropertyName)
@@ -130,6 +129,21 @@ abstract class api_APropertyBag
 		$aMap = $this->getMap();
 		return isset($aMap[$sPropertyName]);
 	}
+	
+		/**
+	 * @return array
+	 */
+	public function getPropertyType($sPropertyName)
+	{
+		$sResult = 'string';
+		$aMap = $this->getMap();
+		if (isset($aMap[$sPropertyName]) && isset($aMap[$sPropertyName][0]))
+		{
+			$sResult = $aMap[$sPropertyName][0];
+		}
+		
+		return $sResult;
+	}	
 
 	/**
 	 * @param string $sPropertyName
@@ -153,8 +167,7 @@ abstract class api_APropertyBag
 		{
 			$this->setType($mValue, $aMap[$sKey][0]);
 
-			if (($this->__USE_TRIM_IN_STRINGS__ && 0 === strpos($aMap[$sKey][0], 'string')) ||
-				(in_array($sKey, $this->aTrimer) && is_string($mValue)))
+			if ($this->__USE_TRIM_IN_STRINGS__ && 0 === strpos($aMap[$sKey][0], 'string'))
 			{
 				$mValue = trim($mValue);
 			}

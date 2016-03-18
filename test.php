@@ -19,7 +19,7 @@ class Account extends api_APropertyBag
 		$this->SetDefaults();
 	}
 	
-	public static function createInstanse($sModule)
+	public static function createInstanse($sModule = 'Core')
 	{
 		return new Account($sModule);
 	}
@@ -41,7 +41,9 @@ class Account extends api_APropertyBag
 			'Name'		=> array('string', ''),
 			'Email'		=> array('string', ''),
 			'Phone'		=> array('string', ''),
-			'New'		=> array('string', 'Default value')
+			'New'		=> array('string', 'Default value'),
+			'IdDomain'	=> array('int', 0),
+			'Description'	=> array('text', '')
 		);
 	}	
 }
@@ -54,28 +56,30 @@ $oAccount->Name = 'Test' . time();
 $oAccount->Email = 'test' . time() . '@local.host';
 $oAccount->Phone = '123-45-67';
 
-$oEavManager->createObject($oAccount);
+$oEavManager->saveObject($oAccount);
+
 
 $aObjects = $oEavManager->getObjectsByType('Account', 
 		array(
 			'Name', 
 			'Email', 
-			'Phone', 
-			'Undefined'
+			'Phone',
+			'IdDomain',
+			'Description'
 		), 0, 9999,
-		array(/*'Name' => 'Test1'*/),
+		array(), 
 		'Sort', \ESortOrder::ASC
 );
-
 print_r($aObjects);
 
-$oAccount->New = 'New!!';
 
-$oEavManager->updateObject($oAccount);
+$oAccount->Description = 'Description';
+
+$oEavManager->saveObject($oAccount);
 
 print_r($oEavManager->getObjectById($oAccount->iObjectId));
 
-//$oEavManager->deleteObject($oAccount->iObjectId);
+$oEavManager->deleteObject($oAccount->iObjectId);
 
 
 	

@@ -37,6 +37,21 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;		
 	}	
+	
+	public function saveObject(\api_APropertyBag &$oObject)
+	{
+		$mResult = false;
+		if (isset($oObject->iObjectId) && $this->isObjectExists($oObject->iObjectId))
+		{
+			$mResult = $this->updateObject($oObject);
+		}
+		else
+		{
+			$mResult = $this->createObject($oObject);
+		}
+		
+		return $mResult;
+	}
 
 	public function createObject(\api_APropertyBag &$oObject)
 	{
@@ -50,9 +65,9 @@ class CApiEavManager extends AApiManagerWithStorage
 			$oObject->iObjectId = $mResult;
 			$aMap = $oObject->getMap();
 			$aProperties = array();
-			foreach ($aMap as $sKey => $sType)
+			foreach ($aMap as $sKey => $aType)
 			{
-				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey});
+				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $aType[0]);
 			}
 			$this->setProperties($mResult, $aProperties);
 		}
@@ -118,32 +133,16 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $aObjects;		
 	}
 	
-	public function getObjectsByModule($sModule, $aSearchProperties = array())
+	public function getObjectsByModule($sModule)
 	{
-		$aObjects = null;
-		try
-		{
-			$aObjects = $this->oStorage->getObjectsByModule($sModule, $aSearchProperties);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-		return $aObjects;
+		// TODO:
+		return false;
 	}
 	
-	public  function getObjectsByModuleAndType($sModule, $sType, $aSearchProperties = array())
+	public  function getObjectsByModuleAndType($sModule, $sType)
 	{
-		$aObjects = null;
-		try
-		{
-			$aObjects = $this->oStorage->getObjectsByModuleAndType($sModule, $sType, $aSearchProperties);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-		return $aObjects;
+		// TODO:
+		return false;
 	}
 	
 	public function getObjectById($iId)
