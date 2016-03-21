@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	
+
 	AddressUtils = require('core/js/utils/Address.js'),
 	FilesUtils = require('core/js/utils/Files.js'),
 	TextUtils = require('core/js/utils/Text.js'),
