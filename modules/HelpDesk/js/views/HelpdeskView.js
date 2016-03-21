@@ -884,7 +884,7 @@ CHelpdeskView.prototype.onItemSelect = function (oItem)
 	{
 		if (!this.replySendingStarted() && (!this.isQuickReplyPaneEmpty() || !this.isNewThreadPaneEmpty()))
 		{
-			Screens.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_CANCEL_REPLY'),
+			Popups.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_CANCEL_REPLY'),
 				_.bind(function (bResult) {
 					if (bResult)
 					{

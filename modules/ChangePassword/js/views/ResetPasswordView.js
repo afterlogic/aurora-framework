@@ -51,7 +51,7 @@ CResetPasswordView.prototype.configureMail = function ()
 {
 	if (this.oDefaultAccount && !this.oDefaultAccount.allowMail() && CreateAccountPopup)
 	{
-		App.Screens.showPopup(CreateAccountPopup, [Enums.AccountCreationPopupType.ConnectToMail, this.oDefaultAccount.email()]);
+		Popups.showPopup(CreateAccountPopup, [Enums.AccountCreationPopupType.ConnectToMail, this.oDefaultAccount.email()]);
 	}
 };
 
