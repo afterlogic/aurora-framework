@@ -94,7 +94,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 		
 		if (!empty($sSortProperty))
 		{
-			$aViewProperties[] = $sSortProperty;
+			array_push($aViewProperties, $sSortProperty);
 			$sResultSort = sprintf(" ORDER BY prop_%s %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
 		}
 		$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aSearchProperties)));
@@ -116,12 +116,27 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$sViewPoperties = ', ' . implode(', ', $aResultViewProperties);
 			$sJoinPoperties = implode(' ', $aJoinProperties);
 		}
-		foreach ($aSearchProperties as $sKey => $sValue)
+		foreach ($aSearchProperties as $sKey => $mValue)
 		{
 			$oObject = call_user_func($sObjectType . '::createInstanse');
-			$sType = $oObject->getPropertyType($sValue);
-			$aResultSearchProperties[] = sprintf("props_%s.value_%s = %s", 
-					$sKey, $sType, $this->escapeString($sValue));
+			$sPrpertyValue = $mValue;
+			$sPropertyAction = '=';
+			if (is_array($mValue) && count($mValue) > 1)
+			{
+				$sPropertyAction = $mValue[0];
+				$sPrpertyValue = $mValue[1];
+			}
+			else
+			{
+				if (strpos($sPrpertyValue, "%") !== false)
+				{
+					$sPropertyAction = 'LIKE';
+				}
+			}
+			$sType = $oObject->getPropertyType($sKey);
+			$sValueFormat = ($sType === 'int') ? "%d" : "%s";
+			$aResultSearchProperties[] = sprintf("props_%s.value_%s %s " . $sValueFormat, 
+					$sKey, $sType, $sPropertyAction, ($sType !== 'int') ? $this->escapeString($mValue) : $mValue);
 		}
 		if (0 < count($aSearchProperties))
 		{
@@ -167,23 +182,19 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function createProperty(CProperty $oProperty)
 	{
-		$aResults = array(
-			array(	
+		return sprintf('INSERT INTO %seav_properties ( %s ) VALUES ( %s )', $this->prefix(), 
+				implode(', ', array(	
 					$this->escapeColumn('id_object'), 
 					$this->escapeColumn('key'),  
 					$this->escapeColumn('value_' . $oProperty->Type),  
 					$this->escapeColumn('type')
-			),
-			array(
+				)), 
+				implode(', ', array(
 					$oProperty->ObjectId,
 					$this->escapeString($oProperty->Name),
 					($oProperty->Type !== 'int') ? $this->escapeString($oProperty->Value) : $oProperty->Value,
 					$this->escapeString($oProperty->Type)				
-			)
-		);
-		return sprintf('INSERT INTO %seav_properties ( %s ) VALUES ( %s )', $this->prefix(), 
-				implode(', ', $aResults[0]), 
-				implode(', ', $aResults[1])
+				))
 		);
 	}	
 	
@@ -194,9 +205,9 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function updateProperty(CProperty $oProperty)
 	{
-		$sSql = 'UPDATE %seav_properties SET %s = %s WHERE %s = %d AND %s = %s';
-		return sprintf($sSql, $this->prefix(), 
-			$this->escapeColumn('value_' . $oProperty->Type), ($oProperty->Type !== 'int') ? $this->escapeString($oProperty->Value) : $oProperty->Value,
+		return sprintf('UPDATE %seav_properties SET %s = %s WHERE %s = %d AND %s = %s', $this->prefix(), 
+			$this->escapeColumn('value_' . $oProperty->Type), 
+				($oProperty->Type !== 'int') ? $this->escapeString($oProperty->Value) : $oProperty->Value,
 			$this->escapeColumn('id_object'), $oProperty->ObjectId,
 			$this->escapeColumn('key'), $this->escapeString($oProperty->Name)
 		);
@@ -209,13 +220,12 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function deleteProperty(CProperty $oProperty)
 	{
-		$sSql = 'DELETE FROM %seav_properties WHERE id = %d';
-
-		return sprintf($sSql, $this->prefix(), $oProperty->Id);
+		return sprintf('DELETE FROM %seav_properties WHERE id = %d', 
+				$this->prefix(), $oProperty->Id);
 	}
 	
 	/**
-	 * @param $oProperty
+	 * @param $iObjectId
 	 *
 	 * @return string
 	 */
@@ -253,25 +263,6 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$this->escapeColumn('key'), $sPropertyName)
 		);
 	}
-	
-	/**
-	 * @param int $iObjectId
-	 *
-	 * @return string
-	 */
-	public function getProperties($iObjectId, $sPropertyValue = '')
-	{
-		$sFilter = '1 = 1';
-		if (!empty($sPropertyValue))
-		{
-			$sFilter = sprintf('%s LIKE %s', 
-				$this->escapeColumn('value'), '%' . $sPropertyValue . '%');
-		}
-		
-		return $this->gePropertyByWhere(sprintf('%s = %d AND %s', 
-				$this->escapeColumn('id_object'), $iObjectId, $sFilter)
-		);
-	}	
 }
 
 /**

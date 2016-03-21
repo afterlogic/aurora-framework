@@ -67,7 +67,7 @@ $aObjects = $oEavManager->getObjectsByType('Account',
 			'IdDomain',
 			'Description'
 		), 0, 9999,
-		array(), 
+		array('IdDomain' => array('<', 1)), 
 		'Sort', \ESortOrder::ASC
 );
 
