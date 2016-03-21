@@ -51,30 +51,35 @@
 				<div class="message_info message_detail_info" data-bind="visible: detailsVisible()">
 					<div class="message_info_line">
 						<span class="title" data-bind="i18n: {'key': 'MAIL/LABEL_FROM'}"></span>: 
-						<span class="from control address" data-bind="text: fullFrom, 
-								attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}">
+						<span class="contact address_capsule">
+							<span class="address" data-bind="text: fullFrom, 
+									attr: {'data-email': fromEmail, 'data-name': oFromAddr() ? oFromAddr().sName : ''}">
+							</span>
 						</span>
 					</div>
 				
 					<div class="message_info_line" data-bind="visible: aToAddr().length > 0">
 						<span class="title" data-bind="i18n: {'key': 'MAIL/LABEL_TO'}"></span>: 
 						<!-- ko foreach: aToAddr -->
-						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
-						</span><span data-bind="visible: $parent.aToAddr().length > $index() + 1">, </span>
+						<span class="contact address_capsule">
+							<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}"></span>
+						</span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aCcAddr().length > 0">
 						<span class="title" data-bind="i18n: {'key': 'CORE/LABEL_CC'}"></span>: 
 						<!-- ko foreach: aCcAddr -->
-						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
-						</span><span data-bind="visible: $parent.aCcAddr().length > $index() + 1">, </span>
+						<span class="contact address_capsule">
+							<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}"></span>
+						</span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line" data-bind="visible: aBccAddr().length > 0">
 						<span class="title" data-bind="i18n: {'key': 'CORE/LABEL_BCC'}"></span>: 
 						<!-- ko foreach: aBccAddr -->
-						<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}">
-						</span><span data-bind="visible: $parent.aBccAddr().length > $index() + 1">, </span>
+						<span class="contact address_capsule">
+							<span class="address" data-bind="text: sFull, attr: {'data-email': sEmail, 'data-name': sName}"></span>
+						</span>
 						<!-- /ko -->
 					</div>
 					<div class="message_info_line">
