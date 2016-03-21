@@ -573,6 +573,9 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 		/* @var $oTenant CTenant */
 		$oTenant =& $this->oAdminPanel->GetMainObject('tenant_edit');
+		
+		var_dump($oTenant->IdTenant);
+		$oTenant->IdTenant = $oTenant->iObjectId;
 		if ($oTenant && 0 < $oTenant->IdTenant)
 		{
 			$oScreen->Data->SetValue('txtToken', CApi::getCsrfToken('p7admToken'));

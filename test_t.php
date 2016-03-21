@@ -1,68 +1,14 @@
 <?php
 
-/* -AFTERLOGIC LICENSE HEADER- */
+if (!defined('PSEVEN_APP_ROOT_PATH'))
+{
+	define('PSEVEN_APP_ROOT_PATH', rtrim(realpath(__DIR__), '\\/').'/');
+}
 
-/**
- * @property int $IdTenant
- * @property int $IdChannel
- * @property bool $IsDisabled
- * @property bool $IsEnableAdminPanelLogin
- * @property bool $IsDefault
- * @property string $Login
- * @property string $Email
- * @property string $PasswordHash
- * @property string $Description
- * @property int $QuotaInMB
- * @property int $AllocatedSpaceInMB
- * @property string $FilesUsageInBytes
- * @property int $FilesUsageInMB
- * @property int $FilesUsageDynamicQuotaInMB
- * @property int $UserCountLimit
- * @property int $DomainCountLimit
- * @property string $Capa
- * @property int $Expared
- * @property string $PayUrl
- * @property bool $IsTrial
- * @property bool $AllowChangeAdminEmail
- * @property bool $AllowChangeAdminPassword
- *
- * @property string $HelpdeskAdminEmailAccount
- * @property string $HelpdeskClientIframeUrl
- * @property string $HelpdeskAgentIframeUrl
- * @property string $HelpdeskSiteName
- * @property string $HelpdeskStyleAllow
- * @property string $HelpdeskStyleImage
- * @property int $HelpdeskFetcherType
- * @property bool $HelpdeskAllowFetcher
- * @property int $HelpdeskFetcherTimer
- * 
- * @property string $LoginStyleImage
- * @property string $AppStyleImage
- * 
- * @property bool $SipAllow
- * @property bool $SipAllowConfiguration
- * @property string $SipRealm
- * @property string $SipWebsocketProxyUrl
- * @property string $SipOutboundProxyUrl
- * @property string $SipCallerID
- * 
- * @property bool $TwilioAllow
- * @property bool $TwilioAllowConfiguration
- * @property string $TwilioAccountSID
- * @property string $TwilioAuthToken
- * @property string $TwilioAppSID
- *
- * @property array $Socials
- * 
- * @property string $CalendarNotificationEmailAccount
- * @property string $InviteNotificationEmailAccount
- *
- * @package Tenants
- * @subpackage Classes
- */
-//class CTenant extends api_AContainer
+// utilizing WebMail Pro API
+include_once __DIR__.'/core/api.php';
 
-class CTenant extends api_APropertyBag
+class Tenant extends api_APropertyBag
 {
 	public function __construct($sModule)
 	{
@@ -191,7 +137,7 @@ class CTenant extends api_APropertyBag
 	
 	public static function createInstanse($sModule = 'Core')
 	{
-		return new CTenant($sModule);
+		return new Tenant($sModule);
 	}
 
 	/**
@@ -532,3 +478,45 @@ class CTenant extends api_APropertyBag
  */
 	}
 }
+
+/* var $oEavManager \CApiEavManager */
+$oEavManager = \CApi::GetCoreManager('eav', 'db');
+
+$oTenant = Tenant::createInstanse('Core');
+//$oTenant->Name = 'Test' . time();
+$oTenant->Email = 'test@local.host';
+$oTenant->Login = '1234';
+//$oTenant->Phone = '123-45-67';
+//var_dump($oTenant);
+$oEavManager->saveObject($oTenant);
+
+
+//$oEavManager->deleteObject(44);
+//$oEavManager->deleteObject(34);
+//$oEavManager->deleteObject(35);
+//$oEavManager->deleteObject(36);
+//$oEavManager->deleteObject(37);
+//exit;
+$aObjects = $oEavManager->getObjectsByType('Tenant', 
+		array(
+			'Email', 
+			'Login',
+			'TwilioPhoneNumber'
+		), 0, 9999,
+		array(), 
+		'Email', \ESortOrder::ASC
+);
+var_dump($aObjects);
+
+
+
+$oTenant->Description = 'Description';
+
+$oEavManager->saveObject($oTenant);
+
+var_dump($oEavManager->getObjectById($oTenant->iObjectId));
+
+//$oEavManager->deleteObject($oTenant->iObjectId);
+
+
+	

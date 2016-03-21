@@ -73,6 +73,7 @@ class CApiTenantsCommandCreator extends api_CommandCreator
 	}
 
 	/**
+	 * @depricated
 	 * @param string $sTenantLogin
 	 * @param string $sTenantPassword Default value is **null**.
 	 *
@@ -93,6 +94,7 @@ class CApiTenantsCommandCreator extends api_CommandCreator
 	}
 
 	/**
+	 * @depricated
 	 * @param int $iDomainId
 	 *
 	 * @return string

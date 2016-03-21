@@ -13,6 +13,16 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 * @var array
 	 */
 	static $aTenantNameCache = array();
+	
+	/**
+	 * @var CApiEavManager
+	 */
+	public $oEavManager = null;
+	
+	/**
+	 * @var CTenant
+	 */
+	static $oDefaultTenant = null;
 
 	/**
 	 * Creates a new instance of the object.
@@ -22,7 +32,9 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('tenants', $oManager, $sForcedStorage);
-
+		
+		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
+		
 		$this->inc('classes.tenant');
 		$this->inc('classes.socials');
 	}
@@ -36,12 +48,24 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 *
 	 * @return array|false [Id => [Login, Description]]
 	 */
-	public function getTenantList($iPage, $iTenantsPerPage, $sOrderBy = 'Login', $bOrderType = true, $sSearchDesc = '')
+	public function getTenantList($iPage, $iTenantsPerPage, $sOrderBy = 'Login', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
 	{
 		$aResult = false;
 		try
 		{
-			$aResult = $this->oStorage->getTenantList($iPage, $iTenantsPerPage, $sOrderBy, $bOrderType, $sSearchDesc);
+			$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+				array(
+					'Login', 
+					'Description'
+				), $iPage, $iTenantsPerPage,
+				array('Description' => '%'.$sSearchDesc.'%'),
+				$sOrderBy, $iOrderType
+			);
+
+			foreach($aResultTenants as $oTenat)
+			{
+				$aResult[$oTenat->iObjectId] = array($oTenat->Login, $oTenat->Description);
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -60,7 +84,14 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$iResult = false;
 		try
 		{
-			$iResult = $this->oStorage->getTenantCount($sSearchDesc);
+			//TODO use objects count method then in will be created
+			$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+				array(
+					'Login'
+				), 0, 9999
+			);
+			
+			$iResult = count($aResultTenants);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -76,6 +107,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantAllocatedSize($iTenantId)
 	{
+		//TODO use new logic then Account class will be rewrited
 		$iResult = 0;
 		if (0 < $iTenantId)
 		{
@@ -97,26 +129,31 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getDefaultGlobalTenant()
 	{
-		$oTenant = new CTenant();
-		$oTenant->IsDefault = true;
-		$oTenant->SipAllowConfiguration = true;
-		$oTenant->TwilioAllowConfiguration = true;
+		if (self::$oDefaultTenant === null)
+		{
+			try
+			{
+				$oResult = $this->oEavManager->getObjectsByType('CTenant', 
+					array(
+						'IsDefault'
+					),
+					0,
+					9999,
+					array('IsDefault' => true)
+				);
 
-		$oTenant->HelpdeskAdminEmailAccount = $this->oSettings->GetConf('Helpdesk/AdminEmailAccount');
-		$oTenant->HelpdeskClientIframeUrl = $this->oSettings->GetConf('Helpdesk/ClientIframeUrl');
-		$oTenant->HelpdeskAgentIframeUrl = $this->oSettings->GetConf('Helpdesk/AgentIframeUrl');
-		$oTenant->HelpdeskSiteName = $this->oSettings->GetConf('Helpdesk/SiteName');
-		$oTenant->HelpdeskStyleAllow = $this->oSettings->GetConf('Helpdesk/StyleAllow');
-		$oTenant->HelpdeskStyleImage = $this->oSettings->GetConf('Helpdesk/StyleImage');
-		$oTenant->HelpdeskStyleText = $this->oSettings->GetConf('Helpdesk/StyleText');
+				if ($oResult instanceOf \CTenant)
+				{
+					 self::$oDefaultTenant = $oResult;
+				}
+			}
+			catch (CApiBaseException $oException)
+			{
+				$this->setLastException($oException);
+			}
+		}
 		
-		$oTenant->HelpdeskFetcherType = $this->oSettings->GetConf('Helpdesk/FetcherType');
-
-		$oTenant->LoginStyleImage = $this->oSettings->GetConf('Common/LoginStyleImage');
-		$oTenant->AppStyleImage = $this->oSettings->GetConf('Common/AppStyleImage');
-		$oTenant->InviteNotificationEmailAccount = $this->oSettings->GetConf('Common/InvitationEmail');
-
-		return $oTenant;
+		return self::$oDefaultTenant;
 	}
 
 	/**
@@ -130,12 +167,41 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$oTenant = null;
 		try
 		{
-			$oTenant = $this->oStorage->getTenantById($mTenantId, $bIdIsHash);
+			//TODO verify logic
+//			$oTenant = $this->oStorage->getTenantById($mTenantId, $bIdIsHash);
+			if (!$bIdIsHash)
+			{
+				var_dump('$mTenantId', $mTenantId);
+				$oResult = $this->oEavManager->getObjectById($mTenantId);
+				
+				if ($oResult instanceOf \CTenant)
+				{
+					$oTenant = $oResult;
+				}
+			}
+			else
+			{
+				$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+					array(
+						'Hash'
+					),
+					0,
+					1,
+					array('Hash' => $mTenantId)
+				);
+				
+				if (isset($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
+				{
+					$oTenant = $aResultTenants[0];
+				}
+			}
+			
 			if ($oTenant)
 			{
 				/* @var $oTenant CTenant */
 				
-				$mTenantId = $oTenant->IdTenant;
+//				$mTenantId = $oTenant->IdTenant;
+				$mTenantId = $oTenant->iObjectId;
 
 				$iFilesUsageInMB = 0;
 				if (0 < strlen($oTenant->FilesUsageInBytes))
@@ -144,17 +210,17 @@ class CApiTenantsManager extends AApiManagerWithStorage
 				}
 
 				$oTenant->AllocatedSpaceInMB = $this->getTenantAllocatedSize($mTenantId) + $iFilesUsageInMB;
-				$oTenant->FlushObsolete('AllocatedSpaceInMB');
+//				$oTenant->FlushObsolete('AllocatedSpaceInMB');
 
 				$oTenant->FilesUsageInMB = $iFilesUsageInMB;
-				$oTenant->FlushObsolete('FilesUsageInMB');
+//				$oTenant->FlushObsolete('FilesUsageInMB');
 
 				if (0 < $oTenant->QuotaInMB)
 				{
 					$oTenant->FilesUsageDynamicQuotaInMB = $oTenant->QuotaInMB - $oTenant->AllocatedSpaceInMB + $oTenant->FilesUsageInMB;
 					$oTenant->FilesUsageDynamicQuotaInMB = 0 < $oTenant->FilesUsageDynamicQuotaInMB ?
 						$oTenant->FilesUsageDynamicQuotaInMB : 0;
-					$oTenant->FlushObsolete('FilesUsageDynamicQuotaInMB');
+//					$oTenant->FlushObsolete('FilesUsageDynamicQuotaInMB');
 				}
 			}
 		}
@@ -184,12 +250,38 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
 	{
+		//TODO why default id is 0? 0 looks like correct object id
 		$iTenantId = 0;
+		
 		try
 		{
 			if (!empty($sTenantLogin))
 			{
-				$iTenantId = $this->oStorage->getTenantIdByLogin($sTenantLogin, $sTenantPassword);
+				$oFilterBy = array('Login' => $sTenantLogin);
+				
+				if (null !== $sTenantPassword)
+				{
+					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
+					
+					//TODO why we shoud filter by these fields?
+					$oFilterBy['IsDisabled'] = false;
+					$oFilterBy['IsEnableAdminPanelLogin'] = true;
+				}
+				
+				$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+					array(
+						'Login'
+					),
+					0,
+					1,
+					$oFilterBy
+				);
+
+				if (isset($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
+				{
+//					$iTenantId = $aResultTenants[0]->IdTenant;
+					$iTenantId = $aResultTenants[0]->iObjectId;
+				}
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -217,7 +309,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			$oTenant = $this->getTenantByHash($sTenantHash);
 			if ($oTenant)
 			{
-				$iResult = $oTenant->IdTenant;
+//				$iResult = $oTenant->IdTenant;
+				$iResult = $oTenant->iObjectId;
 			}
 		}
 
@@ -232,6 +325,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantIdByDomainId($iDomainId)
 	{
+		//TODO use DOMAIN Manager for that
 		$iTenantId = 0;
 		try
 		{
@@ -287,6 +381,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function isTenantExists(CTenant $oTenant)
 	{
+		//TODO
 		$bResult = $oTenant->IsDefault;
 		if (!$bResult)
 		{
@@ -309,6 +404,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantDomains($iTenantId)
 	{
+		//TODO
 		$mResult = false;
 		if (0 < $iTenantId)
 		{

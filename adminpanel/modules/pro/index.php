@@ -951,7 +951,6 @@ class CProModule extends ap_Module
 		{
 			$oTenant = ($iTenantId > 0) ? $this->oTenantsApi->getTenantById($iTenantId) : $this->oTenantsApi->getDefaultGlobalTenant();
 		}
-		
 		return $oTenant;
 	}
 	
