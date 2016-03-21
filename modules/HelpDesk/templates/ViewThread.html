@@ -63,13 +63,13 @@
 		</span>
 	</div>
 	
-	<div class="title">
-		<span class="text">
+	<div class="title" data-bind="visible: subject() !== ''">
+		<span class="address_capsule">
 			<span class="owner control" data-bind="text: subject(), initDom: ownerDom, 
 					attr: {'data-email': selectedItem() ? selectedItem().sEmail : '', 'data-name': selectedItem() ? selectedItem().sName : ''}"></span>
 		</span>
 	</div>
-	<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'HELPDESK/ACTION_SHOW_ALL_THEIR_THREADS'}, click: onShowThreadsByOwner, visible: !bNewTab"></a>
+	<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': 'HELPDESK/ACTION_SHOW_ALL_THEIR_THREADS'}, click: onShowThreadsByOwner, visible: !bNewTab && subject() !== ''"></a>
 </div>
 <div class="panel_center" data-bind="customScrollbar: {'scrollToBottomTrigger': scrollToBottomTrigger,
 	 'scrollToTopTrigger': scrollToTopTrigger}">

@@ -130,7 +130,7 @@ function ClearElement($Element)
 	{
 		$Element.next().remove();
 	}
-	$Element.removeClass('link found');
+	$Element.removeClass('found');
 	$Element.parent().removeClass('found_contact');
 	$Element.off();
 }
@@ -162,7 +162,7 @@ function OnContactResponse(aElements, aContacts)
 							if ($El.attr('data-email') === sEmail)
 							{
 								ClearElement($El);
-								$El.addClass('link found');
+								$El.addClass('found');
 								$El.parent().addClass('found_contact');
 								oContactCardsView.add(aContacts);
 								BindContactCard($El, sEmail);
@@ -173,7 +173,7 @@ function OnContactResponse(aElements, aContacts)
 			}
 			else
 			{
-				$Element.addClass('link found');
+				$Element.addClass('found');
 				$Element.parent().addClass('found_contact');
 				oContactCardsView.add(aContacts);
 				BindContactCard($Element, sEmail);
