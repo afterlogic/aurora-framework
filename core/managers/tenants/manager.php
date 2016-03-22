@@ -385,7 +385,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		try
 		{
 			$aResultTenants = $this->oEavManager->getObjects('CTenant',
-				array(),
+				array('Login'),
 				0,
 				0,
 				array('Login' => $oTenant->Login)
@@ -446,8 +446,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		{
 			if ($oTenant->validate() && !$oTenant->IsDefault)
 			{
-				var_dump($this->isTenantExists($oTenant));
-				
 				if (!$this->isTenantExists($oTenant))
 				{
 					if (0 < $oTenant->IdChannel && CApi::GetConf('tenant', false))
@@ -672,7 +670,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		try
 		{
 			$aResult = $this->oEavManager->getObjectsByType('CTenant',
-				array(),
+				array('IsDefault', 'IdChannel'),
 				0,
 				0,
 				array('IdChannel' => $iChannelId)
