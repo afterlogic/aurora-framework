@@ -30,15 +30,6 @@
 		text-align: center;
 		font-size: 8pt;
 	}
-
-	.customscroll-scrollbar-vertical {
-		margin-right: -2px;
-
-		html.rtl & {
-			margin-right: 0;
-			margin-left: -2px;
-		}
-	}
 }
 /*=== END Folders List CSS ===*/
 
@@ -113,31 +104,8 @@
 			clear: both;
 		}
 
-		.marker {
-			display: none;
-			height: 20px;
-			width: 20px;
-			position: absolute;
-			right: @pannels-overlap-offset;
-			top: 0px;
-			background: url('images/sprites.png?%VERSION%') no-repeat 0px -200px;
-		}
-
-		&.answered .marker{
-			display: inline-block;
-			background-position: 0px -200px;
-		}
-
-		&.forwarded .marker {
-			display: inline-block;
-			background-position: -40px -200px;
-		}
-
-		&.answered.forwarded .marker {
-			display: inline-block;
-			background-position: -80px -200px;
-		}
-
+		@import "answered-marker.less";
+		
 		.importance {
 			width: 14px;
 			height: 14px;
@@ -327,16 +295,6 @@
 
 /*=== Message viewer CSS ===*/
 .message_viewer {
-	.customscroll-scrollbar-vertical {
-		margin-right: @pannels-overlap-offset + 12px;
-	}
-
-	.has_attachments {
-		.customscroll-scrollbar-vertical {
-			margin-right: -@pannels-overlap-offset;
-		}
-	}
-	
 	.panel_center {
 		.box-sizing;
 		.resize_compensation_top(165px);/* header + quick reply */

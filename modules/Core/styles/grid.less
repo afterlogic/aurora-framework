@@ -48,14 +48,13 @@
 	.resize_handler {
 		.user-select(none);
 
-		float: right;
-		width: 6px;
-		margin-right: -8px;
-		height: 100%;
 		cursor: e-resize;
-
-		position: relative;
+		float: right;
+		height: 100%;
 		left: -6px;
+		margin-right: -10px;
+		position: relative;
+		width: 6px;
 		z-index: 100;
 
 		html.rtl & {
@@ -145,10 +144,6 @@
 		background: none;
 	}
 	
-	.customscroll-scrollbar-vertical {
-		right: 4px;
-	}
-	
 	.items_list {
 		.item {
 			.theme-clear-panel-list-item();
@@ -158,15 +153,14 @@
 /*=== END Panels CSS ===*/
 /*=== Panel Item Viewer CSS ===*/
 .panel.item_viewer {
-	width: 60%;
+	background: #ffffff;
 	border-radius: 5px;
-	//margin: -2px 0 0 -2px;
-	margin: 0 0 0 -@pannels-overlap-offset;
+	margin: 0 0 0 4px;
+	overflow: hidden;
     padding: 0px;
 	position: relative;
+	width: 60%;
 	z-index: 1;
-	background: #fff;
-	overflow: hidden;
 	
 	html.rtl & {
 		margin-left: 0px;

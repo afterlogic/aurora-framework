@@ -84,7 +84,8 @@ var
 					bIgnoreSizeLimits = true;
 				}
 
-				if (!bIgnoreSizeLimits) { //Constrain new splitbar position to fit pane size limits
+				if (!bIgnoreSizeLimits) //Constrain new splitbar position to fit pane size limits
+				{
 					newPosition = window.Math.max(
 						iLeftMin,
 						splitter._overallWidth - panes.get(1)._max,

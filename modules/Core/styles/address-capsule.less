@@ -6,21 +6,21 @@ li.address_capsule {
     border: none;
     box-shadow: none;
     border-radius: 11px;
-    padding: 3px 28px 3px 12px;
 	margin: 2px 4px 0 0;
-    white-space: nowrap;
     overflow: hidden;
+    padding: 3px 28px 3px 12px;
     text-overflow: ellipsis;
+    white-space: nowrap;
 	
 	.ficon {
-		margin: 0px 12px 0px 0px;
-		font-size: 16px;
 		color: #5b9bcd;
-		padding: 1px;
-		text-decoration: none;
+		font-size: 16px;
+		margin: 0px 12px 0px 0px;
 		outline: none;
+		padding: 1px;
 		position: absolute;
 		right: 0;
+		text-decoration: none;
 	}
 	
 	&.inputosaurus-selected {
@@ -34,17 +34,18 @@ li.address_capsule {
 }
 
 span.address_capsule {
-	line-height: 20px;
-	font-size: 11pt;
 	display: inline-block;
-	position: relative;
+	font-size: 11pt;
+	line-height: 20px;
 	margin: 0px 0px 4px;
+	position: relative;
 	vertical-align: middle;
 	
 	&:not(.found_contact) {
 		background: #ffffff;
-		color: #5b9bcd;
 		border: solid 1px #e5eff7;
+		color: #5b9bcd;
+		cursor: default;
 	}
 	
 	&.found_contact {
@@ -52,15 +53,15 @@ span.address_capsule {
 	}
 	
 	.add_contact {
-		position: absolute;
 		bottom: 5px;
+		position: absolute;
 		right: 8px;
 	}
 }
 
 .to_arrow {
-	margin-top: 5px;
 	display: inline-block;
 	line-height: 20px;
+	margin-top: 5px;
 	vertical-align: top;
 }
