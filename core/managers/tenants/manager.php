@@ -84,11 +84,10 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$iResult = false;
 		try
 		{
-			//TODO use objects count method then in will be created
 			$aResultTenants = $this->oEavManager->getObjectsCount('CTenant', 
 				array(
-					'Login'
-				), 0, 9999
+					'Description' => $sSearchDesc
+				)
 			);
 			
 			$iResult = count($aResultTenants);
@@ -138,13 +137,13 @@ class CApiTenantsManager extends AApiManagerWithStorage
 						'IsDefault'
 					),
 					0,
-					9999,
+					0,
 					array('IsDefault' => true)
 				);
 
 				if ($oResult instanceOf \CTenant)
 				{
-					 self::$oDefaultTenant = $oResult;
+					self::$oDefaultTenant = $oResult;
 				}
 			}
 			catch (CApiBaseException $oException)
@@ -248,7 +247,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
 	{
-		//TODO why default id is 0? 0 looks like correct object id
 		$iTenantId = 0;
 		
 		try
@@ -295,6 +293,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantIdByHash($sTenantHash)
 	{
+		//TODO
 		$iResult = 0;
 
 		if (0 === strlen($sTenantHash))
@@ -339,6 +338,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * @TODO
 	 * @param int $iIdTenant
 	 * @param bool $bUseCache Default value is **false**.
 	 *
@@ -378,29 +378,47 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	public function isTenantExists(CTenant $oTenant)
 	{
 		//TODO
-		$bResult = $oTenant->IsDefault;
-		if (!$bResult)
+//		$bResult = $oTenant->IsDefault;
+		
+		$bResult = false;
+
+		try
 		{
-			try
+			$aResultTenants = $this->oEavManager->getObjectsByType('CTenant',
+				array(),
+				0,
+				0,
+				array('Login' => $oTenant->Login)
+			);
+
+			if ($aResultTenants)
 			{
-				$bResult = $this->oStorage->isTenantExists($oTenant);
+				foreach($aResultTenants as $oObject)
+				{
+					if ($oObject->iObjectId !== $oTenant->iObjectId)
+					{
+						$bResult = true;
+						break;
+					}
+				}
 			}
-			catch (CApiBaseException $oException)
-			{
-				$this->setLastException($oException);
-			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
 		}
 		return $bResult;
 	}
 
 	/**
+	 * @TODO use domains manager
 	 * @param int $iTenantId
 	 *
 	 * @return array|bool
 	 */
 	public function getTenantDomains($iTenantId)
 	{
-		//TODO
+		
 		$mResult = false;
 		if (0 < $iTenantId)
 		{
@@ -428,6 +446,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		{
 			if ($oTenant->validate() && !$oTenant->IsDefault)
 			{
+				var_dump($this->isTenantExists($oTenant));
+				
 				if (!$this->isTenantExists($oTenant))
 				{
 					if (0 < $oTenant->IdChannel && CApi::GetConf('tenant', false))
@@ -452,8 +472,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					{
 						$oTenant->IdChannel = 0;
 					}
-
-					if (!$this->oStorage->createTenant($oTenant))
+					
+					if (!$this->oEavManager->saveObject($oTenant))
 					{
 						throw new CApiManagerException(Errs::TenantsManager_TenantCreateFailed);
 					}
@@ -534,7 +554,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 				}
 				else
 				{
-					if (null !== $oTenant->GetObsoleteValue('QuotaInMB'))
+					if (null !== $oTenant->QuotaInMB)
 					{
 						$iQuota = $oTenant->QuotaInMB;
 						if (0 < $iQuota)
@@ -547,12 +567,13 @@ class CApiTenantsManager extends AApiManagerWithStorage
 						}
 					}
 
-					if (!$this->oStorage->updateTenant($oTenant))
+					
+					if (!$this->oEavManager->saveObject($oTenant))
 					{
 						throw new CApiManagerException(Errs::TenantsManager_TenantUpdateFailed);
 					}
 
-					if (null !== $oTenant->GetObsoleteValue('IsDisabled'))
+					if (null !== $oTenant->IsDisabled)
 					{
 						/* @var $oDomainsApi CApiDomainsManager */
 						$oDomainsApi = CApi::GetCoreManager('domains');

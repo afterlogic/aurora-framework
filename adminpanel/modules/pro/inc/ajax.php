@@ -540,7 +540,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		$oTenant =& $this->oAdminPanel->GetMainObject('tenant_new');
 		if (!$oTenant)
 		{
-			$oTenant = new CTenant();
+			$oTenant = CTenant::createInstanse('Core');
 			$this->oAdminPanel->SetMainObject('tenant_new', $oTenant);
 		}
 	}

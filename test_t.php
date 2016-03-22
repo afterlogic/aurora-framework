@@ -8,7 +8,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 // utilizing WebMail Pro API
 include_once __DIR__.'/core/api.php';
 
-class Tenant extends api_APropertyBag
+class CTenant extends api_APropertyBag
 {
 	public function __construct($sModule)
 	{
@@ -482,18 +482,18 @@ class Tenant extends api_APropertyBag
 /* var $oEavManager \CApiEavManager */
 $oEavManager = \CApi::GetCoreManager('eav', 'db');
 
-$oTenant = Tenant::createInstanse('Core');
+//$oTenant = Tenant::createInstanse('Core');
 //$oTenant->Name = 'Test' . time();
-$oTenant->Email = 'test@local.host';
-$oTenant->Login = '1234';
+//$oTenant->Email = 'test@local.host';
+//$oTenant->Login = '1234';
 //$oTenant->Phone = '123-45-67';
 //var_dump($oTenant);
-$oEavManager->saveObject($oTenant);
+//$oEavManager->saveObject($oTenant);
 
 
-//$oEavManager->deleteObject(44);
-//$oEavManager->deleteObject(34);
-//$oEavManager->deleteObject(35);
+//$oEavManager->deleteObject(48);
+//$oEavManager->deleteObject(49);
+//$oEavManager->deleteObject(50);
 //$oEavManager->deleteObject(36);
 //$oEavManager->deleteObject(37);
 //exit;
