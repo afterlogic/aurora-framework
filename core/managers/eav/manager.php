@@ -94,6 +94,7 @@ class CApiEavManager extends AApiManagerWithStorage
 			catch (Exception $ex) 
 			{
 				$mResult = false;
+				throw CApiManagerException(Errs::Main_UnknownError);
 			}
 		}
 		
@@ -197,7 +198,7 @@ class CApiEavManager extends AApiManagerWithStorage
 				{
 					if (!$this->oStorage->updateProperty($oProperty))
 					{
-						throw new CApiManagerException(Errs::DomainsManager_DomainUpdateFailed);
+						throw new CApiManagerException(Errs::Main_UnknownError);
 					}
 					else
 					{
@@ -208,7 +209,7 @@ class CApiEavManager extends AApiManagerWithStorage
 				{
 					if (!$this->oStorage->createProperty($oProperty))
 					{
-						throw new CApiManagerException(Errs::DomainsManager_DomainUpdateFailed);
+						throw new CApiManagerException(Errs::Main_UnknownError);
 					}
 					else
 					{
