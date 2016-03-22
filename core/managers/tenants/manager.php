@@ -85,7 +85,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		try
 		{
 			//TODO use objects count method then in will be created
-			$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+			$aResultTenants = $this->oEavManager->getObjectsCount('CTenant', 
 				array(
 					'Login'
 				), 0, 9999

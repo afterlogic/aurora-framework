@@ -103,7 +103,7 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $this->getObjectBySql($this->oCommandCreator->getObjectById($iId));
 	}	
 
-	public function getObjectsByTypeCount($sType, $aSearchProperties)
+	public function getObjectsCount($sType, $aSearchProperties)
 	{
 		$mResult = 0;
 		if ($this->oConnection->Execute($this->oCommandCreator->getObjectsCount($sType, $aSearchProperties)))
