@@ -10,38 +10,62 @@
 class CApiChannelsManager extends AApiManagerWithStorage
 {
 	/**
+	 * @var CApiEavManager
+	 */
+	public $oEavManager = null;
+	
+	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('channels', $oManager, $sForcedStorage);
+		
+		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 
 		$this->inc('classes.channel');
 	}
 
 	/**
+	 * @TODO rename to createChannel
 	 * @return CChannel
 	 */
 	public function newChannel()
 	{
-		return new CChannel();
+		return CChannel::createInstanse();
 	}
 
 	/**
 	 * @param int $iPage
-	 * @param int $iChannelsPerPage
+	 * @param int $iItemsPerPage
 	 * @param string $sOrderBy Default value is **Login**
-	 * @param bool $bOrderType Default value is **true**
+	 * @param bool $iOrderType Default value is **\ESortOrder::ASC**
 	 * @param string $sSearchDesc Default value is empty string
 	 *
 	 * @return array|false [Id => [Login, Description]]
 	 */
-	public function getChannelList($iPage, $iChannelsPerPage, $sOrderBy = 'Login', $bOrderType = true, $sSearchDesc = '')
+	public function getChannelList($iPage, $iItemsPerPage, $sOrderBy = 'Login', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
 	{
 		$aResult = false;
 		try
 		{
-			$aResult = $this->oStorage->getChannelList($iPage, $iChannelsPerPage, $sOrderBy, $bOrderType, $sSearchDesc);
+			$aResultChannels = $this->oEavManager->getObjects(
+				'CChannel', 
+				array('Login', 'Description'),
+				$iPage,
+				$iItemsPerPage,
+				array(
+					'Login' => '%'.$sSearchDesc.'%',
+					'Description' => '%'.$sSearchDesc.'%'
+				),
+				$sOrderBy,
+				$iOrderType
+			);
+			
+			foreach($aResultChannels as $oChannel)
+			{
+				$aResult[$oChannel->iObjectId] = array($oChannel->Login, $oChannel->Description);
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -60,7 +84,14 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		$iResult = false;
 		try
 		{
-			$iResult = $this->oStorage->getChannelCount($sSearchDesc);
+			$aResults = $this->oEavManager->getObjectsCount('CChannel', 
+				array(
+					'Login' => '%'.$sSearchDesc.'%',
+					'Description' => '%'.$sSearchDesc.'%'
+				)
+			);
+			
+			$iResult = count($aResults);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -79,7 +110,12 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		$oChannel = null;
 		try
 		{
-			$oChannel = $this->oStorage->getChannelById($iChannelId);
+			$oResult = $this->oEavManager->getObjectById($iChannelId);
+			
+			if ($oResult instanceOf \CChannel)
+			{
+				$oChannel = $oResult;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -99,7 +135,19 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		$iChannelId = 0;
 		try
 		{
-			$iChannelId = $this->oStorage->getChannelIdByLogin($sChannelLogin);
+			$aResultChannels = $this->oEavManager->getObjects('CChannel', 
+				array(
+					'Login'
+				),
+				0,
+				1,
+				array('Login' => $sChannelLogin)
+			);
+			
+			if (isset($aResultChannels[0]) && $aResultChannels[0] instanceOf \CChannel)
+			{
+				$iChannelId = $aResultChannels[0]->iObjectId;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -114,12 +162,29 @@ class CApiChannelsManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function channelExists(CChannel $oChannel)
+	public function isExists(CChannel $oChannel)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->channelExists($oChannel);
+			$aResultChannels = $this->oEavManager->getObjects('CChannel',
+				array('Login'),
+				0,
+				0,
+				array('Login' => $oChannel->Login)
+			);
+
+			if ($aResultChannels)
+			{
+				foreach($aResultChannels as $oObject)
+				{
+					if ($oObject->iObjectId !== $oChannel->iObjectId)
+					{
+						$bResult = true;
+						break;
+					}
+				}
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -140,10 +205,11 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		{
 			if ($oChannel->validate())
 			{
-				if (!$this->channelExists($oChannel))
+				if (!$this->isExists($oChannel))
 				{
 					$oChannel->Password = md5($oChannel->Login.mt_rand(1000, 9000).microtime(true));
-					if (!$this->oStorage->createChannel($oChannel))
+					
+					if (!$this->oEavManager->saveObject($oChannel))
 					{
 						throw new CApiManagerException(Errs::ChannelsManager_ChannelCreateFailed);
 					}
@@ -177,9 +243,9 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		{
 			if ($oChannel->validate())
 			{
-				if (!$this->channelExists($oChannel))
+				if (!$this->isExists($oChannel))
 				{
-					if (!$this->oStorage->updateChannel($oChannel))
+					if (!$this->oEavManager->saveObject($oChannel))
 					{
 						throw new CApiManagerException(Errs::ChannelsManager_ChannelUpdateFailed);
 					}
@@ -214,7 +280,7 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		{
 			/* @var $oTenantsApi CApiTenantsManager */
 			$oTenantsApi = CApi::GetCoreManager('tenants');
-			if ($oTenantsApi && !$oTenantsApi->deleteTenantsByChannelId($oChannel->IdChannel, true))
+			if ($oTenantsApi && !$oTenantsApi->deleteTenantsByChannelId($oChannel->iObjectId, true))
 			{
 				$oException = $oTenantsApi->GetLastException();
 				if ($oException)
@@ -223,7 +289,7 @@ class CApiChannelsManager extends AApiManagerWithStorage
 				}
 			}
 
-			$bResult = $this->oStorage->deleteChannel($oChannel->IdChannel);
+			$bResult = $this->oEavManager->deleteObject($oChannel->iObjectId);
 		}
 		catch (CApiBaseException $oException)
 		{

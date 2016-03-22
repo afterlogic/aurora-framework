@@ -559,7 +559,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oChannel =& $this->oAdminPanel->GetMainObject('channel_edit');
 		if ($oChannel)
 		{
-			$oScreen->Data->SetValue('intChannelId', $oChannel->IdChannel);
+			$oScreen->Data->SetValue('intChannelId', $oChannel->iObjectId);
 			$oScreen->Data->SetValue('txtLogin', $oChannel->Login);
 			$oScreen->Data->SetValue('txtPassword', $oChannel->Password);
 			$oScreen->Data->SetValue('txtDescription', $oChannel->Description);
@@ -685,7 +685,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oChannel =& $this->oAdminPanel->GetMainObject('channel_edit');
 		if ($oChannel)
 		{
-			$oScreen->Data->SetValue('intChannelId', $oChannel->IdChannel);
+			$oScreen->Data->SetValue('intChannelId', $oChannel->iObjectId);
 			$oScreen->Data->SetValue('txtLogin', $oChannel->Login);
 			$oScreen->Data->SetValue('txtPassword', $oChannel->Password);
 			$oScreen->Data->SetValue('txtDescription', $oChannel->Description);

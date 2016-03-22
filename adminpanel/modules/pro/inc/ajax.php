@@ -580,7 +580,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 
 	public function ChannelsNew()
 	{
-		$oChannel = new CChannel();
+		$oChannel = CChannel::createInstanse('Core');
 		$this->initChannelByPost($oChannel);
 
 		if ($this->oModule->createChannel($oChannel))
