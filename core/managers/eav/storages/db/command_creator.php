@@ -98,6 +98,20 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$aResultViewProperties = array();
 			$aJoinProperties = array();
 			$aResultSearchProperties = array();
+			
+			if ($bCount)
+			{
+				$sGroupByField = "obj_type";
+				$sCount = "COUNT(DISTINCT objects.id) as objects_count,";
+			}			
+			else
+			{
+				if (count($aViewProperties) === 0)
+				{
+					$aMap = $oObject->GetMap();
+					$aViewProperties = array_keys($aMap);
+				}
+			}
 
 			if (!empty($sSortProperty))
 			{
@@ -152,11 +166,6 @@ class CApiEavCommandCreator extends api_CommandCreator
 			{
 				$sLimit = sprintf("LIMIT %d", $iPerPage);
 				$sOffset = sprintf("OFFSET %d", ($iPage > 0) ? ($iPage - 1) * $iPerPage : 0);
-			}
-			if ($bCount)
-			{
-				$sGroupByField = "obj_type";
-				$sCount = "COUNT(DISTINCT objects.id) as objects_count,";
 			}
 		}		
 		$sSql = sprintf("SELECT 
