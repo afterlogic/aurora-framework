@@ -121,7 +121,7 @@ class CCommonPostAction extends ap_CoreModuleHelper
 				foreach ($oTenant->getSocials() as $sKey => $oSocial)
 				{
 					$oTenentSocial = new CTenantSocials();
-					$oTenentSocial->IdTenant = $oTenant->IdTenant;
+					$oTenentSocial->IdTenant = $oTenant->iObjectId;
 					$oTenentSocial->SocialAllow = CPost::GetCheckBox($sKey . '_chSocialAllow');
 					$oTenentSocial->SocialName = ucfirst($sKey);
 					$oTenentSocial->SocialId = CPost::get($sKey . '_txtSocialId');

@@ -361,13 +361,13 @@ class CTenant extends api_APropertyBag
 	public function getUserCount()
 	{
 		$oUsersApi = CApi::GetCoreManager('users');
-		return $oUsersApi->getUsersCountForTenant($this->IdTenant);
+		return $oUsersApi->getUsersCountForTenant($this->iObjectId);
 	}
 
 	public function getDomainCount()
 	{
 		$oDomainsApi = CApi::GetCoreManager('domains');
-		return $oDomainsApi->getDomainCount('', $this->IdTenant);
+		return $oDomainsApi->getDomainCount('', $this->iObjectId);
 	}
 
 	/**
@@ -461,13 +461,13 @@ class CTenant extends api_APropertyBag
 	public function getSocials()
 	{
 		$aSocials = array();
-		if ($this->IdTenant > 0 && count($this->Socials) === 0)
+		if ($this->iObjectId > 0 && count($this->Socials) === 0)
 		{
 			foreach ($this->getDefaultSocials() as $sKey => $oTenantSocial)
 			{
 				$sSocialApiKey = $oTenantSocial->SocialApiKey !== null ? '' : null;
 				$oTenantSocial = new CTenantSocials();
-				$oTenantSocial->IdTenant = $this->IdTenant;
+				$oTenantSocial->IdTenant = $this->iObjectId;
 				$oTenantSocial->SocialName = ucfirst($sKey);
 				$oTenantSocial->SocialApiKey = $sSocialApiKey;
 				$aSocials[strtolower($sKey)] = $oTenantSocial;
@@ -482,7 +482,7 @@ class CTenant extends api_APropertyBag
 				{
 					$sSocialApiKey = $oTenantSocial->SocialApiKey !== null ? '' : null;
 					$oTenantSocial = new CTenantSocials();
-					$oTenantSocial->IdTenant = $this->IdTenant;
+					$oTenantSocial->IdTenant = $this->iObjectId;
 					$oTenantSocial->SocialName = ucfirst($sKey);
 					$oTenantSocial->SocialApiKey = $sSocialApiKey;
 					$aSocials[strtolower($sKey)] = $oTenantSocial;

@@ -45,7 +45,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$sEmail = $oTenant->HelpdeskAdminEmailAccount;
 				if (!$oTenant->IsDefault)
 				{
-					$sUrl.= '='.substr(md5($oTenant->IdTenant.CApi::$sSalt), 0, 8);
+					$sUrl.= '='.substr(md5($oTenant->iObjectId.CApi::$sSalt), 0, 8);
 				}
 
 				$oScreen->Data->SetValue('txtClientsHelpdeskURL', $sUrl);
@@ -574,12 +574,11 @@ class CProPopulateData extends ap_CoreModuleHelper
 		/* @var $oTenant CTenant */
 		$oTenant =& $this->oAdminPanel->GetMainObject('tenant_edit');
 		
-		$oTenant->IdTenant = $oTenant->iObjectId;
-		if ($oTenant && 0 < $oTenant->IdTenant)
+		if ($oTenant && 0 < $oTenant->iObjectId)
 		{
 			$oScreen->Data->SetValue('txtToken', CApi::getCsrfToken('p7admToken'));
 
-			$oScreen->Data->SetValue('intTenantId', $oTenant->IdTenant);
+			$oScreen->Data->SetValue('intTenantId', $oTenant->iObjectId);
 			$oScreen->Data->SetValue('txtLogin', $oTenant->Login);
 			$oScreen->Data->SetValue('txtEmail', $oTenant->Email);
 			$oScreen->Data->SetValue('txtDescription', $oTenant->Description);
@@ -620,12 +619,12 @@ class CProPopulateData extends ap_CoreModuleHelper
 //
 //				if ($oSubscriptionsApi && $oTenantsApi)
 //				{
-//					$aSubscriptions = $oSubscriptionsApi->getSubscriptions($oTenant->IdTenant);
+//					$aSubscriptions = $oSubscriptionsApi->getSubscriptions($oTenant->iObjectId);
 //					if (is_array($aSubscriptions) && 0 < count($aSubscriptions))
 //					{
 //						$oScreen->Data->SetValue('subscriptionsSupported', true);
 //
-//						$aLimits = $oTenantsApi->getSubscriptionUserUsage($oTenant->IdTenant);
+//						$aLimits = $oTenantsApi->getSubscriptionUserUsage($oTenant->iObjectId);
 //
 //						foreach ($aSubscriptions as $oSubscription)
 //						{
@@ -662,7 +661,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('txtUserLimitDesk', '('.$oTenant->getUserCount().' '.CApi::I18N('ADMIN_PANEL/TENANTS_USER_USED').')');
 			}
 
-			$aDomainsArray = $this->oModule->getTenantDomains($oTenant->IdTenant);
+			$aDomainsArray = $this->oModule->getTenantDomains($oTenant->iObjectId);
 
 			$sDomainOptions = '';
 			if (is_array($aDomainsArray) && count($aDomainsArray) > 0)

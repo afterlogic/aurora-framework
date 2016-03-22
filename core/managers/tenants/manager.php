@@ -199,7 +199,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			{
 				/* @var $oTenant CTenant */
 				
-//				$mTenantId = $oTenant->IdTenant;
 				$mTenantId = $oTenant->iObjectId;
 
 				$iFilesUsageInMB = 0;
@@ -278,7 +277,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 
 				if (isset($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
 				{
-//					$iTenantId = $aResultTenants[0]->IdTenant;
 					$iTenantId = $aResultTenants[0]->iObjectId;
 				}
 			}
@@ -308,7 +306,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			$oTenant = $this->getTenantByHash($sTenantHash);
 			if ($oTenant)
 			{
-//				$iResult = $oTenant->IdTenant;
 				$iResult = $oTenant->iObjectId;
 			}
 		}
@@ -494,7 +491,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		{
 			if ($oTenant->validate())
 			{
-				if ($oTenant->IsDefault && 0 === $oTenant->IdTenant)
+				if ($oTenant->IsDefault && 0 === $oTenant->iObjectId)
 				{
 					$this->oSettings->SetConf('Helpdesk/AdminEmailAccount', $oTenant->HelpdeskAdminEmailAccount);
 					$this->oSettings->SetConf('Helpdesk/ClientIframeUrl', $oTenant->HelpdeskClientIframeUrl);
@@ -542,7 +539,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 						$iQuota = $oTenant->QuotaInMB;
 						if (0 < $iQuota)
 						{
-							$iSize = $this->getTenantAllocatedSize($oTenant->IdTenant);
+							$iSize = $this->getTenantAllocatedSize($oTenant->iObjectId);
 							if ($iSize > $iQuota)
 							{
 								throw new CApiManagerException(Errs::TenantsManager_QuotaLimitExided);
@@ -559,7 +556,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					{
 						/* @var $oDomainsApi CApiDomainsManager */
 						$oDomainsApi = CApi::GetCoreManager('domains');
-						if (!$oDomainsApi->enableOrDisableDomainsByTenantId($oTenant->IdTenant, !$oTenant->IsDisabled))
+						if (!$oDomainsApi->enableOrDisableDomainsByTenantId($oTenant->iObjectId, !$oTenant->IsDisabled))
 						{
 							$oException = $oDomainsApi->GetLastException();
 							if ($oException)
@@ -602,7 +599,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	{
 		try
 		{
-			if ($oTenant && 0 < $oTenant->IdTenant)
+			if ($oTenant && 0 < $oTenant->iObjectId)
 			{
 				$iNewUsedInMB = (int) round($iNewAllocatedSizeInBytes / (1024 * 1024));
 
@@ -704,7 +701,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			{
 				/* @var $oDomainsApi CApiDomainsManager */
 				$oDomainsApi = CApi::GetCoreManager('domains');
-				if (!$oDomainsApi->deleteDomainsByTenantId($oTenant->IdTenant, true))
+				if (!$oDomainsApi->deleteDomainsByTenantId($oTenant->iObjectId, true))
 				{
 					$oException = $oDomainsApi->GetLastException();
 					if ($oException)
@@ -713,11 +710,11 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					}
 				}
 
-				$bResult = $this->oStorage->deleteTenant($oTenant->IdTenant);
+				$bResult = $this->oStorage->deleteTenant($oTenant->iObjectId);
 				// TODO subscriptions
 				//if ($bResult)
 				//{
-				//	$this->oStorage->deleteTenantSubscriptions($oTenant->IdTenant);
+				//	$this->oStorage->deleteTenantSubscriptions($oTenant->iObjectId);
 				//}
 			}
 		}

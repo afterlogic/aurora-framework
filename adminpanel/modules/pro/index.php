@@ -1029,7 +1029,7 @@ class CProModule extends ap_Module
 		$bResult = false;
 		$iTenantId = $this->oAdminPanel->TenantId();
 		
-		if ($this->oTenantsApi && $oTenant && (0 === $iTenantId ||0 < $iTenantId && $iTenantId === $oTenant->IdTenant))
+		if ($this->oTenantsApi && $oTenant && (0 === $iTenantId ||0 < $iTenantId && $iTenantId === $oTenant->iObjectId))
 		{
 			$bResult = $this->oTenantsApi->updateTenant($oTenant);
 		}

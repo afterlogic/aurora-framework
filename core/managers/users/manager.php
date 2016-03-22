@@ -412,7 +412,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 							if (0 < $oTenant->QuotaInMB)
 							{
-								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->IdTenant);
+								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->iObjectId);
 								if (((int) ($oAccount->RealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
 								{
 									throw new CApiManagerException(Errs::TenantsManager_QuotaLimitExided);
@@ -566,7 +566,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 							if (0 < $oTenant->QuotaInMB)
 							{
 								$iAccountStorageQuota = $oAccount->GetObsoleteValue('StorageQuota');
-								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->IdTenant);
+								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->iObjectId);
 								$iSize -= (int) ($iAccountStorageQuota / 1024);
 								
 								if (((int) ($oAccount->RealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
