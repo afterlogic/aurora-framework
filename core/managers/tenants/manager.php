@@ -171,7 +171,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 //			$oTenant = $this->oStorage->getTenantById($mTenantId, $bIdIsHash);
 			if (!$bIdIsHash)
 			{
-				var_dump('$mTenantId', $mTenantId);
 				$oResult = $this->oEavManager->getObjectById($mTenantId);
 				
 				if ($oResult instanceOf \CTenant)
