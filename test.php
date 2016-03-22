@@ -43,7 +43,8 @@ class Account extends api_APropertyBag
 			'Phone'		=> array('string', ''),
 			'New'		=> array('string', 'Default value'),
 			'IdDomain'	=> array('int', 0),
-			'Description'	=> array('text', '')
+			'Description'	=> array('text', ''),
+			'Bool'	=>	array('bool', false),
 		);
 	}	
 }
@@ -58,6 +59,8 @@ $oAccount->Phone = '123-45-67';
 
 $oEavManager->saveObject($oAccount);
 
+$iCount = $oEavManager->getObjectsByTypeCount('Account'); 
+echo $iCount;
 
 $aObjects = $oEavManager->getObjectsByType('Account', 
 		array(
@@ -66,7 +69,7 @@ $aObjects = $oEavManager->getObjectsByType('Account',
 			'Phone',
 			'IdDomain',
 			'Description'
-		), 0, 9999,
+		), 0, 0,
 		array('IdDomain' => array('<', 1)), 
 		'Sort', \ESortOrder::ASC
 );

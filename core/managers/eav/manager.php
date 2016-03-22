@@ -119,6 +119,20 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $bResult;
 	}
 	
+	public function getObjectsByTypeCount($sType, $aSearchProperties = array())
+	{
+		$aObjects = null;
+		try
+		{
+			$aObjects = $this->oStorage->getObjectsByTypeCount($sType, $aSearchProperties);
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+		return $aObjects;		
+	}
+	
 	public function getObjectsByType($sType, $aViewProperties = array(), $iPage = 0, $iPerPage = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$aObjects = null;

@@ -209,11 +209,11 @@ abstract class api_APropertyBag
 	protected function setType(&$mValue, $sType)
 	{
 		$sType = strtolower($sType);
-		if (in_array($sType, array('string', 'int', 'bool', 'array')))
+		if (in_array($sType, array('string', 'int', 'array')))
 		{
 			settype($mValue, $sType);
 		}
-		else if (in_array($sType, array('datetime')))
+		else if (in_array($sType, array('datetime', 'bool')))
 		{
 			settype($mValue, 'int');
 		}
@@ -229,7 +229,6 @@ abstract class api_APropertyBag
 				$iSize = substr($sType, 7, -1);
 				if (is_numeric($iSize) && (int) $iSize < strlen($mValue))
 				{
-					// $mValue = substr($mValue, 0, (int) $iSize);
 					$mValue = api_Utils::Utf8Truncate($mValue, (int) $iSize);
 				}
 			}

@@ -103,6 +103,21 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $this->getObjectBySql($this->oCommandCreator->getObjectById($iId));
 	}	
 
+	public function getObjectsByTypeCount($sType, $aSearchProperties)
+	{
+		$mResult = 0;
+		if ($this->oConnection->Execute($this->oCommandCreator->getObjectsCount($sType, $aSearchProperties)))
+		{
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+			{
+				$mResult = $oRow->objects_count;
+			}			
+			$this->oConnection->FreeResult();
+		}
+
+		$this->throwDbExceptionIfExist();
+		return $mResult;
+	}
 	/**
 	 */
 	public function getObjectsByType($sType, $aViewProperties = array(), $iPage = 0, $iPerPage = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
@@ -112,10 +127,9 @@ class CApiEavDbStorage extends CApiEavStorage
 		{
 			$oRow = null;
 			$mResult = array();
+			$oObject = call_user_func($sType . '::createInstanse');
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oObject = call_user_func($sType . '::createInstanse');
-
 				$oObject->iObjectId = $oRow->obj_id;
 				$oObject->sModuleName =  $oRow->obj_module;
 				
