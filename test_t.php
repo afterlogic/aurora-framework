@@ -497,7 +497,7 @@ $oEavManager->saveObject($oTenant);
 //$oEavManager->deleteObject(36);
 //$oEavManager->deleteObject(37);
 //exit;
-$aObjects = $oEavManager->getObjectsByType('Tenant', 
+$aObjects = $oEavManager->getObjects('Tenant', 
 		array(
 			'Email', 
 			'Login',

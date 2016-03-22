@@ -59,10 +59,10 @@ $oAccount->Phone = '123-45-67';
 
 $oEavManager->saveObject($oAccount);
 
-$iCount = $oEavManager->getObjectsByTypeCount('Account'); 
+$iCount = $oEavManager->getObjectsCount('Account'); 
 echo $iCount;
 
-$aObjects = $oEavManager->getObjectsByType('Account', 
+$aObjects = $oEavManager->getObjects('Account', 
 		array(
 			'Name', 
 			'Email', 

@@ -53,7 +53,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$aResult = false;
 		try
 		{
-			$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+			$aResultTenants = $this->oEavManager->getObjects('CTenant', 
 				array(
 					'Login', 
 					'Description'
@@ -133,7 +133,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		{
 			try
 			{
-				$oResult = $this->oEavManager->getObjectsByType('CTenant', 
+				$oResult = $this->oEavManager->getObjects('CTenant', 
 					array(
 						'IsDefault'
 					),
@@ -180,7 +180,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			}
 			else
 			{
-				$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+				$aResultTenants = $this->oEavManager->getObjects('CTenant', 
 					array(
 						'Hash'
 					),
@@ -266,7 +266,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					$oFilterBy['IsEnableAdminPanelLogin'] = true;
 				}
 				
-				$aResultTenants = $this->oEavManager->getObjectsByType('CTenant', 
+				$aResultTenants = $this->oEavManager->getObjects('CTenant', 
 					array(
 						'Login'
 					),
