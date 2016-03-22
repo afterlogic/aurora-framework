@@ -384,7 +384,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 
 		try
 		{
-			$aResultTenants = $this->oEavManager->getObjectsByType('CTenant',
+			$aResultTenants = $this->oEavManager->getObjects('CTenant',
 				array(),
 				0,
 				0,
@@ -513,6 +513,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			{
 				if ($oTenant->IsDefault && 0 === $oTenant->iObjectId)
 				{
+					//TODO remove update settings
 					$this->oSettings->SetConf('Helpdesk/AdminEmailAccount', $oTenant->HelpdeskAdminEmailAccount);
 					$this->oSettings->SetConf('Helpdesk/ClientIframeUrl', $oTenant->HelpdeskClientIframeUrl);
 					$this->oSettings->SetConf('Helpdesk/AgentIframeUrl', $oTenant->HelpdeskAgentIframeUrl);
@@ -630,7 +631,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 				}
 				else
 				{
-					return $this->oStorage->allocateFileUsage($oTenant, $iNewAllocatedSizeInBytes);
+					$oProperty = new CProperty('FilesUsageInBytes', $iNewAllocatedSizeInBytes, $oTenant->getPropertyType('FilesUsageInBytes'));
+					$this->oEavManager->setProperty($oProperty);
 				}
 			}
 		}
@@ -664,12 +666,17 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 *
 	 * @return array
 	 */
-	public function getTenantsIdsByChannelId($iChannelId)
+	public function getTenantsByChannelId($iChannelId)
 	{
 		$aResult = false;
 		try
 		{
-			$aResult = $this->oStorage->getTenantsIdsByChannelId($iChannelId);
+			$aResult = $this->oEavManager->getObjectsByType('CTenant',
+				array(),
+				0,
+				0,
+				array('IdChannel' => $iChannelId)
+			);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -686,19 +693,15 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	public function deleteTenantsByChannelId($iChannelId)
 	{
 		$iResult = 1;
-		$aTenantsIds = $this->getTenantsIdsByChannelId($iChannelId);
+		$aTenants = $this->getTenantsByChannelId($iChannelId);
 
-		if (is_array($aTenantsIds))
+		if (is_array($aTenants))
 		{
-			foreach ($aTenantsIds as $iTenantId)
+			foreach ($aTenants as $oTenant)
 			{
-				if (0 < $iTenantId)
+				if (!$oTenant->IsDefault && 0 < $oTenant->iObjectId)
 				{
-					$oTenant = $this->getTenantById($iTenantId);
-					if ($oTenant)
-					{
-						$iResult &= $this->deleteTenant($oTenant);
-					}
+					$iResult &= $this->deleteTenant($oTenant);
 				}
 			}
 		}
@@ -707,6 +710,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * @TODO rewrite other menagers usage
+	 * 
 	 * @param CTenant $oTenant
 	 *
 	 * @throws $oException
@@ -731,7 +736,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					}
 				}
 
-				$bResult = $this->oStorage->deleteTenant($oTenant->iObjectId);
+				$bResult = $this->oEavManager->deleteObject($oTenant->iObjectId);
+				
 				// TODO subscriptions
 				//if ($bResult)
 				//{
