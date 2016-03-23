@@ -672,7 +672,10 @@ CComposeView.prototype.fillDefault = function (aParams)
 			this.subject(oToAddr.subject);
 			this.setRecipient(this.ccAddr, oToAddr.cc);
 			this.setRecipient(this.bccAddr, oToAddr.bcc);
-			this.textBody('<div>' + oToAddr.body + '</div>');
+			if (oToAddr.body !== '')
+			{
+				this.textBody('<div>' + oToAddr.body + '</div>');
+			}
 		}
 	}
 
