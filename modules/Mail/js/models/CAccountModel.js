@@ -20,6 +20,8 @@ var
 	AlertPopup = require('core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
 	
+	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js'),
+	
 	AccountList = null,
 	Cache = null,
 	Settings = require('modules/Mail/js/Settings.js')
@@ -424,17 +426,21 @@ CAccountModel.prototype.onAccountDeleteResponse = function (oResponse, oRequest)
 
 CAccountModel.prototype.requestFilters = function ()
 {
-	Ajax.send('GetFilters', null, this.onGetFiltersResponse, this);
+	Ajax.send('GetFilters', { 'AccountID': this.id() }, this.onGetFiltersResponse, this);
 };
 
+/**
+ * @param {Object} oResponse
+ * @param {Object} oRequest
+ */
 CAccountModel.prototype.onGetFiltersResponse = function (oResponse, oRequest)
 {
-	var oSieveFilters = new CSieveFiltersModel();
+	var oFilters = new СFiltersModel();
 	if (oResponse.Result)
 	{
-		oSieveFilters.parse(this.id(), oResponse.Result);
+		oFilters.parse(this.id(), oResponse.Result);
 	}
-	this.filters(oSieveFilters);
+	this.filters(oFilters);
 };
 
 module.exports = CAccountModel;
