@@ -6,19 +6,19 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
-	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Api = require('core/js/Api.js'),
-	App = require('core/js/App.js'),
-	Pulse = require('core/js/Pulse.js'),
-	Routing = require('core/js/Routing.js'),
-	UserSettings = require('core/js/Settings.js'),
-	WindowOpener = require('core/js/WindowOpener.js'),
+	Api = require('modules/Core/js/Api.js'),
+	App = require('modules/Core/js/App.js'),
+	Pulse = require('modules/Core/js/Pulse.js'),
+	Routing = require('modules/Core/js/Routing.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
+	WindowOpener = require('modules/Core/js/WindowOpener.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	

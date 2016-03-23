@@ -3,9 +3,9 @@
 var
 	ko = require('knockout'),
 			
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	Screens = require('core/js/Screens.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
 	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
 	

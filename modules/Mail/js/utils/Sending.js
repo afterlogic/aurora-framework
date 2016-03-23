@@ -3,16 +3,16 @@
 var
 	_ = require('underscore'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	Api = require('core/js/Api.js'),
-	App = require('core/js/App.js'),
-	Routing = require('core/js/Routing.js'),
-	Screens = require('core/js/Screens.js'),
+	Api = require('modules/Core/js/Api.js'),
+	App = require('modules/Core/js/App.js'),
+	Routing = require('modules/Core/js/Routing.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
-	CAddressModel = require('core/js/models/CAddressModel.js'),
-	CAddressListModel = require('core/js/models/CAddressListModel.js'),
+	CAddressModel = require('modules/Core/js/models/CAddressModel.js'),
+	CAddressListModel = require('modules/Core/js/models/CAddressListModel.js'),
 	
 	MessageUtils = require('modules/Mail/js/utils/Message.js'),
 	

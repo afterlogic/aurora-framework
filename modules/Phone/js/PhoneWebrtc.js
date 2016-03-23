@@ -5,9 +5,9 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Utils = require('core/js/utils/Common.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Screens = require('core/js/Screens.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
 	Phone = require('modules/Phone/js/Phone.js'),
 	Settings = require('modules/Phone/js/Settings.js')

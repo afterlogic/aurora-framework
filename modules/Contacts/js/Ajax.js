@@ -1,6 +1,6 @@
 'use strict';
 
-var Ajax = require('core/js/Ajax.js');
+var Ajax = require('modules/Core/js/Ajax.js');
 
 Ajax.registerAbortRequestHandler('Contacts', function (oRequest, oOpenedRequest) {
 	switch (oRequest.Method)

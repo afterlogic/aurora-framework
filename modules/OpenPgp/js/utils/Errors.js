@@ -3,9 +3,9 @@
 var
 	_ = require('underscore'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	Screens = require('core/js/Screens.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
 	Enums = require('modules/OpenPgp/js/Enums.js'),
 	

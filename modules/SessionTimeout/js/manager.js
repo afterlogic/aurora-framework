@@ -3,7 +3,7 @@
 var
 	$ = require('jquery'),
 	
-	App = require('core/js/App.js'),
+	App = require('modules/Core/js/App.js'),
 			
 	aSessionTimeoutFunctions = [],
 	iSessionTimeout = 0,

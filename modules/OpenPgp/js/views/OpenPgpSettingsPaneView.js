@@ -4,16 +4,16 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	ModulesManager = require('core/js/ModulesManager.js'),
-	Screens = require('core/js/Screens.js'),
-	UserSettings = require('core/js/Settings.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
+	Screens = require('modules/Core/js/Screens.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	GenerateKeyPopup = require('modules/OpenPgp/js/popups/GenerateKeyPopup.js'),
 	ImportKeyPopup = require('modules/OpenPgp/js/popups/ImportKeyPopup.js'),
 	ShowKeyArmorPopup = require('modules/OpenPgp/js/popups/ShowKeyArmorPopup.js'),

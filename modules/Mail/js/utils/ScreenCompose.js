@@ -1,7 +1,7 @@
 'use strict';
 
 var
-	Routing = require('core/js/Routing.js'),
+	Routing = require('modules/Core/js/Routing.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	

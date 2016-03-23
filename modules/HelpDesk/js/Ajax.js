@@ -1,7 +1,7 @@
 'use strict';
 
 var
-	Ajax = require('core/js/Ajax.js'),
+	Ajax = require('modules/Core/js/Ajax.js'),
 	
 	bExtApp = false
 ;

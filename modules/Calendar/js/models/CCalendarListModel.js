@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Storage = require('core/js/Storage.js'),
+	Storage = require('modules/Core/js/Storage.js'),
 	
 	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js')
 ;

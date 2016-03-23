@@ -7,7 +7,7 @@ module.exports = function (oSettings) {
 	require('modules/Calendar/js/MainTabExtMethods.js');
 
 	var
-		TextUtils = require('core/js/utils/Text.js'),
+		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
 		Settings = require('modules/Calendar/js/Settings.js')
 	;

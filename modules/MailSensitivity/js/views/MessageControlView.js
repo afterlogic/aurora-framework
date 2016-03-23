@@ -3,7 +3,7 @@
 var
 	ko = require('knockout'),
 			
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('modules/Core/js/utils/Text.js')
 ;
 
 function CMessageControlView()

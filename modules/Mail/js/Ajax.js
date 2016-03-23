@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	Types = require('core/js/utils/Types.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	Ajax = require('core/js/Ajax.js')
+	Ajax = require('modules/Core/js/Ajax.js')
 ;
 
 Ajax.registerAbortRequestHandler('Mail', function (oRequest, oOpenedRequest) {

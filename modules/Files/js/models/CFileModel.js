@@ -4,18 +4,18 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	FilesUtils = require('core/js/utils/Files.js'),
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	FilesUtils = require('modules/Core/js/utils/Files.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	Browser = require('core/js/Browser.js'),
-	WindowOpener = require('core/js/WindowOpener.js'),
+	Browser = require('modules/Core/js/Browser.js'),
+	WindowOpener = require('modules/Core/js/WindowOpener.js'),
 	
-	CAbstractFileModel = require('core/js/models/CAbstractFileModel.js'),
-	CDateModel = require('core/js/models/CDateModel.js'),
+	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js'),
+	CDateModel = require('modules/Core/js/models/CDateModel.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	EmbedHtmlPopup = require('core/js/popups/EmbedHtmlPopup.js')
+	Popups = require('modules/Core/js/Popups.js'),
+	EmbedHtmlPopup = require('modules/Core/js/popups/EmbedHtmlPopup.js')
 ;
 
 /**

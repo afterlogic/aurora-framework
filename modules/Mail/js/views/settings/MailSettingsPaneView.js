@@ -4,9 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Browser = require('core/js/Browser.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	UserSettings = require('core/js/Settings.js'),
+	Browser = require('modules/Core/js/Browser.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	SettingsUtils = ModulesManager.run('Settings', 'getSettingsUtils'),
 	

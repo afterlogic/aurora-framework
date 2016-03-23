@@ -4,16 +4,16 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Ajax = require('core/js/Ajax.js'),
-	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js'),
+	Ajax = require('modules/Core/js/Ajax.js'),
+	App = require('modules/Core/js/App.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
 	Settings = require('modules/Auth/js/Settings.js'),
 	
-	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
+	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
 	CForgotView = require('modules/Auth/js/views/CForgotView.js'),
 	CLoginView = require('modules/Auth/js/views/CLoginView.js'),
 	CRegisterView = require('modules/Auth/js/views/CRegisterView.js')

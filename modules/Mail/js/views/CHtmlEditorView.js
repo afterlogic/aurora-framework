@@ -5,18 +5,18 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	AddressUtils = require('core/js/utils/Address.js'),
-	FilesUtils = require('core/js/utils/Files.js'),
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	AddressUtils = require('modules/Core/js/utils/Address.js'),
+	FilesUtils = require('modules/Core/js/utils/Files.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	App = require('core/js/App.js'),
-	Browser = require('core/js/Browser.js'),
-	CJua = require('core/js/CJua.js'),
-	UserSettings = require('core/js/Settings.js'),
+	App = require('modules/Core/js/App.js'),
+	Browser = require('modules/Core/js/Browser.js'),
+	CJua = require('modules/Core/js/CJua.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	AlertPopup = require('core/js/popups/AlertPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 			
 	CCrea = require('modules/Mail/js/CCrea.js'),
 	Settings = require('modules/Mail/js/Settings.js'),

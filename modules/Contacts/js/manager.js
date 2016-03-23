@@ -7,7 +7,7 @@ module.exports = function (oSettings) {
 		_ = require('underscore'),
 		$ = require('jquery'),
 		
-		TextUtils = require('core/js/utils/Text.js'),
+		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
 		Settings = require('modules/Contacts/js/Settings.js'),
 		

@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
 	CFilesView = require('modules/Files/js/views/CFilesView.js'),
 	CFileModel = require('modules/Files/js/models/CFileModel.js')

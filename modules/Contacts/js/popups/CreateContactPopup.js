@@ -5,14 +5,14 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Api = require('core/js/Api.js'),
-	Routing = require('core/js/Routing.js'),
-	Screens = require('core/js/Screens.js'),
+	Api = require('modules/Core/js/Api.js'),
+	Routing = require('modules/Core/js/Routing.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
 	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
 	

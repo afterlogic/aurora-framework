@@ -5,10 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	ModulesManager = require('core/js/ModulesManager.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	
 	Phone = require('modules/Phone/js/Phone.js')
 ;

@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	Types = require('core/js/utils/Types.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
 	LinksUtils = {}
 ;

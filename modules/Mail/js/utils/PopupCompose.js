@@ -1,7 +1,7 @@
 'use strict';
 
 var
-	Popups = require('core/js/Popups.js'),
+	Popups = require('modules/Core/js/Popups.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	

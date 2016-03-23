@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Types = require('core/js/utils/Types.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
 	ContactsCache = require('modules/Contacts/js/Cache.js'),
 	CVcardModel = require('modules/Contacts/js/models/VcardModel.js')

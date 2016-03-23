@@ -3,17 +3,17 @@
 var
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	Ajax = require('core/js/Ajax.js'),
-	App = require('core/js/App.js'),
-	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
-	Routing = require('core/js/Routing.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
+	Ajax = require('modules/Core/js/Ajax.js'),
+	App = require('modules/Core/js/App.js'),
+	Api = require('modules/Core/js/Api.js'),
+	Screens = require('modules/Core/js/Screens.js'),
+	Routing = require('modules/Core/js/Routing.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	ChangePasswordPopup = ModulesManager.run('ChangePassword', 'getChangePasswordPopup'),
 	CreateAccountPopup = ModulesManager.run('Mail', 'getCreateAccountPopup'),
 	

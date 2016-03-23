@@ -4,7 +4,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Types = require('core/js/utils/Types.js')
+	Types = require('modules/Core/js/utils/Types.js')
 ;
 
 /**

@@ -4,10 +4,10 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Types = require('core/js/utils/Types.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	UserSettings = require('core/js/Settings.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),

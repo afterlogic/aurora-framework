@@ -4,9 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Types = require('core/js/utils/Types.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	App = require('core/js/App.js'),
+	App = require('modules/Core/js/App.js'),
 	
 	CalendarCache = require('modules/Calendar/js/Cache.js'),
 	CIcalModel = require('modules/Calendar/js/models/CIcalModel.js')
