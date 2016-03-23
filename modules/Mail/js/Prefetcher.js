@@ -27,6 +27,16 @@ Prefetcher.prefetchFetchersIdentities = function ()
 	return false;
 };
 
+Prefetcher.prefetchAccountFilters = function ()
+{
+	var oAccount = AccountList.getCurrent();
+	
+	if (oAccount && !oAccount.filters() && oAccount.allowMail() && oAccount.extensionExists('AllowSieveFiltersExtension'))
+	{
+		oAccount.requestFilters();
+	}
+};
+
 Prefetcher.prefetchStarredMessageList = function ()
 {
 	var
@@ -306,6 +316,11 @@ module.exports = {
 		
 		if (!bPrefetchStarted)
 		{
+			bPrefetchStarted = Prefetcher.prefetchAccountFilters();
+		}
+		
+		if (!bPrefetchStarted)
+		{
 			bPrefetchStarted = Prefetcher.prefetchStarredMessageList();
 		}
 
@@ -320,6 +335,11 @@ module.exports = {
 		var bPrefetchStarted = false;
 		
 		bPrefetchStarted = Prefetcher.prefetchFetchersIdentities();
+		
+		if (!bPrefetchStarted)
+		{
+			bPrefetchStarted = Prefetcher.prefetchAccountFilters();
+		}
 		
 		if (!bPrefetchStarted)
 		{

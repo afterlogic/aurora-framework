@@ -62,16 +62,10 @@ $oEavManager->saveObject($oAccount);
 $iCount = $oEavManager->getObjectsCount('Account'); 
 echo $iCount;
 
-$aObjects = $oEavManager->getObjects('Account', 
-		array(), 0, 0,
-		array('IdDomain' => array('<', 1)), 
-		'Sort', \ESortOrder::ASC
-);
-
+$aObjects = $oEavManager->getObjects('Account');
 print_r($aObjects);
 
 $oAccount->Description = 'Description';
-
 $oEavManager->saveObject($oAccount);
 
 print_r($oEavManager->getObjectById($oAccount->iObjectId));

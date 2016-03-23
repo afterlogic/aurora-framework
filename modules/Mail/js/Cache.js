@@ -582,21 +582,27 @@ CMailCache.prototype.checkMessageFlags = function ()
  */
 CMailCache.prototype.onGetMessagesFlagsResponse = function (oResponse, oRequest)
 {
-	var oInbox = this.folderList().inboxFolder();
+	var
+		oParameters = JSON.parse(oRequest.Parameters),
+		oFolderList = this.oFolderListItems[oParameters.AccountID],
+		oInbox = (oFolderList) ? oFolderList.inboxFolder() : null
+	;
 	
-	if (oResponse.Result)
+	if (oInbox)
 	{
-		_.each(oResponse.Result, function (aFlags, sUid) {
-			if (_.indexOf(aFlags, '\\flagged') === -1)
-			{
-				oInbox.setMessageUnflaggedByUid(sUid);
-			}
-		});
+		if (oResponse.Result)
+		{
+			_.each(oResponse.Result, function (aFlags, sUid) {
+				if (_.indexOf(aFlags, '\\flagged') === -1)
+				{
+					oInbox.setMessageUnflaggedByUid(sUid);
+				}
+			});
+		}
+		oInbox.removeFlaggedMessageListsFromCache();
+		this.requirePrefetcher();
+		Prefetcher.prefetchStarredMessageList();
 	}
-	oInbox.removeFlaggedMessageListsFromCache();
-	
-	this.requirePrefetcher();
-	Prefetcher.prefetchStarredMessageList();
 };
 
 /**
