@@ -422,4 +422,19 @@ CAccountModel.prototype.onAccountDeleteResponse = function (oResponse, oRequest)
 	}
 };
 
+CAccountModel.prototype.requestFilters = function ()
+{
+	Ajax.send('GetFilters', null, this.onGetFiltersResponse, this);
+};
+
+CAccountModel.prototype.onGetFiltersResponse = function (oResponse, oRequest)
+{
+	var oSieveFilters = new CSieveFiltersModel();
+	if (oResponse.Result)
+	{
+		oSieveFilters.parse(this.id(), oResponse.Result);
+	}
+	this.filters(oSieveFilters);
+};
+
 module.exports = CAccountModel;
