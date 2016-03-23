@@ -769,10 +769,12 @@ var inputosaurustext = {
 			li = (ev && ev.target) ? $(ev.target).closest('li') : null
 		;
 
-		if (li && li.is('li')) {
+		if (li && li.is('li'))
+		{
 			li.find('a').focus();
 		}
-		if (!ev || !$(ev.target).closest('li').data('inputosaurus')) {
+		if (!ev || !$(ev.target).closest('li').data('inputosaurus'))
+		{
 			widget.elements.input.focus();
 		}
 	},
@@ -780,7 +782,7 @@ var inputosaurustext = {
 	_click : function(ev) {
 		var widget = (ev && ev.data.widget) || this ;
 
-		if (widget.elements.input.val() === '')
+		if (widget.elements.input.val() === '' && !ev || !$(ev.target).closest('li').data('inputosaurus'))
 		{
 			if (!widget.options.openedByClick)
 			{
