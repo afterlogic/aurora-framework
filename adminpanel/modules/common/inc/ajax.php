@@ -44,7 +44,7 @@ class CCommonAjaxAction extends ap_CoreModuleHelper
 			if ($this->oModule->updateDomain($oDomain))
 			{
 				$this->checkBolleanWithMessage(true);
-				$this->Ref = '?edit&tab=domains&uid='.$oDomain->IdDomain;
+				$this->Ref = '?edit&tab=domains&uid='.$oDomain->iObjectId;
 			}
 			else
 			{

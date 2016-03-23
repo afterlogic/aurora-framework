@@ -271,7 +271,7 @@ class CProModule extends ap_Module
 
 				$oScreen->AddTopMenuButton(CApi::I18N('ADMIN_PANEL/TOOLBAR_BUTTON_NEW_USER'), 'user_new.png', 'IdUsersNewUserButton');
 				
-				if ($oDomain && ($oDomain->IsDefaultTenantDomain || $oDomain->IsDefaultDomain) && $this->oAdminPanel->AType)
+				if ($oDomain && ($oDomain->IsDefaultTenantDomain || $oDomain->IsDefault) && $this->oAdminPanel->AType)
 				{
 					$oScreen->AddTopMenuButton(CApi::I18N('ADMIN_PANEL/TOOLBAR_BUTTON_INVITE_USER'), 'user_invite.png', 'IdUsersInviteUserButton');
 				}
@@ -648,7 +648,7 @@ class CProModule extends ap_Module
 						{
 							$this->oAdminPanel->SetMainObject('domain_filter', $oDomain);
 
-							if ($oDomain->IsDefaultDomain)
+							if ($oDomain->IsDefault)
 							{
 								$oScreen->Main->AddSwitcher(
 									CM_SWITCHER_MODE_NEW_USER, CM_SWITCHER_MODE_NEW_USER_NAME,
@@ -683,7 +683,7 @@ class CProModule extends ap_Module
 						{
 							$this->oAdminPanel->SetMainObject('domain_filter', $oDomain);
 
-							if ($oDomain->IsDefaultTenantDomain || $oDomain->IsDefaultDomain)
+							if ($oDomain->IsDefaultTenantDomain || $oDomain->IsDefault)
 							{
 								$oScreen->Main->AddSwitcher(
 									CM_SWITCHER_MODE_INVITE_USER, CM_SWITCHER_MODE_INVITE_USER_NAME,
@@ -700,7 +700,7 @@ class CProModule extends ap_Module
 					if (!$oAccount && null !== $iAccountId && 0 < $iAccountId)
 					{
 						$oAccount = $this->getAccount($iAccountId);
-						if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->IdDomain))
+						if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->iObjectId))
 						{
 							$this->oAdminPanel->SetMainObject('account_edit', $oAccount);
 						}
@@ -1168,6 +1168,8 @@ class CProModule extends ap_Module
 	*/
 	public function CreateDomain(CDomain &$oDomain)
 	{
+		var_dump('3');
+		exit;
 		if (!$this->oDomainsApi->CreateDomain($oDomain))
 		{
 			$this->lastErrorCode = $this->oDomainsApi->getLastErrorCode();
@@ -1175,7 +1177,7 @@ class CProModule extends ap_Module
 			return false;
 		}
 
-		CSession::Set(AP_SESS_DOMAIN_NEXT_EDIT_ID, $oDomain->IdDomain);
+		CSession::Set(AP_SESS_DOMAIN_NEXT_EDIT_ID, $oDomain->iObjectId);
 		return true;
 	}
 

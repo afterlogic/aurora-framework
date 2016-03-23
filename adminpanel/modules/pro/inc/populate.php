@@ -203,9 +203,9 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_filter');
 		if ($oDomain)
 		{
-			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->IdDomain) ? 0 : $oDomain->IdDomain);
+			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->iObjectId) ? 0 : $oDomain->iObjectId);
 
-			if ($oDomain->IsDefaultDomain)
+			if ($oDomain->IsDefault)
 			{
 				$oScreen->Data->SetValue('optIncomingProtocolIMAP', EMailProtocol::IMAP4 === $oDomain->IncomingMailProtocol);
 				$oScreen->Data->SetValue('optIncomingProtocolPOP3', EMailProtocol::POP3 === $oDomain->IncomingMailProtocol);
@@ -265,7 +265,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_filter');
 		if ($oDomain)
 		{
-			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->IdDomain) ? 0 : $oDomain->IdDomain);
+			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->iObjectId) ? 0 : $oDomain->iObjectId);
 		}
 	}	
 

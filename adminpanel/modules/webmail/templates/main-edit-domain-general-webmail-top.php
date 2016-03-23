@@ -25,11 +25,11 @@
 			</label>
 
 			<div class="wm_information_com">
-				<?php if($this->Data->getValue('IsDefaultDomain', 'bool')) echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_SERVER'); else echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_DOMAIN');?>
+				<?php if($this->Data->getValue('IsDefault', 'bool')) echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_SERVER'); else echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_DOMAIN');?>
 			</div>
 
 			<div class="wm_information_com">
-				<?php if($this->Data->getValue('IsDefaultDomain', 'bool')) echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_NOTSET_SERVER'); else echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_NOTSET_DOMAIN'); ?>
+				<?php if($this->Data->getValue('IsDefault', 'bool')) echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_NOTSET_SERVER'); else echo CApi::I18N('ADMIN_PANEL/DOMAINS_GENERAL_REGISTERED_ONLY_HINT_NOTSET_DOMAIN'); ?>
 			</div>
 		</td>
 	</tr>

@@ -3,13 +3,14 @@
 /* -AFTERLOGIC LICENSE HEADER- */
 
 /**
+ * @property int $IdDomain ID of the domain in the database. 
  * @property int $IdTenant
  * @property bool $IsDisabled Set to true if the domain was disabled.
  * @property string $Name Domain name.
  * @property string $Url URL pattern to be matched against actual URL for detecting domain used. 
  * @property bool $OverrideSettings Set to true if domain properties should override default domain settings. 
  * @property bool $IsInternal Set to true for domain hosted by mailserver bundle. 
- * @property bool $IsDefault Set to true if object instance is created for the default domain. 
+ * @property bool $IsDefaultDomain Set to true if object instance is created for the default domain. 
  * @property string $SiteName Text to be displayed in web browser tab/window title. 
  * @property string $DefaultLanguage Language used by default, name should match the name of language file under i18n dir with extension omitted. 
  * @property int $DefaultTimeZone Default timezone offset value 
@@ -77,7 +78,7 @@
  * @package Domains
  * @subpackage Classes
  */
-class CDomain extends api_APropertyBag
+class CDomain extends api_AContainer
 {
 	/**
 	 * @var array
@@ -89,36 +90,35 @@ class CDomain extends api_APropertyBag
 	 * @param string $sUrl = null
 	 * @param int $iTenantId = 0
 	 */
-//	public function __construct($sName = '', $sUrl = null, $iTenantId = 0)
-	public function __construct($sModule)
+	public function __construct($sName = '', $sUrl = null, $iTenantId = 0)
 	{
-		parent::__construct(get_class($this), $sModule);
+		parent::__construct(get_class($this), 'IdDomain');
 
-		$this->__USE_TRIM_IN_STRINGS__ = true;
-		
 		$oSettings =& CApi::GetSettings();
 
-//		$aDefaults = array(
-//			'IdTenant'		=> $iTenantId,
-//			'IsDisabled'	=> false,
-//			'Name'			=> trim($sName),
-//			'Url'			=> (null === $sUrl) ? '' : trim($sUrl),
-//
-//			'IsDefault'		=> false,
-//			'IsDefaultTenantDomain'	=> false,
-//			'IsInternal'			=> false,
-//			'UseThreads'			=> true,
-//			'OverrideSettings'		=> true
-//		);
+		$aDefaults = array(
+			'IdDomain'		=> 0,
+			'IdTenant'		=> $iTenantId,
+			'IsDisabled'	=> false,
+			'Name'			=> trim($sName),
+			'Url'			=> (null === $sUrl) ? '' : trim($sUrl),
 
-//		$aSettingsMap = $this->GetSettingsMap();
-//		foreach ($aSettingsMap as $sProperty => $sSettingsName)
-//		{
-//			$aDefaults[$sProperty] = $oSettings->GetConf($sSettingsName);
-//		}
-//
-//		$this->SetDefaults($aDefaults);
-		$this->SetDefaults();
+			'IsDefaultDomain'		=> false,
+			'IsDefaultTenantDomain'	=> false,
+			'IsInternal'			=> false,
+			'UseThreads'			=> true,
+			'OverrideSettings'		=> true
+		);
+
+		$aSettingsMap = $this->GetSettingsMap();
+		foreach ($aSettingsMap as $sProperty => $sSettingsName)
+		{
+			$aDefaults[$sProperty] = $oSettings->GetConf($sSettingsName);
+		}
+
+		$this->__USE_TRIM_IN_STRINGS__ = true;
+
+		$this->SetDefaults($aDefaults);
 
 		$this->aFolders = array(
 			EFolderType::Inbox => array('INBOX', 'Inbox'),
@@ -127,113 +127,11 @@ class CDomain extends api_APropertyBag
 			EFolderType::Spam => array('Spam', 'Junk', 'Junk Mail', 'Junk E-mail', 'Bulk Mail'),
 			EFolderType::Trash => array('Trash', 'Bin', 'Deleted', 'Deleted Items'),
 		);
-		
-		//
-//		$this->SetLower(array('Name', 'IncomingMailServer',/* 'IncomingMailLogin',*/
-//			'OutgoingMailServer'/*, 'OutgoingMailLogin'*/));
+
+		$this->SetLower(array('Name', 'IncomingMailServer',/* 'IncomingMailLogin',*/
+			'OutgoingMailServer'/*, 'OutgoingMailLogin'*/));
 
 		CApi::Plugin()->RunHook('api-domain-construct', array(&$this));
-	}
-	
-	public static function createInstance($sModule = 'Core')
-	{
-		return new CDomain($sModule);
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-			'IdTenant'		=> array('int', 0), //must be passed to constructor
-			'IsDisabled'	=> array('bool', false),
-			'Name'			=> array('string', ''),//must be passed to constructor
-			'Url'			=> array('string', ''),//must be passed to constructor
-
-			'OverrideSettings'	=> array('bool', true),
-			'IsInternal'		=> array('bool', false),
-			'IsDefault'	=> array('bool', false),
-			'IsDefaultTenantDomain'	=> array('bool', false),
-
-			// Common
-			'SiteName'				=> array('string', ''),
-			'DefaultLanguage'		=> array('string', ''),
-			'DefaultTimeZone'		=> array('int', 0),
-			'DefaultTimeFormat'		=> array('int', 0),
-			'DefaultDateFormat'		=> array('string', ''),
-
-			'AllowRegistration'		=> array('bool', false),
-			'AllowPasswordReset'	=> array('bool', false),
-			
-			'DefaultTab'			=> array('string', ''),
-			
-//			'PasswordMinLength'		=> array('int', 'password_min_length'),
-//			'PasswordMustBeComplex'	=> array('bool', 'password_must_be_complex'),
-
-			// WebMail
-			'AllowWebMail'			=> array('bool', true),
-			'IncomingMailProtocol'	=> array('int', 0),
-			'IncomingMailServer'	=> array('string', ''),
-			'IncomingMailPort'		=> array('int', 143),
-			'IncomingMailUseSSL'	=> array('bool', true),
-
-			'OutgoingMailServer'	=> array('string', ''),
-			'OutgoingMailPort'		=> array('int', 25),
-			'OutgoingMailAuth'		=> array('int', 0),
-			'OutgoingMailLogin'		=> array('string', ''),
-			'OutgoingMailPassword'	=> array('password', ''),
-			'OutgoingMailUseSSL'	=> array('bool', true),
-			'OutgoingSendingMethod'	=> array('int', 1),
-
-			'ExternalHostNameOfLocalImap'	=> array('string', ''),// 'ext_imap_host'),
-			'ExternalHostNameOfLocalSmtp'	=> array('string', ''),// 'ext_smtp_host'),
-			'ExternalHostNameOfDAVServer'	=> array('string', ''),// 'ext_dav_host'),
-
-			'UserQuota'				=> array('int', 0), // user_quota // TODO
-			'AutoCheckMailInterval'	=> array('int', 60),
-
-			'DefaultSkin'	=> array('string', 'Default'),
-			'MailsPerPage'	=> array('int', 20),
-
-			'AllowUsersChangeInterfaceSettings'	=> array('bool', false),
-			'AllowUsersChangeEmailSettings'		=> array('bool', false),
-			'AllowUsersAddNewAccounts'			=> array('bool', false),
-			'AllowNewUsersRegister'				=> array('bool', false),
-			'AllowOpenPGP'						=> array('bool', true),
-
-			'Layout'						=> array('int', 0),
-			'DetectSpecialFoldersWithXList'	=> array('int', 0),
-			'UseThreads'					=> array('bool', true),
-
-			// Contacts
-			'AllowContacts'			=> array('bool', true),
-			'ContactsPerPage'		=> array('int', 20),
-			'GlobalAddressBook'		=> array('int', 0),
-
-			// Calendar
-			'AllowCalendar'			=> array('bool', true),
-			'CalendarShowWeekEnds'	=> array('bool', true),
-			'CalendarWorkdayStarts'	=> array('int', 0),
-			'CalendarWorkdayEnds'	=> array('int', 5),
-			'CalendarShowWorkDay'	=> array('bool', true),
-			'CalendarWeekStartsOn'	=> array('int', 0),
-			'CalendarDefaultTab'	=> array('int', 1),
-			
-			// Files module
-			'AllowFiles'			=> array('bool', true),
-			
-			// Helpdesk module
-			'AllowHelpdesk'			=> array('bool', true)
-		);
 	}
 
 	/**
@@ -251,7 +149,7 @@ class CDomain extends api_APropertyBag
 				throw new CApiValidationException(Errs::Validation_InvalidPort, null, array(
 					'{{ClassName}}' => 'CAccount', '{{ClassField}}' => 'OutgoingMailPort'));
 
-			case (!$this->IsDefault && api_Validate::IsEmpty($this->Name)):
+			case (!$this->IsDefaultDomain && api_Validate::IsEmpty($this->Name)):
 				throw new CApiValidationException(Errs::Validation_FieldIsEmpty, null, array(
 					'{{ClassName}}' => 'CDomain', '{{ClassField}}' => 'Name'));
 
@@ -268,6 +166,101 @@ class CDomain extends api_APropertyBag
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getMap()
+	{
+		return self::getStaticMap();
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getStaticMap()
+	{
+		return array(
+			'IdDomain'		=> array('int', 'id_domain', false, false),
+			'IdTenant'		=> array('int', 'id_tenant'),
+			'IsDisabled'	=> array('bool', 'disabled'),
+			'Name'			=> array('string(255)', 'name', true, false),
+			'Url'			=> array('string(255)', 'url'),
+
+			'OverrideSettings'	=> array('bool', 'override_settings'),
+			'IsInternal'		=> array('bool', 'is_internal'),
+			'IsDefaultDomain'	=> array('bool'),
+			'IsDefaultTenantDomain'	=> array('bool', 'is_default_for_tenant'),
+
+			// Common
+			'SiteName'				=> array('string(255)', 'site_name'),
+			'DefaultLanguage'		=> array('string(255)', 'lang'),
+			'DefaultTimeZone'		=> array('int', 'def_user_timezone'),
+			'DefaultTimeFormat'		=> array('int', 'def_user_timeformat'),
+			'DefaultDateFormat'		=> array('string(50)', 'def_user_dateformat'),
+
+			'AllowRegistration'		=> array('bool', 'allow_registration'),
+			'AllowPasswordReset'	=> array('bool', 'allow_pass_reset'),
+			
+//			'PasswordMinLength'		=> array('int', 'password_min_length'),
+//			'PasswordMustBeComplex'	=> array('bool', 'password_must_be_complex'),
+
+			// WebMail
+			'AllowWebMail'			=> array('bool', 'allow_webmail'),
+			'IncomingMailProtocol'	=> array('int', 'mail_protocol'),
+			'IncomingMailServer'	=> array('string(255)', 'mail_inc_host'),
+			'IncomingMailPort'		=> array('int', 'mail_inc_port'),
+			'IncomingMailUseSSL'	=> array('bool', 'mail_inc_ssl'),
+
+			'OutgoingMailServer'	=> array('string(255)', 'mail_out_host'),
+			'OutgoingMailPort'		=> array('int', 'mail_out_port'),
+			'OutgoingMailAuth'		=> array('int', 'mail_out_auth'),
+			'OutgoingMailLogin'		=> array('string(255)', 'mail_out_login'),
+			'OutgoingMailPassword'	=> array('password', 'mail_out_pass'),
+			'OutgoingMailUseSSL'	=> array('bool', 'mail_out_ssl'),
+			'OutgoingSendingMethod'	=> array('int', 'mail_out_method'),
+
+			'ExternalHostNameOfLocalImap'	=> array('string(255)'),// 'ext_imap_host'),
+			'ExternalHostNameOfLocalSmtp'	=> array('string(255)'),// 'ext_smtp_host'),
+			'ExternalHostNameOfDAVServer'	=> array('string(255)'),// 'ext_dav_host'),
+
+			'UserQuota'				=> array('int'), // user_quota // TODO
+			'AutoCheckMailInterval'	=> array('int', 'check_interval'),
+
+			'DefaultSkin'	=> array('string(255)', 'skin'),
+			'MailsPerPage'	=> array('int', 'msgs_per_page'),
+
+			'AllowUsersChangeInterfaceSettings'	=> array('bool', 'allow_change_interface_settings'),
+			'AllowUsersChangeEmailSettings'		=> array('bool', 'allow_change_account_settings'),
+			'AllowUsersAddNewAccounts'			=> array('bool', 'allow_users_add_acounts'),
+			'AllowNewUsersRegister'				=> array('bool', 'allow_new_users_register'),
+			'AllowOpenPGP'						=> array('bool', 'allow_open_pgp'),
+
+			'Layout'	=> array('int', 'layout'),
+			'DetectSpecialFoldersWithXList'	=> array('int', 'xlist'),
+			'UseThreads'					=> array('bool', 'use_threads'),
+
+			// Contacts
+			'AllowContacts'			=> array('bool', 'allow_contacts'),
+			'ContactsPerPage'		=> array('int', 'contacts_per_page'),
+			'GlobalAddressBook'		=> array('int', 'global_addr_book'),
+
+			// Calendar
+			'AllowCalendar'			=> array('bool', 'allow_calendar'),
+			'CalendarShowWeekEnds'	=> array('bool', 'cal_show_weekends'),
+			'CalendarWorkdayStarts'	=> array('int', 'cal_workday_starts'),
+			'CalendarWorkdayEnds'	=> array('int', 'cal_workday_ends'),
+			'CalendarShowWorkDay'	=> array('bool', 'cal_show_workday'),
+			'CalendarWeekStartsOn'	=> array('int', 'cal_week_starts_on'),
+			'CalendarDefaultTab'	=> array('int', 'cal_default_tab'),
+			
+			'AllowFiles'			=> array('bool', 'allow_files'),
+			'AllowHelpdesk'			=> array('bool', 'allow_helpdesk'),
+			
+			'DefaultTab'			=> array('string(100)', 'default_tab')
+			
+		);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function initBeforeChange()
@@ -279,7 +272,7 @@ class CDomain extends api_APropertyBag
 			$this->OverrideSettings = true;
 		}
 
-		if (!$this->OverrideSettings && !$this->IsDefault)
+		if (!$this->OverrideSettings && !$this->IsDefaultDomain)
 		{
 			/* @var $oApiDomainsManager CApiDomainsManager */
 			$oApiDomainsManager = CApi::GetCoreManager('domains');
@@ -304,7 +297,7 @@ class CDomain extends api_APropertyBag
 		parent::InitByDbRow($oRow);
 
 		$this->initBeforeChange();
-//		$this->FlushObsolete();
+		$this->FlushObsolete();
 	}
 
 	/**

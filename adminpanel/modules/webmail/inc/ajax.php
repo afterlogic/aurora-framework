@@ -62,7 +62,7 @@ class CWebMailAjaxAction extends ap_CoreModuleHelper
 				CPost::get('selIncomingMailProtocol'), 'EMailProtocol');
 		}
 
-//		if ($oDomain->OverrideSettings || $oDomain->IsDefaultDomain)
+//		if ($oDomain->OverrideSettings || $oDomain->IsDefault)
 //		{
 //			$oDomain->ExternalHostNameOfDAVServer = CPost::Get('txtExternalHostNameOfDAVServer', $oDomain->ExternalHostNameOfDAVServer);
 //			$oDomain->ExternalHostNameOfLocalImap = CPost::Get('txtExternalHostNameOfLocalImap', $oDomain->ExternalHostNameOfLocalImap);

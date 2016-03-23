@@ -254,7 +254,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 			if (!empty($sTenantLogin))
 			{
 				$oFilterBy = array('Login' => $sTenantLogin);
-				
+				var_dump($sTenantLogin);
 				if (null !== $sTenantPassword)
 				{
 					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
@@ -272,8 +272,10 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					1,
 					$oFilterBy
 				);
+				
+				var_dump($aResultTenants);
 
-				if (isset($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
+				if (($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
 				{
 					$iTenantId = $aResultTenants[0]->iObjectId;
 				}
@@ -630,6 +632,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 				else
 				{
 					$oProperty = new CProperty('FilesUsageInBytes', $iNewAllocatedSizeInBytes, $oTenant->getPropertyType('FilesUsageInBytes'));
+					$oProperty->ObjectId = $oTenant->iObjectId;
 					$this->oEavManager->setProperty($oProperty);
 				}
 			}

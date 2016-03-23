@@ -120,7 +120,7 @@ class CApiDomainsDbStorage extends CApiDomainsStorage
 		$bResult = false;
 		if ($this->oConnection->Execute($this->oCommandCreator->createDomain($oDomain)))
 		{
-			$oDomain->IdDomain = $this->oConnection->GetLastInsertId('awm_domains', 'id_domain');
+			$oDomain->iObjectId = $this->oConnection->GetLastInsertId('awm_domains', 'id_domain');
 			$bResult = true;
 		}
 

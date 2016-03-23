@@ -2,6 +2,8 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
+use Underscore\Types\Arrays;
+
 /**
  * @package Api
  */
@@ -56,7 +58,7 @@ class CApi
 	 * @var bool
 	 */
 	static $bUseDbLog = true;
-
+	
 	public static function Run()
 	{
 		include_once self::LibrariesPath().'autoload.php';

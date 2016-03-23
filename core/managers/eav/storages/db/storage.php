@@ -76,7 +76,7 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (!isset($oObject))
 				{
-					$oObject = call_user_func($oRow->obj_type . '::createInstanse', $oRow->obj_module);
+					$oObject = call_user_func($oRow->obj_type . '::createInstance', $oRow->obj_module);
 				}
 
 				if (isset($oObject))
@@ -129,7 +129,7 @@ class CApiEavDbStorage extends CApiEavStorage
 			$mResult = array();
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oObject = call_user_func($sType . '::createInstanse');
+				$oObject = call_user_func($sType . '::createInstance');
 
 				$oObject->iObjectId = $oRow->obj_id;
 				$oObject->sModuleName =  $oRow->obj_module;

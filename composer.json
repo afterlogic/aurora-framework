@@ -10,6 +10,7 @@
 		"phpzip/phpzip": ">=2.0.7",
 		"tijsverkoyen/css-to-inline-styles": "1.3.*",
 		"afterlogic/dav": "dev-master",
-		"afterlogic/mailso": "dev-master"
+		"afterlogic/mailso": "dev-master",
+		"anahkiasen/underscore-php": "*"
 	}	
 }
