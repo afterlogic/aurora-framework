@@ -5,23 +5,23 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
-	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Api = require('core/js/Api.js'),
-	App = require('core/js/App.js'),
-	CJua = require('core/js/CJua.js'),
-	CSelector = require('core/js/CSelector.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	Routing = require('core/js/Routing.js'),
-	Screens = require('core/js/Screens.js'),
+	Api = require('modules/Core/js/Api.js'),
+	App = require('modules/Core/js/App.js'),
+	CJua = require('modules/Core/js/CJua.js'),
+	CSelector = require('modules/Core/js/CSelector.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
+	Routing = require('modules/Core/js/Routing.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
-	CAbstractScreenView = require('core/js/views/CAbstractScreenView.js'),
-	CPageSwitcherView = require('core/js/views/CPageSwitcherView.js'),
+	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
+	CPageSwitcherView = require('modules/Core/js/views/CPageSwitcherView.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
 	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
 	

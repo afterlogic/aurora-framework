@@ -5,9 +5,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Types = require('core/js/utils/Types.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	UserSettings = require('core/js/Settings.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
 	Pgp = require('modules/OpenPgp/js/vendors/openpgp.js'),
 	Enums = require('modules/OpenPgp/js/Enums.js'),

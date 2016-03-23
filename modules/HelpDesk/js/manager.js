@@ -6,7 +6,7 @@ module.exports = function (oSettings) {
 	require('modules/HelpDesk/js/koBindings.js');
 
 	var
-		TextUtils = require('core/js/utils/Text.js'),
+		TextUtils = require('modules/Core/js/utils/Text.js'),
 				
 		Settings = require('modules/HelpDesk/js/Settings.js'),
 		CheckState = require('modules/HelpDesk/js/CheckState.js')

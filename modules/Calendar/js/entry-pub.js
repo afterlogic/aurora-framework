@@ -7,8 +7,8 @@ $('body').ready(function () {
 		oAvaliableModules = {
 			'Calendar': require('modules/Calendar/js/manager-pub.js')
 		},
-		ModulesManager = require('core/js/ModulesManager.js'),
-		App = require('core/js/App.js')
+		ModulesManager = require('modules/Core/js/ModulesManager.js'),
+		App = require('modules/Core/js/App.js')
 	;
 	
 	App.setPublic();

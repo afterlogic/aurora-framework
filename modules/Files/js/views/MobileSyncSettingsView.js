@@ -3,10 +3,10 @@
 var
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	App = require('core/js/App.js'),
-	UserSettings = require('core/js/Settings.js')
+	App = require('modules/Core/js/App.js'),
+	UserSettings = require('modules/Core/js/Settings.js')
 ;
 
 /**

@@ -4,7 +4,7 @@ var
 	ko = require('knockout'),
 	_ = require('underscore'),
 	
-	App = require('core/js/App.js'),
+	App = require('modules/Core/js/App.js'),
 	
 	Ajax = require('modules/Calendar/js/Ajax.js')
 ;

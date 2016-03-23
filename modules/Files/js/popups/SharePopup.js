@@ -4,8 +4,8 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	App = require('core/js/App.js'),
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	App = require('modules/Core/js/App.js'),
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
 	Ajax = require('modules/Files/js/Ajax.js'),
 	CFolderModel = require('modules/Files/js/models/CFolderModel.js')

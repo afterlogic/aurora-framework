@@ -4,11 +4,11 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	App = require('core/js/App.js'),
+	App = require('modules/Core/js/App.js'),
 	
-	CAbstractHeaderItemView = require('core/js/views/CHeaderItemView.js'),
+	CAbstractHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js'),
 			
 	AccountList = require('modules/Mail/js/AccountList.js'),
 	Cache = require('modules/Mail/js/Cache.js')

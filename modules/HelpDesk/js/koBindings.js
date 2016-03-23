@@ -4,7 +4,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js')
+	TextUtils = require('modules/Core/js/utils/Text.js')
 ;
 
 ko.bindingHandlers.quoteText = {

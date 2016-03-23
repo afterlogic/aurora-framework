@@ -4,11 +4,11 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	Screens = require('core/js/Screens.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
+	Screens = require('modules/Core/js/Screens.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	

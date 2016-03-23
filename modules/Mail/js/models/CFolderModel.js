@@ -6,16 +6,16 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
-	Api = require('core/js/Api.js'),
-	Routing = require('core/js/Routing.js'),
-	Storage = require('core/js/Storage.js'),
+	Api = require('modules/Core/js/Api.js'),
+	Routing = require('modules/Core/js/Routing.js'),
+	Storage = require('modules/Core/js/Storage.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
 	LinksUtils = require('modules/Mail/js/utils/Links.js'),
 	

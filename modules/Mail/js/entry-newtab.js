@@ -11,8 +11,8 @@ $('body').ready(function () {
 			'MailSensitivity': require('modules/MailSensitivity/js/manager.js'),
 			'OpenPgp': require('modules/OpenPgp/js/manager.js')
 		},
-		ModulesManager = require('core/js/ModulesManager.js'),
-		App = require('core/js/App.js')
+		ModulesManager = require('modules/Core/js/ModulesManager.js'),
+		App = require('modules/Core/js/App.js')
 	;
 	
 	App.setNewTab();

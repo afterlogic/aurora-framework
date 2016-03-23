@@ -4,7 +4,7 @@ module.exports = function (oSettings) {
 	require('modules/Files/js/enums.js');
 
 	var
-		TextUtils = require('core/js/utils/Text.js'),
+		TextUtils = require('modules/Core/js/utils/Text.js'),
 				
 		Ajax = require('modules/Files/js/Ajax.js'),
 		Settings = require('modules/Files/js/Settings.js'),
@@ -26,8 +26,8 @@ module.exports = function (oSettings) {
 		},
 		getHeaderItem: function () {
 			var
-				TextUtils = require('core/js/utils/Text.js'),
-				CHeaderItemView = require('core/js/views/CHeaderItemView.js')
+				TextUtils = require('modules/Core/js/utils/Text.js'),
+				CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js')
 			;
 			
 			HeaderItemView = new CHeaderItemView(TextUtils.i18n('FILES/ACTION_SHOW_FILES'));

@@ -1,6 +1,6 @@
 'use strict';
 
-var AddressUtils = require('core/js/utils/Address.js');
+var AddressUtils = require('modules/Core/js/utils/Address.js');
 
 /**
  * @todo

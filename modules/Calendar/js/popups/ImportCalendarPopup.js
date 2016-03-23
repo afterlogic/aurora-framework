@@ -5,14 +5,14 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	App = require('core/js/App.js'),
-	CJua = require('core/js/CJua.js'),
-	Screens = require('core/js/Screens.js'),
-	UserSettings = require('core/js/Settings.js'),
+	App = require('modules/Core/js/App.js'),
+	CJua = require('modules/Core/js/CJua.js'),
+	Screens = require('modules/Core/js/Screens.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js')
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js')
 ;
 
 /**

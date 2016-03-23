@@ -6,7 +6,7 @@ module.exports = function (oSettings) {
 	var
 		_ = require('underscore'),
 		
-		App = require('core/js/App.js'),
+		App = require('modules/Core/js/App.js'),
 		
 		Settings = require('modules/Mail/js/Settings.js'),
 		Cache = null,
@@ -34,8 +34,8 @@ module.exports = function (oSettings) {
 	return {
 		start: function (ModulesManager) {
 			var
-				TextUtils = require('core/js/utils/Text.js'),
-				Browser = require('core/js/Browser.js'),
+				TextUtils = require('modules/Core/js/utils/Text.js'),
+				Browser = require('modules/Core/js/Browser.js'),
 				MailUtils = require('modules/Mail/js/utils/Mail.js')
 			;
 			

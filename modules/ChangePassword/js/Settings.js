@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	Utils = require('core/js/utils/Common.js')
+	Utils = require('modules/Core/js/utils/Common.js')
 ;
 
 module.exports = {

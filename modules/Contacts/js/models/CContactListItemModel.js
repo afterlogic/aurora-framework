@@ -3,8 +3,8 @@
 var
 	ko = require('knockout'),
 	
-	AddressUtils = require('core/js/utils/Address.js'),
-	Types = require('core/js/utils/Types.js')
+	AddressUtils = require('modules/Core/js/utils/Address.js'),
+	Types = require('modules/Core/js/utils/Types.js')
 ;
 
 /**

@@ -4,12 +4,12 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	ModulesManager = require('core/js/ModulesManager.js'),
-	Screens = require('core/js/Screens.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
 	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
 	

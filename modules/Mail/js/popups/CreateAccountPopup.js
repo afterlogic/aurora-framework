@@ -4,11 +4,11 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	
-	Api = require('core/js/Api.js'),
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	Api = require('modules/Core/js/Api.js'),
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
 	AccountList = require('modules/Mail/js/AccountList.js'),
 	Ajax = require('modules/Mail/js/Ajax.js'),

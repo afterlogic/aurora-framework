@@ -29,9 +29,9 @@
     "underscore": "./node_modules/underscore/underscore-min.js",
     "knockout": "./node_modules/knockout/build/output/knockout-latest.js",
     "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
-    "customscroll": "./core/js/vendors/customscroll.js",
-    "modernizr": "./core/js/vendors/modernizr.js",
-    "jquery.cookie": "./core/js/vendors/jquery.cookie.js",
+    "customscroll": "./modules/Core/js/vendors/customscroll.js",
+    "modernizr": "./modules/Core/js/vendors/modernizr.js",
+    "jquery.cookie": "./modules/Core/js/vendors/jquery.cookie.js",
     "knockout-sortable": "./modules/Mail/js/vendors/knockout-sortable.js"
   },
   "devDependencies": {

@@ -5,13 +5,13 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
 	
-	Ajax = require('core/js/Ajax.js'),
-	Api = require('core/js/Api.js'),
-	Screens = require('core/js/Screens.js'),
+	Ajax = require('modules/Core/js/Ajax.js'),
+	Api = require('modules/Core/js/Api.js'),
+	Screens = require('modules/Core/js/Screens.js'),
 	
-	CAbstractPopup = require('core/js/popups/CAbstractPopup.js'),
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
 	Settings = require('modules/ChangePassword/js/Settings.js')
 ;

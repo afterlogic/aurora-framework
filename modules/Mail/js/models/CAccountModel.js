@@ -4,21 +4,21 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	AddressUtils = require('core/js/utils/Address.js'),
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
-	Utils = require('core/js/utils/Common.js'),
+	AddressUtils = require('modules/Core/js/utils/Address.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Ajax = null,
-	Api = require('core/js/Api.js'),
+	Api = require('modules/Core/js/Api.js'),
 	App = null,
-	Browser = require('core/js/Browser.js'),
-	ModulesManager = require('core/js/ModulesManager.js'),
-	UserSettings = require('core/js/Settings.js'),
+	Browser = require('modules/Core/js/Browser.js'),
+	ModulesManager = require('modules/Core/js/ModulesManager.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	AlertPopup = require('core/js/popups/AlertPopup.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
 	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js'),
 	
@@ -139,7 +139,7 @@ CAccountModel.prototype.requireApp = function ()
 {
 	if (App === null)
 	{
-		App = require('core/js/App.js');
+		App = require('modules/Core/js/App.js');
 	}
 };
 

@@ -4,14 +4,14 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js'),
-	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	App = require('core/js/App.js'),
-	CJua = require('core/js/CJua.js'),
-	UserSettings = require('core/js/Settings.js'),
-	Screens = require('core/js/Screens.js')
+	App = require('modules/Core/js/App.js'),
+	CJua = require('modules/Core/js/CJua.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
+	Screens = require('modules/Core/js/Screens.js')
 ;
 
 /**

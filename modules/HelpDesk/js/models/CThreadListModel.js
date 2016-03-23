@@ -5,8 +5,8 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	TextUtils = require('core/js/utils/Text.js'),
-	Types = require('core/js/utils/Types.js')
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js')
 ;
 
 /**

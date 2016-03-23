@@ -3,14 +3,14 @@
 var
 	$ = require('jquery'),
 			
-	TextUtils = require('core/js/utils/Text.js'),
-	Utils = require('core/js/utils/Common.js'),
+	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Storage = require('core/js/Storage.js'),
-	UserSettings = require('core/js/Settings.js'),
+	Storage = require('modules/Core/js/Storage.js'),
+	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Popups = require('core/js/Popups.js'),
-	ConfirmPopup = require('core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/Core/js/Popups.js'),
+	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
 	MailCache = require('modules/Mail/js/Cache.js'),
 	

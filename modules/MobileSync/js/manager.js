@@ -2,7 +2,7 @@
 
 module.exports = function (oSettings) {
 	var
-		TextUtils = require('core/js/utils/Text.js'),
+		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
 		Settings = require('modules/MobileSync/js/Settings.js')
 	;
