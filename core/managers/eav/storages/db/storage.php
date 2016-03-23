@@ -143,7 +143,7 @@ class CApiEavDbStorage extends CApiEavStorage
 					}
 				}
 
-				$mResult[$oRow->obj_id] = $oObject;
+				$mResult[] = $oObject;
 			}
 		}
 		$this->throwDbExceptionIfExist();
