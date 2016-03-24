@@ -190,7 +190,7 @@ class CDomain extends api_APropertyBag
 			'OutgoingMailPort'		=> array('int', 25),
 			'OutgoingMailAuth'		=> array('int', 0),
 			'OutgoingMailLogin'		=> array('string', ''),
-			'OutgoingMailPassword'	=> array('password', ''),
+			'OutgoingMailPassword'	=> array('string', ''), //TODO must be password type
 			'OutgoingMailUseSSL'	=> array('bool', true),
 			'OutgoingSendingMethod'	=> array('int', 1),
 

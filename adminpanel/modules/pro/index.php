@@ -1168,8 +1168,6 @@ class CProModule extends ap_Module
 	*/
 	public function CreateDomain(CDomain &$oDomain)
 	{
-		var_dump('3');
-		exit;
 		if (!$this->oDomainsApi->CreateDomain($oDomain))
 		{
 			$this->lastErrorCode = $this->oDomainsApi->getLastErrorCode();

@@ -369,7 +369,7 @@ class CCommonModule extends ap_Module
 						}
 
 						$oScreen->Data->SetValue('strDomainName', $oDomain->Name.$sTenantAddString);
-						if (0 === $oDomain->IdDomain)
+						if (0 === $oDomain->iObjectId)
 						{
 							$oScreen->Data->SetValue('strDomainName', CApi::I18N('ADMIN_PANEL/DOMAINS_DEFAULT'));
 						}
@@ -377,7 +377,6 @@ class CCommonModule extends ap_Module
 						{
 							$oScreen->Data->SetValue('strDomainName', CApi::I18N('ADMIN_PANEL/DOMAINS_DEFAULT_TENANT').$sTenantAddString);
 						}
-
 						$oScreen->Main->AddTopSwitcher($this->sPath.'/templates/main-top-edit-domain-name.php');
 						$oScreen->Main->AddTopSwitcher($this->sPath.'/templates/main-top-edit-domain.php');
 					}

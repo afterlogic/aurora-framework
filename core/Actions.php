@@ -2065,7 +2065,6 @@ class Actions
 	{
 		$mData = $this->getParamValue('Result', false);
 
-		var_dump($mData);
 		return true;
 	}
 

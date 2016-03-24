@@ -50,7 +50,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		try
 		{
 			$oResult = $this->oEavManager->getObjectById($sDomainId);
-				
+			
 			if ($oResult instanceOf \CDomain)
 			{
 				$oDomain = $oResult;
@@ -141,11 +141,11 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	 */
 	public function createDomain(CDomain &$oDomain)
 	{
-		var_dump('4');
 		$bResult = false;
 		try
 		{
-			if ($oDomain->validate())
+			//TODO imlement validate functionality
+			if (true || $oDomain->validate())
 			{
 				
 				if (!$this->isExists($oDomain->Name))
@@ -184,7 +184,8 @@ class CApiDomainsManager extends AApiManagerWithStorage
 						$oDomain->IdTenant = 0;
 					}
 
-					if (!$this->oStorage->createDomain($oDomain))
+//					if (!$this->oStorage->createDomain($oDomain))
+					if (!$this->oEavManager->saveObject($oDomain))
 					{
 						throw new CApiManagerException(Errs::DomainsManager_DomainCreateFailed);
 					}
@@ -218,7 +219,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oDomain->validate())
+			if (true || $oDomain->validate())
 			{
 				if ($oDomain->IsDefault)
 				{
@@ -234,7 +235,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				}
 				else
 				{
-					if (!$this->oStorage->updateDomain($oDomain))
+					if (!$this->oEavManager->saveObject($oDomain))
 					{
 						throw new CApiManagerException(Errs::DomainsManager_DomainUpdateFailed);
 					}
@@ -492,7 +493,16 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	{
 		$aResult = false;
 		try
-		{
+		{	
+			$aFilters = array(
+				'Name' => '%'.$sSearchDesc.'%'
+			);
+			
+			if ($iTenantId > 0)
+			{
+				$aFilters['IdTenant'] = $iTenantId;
+			}
+			
 			$aResultDomains = $this->oEavManager->getObjects(
 				'CDomain', 
 				array(
@@ -501,12 +511,9 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				),
 				$iPage,
 				$iItemsPerPage,
-				array(
-					'Name' => '%'.$sSearchDesc.'%',
-					'IdTenant' => $iTenantId
-				),
+				$aFilters,
 				$sOrderBy,
-				\ESortOrder::ASC
+				$iOrderType
 			);
 
 			foreach($aResultDomains as $oDomain)
@@ -662,9 +669,6 @@ class CApiDomainsManager extends AApiManagerWithStorage
 			{
 				$bResult = true;
 			}
-			
-			var_dump('isExists', $bResult);
-			exit;
 		}
 		catch (CApiBaseException $oException)
 		{

@@ -674,7 +674,6 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		if (!$oDomain)
 		{
 			$oDomain = CDomain::createInstance('Core');
-			var_dump('1', $oDomain);
 			$this->oAdminPanel->SetMainObject('domain_new', $oDomain);
 		}
 	}
@@ -685,7 +684,6 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_new');
 		if ($oDomain)
 		{
-			var_dump('2', $oDomain);
 			$this->initNewDomainByPost($oDomain);
 		}
 	}
@@ -727,7 +725,6 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		$oDomain->Name = $sDomainName;
 		$oDomain->Url = '';
 
-		var_dump('asdas');
 		if (0 < $this->oAdminPanel->TenantId())
 		{
 			$oDomain->IdTenant = $this->oAdminPanel->TenantId();
@@ -740,7 +737,6 @@ class CProAjaxAction extends ap_CoreModuleHelper
 				$iIdTenant = $this->oModule->GetTenantIdByName($sTenant);
 				if (0 === $iIdTenant)
 				{
-					var_dump($sTenant, $iIdTenant);
 					$this->oAdminPanel->DeleteMainObject('domain_new');
 					$this->LastError = CApi::I18N('API/TENANTSMANAGER_TENANT_DOES_NOT_EXIST');
 				}

@@ -41,7 +41,7 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 			$bHideProtocol = true;
 			if ($oDomain->IsDefault ||
 				(CSession::Has(AP_SESS_DOMAIN_NEXT_EDIT_ID) &&
-					$oDomain->IdDomain === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null)))
+					$oDomain->iObjectId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null)))
 			{
 				$oScreen->Data->SetValue('classHideIncomingMailProtocol', '');
 			}
