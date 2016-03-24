@@ -1,7 +1,7 @@
 <form class="form fields" action="#" autocomplete="on" onsubmit="return false;" data-bind="command: loginCommand">
 	<div class="fieldset">
 		<div class="row email" data-bind="visible: emailVisible, css: {'focused': emailFocus(), 'filled': email().length > 0, shake: shake()}">
-			<label for="selenium_login_email" class="title placeholder"></label>
+			<label for="selenium_login_email" class="placeholder"></label>
 			<span class="value">
 				<input id="selenium_login_email" tabindex="1" class="input check_autocomplete_input" name="email" type="email" spellcheck="false"
 					   data-bind="value: email, hasfocus: emailFocus, valueUpdate: 'afterkeydown', initDom: emailDom, i18n: {'key': 'CORE/LABEL_EMAIL', 'type': 'placeholder'}" />
@@ -9,7 +9,7 @@
 		</div>
 		<!-- ko if: loginVisible --> <!-- for correctly browser save passwords -->
 		<div class="row login" data-bind="visible: loginVisible, css: {'focused': loginFocus(), 'filled': login().length > 0, shake: shake()}">
-			<label for="login" class="title placeholder"></label>
+			<label for="login" class="placeholder"></label>
 			<span class="value">
 				<input id="login" tabindex="2" class="input check_autocomplete_input" type="text" spellcheck="false"
 					   data-bind="value: login, hasfocus: loginFocus, valueUpdate: 'afterkeydown', initDom: loginDom, i18n: {'key': 'AUTH/LABEL_LOGIN', 'type': 'placeholder'}" />
@@ -20,7 +20,7 @@
 		</div>
 		<!-- /ko -->
 		<div class="row password" data-bind="css: {'focused': passwordFocus(), 'filled': password().length > 0, shake: shake()}">
-			<label for="selenium_login_password" class="title placeholder"></label>
+			<label for="selenium_login_password" class="placeholder"></label>
 			<span class="value">
 				<input id="selenium_login_password" tabindex="3" class="input check_autocomplete_input" name="password" type="password" spellcheck="false"
 					   data-bind="value: password, hasfocus: passwordFocus, valueUpdate: 'afterkeydown', initDom: passwordDom, i18n: {'key': 'CORE/LABEL_PASSWORD', 'type': 'placeholder'}" />
@@ -37,7 +37,7 @@
 				<span class="icon"></span>
 				<input id="signme" tabindex="4" type="checkbox" data-bind="checked: signMe, hasfocus: signMeFocused" />
 			</label>
-			<label class="title" for="signme" data-bind="i18n: {'key': 'AUTH/LABEL_REMEMBER_ME'}"></label>
+			<label class="signme_label" for="signme" data-bind="i18n: {'key': 'AUTH/LABEL_REMEMBER_ME'}"></label>
 		</span>
 	</div>
 	<div class="row links">

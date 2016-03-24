@@ -25,7 +25,7 @@ function CShowKeyArmorPopup()
 	}, this);
 	this.user = ko.observable('');
 	this.private = ko.observable(false);
-	this.titleText = ko.computed(function () {
+	this.popupHeading = ko.computed(function () {
 		return this.private() ?
 			TextUtils.i18n('OPENPGP/HEADING_VIEW_PRIVATE_KEY', {'USER': this.user()}) :
 			TextUtils.i18n('OPENPGP/HEADING_VIEW_PUBLIC_KEY', {'USER': this.user()});

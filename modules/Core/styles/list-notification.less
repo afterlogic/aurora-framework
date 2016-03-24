@@ -1,0 +1,33 @@
+.list_notification {
+	font-size: 18px;
+	color: #ccc;
+	padding: 6px 14px 26px;
+	display: block;
+	text-align: center;
+	
+	&.search_results {
+		border-bottom: 1px solid #E5E5E5;
+		background: #FCFCFC;
+	}
+	
+	.link {
+		float: right;
+		font-size: 9pt;
+		margin-left: 10px;
+		
+		html.rtl & {
+			float: left;
+			margin-left: 0px;
+			margin-right: 10px;
+		}
+	}
+	
+	.description {
+		display: block;
+		padding-top: 20px;
+
+		.part {
+			color: #777777;
+		}
+	}
+}
