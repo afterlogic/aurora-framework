@@ -51,7 +51,7 @@
 				</div>
 
 				<div class="fields basic" data-bind="visible: !personalIsEmpty()">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_BASIC_INFO'}"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_BASIC_INFO'}"></h2>
 
 					<div class="fieldset">
 						<div class="row email" data-bind="visible: '' !== personalEmail()">
@@ -127,7 +127,7 @@
 				</div>
 
 				<div class="fields business" data-bind="visible: !businessIsEmpty()">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_BUSINESS_INFO'}"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_BUSINESS_INFO'}"></h2>
 
 					<div class="fieldset">
 						<div class="row email" data-bind="visible: '' !== businessEmail()">
@@ -212,7 +212,7 @@
 				</div>
 
 				<div class="fields other" data-bind="visible: !otherIsEmpty()">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_OTHER_INFO'}"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_OTHER_INFO'}"></h2>
 
 					<div class="fieldset">
 						<div class="row birthday" data-bind="visible: !birthdayIsEmpty()">
@@ -239,7 +239,7 @@
 				</div>
 
 				<div class="fields groups" data-bind="visible: !global() && 0 < $root.groupsInContactView($data).length">
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_GROUPS'}"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_GROUPS'}"></h2>
 					<div class="fieldset">
 						<div class="row" data-bind="foreach: $root.groupsInContactView($data)"><span
 							data-bind="visible: $index() !== 0">, </span>

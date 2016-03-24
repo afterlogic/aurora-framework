@@ -19,7 +19,7 @@ function CAlertPopup()
 	
 	this.alertDesc = ko.observable('');
 	this.closeCallback = null;
-	this.title = ko.observable('');
+	this.popupHeading = ko.observable('');
 	this.okButtonText = ko.observable(TextUtils.i18n('CORE/ACTION_OK'));
 }
 
@@ -30,14 +30,14 @@ CAlertPopup.prototype.PopupTemplate = 'Core_AlertPopup';
 /**
  * @param {string} sDesc
  * @param {Function=} fCloseCallback = null
- * @param {string=} sTitle = ''
+ * @param {string=} sHeading = ''
  * @param {string=} sOkButtonText = 'Ok'
  */
-CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sTitle, sOkButtonText)
+CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sHeading, sOkButtonText)
 {
 	this.alertDesc(sDesc);
 	this.closeCallback = fCloseCallback || null;
-	this.title(sTitle || '');
+	this.popupHeading(sHeading || '');
 	this.okButtonText(sOkButtonText || TextUtils.i18n('CORE/ACTION_OK'));
 };
 

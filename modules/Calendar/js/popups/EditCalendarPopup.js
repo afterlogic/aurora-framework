@@ -32,7 +32,7 @@ function CEditCalendarPopup()
 	this.colors = ko.observableArray([]);
 	this.selectedColor = ko.observable(this.colors()[0]);
 	
-	this.popupTitle = ko.observable('');
+	this.popupHeading = ko.observable('');
 }
 
 _.extendOwn(CEditCalendarPopup.prototype, CAbstractPopup.prototype);
@@ -56,7 +56,7 @@ CEditCalendarPopup.prototype.onShow = function (fCallback, aColors, oCalendar)
 	
 	if (oCalendar)
 	{
-		this.popupTitle(oCalendar.name() ? TextUtils.i18n("CALENDAR/HEADING_EDIT_CALENDAR") : TextUtils.i18n("CALENDAR/HEADING_CREATE_CALENDAR"));
+		this.popupHeading(oCalendar.name() ? TextUtils.i18n("CALENDAR/HEADING_EDIT_CALENDAR") : TextUtils.i18n("CALENDAR/HEADING_CREATE_CALENDAR"));
 		this.calendarName(oCalendar.name ? oCalendar.name() : '');
 		this.calendarDescription(oCalendar.description ? oCalendar.description() : '');
 		this.selectedColor(oCalendar.color ? oCalendar.color() : '');
@@ -64,7 +64,7 @@ CEditCalendarPopup.prototype.onShow = function (fCallback, aColors, oCalendar)
 	}
 	else
 	{
-		this.popupTitle(TextUtils.i18n("CALENDAR/HEADING_CREATE_CALENDAR"));
+		this.popupHeading(TextUtils.i18n("CALENDAR/HEADING_CREATE_CALENDAR"));
 	}
 };
 

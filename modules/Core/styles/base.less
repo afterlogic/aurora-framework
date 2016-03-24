@@ -22,6 +22,21 @@ body {
 	}
 }
 
+.screens {
+	.box-sizing;
+	.resize_compensation_top(@theme-tabs-height);
+
+	height: 100%;
+	
+	.newtab & {
+		.resize_compensation_top(0px);
+	}
+	
+	.screen {
+		height: 100%;
+	}
+}
+
 .panel.left_panel {
 	box-shadow: none;
 	

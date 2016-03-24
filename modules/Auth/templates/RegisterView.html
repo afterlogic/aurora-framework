@@ -1,13 +1,13 @@
 <form class="form fields" action="#/" onsubmit="return false;" data-bind="command: registerCommand">
 	<div class="fieldset">
 		<div class="row name" data-bind="css: {'focused': nameFocus(), 'filled': name().length > 0}">
-			<label for="name" class="title placeholder" data-bind="i18n: {'key': 'CORE/LABEL_NAME'}"></label>
+			<label for="name" class="placeholder" data-bind="i18n: {'key': 'CORE/LABEL_NAME'}"></label>
 			<span class="value">
 				<input id="name" class="input" type="text" spellcheck="false" autocomplete="off" data-bind="value: name, hasfocus: nameFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
 		<div class="row login" data-bind="css: {'focused': loginFocus(), 'filled': login().length > 0}">
-			<label for="reg_login" class="title placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_LOGIN'}"></label>
+			<label for="reg_login" class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_LOGIN'}"></label>
 			<span class="value">
 				<input id="reg_login" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: login, hasfocus: loginFocus, valueUpdate: 'afterkeydown'" />
 			</span>
@@ -18,20 +18,20 @@
 			</span>
 		</div>
 		<div class="row password" data-bind="css: {'focused': passwordFocus(), 'filled': password().length > 0}">
-			<label for="reg_password" class="title placeholder" data-bind="i18n: {'key': 'CORE/LABEL_NEW_PASSWORD'}"></label>
+			<label for="reg_password" class="placeholder" data-bind="i18n: {'key': 'CORE/LABEL_NEW_PASSWORD'}"></label>
 			<span class="value">
 				<input id="reg_password" class="input" autocomplete="off" spellcheck="false" type="password" data-bind="value: password, hasfocus: passwordFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
 		<div class="row password" data-bind="css: {'focused': confirmPasswordFocus(), 'filled': confirmPassword().length > 0}">
-			<label for="reg_confirm_password" class="title placeholder" data-bind="i18n: {'key': 'CORE/LABEL_CONFIRM_PASSWORD'}"></label>
+			<label for="reg_confirm_password" class="placeholder" data-bind="i18n: {'key': 'CORE/LABEL_CONFIRM_PASSWORD'}"></label>
 			<span class="value">
 				<input id="reg_confirm_password" class="input" autocomplete="off" spellcheck="false" type="password" data-bind="value: confirmPassword, hasfocus: confirmPasswordFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
 		<!-- ko if: bAllowQuestionPart -->
 		<div class="row question" data-bind="css: {'focused': questionFocus(), 'filled': question().length > 0}">
-			<label class="title placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_SELECT_QUESTION'}"></label>
+			<label class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_SELECT_QUESTION'}"></label>
 			<span class="value">
 				<span class="custom_selector input" data-bind="customSelect: {'control': false, 'expand': 'expand', 'expandState': questionFocus, 'options': aRegistrationQuestions, value: question, optionsText: 'text', optionsValue: 'value'}">
 					<span class="name" data-bind="text: question"></span>
@@ -49,13 +49,13 @@
 			</span>
 		</div>
 		<div class="row answer" data-bind="visible: visibleYourQuestion, css: {'focused': yourQuestionFocus(), 'filled': yourQuestion().length > 0}">
-			<label for="reg_your_question" class="title placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_YOUR_QUESTION'}"></label>
+			<label for="reg_your_question" class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_YOUR_QUESTION'}"></label>
 			<span class="value">
 				<input id="reg_your_question" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: yourQuestion, hasfocus: yourQuestionFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
 		<div class="row answer" data-bind="css: {'focused': answerFocus(), 'filled': answer().length > 0}">
-			<label for="reg_answer" class="title placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_ANSWER_QUESTION'}"></label>
+			<label for="reg_answer" class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_ANSWER_QUESTION'}"></label>
 			<span class="value">
 				<input id="reg_answer" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: answer, hasfocus: answerFocus, valueUpdate: 'afterkeydown'" />
 			</span>

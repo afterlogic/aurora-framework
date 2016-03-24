@@ -139,7 +139,7 @@
 						<input class="value input" type="text" data-bind="value: nickName" />
 					</div>
 
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_HOME'}, click: function () { personalCollapsed(!personalCollapsed()); }"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_HOME'}, click: function () { personalCollapsed(!personalCollapsed()); }"></h2>
 					
 					<div class="row">
 						<span class="label">
@@ -205,7 +205,7 @@
 
 				<div class="fieldset" data-bind="css: {'collapsed': businessCollapsed}">
 
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_BUSINESS'}, click: function () { businessCollapsed(!businessCollapsed()); }"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_BUSINESS'}, click: function () { businessCollapsed(!businessCollapsed()); }"></h2>
 
 					<div class="row" data-bind="visible: !itsMe()">
 						<span class="label">
@@ -295,7 +295,7 @@
 
 				<div class="fieldset" data-bind="css: {'collapsed': otherCollapsed}">
 
-					<h2 class="subtitle" data-bind="i18n: {'key': 'CONTACTS/HEADING_OTHER'}, click: function () { otherCollapsed(!otherCollapsed()); }"></h2>
+					<h2 class="subheading" data-bind="i18n: {'key': 'CONTACTS/HEADING_OTHER'}, click: function () { otherCollapsed(!otherCollapsed()); }"></h2>
 
 					<div class="row">
 						<span class="label">
@@ -323,7 +323,7 @@
 
 				<div class="fieldset" data-bind="visible: !global() && $root.groupFullCollection().length, css: {'collapsed': groupsCollapsed}">
 
-					<h2 class="subtitle" data-bind="click: function () { groupsCollapsed(!groupsCollapsed()); }"
+					<h2 class="subheading" data-bind="click: function () { groupsCollapsed(!groupsCollapsed()); }"
 						data-bind="i18n: {'key': 'CONTACTS/HEADING_GROUPS'}"></h2>
 
 					<div class="hint" data-bind="i18n: {'key': 'CONTACTS/INFO_CONTACT_GROUPS_MARKED'}"></div>

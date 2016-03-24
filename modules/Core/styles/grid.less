@@ -1,31 +1,16 @@
-/*=== Screens CSS ===*/
-.screens {
-	.box-sizing;
-	.resize_compensation_top(@theme-tabs-height);
-
-	height: 100%;
-	
-	.newtab & {
-		.resize_compensation_top(0px);
-	}
-	
-	.screen {
-		height: 100%;
-	}
-}
-/*=== END Screens CSS ===*/
-/*=== Panels CSS ===*/
 .panels,
 .panel_helper {
 	height: 100%;
 	font-size: 0;
 	white-space: nowrap;
 }
+
 .panels .panel_helper {
 	vertical-align: top;
 	display: inline-block;
 	.box-sizing;
 }
+
 .panel {
 	font-size: 9pt;
 	height: 100%;
@@ -134,8 +119,7 @@
 		.box-sizing(content-box);
 	}
 }
-/*=== END Panels CSS ===*/
-/*=== Panel Item Viewer CSS ===*/
+
 .panel.item_viewer {
 	background: #ffffff;
 	border-radius: 5px;
@@ -229,11 +213,8 @@
 		}
 	}
 }
-/*=== END Panel Item Viewer CSS ===*/
-/*=== Common List CSS ===*/
+
 .items_list {
-	//height: 100%;
-	
 	.section_title {
 		text-transform: uppercase;
 		padding: 10px 17px 10px 17px;
@@ -284,6 +265,14 @@
 	.not_use_threads .item .from .plus_more_senders {
 		display: none;
 	}
+	
+	.use_threads .item .from .other_senders {
+		margin-left: -5px;
+	}
+
+	.use_threads .item .from .plus_more_senders {
+		opacity: 0.5;
+	}
 
 	.item {
 		background: @theme-list-item-bg;
@@ -299,12 +288,6 @@
 		.from, .subject {
 			.fadeout_text_init();
 			.fadeout_text(#fdfdfd);
-		}
-		.from .other_senders {
-			margin-left: -5px;
-		}
-		.from .plus_more_senders {
-			opacity: 0.5;
 		}
 		
 		&.unseen {
@@ -393,12 +376,15 @@
 				margin-right: 4px;
 			}
 		}
+		
 		.size {
 			margin-top: 1px;
 		}
+		
 		.date {
 			margin-top: 1px;
 		}
+		
 		.attachments {
 			margin-top: -2px;
 
@@ -406,22 +392,15 @@
 				margin-top: -1px;
 			}
 		}
+		
 		&.selected .size,
 		&.selected .date {
 			color: @theme-list-selected-item-color;
 		}
 		
-		.title,
-		.subtitle {
+		.title {
 			display: block;
 			margin-bottom: 10px;
-		}
-		.subtitle {
-			font-size: 10pt;
-			margin-bottom: 0px;
-		}
-		&.selected .subtitle {
-			color: inherit;
 		}
 		
 		.separator {
@@ -672,225 +651,13 @@
 	}
 }
 
-.list_notification {
-	font-size: 18px;
-	color: #ccc;
-	padding: 6px 14px 26px;
-	display: block;
-	text-align: center;
-	
-	&.search_results {
-		border-bottom: 1px solid #E5E5E5;
-		background: #FCFCFC;
-	}
-	
-	.link {
-		float: right;
-		font-size: 9pt;
-		margin-left: 10px;
-		
-		html.rtl & {
-			float: left;
-			margin-left: 0px;
-			margin-right: 10px;
-		}
-	}
-	
-	.description {
-		display: block;
-		padding-top: 20px;
+@import "list-notification.less";
 
-		.part {
-			color: #777777;
-		}
-	}
-}
-/*=== END Common List CSS ===*/
 @import "controls/toolbar.less";
 
-/*=== Field list CSS ===*/
-.fields {
-	
-	.fieldset {
-		
-		.subtitle {
-			margin-top: 0px;
-			font-size: 13.5pt;
-		}
+@import "fields.less";
 
-		.disabled {
-			.opacity(0.8);
-			color: #888888;
-			cursor: default;
-		}
-	}
-	
-	.fieldgroup {
-		padding-bottom: 20px;
-		
-		&:last-child {
-			padding-bottom: 0px;
-		}
-	}
-	
-	.hint {
-		color: #929292;
-		padding: 0 0 10px;
-		padding: 0px;
-		margin: 0 0 10px;
-		text-shadow: 0 1px 0 #FFFFFF;
-		
-		p {
-			margin: 0px;
-		}
-		
-		.cssanimations &.highlight {
-			.animation(highlight 500ms linear);
-		}
-	}
-	
-	.row {
-		margin: 0px 0px 6px;
-		font-size: 0px;
-		.clearfix_helper();
-		
-		&.dates {
-			display: inline-block;
-			
-			&.editable {
-				display: inline-block;
-				cursor: pointer;
-				color:#47b;
-				
-				&:hover {
-					text-decoration: underline;
-					color:#c74747;
-				}
-			}
-		}
-		
-		&.fluid {
-		}
-		
-		&:last-child {
-		}
-		
-		&.description value {
-			-ms-word-break: break-all;
-			word-break: break-word;
-		}
-		
-		& > * {
-			font-size: 9pt;
-		}
-		
-		.placeholder {
-			display: inline-block;
-			vertical-align: middle;
-			width: 0px;
-			height: 0;
-			position: relative;
-			color: #bbb;
-			font-size: 12pt;
-			white-space: nowrap;
-			word-break: normal;
-			word-wrap: normal;
-			text-indent: 5px;
-			cursor: text;
-			float: left;
-			
-			html.rtl & {
-				float: right;
-			}
-			
-			.title {
-				color: #bbb;
-			}
-		}
-		
-		&.filled .placeholder,
-		&.focused .placeholder {
-			overflow: hidden;
-		}
-
-	}
-
-	.row_weeks {
-		display: block;
-		margin-top: 6px;
-	}
-	
-	.label {
-		.box-sizing;
-		display: inline-block;
-		padding-right: 10px;
-//		.break-word();
-		word-wrap: normal;
-
-		html.rtl & {
-			padding-right: 0px;
-			padding-left: 10px;
-		}
-		
-		&.required:before {
-			content:  "*";
-			width: 0.6em;
-			display: inline-block;
-			color: red;
-			margin-left: -0.6em;
-		}
-	}
-	
-	td.label {
-		display: table-cell;
-	}
-	.value {
-		.box-sizing;
-	}
-	
-	.input {
-		.box-sizing;
-
-		width: 140px;
-		width: 300px;
-		padding: 4px 6px;
-		border-radius: 4px;
-		margin-right: 16px;
-		
-		html.rtl & {
-			margin-right: 0px;
-			margin-left: 16px;
-		}
-		
-		&:last-child {
-			margin-right: 0px;
-			
-			html.rtl & {
-				margin-left: 0px;
-			}
-		}
-		
-		&[maxlength="2"] {
-			width: 3em;
-		}
-		&[maxlength="3"] {
-			width: 3.5em;
-		}
-		&[maxlength="4"] {
-			width: 4em;
-		}
-		&[maxlength="5"] {
-			width: 4.5em;
-		}
-	}
-
-	.input[type="checkbox"] {
-		width: auto;
-	}
-}
-/*=== END Field list CSS ===*/
-
-/*=== END Field list CSS ===*/
+/* For draggable items in lists */
 .draggable {
 	width: 0px; /* don't change */
 	height: 0px; /* don't change */
@@ -917,4 +684,3 @@
 		}
 	}
 }
-/*=== END Field list CSS ===*/

@@ -8,9 +8,10 @@ var
 	Types = require('modules/Core/js/utils/Types.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
-	Ajax = require('modules/Core/js/Ajax.js'),
 	Api = require('modules/Core/js/Api.js'),
-	Screens = require('modules/Core/js/Screens.js')
+	Screens = require('modules/Core/js/Screens.js'),
+	
+	Ajax = require('modules/Auth/js/Ajax.js')
 ;
 
 /**
@@ -81,16 +82,9 @@ CForgotView.prototype.__name = 'CForgotView';
 
 CForgotView.prototype.executeGetQuestion = function ()
 {
-	var
-		oParameters = {
-			'Action': 'AccountGetForgotQuestion',
-			'Email': this.email()
-		}
-	;
-
 	this.gettingQuestion(true);
 
-	Ajax.send(oParameters, this.onAccountGetForgotQuestionResponse, this);
+	Ajax.send('GetForgotQuestion', {'Email': this.email()}, this.onAccountGetForgotQuestionResponse, this); // AccountGetForgotQuestion
 };
 
 /**
@@ -129,7 +123,6 @@ CForgotView.prototype.executeValidateAnswer = function ()
 {
 	var
 		oParameters = {
-			'Action': 'AccountValidateForgotQuestion',
 			'Email': this.email(),
 			'Question': this.question(),
 			'Answer': this.answer()
@@ -138,7 +131,7 @@ CForgotView.prototype.executeValidateAnswer = function ()
 
 	this.validatingAnswer(true);
 
-	Ajax.send(oParameters, this.onAccountValidateForgotQuestionResponse, this);
+	Ajax.send('ValidateForgotQuestion', oParameters, this.onAccountValidateForgotQuestionResponse, this); // AccountValidateForgotQuestion
 };
 
 /**
@@ -171,7 +164,6 @@ CForgotView.prototype.executeChangePassword = function ()
 	{
 		var
 			oParameters = {
-				'Action': 'AccountChangeForgotPassword',
 				'Email': this.email(),
 				'Question': this.question(),
 				'Answer': this.answer(),
@@ -181,7 +173,7 @@ CForgotView.prototype.executeChangePassword = function ()
 
 		this.changingPassword(true);
 		
-		Ajax.send(oParameters, this.onAccountChangeForgotPasswordResponse, this);
+		Ajax.send('ChangeForgotPassword', oParameters, this.onAccountChangeForgotPasswordResponse, this); // AccountChangeForgotPassword
 	}
 };
 
