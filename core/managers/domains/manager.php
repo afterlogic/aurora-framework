@@ -260,12 +260,22 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function areDomainsEmpty($aDomainsIds)
+	public function areDomainsEmpty($aDomainIds)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->areDomainsEmpty($aDomainsIds);
+//			$bResult = $this->oStorage->areDomainsEmpty($aDomainsIds);
+//			$sSql = 'SELECT COUNT(id_acct) as users_count FROM %sawm_accounts WHERE def_acct = 1 AND id_domain IN (%d)';
+//			
+			$oUsersApi = CApi::GetCoreManager('users');
+			
+			$count = $oUsersApi->getAccountsByDomain($aDomainIds);
+			
+			if ($count <= 0)
+			{
+				$bResult = true;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -335,11 +345,12 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		try
 		{
 			$oDomain = $this->getDomainById($iDomainId);
+			
 			if (!$oDomain)
 			{
 				throw new CApiManagerException(Errs::DomainsManager_DomainDoesNotExist);
 			}
-
+		
 			if (!$bRemoveAllAccounts && !$this->areDomainsEmpty(array($iDomainId)))
 			{
 				throw new CApiManagerException(Errs::DomainsManager_DomainNotEmpty);
@@ -369,7 +380,8 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				}
 			}
 
-			$bResult = $this->oStorage->deleteDomains(array($iDomainId));
+//			$bResult = $this->oStorage->deleteDomains(array($iDomainId));
+			$bResult = $this->oEavManager->deleteObject($iDomainId);
 		}
 		catch (CApiBaseException $oException)
 		{

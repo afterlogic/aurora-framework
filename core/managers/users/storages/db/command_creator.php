@@ -606,6 +606,12 @@ AND %sacal_calendars.user_id = %d';
 			);
 		}
 	}
+	
+	public function getAccountsByDomain($aDomainIds)
+	{
+		$sSql = 'SELECT COUNT(id_acct) as users_count FROM %sawm_accounts WHERE def_acct = 1 AND id_domain IN ('.implode(',', $aDomainIds).')';
+		return sprintf($sSql, $this->prefix());
+	}
 
 	/**
 	 * Returns query-string for obtaining CCalUser object that contains calendar settings for specified user. User identifier is used for look up.
