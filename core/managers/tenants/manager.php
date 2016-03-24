@@ -248,13 +248,11 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
 	{
 		$iTenantId = 0;
-		
 		try
 		{
 			if (!empty($sTenantLogin))
 			{
 				$oFilterBy = array('Login' => $sTenantLogin);
-				var_dump($sTenantLogin);
 				if (null !== $sTenantPassword)
 				{
 					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
@@ -264,7 +262,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					$oFilterBy['IsEnableAdminPanelLogin'] = true;
 				}
 				
-				$aResultTenants = $this->oEavManager->getObjects('CTenant', 
+				$aResultTenants = $this->oEavManager->getObjects(
+					'CTenant', 
 					array(
 						'Login'
 					),
@@ -272,8 +271,6 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					1,
 					$oFilterBy
 				);
-				
-				var_dump($aResultTenants);
 
 				if (($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
 				{
