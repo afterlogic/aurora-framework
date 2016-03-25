@@ -1,14 +1,13 @@
 .languages {
-	
-	position: fixed;
-	top: 20px;
-	right: 20px;
 	border-radius: 5px;
 	padding: 10px 16px;
+	position: fixed;
+	right: 20px;
+	top: 20px;
 
 	html.rtl & {
-		right: auto;
 		left: 20px;
+		right: auto;
 	}
 
 	.custom_selector {
@@ -20,23 +19,24 @@
 		.dropdown_content {
 			padding: 0px;
 			width: 105%;
+			
 			.register & {
 				position: relative;
 			}
 		}
 		
 		&.right .dropdown_arrow {
-			margin-right: 23px;
 			float: right;
+			margin-right: 23px;
 		}
 		
 		.item  {
-			display: block;
-			white-space: nowrap;
-			padding: 8px 12px;
 			border-bottom: 1px solid #CBC8C0;
-			cursor: pointer;
 			color: #4d4d4d;
+			cursor: pointer;
+			display: block;
+			padding: 8px 12px;
+			white-space: nowrap;
 			
 			&.selected  {
 				background: #f0f0f0;
@@ -53,12 +53,12 @@
 	}
 	
 	.icon {
+		background: url("images/sprites.png?%VERSION%") no-repeat 40px -400px;
 		display: inline-block;
-		vertical-align: middle;
-		width: 16px;
 		height: 11px;
 		margin-right: 4px;
-		background: url("images/sprites.png?%VERSION%") no-repeat 40px -400px;
+		vertical-align: middle;
+		width: 16px;
 		
 		.spritesX2();
 	}
@@ -100,38 +100,37 @@
 	.Slovenian .icon { background-position: -480px -520px; }
 
 	&.demo {
-		position: relative !important;
-		clear: both;
-		top: 20px;
-		left: auto;
-		right: auto;
 		background: #D7DCDF;
-		border-radius: 4px;
 		border: 1px solid #C7CCCF;
-		text-align: left;
-		padding: 10px 14px;
-		margin-top: 20px;
-		width: 590px;
+		border-radius: 4px;
+		clear: both;
+		left: auto;
 		margin-left: -172px;
+		margin-top: 20px;
+		padding: 10px 14px;
+		position: relative !important;
+		right: auto;
+		text-align: left;
+		top: 20px;
+		width: 590px;
 		
 		.langs_heading {
-			font-size: 12pt;
 			color: #464646;
+			font-size: 12pt;
 			margin-bottom: 10px;
 			text-align: center;
 		}
 		
 		.item {
-			display: inline-block;
-			width: 49%;
-			width: 24%;
 			color: #555555;
+			display: inline-block;
+			width: 24%;
 			
 			.item_content {
+				border-radius: 3px;
+				cursor: pointer;
 				display: inline-block;
 				padding: 3px 6px;
-				cursor: pointer;
-				border-radius: 3px;
 				white-space: nowrap;
 
 				&:hover {

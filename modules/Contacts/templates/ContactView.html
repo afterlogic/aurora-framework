@@ -1,9 +1,9 @@
 <!-- ko template: { name: $root.sBeforeContactToolbarTemplate} --><!-- /ko -->
 <div class="panel_top">
 	<!-- ko template: { name: $root.sContactToolbarTemplate} --><!-- /ko -->
-	<h2 class="title" data-bind="visibility: '' !== displayName(), text: displayName()"></h2>
-	<span class="item mail_to_title" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail(), customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/ACTION_EMAIL_TO_CONTACT' : ''">
-		<span class="title email" data-bind="text: email()"></span>
+	<h2 class="contacts_heading" data-bind="visibility: '' !== displayName(), text: displayName()"></h2>
+	<span class="mailto_link" href="javascript: void(0)" data-bind="makeLinkComposeMailTo: getFullEmail(), 
+			customTooltip: $root.bAllowComposeMessageToAddresses ? 'CONTACTS/ACTION_EMAIL_TO_CONTACT' : '', text: email()">
 	</span>
 </div>
 <div class="decor"></div>

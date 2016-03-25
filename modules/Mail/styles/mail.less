@@ -631,29 +631,25 @@
 	z-index: 1001;
 	display: inline-block;
 }
-.item_viewer .title,
-.item_viewer .message_header {
-	
-	.add_contact {
+.item_viewer .add_contact {
+	display: inline-block;
+	vertical-align: bottom;
+	width: auto;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	color: @theme-common-link-color;
+	cursor: pointer;
+
+	.iconFontInit();
+	&:before {
+		content: "\e641";
+		font-size: 15px;
 		display: inline-block;
 		vertical-align: bottom;
 		width: auto;
 		height: auto;
 		margin: 0;
-		padding: 0;
-		color: @theme-common-link-color;
-		cursor: pointer;
-
-		.iconFontInit();
-		&:before {
-			content: "\e641";
-			font-size: 15px;
-			display: inline-block;
-			vertical-align: bottom;
-			width: auto;
-			height: auto;
-			margin: 0;
-		}
 	}
 }
 /*=== END Message viewer CSS ===*/

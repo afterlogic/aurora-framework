@@ -48,7 +48,7 @@ function CAccountsSettingsPaneView()
 //		}
 		return bOnlyOneAccount;
 	}, this);
-	this.title = ko.computed(function () {
+	this.settingsHeading = ko.computed(function () {
 		return this.onlyOneAccount() ? TextUtils.i18n('MAIL/HEADING_ACCOUNT_SETTINGS') : TextUtils.i18n('MAIL/HEADING_ACCOUNTS_SETTINGS');
 	}, this);
 	
