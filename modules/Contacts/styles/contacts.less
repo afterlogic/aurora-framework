@@ -1,6 +1,7 @@
 .ContactsLayout .panel_helper {
 	width: 85%;
 }
+
 .panel.groups_panel {
 	width: 15%;
 
@@ -9,7 +10,6 @@
 	}
 }
 
-/*=== Contacts screen CSS ===*/
 .panel.contacts_panel {
 	.panel_content {
 		margin-right: 0px;
@@ -19,8 +19,8 @@
 		padding-right: 4px;
 
 		html.rtl & {
-			padding-right: 0px;
 			padding-left: 30px;
+			padding-right: 0px;
 		}
 	}
 	
@@ -31,15 +31,15 @@
 	
 	.item {
 		.me {
-			background: #F1F1F1;
+			background: #f1f1f1;
 			border-radius: 10px 10px 10px 10px;
-			color: #6D6D6D;
+			color: #6d6d6d;
 			float: right;
 			padding: 2px 8px;
 		}
 		
 		&.selected .me {
-			color: #519CE2;
+			color: #519ce2;
 		}
 		
 		.data {
@@ -47,10 +47,11 @@
 
 			.group {
 				display: inline-block;
-				width: 20px;
 				height: 20px;
-				vertical-align: bottom;
 				margin-top: -1px;
+				vertical-align: bottom;
+				width: 20px;
+				
 				.iconFontInit();
 
 				&:before {
@@ -58,34 +59,27 @@
 					font-size: 20px;
 				}
 
-				&.personal {
-					&:before {
-						content: "\e618";
-					}
+				&.personal:before {
+					content: "\e618";
 				}
 
-				&.shared {
-					&:before {
-						content: "\e629";
-					}
+				&.shared:before {
+					content: "\e629";
 				}
 
-				&.global {
-					&:before {
-						content: "\e619";
-					}
+				&.global:before {
+					content: "\e619";
 				}
-
 			}
 			
 			.name {
 				display: block;
-				margin-bottom: 10px;
 				font-size: 12pt;
+				margin-bottom: 10px;
 			}
 			
 			.email {
-				color: #519CE2;
+				color: #519ce2;
 			}
 		}
 		
@@ -95,8 +89,9 @@
 
 		&.noname .data .name,
 		&.noemail .data .email {
+			color: #888888;
 			font-weight: normal;
-			color: #888;
+			
 			.opacity(0.3);
 		}
 		
@@ -111,9 +106,7 @@
 		margin-top: -25px;
 	}
 }
-/*=== END Contacts screen CSS ===*/
 
-/*=== Contact viewer CSS ===*/
 .panel.contact_viewer {
 	.panel_content {
 		background: url("images/contacts-bg.png?%VERSION%") repeat 0 0;
@@ -132,19 +125,19 @@
 	}
 	
 	.panel_top {
-		overflow: auto;
-		margin: 0px 20px;
-		padding: 23px 0px;
-		min-height: 50px;
 		border-bottom: 0px;
+		margin: 0px 20px;
+		min-height: 50px;
+		overflow: auto;
+		padding: 23px 0px;
 	}
 	
 	.panel_bottom {
+		background: none;
 		border: 0px;
 		border-radius: 0px;
-		background: none;
-		padding: 0px;
 		height: auto;
+		padding: 0px;
 	}
 	
 	.contact_content {
@@ -170,19 +163,19 @@
 	}
 	
 	.decor {
-		border: 1px solid #D9D9D9;
+		border: 1px solid #d9d9d9;
 		border-bottom: 0px;
 		border-radius: 4px 4px 0px 0px;
-		padding-top: 3px;
 		margin: 0px 20px;
+		padding-top: 3px;
 	}
 }
 
 .contact_data_groups {
 	color: #626262;
-	border: 1px solid #D9D9D9;
-	border-top: 0px;
+	border: 1px solid #d9d9d9;
 	border-radius: 0px 0px 4px 4px;
+	border-top: 0px;
 	margin: 0px 20px;
 	min-height: 100px;
 	
@@ -202,7 +195,6 @@
 	}
 	
 	&.edit {
-		
 		.label {
 			width: 25%;
 		}
@@ -216,8 +208,8 @@
 		margin-bottom: 12px;
 		
 		.row {
-			margin-bottom: 5px;
 			clear: none;
+			margin-bottom: 5px;
 			
 			&:after {
 				display: none;
@@ -225,26 +217,26 @@
 		}
 		
 		.label {
-			width: 20px;
 			height: 0px;
-			text-indent: 20px;
 			overflow: hidden;
+			text-indent: 20px;
+			width: 20px;
 			
 			&.address {
 				float: left;
-				width: 20px;
 				height: 20px;
-				text-indent: 0px;
-				overflow: hidden;
-				vertical-align: middle;
 				margin-right: -20px;
+				overflow: hidden;
+				text-indent: 0px;
+				vertical-align: middle;
+				width: 20px;
 				word-wrap: normal;
 				
 				.iconFontInit();
 				&:before {
+					content: "\e662";
 					font-size: 20px;
 					margin-right: 20px;
-					content: "\e662";
 					
 					html.rtl {
 						margin-left: 20px;
@@ -258,17 +250,17 @@
 	.mobile .label,
 	.phone .label,
 	.fax .label {
-		width: 20px;
 		height: 20px;
-		text-indent: 0px;
 		overflow: hidden;
+		text-indent: 0px;
 		vertical-align: middle;
+		width: 20px;
 		
 		.iconFontInit();
 		&:before {
+			content: "\e663";
 			font-size: 20px;
 			margin-right: 20px;
-			content: "\e663";
 
 			html.rtl {
 				margin-left: 20px;
@@ -291,19 +283,14 @@
 	}
 	
 }
-/*=== END Contact viewer CSS ===*/
 
-/*=== contact popup CSS ===*/
 .popup.contact_create_popup {
 	color: #626262;
 
 	.fields .row {
-		margin-top: 0px;
 		margin-bottom: 10px;
+		margin-top: 0px;
 		padding: 0px;
-
-		.label {}
-
 	}
 
 	.link {
@@ -311,4 +298,3 @@
 		display: block;
 	}
 }
-/*=== END contact popup CSS ===*/

@@ -1,38 +1,37 @@
 .groups {
-	.title .icon {
-		.iconFontInit();
-		&:before {
-			font-size: 30px;
-			display: inline-block;
-			width: 30px;
-			height: 30px;
+	.title {
+		.icon {
+			.iconFontInit();
+			
+			&:before {
+				display: inline-block;
+				font-size: 30px;
+				height: 30px;
+				width: 30px;
+			}
 		}
-	}
-	.selected .title .icon {
-		&:before {
-			color: #fff;
-			text-shadow: 0 1px 0 #727272;
+		
+		.icon:before {
+			content: "\e618";
+		}
+		
+		.icon.type1:before {
+			content: "\e618";
+		}
+		
+		.icon.type2:before {
+			content: "\e619";
+		}
+		
+		.icon.type3:before {
+			content: "\e629";
 		}
 	}
 	
-	.title .icon {
+	.selected .title .icon {
 		&:before {
-			content: "\e618";
-		}
-	}
-	.title .icon.type1 {
-		&:before {
-			content: "\e618";
-		}
-	}
-	.title .icon.type2 {
-		&:before {
-			content: "\e619";
-		}
-	}
-	.title .icon.type3 {
-		&:before {
-			content: "\e629";
+			color: #ffffff;
+			text-shadow: 0 1px 0 #727272;
 		}
 	}
 }
