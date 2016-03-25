@@ -555,7 +555,10 @@ abstract class AApiManagerWithStorage extends AApiManager
 			else
 			{
 				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).'Storage';
-				$this->oStorage = new $sClassName($this->sStorageName, $this);
+				if (class_exists($sClassName))
+				{
+					$this->oStorage = new $sClassName($this->sStorageName, $this);
+				}
 			}
 		}
 	}

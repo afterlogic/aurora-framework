@@ -669,7 +669,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$aResult = false;
 		try
 		{
-			$aResult = $this->oEavManager->getObjectsByType('CTenant',
+			$aResult = $this->oEavManager->getObjects(
+				'CTenant',
 				array('IsDefault', 'IdChannel'),
 				0,
 				0,

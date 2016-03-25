@@ -467,7 +467,8 @@ class CApi
 		}
 
 		if ($bDoExitOnError) {
-			echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
+			//TODO check functionality
+			//echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
 		
 		return false;
