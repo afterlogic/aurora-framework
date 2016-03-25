@@ -10,25 +10,33 @@
 class CApiDomainsManager extends AApiManagerWithStorage
 {
 	/**
+	 * @var CApiEavManager
+	 */
+	public $oEavManager = null;
+	
+	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('domains', $oManager, $sForcedStorage);
+		
+		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 
 		$this->inc('classes.domain');
 	}
 
 	/**
+	 * @TODO rename
 	 * @return CDomain
 	 */
 	public function getDefaultDomain()
 	{
-		$oDomain = new CDomain();
-		$oDomain->IsDefaultDomain = true;
+		$oDomain = CDomain::createInstance();
+		$oDomain->IsDefault = true;
 		return $oDomain;
 	}
-
+	
 	/**
 	 * Retrieve information on domain based on its ID. 
 	 * 
@@ -41,7 +49,12 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$oDomain = null;
 		try
 		{
-			$oDomain = $this->oStorage->getDomainById($sDomainId);
+			$oResult = $this->oEavManager->getObjectById($sDomainId);
+			
+			if ($oResult instanceOf \CDomain)
+			{
+				$oDomain = $oResult;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -62,7 +75,18 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$oDomain = null;
 		try
 		{
-			$oDomain = $this->oStorage->getDomainByName($sDomainName);
+			$aResultDomains = $this->oEavManager->getObjects('CDomain', 
+				array(
+				),
+				0,
+				0,
+				array('Name' => $sDomainName)
+			);
+
+			if(isset($aResultDomains[0]) && $aResultDomains[0] instanceOf \CDomain)
+			{
+				$oDomain = $aResultDomains[0];
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -84,6 +108,20 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		try
 		{
 			$oDomain = $this->oStorage->getDomainByUrl($sDomainUrl);
+			
+			$aResultDomains = $this->oEavManager->getObjects('CDomain', 
+				array(
+				),
+				0,
+				0,
+				array('Name' => $sDomainName)
+			);
+
+			if(isset($aResultDomains[0]) && $aResultDomains[0] instanceOf \CDomain)
+			{
+				$oDomain = $aResultDomains[0];
+			}
+			
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -106,9 +144,11 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oDomain->validate())
+			//TODO imlement validate functionality
+			if (true || $oDomain->validate())
 			{
-				if (!$this->domainExists($oDomain->Name))
+				
+				if (!$this->isExists($oDomain->Name))
 				{
 					$oTenant = null;
 					$oTenantsApi = null;
@@ -144,7 +184,8 @@ class CApiDomainsManager extends AApiManagerWithStorage
 						$oDomain->IdTenant = 0;
 					}
 
-					if (!$this->oStorage->createDomain($oDomain))
+//					if (!$this->oStorage->createDomain($oDomain))
+					if (!$this->oEavManager->saveObject($oDomain))
 					{
 						throw new CApiManagerException(Errs::DomainsManager_DomainCreateFailed);
 					}
@@ -178,9 +219,9 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			if ($oDomain->validate())
+			if (true || $oDomain->validate())
 			{
-				if ($oDomain->IsDefaultDomain)
+				if ($oDomain->IsDefault)
 				{
 					$oSettings =& CApi::GetSettings();
 					$aSettingsMap = $oDomain->GetSettingsMap();
@@ -194,7 +235,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				}
 				else
 				{
-					if (!$this->oStorage->updateDomain($oDomain))
+					if (!$this->oEavManager->saveObject($oDomain))
 					{
 						throw new CApiManagerException(Errs::DomainsManager_DomainUpdateFailed);
 					}
@@ -219,12 +260,22 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function areDomainsEmpty($aDomainsIds)
+	public function areDomainsEmpty($aDomainIds)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->areDomainsEmpty($aDomainsIds);
+//			$bResult = $this->oStorage->areDomainsEmpty($aDomainsIds);
+//			$sSql = 'SELECT COUNT(id_acct) as users_count FROM %sawm_accounts WHERE def_acct = 1 AND id_domain IN (%d)';
+//			
+			$oUsersApi = CApi::GetCoreManager('users');
+			
+			$count = $oUsersApi->getAccountsByDomain($aDomainIds);
+			
+			if ($count <= 0)
+			{
+				$bResult = true;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -294,11 +345,12 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		try
 		{
 			$oDomain = $this->getDomainById($iDomainId);
+			
 			if (!$oDomain)
 			{
 				throw new CApiManagerException(Errs::DomainsManager_DomainDoesNotExist);
 			}
-
+		
 			if (!$bRemoveAllAccounts && !$this->areDomainsEmpty(array($iDomainId)))
 			{
 				throw new CApiManagerException(Errs::DomainsManager_DomainNotEmpty);
@@ -328,7 +380,8 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				}
 			}
 
-			$bResult = $this->oStorage->deleteDomains(array($iDomainId));
+//			$bResult = $this->oStorage->deleteDomains(array($iDomainId));
+			$bResult = $this->oEavManager->deleteObject($iDomainId);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -404,7 +457,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$oDomain = $this->getDomainByName($sDomainName);
 		if ($oDomain)
 		{
-			$bResult = $this->deleteDomainById($oDomain->IdDomain, $bRemoveAllAccounts);
+			$bResult = $this->deleteDomainById($oDomain->iObjectId, $bRemoveAllAccounts);
 		}
 		else
 		{
@@ -423,7 +476,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	 */
 	public function getFullDomainsList($iTenantId = 0)
 	{
-		return $this->getDomainsList(1, 99999, 'name', true, '', $iTenantId);
+		return $this->getDomainsList(0, 0, 'Name', \ESortOrder::ASC, '', $iTenantId);
 	}
 
 	/**
@@ -440,21 +493,45 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	 * Get list of domains, with pagination enabled. 
 	 * 
 	 * @param int $iPage Number of page to retrieve. 
-	 * @param int $iDomainsPerPage Number of domains per page. 
+	 * @param int $iItemsPerPage Number of domains per page. 
 	 * @param string $sOrderBy Default value is **'name'**. Key field for sorting, name and email values are supported.
-	 * @param bool $bOrderType Default value is **true**. Sort direction, true for ascending, false for descending.
+	 * @param bool $iOrderType Default value is **true**. Sort direction, true for ascending, false for descending.
 	 * @param string $sSearchDesc Default value is empty string. Filtering value. If not empty, only domains matching this value are returned.
 	 * @param int $iTenantId Default value is **0**.
 	 *
 	 * @return array|false [IdDomain => [IsInternal, Name]] List of domains is returned like [IdDomain => [IsInternal, Name]], IsInternal is reserved for use in MailSuite Pro / Aurora.
 	 */
-	public function getDomainsList($iPage, $iDomainsPerPage, $sOrderBy = 'name', $bOrderType = true, $sSearchDesc = '', $iTenantId = 0)
+	public function getDomainsList($iPage, $iItemsPerPage, $sOrderBy = 'Name', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '', $iTenantId = 0)
 	{
 		$aResult = false;
 		try
-		{
-			$aResult = $this->oStorage->getDomainsList($iPage, $iDomainsPerPage,
-				$sOrderBy, $bOrderType, $sSearchDesc, $iTenantId);
+		{	
+			$aFilters = array(
+				'Name' => '%'.$sSearchDesc.'%'
+			);
+			
+			if ($iTenantId > 0)
+			{
+				$aFilters['IdTenant'] = $iTenantId;
+			}
+			
+			$aResultDomains = $this->oEavManager->getObjects(
+				'CDomain', 
+				array(
+					'IsInternal', 
+					'Name'
+				),
+				$iPage,
+				$iItemsPerPage,
+				$aFilters,
+				$sOrderBy,
+				$iOrderType
+			);
+
+			foreach($aResultDomains as $oDomain)
+			{
+				$aResult[$oDomain->iObjectId] = array($oDomain->IsInternal, $oDomain->Name);
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -474,7 +551,22 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$aResult = false;
 		try
 		{
-			$aResult = $this->oStorage->getDomainIdsByTenantId($iTenantId);
+			$aResultDomains = $this->oEavManager->getObjects(
+				'CDomain', 
+				array(
+					'IdTenant'
+				),
+				0,
+				0,
+				array(
+					'IdTenant' => $iTenantId
+				)
+			);
+			
+			if (is_array($aResultDomains))
+			{
+				$aResult = Underscode\Types\Arrays::pluck($aResultDomains, 'iObjectId');
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -496,6 +588,23 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		try
 		{
 			$oDomain = $this->oStorage->getDefaultDomainByTenantId($iTenantId);
+			
+			$aResultDomains = $this->oEavManager->getObjects(
+				'CDomain', 
+				array(),
+				0,
+				0,
+				array(
+					'IdTenant' => $iTenantId,
+					'IsDefaultTenantDomain' => true
+				)
+			);
+			
+			if (isset($aResultDomains[0]) && $aResultDomains[0] instanceOf \CDomain)
+			{
+				$oDomain = $aResultDomains[0];
+			}
+			
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -517,8 +626,27 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		{
 			if (0 < $iTenantId)
 			{
-				$this->oStorage->setGlobalAddressBookVisibilityByTenantId($iVisibility, $iTenantId);
-				$bResult = true;
+				$aResultDomains = $this->oEavManager->getObjects(
+					'CDomain', 
+					array(
+						'IdTenant'
+					),
+					0,
+					0,
+					array(
+						'IdTenant' => $iTenantId
+					)
+				);
+				
+				if (isset($aResultDomains[0]))
+				{
+					$oDomain = $aResultDomains[0];
+					
+					$oProperty = new CProperty('GlobalAddressBook', $iVisibility, $oDomain->getPropertyType('GlobalAddressBook'));
+					$oProperty->ObjectId = $oDomain->iObjectId;
+					
+					$bResult = $this->oEavManager->setProperty($oProperty);
+				}
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -536,12 +664,23 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	 * @param string $sDomainName Domain name to look up.
 	 * @return bool
 	 */
-	public function domainExists($sDomainName)
+	public function isExists($sDomainName)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->domainExists($sDomainName);
+			$aResultDomains = $this->oEavManager->getObjects(
+				'CDomain',
+				array('Name'),
+				0,
+				0,
+				array('Name' => $sDomainName)
+			);
+
+			if (is_array($aResultDomains) && count($aResultDomains) > 0)
+			{
+				$bResult = true;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -563,7 +702,18 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$iResult = false;
 		try
 		{
-			$iResult = $this->oStorage->getDomainCount($sSearchDesc, $iTenantId);
+			$aResultDomains = $this->oEavManager->getObjectsCount(
+				'CDomain', 
+				array(
+					'Name' => $sSearchDesc,
+					'IdTenant' => $iTenantId
+				)
+			);
+			
+			if (is_array($aResultDomains))
+			{
+				$iResult = count($aResultDomains);
+			}
 		}
 		catch (CApiBaseException $oException)
 		{

@@ -51,6 +51,24 @@ class CApiUsersDbStorage extends CApiUsersStorage
 		return $this->_getAccountBySql($this->oCommandCreator->getAccountByEmailQuery($sEmail));
 	}
 	
+	public function getAccountsByDomain($aDomainIds)
+	{
+		$iResultCount = false;
+		if ($this->oConnection->Execute($this->oCommandCreator->getAccountsByDomain($aDomainIds)))
+		{
+			$oRow = $this->oConnection->GetNextRecord();
+			if ($oRow)
+			{
+				$iResultCount = (int) $oRow->users_count;
+			}
+
+			$this->oConnection->FreeResult();
+		}
+
+		$this->throwDbExceptionIfExist();
+		return $iResultCount;
+	}
+	
 	/**
 	 * Retrieves information on WebMail Pro account. Account ID is used for look up.
 	 * 
@@ -289,6 +307,7 @@ class CApiUsersDbStorage extends CApiUsersStorage
 
 				$oDomain = null;
 				$iDomainId = $oRow->id_domain;
+
 				if (0 < $iDomainId)
 				{
 					$oDomain = $oApiDomainsManager->getDomainById($iDomainId);

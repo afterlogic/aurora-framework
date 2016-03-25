@@ -54,6 +54,23 @@ class CApiUsersManager extends AApiManagerWithStorage
 		return $oAccount;
 	}
 
+	public function getAccountsByDomain($aDomainIds)
+	{
+		$aAccounts = null;
+		try
+		{
+			if (null === $aAccounts)
+			{
+				$aAccounts = $this->oStorage->getAccountsByDomain($aDomainIds);
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+		return $aAccounts;
+	}
+	
 	/**
 	 * Retrieves information on social account.
 	 * 

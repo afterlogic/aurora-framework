@@ -97,7 +97,7 @@ class CAccount extends api_AContainer
 
 			'IdAccount'	=> 0,
 			'IdUser'	=> 0,
-			'IdDomain'	=> $oDomain->IdDomain,
+			'IdDomain'	=> $oDomain->iObjectId,
 			'IdTenant'	=> $oDomain->IdTenant,
 
 			'IsDefaultAccount'	=> true,
@@ -246,7 +246,7 @@ class CAccount extends api_AContainer
 		$sLoginPart = api_Utils::GetAccountNameFromEmail($sLogin);
 		$sDomainPart = api_Utils::GetDomainFromEmail($sLogin);
 
-		$sDomainName = ($this->Domain->IsDefaultDomain || $this->Domain->IsDefaultTenantDomain) ? $sDomainPart : $this->Domain->Name;
+		$sDomainName = ($this->Domain->IsDefault || $this->Domain->IsDefaultTenantDomain) ? $sDomainPart : $this->Domain->Name;
 		if (!empty($sDomainName))
 		{
 			$this->Email = $sLoginPart.$sAtChar.$sDomainName;
@@ -266,7 +266,7 @@ class CAccount extends api_AContainer
 	{
 		parent::InitByDbRow($oRow);
 
-		if (!$this->Domain->IsDefaultDomain && !$this->Domain->IsDefaultTenantDomain)
+		if (!$this->Domain->IsDefault && !$this->Domain->IsDefaultTenantDomain)
 		{
 			$this->IncomingMailProtocol = $this->Domain->IncomingMailProtocol;
 			$this->IncomingMailServer = $this->Domain->IncomingMailServer;

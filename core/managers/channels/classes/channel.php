@@ -21,18 +21,11 @@ class CChannel extends api_APropertyBag
 		
 		$this->SetDefaults();
 		
-		$this->SetDefaults(array(
-			'IdChannel'		=> 0,
-			'Login'			=> '',
-			'Password'		=> '',
-			'Description'	=> ''
-		));
-		
 		//TODO
 //		$this->SetLower(array('Login'));
 	}
 	
-	public static function createInstanse($sModule = 'Core')
+	public static function createInstance($sModule = 'Core')
 	{
 		return new CChannel($sModule);
 	}

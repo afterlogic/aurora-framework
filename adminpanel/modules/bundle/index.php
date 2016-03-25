@@ -270,7 +270,7 @@ class CBundleModule extends ap_Module
 			{
 				case 'edit':
 					$oDomain =& /* @var $oDomain CDomain */ $this->oAdminPanel->GetMainObject('domain_edit');
-					if ($oDomain && !$oDomain->IsDefaultDomain)
+					if ($oDomain && !$oDomain->IsDefault)
 					{
 						/*
 						$oScreen->Main->AddSwitcher(

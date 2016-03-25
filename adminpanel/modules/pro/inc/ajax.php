@@ -164,7 +164,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 	{
 		/* @var $oAccount CAccount */
 		$oAccount =& $this->oAdminPanel->GetMainObject('account_edit');
-		if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->IdDomain))
+		if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->iObjectId))
 		{
 			$this->oAdminPanel->DeleteMainObject('account_edit');
 			if ($this->oModule->UpdateAccount($oAccount))
@@ -260,7 +260,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 
 			if ($oAccount->Domain)
 			{
-				if ($oAccount->Domain->IsDefaultDomain && CPost::get('chAllowMail'))
+				if ($oAccount->Domain->IsDefault && CPost::get('chAllowMail'))
 				{
 					$oAccount->Email = CPost::get('txtNewEmail');
 
@@ -320,7 +320,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 	{
 		$oAccount->IsDefaultAccount = true;
 
-		if ($oAccount->Domain && ($oAccount->Domain->IsDefaultTenantDomain || $oAccount->Domain->IsDefaultDomain))
+		if ($oAccount->Domain && ($oAccount->Domain->IsDefaultTenantDomain || $oAccount->Domain->IsDefault))
 		{
 			$oAccount->initLoginAndEmail(CPost::get('txtInviteLogin'));
 			$oAccount->IncomingMailPassword = md5(CPost::get('txtInviteLogin').time().rand(1000, 9999));
@@ -540,7 +540,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		$oTenant =& $this->oAdminPanel->GetMainObject('tenant_new');
 		if (!$oTenant)
 		{
-			$oTenant = CTenant::createInstanse('Core');
+			$oTenant = CTenant::createInstance('Core');
 			$this->oAdminPanel->SetMainObject('tenant_new', $oTenant);
 		}
 	}
@@ -580,7 +580,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 
 	public function ChannelsNew()
 	{
-		$oChannel = CChannel::createInstanse('Core');
+		$oChannel = CChannel::createInstance('Core');
 		$this->initChannelByPost($oChannel);
 
 		if ($this->oModule->createChannel($oChannel))
@@ -669,9 +669,11 @@ class CProAjaxAction extends ap_CoreModuleHelper
 	{
 		/* @var $oDomain CDomain */
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_new');
+		
+		
 		if (!$oDomain)
 		{
-			$oDomain = new CDomain();
+			$oDomain = CDomain::createInstance('Core');
 			$this->oAdminPanel->SetMainObject('domain_new', $oDomain);
 		}
 	}
@@ -697,8 +699,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 			if ($this->oModule->CreateDomain($oDomain))
 			{
 				$this->checkBolleanWithMessage(true);
-				$this->Ref = ($oDomain->OverrideSettings)
-					? '?edit&tab=domains&uid='.$oDomain->IdDomain : '?root';
+				$this->Ref = ($oDomain->OverrideSettings) ? '?edit&tab=domains&uid='.$oDomain->iObjectId : '?root';
 			}
 			else
 			{
@@ -718,7 +719,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 	{
 		$sDomainName = CPost::get('txtDomainName', '');
 
-		$oDomain->IsDefaultDomain = false;
+		$oDomain->IsDefault = false;
 		$oDomain->OverrideSettings = CPost::GetCheckBox('chOverrideSettings');
 
 		$oDomain->Name = $sDomainName;

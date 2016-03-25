@@ -32,7 +32,7 @@ class CApiChannelsManager extends AApiManagerWithStorage
 	 */
 	public function newChannel()
 	{
-		return CChannel::createInstanse();
+		return CChannel::createInstance();
 	}
 
 	/**

@@ -189,7 +189,7 @@ class CTenant extends api_APropertyBag
 //		}
 	}
 	
-	public static function createInstanse($sModule = 'Core')
+	public static function createInstance($sModule = 'Core')
 	{
 		return new CTenant($sModule);
 	}

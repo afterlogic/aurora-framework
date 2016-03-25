@@ -342,7 +342,7 @@ class CBundleAjaxAction extends ap_CoreModuleHelper
 	 */
 	protected function initUpdateDomainByPost(CDomain &$oDomain)
 	{
-		if ($oDomain->IsInternal && $oDomain->OverrideSettings && !$oDomain->IsDefaultDomain)
+		if ($oDomain->IsInternal && $oDomain->OverrideSettings && !$oDomain->IsDefault)
 		{
 			$oDomain->AllowRegistration = CPost::GetCheckBox('chEnableSignUp');
 			$oDomain->AllowPasswordReset = CPost::GetCheckBox('chAllowUsersResetPassword');

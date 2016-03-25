@@ -82,10 +82,10 @@ class CCommonPopulateData extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_edit');
 		if ($oDomain)
 		{
-			$oScreen->Data->SetValue('hiddenDomainId', $oDomain->IdDomain);
+			$oScreen->Data->SetValue('hiddenDomainId', $oDomain->iObjectId);
 
-			$oScreen->Data->SetValue('classHideDefault', $oDomain->IsDefaultDomain ? 'wm_hide' : '');
-			$oScreen->Data->SetValue('classHideNotDefault', $oDomain->IsDefaultDomain ? '' : 'wm_hide');
+			$oScreen->Data->SetValue('classHideDefault', $oDomain->IsDefault ? 'wm_hide' : '');
+			$oScreen->Data->SetValue('classHideNotDefault', $oDomain->IsDefault ? '' : 'wm_hide');
 			$oScreen->Data->SetValue('classHideOverrideSettings', 0 < $oDomain->IdTenant ? 'wm_hide' : '');
 			$oScreen->Data->SetValue('classHideSsl', $this->oModule->hasSslSupport() ? '' : 'wm_hide');
 			$oScreen->Data->SetValue('chOverrideSettings', $oDomain->OverrideSettings);

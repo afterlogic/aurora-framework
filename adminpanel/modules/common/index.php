@@ -114,7 +114,7 @@ class CCommonModule extends ap_Module
 		}
 		
 		if (CSession::Has(AP_SESS_DOMAIN_NEXT_EDIT_ID) &&
-			$oDomain->IdDomain === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null))
+			$oDomain->iObjectId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null))
 		{
 			CSession::clear(AP_SESS_DOMAIN_NEXT_EDIT_ID);
 		}
@@ -128,7 +128,7 @@ class CCommonModule extends ap_Module
 	 */
 	public function domainExists($sDomainName)
 	{
-		return $this->oDomainsApi->domainExists($sDomainName);
+		return $this->oDomainsApi->isExists($sDomainName);
 	}
 
 	/**
@@ -234,9 +234,13 @@ class CCommonModule extends ap_Module
 
 			$oScreen->SetAllListCount($iAllCount);
 
-			$aDomainsList = $this->oDomainsApi->getDomainsList($oScreen->GetPage(),
+			$aDomainsList = $this->oDomainsApi->getDomainsList(
+				$oScreen->GetPage(),
 				$bAddDefaultDomain ? $oScreen->GetLinesPerPage() - 1 : $oScreen->GetLinesPerPage(),
-				$oScreen->GetOrderBy(), $oScreen->GetOrderType(), $sSearchDesc, $iTenantId);
+				$oScreen->GetOrderBy(),
+				$oScreen->GetOrderType(),
+				$sSearchDesc,
+				$iTenantId);
 
 			if (is_array($aDomainsList) && 0 < count($aDomainsList))
 			{
@@ -365,7 +369,7 @@ class CCommonModule extends ap_Module
 						}
 
 						$oScreen->Data->SetValue('strDomainName', $oDomain->Name.$sTenantAddString);
-						if (0 === $oDomain->IdDomain)
+						if (0 === $oDomain->iObjectId)
 						{
 							$oScreen->Data->SetValue('strDomainName', CApi::I18N('ADMIN_PANEL/DOMAINS_DEFAULT'));
 						}
@@ -373,7 +377,6 @@ class CCommonModule extends ap_Module
 						{
 							$oScreen->Data->SetValue('strDomainName', CApi::I18N('ADMIN_PANEL/DOMAINS_DEFAULT_TENANT').$sTenantAddString);
 						}
-
 						$oScreen->Main->AddTopSwitcher($this->sPath.'/templates/main-top-edit-domain-name.php');
 						$oScreen->Main->AddTopSwitcher($this->sPath.'/templates/main-top-edit-domain.php');
 					}

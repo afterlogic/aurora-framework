@@ -248,13 +248,11 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
 	{
 		$iTenantId = 0;
-		
 		try
 		{
 			if (!empty($sTenantLogin))
 			{
 				$oFilterBy = array('Login' => $sTenantLogin);
-				
 				if (null !== $sTenantPassword)
 				{
 					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
@@ -264,7 +262,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					$oFilterBy['IsEnableAdminPanelLogin'] = true;
 				}
 				
-				$aResultTenants = $this->oEavManager->getObjects('CTenant', 
+				$aResultTenants = $this->oEavManager->getObjects(
+					'CTenant', 
 					array(
 						'Login'
 					),
@@ -273,7 +272,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 					$oFilterBy
 				);
 
-				if (isset($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
+				if (($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
 				{
 					$iTenantId = $aResultTenants[0]->iObjectId;
 				}
@@ -630,6 +629,7 @@ class CApiTenantsManager extends AApiManagerWithStorage
 				else
 				{
 					$oProperty = new CProperty('FilesUsageInBytes', $iNewAllocatedSizeInBytes, $oTenant->getPropertyType('FilesUsageInBytes'));
+					$oProperty->ObjectId = $oTenant->iObjectId;
 					$this->oEavManager->setProperty($oProperty);
 				}
 			}
@@ -669,7 +669,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$aResult = false;
 		try
 		{
-			$aResult = $this->oEavManager->getObjectsByType('CTenant',
+			$aResult = $this->oEavManager->getObjects(
+				'CTenant',
 				array('IsDefault', 'IdChannel'),
 				0,
 				0,

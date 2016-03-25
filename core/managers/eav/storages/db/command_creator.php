@@ -92,7 +92,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 		$sLimit = "";
 		$sOffset = "";
 		
-		$oObject = call_user_func($sObjectType . '::createInstanse');
+		$oObject = call_user_func($sObjectType . '::createInstance');
 		if ($oObject instanceof $sObjectType)
 		{
 			$aResultViewProperties = array();

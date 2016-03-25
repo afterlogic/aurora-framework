@@ -39,9 +39,9 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 		if ($oDomain)
 		{
 			$bHideProtocol = true;
-			if ($oDomain->IsDefaultDomain ||
+			if ($oDomain->IsDefault ||
 				(CSession::Has(AP_SESS_DOMAIN_NEXT_EDIT_ID) &&
-					$oDomain->IdDomain === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null)))
+					$oDomain->iObjectId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null)))
 			{
 				$oScreen->Data->SetValue('classHideIncomingMailProtocol', '');
 			}
@@ -52,7 +52,7 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('textIncomingMailProtocol', '');
 			}
 
-			$oScreen->Data->SetValue('txtFilteHrefAdd', '&filter='.$oDomain->IdDomain);
+			$oScreen->Data->SetValue('txtFilteHrefAdd', '&filter='.$oDomain->iObjectId);
 
 			$oScreen->Data->SetValue('radioAuthTypeAuthCurrentUser', true);
 			$oScreen->Data->SetValue('classHideSsl', $this->oModule->hasSslSupport() ? '' : 'wm_hide');
@@ -120,7 +120,7 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 			$oScreen->Data->SetValue('radioAuthTypeAuthCurrentUser', $iAuthType === ESMTPAuthType::AuthCurrentUser);
 
 			$oScreen->Data->SetValue('chAllowNewUsersRegister', !$oDomain->AllowNewUsersRegister);
-			$oScreen->Data->SetValue('IsDefaultDomain', $oDomain->IsDefaultDomain);
+			$oScreen->Data->SetValue('IsDefault', $oDomain->IsDefault);
 			$oScreen->Data->SetValue('domainIsInternal', $oDomain->IsInternal);
 
 			$iLayout = $oDomain->Layout;
