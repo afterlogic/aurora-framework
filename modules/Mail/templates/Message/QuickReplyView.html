@@ -10,7 +10,7 @@
 	</div>
 	<div class="row" data-bind="css: {'focused': replyTextFocus(),
 		 'filled': replyText().length > 0}">
-		<label for="reply_text" class="title placeholder"  data-bind="i18n: {'key': 'MAIL/LABEL_QUICK_REPLY'}"></label>
+		<label for="reply_text" class="placeholder"  data-bind="i18n: {'key': 'MAIL/LABEL_QUICK_REPLY'}"></label>
 		<textarea id="reply_text" class="input" data-bind="value: replyText, 
 			hasfocus: replyTextFocus, onCtrlEnter: executeSendQuickReply, 
 			valueUpdate: 'afterkeydown', style: {'fontFamily': sDefaultFontName}"></textarea>

@@ -680,28 +680,24 @@
 	display: inline-block;
 }
 
-.item_viewer .title,
-.item_viewer .message_header {
-	
-	.add_contact {
+.item_viewer .add_contact {
+	display: inline-block;
+	vertical-align: middle;
+	width: 11px;
+	height: 11px;
+	margin: 0 0 2px 2px;
+	color: @theme-common-link-color;
+	cursor: pointer;
+
+	.iconFontInit();
+	&:before {
+		content: "\e641";
+		font-size: 16px;
 		display: inline-block;
 		vertical-align: middle;
-		width: 11px;
-		height: 11px;
-		margin: 0 0 2px 2px;
-		color: @theme-common-link-color;
-		cursor: pointer;
-
-		.iconFontInit();
-		&:before {
-			content: "\e641";
-			font-size: 16px;
-			display: inline-block;
-			vertical-align: middle;
-			width: 100%;
-			height: 100%;
-			margin: -12px -3px 0px;
-		}
+		width: 100%;
+		height: 100%;
+		margin: -12px -3px 0px;
 	}
 }
 /*=== END Message viewer CSS ===*/
