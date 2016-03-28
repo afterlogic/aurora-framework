@@ -11,11 +11,18 @@
 class CApiUsersManager extends AApiManagerWithStorage
 {
 	/**
+	 * @var CApiEavManager
+	 */
+	public $oEavManager = null;
+	
+	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('users', $oManager, $sForcedStorage);
+		
+		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 
 		$this->inc('classes.enum');
 		$this->inc('classes.user');
@@ -42,7 +49,23 @@ class CApiUsersManager extends AApiManagerWithStorage
 			CApi::Plugin()->RunHook('api-get-account-on-login-precall', array(&$sEmail, &$oAccount));
 			if (null === $oAccount)
 			{
-				$oAccount = $this->oStorage->getAccountByEmail($sEmail);
+//				$oAccount = $this->oStorage->getAccountByEmail($sEmail);
+				
+				$aResults = $this->oEavManager->getObjects(
+					'CAccount', 
+					array(),
+					0,
+					0,
+					array(
+						'IsDefaultAccount' => true,
+						'Email' => '%'.$sEmail.'%'
+					)
+				);
+				
+				if (isset($aResults[0]))
+				{
+					$oAccount = $aResults[0];
+				}
 			}
 			CApi::Plugin()->RunHook('api-change-account-on-login', array(&$oAccount));
 		}
@@ -54,21 +77,39 @@ class CApiUsersManager extends AApiManagerWithStorage
 		return $oAccount;
 	}
 
+	/**
+	 * means account count
+	 * 
+	 * @param type $aDomainIds
+	 * @return type
+	 */
 	public function getAccountsByDomain($aDomainIds)
 	{
-		$aAccounts = null;
+//		$aAccounts = null;
+		$iResult = false;
 		try
 		{
-			if (null === $aAccounts)
+//			$aAccounts = $this->oStorage->getAccountsByDomain($aDomainIds);
+			
+			if (is_array($aDomainIds))
 			{
-				$aAccounts = $this->oStorage->getAccountsByDomain($aDomainIds);
+				$aResultTenants = $this->oEavManager->getObjectsCount(
+					'CTenant', 
+					array(
+						'IsDefaultAccount' => true,
+						'IdDomain' => array('IN', $aDomainIds)
+					)
+				);
+
+				$iResult = count($aResultTenants);
 			}
 		}
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
-		return $aAccounts;
+//		return $aAccounts;
+		return $iResult;
 	}
 	
 	/**
@@ -85,7 +126,9 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$oAccount = null;
 		try
 		{
-			$oAccount = $this->oStorage->getAccountBySocialEmail($sEmail);
+			var_dump('detect getAccountBySocialEmail usage');
+			exit;
+//			$oAccount = $this->oStorage->getAccountBySocialEmail($sEmail);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -118,11 +161,12 @@ class CApiUsersManager extends AApiManagerWithStorage
 				}
 				if (null === $oAccount)
 				{
-					$oAccount = $this->oStorage->getAccountById($iAccountId);
+//					$oAccount = $this->oStorage->getAccountById($iAccountId);
+					$oAccount = $this->oEavManager->getObjectById($iAccountId);
 				}
 
 				// Default account extension
-				if ($oAccount instanceof CAccount)
+				if ($oAccount instanceof \CAccount)
 				{
 					if ($oAccount->IsInternal)
 					{
@@ -210,7 +254,20 @@ class CApiUsersManager extends AApiManagerWithStorage
 				CApi::Plugin()->RunHook('api-get-user-by-id-precall', array(&$iUserId, &$oUser));
 				if (null === $oUser)
 				{
-					$oUser = $this->oStorage->getUserById($iUserId);
+//					$oUser = $this->oStorage->getUserById($iUserId);
+					
+					$oUser = $this->oEavManager->getObjectById($iUserId);
+					
+					if ($oUser instanceof \CUser)
+					{
+						//TODO method needs to be refactored according to the new system of properties inheritance
+						$oApiDomainsManager = CApi::GetCoreManager('domains');
+						$oDomain = $oApiDomainsManager->getDefaultDomain();
+						
+						$oUser->setInheritedSettings(array(
+							'domain' => $oDomain
+						));
+					}
 				}
 				CApi::Plugin()->RunHook('api-change-user-by-id', array(&$oUser));
 			}
@@ -242,7 +299,25 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$iResult = 0;
 		try
 		{
-			$iResult = $this->oStorage->getDefaultAccountDomainId($iUserId);
+//			$iResult = $this->oStorage->getDefaultAccountDomainId($iUserId);
+			
+//			def_acct = 1 AND id_user = %d'
+			
+			$aResults = $this->oEavManager->getObjects(
+				'CAccount', 
+				array('IdDomain'),
+				0,
+				0,
+				array(
+					'IsDefaultAccount' => true,
+					'IdUser' => $iUserId
+				)
+			);
+			
+			if (isset($aResults[0]))
+			{
+				$iResult = $aResults[0]->IdDomain;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -265,7 +340,21 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$iResult = 0;
 		try
 		{
-			$iResult = $this->oStorage->getDefaultAccountId($iUserId);
+			$aResults = $this->oEavManager->getObjects(
+				'CAccount', 
+				array('IsDefaultAccount', 'IdUser'),
+				0,
+				0,
+				array(
+					'IsDefaultAccount' => true,
+					'IdUser' => $iUserId
+				)
+			);
+			
+			if (isset($aResults[0]))
+			{
+				$iResult = $aResults[0]->iObjectId;
+			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -303,7 +392,19 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$iResult = 0;
 		try
 		{
-			$iResult = $this->oStorage->getAccountUsedSpace($sEmail);
+			//TODO
+//			$iResult = $this->oStorage->getAccountUsedSpace($sEmail);
+//			
+//			$sSql = 'SELECT DISTINCT quota_usage_bytes as main_usage FROM %sawm_account_quotas WHERE %s = %s';
+//			
+//			if ($oRow)
+//			{
+//				$sQuotaUsageBytes = (string) $oRow->main_usage;
+//				if (0 < strlen($sQuotaUsageBytes) && is_numeric($sQuotaUsageBytes))
+//				{
+//					$iResult = (int) ($sQuotaUsageBytes / 1024);
+//				}
+//			}
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -477,7 +578,8 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 					if ($bConnectValid)
 					{
-						if (!$this->oStorage->createAccount($oAccount))
+//						if (!$this->oStorage->createAccount($oAccount))
+						if (!$this->oEavManager->saveObject($oAccount))
 						{
 							throw new CApiManagerException(Errs::UserManager_AccountCreateFailed);
 						}
@@ -534,7 +636,13 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->enableAccounts($aAccountsIds, $bIsEnabled);
+//			$bResult = $this->oStorage->enableAccounts($aAccountsIds, $bIsEnabled);
+//			$sSql = 'UPDATE %sawm_accounts SET deleted = %d WHERE id_acct IN (%s)';
+			$oAccount = CAccount::createInstance('Core');
+			
+			$oProperty = new CProperty('IsDisabled', $bIsEnabled, $oAccount->getPropertyType('IsDisabled'));
+			//TODO wait for multy object ids implementation in Eav Manager
+			$this->oEavManager->setProperties($aAccountsIds, $oProperty);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -617,7 +725,8 @@ class CApiUsersManager extends AApiManagerWithStorage
 				CApi::Plugin()->RunHook('api-update-account', array(&$oAccount, &$bUseOnlyHookUpdate));
 				if (!$bUseOnlyHookUpdate)
 				{
-					if (!$this->oStorage->updateAccount($oAccount))
+//					if (!$this->oStorage->updateAccount($oAccount))
+					if (!($this->oEavManager->saveObject($oAccount) && $this->oEavManager->saveObject($oAccount->User)))
 					{
 						$this->moveStorageExceptionToManager();
 						throw new CApiManagerException(Errs::UserManager_AccountUpdateFailed);

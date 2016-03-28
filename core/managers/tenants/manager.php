@@ -53,7 +53,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$aResult = false;
 		try
 		{
-			$aResultTenants = $this->oEavManager->getObjects('CTenant', 
+			$aResultTenants = $this->oEavManager->getObjects(
+				'CTenant', 
 				array(
 					'Login', 
 					'Description'

@@ -572,14 +572,14 @@ AND %sacal_calendars.user_id = %d';
 	 * 
 	 * @return string
 	 */
-	public function getAccountByEmailQuery($sEmail)
-	{
-		return $this->_getAccountByWhereQuery(sprintf('%s = %d AND %s = %s',
-			$this->escapeColumn('def_acct'), true,
-			$this->escapeColumn('email'),
-			strtolower($this->escapeString($sEmail)))
-		);
-	}
+//	public function getAccountByEmailQuery($sEmail)
+//	{
+//		return $this->_getAccountByWhereQuery(sprintf('%s = %d AND %s = %s',
+//			$this->escapeColumn('def_acct'), true,
+//			$this->escapeColumn('email'),
+//			strtolower($this->escapeString($sEmail)))
+//		);
+//	}
 	
 	/**
 	 * Returns query-string for retrieving information on WebMail Pro account. Account ID is used for look up.

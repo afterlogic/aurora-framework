@@ -44,7 +44,7 @@
  * @package Users
  * @subpackage Classes
  */
-class CAccount extends api_AContainer
+class CAccount extends api_APropertyBag
 {
 	const ChangePasswordExtension = 'AllowChangePasswordExtension';
 	const AutoresponderExtension = 'AllowAutoresponderExtension';
@@ -79,12 +79,13 @@ class CAccount extends api_AContainer
 	 * 
 	 * @return void
 	 */
-	public function __construct($oDomain)
+	public function __construct($sModule, $oParams)
 	{
-		parent::__construct(get_class($this), 'IdAccount');
+//		parent::__construct(get_class($this), 'IdAccount');
+		parent::__construct(get_class($this), $sModule);
 
-		$this->Domain = $oDomain;
-		$this->User = new CUser($oDomain);
+		$this->Domain = $oParams['domain'];
+		$this->User = CUser::createInstance('Core', array('domain' => $oDomain));
 		$this->aExtension = array();
 
 		$this->SetTrimer(array('Email', 'FriendlyName', 'IncomingMailServer', 'IncomingMailLogin', 'IncomingMailPassword',
@@ -93,56 +94,10 @@ class CAccount extends api_AContainer
 		$this->SetLower(array(/*'Email', */'IncomingMailServer', /*'IncomingMailLogin',*/
 			'OutgoingMailServer', /*'OutgoingMailLogin'*/));
 
-		$this->SetDefaults(array(
-
-			'IdAccount'	=> 0,
-			'IdUser'	=> 0,
-			'IdDomain'	=> $oDomain->iObjectId,
-			'IdTenant'	=> $oDomain->IdTenant,
-
-			'IsDefaultAccount'	=> true,
-			'IsInternal'		=> $oDomain->IsInternal,
-			'IsDisabled'		=> false,
-			'IsMailingList'		=> false,
-
-			'StorageQuota'		=> $oDomain->UserQuota,
-			'StorageUsedSpace'	=> 0,
-			
-			'Email'				=> '',
-			'FriendlyName'		=> '',
-
-			'IncomingMailProtocol'	=> $oDomain->IncomingMailProtocol,
-			'IncomingMailServer'	=> $oDomain->IncomingMailServer,
-			'IncomingMailPort'		=> $oDomain->IncomingMailPort,
-			'IncomingMailLogin'		=> '',
-			'IncomingMailPassword'	=> '',
-			'IncomingMailUseSSL'	=> $oDomain->IncomingMailUseSSL,
-
-			'PreviousMailPassword'	=> '',
-
-			'OutgoingMailServer'	=> $oDomain->OutgoingMailServer,
-			'OutgoingMailPort'		=> $oDomain->OutgoingMailPort,
-			'OutgoingMailLogin'		=> '',
-			'OutgoingMailPassword'	=> '',
-			'OutgoingMailAuth'		=> $oDomain->OutgoingMailAuth,
-			'OutgoingMailUseSSL'	=> $oDomain->OutgoingMailUseSSL,
-			'OutgoingSendingMethod'	=> $oDomain->OutgoingSendingMethod,
-
-			'HideInGAB'			=> false,
-
-			'Signature'			=> '',
-			'SignatureType'		=> EAccountSignatureType::Html,
-			'SignatureOptions'	=> EAccountSignatureOptions::DontAdd,
-
-			'GlobalAddressBook'	=> $oDomain->GlobalAddressBook,
-
-			'DetectSpecialFoldersWithXList' => $oDomain->DetectSpecialFoldersWithXList,
-
-			'CustomFields'		=> '',
-			'ForceSaveOnLogin'	=> false,
-			'AllowMail'			=> true,
-			'IsPasswordSpecified' => true
-		));
+		$this->SetDefaults();
+		
+		$this->setInheritedSettings($oParams);
+		
 
 		CApi::Plugin()->RunHook('api-account-construct', array(&$this));
 	}
@@ -154,9 +109,41 @@ class CAccount extends api_AContainer
 	 * 
 	 * @return CAccount
 	 */
-	public static function createInstance($oDomain)
+	public static function createInstance($sModule = 'Core', $oParams = array())
 	{
-		return new CAccount($oDomain);
+		return new CAccount($sModule, $oParams);
+	}
+	
+	/**
+	 * temp method
+	 */
+	public function setInheritedSettings($oParams = array())
+	{
+		if (isset($oParams['domain']))
+		{
+			$this->IdDomain = $oParams['domain']->iObjectId;
+			$this->IdTenant	= $oParams['domain']->IdTenant;
+
+			$this->IsInternal = $oParams['domain']->IsInternal;
+
+			$this->StorageQuota = $oParams['domain']->UserQuota;
+
+			$this->IncomingMailProtocol = $oParams['domain']->IncomingMailProtocol;
+			$this->IncomingMailServer = $oParams['domain']->IncomingMailServer;
+			$this->IncomingMailPort = $oParams['domain']->IncomingMailPort;
+
+			$this->IncomingMailUseSSL = $oParams['domain']->IncomingMailUseSSL;
+
+			$this->OutgoingMailServer = $oParams['domain']->OutgoingMailServer;
+			$this->OutgoingMailPort = $oParams['domain']->OutgoingMailPort;
+
+			$this->OutgoingMailAuth = $oParams['domain']->OutgoingMailAuth;
+			$this->OutgoingMailUseSSL = $oParams['domain']->OutgoingMailUseSSL;
+			$this->OutgoingSendingMethod = $oParams['domain']->OutgoingSendingMethod;
+
+			$this->GlobalAddressBook = $oParams['domain']->GlobalAddressBook;
+			$this->DetectSpecialFoldersWithXList = $oParams['domain']->DetectSpecialFoldersWithXList;
+		}
 	}
 
 	/**
@@ -377,16 +364,6 @@ class CAccount extends api_AContainer
 	}
 
 	/**
-	 * Obtains static map of account fields. Function with the same name is used for other objects in a unified container **api_AContainer**.
-	 * 
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
 	 * Gets actual quota information in bytes.
 	 * 
 	 * @return int
@@ -395,65 +372,6 @@ class CAccount extends api_AContainer
 	{
 		return 0 === $this->StorageQuota ? (int) CApi::GetConf('labs.unlim-quota-limit-size-in-kb', 104857600) : $this->StorageQuota;
 	}
-
-	/**
-	 * Obtains static map of account fields.
-	 * 
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-			'IdAccount'	=> array('int', 'id_acct', false, false),
-			'IdUser'	=> array('int', 'id_user'),
-			'IdDomain'	=> array('int', 'id_domain'),
-			'IdTenant'	=> array('int', 'id_tenant', true, false),
-
-			'IsInternal'		=> array('bool'),
-			'IsDisabled'		=> array('bool', 'deleted'),
-			'IsDefaultAccount'	=> array('bool', 'def_acct'),
-			'IsMailingList'		=> array('bool', 'mailing_list'),
-
-			'StorageQuota'		=> array('int', 'quota'),
-			'StorageUsedSpace'	=> array('int'),
-
-			'Email'				=> array('string(255)', 'email', true, false),
-			'FriendlyName'		=> array('string(255)', 'friendly_nm'),
-
-			'IncomingMailProtocol'	=> array('int', 'mail_protocol'),
-			'IncomingMailServer'	=> array('string(255)', 'mail_inc_host'),
-			'IncomingMailPort'		=> array('int', 'mail_inc_port'),
-			'IncomingMailLogin'		=> array('string(255)', 'mail_inc_login'),
-			'IncomingMailPassword'	=> array('password', 'mail_inc_pass'),
-			'IncomingMailUseSSL'	=> array('bool', 'mail_inc_ssl'),
-
-			'PreviousMailPassword'	=> array('string'),
-
-			'OutgoingMailServer'	=> array('string(255)', 'mail_out_host'),
-			'OutgoingMailPort'		=> array('int', 'mail_out_port'),
-			'OutgoingMailLogin'		=> array('string(255)', 'mail_out_login'),
-			'OutgoingMailPassword'	=> array('password', 'mail_out_pass'),
-			'OutgoingMailAuth'		=> array('int', 'mail_out_auth'),
-			'OutgoingMailUseSSL'	=> array('bool', 'mail_out_ssl'),
-			'OutgoingSendingMethod'	=> array('int'),
-
-			'HideInGAB'			=> array('bool', 'hide_in_gab'),
-
-			'Signature'			=> array('string', 'signature'),
-			'SignatureType'		=> array('int', 'signature_type'),
-			'SignatureOptions'	=> array('int', 'signature_opt'),
-
-			'GlobalAddressBook'	=> array('int'),
-
-			'DetectSpecialFoldersWithXList' => array('bool'),
-
-			'CustomFields'		=> array('serialize', 'custom_fields'),
-			'ForceSaveOnLogin'	=> array('bool'),
-			'AllowMail'			=> array('bool', 'allow_mail'),
-			'IsPasswordSpecified' => array('bool', 'is_password_specified'),
-		);
-	}
-	
 	
 	/**
 	 * Can account login with password.
@@ -465,5 +383,74 @@ class CAccount extends api_AContainer
 		$bCanLoginWithPassword = false;
 		CApi::Plugin()->RunHook('api-account-can-login-with-password', array(&$bCanLoginWithPassword));
 		return ($this->AllowMail || $this->IsPasswordSpecified || $bCanLoginWithPassword);
+	}
+	
+
+	/**
+	 * Obtains static map of account fields. Function with the same name is used for other objects in a unified container **api_AContainer**.
+	 * 
+	 * @return array
+	 */
+	public function getMap()
+	{
+		return self::getStaticMap();
+	}
+	
+	/**
+	 * Obtains static map of account fields.
+	 * 
+	 * @return array
+	 */
+	public static function getStaticMap()
+	{
+		return array(
+//			'IdAccount'	=> array('int', 'id_acct', false, false),
+			'IdUser'	=> array('int', 0), //'id_user'),
+			'IdDomain'	=> array('int', 0), //'id_domain'),
+			'IdTenant'	=> array('int', 0), //'id_tenant', true, false),
+
+			'IsInternal'		=> array('bool', false), //),
+			'IsDisabled'		=> array('bool', false), //'deleted'),
+			'IsDefaultAccount'	=> array('bool', true), //'def_acct'),
+			'IsMailingList'		=> array('bool', false), //'mailing_list'),
+
+			'StorageQuota'		=> array('int', 0), //'quota'),
+			'StorageUsedSpace'	=> array('int', 0), //),
+
+			'Email'				=> array('string', ''), //'email', true, false),
+			'FriendlyName'		=> array('string', ''), //'friendly_nm'),
+
+			'IncomingMailProtocol'	=> array('int', 0), //'mail_protocol'),
+			'IncomingMailServer'	=> array('string', ''), //'mail_inc_host'),
+			'IncomingMailPort'		=> array('int', 143), //'mail_inc_port'),
+			'IncomingMailLogin'		=> array('string', ''), //'mail_inc_login'),
+			'IncomingMailPassword'	=> array('string', ''), //'mail_inc_pass'), //must be password
+			'IncomingMailUseSSL'	=> array('bool', false), //'mail_inc_ssl'),
+
+			'PreviousMailPassword'	=> array('string', ''), //),
+
+			'OutgoingMailServer'	=> array('string', ''), //'mail_out_host'),
+			'OutgoingMailPort'		=> array('int', 0), //'mail_out_port'),
+			'OutgoingMailLogin'		=> array('string', ''), //'mail_out_login'),
+			'OutgoingMailPassword'	=> array('string', ''), //'mail_out_pass'), //must be password
+			'OutgoingMailAuth'		=> array('int', 0), //'mail_out_auth'),
+			'OutgoingMailUseSSL'	=> array('bool', false), //'mail_out_ssl'),
+			'OutgoingSendingMethod'	=> array('int', 0), //),
+
+			'HideInGAB'			=> array('bool', false), //'hide_in_gab'),
+
+			'Signature'			=> array('string', ''), //'signature'),
+			'SignatureType'		=> array('int', EAccountSignatureType::Html), //'signature_type'),
+			'SignatureOptions'	=> array('int', EAccountSignatureOptions::DontAdd), //'signature_opt'),
+
+			'GlobalAddressBook'	=> array('int', 0), //),
+
+			'DetectSpecialFoldersWithXList' => array('bool', false), //),
+
+			'CustomFields'		=> array('serialize', ''), //'custom_fields'), //must be serialize
+			'ForceSaveOnLogin'	=> array('bool', false), //),
+			'AllowMail'			=> array('bool', true), //'allow_mail'),
+			'IsPasswordSpecified' => array('bool', false) //'is_password_specified'),
+		);
 	}
 }

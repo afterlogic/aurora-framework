@@ -54,7 +54,7 @@
  * @package Users
  * @subpackage Classes
  */
-class CUser extends api_AContainer
+class CUser extends api_APropertyBag
 {
 	/**
 	 * @var CSubscription
@@ -66,81 +66,98 @@ class CUser extends api_AContainer
 	 * 
 	 * @return void
 	 */
-	public function __construct(CDomain $oDomain)
+	public function __construct($sModule, $oParams)
 	{
-		parent::__construct(get_class($this), 'IdUser');
+		//parent::__construct(get_class($this), 'IdUser');
+		parent::__construct(get_class($this), $sModule);
+		
+		$this->__USE_TRIM_IN_STRINGS__ = true;
+		
+		$this->SetDefaults();
 
+		$this->oSubCache = null;
+		
+//		$this->SetUpper(array('Capa'));
+
+		$this->setInheritedSettings($oParams);
+
+		CApi::Plugin()->RunHook('api-user-construct', array(&$this));
+	}
+	
+	/**
+	 * temp method
+	 */
+	public function setInheritedSettings($oParams = array())
+	{
 		$oSettings =& CApi::GetSettings();
 		$iSaveMail = $oSettings->GetConf('WebMail/SaveMail');
 		$iSaveMail = ESaveMail::Always !== $iSaveMail
 			? $oSettings->GetConf('WebMail/SaveMail') : ESaveMail::DefaultOn;
-
-		$this->oSubCache = null;
 		
-		$this->__USE_TRIM_IN_STRINGS__ = true;
-		$this->SetUpper(array('Capa'));
+		if (isset($oParams['domain']))
+		{
+//				array(
+	//			'IdUser'							=> 0,
+	//			'IdSubscription'					=> 0,
+	//			'IdHelpdeskUser'					=> 0,
 
-		$this->SetDefaults(array(
-			'IdUser'							=> 0,
-			'IdSubscription'					=> 0,
-			'IdHelpdeskUser'					=> 0,
+				$this->MailsPerPage = $oParams['domain']->MailsPerPage;
+				$this->ContactsPerPage = $oParams['domain']->ContactsPerPage;
+				$this->AutoCheckMailInterval = $oParams['domain']->AutoCheckMailInterval;
 
-			'MailsPerPage'						=> $oDomain->MailsPerPage,
-			'ContactsPerPage'					=> $oDomain->ContactsPerPage,
-			'AutoCheckMailInterval'				=> $oDomain->AutoCheckMailInterval,
+	//			'CreatedTime'						=> 0,
+	//			'LastLogin'							=> 0,
+	//			'LastLoginNow'						=> 0,
+	//			'LoginsCount'						=> 0,
 
-			'CreatedTime'						=> 0,
-			'LastLogin'							=> 0,
-			'LastLoginNow'						=> 0,
-			'LoginsCount'						=> 0,
+				$this->DefaultSkin = $oParams['domain']->DefaultSkin;
+				$this->DefaultLanguage = $oParams['domain']->DefaultLanguage;
+				$this->DefaultEditor = EUserHtmlEditor::Html;
+				$this->SaveMail = $iSaveMail;
+				$this->Layout = $oParams['domain']->Layout;
 
-			'DefaultSkin'						=> $oDomain->DefaultSkin,
-			'DefaultLanguage'					=> $oDomain->DefaultLanguage,
-			'DefaultEditor'						=> EUserHtmlEditor::Html,
-			'SaveMail'							=> $iSaveMail,
-			'Layout'							=> $oDomain->Layout,
+				$this->DefaultTimeZone = 0; // $oDomain->DefaultTimeZone, // TODO
+				$this->DefaultTimeFormat = $oParams['domain']->DefaultTimeFormat;
+				$this->DefaultDateFormat = $oParams['domain']->DefaultDateFormat;
 
-			'DefaultTimeZone'					=> 0, // $oDomain->DefaultTimeZone, // TODO
-			'DefaultTimeFormat'					=> $oDomain->DefaultTimeFormat,
-			'DefaultDateFormat'					=> $oDomain->DefaultDateFormat,
+				$this->DefaultIncomingCharset = CApi::GetConf('webmail.default-inc-charset', 'iso-8859-1');
 
-			'DefaultIncomingCharset'			=> CApi::GetConf('webmail.default-inc-charset', 'iso-8859-1'),
+	//			'Question1'							=> '',
+	//			'Question2'							=> '',
+	//			'Answer1'							=> '',
+	//			'Answer2'							=> '',
 
-			'Question1'							=> '',
-			'Question2'							=> '',
-			'Answer1'							=> '',
-			'Answer2'							=> '',
+	//			'TwilioNumber'						=> '',
+	//			'TwilioEnable'						=> true,
+	//			'TwilioDefaultNumber'				=> false,
+	//			'SipEnable'							=> true,
+	//			'SipImpi'							=> '',
+	//			'SipPassword'						=> '',
 
-			'TwilioNumber'						=> '',
-			'TwilioEnable'						=> true,
-			'TwilioDefaultNumber'				=> false,
-			'SipEnable'							=> true,
-			'SipImpi'							=> '',
-			'SipPassword'						=> '',
+	//			'Capa'								=> '',
+	//			'ClientTimeZone'					=> '',
+				$this->UseThreads = $oParams['domain']->UseThreads;
+	//			'SaveRepliedMessagesToCurrentFolder'=> false,
+	//			'DesktopNotifications'				=> false,
+	//			'AllowChangeInputDirection'			=> false,
+	//			'EnableOpenPgp'						=> false,
+	//			'AllowAutosaveInDrafts'				=> true,
+	//			'AutosignOutgoingEmails'			=> false,
+	//			'AllowHelpdeskNotifications'		=> false,
+	//			'CustomFields'						=> '',
+	//
+	//			'HelpdeskSignature'					=> '',
+	//			'HelpdeskSignatureEnable'			=> false,
+	//
+	//			'FilesEnable'						=> true,
+	//			
+	//			'EmailNotification'					=> '',
+	//			
+	//			'PasswordResetHash'					=> ''
+//			);
+		}
 
-			'Capa'								=> '',
-			'ClientTimeZone'					=> '',
-			'UseThreads'						=> $oDomain->UseThreads,
-			'SaveRepliedMessagesToCurrentFolder'=> false,
-			'DesktopNotifications'				=> false,
-			'AllowChangeInputDirection'			=> false,
-			'EnableOpenPgp'						=> false,
-			'AllowAutosaveInDrafts'				=> true,
-			'AutosignOutgoingEmails'			=> false,
-			'AllowHelpdeskNotifications'		=> false,
-			'CustomFields'						=> '',
-
-			'HelpdeskSignature'					=> '',
-			'HelpdeskSignatureEnable'			=> false,
-
-			'FilesEnable'						=> true,
-			
-			'EmailNotification'					=> '',
-			
-			'PasswordResetHash'					=> ''
-		));
-
-		CApi::Plugin()->RunHook('api-user-construct', array(&$this));
+//		CDomain $oDomain
 	}
 
 	/**
@@ -227,7 +244,11 @@ class CUser extends api_AContainer
 
 		return true;
 	}
-
+	
+	public static function createInstance($sModule = 'Core', $oParams = array())
+	{
+		return new CUser($sModule, $oParams);
+	}
 	/**
 	 * Obtains static map of user fields. Function with the same name is used for other objects in a unified container **api_AContainer**.
 	 * 
@@ -247,65 +268,66 @@ class CUser extends api_AContainer
 	{
 		return array(
 
-			'IdUser'							=> array('int', 'id_user'),
-			'IdSubscription'					=> array('int', 'id_subscription'),
-			'IdHelpdeskUser'					=> array('int', 'id_helpdesk_user'),
+			'IdUser'							=> array('int', 0), //'id_user'),
+			'IdSubscription'					=> array('int', 0), //'id_subscription'),
+			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),
 
-			'MailsPerPage'						=> array('int', 'msgs_per_page'),
-			'ContactsPerPage'					=> array('int', 'contacts_per_page'),
-			'AutoCheckMailInterval'				=> array('int', 'auto_checkmail_interval'),
+			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
+			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),
+			'AutoCheckMailInterval'				=> array('int', 0), //'auto_checkmail_interval'),
 
-			'CreatedTime'						=> array('datetime', 'created_time'),
-			'LastLogin'							=> array('datetime', 'last_login', true, false),
-			'LastLoginNow'						=> array('datetime', 'last_login_now', true, false),
-			'LoginsCount'						=> array('int', 'logins_count', true, false),
+			'CreatedTime'						=> array('string', ''), //'created_time'), //must be datetime
+			'LastLogin'							=> array('string', ''), //'last_login', true, false), //must be datetime
+			'LastLoginNow'						=> array('string', ''), //'last_login_now', true, false), //must be datetime
+			'LoginsCount'						=> array('int', 0), //'logins_count', true, false),
 
-			'DefaultSkin'						=> array('string(255)', 'def_skin'),
-			'DefaultLanguage'					=> array('string(255)', 'def_lang'),
-			'DefaultEditor'						=> array('int', 'def_editor'),
-			'SaveMail'							=> array('int', 'save_mail'),
-			'Layout'							=> array('int', 'layout'),
+			'DefaultSkin'						=> array('string', ''), //'def_skin'),
+			'DefaultLanguage'					=> array('string', ''), //'def_lang'),
+			'DefaultEditor'						=> array('int', 0), //'def_editor'),
+			'SaveMail'							=> array('int', 0), //'save_mail'),
+			'Layout'							=> array('int', 0), //'layout'),
 
-			'DefaultIncomingCharset'			=> array('string(30)', 'incoming_charset'),
+			'DefaultIncomingCharset'			=> array('string', ''), //'incoming_charset'),
 
-			'DefaultTimeZone'					=> array('int', 'def_timezone'),
-			'DefaultTimeFormat'					=> array('int', 'def_time_fmt'),
-			'DefaultDateFormat'					=> array('string(100)', 'def_date_fmt'),
-			'ClientTimeZone'					=> array('string(100)', 'client_timezone'),
+			'DefaultTimeZone'					=> array('int', 0), //'def_timezone'),
+			'DefaultTimeFormat'					=> array('int', 0), //'def_time_fmt'),
+			'DefaultDateFormat'					=> array('string', ''), //'def_date_fmt'),
+			'ClientTimeZone'					=> array('string', ''), //'client_timezone'),
 
-			'Question1'							=> array('string(255)', 'question_1'),
-			'Question2'							=> array('string(255)', 'question_2'),
-			'Answer1'							=> array('string(255)', 'answer_1'),
-			'Answer2'							=> array('string(255)', 'answer_2'),
+			'Question1'							=> array('string', ''), //'question_1'),
+			'Question2'							=> array('string', ''), //'question_2'),
+			'Answer1'							=> array('string', ''), //'answer_1'),
+			'Answer2'							=> array('string', ''), //'answer_2'),
 
-			'SipEnable'							=> array('bool', 'sip_enable'),
-			'SipImpi'							=> array('string', 'sip_impi'),
-			'SipPassword'						=> array('password', 'sip_password'),
-			'TwilioNumber'						=> array('string', 'twilio_number'),
-			'TwilioEnable'						=> array('bool', 'twilio_enable'),
-			'TwilioDefaultNumber'				=> array('bool', 'twilio_default_number'),
-
-			'UseThreads'						=> array('bool', 'use_threads'),
-			'SaveRepliedMessagesToCurrentFolder'=> array('bool', 'save_replied_messages_to_current_folder'),
-			'DesktopNotifications'				=> array('bool', 'desktop_notifications'),
-			'AllowChangeInputDirection'			=> array('bool', 'allow_change_input_direction'),
-			'AllowHelpdeskNotifications'		=> array('bool', 'allow_helpdesk_notifications'),
-
-			'EnableOpenPgp'						=> array('bool', 'enable_open_pgp'),
-			'AllowAutosaveInDrafts'				=> array('bool', 'allow_autosave_in_drafts'),
-			'AutosignOutgoingEmails'			=> array('bool', 'autosign_outgoing_emails'),
-
-			'Capa'								=> array('string(255)', 'capa'),
-			'CustomFields'						=> array('serialize', 'custom_fields'),
-
-			'HelpdeskSignature'					=> array('string', 'helpdesk_signature'),
-			'HelpdeskSignatureEnable'			=> array('bool', 'helpdesk_signature_enable'),
-
-			'FilesEnable'						=> array('bool', 'files_enable'),
+			'SipEnable'							=> array('bool', true), //'sip_enable'),
+			'SipImpi'							=> array('string', ''), //'sip_impi'),
+			'SipPassword'						=> array('string', ''), //'sip_password'), //must be password
 			
-			'EmailNotification'					=> array('string', 'email_notification'),
+			'TwilioEnable'						=> array('bool', true), //'twilio_enable'),
+			'TwilioNumber'						=> array('string', ''), //'twilio_number'),
+			'TwilioDefaultNumber'				=> array('bool', false), //'twilio_default_number'),
+
+			'UseThreads'						=> array('bool', true), //'use_threads'),
+			'SaveRepliedMessagesToCurrentFolder'=> array('bool', false), //'save_replied_messages_to_current_folder'),
+			'DesktopNotifications'				=> array('bool', false), //'desktop_notifications'),
+			'AllowChangeInputDirection'			=> array('bool', false), //'allow_change_input_direction'),
+			'AllowHelpdeskNotifications'		=> array('bool', false), //'allow_helpdesk_notifications'),
+
+			'EnableOpenPgp'						=> array('bool', true), //'enable_open_pgp'),
+			'AllowAutosaveInDrafts'				=> array('bool', true), //'allow_autosave_in_drafts'),
+			'AutosignOutgoingEmails'			=> array('bool', true), //'autosign_outgoing_emails'),
+
+			'Capa'								=> array('string', ''), //'capa'),
+			'CustomFields'						=> array('string', ''), //'custom_fields'), //must be serialize type
+
+			'HelpdeskSignature'					=> array('string', ''), //'helpdesk_signature'),
+			'HelpdeskSignatureEnable'			=> array('bool', true), //'helpdesk_signature_enable'),
+
+			'FilesEnable'						=> array('bool', true), //'files_enable'),
 			
-			'PasswordResetHash'					=> array('string', 'password_reset_hash')
+			'EmailNotification'					=> array('string', ''), //'email_notification'),
+			
+			'PasswordResetHash'					=> array('string', ''), //'password_reset_hash')
 		);
 	}
 }

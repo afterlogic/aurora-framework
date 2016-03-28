@@ -46,10 +46,10 @@ class CApiUsersDbStorage extends CApiUsersStorage
 	 * 
 	 * @return CAccount
 	 */
-	public function getAccountByEmail($sEmail)
-	{
-		return $this->_getAccountBySql($this->oCommandCreator->getAccountByEmailQuery($sEmail));
-	}
+//	public function getAccountByEmail($sEmail)
+//	{
+//		return $this->_getAccountBySql($this->oCommandCreator->getAccountByEmailQuery($sEmail));
+//	}
 	
 	public function getAccountsByDomain($aDomainIds)
 	{
