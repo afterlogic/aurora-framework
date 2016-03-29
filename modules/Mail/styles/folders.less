@@ -1,4 +1,3 @@
-/*=== Folder offsets CSS ===*/
 @folderOffset: 16px;
 
 .folderOffset(@level) when (@level < 20) {
@@ -22,35 +21,28 @@
 }
 
 .folders {
-	.title .icon.type1 {
-		&:before {
-			content: "\e616";
-		}
+	.title .icon.type1:before {
+		content: "\e616";
 	}
-	.title .icon.type2 {
-		&:before {
-			content: "\e615";
-		}
+	
+	.title .icon.type2:before {
+		content: "\e615";
 	}
-	.title .icon.type3 {
-		&:before {
-			content: "\e617";
-		}
+	
+	.title .icon.type3:before {
+		content: "\e617";
 	}
-	.title .icon.type4 {
-		&:before {
-			content: "\e614";
-		}
+	
+	.title .icon.type4:before {
+		content: "\e614";
 	}
-	.title .icon.type5 {
-		&:before {
-			content: "\e612";
-		}
+	
+	.title .icon.type5:before {
+		content: "\e612";
 	}
-	.item .icon.type10 {
-		&:before {
-			content: "\e66c";
-		}
+	
+	.item .icon.type10:before {
+		content: "\e66c";
 	}
 
 	.title .icon.type7,
@@ -66,16 +58,11 @@
 		text-shadow: none;
 	}
 	
-	.virtualEmpty .title .icon.type7 {
-		&:before {
-			color: #727272 !important;
-		}
+	.virtualEmpty .title .icon.type7:before {
+		color: #727272 !important;
 	}
-	.virtualEmpty.selected .title .icon.type7 {
-		&:before {
-			color: #fff !important;
-		}
+	
+	.virtualEmpty.selected .title .icon.type7:before {
+		color: #ffffff !important;
 	}
 }
-
-/*=== END Folder offsets CSS ===*/

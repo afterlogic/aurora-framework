@@ -2,10 +2,10 @@
 	@levelColor: #e4e4e4;
 	
 	.children {
-		margin: 10px 0px 5px;
 		background: @levelColor;
 		border-radius: 1px;
 		box-shadow: 0 0 0 8px @levelColor;
+		margin: 10px 0px 5px;
 			
 		.children {
 			background: darken(@levelColor, 10%);
@@ -14,8 +14,9 @@
 			.children {
 				background: darken(@levelColor, 20%);
 				box-shadow: 0 0 0 8px darken(@levelColor, 20%);
+				
 				.size {
-					color: #777;
+					color: #777777;
 				}
 				
 				.children {
@@ -23,10 +24,11 @@
 					box-shadow: 0 0 0 8px darken(@levelColor, 30%);
 					
 					.title {
-						color: #000
+						color: #000000
 					}
+					
 					.size {
-						color: #555;
+						color: #555555;
 					}
 				}
 			}
@@ -34,12 +36,12 @@
 	}
 		
 	.expanded {
-		box-shadow: 0 0 0 8px #e4e4e4;
 		background: #e4e4e4;
+		box-shadow: 0 0 0 8px #e4e4e4;
 		
 		.expanded {
-			box-shadow: 0 0 0 8px #C2C2C2;
-			background: #C2C2C2;
+			box-shadow: 0 0 0 8px #c2c2c2;
+			background: #c2c2c2;
 		}
 	}
 	
@@ -56,6 +58,7 @@
 		&:last-child {
 			margin-bottom: 0px
 		}
+		
 		&.fail {
 			opacity: 0.3;
 			
@@ -80,20 +83,21 @@
 			.upload& {
 				background: #e84d49;
 				border-radius: 2px;
+				color: #ffffff;
+				cursor: pointer;
 				display: block;
 				float: right;
-				height: 14px;
-				width: 14px;
-				overflow: hidden;
-				margin-left: -14px;
-				cursor: pointer;
-				position: relative;
-				color: #fff;
 				font-size: 12px;
+				height: 14px;
+				margin-left: -14px;
+				overflow: hidden;
+				position: relative;
 				text-align: center;
+				width: 14px;
 				z-index: 10;
 				
 				.iconFontInit();
+				
 				&:before {
 					content: "\e63e";
 				}
@@ -102,48 +106,48 @@
 		
 		.spinner {
 			background: url("images/wait.gif?%VERSION%") no-repeat left top;
-			display:inline-block;
-			width:20px;
-			height:20px;
+			display: inline-block;
+			height: 20px;
+			width: 20px;
 		}
 		
 		.progress {
-			display:block;
-			margin-bottom:-3px;
-			height:3px;
-			width:100%;
+			display: block;
+			height: 3px;
+			margin-bottom: -3px;
+			width: 100%;
 			
 			span {
 				display: block;
 				height: 3px;
-				background: #EF4A4A;
+				background: #ef4a4a;
 			}
 		}
 
 		.image {
-			display: block;
-			text-align: center;
-			overflow: hidden;
-			min-height: 100px;
 			border-bottom: 1px solid #dedede;
-			white-space: nowrap;
+			display: block;
+			min-height: 100px;
+			overflow: hidden;
 			position: relative;
+			text-align: center;
+			white-space: nowrap;
 			
 			&:after {
-				display: inline-block;
-				vertical-align: middle;
-				min-height: inherit;
 				content: "";
+				display: inline-block;
+				min-height: inherit;
+				vertical-align: middle;
 			}
 			
 			img {
-				vertical-align: middle;
-				background: #fff;
+				background: #ffffff;
+				left: 50%;
 				max-height: 100px;
 				position: absolute;
 				top: 50%;
-				left: 50%;
 				transform: translate(-50%, -50%);
+				vertical-align: middle;
 			}
 		}
 		
@@ -153,15 +157,15 @@
 		
 		.text {
 			color: #c7c7c7;
-			text-transform: uppercase;
+			display: inline-block;
 			font-size: 18pt;
 			margin: 36px 0px 0px;
-			display: inline-block;
+			text-transform: uppercase;
 		}
 
 		.icon {
-			vertical-align: top;
 			margin: 15px 0px 0px !important;
+			vertical-align: top;
 		}
 
 		.download {
@@ -172,13 +176,13 @@
 			.box-sizing;
 
 			display: inline-block;
-			width: 100%;
-			padding: 0px 43px 0px 8px;
-			word-wrap: break-word;
-			white-space: normal;
 			font-weight: bold;
 			max-height: 2.5em;
 			overflow: hidden;
+			padding: 0px 43px 0px 8px;
+			white-space: normal;
+			width: 100%;
+			word-wrap: break-word;
 
 			&.no_size {
 				padding: 0px 8px 0px 8px;
@@ -186,10 +190,10 @@
 
 			.name {
 				display: inline-block;
-				width: 100%;
-				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
+				white-space: nowrap;
+				width: 100%;
 			}
 		}
 
@@ -205,24 +209,27 @@
 		
 		.status_text {
 			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms");
+			
 			display: block;
-			overflow: hidden;
-			white-space: normal;
-			margin: 6px 0px -21px;
 			height: 15px;
+			margin: 6px 0px -21px;
 			opacity: 1;
+			overflow: hidden;
 			visibility: visible;
+			white-space: normal;
 			
 			&.hide {
 				.transition(~"opacity 500ms ease 0s, visibility 1ms linear 600ms");
+				
 				opacity: 0;
 				visibility: hidden;
 			}
 		}
 		
 		&.fail .status_text {
-			color:#f00;
+			color:#ff0000;
 		}
+		
 		&.success .status_text {
 			color:#308F00;
 		}
@@ -232,27 +239,28 @@
 			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms");
 
 			border: 0px;
-			padding: 0px;
-			margin: 6px 0px 0px;
 			display: block;
-			text-align: left;
+			margin: 6px 0px 0px;
 			opacity: 1;
+			padding: 0px;
+			text-align: left;
 			visibility: visible;
 			
 			&.hide {
 				.transition(~"opacity 500ms ease 0s, visibility 1ms linear 600ms");
+				
 				opacity: 0;
 				visibility: hidden;
 			}
 
 			.button {
-				padding: 0px;
-				font-weight: normal;
-				font-size: 9pt;
 				background: none;
-				color: #4477BB;
-				text-shadow: none;
 				border: 0px;
+				color: #4477bb;
+				font-size: 9pt;
+				font-weight: normal;
+				padding: 0px;
+				text-shadow: none;
 
 				&.open,
 				&.download {

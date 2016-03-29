@@ -22,14 +22,19 @@ body {
 textarea {
 	resize: vertical;
 }
+
 label {
 	cursor: pointer;
 }
-a, .link {
-	&, &:link, &:visited {
+
+a,
+.link {
+	&,
+	&:link,
+	&:visited {
 		color: @theme-common-link-color;
-		text-decoration: none;
 		cursor: pointer;
+		text-decoration: none;
 	}
 	
 	&:hover {

@@ -1,6 +1,6 @@
-/*=== ui-autocomplete CSS ===*/
 .ui-autocomplete {
 	.box-sizing;
+	
 	overflow-y: auto;
 
 	li {
@@ -17,14 +17,15 @@
 			white-space: nowrap;
 
 			span.del {
-				position: absolute;
-				top: 6px;
-				right: 0;
-				visibility: hidden;
 				color: rgb(216, 216, 216);
+				position: absolute;
+				right: 0;
 				text-shadow: 0 1px 0 #ffffff, 0 0 0 #c8c8c8;
+				top: 6px;
+				visibility: hidden;
 
 				.iconFontInit();
+				
 				&:before {
 					content: "\e63e";
 				}
@@ -48,9 +49,7 @@
 		border-color: #f1f1f1;
 	}
 }
-/*=== END ui-autocomplete CSS ===*/
 
-/*=== ui-datepicker CSS ===*/
 .ui-datepicker {
 	.ui-widget-header {
 		background: none;
@@ -65,7 +64,6 @@
 	}
 	
 	.ui-datepicker-today {
-		background: #FFF4CF;
+		background: #fff4cf;
 	}
 }
-/*=== END ui-datepicker CSS ===*/

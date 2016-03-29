@@ -1,13 +1,14 @@
 .attachments {
 	
 	.attachment {
-		background: none repeat scroll 0 0 #FFFFFF;
-	    border: 1px solid #FFFFFF;
+		background: none repeat scroll 0 0 #ffffff;
+	    border: 1px solid #ffffff;
 	    border-radius: 3px;
-		box-shadow: 0 1px 2px #B7B7B7;
+		box-shadow: 0 1px 2px #b7b7b7;
 		margin: 4px 2px 10px;
 		overflow: hidden;
 		position: relative;
+		
 		.clearfix_helper();
 		
 		&.fail {
@@ -20,8 +21,8 @@
 
 		.item_content {
 			display: block;
-			padding: 8px 10px 6px;
 			float: right;
+			padding: 8px 10px 6px;
 		}
 
 		.cancel {
@@ -30,18 +31,19 @@
 			.upload& {
 				background: #e84d49;
 				border-radius: 2px;
+				color: #ffffff;
+				cursor: pointer;
 				display: block;
 				float: right;
-				height: 14px;
-				width: 14px;
-				overflow: hidden;
-				margin-top: 5px;
-				cursor: pointer;
-				color: #fff;
 				font-size: 12px;
+				height: 14px;
+				margin-top: 5px;
+				overflow: hidden;
 				text-align: center;
+				width: 14px;
 				
 				.iconFontInit();
+				
 				&:before {
 					content: "\e63e";
 				}
@@ -50,59 +52,59 @@
 		
 		.spinner {
 			background: url("images/wait.gif?%VERSION%") no-repeat left top;
-			display:inline-block;
-			width:20px;
-			height:20px;
+			display: inline-block;
+			height: 20px;
+			width: 20px;
 		}
 		
 		.progress {
-			display:block;
-			margin-bottom:-3px;
-			height:3px;
-			width:100%;
+			display: block;
+			height: 3px;
+			left: 0px;
+			margin-bottom: -3px;
 			position: absolute;
 			top: 0px;
-			left: 0px;
+			width: 100%;
 			
 			span {
+				background: #ef4a4a;
 				display: block;
 				height: 3px;
-				background: #EF4A4A;
 			}
 		}
 
 		.image {
-			display: none;
-			text-align: center;
-			overflow: hidden;
-			min-height: 100px;
 			border-bottom: 1px solid #dedede;
+			display: none;
+			min-height: 100px;
+			overflow: hidden;
+			text-align: center;
 			white-space: nowrap;
 			
 			&:after {
-				display: inline-block;
-				vertical-align: middle;
-				min-height: inherit;
 				content: "";
+				display: inline-block;
+				min-height: inherit;
+				vertical-align: middle;
 			}
 			
 			img {
+				background: #ffffff;
 				vertical-align: middle;
-				background: #fff;
 			}
 		}
 		
 		.text {
 			color: #c7c7c7;
-			text-transform: uppercase;
+			display: inline-block;
 			font-size: 18pt;
 			margin: 36px 0px 0px;
-			display: inline-block;
+			text-transform: uppercase;
 		}
 
 		.icon {
-			vertical-align: top;
 			margin: 15px 4px 0px 0px !important;
+			vertical-align: top;
 		}
 
 		.download {
@@ -113,10 +115,10 @@
 			.box-sizing;
 
 			display: block;
+			font-weight: bold;
 			max-width: 100%;
 			padding: 10px 0px 0px 8px;
 			word-wrap: break-word;
-			font-weight: bold;
 			white-space: normal
 		}
 
@@ -126,62 +128,66 @@
 
 		.size {
 			color: #929292;
-			float: right;
 			display: block;
+			float: right;
 			margin: 10px 0px 0px 0px;
 		}
 		
 		.status_text {
 			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms");
+			
 			display: block;
 			float: right;
-			overflow: hidden;
-			white-space: normal;
 			margin: 2px 10px 0px 0px;
 			opacity: 1;
+			overflow: hidden;
 			visibility: visible;
+			white-space: normal;
 			
 			&.hide {
 				.transition(~"opacity 500ms ease 0s, visibility 1ms linear 600ms");
+				
 				opacity: 0;
 				visibility: hidden;
 			}
 		}
 		
 		&.fail .status_text {
-			color:#f00;
+			color:#ff0000;
 		}
+		
 		&.success .status_text {
-			color:#308F00;
+			color:#308f00;
 		}
 		
 		.buttons {
 			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms, max-width 1ms linear 0ms");
 
 			border: 0px;
-			padding: 0px;
-			margin: 2px 0px 0px 0px;
 			display: block;
 			float: right;
-			opacity: 1;
-			visibility: visible;
+			margin: 2px 0px 0px 0px;
 			max-width: 200px;
+			opacity: 1;
+			padding: 0px;
+			visibility: visible;
 			
 			&.hide {
 				.transition(~"opacity 500ms ease 0s, visibility 1ms linear 600ms, max-width 1ms linear 0ms");
+				
+				max-width: 0px;
 				opacity: 0;
 				visibility: hidden;
-				max-width: 0px;
 			}
 
 			.button {
-				padding: 0px;
-				font-weight: normal;
-				font-size: 12pt;
 				background: none;
-				color: #4477BB;
-				text-shadow: none;
+				color: #4477bb;
 				border: 0px;
+				font-size: 12pt;
+				font-weight: normal;
+				padding: 0px;
+				text-shadow: none;
 			}
 		}
 	}

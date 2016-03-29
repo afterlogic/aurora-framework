@@ -16,7 +16,7 @@
 	& > .input {
 		.box-sizing;
 
-		border: 1px solid #fff;
+		border: 1px solid #ffffff;
 		border-radius: 10px;
 		box-shadow: none;
 		display: inline-block;
@@ -36,8 +36,8 @@
 		}
 
 		&.focus {
-			border: 1px solid #93B5E3;
-			box-shadow: 0 0 2px 0 #1D67CD;
+			border: 1px solid #93b5e3;
+			box-shadow: 0 0 2px 0 #1d67cd;
 		}
 
 		.row {
@@ -92,7 +92,7 @@
 			
 			.iconFontInit();
 			&:before {
-				color: #CCCCCC;
+				color: #cccccc;
 				content: "\e628";
 				display: block;
 				font-size: 20px;
@@ -124,7 +124,7 @@
 		
 		.iconFontInit();
 		&:before {
-			color: #CCCCCC;
+			color: #cccccc;
 			content: "\e66d";
 			display: inline-block;
 			font-size: 18px;
@@ -133,15 +133,13 @@
 			width: 20px;
 		}
 
-		&.expand {
-			&:before {
-				content: "\e66e";
-			}
+		&.expand:before {
+			content: "\e66e";
 		}
 	}
 
 	.search_highlight {
-		color: #ccc;
+		color: #cccccc;
 	}
 
 	.expand .extended {
@@ -195,7 +193,7 @@
 					}
 
 					&.text {
-						border-bottom: 1px dashed #C5C7C8;
+						border-bottom: 1px dashed #c5c7c8;
 					}
 
 					&.attachments {
@@ -217,10 +215,8 @@
 						padding: 0;
 					}
 
-					.label {
-						html.rtl & {
-							text-align: right;
-						}
+					html.rtl & .label {
+						text-align: right;
 					}
 
 					.input {
@@ -241,7 +237,7 @@
 			}
 			
 			.buttons {
-				border-top: 1px solid #EAE7E7;
+				border-top: 1px solid #eae7e7;
 				display: block;
 				margin: 0px 18px 0px 0px;
 				padding: 10px 0px 0px 0px;

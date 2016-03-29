@@ -13,23 +13,23 @@
 	}
 	
 	.item {
-		font-size: 12pt;
-		display: inline-block;
-		vertical-align: middle;
+		color: #aaaaaa;
 		cursor: pointer;
-		color: #aaa;
+		display: inline-block;
+		font-size: 12pt;
+		vertical-align: middle;
 		
 		.csstransitions & {
 			.transition(color 200ms ease 0s);
 		}
 		
 		&:hover {
-			color: #777;
+			color: #777777;
 		}
 		
 		&.current {
+			color: #000000;
 			cursor: default;
-			color: #000;
 		}
 		
 		&.first,
@@ -38,13 +38,14 @@
 		&.next
 		{
 			.iconFontInit();
-				display: inline-block;
-				vertical-align: middle;
-				line-height: 18px;
+			
+			display: inline-block;
+			line-height: 18px;
+			vertical-align: middle;
 			
 			&:before {
-				font-size: 18px;
 				display: inline-block;
+				font-size: 18px;
 				vertical-align: middle;
 			}
 		}

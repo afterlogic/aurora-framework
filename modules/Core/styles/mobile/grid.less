@@ -5,20 +5,22 @@
 	white-space: nowrap;
 	width: 100%;
 }
+
 .panels .panel_helper {
-	vertical-align: top;
 	display: inline-block;
+	vertical-align: top;
 }
+
 .panel {
 	font-size: 12pt;
 	height: 100%;
+	position: relative;
 	white-space: normal;
 	width: 100%;
-	position: relative;
 
 	.panels & {
-		vertical-align: top;
 		display: inline-block;
+		vertical-align: top;
 	}
 	
 	.resize_handler {
@@ -34,6 +36,7 @@
 	
 	.middle_bar {
 		.box-sizing;
+		
 		height: 100%;
 	}
 	
@@ -42,10 +45,10 @@
 	}
 
 	.panel_top {
-		white-space: nowrap;
 		border-bottom: 1px solid #e2e2e2;
 		color: #555566;
 		padding: 6px 10px 6px 34px;
+		white-space: nowrap;
 		
 		html.rtl & {
 			padding-left: 10px;
@@ -66,8 +69,8 @@
 	}
 	
 	.panel_center {
-		height: 100%;
 		background: #ffffff;
+		height: 100%;
 		min-height: 100px;
 	}
 	
@@ -90,24 +93,24 @@
 	z-index: 1;
 	
 	.notification {
-		font-size: 18px;
 		color: #cccccc;
-		padding: 26px 20px;
 		display: block;
+		font-size: 18px;
+		padding: 26px 20px;
 		text-align: center;
 	}
 	
 	.attachments {
-		padding: 20px;
 		color: #3d3d3d;
+		padding: 20px;
 		
 		.download_menu {
 			margin-bottom: 10px;
 			
 			.content {
+				margin-left: 24px;
 				max-height: 0px;
 				overflow: hidden;
-				margin-left: 24px;
 				
 				.transition(max-height 500ms ease 500ms);
 				
@@ -118,6 +121,7 @@
 			
 			&:hover .content {
 				max-height: 200px;
+				
 				.transition(max-height 500ms ease 0s);
 			}
 			
@@ -125,7 +129,7 @@
 				display: inline-block;
 				
 				&.hover {
-					color: #333 !important;
+					color: #333333 !important;
 					text-decoration: none !important;
 				}
 				
@@ -135,11 +139,11 @@
 				
 				&.hover .icon {
 					display: inline-block;
-					vertical-align: middle;
-					width: 16px;
+					float: left;
 					height: 16px;
 					margin-right: 8px;
-					float: left;
+					vertical-align: middle;
+					width: 16px;
 					
 					&:before {
 						content: "\e642";
@@ -157,14 +161,14 @@
 
 .items_list {
 	.section_title {
-		text-transform: uppercase;
-		padding: 10px 17px 10px 17px;
 		color: #777777;
 		cursor: default;
-		font-weight: bold;
-		white-space: nowrap;
 		display: block;
+		font-weight: bold;
+		padding: 10px 17px 10px 17px;
 		text-shadow: 0px 1px 0px #fff;
+		text-transform: uppercase;
+		white-space: nowrap;
 		
 		html.rtl & {
 			padding-left: 0px;
@@ -178,13 +182,13 @@
 	
 	.use_threads .threaded {
 		background: #f9f8f6;
-		border-left: 5px solid #E3E3E3;
+		border-left: 5px solid #e3e3e3;
 		max-height: 0px;
 		
 
 		html.rtl & {
-			border-left: 0px solid #E3E3E3;
-			border-right: 5px solid #E3E3E3;
+			border-left: 0px solid #e3e3e3;
+			border-right: 5px solid #e3e3e3;
 		}
 
 		&.show {
@@ -217,14 +221,14 @@
 
 	.item {
 		background: #fdfdfd;
+		color: #3d3d3d;
+		cursor: default;
 		font-weight: normal;
 		line-height: 140%;
-		white-space: nowrap;
-		cursor: default;
-		color: #3d3d3d;
-		position: relative;
 		max-height: 85px;
 		overflow: hidden;
+		position: relative;
+		white-space: nowrap;
 		
 		.from, .subject {
 			.fadeout_text_init();
@@ -243,8 +247,8 @@
 		&.deleted {
 			.transition(max-height 250ms ease);
 
-			overflow: hidden;
 			max-height: 0px !important;
+			overflow: hidden;
 		}
 		
 		&.checked {
@@ -255,7 +259,7 @@
 			}
 			
 			.custom_checkbox .icon {
-				border-color: mix(@theme-list-checked-item-bg, #000, 70%);
+				border-color: mix(@theme-list-checked-item-bg, #000000, 70%);
 				box-shadow: 0 1px 0 lighten(@theme-list-checked-item-bg, 15%);
 			}
 		}
@@ -269,14 +273,14 @@
 			}
 			
 			.custom_checkbox .icon {
-				border-color: mix(@theme-list-selected-item-bg, #000, 70%);
+				border-color: mix(@theme-list-selected-item-bg, #000000, 70%);
 				box-shadow: 0 1px 0 lighten(@theme-list-selected-item-bg, 15%);
 			}
 		}
 		
 		.item_content {
-			padding: 12px 16px 12px 14px;
 			border-bottom: 1px solid #e8e8e8;
+			padding: 12px 16px 12px 14px;
 
 			html.rtl & {
 				padding-left: 16px;
@@ -326,8 +330,8 @@
 		
 		.title {
 			display: block;
-			margin-bottom: 10px;
 			font-size: 10.5pt;
+			margin-bottom: 10px;
 		}
 		
 		.separator {
@@ -341,30 +345,31 @@
 		.box-sizing;
 		.transition(opacity 250ms ease 0s);
 
-		background: #FFFDD6;
-		padding: 11px;
-		color: #D3B910;
+		background: #fffdd6;
+		color: #d3b910;
 		font-size: 18pt;
-		text-align: center;
-		opacity: 0;
-		position: absolute;
-		top: 0px;
-		left: 0px;
 		height: 100%;
-		width: 100%;
+		left: 0px;
+		opacity: 0;
+		padding: 11px;
+		position: absolute;
+		text-align: center;
+		top: 0px;
 		visibility: hidden;
+		width: 100%;
 		
 		&.active {
 			visibility: visible;
+			
 			.opacity(0.5);
 		}
 		
 		.inner {
 			.box-sizing;
 
-			height: 100%;
-			border: 3px dashed #E2DA36;
+			border: 3px dashed #e2da36;
 			border-radius: 5px;
+			height: 100%;
 		}
 	}
 }
@@ -376,8 +381,8 @@
 	@fontShadow: 0px 1px 0px #ffffff;
 	
 	.title_selectable_text() {
-		cursor: pointer;
 		color: @fontColor;
+		cursor: pointer;
 		text-shadow: @fontShadow;
 
 		&:hover {
@@ -391,33 +396,33 @@
 	
 	.items_list {
 		.item {
-			font-size: 12pt;
 			background: none;
+			font-size: 12pt;
 			max-height: inherit;
 
 			& > .title {
 				color: lighten(@fontColor, 20%);
-				text-decoration: none;
+				cursor: default;
+				display: block;
 				font-size: @fontSize + 2pt;
 				font-weight: normal;
 				line-height: normal;
+				margin-bottom: 0px;
+				outline: none;
 				padding-top: 4px;
 				padding-bottom: 7px;
 				padding-left: 16px;
-				cursor: default;
-				display: block;
+				text-decoration: none;
 				white-space: nowrap;
-				outline: none;
-				margin-bottom: 0px;
 
 				.name {
 					display: block;
-					overflow: hidden;
 					margin-right: 10px;
+					overflow: hidden;
 
 					html.rtl & {
-						margin-right: 0px;
 						margin-left: 10px;
+						margin-right: 0px;
 					}
 				}
 
@@ -428,9 +433,9 @@
 
 				.icon {
 					display: inline-block;
+					height: 30px;
 					vertical-align: middle;
 					width: 30px;
-					height: 30px;
 				}
 
 				&.droppableHover .name {
@@ -440,24 +445,24 @@
 
 			&.canSelect {
 				& > .title {
-					cursor: pointer;
 					color: @fontColor;
+					cursor: pointer;
 					text-shadow: @fontShadow;
 
 					&:hover {
-						color: #40444C;
+						color: #40444c;
 					}
 
 					&.virtualEmpty .title,
 					&.virtualEmpty .title:hover {
-						color: #AAAAAA;
+						color: #aaaaaa;
 					}
 				}
 			}
 
 			&.selected > .title {
-				color: #fff !important;
 				background: @theme-group-style-selected-item-bg; 
+				color: #ffffff !important;
 
 				.name {
 					.fadeout_text(@theme-group-style-selected-item-bg-color);
@@ -505,6 +510,7 @@
 				width: 12px;
 				
 				.iconFontInit();
+				
 				&:before {
 					display: inline-block;
 					font-size: 16px;
@@ -513,16 +519,12 @@
 					width: 100%;
 				}
 
-				&.expanded {
-					&:before {
-						content: "\e66d";
-					}
+				&.expanded:before {
+					content: "\e66d";
 				}
 				
-				&.collapsed {
-					&:before {
-						content: "\e670";
-					}
+				&.collapsed:before {
+					content: "\e670";
 				}
 			}
 
@@ -532,6 +534,7 @@
 
 			.children .title {
 				max-height: 29px;
+				
 				.transition(~"max-height 300ms ease 0ms, opacity 200ms ease 0ms, padding 300ms ease 0ms");
 			}
 
@@ -552,12 +555,12 @@
 	.item .title.droppableHover {
 		background: desaturate(darken(@theme-group-style-item-bg, 5%), 10%) !important;
 		color: #626262 !important;
-		text-shadow: 0px 1px 0px #fff !important;
+		text-shadow: 0px 1px 0px #ffffff !important;
 	}
 	
 	.item.selected .title.droppableHover {
 		background: desaturate(darken(@theme-group-style-selected-item-bg-color, 5%), 10%) !important;
-		color: #fff !important;
+		color: #ffffff !important;
 		text-shadow: 0px 1px 0px #678197 !important;
 	}
 }

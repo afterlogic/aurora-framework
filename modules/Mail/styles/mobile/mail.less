@@ -1,20 +1,13 @@
 .MailLayout .panels {
-	//position: relative;
-	//left: 0%;
-	
 	-webkit-transition: -webkit-transform 500ms ease 0s;
 	-moz-transition: -moz-transform 500ms ease 0s;
 	transition: transform 500ms ease 0s;
-	
-	//.transition(left 500ms ease 0s);
 	
 	&.list_active {
 		-webkit-transform: translateX(-100%);
 		-moz-transform: translateX(-100%);
 		-o-transform: translateX(-100%);
 		transform: translateX(-100%);
-
-		//left: -100%;
 	}
 	
 	&.viewer_active {
@@ -22,10 +15,9 @@
 		-moz-transform: translateX(-200%);
 		-o-transform: translateX(-200%);
 		transform: translateX(-200%);
-		//left: -200%;
 	}
 }
-/*=== Folders List CSS ===*/
+
 .panel.folders_panel  {
 	.panel_content {
 		.resize_compensation_top(0px);
@@ -37,6 +29,7 @@
 	
 	.panel_bottom {
 		.box-sizing;
+		
 		background-color: transparent;
 		border-top: 0px;
 		bottom: 60px;
@@ -48,16 +41,14 @@
 		width: 100%;
 		
 		.manage_folders {
-			line-height: 16px;
-			text-align: center;
-			font-size: 12pt;
-			
-			background: #F5F5F5;
-			border: 1px solid #D5D5D5;
+			background: #f5f5f5;
+			border: 1px solid #d5d5d5;
 			border-radius: 21px;
-			box-shadow: 0 0 5px #E1E1E1;
+			box-shadow: 0 0 5px #e1e1e1;
 			cursor: default;
 			display: inline-block;
+			font-size: 12pt;
+			line-height: 16px;
 			padding: 8px 12px;
 			text-align: right;
 		}
@@ -72,13 +63,11 @@
 		
 		.item {
 			margin-bottom: 10px;
-			color: #3D3D3D;
+			color: #3d3d3d;
 		}
 	}
 }
-/*=== END Folders List CSS ===*/
 
-/*=== Message List CSS ===*/
 .panel.messages_panel {
 	.panel_content {
 		.resize_compensation_top(64px);
@@ -90,6 +79,7 @@
 	
 	.panel_bottom {
 		.box-sizing;
+		
 		background-color: transparent;
 		border-top: 0px;
 		bottom: 60px;
@@ -102,22 +92,19 @@
 	}
 	
 	.items_list {
-
 		@import "flag.less";
-		
 	}
 	
 	.items_list .item {
-		
 		.controls .separator,
 		.data .separator {
 			display: block;
 		}
 		
 		.size {
-			width: 40px;
-			text-align: right;
 			display: none;
+			text-align: right;
+			width: 40px;
 		}
 		
 		.subject,
@@ -126,28 +113,29 @@
 			overflow: hidden;
 		}
 		
-		.subject{
+		.subject {
 			color: #6d6d6d;
 			font-size: 10pt;
 			line-height: 120%;
 		}
 		
-		&.selected .subject{
-			color: #fff;
+		&.selected .subject {
+			color: #ffffff;
 		}
 		
-		&.nosubject .subject{
+		&.nosubject .subject {
 			color: #888888;
+			
 			.opacity(0.3);
 		}
 		
-		&.selected.nosubject .subject{
-			color: #fff;
+		&.selected.nosubject .subject {
+			color: #ffffff;
 		}
 		
 		.from {
-			margin-bottom: 10px;
 			font-size: 10.5pt;
+			margin-bottom: 10px;
 		}
 		
 		.text {
@@ -167,54 +155,53 @@
 		@import "answered-marker.less";
 		
 		.importance {
-			width: 17px;
-			height: 17px;
-			display: inline-block;
-			vertical-align: middle;
-			border-radius: 50%;
 			border: 1px solid;
-			//color: #FFBA00;
+			border-radius: 50%;
+			display: inline-block;
+			height: 17px;
 			text-align: center;
+			vertical-align: middle;
+			width: 17px;
 			
 			.iconFontInit();
+			
 			&:before {
-				font-size: 18px;
-				display: inline-block;
-				width: 10px;
 				content: "\e620";
+				display: inline-block;
+				font-size: 18px;
 				margin-top: -1px;
+				width: 10px;
 			}
 		}
+		
 		&.selected .importance {
-			color: #fff;
-			border-color: #fff;
+			border-color: #ffffff;
+			color: #ffffff;
 		}
 		
 		.attachments {
 			display: inline-block;
-			width: 20px;
 			height: 20px;
 			vertical-align: bottom;
+			width: 20px;
 			
 			&.has_attachments {
 				.iconFontInit();
+				
 				&:before {
 					.opacity(0.7);
-					font-size: 20px;
+					
 					content: "\e622";
+					font-size: 20px;
 				}
 			}
 			
-			&.has_vcard_attachment {
-				&:before {
-					content: "\e621";
-				}
+			&.has_vcard_attachment:before {
+				content: "\e621";
 			}
 			
-			&.has_ical_attachment {
-				&:before {
-					content: "\e623";
-				}
+			&.has_ical_attachment:before {
+				content: "\e623";
 			}
 		}
 		&.selected .attachments.has_attachments {
@@ -224,8 +211,8 @@
 		}
 		
 		// Thread Counter
-		@tcBackground: #CCC8C1;
-		@tcTextColor: #fff;
+		@tcBackground: #ccc8c1;
+		@tcTextColor: #ffffff;
 		@tcBorder: 0px;
 		
 		@tcSelectedBackground: @tcBackground;
@@ -245,12 +232,12 @@
 			border: @tcBorder;
 			border-radius: 10px;
 			color: @tcTextColor;
-			float: right;
-			line-height: 100%;
-			padding: 4px 8px 3px;
-			margin: -4px 0px 0px 6px;
-			font-weight: bold;
 			cursor: pointer;
+			float: right;
+			font-weight: bold;
+			line-height: 100%;
+			margin: -4px 0px 0px 6px;
+			padding: 4px 8px 3px;
 			
 			html.rtl & {
 				float: left;
@@ -263,6 +250,7 @@
 		
 			&:hover {
 				.transition(background-color 200ms ease);
+				
 				background-color: darken(@tcUnreadSelectedBackground, 5%);
 			}
 			
@@ -305,6 +293,7 @@
 	.from {
 		margin-bottom: 6px !important;
 	}
+	
 	.thread {
 		margin-top: 2px !important;
 	}
@@ -333,10 +322,7 @@
 		display: none;
 	}
 }
-/*=== END Message List CSS ===*/
 
-
-/*=== Message viewer CSS ===*/
 .message_viewer {
 	.panel_content {
 		.resize_compensation_top(64px);
@@ -357,8 +343,8 @@
 	}
 	
 	.message_body {
-		padding: 20px;
 		font-size: 11pt;
+		padding: 20px;
 		
 		li {
 			margin-bottom: 0.6em;
@@ -366,10 +352,10 @@
 	}
 	
 	.message_body_info {
+		color: #cccccc;
 		font: normal 18px Tahoma;
-		color: #ccc;
-		text-align: center;
 		margin: 30px;
+		text-align: center;
 		
 		.message_body_secondary_info {
 			font-size: 14px;
@@ -379,25 +365,25 @@
 	
 	.message_header {
 		background: #f8f8f8;
-		color: #4D4D4D;
+		color: #4d4d4d;
 	
 		.header_row {
 			clear: both;
 		}
 		
 		.toolbar {
-			float: right;
-			border: 0px;
-			padding: 0px;
 			background: 0px;
-			position: relative;
-			z-index: 1;
+			border: 0px;
+			filter: none;
+			float: right;
 			margin-bottom: 10px;
 			margin-right: 25px;
 			max-width: 100%;
-			width: auto;
+			padding: 0px;
 			overflow: hidden;
-			filter: none;
+			position: relative;
+			width: auto;
+			z-index: 1;
 			
 			html.rtl & {
 				float: left;
@@ -407,10 +393,10 @@
 				padding: 0px;
 				
 				.item {
-					border: 0px;
-					padding: 0px;
-					box-shadow: none;
 					background: none;
+					border: 0px;
+					box-shadow: none;
+					padding: 0px;
 					
 					.icon {
 						color: #929292 !important;
@@ -424,61 +410,59 @@
 		}
 		
 		.header_content {
-			padding: 14px 18px;
 			border-bottom: 1px solid #e2e2e2;
+			padding: 14px 18px;
 		}
 		
 		.message_info {
-			position: relative;
 			font-size: 10pt;
 			padding-top: 1px; /* fix nested element negative margin */
+			position: relative;
 			
 			html.rtl & {
 				margin-right: 14px;
 			}
 			
 			.message_info_line {
-				padding: 4px 4px 0px 0px;
-				top: -4px;
-				position: relative;
-				white-space: nowrap;
 				overflow: hidden;
+				padding: 4px 4px 0px 0px;
+				position: relative;
+				top: -4px;
+				white-space: nowrap;
 			}
 			
 			&.message_detail_info .message_info_line {
 				white-space: normal;
-			/*	overflow: visible;  ??? */
 			}
 		}
 		
 		.details_show,
 		.details_hide {
-			display: inline-block;
-			vertical-align: bottom;
-			margin: -4px 6px 0px 0px;
-			float: left;
-			width: 14px;
-			height: 16px;
-			position: absolute;
 			color: #727272;
+			display: inline-block;
+			float: left;
+			height: 16px;
+			margin: -4px 6px 0px 0px;
+			position: absolute;
+			vertical-align: bottom;
+			width: 14px;
 
 			html.rtl & {
-				margin-right: 0px;
 				margin-left: 6px;
+				margin-right: 0px;
 			}
 			
 			.iconFontInit();
+			
 			&:before {
-				font-size: 23px;
-				display: inline-block;
 				content: "\e671";
+				display: inline-block;
+				font-size: 23px;
 			}
 		}
 		
-		.details_hide {
-			&:before {
-				content: "\e66e";
-			}
+		.details_hide:before {
+			content: "\e66e";
 		}
 		
 		.title {
@@ -493,22 +477,22 @@
 		}
 		
 		.icon {
-			padding: 0px;
 			margin: 0px;
+			padding: 0px;
 			
 			.attachments {
+				background: url("images/sprites.png") no-repeat -120px -120px;
+				cursor: pointer;
 				display: inline-block;
-				width: 16px;
+				float: left;
 				height: 16px;
 				margin-right: 8px;
-				float: left;
-				cursor: pointer;
-				background: url("images/sprites.png") no-repeat -120px -120px;
+				width: 16px;
 				
 				html.rtl & {
-					margin-right: 0px;
-					margin-left: 8px;
 					float: right;
+					margin-left: 8px;
+					margin-right: 0px;
 				}
 			}
 		}
@@ -535,17 +519,17 @@
 	
 	.notice {
 		background: #ffffc5;
-		padding: 4px 6px;
-		border-bottom: 1px solid #EAE7CA;
-		color: #B5AD94;
+		border-bottom: 1px solid #eae7ca;
+		color: #b5ad94;
 		font-size: 8pt;
+		padding: 4px 6px;
 
 		.item {
 			display: block;
 		}
 
 		.link {
-			color: #7E9BAF;
+			color: #7e9baf;
 		}
 	}
 	
@@ -558,9 +542,9 @@
 			white-space: normal;
 
 			.bodyparts_separator {
-				height: 1px;
 				background-color: #e2e2e2;
 				display: none;
+				height: 1px;
 				margin: 0px 20px;
 			}
 		}
@@ -571,18 +555,18 @@
 	}
 	
 	.appointment {
-		padding: 15px;
 		background: #eeffe0;
 		border-bottom: 1px solid #cee2c0;
+		padding: 15px;
 
 		.row.fluid {
 			padding-left: 100px;
 		}
 
 		.label {
-			width: 100px;
 			color: #57793E;
 			vertical-align: top;
+			width: 100px;
 		}
 
 		.row.fluid .label {
@@ -606,48 +590,42 @@
 	.panels.has_attachments {
 		.message_panel {
 			display: block;
-			box-shadow: none;
 			border-radius: 0px;
+			box-shadow: none;
 			width: 100%;
-			
-			//position: relative;
-			//top: -100%;
 		}
 
 		.attachments_panel {
-			//position: relative;
-			//top: 100%;
-			
-			display: none;
 			box-shadow: none;
+			display: none;
 		}
 		
 		&.view_attachments {
 			.message_panel {
 				display: none;
 			}
+			
 			.attachments_panel {
 				display: block;
 			}
 		}
-		
 	}
 	
-	
 	.body_parts_switcher {
-		white-space: nowrap;
+		background: #ffffff;
+		border-bottom: 2px solid #cccccc;
 		font-size: 0px;
-		border-bottom: 2px solid #ccc;
-		background: #FFFFFF;
+		white-space: nowrap;
 		
 		.item {
-			font-size: 9pt;
-			white-space: normal;
-			display: inline-block;
 			.box-sizing;
-			width: 50%;
+			
+			border-bottom: 0px solid #cccccc;
+			display: inline-block;
+			font-size: 9pt;
 			padding: 10px 16px;
-			border-bottom: 0px solid #ccc;
+			white-space: normal;
+			width: 50%;
 		}
 		
 		.show_message {
@@ -670,34 +648,34 @@
 
 .panel.thread_viewer .panel_top .expand .owner.found,
 .message_viewer .message_header .expand .from.found {
-	padding: 3px 7px 0px;
-	margin: -3px -7px 0px 0px;
-	background: #fff;
+	background: #ffffff;
 	border-radius: 4px 4px 0px 0px;
 	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+	display: inline-block;
+	margin: -3px -7px 0px 0px;
+	padding: 3px 7px 0px;
 	position: relative;
 	z-index: 1001;
-	display: inline-block;
 }
 
 .item_viewer .add_contact {
-	display: inline-block;
-	vertical-align: middle;
-	width: 11px;
-	height: 11px;
-	margin: 0 0 2px 2px;
 	color: @theme-common-link-color;
 	cursor: pointer;
+	display: inline-block;
+	height: 11px;
+	margin: 0 0 2px 2px;
+	vertical-align: middle;
+	width: 11px;
 
 	.iconFontInit();
+	
 	&:before {
 		content: "\e641";
-		font-size: 16px;
 		display: inline-block;
-		vertical-align: middle;
-		width: 100%;
+		font-size: 16px;
 		height: 100%;
 		margin: -12px -3px 0px;
+		vertical-align: middle;
+		width: 100%;
 	}
 }
-/*=== END Message viewer CSS ===*/

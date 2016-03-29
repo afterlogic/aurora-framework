@@ -10,27 +10,27 @@ blockquote {/*while editing see also print message*/
 }
 
 .blockquote_before_toggle.collapsed .blockquote_content {
-	overflow: hidden;
 	height: 100%;
+	overflow: hidden;
 }
 
 .blockquote_before_toggle.collapsed::before {
 	.fade_gradient(vertical, #ffffff);
 	
-    bottom: 0;
-    display: block;
-    height: 100%;
-    position: absolute;
-    width: 100%;
 	content: "";
+    display: block;
+    bottom: 0;
+    height: 100%;
 	margin-left: -8px;
 	padding: 0px 4px;
+    position: absolute;
+    width: 100%;
 }
 
 .blockquote_toggle
 {
-	background-color: #F8F8F8;
-	border: 1px solid #CCCCCC;
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
 	border-radius: 4px 4px 4px 4px;
 	color: grey;
 	cursor: pointer;

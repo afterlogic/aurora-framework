@@ -1,19 +1,18 @@
-/*=== Phone CSS ===*/
 .phone_block {
+	background: transparent !important;
 	float: right;
     font-size: 0pt !important;
-	background: transparent !important;
 	line-height: 10px;
-	text-align: right;
-	padding: 0 !important;
 	margin: -17px 30px 0px 0px !important;
+	padding: 0 !important;
+	text-align: right;
 	top: 50%;
 
 	.phone_inner {
-		display: block;
-		background: #fff;
+		background: #ffffff;
 		border-radius: 16px;
-		box-shadow: 0px 0px 4px #D6D6D6;
+		box-shadow: 0px 0px 4px #d6d6d6;
+		display: block;
 		overflow: hidden;
 		text-shadow: none;
 
@@ -40,14 +39,14 @@
 			position: relative;
 
 			.dropdown_content {
-				border: none;
-				box-shadow: none;
-				margin: 0;
-				padding: 0;
-				border-radius: 0px;
 				background: transparent;
+				border: none;
+				border-radius: 0px;
+				box-shadow: none;
 				left: 0;
+				margin: 0;
 				max-height: 200px;
+				padding: 0;
 
 				.item {
 					cursor: pointer;
@@ -58,67 +57,61 @@
 					}
 
 					.icon.log_status {
-						width: 15px;
-						height: 15px;
 						display: inline-block;
+						height: 15px;
+						width: 15px;
 
 						&:before {
 							font-family: 'afterlogic';
+							height: 100%;
 							text-shadow: none !important;
 							width: 100%;
-							height: 100%;
 						}
 
-						&.incoming {
-
-							&:before {
-								content: "\e666";
-								color: #6161ff;
-							}
+						&.incoming:before {
+							color: #6161ff;
+							content: "\e666";
 						}
-						&.outgoing {
-
-							&:before {
-								content: "\e665";
-								color: #4eca88;
-							}
+						
+						&.outgoing:before {
+							color: #4eca88;
+							content: "\e665";
 						}
-						&.missed {
-
-							&:before {
-								content: "\e668";
-								color: #ff6363;
-							}
+						
+						&.missed:before {
+							color: #ff6363;
+							content: "\e668";
 						}
 					}
 				}
 
 				.more {
 					color: #4477bb;
-					padding-bottom: 8px;
 					float: right;
+					padding-bottom: 8px;
 
 					&:hover {
-						color: #c74747;
-						border-radius: 16px;
 						background: transparent;
+						border-radius: 16px;
+						color: #c74747;
 					}
 				}
 			}
 
 			.spinner {
-				margin: 0px auto;
-				width: 70px;
-				text-align: center;
 				display: block;
+				margin: 0px auto;
 				padding-bottom: 5px;
+				text-align: center;
+				width: 70px;
 
 				span {
-					width: 12px;
-					height: 12px;
 					background-color: #c1b6b6;
 					border-radius: 100%;
 					display: inline-block;
+					height: 12px;
+					width: 12px;
+					
 					-webkit-animation: bouncedelay 1.4s infinite ease-in-out;
 					animation: bouncedelay 1.4s infinite ease-in-out;
 					/* Prevent first frame from flickering when animation starts */
@@ -145,14 +138,14 @@
 		.call_report,
 		.direction {
 			background: transparent;
-			display: inline-block;
-			max-width: 0px;
-			margin-left: 0px;
-			white-space: nowrap;
-			opacity: 0;
 			cursor: pointer;
+			display: inline-block;
+			margin-left: 0px;
+			max-width: 0px;
+			opacity: 0;
 			overflow: hidden;
 			vertical-align: middle;
+			white-space: nowrap;
 
 			.transition(~"max-width 500ms ease 0ms, opacity 400ms ease 0ms, margin-left 300ms ease 0ms ");
 		}
@@ -164,13 +157,13 @@
 			.box-sizing;
 
 			background: transparent;
-			width: 0px;
 			border: 0px;
-			padding-left: 0px;
-			padding-right: 0px;
 			box-shadow: none;
 			opacity: 0;
+			padding-left: 0px;
+			padding-right: 0px;
 			vertical-align: middle;
+			width: 0px;
 
 			.transition(~"width 500ms ease 0ms, opacity 350ms ease 0ms, padding-left 350ms ease 0ms, padding-right 350ms ease 0ms");
 		}
@@ -180,32 +173,32 @@
 		}
 
 		.buttons {
-			margin: 0px;
 			font-size: 0px;
+			margin: 0px;
 		}
 
 		.button {
-			display: inline-block;
-			vertical-align: middle;
-			border: 2px solid #fff;
+			border: 2px solid #ffffff;
 			border-radius: 16px;
-			padding: 0px;
-			width: 30px;
+			display: inline-block;
 			height: 30px;
-			text-align: center;
 			line-height: 180%;
+			padding: 0px;
+			text-align: center;
+			vertical-align: middle;
+			width: 30px;
 
 			.transition(background-color 0ms ease 0s);
 
 			.icon {
+				color: #ffffff;
 				display: inline-block;
-				vertical-align: bottom;
-				width: 18px;
+				font-size: 16px;
 				height: 18px;
 				line-height: 18px;
-				color: #fff;
-				font-size: 16px;
 				text-shadow: none;
+				vertical-align: bottom;
+				width: 18px;
 
 				-webkit-transition: -webkit-transform 300ms ease 0s;
 				-moz-transition: -moz-transform 300ms ease 0s;
@@ -214,6 +207,7 @@
 				.transform(rotateZ(0deg));
 
 				.iconFontInit();
+				
 				&:before {
 					content: "\e661";
 				}
@@ -222,25 +216,25 @@
 
 		.indicator {
 			position: absolute;
-			top: 0px;
 			right: 0px;
+			top: 0px;
 		}
+		
 		.indicator.missed {
-			width: 10px;
-			height: 10px;
+			background: #ff6767;
 			border-radius: 5px;
-			background: #FF6767;
+			height: 10px;
+			width: 10px;
 		}
 	}
 
 	&.online {
-
 		.phone_inner {
-			background: #fff;
+			background: #ffffff;
 
 			.button {
-				background-color: #87D354;
-				box-shadow: inset 0px 0px 10px #69BE2E;
+				background-color: #87d354;
+				box-shadow: inset 0px 0px 10px #69be2e;
 			}
 		}
 	}
@@ -252,7 +246,7 @@
 		}
 
 		.button {
-			background: #ccc;
+			background: #cccccc;
 			cursor: default;
 		}
 
@@ -266,9 +260,7 @@
 	}
 
 	&.active {
-
 		&.outgoing {
-
 			.button .icon {
 				.transform(rotateZ(0deg));
 			}
@@ -277,8 +269,8 @@
 		&.incoming .button,
 		&.outgoing .button,
 		&.connect .button {
-			background-color: #FF6767;
-			box-shadow: 0 0 10px #E75353 inset;
+			background-color: #ff6767;
+			box-shadow: 0 0 10px #e75353 inset;
 		}
 
 		&.ready .button .icon {
@@ -286,18 +278,18 @@
 		}
 
 		.input {
-			opacity: 1;
-			width: 160px;
 			display: inline-block;
+			opacity: 1;
 			padding-left: 2px;
+			width: 160px;
 		}
 
 		.call_report,
 		.direction {
-			max-width: 200px;
-			margin-left: 10px;
-			opacity: 1;
 			cursor: default;
+			margin-left: 10px;
+			max-width: 200px;
+			opacity: 1;
 			overflow: visible;
 		}
 	}
@@ -306,27 +298,25 @@
 	&.outgoing,
 	&.connect {
 		.phone_inner {
-			background: #FFC939;
+			background: #ffc939;
 		}
 	}
 
 	&.incoming {
-
 		.call_report {
 			padding-right: 2px;
 		}
 
 		.direction {
-			max-width: 0px;
 			margin-left: 0px;
+			max-width: 0px;
 		}
 
 		.input {
-			width: 0px;
+			opacity: 0;
 			padding-left: 0px;
 			padding-right: 0px;
-			opacity: 0;
+			width: 0px;
 		}
 	}
 }
-/*=== END Phone CSS ===*/

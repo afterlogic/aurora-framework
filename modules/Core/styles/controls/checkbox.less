@@ -1,16 +1,16 @@
 .custom_radio,
 .custom_checkbox {
+	cursor: pointer;
 	display: inline-block;
-	vertical-align: text-bottom;
-	overflow: hidden;
+	font-size: 0;
 	line-height: 1;
 	margin-right: 4px;
-	cursor: pointer;
-	font-size: 0;
+	overflow: hidden;
+	vertical-align: text-bottom;
 	
 	html.rtl & {
-		margin-right: 0px;
 		margin-left: 4px;
+		margin-right: 0px;
 	}
 	
 	.toolbar & {
@@ -35,49 +35,43 @@
 	}
 	
 	.icon {
-		display: inline-block;
-		vertical-align: top;
+		background: #ffffff;
 		border: 1px solid #b4b5b6;
 		border-radius: 2px;
-		width: 13px !important;
+		color: #5a6269;
+		display: inline-block;
 		height: 13px !important;
 		line-height: 13px !important;
-		background: #fff;
 		text-align: center;
-		
-		color: #5A6269;
+		vertical-align: top;
+		width: 13px !important;
 		
 		.iconFontInit();
+		
 		&:before {
-			font-size: 10px;
 			display: inline-block;
-			vertical-align: baseline;
+			font-size: 10px;
 			line-height: inherit;
+			vertical-align: baseline;
 			
 			.toolbar & {
 				font-size: 12px !important;
-				width: 12px !important;
 				height: 12px !important;
+				width: 12px !important;
 			}
 		}
 		
 		.disabled& {
-			color: #ccc;
+			color: #cccccc;
 		}
 	}
 }
 
-.custom_checkbox {
-	
-	&.checked .icon {
-		&:before {
-			content: "\e61c";
-		}
-	}
+.custom_checkbox.checked .icon:before {
+	content: "\e61c";
 }
 
 .custom_radio {
-	
 	.icon {
 		border-radius: 50%;
 
@@ -86,51 +80,48 @@
 		}
 	}
 	
-	&.checked .icon {
-		&:before {
-			content: "\e61b";
-		}
+	&.checked .icon:before {
+		content: "\e61b";
 	}
 }
 
 .custom_switcher {
-	display: inline-block;
-	background: #fff;
-	border: 1px solid #ccc;
+	background: #ffffff;
+	border: 1px solid #cccccc;
 	border-radius: 3px;
+	display: inline-block;
 	font-size: 0px;
 	
 	.text {
+		border-right: 1px solid #cccccc;
 		display: inline-block !important;
-		padding: 5px 5px;
 		font-size: 9pt;
-		border-right: 1px solid #ccc;
+		padding: 5px 5px;
 	}
 	
 	label {
-		
 		&.checked {
-			background: #6FA8DE;
+			background: #6fa8de;
+			color: #ffffff;
 			display: inline-block;
-			color: #fff;
 		}
 		
 		&:first-child .text {
 			padding-left: 7px;
 
 			html.rtl & {
-				padding-right: 7px;
 				border: 0px;
+				padding-right: 7px;
 			}
 		}
 		
 		&:last-child .text{
-			padding-right: 7px;
 			border: 0px;
+			padding-right: 7px;
 
 			html.rtl & {
+				border-right: 1px solid #cccccc;
 				padding-right: 5px;
-				border-right: 1px solid #ccc;
 			}
 		}
 	}

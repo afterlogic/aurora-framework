@@ -24,50 +24,40 @@
 .folders {
 	.title .icon {
 		.iconFontInit();
+		
 		&:before {
-			font-size: 30px;
 			display: inline-block;
-			width: 30px;
+			font-size: 30px;
 			height: 30px;
-		}
-	}
-	.selected .title .icon {
-		&:before {
-			color: #fff;
-			text-shadow: 0 1px 0 #727272;
+			width: 30px;
 		}
 	}
 	
-	.title .icon.type1 {
-		&:before {
-			content: "\e616";
-		}
+	.selected .title .icon:before {
+		color: #ffffff;
+		text-shadow: 0 1px 0 #727272;
 	}
-	.title .icon.type2 {
-		&:before {
-			content: "\e615";
-		}
+	
+	.title .icon.type1:before {
+		content: "\e616";
 	}
-	.title .icon.type3 {
-		&:before {
-			content: "\e617";
-		}
+	
+	.title .icon.type2:before {
+		content: "\e615";
 	}
-	.title .icon.type4 {
-		&:before {
-			content: "\e614";
-		}
+	
+	.title .icon.type3:before {
+		content: "\e617";
 	}
-	.title .icon.type5 {
-		&:before {
-			content: "\e612";
-		}
+	
+	.title .icon.type4:before {
+		content: "\e614";
 	}
-	.item .icon.type10 {
-		&:before {
-		}
+	
+	.title .icon.type5:before {
+		content: "\e612";
 	}
-
+	
 	.title .icon.type7,
 	.selected .title .icon.type7 {
 		&:before {
@@ -77,16 +67,11 @@
 		}
 	}
 	
-	.virtualEmpty .title .icon.type7 {
-		&:before {
-			color: #727272 !important;
-		}
+	.virtualEmpty .title .icon.type7:before {
+		color: #727272 !important;
 	}
-	.virtualEmpty.selected .title .icon.type7 {
-		&:before {
-			color: #fff !important;
-		}
+	
+	.virtualEmpty.selected .title .icon.type7:before {
+		color: #ffffff !important;
 	}
 }
-
-/*=== END Folder offsets CSS ===*/

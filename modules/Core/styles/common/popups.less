@@ -1,13 +1,12 @@
-/*=== Popup CSS ===*/
 .popup {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 2000;
-	text-align: center;
 	display: none;
+	height: 100%;
+	left: 0px;
+	position: fixed;
+	text-align: center;
+	top: 0px;
+	width: 100%;
+	z-index: 2000;
 	
 	&.visible {
 		display: block;
@@ -18,48 +17,47 @@
 	}
 	
 	.mask {
-		background: #000;
+		background: #000000;
+		filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+		height: 100%;
+		opacity: 0;
 		position: absolute;
 		width: 100%;
-		height: 100%;
-		filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
-		opacity: 0;
 
 		.transition(opacity 200ms linear);
 	}
 	
 	.helper {
-		height: 100%;
-		width: 1px;
 		display: inline-block;
+		height: 100%;
 		vertical-align: middle;
+		width: 1px;
 	}
 }
 
 .popup_panel {
-	display: inline-block;
-	vertical-align: middle;
-	position: relative;
-	background: #fff;
-	padding: 20px;
+	background: #ffffff;
 	border-radius: 4px;
 	box-shadow: 0px 10px 20px fade(#000, 40%);
-	min-width: 270px;
+	display: inline-block;
 	max-width: 50%;
+	min-width: 270px;
+	padding: 20px;
+	position: relative;
 	text-align: left;
+	vertical-align: middle;
 	
 	html.rtl & {
 		text-align: right;
 	}
 	
 	.close {
-		display: inline-block;
-		width: 30px;
-		height: 30px;
-		float: right;
-		margin: -30px -30px 0 0;
 		cursor: pointer;
 		display: none;
+		float: right;
+		height: 30px;
+		margin: -30px -30px 0 0;
+		width: 30px;
 		
 		html.rtl & {
 			float: left;
@@ -117,18 +115,16 @@
 }
 
 .popup.player_popup {
-
 	&.visible .mask {
 		opacity: 0.8;
 	}
 
 	.popup_panel {
 		background: none;
-		padding: 0;
 		border-radius: 0;
 		box-shadow: none;
-		min-width: inherit;
 		max-width: inherit;
+		min-width: inherit;
+		padding: 0;
 	}
 }
-/*=== END Popup CSS ===*/
