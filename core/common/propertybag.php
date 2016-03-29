@@ -26,7 +26,7 @@ abstract class api_APropertyBag
 	/**
 	 * @var string
 	 */
-	public $sParentClassName;
+	public $sClassName;
 
 	/**
 	 * @var array
@@ -34,16 +34,16 @@ abstract class api_APropertyBag
 	protected $aContainer;
 	
 	/**
-	 * @param string $sParentClassName
+	 * @param string $sClassName
 	 * @param string $sModuleName = ''
 	 */
-	public function __construct($sParentClassName, $sModuleName = '')
+	public function __construct($sClassName, $sModuleName = '')
 	{
 		$this->__USE_TRIM_IN_STRINGS__ = false;
 		
 		$this->iObjectId = 0;
+		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
-		$this->sParentClassName = $sParentClassName;
 
 		$this->aContainer = array();
 	}
@@ -59,14 +59,14 @@ abstract class api_APropertyBag
 			$aDefaultValues[$sMapKey] = $aMap[1];
 		}
 		
-		$this->MassSetValues($aDefaultValues);
+		$this->setValues($aDefaultValues);
 	}
 
 	/**
 	 * @param array $aValues
 	 * @return void
 	 */
-	public function MassSetValues($aValues)
+	public function setValues($aValues)
 	{
 		foreach ($aValues as $sKey => $mValue)
 		{

@@ -184,30 +184,15 @@ class CApiEavDbStorage extends CApiEavStorage
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
-
+	
 	/**
 	 */
-	public function createProperty(CProperty $oProperty)
+	public function setProperties($aObjectIds, $aProperties)
 	{
-		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->createProperty($oProperty)))
-		{
-			$oProperty->Id = $this->oConnection->GetLastInsertId('eav_properties', 'id');
-			$bResult = true;
-		}
-
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->setProperties($aObjectIds, $aProperties));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
-	}
-
-	/**
-	 */
-	public function updateProperty(CProperty &$oProperty)
-	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->updateProperty($oProperty));
-		$this->throwDbExceptionIfExist();
-		return $bResult;
-	}
+	}	
 
 	/**
 	 * @return bool

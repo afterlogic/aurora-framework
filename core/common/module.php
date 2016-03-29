@@ -297,6 +297,14 @@ abstract class AApiModule
 	 */
 	protected $aParameters;
 
+	/**
+	 * @var array
+	 */
+	protected $aObjects = array();	
+
+	/**
+	 * @var \CApiCapabilityManager
+	 */
 	public $oApiCapabilityManager = null;
 	
 	/**
@@ -336,6 +344,17 @@ abstract class AApiModule
 	public function broadcastEvent($sEvent, $aArguments = array())
 	{
 		\CApi::GetModuleManager()->broadcastEvent($sEvent, $aArguments);
+	}
+	
+	
+	public function setObjectsMap($sType, $aMap)
+	{
+		$this->aObjects[$sType] = $aMap;
+	}	
+	
+	public function getObjectsMap()
+	{
+		
 	}
 
 	/**

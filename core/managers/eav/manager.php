@@ -55,7 +55,7 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	public function createObject(\api_APropertyBag &$oObject)
 	{
-		$mResult = $this->oStorage->createObject($oObject->sModuleName, $oObject->sParentClassName);
+		$mResult = $this->oStorage->createObject($oObject->sModuleName, $oObject->sClassName);
 		if (!$mResult)
 		{
 			throw new CApiManagerException(Errs::Main_UnknownError);
@@ -175,13 +175,17 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 	
 	/**
+	 * @param int|array $mObjectId
 	 */
-	public function setProperties($iObjectId, $aProperties)
+	public function setProperties($mObjectId, $aProperties)
 	{
-		foreach ($aProperties as $oProperty)
+		if (!is_array($mObjectId))
 		{
-			$oProperty->ObjectId = $iObjectId;
-			$this->setProperty($oProperty);
+			$mObjectId = array($mObjectId);
+		}
+		if (!$this->oStorage->setProperties($mObjectId, $aProperties))
+		{
+			throw new CApiManagerException(Errs::Main_UnknownError);
 		}
 	}
 

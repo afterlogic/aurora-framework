@@ -210,36 +210,79 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function createProperty(CProperty $oProperty)
 	{
-		return sprintf('INSERT INTO %seav_properties ( %s ) VALUES ( %s )', $this->prefix(), 
-				implode(', ', array(	
-					$this->escapeColumn('id_object'), 
-					$this->escapeColumn('key'),  
-					$this->escapeColumn('value_' . $oProperty->Type),  
-					$this->escapeColumn('type')
-				)), 
-				implode(', ', array(
-					$oProperty->ObjectId,
-					$this->escapeString($oProperty->Name),
-					($oProperty->Type !== 'int' && $oProperty->Type !== 'bool') ? $this->escapeString($oProperty->Value) : $oProperty->Value,
-					$this->escapeString($oProperty->Type)				
-				))
+		return $this->setProperties(
+				array($oProperty->ObjectId),
+				array($oProperty)
 		);
 	}	
 	
 	/**
-	 * @param CProperty $oProperty
+	 * @param array $aObjectIds
+	 * @param array $aProperties
 	 *
 	 * @return string
 	 */
-	public function updateProperty(CProperty $oProperty)
+	public function setProperties($aObjectIds, $aProperties)
 	{
-		$sValueFormat = ($oProperty->Type === 'int' || $oProperty->Type === 'bool') ? "%d" : "%s";
-		return sprintf('UPDATE %seav_properties SET %s = ' . $sValueFormat . ' WHERE %s = %d AND %s = %s', $this->prefix(), 
-			$this->escapeColumn('value_' . $oProperty->Type), 
-				($oProperty->Type !== 'int' && $oProperty->Type !== 'bool') ? $this->escapeString($oProperty->Value) : $oProperty->Value,
-			$this->escapeColumn('id_object'), $oProperty->ObjectId,
-			$this->escapeColumn('key'), $this->escapeString($oProperty->Name)
+		$aValues = array();
+		foreach ($aObjectIds as $iObjectId)
+		{
+			foreach ($aProperties as $oProperty)
+			{
+				if ($oProperty instanceof \CProperty)
+				{
+					$aValues[] = sprintf('(%d, %s, %s, %s, %s, %d, %d)',
+						$iObjectId,
+						$this->escapeString($oProperty->Name),
+						$this->escapeString($oProperty->Type),
+						$oProperty->Type === "string" ? $this->escapeString($oProperty->Value) : 'null',
+						$oProperty->Type === "text" ? $this->escapeString($oProperty->Value) : 'null',
+						$oProperty->Type === "int" ? $oProperty->Value : 'null',
+						$oProperty->Type === "bool" ? $oProperty->Value : 'null'
+					);
+				}
+			}
+		}
+		$sValues = implode(',', $aValues);
+		
+		return sprintf(
+		'INSERT INTO %seav_properties 
+			(%s, %s, %s, %s, %s, %s, %s)
+		VALUES 
+			%s
+		ON DUPLICATE KEY UPDATE 
+			%s=VALUES(%s),
+			%s=VALUES(%s),
+			%s=VALUES(%s),
+			%s=VALUES(%s),
+			%s=VALUES(%s),
+			%s=VALUES(%s),
+			%s=VALUES(%s)', 
+			$this->prefix(), 
+			$this->escapeColumn('id_object'), 
+			$this->escapeColumn('key'),
+			$this->escapeColumn('type'),
+			$this->escapeColumn('value_string'),
+			$this->escapeColumn('value_text'),
+			$this->escapeColumn('value_int'),
+			$this->escapeColumn('value_bool'),
+			$sValues,
+			$this->escapeColumn('id_object'), 
+			$this->escapeColumn('id_object'), 
+			$this->escapeColumn('key'),
+			$this->escapeColumn('key'),
+			$this->escapeColumn('type'),
+			$this->escapeColumn('type'),
+			$this->escapeColumn('value_string'),
+			$this->escapeColumn('value_string'),
+			$this->escapeColumn('value_text'),
+			$this->escapeColumn('value_text'),
+			$this->escapeColumn('value_int'),
+			$this->escapeColumn('value_int'),
+			$this->escapeColumn('value_bool'),
+			$this->escapeColumn('value_bool')
 		);
+
 	}	
 	
 	/**

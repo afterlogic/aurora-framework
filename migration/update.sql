@@ -16,3 +16,6 @@ CREATE TABLE `eav_properties` (
   `value_bool` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `eav_properties` 
+ADD UNIQUE INDEX `id_object_key` (`id_object` ASC, `key` ASC);
