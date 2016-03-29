@@ -7,7 +7,8 @@
  *
  * @package Channels
  */
-class CApiChannelsManager extends AApiManagerWithStorage
+//class CApiChannelsManager extends AApiManagerWithStorage
+class CApiCoreChannelsManager extends AApiManager
 {
 	/**
 	 * @var CApiEavManager
@@ -17,13 +18,13 @@ class CApiChannelsManager extends AApiManagerWithStorage
 	/**
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('channels', $oManager, $sForcedStorage);
+		parent::__construct('channels', $oManager, $oModule);
 		
 		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 
-		$this->inc('classes.channel');
+		$this->incClass('channel');
 	}
 
 	/**
@@ -279,7 +280,9 @@ class CApiChannelsManager extends AApiManagerWithStorage
 		try
 		{
 			/* @var $oTenantsApi CApiTenantsManager */
-			$oTenantsApi = CApi::GetCoreManager('tenants');
+//			$oTenantsApi = CApi::GetCoreManager('tenants');
+			$oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
+			
 			if ($oTenantsApi && !$oTenantsApi->deleteTenantsByChannelId($oChannel->iObjectId, true))
 			{
 				$oException = $oTenantsApi->GetLastException();

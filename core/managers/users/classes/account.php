@@ -88,11 +88,11 @@ class CAccount extends api_APropertyBag
 		$this->User = CUser::createInstance('Core', array('domain' => $oDomain));
 		$this->aExtension = array();
 
-		$this->SetTrimer(array('Email', 'FriendlyName', 'IncomingMailServer', 'IncomingMailLogin', 'IncomingMailPassword',
-			'PreviousMailPassword', 'OutgoingMailServer', 'OutgoingMailLogin'));
+//		$this->SetTrimer(array('Email', 'FriendlyName', 'IncomingMailServer', 'IncomingMailLogin', 'IncomingMailPassword',
+//			'PreviousMailPassword', 'OutgoingMailServer', 'OutgoingMailLogin'));
 
-		$this->SetLower(array(/*'Email', */'IncomingMailServer', /*'IncomingMailLogin',*/
-			'OutgoingMailServer', /*'OutgoingMailLogin'*/));
+//		$this->SetLower(array(/*'Email', */'IncomingMailServer', /*'IncomingMailLogin',*/
+//			'OutgoingMailServer', /*'OutgoingMailLogin'*/));
 
 		$this->SetDefaults();
 		

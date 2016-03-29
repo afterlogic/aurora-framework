@@ -208,7 +208,8 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		{
 			$oAccount->User->IdSubscription = (int) CPost::get('selSubscribtions');
 
-			$oTenantsApi = CApi::GetCoreManager('tenants');
+//			$oTenantsApi = CApi::GetCoreManager('tenants');
+			$oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 			/* @var $oTenantsApi CApiTenantsManager */
 
 			if ($oTenantsApi)
@@ -478,7 +479,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 			$sChannel = CPost::get('txtChannel', '');
 			if (0 < strlen($sChannel))
 			{
-				$oChannelsApi = CApi::GetCoreManager('channels');
+				$oChannelsApi = CApi::GetModule('Core')->GetManager('channels', 'db');
 				if ($oChannelsApi)
 				{
 					/* @var $oChannel CChannel */

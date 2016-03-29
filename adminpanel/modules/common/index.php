@@ -43,7 +43,8 @@ class CCommonModule extends ap_Module
 		$this->oUsersApi = CApi::GetCoreManager('users');
 		$this->oCapabilityApi = CApi::GetCoreManager('capability');
 		$this->oIntegratorApi = CApi::GetCoreManager('integrator');
-		$this->oTenantsApi = CApi::GetCoreManager('tenants');
+//		$this->oTenantsApi = CApi::GetCoreManager('tenants');
+		$this->oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 
 		if (\CApi::GetConf('labs.allow-social-integration', true))
 		{

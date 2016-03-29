@@ -238,7 +238,8 @@ class CProPopulateData extends ap_CoreModuleHelper
 			{
 				$oScreen->Data->SetValue('domainInTenant', true);
 
-				$oTenantsApi = CApi::GetCoreManager('tenants');
+//				$oTenantsApi = CApi::GetCoreManager('tenants');
+				$oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 				/* @var $oTenantsApi CApiTenantsManager */
 
 				if ($oTenantsApi)
@@ -298,6 +299,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 //				if (CApi::GetConf('capa', false))
 //				{
 //					$oTenantsApi = CApi::GetCoreManager('tenants');
+//					$oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 //					/* @var $oTenantsApi CApiTenantsManager */
 //
 //
@@ -599,7 +601,8 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 			if (0 < $oTenant->IdChannel)
 			{
-				$oChannelsApi = CApi::GetCoreManager('channels');
+				$oChannelsApi = CApi::GetModule('Core')->GetManager('channels', 'db');
+				
 				if ($oChannelsApi)
 				{
 					$oChannel = $oChannelsApi->getChannelById($oTenant->IdChannel);
@@ -616,6 +619,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 //			{
 //				$oSubscriptionsApi = CApi::GetCoreManager('subscriptions');
 //				$oTenantsApi = CApi::GetCoreManager('tenants');
+//				$oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 //
 //				if ($oSubscriptionsApi && $oTenantsApi)
 //				{

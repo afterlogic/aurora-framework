@@ -53,7 +53,8 @@ class CProModule extends ap_Module
 		$this->oLicApi = CApi::GetCoreManager('licensing');
 		$this->oUsersApi = CApi::GetCoreManager('users');
 		$this->oCapabilityApi = CApi::GetCoreManager('capability');
-		$this->oTenantsApi = CApi::GetCoreManager('tenants');
+//		$this->oTenantsApi = CApi::GetCoreManager('tenants');
+		$this->oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 
 		$this->oChannelsApi = null;
 
@@ -67,7 +68,7 @@ class CProModule extends ap_Module
 			$this->aTabs[] = AP_TAB_TENANTS;
 			$this->aTabs[] = AP_TAB_CHANNELS;
 
-			$this->oChannelsApi = CApi::GetCoreManager('channels');
+			$this->oChannelsApi = \CApi::GetModule('Core')->GetManager('channels');
 		}
 
 		$this->aTabs[] = AP_TAB_DOMAINS;

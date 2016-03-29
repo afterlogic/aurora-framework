@@ -2,9 +2,21 @@
 
 class CoreModule extends AApiModule
 {
+	public $oApiTenantsManager = null;
+	
+	public $oApiChannelsManager = null;
+	
 	public function init() {
 		parent::init();
 		
+		$this->oApiTenantsManager = $this->GetManager('tenants', 'db');
+		$this->oApiChannelsManager = $this->GetManager('channels', 'db');
+		
+//		$oModuleManager = \CApi::GetModuleManager();
+//		$oMailModule = $oModuleManager->GetModule('Mail');
+//		var_dump($oMailModule);
+//		CApi::GetCoreManager('tenants');
+
 		$this->AddEntry('ping', 'EntryPing');
 		$this->AddEntry('pull', 'EntryPull');
 		$this->AddEntry('plugins', 'EntryPlugins');

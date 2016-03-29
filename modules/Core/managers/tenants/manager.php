@@ -7,7 +7,8 @@
  *
  * @package Tenants
  */
-class CApiTenantsManager extends AApiManagerWithStorage
+//class CApiTenantsManager extends AApiManagerWithStorage
+class CApiCoreTenantsManager extends AApiManager
 {
 	/**
 	 * @var array
@@ -29,14 +30,14 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 *
 	 * @param CApiGlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db', AApiModule $oModule = null)
 	{
-		parent::__construct('tenants', $oManager, $sForcedStorage);
+		parent::__construct('tenants', $oManager, $oModule);
 		
 		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 		
-		$this->inc('classes.tenant');
-		$this->inc('classes.socials');
+		$this->incClass('tenant');
+		$this->incClass('socials');
 	}
 
 	/**
@@ -85,7 +86,8 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		$iResult = false;
 		try
 		{
-			$aResultTenants = $this->oEavManager->getObjectsCount('CTenant', 
+			$aResultTenants = $this->oEavManager->getObjectsCount(
+				'CTenant', 
 				array(
 					'Description' => $sSearchDesc
 				)
@@ -113,7 +115,33 @@ class CApiTenantsManager extends AApiManagerWithStorage
 		{
 			try
 			{
-				$iResult = $this->oStorage->getTenantAllocatedSize($iTenantId);
+//				$iResult = $this->oStorage->getTenantAllocatedSize($iTenantId);
+				
+				//$oAccountsApi = CApi::GetCoreManager('users');
+				//TODO move account request to manager of Accounts
+				$aResults = $this->oEavManager->getObjects(
+					'CAccount', 
+					array(
+						'StorageQuota'
+					),
+					0,
+					0,
+					array('IdTenant' => $iTenantId)
+				);
+				
+				if (is_array($aResults))
+				{
+					$iQuotaSum = 0;
+					foreach ($aResults as $oAccount)
+					{
+						$iQuotaSum += $oAccount->StorageQuota;
+					}
+					
+					if ($iQuotaSum > 0)
+					{
+						$iResult = $iQuotaSum / 1024;
+					}
+				}
 			}
 			catch (CApiBaseException $oException)
 			{
@@ -418,13 +446,37 @@ class CApiTenantsManager extends AApiManagerWithStorage
 	 */
 	public function getTenantDomains($iTenantId)
 	{
-		
 		$mResult = false;
 		if (0 < $iTenantId)
 		{
 			try
 			{
-				$mResult = $this->oStorage->getTenantDomains($iTenantId);
+//				$mResult = $this->oStorage->getTenantDomains($iTenantId);
+
+				//TODO move domains request to manager of Domains
+				$aResultDomains = $this->oEavManager->getObjects(
+					'CDomain', 
+					array(
+						'Name'
+					),
+					0,
+					0,
+					array(
+						'IdTenant' => $iTenantId
+					)
+				);
+				
+				$aSortedDomains = array();
+				
+				if (is_array($aResultDomains))
+				{
+					foreach ($aResultDomains as $oDomain)
+					{
+						$aSortedDomains[$oDomain->iObjectId] = $oDomain->Name;
+					}
+					
+					$mResult = $aSortedDomains;
+				}
 			}
 			catch (CApiBaseException $oException)
 			{
