@@ -1,7 +1,7 @@
 .MailLayout .panel_helper {
 	width: 85%;
 }
-/*=== Folders List CSS ===*/
+
 .panel.folders_panel  {
 	width: 15%;
 	
@@ -14,10 +14,10 @@
 	}
 	
 	.panel_bottom {
-		height: 30px;
+		background: none;
 		border: 0px;
 		border-radius: 0px;
-		background: none;
+		height: 30px;
 		padding: 0px;
 	}
 	
@@ -26,14 +26,12 @@
 	}
 	
 	.manage_folders {
+		font-size: 8pt;
 		line-height: 16px;
 		text-align: center;
-		font-size: 8pt;
 	}
 }
-/*=== END Folders List CSS ===*/
 
-/*=== Message List CSS ===*/
 .messages_panel {
 	.middle_bar {
 		.resize_compensation_top(39px);
@@ -41,22 +39,19 @@
 	}
 
 	.items_list {
-
 		@import "flag.less";
-		
 	}
 	
 	.items_list .item {
-		
 		.controls .separator,
 		.data .separator {
 			display: block;
 		}
 
 		.size {
-			width: 40px;
-			text-align: right;
 			display: none;
+			text-align: right;
+			width: 40px;
 		}
 
 		.subject,
@@ -81,13 +76,13 @@
 		}
 
 		&.selected.nosubject .subject{
-			color: #fff;
+			color: #ffffff;
 		}
 
 		.from {
+			font-size: 10.5pt;
 			margin-bottom: 10px;
 			min-height: 16px;
-			font-size: 10.5pt;
 		}
 
 		.text {
@@ -107,81 +102,77 @@
 		@import "answered-marker.less";
 		
 		.importance {
-			width: 14px;
-			height: 14px;
-			display: inline-block;
-			vertical-align: middle;
-			line-height: 1;
-			border-radius: 50%;
 			border: 1px solid;
-			text-align: center;
+			border-radius: 50%;
+			display: inline-block;
+			height: 14px;
+			line-height: 1;
 			margin-top: -3px;
+			text-align: center;
+			vertical-align: middle;
+			width: 14px;
 
 			.iconFontInit();
+			
 			&:before {
-				font-size: 13px;
+				content: "\e620";
 				display: inline-block;
+				font-size: 13px;
 				vertical-align: top;
 				width: 7px;
-				content: "\e620";
 			}
 		}
+		
 		&.selected .importance {
-			color: #fff;
-			border-color: #fff;
+			color: #ffffff;
+			border-color: #ffffff;
 		}
 
 		.attachments {
 			display: inline-block;
-			width: 20px;
 			height: 20px;
 			vertical-align: bottom;
+			width: 20px;
 
 			&.has_attachments {
 				.iconFontInit();
+				
 				&:before {
 					.opacity(0.7);
-					font-size: 20px;
+					
 					content: "\e622";
+					font-size: 20px;
 				}
 			}
 
-			&.has_vcard_attachment {
-				&:before {
-					content: "\e621";
-				}
+			&.has_vcard_attachment:before {
+				content: "\e621";
 			}
 
-			&.has_ical_attachment {
-				&:before {
-					content: "\e623";
-				}
+			&.has_ical_attachment:before {
+				content: "\e623";
 			}
 		}
-		&.selected .attachments.has_attachments {
-			&:before {
-				color: @theme-list-selected-item-color;
-			}
+		
+		&.selected .attachments.has_attachments:before {
+			color: @theme-list-selected-item-color;
 		}
 
-		&.selected {
-			.thread {
-				background: @theme-list-selected-item-bg;
-			}
+		&.selected .thread {
+			background: @theme-list-selected-item-bg;
 		}
-		&.checked {
-			.thread {
-				background: @theme-list-checked-item-bg;
+		
+		&.checked .thread {
+			background: @theme-list-checked-item-bg;
 
-				&:hover {
-					background-color: darken(@theme-list-checked-item-bg, 5%);
-				}
+			&:hover {
+				background-color: darken(@theme-list-checked-item-bg, 5%);
 			}
 		}
 
 		// Thread Counter
-		@tcBackground: #CCC8C1;
-		@tcTextColor: #fff;
+		@tcBackground: #ccc8c1;
+		@tcTextColor: #ffffff;
 		@tcBorder: 0px;
 
 		@tcSelectedBackground: @tcBackground;
@@ -201,12 +192,12 @@
 			border: @tcBorder;
 			border-radius: 9px;
 			color: @tcTextColor;
-			float: right;
-			line-height: 100%;
-			padding: 4px 8px 3px;
-			margin: -4px 0px 0px 6px;
-			font-weight: bold;
 			cursor: pointer;
+			float: right;
+			font-weight: bold;
+			line-height: 100%;
+			margin: -4px 0px 0px 6px;
+			padding: 4px 8px 3px;
 
 			html.rtl & {
 				float: left;
@@ -219,6 +210,7 @@
 
 			&:hover {
 				.transition(background-color 200ms ease);
+				
 				background-color: darken(@tcUnreadSelectedBackground, 5%);
 			}
 
@@ -261,6 +253,7 @@
 	.from {
 		margin-bottom: 6px !important;
 	}
+	
 	.thread {
 		margin-top: 2px !important;
 	}
@@ -290,10 +283,7 @@
 		display: none;
 	}
 }
-/*=== END Message List CSS ===*/
 
-
-/*=== Message viewer CSS ===*/
 .message_viewer {
 	.panel_center {
 		.box-sizing;
@@ -314,8 +304,8 @@
 	}
 	
 	.message_body {
-		padding: 20px;
 		font-size: 11pt;
+		padding: 20px;
 		
 		li {
 			margin-bottom: 0.6em;
@@ -323,10 +313,10 @@
 	}
 	
 	.message_body_info {
+		color: #cccccc;
 		font: normal 18px Tahoma;
-		color: #ccc;
-		text-align: center;
 		margin: 30px;
+		text-align: center;
 		
 		.message_body_secondary_info {
 			font-size: 14px;
@@ -337,12 +327,13 @@
 	.message_header {
 		background: #ffffff;
 		border-bottom: 1px solid #e2e2e2;
-		color: #4D4D4D;
+		color: #4d4d4d;
 		padding-bottom: 6px;
 		position: relative;
 
 		.nosubject .subject {
 			color: #888888;
+			
 			.opacity(0.3);
 		}
 
@@ -356,24 +347,25 @@
 	
 		.header_row {
 			clear: both;
+			
 			&:last-child {
 				margin-top: 18px; 
 			}
 		}
 		
 		.toolbar {
-			float: right;
+			background: none;
 			border: 0px;
-			padding: 0px;
-			background: 0px;
-			position: relative;
-			z-index: 1;
+			filter: none;
+			float: right;
 			margin-bottom: 0px;
 			max-width: 100%;
-			width: auto;
 			overflow: visible;
-			filter: none;
+			padding: 0px;
+			position: relative;
 			top: -4px;
+			width: auto;
+			z-index: 1;
 			
 			html.rtl & {
 				float: left;
@@ -383,28 +375,22 @@
 				padding: 0px;
 				
 				& > .item {
-					border: 0px;
-					padding: 0px;
-					margin-right: 16px;
-					box-shadow: none !important;
 					background: none !important;
+					border: 0px;
+					box-shadow: none !important;
+					margin-right: 16px;
+					padding: 0px;
 					
 					&:last-child {
 						margin-right: 0px;
 					}
 					
-					.icon.arrow {
-						&:before {
-							font-size: 20px;
-						}
+					.icon.arrow:before {
+						font-size: 20px;
 					}
 					
-					.dropdown {
-						.item {
-							.icon {
-								margin-right: 5px;
-							}
-						}
+					.dropdown .item .icon {
+						margin-right: 5px;
 					}
 				}
 			}
@@ -415,9 +401,9 @@
 		}
 		
 		.message_info {
-			position: relative;
 			font-size: 10pt;
 			padding-top: 1px; /* fix nested element negative margin */
+			position: relative;
 			
 			html.rtl & {
 				margin-right: 14px;
@@ -425,10 +411,10 @@
 			
 			.message_info_line {
 				margin: 0;
-				top: -4px;
-				position: relative;
-				white-space: nowrap;
 				overflow: hidden;
+				position: relative;
+				top: -4px;
+				white-space: nowrap;
 			}
 			
 			&.message_detail_info .message_info_line:last-child {
@@ -436,41 +422,39 @@
 			}
 			
 			&.message_detail_info .message_info_line {
-				white-space: normal;
 				max-height: 72px;
 				overflow-y: auto !important;
+				white-space: normal;
 			}
 		}
 		
 		.details_show,
 		.details_hide {
-			display: inline-block;
-			vertical-align: bottom;
-			//margin: 2px 0px 0px 0px;
-			float: left;
-			width: 16px;
-			height: 16px;
-			position: absolute;
 			color: #727272;
+			display: inline-block;
+			float: left;
+			height: 16px;
 			overflow: hidden;
+			position: absolute;
+			vertical-align: bottom;
+			width: 16px;
 			
 			html.rtl & {
-				margin-right: 0px;
 				margin-left: 6px;
+				margin-right: 0px;
 			}
 			
 			.iconFontInit();
+			
 			&:before {
-				font-size: 18px;
-				display: inline-block;
 				content: "\e66d";
+				display: inline-block;
+				font-size: 18px;
 			}
 		}
 		
-		.details_hide {
-			&:before {
-				content: "\e66e";
-			}
+		.details_hide:before {
+			content: "\e66e";
 		}
 		
 		.title {
@@ -488,22 +472,22 @@
 		}
 		
 		.icon {
-			padding: 0px;
 			margin: 0px;
+			padding: 0px;
 			
 			.attachments {
+				background: url("images/sprites.png") no-repeat -120px -120px;
+				cursor: pointer;
 				display: inline-block;
-				width: 16px;
+				float: left;
 				height: 16px;
 				margin-right: 8px;
-				float: left;
-				cursor: pointer;
-				background: url("images/sprites.png") no-repeat -120px -120px;
+				width: 16px;
 				
 				html.rtl & {
-					margin-right: 0px;
-					margin-left: 8px;
 					float: right;
+					margin-left: 8px;
+					margin-right: 0px;
 				}
 			}
 		}
@@ -529,17 +513,17 @@
 	
 	.notice {
 		background: #ffffc5;
-		padding: 4px 6px;
-		border-bottom: 1px solid #EAE7CA;
-		color: #B5AD94;
+		border-bottom: 1px solid #eae7ca;
+		color: #b5ad94;
 		font-size: 8pt;
+		padding: 4px 6px;
 
 		.item {
 			display: block;
 		}
 
 		.link {
-			color: #7E9BAF;
+			color: #7e9baf;
 		}
 	}
 	
@@ -552,9 +536,9 @@
 			white-space: normal;
 
 			.bodyparts_separator {
-				height: 1px;
 				background-color: #e2e2e2;
 				display: none;
+				height: 1px;
 				margin: 0px 20px;
 			}
 		}
@@ -565,18 +549,18 @@
 	}
 	
 	.appointment {
-		padding: 15px;
 		background: #eeffe0;
 		border-bottom: 1px solid #cee2c0;
+		padding: 15px;
 
 		.row.fluid {
 			padding-left: 100px;
 		}
 
 		.label {
-			width: 100px;
-			color: #57793E;
+			color: #57793e;
 			vertical-align: top;
+			width: 100px;
 		}
 
 		.row.fluid .label {
@@ -585,6 +569,7 @@
 
 		.value {
 			display: inline-block;
+			
 			.break-word();
 		}
 
@@ -602,73 +587,73 @@
 		padding-right: 170px;
 		
 		.message_panel {
-			border-right: 1px solid #E2E2E2;
+			border-right: 1px solid #e2e2e2;
 		}
 	}
 	
 	.message_panel {
-		box-shadow: none;
 		border-radius: 0px;
+		box-shadow: none;
 		width: 100%;
 	}
 	
 	.attachments_panel {
 		box-shadow: none;
-		width: 170px;
-		margin-right: -170px;
 		float: right;
+		margin-right: -170px;
+		width: 170px;
 	}
 }
 
 .panel.thread_viewer .panel_top .expand .owner.found,
 .message_viewer .message_header .expand .from.found {
-	padding: 3px 7px 0px;
-	margin: -3px -7px 0px 0px;
-	background: #fff;
+	background: #ffffff;
 	border-radius: 4px 4px 0px 0px;
 	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+	display: inline-block;
+	margin: -3px -7px 0px 0px;
+	padding: 3px 7px 0px;
 	position: relative;
 	z-index: 1001;
-	display: inline-block;
 }
+
 .item_viewer .add_contact {
+	color: @theme-common-link-color;
+	cursor: pointer;
 	display: inline-block;
-	vertical-align: bottom;
-	width: auto;
 	height: auto;
 	margin: 0;
 	padding: 0;
-	color: @theme-common-link-color;
-	cursor: pointer;
+	vertical-align: bottom;
+	width: auto;
 
 	.iconFontInit();
+	
 	&:before {
 		content: "\e641";
-		font-size: 15px;
 		display: inline-block;
-		vertical-align: bottom;
-		width: auto;
+		font-size: 15px;
 		height: auto;
 		margin: 0;
+		vertical-align: bottom;
+		width: auto;
 	}
 }
-/*=== END Message viewer CSS ===*/
 
-.messages_panel {
-	.middle_bar {
-		.transition(~"margin-top 500ms ease 0ms, padding-top 500ms ease 0ms");
-		
-		&.advanced_search {
-			.resize_compensation_top(198px);
-			
-			.panel_top {
-				height: 185px;
-			}
-		}
-		
+.messages_panel .middle_bar {
+	.transition(~"margin-top 500ms ease 0ms, padding-top 500ms ease 0ms");
+
+	&.advanced_search {
+		.resize_compensation_top(198px);
+
 		.panel_top {
-			height: 26px;
-			.transition(~"height 500ms ease 0ms");
+			height: 185px;
 		}
+	}
+
+	.panel_top {
+		height: 26px;
+		
+		.transition(~"height 500ms ease 0ms");
 	}
 }

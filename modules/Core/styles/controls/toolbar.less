@@ -1,4 +1,3 @@
-/*=== Toolbar CSS ===*/
 .toolbar {
 	background: @theme-toolbar-background;
 	border: @theme-toolbar-border;
@@ -59,6 +58,7 @@
 				
 				.iconFontInit();
 				.iconFontInit(after);
+				
 				&:before {
 					display: inline-block;
 					vertical-align: baseline;
@@ -66,13 +66,13 @@
 			}
 
 			& > .text_icon {
-				display: inline-block;
-				vertical-align: middle;
-				text-align: center;
-				width: 30px;
-				height: 30px;
-				font-size: 20px;
 				color: rgba(0,0,0, 0.5);
+				display: inline-block;
+				font-size: 20px;
+				height: 30px;
+				text-align: center;
+				vertical-align: middle;
+				width: 30px;
 			}
 
 			&.checkstate  {
@@ -98,13 +98,13 @@
 
 			& > .text,
 			& .button .text {
-				font-weight: normal;
 				font-size: 13pt;
+				font-weight: normal;
 			}
 			
 			& > .text {
-				display: none;
 				color: #7f7f7f;
+				display: none;
 			}
 
 			.hint {
@@ -116,6 +116,7 @@
 				padding: 0 5px;
 				vertical-align: middle;
 			}
+			
 			&:hover .hint {
 				background: lighten(@theme-toolbar-hint-background, 5%);
 			}
@@ -123,9 +124,9 @@
 	   
 		.group {
 			display: inline-block;
-			vertical-align: middle;
 			margin-right: 8px;
 			position: relative;
+			vertical-align: middle;
 
 			html.rtl & {
 				margin-left: 8px;
@@ -137,27 +138,25 @@
 			}
 
 			& > .item {
-				margin-right: 0px;
-				margin-left: 0px;
 				border-radius: 0px;
 				border-left-width: 0px;
 				border-right-width: 1px;
+				margin-left: 0px;
+				margin-right: 0px;
 
 				html.rtl & {
-					margin-right: 0px;
-					margin-left: 0px;
 					border-radius: 0px;
 					border-left-width: 1px;
 					border-right-width: 0px;
 				}
 
 				&:first-child {
-					border-left-width: 1px;
 					border-radius: 4px 0px 0px 4px;
+					border-left-width: 1px;
 
 					html.rtl & {
-						border-right-width: 1px;
 						border-radius: 0px 4px 4px 0px;
+						border-right-width: 1px;
 					}
 				}
 
@@ -176,6 +175,7 @@
 	.disabled .item,
 	.item.disabled {
 		.opacity(0.3);
+		
 		color: #888888;
 		cursor: default;
 	}
@@ -189,4 +189,3 @@
 .cssanimations .toolbar .item.process .icon:before {
 	.animation(cycle 0.8s linear infinite);
 }
-/*=== END Toolbar CSS ===*/

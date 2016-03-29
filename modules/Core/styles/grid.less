@@ -1,24 +1,25 @@
 .panels,
 .panel_helper {
-	height: 100%;
 	font-size: 0;
+	height: 100%;
 	white-space: nowrap;
 }
 
 .panels .panel_helper {
-	vertical-align: top;
 	display: inline-block;
+	vertical-align: top;
+	
 	.box-sizing;
 }
 
 .panel {
+	border-radius: 5px;
+	box-shadow: -1px 0 2px rgba(0,0,0,0.11);
 	font-size: 9pt;
 	height: 100%;
+	position: relative;
 	white-space: normal;
 
-	box-shadow: -1px 0 2px rgba(0,0,0,0.11);
-	border-radius: 5px;
-	position: relative;
 	.box-sizing;
 	
 	.rtl & {
@@ -26,8 +27,8 @@
 	}
 	
 	.panels & {
-		vertical-align: top;
 		display: inline-block;
+		vertical-align: top;
 	}
 	
 	.resize_handler {
@@ -47,9 +48,9 @@
 		}
 
 		&.active {
-			width: 100px;
 			left: -50px;
 			margin-right: -100px;
+			width: 100px;
 		}
 	}
 	
@@ -58,11 +59,11 @@
 		.resize_compensation_top(@theme-toolbar-height); /* toolbar offset*/
 
 		.resizer {
+			background: transparent;
+			left: 0;
 			position: absolute;
 			top: 0;
-			left: 0;
 			width: 100%;
-			background: transparent;
 		}
 
 		height: 100%;
@@ -70,6 +71,7 @@
 	
 	.middle_bar {
 		.box-sizing;
+		
 		height: 100%;
 	}
 	
@@ -78,10 +80,10 @@
 	}
 
 	.panel_top {
-		white-space: nowrap;
 		border-bottom: 1px solid #e2e2e2;
 		color: #555566;
 		padding: 6px 10px 6px 34px;
+		white-space: nowrap;
 
 		html.rtl & {
 			padding-left: 10px;
@@ -102,8 +104,8 @@
 	}
 	
 	.panel_center {
-		height: 100%;
 		background: #ffffff;
+		height: 100%;
 	}
 	
 	.panel_bottom {
@@ -138,24 +140,24 @@
 	}
 	
 	.notification {
-		font-size: 18px;
-		color: #ccc;
-		padding: 26px 20px;
+		color: #cccccc;
 		display: block;
+		font-size: 18px;
+		padding: 26px 20px;
 		text-align: center;
 	}
 	
 	.attachments {
-		padding: 20px;
 		color: #3d3d3d;
-		
+		padding: 20px;
+
 		.download_menu {
 			margin-bottom: 10px;
 			
 			.content {
+				margin-left: 24px;
 				max-height: 0px;
 				overflow: hidden;
-				margin-left: 24px;
 				
 				.transition(max-height 500ms ease 500ms);
 				
@@ -166,6 +168,7 @@
 			
 			&:hover .content {
 				max-height: 200px;
+				
 				.transition(max-height 500ms ease 0s);
 			}
 			
@@ -173,32 +176,33 @@
 				display: inline-block;
 				
 				&.hover {
-					color: #333 !important;
+					color: #333333 !important;
 					text-decoration: none !important;
 				}
 				
 				.icon {
-					display: none;
 					color: @theme-common-link-color;
+					display: none;
 					
 					.iconFontInit();
+					
 					&:before {
-						font-size: 20px;
 						display: inline-block;
-						vertical-align: middle;
-						width: 100%;
+						font-size: 20px;
 						height: 100%;
 						margin: -6px -3px 0px;
+						vertical-align: middle;
+						width: 100%;
 					}
 				}
 				
 				&.hover .icon {
 					display: inline-block;
-					vertical-align: middle;
-					width: 16px;
+					float: left;
 					height: 16px;
 					margin-right: 8px;
-					float: left;
+					vertical-align: middle;
+					width: 16px;
 					
 					&:before {
 						content: "\e642";
@@ -209,21 +213,20 @@
 					overflow: hidden;
 				}
 			}
-			
 		}
 	}
 }
 
 .items_list {
 	.section_title {
-		text-transform: uppercase;
-		padding: 10px 17px 10px 17px;
 		color: #777777;
 		cursor: default;
-		font-weight: bold;
-		white-space: nowrap;
 		display: block;
+		font-weight: bold;
+		padding: 10px 17px 10px 17px;
 		text-shadow: 0px 1px 0px #fff;
+		text-transform: uppercase;
+		white-space: nowrap;
 		
 		html.rtl & {
 			padding-left: 0px;
@@ -237,13 +240,12 @@
 	
 	.use_threads .threaded {
 		background: #f9f8f6;
-		border-left: 5px solid #E3E3E3;
+		border-left: 5px solid #e3e3e3;
 		max-height: 0px;
-		
 
 		html.rtl & {
-			border-left: 0px solid #E3E3E3;
-			border-right: 5px solid #E3E3E3;
+			border-left: 0px;
+			border-right: 5px solid #e3e3e3;
 		}
 
 		&.show {
@@ -276,14 +278,14 @@
 
 	.item {
 		background: @theme-list-item-bg;
+		color: #3d3d3d;
+		cursor: default;
 		font-weight: normal;
 		line-height: 140%;
-		white-space: nowrap;
-		cursor: default;
-		color: #3d3d3d;
-		position: relative;
 		max-height: 80px;
 		overflow: hidden;
+		position: relative;
+		white-space: nowrap;
 		
 		.from, .subject {
 			.fadeout_text_init();
@@ -302,8 +304,8 @@
 		&.deleted {
 			.transition(max-height 250ms ease);
 
-			overflow: hidden;
 			max-height: 0px !important;
+			overflow: hidden;
 		}
 		
 		&.checked {
@@ -334,8 +336,8 @@
 		}
 		
 		.item_content {
-			padding: 14px 16px 14px 14px;
 			border-bottom: 1px solid #e8e8e8;
+			padding: 14px 16px 14px 14px;
 
 			html.rtl & {
 				padding-left: 16px;
@@ -377,10 +379,7 @@
 			}
 		}
 		
-		.size {
-			margin-top: 1px;
-		}
-		
+		.size,
 		.date {
 			margin-top: 1px;
 		}
@@ -414,30 +413,31 @@
 		.box-sizing;
 		.transition(opacity 250ms ease 0s);
 
-		background: #FFFDD6;
-		padding: 11px;
-		color: #D3B910;
+		background: #fffdd6;
+		color: #d3b910;
 		font-size: 18pt;
-		text-align: center;
-		opacity: 0;
-		position: absolute;
-		top: 0px;
-		left: 0px;
 		height: 100%;
-		width: 100%;
+		left: 0px;
+		opacity: 0;
+		padding: 11px;
+		position: absolute;
+		text-align: center;
+		top: 0px;
 		visibility: hidden;
+		width: 100%;
 		
 		&.active {
 			visibility: visible;
+			
 			.opacity(0.5);
 		}
 		
 		.inner {
 			.box-sizing;
 
-			height: 100%;
-			border: 3px dashed #E2DA36;
+			border: 3px dashed #e2da36;
 			border-radius: 5px;
+			height: 100%;
 		}
 	}
 }
@@ -464,33 +464,33 @@
 	
 	.items_list {
 		.item {
-			font-size: 10pt;
 			background: none;
+			font-size: 10pt;
 			max-height: inherit;
 			
 			& > .title {
 				color: lighten(@fontColor, 20%);
-				text-decoration: none;
+				cursor: default;
+				display: block;
 				font-size: @fontSize;
 				font-weight: @fontWeight;
 				line-height: normal;
+				margin-bottom: 0px;
+				outline: none;
 				padding-top: 5px;
 				padding-bottom: 7px;
 				padding-left: 16px;
-				cursor: default;
-				display: block;
+				text-decoration: none;
 				white-space: nowrap;
-				outline: none;
-				margin-bottom: 0px;
 
 				.name {
 					display: block;
-					overflow: hidden;
 					margin-right: 10px;
+					overflow: hidden;
 
 					html.rtl & {
-						margin-right: 0px;
 						margin-left: 10px;
+						margin-right: 0px;
 					}
 				}
 				
@@ -505,22 +505,22 @@
 
 				.icon {
 					display: inline-block;
+					height: 20px;
 					vertical-align: bottom;
 					width: 20px;
-					height: 20px;
 
 					.iconFontInit();
+					
 					&:before {
-						font-size: 20px;
 						display: inline-block;
-						width: 100%;
 						height: 100%;
+						font-size: 20px;
+						width: 100%;
 					}
 				}
 			}
 			
 			&.canSelect {
-				
 				& > .title {
 					.title_selectable_text();
 
@@ -529,16 +529,16 @@
 						color: #aaaaaa;
 					}
 				}
+				
 				& > .title.ui-state-disabled {
 					cursor: pointer !important;
 				}
 			}
 
 			&.selected {
-				
 				& > .title {
-					color: #ffffff !important;
 					background: @theme-group-style-selected-item-bg; 
+					color: #ffffff !important;
 
 					.name {
 						.fadeout_text(@theme-group-style-selected-item-bg-color);
@@ -556,13 +556,13 @@
 				display: inline-block;
 				float: right;
 				margin-right: 10px;
-				padding: 2px 10px;
 				margin-top: 2px;
+				padding: 2px 10px;
 
 				html.rtl & {
-					margin-right: 0px;
-					margin-left: 10px;
 					float: left;
+					margin-left: 10px;
+					margin-right: 0px;
 				}
 			}
 
@@ -601,16 +601,12 @@
 						width: 100%;
 					}
 
-					&.expanded {
-						&:before {
-							content: "\e66d";
-						}
+					&.expanded:before {
+						content: "\e66d";
 					}
 
-					&.collapsed {
-						&:before {
-							content: "\e670";
-						}
+					&.collapsed:before {
+						content: "\e670";
 					}
 				}
 
@@ -620,15 +616,16 @@
 
 				.children .title {
 					max-height: 29px;
+					
 					.transition(~"max-height 300ms ease 0ms, opacity 200ms ease 0ms, padding 300ms ease 0ms");
 				}
 
 				&.collapsed .children .title {
 					max-height: 0px;
 					opacity: 0;
-					padding-top: 0px;
-					padding-bottom: 0px;
 					overflow: hidden;
+					padding-bottom: 0px;
+					padding-top: 0px;
 				}
 			}
 		}
@@ -641,12 +638,12 @@
 	.item .title.droppableHover {
 		background: desaturate(darken(@theme-group-style-item-bg, 5%), 10%) !important;
 		color: #626262 !important;
-		text-shadow: 0px 1px 0px #fff !important;
+		text-shadow: 0px 1px 0px #ffffff !important;
 	}
 	
 	.item.selected .title.droppableHover {
 		background: desaturate(darken(@theme-group-style-selected-item-bg-color, 5%), 10%) !important;
-		color: #fff !important;
+		color: #ffffff !important;
 		text-shadow: 0px 1px 0px #678197 !important;
 	}
 }
@@ -659,28 +656,27 @@
 
 /* For draggable items in lists */
 .draggable {
-	width: 0px; /* don't change */
 	height: 0px; /* don't change */
+	width: 0px; /* don't change */
 	
 	.content {
 		cursor: move;
-		width: 200px;
 		height: 200px;
 		margin: -100px 0px 0px -100px;
+		width: 200px;
 		
 		.count-text {
-			.transparent_color_helper(#000, 0.5);
+			.transparent_color_helper(#000000, 0.5);
 			
 			border-radius: 2px;
-			line-height: 100%;
+			color: #ffffff;
 			display: inline-block;
+			line-height: 100%;
 			margin: 100px 0px 0px 100px;
-
-			z-index: 10002;
-			color: #fff;
-			padding: 6px 10px;
 			min-width: 30px;
+			padding: 6px 10px;
 			white-space: nowrap;
+			z-index: 10002;
 		}
 	}
 }

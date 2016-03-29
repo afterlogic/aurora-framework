@@ -1,13 +1,12 @@
-/*=== Report panels CSS ===*/
 .report_panel {
-	width: 100%;
-	text-align: center;
 	height: 0px;
 	overflow: visible;
-	top: 0px;
 	position: fixed;
-	z-index: 3000;
+	text-align: center;
+	top: 0px;
 	visibility: visible;
+	width: 100%;
+	z-index: 3000;
 
 	a {
 		text-shadow: none;
@@ -33,18 +32,19 @@
 	}
 	
 	.content {
-		display: inline-block;
-		font-weight: bold;
-		text-align: left;
 		background: #f9f9f9;
 		border: 1px solid #c3c3c3;
 		border-top: 0px;
-		padding: 15px 30px 10px;
 		border-radius: 0px 0px 4px 4px;
 		box-shadow: 0px 1px 2px 0px #bbb;
-		text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
-		.opacity(1);
+		display: inline-block;
+		font-weight: bold;
 		max-width: 20%;
+		padding: 15px 30px 10px;
+		text-align: left;
+		text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
+		
+		.opacity(1);
 		
 		@media screen and (max-width: 768px) {
 			max-width: 80%;
@@ -71,51 +71,53 @@
 		}
 		
 		.loading& {
+			color: #ffffff;
 			background: #dac073;
 			border-color: #c5ac60;
-			color: #fff;
 		}
 		
 		.report& {
+			color: #ffffff;
 			background: #96c671;
 			border-color: #82b35d;
-			color: #fff;
 		}
+		
 		.error& {
+			color: #ffffff;
 			background: #f47474;
 			border-color: #e26464;
-			color: #fff;
 		}
+		
 		.report&, .error& {
 			.close {
-				position: absolute;
 				cursor: pointer;
+				height: 16px;
+				position: absolute;
 				right: 2px;
 				top: 2px;
-				height: 16px;
 				width: 16px;
 				
 				.iconFontInit();
+				
 				&:before {
-					font-size: 16px;
-					display: inline-block;
 					content: "\e63e";
+					display: inline-block;
+					font-size: 16px;
 				}
 			}
 		}
 
 		.gray& {
-			background: #ccc;
+			background: #cccccc;
 			border-color: #a9a9a9;
 		}
 
 		.icon {
-			width: 16px;
+			display: none;
+			float: left;
 			height: 17px;
 			margin-left: -23px;
-			float: left;
-			display: none;
+			width: 16px;
 		}
 	}
 }
-/*=== END Report panels CSS ===*/

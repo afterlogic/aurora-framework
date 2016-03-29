@@ -1,21 +1,18 @@
-/*=== Settings screen CSS ===*/
 .panels.settings {
-	.folders
-	{
+	.folders {
 		.items_list_group_style();
 		
 		.items_list .item .title .name {
 			.fadeout_text_init();
-			.fadeout_text(#F0F0F0);
+			.fadeout_text(#f0f0f0);
 		}
 
 		.items_list .item.canDrag .title:hover .name {
-			.fadeout_text(#EAEAEA);
+			.fadeout_text(#eaeaea);
 		}
 	}
 	
 	.panel {
-		/* width: 60%; */
 		width: 800px;
 
 		html.non-adjustable & {
@@ -23,15 +20,15 @@
 		}
 		
 		&.data {
-			background: #F9F9F9;
+			background: #f9f9f9;
 		}
 		
 		&.navigation_panel {
 			width: 15%;
 			
 			.middle_bar {
-				padding-top: 22px;
 				margin-top: 0px;
+				padding-top: 22px;
 			}
 			
 			.item {
@@ -39,73 +36,55 @@
 				
 				.icon {
 					display: inline-block;
-					vertical-align: middle;
-					width: 18px;
 					height: 19px;
 					margin-right: 4px;
+					vertical-align: middle;
+					width: 18px;
 					
 					.iconFontInit();
+					
 					&:before {
 						display: inline-block;
-						width: 100%;
-						height: 100%;
-						
 						font-size: 20px;
+						height: 100%;
+						width: 100%;
 					}
 				}
 				
-				&.common .icon {
-					&:before {
-						content: "\e639";
-					}
+				&.common .icon:before {
+					content: "\e639";
 				}
 				
-				&.accounts .icon {
-					&:before {
-						content: "\e638";
-					}
+				&.accounts .icon:before {
+					content: "\e638";
 				}
 				
-				&.calendar .icon {
-					&:before {
-						content: "\e63a";
-					}
+				&.calendar .icon:before {
+					content: "\e63a";
 				}
 				
-				&.services .icon {
-					&:before {
-						content: "\e672";
-					}
+				&.services .icon:before {
+					content: "\e672";
 				}
 
-				&.cloud-storage .icon {
-					&:before {
-						content: "\e656";
-					}
+				&.cloud-storage .icon:before {
+					content: "\e656";
 				}
 
-				&.mobile_sync .icon {
-					&:before {
-						content: "\e636";
-					}
+				&.mobile_sync .icon:before {
+					content: "\e636";
 				}
 				
-				&.outlook_sync .icon {
-					&:before {
-						content: "\e635";
-					}
+				&.outlook_sync .icon:before {
+					content: "\e635";
 				}
 				
-				&.helpdesk .icon {
-					&:before {
-						content: "\e637";
-					}
+				&.helpdesk .icon:before {
+					content: "\e637";
 				}
 				
-				&.pgp .icon {
-					&:before {
-						content: "\e658";
-					}
+				&.pgp .icon:before {
+					content: "\e658";
 				}
 			}
 		}
@@ -132,8 +111,8 @@
 	
 	.settings_heading {
 		color: #4d4d4d;
-		padding: 35px 20px 15px;
 		margin: 0px;
+		padding: 35px 20px 15px;
 	}
 
 	.fieldset {
@@ -148,7 +127,7 @@
 	
 	.fieldblock {
 		background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);
-		border: 1px solid #D0D0DA;
+		border: 1px solid #d0d0da;
 		border-radius: 4px 4px 4px 4px;
 		margin-bottom: 14px;
 		padding: 14px;
@@ -157,23 +136,20 @@
 	.fields {
 		.row {
 			margin-bottom: 14px;
-			/*padding-left: 150px;*/
 
 			&:last-child {
 				margin-bottom: 0px;
 			}
 
 			.label {
-				width: 150px;
-			/*	margin-left: -150px;*/
 				color: #626262;
+				width: 150px;
 				word-wrap: break-word;
 			}
 			
 			.input {
 				font-size: 10pt;
 				padding: 7px 9px 6px;
-				/*width: 100%;*/
 			}
 			
 			.value {
@@ -183,10 +159,10 @@
 				}
 				
 				&.text {
-					padding: 7px 9px 6px;
 					font-weight: bold;
-					width: 300px;
 					display: inline-block;
+					padding: 7px 9px 6px;
+					width: 300px;
 					
 					&.port {
 						width: auto;
@@ -213,9 +189,7 @@
 	}
 }
 
-
 .panels.settings .fields .hint {
-/*	border-radius: 4px;*/
 	padding: 4px 6px;
 	margin: -12px -6px 12px;
 }
@@ -228,11 +202,12 @@
 .panels.settings .mobile_sync .fields .label {
 	float: left;
 }
+
 .panels.settings .mobile_sync .fields .value {
 	display: block;
 	overflow: hidden;
-	-ms-word-break: break-all;
 	word-wrap: break-word;
+	-ms-word-break: break-all;
 }
 
 .panels.settings .workday .input {
@@ -248,16 +223,18 @@
 		.transition(color 300ms ease 0s);
 		
 		.icon {
+			color: #91908e;
 			display: inline-block;
-			vertical-align: middle;
-			width: 28px;
+			font-size: 26px;
 			height: 31px;
 			margin-top: 0;
-			font-size: 26px;
-			color: #91908e;
+			vertical-align: middle;
+			width: 28px;
+			
 			.transition(opacity 300ms ease 0s);
 			
 			.iconFontInit();
+			
 			&:before {
 				content: "\e63d";
 			}
@@ -280,42 +257,43 @@
 }
 
 .settings {
-	
 	.tabs  {
-		margin-top: 20px;
 		margin-bottom: 16px;
-		.tabs-links{
-			opacity: 0;
+		margin-top: 20px;
+		
+		.tabs-links {
 			height: 0;
+			opacity: 0;
 			overflow: hidden;
 			width: 0;
 		}
+		
 		.shortcuts  {
 			font-size: 0pt;
-			padding: 0px 0px 0px 20px;
 			margin: 0px 20px;
+			padding: 0px 0px 0px 20px;
 			
 			.item {
-				font-size: 9pt;
 				display: inline-block;
+				font-size: 9pt;
 				vertical-align: bottom;
 				
 				a {
+					background: #f5f5f5;
 					border: 1px solid #e0e0e0;
 					border-bottom: 0px;
-					display: inline-block;
-					padding: 6px 12px 6px;
-					margin-right: 4px;
-					color: #828282;
-					font-weight: bold;
-					outline: none;
-					background: #F5F5F5;
-					text-decoration: none;
 					border-radius: 4px 4px 0px 0px;
+					color: #828282;
+					display: inline-block;
+					font-weight: bold;
+					margin-right: 4px;
+					outline: none;
+					padding: 6px 12px 6px;
+					text-decoration: none;
 				}
 				
 				&.selected a {
-					background: #F1F1F1;
+					background: #f1f1f1;
 					color: #3d3d3d;
 					margin-bottom: -1px;
 					padding-bottom: 7px;
@@ -331,27 +309,27 @@
 }
 
 .settings .accounts_list {
-	border: 1px solid #d5d9dc;
 	background: #fafafa;
+	border: 1px solid #d5d9dc;
 	border-radius: 4px;
 	margin: 0px 20px;
 	overflow: hidden;
+	
 	.clearfixHelper();
 
 	.item {
-		padding: 6px 10px;
 		border-bottom: 1px solid #d5d9dc;
 		color: #626262;
 		cursor: pointer;
+		padding: 6px 10px;
 
 		&.fetcher {
-
 			.icon {
 				display: inline-block;
+				font-size: 20px;
+				height: 18px;
 				vertical-align: bottom;
 				width: 18px;
-				height: 18px;
-				font-size: 20px;
 				
 				.iconFontInit();
 			}
@@ -361,10 +339,10 @@
 			}
 
 			.icon.loyal {
-				margin-left: 10px;
 				font-family: monospace;
-				height: 17px;
 				font-size: 19px;
+				height: 17px;
+				margin-left: 10px;
 			}
 
 			.label {
@@ -392,9 +370,9 @@
 	}
 
 	.title {
-		padding: 0px;
 		display: inline-block;
 		font-size: 9pt;
+		padding: 0px;
 	}
 }
 
@@ -417,30 +395,28 @@
 }
 
 .settings .accounts_list .item .button {
+	background: none repeat scroll 0 0 #6fa8de;
+    border: 1px solid #5d97cd;
+    border-radius: 4px 4px 4px 4px;
+    color: #ffffff;
 	cursor: pointer;
-	padding: 1px 5px;
 	display: inline-block;
 	font-size: 9pt !important;
-
-	background: none repeat scroll 0 0 #6FA8DE;
-    border: 1px solid #5D97CD;
-    border-radius: 4px 4px 4px 4px;
-    color: #FFFFFF;
-    text-shadow: 0 1px 0 #4D759B;
+	padding: 1px 5px;
+    text-shadow: 0 1px 0 #4d759b;
 }
-.settings .folders {
 
+.settings .folders {
 	&.items_list {
 		margin-bottom: 10px;
-		
 		
 		.first_sortable_container {
 			position: relative;
 		}
 		
 		.item {
-			border-top: 1px solid #ccc;
 			background: none;
+			border-top: 1px solid #cccccc;
 			max-height: inherit;
 			overflow: visible;
 			
@@ -459,9 +435,9 @@
 		}
 		
 		.title {
-			padding-top: 4px;
 			padding-bottom: 7px;
 			padding-right: 0px;
+			padding-top: 4px;
 			
 			&:hover {
 				background: rgba(0,0,0, 0.03);
@@ -473,12 +449,13 @@
 			&:before {
 				content: "\e65d";
 				display: inline-block;
+				font-size: 20px;
+				height: 20px;
+				left: 0px;
 				position: absolute;
 				top: 4px;
-				left: 0px;
 				width: 20px;
-				height: 20px;
-				font-size: 20px;
+				
 				.opacity(0.3);
 			}
 		}
@@ -495,12 +472,15 @@
 			}
 
 			.button {
-				display: inline-block;
-				width: 20px;
-				height: 20px;
 				cursor: pointer;
+				display: inline-block;
+				height: 20px;
+				width: 20px;
+				
 				.iconFontInit();
+				
 				font-size: 20px;
+				
 				.opacity(0.8);
 				
 				&:hover {
@@ -512,22 +492,16 @@
 					cursor: default !important;
 				}
 				
-				&.delete {
-					&:before {
-						content: "\e65f";
-					}
+				&.delete:before {
+					content: "\e65f";
 				}
 				
-				&.subscribe {
-					&:before {
-						content: "\e660";
-					}
+				&.subscribe:before {
+					content: "\e660";
+				}
 				
-					&.subscribed {
-						&:before {
-							content: "\e65e";
-						}
-					}
+				&.subscribe.subscribed:before {
+					content: "\e65e";
 				}
 
 				&.up {
@@ -537,6 +511,7 @@
 						background-position: -680px -140px;
 					}
 				}
+				
 				&.down {
 					background-position: -700px -120px;
 					
@@ -558,45 +533,48 @@
 	}
 }
 
-
-
-
 .settings .fields .filter .value {
 	word-spacing: 0.7ex;
 }
+
 .settings .fields .filter .value .part {
-	word-spacing: normal;
 	display: inline-block;
+	word-spacing: normal;
 }
+
 .settings .fields .filter .input {
+	margin: 0px;
 	padding: 2px;
 	width: 75px;
-	margin: 0px;
 }
+
 .settings .fields .filter .buttons {
-	margin: 0px;
 	float: right;
+	margin: 0px;
 }
 
 .settings .fields .filter .field {
-	position: relative;
 	display: inline-block;
+	position: relative;
 }
+
 .settings .fields .filter .link,
 .settings .fields .filter .link:hover {
+	border-bottom: 1px dashed #4477bb;
 	color: #4477bb;
 	text-decoration: none;
-	border-bottom: 1px dashed #4477bb;
 }
 
 .settings .helpdesk .input,
 .settings .autoresponder .input {
 	width: 520px;
 }
+
 .settings .helpdesk .signature .input,
 .settings .autoresponder .message .input {
 	height: 145px;
 }
+
 .settings .signature .editor_row .custom_radio {
 	float: left;
 	margin-right: 4px;
@@ -606,16 +584,18 @@ html.rtl .settings .signature .editor_row .custom_radio {
 	margin-right: 0px;
 	margin-left: 4px;
 }
+
 .settings .signature .editor_row .editor {
 	height: 200px;
-	padding-top: 1px;
 	margin-left: 18px;
+	padding-top: 1px;
 }
+
 html.rtl .settings .signature .editor_row .editor {
-	margin-right: 18px;
 	margin-left: 0px;
+	margin-right: 18px;
 }
+
 .settings .signature .editor_row .editor .html_editor {
 	.pass_through;
 }
-/*=== END Settings screen CSS ===*/

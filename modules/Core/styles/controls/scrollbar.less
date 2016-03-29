@@ -1,9 +1,9 @@
 .scroll-wrap {
 	display: block;
-	position: relative;
-	overflow: hidden;
-	max-height: none;
 	height: 100%;
+	max-height: none;
+	overflow: hidden;
+	position: relative;
 
 	.scroll-inner {
 		overflow: hidden;
@@ -17,14 +17,14 @@
 .scroll-inner {
 	.box-sizing(content-box);
 
+	display: block;
+	height: 100%;
+	max-height: inherit;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
-	height: 100%;
-	width: auto !important;
-	max-height: inherit;
 	position: relative;
 	top: 0px;
-	display: block;
+	width: auto !important;
 }
 
 .customscroll-scrollbar {
@@ -48,6 +48,7 @@
 
 .customscroll-scrollbar-shown {
 	.opacity(0.3);
+	
 	visibility: visible;
 
 	.csstransitions & {
@@ -60,14 +61,15 @@
 }
 
 .customscroll-scrollbar-horizontal {
-	height: 16px;
-	margin-left: 2px;
 	bottom: 4px;
+	height: 16px;
 	left: 0;
+	margin-left: 2px;
 
 	div {
-		margin: 12px 0px 2px 0px;
 		height: 4px;
+		margin: 12px 0px 2px 0px;
+		
 		.csstransitions & {
 			.transition(~"height 300ms ease 0ms, margin 300ms ease 0ms");
 		}
@@ -75,10 +77,10 @@
 }
 
 .customscroll-scrollbar-horizontal.customscroll-scrollbar-shown {
-
 	div {
-		margin: 10px 0px 2px 0px;
 		height: 8px;
+		margin: 10px 0px 2px 0px;
+		
 		.csstransitions & {
 			.transition(~"height 300ms ease 0ms, margin 300ms ease 0ms");
 		}
@@ -101,8 +103,8 @@
 
 	div {
 		display: inline-block !important;
-
 		width: 4px;
+		
 		.csstransitions & {
 			.transition(~"width 300ms ease 0ms");
 		}
@@ -117,6 +119,7 @@
 .customscroll-scrollbar.customscroll-scrollbar-vertical.customscroll-scrollbar-shown {
 	div {
 		width: 8px;
+		
 		.csstransitions & {
 			.transition(~"width 300ms ease 0ms");
 		}

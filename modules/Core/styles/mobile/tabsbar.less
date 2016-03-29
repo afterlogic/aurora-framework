@@ -1,10 +1,9 @@
-/*=== Tabsbar CSS ===*/
 .tabs_panel {
 	@fontSize: 12pt;
 	@itemTopOffset: 24px;
     
-	z-index: 1000;
 	float: right;
+	z-index: 1000;
 	
 	.control {
 		display: inline-block;
@@ -18,30 +17,29 @@
 			width: 15px;
 		
 			.iconFontInit();
+			
 			&:before {
+				color: rgba(0,0,0, 0.5);
+				content: "\e61e";
 				font-size: 30px;
 				display: inline-block;
-				width: 30px;
 				height: 30px;
-				color: rgba(0,0,0, 0.5);
-				text-shadow: 0 1px 0 #FFFFFF, 0 0 0 #505050;
-			}
-			&:before {
-				content: "\e61e";
+				text-shadow: 0 1px 0 #ffffff, 0 0 0 #505050;
+				width: 30px;
 			}
 		}
 	}
 	
 	.item {
+		color: #888785;
 		display: block;
-		vertical-align: top;
 		font-size: @fontSize;
+		line-height: 120%;
 		margin: @itemTopOffset 0px 0px 6px;
 		padding: 4px 10px;
-		line-height: 120%;
 		position: relative;
-		color: #888785;
-		text-shadow: 0px 1px 0px #fff;
+		text-shadow: 0px 1px 0px #ffffff;
+		vertical-align: top;
 		
 		html.rtl & {
 			margin-left: 0px;
@@ -50,6 +48,7 @@
 		
 		.cssanimations &.recivedAnim {
 			border-radius: 4px;
+			
 			.animation(highlight 0.5s linear);
 		}
 		
@@ -63,9 +62,9 @@
 		
 		.text {
 			color: inherit;
-			text-decoration: none;
-			position: relative;
 			outline: none;
+			position: relative;
+			text-decoration: none;
 			
 			&:hover {
 				color: #3d3d3d;
@@ -79,40 +78,33 @@
 		}
 		
 		.helper {
-			visibility: hidden;
-			position: relative;
-			top: -40px;
 			display: block;
 			height: 0;
 			overflow: hidden;
+			position: relative;
+			top: -40px;
+			visibility: hidden;
 		}
 	}
 	
 	.item .helper,
 	.current {
-		font-weight: bold;
 		color: #3d3d3d;
+		font-weight: bold;
 	}
 	
 	.settings,
 	.logout {
 		display: block;
-		
-		html.rtl & {
-		}
 	}
 	
 	.logout span {
 		cursor: pointer;
 	}
 }
-/*=== END Tabsbar CSS ===*/
-/*=== Acount menu CSS ===*/
+
 .tabs_panel {
-	
-	
 	.emails {
-		
 		.dropdown_helper {
 			min-width: 100%;
 		}
@@ -122,27 +114,26 @@
 		}
 
 		.dropdown_content {
-			color: #555;
-			background: #fff;
-			border: 1px solid #ccc;
-			padding: 30px 0px 0px 0px;
-			margin: -30px 0px 0px -2px;
-			display: block;
-			min-width: 100%;
 			border-radius: 4px;
+			color: #555555;
+			display: block;
+			background: #ffffff;
+			border: 1px solid #cccccc;
+			margin: -30px 0px 0px -2px;
+			min-width: 100%;
+			padding: 30px 0px 0px 0px;
 
 			.item {
-				margin: 0px;
-				display: block;
 				color: #555555;
-				padding: 6px 10px;
+				display: block;
 				font-weight: normal;
+				margin: 0px;
+				padding: 6px 10px;
 
 				&:hover {
-					background: #eee;
+					background: #eeeeee;
 				}
 			}
 		}
 	}
 }
-/*=== END Acount menu CSS ===*/

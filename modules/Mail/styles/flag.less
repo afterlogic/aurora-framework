@@ -20,7 +20,7 @@
 	
 	&:after {
 		// checked
-		color: #FFB736;
+		color: #ffb736;
 		content: "\e61f";
 		display: block;
 		font-size: 24px;
@@ -40,32 +40,26 @@
 	}
 }
 
-.item.checked .flag:not(.partial) {
-	&:before {
-		color:  desaturate(darken(@theme-list-checked-item-bg, 20%), 30%);
-	}
+.item.checked .flag:not(.partial):before {
+	color:  desaturate(darken(@theme-list-checked-item-bg, 20%), 30%);
 }
 
-.item.selected .flag:not(.partial) {
-	&:before {
-		color: desaturate(darken(@theme-list-selected-item-bg, 10%), 10%);
-	}
+.item.selected .flag:not(.partial):before {
+	color: desaturate(darken(@theme-list-selected-item-bg, 10%), 10%);
 }
 
 .use_threads .item .partial {
 	color: #ffb736;
 }
 
-.item .flagged {
-	&:after {
-		opacity: 1;
-		visibility: visible;
-		
-		-webkit-transition: -webkit-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
-		-moz-transition: -moz-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
-		-o-transition: -o-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
-		transition: transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
+.item .flagged:after {
+	opacity: 1;
+	visibility: visible;
 
-		.transform(scale(1));
-	}
+	-webkit-transition: -webkit-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
+	-moz-transition: -moz-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
+	-o-transition: -o-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
+	transition: transform 200ms cubic-bezier(.4,.4,.6,4) 0s, visibility 0ms linear 0s;
+
+	.transform(scale(1));
 }
