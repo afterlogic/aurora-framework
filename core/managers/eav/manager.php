@@ -53,7 +53,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}
 
-	public function createObject(\api_APropertyBag &$oObject)
+	protected function createObject(\api_APropertyBag &$oObject)
 	{
 		$mResult = $this->oStorage->createObject($oObject->sModuleName, $oObject->sClassName);
 		if (!$mResult)
@@ -75,7 +75,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}
 	
-	public function updateObject(\api_APropertyBag $oObject)
+	protected function updateObject(\api_APropertyBag $oObject)
 	{
 		$mResult = false;
 		$aMap = $oObject->getMap();
@@ -134,7 +134,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $iCount;		
 	}
 	
-	public function getObjects($sType, $aViewProperties = array(), $iPage = 0, $iPerPage = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
+	public function getObjects($sType, $aViewProperties = array(), $iPage = 0, $iPerPage = 0, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$aObjects = null;
 		try
@@ -198,27 +198,9 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			if ($oProperty->validate())
 			{
-				if ($this->oStorage->isPropertyExists($oProperty))
+				if (!$this->oStorage->setProperties(array($oProperty->ObjectId), array($oProperty)))
 				{
-					if (!$this->oStorage->updateProperty($oProperty))
-					{
-						throw new CApiManagerException(Errs::Main_UnknownError);
-					}
-					else
-					{
-						$bResult = true;
-					}
-				}
-				else
-				{
-					if (!$this->oStorage->createProperty($oProperty))
-					{
-						throw new CApiManagerException(Errs::Main_UnknownError);
-					}
-					else
-					{
-						$bResult = true;
-					}
+					throw new CApiManagerException(Errs::Main_UnknownError);
 				}
 			}
 		}

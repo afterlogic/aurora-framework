@@ -21,7 +21,9 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function isObjectExists($iObjectId)
 	{
-		return sprintf('SELECT COUNT(id) as objects_count FROM %seav_objects WHERE %s = %d', 
+		return sprintf(
+			'SELECT COUNT(id) as objects_count '
+			. 'FROM %seav_objects WHERE %s = %d', 
 			$this->prefix(), $this->escapeColumn('id'), $iObjectId
 		);
 	}
@@ -31,7 +33,9 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function createObject($sModule, $sType)
 	{
-		return sprintf('INSERT INTO %seav_objects ( %s, %s ) VALUES ( %s, %s )', 
+		return sprintf(
+			'INSERT INTO %seav_objects ( %s, %s ) '
+			. 'VALUES ( %s, %s )', 
 			$this->prefix(),
 			$this->escapeColumn('module_name'), 
 			$this->escapeColumn('object_type'), 
@@ -47,14 +51,16 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function deleteObject($iId)
 	{
-		return sprintf('DELETE FROM %seav_objects WHERE id = %d', 
+		return sprintf(
+			'DELETE FROM %seav_objects '
+			. 'WHERE id = %d', 
 			$this->prefix(), $iId);
 	}	
 	
 	public function getObjectById($iId)
 	{
-		$sSql = "
-			SELECT 	   
+		return sprintf(
+			"SELECT 	   
 				objects.id as obj_id, 
 				objects.object_type as obj_type, 
 				objects.module_name as obj_module,
@@ -69,9 +75,8 @@ class CApiEavCommandCreator extends api_CommandCreator
 			FROM %seav_properties as props
 				  RIGHT JOIN %seav_objects as objects
 					ON objects.id = props.id_object
-			WHERE objects.id = %d;";
-		
-		return sprintf($sSql, $this->prefix(), $this->prefix(), $iId);
+			WHERE objects.id = %d;",				
+			$this->prefix(), $this->prefix(), $iId);
 	}
 	
 	public function getObjectsCount($sObjectType, $aSearchProperties = array())
@@ -124,7 +129,12 @@ class CApiEavCommandCreator extends api_CommandCreator
 			{
 				$sType = $oObject->getPropertyType($sProperty);
 
-				$aResultViewProperties[$sProperty] = sprintf("props_%s.value_%s as prop_%s", $sProperty, $sType, $sProperty);
+				$aResultViewProperties[$sProperty] = sprintf(
+						"props_%s.value_%s as prop_%s", 
+						$sProperty, 
+						$sType, 
+						$sProperty
+				);
 				$aJoinProperties[$sProperty] = sprintf(
 						"LEFT JOIN eav_properties as props_%s 
 							ON props_%s.key = %s 
@@ -154,8 +164,13 @@ class CApiEavCommandCreator extends api_CommandCreator
 				}
 				$sType = $oObject->getPropertyType($sKey);
 				$sValueFormat = ($sType === 'int' || $sType === 'bool') ? "%d" : "%s";
-				$aResultSearchProperties[] = sprintf("props_%s.value_%s %s " . $sValueFormat, 
-						$sKey, $sType, $sPropertyAction, ($sType !== 'int' && $sType !== 'bool') ? $this->escapeString($mValue) : $mValue);
+				$aResultSearchProperties[] = sprintf(
+						"props_%s.value_%s %s " . $sValueFormat, 
+						$sKey, 
+						$sType, 
+						$sPropertyAction, 
+						($sType !== 'int' && $sType !== 'bool') ? $this->escapeString($mValue) : $mValue
+				);
 			}
 			if (0 < count($aSearchProperties))
 			{
@@ -168,7 +183,8 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sOffset = sprintf("OFFSET %d", ($iPage > 0) ? ($iPage - 1) * $iPerPage : 0);
 			}
 		}		
-		$sSql = sprintf("SELECT 
+		$sSql = sprintf(
+			"SELECT 
 			%s #1 COUNT
 			objects.id as obj_id, objects.object_type as obj_type, objects.module_name as obj_module
 			# fields
@@ -224,6 +240,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function setProperties($aObjectIds, $aProperties)
 	{
+		$sSql = '';
 		$aValues = array();
 		foreach ($aObjectIds as $iObjectId)
 		{
@@ -243,46 +260,42 @@ class CApiEavCommandCreator extends api_CommandCreator
 				}
 			}
 		}
-		$sValues = implode(',', $aValues);
+		if (count($aValues) > 0)
+		{
+			$sValues = implode(",\r\n", $aValues);
+			$sSql = sprintf(
+			'INSERT INTO %seav_properties 
+				(%s, %s, %s, %s, %s, %s, %s)
+			VALUES 
+				%s
+			ON DUPLICATE KEY UPDATE 
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s)', 
+				$this->prefix(), 
+				$this->escapeColumn('id_object'), 
+				$this->escapeColumn('key'),
+				$this->escapeColumn('type'),
+				$this->escapeColumn('value_string'),
+				$this->escapeColumn('value_text'),
+				$this->escapeColumn('value_int'),
+				$this->escapeColumn('value_bool'),
+				$sValues,
+				$this->escapeColumn('id_object'), $this->escapeColumn('id_object'), 
+				$this->escapeColumn('key'), $this->escapeColumn('key'),
+				$this->escapeColumn('type'), $this->escapeColumn('type'),
+				$this->escapeColumn('value_string'), $this->escapeColumn('value_string'),
+				$this->escapeColumn('value_text'), $this->escapeColumn('value_text'),
+				$this->escapeColumn('value_int'), $this->escapeColumn('value_int'),
+				$this->escapeColumn('value_bool'), $this->escapeColumn('value_bool')
+			);
+		}
 		
-		return sprintf(
-		'INSERT INTO %seav_properties 
-			(%s, %s, %s, %s, %s, %s, %s)
-		VALUES 
-			%s
-		ON DUPLICATE KEY UPDATE 
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s)', 
-			$this->prefix(), 
-			$this->escapeColumn('id_object'), 
-			$this->escapeColumn('key'),
-			$this->escapeColumn('type'),
-			$this->escapeColumn('value_string'),
-			$this->escapeColumn('value_text'),
-			$this->escapeColumn('value_int'),
-			$this->escapeColumn('value_bool'),
-			$sValues,
-			$this->escapeColumn('id_object'), 
-			$this->escapeColumn('id_object'), 
-			$this->escapeColumn('key'),
-			$this->escapeColumn('key'),
-			$this->escapeColumn('type'),
-			$this->escapeColumn('type'),
-			$this->escapeColumn('value_string'),
-			$this->escapeColumn('value_string'),
-			$this->escapeColumn('value_text'),
-			$this->escapeColumn('value_text'),
-			$this->escapeColumn('value_int'),
-			$this->escapeColumn('value_int'),
-			$this->escapeColumn('value_bool'),
-			$this->escapeColumn('value_bool')
-		);
-
+		return $sSql;
 	}	
 	
 	/**
@@ -305,7 +318,8 @@ class CApiEavCommandCreator extends api_CommandCreator
 	public function deleteProperties($iObjectId)
 	{
 		return sprintf(
-				'DELETE FROM %seav_properties WHERE id_object = %d', 
+				'DELETE FROM %seav_properties '
+				. 'WHERE id_object = %d', 
 				$this->prefix(), $iObjectId
 		);
 	}
@@ -318,7 +332,8 @@ class CApiEavCommandCreator extends api_CommandCreator
 	public function isPropertyExists($iObjectId, $sPropertyName)
 	{
 		return sprintf(
-				'SELECT COUNT(id) as properties_count FROM %seav_properties WHERE %s = %d and %s = %s', 
+				'SELECT COUNT(id) as properties_count '
+				. 'FROM %seav_properties WHERE %s = %d and %s = %s', 
 				$this->prefix(),
 				$this->escapeColumn('id_object'), $iObjectId,
 				$this->escapeColumn('key'), $this->escapeString($sPropertyName)
@@ -332,9 +347,14 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function getProperty($iObjectId, $sPropertyName)
 	{
-		return $this->gePropertyByWhere(sprintf('%s = %d AND %s = %s', 
-				$this->escapeColumn('id_object'), $iObjectId,
-				$this->escapeColumn('key'), $this->escapeString($sPropertyName))
+		return $this->gePropertyByWhere(
+			sprintf(
+				'%s = %d AND %s = %s', 
+				$this->escapeColumn('id_object'), 
+				$iObjectId,
+				$this->escapeColumn('key'), 
+				$this->escapeString($sPropertyName)
+			)
 		);
 	}
 }
