@@ -244,6 +244,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 	 */
 	public function setProperties($aObjectIds, $aProperties)
 	{
+		$sSql = '';
 		$aValues = array();
 		foreach ($aObjectIds as $iObjectId)
 		{
@@ -263,46 +264,42 @@ class CApiEavCommandCreator extends api_CommandCreator
 				}
 			}
 		}
-		$sValues = implode(',', $aValues);
+		if (count($aValues) > 0)
+		{
+			$sValues = implode(",\r\n", $aValues);
+			$sSql = sprintf(
+			'INSERT INTO %seav_properties 
+				(%s, %s, %s, %s, %s, %s, %s)
+			VALUES 
+				%s
+			ON DUPLICATE KEY UPDATE 
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s),
+				%s=VALUES(%s)', 
+				$this->prefix(), 
+				$this->escapeColumn('id_object'), 
+				$this->escapeColumn('key'),
+				$this->escapeColumn('type'),
+				$this->escapeColumn('value_string'),
+				$this->escapeColumn('value_text'),
+				$this->escapeColumn('value_int'),
+				$this->escapeColumn('value_bool'),
+				$sValues,
+				$this->escapeColumn('id_object'), $this->escapeColumn('id_object'), 
+				$this->escapeColumn('key'), $this->escapeColumn('key'),
+				$this->escapeColumn('type'), $this->escapeColumn('type'),
+				$this->escapeColumn('value_string'), $this->escapeColumn('value_string'),
+				$this->escapeColumn('value_text'), $this->escapeColumn('value_text'),
+				$this->escapeColumn('value_int'), $this->escapeColumn('value_int'),
+				$this->escapeColumn('value_bool'), $this->escapeColumn('value_bool')
+			);
+		}
 		
-		return sprintf(
-		'INSERT INTO %seav_properties 
-			(%s, %s, %s, %s, %s, %s, %s)
-		VALUES 
-			%s
-		ON DUPLICATE KEY UPDATE 
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s),
-			%s=VALUES(%s)', 
-			$this->prefix(), 
-			$this->escapeColumn('id_object'), 
-			$this->escapeColumn('key'),
-			$this->escapeColumn('type'),
-			$this->escapeColumn('value_string'),
-			$this->escapeColumn('value_text'),
-			$this->escapeColumn('value_int'),
-			$this->escapeColumn('value_bool'),
-			$sValues,
-			$this->escapeColumn('id_object'), 
-			$this->escapeColumn('id_object'), 
-			$this->escapeColumn('key'),
-			$this->escapeColumn('key'),
-			$this->escapeColumn('type'),
-			$this->escapeColumn('type'),
-			$this->escapeColumn('value_string'),
-			$this->escapeColumn('value_string'),
-			$this->escapeColumn('value_text'),
-			$this->escapeColumn('value_text'),
-			$this->escapeColumn('value_int'),
-			$this->escapeColumn('value_int'),
-			$this->escapeColumn('value_bool'),
-			$this->escapeColumn('value_bool')
-		);
-
+		return $sSql;
 	}	
 	
 	/**
