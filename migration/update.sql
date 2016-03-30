@@ -1,11 +1,11 @@
-CREATE TABLE `eav_objects` (
+CREATE TABLE IF NOT EXISTS `eav_objects` (
   `id` int(11) NOT NULL auto_increment,
   `object_type` varchar(255) default NULL,
   `module_name` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `eav_properties` (
+CREATE TABLE IF NOT EXISTS `eav_properties` (
   `id` int(11) NOT NULL auto_increment,
   `id_object` int(11) default NULL,
   `key` varchar(255) default NULL,
