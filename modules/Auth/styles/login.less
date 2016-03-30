@@ -15,8 +15,9 @@
 }
 
 .login_panel {
+	.theme-login-panel();
+	
 	@borderColor: #cac7c7;
-	@focusedBackground: #fff3ce;
 	@focusedBorderColor: #cfbf8e;
 	
 	.box-sizing;
@@ -47,7 +48,7 @@
 			display: none;
 		}
 		
-		.theme-header();
+		.theme-login-header();
 	}
 	
 	.login_panel_content {
@@ -59,8 +60,8 @@
 			.perspective(4000px);
 
 			&.left {
-				padding-right: 20px;
 				margin-right: 276px;
+				padding-right: 20px;
 				text-align: center;
 			}
 			
@@ -124,9 +125,9 @@
 
 			&.social_register .question_title,
 			&.send_question .question_title {
+				color: #929292;
 				display: block;
 				font-size: 11pt;
-				color: #929292;
 			}
 
 			&.forgot,
@@ -147,9 +148,9 @@
 				.transform(rotateY(180deg));
 				
 				font-size: 12pt;
+				text-shadow: 0px 1px 0px #f3f3f3;
 				white-space: normal;
 				width: 240px;
-				text-shadow: 0px 1px 0px #f3f3f3;
 			}
 		}
 	}
@@ -216,8 +217,8 @@
 		text-align: right;
 		white-space: nowrap;
 
-		&.focused{
-			background: @focusedBackground;
+		&.focused {
+			background: @focused-background;
 			border-color: @focusedBorderColor;
 			position: relative;
 		}
@@ -228,7 +229,7 @@
 
 		&:first-child {
 			border-radius: 4px 4px 0px 0px;
-			box-shadow: 0 1px 1px #DDDDDD inset;
+			box-shadow: 0 1px 1px #dddddd inset;
 		}
 
 		&:last-child {
@@ -267,7 +268,7 @@
 				margin-right: -20px;
 			}
 			
-			.iconFontInit();
+			.init-icon-font();
 			&:before {
 				color: #d5d4d2;
 				display: inline-block;
@@ -436,15 +437,13 @@
 		}
 
 		.twitter {
-			background: #55ACEE url("images/twitter-icon_17x14.png") 4px 3px no-repeat;
+			background: #55acee url("images/twitter-icon_17x14.png") 4px 3px no-repeat;
 			border: 1px solid #5399cd;
 
 			.text {
-				background: #55ACEE;
+				background: #55acee;
 				border-left: 1px solid #5399cd;
 			}
 		}
 	}
-	
-	.theme-login-panel();
 }

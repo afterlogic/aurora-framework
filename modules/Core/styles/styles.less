@@ -1,39 +1,38 @@
 /*=== Common css part ===*/
 @import "./common/@mixins.less";
-@import "./common/@theme.less";
 @import "./common/text-fade.less";
 @import "./common/fonts.less";
 
 /*=== Library part ===*/
 @import "./common/helpers.less";
 @import "./common/keyframes.less";
-@import "grid.less";
+@import "./desktop/grid.less";
+@import "./common/list-notification.less";
+@import "./common/toolbar.less";
+@import "./common/fields.less";
 	
 /* Controls */
-@import "./controls/buttons.less";
-@import "./controls/checkbox.less";
-@import "./controls/inputs.less";
-@import "./controls/scrollbar.less";
-@import "./controls/pagination.less";
-@import "./controls/dropdown.less";
-@import "./controls/jquery-ui-overrides.less";
+@import "./common/buttons.less";
+@import "./common/checkbox.less";
+@import "./common/inputs.less";
+@import "./common/scrollbar.less";
+@import "./common/pagination.less";
+@import "./desktop/dropdown.less";
+@import "./common/jquery-ui-overrides.less";
 
-@import "attachments.less";
+@import "./desktop/attachments.less";
 @import "./common/notifications.less";
 @import "./common/popups.less";
 @import "./common/files.less";
 
 /*=== Common blocks part ===*/
 @import "./common/search-block.less";
-@import "quick-reply.less";
+@import "./desktop/quick-reply.less";
 @import "./common/tabsbar.less";
 @import "./common/volumer.less";
-@import "custom-tooltip.less";
-@import "address-capsule.less";
+@import "./desktop/custom-tooltip.less";
+@import "./desktop/address-capsule.less";
 
 /*=== Screen overrides part ===*/
 @import "./common/base.less";
-@import "base.less";
-
-/*=== Develop part ===*/
-@import "dev.less";
+@import "./desktop/base.less";

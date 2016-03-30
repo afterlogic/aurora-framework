@@ -1,0 +1,67 @@
+.theme-thread-pin();
+
+&.checked .thread-pin {
+	background: @theme-list-checked-item-bg;
+
+	&:hover {
+		background-color: darken(@theme-list-checked-item-bg, 5%);
+	}
+}
+
+.thread-pin {
+	background: @thread-pin-background;
+	border: @thread-pin-border;
+	border-radius: 9px;
+	color: @thread-pin-color;
+	cursor: pointer;
+	float: right;
+	font-weight: bold;
+	line-height: 100%;
+	margin: -4px 0px 0px 6px;
+	padding: 4px 8px 3px;
+
+	html.rtl & {
+		float: left;
+	}
+
+	&.loading {
+		background-color: #abaaa3;
+		cursor: default;
+	}
+
+	&:hover {
+		.transition(background-color 200ms ease);
+
+		background-color: darken(@thread-pin-unread-selected-background, 5%);
+	}
+
+	&.unread {
+		background-color: @thread-pin-unread-background;
+		border: @thread-pin-unread-border;
+		color: @thread-pin-unread-color;
+
+		&:hover {
+			background-color: darken(@thread-pin-unread-background, 5%);
+		}
+	}
+}
+
+&.selected .thread-pin {
+	background: @theme-list-selected-item-bg;
+	border: @thread-pin-selected-border;
+	color: @thread-pin-selected-color;
+
+	&:hover {
+		background-color: darken(@thread-pin-selected-background, 5%);
+	}
+
+	&.unread {
+		background-color: @thread-pin-unread-selected-background;
+		border: @thread-pin-unread-selected-border;
+		color: @thread-pin-unread-selected-color;
+
+		&:hover {
+			background-color: darken(@thread-pin-unread-selected-background, 5%);
+		}
+	}
+}

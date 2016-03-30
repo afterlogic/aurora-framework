@@ -9,8 +9,9 @@
 	vertical-align: bottom;
 	width: 16px;
 
-	.iconFontInit();
-	.iconFontInit(after);
+	.init-icon-font();
+	.init-icon-font(after);
+	
 	&:before {
 		content: "\e652";
 		display: block;
@@ -30,7 +31,7 @@
 		visibility: hidden;
 		width: 100%;
 
-		.transformOrigin(13px 13px);
+		.transform-origin(13px 13px);
 		.transform(scale(0.8));
 
 		-webkit-transition: -webkit-transform 200ms cubic-bezier(.4,.4,.6,4) 0s, opacity 100ms linear 100ms, visibility 0ms linear 300ms;

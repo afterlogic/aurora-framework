@@ -25,7 +25,7 @@
 	}
 
 	.agent_area .panel .panel_content {
-		.resize_compensation_top(0px);
+		.resize-compensation-top(0px);
 	}
 
 	.agent_area .panel.threads_panel {
@@ -102,12 +102,12 @@
 }
 
 .panel.threads_panel .middle_bar {
-	.resize_compensation_top(53px);
-	.resize_compensation_bottom(41px);
+	.resize-compensation-top(53px);
+	.resize-compensation-bottom(41px);
 
 	.HelpdeskLayout .user_area & {
-		.resize_compensation_top(0px);
-		.resize_compensation_bottom(0px);
+		.resize-compensation-top(0px);
+		.resize-compensation-bottom(0px);
 
 		background: #ffffff;
 		border-radius: 5px 0px 5px 5px;
@@ -181,7 +181,7 @@
 					}
 
 					.icon {
-						background: url("images/sprites.png?%VERSION%") no-repeat -120px -120px;
+						background: url("images/sprites.png") no-repeat -120px -120px;
 						display: inline-block;
 						height: 16px;
 						vertical-align: middle;
@@ -249,16 +249,16 @@
 	}
 
 	.middle_bar {
-		.resize_compensation_top(76px);
-		.resize_compensation_bottom(92px);
+		.resize-compensation-top(76px);
+		.resize-compensation-bottom(92px);
 
 		&.new_request {
-			.resize_compensation_top(0px);
-			.resize_compensation_bottom(57px);
+			.resize-compensation-top(0px);
+			.resize-compensation-bottom(57px);
 		}
 
 		&.own_thread {
-			.resize_compensation_top(57px);
+			.resize-compensation-top(57px);
 		}
 	}
 
@@ -368,7 +368,7 @@
 					margin-right: 10px;
 				}
 				
-				.iconFontInit();
+				.init-icon-font();
 				
 				&:before {
 					content: "\e63e";
@@ -455,7 +455,7 @@
 			}
 
 			.content::before {
-				background: url("images/sprites.png?%VERSION%") repeat -280px -200px;
+				background: url("images/sprites.png") repeat -280px -200px;
 				content: "";
 				float: left;
 				height: 40px;
@@ -500,7 +500,7 @@
 			}
 
 			.icon {
-				background: url("images/sprites.png?%VERSION%") no-repeat -120px -120px;
+				background: url("images/sprites.png") no-repeat -120px -120px;
 				display: inline-block;
 				height: 16px;
 				vertical-align: middle;
@@ -620,8 +620,10 @@
 	}
 
 	.items_list .list_notification .icon.meditation {
-		.iconFontInit();
+		.init-icon-font();
+		
 		font-size: 150px;
+		
 		&:before {
 			content: "\e66f";
 		}
@@ -738,7 +740,7 @@
 			}
 
 			.icon {
-				background: url("images/sprites.png?%VERSION%") no-repeat -400px -411px;
+				background: url("images/sprites.png") no-repeat -400px -411px;
 				display: inline-block;
 				height: 31px;
 				margin-right: 4px;

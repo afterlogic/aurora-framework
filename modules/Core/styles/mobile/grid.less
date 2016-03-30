@@ -29,7 +29,7 @@
 	
 	.panel_content {
 		.box-sizing;
-		.resize_compensation_top(@theme-toolbar-height); /* toolbar offset*/
+		.resize-compensation-top(@theme-toolbar-height); /* toolbar offset*/
 
 		height: 100%;
 	}
@@ -231,8 +231,8 @@
 		white-space: nowrap;
 		
 		.from, .subject {
-			.fadeout_text_init();
-			.fadeout_text(#fdfdfd);
+			.fadeout-text-init();
+			.fadeout-text(#fdfdfd);
 		}
 		
 		&.unseen {
@@ -240,7 +240,7 @@
 			font-weight: bold;
 			
 			.from, .subject {
-				.fadeout_text(@theme-list-unseen-item-bg);
+				.fadeout-text(@theme-list-unseen-item-bg);
 			}
 		}
 		
@@ -255,7 +255,7 @@
 			background: @theme-list-checked-item-bg;
 			
 			.from, .subject {
-				.fadeout_text(@theme-list-checked-item-bg);
+				.fadeout-text(@theme-list-checked-item-bg);
 			}
 			
 			.custom_checkbox .icon {
@@ -269,7 +269,7 @@
 			color: @theme-list-selected-item-color;
 			
 			.from, .subject {
-				.fadeout_text(@theme-list-selected-item-bg);
+				.fadeout-text(@theme-list-selected-item-bg);
 			}
 			
 			.custom_checkbox .icon {
@@ -439,7 +439,7 @@
 				}
 
 				&.droppableHover .name {
-					.fadeout_text(desaturate(darken(@theme-group-style-item-bg, 5%), 10%));
+					.fadeout-text(desaturate(darken(@theme-group-style-item-bg, 5%), 10%));
 				}
 			}
 
@@ -465,11 +465,11 @@
 				color: #ffffff !important;
 
 				.name {
-					.fadeout_text(@theme-group-style-selected-item-bg-color);
+					.fadeout-text(@theme-group-style-selected-item-bg-color);
 				}
 
 				&.droppableHover .name {
-					.fadeout_text(desaturate(darken(@theme-group-style-selected-item-bg-color, 5%), 10%));
+					.fadeout-text(desaturate(darken(@theme-group-style-selected-item-bg-color, 5%), 10%));
 				}
 
 				.theme-group-style-selected-item();
@@ -509,7 +509,7 @@
 				vertical-align: middle;
 				width: 12px;
 				
-				.iconFontInit();
+				.init-icon-font();
 				
 				&:before {
 					display: inline-block;
@@ -564,9 +564,3 @@
 		text-shadow: 0px 1px 0px #678197 !important;
 	}
 }
-
-@import "../list-notification.less";
-
-@import "../controls/toolbar.less";
-
-@import "../fields.less";

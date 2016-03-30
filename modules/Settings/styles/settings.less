@@ -3,12 +3,12 @@
 		.items_list_group_style();
 		
 		.items_list .item .title .name {
-			.fadeout_text_init();
-			.fadeout_text(#f0f0f0);
+			.fadeout-text-init();
+			.fadeout-text(#f0f0f0);
 		}
 
 		.items_list .item.canDrag .title:hover .name {
-			.fadeout_text(#eaeaea);
+			.fadeout-text(#eaeaea);
 		}
 	}
 	
@@ -41,7 +41,7 @@
 					vertical-align: middle;
 					width: 18px;
 					
-					.iconFontInit();
+					.init-icon-font();
 					
 					&:before {
 						display: inline-block;
@@ -91,13 +91,13 @@
 	}
 	
 	.panel_content {
-		.resize_compensation_top(0px);
+		.resize-compensation-top(0px);
 
 		margin-right: 0px;
 	}
 	
 	.middle_bar {
-		.resize_compensation_top(72px);
+		.resize-compensation-top(72px);
 	}
 	
 	.panel_top {
@@ -233,7 +233,7 @@
 			
 			.transition(opacity 300ms ease 0s);
 			
-			.iconFontInit();
+			.init-icon-font();
 			
 			&:before {
 				content: "\e63d";
@@ -331,7 +331,7 @@
 				vertical-align: bottom;
 				width: 18px;
 				
-				.iconFontInit();
+				.init-icon-font();
 			}
 
 			.icon.fetcher:before {
@@ -351,6 +351,10 @@
 
 			.title {
 				font-weight: bold;
+			}
+			
+			.info {
+				float: right;
 			}
 		}
 
@@ -445,7 +449,8 @@
 		}
 		
 		.canDrag .title:hover {
-			.iconFontInit();
+			.init-icon-font();
+			
 			&:before {
 				content: "\e65d";
 				display: inline-block;
@@ -477,7 +482,7 @@
 				height: 20px;
 				width: 20px;
 				
-				.iconFontInit();
+				.init-icon-font();
 				
 				font-size: 20px;
 				
@@ -597,5 +602,5 @@ html.rtl .settings .signature .editor_row .editor {
 }
 
 .settings .signature .editor_row .editor .html_editor {
-	.pass_through;
+	.pass-events-through();
 }
