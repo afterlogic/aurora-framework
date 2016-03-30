@@ -38,7 +38,7 @@
 	}
 }
 
-.fadeout_text_init() {
+.fadeout-text-init() {
 	overflow: hidden;
 
 	&:after {
@@ -62,12 +62,12 @@
 	}
 }
 
-.fadeout_text(@color) when (iscolor(@color)) {
+.fadeout-text(@color) when (iscolor(@color)) {
 	&:after {
-		.fade_gradient(@color);
+		.fade-gradient(@color);
 		
 		html.rtl & {
-			.fade_gradient(rtl, @color);
+			.fade-gradient(rtl, @color);
 		}
 	}
 }

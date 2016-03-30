@@ -96,7 +96,7 @@
 				width: 14px;
 				z-index: 10;
 				
-				.iconFontInit();
+				.init-icon-font();
 				
 				&:before {
 					content: "\e63e";
@@ -105,7 +105,7 @@
 		}
 		
 		.spinner {
-			background: url("images/wait.gif?%VERSION%") no-repeat left top;
+			background: url("images/wait.gif") no-repeat left top;
 			display: inline-block;
 			height: 20px;
 			width: 20px;
@@ -235,7 +235,7 @@
 		}
 		
 		.buttons {
-			.clearfix_helper();
+			.clearfix-helper();
 			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms");
 
 			border: 0px;

@@ -25,8 +25,8 @@
 				<span class="plus_more_senders" data-bind="text: threadMoreSendersText(), visible: threadMoreSendersVisible()"></span>
 			</span>
 			<span class="separator"></span>
-			<span class="thread" data-bind="text: threadCount(), visible: threadCountVisible(), click: openThread, css: {'unread': threadUnreadCount() > 0}, customTooltip: threadCountHint"></span>
-			<span class="thread loading" data-bind="i18n: {'key': 'CORE/INFO_LOADING'}, visible: threadLoadingVisible()"></span>
+			<span class="thread-pin" data-bind="text: threadCount(), visible: threadCountVisible(), click: openThread, css: {'unread': threadUnreadCount() > 0}, customTooltip: threadCountHint"></span>
+			<span class="thread-pin loading" data-bind="i18n: {'key': 'CORE/INFO_LOADING'}, visible: threadLoadingVisible()"></span>
 			<span class="subject fadeout">
 				<span class="importance" data-bind="visible: importance() === Enums.Importance.High"></span>
 				<span data-bind="text: subjectForDisplay()"></span>

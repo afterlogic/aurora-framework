@@ -25,8 +25,8 @@
 	}
 	
 	.middle_bar {
-		.resize_compensation_top(39px);
-		.resize_compensation_bottom(47px);
+		.resize-compensation-top(39px);
+		.resize-compensation-bottom(47px);
 	}
 	
 	.item {
@@ -52,7 +52,7 @@
 				vertical-align: bottom;
 				width: 20px;
 				
-				.iconFontInit();
+				.init-icon-font();
 
 				&:before {
 					.opacity(0.7);
@@ -109,18 +109,18 @@
 
 .panel.contact_viewer {
 	.panel_content {
-		background: url("images/contacts-bg.png?%VERSION%") repeat 0 0;
+		background: url("images/contacts-bg.png") repeat 0 0;
 		margin: 0 !important;
 		padding: 2px 4px 0 2px !important;
 	}
 	
 	.middle_bar {
 		.box-sizing;
-		.resize_compensation_top(100px);
+		.resize-compensation-top(100px);
 		
 		&.edit_contact,
 		&.edit_group {
-			.resize_compensation_bottom(69px);
+			.resize-compensation-bottom(69px);
 		}
 	}
 	
@@ -232,7 +232,8 @@
 				width: 20px;
 				word-wrap: normal;
 				
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					content: "\e662";
 					font-size: 20px;
@@ -256,7 +257,8 @@
 		vertical-align: middle;
 		width: 20px;
 		
-		.iconFontInit();
+		.init-icon-font();
+		
 		&:before {
 			content: "\e663";
 			font-size: 20px;

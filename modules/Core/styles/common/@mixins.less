@@ -1,4 +1,4 @@
-.border-radius (@radius) {
+.border-radius(@radius) {
 	-webkit-border-radius: @radius;
 	-moz-border-radius: @radius;
 	border-radius: @radius;
@@ -24,21 +24,21 @@
 	word-wrap: break-word;
 }
 
-.transition (@rule) {
+.transition(@rule) {
 	-webkit-transition: @rule;
 	-moz-transition: @rule;
 	-o-transition: @rule;
 	transition: @rule;
 }
 
-.transform (@rule) {
+.transform(@rule) {
 	-webkit-transform: @rule;
 	-moz-transform: @rule;
 	-o-transform: @rule;
 	transform: @rule;
 }
 
-.transformOrigin (@rule) {
+.transform-origin(@rule) {
 	-webkit-transform-origin: @rule;
 	-moz-transform-origin: @rule;
 	-ms-transform-origin: @rule;
@@ -53,7 +53,7 @@
 	perspective: @rule;
 }
 
-.animation (@rule) {
+.animation(@rule) {
 	-webkit-animation: @rule;
 	-moz-animation: @rule;
 	animation: @rule;
@@ -64,7 +64,7 @@
 	filter: e(%("alpha(opacity=%d)", @value*100));
 }
 
-.gradient(@color: transparent, @start: #EEE, @stop: #FFF) {
+.gradient(@color: transparent, @start: #eeeeee, @stop: #ffffff) {
 	background: @color;
 	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, @start), color-stop(1, @stop));
 	background: -webkit-linear-gradient(bottom, @start 0%, @stop 100%);
@@ -74,7 +74,7 @@
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
 }
 
-.fade_gradient(@color: #F5F5F5) when (@theme-use-text-fade = true) {
+.fade-gradient(@color: #f5f5f5) when (@theme-use-text-fade = true) {
 	@start: fade(@color, 0%);
 	@stop: fade(@color, 100%);
 	
@@ -87,7 +87,7 @@
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d',GradientType=1)",argb(@start),argb(@stop))); //* IE6-9 */
 }
 
-.fade_gradient(rtl, @color: #F5F5F5) when (@theme-use-text-fade) {
+.fade-gradient(rtl, @color: #f5f5f5) when (@theme-use-text-fade = true) {
 	@start: fade(@color, 100%);
 	@stop: fade(@color, 0%);
 		
@@ -100,7 +100,7 @@
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d',GradientType=1)",argb(@start),argb(@stop)));
 }
 
-.fade_gradient(vertical, @color: #F5F5F5) {
+.fade-gradient(vertical, @color: #f5f5f5) {
 	@start: fade(@color, 0%);
 	@stop: fade(@color, 100%);
 	
@@ -114,16 +114,17 @@
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d',GradientType=0)",argb(@start),argb(@stop)));
 }
 
-.resize_compensation_top (@offset: 0px) {
+.resize-compensation-top(@offset: 0px) {
 	padding-top: @offset;
 	margin-top: -@offset;
 }
-.resize_compensation_bottom (@offset: 0px) {
+
+.resize-compensation-bottom(@offset: 0px) {
 	padding-bottom: @offset;
 	margin-bottom: -@offset;
 }
 
-.pass_through() {
+.pass-events-through() {
 	pointer-events:none;
 	
 	> * {
@@ -131,7 +132,7 @@
 	}
 }
 
-.clearfix_helper() {
+.clearfix-helper() {
 	clear: both;
 	
 	&:after { clear: both; display: block; content: "."; height: 0; visibility: hidden; } //*Opera*/
@@ -139,14 +140,14 @@
 	* html & { height: 1%; } // IE 6 */
 }
 
-.transparent_color_helper(@color, @opacity) {
+.transparent-background-color(@color, @opacity) {
 	@colorAlpha: fade(@color, @opacity * 100);
 	background-color: @colorAlpha;
 	@aplhaColor: argb(@colorAlpha);
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='%d', endColorstr='%d')", @aplhaColor, @aplhaColor));
 }
 
-.iconFontInit() {
+.init-icon-font() {
 	&:before {
 		speak: none;
 		font-style: normal;
@@ -162,7 +163,7 @@
 	}
 }
 
-.iconFontInit(after) {
+.init-icon-font(after) {
 	&:after {
 		speak: none;
 		font-style: normal;
@@ -176,20 +177,4 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
-}
-
-.makeIconBevel(@color) {
-	color: fade(darken(@color, 50%), 50%);
-	text-shadow: 0 1px 0 lighten(@color, 90%), 0 0 0 darken(@color, 100%)
-}
-
-.filterBlur(@value, @bZoom: 0.01) {
-	filter: blur(@value);
-	-webkit-filter: blur(@value);
-	-moz-filter: blur(@value);
-	-ms-filter: blur(@value);
-	-o-filter: blur(@value);
-	filter: url("images/filters.svg#blur@{value}"); // 1-5 px
-	
-	.transform(scale((unit(@value)*@bZoom)+1)); //need for cuting blured edges
 }

@@ -74,7 +74,7 @@
 				color: #ffffff;
 				
 				&:hover {
-					.transparent_color_helper(#000000, 0.1);
+					.transparent-background-color(#000000, 0.1);
 				}
 			}
 		}
@@ -161,7 +161,8 @@
 				margin-left: 6px;
 				width: 18px;
 				
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					content: "\e65c";
 					display: inline-block;
@@ -179,7 +180,8 @@
 				margin-left: 4px;
 				width: 14px;
 			
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					content: "\e66d";
 					display: inline-block;
@@ -205,7 +207,7 @@
 				overflow: hidden;
 				width: 16px;
 
-				.iconFontInit();
+				.init-icon-font();
 				
 				&:hover {
 					opacity: 0.6;
@@ -236,7 +238,8 @@
 					vertical-align: middle;
 					width: 20px;
 					
-					.iconFontInit();
+					.init-icon-font();
+					
 					&:before {
 						display: inline-block;
 						font-size: 20px;
@@ -262,18 +265,15 @@
 	}
 	
 	.middle_bar {
-		.resize_compensation_bottom(@theme-smallCalendarHeight);
+		.resize-compensation-bottom(@theme-small-calendar-height);
 	}
 	
 	.panel_bottom {
-		@currentPeriodBgColor: #d3d1ca;
-		@todayBgColor: #fff4cf;
-
 		background: #E3E1D9;
 		border: 0px;
 		border-radius: 0px;
 		float: left;
-		height: @theme-smallCalendarHeight;
+		height: @theme-small-calendar-height;
 		padding: 0px;
 		line-height: 140%;
 		width: 100%;
@@ -315,7 +315,8 @@
 				border: 1px solid #999999;
 			}
 
-			.iconFontInit();
+			.init-icon-font();
+			
 			&:before {
 				color: inherit;
 				display: inline-block;
@@ -341,24 +342,21 @@
 			font-weight: bold !important;
 		}
 		
-		table.highlight_week tr.current_week {
-			background-color: @currentPeriodBgColor;
-		}
+		.theme-small-calendar();
 		
+		table.highlight_week tr.current_week,
 		table.highlight_day td.ui-datepicker-current-day {
-			background-color: @currentPeriodBgColor;
+			background-color: @current-day-background;
 		}
 		
 		table.highlight_day td.ui-datepicker-today,
 		td.ui-datepicker-today {
-			background-color: @todayBgColor;
+			background-color: @today-background;
 		}
 		
 		table.ui-datepicker-calendar td a {
 			text-align: center;
 		}
-		
-		.theme-small-calendar();
 	}
 }
 
@@ -497,7 +495,8 @@
 			}
 		}
 		
-		.iconFontInit();
+		.init-icon-font();
+		
 		&:before {
 			content: "\e61c";
 			display: inline-block;
@@ -533,7 +532,7 @@
 		padding-right: 23px;
 	}
 
-	.iconFontInit(after);
+	.init-icon-font(after);
 	
 	&:after {
 		display: block;
@@ -717,7 +716,8 @@ fc-month-view .fc-content,
 		margin: -10px -7px 0px 0px;
 		width: 16px;
 		
-		.iconFontInit();
+		.init-icon-font();
+		
 		&:before {
 			display: inline-block;
 			color: #ffffff;
@@ -821,7 +821,7 @@ fc-month-view .fc-content,
 			height: 20px;
 			width: 20px;
 			
-			.iconFontInit();
+			.init-icon-font();
 			
 			&:hover {
 				color: darken(#7b7b7b, 10%);
@@ -1010,7 +1010,8 @@ fc-month-view .fc-content,
 				height: 20px;
 				width: 28px;
 				
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					color: #c2c7cb;
 					display: inline-block;
@@ -1031,7 +1032,7 @@ fc-month-view .fc-content,
 			}
 
 			&.repeat .icon {
-				background: url("images/sprites.png?%VERSION%") no-repeat 40px 40px;
+				background: url("images/sprites.png") no-repeat 40px 40px;
 				background-position: -280px -120px;
 			}
 
@@ -1307,7 +1308,7 @@ fc-month-view .fc-content,
 		width: 100%;
 
 		.icon.repeat {
-			background: url("images/sprites.png?%VERSION%") no-repeat -980px -240px;
+			background: url("images/sprites.png") no-repeat -980px -240px;
 			display: block;
 			height: 12px;
 			left: 6px;
@@ -1368,7 +1369,8 @@ fc-month-view .fc-content,
 					color: darken(#7b7b7b, 10%);
 				}
 				
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					content: "\e641";
 					display: inline-block;
@@ -1408,7 +1410,8 @@ fc-month-view .fc-content,
 					color: darken(#7b7b7b, 10%);
 				}
 				
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					content: "\e645";
 					display: inline-block;
@@ -1437,7 +1440,8 @@ fc-month-view .fc-content,
 				vertical-align: middle;
 				width: 16px;
 
-				.iconFontInit();
+				.init-icon-font();
+				
 				&:before {
 					display: inline-block;
 					font-size: 14px;

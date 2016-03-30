@@ -9,7 +9,9 @@ var
 
 	aModulesNames = argv.getModules(),
 	aModulesFiles = [],
-	aModulesWatchPaths = []
+	aModulesWatchPaths = [],
+	
+	sTheme = argv.getParameter('--theme').toLowerCase()
 ;
 	
 aModulesNames.forEach(function (sModuleName) {
@@ -24,8 +26,13 @@ gulp.task('styles', function () {
 	
 	gulp.src(aModulesFiles)
 		.pipe(concat('styles.css', {
-			process: function(src, filePath) {
-				return '@import "' + filePath + '";\r\n'; 
+			process: function(sSrc, sFilePath) {
+				var
+					sThemePath = sFilePath.replace('styles.less', 'themes/' + sTheme + '.less'),
+					sRes = fileExists(sThemePath) ? '@import "' + sThemePath + '";\r\n' : ''
+				;
+				
+				return sRes + '@import "' + sFilePath + '";\r\n'; 
 			}
 		}))
 		.pipe(plumber({

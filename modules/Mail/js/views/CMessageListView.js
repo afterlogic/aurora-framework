@@ -691,8 +691,8 @@ CMessageListView.prototype.onBind = function ($viewDom)
 			}
 		})
 		.on('dblclick', '.message_sub_list .item .flag', fStopPopagation)
-		.on('click', '.message_sub_list .item .thread', fStopPopagation)
-		.on('dblclick', '.message_sub_list .item .thread', fStopPopagation)
+		.on('click', '.message_sub_list .item .thread-pin', fStopPopagation)
+		.on('dblclick', '.message_sub_list .item .thread-pin', fStopPopagation)
 	;
 
 	this.selector.initOnApplyBindings(

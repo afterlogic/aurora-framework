@@ -20,11 +20,11 @@
 
 .panel.folders_panel  {
 	.panel_content {
-		.resize_compensation_top(0px);
+		.resize-compensation-top(0px);
 	}
 	
 	.middle_bar {
-		.resize_compensation_bottom(0px);
+		.resize-compensation-bottom(0px);
 	}
 	
 	.panel_bottom {
@@ -70,11 +70,11 @@
 
 .panel.messages_panel {
 	.panel_content {
-		.resize_compensation_top(64px);
+		.resize-compensation-top(64px);
 	}
 	
 	.middle_bar {
-		.resize_compensation_top(39px);
+		.resize-compensation-top(39px);
 	}
 	
 	.panel_bottom {
@@ -92,7 +92,7 @@
 	}
 	
 	.items_list {
-		@import "flag.less";
+		@import "../common/flag.less";
 	}
 	
 	.items_list .item {
@@ -152,7 +152,7 @@
 			clear: both;
 		}
 		
-		@import "answered-marker.less";
+		@import "../common/answered-marker.less";
 		
 		.importance {
 			border: 1px solid;
@@ -163,7 +163,7 @@
 			vertical-align: middle;
 			width: 17px;
 			
-			.iconFontInit();
+			.init-icon-font();
 			
 			&:before {
 				content: "\e620";
@@ -186,7 +186,7 @@
 			width: 20px;
 			
 			&.has_attachments {
-				.iconFontInit();
+				.init-icon-font();
 				
 				&:before {
 					.opacity(0.7);
@@ -210,82 +210,7 @@
 			}
 		}
 		
-		// Thread Counter
-		@tcBackground: #ccc8c1;
-		@tcTextColor: #ffffff;
-		@tcBorder: 0px;
-		
-		@tcSelectedBackground: @tcBackground;
-		@tcSelectedTextColor: @tcTextColor;
-		@tcSelectedBorder: @tcBorder;
-		
-		@tcUnreadBackground: @tcBackground;
-		@tcUnreadTextColor: @tcTextColor;
-		@tcUnreadBorder: @tcBorder;
-		
-		@tcUnreadSelectedBackground: @tcBackground;
-		@tcUnreadSelectedTextColor: @tcTextColor;
-		@tcUnreadSelectedBorder: @tcBorder;
-		
-		.thread {
-			background: @tcBackground;
-			border: @tcBorder;
-			border-radius: 10px;
-			color: @tcTextColor;
-			cursor: pointer;
-			float: right;
-			font-weight: bold;
-			line-height: 100%;
-			margin: -4px 0px 0px 6px;
-			padding: 4px 8px 3px;
-			
-			html.rtl & {
-				float: left;
-			}
-			
-			&.loading {
-				background-color: #abaaa3;
-				cursor: default;
-			}
-		
-			&:hover {
-				.transition(background-color 200ms ease);
-				
-				background-color: darken(@tcUnreadSelectedBackground, 5%);
-			}
-			
-			&.unread {
-				background-color: @tcUnreadBackground;
-				border: @tcUnreadBorder;
-				color: @tcUnreadTextColor;
-
-				&:hover {
-					background-color: darken(@tcUnreadBackground, 5%);
-				}
-			}
-		}
-		
-		&.selected .thread {
-			background: @tcSelectedBackground;
-			border: @tcSelectedBorder;
-			color: @tcSelectedTextColor;
-			
-			&:hover {
-				background-color: darken(@tcSelectedBackground, 5%);
-			}
-			
-			&.unread {
-				background-color: @tcUnreadSelectedBackground;
-				border: @tcUnreadSelectedBorder;
-				color: @tcUnreadSelectedTextColor;
-
-				&:hover {
-					background-color: darken(@tcUnreadSelectedBackground, 5%);
-				}
-			}
-		}
-		
-		.theme-messages-list-item();
+		@import "../common/thread-pin.less";
 	}
 }
 
@@ -294,7 +219,7 @@
 		margin-bottom: 6px !important;
 	}
 	
-	.thread {
+	.thread-pin {
 		margin-top: 2px !important;
 	}
 }
@@ -310,7 +235,7 @@
 	.messages_panel .items_list .item .marker,
 	.html_editor .toolbar .item .icon
 	{
-		background-image: url("images/sprites2x.png?%VERSION%");
+		background-image: url("images/sprites2x.png");
 		background-size: 1440px 560px;
 	}
 }
@@ -318,19 +243,19 @@
 .messages_panel .items_list .not_use_threads .item {
 	& .thread_loading,
 	&.thread_more_messages,
-	& .thread {
+	& .thread-pin {
 		display: none;
 	}
 }
 
 .message_viewer {
 	.panel_content {
-		.resize_compensation_top(64px);
+		.resize-compensation-top(64px);
 	}
 	
 	.panel_center {
 		.box-sizing;
-		.resize_compensation_top(165px);/* header + quick reply */
+		.resize-compensation-top(165px);/* header + quick reply */
 
 		background: none;
 		width: 100%;
@@ -452,7 +377,7 @@
 				margin-right: 0px;
 			}
 			
-			.iconFontInit();
+			.init-icon-font();
 			
 			&:before {
 				content: "\e671";
@@ -667,7 +592,7 @@
 	vertical-align: middle;
 	width: 11px;
 
-	.iconFontInit();
+	.init-icon-font();
 	
 	&:before {
 		content: "\e641";
