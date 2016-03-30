@@ -106,8 +106,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		$bResult = true;
 		try
 		{
-			$bResult = $this->oStorage->deleteObject($iObjectId);
-			if ($bResult)
+			if ($this->oStorage->deleteObject($iObjectId))
 			{
 				$bResult = $this->deleteProperties($iObjectId);
 			}

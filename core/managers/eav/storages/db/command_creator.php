@@ -111,7 +111,11 @@ class CApiEavCommandCreator extends api_CommandCreator
 			}			
 			else
 			{
-				if (count($aViewProperties) === 0)
+				if ($aViewProperties === null)
+				{
+					$aViewProperties = array();
+				}
+				else if (count($aViewProperties) === 0)
 				{
 					$aMap = $oObject->GetMap();
 					$aViewProperties = array_keys($aMap);
