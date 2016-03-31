@@ -852,15 +852,6 @@ CCalendarView.prototype.setAutoReloadTimer = function ()
 	}
 };
 
-CCalendarView.prototype.reloadAll = function ()
-{
-	this.startDateTime = 0;
-	this.endDateTime = 0;
-	this.needsToReload = true;
-	
-	this.getCalendars();
-};
-
 CCalendarView.prototype.getTimeLimits = function ()
 {
 	var
@@ -1113,7 +1104,7 @@ CCalendarView.prototype.openImportCalendarForm = function (oCalendar)
 {
 	if (!this.isPublic)
 	{
-		Popups.showPopup(ImportCalendarPopup, [_.bind(this.reloadAll, this), oCalendar]);
+		Popups.showPopup(ImportCalendarPopup, [_.bind(this.getCalendars, this), oCalendar]);
 	}
 };
 
@@ -1953,7 +1944,7 @@ CCalendarView.prototype.onFileUploadComplete = function (sFileUid, bResponseRece
 
 	if (!bError)
 	{
-		this.reloadAll();
+		this.getCalendars();
 	}
 	else
 	{
