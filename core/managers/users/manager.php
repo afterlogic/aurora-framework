@@ -25,7 +25,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 
 		$this->inc('classes.enum');
-		$this->inc('classes.user');
+//		$this->inc('classes.user');
 		$this->inc('classes.account');
 		$this->inc('classes.caluser');
 		$this->inc('classes.identity');

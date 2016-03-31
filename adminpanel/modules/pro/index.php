@@ -34,6 +34,11 @@ class CProModule extends ap_Module
 	 * @var CApiUsersManager
 	 */
 	protected $oUsersApi;
+	
+	/**
+	 * @var CApiUsersManager
+	 */
+	protected $oAccountsApi;
 
 	/**
 	 * @var CApiCapabilityManager
@@ -51,7 +56,8 @@ class CProModule extends ap_Module
 
 		$this->oDomainsApi = CApi::GetCoreManager('domains');
 		$this->oLicApi = CApi::GetCoreManager('licensing');
-		$this->oUsersApi = CApi::GetCoreManager('users');
+		$this->oUsersApi = CApi::GetModule('Core')->GetManager('users');
+		$this->oAccountsApi = CApi::GetCoreManager('users');
 		$this->oCapabilityApi = CApi::GetCoreManager('capability');
 //		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 		$this->oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
@@ -961,7 +967,7 @@ class CProModule extends ap_Module
 	 */
 	public function GetAccountByEmail($sEmail)
 	{
-		return $this->oUsersApi ? $this->oUsersApi->getAccountByEmail($sEmail) : null;
+		return $this->oAccountsApi ? $this->oAccountsApi->getAccountByEmail($sEmail) : null;
 	}
 
 
@@ -995,7 +1001,7 @@ class CProModule extends ap_Module
 	 */
 	public function ValidateHelpdeskEmail($sEmail)
 	{
-		$oAccount = $this->oUsersApi->getAccountByEmail($sEmail);
+		$oAccount = $this->oAccountsApi->getAccountByEmail($sEmail);
 		return $oAccount instanceof CAccount;
 	}
 
@@ -1061,10 +1067,10 @@ class CProModule extends ap_Module
 	{
 		$bWithMailConnection =  !$oAccount->IsInternal && $oAccount->Domain->AllowWebMail && $oAccount->AllowMail;
 		
-		if (!$this->oUsersApi->createAccount($oAccount, $bWithMailConnection))
+		if (!$this->oAccountsApi->createAccount($oAccount, $bWithMailConnection))
 		{
-			$this->lastErrorCode = $this->oUsersApi->getLastErrorCode();
-			$this->lastErrorMessage = $this->oUsersApi->GetLastErrorMessage();
+			$this->lastErrorCode = $this->oAccountsApi->getLastErrorCode();
+			$this->lastErrorMessage = $this->oAccountsApi->GetLastErrorMessage();
 			return false;
 		}
 		return true;
@@ -1077,10 +1083,10 @@ class CProModule extends ap_Module
 	 */
 	public function EnableAccounts($aAccountsIds, $bIsEnabled)
 	{
-		if (!$this->oUsersApi->enableAccounts($aAccountsIds, $bIsEnabled))
+		if (!$this->oAccountsApi->enableAccounts($aAccountsIds, $bIsEnabled))
 		{
-			$this->lastErrorCode = $this->oUsersApi->getLastErrorCode();
-			$this->lastErrorMessage = $this->oUsersApi->GetLastErrorMessage();
+			$this->lastErrorCode = $this->oAccountsApi->getLastErrorCode();
+			$this->lastErrorMessage = $this->oAccountsApi->GetLastErrorMessage();
 			return false;
 		}
 		return true;
@@ -1092,10 +1098,10 @@ class CProModule extends ap_Module
 	 */
 	public function UpdateAccount(CAccount &$oAccount)
 	{
-		if (!$this->oUsersApi->updateAccount($oAccount))
+		if (!$this->oAccountsApi->updateAccount($oAccount))
 		{
-			$this->lastErrorCode = $this->oUsersApi->getLastErrorCode();
-			$this->lastErrorMessage = $this->oUsersApi->GetLastErrorMessage();
+			$this->lastErrorCode = $this->oAccountsApi->getLastErrorCode();
+			$this->lastErrorMessage = $this->oAccountsApi->GetLastErrorMessage();
 			return false;
 		}
 		return true;
@@ -1107,7 +1113,7 @@ class CProModule extends ap_Module
 	 */
 	public function AccountExists(CAccount $oAccount)
 	{
-		return $this->oUsersApi->accountExists($oAccount);
+		return $this->oAccountsApi->accountExists($oAccount);
 	}
 
 	/**
@@ -1119,7 +1125,7 @@ class CProModule extends ap_Module
 		$iResult = 1;
 		foreach ($aAccountsIds as $iAccountId)
 		{
-			$iResult &= $this->oUsersApi->deleteAccountById($iAccountId);
+			$iResult &= $this->oAccountsApi->deleteAccountById($iAccountId);
 		}
 		return (bool) $iResult;
 	}
@@ -1132,7 +1138,7 @@ class CProModule extends ap_Module
 	{
 		if (is_numeric($iAccountId) && 0 < $iAccountId)
 		{
-			return $this->oUsersApi->getAccountById($iAccountId);
+			return $this->oAccountsApi->getAccountById($iAccountId);
 		}
 		return null;
 	}
@@ -1145,7 +1151,7 @@ class CProModule extends ap_Module
 	{
 		if (is_numeric($iAccountId) && 0 < $iAccountId)
 		{
-			return $this->oUsersApi->getAccountById($iAccountId);
+			return $this->oAccountsApi->getAccountById($iAccountId);
 		}
 		return null;
 	}

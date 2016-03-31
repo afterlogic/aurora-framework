@@ -6,17 +6,15 @@ class CoreModule extends AApiModule
 	
 	public $oApiChannelsManager = null;
 	
+	public $oApiUsersManager = null;
+	
 	public function init() {
 		parent::init();
 		
 		$this->oApiTenantsManager = $this->GetManager('tenants', 'db');
 		$this->oApiChannelsManager = $this->GetManager('channels', 'db');
+		$this->oApiUsersManager = $this->GetManager('users', 'db');
 		
-//		$oModuleManager = \CApi::GetModuleManager();
-//		$oMailModule = $oModuleManager->GetModule('Mail');
-//		var_dump($oMailModule);
-//		CApi::GetCoreManager('tenants');
-
 		$this->AddEntry('ping', 'EntryPing');
 		$this->AddEntry('pull', 'EntryPull');
 		$this->AddEntry('plugins', 'EntryPlugins');
@@ -716,6 +714,74 @@ class CoreModule extends AApiModule
 		return $bResult;
 	}
 	
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function CreateUser($oData)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if (true)
+		{
+			$oUser = \CUser::createInstance();
+			
+//			$oUser->IdTenant = $oData['IdTenant'];
+//			$oUser->IdDomain = $oData['IdDomain'];
+			$oUser->Name = $oData['Name'];
+
+//			$this->populateContactObject($oContact);
+
+			$this->oApiUsersManager->createUser($oUser);
+			return $oUser ? array(
+				'iObjectId' => $oUser->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function UpdateUser($oData)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if ($oData['IdUser'] > 0)
+		{
+			$oUser = $this->oApiUsersManager->getUserById($oData['IdUser']);
+			
+			if ($oUser)
+			{
+	//			$oUser->IdTenant = $oData['IdTenant'];
+	//			$oUser->IdDomain = $oData['IdDomain'];
+				$oUser->Name = $oData['Name'];
+
+	//			$this->populateContactObject($oContact);
+
+				$this->oApiUsersManager->updateUser($oUser);
+			}
+			
+			return $oUser ? array(
+				'iObjectId' => $oUser->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
 }
 
 return new CoreModule('1.0');

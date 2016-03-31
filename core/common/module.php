@@ -305,7 +305,7 @@ abstract class AApiModule
 	/**
 	 * @var \CApiCapabilityManager
 	 */
-	public $oApiCapabilityManager = null;
+//	public $oApiCapabilityManager = null;
 	
 	/**
 	 * @var \MailSo\Base\Http
