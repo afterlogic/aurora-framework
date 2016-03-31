@@ -85,7 +85,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 	}
 			
 	public function getObjects($sObjectType, $aViewProperties = array(), 
-			$iPage = 0, $iPerPage = 0, $aSearchProperties = array(), 
+			$iPage = 0, $iPerPage = 0, $aWhere = array(), 
 			$sSortProperty = "", $iSortOrder = \ESortOrder::ASC, $bCount = false)
 	{
 		$sCount = "";
@@ -127,7 +127,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				array_push($aViewProperties, $sSortProperty);
 				$sResultSort = sprintf(" ORDER BY prop_%s %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
 			}
-			$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aSearchProperties)));
+			$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aWhere)));
 
 			foreach ($aViewProperties as $sProperty)
 			{
@@ -150,7 +150,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sViewPoperties = ', ' . implode(', ', $aResultViewProperties);
 				$sJoinPoperties = implode(' ', $aJoinProperties);
 			}
-			foreach ($aSearchProperties as $sKey => $mValue)
+			foreach ($aWhere as $sKey => $mValue)
 			{
 				$sPrpertyValue = $mValue;
 				$sPropertyAction = '=';
@@ -167,16 +167,16 @@ class CApiEavCommandCreator extends api_CommandCreator
 					}
 				}
 				$sType = $oObject->getPropertyType($sKey);
-				$sValueFormat = ($sType === 'int' || $sType === 'bool') ? "%d" : "%s";
+				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
 						"props_%s.value_%s %s " . $sValueFormat, 
 						$sKey, 
 						$sType, 
 						$sPropertyAction, 
-						($sType !== 'int' && $sType !== 'bool') ? $this->escapeString($mValue) : $mValue
+						$oObject->isStringProperty($sKey) ? $this->escapeString($sPrpertyValue) : $sPrpertyValue
 				);
 			}
-			if (0 < count($aSearchProperties))
+			if (0 < count($aWhere))
 			{
 				$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchProperties);
 			}

@@ -305,7 +305,7 @@ abstract class AApiModule
 	/**
 	 * @var \CApiCapabilityManager
 	 */
-//	public $oApiCapabilityManager = null;
+	public $oApiCapabilityManager = null;
 	
 	/**
 	 * @var \MailSo\Base\Http
@@ -444,13 +444,12 @@ abstract class AApiModule
 		if (isset($this->aManagersCache[$sManagerName]))
 		{
 			$sClassName = 'CApi'.ucfirst($this->GetName()).ucfirst($sManagerName).'Manager';
-
 			if (class_exists($sClassName))
 			{
 				$mResult = new $sClassName(\CApi::$oManager, $sForcedStorage, $this);
 			}
 		}
-
+		
 		return $mResult;
 	}
 	
@@ -459,6 +458,14 @@ abstract class AApiModule
 		if (!isset($this->aEntries[$sName]))
 		{
 			$this->aEntries[$sName] = $mCallbak;
+		}
+	}
+	
+	public function AddEntries($aEntries)
+	{
+		foreach ($aEntries as $sName => $mCallbak)
+		{
+			$this->AddEntry($sName, $mCallbak);
 		}
 	}
 	
@@ -497,6 +504,7 @@ abstract class AApiModule
 
 		$aResponseItem = null;
 		$sAction = $this->oHttp->GetPost('Action', null);
+
 		$sModule = $this->oHttp->GetPost('Module', null);
 		if (strtolower($sModule) === strtolower($this->GetName())) {
 			
@@ -508,13 +516,12 @@ abstract class AApiModule
 				\CApi::Log('Module: '. $sModule);
 				\CApi::Log('Method: '. $sMethod);
 
-				if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'GetAppData' &&
+				if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'SystemGetAppData' &&
 					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\Core\Service::validateToken()) {
 					
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidToken);
 				} else if (!empty($sModule) && !empty($sMethod)) {
 					
-
 					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
 					$aParameters['AuthToken'] = $this->oHttp->GetPost('AuthToken', '');
 					

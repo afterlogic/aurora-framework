@@ -15,15 +15,23 @@ class CoreModule extends AApiModule
 		$this->oApiChannelsManager = $this->GetManager('channels', 'db');
 		$this->oApiUsersManager = $this->GetManager('users', 'db');
 		
-		$this->AddEntry('ping', 'EntryPing');
-		$this->AddEntry('pull', 'EntryPull');
-		$this->AddEntry('plugins', 'EntryPlugins');
-		$this->AddEntry('mobile', 'EntryMobile');
-		$this->AddEntry('speclogon', 'EntrySpeclogon');
-		$this->AddEntry('speclogoff', 'EntrySpeclogoff');
-		$this->AddEntry('sso', 'EntrySso');
-		$this->AddEntry('autodiscover', 'EntryAutodiscover');
-		$this->AddEntry('postlogin', 'EntryPostlogin');
+//		$oModuleManager = \CApi::GetModuleManager();
+//		$oMailModule = $oModuleManager->GetModule('Mail');
+//		var_dump($oMailModule);
+//		CApi::GetCoreManager('tenants');
+		
+		$this->AddEntries(array(
+				'ping' => 'EntryPing',
+				'pull' => 'EntryPull',
+				'plugins' => 'EntryPlugins',
+				'mobile' => 'EntryMobile',
+				'speclogon' => 'EntrySpeclogon',
+				'speclogoff' => 'EntrySpeclogoff',
+				'sso' => 'EntrySso',
+				'autodiscover' => 'EntryAutodiscover',
+				'postlogin' => 'EntryPostlogin'
+			)
+		);
 	}
 	
 	/**

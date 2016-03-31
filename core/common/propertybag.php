@@ -130,7 +130,7 @@ abstract class api_APropertyBag
 		return isset($aMap[$sPropertyName]);
 	}
 	
-		/**
+	/**
 	 * @return array
 	 */
 	public function getPropertyType($sPropertyName)
@@ -145,6 +145,16 @@ abstract class api_APropertyBag
 		return $sResult;
 	}	
 
+	/**
+	 * @return array
+	 */
+	public function isStringProperty($sPropertyName)
+	{
+		$sType = $this->getPropertyType($sPropertyName);
+		
+		return ($sType === 'string' || $sType === 'text');
+	}		
+	
 	/**
 	 * @param string $sPropertyName
 	 * @return bool

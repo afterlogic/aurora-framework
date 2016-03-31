@@ -7,8 +7,11 @@ class CalendarModule extends AApiModule
 	public function init() 
 	{
 		$this->oApiCalendarManager = $this->GetManager('main', 'sabredav');
-		$this->AddEntry('invite', 'EntryInvite');
-		$this->AddEntry('calendar-pub', 'EntryCalendarPub');
+		$this->AddEntries(array(
+				'invite' => 'EntryInvite',
+				'calendar-pub' => 'EntryCalendarPub'
+			)
+		);
 		
 		$this->subscribeEvent('Mail::GetBodyStructureParts', array($this, 'onGetBodyStructureParts'));
 		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));

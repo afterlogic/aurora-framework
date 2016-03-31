@@ -5,8 +5,11 @@ class IosModule extends AApiModule
 	public function init() {
 		parent::init();
 		
-		$this->AddEntry('ios', 'EntryIos');
-		$this->AddEntry('profile', 'EntryProfile');
+		$this->AddEntries(array(
+				'ios' => 'EntryIos',
+				'profile' => 'EntryProfile'
+			)
+		);
 	}
 	
 	public function EntryIos()
