@@ -8,17 +8,97 @@
 	background: #ece9e0;
 }
 
+.theme-tabsbar() {
+	@tabsbar-item-fontsize: 10.6pt;
+	@tabsbar-item-font-color: #888785;
+	@tabsbar-item-font-color-hover: darken(@tabsbar-item-font-color, 40%);
+	@tabsbar-item-font-shadow: 0px 1px 0px #ffffff;
+	@tabsbar-item-top-offset: 24px;
+	
+	.theme-tabsbar-item() {
+		margin: 0px;
+		padding: 4px 10px;
+		
+		html.rtl & {
+			margin-left: 0px;
+			margin-right: 6px;
+		}
+	}
+	
+	.theme-tabsbar-item-hover() {}
+	
+	.theme-current() {}
+	
+	.theme-unseen-marker() {
+		background: #888785;
+		color: #ffffff;
+		top: -7px;
+	}
+}
+
+.theme-dropdown() {}
+
+.theme-panel() {}
+
 @theme-buttons-primary-background: #81c54b;
 @theme-buttons-secondary-background: #a7afb9;
 
+.theme-big-single-button() {
+	.gradient(lighten(#81c653, 5%), #81c653, lighten(#81c653, 5%));
+
+	box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+	border-color: darken(#81c653, 5%);
+	border-radius: 5px;
+	font-size: 13pt;
+	font-weight: normal;
+
+	&.enable:hover {
+		.gradient(#81c653, darken(#81c653, 5%), #81c653);
+	}
+}
+
 @theme-toolbar-height: 55px;
-@theme-toolbar-background: #fbfbf9;
-@theme-toolbar-border: none;
-@theme-toolbar-border-radius: 4px 4px 0 0;
-@theme-toolbar-hint-background: #78b8f0;
-@theme-toolbar-hint-color: #ffffff;
-@theme-toolbar-icon-color: #78b8f0;
-@theme-toolbar-icon-shadow: none;
+
+.theme-common-panel-toolbar() {
+	background: #fbfbf9;
+	border: none;
+	border-radius: 4px 4px 0 0;
+	white-space: nowrap;
+
+	.resizer {
+		height: @theme-toolbar-height;
+	}
+	
+	.theme-item() {
+		& > .icon {
+			color: #78b8f0;
+			text-shadow: none;
+
+			&:hover {
+				color: darken(#78b8f0, 10%);
+			}
+		}
+		
+		.hint {
+			background: lighten(#78b8f0, 10%);
+			color: #ffffff;
+		}
+
+		&:hover .hint {
+			background: lighten(#78b8f0, 5%);
+		}
+	}
+	
+	.theme-item-hover() {
+		background: #eeeeee;
+
+		.hint {
+			background-color: darken(#eeeeee, 10%);
+		}
+	}
+}
+
+.theme-clear-left-panel() {}
 
 .theme-clear-panel-list-item-count() {
 	background: #327cc2;
@@ -53,6 +133,27 @@
 	text-shadow: 0px 1px 0px #678197;
 }
 
-.ui-widget-content a:hover {
-	color: inherit
+.theme-address-capsule {
+	background-color: #e5eff7;
+    color: #5b9bcd;
+    border: none;
+	
+	.ficon {
+		color: #5b9bcd;
+	}
+	
+	&.inputosaurus-selected {
+		background: #5b9bcd;
+		color: #ffffff;
+		
+		.ficon {
+			color: #ffffff;
+		}
+	}
+}
+
+.theme-address-capsule-notfound {
+	background: #ffffff;
+	border: solid 1px #e5eff7;
+	color: #5b9bcd;
 }

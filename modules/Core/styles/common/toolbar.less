@@ -1,12 +1,7 @@
 .toolbar {
-	background: @theme-toolbar-background;
-	border: @theme-toolbar-border;
-	border-radius: @theme-toolbar-border-radius;
+	.theme-common-panel-toolbar();
+	
 	white-space: nowrap;
-
-	.resizer {
-		height: @theme-toolbar-height;
-	}
 
 	.content {
 		display: block;
@@ -15,6 +10,8 @@
 
 		& > .item,
 		.group > .item {
+			.theme-item();
+			
 			cursor: pointer;
 			display: inline-block;
 			font-size: 10pt;
@@ -24,6 +21,10 @@
 			padding: 1px 7px;
 			position: relative;
 			vertical-align: middle;
+			
+			&:hover {
+				.theme-item-hover();
+			}
 			
 			&:last-child {
 				margin-right: 0px;
@@ -43,18 +44,12 @@
 			}
 			
 			& > .icon {
-				color: @theme-toolbar-icon-color;
 				display: inline-block;
 				font-size: 27px;
 				height: 28px;
 				text-align: center;
-				text-shadow: @theme-toolbar-icon-shadow;
 				vertical-align: middle;
 				width: 28px;
-				
-				&:hover {
-					color: darken(@theme-toolbar-icon-color, 10%);
-				}
 				
 				.init-icon-font();
 				.init-icon-font(after);
@@ -108,17 +103,15 @@
 			}
 
 			.hint {
-				background: lighten(@theme-toolbar-hint-background, 10%);
 				border-radius: 6px;
-				color: @theme-toolbar-hint-color;
 				display: inline-block;
 				line-height: 22px;
 				padding: 0 5px;
 				vertical-align: middle;
 			}
 			
-			&:hover .hint {
-				background: lighten(@theme-toolbar-hint-background, 5%);
+			&.expand {
+				.theme-item-hover();
 			}
 		}
 	   
@@ -168,6 +161,10 @@
 						border-radius: 4px 0px 0px 4px;
 					}
 				}
+			}
+			
+			&.expand > .item {
+				.theme-item-hover();
 			}
 		}
 	}

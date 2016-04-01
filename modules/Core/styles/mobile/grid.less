@@ -85,6 +85,8 @@
 	&.item_viewer {
 		.box-sizing(content-box);
 	}
+	
+	.theme-panel();
 }
 
 .panel.item_viewer {
@@ -375,18 +377,16 @@
 }
 
 .items_list_group_style() {
-	@fontSize: 10pt;
-	@fontWeight: bold;
-	@fontColor: #777777;
-	@fontShadow: 0px 1px 0px #ffffff;
+	@group-item-font-color: #777777;
+	@group-item-font-shadow: 0px 1px 0px #ffffff;
 	
 	.title_selectable_text() {
-		color: @fontColor;
+		color: @group-item-font-color;
 		cursor: pointer;
-		text-shadow: @fontShadow;
+		text-shadow: @group-item-font-shadow;
 
 		&:hover {
-			color: darken(@fontColor, 20%);
+			color: darken(@group-item-font-color, 20%);
 
 			.icon {
 				color: inherit;
@@ -401,10 +401,10 @@
 			max-height: inherit;
 
 			& > .title {
-				color: lighten(@fontColor, 20%);
+				color: lighten(@group-item-font-color, 20%);
 				cursor: default;
 				display: block;
-				font-size: @fontSize + 2pt;
+				font-size: 12pt;
 				font-weight: normal;
 				line-height: normal;
 				margin-bottom: 0px;
@@ -445,9 +445,9 @@
 
 			&.canSelect {
 				& > .title {
-					color: @fontColor;
+					color: @group-item-font-color;
 					cursor: pointer;
-					text-shadow: @fontShadow;
+					text-shadow: @group-item-font-shadow;
 
 					&:hover {
 						color: #40444c;
