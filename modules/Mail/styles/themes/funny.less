@@ -1,19 +1,23 @@
 .theme-thread-pin() {
-	@thread-pin-background: #ffffff;
-	@thread-pin-color: #a0a0a0;
-	@thread-pin-border: 1px solid #a0a0a0;
+	@thread-pin-background: none;
+	@thread-pin-color: #999999;
+	@thread-pin-border: 1px solid #bbbbbb;
 	
 	@thread-pin-selected-background: @theme-list-selected-item-bg;
 	@thread-pin-selected-color: #ffffff;
 	@thread-pin-selected-border: 1px solid #ffffff;
 	
-	@thread-pin-unread-background: #a0a0a0;
+	@thread-pin-unread-background: #bbbbbb;
 	@thread-pin-unread-color: #ffffff;
-	@thread-pin-unread-border: 1px solid #a0a0a0;
+	@thread-pin-unread-border: 1px solid #bbbbbb;
 	
 	@thread-pin-unread-selected-background: #ffffff;
 	@thread-pin-unread-selected-color: @theme-list-selected-item-bg;
 	@thread-pin-unread-selected-border: @thread-pin-selected-border;
 }
 
-@theme-message-toolbar-item() {};
+@theme-message-toolbar-item() {
+	&:hover {
+		color: #8f7a66;
+	}
+}

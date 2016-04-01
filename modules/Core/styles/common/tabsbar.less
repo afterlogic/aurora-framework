@@ -1,11 +1,7 @@
 /*=== Tabsbar CSS ===*/
 .tabs_panel {
-	@fontSize: 10.6pt;
-	@fontColor: #888785;
-	@fontColorHover: darken(@fontColor, 40%);
-	@fontShadow: 0px 1px 0px #ffffff;
-	@itemTopOffset: 24px;
-    
+    .theme-tabsbar();
+	
 	height: @theme-tabs-height;
 	line-height: @theme-tabs-height;
 	padding: 0px 5px;
@@ -13,20 +9,15 @@
 	z-index: 1000;
 	
 	.item {
-		color: @fontColor;
-		display: inline-block;
-		font-size: @fontSize;
-		line-height: 120%;
-		margin: 0px;
-		padding: 4px 10px;
-		position: relative;
-		text-shadow: @fontShadow;
-		vertical-align: middle;
+		.theme-tabsbar-item();
 		
-		html.rtl & {
-			margin-left: 0px;
-			margin-right: 6px;
-		}
+		color: @tabsbar-item-font-color;
+		display: inline-block;
+		font-size: @tabsbar-item-fontsize;
+		line-height: 120%;
+		position: relative;
+		text-shadow: @tabsbar-item-font-shadow;
+		vertical-align: middle;
 		
 		.cssanimations &.recivedAnim {
 			border-radius: 4px;
@@ -52,7 +43,9 @@
 		}
 		
 		&:hover {
-			color: @fontColorHover;
+			.theme-tabsbar-item-hover();
+			
+			color: @tabsbar-item-font-color-hover;
 			
 			.text {
 				text-decoration: none;
@@ -74,16 +67,15 @@
 		}
 
 		.unseen {
-			background-color: #888785;
+			.theme-unseen-marker();
+			
 			border-radius: 7px;
-			color: #FFFFFF;
 			font-size: 6.4pt;
 			height: 11px;
 			line-height: 12px;
 			position: absolute;
 			text-align: center;
 			text-shadow: none;
-			top: -7px;
 			
 			&.one {
 				right: -10px;
@@ -103,7 +95,9 @@
 	}
 	
 	.current {
-		color: @fontColorHover;
+		.theme-current();
+		
+		color: @tabsbar-item-font-color-hover;
 		font-weight: bold;
 	}
 	
@@ -136,7 +130,7 @@
 		height: auto;
 		margin-left: 6px;
 		margin-right: 0px;
-		margin-top: @itemTopOffset;
+		margin-top: @tabsbar-item-top-offset;
 		
 		html.rtl & {
 			float: left;

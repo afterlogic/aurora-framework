@@ -1,6 +1,5 @@
 .tabs_panel {
-	@fontSize: 12pt;
-	@itemTopOffset: 24px;
+	.theme-tabsbar();
     
 	float: right;
 	z-index: 1000;
@@ -31,11 +30,13 @@
 	}
 	
 	.item {
+		.theme-tabsbar-item();
+		
 		color: #888785;
 		display: block;
-		font-size: @fontSize;
+		font-size: @tabsbar-item-fontsize;
 		line-height: 120%;
-		margin: @itemTopOffset 0px 0px 6px;
+		margin: @tabsbar-item-top-offset 0px 0px 6px;
 		padding: 4px 10px;
 		position: relative;
 		text-shadow: 0px 1px 0px #ffffff;

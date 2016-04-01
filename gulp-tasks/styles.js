@@ -43,7 +43,7 @@ gulp.task('styles', function () {
 			}
 		}))
 		.pipe(less())
-		.pipe(gulp.dest('./skins/Default'))
+		.pipe(gulp.dest('./skins/' + sTheme))
 		.on('error', gutil.log);
 });
 

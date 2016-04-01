@@ -1,9 +1,6 @@
 span.address_capsule,
 li.address_capsule {
-	background-color: #e5eff7;
-    color: #5b9bcd;
 	cursor: pointer;
-    border: none;
     box-shadow: none;
     border-radius: 11px;
 	margin: 2px 4px 0 0;
@@ -13,7 +10,6 @@ li.address_capsule {
     white-space: nowrap;
 	
 	.ficon {
-		color: #5b9bcd;
 		font-size: 16px;
 		margin: 0px 12px 0px 0px;
 		outline: none;
@@ -23,14 +19,7 @@ li.address_capsule {
 		text-decoration: none;
 	}
 	
-	&.inputosaurus-selected {
-		background: #5b9bcd;
-		color: #ffffff;
-		
-		.ficon {
-			color: #ffffff;
-		}
-	}
+	.theme-address-capsule();
 }
 
 span.address_capsule {
@@ -42,10 +31,9 @@ span.address_capsule {
 	vertical-align: middle;
 	
 	&:not(.found_contact) {
-		background: #ffffff;
-		border: solid 1px #e5eff7;
-		color: #5b9bcd;
 		cursor: default;
+		
+		.theme-address-capsule-notfound();
 	}
 	
 	&.found_contact {
