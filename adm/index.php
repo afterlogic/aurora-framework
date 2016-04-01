@@ -69,6 +69,12 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 		spl_autoload_unregister('ProjectCoreSplAutoLoad');
 	}
 	
+	$oAppData = \CApi::GetModule('Core')->GetAppData();
+
+	$sToken = $oAppData['Token'];
+	$sAuthToken = isset($_COOKIE['AUTH']) ? $_COOKIE['AUTH'] : '';
+	$iStoredTab = isset($_COOKIE['TAB']) ? (int)$_COOKIE['TAB'] : 0;
+	
 	include "action.php";
 } ?>
 <!DOCTYPE html>
@@ -100,35 +106,98 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	
     <script src="/node_modules/underscore/underscore-min.js"></script>
     <script src="/node_modules/knockout/build/output/knockout-latest.js"></script>
+    <script>
+		var staticData = {};
+	</script>
 </head>
 <body>
 	<div class="container">
-		<div class="page-header">
-			<h1>Test panel<small>beta 0.1</small></h1>
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="page-header">
+					<h1>Test panel<small>beta 0.1</small></h1>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<?php if ($sAuthToken) { ?>
+					<div><?php echo $sAuthToken; ?></div>
+				<?php } else { ?>
+				<fieldset>
+					<label>Login</label>
+					<form method="POST" action="/adm/">
+						<input name="manager" type="text" value="auth" class="form-control" />
+						<input name="Method" type="text" value="Login2" class="form-control" />
+
+						<input name="login" type="text" class="form-control" />
+						<input name="password" type="text" class="form-control" />
+
+						<input type="submit" value="Login" />
+					</form>
+				</fieldset>
+				<?php } ?>
+			</div>
 		</div>
 		<!-- Nav tabs -->
 		<ul id="myTabs" class="nav nav-tabs" role="tablist">
-			<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
-			<li role="presentation"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Accounts</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 0 ? 'active' : ''?>"><a href="#ajax" aria-controls="ajax" role="tab" data-toggle="tab">Ajax</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 1 ? 'active' : ''?>"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 2 ? 'active' : ''?>"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Accounts</a></li>
 		</ul>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="users">
-				<?php include "users.php"; ?>
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 0 ? 'active' : ''?>" id="ajax">
+				<form id="form" onsubmit="return false;">
+					
+					<input name="Token" type="text" placeholder="Token" value="" class="form-control" />
+					<input name="AuthToken" type="text" placeholder="AuthToken" value="" class="form-control" />
+					<input name="Method" type="text" placeholder="Method" class="form-control" />
+					<input name="Module" type="text" placeholder="Module" class="form-control" />
+					
+					<input name="login" type="text" class="form-control" />
+					<input name="password" type="text" class="form-control" />
+					
+					<button id="button">Send</button>
+				</form>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="accounts">
-				accounts
-				<?php //include "users.php"; ?>
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 1 ? 'active' : ''?>" id="users">
+				<?php include "users\list.php"; ?>
+			</div>
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 2 ? 'active' : ''?>" id="accounts">
+				<?php include "accounts\list.php"; ?>
 			</div>
 		</div>
 	</div>
 	
 	<script>
-	$('#myTabs').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-	});
+	$('#myTabs')
+		.click(function (e) {
+			e.preventDefault();
+			$(this).tab('show');
+		})
+		.on('shown.bs.tab', function (e) {
+			var index = $(this).children().index($(e.target).parent());
+			document.cookie = "TAB="+index;
+		});
+	
+	$('#button').click(function () {
+		$.ajax('/?/Ajax/', {
+			'method': 'POST',
+			'data': {
+				'Token': $('input[name=Token]').val(),
+				'AuthToken': $('input[name=AuthToken]').val(),
+				'Method': $('input[name=Method]').val(),
+				'Module': $('input[name=Module]').val(),
+				'Parameters': JSON.stringify({
+					'login': $('input[name=login]').val(),
+					'password': $('input[name=password]').val()
+				})
+			}
+		})
+		.always(function() {
+			console.log( "complete", arguments );
+		});
+ 	});
 	</script>
 </body>
 </html>

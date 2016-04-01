@@ -1554,204 +1554,204 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$oAccount = null;
-		if (!empty($sCalendarPubHash))
-		{
-			$oAccount = $this->getLogginedDefaultAccount($sAuthToken);
-			if ($oAccount)
-			{
-				$aAppData['Auth'] = true;
-				$aAppData['User'] = $this->appDataUserSettings($oAccount);
-			}
+//		if (!empty($sCalendarPubHash))
+//		{
+//			$oAccount = $this->getLogginedDefaultAccount($sAuthToken);
+//			if ($oAccount)
+//			{
+//				$aAppData['Auth'] = true;
+//				$aAppData['User'] = $this->appDataUserSettings($oAccount);
+//			}
+//
+//			$aAppData['CalendarPubHash'] = $sCalendarPubHash;
+//			$aAppData['IsMobile'] = 0;
+//
+//			return $aAppData;
+//		}
+//
+//		if (!empty($sFileStoragePubHash))
+//		{
+//			$aAppData['FileStoragePubHash'] = $sFileStoragePubHash;
+//
+//			$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sFileStoragePubHash));
+//
+//			$aAppData['FileStoragePubParams'] = array();
+//			if (!empty($mMin['__hash__']))
+//			{
+//				$aAppData['FileStoragePubParams'] = $mMin;
+//			}
+//
+//			$aAppData['IsMobile'] = 0;
+//			return $aAppData;
+//		}
 
-			$aAppData['CalendarPubHash'] = $sCalendarPubHash;
-			$aAppData['IsMobile'] = 0;
-
-			return $aAppData;
-		}
-
-		if (!empty($sFileStoragePubHash))
-		{
-			$aAppData['FileStoragePubHash'] = $sFileStoragePubHash;
-
-			$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sFileStoragePubHash));
-
-			$aAppData['FileStoragePubParams'] = array();
-			if (!empty($mMin['__hash__']))
-			{
-				$aAppData['FileStoragePubParams'] = $mMin;
-			}
-
-			$aAppData['IsMobile'] = 0;
-			return $aAppData;
-		}
-
-		$oApiHelpdeskManager = CApi::Manager('helpdesk');
+//		$oApiHelpdeskManager = CApi::Manager('helpdesk');
 		/* @var $oApiHelpdeskManager CApiHelpdeskManager */
 
-		$oApiTenant = CApi::GetCoreManager('tenants');
+//		$oApiTenant = CApi::GetCoreManager('tenants');
 		/* @var $oApiTenant CApiTenantsManager */
 
-		$oTenant = $oApiTenant ? $oApiTenant->getDefaultGlobalTenant() : null;
+//		$oTenant = $oApiTenant ? $oApiTenant->getDefaultGlobalTenant() : null;
 
-		$aAppData['LoginStyleImage'] = '';
-		$aAppData['AppStyleImage'] = '';
-		$aAppData['HelpdeskSiteName'] = '';
-		$aAppData['HelpdeskStyleImage'] = '';
+//		$aAppData['LoginStyleImage'] = '';
+//		$aAppData['AppStyleImage'] = '';
+//		$aAppData['HelpdeskSiteName'] = '';
+//		$aAppData['HelpdeskStyleImage'] = '';
+//
+//		if ($oTenant)
+//		{
+//			$aAppData['LoginStyleImage'] = $oTenant->LoginStyleImage;
+//			$aAppData['AppStyleImage'] = $oTenant->AppStyleImage;
+//		}
+//
+//		$aThreadId = $this->getThreadIdFromRequestAndClear();
+//		$mThreadId = isset($aThreadId['id']) ? $aThreadId['id'] : null;
+//		$sThreadAction = isset($aThreadId['action']) ? $aThreadId['action'] : '';
+//		if (!empty($sHelpdeskTenantHash))
+//		{
+//			$aHelpdeskMainData = null;
+//			$aAppData['TenantHash'] = $sHelpdeskTenantHash;
+//			$aAppData['IsMobile'] = 0;
+//
+//			$iUserId = $this->getLogginedHelpdeskUserId();
+//			if (0 < $iUserId && $oApiHelpdeskManager)
+//			{
+//				$oHelpdeskUser = $oApiHelpdeskManager->getUserById($oApiTenant->getTenantIdByHash($sHelpdeskTenantHash), $iUserId);
+//				if ($oHelpdeskUser)
+//				{
+//					$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($oHelpdeskUser->IdTenant);
+//
+//					$aAppData['Auth'] = true;
+//					$aAppData['HelpdeskIframeUrl'] = $oHelpdeskUser->IsAgent ? $aHelpdeskMainData['AgentIframeUrl'] : $aHelpdeskMainData['ClientIframeUrl'];
+//					$aAppData['HelpdeskSiteName'] = isset($aHelpdeskMainData['SiteName']) ? $aHelpdeskMainData['SiteName'] : '';
+//					$aAppData['User'] = $this->appDataHelpdeskUserSettings($oHelpdeskUser);
+//				}
+//			}
+//
+//			if (!$aHelpdeskMainData && $oApiHelpdeskManager)
+//			{
+//				$iIdTenant = $oApiTenant->getTenantIdByHash($sHelpdeskTenantHash);
+//				$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($iIdTenant);
+//				$aAppData['HelpdeskSiteName'] = isset($aHelpdeskMainData['SiteName']) ? $aHelpdeskMainData['SiteName'] : '';
+//				$aAppData['HelpdeskStyleImage'] = isset($aHelpdeskMainData['StyleImage']) &&
+//				isset($aHelpdeskMainData['StyleAllow']) ? $aHelpdeskMainData['StyleImage'] : '';
+//			}
+//
+//			$oHttp = \MailSo\Base\Http::SingletonInstance();
+//
+//			$aAppData['HelpdeskForgotHash'] = $oHttp->GetRequest('forgot', '');
+//			if (0 === strlen($aAppData['HelpdeskForgotHash']))
+//			{
+//				$aAppData['HelpdeskThreadId'] = null === $mThreadId ? 0 : $mThreadId;
+//				$aAppData['HelpdeskActivatedEmail'] = $this->getActivatedUserEmailAndClear();
+//			}
+//
+//			$aAppData['App'] = array();
+//			$aAppData['App']['DateFormats'] = array();
+//			foreach (array(EDateFormat::MMDDYYYY, EDateFormat::DDMMYYYY, EDateFormat::DD_MONTH_YYYY) as $sDateFmtName)
+//			{
+//				$aAppData['App']['DateFormats'][] = $sDateFmtName;
+//			}
+//
+//			return $aAppData;
+//		}
+//		else
+//		{
+//			$aAppData['HelpdeskRedirect'] = is_int($mThreadId);
+//			$aAppData['HelpdeskThreadId'] = null === $mThreadId ? 0 : $mThreadId;
+//			$aAppData['HelpdeskThreadAction'] = $sThreadAction ? $sThreadAction : '';
+//		}
 
-		if ($oTenant)
-		{
-			$aAppData['LoginStyleImage'] = $oTenant->LoginStyleImage;
-			$aAppData['AppStyleImage'] = $oTenant->AppStyleImage;
-		}
+//		$oDefaultAccount = null;
+//
+//		$iUserId = $this->getLogginedUserId($sAuthToken);
+//		if (0 < $iUserId)
+//		{
+//			/* @var $oApiUsersManager CApiUsersManager */
+//			$oApiUsersManager = CApi::GetCoreManager('users');
+//
+//			$aInfo = $oApiUsersManager->getUserAccounts($iUserId);
+//			
+//			if (is_array($aInfo) && 0 < count($aInfo))
+//			{
+//				$aAppData['Auth'] = true;
+//
+//				$iDefault = 0;
+//				$iDefaultIndex = 0;
+//				$aAccounts = array();
+//				$aDefaultAccount = array();
+//				foreach ($aInfo as $iAccountId => $aData)
+//				{
+//					if (is_array($aData) && !empty($aData[1]))
+//					{
+//						$aAccount = array(
+//							'AccountID' => $iAccountId,
+//							'Email' => $aData[1],
+//							'FriendlyName' => $aData[2],
+//							'Signature' => array(
+//								'Signature' => $aData[3],
+//								'Type' => $aData[4],
+//								'Options' => $aData[5]
+//							),
+//							'IsPasswordSpecified' => $aData[6],
+//							'AllowMail' => $aData[7]
+//						);
+//
+//						if ($aData[0])
+//						{
+//							$aDefaultAccount = $aAccount;
+//							$iDefault = $iAccountId;
+//							$iDefaultIndex = count($aAccounts);
+//						}
+//						else
+//						{
+//							$aAccounts[] = $aAccount;
+//						}
+//					}
+//				}
+//
+//				$aAppData['Default'] = $iDefault;
+//
+//				$oDefaultAccount = $oApiUsersManager->getAccountById($iDefault);
+//				if ($oDefaultAccount)
+//				{
+//					$aAppData['User'] = $this->appDataUserSettings($oDefaultAccount);
+//					if ($oApiHelpdeskManager)
+//					{
+//						$aData = $oApiHelpdeskManager->getHelpdeskMainSettings($oDefaultAccount->IdTenant);
+//						$aAppData['HelpdeskIframeUrl'] = isset($aAppData['User']['IsHelpdeskAgent']) && $aAppData['User']['IsHelpdeskAgent'] ?
+//							$aData['AgentIframeUrl'] : $aData['ClientIframeUrl'];
+//					}
+//				}
+//			}
+//		}
 
-		$aThreadId = $this->getThreadIdFromRequestAndClear();
-		$mThreadId = isset($aThreadId['id']) ? $aThreadId['id'] : null;
-		$sThreadAction = isset($aThreadId['action']) ? $aThreadId['action'] : '';
-		if (!empty($sHelpdeskTenantHash))
-		{
-			$aHelpdeskMainData = null;
-			$aAppData['TenantHash'] = $sHelpdeskTenantHash;
-			$aAppData['IsMobile'] = 0;
-
-			$iUserId = $this->getLogginedHelpdeskUserId();
-			if (0 < $iUserId && $oApiHelpdeskManager)
-			{
-				$oHelpdeskUser = $oApiHelpdeskManager->getUserById($oApiTenant->getTenantIdByHash($sHelpdeskTenantHash), $iUserId);
-				if ($oHelpdeskUser)
-				{
-					$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($oHelpdeskUser->IdTenant);
-
-					$aAppData['Auth'] = true;
-					$aAppData['HelpdeskIframeUrl'] = $oHelpdeskUser->IsAgent ? $aHelpdeskMainData['AgentIframeUrl'] : $aHelpdeskMainData['ClientIframeUrl'];
-					$aAppData['HelpdeskSiteName'] = isset($aHelpdeskMainData['SiteName']) ? $aHelpdeskMainData['SiteName'] : '';
-					$aAppData['User'] = $this->appDataHelpdeskUserSettings($oHelpdeskUser);
-				}
-			}
-
-			if (!$aHelpdeskMainData && $oApiHelpdeskManager)
-			{
-				$iIdTenant = $oApiTenant->getTenantIdByHash($sHelpdeskTenantHash);
-				$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($iIdTenant);
-				$aAppData['HelpdeskSiteName'] = isset($aHelpdeskMainData['SiteName']) ? $aHelpdeskMainData['SiteName'] : '';
-				$aAppData['HelpdeskStyleImage'] = isset($aHelpdeskMainData['StyleImage']) &&
-				isset($aHelpdeskMainData['StyleAllow']) ? $aHelpdeskMainData['StyleImage'] : '';
-			}
-
-			$oHttp = \MailSo\Base\Http::SingletonInstance();
-
-			$aAppData['HelpdeskForgotHash'] = $oHttp->GetRequest('forgot', '');
-			if (0 === strlen($aAppData['HelpdeskForgotHash']))
-			{
-				$aAppData['HelpdeskThreadId'] = null === $mThreadId ? 0 : $mThreadId;
-				$aAppData['HelpdeskActivatedEmail'] = $this->getActivatedUserEmailAndClear();
-			}
-
-			$aAppData['App'] = array();
-			$aAppData['App']['DateFormats'] = array();
-			foreach (array(EDateFormat::MMDDYYYY, EDateFormat::DDMMYYYY, EDateFormat::DD_MONTH_YYYY) as $sDateFmtName)
-			{
-				$aAppData['App']['DateFormats'][] = $sDateFmtName;
-			}
-
-			return $aAppData;
-		}
-		else
-		{
-			$aAppData['HelpdeskRedirect'] = is_int($mThreadId);
-			$aAppData['HelpdeskThreadId'] = null === $mThreadId ? 0 : $mThreadId;
-			$aAppData['HelpdeskThreadAction'] = $sThreadAction ? $sThreadAction : '';
-		}
-
-		$oDefaultAccount = null;
-
-		$iUserId = $this->getLogginedUserId($sAuthToken);
-		if (0 < $iUserId)
-		{
-			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager = CApi::GetCoreManager('users');
-
-			$aInfo = $oApiUsersManager->getUserAccounts($iUserId);
-			
-			if (is_array($aInfo) && 0 < count($aInfo))
-			{
-				$aAppData['Auth'] = true;
-
-				$iDefault = 0;
-				$iDefaultIndex = 0;
-				$aAccounts = array();
-				$aDefaultAccount = array();
-				foreach ($aInfo as $iAccountId => $aData)
-				{
-					if (is_array($aData) && !empty($aData[1]))
-					{
-						$aAccount = array(
-							'AccountID' => $iAccountId,
-							'Email' => $aData[1],
-							'FriendlyName' => $aData[2],
-							'Signature' => array(
-								'Signature' => $aData[3],
-								'Type' => $aData[4],
-								'Options' => $aData[5]
-							),
-							'IsPasswordSpecified' => $aData[6],
-							'AllowMail' => $aData[7]
-						);
-
-						if ($aData[0])
-						{
-							$aDefaultAccount = $aAccount;
-							$iDefault = $iAccountId;
-							$iDefaultIndex = count($aAccounts);
-						}
-						else
-						{
-							$aAccounts[] = $aAccount;
-						}
-					}
-				}
-
-				$aAppData['Default'] = $iDefault;
-
-				$oDefaultAccount = $oApiUsersManager->getAccountById($iDefault);
-				if ($oDefaultAccount)
-				{
-					$aAppData['User'] = $this->appDataUserSettings($oDefaultAccount);
-					if ($oApiHelpdeskManager)
-					{
-						$aData = $oApiHelpdeskManager->getHelpdeskMainSettings($oDefaultAccount->IdTenant);
-						$aAppData['HelpdeskIframeUrl'] = isset($aAppData['User']['IsHelpdeskAgent']) && $aAppData['User']['IsHelpdeskAgent'] ?
-							$aData['AgentIframeUrl'] : $aData['ClientIframeUrl'];
-					}
-				}
-			}
-		}
-
-		if ($aAppData['Auth'])
-		{
-			if (0 < $oDefaultAccount->IdTenant)
-			{
-				$aAppData['AppStyleImage'] = '';
-				$oAccountTenant = $oApiTenant ? (0 < $oDefaultAccount->IdTenant ? $oApiTenant->getTenantById($oDefaultAccount->IdTenant) : $oApiTenant->getDefaultGlobalTenant()) : null;
-				if ($oAccountTenant)
-				{
-					$aAppData['AppStyleImage'] = $oAccountTenant->AppStyleImage;
-				}
-			}
-		}
-
-		$oDomain = $this->getDefaultAccountDomain($oDefaultAccount);
-		if ($oDefaultAccount)
-		{
-			array_splice($aAccounts, $iDefaultIndex, 0, array($aDefaultAccount));
-			$aAppData['Accounts'] = $aAccounts;
-		}
-		$aAppData['App'] = $this->appDataDomainSettings($oDomain, $oDefaultAccount);
-		if (!isset($aAppData['Plugins']))
-		{
-			$aAppData['Plugins'] = array();
-		}
-
-		$aAppData['HelpdeskThreadId'] = null === $aAppData['HelpdeskThreadId'] ? 0 : $aAppData['HelpdeskThreadId'];
+//		if ($aAppData['Auth'])
+//		{
+//			if (0 < $oDefaultAccount->IdTenant)
+//			{
+//				$aAppData['AppStyleImage'] = '';
+//				$oAccountTenant = $oApiTenant ? (0 < $oDefaultAccount->IdTenant ? $oApiTenant->getTenantById($oDefaultAccount->IdTenant) : $oApiTenant->getDefaultGlobalTenant()) : null;
+//				if ($oAccountTenant)
+//				{
+//					$aAppData['AppStyleImage'] = $oAccountTenant->AppStyleImage;
+//				}
+//			}
+//		}
+//
+//		$oDomain = $this->getDefaultAccountDomain($oDefaultAccount);
+//		if ($oDefaultAccount)
+//		{
+//			array_splice($aAccounts, $iDefaultIndex, 0, array($aDefaultAccount));
+//			$aAppData['Accounts'] = $aAccounts;
+//		}
+//		$aAppData['App'] = $this->appDataDomainSettings($oDomain, $oDefaultAccount);
+//		if (!isset($aAppData['Plugins']))
+//		{
+//			$aAppData['Plugins'] = array();
+//		}
+//
+//		$aAppData['HelpdeskThreadId'] = null === $aAppData['HelpdeskThreadId'] ? 0 : $aAppData['HelpdeskThreadId'];
 		
 		CApi::Plugin()->RunHook('api-app-data', array($oDefaultAccount, &$aAppData));
 

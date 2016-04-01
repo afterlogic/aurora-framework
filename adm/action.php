@@ -1,28 +1,30 @@
 <?php
 $oHttp = \MailSo\Base\Http::NewInstance();
 
-if ($oHttp->HasPost('action'))
+if ($oHttp->HasPost('manager'))
 {
-//	header('Location: /adm/');
-	switch ($oHttp->GetPost('action'))
+	$sManagerName = $oHttp->GetPost('manager');
+	
+	if (in_array($sManagerName, array('accounts', 'users')))
 	{
-		case 'create': 
-			\CApi::GetModule('Core')->CreateUser(array(
-			//	'IdTenant' => $oHttp->GetPost('tenant', 0),
-				'IdDomain' => $oHttp->GetPost('domain', 0),
-				'Name' => $oHttp->GetPost('name', 0)
-			));
-			break;
-		case 'update': 
-			\CApi::GetModule('Core')->UpdateUser(array(
-				'IdUser' => $oHttp->GetPost('id', 0),
-				'IdDomain' => $oHttp->GetPost('domain', 0),
-				'Name' => $oHttp->GetPost('name', 0)
-			));
-			break;
+		header('Location: /adm/');
+		include $sManagerName."\actions.php";
+		exit;
 	}
-
-	exit;
+	else if ($sManagerName === 'auth')
+	{
+		$result = \CApi::ExecuteMethod('Auth::Login2', array(
+//			'AuthToken' => $oHttp->GetPost('login', ''),
+			'login' => $oHttp->GetPost('login', ''),
+			'password' => $oHttp->GetPost('password', '')
+		));
+		
+		if ($result['AuthToken'])
+		{
+			$sAuthToken = $result['AuthToken'];
+			setcookie('AUTH', $result['AuthToken']);
+		}
+	}
 }
 
 

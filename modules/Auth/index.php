@@ -2,9 +2,20 @@
 
 class AuthModule extends AApiModule
 {
+	public $oApiAccountsManager = null;
+	
 	/**
 	 * @return array
 	 */
+	public function init()
+	{
+		parent::init();
+		
+		$this->oApiAccountsManager = $this->GetManager('accounts', 'db');
+		
+		$this->subscribeEvent('Auth::Login', array($this, 'checkAuth'));
+	}
+	
 	public function IsAuth()
 	{
 		$mResult = false;
@@ -197,6 +208,149 @@ class AuthModule extends AApiModule
 		\CApi::LogEvent(\EEvents::Logout, $oAccount);
 		return $oApiIntegrator->logoutAccount($sAuthToken);
 	}	
+	
+	public function Login2()
+	{
+		$bResult = false;
+		
+		$this->broadcastEvent('Auth::Login', array(
+			'login' => $this->getParamValue('login'),
+			'password' => $this->getParamValue('password'),
+			'result' => &$bResult
+		));
+		
+		if ($bResult === true)
+		{
+			$bSignMe = true;
+			
+			$aAccountHashTable = array(
+				'token' => 'auth',
+				'sign-me' => $bSignMe,
+				'id' => 60, //$oAccount->IdUser,
+				'email' => 'vasil@afterlogic.com' //$oAccount->Email
+			);
+
+			$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
+			$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
+
+			$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
+
+			$sAuthToken = \CApi::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
+			
+			return array(
+				'AuthToken' => $sAuthToken
+			);
+		}
+		
+		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
+		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+	}
+	
+	public function checkAuth($sLogin, $sPassword, &$bResult)
+	{
+		$bResult = $sLogin === 'vasil' && $sPassword === 'p12345';
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function CreateAccount()
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+
+		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+
+		$iUserId = $oApiIntegrator->getLogginedUserId($this->getParamValue('AuthToken'));
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if (true)
+		{
+			$oAccount = \CAccount::createInstance();
+			
+//			$oAccount->IdUser = $this->getParamValue('IdUser');
+			$oAccount->Login = $this->getParamValue('Login');
+			$oAccount->Password = $this->getParamValue('Password');
+
+			$this->oApiAccountsManager->createAccount($oAccount);
+			return $oAccount ? array(
+				'iObjectId' => $oAccount->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::ChannelNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function UpdateAccount()
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		$iAccountId = $this->getParamValue('IdAccount', 0);
+		
+		if ($iAccountId > 0)
+		{
+			$oAccount = $this->oApiAccountsManager->getAccountById($iAccountId);
+			
+			if ($oAccount)
+			{
+				if ($this->getParamValue('Login', '')) {
+					$oAccount->Login =  $this->getParamValue('Login', '');
+				}
+				if ($this->getParamValue('Password', '')) {
+					$oAccount->Password =  $this->getParamValue('Password', '');
+				}
+				
+
+				$this->oApiAccountsManager->updateAccount($oAccount);
+			}
+			
+			return $oAccount ? array(
+				'iObjectId' => $oAccount->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function DeleteAccount()
+	{
+		$bResult = false;
+		$iAccountId = $this->getParamValue('IdAccount', 0);
+
+		if ($iAccountId > 0)
+		{
+			
+			$oAccount = $this->oApiAccountsManager->getAccountById($iAccountId);
+			
+			if ($oAccount)
+			{
+				$bResult = $this->oApiAccountsManager->deleteAccount($oAccount);
+			}
+			
+			return $bResult;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+	}
 }
 
 return new AuthModule('1.0');
