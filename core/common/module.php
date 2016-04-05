@@ -14,6 +14,7 @@ class CApiModuleManager
      */
     protected $_aEventSubscriptions = array();
 	
+    protected $_aObjectsMap = array();
 	
 	public function __construct()
 	{
@@ -91,21 +92,32 @@ class CApiModuleManager
      * @param array $aArguments
      * @return bool
      */
-    public function broadcastEvent($sEvent, $aArguments = array()) 
+    public function broadcastEvent($sModule, $sEvent, $aArguments = array()) 
 	{
         $bResult = true;
+		$aEventSubscriptions = array();
+		if (isset($this->_aEventSubscriptions[$sModule. '::' .$sEvent])) {
+			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sModule. '::' .$sEvent]);
+		}
 		if (isset($this->_aEventSubscriptions[$sEvent])) {
-            foreach($this->_aEventSubscriptions[$sEvent] as $fCallback) {
-                $result = call_user_func_array($fCallback, $aArguments);
-                if ($result === false) {
-					$bResult = false;
-					break;
-				}
-            }
+			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sEvent]);
         }
+		
+		foreach($aEventSubscriptions as $fCallback) {
+			$result = call_user_func_array($fCallback, $aArguments);
+			if ($result === false) {
+				$bResult = false;
+				break;
+			}
+		}
 
         return $bResult;
     }	
+	
+	public function setObjectMap()
+	{
+		
+	}
 
 	/**
 	 * @return string
@@ -343,17 +355,18 @@ abstract class AApiModule
 
 	public function broadcastEvent($sEvent, $aArguments = array())
 	{
-		\CApi::GetModuleManager()->broadcastEvent($sEvent, $aArguments);
+		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments);
 	}
 	
 	
-	public function setObjectsMap($sType, $aMap)
+	public function setObjectMap($sType, $aMap)
 	{
 		$this->aObjects[$sType] = $aMap;
 	}	
 	
-	public function getObjectsMap()
+	public function getObjectMap($sType)
 	{
+		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : false;
 		
 	}
 

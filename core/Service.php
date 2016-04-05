@@ -53,7 +53,7 @@ class Service
 	
 	public function GetVersion()
 	{
-		$sVersion = file_get_contents(PSEVEN_APP_ROOT_PATH.'VERSION');
+		$sVersion = @file_get_contents(PSEVEN_APP_ROOT_PATH.'VERSION');
 		define('PSEVEN_APP_VERSION', $sVersion);
 		return $sVersion;
 	}

@@ -780,7 +780,7 @@ class MailModule extends AApiModule
 
 			$aParts = $oBodyStructure->GetAllParts();
 					
-			\CApi::GetModuleManager()->broadcastEvent('Mail::GetBodyStructureParts', array($aParts, &$aCustomParts));
+			\CApi::GetModuleManager()->broadcastEvent('GetBodyStructureParts', array($aParts, &$aCustomParts));
 			
 			$bParseAsc = true;
 			if ($bParseAsc)
@@ -899,7 +899,7 @@ class MailModule extends AApiModule
 				);
 			}
 			
-			\CApi::GetModuleManager()->broadcastEvent('Mail::ExtendMessageData', array($oAccount, &$oMessage, $aData));
+			\CApi::GetModuleManager()->broadcastEvent('ExtendMessageData', array($oAccount, &$oMessage, $aData));
 		}
 
 		if (!($oMessage instanceof \CApiMailMessage))
