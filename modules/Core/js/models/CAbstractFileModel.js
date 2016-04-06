@@ -114,7 +114,6 @@ function CAbstractFileModel(sModuleName)
 		return this.allowExpandSubFiles() && !this.subFilesCollapsed() && this.subFilesStartedLoading();
 	}, this);
 	
-	this.visibleSpinner = ko.observable(false);
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
 		return this.uploadError() ? this.statusText() : '';
@@ -414,18 +413,16 @@ CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData)
 
 	this.uploadUid(sFileUid);
 	this.uploaded(false);
-	this.visibleSpinner(false);
 	this.statusText('');
 	this.progressPercent(0);
 	this.visibleProgress(false);
 };
 
 /**
- * Starts spinner and progress.
+ * Starts progress.
  */
 CAbstractFileModel.prototype.onUploadStart = function ()
 {
-	this.visibleSpinner(true);
 	this.visibleProgress(true);
 };
 
@@ -460,7 +457,6 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 			TextUtils.i18n('CORE/ERROR_UPLOAD_UNKNOWN')
 	;
 	
-	this.visibleSpinner(false);
 	this.progressPercent(0);
 	this.visibleProgress(false);
 	

@@ -1927,8 +1927,8 @@ class CApiIntegratorManager extends AApiManager
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
 		
 		$sS = 
-'<link type="text/css" rel="stylesheet" href="./static/css/libs.css'.'?'.CApi::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./skins/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
 		if (!empty($sHelpdeskHash))
 		{
 			$oApiTenant = /* @var $oApiTenant CApiTenantsManager */ CApi::GetCoreManager('tenants');

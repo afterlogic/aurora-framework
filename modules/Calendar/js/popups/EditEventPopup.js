@@ -245,7 +245,7 @@ CEditEventPopup.prototype.createDatePickerObject = function (oElement, fSelect)
 		firstDay: Settings.WeekStartsOn,
 		showOn: 'both',
 		buttonText: '',
-		buttonImage: 'skins/Default/images/calendar-icon.png',
+		buttonImage: './static/styles/images/calendar-icon.png',
 		buttonImageOnly: true,
 		dateFormat: this.dateFormatDatePicker,
 		onSelect: fSelect

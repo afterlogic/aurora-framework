@@ -40,7 +40,6 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 	this.workareaDom = ko.observable();
 	this.uploaderAreaDom = ko.observable();
 	this.editorUploaderBodyDragOver = ko.observable(false);
-	this.editorUploaderProgress = ko.observable(false);
 	
 	this.htmlEditorDom = ko.observable();
 	this.toolbarDom = ko.observable();
@@ -941,7 +940,7 @@ CHtmlEditorView.prototype.onEditorDrop = function (sUid, oData) {
 				}
 
 				sId = oFile.name + '_' + hash;
-				this.oCrea.insertHtml('<img id="' + sId + '" src="skins/Default/images/wait.gif" />', true);
+				this.oCrea.insertHtml('<img id="' + sId + '" src="./static/styles/images/wait.gif" />', true);
 				if (!bCreaFocused)
 				{
 					this.oCrea.fixFirefoxCursorBug();

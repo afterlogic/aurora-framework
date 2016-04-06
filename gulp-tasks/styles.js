@@ -25,6 +25,27 @@ aModulesNames.forEach(function (sModuleName) {
 	}
 });
 
+function BuildLibsCss()
+{
+	var
+		aLibsFiles = [
+			'modules/Core/styles/vendors/normalize.css',
+			'modules/Core/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
+			'modules/Core/styles/vendors/fullcalendar-2.2.3.min.css',
+			'modules/Core/styles/vendors/inputosaurus.css'
+		],
+		sDestPath = 'static/styles/libs/',
+		fBuild = function () {
+			gulp.src(aLibsFiles)
+				.pipe(concat('libs.css'))
+				.pipe(gulp.dest(sDestPath))
+				.on('error', gutil.log);
+		}
+	;
+	
+	CheckFolderAndCallHandler(sDestPath, fBuild);
+}
+
 function BuildThemeCss(sTheme, bMobile)
 {
 	var
@@ -33,9 +54,9 @@ function BuildThemeCss(sTheme, bMobile)
 	;
 	
 	aModulesNames.forEach(function (sModuleName) {
-		if (fileExists('./modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
+		if (fileExists('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
 		{
-			aModulesFiles.push('./modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
+			aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 		}
 	});
 
@@ -58,85 +79,78 @@ function BuildThemeCss(sTheme, bMobile)
 			}
 		}))
 		.pipe(less())
-		.pipe(gulp.dest('./skins/' + sTheme))
+		.pipe(gulp.dest('static/styles/themes/' + sTheme))
 		.on('error', gutil.log);
 }
 
-function MoveThemeFiles(sTheme)
+function CheckFolderAndCallHandler(sDir, fHandler)
 {
-	var
-		aDirs = [
-			{from: 'modules/Core/styles/themes/fonts', to: 'skins/' + sTheme + '/fonts'},
-			{from: 'modules/Core/styles/themes/images', to: 'skins/' + sTheme + '/images'},
-			{from: 'modules/Core/styles/themes/' + sTheme.toLowerCase() + '-images', to: 'skins/' + sTheme + '/images'}
-		],
-		fCopyDir = function (oDirs) {
-			copyDir(oDirs.from, oDirs.to, function (oErr) {
-				if (oErr)
-				{
-					console.log(oDirs.from + ' directory copying was failed: ', oErr);
-				}
-			});	
-		},
-		fCopySharing = function (sTheme) {
-			ncp('./modules/Core/styles/sharing.css', './skins/' + sTheme + '/sharing.css', function (oErr) {
-				if (oErr)
-				{
-					console.log(sTheme + '/sharing.css file copying was failed: ', oErr);
-				}
-			});
-		}
-	;
-	
-	_.each(aDirs, function (oDirs) {
-		if (fs.existsSync(oDirs.from))
-		{
-			if (fs.existsSync(oDirs.to))
-			{
-				fCopyDir(oDirs);
-			}
-			else
-			{
-				mkdirp(oDirs.to, function (oErr) {
-					if (!fs.existsSync(oDirs.to))
-					{
-						console.log(oDirs.to + ' directory creating was failed: ', oErr);
-					}
-					else
-					{
-						fCopyDir(oDirs);
-					}
-				});
-			}
-		}
-		else
-		{
-			console.log(oDirs.from + ' directory does not exist');
-		}
-	});
-	
-	if (fs.existsSync('./skins/' + sTheme))
+	if (fs.existsSync(sDir))
 	{
-		fCopySharing(sTheme);
+		fHandler();
 	}
 	else
 	{
-		mkdirp('./skins/' + sTheme, function (oErr) {
-			if (oErr)
+		mkdirp(sDir, function (oErr) {
+			if (!fs.existsSync(sDir))
 			{
-				console.log('./skins/' + sTheme + ' directory creating was failed: ', oErr);
+				console.log(sDir + ' directory creating was failed: ', oErr);
 			}
 			else
 			{
-				fCopySharing(sTheme);
+				fHandler();
 			}
 		});
 	}
 }
 
+function MoveFiles(sFromDir, sToDir)
+{
+	var
+		fCopyDir = function () {
+			copyDir(sFromDir, sToDir, function (oErr) {
+				if (oErr)
+				{
+					console.log(sFromDir + ' directory copying was failed: ', oErr);
+				}
+			});	
+		}
+	;
+	
+	if (fs.existsSync(sFromDir))
+	{
+		CheckFolderAndCallHandler(sToDir, fCopyDir);
+	}
+	else
+	{
+		console.log(sFromDir + ' directory does not exist');
+	}
+}
+
+function MoveSharingCss()
+{
+	var
+		fCopySharing = function () {
+			ncp('modules/Core/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
+				if (oErr)
+				{
+					console.log('static/styles/sharing.css file copying was failed: ', oErr);
+				}
+			});
+		}
+	;
+	
+	CheckFolderAndCallHandler('static/styles', fCopySharing);
+}
+
 gulp.task('styles', function () {
+	BuildLibsCss();
+	MoveFiles('modules/Core/styles/vendors/jquery/images', 'static/styles/libs/images');
+	MoveFiles('modules/Core/styles/fonts', 'static/styles/fonts');
+	MoveFiles('modules/Core/styles/images', 'static/styles/images');
+	MoveSharingCss();
 	_.each(aThemes, function (sTheme) {
-		MoveThemeFiles(sTheme);
+		MoveFiles('modules/Core/styles/themes/' + sTheme.toLowerCase() + '-images', 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme.toLowerCase(), false);
 		BuildThemeCss(sTheme.toLowerCase(), true);
 	});
