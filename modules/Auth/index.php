@@ -242,7 +242,7 @@ class AuthModule extends AApiModule
 			);
 		}
 		
-		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
+//		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
 		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 	}
 	
@@ -259,16 +259,24 @@ class AuthModule extends AApiModule
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
-
-		$iUserId = $oApiIntegrator->getLogginedUserId($this->getParamValue('AuthToken'));
+//		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+//		$iUserId = $oApiIntegrator->getLogginedUserId($this->getParamValue('AuthToken'));
 		
-//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		if (true)
+		$oEventResult = null;
+		$this->broadcastEvent('Auth::CreateAccount', array(
+			'IdUser' => $this->getParamValue('IdUser'),
+			'login' => $this->getParamValue('login'),
+			'password' => $this->getParamValue('password'),
+			'result' => &$oEventResult
+		));
+		var_dump($oEventResult);
+		exit;
+		//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if ($oEventResult instanceOf \CUser)
 		{
 			$oAccount = \CAccount::createInstance();
 			
-//			$oAccount->IdUser = $this->getParamValue('IdUser');
+			$oAccount->IdUser = $oEventResult->iObjectId;
 			$oAccount->Login = $this->getParamValue('Login');
 			$oAccount->Password = $this->getParamValue('Password');
 
@@ -279,7 +287,7 @@ class AuthModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ChannelNotAllowed);
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::NonUserPassed);
 		}
 
 		return false;

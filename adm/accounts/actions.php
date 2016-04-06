@@ -8,6 +8,9 @@ if ($oHttp->HasPost('action'))
 	{
 		case 'create': 
 			\CApi::ExecuteMethod('Auth::CreateAccount', array(
+				'Token' => $sToken,
+				'AuthToken' => $sAuthToken,
+				'IdUser' => $oHttp->GetPost('user_id', ''),
 				'Login' => $oHttp->GetPost('login', ''),
 				'Password' => $oHttp->GetPost('password', '')
 			));

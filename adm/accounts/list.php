@@ -20,16 +20,16 @@
 				<input type="hidden" name="manager" value="accounts"/>
 				<input type="hidden" name="action" value="update"/>
 
-				<input name="id" type="text" data-bind="textInput: id;" class="form-control" />
-				<input name="login" data-bind="textInput: login" placeholder="User Login" class="form-control" />
-				<input name="password" data-bind="textInput: password" placeholder="User Password" class="form-control" />
+				<input name="id" readonly="true" type="text" data-bind="textInput: id;" class="form-control" />
+				<input name="login" data-bind="textInput: login" placeholder="Account Login" class="form-control" />
+				<input name="password" data-bind="textInput: password" placeholder="Account Password" class="form-control" />
 
 				<input type="submit" value="Update" />
 			</form>
 			<form method="POST" action="/adm/">
 				<input type="hidden" name="manager" value="accounts"/>
 				<input type="hidden" name="action" value="delete"/>
-				<input name="id" type="text" data-bind="textInput: id;" class="form-control" />
+				<input name="id" readonly="true" type="text" data-bind="textInput: id;" class="form-control" />
 				<input type="submit" value="Delete" />
 			</form>
 		</fieldset>
@@ -39,9 +39,9 @@
 				<input type="hidden" name="manager" value="accounts"/>
 				<input type="hidden" name="action" value="create"/>
 
-				<input name="id" type="text" class="form-control" />
-				<input name="login" placeholder="User Login" class="form-control" />
-				<input name="password" placeholder="User Password" class="form-control" />
+				<input name="user_id" placeholder="User Id" class="form-control" />
+				<input name="login" placeholder="Account Login" class="form-control" />
+				<input name="password" placeholder="Account Password" class="form-control" />
 
 				<input type="submit" value="Create" />
 			</form>

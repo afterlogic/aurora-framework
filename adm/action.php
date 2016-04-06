@@ -7,7 +7,7 @@ if ($oHttp->HasPost('manager'))
 	
 	if (in_array($sManagerName, array('accounts', 'users')))
 	{
-		header('Location: /adm/');
+//		header('Location: /adm/');
 		include $sManagerName."\actions.php";
 		exit;
 	}

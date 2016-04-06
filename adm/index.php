@@ -75,6 +75,19 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	$sAuthToken = isset($_COOKIE['AUTH']) ? $_COOKIE['AUTH'] : '';
 	$iStoredTab = isset($_COOKIE['TAB']) ? (int)$_COOKIE['TAB'] : 0;
 	
+	$oApiIntegrator = \CApi::GetCoreManager('integrator');
+	$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
+	
+	if (!$iUserId)
+	{
+		$sAuthToken = '';
+		setcookie('AUTH', '');
+	}
+	
+	var_dump($iUserId);
+	var_dump($sAuthToken);
+	var_dump($sToken);
+	
 	include "action.php";
 } ?>
 <!DOCTYPE html>
@@ -120,7 +133,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 			</div>
 			<div class="col-sm-4">
 				<?php if ($sAuthToken) { ?>
-					<div><?php echo $sAuthToken; ?></div>
+					<div>AUTH TOKEN: <?php echo $sAuthToken; ?></div>
 				<?php } else { ?>
 				<fieldset>
 					<label>Login</label>
