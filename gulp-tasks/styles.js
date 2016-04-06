@@ -136,14 +136,21 @@ function MoveThemeFiles(sTheme)
 
 gulp.task('styles', function () {
 	_.each(aThemes, function (sTheme) {
+		MoveThemeFiles(sTheme);
 		BuildThemeCss(sTheme.toLowerCase(), false);
 		BuildThemeCss(sTheme.toLowerCase(), true);
-		MoveThemeFiles(sTheme);
+	});
+});
+
+gulp.task('cssonly', function () {
+	_.each(aThemes, function (sTheme) {
+		BuildThemeCss(sTheme.toLowerCase(), false);
+		BuildThemeCss(sTheme.toLowerCase(), true);
 	});
 });
 
 gulp.task('styles:watch', ['styles'], function () {
-	gulp.watch(aModulesWatchPaths, {interval: 500}, ['styles']);
+	gulp.watch(aModulesWatchPaths, {interval: 500}, ['cssonly']);
 });
 
 module.exports = {};
