@@ -27,6 +27,19 @@
 	.agent_area .panel .panel_content {
 		.resize-compensation-top(0px);
 	}
+	
+	.toolbar {
+		.new_request_button,
+		.new_request_button:hover {
+			background: none;
+			border: none;
+		}
+		
+		.new_request_button .text:hover,
+		.checkstate .icon:hover {
+			color: darken(@theme-toolbar-item-icon-color, 10%);
+		}
+	}
 
 	.agent_area .panel.threads_panel {
 		.toolbar {
@@ -53,7 +66,7 @@
 				padding: 0px;
 			}
 
-			.new_request {
+			.new_request_button {
 				margin-right: 0px;
 				
 				.icon {
@@ -85,7 +98,7 @@
 		box-shadow: none;
 		
 		.toolbar {
-			.new_request {
+			.new_request_button {
 				display: inline-block;
 				min-width: 200px;
 			}

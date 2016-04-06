@@ -10,7 +10,7 @@
 
 		& > .item,
 		.group > .item {
-			.theme-item();
+			.theme-toolbar-item();
 			
 			cursor: pointer;
 			display: inline-block;
@@ -23,7 +23,7 @@
 			vertical-align: middle;
 			
 			&:hover {
-				.theme-item-hover();
+				.theme-toolbar-item-hover();
 			}
 			
 			&:last-child {
@@ -98,7 +98,7 @@
 			}
 			
 			& > .text {
-				color: #7f7f7f;
+				color: @theme-toolbar-item-icon-color;
 				display: none;
 			}
 
@@ -111,7 +111,7 @@
 			}
 			
 			&.expand {
-				.theme-item-hover();
+				.theme-toolbar-item-hover();
 			}
 		}
 	   
@@ -164,7 +164,7 @@
 			}
 			
 			&.expand > .item {
-				.theme-item-hover();
+				.theme-toolbar-item-hover();
 			}
 		}
 	}

@@ -18,7 +18,11 @@ if ($.isFunction(ComposeMessageToAddressesFunc))
 				sFullEmail = fValueAccessor()
 			;
 
-			$Element.show().addClass('link');
+			$Element.show();
+			if (!$Element.hasClass('button'))
+			{
+				$Element.addClass('link');
+			}
 			$Element.click(function () {
 				ComposeMessageToAddressesFunc(sFullEmail);
 			});

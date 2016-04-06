@@ -16,8 +16,12 @@
 	@thread-pin-unread-selected-border: @thread-pin-selected-border;
 }
 
-@theme-message-toolbar-item() {
-	&:hover {
-		color: #8f7a66;
+.theme-message-toolbar-item() {
+	.icon {
+		color: @theme-toolbar-item-icon-color;
+	}
+	
+	.icon:hover {
+		color: darken(@theme-toolbar-item-icon-color, 10%);
 	}
 }
