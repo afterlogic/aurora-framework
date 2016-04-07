@@ -6,9 +6,6 @@
 	{
 		this.usersList = ko.observableArray([]);
 		this.selectedItem = ko.observable(null);
-		this.selectedItem.subscribe(function (oValue) {
-			console.log('selectedItem', oValue);
-		});
 		
 		this.reset = function () {
 			this.selectedItem(null);
@@ -29,7 +26,8 @@
 					'login': oItem[0],
 					'password': oItem[1],
 					'user_id': oItem[2],
-					'disabled': oItem[3]
+					'disabled': oItem[3],
+					'active': ko.observable(false)
 				});
 			});
 			this.usersList(aListData);
@@ -39,7 +37,14 @@
 	
 	CScreen.prototype.selectItem = function (oItem)
 	{
+		var oCurrentItem = this.selectedItem();
+		if (oCurrentItem)
+		{
+			oCurrentItem.active(false);
+		}
+		
 		this.selectedItem(oItem);
+		this.selectedItem().active(true);
 	};
 	
 	$(function () {

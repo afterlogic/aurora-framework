@@ -26,7 +26,8 @@
 				aListData.push({
 					'id': iIndex,
 					'name': oItem[0],
-					'description': oItem[1]
+					'description': oItem[1],
+					'active': ko.observable(false)
 				});
 			});
 			this.usersList(aListData);
@@ -36,7 +37,14 @@
 	
 	CScreen.prototype.selectItem = function (oItem)
 	{
+		var oCurrentItem = this.selectedItem();
+		if (oCurrentItem)
+		{
+			oCurrentItem.active(false);
+		}
+		
 		this.selectedItem(oItem);
+		this.selectedItem().active(true);
 	};
 	
 	$(function () {

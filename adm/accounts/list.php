@@ -4,7 +4,7 @@
 ?>
 <div id="accounts-screen" class="row">
 	<div class="col-sm-6">
-		<table class="table table-striped" data-bind="">
+		<table class="table table-striped">
 			<tr>
 				<th>id</th>
 				<th>login</th>
@@ -12,7 +12,7 @@
 				<th>user id</td>
 			</tr>
 			<!-- ko foreach: usersList -->
-			<tr data-bind="click: $parent.selectItem.bind($parent)">
+			<tr data-bind="click: $parent.selectItem.bind($parent), css: {'success': active}">
 				<td data-bind="text: id;"></td>
 				<td data-bind="text: login"></td>
 				<td data-bind="text: password"></td>
