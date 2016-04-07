@@ -27,7 +27,9 @@
 				aListData.push({
 					'id': iIndex,
 					'login': oItem[0],
-					'password': oItem[1]
+					'password': oItem[1],
+					'user_id': oItem[2],
+					'disabled': oItem[3]
 				});
 			});
 			this.usersList(aListData);

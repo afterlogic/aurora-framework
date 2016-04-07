@@ -109,7 +109,7 @@ class CApiAuthAccountsManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CAccount', 
 				array(
-					'IsDisabled', 'Login', 'Password'
+					'IsDisabled', 'Login', 'Password', 'IdUser'
 				),
 				$iPage,
 				$iUsersPerPage,
@@ -125,6 +125,7 @@ class CApiAuthAccountsManager extends AApiManager
 					$aResult[$oItem->iObjectId] = array(
 						$oItem->Login,
 						$oItem->Password,
+						$oItem->IdUser,
 						$oItem->IsDisabled
 					);
 				}

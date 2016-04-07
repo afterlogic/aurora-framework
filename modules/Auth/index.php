@@ -263,15 +263,14 @@ class AuthModule extends AApiModule
 //		$iUserId = $oApiIntegrator->getLogginedUserId($this->getParamValue('AuthToken'));
 		
 		$oEventResult = null;
-		$this->broadcastEvent('Auth::CreateAccount', array(
+		$this->broadcastEvent('CreateAccount', array(
 			'IdUser' => $this->getParamValue('IdUser'),
 			'login' => $this->getParamValue('login'),
 			'password' => $this->getParamValue('password'),
 			'result' => &$oEventResult
 		));
-		var_dump($oEventResult);
-		exit;
-		//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		
+		//	if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		if ($oEventResult instanceOf \CUser)
 		{
 			$oAccount = \CAccount::createInstance();

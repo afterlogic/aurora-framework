@@ -32,6 +32,8 @@ class CoreModule extends AApiModule
 				'postlogin' => 'EntryPostlogin'
 			)
 		);
+		
+		$this->subscribeEvent('CreateAccount', array($this, 'onAccountCreate'));
 	}
 	
 	/**
@@ -789,6 +791,31 @@ class CoreModule extends AApiModule
 		}
 
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function onAccountCreate($iUserId, $sLogin, $sPassword, &$oResult)
+	{
+		$oUser = null;
+		
+		if ($iUserId > 0)
+		{
+			$oUser = $this->oApiUsersManager->getUserById($iUserId);
+		}
+		else
+		{
+			$oUser = \CUser::createInstance();
+				
+			if (!$this->oApiUsersManager->createUser($oUser))
+			{
+				$oUser = null;
+			}
+		}
+		
+		$oResult = $oUser;
 	}
 }
 
