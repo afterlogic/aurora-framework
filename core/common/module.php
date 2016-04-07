@@ -983,16 +983,17 @@ abstract class AApiModule
 
 	public function ExecuteMethod($sMethod, $aParameters = array())
 	{
-		$this->broadcastEvent($this->GetName() . '::' . $sMethod . '::' . 'before', array(&$aParameters));
+		$this->broadcastEvent($sMethod . '::before', array(&$aParameters));
 
 		$this->SetParameters($aParameters);
 		\CApiResponseManager::SetMethod($sMethod);
 		$mResult = \CApiModuleMethod::createInstance($this, $sMethod, $this->aParameters)->Execute();
 		
 		$aParameters['@Result'] = $mResult;
-		$this->broadcastEvent($this->GetName() . '::' . $sMethod . '::' . 'after', array(&$aParameters));
+		$this->broadcastEvent($sMethod . '::after', array(&$aParameters));
 		$mResult = $aParameters['@Result'];
 				
 		return $mResult;
 	}
 }
+
