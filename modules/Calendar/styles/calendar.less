@@ -432,13 +432,18 @@
 			&.passive:hover {
 				box-shadow: none;
 				cursor: default;
+				
+				.theme-toolbar-item();
 			}
 		}
 		
-		.range_select .item.passive,
-		.range_select .item.passive:hover {
-			background-color: #f0f0f0;
-			border-radius: 3px;
+		.range_select .item {
+			.theme-toolbar-item();
+			
+			&.passive,
+			&.passive:hover {
+				.theme-toolbar-pressed-button();
+			}
 		}
 
 		.date_select .item {
@@ -1032,7 +1037,7 @@ fc-month-view .fc-content,
 			}
 
 			&.repeat .icon {
-				background: url("images/sprites.png") no-repeat 40px 40px;
+				background: url("../../images/sprites.png") no-repeat 40px 40px;
 				background-position: -280px -120px;
 			}
 
@@ -1308,7 +1313,7 @@ fc-month-view .fc-content,
 		width: 100%;
 
 		.icon.repeat {
-			background: url("images/sprites.png") no-repeat -980px -240px;
+			background: url("../../images/sprites.png") no-repeat -980px -240px;
 			display: block;
 			height: 12px;
 			left: 6px;

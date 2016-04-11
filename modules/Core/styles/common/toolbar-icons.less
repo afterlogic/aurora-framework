@@ -3,20 +3,11 @@
 		content: "\e607";
 		height: 100%;
 		width: 100%;
-
+	}
+	
+	.cssanimations {
 		.transform-origin(50% 48%);
 		.transform(rotate(0deg));
-
-		.no-cssanimations & {
-			content: "";
-		}
-	}
-
-	.no-cssanimations & {
-		background: url("images/check.png") no-repeat 0px 0px;
-		height: 19px !important;
-		overflow: hidden;
-		width: 19px !important;
 	}
 }
 
@@ -110,7 +101,7 @@
 	content: "\e631";
 }
 
-&.new_request .icon:before {
+&.new_request_button .icon:before {
 	content: "\e630";
 }
 

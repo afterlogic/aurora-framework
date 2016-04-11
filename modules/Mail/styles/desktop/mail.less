@@ -62,20 +62,20 @@
 
 		.subject {
 			color: #6d6d6d;
-			font-size: 10pt;
-			line-height: 120%;
+			font-size: 13pt;
+			line-height: 130%;
 		}
 
-		&.selected .subject{
+		&.selected .subject {
 			color: @theme-list-selected-item-color;
 		}
 
-		&.nosubject .subject{
+		&.nosubject .subject {
 			color: #888888;
 			.opacity(0.3);
 		}
 
-		&.selected.nosubject .subject{
+		&.selected.nosubject .subject {
 			color: #ffffff;
 		}
 
@@ -184,7 +184,7 @@
 	.panel.files .items_list .folder .icon,
 	.html_editor .toolbar .item .icon
 	{
-		background-image: url("images/sprites2x.png");
+		background-image: url("../../images/sprites2x.png");
 		background-size: 1440px 560px;
 	}
 }
@@ -294,10 +294,7 @@
 					margin-right: 16px;
 					padding: 0px;
 					
-					/*@theme-message-toolbar-item();*/
-/*	.icon:hover {
-		color: #8f7a66 !important;
-	}*/
+					.theme-message-toolbar-item();
 					
 					&:last-child {
 						margin-right: 0px;
@@ -394,7 +391,7 @@
 			padding: 0px;
 			
 			.attachments {
-				background: url("images/sprites.png") no-repeat -120px -120px;
+				background: url("../../images/sprites.png") no-repeat -120px -120px;
 				cursor: pointer;
 				display: inline-block;
 				float: left;

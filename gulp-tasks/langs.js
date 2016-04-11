@@ -8,9 +8,9 @@ var
 	source = require('vinyl-source-stream')
 ;
 
-gulp.task('langs', function() {
+function BuildLang(sLanguage)
+{
 	var
-		sLanguage = argv.getParameter('--lang', 'English'),
 		aModulesNames = argv.getModules(),
 		aModules = _.map(aModulesNames, function (sModuleName) {
 			var sFilePath = './modules/' + sModuleName + '/i18n/' + sLanguage + '.ini';
@@ -82,6 +82,17 @@ gulp.task('langs', function() {
 
 			fEndStream();
 		});
+	});
+}
+
+gulp.task('langs', function() {
+	var
+		sLanguages = argv.getParameter('--langs', 'English'),
+		aLanguages = sLanguages.split(',')
+	;
+	
+	_.each(aLanguages, function (sLanguage) {
+		BuildLang(sLanguage);
 	});
 });
 

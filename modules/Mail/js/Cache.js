@@ -1330,7 +1330,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 		sUid = oResponse.Result.New[0].Uid;
 		oParameters = {
 			action:'show',
-			icon: 'skins/wm_logo_140x140.png',
+			icon: 'static/styles/images/logo_140x140.png',
 			title: TextUtils.i18n('MAIL/INFO_NEW_MESSAGES_PLURAL', {
 				'COUNT': iNewLength
 			}, null, iNewLength),
