@@ -166,7 +166,7 @@ class Service
 		$this->RedirectToHttps();
 
 		$aPaths = $this->GetPaths();
-		
+
 		if (0 < count($aPaths) && !empty($aPaths[0])) {
 			
 			$sEntryPart = strtolower($aPaths[0]);

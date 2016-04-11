@@ -185,7 +185,7 @@ class AuthModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function Logout()
+	/*public function Logout()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
@@ -207,17 +207,28 @@ class AuthModule extends AApiModule
 
 		\CApi::LogEvent(\EEvents::Logout, $oAccount);
 		return $oApiIntegrator->logoutAccount($sAuthToken);
-	}	
+	}*/
 	
-	public function Login2()
+	public function Login()
 	{
 		$bResult = false;
 		
-		$this->broadcastEvent('Auth::Login', array(
-			'login' => $this->getParamValue('login'),
-			'password' => $this->getParamValue('password'),
-			'result' => &$bResult
-		));
+		if ($this->getParamValue('Email', false))
+		{
+			$this->broadcastEvent('Auth::Login', array(
+				'login' => $this->getParamValue('Email'),
+				'password' => $this->getParamValue('IncPassword'),
+				'result' => &$bResult
+			));
+		}
+		else
+		{
+			$this->broadcastEvent('Auth::Login', array(
+				'login' => $this->getParamValue('login'),
+				'password' => $this->getParamValue('password'),
+				'result' => &$bResult
+			));
+		}
 		
 		if ($bResult === true)
 		{
@@ -246,7 +257,7 @@ class AuthModule extends AApiModule
 		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 	}
 	
-	public function Logout2()
+	public function Logout()
 	{
 		$sAuthToken = $this->getParamValue('AuthToken');
 		

@@ -308,7 +308,7 @@ class CApiIntegratorManager extends AApiManager
 				
 					$iUserId = $aAccountHashTable['id'];
 			}
-			CApi::Plugin()->RunHook('api-integrator-get-loggined-user-id', array(&$iUserId));
+//			CApi::Plugin()->RunHook('api-integrator-get-loggined-user-id', array(&$iUserId));
 		}
 
 		return $iUserId;
@@ -1528,17 +1528,17 @@ class CApiIntegratorManager extends AApiManager
 		
 		CApi::Plugin()->RunHook('api-pre-app-data', array(&$aAppData));
 
-		$oApiCapability = \CApi::GetCoreManager('capability');
-		if ($oApiCapability)
-		{
-			if ($oApiCapability->isNotLite())
-			{
-				$aAppData['IsMobile'] = $this->isMobile();
-				$aAppData['AllowMobile'] = true;
-			}
-
-			$aAppData['IsMailsuite'] = $oApiCapability->isMailsuite();
-		}
+//		$oApiCapability = \CApi::GetCoreManager('capability');
+//		if ($oApiCapability)
+//		{
+//			if ($oApiCapability->isNotLite())
+//			{
+//				$aAppData['IsMobile'] = $this->isMobile();
+//				$aAppData['AllowMobile'] = true;
+//			}
+//
+//			$aAppData['IsMailsuite'] = $oApiCapability->isMailsuite();
+//		}
 
 		$iIdTenant = 0;
 
@@ -1664,11 +1664,23 @@ class CApiIntegratorManager extends AApiManager
 
 //		$oDefaultAccount = null;
 //
-//		$iUserId = $this->getLogginedUserId($sAuthToken);
-//		if (0 < $iUserId)
-//		{
+		$iUserId = $this->getLogginedUserId($sAuthToken);
+		
+		if (0 < $iUserId)
+		{
+			
 //			/* @var $oApiUsersManager CApiUsersManager */
 //			$oApiUsersManager = CApi::GetCoreManager('users');
+			$oUser = \CApi::ExecuteMethod('Core::GetUser', array(
+//				'Token' => $sToken,
+				'AuthToken' => $sAuthToken,
+				'UserId' => $iUserId
+			));
+			
+			if ($oUser)
+			{
+				$aAppData['Auth'] = true;
+			}
 //
 //			$aInfo = $oApiUsersManager->getUserAccounts($iUserId);
 //			
@@ -1724,7 +1736,7 @@ class CApiIntegratorManager extends AApiManager
 //					}
 //				}
 //			}
-//		}
+		}
 
 //		if ($aAppData['Auth'])
 //		{
@@ -1811,7 +1823,7 @@ class CApiIntegratorManager extends AApiManager
 			$sTheme = $oSettings->GetConf('WebMail/DefaultSkin');
 
 			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
-			
+
 			if ($oAccount)
 			{
 				$sSiteName = $oAccount->Domain->SiteName;
@@ -1821,28 +1833,28 @@ class CApiIntegratorManager extends AApiManager
 			else
 			{
 				/* @var $oApiDomainsManager CApiDomainsManager */
-				$oApiDomainsManager = CApi::GetCoreManager('domains');
-
-				$oInput = new api_Http();
-				$oDomain = /* @var $oDomain CDomain */ $oApiDomainsManager->getDomainByUrl($oInput->GetHost());
-				
-				if ($oDomain)
-				{
-					$sTheme = $oDomain->DefaultSkin;
-					$sLanguage = $this->getLoginLanguage();
-
-					if (empty($sLanguage))
-					{
-						$sLanguage = $this->getBrowserLanguage();
-					}
-					
-					if (empty($sLanguage))
-					{
-						$sLanguage = $oDomain->DefaultLanguage;
-					}
-
-					$sSiteName = $oDomain->SiteName;
-				}
+//				$oApiDomainsManager = CApi::GetCoreManager('domains');
+//
+//				$oInput = new api_Http();
+//				$oDomain = /* @var $oDomain CDomain */ $oApiDomainsManager->getDomainByUrl($oInput->GetHost());
+//				
+//				if ($oDomain)
+//				{
+//					$sTheme = $oDomain->DefaultSkin;
+//					$sLanguage = $this->getLoginLanguage();
+//
+//					if (empty($sLanguage))
+//					{
+//						$sLanguage = $this->getBrowserLanguage();
+//					}
+//					
+//					if (empty($sLanguage))
+//					{
+//						$sLanguage = $oDomain->DefaultLanguage;
+//					}
+//
+//					$sSiteName = $oDomain->SiteName;
+//				}
 			}
 
 			$sLanguage = $this->validatedLanguageValue($sLanguage);
@@ -1997,7 +2009,6 @@ class CApiIntegratorManager extends AApiManager
 		}
 		
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
-
 		return '<div class="auroraMain">
 	<div id="auroraContent">
 		<div class="screens"></div>

@@ -49,9 +49,9 @@ class CApiCoreUsersManager extends AApiManager
 				if (null === $oUser)
 				{
 //					$oUser = $this->oStorage->getUserById($iUserId);
-					
+
 					$oUser = $this->oEavManager->getObjectById($iUserId);
-					
+
 					if ($oUser instanceof \CUser)
 					{
 						//TODO method needs to be refactored according to the new system of properties inheritance
@@ -61,6 +61,10 @@ class CApiCoreUsersManager extends AApiManager
 						$oUser->setInheritedSettings(array(
 							'domain' => $oDomain
 						));
+					}
+					else
+					{
+						$oUser = null;
 					}
 				}
 				CApi::Plugin()->RunHook('api-change-user-by-id', array(&$oUser));
@@ -316,7 +320,6 @@ class CApiCoreUsersManager extends AApiManager
 		{
 			if ($oUser->validate())
 			{
-				var_dump($oUser);
 //				if ($this->isExists($oUser))
 //				{
 //					$oChannel->Password = md5($oChannel->Login.mt_rand(1000, 9000).microtime(true));
