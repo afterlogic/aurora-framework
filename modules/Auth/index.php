@@ -59,7 +59,7 @@ class AuthModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function Login()
+	/*public function Login()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
 		$sEmail = trim((string) $this->getParamValue('Email', ''));
@@ -180,7 +180,7 @@ class AuthModule extends AApiModule
 
 		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
 		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
-	}
+	}*/
 	
 	/**
 	 * @return array
@@ -244,6 +244,22 @@ class AuthModule extends AApiModule
 		
 //		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
 		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+	}
+	
+	public function Logout2()
+	{
+		$sAuthToken = $this->getParamValue('AuthToken');
+		
+		if ($sAuthToken)
+		{
+			\CApi::Cacher()->Delete('AUTHTOKEN:'.$sAuthToken);
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Auth\Notifications::IncorrentAuthToken);
+		}
+		
+		return true;
 	}
 	
 	public function checkAuth($sLogin, $sPassword, &$bResult)

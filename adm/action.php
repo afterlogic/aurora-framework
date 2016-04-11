@@ -13,17 +13,37 @@ if ($oHttp->HasPost('manager'))
 	}
 	else if ($sManagerName === 'auth')
 	{
-		$result = \CApi::ExecuteMethod('Auth::Login2', array(
-//			'AuthToken' => $oHttp->GetPost('login', ''),
-			'login' => $oHttp->GetPost('login', ''),
-			'password' => $oHttp->GetPost('password', '')
-		));
-		
-		if ($result['AuthToken'])
+		if ($oHttp->HasPost('action'))
 		{
-			$sAuthToken = $result['AuthToken'];
-			setcookie('AUTH', $result['AuthToken']);
+			switch ($oHttp->GetPost('action'))
+			{
+				case 'login': 
+					$result = \CApi::ExecuteMethod('Auth::Login2', array(
+			//			'AuthToken' => $oHttp->GetPost('login', ''),
+						'login' => $oHttp->GetPost('login', ''),
+						'password' => $oHttp->GetPost('password', '')
+					));
+					
+					if ($result['AuthToken'])
+					{
+						$sAuthToken = $result['AuthToken'];
+						setcookie('AUTH', $result['AuthToken']);
+					}
+					break;
+				case 'logout': 
+					$result = \CApi::ExecuteMethod('Auth::Logout2', array(
+						'AuthToken' => $sAuthToken
+					));
+					
+					if ($result)
+					{
+						$sAuthToken = '';
+						setcookie ("AUTH", "", time() - 3600);
+					}
+					break;
+			}
 		}
+		
 	}
 }
 
