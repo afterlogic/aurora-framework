@@ -211,14 +211,14 @@ class AuthModule extends AApiModule
 	
 	public function Login($sLogin, $sPassword)
 	{
-		$bResult = false;
+		$mResult = false;
 		
 //		if ($this->getParamValue('Email', false))
 //		{
 			$this->broadcastEvent('Login', array(
 				'login' => $sLogin,
 				'password' => $sPassword,
-				'result' => &$bResult
+				'result' => &$mResult
 			));
 //		}
 //		else
@@ -229,15 +229,15 @@ class AuthModule extends AApiModule
 //				'result' => &$bResult
 //			));
 //		}
-		
-		if ($bResult === true)
+
+		if ($mResult instanceOf CAccount)
 		{
 			$bSignMe = true;
 			
 			$aAccountHashTable = array(
 				'token' => 'auth',
 				'sign-me' => $bSignMe,
-				'id' => 60, //$oAccount->IdUser,
+				'id' => $mResult->IdUser, //$oAccount->IdUser,
 				'email' => 'vasil@afterlogic.com' //$oAccount->Email
 			);
 
@@ -271,10 +271,16 @@ class AuthModule extends AApiModule
 		return true;
 	}
 	
-	public function checkAuth($sLogin, $sPassword, &$bResult)
+	public function checkAuth($sLogin, $sPassword, &$mResult)
 	{
+		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sLogin, $sPassword);
 		
-		$bResult = ($sLogin === 'vasil' || $sLogin === 'sash') && $sPassword === 'p12345' ;
+		if ($oAccount)
+		{
+			$mResult = $oAccount;
+		}
+		
+//		$mResult = ($sLogin === 'vasil' || $sLogin === 'sash') && $sPassword === 'p12345' ;
 	}
 	
 	/**

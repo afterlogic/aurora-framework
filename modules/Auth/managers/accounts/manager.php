@@ -76,6 +76,48 @@ class CApiAuthAccountsManager extends AApiManager
 		}
 		return $oAccount;
 	}
+	
+	/**
+	 * Retrieves information on particular WebMail Pro user. 
+	 * 
+	 * @api
+	 * @todo not used
+	 * 
+	 * @param int $iUserId User identifier.
+	 * 
+	 * @return CUser | false
+	 */
+	public function getAccountByCredentials($sLogin, $sPassword)
+	{
+		$oAccount = null;
+		try
+		{
+			$aResults = $this->oEavManager->getObjects(
+				'CAccount', 
+				array(
+					'IsDisabled', 'Login', 'Password', 'IdUser'
+				),
+				0,
+				0,
+				array(
+					'Login' => $sLogin,
+					'Password' => $sPassword,
+					'IsDisabled' => false
+				)
+			);
+
+			if (is_array($aResults) && count($aResults) === 1)
+			{
+				$oAccount = $aResults[0];
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$oAccount = false;
+			$this->setLastException($oException);
+		}
+		return $oAccount;
+	}
 
 	/**
 	 * Obtains list of information about users for specific domain. Domain identifier is used for look up.
