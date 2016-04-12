@@ -124,6 +124,7 @@ class CApiCoreUsersManager extends AApiManager
 				$sOrderBy,
 				$iOrderType
 			);
+			var_dump($aResults);
 			
 			foreach($aResults as $oUser)
 			{

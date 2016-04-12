@@ -1765,7 +1765,7 @@ class CApiIntegratorManager extends AApiManager
 //
 //		$aAppData['HelpdeskThreadId'] = null === $aAppData['HelpdeskThreadId'] ? 0 : $aAppData['HelpdeskThreadId'];
 		
-		CApi::Plugin()->RunHook('api-app-data', array($oDefaultAccount, &$aAppData));
+		//CApi::Plugin()->RunHook('api-app-data', array($oDefaultAccount, &$aAppData));
 
 		return $aAppData;
 	}

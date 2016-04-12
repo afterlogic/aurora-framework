@@ -273,7 +273,8 @@ class AuthModule extends AApiModule
 	
 	public function checkAuth($sLogin, $sPassword, &$bResult)
 	{
-		$bResult = $sLogin === 'vasil' && $sPassword === 'p12345';
+		
+		$bResult = ($sLogin === 'vasil' || $sLogin === 'sash') && $sPassword === 'p12345' ;
 	}
 	
 	/**
