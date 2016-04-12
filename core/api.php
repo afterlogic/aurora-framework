@@ -20,6 +20,11 @@ class CApi
 	static $oModuleManager;
 
 	/**
+	 * @var array
+	 */
+	static $aModuleDecorators;
+
+	/**
 	 * @var CApiPluginManager
 	 */
 	static $oPlugin;
@@ -111,8 +116,7 @@ class CApi
 				}
 			}
 
-			$oHtml = \MailSo\Base\Http::SingletonInstance();
-			$sHost = $oHtml->GetHost();
+			$sHost = \MailSo\Base\Http::SingletonInstance()->GetHost();
 			
 			if (0 < \strlen($sHost))
 			{
@@ -133,6 +137,7 @@ class CApi
 			CApi::$oModuleManager = CApiModuleManager::createInstance();
 			CApi::$oModuleManager->init();
 			CApi::$oManager->PrepareStorageMap();
+			CApi::$aModuleDecorators = array();
 		}
 	}
 
@@ -215,6 +220,16 @@ class CApi
 		return CApi::$oModuleManager;
 	}
 	
+	public static function GetModuleDecorator($sModuleName)
+	{
+		if (!isset(CApi::$aModuleDecorators[$sModuleName]))
+		{
+			CApi::$aModuleDecorators[$sModuleName] = new \CApiModuleDecorator($sModuleName);
+		}
+		
+		return CApi::$aModuleDecorators[$sModuleName];
+	}
+
 	public static function GetModule($sModuleName)
 	{
 		return self::GetModuleManager()->GetModule($sModuleName);
@@ -228,10 +243,10 @@ class CApi
 		return CApi::$oManager;
 	}
 
-	public static function ExecuteMethod($sMethod, $aParameters = array())
+	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
-		list($sModuleName, $sMethod) = explode('::', $sMethod);
-		return CApi::GetModuleManager()->ExecuteMethod($sModuleName, $sMethod, $aParameters);
+		list($sModuleName, $sMethodName) = explode('::', $sMethodName);
+		return CApi::GetModuleManager()->ExecuteMethod($sModuleName, $sMethodName, $aParameters);
 	}
 
 	/**

@@ -407,11 +407,11 @@ class CoreModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function SetMobile()
+	public function SetMobile($bMobile)
 	{
 		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
 		return $oApiIntegratorManager ?
-			$oApiIntegratorManager->setMobile('1' === (string) $this->getParamValue('Mobile', '0')) : false;
+			$oApiIntegratorManager->setMobile($bMobile) : false;
 	}	
 	
 	/**
@@ -816,15 +816,6 @@ class CoreModule extends AApiModule
 		}
 		
 		$oResult = $oUser;
-	}
-	
-	public function GetUser()
-	{
-		$iUserId = (int) $this->getParamValue('UserId', '');
-		
-		$oUser = $this->oApiUsersManager->getUserById($iUserId);
-		
-		return $oUser ? $oUser : null;
 	}
 }
 

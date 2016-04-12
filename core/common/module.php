@@ -226,53 +226,26 @@ class CApiModuleManager
 /**
  * @package Api
  */
-class CApiModuleMethod
+class CApiModuleDecorator
 {
-	/**
-	 * @var object
-	 */
-	protected $oClass;
+    protected $oModule;
 
-	/**
-	 * @var string
-	 */
-	protected $sMethodName;
-
-	/**
-	 * @var array
-	 */
-	protected $aParameters;
-	
-	/**
-	 * @param string $sVersion
-	 */
-	public function __construct($oClass, $sMethodName, $aParameters = array())
+    public function __construct($sModuleName) 
 	{
-		$this->oClass = $oClass;
-		$this->sMethodName = $sMethodName;
-		$this->aParameters = $aParameters;
-	}
+       $this->oModule = \CApi::GetModule($sModuleName);
+    }	
 	
-	public static function createInstance($oClass, $sMethodName, $aParameters = array())
-	{
-		return new CApiModuleMethod($oClass, $sMethodName, $aParameters);
-	}
-	
-	public function Exists()
-	{
-		return method_exists($this->oClass, $this->sMethodName);
-	}	
-	
-	public function Execute()
+	public function __call($sMethodName, $aArguments) 
 	{
 		$mResult = false;
-		if ($this->Exists()) {
-			
-			$mResult = call_user_func(array($this->oClass, $this->sMethodName));
+		if ($this->oModule instanceof AApiModule)
+		{
+			$mResult = $this->oModule->ExecuteMethod($sMethodName, $aArguments);
 		}
 		return $mResult;
 	}
 }
+
 
 /**
  * @package Api
@@ -384,14 +357,6 @@ abstract class AApiModule
 	final public function SetPath($sPath)
 	{
 		$this->sPath = $sPath;
-	}
-
-	/**
-	 * @param array $aParameters
-	 */
-	final public function SetParameters($aParameters)
-	{
-		$this->aParameters = $aParameters;
 	}
 
 	/**
@@ -731,11 +696,6 @@ abstract class AApiModule
 		
 		return false;
 	}	
-
-	public function MethodExists($sMethod)
-	{
-		return method_exists($this, $sMethod);
-	}
 	
 	public function getParamValue($sKey, $mDefault = null)
 	{
@@ -981,17 +941,19 @@ abstract class AApiModule
 		return $oResult;
 	}	
 
-	public function ExecuteMethod($sMethod, $aParameters = array())
+	public function ExecuteMethod($sMethodName, $aArguments = array())
 	{
-		$this->broadcastEvent($sMethod . '::before', array(&$aParameters));
+		$mResult = false;
+		if (method_exists($this, $sMethodName))
+		{
+			$this->broadcastEvent($sMethodName . '::before', array(&$aArguments));
 
-		$this->SetParameters($aParameters);
-		\CApiResponseManager::SetMethod($sMethod);
-		$mResult = \CApiModuleMethod::createInstance($this, $sMethod, $this->aParameters)->Execute();
-		
-		$aParameters['@Result'] = $mResult;
-		$this->broadcastEvent($sMethod . '::after', array(&$aParameters));
-		$mResult = $aParameters['@Result'];
+			$mResult = call_user_func_array(array($this, $sMethodName), $aArguments);
+
+			$aArguments['@Result'] = $mResult;
+			$this->broadcastEvent($sMethodName . '::after', array(&$aArguments));
+			$mResult = $aArguments['@Result'];
+		}
 				
 		return $mResult;
 	}
