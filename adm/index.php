@@ -77,7 +77,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	
 	$oApiIntegrator = \CApi::GetCoreManager('integrator');
 	$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
-	
+	$sBaseUrl = $_SERVER['REQUEST_URI'];
 	if (!$iUserId)
 	{
 		$sAuthToken = '';
@@ -132,7 +132,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 					<div>CSRF TOKEN: <?php echo $sToken; ?></div>
 					<div>AUTH TOKEN: <?php echo $sAuthToken; ?></div>
 					<div>USER ID: <?php echo $iUserId; ?></div>
-					<form method="POST" action="/adm/">
+					<form method="POST" action="<?php echo $sBaseUrl; ?>">
 						<input name="manager" type="hidden" value="auth" class="form-control" />
 						<input name="action" type="hidden" value="logout" class="form-control" />
 
@@ -141,7 +141,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 				<?php } else { ?>
 				<fieldset>
 					<label>Login</label>
-					<form method="POST" action="/adm/">
+					<form method="POST" action="<?php echo $sBaseUrl; ?>">
 						<input name="manager" type="hidden" value="auth" class="form-control" />
 						<!--<input name="Method" type="text" value="Login2" class="form-control" />-->
 						<input name="action" type="hidden" value="login" class="form-control" />

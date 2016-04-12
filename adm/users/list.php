@@ -26,7 +26,7 @@
 		<button data-bind="click: reset" class="btn btn-default">Reset</button>
 		<fieldset data-bind="with: selectedItem">
 			<label>Edit item</label>
-			<form method="POST" action="/adm/">
+			<form method="POST" action="<?php echo $sBaseUrl; ?>">
 				<input type="hidden" name="manager" value="users"/>
 				<input type="hidden" name="action" value="update"/>
 
@@ -45,7 +45,7 @@
 
 				<input type="submit" value="Update" class="btn btn-primary" />
 			</form>
-			<form method="POST" action="/adm/">
+			<form method="POST" action="<?php echo $sBaseUrl; ?>">
 				<input type="hidden" name="manager" value="users"/>
 				<input type="hidden" name="action" value="delete"/>
 				<div class="form-group">
@@ -58,7 +58,7 @@
 		</fieldset>
 		<fieldset data-bind="if: !selectedItem()">
 			<label>Create item</label>
-			<form method="POST" action="/adm/">
+			<form method="POST" action="<?php echo $sBaseUrl; ?>">
 				<input type="hidden" name="manager" value="users"/>
 				<input type="hidden" name="action" value="create"/>
 
