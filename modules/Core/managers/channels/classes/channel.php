@@ -19,6 +19,12 @@ class CChannel extends api_APropertyBag
 
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
+		self::$aStaticMap = array(
+			'Login'			=> array('string', ''),
+			'Password'		=> array('string', ''),
+			'Description'	=> array('string', '')
+		);
+		
 		$this->SetDefaults();
 		
 		//TODO
@@ -28,26 +34,6 @@ class CChannel extends api_APropertyBag
 	public static function createInstance($sModule = 'Core')
 	{
 		return new CChannel($sModule);
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-	
-	/**
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-			'Login'			=> array('string', ''),
-			'Password'		=> array('string', ''),
-			'Description'	=> array('string', '')
-		);
 	}
 
 	/**

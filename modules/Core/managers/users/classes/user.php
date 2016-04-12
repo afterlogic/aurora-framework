@@ -73,6 +73,74 @@ class CUser extends api_APropertyBag
 		
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
+		self::$aStaticMap = array(
+
+//			'IdUser'							=> array('int', 0), //'id_user'),
+			'Name'								=> array('string', ''), //'id_subscription'),
+			'IdTenant'							=> array('int', 0),
+			'IsDisabled'						=> array('bool', false),
+			'IdSubscription'					=> array('int', 0), //'id_subscription'),
+			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),
+
+			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
+			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),
+			'AutoCheckMailInterval'				=> array('int', 0), //'auto_checkmail_interval'),
+
+			'CreatedTime'						=> array('string', ''), //'created_time'), //must be datetime
+			'LastLogin'							=> array('string', ''), //'last_login', true, false), //must be datetime
+			'LastLoginNow'						=> array('string', ''), //'last_login_now', true, false), //must be datetime
+			'LoginsCount'						=> array('int', 0), //'logins_count', true, false),
+
+			'DefaultSkin'						=> array('string', ''), //'def_skin'),
+			'DefaultLanguage'					=> array('string', ''), //'def_lang'),
+			'DefaultEditor'						=> array('int', 0), //'def_editor'),
+			'SaveMail'							=> array('int', 0), //'save_mail'),
+			'Layout'							=> array('int', 0), //'layout'),
+
+			'DefaultIncomingCharset'			=> array('string', ''), //'incoming_charset'),
+
+			'DefaultTimeZone'					=> array('int', 0), //'def_timezone'),
+			'DefaultTimeFormat'					=> array('int', 0), //'def_time_fmt'),
+			'DefaultDateFormat'					=> array('string', ''), //'def_date_fmt'),
+			'ClientTimeZone'					=> array('string', ''), //'client_timezone'),
+
+			'Question1'							=> array('string', ''), //'question_1'),
+			'Question2'							=> array('string', ''), //'question_2'),
+			'Answer1'							=> array('string', ''), //'answer_1'),
+			'Answer2'							=> array('string', ''), //'answer_2'),
+
+			'SipEnable'							=> array('bool', true), //'sip_enable'),
+			'SipImpi'							=> array('string', ''), //'sip_impi'),
+			'SipPassword'						=> array('string', ''), //'sip_password'), //must be password
+			
+			'TwilioEnable'						=> array('bool', true), //'twilio_enable'),
+			'TwilioNumber'						=> array('string', ''), //'twilio_number'),
+			'TwilioDefaultNumber'				=> array('bool', false), //'twilio_default_number'),
+
+			'UseThreads'						=> array('bool', true), //'use_threads'),
+			'SaveRepliedMessagesToCurrentFolder'=> array('bool', false), //'save_replied_messages_to_current_folder'),
+			'DesktopNotifications'				=> array('bool', false), //'desktop_notifications'),
+			'AllowChangeInputDirection'			=> array('bool', false), //'allow_change_input_direction'),
+			'AllowHelpdeskNotifications'		=> array('bool', false), //'allow_helpdesk_notifications'),
+
+			'EnableOpenPgp'						=> array('bool', true), //'enable_open_pgp'),
+			'AllowAutosaveInDrafts'				=> array('bool', true), //'allow_autosave_in_drafts'),
+			'AutosignOutgoingEmails'			=> array('bool', true), //'autosign_outgoing_emails'),
+
+			'Capa'								=> array('string', ''), //'capa'),
+			'CustomFields'						=> array('string', ''), //'custom_fields'), //must be serialize type
+
+			'HelpdeskSignature'					=> array('string', ''), //'helpdesk_signature'),
+			'HelpdeskSignatureEnable'			=> array('bool', true), //'helpdesk_signature_enable'),
+
+			'FilesEnable'						=> array('bool', true), //'files_enable'),
+			
+			'EmailNotification'					=> array('string', ''), //'email_notification'),
+			
+			'PasswordResetHash'					=> array('string', ''), //'password_reset_hash')
+		);
+		
+		
 		$this->SetDefaults();
 
 		$this->oSubCache = null;
@@ -248,89 +316,5 @@ class CUser extends api_APropertyBag
 	public static function createInstance($sModule = 'Core', $oParams = array())
 	{
 		return new CUser($sModule, $oParams);
-	}
-	/**
-	 * Obtains static map of user fields. Function with the same name is used for other objects in a unified container **api_AContainer**.
-	 * 
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
-	 * Obtains static map of user fields.
-	 * 
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-
-//			'IdUser'							=> array('int', 0), //'id_user'),
-			'Name'								=> array('string', ''), //'id_subscription'),
-			'IdTenant'							=> array('int', 0),
-			'IsDisabled'						=> array('bool', false),
-			'IdSubscription'					=> array('int', 0), //'id_subscription'),
-			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),
-
-			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
-			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),
-			'AutoCheckMailInterval'				=> array('int', 0), //'auto_checkmail_interval'),
-
-			'CreatedTime'						=> array('string', ''), //'created_time'), //must be datetime
-			'LastLogin'							=> array('string', ''), //'last_login', true, false), //must be datetime
-			'LastLoginNow'						=> array('string', ''), //'last_login_now', true, false), //must be datetime
-			'LoginsCount'						=> array('int', 0), //'logins_count', true, false),
-
-			'DefaultSkin'						=> array('string', ''), //'def_skin'),
-			'DefaultLanguage'					=> array('string', ''), //'def_lang'),
-			'DefaultEditor'						=> array('int', 0), //'def_editor'),
-			'SaveMail'							=> array('int', 0), //'save_mail'),
-			'Layout'							=> array('int', 0), //'layout'),
-
-			'DefaultIncomingCharset'			=> array('string', ''), //'incoming_charset'),
-
-			'DefaultTimeZone'					=> array('int', 0), //'def_timezone'),
-			'DefaultTimeFormat'					=> array('int', 0), //'def_time_fmt'),
-			'DefaultDateFormat'					=> array('string', ''), //'def_date_fmt'),
-			'ClientTimeZone'					=> array('string', ''), //'client_timezone'),
-
-			'Question1'							=> array('string', ''), //'question_1'),
-			'Question2'							=> array('string', ''), //'question_2'),
-			'Answer1'							=> array('string', ''), //'answer_1'),
-			'Answer2'							=> array('string', ''), //'answer_2'),
-
-			'SipEnable'							=> array('bool', true), //'sip_enable'),
-			'SipImpi'							=> array('string', ''), //'sip_impi'),
-			'SipPassword'						=> array('string', ''), //'sip_password'), //must be password
-			
-			'TwilioEnable'						=> array('bool', true), //'twilio_enable'),
-			'TwilioNumber'						=> array('string', ''), //'twilio_number'),
-			'TwilioDefaultNumber'				=> array('bool', false), //'twilio_default_number'),
-
-			'UseThreads'						=> array('bool', true), //'use_threads'),
-			'SaveRepliedMessagesToCurrentFolder'=> array('bool', false), //'save_replied_messages_to_current_folder'),
-			'DesktopNotifications'				=> array('bool', false), //'desktop_notifications'),
-			'AllowChangeInputDirection'			=> array('bool', false), //'allow_change_input_direction'),
-			'AllowHelpdeskNotifications'		=> array('bool', false), //'allow_helpdesk_notifications'),
-
-			'EnableOpenPgp'						=> array('bool', true), //'enable_open_pgp'),
-			'AllowAutosaveInDrafts'				=> array('bool', true), //'allow_autosave_in_drafts'),
-			'AutosignOutgoingEmails'			=> array('bool', true), //'autosign_outgoing_emails'),
-
-			'Capa'								=> array('string', ''), //'capa'),
-			'CustomFields'						=> array('string', ''), //'custom_fields'), //must be serialize type
-
-			'HelpdeskSignature'					=> array('string', ''), //'helpdesk_signature'),
-			'HelpdeskSignatureEnable'			=> array('bool', true), //'helpdesk_signature_enable'),
-
-			'FilesEnable'						=> array('bool', true), //'files_enable'),
-			
-			'EmailNotification'					=> array('string', ''), //'email_notification'),
-			
-			'PasswordResetHash'					=> array('string', ''), //'password_reset_hash')
-		);
 	}
 }

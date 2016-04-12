@@ -249,15 +249,6 @@ class CUser extends api_APropertyBag
 	{
 		return new CUser($sModule, $oParams);
 	}
-	/**
-	 * Obtains static map of user fields. Function with the same name is used for other objects in a unified container **api_AContainer**.
-	 * 
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
 
 	/**
 	 * Obtains static map of user fields.

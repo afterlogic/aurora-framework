@@ -70,9 +70,79 @@ class CTenant extends api_APropertyBag
 
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 
+		self::$aStaticMap = array(
+			'IdTenant'					=> array('int', 0),
+			'IdChannel'					=> array('int', 0),
+			'IsDisabled'				=> array('bool', false),
+			'IsDefault'					=> array('bool', false),
+			'IsEnableAdminPanelLogin'	=> array('bool', false),
+			'Login'						=> array('string', ''),
+			'Email'						=> array('string', ''),
+			'PasswordHash'				=> array('string', ''),
+			'Description'				=> array('string', ''),
+			'AllocatedSpaceInMB'		=> array('int', 0),
+			'FilesUsageInMB'			=> array('int', 0),
+			'FilesUsageDynamicQuotaInMB'=> array('int', 0),
+			'FilesUsageInBytes'			=> array('string', '0'),
+			'QuotaInMB'					=> array('int', 0),
+			'UserCountLimit'			=> array('int', 0),
+			'DomainCountLimit'			=> array('int', 0),
+			'Capa'						=> array('string', '', false), //(string) $oSettings->GetConf('Common/TenantGlobalCapa')
+			
+			'AllowChangeAdminEmail'		=> array('bool', true),
+			'AllowChangeAdminPassword'	=> array('bool', true),
+
+			'Expared'					=> array('int', 0),
+			'PayUrl'					=> array('string', ''),
+			'IsTrial'					=> array('bool', false),
+
+			'HelpdeskAdminEmailAccount'	=> array('string', ''),
+			'HelpdeskClientIframeUrl'	=> array('string', ''),
+			'HelpdeskAgentIframeUrl'	=> array('string', ''),
+			'HelpdeskSiteName'			=> array('string', ''),
+			'HelpdeskStyleAllow'		=> array('bool', false),
+			'HelpdeskStyleImage'		=> array('string', ''),
+			'HelpdeskStyleText'			=> array('string', ''),
+
+			'LoginStyleImage'			=> array('string', ''),
+			'AppStyleImage'				=> array('string', ''),
+
+			'HelpdeskFacebookAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/FacebookAllow')
+			'HelpdeskFacebookId'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookId')
+			'HelpdeskFacebookSecret'	=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookSecret')
+			'HelpdeskGoogleAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/GoogleAllow')
+			'HelpdeskGoogleId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleId')
+			'HelpdeskGoogleSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleSecret')
+			'HelpdeskTwitterAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/TwitterAllow')
+			'HelpdeskTwitterId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterId')
+			'HelpdeskTwitterSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterSecret')
+			'HelpdeskAllowFetcher'		=> array('bool', false),
+			'HelpdeskFetcherType'		=> array('int', EHelpdeskFetcherType::NONE),
+			'HelpdeskFetcherTimer'		=> array('int', 0),
+
+			'SipAllow'					=> array('bool', false, false), //!!$oSettings->GetConf('Sip/AllowSip')
+			'SipAllowConfiguration'		=> array('bool', false),
+			'SipRealm'					=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/Realm')
+			'SipWebsocketProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/WebsocketProxyUrl')
+			'SipOutboundProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/OutboundProxyUrl')
+			'SipCallerID'				=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/CallerID')
+			
+			'TwilioAllow'				=> array('bool', false, false), //, !!$oSettings->GetConf('Twilio/AllowTwilio')
+			'TwilioAllowConfiguration'	=> array('bool', false),
+			'TwilioPhoneNumber'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/PhoneNumber')
+			'TwilioAccountSID'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/AccountSID')
+			'TwilioAuthToken'			=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AuthToken')
+			'TwilioAppSID'				=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AppSID')
+			
+//			'Socials'					=> array('array', array(), false), //$this->getDefaultSocials()
+			'CalendarNotificationEmailAccount'	=> array('string', ''),
+			'InviteNotificationEmailAccount'	=> array('string', '')
+		);
+
 		$this->SetDefaults();
 		
 		$this->setInheritedSettings();
+		
 	}
 	
 	/**
@@ -81,7 +151,7 @@ class CTenant extends api_APropertyBag
 	public function setInheritedSettings()
 	{
 		$oSettings =& CApi::GetSettings();
-		$oMap = self::getStaticMap();
+		$oMap = $this->getStaticMap();
 		
 		if (isset($oMap['Capa'][2]) && !$oMap['Capa'][2])
 		{
@@ -192,89 +262,6 @@ class CTenant extends api_APropertyBag
 	public static function createInstance($sModule = 'Core')
 	{
 		return new CTenant($sModule);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-			'IdTenant'					=> array('int', 0),
-			'IdChannel'					=> array('int', 0),
-			'IsDisabled'				=> array('bool', false),
-			'IsDefault'					=> array('bool', false),
-			'IsEnableAdminPanelLogin'	=> array('bool', false),
-			'Login'						=> array('string', ''),
-			'Email'						=> array('string', ''),
-			'PasswordHash'				=> array('string', ''),
-			'Description'				=> array('string', ''),
-			'AllocatedSpaceInMB'		=> array('int', 0),
-			'FilesUsageInMB'			=> array('int', 0),
-			'FilesUsageDynamicQuotaInMB'=> array('int', 0),
-			'FilesUsageInBytes'			=> array('string', '0'),
-			'QuotaInMB'					=> array('int', 0),
-			'UserCountLimit'			=> array('int', 0),
-			'DomainCountLimit'			=> array('int', 0),
-			'Capa'						=> array('string', '', false), //(string) $oSettings->GetConf('Common/TenantGlobalCapa')
-			
-			'AllowChangeAdminEmail'		=> array('bool', true),
-			'AllowChangeAdminPassword'	=> array('bool', true),
-
-			'Expared'					=> array('int', 0),
-			'PayUrl'					=> array('string', ''),
-			'IsTrial'					=> array('bool', false),
-
-			'HelpdeskAdminEmailAccount'	=> array('string', ''),
-			'HelpdeskClientIframeUrl'	=> array('string', ''),
-			'HelpdeskAgentIframeUrl'	=> array('string', ''),
-			'HelpdeskSiteName'			=> array('string', ''),
-			'HelpdeskStyleAllow'		=> array('bool', false),
-			'HelpdeskStyleImage'		=> array('string', ''),
-			'HelpdeskStyleText'			=> array('string', ''),
-
-			'LoginStyleImage'			=> array('string', ''),
-			'AppStyleImage'				=> array('string', ''),
-
-			'HelpdeskFacebookAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/FacebookAllow')
-			'HelpdeskFacebookId'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookId')
-			'HelpdeskFacebookSecret'	=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookSecret')
-			'HelpdeskGoogleAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/GoogleAllow')
-			'HelpdeskGoogleId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleId')
-			'HelpdeskGoogleSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleSecret')
-			'HelpdeskTwitterAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/TwitterAllow')
-			'HelpdeskTwitterId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterId')
-			'HelpdeskTwitterSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterSecret')
-			'HelpdeskAllowFetcher'		=> array('bool', false),
-			'HelpdeskFetcherType'		=> array('int', EHelpdeskFetcherType::NONE),
-			'HelpdeskFetcherTimer'		=> array('int', 0),
-
-			'SipAllow'					=> array('bool', false, false), //!!$oSettings->GetConf('Sip/AllowSip')
-			'SipAllowConfiguration'		=> array('bool', false),
-			'SipRealm'					=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/Realm')
-			'SipWebsocketProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/WebsocketProxyUrl')
-			'SipOutboundProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/OutboundProxyUrl')
-			'SipCallerID'				=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/CallerID')
-			
-			'TwilioAllow'				=> array('bool', false, false), //, !!$oSettings->GetConf('Twilio/AllowTwilio')
-			'TwilioAllowConfiguration'	=> array('bool', false),
-			'TwilioPhoneNumber'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/PhoneNumber')
-			'TwilioAccountSID'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/AccountSID')
-			'TwilioAuthToken'			=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AuthToken')
-			'TwilioAppSID'				=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AppSID')
-			
-//			'Socials'					=> array('array', array(), false), //$this->getDefaultSocials()
-			'CalendarNotificationEmailAccount'	=> array('string', ''),
-			'InviteNotificationEmailAccount'	=> array('string', '')
-		);
 	}
 	
 	/**

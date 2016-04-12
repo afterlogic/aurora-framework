@@ -125,7 +125,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 			if (!empty($sSortProperty))
 			{
 				array_push($aViewProperties, $sSortProperty);
-				$sResultSort = sprintf(" ORDER BY prop_%s %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
+				$sResultSort = sprintf(" ORDER BY `prop_%s` %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
 			}
 			$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aWhere)));
 
@@ -134,15 +134,15 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sType = $oObject->getPropertyType($sProperty);
 
 				$aResultViewProperties[$sProperty] = sprintf(
-						"props_%s.value_%s as prop_%s", 
+						"`props_%s`.`value_%s` as `prop_%s`", 
 						$sProperty, 
 						$sType, 
 						$sProperty
 				);
 				$aJoinProperties[$sProperty] = sprintf(
-						"LEFT JOIN eav_properties as props_%s 
-							ON props_%s.key = %s 
-								AND props_%s.id_object = objects.id",
+						"LEFT JOIN eav_properties as `props_%s` 
+							ON `props_%s`.key = %s 
+								AND `props_%s`.id_object = objects.id",
 				$sProperty, $sProperty, $this->escapeString($sProperty), $sProperty);
 			}
 			if (0 < count($aViewProperties))
@@ -169,7 +169,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sType = $oObject->getPropertyType($sKey);
 				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
-						"props_%s.value_%s %s " . $sValueFormat, 
+						"`props_%s`.`value_%s` %s " . $sValueFormat, 
 						$sKey, 
 						$sType, 
 						$sPropertyAction, 

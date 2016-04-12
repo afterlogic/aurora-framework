@@ -23,6 +23,14 @@ class CAccount extends api_APropertyBag
 		$this->SetDefaults();
 
 		CApi::Plugin()->RunHook('api-account-construct', array(&$this));
+
+		self::$aStaticMap = array(
+			'IsDisabled'			=> array('bool', false),
+			'IdUser'				=> array('int', 0),
+			'Login'					=> array('string', ''),
+			'Password'				=> array('string', '')
+		);
+		
 	}
 
 	/**
@@ -45,29 +53,5 @@ class CAccount extends api_APropertyBag
 	public static function createInstance($sModule = 'Auth', $oParams = array())
 	{
 		return new CAccount($sModule, $oParams);
-	}
-	/**
-	 * Obtains static map of user fields. Function with the same name is used for other objects in a unified container **api_AContainer**.
-	 * 
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
-	 * Obtains static map of user fields.
-	 * 
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-			'IsDisabled'			=> array('bool', false),
-			'IdUser'				=> array('int', 0),
-			'Login'					=> array('string', ''),
-			'Password'				=> array('string', '')
-		);
 	}
 }

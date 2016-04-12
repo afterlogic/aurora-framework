@@ -96,64 +96,7 @@ class CDomain extends api_APropertyBag
 
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
-		$oSettings =& CApi::GetSettings();
-
-//		$aDefaults = array(
-//			'IdTenant'		=> $iTenantId,
-//			'IsDisabled'	=> false,
-//			'Name'			=> trim($sName),
-//			'Url'			=> (null === $sUrl) ? '' : trim($sUrl),
-//
-//			'IsDefault'		=> false,
-//			'IsDefaultTenantDomain'	=> false,
-//			'IsInternal'			=> false,
-//			'UseThreads'			=> true,
-//			'OverrideSettings'		=> true
-//		);
-
-//		$aSettingsMap = $this->GetSettingsMap();
-//		foreach ($aSettingsMap as $sProperty => $sSettingsName)
-//		{
-//			$aDefaults[$sProperty] = $oSettings->GetConf($sSettingsName);
-//		}
-//
-//		$this->SetDefaults($aDefaults);
-		$this->SetDefaults();
-
-		$this->aFolders = array(
-			EFolderType::Inbox => array('INBOX', 'Inbox'),
-			EFolderType::Drafts => array('Drafts', 'Draft'),
-			EFolderType::Sent => array('Sent', 'Sent Items', 'Sent Mail'),
-			EFolderType::Spam => array('Spam', 'Junk', 'Junk Mail', 'Junk E-mail', 'Bulk Mail'),
-			EFolderType::Trash => array('Trash', 'Bin', 'Deleted', 'Deleted Items'),
-		);
-		
-		//
-//		$this->SetLower(array('Name', 'IncomingMailServer',/* 'IncomingMailLogin',*/
-//			'OutgoingMailServer'/*, 'OutgoingMailLogin'*/));
-
-		CApi::Plugin()->RunHook('api-domain-construct', array(&$this));
-	}
-	
-	public static function createInstance($sModule = 'Core')
-	{
-		return new CDomain($sModule);
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
+		self::$aStaticMap =  array(
 			'IdTenant'		=> array('int', 0), //must be passed to constructor
 			'IsDisabled'	=> array('bool', false),
 			'Name'			=> array('string', ''),//must be passed to constructor
@@ -234,6 +177,50 @@ class CDomain extends api_APropertyBag
 			// Helpdesk module
 			'AllowHelpdesk'			=> array('bool', true)
 		);
+		
+		
+		$oSettings =& CApi::GetSettings();
+
+//		$aDefaults = array(
+//			'IdTenant'		=> $iTenantId,
+//			'IsDisabled'	=> false,
+//			'Name'			=> trim($sName),
+//			'Url'			=> (null === $sUrl) ? '' : trim($sUrl),
+//
+//			'IsDefault'		=> false,
+//			'IsDefaultTenantDomain'	=> false,
+//			'IsInternal'			=> false,
+//			'UseThreads'			=> true,
+//			'OverrideSettings'		=> true
+//		);
+
+//		$aSettingsMap = $this->GetSettingsMap();
+//		foreach ($aSettingsMap as $sProperty => $sSettingsName)
+//		{
+//			$aDefaults[$sProperty] = $oSettings->GetConf($sSettingsName);
+//		}
+//
+//		$this->SetDefaults($aDefaults);
+		$this->SetDefaults();
+
+		$this->aFolders = array(
+			EFolderType::Inbox => array('INBOX', 'Inbox'),
+			EFolderType::Drafts => array('Drafts', 'Draft'),
+			EFolderType::Sent => array('Sent', 'Sent Items', 'Sent Mail'),
+			EFolderType::Spam => array('Spam', 'Junk', 'Junk Mail', 'Junk E-mail', 'Bulk Mail'),
+			EFolderType::Trash => array('Trash', 'Bin', 'Deleted', 'Deleted Items'),
+		);
+		
+		//
+//		$this->SetLower(array('Name', 'IncomingMailServer',/* 'IncomingMailLogin',*/
+//			'OutgoingMailServer'/*, 'OutgoingMailLogin'*/));
+
+		CApi::Plugin()->RunHook('api-domain-construct', array(&$this));
+	}
+	
+	public static function createInstance($sModule = 'Core')
+	{
+		return new CDomain($sModule);
 	}
 
 	/**

@@ -34,6 +34,11 @@ abstract class api_APropertyBag
 	protected $aContainer;
 	
 	/**
+	 * @var array
+	 */
+	protected static $aStaticMap;
+	
+	/**
 	 * @param string $sClassName
 	 * @param string $sModuleName = ''
 	 */
@@ -266,7 +271,7 @@ abstract class api_APropertyBag
 	 */
 	public function getMap()
 	{
-		$aStaticMap = self::getStaticMap();
+		$aStaticMap = $this->getStaticMap();
 		$aModules = \CApi::GetModuleManager()->GetModules();
 		foreach ($aModules as $oModule)
 		{
@@ -279,8 +284,8 @@ abstract class api_APropertyBag
 	/**
 	 * @return array
 	 */
-	public static function getStaticMap()
+	public function getStaticMap()
 	{
-		return array();
+		return static::$aStaticMap;
 	}	
 }
