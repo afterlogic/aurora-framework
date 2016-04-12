@@ -270,6 +270,7 @@ class CUser extends api_APropertyBag
 
 //			'IdUser'							=> array('int', 0), //'id_user'),
 			'Name'								=> array('string', ''), //'id_subscription'),
+			'IdTenant'							=> array('int', 0),
 			'IsDisabled'						=> array('bool', false),
 			'IdSubscription'					=> array('int', 0), //'id_subscription'),
 			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),

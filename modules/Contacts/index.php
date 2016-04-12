@@ -160,12 +160,17 @@ class ContactsModule extends AApiModule
 	 */
 	public function GetGroups()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
+		$sAuthToken = $this->getParamValue('AuthToken');
+		$iUserId = \CApi::GetCoreManager('integrator')->getLogginedUserId($sAuthToken);
+				
+//		$oAccount = $this->getDefaultAccountFromParam();
 
 		$aList = false;
-		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		//TODO use real user settings
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if (true)
 		{
-			$aList = $this->oApiContactsManager->getGroupItems($oAccount->IdUser,
+			$aList = $this->oApiContactsManager->getGroupItems($iUserId,
 				\EContactSortField::Name, \ESortOrder::ASC, 0, 999);
 		}
 		else
@@ -262,7 +267,15 @@ class ContactsModule extends AApiModule
 
 	public function GetPersonalContacts()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
+		$sAuthToken = $this->getParamValue('AuthToken');
+		$iUserId = \CApi::GetCoreManager('integrator')->getLogginedUserId($sAuthToken);
+		
+		$oUser = \CApi::ExecuteMethod('Core::GetUser', array(
+			'AuthToken' => $sAuthToken,
+			'UserId' => $iUserId
+		));
+		
+//		$oAccount = $this->getDefaultAccountFromParam();
 
 		$iOffset = (int) $this->getParamValue('Offset', 0);
 		$iLimit = (int) $this->getParamValue('Limit', 20);
@@ -275,11 +288,13 @@ class ContactsModule extends AApiModule
 		$iSortField = \EContactSortField::Name;
 		$iSortOrder = \ESortOrder::ASC;
 		
-		$iTenantId = $bSharedToAll ? $oAccount->IdTenant : null;
+		$iTenantId = $bSharedToAll ? $oUser->IdTenant : null;
 		
 		$this->populateSortParams($iSortField, $iSortOrder);
-
-		$bAllowContactsSharing = $this->oApiCapabilityManager->isSharedContactsSupported($oAccount);
+		
+		//TODO use real user settings
+//		$bAllowContactsSharing = $this->oApiCapabilityManager->isSharedContactsSupported($oAccount);
+		$bAllowContactsSharing = true;
 		if ($bAll && !$bAllowContactsSharing &&
 			!$this->oApiCapabilityManager->isGlobalContactsSupported($oAccount))
 		{
@@ -289,22 +304,24 @@ class ContactsModule extends AApiModule
 		$iCount = 0;
 		$aList = array();
 		
-		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		//TODO use real user settings
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if (true)
 		{
 			$iGroupId = ('' === $sGroupId) ? 0 : (int) $sGroupId;
 			
 			if ($bAllowContactsSharing && 0 < $iGroupId)
 			{
-				$iTenantId = $oAccount->IdTenant;
+				$iTenantId = $oUser->IdTenant;
 			}
 			
 			$iCount = $this->oApiContactsManager->getContactItemsCount(
-				$oAccount->IdUser, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId, $bAll);
+				$iUserId, $sSearch, $sFirstCharacter, $iGroupId, $iTenantId, $bAll);
 
 			if (0 < $iCount)
 			{
 				$aContacts = $this->oApiContactsManager->getContactItems(
-					$oAccount->IdUser, $iSortField, $iSortOrder, $iOffset,
+					$iUserId, $iSortField, $iSortOrder, $iOffset,
 					$iLimit, $sSearch, $sFirstCharacter, $sGroupId, $iTenantId, $bAll);
 
 				if (is_array($aContacts))
