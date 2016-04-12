@@ -18,8 +18,7 @@ if ($oHttp->HasPost('manager'))
 			switch ($oHttp->GetPost('action'))
 			{
 				case 'login': 
-					$result = \CApi::ExecuteMethod('Auth::Login2', array(
-			//			'AuthToken' => $oHttp->GetPost('login', ''),
+					$result = \CApi::ExecuteMethod('Auth::Login', array(
 						'login' => $oHttp->GetPost('login', ''),
 						'password' => $oHttp->GetPost('password', '')
 					));
@@ -31,7 +30,7 @@ if ($oHttp->HasPost('manager'))
 					}
 					break;
 				case 'logout': 
-					$result = \CApi::ExecuteMethod('Auth::Logout2', array(
+					$result = \CApi::ExecuteMethod('Auth::Logout', array(
 						'AuthToken' => $sAuthToken
 					));
 					

@@ -209,26 +209,26 @@ class AuthModule extends AApiModule
 		return $oApiIntegrator->logoutAccount($sAuthToken);
 	}*/
 	
-	public function Login()
+	public function Login($sLogin, $sPassword)
 	{
 		$bResult = false;
 		
-		if ($this->getParamValue('Email', false))
-		{
-			$this->broadcastEvent('Auth::Login', array(
-				'login' => $this->getParamValue('Email'),
-				'password' => $this->getParamValue('IncPassword'),
+//		if ($this->getParamValue('Email', false))
+//		{
+			$this->broadcastEvent('Login', array(
+				'login' => $sLogin,
+				'password' => $sPassword,
 				'result' => &$bResult
 			));
-		}
-		else
-		{
-			$this->broadcastEvent('Auth::Login', array(
-				'login' => $this->getParamValue('login'),
-				'password' => $this->getParamValue('password'),
-				'result' => &$bResult
-			));
-		}
+//		}
+//		else
+//		{
+//			$this->broadcastEvent('Login', array(
+//				'login' => $this->getParamValue('login'),
+//				'password' => $this->getParamValue('password'),
+//				'result' => &$bResult
+//			));
+//		}
 		
 		if ($bResult === true)
 		{
@@ -257,11 +257,9 @@ class AuthModule extends AApiModule
 		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 	}
 	
-	public function Logout()
-	{
-		$sAuthToken = $this->getParamValue('AuthToken');
-		
-		if ($sAuthToken)
+	public function Logout($sAuthToken = '')
+	{	
+		if (!empty($sAuthToken))
 		{
 			\CApi::Cacher()->Delete('AUTHTOKEN:'.$sAuthToken);
 		}
@@ -269,7 +267,7 @@ class AuthModule extends AApiModule
 		{
 			throw new \Core\Exceptions\ClientException(\Auth\Notifications::IncorrentAuthToken);
 		}
-		
+
 		return true;
 	}
 	

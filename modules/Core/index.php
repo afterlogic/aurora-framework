@@ -34,7 +34,7 @@ class CoreModule extends AApiModule
 		);
 		
 		$this->setObjectMap('CUser', array(
-				'Test'	=> array('string', '')
+				'Test1'	=> array('string', 'www')
 			)
 		);
 		
@@ -766,20 +766,25 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function UpdateUser($oData)
+	public function UpdateUser($sIdUser = 0, $sUserName = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 		
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		if ($oData['IdUser'] > 0)
+		
+//		'IdUser' => $oHttp->GetPost('id', 0),
+//				'IdDomain' => $oHttp->GetPost('domain', 0),
+//				'Name' => $oHttp->GetPost('name', 0)
+
+		if ($sIdUser > 0)
 		{
-			$oUser = $this->oApiUsersManager->getUserById($oData['IdUser']);
+			$oUser = $this->oApiUsersManager->getUserById($sIdUser);
 			
 			if ($oUser)
 			{
 	//			$oUser->IdTenant = $oData['IdTenant'];
 	//			$oUser->IdDomain = $oData['IdDomain'];
-				$oUser->Name = $oData['Name'];
+				$oUser->Name = $sUserName;
 
 	//			$this->populateContactObject($oContact);
 

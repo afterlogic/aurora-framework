@@ -14,11 +14,18 @@ if ($oHttp->HasPost('action'))
 			));
 			break;
 		case 'update': 
-			\CApi::GetModule('Core')->UpdateUser(array(
+			\CApi::ExecuteMethod('Core::UpdateUser', array(
+				//'Token' => $sToken,
+				//'AuthToken' => $sAuthToken,
 				'IdUser' => $oHttp->GetPost('id', 0),
-				'IdDomain' => $oHttp->GetPost('domain', 0),
-				'Name' => $oHttp->GetPost('name', 0)
+				'Name' => $oHttp->GetPost('name', 0),
+				'IdDomain' => $oHttp->GetPost('domain', 0)
 			));
+//			\CApi::GetModule('Core')->UpdateUser(array(
+//				'IdUser' => $oHttp->GetPost('id', 0),
+//				'IdDomain' => $oHttp->GetPost('domain', 0),
+//				'Name' => $oHttp->GetPost('name', 0)
+//			));
 			break;
 	}
 }
