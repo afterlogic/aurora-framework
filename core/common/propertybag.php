@@ -266,7 +266,14 @@ abstract class api_APropertyBag
 	 */
 	public function getMap()
 	{
-		return self::getStaticMap();
+		$aStaticMap = self::getStaticMap();
+		$aModules = \CApi::GetModuleManager()->GetModules();
+		foreach ($aModules as $oModule)
+		{
+			$aStaticMap = array_merge($aStaticMap, $oModule->getObjectMap($this->sClassName));
+		}
+		
+		return $aStaticMap;
 	}
 
 	/**

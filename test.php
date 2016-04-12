@@ -8,8 +8,8 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 // utilizing WebMail Pro API
 include_once __DIR__.'/core/api.php';
 
-$oCoreDecorator = CApi::GetModuleDecorator('Core');
-$mResult = $oCoreDecorator->SetMobile(true, false);
+$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+$mResult = $oCoreDecorator->SetMobile(false);
 
 var_dump($mResult);
 

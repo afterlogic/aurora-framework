@@ -331,16 +331,19 @@ abstract class AApiModule
 		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments);
 	}
 	
-	
 	public function setObjectMap($sType, $aMap)
 	{
-		$this->aObjects[$sType] = $aMap;
+		$aResultMap = array();
+		foreach ($aMap as $sKey => $aValue)
+		{
+			$aResultMap[$this->GetName() . '::' . $sKey] = $aValue;
+		}
+		$this->aObjects[$sType] = $aResultMap;
 	}	
 	
 	public function getObjectMap($sType)
 	{
-		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : false;
-		
+		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : array();
 	}
 
 	/**
@@ -399,7 +402,7 @@ abstract class AApiModule
 		return $this->sName.'-'.$this->sVersion;
 	}
 	
-	public function GetManagerPath($sManagerName)
+	protected function GetManagerPath($sManagerName)
 	{
 		return $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
 	}
@@ -481,9 +484,8 @@ abstract class AApiModule
 		@ob_start();
 
 		$aResponseItem = null;
-		$sAction = $this->oHttp->GetPost('Action', null);
-
 		$sModule = $this->oHttp->GetPost('Module', null);
+
 		if (strtolower($sModule) === strtolower($this->GetName())) {
 			
 			$sMethod = $this->oHttp->GetPost('Method', null);
@@ -533,20 +535,18 @@ abstract class AApiModule
 
 				\CApi::LogException($oException);
 
-				$sAction = empty($sAction) ? 'Unknown' : $sAction;
-
 				$aAdditionalParams = null;
 				if ($oException instanceof \Core\Exceptions\ClientException) {
 					
 					$aAdditionalParams = $oException->GetObjectParams();
 				}
 
-				$aResponseItem = $this->ExceptionResponse(null, $sAction, $oException, $aAdditionalParams);
+				$aResponseItem = $this->ExceptionResponse(null, $sMethod, $oException, $aAdditionalParams);
 			}
 
 			@header('Content-Type: application/json; charset=utf-8');
 
-			\CApi::Plugin()->RunHook('ajax.response-result', array($sAction, &$aResponseItem));
+			\CApi::Plugin()->RunHook('ajax.response-result', array($sMethod, &$aResponseItem));
 		}
 
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
@@ -561,7 +561,6 @@ abstract class AApiModule
 		$sParameters = $this->oHttp->GetPost('Parameters', null);
 		try
 		{
-
 			if (!empty($sModule) && !empty($sMethod))
 			{
 				$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();

@@ -33,6 +33,11 @@ class CoreModule extends AApiModule
 			)
 		);
 		
+		$this->setObjectMap('CUser', array(
+				'Test'	=> array('string', '')
+			)
+		);
+		
 		$this->subscribeEvent('CreateAccount', array($this, 'onAccountCreate'));
 	}
 	
@@ -817,6 +822,15 @@ class CoreModule extends AApiModule
 		
 		$oResult = $oUser;
 	}
+	
+	public function GetUser()
+	{
+		$iUserId = (int) $this->getParamValue('UserId', '');
+		
+		$oUser = $this->oApiUsersManager->getUserById($iUserId);
+		
+		return $oUser ? $oUser : null;
+	}	
 }
 
 return new CoreModule('1.0');
