@@ -82,7 +82,79 @@ class CContact extends api_APropertyBag
 		parent::__construct(get_class($this), $sModule);
 
 		$this->__USE_TRIM_IN_STRINGS__ = true;
+		
+		self::$aStaticMap = array(
+//			'IdContact'		=> array('string', 'id_addr', false, false),
+			'IdContactStr'	=> array('string', ''), //(255) 'str_id', false),
+			'IdUser'		=> array('int', 0), //, 'id_user'),
+			'IdDomain'		=> array('int', 0), //, 'id_domain'),
+			'IdTenant'		=> array('int', 0), // 'id_tenant', true),
 
+			'GroupsIds'			=> array('array', ''), //),
+
+			'Type'			=> array('int', EContactType::Personal), // 'type'),
+			'IdTypeLink'	=> array('string', ''), // (100) 'type_id'),
+
+			'ViewEmail'			=> array('string', ''), //(255) 'view_email'),
+			'PrimaryEmail'		=> array('int', 0), // 'primary_email'),
+
+			'DateCreated'		=> array('datetime', time()), // 'date_created', true, false),
+			'DateModified'		=> array('datetime', time()), // 'date_modified'),
+
+			'UseFriendlyName'	=> array('bool', true), // 'use_friendly_nm'),
+
+			'Title'			=> array('string', ''), //),
+			'FullName'		=> array('string', ''), // 255) 'fullname'),
+			'FirstName'		=> array('string', ''), // (100)'firstname'),
+			'LastName'		=> array('string', ''), //(100) 'surname'),
+			'NickName'		=> array('string', ''), //(100) 'nickname'),
+			'Skype'			=> array('string', ''), //(100) 'skype'),
+			'Facebook'		=> array('string', ''), //(255) 'facebook'),
+
+			'HomeEmail'		=> array('string', ''), //(255) 'h_email'),
+			'HomeStreet'	=> array('string', ''), //(255) 'h_street'),
+			'HomeCity'		=> array('string', ''), //(200) 'h_city'),
+			'HomeState'		=> array('string', ''), //(200) 'h_state'),
+			'HomeZip'		=> array('string', ''), //(10) 'h_zip'),
+			'HomeCountry'	=> array('string', ''), //(200) 'h_country'),
+			'HomePhone'		=> array('string', ''), //(50) 'h_phone'),
+			'HomeFax'		=> array('string', ''), //(50) 'h_fax'),
+			'HomeMobile'	=> array('string', ''), //(50) 'h_mobile'),
+			'HomeWeb'		=> array('string', ''), //(255) 'h_web'),
+
+			'BusinessEmail'		=> array('string', ''), //(255) 'b_email'),
+			'BusinessCompany'	=> array('string', ''), //(200) 'b_company'),
+			'BusinessStreet'	=> array('string', ''), //(255) 'b_street'),
+			'BusinessCity'		=> array('string', ''), //(200) 'b_city'),
+			'BusinessState'		=> array('string', ''), //(200) 'b_state'),
+			'BusinessZip'		=> array('string', ''), //(10) 'b_zip'),
+			'BusinessCountry'	=> array('string', ''), //(200) 'b_country'),
+			'BusinessJobTitle'	=> array('string', ''), //(100) 'b_job_title'),
+			'BusinessDepartment'=> array('string', ''), //(200) 'b_department'),
+			'BusinessOffice'	=> array('string', ''), //(200) 'b_office'),
+			'BusinessPhone'		=> array('string', ''), //(50) 'b_phone'),
+			'BusinessMobile'	=> array('string', ''), //),
+			'BusinessFax'		=> array('string', ''), //(50) 'b_fax'),
+			'BusinessWeb'		=> array('string', ''), //(255) 'b_web'),
+
+			'OtherEmail'		=> array('string', ''), //(255) 'other_email'),
+			'Notes'				=> array('string', ''), //(255) 'notes'),
+
+			'BirthdayDay'		=> array('int', 0), // 'birthday_day'),
+			'BirthdayMonth'		=> array('int', 0), // 'birthday_month'),
+			'BirthdayYear'		=> array('int', 0), // 'birthday_year'),
+
+			'ReadOnly'			=> array('bool', false), //),
+			'Global'			=> array('bool', false), //),
+			'ItsMe'				=> array('bool', false), //),
+
+			'ETag'				=> array('string', ''), //(50) 'etag'),
+			
+			'Auto'				=> array('bool', false), // 'auto_create'),
+			'SharedToAll'		=> array('bool', false), // 'shared_to_all'),
+			'HideInGAB'			=> array('bool', false) // 'hide_in_gab')
+		);
+		
 		$this->SetDefaults();
 		
 		$this->setInheritedSettings($oParams);
@@ -91,6 +163,11 @@ class CContact extends api_APropertyBag
 		$this->__SKIP_VALIDATE__ = false;
 
 		CApi::Plugin()->RunHook('api-contact-construct', array(&$this));
+	}
+	
+	public static function createInstance($sModule = 'Contacts', $oParams = array())
+	{
+		return new CContact($sModule, $oParams);
 	}
 	
 	/**
@@ -200,92 +277,6 @@ class CContact extends api_APropertyBag
 		}
 
 		return true;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return self::getStaticMap();
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getStaticMap()
-	{
-		return array(
-//			'IdContact'		=> array('string', 'id_addr', false, false),
-			'IdContactStr'	=> array('string', ''), //(255) 'str_id', false),
-			'IdUser'		=> array('int', 0), //, 'id_user'),
-			'IdDomain'		=> array('int', 0), //, 'id_domain'),
-			'IdTenant'		=> array('int', 0), // 'id_tenant', true),
-
-			'GroupsIds'			=> array('array', ''), //),
-
-			'Type'			=> array('int', EContactType::Personal), // 'type'),
-			'IdTypeLink'	=> array('string', ''), // (100) 'type_id'),
-
-			'ViewEmail'			=> array('string', ''), //(255) 'view_email'),
-			'PrimaryEmail'		=> array('int', 0), // 'primary_email'),
-
-			'DateCreated'		=> array('datetime', time()), // 'date_created', true, false),
-			'DateModified'		=> array('datetime', time()), // 'date_modified'),
-
-			'UseFriendlyName'	=> array('bool', true), // 'use_friendly_nm'),
-
-			'Title'			=> array('string', ''), //),
-			'FullName'		=> array('string', ''), // 255) 'fullname'),
-			'FirstName'		=> array('string', ''), // (100)'firstname'),
-			'LastName'		=> array('string', ''), //(100) 'surname'),
-			'NickName'		=> array('string', ''), //(100) 'nickname'),
-			'Skype'			=> array('string', ''), //(100) 'skype'),
-			'Facebook'		=> array('string', ''), //(255) 'facebook'),
-
-			'HomeEmail'		=> array('string', ''), //(255) 'h_email'),
-			'HomeStreet'	=> array('string', ''), //(255) 'h_street'),
-			'HomeCity'		=> array('string', ''), //(200) 'h_city'),
-			'HomeState'		=> array('string', ''), //(200) 'h_state'),
-			'HomeZip'		=> array('string', ''), //(10) 'h_zip'),
-			'HomeCountry'	=> array('string', ''), //(200) 'h_country'),
-			'HomePhone'		=> array('string', ''), //(50) 'h_phone'),
-			'HomeFax'		=> array('string', ''), //(50) 'h_fax'),
-			'HomeMobile'	=> array('string', ''), //(50) 'h_mobile'),
-			'HomeWeb'		=> array('string', ''), //(255) 'h_web'),
-
-			'BusinessEmail'		=> array('string', ''), //(255) 'b_email'),
-			'BusinessCompany'	=> array('string', ''), //(200) 'b_company'),
-			'BusinessStreet'	=> array('string', ''), //(255) 'b_street'),
-			'BusinessCity'		=> array('string', ''), //(200) 'b_city'),
-			'BusinessState'		=> array('string', ''), //(200) 'b_state'),
-			'BusinessZip'		=> array('string', ''), //(10) 'b_zip'),
-			'BusinessCountry'	=> array('string', ''), //(200) 'b_country'),
-			'BusinessJobTitle'	=> array('string', ''), //(100) 'b_job_title'),
-			'BusinessDepartment'=> array('string', ''), //(200) 'b_department'),
-			'BusinessOffice'	=> array('string', ''), //(200) 'b_office'),
-			'BusinessPhone'		=> array('string', ''), //(50) 'b_phone'),
-			'BusinessMobile'	=> array('string', ''), //),
-			'BusinessFax'		=> array('string', ''), //(50) 'b_fax'),
-			'BusinessWeb'		=> array('string', ''), //(255) 'b_web'),
-
-			'OtherEmail'		=> array('string', ''), //(255) 'other_email'),
-			'Notes'				=> array('string', ''), //(255) 'notes'),
-
-			'BirthdayDay'		=> array('int', 0), // 'birthday_day'),
-			'BirthdayMonth'		=> array('int', 0), // 'birthday_month'),
-			'BirthdayYear'		=> array('int', 0), // 'birthday_year'),
-
-			'ReadOnly'			=> array('bool', false), //),
-			'Global'			=> array('bool', false), //),
-			'ItsMe'				=> array('bool', false), //),
-
-			'ETag'				=> array('string', ''), //(50) 'etag'),
-			
-			'Auto'				=> array('bool', false), // 'auto_create'),
-			'SharedToAll'		=> array('bool', false), // 'shared_to_all'),
-			'HideInGAB'			=> array('bool', false) // 'hide_in_gab')
-		);
 	}
 
 	private function compareProperty($oContact, $sName)

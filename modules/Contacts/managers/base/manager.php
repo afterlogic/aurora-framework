@@ -9,8 +9,13 @@
  *
  * @package ContactsBase
  */
-class CApiContactsBaseManager extends AApiManagerWithStorage
+class CApiContactsBaseManager extends AApiManager
 {
+	/**
+	 * @var CApiEavManager
+	 */
+	public $oEavManager = null;
+	
 	/**
 	 * Creates a new instance of the object.
 	 *
@@ -18,8 +23,11 @@ class CApiContactsBaseManager extends AApiManagerWithStorage
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-		parent::__construct('base', $oManager, $sForcedStorage, $oModule);
+//		parent::__construct('base', $oManager, $sForcedStorage, $oModule);
+		parent::__construct('base', $oManager, $oModule);
 
+		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
+		
 		$this->incClass('contact-list-item');
 		$this->incClass('contact');
 		$this->incClass('group');
@@ -29,26 +37,26 @@ class CApiContactsBaseManager extends AApiManagerWithStorage
 	/**
 	 * @return CContactListItem
 	 */
-	public function createContactListItemObject()
-	{
-		return new CContactListItem();
-	}
+//	public function createContactListItemObject()
+//	{
+//		return new CContactListItem();
+//	}
 
 	/**
 	 * @return CContact
 	 */
-	public function createContactObject()
-	{
-		return new CContact();
-	}
+//	public function createContactObject()
+//	{
+//		return new CContact();
+//	}
 
 	/**
 	 * @return CGroup
 	 */
-	public function createGroupObject()
-	{
-		return new CGroup();
-	}
+//	public function createGroupObject()
+//	{
+//		return new CGroup();
+//	}
 
 	/**
      * Returns contact item identified by user ID and contact ID.
@@ -536,8 +544,22 @@ class CApiContactsBaseManager extends AApiManagerWithStorage
 		$mResult = false;
 		try
 		{
-			$mResult = $this->oStorage->getGroupItems($iUserId, $iSortField, $iSortOrder,
-				$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iContactId);
+//			$mResult = $this->oStorage->getGroupItems($iUserId, $iSortField, $iSortOrder,
+//				$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iContactId);
+			//TODO add ability to find by firs character
+			$mResult = $this->oEavManager->getObjects(
+				'CContact', 
+				array(
+					'Login', 
+					'Description'
+				),
+				$iOffset,
+				$iRequestLimit,
+				array('Description' => '%'.$sSearch.'%'),
+				$iSortField,
+				$iSortOrder
+			);
+			var_dump($mResult);
 		}
 		catch (CApiBaseException $oException)
 		{

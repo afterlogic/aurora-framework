@@ -158,17 +158,18 @@ class ContactsModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetGroups()
+	public function GetGroups($iUserId = 0)
 	{
-		$sAuthToken = $this->getParamValue('AuthToken');
-		$iUserId = \CApi::GetCoreManager('integrator')->getLogginedUserId($sAuthToken);
-				
+//		$sAuthToken = $this->getParamValue('AuthToken');
+//		$iUserId = \CApi::GetCoreManager('integrator')->getLogginedUserId($sAuthToken);
 //		$oAccount = $this->getDefaultAccountFromParam();
 
 		$aList = false;
 		//TODO use real user settings
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		if (true)
+		var_dump($iUserId);
+		
+		if ($iUserId > 0)
 		{
 			$aList = $this->oApiContactsManager->getGroupItems($iUserId,
 				\EContactSortField::Name, \ESortOrder::ASC, 0, 999);
@@ -597,7 +598,7 @@ class ContactsModule extends AApiModule
 		
 		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			$oContact = new \CContact();
+			$oContact = \CContact::createInstance();
 			$oContact->IdUser = $oAccount->IdUser;
 			$oContact->IdTenant = $oAccount->IdTenant;
 			$oContact->IdDomain = $oAccount->IdDomain;
@@ -776,7 +777,7 @@ class ContactsModule extends AApiModule
 		$sData = $oApiFileCache->get($oAccount, $sTempFile);
 		if (!empty($sData))
 		{
-			$oContact = new \CContact();
+			$oContact = \CContact::createInstance();
 			$oContact->InitFromVCardStr($oAccount->IdUser, $sData);
 
 			if ($this->oApiContactsManager->createContact($oContact))
@@ -1084,7 +1085,7 @@ class ContactsModule extends AApiModule
 				$sData = $aDataItem['Data'];
 				if (!empty($sData) && $oApiCapa->isContactsSupported($oAccount)) {
 					
-					$oContact = new CContact();
+					$oContact = \CContact::createInstance();
 					$oContact->InitFromVCardStr($oAccount->IdUser, $sData);
 					$oContact->initBeforeChange();
 
