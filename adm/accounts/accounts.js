@@ -32,7 +32,6 @@
 			});
 			this.usersList(aListData);
 //		}
-		
 	};
 	
 	CScreen.prototype.selectItem = function (oItem)

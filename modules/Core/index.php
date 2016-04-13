@@ -17,7 +17,6 @@ class CoreModule extends AApiModule
 		
 //		$oModuleManager = \CApi::GetModuleManager();
 //		$oMailModule = $oModuleManager->GetModule('Mail');
-//		var_dump($oMailModule);
 //		CApi::GetCoreManager('tenants');
 		
 		$this->AddEntries(array(
@@ -734,20 +733,17 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function CreateUser($oData)
+	public function CreateUser($iTenantId = 0, $sName = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 		
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		if (true)
+		if ($iTenantId > 0 && $sName !== '')
 		{
 			$oUser = \CUser::createInstance();
 			
-//			$oUser->IdTenant = $oData['IdTenant'];
-//			$oUser->IdDomain = $oData['IdDomain'];
-			$oUser->Name = $oData['Name'];
-
-//			$this->populateContactObject($oContact);
+			$oUser->Name = $sName;
+			$oUser->IdTenant = $iTenantId;
 
 			$this->oApiUsersManager->createUser($oUser);
 			return $oUser ? array(
@@ -766,29 +762,51 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function UpdateUser($sIdUser = 0, $sUserName = '')
+	public function UpdateUser($iUserId = 0, $sUserName = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 		
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		
-//		'IdUser' => $oHttp->GetPost('id', 0),
-//				'IdDomain' => $oHttp->GetPost('domain', 0),
-//				'Name' => $oHttp->GetPost('name', 0)
-
-		if ($sIdUser > 0)
+		if ($iUserId > 0)
 		{
-			$oUser = $this->oApiUsersManager->getUserById($sIdUser);
+			$oUser = $this->oApiUsersManager->getUserById($iUserId);
 			
 			if ($oUser)
 			{
-	//			$oUser->IdTenant = $oData['IdTenant'];
-	//			$oUser->IdDomain = $oData['IdDomain'];
 				$oUser->Name = $sUserName;
-
-	//			$this->populateContactObject($oContact);
-
 				$this->oApiUsersManager->updateUser($oUser);
+			}
+			
+			return $oUser ? array(
+				'iObjectId' => $oUser->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function DeleteUser($iUserId = 0)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+
+		if ($iUserId > 0)
+		{
+			$oUser = $this->oApiUsersManager->getUserById($iUserId);
+			
+			if ($oUser)
+			{
+				$this->oApiUsersManager->deleteUser($oUser);
 			}
 			
 			return $oUser ? array(

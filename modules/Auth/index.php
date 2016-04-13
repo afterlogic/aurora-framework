@@ -287,7 +287,7 @@ class AuthModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function CreateAccount()
+	public function CreateAccount($iUserId = 0, $sLogin = '', $sPassword = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 
@@ -296,9 +296,9 @@ class AuthModule extends AApiModule
 		
 		$oEventResult = null;
 		$this->broadcastEvent('CreateAccount', array(
-			'IdUser' => $this->getParamValue('IdUser'),
-			'login' => $this->getParamValue('login'),
-			'password' => $this->getParamValue('password'),
+			'IdUser' => $iUserId,
+			'login' => $sLogin,
+			'password' => $sPassword,
 			'result' => &$oEventResult
 		));
 		
@@ -308,8 +308,8 @@ class AuthModule extends AApiModule
 			$oAccount = \CAccount::createInstance();
 			
 			$oAccount->IdUser = $oEventResult->iObjectId;
-			$oAccount->Login = $this->getParamValue('Login');
-			$oAccount->Password = $this->getParamValue('Password');
+			$oAccount->Login = $sLogin;
+			$oAccount->Password = $sPassword;
 
 			$this->oApiAccountsManager->createAccount($oAccount);
 			return $oAccount ? array(
@@ -328,12 +328,11 @@ class AuthModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function UpdateAccount()
+	public function UpdateAccount($iAccountId = 0, $sLogin = '', $sPassword = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 		
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		$iAccountId = $this->getParamValue('IdAccount', 0);
 		
 		if ($iAccountId > 0)
 		{
@@ -341,11 +340,11 @@ class AuthModule extends AApiModule
 			
 			if ($oAccount)
 			{
-				if ($this->getParamValue('Login', '')) {
-					$oAccount->Login =  $this->getParamValue('Login', '');
+				if ($sLogin) {
+					$oAccount->Login = $sLogin;
 				}
-				if ($this->getParamValue('Password', '')) {
-					$oAccount->Password =  $this->getParamValue('Password', '');
+				if ($sPassword) {
+					$oAccount->Password = $sPassword;
 				}
 				
 
@@ -368,10 +367,9 @@ class AuthModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function DeleteAccount()
+	public function DeleteAccount($iAccountId = 0)
 	{
 		$bResult = false;
-		$iAccountId = $this->getParamValue('IdAccount', 0);
 
 		if ($iAccountId > 0)
 		{

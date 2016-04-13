@@ -42,31 +42,31 @@ class CApiCoreUsersManager extends AApiManager
 		$oUser = null;
 		try
 		{
+			
 			if (is_numeric($iUserId))
 			{
 				$iUserId = (int) $iUserId;
 				CApi::Plugin()->RunHook('api-get-user-by-id-precall', array(&$iUserId, &$oUser));
 				if (null === $oUser)
 				{
-//					$oUser = $this->oStorage->getUserById($iUserId);
-
 					$oUser = $this->oEavManager->getObjectById($iUserId);
 
-					if ($oUser instanceof \CUser)
+					if ($oUser instanceOf \CUser)
 					{
 						//TODO method needs to be refactored according to the new system of properties inheritance
-						$oApiDomainsManager = CApi::GetCoreManager('domains');
-						$oDomain = $oApiDomainsManager->getDefaultDomain();
+//						$oApiDomainsManager = CApi::GetCoreManager('domains');
+//						$oDomain = $oApiDomainsManager->getDefaultDomain();
 						
-						$oUser->setInheritedSettings(array(
-							'domain' => $oDomain
-						));
+//						$oUser->setInheritedSettings(array(
+//							'domain' => $oDomain
+//						));
 					}
 					else
 					{
 						$oUser = null;
 					}
 				}
+				
 				CApi::Plugin()->RunHook('api-change-user-by-id', array(&$oUser));
 			}
 			else
@@ -334,6 +334,35 @@ class CApiCoreUsersManager extends AApiManager
 //					throw new CApiManagerException(Errs::UsersManager_UserAlreadyExists);
 //				}
 			}
+
+			$bResult = true;
+		}
+		catch (CApiBaseException $oException)
+		{
+			$bResult = false;
+			$this->setLastException($oException);
+		}
+
+		return $bResult;
+	}
+	
+	/**
+	 * @param CUser $oUser
+	 *
+	 * @return bool
+	 */
+	public function deleteUser (CUser &$oUser)
+	{
+		$bResult = false;
+		try
+		{
+//			if ($oUser->validate())
+//			{
+				if (!$this->oEavManager->deleteObject($oUser->iObjectId))
+				{
+					throw new CApiManagerException(Errs::UsersManager_UserDeleteFailed);
+				}
+//			}
 
 			$bResult = true;
 		}
