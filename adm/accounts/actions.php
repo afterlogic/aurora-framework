@@ -15,11 +15,6 @@ if ($oHttp->HasPost('action'))
 				$oHttp->GetPost('password', '')
 			);
 			
-//			\CApi::ExecuteMethod('Auth::CreateAccount', array(
-//				'IdUser' => $oHttp->GetPost('user_id', ''),
-//				'Login' => $oHttp->GetPost('login', ''),
-//				'Password' => $oHttp->GetPost('password', '')
-//			));
 			break;
 		case 'update':
 			$mResult = $oAuthDecorator->UpdateAccount(
