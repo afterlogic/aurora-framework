@@ -50,5 +50,5 @@ var_dump($aGroups);
 	staticData['contacts_list'] = <?php echo is_array($aItems) ? json_encode($aItems) : '[]'; ?>;
 	staticData['contacts_groups'] = <?php echo is_array($aContactGrouns) ? json_encode($aContactGrouns) : '[]'; ?>;
 </script>
-<script src="accounts/accounts.js"></script>
+<script src="contacts/contacts.js"></script>
 

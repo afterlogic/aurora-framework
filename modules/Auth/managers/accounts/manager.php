@@ -105,7 +105,7 @@ class CApiAuthAccountsManager extends AApiManager
 					'IsDisabled' => false
 				)
 			);
-
+			
 			if (is_array($aResults) && count($aResults) === 1)
 			{
 				$oAccount = $aResults[0];

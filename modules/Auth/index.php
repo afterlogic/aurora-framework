@@ -209,26 +209,26 @@ class AuthModule extends AApiModule
 		return $oApiIntegrator->logoutAccount($sAuthToken);
 	}*/
 	
-	public function Login($sLogin, $sPassword)
+	public function Login($sLogin, $sPassword, $sPassword1 = null)
 	{
 		$mResult = false;
-		
-//		if ($this->getParamValue('Email', false))
-//		{
+
+		if ($sPassword1)
+		{
+			$this->broadcastEvent('Login', array(
+				'login' => $sLogin,
+				'password' => $sPassword1,
+				'result' => &$mResult
+			));
+		}
+		else
+		{
 			$this->broadcastEvent('Login', array(
 				'login' => $sLogin,
 				'password' => $sPassword,
 				'result' => &$mResult
 			));
-//		}
-//		else
-//		{
-//			$this->broadcastEvent('Login', array(
-//				'login' => $this->getParamValue('login'),
-//				'password' => $this->getParamValue('password'),
-//				'result' => &$bResult
-//			));
-//		}
+		}
 
 		if ($mResult instanceOf CAccount)
 		{
@@ -274,7 +274,7 @@ class AuthModule extends AApiModule
 	public function checkAuth($sLogin, $sPassword, &$mResult)
 	{
 		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sLogin, $sPassword);
-		
+	
 		if ($oAccount)
 		{
 			$mResult = $oAccount;

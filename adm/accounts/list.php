@@ -28,5 +28,5 @@
 <script>
 	staticData['accounts_list'] = <?php echo is_array($aItems) ? json_encode($aItems) : '[]'; ?>;
 </script>
-<script src="contacts/contacts.js"></script>
+<script src="accounts/accounts.js"></script>
 
