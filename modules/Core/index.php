@@ -846,11 +846,9 @@ class CoreModule extends AApiModule
 		$oResult = $oUser;
 	}
 	
-	public function GetUser()
+	public function GetUser($iUserId = 0)
 	{
-		$iUserId = (int) $this->getParamValue('UserId', '');
-		
-		$oUser = $this->oApiUsersManager->getUserById($iUserId);
+		$oUser = $this->oApiUsersManager->getUserById((int) $iUserId);
 		
 		return $oUser ? $oUser : null;
 	}	

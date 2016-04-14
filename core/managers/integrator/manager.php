@@ -1553,7 +1553,7 @@ class CApiIntegratorManager extends AApiManager
 			$this->clearLastErrorCode();
 		}
 
-		$oAccount = null;
+//		$oAccount = null;
 //		if (!empty($sCalendarPubHash))
 //		{
 //			$oAccount = $this->getLogginedDefaultAccount($sAuthToken);
@@ -1665,17 +1665,24 @@ class CApiIntegratorManager extends AApiManager
 //		$oDefaultAccount = null;
 //
 		$iUserId = $this->getLogginedUserId($sAuthToken);
-		
+
 		if (0 < $iUserId)
 		{
 			
+			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+			
 //			/* @var $oApiUsersManager CApiUsersManager */
 //			$oApiUsersManager = CApi::GetCoreManager('users');
-			$oUser = \CApi::ExecuteMethod('Core::GetUser', array(
-//				'Token' => $sToken,
-				'AuthToken' => $sAuthToken,
-				'UserId' => $iUserId
-			));
+			$oUser = $oCoreDecorator->GetUser(
+//				$sAuthToken,
+				$iUserId
+			);
+			
+//			$oUser = \CApi::ExecuteMethod('Core::GetUser', array(
+////				'Token' => $sToken,
+//				'AuthToken' => $sAuthToken,
+//				'UserId' => $iUserId
+//			));
 			
 			if ($oUser)
 			{
