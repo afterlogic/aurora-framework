@@ -9,7 +9,7 @@
  *
  * @package ContactsBase
  */
-class CApiContactsBaseManager extends AApiManager
+class CApiContactsBaseManager extends AApiManagerWithStorage
 {
 	/**
 	 * @var CApiEavManager
@@ -23,8 +23,8 @@ class CApiContactsBaseManager extends AApiManager
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
-//		parent::__construct('base', $oManager, $sForcedStorage, $oModule);
-		parent::__construct('base', $oManager, $oModule);
+		parent::__construct('base', $oManager, $sForcedStorage, $oModule);
+//		parent::__construct('base', $oManager, $oModule);
 
 		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
 		
@@ -544,22 +544,20 @@ class CApiContactsBaseManager extends AApiManager
 		$mResult = false;
 		try
 		{
-//			$mResult = $this->oStorage->getGroupItems($iUserId, $iSortField, $iSortOrder,
-//				$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iContactId);
+			$mResult = $this->oStorage->getGroupItems($iUserId, $iSortField, $iSortOrder,
+				$iOffset, $iRequestLimit, $sSearch, $sFirstCharacter, $iContactId);
 			//TODO add ability to find by firs character
-			$mResult = $this->oEavManager->getObjects(
-				'CContact', 
-				array(
-					'Login', 
-					'Description'
-				),
-				$iOffset,
-				$iRequestLimit,
-				array('Description' => '%'.$sSearch.'%'),
-				$iSortField,
-				$iSortOrder
-			);
-			var_dump($mResult);
+//			$mResult = $this->oEavManager->getObjects(
+//				'CContact', 
+//				array(
+//					'Name'
+//				),
+//				$iOffset,
+//				$iRequestLimit,
+//				array('Name' => '%'.$sSearch.'%'),
+//				$iSortField,
+//				$iSortOrder
+//			);
 		}
 		catch (CApiBaseException $oException)
 		{

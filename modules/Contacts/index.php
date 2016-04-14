@@ -167,7 +167,6 @@ class ContactsModule extends AApiModule
 		$aList = false;
 		//TODO use real user settings
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		var_dump($iUserId);
 		
 		if ($iUserId > 0)
 		{
