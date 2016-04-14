@@ -503,7 +503,12 @@ abstract class AApiModule
 				} else if (!empty($sModule) && !empty($sMethod)) {
 					
 					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
-					$aParameters['AuthToken'] = $this->oHttp->GetPost('AuthToken', '');
+					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
+					
+					if (!\CApi::getLoginedUserId($sAuthToken))
+					{
+						throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
+					}
 					
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
 					

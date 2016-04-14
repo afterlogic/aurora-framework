@@ -21,13 +21,13 @@ $oEavManager = \CApi::GetCoreManager('eav', 'db');
 //echo $iCount;
 
 $aObjects = $oEavManager->getObjects('CUser');
-var_dump($aObjects[0]);
+var_dump($aObjects);
 
-$aObjects[0]->{'Core::TestString'} = 'aaa';
+//$aObjects[0]->{'Core::TestString'} = 'aaa';
 
-$oEavManager->saveObject($aObjects[0]);
+//$oEavManager->saveObject($aObjects[0]);
 
-var_dump($oEavManager->getObjectById($aObjects[0]->iObjectId));
+//var_dump($oEavManager->getObjectById($aObjects[0]->iObjectId));
 
 //$oEavManager->deleteObject($oAccount->iObjectId);
 

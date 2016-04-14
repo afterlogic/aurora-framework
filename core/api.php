@@ -64,6 +64,11 @@ class CApi
 	 */
 	static $bUseDbLog = true;
 	
+	/**
+	 * @var array
+	 */
+	protected static $aUserSession = array();
+	
 	public static function Run()
 	{
 		include_once self::LibrariesPath().'autoload.php';
@@ -1149,6 +1154,41 @@ class CApi
 		}
 
 		return $sToken;
+	}
+	
+	public static function getLoginedUserId($sAuthToken = '')
+	{
+		$mResult = false;
+		if (!empty($sAuthToken))
+		{
+			if (isset(static::$aUserSession[$sAuthToken]))
+			{
+				$mResult = (int) static::$aUserSession[$sAuthToken];
+			}
+			else
+			{
+				/* @var $oApiIntegrator \CApiIntegratorManager */
+				$oApiIntegrator = \CApi::GetCoreManager('integrator');
+				if ($oApiIntegrator)
+				{
+					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);
+					static::$aUserSession[$sAuthToken] = $mResult;
+				}
+			}
+		}
+		else 
+		{
+			if(is_array(static::$aUserSession) && count(static::$aUserSession) === 1)
+			{
+				$aUserSession = array_values(static::$aUserSession);
+				if(isset($aUserSession[0]))
+				{
+					$mResult = $aUserSession[0];
+				}
+			}
+		}
+		
+		return $mResult;
 	}
 	
 }

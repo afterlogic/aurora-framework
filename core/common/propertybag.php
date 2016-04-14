@@ -274,17 +274,9 @@ abstract class api_APropertyBag
 		$aStaticMap = $this->getStaticMap();
 		$aModules = \CApi::GetModuleManager()->GetModules();
 		
-		//TODO temporary fix $aStaticMap issue
-		if (is_array($aStaticMap))
+		foreach ($aModules as $oModule)
 		{
-			foreach ($aModules as $oModule)
-			{
-				$aStaticMap = array_merge($aStaticMap, $oModule->getObjectMap($this->sClassName));
-			}
-		}
-		else
-		{
-			$aStaticMap = array();
+			$aStaticMap = array_merge($aStaticMap, $oModule->getObjectMap($this->sClassName));
 		}
 		
 		return $aStaticMap;
@@ -295,6 +287,6 @@ abstract class api_APropertyBag
 	 */
 	public function getStaticMap()
 	{
-		return static::$aStaticMap;
+		return is_array(static::$aStaticMap) ? static::$aStaticMap : array();
 	}	
 }
