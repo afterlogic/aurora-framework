@@ -58,15 +58,26 @@ class CApiCoreTenantsManager extends AApiManager
 				'CTenant', 
 				array(
 					'Login', 
-					'Description'
-				), $iPage, $iTenantsPerPage,
-				array('Description' => '%'.$sSearchDesc.'%'),
-				$sOrderBy, $iOrderType
+					'Description',
+					'IdChannel',
+					'PasswordHash'
+				),
+				$iPage,
+				$iTenantsPerPage,
+				array(
+					'Description' => '%'.$sSearchDesc.'%'
+				),
+				$sOrderBy,
+				$iOrderType
 			);
 
 			foreach($aResultTenants as $oTenat)
 			{
-				$aResult[$oTenat->iObjectId] = array($oTenat->Login, $oTenat->Description);
+				$aResult[$oTenat->iObjectId] = array(
+					$oTenat->Login,
+					$oTenat->Description,
+					$oTenat->IdChannel,
+				);
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -208,7 +219,8 @@ class CApiCoreTenantsManager extends AApiManager
 			}
 			else
 			{
-				$aResultTenants = $this->oEavManager->getObjects('CTenant', 
+				$aResultTenants = $this->oEavManager->getObjects(
+					'CTenant', 
 					array(
 						'Hash'
 					),
@@ -223,6 +235,8 @@ class CApiCoreTenantsManager extends AApiManager
 				}
 			}
 			
+			
+			
 			if ($oTenant)
 			{
 				/* @var $oTenant CTenant */
@@ -234,8 +248,8 @@ class CApiCoreTenantsManager extends AApiManager
 				{
 					$iFilesUsageInMB = (int) ($oTenant->FilesUsageInBytes / (1024 * 1024));
 				}
-
 				$oTenant->AllocatedSpaceInMB = $this->getTenantAllocatedSize($mTenantId) + $iFilesUsageInMB;
+
 //				$oTenant->FlushObsolete('AllocatedSpaceInMB');
 
 				$oTenant->FilesUsageInMB = $iFilesUsageInMB;
@@ -249,6 +263,8 @@ class CApiCoreTenantsManager extends AApiManager
 //					$oTenant->FlushObsolete('FilesUsageDynamicQuotaInMB');
 				}
 			}
+			
+			
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -618,12 +634,11 @@ class CApiCoreTenantsManager extends AApiManager
 						}
 					}
 
-					
 					if (!$this->oEavManager->saveObject($oTenant))
 					{
 						throw new CApiManagerException(Errs::TenantsManager_TenantUpdateFailed);
 					}
-
+					
 					if (null !== $oTenant->IsDisabled)
 					{
 						/* @var $oDomainsApi CApiDomainsManager */

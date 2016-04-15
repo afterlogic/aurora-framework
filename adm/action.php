@@ -5,9 +5,9 @@ if ($oHttp->HasPost('manager'))
 {
 	$sManagerName = $oHttp->GetPost('manager');
 	
-	if (in_array($sManagerName, array('accounts', 'users', 'contacts')))
+	if (in_array($sManagerName, array('channels', 'tenants', 'accounts', 'users', 'contacts')))
 	{
-		header('Location: /adm/');
+//		header('Location: /adm/');
 		include $sManagerName."\actions.php";
 		exit;
 	}

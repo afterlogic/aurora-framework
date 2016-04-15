@@ -4,70 +4,7 @@
 
 if (!defined('PSEVEN_APP_ROOT_PATH'))
 {
-	$sV = PHP_VERSION;
-	if (-1 === version_compare($sV, '5.3.0') || !function_exists('spl_autoload_register'))
-	{
-		echo
-			'PHP '.$sV.' detected, 5.3.0 or above required.
-			<br />
-			<br />
-			You need to upgrade PHP engine installed on your server.
-			If it\'s a dedicated or your local server, you can download the latest version of PHP from its
-			<a href="http://php.net/downloads.php" target="_blank">official site</a> and install it yourself.
-			In case of a shared hosting, you need to ask your hosting provider to perform the upgrade.';
-		
-		exit(0);
-	}
-
-	if (!defined('PSEVEN_APP_ROOT_PATH'))
-	{
-		define('PSEVEN_APP_ROOT_PATH', dirname(rtrim(realpath(__DIR__), '\\/')).'/');
-	}
-	
-	define('PSEVEN_APP_START', microtime(true));
-	
-	/**
-	 * @param string $sClassName
-	 *
-	 * @return mixed
-	 */
-	function CoreSplAutoLoad($sClassName)
-	{
-		$aClassesTree = array(
-			'core' => array(
-				'Core'
-			)
-		);
-		foreach ($aClassesTree as $sFolder => $aClasses)
-		{
-			foreach ($aClasses as $sClass)
-			{
-				if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\'))
-				{
-					$sClassPath = (strtolower($sClass) === strtolower($sFolder)) ? '' : $sClass . '/';
-					$sFileName = PSEVEN_APP_ROOT_PATH.$sFolder.'/'.$sClassPath.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
-					if (file_exists($sFileName))
-					{
-						return include_once $sFileName;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	spl_autoload_register('CoreSplAutoLoad');
-
-	if (class_exists('Core\Service'))
-	{
-		include PSEVEN_APP_ROOT_PATH.'core/api.php';
-//		\Core\Service::NewInstance()->Handle();	
-	}
-	else
-	{
-		spl_autoload_unregister('ProjectCoreSplAutoLoad');
-	}
+	include "init.php";
 	
 	$oAppData = \CApi::GetModule('Core')->GetAppData();
 
@@ -128,39 +65,17 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 				</div>
 			</div>
 			<div class="col-sm-4">
-				<?php if ($sAuthToken) { ?>
-					<div>CSRF TOKEN: <?php echo $sToken; ?></div>
-					<div>AUTH TOKEN: <?php echo $sAuthToken; ?></div>
-					<div>USER ID: <?php echo $iUserId; ?></div>
-					<form method="POST" action="<?php echo $sBaseUrl; ?>">
-						<input name="manager" type="hidden" value="auth" class="form-control" />
-						<input name="action" type="hidden" value="logout" class="form-control" />
-
-						<input type="submit" value="Logout" />
-					</form>
-				<?php } else { ?>
-				<fieldset>
-					<label>Login</label>
-					<form method="POST" action="<?php echo $sBaseUrl; ?>">
-						<input name="manager" type="hidden" value="auth" class="form-control" />
-						<!--<input name="Method" type="text" value="Login2" class="form-control" />-->
-						<input name="action" type="hidden" value="login" class="form-control" />
-
-						<input name="login" type="text" class="form-control" />
-						<input name="password" type="text" class="form-control" />
-
-						<input type="submit" value="Login" />
-					</form>
-				</fieldset>
-				<?php } ?>
+				<?php include "login_form.php"; ?>
 			</div>
 		</div>
 		<!-- Nav tabs -->
 		<ul id="myTabs" class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="<?php echo $iStoredTab === 0 ? 'active' : ''?>"><a href="#ajax" aria-controls="ajax" role="tab" data-toggle="tab">Ajax</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 1 ? 'active' : ''?>"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 2 ? 'active' : ''?>"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Accounts</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 3 ? 'active' : ''?>"><a href="#contacts" aria-controls="contacts" role="tab" data-toggle="tab">Contacts</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 1 ? 'active' : ''?>"><a href="#channels" aria-controls="channels" role="tab" data-toggle="tab">Channels</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 2 ? 'active' : ''?>"><a href="#tenants" aria-controls="tenants" role="tab" data-toggle="tab">Tenants</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 3 ? 'active' : ''?>"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 4 ? 'active' : ''?>"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Accounts</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 5 ? 'active' : ''?>"><a href="#contacts" aria-controls="contacts" role="tab" data-toggle="tab">Contacts</a></li>
 		</ul>
 
 		<!-- Tab panes -->
@@ -179,13 +94,19 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 					<button id="button">Send</button>
 				</form>
 			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 1 ? 'active' : ''?>" id="users">
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 1 ? 'active' : ''?>" id="channels">
+				<?php include "channels\list.php"; ?>
+			</div>
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 2 ? 'active' : ''?>" id="tenants">
+				<?php include "tenants\list.php"; ?>
+			</div>
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 3 ? 'active' : ''?>" id="users">
 				<?php include "users\list.php"; ?>
 			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 2 ? 'active' : ''?>" id="accounts">
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 4 ? 'active' : ''?>" id="accounts">
 				<?php include "accounts\list.php"; ?>
 			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 3 ? 'active' : ''?>" id="contacts">
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 5 ? 'active' : ''?>" id="contacts">
 				<?php include "contacts\list.php"; ?>
 			</div>
 		</div>

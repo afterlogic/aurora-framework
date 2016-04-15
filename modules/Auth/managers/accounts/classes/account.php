@@ -20,19 +20,21 @@ class CAccount extends api_APropertyBag
 		
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
+		$this->aStaticMap = array(
+			'IsDisabled'	=> array('bool', false),
+			'IdUser'		=> array('int', 0),
+			'Login'			=> array('string', ''),
+			'Password'		=> array('string', ''),
+			'Test'			=> array('string', '')
+		);
+		
 		$this->SetDefaults();
 
 		CApi::Plugin()->RunHook('api-account-construct', array(&$this));
 
-		self::$aStaticMap = array(
-			'IsDisabled'			=> array('bool', false),
-			'IdUser'				=> array('int', 0),
-			'Login'					=> array('string', ''),
-			'Password'				=> array('string', '')
-		);
-		
 	}
 
+	
 	/**
 	 * Checks if the user has only valid data.
 	 * 

@@ -52,7 +52,7 @@ class CApiCoreChannelsManager extends AApiManager
 		{
 			$aResultChannels = $this->oEavManager->getObjects(
 				'CChannel', 
-				array('Login', 'Description'),
+				array('Login', 'Description', 'Password'),
 				$iPage,
 				$iItemsPerPage,
 				array(
@@ -65,7 +65,11 @@ class CApiCoreChannelsManager extends AApiManager
 			
 			foreach($aResultChannels as $oChannel)
 			{
-				$aResult[$oChannel->iObjectId] = array($oChannel->Login, $oChannel->Description);
+				$aResult[$oChannel->iObjectId] = array(
+					$oChannel->Login,
+					$oChannel->Description,
+					$oChannel->Password
+				);
 			}
 		}
 		catch (CApiBaseException $oException)

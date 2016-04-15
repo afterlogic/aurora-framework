@@ -728,6 +728,213 @@ class CoreModule extends AApiModule
 		return $bResult;
 	}
 	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function CreateChannel($sLogin = '', $sDescription = '')
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+	
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if ($sLogin !== '' && $sDescription !== '')
+		{
+			$oChannel = \CChannel::createInstance();
+			
+			$oChannel->Login = $sLogin;
+			$oChannel->Description = $sDescription;
+
+			$this->oApiChannelsManager->createChannel($oChannel);
+			return $oChannel ? array(
+				'iObjectId' => $oChannel->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function UpdateChannel($iChannelId = 0, $sLogin = '', $sDescription = '')
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		
+		if ($iChannelId > 0)
+		{
+			$oChannel = $this->oApiChannelsManager->getChannelById($iChannelId);
+			
+			if ($oChannel)
+			{
+				if ($sLogin)
+				{
+					$oChannel->Login = $sLogin;
+				}
+				if ($sDescription)
+				{
+					$oChannel->Description = $sDescription;
+				}
+				
+				$this->oApiChannelsManager->updateChannel($oChannel);
+			}
+			
+			return $oChannel ? array(
+				'iObjectId' => $oChannel->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function DeleteChannel($iChannelId = 0)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+
+		if ($iChannelId > 0)
+		{
+			$oChannel = $this->oApiChannelsManager->getChannelById($iChannelId);
+			
+			if ($oChannel)
+			{
+				$this->oApiChannelsManager->deleteChannel($oChannel);
+			}
+			
+			return $oChannel ? array(
+				'iObjectId' => $oChannel->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function CreateTenant($sLogin = '', $sDescription = '', $iChannelId = 0)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+	
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		if ($sLogin !== '' && $sDescription !== '' && $iChannelId > 0)
+		{
+			$oTenant = \CTenant::createInstance();
+			
+			$oTenant->Login = $sLogin;
+			$oTenant->Description = $sDescription;
+			$oTenant->IdChannel = $iChannelId;
+
+			$this->oApiTenantsManager->createTenant($oTenant);
+			return $oTenant ? array(
+				'iObjectId' => $oTenant->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function UpdateTenant($iTenantId = 0, $sLogin = '', $sDescription = '', $iChannelId = 0)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		
+		if ($iTenantId > 0)
+		{
+			$oTenant = $this->oApiTenantsManager->getTenantById($iTenantId);
+			
+			if ($oTenant)
+			{
+				if ($sLogin)
+				{
+					$oTenant->Login = $sLogin;
+				}
+				if ($sDescription)
+				{
+					$oTenant->Description = $sDescription;
+				}
+				if ($iChannelId)
+				{
+					$oTenant->IdChannel = $iChannelId;
+				}
+				
+				$this->oApiTenantsManager->updateTenant($oTenant);
+			}
+			
+			return $oTenant ? array(
+				'iObjectId' => $oTenant->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function DeleteTenant($iTenantId = 0)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+
+		if ($iTenantId > 0)
+		{
+			$oTenant = $this->oApiTenantsManager->getTenantById($iTenantId);
+			
+			if ($oTenant)
+			{
+				$this->oApiTenantsManager->deleteTenant($oTenant);
+			}
+			
+			return $oTenant ? array(
+				'iObjectId' => $oTenant->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	
+	
 	
 	/**
 	 * 
