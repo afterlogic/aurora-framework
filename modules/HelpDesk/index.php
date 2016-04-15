@@ -4,10 +4,20 @@ class HelpDeskModule extends AApiModule
 {
 	public $oApiHelpDeskManager = null;
 	
+	public $oCoreDecorator = null;
+	
 	public function init() 
 	{
 		$this->oApiHelpDeskManager = $this->GetManager('main', 'db');
+		
 		$this->AddEntry('helpdesk', 'EntryHelpDesk');
+		
+		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
+				
+		$this->setObjectMap('CUser', array(
+				'IsAgent'	=> array('bool', true)
+			)
+		);
 	}
 	
 	/**
@@ -17,6 +27,11 @@ class HelpDeskModule extends AApiModule
 	 */
 	protected function getHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
 	{
+		//$iUserId = $this->getLogginedUserId($sAuthToken);
+		$iUserId = 61;
+		$oUser = $this->oCoreDecorator->GetUser($iUserId);
+		return $oUser;
+		
 		$oResult = null;
 		$oAccount = null;
 
@@ -30,8 +45,10 @@ class HelpDeskModule extends AApiModule
 		}
 		else
 		{
-			$oApiTenants = \CApi::GetCoreManager('tenants');
-			$mTenantID = $oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
+//			$oApiTenants = \CApi::GetCoreManager('tenants');
+//			$mTenantID = $oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
+			$mTenantID = $this->oCoreDecorator->getTenantIdByHash($this->getParamValue('TenantHash', ''));
+
 			if (is_int($mTenantID))
 			{
 				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
@@ -309,19 +326,23 @@ class HelpDeskModule extends AApiModule
 		return false;
 	}	
 	
-	public function CreatePost()
+	public function CreatePost($iThreadId = 0, $sIsInternal = '0', $sSubject = '', $sText = '', $sCc = '', $sBcc = '', $mAttachments = null, $iIsExt = 0)
 	{
-		$oAccount = null;
 		$oUser = $this->getHelpdeskAccountFromParam();
+		
+//		$bIsAgent = $oUser->{'HelpDesk::IsAgent'};
+		
 		/* @var $oAccount CAccount */
 
-		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
-		$sSubject = trim((string) $this->getParamValue('Subject', ''));
-		$sText = trim((string) $this->getParamValue('Text', ''));
-		$sCc = trim((string) $this->getParamValue('Cc', ''));
-		$sBcc = trim((string) $this->getParamValue('Bcc', ''));
-		$bIsInternal = '1' === (string) $this->getParamValue('IsInternal', '0');
-		$mAttachments = $this->getParamValue('Attachments', null);
+//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
+//		$sSubject = trim((string) $this->getParamValue('Subject', ''));
+//		$sText = trim((string) $this->getParamValue('Text', ''));
+//		$sCc = trim((string) $this->getParamValue('Cc', ''));
+//		$sBcc = trim((string) $this->getParamValue('Bcc', ''));
+//		$bIsInternal = '1' === (string) $this->getParamValue('IsInternal', '0');
+//		$mAttachments = $this->getParamValue('Attachments', null);
+		
+		$bIsInternal = '1' === $sIsInternal;
 		
 		if (0 === strlen($sText) || (0 === $iThreadId && 0 === strlen($sSubject)))
 		{
@@ -338,7 +359,8 @@ class HelpDeskModule extends AApiModule
 			
 			$oThread = new \CHelpdeskThread();
 			$oThread->IdTenant = $oUser->IdTenant;
-			$oThread->IdOwner = $oUser->IdHelpdeskUser;
+//			$oThread->IdOwner = $oUser->IdHelpdeskUser;
+			$oThread->IdOwner = $oUser->iObjectId;
 			$oThread->Type = \EHelpdeskThreadType::Pending;
 			$oThread->Subject = $sSubject;
 
@@ -356,7 +378,8 @@ class HelpDeskModule extends AApiModule
 		{
 			$oPost = new \CHelpdeskPost();
 			$oPost->IdTenant = $oUser->IdTenant;
-			$oPost->IdOwner = $oUser->IdHelpdeskUser;
+//			$oPost->IdOwner = $oUser->IdHelpdeskUser;
+			$oPost->IdOwner = $oUser->iObjectId;
 			$oPost->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 			$oPost->Type = $bIsInternal ? \EHelpdeskPostType::Internal : \EHelpdeskPostType::Normal;
 			$oPost->SystemType = \EHelpdeskPostSystemType::None;
@@ -395,7 +418,8 @@ class HelpDeskModule extends AApiModule
 						$oAttachment = new \CHelpdeskAttachment();
 						$oAttachment->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 						$oAttachment->IdHelpdeskPost = $oPost->IdHelpdeskPost;
-						$oAttachment->IdOwner = $oUser->IdHelpdeskUser;
+//						$oAttachment->IdOwner = $oUser->IdHelpdeskUser;
+						$oAttachment->IdOwner = $oUser->iObjectId;
 						$oAttachment->IdTenant = $oUser->IdTenant;
 
 						$oAttachment->FileName = $sUploadName;
@@ -519,23 +543,23 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetPosts()
+	public function GetPosts($iThreadId = 0, $iStartFromId = 0, $iLimit = 10, $iIsExt = 1)
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+//		$oAccount = null;
+//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->getHelpdeskAccountFromParam();
+		
+		$bIsAgent = $oUser->{'HelpDesk::IsAgent'};
 
-		$bIsAgent = $oUser->IsAgent;
-
-		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
-		$iStartFromId = (int) $this->getParamValue('StartFromId', 0);
-		$iLimit = (int) $this->getParamValue('Limit', 10);
-		$iIsExt = (int) $this->getParamValue('IsExt', 1);
+//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
+//		$iStartFromId = (int) $this->getParamValue('StartFromId', 0);
+//		$iLimit = (int) $this->getParamValue('Limit', 10);
+//		$iIsExt = (int) $this->getParamValue('IsExt', 1);
 
 		if (1 > $iThreadId || 0 > $iStartFromId || 1 > $iLimit)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
-
 		$oThread = $this->oApiHelpDeskManager->getThreadById($oUser, $iThreadId);
 		if (!$oThread)
 		{
@@ -674,13 +698,14 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function ChangeThreadState()
+	public function ChangeThreadState($iThreadId = 0, $iThreadType = \EHelpdeskThreadType::None, $IsExt = 0)
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+//		$oAccount = null;
+//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->getHelpdeskAccountFromParam();
 
-		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
-		$iThreadType = (int) $this->getParamValue('Type', \EHelpdeskThreadType::None);
+//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
+//		$iThreadType = (int) $this->getParamValue('Type', \EHelpdeskThreadType::None);
 
 		if (1 > $iThreadId || !in_array($iThreadType, array(
 			\EHelpdeskThreadType::Pending,
@@ -693,7 +718,7 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		if (!$oUser || ($iThreadType !== \EHelpdeskThreadType::Resolved && !$oUser->IsAgent))
+		if (!$oUser || ($iThreadType !== \EHelpdeskThreadType::Resolved && !$oUser->{'HelpDesk::IsAgent'}))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
@@ -710,12 +735,13 @@ class HelpDeskModule extends AApiModule
 	}	
 	
 
-	public function PingThread()
+	public function PingThread($iThreadId = 0)
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+//		$oAccount = null;
+//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->getHelpdeskAccountFromParam();
 
-		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
+//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 
 		if (0 === $iThreadId)
 		{
@@ -727,12 +753,13 @@ class HelpDeskModule extends AApiModule
 		return $this->oApiHelpDeskManager->getOnline($oUser, $iThreadId);
 	}
 	
-	public function SetThreadSeen()
+	public function SetThreadSeen($iThreadId = 0)
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+//		$oAccount = null;
+//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->getHelpdeskAccountFromParam();
 
-		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
+//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 
 		if (0 === $iThreadId)
 		{
@@ -751,17 +778,20 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetThreads()
+	public function GetThreads($iOffset = 0, $iLimit = 10, $iFilter = \EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+//		$oAccount = null;
+//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->getHelpdeskAccountFromParam();
 		
-		$iFilter = (int) $this->getParamValue('Filter', \EHelpdeskThreadFilterType::All);
-		$sSearch = (string) $this->getParamValue('Search', '');
-		$iOffset = (int) $this->getParamValue('Offset', 0);
-		$iLimit = (int) $this->getParamValue('Limit', 10);
+//		var_dump($oUser);
+		
+//		$iFilter = (int) $this->getParamValue('Filter', \EHelpdeskThreadFilterType::All);
+//		$sSearch = (string) $this->getParamValue('Search', '');
+//		$iOffset = (int) $this->getParamValue('Offset', 0);
+//		$iLimit = (int) $this->getParamValue('Limit', 10);
 
-		$bIsAgent = $oUser->IsAgent;
+		$bIsAgent = (bool)$oUser->{'HelpDesk::IsAgent'};
 
 		if (0 > $iOffset || 1 > $iLimit)
 		{

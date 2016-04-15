@@ -851,7 +851,14 @@ class CoreModule extends AApiModule
 		$oUser = $this->oApiUsersManager->getUserById((int) $iUserId);
 		
 		return $oUser ? $oUser : null;
-	}	
+	}
+	
+	public function GetTenantIdByHash($sTenantHash = '')
+	{
+		$oTenant = $this->oApiTenantsManager->GetTenantIdByHash((string) $sTenantHash);
+		
+		return $oTenant ? $oTenant : null;
+	}
 }
 
 return new CoreModule('1.0');

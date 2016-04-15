@@ -416,7 +416,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 * 
 	 * @return bool
 	 */
-	public function createUser(CHelpdeskUser &$oHelpdeskUser, $bCreateFromFetcher = false)
+//	public function createUser(CHelpdeskUser &$oHelpdeskUser, $bCreateFromFetcher = false)
+	public function createUser(CUser &$oHelpdeskUser, $bCreateFromFetcher = false)
 	{
 		$bResult = false;
 		try
@@ -679,7 +680,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function isUserExists(CHelpdeskUser $oHelpdeskUser)
+//	public function isUserExists(CHelpdeskUser $oHelpdeskUser)
+	public function isUserExists(CUser $oHelpdeskUser)
 	{
 		$bResult = false;
 		if(!$oHelpdeskUser->SocialId)
@@ -703,7 +705,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function userInformation(CHelpdeskUser $oHelpdeskUser, $aIdList)
+//	public function userInformation(CHelpdeskUser $oHelpdeskUser, $aIdList)
+	public function userInformation(CUser $oHelpdeskUser, $aIdList)
 	{
 		$mResult = false;
 		try
@@ -723,7 +726,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
      *
 	 * @return bool
 	 */
-	public function updateUser(CHelpdeskUser $oHelpdeskUser)
+//	public function updateUser(CHelpdeskUser $oHelpdeskUser)
+	public function updateUser(CUser $oHelpdeskUser)
 	{
 		$bResult = false;
 		try
@@ -802,7 +806,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function deletePosts(CHelpdeskUser $oHelpdeskUser, $oThread, $aPostIds)
+	public function deletePosts(CUser $oHelpdeskUser, $oThread, $aPostIds)
 	{
 		$bResult = false;
 		try
@@ -832,7 +836,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function verifyThreadIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
+//	public function verifyThreadIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
+	public function verifyThreadIdsBelongToUser(CUser $oHelpdeskUser, $aThreadIds)
 	{
 		$bResult = false;
 		try
@@ -856,7 +861,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function verifyPostIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aPostIds)
+//	public function verifyPostIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aPostIds)
+	public function verifyPostIdsBelongToUser(CUser $oHelpdeskUser, $aPostIds)
 	{
 		$bResult = false;
 		try
@@ -881,7 +887,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function archiveThreads(CHelpdeskUser $oHelpdeskUser, $aThreadIds, $bSetArchive = true)
+//	public function archiveThreads(CHelpdeskUser $oHelpdeskUser, $aThreadIds, $bSetArchive = true)
+	public function archiveThreads(CUser $oHelpdeskUser, $aThreadIds, $bSetArchive = true)
 	{
 		$bResult = false;
 		try
@@ -1007,7 +1014,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function createThread(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread &$oHelpdeskThread)
+//	public function createThread(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread &$oHelpdeskThread)
+	public function createThread(CUser $oHelpdeskUser, CHelpdeskThread &$oHelpdeskThread)
 	{
 		$bResult = false;
 		try
@@ -1034,7 +1042,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function updateThread(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+//	public function updateThread(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+	public function updateThread(CUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
 	{
 		$bResult = false;
 		try
@@ -1498,7 +1507,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 * 
 	 * @return int
 	 */
-	public function getThreadsCount(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
+//	public function getThreadsCount(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
+	public function getThreadsCount(CUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
 		$iResult = 0;
 		try
@@ -1543,7 +1553,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getThreads(CHelpdeskUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
+//	public function getThreads(CHelpdeskUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
+	public function getThreads(CUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
 		$aResult = null;
 		try
@@ -1586,7 +1597,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return int
 	 */
-	public function getPostsCount(CHelpdeskUser $oHelpdeskUser, $oThread)
+	public function getPostsCount(CUser $oHelpdeskUser, $oThread)
 	{
 		$iResult = 0;
 		try
@@ -1607,7 +1618,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getThreadsLastPostIds(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
+//	public function getThreadsLastPostIds(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
+	public function getThreadsLastPostIds(CUser $oHelpdeskUser, $aThreadIds)
 	{
 		$mResult = false;
 		try
@@ -1628,7 +1640,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getAttachments(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+//	public function getAttachments(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+	public function getAttachments(CUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
 	{
 		$aResult = null;
 		try
@@ -1651,7 +1664,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getPosts(CHelpdeskUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
+//	public function getPosts(CHelpdeskUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
+	public function getPosts(CUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
 	{
 		$aResult = null;
 		try
@@ -1672,7 +1686,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getExtPostsCount(CHelpdeskUser $oHelpdeskUser, $oThread)
+//	public function getExtPostsCount(CHelpdeskUser $oHelpdeskUser, $oThread)
+	public function getExtPostsCount(CUser $oHelpdeskUser, $oThread)
 	{
 		$aResult = null;
 		try
@@ -1716,10 +1731,11 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
+//	public function getOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
+	public function getOnline(CUser $oHelpdeskUser, $iThreadID)
 	{
 		$aResult = false;
-		if ($oHelpdeskUser && $oHelpdeskUser->IsAgent)
+		if ($oHelpdeskUser && $oHelpdeskUser->{'HelpDesk::IsAgent'})
 		{
 			try
 			{
@@ -1740,14 +1756,15 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function setOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
+//	public function setOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
+	public function setOnline(CUser $oHelpdeskUser, $iThreadId)
 	{
 		$bResult = false;
 		if ($oHelpdeskUser)
 		{
 			try
 			{
-				$bResult = $this->oStorage->setOnline($oHelpdeskUser, $iThreadID);
+				$bResult = $this->oStorage->setOnline($oHelpdeskUser, $iThreadId);
 			}
 			catch (CApiBaseException $oException)
 			{
@@ -1992,19 +2009,20 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function createPost(CHelpdeskUser $oHelpdeskUser, $oThread, CHelpdeskPost $oPost, $bIsNew = false, $bSendNotify = true, $sCc = '', $sBcc = '')
+//	public function createPost(CHelpdeskUser $oHelpdeskUser, $oThread, CHelpdeskPost $oPost, $bIsNew = false, $bSendNotify = true, $sCc = '', $sBcc = '')
+	public function createPost(CUser $oHelpdeskUser, $oThread, CHelpdeskPost $oPost, $bIsNew = false, $bSendNotify = true, $sCc = '', $sBcc = '')
 	{
 		$bResult = false;
 		try
 		{
 			if ($oPost->validate())
 			{
-				if ($oPost->Type === EHelpdeskPostType::Internal && !$oHelpdeskUser->IsAgent)
+				if ($oPost->Type === EHelpdeskPostType::Internal && !$oHelpdeskUser->{'HelpDesk::IsAgent'})
 				{
 					$oPost->Type = EHelpdeskPostType::Normal;
 				}
 
-				if ($oHelpdeskUser->IsAgent && !$bIsNew && $oHelpdeskUser->IdHelpdeskUser !== $oThread->IdOwner)
+				if ($oHelpdeskUser->{'HelpDesk::IsAgent'} && !$bIsNew && $oHelpdeskUser->IdHelpdeskUser !== $oThread->IdOwner)
 				{
 					if ($oPost->Type !== EHelpdeskPostType::Internal)
 					{
@@ -2077,7 +2095,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function setThreadSeen(CHelpdeskUser $oHelpdeskUser, $oHelpdeskThread)
+//	public function setThreadSeen(CHelpdeskUser $oHelpdeskUser, $oHelpdeskThread)
+	public function setThreadSeen(CUser $oHelpdeskUser, $oHelpdeskThread)
 	{
 		$bResult = false;
 		try
