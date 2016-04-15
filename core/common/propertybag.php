@@ -36,7 +36,7 @@ abstract class api_APropertyBag
 	/**
 	 * @var array
 	 */
-	protected static $aStaticMap;
+	protected $aStaticMap;
 	
 	/**
 	 * @param string $sClassName
@@ -287,6 +287,6 @@ abstract class api_APropertyBag
 	 */
 	public function getStaticMap()
 	{
-		return is_array(static::$aStaticMap) ? static::$aStaticMap : array();
+		return is_array($this->aStaticMap) ? $this->aStaticMap : array();
 	}	
 }

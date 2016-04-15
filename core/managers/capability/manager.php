@@ -197,6 +197,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isFilesSupported($oAccount = null)
 	{
+		return true; //TODO: sash
 		$bResult = !!CApi::GetConf('files', false) && $this->isNotLite();
 		if ($bResult && $oAccount)
 		{

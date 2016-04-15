@@ -163,21 +163,21 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 	/**
 	 * Performs search for files. 
 	 * 
-	 * @param CAccount $oAccount Account object 
+	 * @param int $iUserId 
 	 * @param string $sType Storage type. Accepted values: **EFileStorageType::Personal**, **EFileStorageType::Corporate**, **EFileStorageType::Shared**. 
 	 * @param string $sPath Path to the folder. 
 	 * @param string $sPattern Search string. 
 	 * 
 	 * @return array  array of \CFileStorageItem. 
 	 */
-	public function getFiles($oAccount, $sType, $sPath, $sPattern = '')
+	public function getFiles($iUserId, $sType, $sPath, $sPattern = '')
 	{
 		$bResult = false;
 		$bBreak = false;
-		\CApi::Plugin()->RunHook('filestorage.get-files', array($oAccount, $sType, $sPath, $sPattern, &$bResult, &$bBreak));
+//		\CApi::Plugin()->RunHook('filestorage.get-files', array($oAccount, $sType, $sPath, $sPattern, &$bResult, &$bBreak));
 		if (!$bBreak)
 		{
-			$bResult = $this->oStorage->getFiles($oAccount, $sType, $sPath, $sPattern);
+			$bResult = $this->oStorage->getFiles($iUserId, $sType, $sPath, $sPattern);
 		}
 		return $bResult;
 	}

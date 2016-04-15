@@ -547,7 +547,7 @@ abstract class AApiModule
 					$aAdditionalParams = $oException->GetObjectParams();
 				}
 
-				$aResponseItem = $this->ExceptionResponse(null, $sMethod, $oException, $aAdditionalParams);
+				$aResponseItem = $this->ExceptionResponse($sMethod, $oException, $aAdditionalParams);
 			}
 
 			@header('Content-Type: application/json; charset=utf-8');

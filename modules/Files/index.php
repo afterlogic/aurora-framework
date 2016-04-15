@@ -228,33 +228,30 @@ class FilesModule extends AApiModule
 
 	public function GetExternalStorages()
 	{
+		$oResult = array();
+		return $oResult; // TODO
 		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$oResult = array();
 		\CApi::Plugin()->RunHook('filestorage.get-external-storages', array($oAccount, &$oResult));
 
 		return $oResult;
 	}
 
-	public function GetFiles()
+	public function GetFiles($sType, $sPath, $sPattern)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLoginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sPath = $this->getParamValue('Path');
-		$sType = $this->getParamValue('Type');
-		$sPattern = $this->getParamValue('Pattern');
-		
 		return array(
-			'Items' => $this->oApiFilesManager->getFiles($oAccount, $sType, $sPath, $sPattern),
-			'Quota' => $this->oApiFilesManager->getQuota($oAccount)
+			'Items' => $this->oApiFilesManager->getFiles($iUserId, $sType, $sPath, $sPattern),
+			'Quota' => $this->oApiFilesManager->getQuota($iUserId)
 		);
 	}	
 

@@ -88,18 +88,18 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}	
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param bool $bUser
 	 *
 	 * @return string|null
 	 */
-	protected function getRootPath($oAccount, $sType, $bUser = false)
+	protected function getRootPath($iUserId, $sType, $bUser = false)
 	{
 		$sRootPath = null;
-		if ($oAccount)
+		if ($iUserId)
 		{
-			$sUser = $bUser ? '/' . $oAccount->Email : '';
+			$sUser = $bUser ? '/' . $iUserId : '';
 			$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
 					\Afterlogic\DAV\Constants::FILESTORAGE_PATH_PERSONAL . $sUser;
 
@@ -366,32 +366,32 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sPattern
 	 *
 	 * @return array
 	 */
-	public function getFiles($oAccount, $sType = \EFileStorageTypeStr::Personal, $sPath = '', $sPattern = '')
+	public function getFiles($iUserId, $sType = \EFileStorageTypeStr::Personal, $sPath = '', $sPattern = '')
 	{
 		$oDirectory = null;
 		$aItems = array();
 		$aResult = array();
 		$oMin = $this->getApiMinManager();
 		
-		if ($oAccount && $this->init($oAccount))
+		if ($this->init($iUserId))
 		{
 			$oTenant = null;
-			$oApiTenants = \CApi::GetCoreManager('tenants');
+			$oApiTenants = false; //\CApi::GetCoreManager('tenants');
 			if ($oApiTenants)
 			{
 				$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
 					$oApiTenants->getDefaultGlobalTenant();
 			}
 
-			$sRootPath = $this->getRootPath($oAccount, $sType, true);
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$sRootPath = $this->getRootPath($iUserId, $sType, true);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			if ($oDirectory !== null)
 			{
 				if (!empty($sPattern) || is_numeric($sPattern))
