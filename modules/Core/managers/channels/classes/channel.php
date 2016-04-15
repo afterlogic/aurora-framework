@@ -19,7 +19,7 @@ class CChannel extends api_APropertyBag
 
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
-		self::$aStaticMap = array(
+		$this->aStaticMap = array(
 			'Login'			=> array('string', ''),
 			'Password'		=> array('string', ''),
 			'Description'	=> array('string', '')

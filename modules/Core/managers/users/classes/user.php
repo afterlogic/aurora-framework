@@ -73,7 +73,7 @@ class CUser extends api_APropertyBag
 		
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
-		self::$aStaticMap = array(
+		$this->aStaticMap = array(
 
 //			'IdUser'							=> array('int', 0), //'id_user'),
 			'Name'								=> array('string', ''), //'id_subscription'),

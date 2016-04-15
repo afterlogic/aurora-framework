@@ -70,7 +70,7 @@ class CTenant extends api_APropertyBag
 
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 
-		self::$aStaticMap = array(
+		$this->aStaticMap = array(
 			'IdTenant'					=> array('int', 0),
 			'IdChannel'					=> array('int', 0),
 			'IsDisabled'				=> array('bool', false),
