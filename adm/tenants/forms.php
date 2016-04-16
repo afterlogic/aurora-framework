@@ -14,8 +14,8 @@
 			<input name="login" data-bind="textInput: login" class="form-control" />
 		</div>
 		<div class="form-group">
-			<label>Password</label>
-			<input name="password" data-bind="textInput: password" class="form-control" />
+			<label>Hash</label>
+			<input name="hash" readonly data-bind="textInput: hash" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label>Description</label>

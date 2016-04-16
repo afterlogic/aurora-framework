@@ -116,7 +116,7 @@ class CApiCoreUsersManager extends AApiManager
 				'CUser', 
 				array(
 //					'IsMailingList', 'Email', 'FriendlyName', 'IsDisabled', 'IdUser', 'StorageQuota', 'LastLogin'
-					'IsDisabled', 'LastLogin', 'Name'
+					'IsDisabled', 'LastLogin', 'Name', 'IdTenant'
 				),
 				$iPage,
 				$iUsersPerPage,
@@ -135,7 +135,8 @@ class CApiCoreUsersManager extends AApiManager
 					$oUser->IsDisabled,
 //					$oUser->IdUser,
 //					$oUser->StorageQuota,
-					$oUser->LastLogin
+					$oUser->LastLogin,
+					$oUser->IdTenant
 				);
 			}
 

@@ -30,7 +30,7 @@
 					'login': oItem[0],
 					'description': oItem[1],
 					'channel_id': oItem[2],
-					'password': oItem[3],
+					'hash': oItem[3],
 					'active': ko.observable(false)
 				});
 			});

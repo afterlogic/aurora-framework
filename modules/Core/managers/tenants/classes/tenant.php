@@ -78,6 +78,7 @@ class CTenant extends api_APropertyBag
 			'IsEnableAdminPanelLogin'	=> array('bool', false),
 			'Login'						=> array('string', ''),
 			'Email'						=> array('string', ''),
+			'Hash'						=> array('string', ''),
 			'PasswordHash'				=> array('string', ''),
 			'Description'				=> array('string', ''),
 			'AllocatedSpaceInMB'		=> array('int', 0),

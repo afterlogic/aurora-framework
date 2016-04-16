@@ -10,13 +10,18 @@
 			<input name="id" readonly="true" type="text" data-bind="textInput: id" class="form-control" />
 		</div>
 		<div class="form-group">
+			<label>Tenant Id</label>
+			<input name="tenant_id" type="text" data-bind="textInput: tenant_id" class="form-control" />
+		</div>
+		<div class="form-group">
 			<label>Name</label>
-			<textarea name="name" data-bind="text: name" placeholder="User Name" class="form-control"></textarea>
+			<input name="name" type="text" data-bind="textInput: name" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label>Description</label>
 			<textarea name="description" data-bind="text: description" placeholder="User Description" class="form-control"></textarea>
 		</div>
+		
 
 		<input type="submit" value="Update" class="btn btn-primary" />
 	</form>

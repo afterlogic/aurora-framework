@@ -19,7 +19,8 @@ if ($oHttp->HasPost('action'))
 		case 'update': 
 			$mResult = $oCoreDecorator->UpdateUser(
 				$oHttp->GetPost('id', 0),
-				$oHttp->GetPost('name', 0)
+				$oHttp->GetPost('name', 0),
+				$oHttp->GetPost('tenant_id', 0)
 			);
 			break;
 		case 'delete': 

@@ -12,6 +12,7 @@ if ($oHttp->HasPost('action'))
 			$mResult = $oDecorator->CreateTenant(
 				$oHttp->GetPost('channel_id', ''),
 				$oHttp->GetPost('login', ''),
+				$oHttp->GetPost('description', ''),
 				$oHttp->GetPost('password', '')
 			);
 			

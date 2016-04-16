@@ -6,6 +6,9 @@
 	{
 		this.usersList = ko.observableArray([]);
 		this.selectedItem = ko.observable(null);
+		this.selectedItem.subscribe(function (v) {
+			console.log(v);
+		});
 		
 		this.reset = function () {
 			if (this.selectedItem())
@@ -28,6 +31,7 @@
 					'id': iIndex,
 					'name': oItem[0],
 					'description': oItem[1],
+					'tenant_id': oItem[3],
 					'active': ko.observable(false)
 				});
 			});

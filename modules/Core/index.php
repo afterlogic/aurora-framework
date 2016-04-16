@@ -969,7 +969,7 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function UpdateUser($iUserId = 0, $sUserName = '')
+	public function UpdateUser($iUserId = 0, $sUserName = '', $iTenantId = 0)
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 		
@@ -982,6 +982,7 @@ class CoreModule extends AApiModule
 			if ($oUser)
 			{
 				$oUser->Name = $sUserName;
+				$oUser->IdTenant = $iTenantId;
 				$this->oApiUsersManager->updateUser($oUser);
 			}
 			

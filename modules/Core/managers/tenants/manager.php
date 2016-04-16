@@ -60,7 +60,7 @@ class CApiCoreTenantsManager extends AApiManager
 					'Login', 
 					'Description',
 					'IdChannel',
-					'PasswordHash'
+					'Hash'
 				),
 				$iPage,
 				$iTenantsPerPage,
@@ -77,6 +77,7 @@ class CApiCoreTenantsManager extends AApiManager
 					$oTenat->Login,
 					$oTenat->Description,
 					$oTenat->IdChannel,
+					$oTenat->Hash
 				);
 			}
 		}
@@ -543,6 +544,12 @@ class CApiCoreTenantsManager extends AApiManager
 					{
 						throw new CApiManagerException(Errs::TenantsManager_TenantCreateFailed);
 					}
+					
+					if ($oTenant->iObjectId)
+					{
+						$oTenant->Hash = substr(md5($oTenant->iObjectId.\CApi::$sSalt), 1,8);
+						$this->oEavManager->saveObject($oTenant);
+					}
 				}
 				else
 				{
@@ -632,6 +639,11 @@ class CApiCoreTenantsManager extends AApiManager
 								throw new CApiManagerException(Errs::TenantsManager_QuotaLimitExided);
 							}
 						}
+					}
+					
+					if ($oTenant->Hash === '')
+					{
+						$oTenant->Hash = substr(md5($oTenant->iObjectId.\CApi::$sSalt), 1,8);
 					}
 
 					if (!$this->oEavManager->saveObject($oTenant))

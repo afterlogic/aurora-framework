@@ -871,12 +871,15 @@ class HelpDeskModule extends AApiModule
 	
 	public function EntryHelpDesk()
 	{
-		$oLogginedAccount = $this->GetDefaultAccount();
+//		$oLogginedAccount = $this->GetDefaultAccount();
+		$oLogginedAccount = $this->getHelpdeskAccountFromParam();
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
-
-		$oApiTenants = \CApi::GetCoreManager('tenants');
-		$mHelpdeskIdTenant = $oApiTenants->getTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
+		
+//		$oApiTenants = \CApi::GetCoreManager('tenants');
+//		$mHelpdeskIdTenant = $oApiTenants->getTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
+		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
+		
 		if (!is_int($mHelpdeskIdTenant))
 		{
 			\CApi::Location('./');
@@ -923,8 +926,9 @@ class HelpDeskModule extends AApiModule
 			}
 		}
 
-		if ($oLogginedAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oLogginedAccount) &&
-			$oLogginedAccount->IdTenant === $mHelpdeskIdTenant)
+		//TODO oApiCapabilityManager
+//		if ($oLogginedAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oLogginedAccount) && $oLogginedAccount->IdTenant === $mHelpdeskIdTenant)
+		if ($oLogginedAccount && $oLogginedAccount->IdTenant === $mHelpdeskIdTenant)
 		{
 			if (!$bDoId)
 			{
