@@ -8,6 +8,10 @@
 		this.selectedItem = ko.observable(null);
 		
 		this.reset = function () {
+			if (this.selectedItem())
+			{
+				this.selectedItem().active(false);
+			}
 			this.selectedItem(null);
 		};
 		

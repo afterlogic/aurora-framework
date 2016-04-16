@@ -6,11 +6,12 @@
 	{
 		this.usersList = ko.observableArray([]);
 		this.selectedItem = ko.observable(null);
-		this.selectedItem.subscribe(function (oValue) {
-			console.log(oValue);
-		});
 		
 		this.reset = function () {
+			if (this.selectedItem())
+			{
+				this.selectedItem().active(false);
+			}
 			this.selectedItem(null);
 		};
 		
