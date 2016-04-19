@@ -74,7 +74,7 @@ function CHelpdeskView()
 	this.bExtApp = bExtApp;
 	this.bAgent = Settings.IsAgent;
 	this.bNewTab = App.isNewTab();
-console.log('3', Settings);
+
 	this.signature = Settings.signature;
 	this.signatureEnable = Settings.useSignature;
 	this.isSignatureVisible = ko.computed(function () {

@@ -25,7 +25,6 @@ function CMobileSyncSettingsPaneView()
 	this.oContactsMobileSyncSettingsView = ModulesManager.run('Contacts', 'getMobileSyncSettingsView');
 	
 	this.oResetPasswordViewModel = ModulesManager.run('ChangePassword', 'getResetPasswordView');
-	console.log('this.oResetPasswordViewModel', this.oResetPasswordViewModel);
 	
 	this.enableDav = ko.observable(false);
 	

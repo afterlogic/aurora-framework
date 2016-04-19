@@ -2,7 +2,7 @@
 
 module.exports = function (oSettings) {
 	require('modules/HelpDeskClient/js/enums.js');
-	console.log(oSettings);
+	
 	require('modules/HelpDeskClient/js/koBindings.js');
 
 	var

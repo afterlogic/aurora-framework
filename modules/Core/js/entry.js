@@ -10,7 +10,7 @@ $('body').ready(function () {
 			'Contacts': require('modules/Contacts/js/manager.js'),
 			'Calendar': require('modules/Calendar/js/manager.js'),
 			'Files': require('modules/Files/js/manager.js'),
-			'Helpdesk': require('modules/HelpDesk/js/manager.js'),
+			'Helpdesk': require('modules/HelpDeskClient/js/manager.js'),
 			'Phone': require('modules/Phone/js/manager.js'),
 			'Settings': require('modules/Settings/js/manager.js'),
 			

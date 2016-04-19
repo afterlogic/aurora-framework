@@ -2,7 +2,7 @@
 
 module.exports = function (oSettings) {
 	require('modules/HelpDeskClient/js/enums.js');
-	console.log(oSettings);
+	
 	require('modules/HelpDeskClient/js/koBindings.js');
 
 	var Settings = require('modules/HelpDeskClient/js/Settings.js');
@@ -11,10 +11,15 @@ module.exports = function (oSettings) {
 	return {
 		screens: {
 			'main': function () {
-				return require('modules/HelpDeskClient/js/views/HelpdeskView.js');
-			},
-			'auth': function () {
-				return require('modules/HelpDeskClient/js/views/LoginView.js');
+				var App = require('modules/Core/js/App.js');
+				if (App.isAuth())
+				{
+					return require('modules/HelpDeskClient/js/views/HelpdeskView.js');
+				}
+				else
+				{
+					return require('modules/HelpDeskClient/js/views/LoginView.js');
+				}
 			}
 		}
 	};

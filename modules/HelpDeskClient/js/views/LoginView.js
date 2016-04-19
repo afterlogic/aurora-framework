@@ -13,8 +13,12 @@ var
 	Storage = require('modules/Core/js/Storage.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
+	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
+	
 	Ajax = require('modules/HelpDeskClient/js/Ajax.js'),
-	Settings = require('modules/HelpDeskClient/js/Settings.js')
+	Settings = require('modules/HelpDeskClient/js/Settings.js'),
+	
+	$html = $('html')
 ;
 
 /**
@@ -22,6 +26,8 @@ var
  */
 function CLoginView()
 {
+	CAbstractScreenView.call(this);
+	
 	this.emailFocus = ko.observable(false);
 	this.email = ko.observable('');
 	
@@ -114,6 +120,10 @@ function CLoginView()
 //		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
 //	}
 }
+
+_.extendOwn(CLoginView.prototype, CAbstractScreenView.prototype);
+
+CLoginView.prototype.ViewTemplate = 'HelpDeskClient_LoginView';
 
 CLoginView.prototype.__name = 'CLoginView';
 
