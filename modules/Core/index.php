@@ -735,14 +735,17 @@ class CoreModule extends AApiModule
 	public function CreateChannel($sLogin = '', $sDescription = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
-		var_dump($sLogin, $sDescription);
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		if ($sLogin !== '' && $sDescription !== '')
+		if ($sLogin !== '')
 		{
 			$oChannel = \CChannel::createInstance();
 			
 			$oChannel->Login = $sLogin;
-			$oChannel->Description = $sDescription;
+			
+			if ($sDescription !== '')
+			{
+				$oChannel->Description = $sDescription;
+			}
 
 			$this->oApiChannelsManager->createChannel($oChannel);
 			return $oChannel ? array(
@@ -840,7 +843,7 @@ class CoreModule extends AApiModule
 		if ($sLogin !== '' && $sDescription !== '' && $iChannelId > 0)
 		{
 			$oTenant = \CTenant::createInstance();
-			
+			var_dump($iChannelId);
 			$oTenant->Login = $sLogin;
 			$oTenant->Description = $sDescription;
 			$oTenant->IdChannel = $iChannelId;

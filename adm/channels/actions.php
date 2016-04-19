@@ -5,7 +5,7 @@ if ($oHttp->HasPost('action'))
 {
 	$oDecorator = \CApi::GetModuleDecorator('Core');
 	
-//	header('Location: /adm/');
+	header('Location: /adm/');
 	switch ($oHttp->GetPost('action'))
 	{
 		case 'create': 

@@ -20,6 +20,8 @@ class CApiCoreTenantsManager extends AApiManager
 	 */
 	public $oEavManager = null;
 	
+	public $oChannelsManager = null;
+	
 	/**
 	 * @var CTenant
 	 */
@@ -35,6 +37,8 @@ class CApiCoreTenantsManager extends AApiManager
 		parent::__construct('tenants', $oManager, $oModule);
 		
 		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
+		
+		$this->oChannelsManager = $this->oModule->GetManager('channels', 'db');
 		
 		$this->incClass('tenant');
 		$this->incClass('socials');
@@ -520,11 +524,11 @@ class CApiCoreTenantsManager extends AApiManager
 					if (0 < $oTenant->IdChannel && CApi::GetConf('tenant', false))
 					{
 						/* @var $oChannelsApi CApiChannelsManager */
-						$oChannelsApi = CApi::GetCoreManager('channels');
-						if ($oChannelsApi)
+						
+						if ($this->oChannelsManager)
 						{
 							/* @var $oChannel CChannel */
-							$oChannel = $oChannelsApi->getChannelById($oTenant->IdChannel);
+							$oChannel = $this->oChannelsManager->getChannelById($oTenant->IdChannel);
 							if (!$oChannel)
 							{
 								throw new CApiManagerException(Errs::ChannelsManager_ChannelDoesNotExist);
@@ -805,15 +809,15 @@ class CApiCoreTenantsManager extends AApiManager
 			if ($oTenant && !$oTenant->IsDefault)
 			{
 				/* @var $oDomainsApi CApiDomainsManager */
-				$oDomainsApi = CApi::GetCoreManager('domains');
-				if (!$oDomainsApi->deleteDomainsByTenantId($oTenant->iObjectId, true))
-				{
-					$oException = $oDomainsApi->GetLastException();
-					if ($oException)
-					{
-						throw $oException;
-					}
-				}
+//				$oDomainsApi = CApi::GetCoreManager('domains');
+//				if (!$oDomainsApi->deleteDomainsByTenantId($oTenant->iObjectId, true))
+//				{
+//					$oException = $oDomainsApi->GetLastException();
+//					if ($oException)
+//					{
+//						throw $oException;
+//					}
+//				}
 
 				$bResult = $this->oEavManager->deleteObject($oTenant->iObjectId);
 				
