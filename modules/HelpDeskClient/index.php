@@ -93,45 +93,25 @@ class HelpDeskModuleClient extends AApiModule
 			return '';
 		}
 		
-//		var_dump($this->GetPath().'/templates/Login.html');
-		
 		$oCoreModule = \CApi::GetModule('Core');
 		if ($oCoreModule instanceof \AApiModule) {
 			$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
 		}
 		
-//		$sResult = file_get_contents($this->GetPath().'/templates/Login.html');
-		if (is_string($sResult)) {
-//			$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-//			if (0 < \strlen($sFrameOptions)) {
-//				@\header('X-Frame-Options: '.$sFrameOptions);
-//			}
+		if (is_string($sResult))
+		{
+			$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+			if (0 < \strlen($sFrameOptions)) {
+				@\header('X-Frame-Options: '.$sFrameOptions);
+			}
 			
-			list($sLanguage, $sTheme, $sSiteName) = $oApiIntegrator->getThemeAndLanguage();
-			
-			$sHelpdeskHash = $this->oHttp->GetQuery('helpdesk', '');
+//			$sHelpdeskHash = $this->oHttp->GetQuery('helpdesk', '');
 
-//			$sAuthToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
 			$sResult = strtr($sResult, array(
 				'{{AppVersion}}' => PSEVEN_APP_VERSION,
-//				'{{IntegratorDir}}' => $oApiIntegrator->isRtl($sAuthToken) ? 'rtl' : 'ltr',
-				'{{IntegratorDir}}' => 'ltr',
-				'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink($sAuthToken, $sHelpdeskHash),
-//				'{{IntegratorLinks}}' => '',
-//				'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sAuthToken)
-				'{{IntegratorBody}}' => '<div class="auroraMain">
-					<div id="auroraContent">
-						<div class="screens"></div>
-						<div class="popups"></div>
-					</div>
-					<div id="pSevenHidden"></div>'.
-				'<div>'.
-				$oApiIntegrator->compileTemplates().
-				$oApiIntegrator->compileLanguage($sLanguage).
-				$oApiIntegrator->compileAppData($sHelpdeskHash, '', '', $sAccessToken).
-				'<script src="./static/js/app-helpdesk.js?'.CApi::VersionJs().'"></script>'.
-					(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
-				'</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'
+				'{{IntegratorDir}}' =>  $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+				'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('-helpdesk'),
+				'{{IntegratorBody}}' => $oApiIntegrator->buildBody('-helpdesk')
 			));
 		}
 		

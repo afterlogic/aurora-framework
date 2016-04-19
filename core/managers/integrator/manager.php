@@ -1492,12 +1492,13 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return array
 	 */
-	public function appData($sHelpdeskTenantHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAuthToken = '')
+//	public function appData($sHelpdeskTenantHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAuthToken = '')
+	public function appData()
 	{
 		$aAppData = array(
 			'Auth' => false,
 			'User' => null,
-			'TenantHash' => $sHelpdeskTenantHash,
+//			'TenantHash' => $sHelpdeskTenantHash,
 			'IsMobile' => 0,
 			'AllowMobile' => false,
 			'IsMailsuite' => false,
@@ -1807,15 +1808,18 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return string
 	 */
-	public function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAccessToken = '')
+//	public function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAccessToken = '')
+	public function compileAppData()
 	{
-		return '<script>window.pSevenAppData='.@json_encode($this->appData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $sAccessToken)).';</script>';
+//		return '<script>window.pSevenAppData='.@json_encode($this->appData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $sAccessToken)).';</script>';
+		return '<script>window.pSevenAppData='.@json_encode($this->appData()).';</script>';
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getThemeAndLanguage($sAccessToken = '')
+//	public function getThemeAndLanguage($sAccessToken = '')
+	public function getThemeAndLanguage()
 	{
 		static $sLanguage = false;
 		static $sTheme = false;
@@ -1930,9 +1934,10 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return string
 	 */
-	public function IsRtl($sAccessToken = '')
+//	public function IsRtl($sAccessToken = '')
+	public function IsRtl()
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return \in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian'));
 	}
 
@@ -1942,9 +1947,10 @@ class CApiIntegratorManager extends AApiManager
 	 * @param string $sFileStoragePubHash Default value is empty string.
 	 * @return string
 	 */
-	public function buildHeadersLink($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+//	public function buildHeadersLink($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+	public function buildHeadersLink()
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
 		
 		$sS = 
@@ -1979,46 +1985,53 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return string
 	 */
-	public function buildBody($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+//	public function buildBody($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
+	public function buildBody($sModuleHash = '')
 	{
-		$oHttp = \MailSo\Base\Http::NewInstance();
-		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
-		$sAdminPanel = $oHttp->GetQuery('adminpanel');
 		$sPostfix = '';
+//		$oHttp = \MailSo\Base\Http::NewInstance();
+//		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
+//		$sAdminPanel = $oHttp->GetQuery('adminpanel');
 		
-		$bMobile = \CApi::IsMobileApplication();
-		$bHelpdesk = !empty($sHelpdeskHash); 		
-		if (isset($sAdminPanel))
-		{
-			$sPostfix = '-adminpanel';
-		} 
-		else if ($bMobile && !$bHelpdesk)
-		{
-			$sPostfix = '-mobile';
-		}
-		else if (isset($sMessageNewtab))
-		{
-			$sPostfix = '-message-newtab';
-		}
-		else if ($bHelpdesk)
-		{
-			$sPostfix = '-helpdesk';
-		}
-		else if (!empty($sCalendarPubHash))
-		{
-			$sPostfix = '-calendar-pub';
-		}
-		else if (!empty($sFileStoragePubHash))
-		{
-			$sPostfix = '-files-pub';
-		}
-		if (CApi::GetConf('labs.use-app-min-js', false))
-		{
-			$sPostfix = $sPostfix.'.min';
-		}
+//		$bMobile = \CApi::IsMobileApplication();
+//		$bHelpdesk = !empty($sHelpdeskHash); 		
+//		if (isset($sAdminPanel))
+//		{
+//			$sPostfix = '-adminpanel';
+//		} 
+//		else if ($bMobile && !$bHelpdesk)
+//		{
+//			$sPostfix = '-mobile';
+//		}
+//		else if (isset($sMessageNewtab))
+//		{
+//			$sPostfix = '-message-newtab';
+//		}
+//		else if ($bHelpdesk)
+//		{
+//			$sPostfix = '-helpdesk';
+//		}
+//		else if (!empty($sCalendarPubHash))
+//		{
+//			$sPostfix = '-calendar-pub';
+//		}
+//		else if (!empty($sFileStoragePubHash))
+//		{
+//			$sPostfix = '-files-pub';
+//		}
 		
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage($sAccessToken);
-		return '<div class="auroraMain">
+		if ($sModuleHash !== '')
+		{
+			$sPostfix = $sModuleHash;
+		
+			if (CApi::GetConf('labs.use-app-min-js', false))
+			{
+				$sPostfix = $sPostfix.'.min';
+			}
+		}
+		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
+		return 
+'<div class="auroraMain">
 	<div id="auroraContent">
 		<div class="screens"></div>
 		<div class="popups"></div>
@@ -2027,7 +2040,7 @@ class CApiIntegratorManager extends AApiManager
 '<div>'.
 $this->compileTemplates().
 $this->compileLanguage($sLanguage).
-$this->compileAppData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $sAccessToken).
+$this->compileAppData().
 '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
 	(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
 '</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'

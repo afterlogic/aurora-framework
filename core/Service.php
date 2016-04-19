@@ -141,12 +141,15 @@ class Service
 					}
 					
 					$sAuthToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
+					
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
 						'{{IntegratorDir}}' => $oApiIntegrator->isRtl($sAuthToken) ? 'rtl' : 'ltr',
 						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink($sAuthToken),
 						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sAuthToken)
 					));
+//					var_dump($sResult);
+//					exit;
 				}
 			}
 		}
