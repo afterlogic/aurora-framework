@@ -843,7 +843,7 @@ class CoreModule extends AApiModule
 		if ($sLogin !== '' && $sDescription !== '' && $iChannelId > 0)
 		{
 			$oTenant = \CTenant::createInstance();
-			var_dump($iChannelId);
+
 			$oTenant->Login = $sLogin;
 			$oTenant->Description = $sDescription;
 			$oTenant->IdChannel = $iChannelId;
