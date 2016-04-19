@@ -16,8 +16,6 @@ class CMailAccount extends api_APropertyBag
 	 */
 	public function __construct($sModule, $oParams)
 	{
-		var_dump($sModule);
-		var_dump(get_class($this));
 		parent::__construct(get_class($this), $sModule);
 		
 		$this->__USE_TRIM_IN_STRINGS__ = true;
@@ -26,7 +24,7 @@ class CMailAccount extends api_APropertyBag
 
 		CApi::Plugin()->RunHook('api-account-construct', array(&$this));
 
-		self::$aStaticMap = array(
+		$this->aStaticMap = array(
 			'IsDisabled'			=> array('bool', false),
 			'IdUser'				=> array('int', 0),
 			'IsInternal'			=> array('bool', false),
@@ -52,7 +50,6 @@ class CMailAccount extends api_APropertyBag
 			'OutgoingMailUseSSL'	=> array('bool', false),//'mail_out_ssl'),
 			'OutgoingSendingMethod'	=> array('int', 0)
 		);
-		
 	}
 
 	/**

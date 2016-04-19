@@ -2,7 +2,7 @@
 	$oManagerApi = \CApi::GetModule('Mail')->GetManager('accounts');
 //		var_dump($oManagerApi);
 	$aItems = $oManagerApi->getAccountList(0, 0);
-	var_dump($aItems);
+//	var_dump($aItems);
 ?>
 <div id="mail-screen" class="row">
 	<div class="col-sm-6">
