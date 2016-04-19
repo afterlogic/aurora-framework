@@ -29,6 +29,7 @@ class HelpDeskModule extends AApiModule
 	{
 //		$iUserId = $this->getLogginedUserId($sAuthToken);
 		$iUserId = \CApi::getLoginedUserId();
+		var_dump($iUserId);
 //		$iUserId = 61;
 		$oUser = $this->oCoreDecorator->GetUser($iUserId);
 

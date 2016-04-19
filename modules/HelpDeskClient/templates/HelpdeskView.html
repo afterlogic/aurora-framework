@@ -9,18 +9,18 @@
 							<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_NEW_REQUEST'}"></span>
 						</span>
 					</div>
-					<div class="middle_bar" data-bind="visible: bAgent, template: {name: 'HelpDesk_ThreadsList'}"></div>
-					<div class="middle_bar" data-bind="visible: !bAgent, template: {name: 'HelpDesk_ThreadsListExt'}"></div>
+					<div class="middle_bar" data-bind="visible: bAgent, template: {name: 'HelpDeskClient_ThreadsList'}"></div>
+					<div class="middle_bar" data-bind="visible: !bAgent, template: {name: 'HelpDeskClient_ThreadsListExt'}"></div>
 				</div>
 			</div>
 			<div class="panel item_viewer thread_viewer">
 				<div class="panel_content">
 					<div class="middle_bar" data-bind="visible: !visibleNewThread() && selectedItem(), css: {'own_thread': simplePreviewPane()}, heightAdjust: {'location': 'bottom', 'elements': [domQuickReply], 'triggers': [uploadedFiles(), isQuickReplyActive(), replySendingStarted(), isQuickReplyHidden()]}">
-						<!-- ko template: { name: simplePreviewPane() ? 'HelpDesk_ViewThreadExt' : 'HelpDesk_ViewThread' } --><!-- /ko -->
-						<!-- ko template: { name: 'HelpDesk_QuickReply' } --><!-- /ko -->
+						<!-- ko template: { name: simplePreviewPane() ? 'HelpDeskClient_ViewThreadExt' : 'HelpDeskClient_ViewThread' } --><!-- /ko -->
+						<!-- ko template: { name: 'HelpDeskClient_QuickReply' } --><!-- /ko -->
 					</div>
 					<div class="middle_bar new_request" data-bind="visible: visibleNewThread()">
-						<!-- ko template: { name: 'HelpDesk_NewThread'} --><!-- /ko -->
+						<!-- ko template: { name: 'HelpDeskClient_NewThread'} --><!-- /ko -->
 					</div>
 				</div>
 			</div>
