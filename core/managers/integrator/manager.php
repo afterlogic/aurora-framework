@@ -92,7 +92,7 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return string
 	 */
-	private function compileTemplates()
+	public function compileTemplates()
 	{
 		$sHash = CApi::Plugin()->Hash();
 		
@@ -248,7 +248,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return string
 	 */
-	private function compileLanguage($sLanguage)
+	public function compileLanguage($sLanguage)
 	{
 		$sLanguage = $this->validatedLanguageValue($sLanguage);
 		return '<script>window.auroraI18n='.$this->getLanguageString($sLanguage).';'.$this->getMomentLanguageString($sLanguage).'</script>';
@@ -1807,7 +1807,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return string
 	 */
-	private function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAccessToken = '')
+	public function compileAppData($sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAccessToken = '')
 	{
 		return '<script>window.pSevenAppData='.@json_encode($this->appData($sHelpdeskHash, $sCalendarPubHash, $sFileStoragePubHash, $sAccessToken)).';</script>';
 	}
@@ -1815,7 +1815,7 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return array
 	 */
-	private function getThemeAndLanguage($sAccessToken = '')
+	public function getThemeAndLanguage($sAccessToken = '')
 	{
 		static $sLanguage = false;
 		static $sTheme = false;
@@ -1829,13 +1829,15 @@ class CApiIntegratorManager extends AApiManager
 			$sLanguage = $oSettings->GetConf('Common/DefaultLanguage');
 			$sTheme = $oSettings->GetConf('WebMail/DefaultSkin');
 
-			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
+//			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
+			$oUser = \CApi::getLoginedUserId();
 
-			if ($oAccount)
+			if ($oUser)
 			{
-				$sSiteName = $oAccount->Domain->SiteName;
-				$sTheme = $oAccount->User->DefaultSkin;
-				$sLanguage = $oAccount->User->DefaultLanguage;
+//				$sSiteName = $oAccount->Domain->SiteName;
+				$sSiteName = '';
+				$sTheme = $oUser->DefaultSkin;
+				$sLanguage = $oUser->DefaultLanguage;
 			}
 			else
 			{
@@ -1948,25 +1950,25 @@ class CApiIntegratorManager extends AApiManager
 		$sS = 
 '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
 '<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
-		if (!empty($sHelpdeskHash))
-		{
-			$oApiTenant = /* @var $oApiTenant CApiTenantsManager */ CApi::GetCoreManager('tenants');
-
-			$oTenant = $oApiTenant->getTenantByHash($sHelpdeskHash);
-			if (!$oTenant)
-			{
-				$oTenant = $oApiTenant->getDefaultGlobalTenant();
-			}
-
-			if ($oTenant && $oTenant->HelpdeskStyleAllow)
-			{
-				$sS .= '<style>'.strip_tags($oTenant->getHelpdeskStyleText()).'</style>';
-			}
-		}
-		else if (empty($sCalendarPubHash) && empty($sFileStoragePubHash))
-		{
-			$sS .= '<style>'.\CApi::Plugin()->CompileCss().'</style>';
-		}
+//		if (!empty($sHelpdeskHash))
+//		{
+//			$oApiTenant = /* @var $oApiTenant CApiTenantsManager */ CApi::GetCoreManager('tenants');
+//
+//			$oTenant = $oApiTenant->getTenantByHash($sHelpdeskHash);
+//			if (!$oTenant)
+//			{
+//				$oTenant = $oApiTenant->getDefaultGlobalTenant();
+//			}
+//
+//			if ($oTenant && $oTenant->HelpdeskStyleAllow)
+//			{
+//				$sS .= '<style>'.strip_tags($oTenant->getHelpdeskStyleText()).'</style>';
+//			}
+//		}
+//		else if (empty($sCalendarPubHash) && empty($sFileStoragePubHash))
+//		{
+//			$sS .= '<style>'.\CApi::Plugin()->CompileCss().'</style>';
+//		}
 		return $sS;
 	}
 

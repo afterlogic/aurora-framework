@@ -9,8 +9,8 @@ class HelpDeskModule extends AApiModule
 	public function init() 
 	{
 		$this->oApiHelpDeskManager = $this->GetManager('main', 'db');
-		
-		$this->AddEntry('helpdesk', 'EntryHelpDesk');
+
+//		$this->AddEntry('helpdesk', 'EntryHelpDesk');
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 				
@@ -27,9 +27,11 @@ class HelpDeskModule extends AApiModule
 	 */
 	protected function getHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
 	{
-		//$iUserId = $this->getLogginedUserId($sAuthToken);
-		$iUserId = 61;
+//		$iUserId = $this->getLogginedUserId($sAuthToken);
+		$iUserId = \CApi::getLoginedUserId();
+//		$iUserId = 61;
 		$oUser = $this->oCoreDecorator->GetUser($iUserId);
+
 		return $oUser;
 		
 		$oResult = null;
@@ -868,79 +870,6 @@ class HelpDeskModule extends AApiModule
 
 		return $this->oApiHelpDeskManager->getThreadsPendingCount($oUser->IdTenant);
 	}	
-	
-	public function EntryHelpDesk()
-	{
-//		$oLogginedAccount = $this->GetDefaultAccount();
-		$oLogginedAccount = $this->getHelpdeskAccountFromParam();
-
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
-		
-//		$oApiTenants = \CApi::GetCoreManager('tenants');
-//		$mHelpdeskIdTenant = $oApiTenants->getTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
-		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
-		
-		if (!is_int($mHelpdeskIdTenant))
-		{
-			\CApi::Location('./');
-			return '';
-		}
-
-		$bDoId = false;
-		$sThread = $this->oHttp->GetQuery('thread');
-		$sThreadAction = $this->oHttp->GetQuery('action');
-		if (0 < strlen($sThread))
-		{
-			$iThreadID = $this->oApiHelpDeskManager->getThreadIdByHash($mHelpdeskIdTenant, $sThread);
-			if (0 < $iThreadID)
-			{
-				$oApiIntegrator->setThreadIdFromRequest($iThreadID, $sThreadAction);
-				$bDoId = true;
-			}
-		}
-
-		$sActivateHash = $this->oHttp->GetQuery('activate');
-		if (0 < strlen($sActivateHash) && !$this->oHttp->HasQuery('forgot'))
-		{
-			$bRemove = true;
-			$oUser = $this->oApiHelpDeskManager->getUserByActivateHash($mHelpdeskIdTenant, $sActivateHash);
-			/* @var $oUser \CHelpdeskUser */
-			if ($oUser)
-			{
-				if (!$oUser->Activated)
-				{
-					$oUser->Activated = true;
-					$oUser->regenerateActivateHash();
-
-					if ($this->oApiHelpDeskManager->updateUser($oUser))
-					{
-						$bRemove = false;
-						$oApiIntegrator->setUserAsActivated($oUser);
-					}
-				}
-			}
-
-			if ($bRemove)
-			{
-				$oApiIntegrator->removeUserAsActivated();
-			}
-		}
-
-		//TODO oApiCapabilityManager
-//		if ($oLogginedAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oLogginedAccount) && $oLogginedAccount->IdTenant === $mHelpdeskIdTenant)
-		if ($oLogginedAccount && $oLogginedAccount->IdTenant === $mHelpdeskIdTenant)
-		{
-			if (!$bDoId)
-			{
-				$oApiIntegrator->setThreadIdFromRequest(0);
-			}
-
-			$oApiIntegrator->skipMobileCheck();
-			\CApi::Location('./');
-			return '';
-		}	
-				
-	}
 	
 	/**
 	 * @return array

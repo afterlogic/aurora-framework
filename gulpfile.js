@@ -103,7 +103,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/HelpDesk/js/entry-ext.js"
+			"./modules/HelpDeskClient/js/entry-ext.js"
 		]
 	}
 };

@@ -1,0 +1,37 @@
+<div class="panel_center unselectable" data-bind="customScrollbar: {x: false}">
+	<div class="threads_scroll scroll-inner">
+		<div class="items_list">
+			<div class="details" data-bind="visible: !clientDetailsVisible() && '' !== externalContentUrl()">
+				<div class="details_content">
+					<span class="link details_show" data-bind="i18n: {'key': 'CORE/ACTION_SHOW_DETAILS'}, click: showClientDetails"></span>
+				</div>
+			</div>
+			<div class="details" data-bind="visible: clientDetailsVisible() && '' !== externalContentUrl()">
+				<div class="details_content">
+					<span class="link details_hide" data-bind="i18n: {'key': 'CORE/ACTION_HIDE_DETAILS'}, click: hideClientDetails"></span>
+					<!-- ko if: '' !== externalContentUrl() -->
+						<iframe class="external_content" src="javascript:void(0);"
+							data-bind="attr: { 'src': externalContentUrl }"></iframe>
+					<!-- /ko -->
+				</div>
+			</div>
+			<span class="list_notification" data-bind="visible: isSearch() && !isEmptyList()">
+				<span class="link" data-bind="i18n: {'key': 'CORE/ACTION_CLEAR_SEARCH'}, click: onClearSearch"></span>
+				<span class="description" data-bind="text: searchText"></span>
+			</span>
+			
+			<div class="items_sub_list">
+				<!-- ko template: {name: 'HelpDesk_ThreadItemExt', foreach: threads} --><!-- /ko -->
+				<div class="item helper"></div>
+			</div>
+			
+			<span class="list_notification" data-bind="visible: loadingList()">
+				<span class="description" data-bind="i18n: {'key': 'HELPDESK/INFO_LOADING_THREAD_LIST'}" ></span>
+			</span>
+			
+			<span class="list_notification" data-bind="visible: !loadingList() && isEmptyList()">
+				<span class="description" data-bind="text: dynamicEmptyListInfo"></span>
+			</span>
+		</div>
+	</div>
+</div>
