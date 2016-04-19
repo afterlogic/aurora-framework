@@ -735,7 +735,7 @@ class CoreModule extends AApiModule
 	public function CreateChannel($sLogin = '', $sDescription = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
-	
+		var_dump($sLogin, $sDescription);
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		if ($sLogin !== '' && $sDescription !== '')
 		{

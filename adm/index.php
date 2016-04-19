@@ -76,6 +76,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 			<li role="presentation" class="<?php echo $iStoredTab === 3 ? 'active' : ''?>"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
 			<li role="presentation" class="<?php echo $iStoredTab === 4 ? 'active' : ''?>"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Accounts</a></li>
 			<li role="presentation" class="<?php echo $iStoredTab === 5 ? 'active' : ''?>"><a href="#contacts" aria-controls="contacts" role="tab" data-toggle="tab">Contacts</a></li>
+			<li role="presentation" class="<?php echo $iStoredTab === 6 ? 'active' : ''?>"><a href="#mail" aria-controls="mail" role="tab" data-toggle="tab">Mail</a></li>
 		</ul>
 
 		<!-- Tab panes -->
@@ -108,6 +109,9 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 			</div>
 			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 5 ? 'active' : ''?>" id="contacts">
 				<?php include "contacts\list.php"; ?>
+			</div>
+			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 6 ? 'active' : ''?>" id="mail">
+				<?php include "mail\list.php"; ?>
 			</div>
 		</div>
 	</div>
