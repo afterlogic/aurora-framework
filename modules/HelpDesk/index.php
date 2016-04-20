@@ -122,24 +122,23 @@ class HelpDeskModule extends AApiModule
 		return $oResult;
 	}	
 	
-	public function Login()
+	public function Login($sTenantHash = '', $sLogin = '', $sPassword = '', $bSignMe = 0)
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$sTenantHash = trim($this->getParamValue('TenantHash', ''));
+		$sTenantHash = trim($sTenantHash);
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
-			$sEmail = trim($this->getParamValue('Email', ''));
-			$sPassword = trim($this->getParamValue('Password', ''));
-			$bSignMe = '1' === (string) $this->getParamValue('SignMe', '0');
+			$sEmail = trim($sLogin);
+			$sPassword = trim($sPassword);
+			$bSignMe = '1' === (string) $bSignMe;
 
 			if (0 === strlen($sEmail) || 0 === strlen($sPassword))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 			
-			$oApiTenants = \CApi::GetCoreManager('tenants');
-			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
-			
+			$mIdTenant = $this->oCoreDecorator->getTenantIdByHash($sTenantHash);
+
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
@@ -147,13 +146,43 @@ class HelpDeskModule extends AApiModule
 
 			try
 			{
-				$oApiIntegrator = \CApi::GetCoreManager('integrator');
-				$oHelpdeskUser = $oApiIntegrator->loginToHelpdeskAccount($mIdTenant, $sEmail, $sPassword);
-				if ($oHelpdeskUser && !$oHelpdeskUser->Blocked)
+//				$oApiIntegrator = \CApi::GetCoreManager('integrator');
+//				$oHelpdeskUser = $oApiIntegrator->loginToHelpdeskAccount($mIdTenant, $sEmail, $sPassword);
+//				if ($oHelpdeskUser && !$oHelpdeskUser->Blocked)
+//				{
+//					$oApiIntegrator->setHelpdeskUserAsLoggedIn($oHelpdeskUser, $bSignMe);
+//					return true;
+//				}
+				
+				$mResult = null;
+				
+				$this->broadcastEvent('Login', array(
+					'login' => $sLogin,
+					'password' => $sPassword,
+					'result' => &$mResult
+				));
+
+				if ($mResult instanceOf CAccount)
 				{
-					$oApiIntegrator->setHelpdeskUserAsLoggedIn($oHelpdeskUser, $bSignMe);
-					return true;
+					$aAccountHashTable = array(
+						'token' => 'auth',
+						'sign-me' => $bSignMe,
+						'id' => $mResult->IdUser, //$oAccount->IdUser,
+						'email' => 'vasil@afterlogic.com' //$oAccount->Email
+					);
+
+//					$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
+					$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
+
+					$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
+
+					$sAuthToken = \CApi::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
+					
+					return array(
+						'AuthToken' => $sAuthToken
+					);
 				}
+				
 			}
 			catch (\Exception $oException)
 			{
@@ -785,8 +814,6 @@ class HelpDeskModule extends AApiModule
 //		$oAccount = null;
 //		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 		$oUser = $this->getHelpdeskAccountFromParam();
-		
-//		var_dump($oUser);
 		
 //		$iFilter = (int) $this->getParamValue('Filter', \EHelpdeskThreadFilterType::All);
 //		$sSearch = (string) $this->getParamValue('Search', '');

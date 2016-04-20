@@ -9,6 +9,7 @@ var
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Api = require('modules/Core/js/Api.js'),
+	Browser = require('modules/Core/js/Browser.js'),
 	Screens = require('modules/Core/js/Screens.js'),
 	Storage = require('modules/Core/js/Storage.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
@@ -225,8 +226,9 @@ CLoginView.prototype.actionLogin = function ()
 		this.storeQuestion();
 
 		this.loginProcess(true);
-
+		
 		Ajax.send('Login', {
+			'TenantHash': '80421e8d',
 			'Email': this.email(),
 			'Password': this.password(),
 			'SignMe': this.signMe() ? '1' : '0'
@@ -248,6 +250,8 @@ CLoginView.prototype.onHelpdeskLoginResponse = function (oResponse, oRequest)
 	
 	if (oResponse.Result)
 	{
+		$.cookie('AuthToken', oResponse.Result.AuthToken, { expires: 30 });
+		
 		window.location.reload();
 	}
 	else

@@ -13,48 +13,49 @@ class AuthModule extends AApiModule
 		
 		$this->oApiAccountsManager = $this->GetManager('accounts', 'db');
 		
-		$this->subscribeEvent('Auth::Login', array($this, 'checkAuth'));
+//		$this->subscribeEvent('Auth::Login', array($this, 'checkAuth'));
+		$this->subscribeEvent('Login', array($this, 'checkAuth'));
 	}
 	
-	public function IsAuth()
-	{
-		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam(false);
-		if ($oAccount) {
-			
-			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
-			if ('' !== $sClientTimeZone) {
-				
-				$oAccount->User->ClientTimeZone = $sClientTimeZone;
-				$oApiUsers = \CApi::GetCoreManager('users');
-				if ($oApiUsers) {
-					
-					$oApiUsers->updateAccount($oAccount);
-				}
-			}
-
-			$mResult = array();
-			$mResult['Extensions'] = array();
-
-			// extensions
-			if ($oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) &&
-				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe)) {
-				
-				$oAccount->enableExtension(\CAccount::DisableManageSubscribe);
-			}
-
-			$aExtensions = $oAccount->getExtensionList();
-			foreach ($aExtensions as $sExtensionName) {
-				
-				if ($oAccount->isExtensionEnabled($sExtensionName)) {
-					
-					$mResult['Extensions'][] = $sExtensionName;
-				}
-			}
-		}
-
-		return $mResult;
-	}	
+//	public function IsAuth()
+//	{
+//		$mResult = false;
+//		$oAccount = $this->getDefaultAccountFromParam(false);
+//		if ($oAccount) {
+//			
+//			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
+//			if ('' !== $sClientTimeZone) {
+//				
+//				$oAccount->User->ClientTimeZone = $sClientTimeZone;
+//				$oApiUsers = \CApi::GetCoreManager('users');
+//				if ($oApiUsers) {
+//					
+//					$oApiUsers->updateAccount($oAccount);
+//				}
+//			}
+//
+//			$mResult = array();
+//			$mResult['Extensions'] = array();
+//
+//			// extensions
+//			if ($oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) &&
+//				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe)) {
+//				
+//				$oAccount->enableExtension(\CAccount::DisableManageSubscribe);
+//			}
+//
+//			$aExtensions = $oAccount->getExtensionList();
+//			foreach ($aExtensions as $sExtensionName) {
+//				
+//				if ($oAccount->isExtensionEnabled($sExtensionName)) {
+//					
+//					$mResult['Extensions'][] = $sExtensionName;
+//				}
+//			}
+//		}
+//
+//		return $mResult;
+//	}	
 	
 	/**
 	 * @return array
@@ -241,7 +242,7 @@ class AuthModule extends AApiModule
 				'email' => 'vasil@afterlogic.com' //$oAccount->Email
 			);
 
-			$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
+//			$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
 			$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
 
 			$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
@@ -274,7 +275,7 @@ class AuthModule extends AApiModule
 	public function checkAuth($sLogin, $sPassword, &$mResult)
 	{
 		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sLogin, $sPassword);
-	
+
 		if ($oAccount)
 		{
 			$mResult = $oAccount;
