@@ -1664,7 +1664,7 @@ class CApiIntegratorManager extends AApiManager
 //		}
 
 //		$oDefaultAccount = null;
-//
+		$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
 		$iUserId = $this->getLogginedUserId($sAuthToken);
 
 		if (0 < $iUserId)

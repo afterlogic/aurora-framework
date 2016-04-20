@@ -140,7 +140,7 @@ class Service
 						@\header('X-Frame-Options: '.$sFrameOptions);
 					}
 					
-					$sAuthToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
+//					$sAuthToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
 					
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
