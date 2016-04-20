@@ -62,6 +62,8 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCalendarSupported($oAccount = null)
 	{
+		return true; // TODO
+		
 		$bResult = false;
 
 		if ($this->isNotLite() && $oAccount)
@@ -86,6 +88,8 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCalendarSharingSupported($oAccount = null)
 	{
+		return true; // TODO
+		
 		if ($oAccount)
 		{
 			$bResult = $this->isCollaborationSupported() && 

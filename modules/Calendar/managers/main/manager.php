@@ -629,14 +629,14 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	/**
 	 * Account object
 	 *
-	 * @param CAccount $oAccount Account object
+	 * @param int $iUserId
 	 * @param array | string $mCalendarId Calendar ID
 	 * @param string $dStart Date range start
 	 * @param string $dFinish Date range end
 	 *
 	 * @return array|bool
 	 */
-	public function getEvents($oAccount, $mCalendarId, $dStart = null, $dFinish = null)
+	public function getEvents($iUserId, $mCalendarId, $dStart = null, $dFinish = null)
 	{
 		$aResult = array();
 		try
@@ -646,7 +646,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 			$mCalendarId = !is_array($mCalendarId) ? array($mCalendarId) : $mCalendarId;
 
 			foreach ($mCalendarId as $sCalendarId) {
-				$aEvents = $this->oStorage->getEvents($oAccount, $sCalendarId, $dStart, $dFinish);
+				$aEvents = $this->oStorage->getEvents($iUserId, $sCalendarId, $dStart, $dFinish);
 				if ($aEvents && is_array($aEvents)) {
 					$aResult = array_merge($aResult, $aEvents);
 				}

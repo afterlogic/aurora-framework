@@ -20,28 +20,24 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetCalendars()
+	public function GetCalendars($bIsPublic = false, $sPublicCalendarId = '')
 	{
 		$mResult = false;
 		$mCalendars = false;
 		
-		$bIsPublic = (bool) $this->getParamValue('IsPublic', false); 
-		$oAccount = null;
-				
 		if ($bIsPublic) {
 			
-			$sPublicCalendarId = $this->getParamValue('PublicCalendarId', '');
 			$oCalendar = $this->oApiCalendarManager->getPublicCalendar($sPublicCalendarId);
 			$mCalendars = array($oCalendar);
 		} else {
 			
-			$oAccount = $this->getDefaultAccountFromParam();
-			if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount)) {
+			$iUserId = \CApi::getLoginedUserId();
+			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId)) {
 				
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 			}
 	
-			$mCalendars = $this->oApiCalendarManager->getCalendars($oAccount);
+			$mCalendars = $this->oApiCalendarManager->getCalendars($iUserId);
 		}
 		
 		if ($mCalendars) {
@@ -233,16 +229,11 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetEvents()
+	public function GetEvents($aCalendarIds, $iStart, $iEnd, $bIsPublic, $iTimezoneOffset, $sTimezone)
 	{
+		$aArgs = func_get_args();
+		
 		$mResult = false;
-		$oAccount = null;
-		$aCalendarIds = @json_decode($this->getParamValue('CalendarIds'), true);
-		$iStart = $this->getParamValue('Start'); 
-		$iEnd = $this->getParamValue('End'); 
-		$bIsPublic = (bool) $this->getParamValue('IsPublic'); 
-		$iTimezoneOffset = $this->getParamValue('TimezoneOffset'); 
-		$sTimezone = $this->getParamValue('Timezone'); 
 		
 		if ($bIsPublic)
 		{
@@ -253,12 +244,12 @@ class CalendarModule extends AApiModule
 		}
 		else
 		{
-			$oAccount = $this->getDefaultAccountFromParam();
-			if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+			$iUserId = \CApi::getLoginedUserId();
+			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 			}
-			$mResult = $this->oApiCalendarManager->getEvents($oAccount, $aCalendarIds, $iStart, $iEnd);
+			$mResult = $this->oApiCalendarManager->getEvents($iUserId, $aCalendarIds, $iStart, $iEnd);
 		}
 		
 		return $mResult;
@@ -637,13 +628,11 @@ class CalendarModule extends AApiModule
 					}
 					
 					$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
-					
-					$sCalendarHash = \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub');
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
-						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody('-calendar-pub')
+						'{{IntegratorDir}}' => $oApiIntegrator->isRtl($sAuthToken) ? 'rtl' : 'ltr',
+						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink($sAuthToken, '', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub')),
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sAuthToken, '', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub'))
 					));
 				}
 			}
