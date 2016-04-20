@@ -144,9 +144,9 @@ class Service
 					
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
-						'{{IntegratorDir}}' => $oApiIntegrator->isRtl($sAuthToken) ? 'rtl' : 'ltr',
-						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink($sAuthToken),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sAuthToken)
+						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
 					));
 //					var_dump($sResult);
 //					exit;

@@ -2023,12 +2023,13 @@ class CApiIntegratorManager extends AApiManager
 		if ($sModuleHash !== '')
 		{
 			$sPostfix = $sModuleHash;
-		
-			if (CApi::GetConf('labs.use-app-min-js', false))
-			{
-				$sPostfix = $sPostfix.'.min';
-			}
 		}
+		
+		if (CApi::GetConf('labs.use-app-min-js', false))
+		{
+			$sPostfix = $sPostfix.'.min';
+		}
+		
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return 
 '<div class="auroraMain">
