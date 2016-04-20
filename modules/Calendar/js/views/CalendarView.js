@@ -978,7 +978,7 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
 	if (aCalendarIds.length > 0)
 	{
 		Ajax.send('GetEvents', {
-			'CalendarIds': JSON.stringify(aCalendarIds),
+			'CalendarIds': aCalendarIds,
 			'Start': this.startDateTime,
 			'End': this.endDateTime,
 			'IsPublic': this.isPublic ? 1 : 0,
@@ -1235,7 +1235,7 @@ CCalendarView.prototype.shareCalendar = function (sId, bIsPublic, aShares, bShar
 		Ajax.send('UpdateCalendarShare', {
 				'Id': sId,
 				'IsPublic': bIsPublic ? 1 : 0,
-				'Shares': JSON.stringify(aShares),
+				'Shares': aShares,
 				'ShareToAll': bShareToAll ? 1 : 0, 
 				'ShareToAllAccess': iShareToAllAccess
 			}, this.onUpdateCalendarShareResponse, this

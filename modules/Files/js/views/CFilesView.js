@@ -523,7 +523,7 @@ CFilesView.prototype.filesDrop = function (oFolder, oEvent, oUi)
 					'ToType': sStorageType,
 					'FromPath': sFromPath,
 					'ToPath': sToPath,
-					'Files': JSON.stringify(aItems)
+					'Files': aItems
 				}, this.onMoveResponse, this);
 			}
 		}
@@ -1082,7 +1082,7 @@ CFilesView.prototype.deleteItems = function (aChecked, bOkAnswer)
 		Ajax.send('Delete', {
 				'Type': this.storageType(),
 				'Path': this.path(),
-				'Items': JSON.stringify(aItems)		
+				'Items': aItems
 			}, this.onDeleteResponse, this
 		);
 	}		
