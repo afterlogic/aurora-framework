@@ -511,6 +511,12 @@ abstract class AApiModule
 						throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
 					}
 					
+					//TODO need to remove special case handling
+					if ($sModule === 'Auth' && $sMethod === 'Logout' && $sAuthToken)
+					{
+						$aParameters['AuthToken'] = $sAuthToken;
+					}
+					
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
 					
 					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
