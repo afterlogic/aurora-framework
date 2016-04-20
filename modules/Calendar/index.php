@@ -630,9 +630,9 @@ class CalendarModule extends AApiModule
 					$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
-						'{{IntegratorDir}}' => $oApiIntegrator->isRtl($sAuthToken) ? 'rtl' : 'ltr',
-						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink($sAuthToken, '', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub')),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sAuthToken, '', \MailSo\Base\Http::NewInstance()->GetQuery('calendar-pub'))
+						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody('-calendar-pub')
 					));
 				}
 			}
