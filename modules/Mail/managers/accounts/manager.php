@@ -89,7 +89,7 @@ class CApiMailAccountsManager extends AApiManager
 	 * 
 	 * @return CUser | false
 	 */
-	public function getAccountByCredentials($sLogin, $sPassword)
+	public function getAccountByCredentials($sEmail, $sIncomingMailPassword)
 	{
 		$oAccount = null;
 		try
@@ -97,13 +97,13 @@ class CApiMailAccountsManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount', 
 				array(
-					'IsDisabled', 'Login', 'Password', 'IdUser'
+					'IsDisabled', 'Email', 'IncomingMailPassword', 'IdUser'
 				),
 				0,
 				0,
 				array(
-					'Login' => $sLogin,
-					'Password' => $sPassword,
+					'Email' => $sEmail,
+					'IncomingMailPassword' => $sIncomingMailPassword,
 					'IsDisabled' => false
 				)
 			);
@@ -136,7 +136,7 @@ class CApiMailAccountsManager extends AApiManager
 	 * 
 	 * @return array | false [IdAccount => [IsMailingList, Email, FriendlyName, IsDisabled, IdUser, StorageQuota, LastLogin]]
 	 */
-	public function getAccountList($iPage, $iUsersPerPage, $sOrderBy = 'Login', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
+	public function getAccountList($iPage, $iUsersPerPage, $sOrderBy = 'Email', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
 	{
 		$aResult = false;
 		try
@@ -147,13 +147,13 @@ class CApiMailAccountsManager extends AApiManager
 			
 			if ($sSearchDesc !== '')
 			{
-				$aFilters['Login'] = '%'.$sSearchDesc.'%';
+				$aFilters['Email'] = '%'.$sSearchDesc.'%';
 			}
 				
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount', 
 				array(
-					'IsDisabled', 'Login', 'Password', 'IdUser'
+					'IsDisabled', 'Email', 'IncomingMailPassword', 'IdUser'
 				),
 				$iPage,
 				$iUsersPerPage,
@@ -167,8 +167,8 @@ class CApiMailAccountsManager extends AApiManager
 				foreach($aResults as $oItem)
 				{
 					$aResult[$oItem->iObjectId] = array(
-						$oItem->Login,
-						$oItem->Password,
+						$oItem->Email,
+						$oItem->IncomingMailPassword,
 						$oItem->IdUser,
 						$oItem->IsDisabled
 					);
@@ -195,10 +195,10 @@ class CApiMailAccountsManager extends AApiManager
 		{
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount',
-				array('Login'),
+				array('Email'),
 				0,
 				0,
-				array('Login' => $oAccount->Login)
+				array('Email' => $oAccount->Email)
 			);
 
 			if ($aResults)

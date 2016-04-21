@@ -20,8 +20,6 @@ class CMailAccount extends api_APropertyBag
 		
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
-		$this->SetDefaults();
-
 		CApi::Plugin()->RunHook('api-account-construct', array(&$this));
 
 		$this->aStaticMap = array(
@@ -32,24 +30,26 @@ class CMailAccount extends api_APropertyBag
 			'IsMailingList'			=> array('bool', false),//'mailing_list'),
 			'StorageQuota'			=> array('int', 0),//'quota'),
 			'StorageUsedSpace'		=> array('int', 0),
-			'Email'					=> array('string(255)', ''),//'email', true, false),
-			'FriendlyName'			=> array('string(255)', ''),//'friendly_nm'),
+			'Email'					=> array('string', ''),//'email', true, false),
+			'FriendlyName'			=> array('string', ''),//'friendly_nm'),
 			'DetectSpecialFoldersWithXList' => array('bool', false),
 			'IncomingMailProtocol'	=> array('int',  0),//'mail_protocol'),
-			'IncomingMailServer'	=> array('string(255)', ''),//'mail_inc_host'),
+			'IncomingMailServer'	=> array('string', ''),//'mail_inc_host'),
 			'IncomingMailPort'		=> array('int',  0),//'mail_inc_port'),
-			'IncomingMailLogin'		=> array('string(255)', ''),//'mail_inc_login'),
-			'IncomingMailPassword'	=> array('string(255)', ''),//'password', 'mail_inc_pass'),
+			'IncomingMailLogin'		=> array('string', ''),//'mail_inc_login'),
+			'IncomingMailPassword'	=> array('string', ''),//'password', 'mail_inc_pass'),
 			'IncomingMailUseSSL'	=> array('bool', false),//'mail_inc_ssl'),
 			'PreviousMailPassword'	=> array('string', ''),
-			'OutgoingMailServer'	=> array('string(255)', ''),//'mail_out_host'),
+			'OutgoingMailServer'	=> array('string', ''),//'mail_out_host'),
 			'OutgoingMailPort'		=> array('int',  0),//'mail_out_port'),
-			'OutgoingMailLogin'		=> array('string(255)', ''),//'mail_out_login'),
-			'OutgoingMailPassword'	=> array('string(255)', ''),//'password', 'mail_out_pass'),
+			'OutgoingMailLogin'		=> array('string', ''),//'mail_out_login'),
+			'OutgoingMailPassword'	=> array('string', ''),//'password', 'mail_out_pass'),
 			'OutgoingMailAuth'		=> array('int',  0),//'mail_out_auth'),
 			'OutgoingMailUseSSL'	=> array('bool', false),//'mail_out_ssl'),
 			'OutgoingSendingMethod'	=> array('int', 0)
 		);
+		
+		$this->SetDefaults();
 	}
 
 	/**
