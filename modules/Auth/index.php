@@ -258,11 +258,12 @@ class AuthModule extends AApiModule
 		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
 	}
 	
-	public function Logout($sAuthToken = '')
+	public function Logout()
 	{	
-		if (!empty($sAuthToken))
+		$mAuthToken = \CApi::getLogginedUserAuthToken();
+		if ($mAuthToken !== false)
 		{
-			\CApi::Cacher()->Delete('AUTHTOKEN:'.$sAuthToken);
+			\CApi::Cacher()->Delete('AUTHTOKEN:'.$mAuthToken);
 		}
 		else
 		{

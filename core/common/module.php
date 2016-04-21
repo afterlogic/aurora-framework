@@ -506,15 +506,9 @@ abstract class AApiModule
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
 					
 					
-					if ($sModule !== 'Auth' && $sMethod !== 'Login' &&  !\CApi::getLoginedUserId($sAuthToken))
+					if ($sModule !== 'Auth' && $sMethod !== 'Login' &&  !\CApi::getLogginedUserId($sAuthToken))
 					{
 						throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
-					}
-					
-					//TODO need to remove special case handling
-					if ($sModule === 'Auth' && $sMethod === 'Logout' && $sAuthToken)
-					{
-						$aParameters['AuthToken'] = $sAuthToken;
 					}
 					
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
