@@ -31,7 +31,7 @@ class CalendarModule extends AApiModule
 			$mCalendars = array($oCalendar);
 		} else {
 			
-			$iUserId = \CApi::getLoginedUserId();
+			$iUserId = \CApi::getLogginedUserId();
 			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId)) {
 				
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
@@ -83,26 +83,22 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CreateCalendar()
+	public function CreateCalendar($sName, $sDescription, $sColor)
 	{
 		$mResult = false;
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sName = $this->getParamValue('Name');
-		$sDescription = $this->getParamValue('Description'); 
-		$sColor = $this->getParamValue('Color'); 
-		
-		$mCalendarId = $this->oApiCalendarManager->createCalendar($oAccount, $sName, $sDescription, 0, $sColor);
+		$mCalendarId = $this->oApiCalendarManager->createCalendar($iUserId, $sName, $sDescription, 0, $sColor);
 		if ($mCalendarId)
 		{
-			$oCalendar = $this->oApiCalendarManager->getCalendar($oAccount, $mCalendarId);
+			$oCalendar = $this->oApiCalendarManager->getCalendar($iUserId, $mCalendarId);
 			if ($oCalendar instanceof \CCalendar)
 			{
-				$mResult = $oCalendar->toResponseArray($oAccount);
+				$mResult = $oCalendar->toResponseArray($iUserId);
 			}
 		}
 		
@@ -112,20 +108,15 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendar()
+	public function UpdateCalendar($sName, $sDescription, $sColor, $sId)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		$iUserId = $this->getDefaultAccountFromParam();
+		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sName = $this->getParamValue('Name');
-		$sDescription = $this->getParamValue('Description'); 
-		$sColor = $this->getParamValue('Color'); 
-		$sId = $this->getParamValue('Id'); 
-		
-		return $this->oApiCalendarManager->updateCalendar($oAccount, $sId, $sName, $sDescription, 0, $sColor);
+		return $this->oApiCalendarManager->updateCalendar($iUserId, $sId, $sName, $sDescription, 0, $sColor);
 	}	
 
 	/**
@@ -231,8 +222,6 @@ class CalendarModule extends AApiModule
 	 */
 	public function GetEvents($aCalendarIds, $iStart, $iEnd, $bIsPublic, $iTimezoneOffset, $sTimezone)
 	{
-		$aArgs = func_get_args();
-		
 		$mResult = false;
 		
 		if ($bIsPublic)
@@ -244,7 +233,7 @@ class CalendarModule extends AApiModule
 		}
 		else
 		{
-			$iUserId = \CApi::getLoginedUserId();
+			$iUserId = \CApi::getLogginedUserId();
 			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);

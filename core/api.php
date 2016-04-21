@@ -1156,7 +1156,7 @@ class CApi
 		return $sToken;
 	}
 	
-	public static function getLoginedUserId($sAuthToken = '')
+	public static function getLogginedUserId($sAuthToken = '')
 	{
 		$mResult = false;
 		if (!empty($sAuthToken))
@@ -1186,6 +1186,17 @@ class CApi
 					$mResult = $aUserSession[0];
 				}
 			}
+		}
+		
+		return $mResult;
+	}
+	
+	public static function getLogginedUserAuthToken()
+	{
+		$mResult = false;
+		if(is_array(static::$aUserSession) && count(static::$aUserSession) === 1)
+		{
+			$mResult = array_search(static::$aUserSession[0], static::$aUserSession);
 		}
 		
 		return $mResult;

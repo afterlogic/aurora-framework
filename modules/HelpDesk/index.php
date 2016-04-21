@@ -28,7 +28,7 @@ class HelpDeskModule extends AApiModule
 	protected function getHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
 	{
 //		$iUserId = $this->getLogginedUserId($sAuthToken);
-		$iUserId = \CApi::getLoginedUserId();
+		$iUserId = \CApi::getLogginedUserId();
 //		$iUserId = 61;
 		$oUser = $this->oCoreDecorator->GetUser($iUserId);
 

@@ -133,13 +133,13 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	{
 		$oCalendar = false;
 		list(, $sCalendarId) = \Sabre\HTTP\URLUtil::splitPath($sPath);
-		if (count($this->CalDAVCalendarsCache) > 0 && isset($this->CalDAVCalendarsCache[$sCalendarId][$this->Account->Email])) {
-			$oCalendar = $this->CalDAVCalendarsCache[$sCalendarId][$this->Account->Email];
+		if (count($this->CalDAVCalendarsCache) > 0 && isset($this->CalDAVCalendarsCache[$sCalendarId][$this->UserId])) {
+			$oCalendar = $this->CalDAVCalendarsCache[$sCalendarId][$this->UserId];
 		} else {
 			$oCalendars = new \Afterlogic\DAV\CalDAV\CalendarHome($this->getBackend(), $this->Principal);
 			if (isset($oCalendars) && $oCalendars->childExists($sCalendarId)) {
 				$oCalendar = $oCalendars->getChild($sCalendarId);
-				$this->CalDAVCalendarsCache[$sCalendarId][$this->Account->Email] = $oCalendar;
+				$this->CalDAVCalendarsCache[$sCalendarId][$this->UserId] = $oCalendar;
 			}
 		}
 	
@@ -210,19 +210,19 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	}
 	
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sCalendarId
 	 * 
      * @return \CCalendar|bool
 	 */
-	public function getCalendar($oAccount, $sCalendarId)
+	public function getCalendar($iUserId, $sCalendarId)
 	{
-		$this->init($oAccount);
+		$this->init($iUserId);
 
 		$oCalDAVCalendar = null;
 		$oCalendar = false;
-		if (count($this->CalendarsCache) > 0 && isset($this->CalendarsCache[$this->Account->Email][$sCalendarId])) {
-			$oCalendar = $this->CalendarsCache[$this->Account->Email][$sCalendarId];
+		if (count($this->CalendarsCache) > 0 && isset($this->CalendarsCache[$this->UserId][$sCalendarId])) {
+			$oCalendar = $this->CalendarsCache[$this->UserId][$sCalendarId];
 		} else {
 			$oCalDAVCalendar = $this->getCalDAVCalendar($sCalendarId);
 			if ($oCalDAVCalendar) {
@@ -345,7 +345,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sName
 	 * @param string $sDescription
 	 * @param int $iOrder
@@ -353,9 +353,9 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	 * 
 	 * @return string
 	 */
-	public function createCalendar($oAccount, $sName, $sDescription, $iOrder, $sColor)
+	public function createCalendar($iUserId, $sName, $sDescription, $iOrder, $sColor)
 	{
-		$this->init($oAccount);
+		$this->init($iUserId);
 
 		$oUserCalendars = new \Afterlogic\DAV\CalDAV\CalendarHome($this->getBackend(), $this->Principal);
 
@@ -379,7 +379,7 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sCalendarId
 	 * @param string $sName
 	 * @param string $sDescription
@@ -388,9 +388,9 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	 * 
 	 * @return bool
 	 */
-	public function updateCalendar($oAccount, $sCalendarId, $sName, $sDescription, $iOrder, $sColor)
+	public function updateCalendar($iUserId, $sCalendarId, $sName, $sDescription, $iOrder, $sColor)
 	{
-		$this->init($oAccount);
+		$this->init($iUserId);
 		
 		$bOnlyColor = ($sName === null && $sDescription === null && $iOrder === null);
 
@@ -403,16 +403,16 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 
 				$sOwnerPrincipal = isset($aCalendarProperties['{http://sabredav.org/ns}owner-principal']) ? 
 						$aCalendarProperties['{http://sabredav.org/ns}owner-principal'] : $sPrincipal; 
-				$bIsOwner = (isset($sOwnerPrincipal) && basename($sOwnerPrincipal) === $oAccount->Email);
+				$bIsOwner = (isset($sOwnerPrincipal) && basename($sOwnerPrincipal) === $iUserId);
 
 				$bShared = ($oCalDAVCalendar instanceof \Sabre\CalDAV\SharedCalendar);
-				$bSharedToAll = (isset($sPrincipal) && basename($sPrincipal) === $this->getTenantUser($oAccount));
+				$bSharedToAll = (isset($sPrincipal) && basename($sPrincipal) === $this->getTenantUser($iUserId));
 				$bSharedToMe = ($bShared && !$bSharedToAll && !$bIsOwner);
 				
 				$aUpdateProperties = array();
 				if ($bSharedToMe) {
 					$aUpdateProperties = array(
-						'href' => $oAccount->Email,
+						'href' => $iUserId,
 						'color' => $sColor,
 					);
 					if (!$bOnlyColor) {
@@ -445,15 +445,15 @@ class CApiCalendarMainSabredavStorage extends CApiCalendarMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sCalendarId
 	 * @param string $sColor
 	 * 
 	 * @return bool
 	 */
-	public function updateCalendarColor($oAccount, $sCalendarId, $sColor)
+	public function updateCalendarColor($iUserId, $sCalendarId, $sColor)
 	{
-		return $this->updateCalendar($oAccount, $sCalendarId, null, null, null, $sColor);
+		return $this->updateCalendar($iUserId, $sCalendarId, null, null, null, $sColor);
 	}
 
 	/**

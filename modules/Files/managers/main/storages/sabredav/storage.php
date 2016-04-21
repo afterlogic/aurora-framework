@@ -429,13 +429,13 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 					$sID = '';
 					if ($oValue instanceof \Afterlogic\DAV\FS\Directory)
 					{
-						$sID = $this->generateShareHash($oAccount, $sType, $sFilePath, $oValue->getName());
+//						$sID = $this->generateShareHash($oAccount, $sType, $sFilePath, $oValue->getName());
 						$oItem->IsFolder = true;
 					}
 
 					if ($oValue instanceof \Afterlogic\DAV\FS\File)
 					{
-						$sID = $this->generateShareHash($oAccount, $sType, $sFilePath, $oValue->getName());
+//						$sID = $this->generateShareHash($oAccount, $sType, $sFilePath, $oValue->getName());
 						$oItem->IsFolder = false;
 						$oItem->Size = $oValue->getSize();
 						$oFileInfo = null;
@@ -532,7 +532,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 					$mMin = $oMin->getMinByID($sID);
 
 					$oItem->Shared = isset($aProps['Shared']) ? $aProps['Shared'] : empty($mMin['__hash__']) ? false : true;
-					$oItem->Owner = isset($aProps['Owner']) ? $aProps['Owner'] : $oAccount->Email;
+					$oItem->Owner = isset($aProps['Owner']) ? $aProps['Owner'] : $iUserId;
 					
 					if ($oItem && '.asc' === \strtolower(\substr(\trim($oItem->Name), -4)))
 					{

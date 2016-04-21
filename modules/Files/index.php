@@ -243,7 +243,7 @@ class FilesModule extends AApiModule
 
 	public function GetFiles($sType, $sPath, $sPattern)
 	{
-		$iUserId = \CApi::getLoginedUserId();
+		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);

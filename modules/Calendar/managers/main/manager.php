@@ -287,7 +287,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	/**
 	 * Creates new calendar.
 	 *
-	 * @param CAccount $oAccount Account object
+	 * @param int $iUserId
 	 * @param string $sName Name of the calendar
 	 * @param string $sDescription Description of the calendar
 	 * @param int $iOrder Ordinal number of the calendar in calendars list
@@ -295,12 +295,12 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	 *
 	 * @return CCalendar|false
 	 */
-	public function createCalendar($oAccount, $sName, $sDescription, $iOrder, $sColor)
+	public function createCalendar($iUserId, $sName, $sDescription, $iOrder, $sColor)
 	{
 		$oResult = null;
 		try
 		{
-			$oResult = $this->oStorage->createCalendar($oAccount, $sName, $sDescription, $iOrder, $sColor);
+			$oResult = $this->oStorage->createCalendar($iUserId, $sName, $sDescription, $iOrder, $sColor);
 		}
 		catch (Exception $oException)
 		{
@@ -313,7 +313,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	/**
 	 * Updates calendar properties.
 	 *
-	 * @param CAccount $oAccount Account object
+	 * @param int $iUserId
 	 * @param string $sCalendarId Calendar ID
 	 * @param string $sName Name of the calendar
 	 * @param string $sDescription Description of the calendar
@@ -322,12 +322,12 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	 *
 	 * @return CCalendar|false
 	 */
-	public function updateCalendar($oAccount, $sCalendarId, $sName, $sDescription, $iOrder, $sColor)
+	public function updateCalendar($iUserId, $sCalendarId, $sName, $sDescription, $iOrder, $sColor)
 	{
 		$oResult = null;
 		try
 		{
-			$oResult = $this->oStorage->updateCalendar($oAccount, $sCalendarId, $sName, $sDescription, $iOrder, $sColor);
+			$oResult = $this->oStorage->updateCalendar($iUserId, $sCalendarId, $sName, $sDescription, $iOrder, $sColor);
 		}
 		catch (Exception $oException)
 		{
@@ -362,18 +362,18 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	/**
 	 * Change color of the calendar.
 	 *
-	 * @param CAccount $oAccount Account object
+	 * @param int $iUserId
 	 * @param string $sCalendarId Calendar ID
 	 * @param string $sColor New color code
 	 *
 	 * @return bool
 	 */
-	public function updateCalendarColor($oAccount, $sCalendarId, $sColor)
+	public function updateCalendarColor($iUserId, $sCalendarId, $sColor)
 	{
 		$oResult = null;
 		try
 		{
-			$oResult = $this->oStorage->updateCalendarColor($oAccount, $sCalendarId, $sColor);
+			$oResult = $this->oStorage->updateCalendarColor($iUserId, $sCalendarId, $sColor);
 		}
 		catch (Exception $oException)
 		{
@@ -386,17 +386,17 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	/**
 	 * Deletes calendar.
 	 *
-	 * @param CAccount $oAccount Account object
+	 * @param int $iUserId
 	 * @param string $sCalendarId Calendar ID
 	 *
 	 * @return bool
 	 */
-	public function deleteCalendar($oAccount, $sCalendarId)
+	public function deleteCalendar($iUserId, $sCalendarId)
 	{
 		$oResult = null;
 		try
 		{
-			$oResult = $this->oStorage->deleteCalendar($oAccount, $sCalendarId);
+			$oResult = $this->oStorage->deleteCalendar($iUserId, $sCalendarId);
 		}
 		catch (Exception $oException)
 		{
@@ -1419,19 +1419,19 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 *
 	 * @return bool
 	 */
-	public function getCalendars($oAccount)
+	public function getCalendars($iUserId)
 	{
 		$oResult = array();
 		try
 		{
 			$oCalendars = array();
-			$oCalendarsOwn = $this->oStorage->getCalendars($oAccount);
+			$oCalendarsOwn = $this->oStorage->getCalendars($iUserId);
 
-			if ($this->oApiCapabilityManager->isCalendarSharingSupported($oAccount)) {
+			if ($this->oApiCapabilityManager->isCalendarSharingSupported($iUserId)) {
 				$oCalendarsSharedToAll = array();
 
 				$aCalendarsSharedToAllIds = array_map(
@@ -1460,7 +1460,7 @@ class CApiCalendarMainManager extends AApiManagerWithStorage
 				if (!$bDefault && $oCalendar->Access !== ECalendarPermission::Read) {
 					$oCalendar->IsDefault = $bDefault = true;
 				}
-				$oCalendar = $this->populateCalendarShares($oAccount, $oCalendar);
+				$oCalendar = $this->populateCalendarShares($iUserId, $oCalendar);
 				$oResult[] = $oCalendar;
 			}
 		}

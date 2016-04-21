@@ -1834,7 +1834,7 @@ class CApiIntegratorManager extends AApiManager
 			$sTheme = $oSettings->GetConf('WebMail/DefaultSkin');
 
 //			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
-			$oUser = \CApi::getLoginedUserId();
+			$oUser = \CApi::getLogginedUserId();
 
 			if ($oUser)
 			{
