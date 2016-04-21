@@ -505,8 +505,7 @@ abstract class AApiModule
 					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
 					
-					
-					if ($sModule !== 'Auth' && $sMethod !== 'Login' &&  !\CApi::getLogginedUserId($sAuthToken))
+					if (!\CApi::getLogginedUserId($sAuthToken))
 					{
 						throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
 					}

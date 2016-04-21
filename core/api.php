@@ -1196,7 +1196,8 @@ class CApi
 		$mResult = false;
 		if(is_array(static::$aUserSession) && count(static::$aUserSession) === 1)
 		{
-			$mResult = array_search(static::$aUserSession[0], static::$aUserSession);
+			$aAuthTokens = array_keys(static::$aUserSession);
+			$mResult = $aAuthTokens[0];
 		}
 		
 		return $mResult;
