@@ -125,7 +125,12 @@ class MailModule extends AApiModule
 
 		if ($oAccount)
 		{
-			$mResult = $oAccount;
+			$mResult = array(
+				'token' => 'auth',
+				'sign-me' => true,
+				'id' => $oAccount->IdUser,
+				'email' => $oAccount->Email
+			);
 		}
 	}
 }

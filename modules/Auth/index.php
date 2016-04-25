@@ -231,16 +231,9 @@ class AuthModule extends AApiModule
 			));
 		}
 
-		if ($mResult instanceOf CAccount)
+		if (is_array($mResult))
 		{
-			$bSignMe = true;
-			
-			$aAccountHashTable = array(
-				'token' => 'auth',
-				'sign-me' => $bSignMe,
-				'id' => $mResult->IdUser, //$oAccount->IdUser,
-				'email' => 'vasil@afterlogic.com' //$oAccount->Email
-			);
+			$aAccountHashTable = $mResult;
 
 //			$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
 			$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
@@ -279,10 +272,13 @@ class AuthModule extends AApiModule
 
 		if ($oAccount)
 		{
-			$mResult = $oAccount;
+			$mResult = array(
+				'token' => 'auth',
+				'sign-me' => true,
+				'id' => $oAccount->IdUser,
+				'email' => 'vasil@afterlogic.com'
+			);
 		}
-		
-//		$mResult = ($sLogin === 'vasil' || $sLogin === 'sash') && $sPassword === 'p12345' ;
 	}
 	
 	/**
