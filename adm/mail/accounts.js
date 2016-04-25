@@ -26,8 +26,9 @@
 				'id': iIndex,
 				'email': oItem[0],
 				'password': oItem[1],
-				'user_id': oItem[2],
-				'disabled': oItem[3],
+				'server': oItem[2],
+				'user_id': oItem[3],
+				'disabled': oItem[4],
 				'active': ko.observable(false)
 			});
 		});

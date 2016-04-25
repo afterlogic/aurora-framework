@@ -17,6 +17,10 @@
 			<label>Password</label>
 			<input name="password" data-bind="textInput: password" placeholder="Account Password" class="form-control" />
 		</div>
+		<div class="form-group">
+			<label>Server</label>
+			<input name="server" data-bind="textInput: server" placeholder="IMAP server" class="form-control" />
+		</div>
 
 		<input type="submit" value="Update" class="btn btn-primary" />
 	</form>
@@ -48,6 +52,10 @@
 		<div class="form-group">
 			<label>Password</label>
 			<input name="password" placeholder="Account Password" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label>Server</label>
+			<input name="server" placeholder="IMAP server" class="form-control" />
 		</div>
 
 		<input type="submit" value="Create" class="btn btn-primary" />

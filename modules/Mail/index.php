@@ -14,19 +14,22 @@ class MailModule extends AApiModule
 				'SaveRepliedMessagesToCurrentFolder' => array('bool', false), //'save_replied_messages_to_current_folder'),
 			)
 		);
+		
+		$this->subscribeEvent('Login', array($this, 'checkAuth'));
 	}
 	
 	/**
 	 * 
 	 * @return boolean
 	 */
-	public function CreateAccount($iUserId = 0, $sEmail = '', $sPassword = '')
+	public function CreateAccount($iUserId = 0, $sEmail = '', $sPassword = '', $sServer = '')
 	{
 		$oEventResult = null;
 		$this->broadcastEvent('CreateAccount', array(
 			'IdUser' => $iUserId,
 			'email' => $sEmail,
 			'password' => $sPassword,
+			'server' => $sServer,
 			'result' => &$oEventResult
 		));
 		
@@ -55,7 +58,7 @@ class MailModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function UpdateAccount($iAccountId = 0, $sEmail = '', $sPassword = '')
+	public function UpdateAccount($iAccountId = 0, $sEmail = '', $sPassword = '', $sServer = '')
 	{
 		if ($iAccountId > 0)
 		{
@@ -70,6 +73,10 @@ class MailModule extends AApiModule
 				if ($sPassword)
 				{
 					$oAccount->IncomingMailPassword = $sPassword;
+				}
+				if ($sServer)
+				{
+					$oAccount->IncomingMailServer = $sServer;
 				}
 
 				$this->oApiAccountsManager->updateAccount($oAccount);
@@ -109,6 +116,16 @@ class MailModule extends AApiModule
 		else
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+	}
+	
+	public function checkAuth($sEmail, $sPassword, &$mResult)
+	{
+		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sEmail, $sPassword);
+
+		if ($oAccount)
+		{
+			$mResult = $oAccount;
 		}
 	}
 }

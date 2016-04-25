@@ -12,7 +12,8 @@ if ($oHttp->HasPost('action'))
 			$mResult = $oMailDecorator->CreateAccount(
 				$oHttp->GetPost('user_id', ''),
 				$oHttp->GetPost('email', ''),
-				$oHttp->GetPost('password', '')
+				$oHttp->GetPost('password', ''),
+				$oHttp->GetPost('server', '')
 			);
 			
 			break;
@@ -20,7 +21,8 @@ if ($oHttp->HasPost('action'))
 			$mResult = $oMailDecorator->UpdateAccount(
 				$oHttp->GetPost('id', ''),
 				$oHttp->GetPost('email', ''),
-				$oHttp->GetPost('password', '')
+				$oHttp->GetPost('password', ''),
+				$oHttp->GetPost('server', '')
 			);
 			break;
 		case 'delete':

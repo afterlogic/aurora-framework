@@ -97,7 +97,7 @@ class CApiMailAccountsManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount', 
 				array(
-					'IsDisabled', 'Email', 'IncomingMailPassword', 'IdUser'
+					'IsDisabled', 'Email', 'IncomingMailPassword', 'IncomingMailServer', 'IdUser'
 				),
 				0,
 				0,
@@ -153,7 +153,7 @@ class CApiMailAccountsManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount', 
 				array(
-					'IsDisabled', 'Email', 'IncomingMailPassword', 'IdUser'
+					'IsDisabled', 'Email', 'IncomingMailPassword', 'IncomingMailServer', 'IdUser'
 				),
 				$iPage,
 				$iUsersPerPage,
@@ -169,6 +169,7 @@ class CApiMailAccountsManager extends AApiManager
 					$aResult[$oItem->iObjectId] = array(
 						$oItem->Email,
 						$oItem->IncomingMailPassword,
+						$oItem->IncomingMailServer,
 						$oItem->IdUser,
 						$oItem->IsDisabled
 					);
