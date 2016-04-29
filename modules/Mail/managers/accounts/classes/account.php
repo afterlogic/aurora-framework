@@ -33,20 +33,20 @@ class CMailAccount extends api_APropertyBag
 			'Email'					=> array('string', ''),//'email', true, false),
 			'FriendlyName'			=> array('string', ''),//'friendly_nm'),
 			'DetectSpecialFoldersWithXList' => array('bool', false),
-			'IncomingMailProtocol'	=> array('int',  0),//'mail_protocol'),
+			'IncomingMailProtocol'	=> array('int',  EMailProtocol::IMAP4),//'mail_protocol'),
 			'IncomingMailServer'	=> array('string', ''),//'mail_inc_host'),
-			'IncomingMailPort'		=> array('int',  0),//'mail_inc_port'),
+			'IncomingMailPort'		=> array('int',  143),//'mail_inc_port'),
 			'IncomingMailLogin'		=> array('string', ''),//'mail_inc_login'),
 			'IncomingMailPassword'	=> array('string', ''),//'password', 'mail_inc_pass'),
 			'IncomingMailUseSSL'	=> array('bool', false),//'mail_inc_ssl'),
 			'PreviousMailPassword'	=> array('string', ''),
 			'OutgoingMailServer'	=> array('string', ''),//'mail_out_host'),
-			'OutgoingMailPort'		=> array('int',  0),//'mail_out_port'),
+			'OutgoingMailPort'		=> array('int',  25),//'mail_out_port'),
 			'OutgoingMailLogin'		=> array('string', ''),//'mail_out_login'),
 			'OutgoingMailPassword'	=> array('string', ''),//'password', 'mail_out_pass'),
-			'OutgoingMailAuth'		=> array('int',  0),//'mail_out_auth'),
+			'OutgoingMailAuth'		=> array('int',  ESMTPAuthType::NoAuth),//'mail_out_auth'),
 			'OutgoingMailUseSSL'	=> array('bool', false),//'mail_out_ssl'),
-			'OutgoingSendingMethod'	=> array('int', 0)
+			'OutgoingSendingMethod'	=> array('int', ESendingMethod::Specified)
 		);
 		
 		$this->SetDefaults();

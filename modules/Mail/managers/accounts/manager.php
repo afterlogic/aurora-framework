@@ -97,7 +97,7 @@ class CApiMailAccountsManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount', 
 				array(
-					'IsDisabled', 'Email', 'IncomingMailPassword', 'IncomingMailServer', 'IdUser'
+					'IsDisabled', 'Email', 'IncomingMailPassword', 'IncomingMailLogin', 'IncomingMailServer', 'IdUser'
 				),
 				0,
 				0,
@@ -119,6 +119,47 @@ class CApiMailAccountsManager extends AApiManager
 			$this->setLastException($oException);
 		}
 		return $oAccount;
+	}
+	
+	/**
+	 * Retrieves information on particular WebMail Pro user. 
+	 * 
+	 * @api
+	 * 
+	 * @param int $iUserId User identifier.
+	 * 
+	 * @return CUser | false
+	 */
+	public function isDefaultUserAccountExists ($iUserId)
+	{
+		$bExists = false;
+		
+		try
+		{
+			$aResults = $this->oEavManager->getObjects(
+				'CMailAccount', 
+				array(
+					'IdUser'
+				),
+				0,
+				0,
+				array(
+					'IdUser' => $iUserId,
+					'IsDefaultAccount' => true
+				)
+			);
+			
+			if (is_array($aResults) && count($aResults) > 0)
+			{
+				$bExists = true;
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+		
+		return $bExists;
 	}
 
 	/**
@@ -153,7 +194,7 @@ class CApiMailAccountsManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount', 
 				array(
-					'IsDisabled', 'Email', 'IncomingMailPassword', 'IncomingMailServer', 'IdUser'
+					'IsDisabled', 'Email', 'IncomingMailPassword', 'IncomingMailServer', 'IsDefaultAccount', 'IdUser'
 				),
 				$iPage,
 				$iUsersPerPage,
@@ -170,6 +211,7 @@ class CApiMailAccountsManager extends AApiManager
 						$oItem->Email,
 						$oItem->IncomingMailPassword,
 						$oItem->IncomingMailServer,
+						$oItem->IsDefaultAccount,
 						$oItem->IdUser,
 						$oItem->IsDisabled
 					);

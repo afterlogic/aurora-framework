@@ -221,9 +221,12 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 				App.tokenProblem();
 				break;
 			case Enums.Errors.AuthError:
-				this.bAllowRequests = false;
-				this.abortAllRequests();
-				App.authProblem();
+				if (App.isAuth())
+				{
+					this.bAllowRequests = false;
+					this.abortAllRequests();
+					App.authProblem();
+				}
 				break;
 		}
 	}

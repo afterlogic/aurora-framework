@@ -69,7 +69,7 @@ function InitModernizr()
 
 function CApp()
 {
-	this.bAuth = window.pSevenAppData.Auth;
+	this.bAuth = window.auroraAppData.Auth;
 	this.bPublic = false;
 	this.bNewTab = false;
 	this.bMobile = false;

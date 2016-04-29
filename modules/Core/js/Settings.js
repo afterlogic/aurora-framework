@@ -6,7 +6,7 @@ var
 	
 	Types = require('modules/Core/js/utils/Types.js'),
 	
-	AppData = window.pSevenAppData,
+	AppData = window.auroraAppData,
 	
 	bRtl = $('html').hasClass('rtl')
 ;

@@ -2,11 +2,13 @@
 
 class MailModule extends AApiModule
 {
+	public $oApiMainManager = null;
 	public $oApiAccountsManager = null;
 	
 	public function init() 
 	{
 		$this->oApiAccountsManager = $this->GetManager('accounts', 'db');
+		$this->oApiMainManager = $this->GetManager('main', 'db');
 		
 		$this->setObjectMap('CUser', array(
 				'MailsPerPage'	=> array('int', '20'),
@@ -29,7 +31,6 @@ class MailModule extends AApiModule
 			'IdUser' => $iUserId,
 			'email' => $sEmail,
 			'password' => $sPassword,
-			'server' => $sServer,
 			'result' => &$oEventResult
 		));
 		
@@ -39,7 +40,13 @@ class MailModule extends AApiModule
 			
 			$oAccount->IdUser = $oEventResult->iObjectId;
 			$oAccount->Email = $sEmail;
+			$oAccount->IncomingMailLogin = $sEmail;
 			$oAccount->IncomingMailPassword = $sPassword;
+			$oAccount->IncomingMailServer = $sServer;
+			if (!$this->oApiAccountsManager->isDefaultUserAccountExists($iUserId))
+			{
+				$oAccount->IsDefaultAccount = true;
+			}
 
 			$this->oApiAccountsManager->createAccount($oAccount);
 			return $oAccount ? array(
@@ -125,6 +132,7 @@ class MailModule extends AApiModule
 
 		if ($oAccount)
 		{
+			$this->oApiMainManager->validateAccountConnection($oAccount);
 			$mResult = array(
 				'token' => 'auth',
 				'sign-me' => true,

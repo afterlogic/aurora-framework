@@ -613,9 +613,9 @@ CAccountListModel.prototype.displaySocialWelcome = function ()
 	}
 };
 
-var AccountList = new CAccountListModel(Types.pInt(window.pSevenAppData.Default));
+var AccountList = new CAccountListModel(Types.pInt(window.auroraAppData.Default));
 
-AccountList.parse(window.pSevenAppData.Default, window.pSevenAppData.Accounts);
+AccountList.parse(window.auroraAppData.Default, window.auroraAppData.Accounts);
 
 if (MainTab)
 {

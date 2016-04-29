@@ -10,6 +10,7 @@
 				<th>email</th>
 				<th>password</th>
 				<th>server</th>
+				<th>default</th>
 				<th>user id</th>
 			</tr>
 			<!-- ko foreach: mailAccountsList -->
@@ -18,6 +19,7 @@
 				<td data-bind="text: email"></td>
 				<td data-bind="text: password"></td>
 				<td data-bind="text: server"></td>
+				<td data-bind="text: is_default"></td>
 				<td data-bind="text: user_id"></td>
 			</tr>
 			<!-- /ko -->

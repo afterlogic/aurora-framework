@@ -41,13 +41,13 @@ class CApiMailMainManager extends AApiManagerWithStorage
 	/**
 	 * Returns ImapClient object from cache.
 	 * 
-	 * @param CAccount $oAccount Account object.
+	 * @param CMailAccount $oAccount Account object.
 	 * @param int $iForceConnectTimeOut = 0. The value overrides connection timeout value.
 	 * @param int $iForceSocketTimeOut = 0. The value overrides socket timeout value.
 	 *
 	 * @return \MailSo\Imap\ImapClient|null
 	 */
-	public function &_getImapClient(CAccount $oAccount, $iForceConnectTimeOut = 0, $iForceSocketTimeOut = 0)
+	public function &_getImapClient(CMailAccount $oAccount, $iForceConnectTimeOut = 0, $iForceSocketTimeOut = 0)
 	{
 		$oResult = null;
 		if ($oAccount)
@@ -88,10 +88,10 @@ class CApiMailMainManager extends AApiManagerWithStorage
 
 			if (!$oResult->IsLoggined())
 			{
-				$sProxyAuthUser = !empty($oAccount->CustomFields['ProxyAuthUser'])
-					? $oAccount->CustomFields['ProxyAuthUser'] : '';
+//				$sProxyAuthUser = !empty($oAccount->CustomFields['ProxyAuthUser'])
+//					? $oAccount->CustomFields['ProxyAuthUser'] : '';
 
-				$oResult->Login($oAccount->IncomingMailLogin, $oAccount->IncomingMailPassword, $sProxyAuthUser);
+				$oResult->Login($oAccount->IncomingMailLogin, $oAccount->IncomingMailPassword, '');
 			}
 		}
 
@@ -124,7 +124,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 	/**
 	 * Checks if user of the account can successfully connect to mail server.
 	 * 
-	 * @param CAccount $oAccount Account object.
+	 * @param CMailAccount $oAccount Account object.
 	 * 
 	 * @return void
 	 *
