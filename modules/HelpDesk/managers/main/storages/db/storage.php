@@ -108,10 +108,10 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	 *
 	 * @return CHelpdeskUser|null|false
 	 */
-	public function getUserByEmail($iIdTenant, $sEmail)
-	{
-		return $this->_getUserBySql($this->oCommandCreator->getUserByEmail($iIdTenant, $sEmail));
-	}
+//	public function getUserByEmail($iIdTenant, $sEmail)
+//	{
+//		return $this->_getUserBySql($this->oCommandCreator->getUserByEmail($iIdTenant, $sEmail));
+//	}
 
 	/**
 	 * @param int $iIdTenant

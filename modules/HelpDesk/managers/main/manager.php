@@ -63,11 +63,11 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return CApiMailManager
 	 */
-	private function _getApiMail()
+	public function _getApiMail()
 	{
 		if (null === $this->oApiMail)
 		{
-			$this->oApiMail = CApi::Manager('mail');
+			$this->oApiMail = \CApi::Manager('mail');
 		}
 		
 		return $this->oApiMail;
@@ -521,11 +521,13 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 */
 	public function getHelpdeskMainSettings($iIdTenant)
 	{
-		$oApiTenant = CApi::GetCoreManager('tenants');
+		$oApiTenant = $this->GetModule()->oCoreDecorator;
+		
 		$oTenant = /* @var $oTenant CTenant */ $oApiTenant ? 
-			(0 < $iIdTenant ? $oApiTenant->getTenantById($iIdTenant) : $oApiTenant->getDefaultGlobalTenant()) : null;
+			(0 < $iIdTenant ? $oApiTenant->GetTenantById($iIdTenant) : $oApiTenant->GetDefaultGlobalTenant()) : null;
 
 		$sClientIframeUrl = '';
+		$sAdminEmail = '';
 		$sAdminEmailAccount = '';
 		$sAgentIframeUrl = '';
 		$sSiteName = '';
@@ -547,18 +549,19 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 		if ($oTenant)
 		{
-			$sAdminEmailAccount = $oTenant->HelpdeskAdminEmailAccount;
-			$sClientIframeUrl = $oTenant->HelpdeskClientIframeUrl;
-			$sAgentIframeUrl = $oTenant->HelpdeskAgentIframeUrl;
-			$sSiteName = $oTenant->HelpdeskSiteName;
-			$bStyleAllow = $oTenant->HelpdeskStyleAllow;
-			$sStyleImage = $oTenant->HelpdeskStyleImage;
-			$sStyleText = $oTenant->getHelpdeskStyleText();
-
-			$iHelpdeskFetcherType = $oTenant->HelpdeskFetcherType;
+			$sAdminEmail = $oTenant->{'HelpDesk::AdminEmail'};
+			$sAdminEmailAccount = $oTenant->{'HelpDesk::AdminEmailAccount'};
+			$sClientIframeUrl = $oTenant->{'HelpDesk::ClientIframeUrl'};
+			$sAgentIframeUrl = $oTenant->{'HelpDesk::AgentIframeUrl'};
+			$sSiteName = $oTenant->{'HelpDesk::SiteName'};
+			$bStyleAllow = $oTenant->{'HelpDesk::StyleAllow'};
+			$sStyleImage = $oTenant->{'HelpDesk::StyleImage'};
+			$iHelpdeskFetcherType = $oTenant->{'HelpDesk::FetcherType'};
+			$sStyleText = $this->getHelpdeskStyleText($oTenant->{'HelpDesk::StyleText'});
 		}
 
 		return array(
+			'AdminEmail' => $sAdminEmail,
 			'AdminEmailAccount' => $sAdminEmailAccount,
 			'ClientIframeUrl' => $sClientIframeUrl,
 			'AgentIframeUrl' => $sAgentIframeUrl,
@@ -669,11 +672,12 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function forgotUser($oHelpdeskUser)
-	{
-		$this->NotifyForgot($oHelpdeskUser);
-		return true;
-	}
+	//MOVED TO THE MAIN MODULE CLASS
+//	public function forgotUser($oHelpdeskAccount)
+//	{
+//		$this->NotifyForgot($oHelpdeskAccount);
+//		return true;
+//	}
 	
 	/**
 	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
@@ -1778,44 +1782,47 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	/**
 	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
 	 */
-	public function NotifyForgot($oHelpdeskUser)
-	{
-		if ($oHelpdeskUser)
-		{
-			$oFromAccount = null;
-			$aData = $this->getHelpdeskMainSettings($oHelpdeskUser->IdTenant);
-			if (!empty($aData['AdminEmailAccount']))
-			{
-				$oApiUsers = $this->_getApiUsers();
-				if ($oApiUsers)
-				{
-					$oFromAccount = $oApiUsers->getAccountByEmail($aData['AdminEmailAccount']);
-				}
-			}
-
-			$sSiteName = isset($aData['SiteName']) ? $aData['SiteName'] : '';
-
-			if ($oFromAccount)
-			{
-				$oApiMail = $this->_getApiMail();
-				if ($oApiMail)
-				{
-					$sEmail = $oHelpdeskUser->resultEmail();
-					if (!empty($sEmail))
-					{
-						$oFromEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
-						$oToEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oHelpdeskUser->Name);
-
-						$oUserMessage = $this->_buildUserMailMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.forgot.html',
-							$oFromEmail->ToString(), $oToEmail->ToString(),
-							'Forgot', '', '', $oHelpdeskUser, $sSiteName);
-
-						$oApiMail->sendMessage($oFromAccount, $oUserMessage);
-					}
-				}
-			}
-		}
-	}
+	//MOVED TO THE MAIN MODULE CLASS
+//	public function NotifyForgot($oHelpdeskAccount)
+//	{
+//		if ($oHelpdeskAccount)
+//		{
+//			$oFromAccount = null;
+//			
+//			$oUser = $this->oCoreDecorator->GetUser($oHelpdeskAccount->IdUser);
+//			$aData = $this->getHelpdeskMainSettings($oUser->IdTenant);
+//			if (!empty($aData['AdminEmailAccount']))
+//			{
+//				$oApiUsers = $this->_getApiUsers();
+//				if ($oApiUsers)
+//				{
+//					$oFromAccount = $oApiUsers->getAccountByEmail($aData['AdminEmailAccount']);
+//				}
+//			}
+//
+//			$sSiteName = isset($aData['SiteName']) ? $aData['SiteName'] : '';
+//
+//			if ($oFromAccount)
+//			{
+//				$oApiMail = $this->_getApiMail();
+//				if ($oApiMail)
+//				{
+//					$sEmail = $oHelpdeskAccount->resultEmail();
+//					if (!empty($sEmail))
+//					{
+//						$oFromEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
+//						$oToEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oHelpdeskAccount->Name);
+//
+//						$oUserMessage = $this->_buildUserMailMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.forgot.html',
+//							$oFromEmail->ToString(), $oToEmail->ToString(),
+//							'Forgot', '', '', $oHelpdeskAccount, $sSiteName);
+//
+//						$oApiMail->sendMessage($oFromAccount, $oUserMessage);
+//					}
+//				}
+//			}
+//		}
+//	}
 	
 	/**
 	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
@@ -1823,12 +1830,12 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function NotifyRegistration($oHelpdeskUser, $bCreateFromFetcher = false)
+	public function NotifyRegistration($oHelpdeskAccount, $bCreateFromFetcher = false)
 	{
-		if ($oHelpdeskUser)
+		if ($oHelpdeskAccount)
 		{
 			$oFromAccount = null;
-			$aData = $this->getHelpdeskMainSettings($oHelpdeskUser->IdTenant);
+			$aData = $this->getHelpdeskMainSettings($oHelpdeskAccount->User->IdTenant);
 			if (!empty($aData['AdminEmailAccount']))
 			{
 				$oApiUsers = $this->_getApiUsers();
@@ -1845,14 +1852,14 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 				$oApiMail = $this->_getApiMail();
 				if ($oApiMail)
 				{
-					$sEmail = $oHelpdeskUser->resultEmail();
+					$sEmail = $oHelpdeskAccount->resultEmail();
 					if (!empty($sEmail))
 					{
 						$oFromEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
-						$oToEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oHelpdeskUser->Name);
+						$oToEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oHelpdeskAccount->Name);
 
 						$oUserMessage = $this->_buildUserMailMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.registration'.($bCreateFromFetcher ? '.fetcher' : '').'.html',
-							$oFromEmail->ToString(), $oToEmail->ToString(), 'Registration', '', '', $oHelpdeskUser, $sSiteName);
+							$oFromEmail->ToString(), $oToEmail->ToString(), 'Registration', '', '', $oHelpdeskAccount, $sSiteName);
 
 						$oApiMail->sendMessage($oFromAccount, $oUserMessage);
 					}
@@ -2129,4 +2136,21 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 		return $mResult;
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getHelpdeskStyleText($sStyleText = '')
+	{
+		return '' !== $sStyleText ? base64_decode($sStyleText) : '';
+	}
+
+	/**
+	 * @param string $sStyle
+	 */
+//	public function setHelpdeskStyleText($sStyle)
+//	{
+//		$sStyle = trim($sStyle);
+//		$this->HelpdeskStyleText = ('' !== $sStyle) ? base64_encode($sStyle) : '';
+//	}
 }

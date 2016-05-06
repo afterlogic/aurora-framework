@@ -1076,6 +1076,13 @@ class CoreModule extends AApiModule
 		
 		return $oTenant ? $oTenant : null;
 	}
+	
+	public function GetDefaultGlobalTenant()
+	{
+		$oTenant = $this->oApiTenantsManager->getDefaultGlobalTenant();
+		
+		return $oTenant ? $oTenant : null;
+	}
 }
 
 return new CoreModule('1.0');

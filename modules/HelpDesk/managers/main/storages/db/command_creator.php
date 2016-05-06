@@ -55,12 +55,12 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 *
 	 * @return string
 	 */
-	public function getUserByEmail($iIdTenant, $sEmail)
-	{
-		return $this->_getUserByWhere(sprintf('%s = %d AND %s = %s',
-			$this->escapeColumn('id_tenant'), $iIdTenant,
-			$this->escapeColumn('email'), strtolower($this->escapeString($sEmail))));
-	}
+//	public function getUserByEmail($iIdTenant, $sEmail)
+//	{
+//		return $this->_getUserByWhere(sprintf('%s = %d AND %s = %s',
+//			$this->escapeColumn('id_tenant'), $iIdTenant,
+//			$this->escapeColumn('email'), strtolower($this->escapeString($sEmail))));
+//	}
 
 	/**
 	 * @param int $iIdTenant

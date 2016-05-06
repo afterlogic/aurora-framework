@@ -2,18 +2,24 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
+use \Modules\HelpDesk\CAccount as CHelpDeskAccount;
+
 /**
  * CApiAccountsManager class summary
  * 
  * @api
  * @package Accounts
  */
-class CApiAuthAccountsManager extends AApiManager
+class CApiHelpDeskAccountsManager extends AApiManager
 {
 	/**
 	 * @var CApiEavManager
 	 */
 	public $oEavManager = null;
+	
+	public $oCoreDecorator = null;
+	
+	public $sAccountClassName = '';
 	
 	/**
 	 * @param CApiGlobalManager &$oManager
@@ -23,6 +29,10 @@ class CApiAuthAccountsManager extends AApiManager
 		parent::__construct('accounts', $oManager, $oModule);
 		
 		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
+		
+		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		
+		$this->sAccountClassName = '\Modules\HelpDesk\CAccount';
 
 		$this->incClass('account');
 	}
@@ -51,7 +61,7 @@ class CApiAuthAccountsManager extends AApiManager
 //					$oAccount = $this->oStorage->getUserById($iUserId);
 					$oAccount = $this->oEavManager->getObjectById($iAccountId);
 					
-					if ($oAccount instanceof \CAccount)
+					if ($oAccount instanceof CHelpDeskAccount)
 					{
 						//TODO method needs to be refactored according to the new system of properties inheritance
 //						$oApiDomainsManager = CApi::GetCoreManager('domains');
@@ -93,7 +103,7 @@ class CApiAuthAccountsManager extends AApiManager
 		try
 		{
 			$aResults = $this->oEavManager->getObjects(
-				'CAccount', 
+				$this->sAccountClassName, 
 				array(
 					'IsDisabled', 'Login', 'Password', 'IdUser'
 				),
@@ -109,6 +119,52 @@ class CApiAuthAccountsManager extends AApiManager
 			if (is_array($aResults) && count($aResults) === 1)
 			{
 				$oAccount = $aResults[0];
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$oAccount = false;
+			$this->setLastException($oException);
+		}
+		return $oAccount;
+	}
+	
+	
+	public function getAccountByEmail($sIdTenant, $sLogin)
+	{
+		$oAccount = null;
+		try
+		{
+			$aResults = $this->oEavManager->getObjects(
+				$this->sAccountClassName, 
+				array(
+					'IsDisabled', 'Login', 'IdUser'
+				),
+				0,
+				0,
+				array(
+					'Login' => $sLogin,
+					'IsDisabled' => false
+				)
+			);
+			
+			if (is_array($aResults))
+			{
+//				$aUsserIds = Underscode\Types\Arrays::pluck($aResults, 'IdUser');
+				
+				foreach ($aResults as $key => $oAccount) {
+					$oUser = $this->oCoreDecorator->GetUser($oAccount->IdUser);
+					
+					if ($oUser && $oUser->IdTenant !== $sIdTenant)
+					{
+						unset($aResults[$key]);
+					}
+				}
+			}
+			
+			if (count($aResults) === 0)
+			{
+				$oAccount = array_values($aResults)[0];
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -182,17 +238,17 @@ class CApiAuthAccountsManager extends AApiManager
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param CHelpDeskAccount $oAccount
 	 *
 	 * @return bool
 	 */
-	public function isExists(CAccount $oAccount)
+	public function isExists(CHelpDeskAccount $oAccount)
 	{
 		$bResult = false;
 		try
 		{
 			$aResults = $this->oEavManager->getObjects(
-				'CAccount',
+				$this->sAccountClassName,
 				array('Login'),
 				0,
 				0,
@@ -223,7 +279,7 @@ class CApiAuthAccountsManager extends AApiManager
 	 *
 	 * @return bool
 	 */
-	public function createAccount (CAccount &$oAccount)
+	public function createAccount (CHelpDeskAccount &$oAccount)
 	{
 		$bResult = false;
 		try

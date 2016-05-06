@@ -242,32 +242,40 @@ class CApiCoreUsersManager extends AApiManager
 	public function isExists(CUser $oUser)
 	{
 		$bResult = false;
-		try
+		
+		$oResult = $this->oEavManager->getObjectById($oUser->iObjectId);
+				
+		if ($oResult instanceof \CUser)
 		{
-			$aResults = $this->oEavManager->getObjects(
-				'CUser',
-				array('Name'),
-				0,
-				0,
-				array('Name' => $oUser->Name)
-			);
-
-			if ($aResults)
-			{
-				foreach($aResults as $oObject)
-				{
-					if ($oObject->iObjectId !== $oUser->iObjectId)
-					{
-						$bResult = true;
-						break;
-					}
-				}
-			}
+			$bResult = true;
 		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
+		
+//		try
+//		{
+//			$aResults = $this->oEavManager->getObjects(
+//				'CUser',
+//				array('Name'),
+//				0,
+//				0,
+//				array('Name' => $oUser->Name)
+//			);
+//
+//			if ($aResults)
+//			{
+//				foreach($aResults as $oObject)
+//				{
+//					if ($oObject->iObjectId !== $oUser->iObjectId)
+//					{
+//						$bResult = true;
+//						break;
+//					}
+//				}
+//			}
+//		}
+//		catch (CApiBaseException $oException)
+//		{
+//			$this->setLastException($oException);
+//		}
 		return $bResult;
 	}
 	
@@ -289,12 +297,12 @@ class CApiCoreUsersManager extends AApiManager
 					
 					if (!$this->oEavManager->saveObject($oUser))
 					{
-						throw new CApiManagerException(Errs::UsersManager_UserCreateFailed);
+						throw new \CApiManagerException(Errs::UsersManager_UserCreateFailed);
 					}
 				}
 				else
 				{
-					throw new CApiManagerException(Errs::UsersManager_UserAlreadyExists);
+					throw new \CApiManagerException(Errs::UsersManager_UserAlreadyExists);
 				}
 			}
 

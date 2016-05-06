@@ -177,7 +177,8 @@ class CApiCoreTenantsManager extends AApiManager
 		{
 			try
 			{
-				$oResult = $this->oEavManager->getObjects('CTenant', 
+				$oResult = $this->oEavManager->getObjects(
+					'CTenant', 
 					array(
 						'IsDefault'
 					),
@@ -591,15 +592,15 @@ class CApiCoreTenantsManager extends AApiManager
 				if ($oTenant->IsDefault && 0 === $oTenant->iObjectId)
 				{
 					//TODO remove update settings
-					$this->oSettings->SetConf('Helpdesk/AdminEmailAccount', $oTenant->HelpdeskAdminEmailAccount);
-					$this->oSettings->SetConf('Helpdesk/ClientIframeUrl', $oTenant->HelpdeskClientIframeUrl);
-					$this->oSettings->SetConf('Helpdesk/AgentIframeUrl', $oTenant->HelpdeskAgentIframeUrl);
-					$this->oSettings->SetConf('Helpdesk/SiteName', $oTenant->HelpdeskSiteName);
-					$this->oSettings->SetConf('Helpdesk/StyleAllow', $oTenant->HelpdeskStyleAllow);
-					$this->oSettings->SetConf('Helpdesk/StyleImage', $oTenant->HelpdeskStyleImage);
-					$this->oSettings->SetConf('Helpdesk/StyleText', $oTenant->HelpdeskStyleText);
+					$this->oSettings->SetConf('Helpdesk/AdminEmailAccount', $oTenant->{'HelpDesk::AdminEmailAccount'});
+					$this->oSettings->SetConf('Helpdesk/ClientIframeUrl', $oTenant->{'HelpDesk::ClientIframeUrl'});
+					$this->oSettings->SetConf('Helpdesk/AgentIframeUrl', $oTenant->{'HelpDesk::AgentIframeUrl'});
+					$this->oSettings->SetConf('Helpdesk/SiteName', $oTenant->{'HelpDesk::SiteName'});
+					$this->oSettings->SetConf('Helpdesk/StyleAllow', $oTenant->{'HelpDesk::StyleAllow'});
+					$this->oSettings->SetConf('Helpdesk/StyleImage', $oTenant->{'HelpDesk::StyleImage'});
+					$this->oSettings->SetConf('Helpdesk/StyleText', $oTenant->{'HelpDesk::StyleText'});
 
-					$this->oSettings->SetConf('Helpdesk/FetcherType', $oTenant->HelpdeskFetcherType);
+					$this->oSettings->SetConf('Helpdesk/FetcherType', $oTenant->{'HelpDesk::FetcherType'});
 
 					$this->oSettings->SetConf('Common/LoginStyleImage', $oTenant->LoginStyleImage);
 					$this->oSettings->SetConf('Common/AppStyleImage', $oTenant->AppStyleImage);

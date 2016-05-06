@@ -505,7 +505,7 @@ abstract class AApiModule
 					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
 					
-					if ($sMethod !== 'Login')
+					if (!$this->CheckNonAuthorizedMethodAllowed($sMethod, $sAuthToken))
 					{
 						if (!\CApi::getLogginedUserId($sAuthToken))
 						{
@@ -514,9 +514,9 @@ abstract class AApiModule
 					}
 					
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
-					
-					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
 
+					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
+					
 	/*						
 					else if (\CApi::Plugin()->JsonHookExists($sMethodName))
 					{
@@ -963,6 +963,11 @@ abstract class AApiModule
 		}
 				
 		return $mResult;
+	}
+	
+	public function CheckNonAuthorizedMethodAllowed($sMethodName = '', $sAuthToken = '')
+	{
+		return !!in_array($sMethodName, array('Login'));
 	}
 }
 

@@ -21,6 +21,10 @@ module.exports = function (oSettings) {
 					return require('modules/HelpDeskClient/js/views/LoginView.js');
 				}
 			}
+		},
+		getHeaderItem: function () {
+//			CheckState.start();
+			return require('modules/HelpDeskClient/js/views/HeaderItemView.js');
 		}
 	};
 };

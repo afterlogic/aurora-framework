@@ -1,5 +1,7 @@
 <?php
 
+use \Modules\HelpDesk\CAccount;
+
 class HelpDeskModule extends AApiModule
 {
 	public $oApiHelpDeskManager = null;
@@ -9,15 +11,33 @@ class HelpDeskModule extends AApiModule
 	public function init() 
 	{
 		$this->oApiHelpDeskManager = $this->GetManager('main', 'db');
+		$this->oAccountsManager = $this->GetManager('accounts', 'db');
 
 //		$this->AddEntry('helpdesk', 'EntryHelpDesk');
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 				
 		$this->setObjectMap('CUser', array(
-				'IsAgent'	=> array('bool', true)
+				'IsAgent' => array('bool', true)
 			)
 		);
+		
+		$this->setObjectMap('CTenant', array(
+				'AdminEmail'		=> array('string', ''),
+				'AdminEmailAccount'	=> array('string', ''),
+				'ClientIframeUrl'	=> array('string', ''),
+				'AgentIframeUrl'	=> array('string', ''),
+				'SiteName'			=> array('string', ''),
+				'StyleAllow'		=> array('bool', false),
+				'StyleImage'		=> array('string', ''),
+				'FetcherType'		=> array('int', EHelpdeskFetcherType::NONE),
+				'StyleText'			=> array('string', ''),
+				'AllowFetcher'		=> array('bool', false),
+				'FetcherTimer' => array('int', 0)
+			)
+		);
+		
+		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
 	}
 	
 	/**
@@ -27,14 +47,12 @@ class HelpDeskModule extends AApiModule
 	 */
 	protected function getHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
 	{
-//		$iUserId = $this->getLogginedUserId($sAuthToken);
 		$iUserId = \CApi::getLogginedUserId();
-//		$iUserId = 61;
-		$oUser = $this->oCoreDecorator->GetUser($iUserId);
+		$oUser = $this->oCoreDecorator ? $this->oCoreDecorator->GetUser($iUserId) : null;
 
 		return $oUser;
 		
-		$oResult = null;
+		/*$oResult = null;
 		$oAccount = null;
 
 		if ('0' === (string) $this->getParamValue('IsExt', '1'))
@@ -62,7 +80,7 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
 		}
 
-		return $oResult;
+		return $oResult;*/
 	}
 	
 	/**
@@ -137,7 +155,7 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 			
-			$mIdTenant = $this->oCoreDecorator->getTenantIdByHash($sTenantHash);
+			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
 
 			if (!is_int($mIdTenant))
 			{
@@ -161,28 +179,22 @@ class HelpDeskModule extends AApiModule
 					'password' => $sPassword,
 					'result' => &$mResult
 				));
-
-				if ($mResult instanceOf CAccount)
+				
+				if (is_array($mResult))
 				{
-					$aAccountHashTable = array(
-						'token' => 'auth',
-						'sign-me' => $bSignMe,
-						'id' => $mResult->IdUser, //$oAccount->IdUser,
-						'email' => 'vasil@afterlogic.com' //$oAccount->Email
-					);
+					$aAccountHashTable = $mResult;
 
-//					$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
+		//			$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
 					$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
 
 					$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
 
 					$sAuthToken = \CApi::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
-					
+
 					return array(
 						'AuthToken' => $sAuthToken
 					);
 				}
-				
 			}
 			catch (\Exception $oException)
 			{
@@ -225,32 +237,59 @@ class HelpDeskModule extends AApiModule
 		return true;
 	}	
 	
-	public function Register()
+	public function Register($sTenantHash = '', $sEmail = '', $sPassword = '', $sName = '', $bIsExt = false)
 	{
-		$sTenantHash = trim($this->getParamValue('TenantHash', ''));
-		if ($this->oApiCapabilityManager->isHelpdeskSupported())
-		{
-			$sEmail = trim($this->getParamValue('Email', ''));
-			$sName = trim($this->getParamValue('Name', ''));
-			$sPassword = trim($this->getParamValue('Password', ''));
+		$sTenantHash = trim($sTenantHash);
+//		if ($this->oApiCapabilityManager->isHelpdeskSupported())
+//		{
+			$sEmail = trim($sEmail);
+			$sName = trim($sName);
+			$sPassword = trim($sPassword);
 
 			if (0 === strlen($sEmail) || 0 === strlen($sPassword))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oApiTenants = \CApi::GetCoreManager('tenants');
-			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
+			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
-
+			
 			$bResult = false;
 			try
 			{
-				$oApiIntegrator = \CApi::GetCoreManager('integrator');
-				$bResult = !!$oApiIntegrator->registerHelpdeskAccount($mIdTenant, $sEmail, $sName, $sPassword);
+				//$oApiIntegrator = \CApi::GetCoreManager('integrator');
+				//$bResult = !!$oApiIntegrator->registerHelpdeskAccount($mIdTenant, $sEmail, $sName, $sPassword);
+				
+				$oEventResult = null;
+				$iUserId = \CApi::getLogginedUserId();
+				
+				$this->broadcastEvent('CreateAccount', array(
+					'IdUser' => $iUserId,
+					'login' => $sEmail,
+					'password' => $sPassword,
+					'result' => &$oEventResult
+				));
+				
+				if ($oEventResult instanceOf \CUser)
+				{
+					$oAccount = \Modules\HelpDesk\CAccount::createInstance();
+
+					$oAccount->IdUser = $oEventResult->iObjectId;
+					$oAccount->Login = $sEmail;
+					$oAccount->Password = $sPassword;
+
+					$this->oAccountsManager->createAccount($oAccount);
+					return $oAccount ? array(
+						'iObjectId' => $oAccount->iObjectId
+					) : false;
+				}
+				else
+				{
+					throw new \Core\Exceptions\ClientException(\Core\Notifications::NonUserPassed);
+				}
 			}
 			catch (\Exception $oException)
 			{
@@ -275,7 +314,7 @@ class HelpDeskModule extends AApiModule
 			}
 
 			return $bResult;
-		}
+//		}
 
 		return false;
 	}	
@@ -290,32 +329,68 @@ class HelpDeskModule extends AApiModule
 		return $oUser && $oUser->IsAgent;
 	}	
 	
-	public function Forgot()
+	public function Forgot($sTenantHash = '', $sEmail = '', $bIsExt = false)
 	{
-		$sTenantHash = trim($this->getParamValue('TenantHash', ''));
+		$sTenantHash = trim($sTenantHash);
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
-			$sEmail = trim($this->getParamValue('Email', ''));
+			$sEmail = trim($sEmail);
 
 			if (0 === strlen($sEmail))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oApiTenants = \CApi::GetCoreManager('tenants');
-			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
+			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
+
 			if (!is_int($mIdTenant))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oUser = $this->oApiHelpDeskManager->getUserByEmail($mIdTenant, $sEmail);
-			if (!($oUser instanceof \CHelpdeskUser))
+			$oAccount = $this->oAccountsManager->getAccountByEmail($mIdTenant, $sEmail);
+			
+			if (!($oAccount instanceof \Modules\HelpDesk\CAccount))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
 			}
 
-			return $this->oApiHelpDeskManager->forgotUser($oUser);
+//			return $this->oApiHelpDeskManager->forgotUser($oAccount);
+			
+			$oFromAccount = null;
+			
+			$aData = $this->oApiHelpDeskManager->getHelpdeskMainSettings($mIdTenant);
+
+			if (!empty($aData['AdminEmailAccount']))
+			{
+				$oApiUsers = $this->_getApiUsers();
+				if ($oApiUsers)
+				{
+					$oFromAccount = $oApiUsers->getAccountByEmail($aData['AdminEmailAccount']);
+				}
+			}
+
+			$sSiteName = isset($aData['SiteName']) ? $aData['SiteName'] : '';
+
+			if ($oFromAccount)
+			{
+				$oApiMail = $this->oApiHelpDeskManager->_getApiMail();
+				if ($oApiMail)
+				{
+					$sEmail = $oAccount->getNotificationEmail();
+					if (!empty($sEmail))
+					{
+						$oFromEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
+						$oToEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oAccount->Name);
+
+						$oUserMessage = $this->oApiHelpDeskManager->_buildUserMailMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.forgot.html',
+							$oFromEmail->ToString(), $oToEmail->ToString(),
+							'Forgot', '', '', $oAccount, $sSiteName);
+
+						$oApiMail->sendMessage($oFromAccount, $oUserMessage);
+					}
+				}
+			}
 		}
 		
 		return false;
@@ -979,6 +1054,26 @@ class HelpDeskModule extends AApiModule
 		$oApiUsers = \CApi::GetCoreManager('users');
 		return $oApiUsers->UpdateAccount($oAccount);
 	}	
+	
+	public function checkAuth($sLogin, $sPassword, &$mResult)
+	{
+		$oAccount = $this->oAccountsManager->getAccountByCredentials($sLogin, $sPassword);
+
+		if ($oAccount)
+		{
+			$mResult = array(
+				'token' => 'auth',
+				'sign-me' => true,
+				'id' => $oAccount->IdUser,
+				'email' => $oAccount->Login
+			);
+		}
+	}
+	
+	public function CheckNonAuthorizedMethodAllowed($sMethodName = '', $sAuthToken = '')
+	{
+		return !!in_array($sMethodName, array('Login', 'Register', 'Forgot'));
+	}
 }
 
 return new HelpDeskModule('1.0');

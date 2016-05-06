@@ -9,7 +9,7 @@ var
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Api = require('modules/Core/js/Api.js'),
-	Browser = require('modules/Core/js/Browser.js'),
+//	Browser = require('modules/Core/js/Browser.js'),
 	Screens = require('modules/Core/js/Screens.js'),
 	Storage = require('modules/Core/js/Storage.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
@@ -28,6 +28,8 @@ var
 function CLoginView()
 {
 	CAbstractScreenView.call(this);
+	
+	this.sTenantHash = '80421e8d';
 	
 	this.emailFocus = ko.observable(false);
 	this.email = ko.observable('');
@@ -228,7 +230,7 @@ CLoginView.prototype.actionLogin = function ()
 		this.loginProcess(true);
 		
 		Ajax.send('Login', {
-			'TenantHash': '80421e8d',
+			'TenantHash': this.sTenantHash,
 			'Email': this.email(),
 			'Password': this.password(),
 			'SignMe': this.signMe() ? '1' : '0'
@@ -287,6 +289,7 @@ CLoginView.prototype.actionRegister = function ()
 		this.registeringProcess(true);
 
 		Ajax.send('Register', {
+			'TenantHash': this.sTenantHash,
 			'Email': this.regEmail(),
 			'Password': this.regPassword(),
 			'Name': this.regName()
@@ -375,7 +378,10 @@ CLoginView.prototype.actionForgot = function ()
 {
 	this.sendingPasswordProcess(true);
 
-	Ajax.send('Forgot', { 'Email': this.forgotEmail() }, this.onHelpdeskForgotResponse, this);
+	Ajax.send('Forgot', {
+		'TenantHash': this.sTenantHash,
+		'Email': this.forgotEmail()
+	}, this.onHelpdeskForgotResponse, this);
 };
 
 /**

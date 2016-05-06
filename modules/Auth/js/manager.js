@@ -1,9 +1,12 @@
 'use strict';
 
+
 module.exports = function (oSettings) {
 	require('modules/Auth/js/enums.js');
+	require('jquery.cookie');
 
 	var
+		$ = require('jquery'),
 		Types = require('modules/Core/js/utils/Types.js'),
 		
 		Ajax = require('modules/Auth/js/Ajax.js'),
@@ -21,6 +24,8 @@ module.exports = function (oSettings) {
 		logout: function (iLastErrorCode, fOnLogoutResponse, oContext)
 		{
 			Ajax.send('Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, fOnLogoutResponse, oContext);
+			
+			$.removeCookie('AuthToken');
 		},
 		beforeAppRunning: function (bAuth) {
 			if (!bAuth && Types.isNonEmptyString(Settings.CustomLoginUrl))

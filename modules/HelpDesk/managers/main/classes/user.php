@@ -197,16 +197,17 @@ class CHelpdeskUser extends api_AContainer
 	/**
 	 * @return string
 	 */
-	public function resultEmail()
-	{
-		$sEmail = $this->NotificationEmail;
-		if (empty($sEmail))
-		{
-			$sEmail = $this->Email;
-		}
-
-		return $sEmail;
-	}
+	//TODO moved to HelpDesk Account
+//	public function resultEmail()
+//	{
+//		$sEmail = $this->NotificationEmail;
+//		if (empty($sEmail))
+//		{
+//			$sEmail = $this->Email;
+//		}
+//
+//		return $sEmail;
+//	}
 	
 	/**
 	 * @return array
