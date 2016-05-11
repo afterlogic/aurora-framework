@@ -185,21 +185,21 @@ class CApiFilesMainManager extends AApiManagerWithStorage
 	/**
 	 * Creates a new folder. 
 	 * 
-	 * @param CAccount $oAccount Account object 
+	 * @param int $iUserId
 	 * @param int $iType Storage type. Accepted values: **EFileStorageType::Personal**, **EFileStorageType::Corporate**, **EFileStorageType::Shared**. 
 	 * @param string $sPath Path to the parent folder, empty string means top-level folder is created. 
 	 * @param string $sFolderName Folder name. 
 	 * 
 	 * @return bool
 	 */
-	public function createFolder($oAccount, $iType, $sPath, $sFolderName)
+	public function createFolder($iUserId, $iType, $sPath, $sFolderName)
 	{
 		$bResult = false;
 		$bBreak = false;
-		\CApi::Plugin()->RunHook('filestorage.create-folder', array($oAccount, $iType, $sPath, $sFolderName, &$bResult, &$bBreak));
+		\CApi::Plugin()->RunHook('filestorage.create-folder', array($iUserId, $iType, $sPath, $sFolderName, &$bResult, &$bBreak));
 		if (!$bBreak)
 		{
-			$bResult = $this->oStorage->createFolder($oAccount, $iType, $sPath, $sFolderName);
+			$bResult = $this->oStorage->createFolder($iUserId, $iType, $sPath, $sFolderName);
 		}
 		return $bResult;
 	}

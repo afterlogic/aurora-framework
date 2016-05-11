@@ -916,7 +916,9 @@ class CApi
 	 */
 	public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
 	{
-		$sLanguage = $oAccount ? $oAccount->User->DefaultLanguage : '';
+		
+		// TODO:
+		$sLanguage = /*$oAccount ? $oAccount->User->DefaultLanguage :*/ '';
 		
 		if (empty($sLanguage)) {
 			$oSettings =& \CApi::GetSettings();

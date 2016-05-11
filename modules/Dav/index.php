@@ -134,6 +134,18 @@ class DavModule extends AApiModule
 			$aParameters['@Result']['ServerUrl'] = $this->GetServerUrl();
 		}
 	}
+	
+	public function Login($sLogin, $sPassword)
+	{
+		$mResult = false;
+		$this->broadcastEvent('Login', array(
+			'login' => $sLogin,
+			'password' => $sPassword,
+			'result' => &$mResult)
+		);		
+		
+		return ($mResult !== false && isset($mResult['id'])) ? $mResult['id'] : false;
+	}
 }
 
 return new DavModule('1.0');

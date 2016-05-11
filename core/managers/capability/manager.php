@@ -147,12 +147,14 @@ class CApiCapabilityManager extends AApiManager
 	}
 
 	/**
-	 * @param CAccount $oAccount = null
+	 * @param int $iUserId = null
 	 * @param bool $bCheckShowSettings = true
 	 * @return bool
 	 */
-	public function isGlobalContactsSupported($oAccount = null, $bCheckShowSettings = true)
+	public function isGlobalContactsSupported($iUserId = null, $bCheckShowSettings = true)
 	{
+		return false; //TODO:
+		
 		$bResult = $this->isContactsSupported() && $this->isCollaborationSupported();
 		if ($bResult && $bCheckShowSettings)
 		{
@@ -161,9 +163,9 @@ class CApiCapabilityManager extends AApiManager
 			$bResult = $oSettings && !!$oSettings->GetConf('Contacts/ShowGlobalContactsInAddressBook');
 		}
 
-		if ($bResult && $oAccount)
+		if ($bResult && $iUserId)
 		{
-			$bResult = $this->isContactsSupported($oAccount) && $oAccount->User->getCapa(ECapa::GAB) && $oAccount->GlobalAddressBook !== \EContactsGABVisibility::Off;
+			$bResult = $this->isContactsSupported($iUserId) && $iUserId->User->getCapa(ECapa::GAB) && $iUserId->GlobalAddressBook !== \EContactsGABVisibility::Off;
 		}		
 
 		return $bResult;

@@ -45,20 +45,20 @@ class CoreModule extends AApiModule
 	 */
 	public function DoServerInitializations()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
+		$iUserId = \CApi::getLogginedUserId();
 
 		$bResult = false;
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 
-		if ($oAccount && $oApiIntegrator)
+		if ($iUserId && $oApiIntegrator)
 		{
 			$oApiIntegrator->resetCookies();
 		}
 
-		if ($this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
+		if ($this->oApiCapabilityManager->isGlobalContactsSupported($iUserId, true))
 		{
-			$bResult = \CApi::ExecuteMethod('Contact::SynchronizeExternalContacts', array('Account' => $oAccount));
+			$bResult = \CApi::ExecuteMethod('Contact::SynchronizeExternalContacts', array('UserId' => $iUserId));
 		}
 
 		$oCacher = \CApi::Cacher();
@@ -1064,6 +1064,12 @@ class CoreModule extends AApiModule
 		return $oUser ? $oUser : null;
 	}
 	
+	public function GetUserList($iPage, $iUsersPerPage, $sOrderBy = 'Email', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
+	{
+		$aUsers = $this->oApiUsersManager->getUserList($iPage, $iUsersPerPage, $sOrderBy, $iOrderType, $sSearchDesc);
+		return $aUsers ? $aUsers : null;
+	}
+
 	public function GetTenantIdByHash($sTenantHash = '')
 	{
 		$oTenant = $this->oApiTenantsManager->GetTenantIdByHash((string) $sTenantHash);

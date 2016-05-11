@@ -148,7 +148,7 @@ class FilesModule extends AApiModule
 	
 	public function UploadFile()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
+		$iUserId = \CApi::getLogginedUserId();
 		$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
 
 		$aFileData = $this->getParamValue('FileData', null);
@@ -159,7 +159,7 @@ class FilesModule extends AApiModule
 		$sError = '';
 		$aResponse = array();
 
-		if ($oAccount) {
+		if ($iUserId) {
 			
 			if (is_array($aFileData)) {
 				
@@ -175,13 +175,13 @@ class FilesModule extends AApiModule
 				{
 					$rData = $aFileData['tmp_name'];
 				}
-				else if ($oApiFileCacheManager->moveUploadedFile($oAccount, $sSavedName, $aFileData['tmp_name']))
+				else if ($oApiFileCacheManager->moveUploadedFile($iUserId, $sSavedName, $aFileData['tmp_name']))
 				{
-					$rData = $oApiFileCacheManager->getFile($oAccount, $sSavedName);
+					$rData = $oApiFileCacheManager->getFile($iUserId, $sSavedName);
 				}
 				if ($rData)
 				{
-					$this->oApiFilesManager->createFile($oAccount, $sType, $sPath, $sUploadName, $rData, false);
+					$this->oApiFilesManager->createFile($iUserId, $sType, $sPath, $sUploadName, $rData, false);
 
 					$aResponse['File'] = array(
 						'Name' => $sUploadName,
@@ -190,7 +190,7 @@ class FilesModule extends AApiModule
 						'Size' =>  (int) $iSize,
 						'Hash' => \CApi::EncodeKeyValues(array(
 							'TempFile' => true,
-							'AccountID' => $oAccount->IdAccount,
+							'UserID' => $iUserId,
 							'Name' => $sUploadName,
 							'TempName' => $sSavedName
 						))
@@ -230,13 +230,13 @@ class FilesModule extends AApiModule
 	{
 		$oResult = array();
 		return $oResult; // TODO
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		\CApi::Plugin()->RunHook('filestorage.get-external-storages', array($oAccount, &$oResult));
+		\CApi::Plugin()->RunHook('filestorage.get-external-storages', array($iUserId, &$oResult));
 
 		return $oResult;
 	}
@@ -255,29 +255,25 @@ class FilesModule extends AApiModule
 		);
 	}	
 
-	public function GetPublicFiles()
+	public function GetPublicFiles($sHash, $sPath)
 	{
-		$oAccount = null;
+		$iUserId = null;
 		$oResult = array();
 
-		$sHash = $this->getParamValue('Hash');
-		$sPath = $this->getParamValue('Path', '');
-		
 		$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sHash));
 		if (!empty($mMin['__hash__'])) {
 			
-			$oApiUsers = \CApi::GetCoreManager('users');
-			$oAccount = $oApiUsers->getAccountById($mMin['Account']);
-			if ($oAccount) {
+			$iUserId = $mMin['UserId'];
+			if ($iUserId) {
 				
-				if (!$this->oApiCapabilityManager->isFilesSupported($oAccount)) {
+				if (!$this->oApiCapabilityManager->isFilesSupported($iUserId)) {
 					
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 				}
 				$sPath =  implode('/', array($mMin['Path'], $mMin['Name']))  . $sPath;
 
-				$oResult['Items'] = $this->oApiFilesManager->getFiles($oAccount, $mMin['Type'], $sPath);
-				$oResult['Quota'] = $this->oApiFilesManager->getQuota($oAccount);
+				$oResult['Items'] = $this->oApiFilesManager->getFiles($iUserId, $mMin['Type'], $sPath);
+				$oResult['Quota'] = $this->oApiFilesManager->getQuota($iUserId);
 				
 			}
 		}
@@ -287,100 +283,79 @@ class FilesModule extends AApiModule
 
 	public function GetQuota()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount)) {
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId)) {
 			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
 		return array(
-				'Quota' => $this->oApiFilesManager->getQuota($oAccount)
+			'Quota' => $this->oApiFilesManager->getQuota($iUserId)
 		);
 	}	
 
-	public function CreateFolder()
+	public function CreateFolder($sType, $sPath, $sFolderName)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount)) {
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId)) {
 			
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sType = $this->getParamValue('Type');
-		$sPath = $this->getParamValue('Path');
-		$sFolderName = $this->getParamValue('FolderName');
-		
-		return $this->oApiFilesManager->createFolder($oAccount, $sType, $sPath, $sFolderName);
+		return $this->oApiFilesManager->createFolder($iUserId, $sType, $sPath, $sFolderName);
 	}
 	
-	public function CreateLink()
+	public function CreateLink($sType, $sPath, $sLink, $sName)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sType = $this->getParamValue('Type');
-		$sPath = $this->getParamValue('Path');
-		$sLink = $this->getParamValue('Link');
-		$sName = $this->getParamValue('Name');
-		
-		return $this->oApiFilesManager->createLink($oAccount, $sType, $sPath, $sLink, $sName);
+		return $this->oApiFilesManager->createLink($iUserId, $sType, $sPath, $sLink, $sName);
 	}
 	
-	public function Delete()
+	public function Delete($sType, $sPath, $aItems)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sType = $this->getParamValue('Type');
-		$aItems = @json_decode($this->getParamValue('Items'), true);
 		$oResult = false;
 		
 		foreach ($aItems as $oItem)
 		{
-			$oResult = $this->oApiFilesManager->delete($oAccount, $sType, $oItem['Path'], $oItem['Name']);
+			$oResult = $this->oApiFilesManager->delete($iUserId, $sType, $oItem['Path'], $oItem['Name']);
 		}
 		
 		return $oResult;
 	}	
 
-	public function Rename()
+	public function Rename($sType, $sPath, $sName, $sNewName, $bIsLink)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$sType = $this->getParamValue('Type');
-		$sPath = $this->getParamValue('Path');
-		$sName = $this->getParamValue('Name');
-		$sNewName = $this->getParamValue('NewName');
-		$bIsLink = !!$this->getParamValue('IsLink');
 		$sNewName = \trim(\MailSo\Base\Utils::ClearFileName($sNewName));
 		
-		$sNewName = $this->oApiFilesManager->getNonExistingFileName($oAccount, $sType, $sPath, $sNewName);
-		return $this->oApiFilesManager->rename($oAccount, $sType, $sPath, $sName, $sNewName, $bIsLink);
+		$sNewName = $this->oApiFilesManager->getNonExistingFileName($iUserId, $sType, $sPath, $sNewName);
+		return $this->oApiFilesManager->rename($iUserId, $sType, $sPath, $sName, $sNewName, $bIsLink);
 	}	
 
-	public function Copy()
+	public function Copy($sFromType, $sToType, $sFromPath, $sToPath, $aItems)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 
-		$sFromType = $this->getParamValue('FromType');
-		$sToType = $this->getParamValue('ToType');
-		$sFromPath = $this->getParamValue('FromPath');
-		$sToPath = $this->getParamValue('ToPath');
-		$aItems = @json_decode($this->getParamValue('Files'), true);
 		$oResult = null;
 		
 		foreach ($aItems as $aItem)
@@ -388,26 +363,20 @@ class FilesModule extends AApiModule
 			$bFolderIntoItself = $aItem['IsFolder'] && $sToPath === $sFromPath.'/'.$aItem['Name'];
 			if (!$bFolderIntoItself)
 			{
-				$sNewName = $this->oApiFilesManager->getNonExistingFileName($oAccount, $sToType, $sToPath, $aItem['Name']);
-				$oResult = $this->oApiFilesManager->copy($oAccount, $sFromType, $sToType, $sFromPath, $sToPath, $aItem['Name'], $sNewName);
+				$sNewName = $this->oApiFilesManager->getNonExistingFileName($iUserId, $sToType, $sToPath, $aItem['Name']);
+				$oResult = $this->oApiFilesManager->copy($iUserId, $sFromType, $sToType, $sFromPath, $sToPath, $aItem['Name'], $sNewName);
 			}
 		}
 		return $oResult;
 	}	
 
-	public function Move()
+	public function Move($sFromType, $sToType, $sFromPath, $sToPath, $aItems)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
-		
-		$sFromType = $this->getParamValue('FromType');
-		$sToType = $this->getParamValue('ToType');
-		$sFromPath = $this->getParamValue('FromPath');
-		$sToPath = $this->getParamValue('ToPath');
-		$aItems = @json_decode($this->getParamValue('Files'), true);
 		$oResult = null;
 		
 		foreach ($aItems as $aItem)
@@ -415,43 +384,34 @@ class FilesModule extends AApiModule
 			$bFolderIntoItself = $aItem['IsFolder'] && $sToPath === $sFromPath.'/'.$aItem['Name'];
 			if (!$bFolderIntoItself)
 			{
-				$sNewName = $this->oApiFilesManager->getNonExistingFileName($oAccount, $sToType, $sToPath, $aItem['Name']);
-				$oResult = $this->oApiFilesManager->move($oAccount, $sFromType, $sToType, $sFromPath, $sToPath, $aItem['Name'], $sNewName);
+				$sNewName = $this->oApiFilesManager->getNonExistingFileName($iUserId, $sToType, $sToPath, $aItem['Name']);
+				$oResult = $this->oApiFilesManager->move($iUserId, $sFromType, $sToType, $sFromPath, $sToPath, $aItem['Name'], $sNewName);
 			}
 		}
 		return $oResult;
 	}	
 	
-	public function CreatePublicLink()
+	public function CreatePublicLink($sType, $sPath, $sName, $sSize, $bIsFolder)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
+		$bIsFolder = $bIsFolder === '1' ? true : false;
 		
-		$sType = $this->getParamValue('Type'); 
-		$sPath = $this->getParamValue('Path'); 
-		$sName = $this->getParamValue('Name');
-		$sSize = $this->getParamValue('Size');
-		$bIsFolder = $this->getParamValue('IsFolder', '0') === '1' ? true : false;
-		
-		return $this->oApiFilesManager->createPublicLink($oAccount, $sType, $sPath, $sName, $sSize, $bIsFolder);
+		return $this->oApiFilesManager->createPublicLink($iUserId, $sType, $sPath, $sName, $sSize, $bIsFolder);
 	}	
 	
-	public function DeletePublicLink()
+	public function DeletePublicLink($sType, $sPath, $sName)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isFilesSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
 		}
 		
-		$sType = $this->getParamValue('Type'); 
-		$sPath = $this->getParamValue('Path'); 
-		$sName = $this->getParamValue('Name');
-		
-		return $this->oApiFilesManager->deletePublicLink($oAccount, $sType, $sPath, $sName);
+		return $this->oApiFilesManager->deletePublicLink($iUserId, $sType, $sPath, $sName);
 	}
 	
 	/**
@@ -459,10 +419,10 @@ class FilesModule extends AApiModule
 	 */
 	public function CheckUrl()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
+		$iUserId = \CApi::getLogginedUserId();
 		$mResult = false;
 
-		if ($oAccount)
+		if ($iUserId)
 		{
 			$sUrl = trim($this->getParamValue('Url', ''));
 
@@ -474,7 +434,7 @@ class FilesModule extends AApiModule
 					$oApiTenants = \CApi::GetCoreManager('tenants');
 					if ($oApiTenants)
 					{
-						$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
+						$oTenant = (0 < $iUserId->IdTenant) ? $oApiTenants->getTenantById($iUserId->IdTenant) :
 							$oApiTenants->getDefaultGlobalTenant();
 					}
 					$oSocial = $oTenant->getSocialByName('google');

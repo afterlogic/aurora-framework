@@ -69,16 +69,16 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 	
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 *
 	 * @return bool
 	 */
-	public function init($oAccount)
+	public function init($iUserId)
 	{
 		$bResult = false;
-		if ($oAccount) {
+		if ($iUserId) {
 			if (!$this->initialized) {
-//				\Afterlogic\DAV\Server::getInstance()->setAccount($oAccount);
+				\Afterlogic\DAV\Server::getInstance()->setUser($iUserId);
 				$this->initialized = true;
 			}
 			$bResult = true;
@@ -105,7 +105,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 
 			if ($sType === \EFileStorageTypeStr::Corporate)
 			{
-				$iTenantId = $oAccount ? $oAccount->IdTenant : 0;
+				$iTenantId = /*$oAccount ? $oAccount->IdTenant :*/ 0;
 
 				$sTenant = $bUser ? $sTenant = '/' . $iTenantId : '';
 				$sRootPath = \CApi::DataPath() . \Afterlogic\DAV\Constants::FILESTORAGE_PATH_ROOT . 
@@ -122,19 +122,19 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 *
 	 * @return Afterlogic\DAV\FS\Directory|null
 	 */
-	protected function getDirectory($oAccount, $sType, $sPath = '')
+	protected function getDirectory($iUserId, $sType, $sPath = '')
 	{
 		$oDirectory = null;
 		
-		if ($oAccount)
+		if ($iUserId)
 		{
-			$sRootPath = $this->getRootPath($oAccount, $sType);
+			$sRootPath = $this->getRootPath($iUserId, $sType);
 			
 			if ($sType === \EFileStorageTypeStr::Personal) {
 				
@@ -152,7 +152,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 			
 			if ($oDirectory) {
 				
-				$oDirectory->setAccount($oAccount);
+				$oDirectory->setUser($iUserId);
 				
 				if ($sPath !== '') {
 					
@@ -167,19 +167,19 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return bool
 	 */
-	public function isFileExists($oAccount, $sType, $sPath, $sName)
+	public function isFileExists($iUserId, $sType, $sPath, $sName)
 	{
 		$bResult = false;
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			if ($oDirectory !== null)
 			{
 				if($oDirectory->childExists($sName))
@@ -197,19 +197,19 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return string|null
 	 */
-	public function getSharedFile($oAccount, $sType, $sPath, $sName)
+	public function getSharedFile($iUserId, $sType, $sPath, $sName)
 	{
 		$sResult = null;
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$sRootPath = $this->getRootPath($oAccount, $sType, true);
+			$sRootPath = $this->getRootPath($iUserId, $sType, true);
 			$FilePath = $sRootPath . '/' . $sPath . '/' . $sName;
 			if (file_exists($FilePath))
 			{
@@ -221,19 +221,19 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return CFileStorageItem|null
 	 */
-	public function getFileInfo($oAccount, $sType, $sPath, $sName)
+	public function getFileInfo($iUserId, $sType, $sPath, $sName)
 	{
 		$oResult = null;
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			if ($oDirectory !== null)
 			{
 				$oItem = $oDirectory->getChild($sName);
@@ -263,18 +263,18 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 *
 	 * @return Afterlogic\DAV\FS\Directory|null
 	 */
-	public function getDirectoryInfo($oAccount, $sType, $sPath)
+	public function getDirectoryInfo($iUserId, $sType, $sPath)
 	{
 		$sResult = null;
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			if ($oDirectory !== null && $oDirectory instanceof Afterlogic\DAV\FS\Directory)
 			{
 				$sResult = $oDirectory->getChildrenProperties();
@@ -285,19 +285,19 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return Afterlogic\DAV\FS\File|null
 	 */
-	public function getFile($oAccount, $sType, $sPath, $sName)
+	public function getFile($iUserId, $sType, $sPath, $sName)
 	{
 		$sResult = null;
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			if ($oDirectory !== null)
 			{
 				$oItem = $oDirectory->getChild($sName);
@@ -312,18 +312,18 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return string|false
 	 */
-	public function createPublicLink($oAccount, $sType, $sPath, $sName, $sSize, $bIsFolder)
+	public function createPublicLink($iUserId, $sType, $sPath, $sName, $sSize, $bIsFolder)
 	{
 		$mResult = false;
 
-		$sID = implode('|', array($oAccount->IdAccount,	$sType, $sPath, $sName));
+		$sID = implode('|', array($iUserId,	$sType, $sPath, $sName));
 		$oMin = $this->getApiMinManager();
 		$mMin = $oMin->getMinByID($sID);
 		if (!empty($mMin['__hash__']))
@@ -333,7 +333,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 		else
 		{
 			$mResult = $oMin->createMin($sID, array(
-					'Account' => $oAccount->IdAccount,
+					'UserId' => $iUserId,
 					'Type' => $sType, 
 					'Path' => $sPath, 
 					'Name' => $sName,
@@ -349,16 +349,16 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return bool
 	 */
-	public function deletePublicLink($oAccount, $sType, $sPath, $sName)
+	public function deletePublicLink($iUserId, $sType, $sPath, $sName)
 	{
-		$sID = implode('|', array($oAccount->IdAccount,	$sType, $sPath, $sName));
+		$sID = implode('|', array($iUserId,	$sType, $sPath, $sName));
 
 		$oMin = $this->getApiMinManager();
 
@@ -386,7 +386,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 			$oApiTenants = false; //\CApi::GetCoreManager('tenants');
 			if ($oApiTenants)
 			{
-				$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
+				$oTenant = /*(0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :*/
 					$oApiTenants->getDefaultGlobalTenant();
 			}
 
@@ -553,18 +553,18 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sFolderName
 	 *
 	 * @return bool
 	 */
-	public function createFolder($oAccount, $sType, $sPath, $sFolderName)
+	public function createFolder($iUserId, $sType, $sPath, $sFolderName)
 	{
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 
 			if ($oDirectory !== null)
 			{
@@ -577,7 +577,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sLink
@@ -585,12 +585,12 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 *
 	 * @return bool
 	 */
-	public function createLink($oAccount, $sType, $sPath, $sLink, $sName)
+	public function createLink($iUserId, $sType, $sPath, $sLink, $sName)
 	{
 		$iLinkType = \api_Utils::GetLinkType($sLink);
-		if (/*\EFileStorageLinkType::Unknown !== $iLinkType && */$this->init($oAccount))
+		if (/*\EFileStorageLinkType::Unknown !== $iLinkType && */$this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 
 			if ($oDirectory !== null)
 			{
@@ -598,7 +598,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 				$oDirectory->createFile($sFileName);
 				$oItem = $oDirectory->getChild($sFileName);
 				$oItem->updateProperties(array(
-					'Owner' => $oAccount->Email,
+					'Owner' => $iUserId,
 					'Name' => $sName,
 					'Link' => $sLink,
 					'LinkType' => $iLinkType
@@ -612,7 +612,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sFileName
@@ -620,11 +620,11 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 *
 	 * @return bool
 	 */
-	public function createFile($oAccount, $sType, $sPath, $sFileName, $sData)
+	public function createFile($iUserId, $sType, $sPath, $sFileName, $sData)
 	{
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 
 			if ($oDirectory !== null)
 			{
@@ -637,24 +637,24 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
 	 *
 	 * @return bool
 	 */
-	public function delete($oAccount, $sType, $sPath, $sName)
+	public function delete($iUserId, $sType, $sPath, $sName)
 	{
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			$oItem = $oDirectory->getChild($sName);
 			if ($oItem !== null)
 			{
 				if ($oItem instanceof \Afterlogic\DAV\FS\Directory)
 				{
-					$this->updateMin($oAccount, $sType, $sPath, $sName, $sName, $oItem, true);
+					$this->updateMin($iUserId, $sType, $sPath, $sName, $sName, $oItem, true);
 				}
 				$oItem->delete();
 				return true;
@@ -665,7 +665,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
@@ -675,13 +675,13 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 *
 	 * @return bool
 	 */
-	public function updateMin($oAccount, $sType, $sPath, $sName, $sNewName, $oItem, $bDelete = false)
+	public function updateMin($iUserId, $sType, $sPath, $sName, $sNewName, $oItem, $bDelete = false)
 	{
-		if ($oAccount)
+		if ($iUserId)
 		{
 			$oApiMinManager = $this->getApiMinManager();
 
-			$sRootPath = $this->getRootPath($oAccount, $sType, true);
+			$sRootPath = $this->getRootPath($iUserId, $sType, true);
 
 			$sOldPath = $sPath . '/' . $sName;
 			$sNewPath = $sPath . '/' . $sNewName;
@@ -693,7 +693,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 					if ($oChild instanceof \Afterlogic\DAV\FS\File)
 					{
 						$sChildPath = substr(dirname($oChild->getPath()), strlen($sRootPath));
-						$sID = $this->generateShareHash($oAccount, $sType, $sChildPath, $oChild->getName());
+						$sID = $this->generateShareHash($iUserId, $sType, $sChildPath, $oChild->getName());
 						if ($bDelete)
 						{
 							$oApiMinManager->deleteMinByID($sID);
@@ -704,7 +704,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 							if (!empty($mMin['__hash__']))
 							{
 								$sNewChildPath = $sNewPath . substr($sChildPath, strlen($sOldPath));
-								$sNewID = $this->generateShareHash($oAccount, $sType, $sNewChildPath, $oChild->getName());
+								$sNewID = $this->generateShareHash($iUserId, $sType, $sNewChildPath, $oChild->getName());
 								$mMin['Path'] = $sNewChildPath;
 								$oApiMinManager->updateMinByID($sID, $mMin, $sNewID);
 							}					
@@ -712,7 +712,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 					}
 					if ($oChild instanceof \Afterlogic\DAV\FS\Directory)
 					{
-						$this->updateMin($oAccount, $sType, $sPath, $sName, $sNewName, $oChild, $bDelete);
+						$this->updateMin($iUserId, $sType, $sPath, $sName, $sNewName, $oChild, $bDelete);
 					}
 				}
 			}
@@ -720,7 +720,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
@@ -728,15 +728,15 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 *
 	 * @return bool
 	 */
-	public function rename($oAccount, $sType, $sPath, $sName, $sNewName)
+	public function rename($iUserId, $sType, $sPath, $sName, $sNewName)
 	{
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			$oItem = $oDirectory->getChild($sName);
 			if ($oItem !== null)
 			{
-				$this->updateMin($oAccount, $sType, $sPath, $sName, $sNewName, $oItem);
+				$this->updateMin($iUserId, $sType, $sPath, $sName, $sNewName, $oItem);
 				$oItem->setName($sNewName);
 				return true;
 			}
@@ -745,7 +745,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 * @param string $sPath
 	 * @param string $sName
@@ -753,11 +753,11 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 *
 	 * @return bool
 	 */
-	public function renameLink($oAccount, $sType, $sPath, $sName, $sNewName)
+	public function renameLink($iUserId, $sType, $sPath, $sName, $sNewName)
 	{
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
-			$oDirectory = $this->getDirectory($oAccount, $sType, $sPath);
+			$oDirectory = $this->getDirectory($iUserId, $sType, $sPath);
 			$oItem = $oDirectory->getChild($sName);
 
 			if ($oItem)
@@ -772,7 +772,7 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sFromType
 	 * @param string $sToType
 	 * @param string $sFromPath
@@ -783,9 +783,9 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	 *
 	 * @return bool
 	 */
-	public function copy($oAccount, $sFromType, $sToType, $sFromPath, $sToPath, $sName, $sNewName, $bMove = false)
+	public function copy($iUserId, $sFromType, $sToType, $sFromPath, $sToPath, $sName, $sNewName, $bMove = false)
 	{
-		if ($this->init($oAccount))
+		if ($this->init($iUserId))
 		{
 			$oApiMinManager = $this->getApiMinManager();
 
@@ -794,11 +794,11 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 				$sNewName = $sName;
 			}
 
-			$sFromRootPath = $this->getRootPath($oAccount, $sFromType, true);
-			$sToRootPath = $this->getRootPath($oAccount, $sToType, true);
+			$sFromRootPath = $this->getRootPath($iUserId, $sFromType, true);
+			$sToRootPath = $this->getRootPath($iUserId, $sToType, true);
 
-			$oFromDirectory = $this->getDirectory($oAccount, $sFromType, $sFromPath);
-			$oToDirectory = $this->getDirectory($oAccount, $sToType, $sToPath);
+			$oFromDirectory = $this->getDirectory($iUserId, $sFromType, $sFromPath);
+			$oToDirectory = $this->getDirectory($iUserId, $sToType, $sToPath);
 
 			if ($oToDirectory && $oFromDirectory)
 			{
@@ -813,19 +813,19 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 						$aProps = $oItem->getProperties(array());
 						if (!$bMove)				
 						{
-							$aProps['Owner'] = $oAccount->Email;
+							$aProps['Owner'] = $iUserId;
 						}
 						else
 						{
 							$sChildPath = substr(dirname($oItem->getPath()), strlen($sFromRootPath));
-							$sID = $this->generateShareHash($oAccount, $sFromType, $sChildPath, $oItem->getName());
+							$sID = $this->generateShareHash($iUserId, $sFromType, $sChildPath, $oItem->getName());
 
 							$sNewChildPath = substr(dirname($oItemNew->getPath()), strlen($sToRootPath));
 
 							$mMin = $oApiMinManager->getMinByID($sID);
 							if (!empty($mMin['__hash__']))
 							{
-								$sNewID = $this->generateShareHash($oAccount, $sToType, $sNewChildPath, $oItemNew->getName());
+								$sNewID = $this->generateShareHash($iUserId, $sToType, $sNewChildPath, $oItemNew->getName());
 
 								$mMin['Path'] = $sNewChildPath;
 								$mMin['Type'] = $sToType;
@@ -842,8 +842,8 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 						$oChildren = $oItem->getChildren();
 						foreach ($oChildren as $oChild)
 						{
-							$sChildNewName = $this->getNonExistingFileName($oAccount, $sToType, $sToPath . '/' . $sNewName, $oChild->getName());
-							$this->copy($oAccount, $sFromType, $sToType, $sFromPath . '/' . $sName, $sToPath . '/' . $sNewName, $oChild->getName(), $sChildNewName, $bMove);
+							$sChildNewName = $this->getNonExistingFileName($iUserId, $sToType, $sToPath . '/' . $sNewName, $oChild->getName());
+							$this->copy($iUserId, $sFromType, $sToType, $sFromPath . '/' . $sName, $sToPath . '/' . $sNewName, $oChild->getName(), $sChildNewName, $bMove);
 						}
 					}
 					if ($bMove)
@@ -858,30 +858,30 @@ class CApiFilesMainSabredavStorage extends CApiFilesMainStorage
 	}
 
 	/**
-	 * @param CAccount $oAccount
+	 * @param int $iUserId
 	 * @param string $sType
 	 *
 	 * @return array
 	 */
-	public function getRealQuota($oAccount, $sType)
+	public function getRealQuota($iUserId, $sType)
 	{
 		$iUsageSize = 0;
 		$iFreeSize = 0;
 		
-		if ($oAccount)
+		if ($iUserId)
 		{
-			$sRootPath = $this->getRootPath($oAccount, \EFileStorageTypeStr::Personal, true);
+			$sRootPath = $this->getRootPath($iUserId, \EFileStorageTypeStr::Personal, true);
 			$aSize = \api_Utils::GetDirectorySize($sRootPath);
 			$iUsageSize += (int) $aSize['size'];
 
-			$sRootPath = $this->getRootPath($oAccount, \EFileStorageTypeStr::Corporate, true);
+			$sRootPath = $this->getRootPath($iUserId, \EFileStorageTypeStr::Corporate, true);
 			$aSize = \api_Utils::GetDirectorySize($sRootPath);
 			$iUsageSize += (int) $aSize['size'];
 
 			$oApiTenants = \CApi::GetCoreManager('tenants');
 			if ($oApiTenants)
 			{
-				$oTenant = $oApiTenants->getTenantById($oAccount->IdTenant);
+				$oTenant = $oApiTenants->getTenantById($iUserId->IdTenant);
 				if ($oTenant)
 				{
 					$iFreeSize = ($oTenant->FilesUsageDynamicQuotaInMB * 1024 * 1024) - $iUsageSize;
