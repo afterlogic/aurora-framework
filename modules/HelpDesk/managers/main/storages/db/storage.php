@@ -582,18 +582,17 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 	
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All.
 	 * @param string $sSearch Default value is empty string.
 	 * @param int $iSearchOwner Default value is **0**.
 	 *
 	 * @return int
 	 */
-//	public function getThreadsCount(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
-	public function getThreadsCount(CUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreadsCount(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$iResult = 0;
-		if ($this->oConnection->Execute($this->oCommandCreator->getThreadsCount($oHelpdeskUser, $iFilter, $sSearch, $iSearchOwner)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getThreadsCount($oUser, $iFilter, $sSearch, $iSearchOwner)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
@@ -715,16 +714,15 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aThreadIds
 	 *
 	 * @return array|bool
 	 */
-//	public function getThreadsLastPostIds(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
-	public function getThreadsLastPostIds(CUser $oHelpdeskUser, $aThreadIds)
+	public function getThreadsLastPostIds(\CUser $oUser, $aThreadIds)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getThreadsLastPostIds($oHelpdeskUser, $aThreadIds)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getThreadsLastPostIds($oUser, $aThreadIds)))
 		{
 			$oRow = null;
 			$mResult = array();

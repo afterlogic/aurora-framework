@@ -27,7 +27,9 @@ class CAccount extends \api_APropertyBag
 			'IdUser'		=> array('int', 0),
 			'Login'			=> array('string', ''),
 			'Password'		=> array('string', ''),
-			'NotificationEmail' => array('string', '')
+			'NotificationEmail' => array('string', ''),
+			/* moved from user */
+			'IsAgent' => array('string', '')
 		);
 		
 		$this->SetDefaults();

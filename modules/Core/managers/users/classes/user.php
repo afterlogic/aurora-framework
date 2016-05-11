@@ -76,7 +76,7 @@ class CUser extends api_APropertyBag
 		$this->aStaticMap = array(
 
 //			'IdUser'							=> array('int', 0), //'id_user'),
-			'Name'								=> array('string', ''), //'id_subscription'),
+			'Name'								=> array('string', ''),
 			'IdTenant'							=> array('int', 0),
 			'IsDisabled'						=> array('bool', false),
 			'IdSubscription'					=> array('int', 0), //'id_subscription'),

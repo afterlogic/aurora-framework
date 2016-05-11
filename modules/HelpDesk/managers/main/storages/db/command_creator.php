@@ -370,20 +370,19 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iIdThread
 	 *
 	 * @return string
 	 */
-//	public function getThreadById(CHelpdeskUser $oHelpdeskUser, $iIdThread)
-	public function getThreadById(CUser $oHelpdeskUser, $iIdThread)
+	public function getThreadById(\CUser $oUser, $iIdThread)
 	{
 		$aMap = api_AContainer::DbReadKeys(CHelpdeskThread::getStaticMap());
 		$aMap = array_map(array($this, 'escapeColumn'), $aMap);
 
 		return sprintf('SELECT %s FROM %sahd_threads WHERE %s = %d AND %s = %d',
 			implode(', ', $aMap), $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_thread'), $iIdThread
 		);
 	}
@@ -427,7 +426,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All.
 	 * @param string $sSearch
 	 * @param int $iSearchOwner
@@ -435,11 +434,11 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 * @return array
 	 */
 //	private function buildThreadsWhere(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
-	private function buildThreadsWhere(CUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	private function buildThreadsWhere(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$aWhere = array();
 
-		$aWhere[] = $this->escapeColumn('id_tenant').' = '.$oHelpdeskUser->IdTenant;
+		$aWhere[] = $this->escapeColumn('id_tenant').' = '.$oUser->IdTenant;
 
 		$aWhere[] = $this->escapeColumn('archived').' = '.(EHelpdeskThreadFilterType::Archived === $iFilter ? 1 : 0);
 		if (EHelpdeskThreadFilterType::Archived !== $iFilter)
@@ -456,7 +455,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 					$aWhere[] = $this->escapeColumn('type').' = '.EHelpdeskThreadType::Resolved;
 					break;
 				case EHelpdeskThreadFilterType::Open:
-					if ($oHelpdeskUser->{'HelpDesk::IsAgent'})
+					if ($oUser->{'HelpDesk::IsAgent'})
 					{
 						$aWhere[] = '(('.
 							$this->escapeColumn('type').' IN ('.implode(',', array(
@@ -465,7 +464,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 								EHelpdeskThreadType::Waiting
 							)).')'.
 						') OR ('.
-							$this->escapeColumn('id_owner').' = '.$oHelpdeskUser->IdHelpdeskUser.' AND '.
+							$this->escapeColumn('id_owner').' = '.$oUser->iObjectId.' AND '.
 							$this->escapeColumn('type').' IN ('.implode(',', array(
 								EHelpdeskThreadType::Answered
 							)).')'.
@@ -492,9 +491,9 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 			}
 		}
 
-		if (!$oHelpdeskUser->{'HelpDesk::IsAgent'})
+		if (!$oUser->{'HelpDesk::IsAgent'})
 		{
-			$aWhere[] = $this->escapeColumn('id_owner').' = '.$oHelpdeskUser->IdHelpdeskUser;
+			$aWhere[] = $this->escapeColumn('id_owner').' = '.$oUser->iObjectId;
 		}
 
 		if (0 < $iSearchOwner)
@@ -524,20 +523,19 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All.
 	 * @param string $sSearch Default value is empty string.
 	 * @param int $iSearchOwner Default value is **0**.
 	 *
 	 * @return string
 	 */
-//	public function getThreadsCount(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
-	public function getThreadsCount(CUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreadsCount(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$sSql = 'SELECT COUNT(id_helpdesk_thread) as item_count FROM %sahd_threads';
 		$sSql = sprintf($sSql, $this->prefix());
 
-		$aWhere = $this->buildThreadsWhere($oHelpdeskUser, $iFilter, $sSearch, $iSearchOwner);
+		$aWhere = $this->buildThreadsWhere($oUser, $iFilter, $sSearch, $iSearchOwner);
 		if (is_array($aWhere) && 0 < count($aWhere))
 		{
 			$sSql .= ' WHERE '.implode(' AND ', $aWhere);
@@ -563,7 +561,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iOffset Default value is **0**.
 	 * @param int $iLimit Default value is **20**.
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All.
@@ -572,8 +570,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 *
 	 * @return string
 	 */
-//	public function getThreads(CHelpdeskUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
-	public function getThreads(CUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreads(\CUser $oUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$sSearch = trim($sSearch);
 
@@ -584,7 +581,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 		$sSql = 'SELECT %s FROM %sahd_threads';
 		$sSql = sprintf($sSql, implode(', ', $aMap), $this->prefix());
 
-		$aWhere = $this->buildThreadsWhere($oHelpdeskUser, $iFilter, $sSearch, $iSearchOwner);
+		$aWhere = $this->buildThreadsWhere($oUser, $iFilter, $sSearch, $iSearchOwner);
 		if (is_array($aWhere) && 0 < count($aWhere))
 		{
 			$sSql .= ' WHERE '.implode(' AND ', $aWhere);
@@ -600,18 +597,17 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aThreadIds
 	 *
 	 * @return string
 	 */
-//	public function getThreadsLastPostIds(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
-	public function getThreadsLastPostIds(CUser $oHelpdeskUser, $aThreadIds)
+	public function getThreadsLastPostIds(\CUser $oUser, $aThreadIds)
 	{
 		$sSql = 'SELECT DISTINCT id_helpdesk_thread, last_post_id FROM %sahd_reads WHERE %s = %d AND %s = %d AND %s IN (%s)';
 		return sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
-			$this->escapeColumn('id_owner'), $oHelpdeskUser->IdHelpdeskUser,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
+			$this->escapeColumn('id_owner'), $oUser->iObjectId,
 			$this->escapeColumn('id_helpdesk_thread'), implode(',', $aThreadIds)
 		);
 	}

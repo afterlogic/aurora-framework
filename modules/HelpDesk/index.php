@@ -4,13 +4,17 @@ use \Modules\HelpDesk\CAccount;
 
 class HelpDeskModule extends AApiModule
 {
-	public $oApiHelpDeskManager = null;
+	public $oCurrentAccount = null;
+	
+	public $oMainManager = null;
+	
+	public $oAccountsManager = null;
 	
 	public $oCoreDecorator = null;
 	
 	public function init() 
 	{
-		$this->oApiHelpDeskManager = $this->GetManager('main', 'db');
+		$this->oMainManager = $this->GetManager('main', 'db');
 		$this->oAccountsManager = $this->GetManager('accounts', 'db');
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
@@ -38,6 +42,17 @@ class HelpDeskModule extends AApiModule
 		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
 	}
 	
+	protected function GetCurrentAccount()
+	{
+		$iUserId = \CApi::getLogginedUserId();
+	
+		if (!$this->oCurrentAccount && $iUserId)
+		{
+			$this->oCurrentAccount = $this->oAccountsManager->getAccountByUserId($iUserId);
+		}
+		
+		return $this->oCurrentAccount;
+	}
 	/**
 	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
 	 *
@@ -94,13 +109,13 @@ class HelpDeskModule extends AApiModule
 		{
 			if (0 < $oAccount->User->IdHelpdeskUser)
 			{
-				$oHelpdeskUser = $this->oApiHelpDeskManager->getUserById($oAccount->IdTenant, $oAccount->User->IdHelpdeskUser);
+				$oHelpdeskUser = $this->oMainManager->getUserById($oAccount->IdTenant, $oAccount->User->IdHelpdeskUser);
 				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
 			}
 
 			if (!($oResult instanceof \CHelpdeskUser))
 			{
-				$oHelpdeskUser = $this->oApiHelpDeskManager->getUserByEmail($oAccount->IdTenant, $oAccount->Email);
+				$oHelpdeskUser = $this->oMainManager->getUserByEmail($oAccount->IdTenant, $oAccount->Email);
 				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
 				
 				if ($oResult instanceof \CHelpdeskUser)
@@ -125,7 +140,7 @@ class HelpDeskModule extends AApiModule
 
 				$oHelpdeskUser->setPassword($oAccount->IncomingMailPassword);
 
-				if ($this->oApiHelpDeskManager->createUser($oHelpdeskUser))
+				if ($this->oMainManager->createUser($oHelpdeskUser))
 				{
 					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
 					$oApiUsers->updateAccount($oAccount);
@@ -354,11 +369,11 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
 			}
 
-//			return $this->oApiHelpDeskManager->forgotUser($oAccount);
+//			return $this->oMainManager->forgotUser($oAccount);
 			
 			$oFromAccount = null;
 			
-			$aData = $this->oApiHelpDeskManager->getHelpdeskMainSettings($mIdTenant);
+			$aData = $this->oMainManager->getHelpdeskMainSettings($mIdTenant);
 
 			if (!empty($aData['AdminEmailAccount']))
 			{
@@ -373,7 +388,7 @@ class HelpDeskModule extends AApiModule
 
 			if ($oFromAccount)
 			{
-				$oApiMail = $this->oApiHelpDeskManager->_getApiMail();
+				$oApiMail = $this->oMainManager->_getApiMail();
 				if ($oApiMail)
 				{
 					$sEmail = $oAccount->getNotificationEmail();
@@ -382,7 +397,7 @@ class HelpDeskModule extends AApiModule
 						$oFromEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
 						$oToEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oAccount->Name);
 
-						$oUserMessage = $this->oApiHelpDeskManager->_buildUserMailMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.forgot.html',
+						$oUserMessage = $this->oMainManager->_buildUserMailMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.forgot.html',
 							$oFromEmail->ToString(), $oToEmail->ToString(),
 							'Forgot', '', '', $oAccount, $sSiteName);
 
@@ -415,7 +430,7 @@ class HelpDeskModule extends AApiModule
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
 
-			$oUser = $this->oApiHelpDeskManager->getUserByActivateHash($mIdTenant, $sActivateHash);
+			$oUser = $this->oMainManager->getUserByActivateHash($mIdTenant, $sActivateHash);
 			if (!($oUser instanceof \CHelpdeskUser))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
@@ -425,7 +440,7 @@ class HelpDeskModule extends AApiModule
 			$oUser->setPassword($sNewPassword);
 			$oUser->regenerateActivateHash();
 
-			return $this->oApiHelpDeskManager->updateUser($oUser);
+			return $this->oMainManager->updateUser($oUser);
 		}
 
 		return false;
@@ -469,14 +484,14 @@ class HelpDeskModule extends AApiModule
 			$oThread->Type = \EHelpdeskThreadType::Pending;
 			$oThread->Subject = $sSubject;
 
-			if (!$this->oApiHelpDeskManager->createThread($oUser, $oThread))
+			if (!$this->oMainManager->createThread($oUser, $oThread))
 			{
 				$oThread = null;
 			}
 		}
 		else
 		{
-			$oThread = $this->$this->oApiHelpDeskManager->getThreadById($oUser, $iThreadId);
+			$oThread = $this->oMainManager->getThreadById($oUser, $iThreadId);
 		}
 
 		if ($oThread && 0 < $oThread->IdHelpdeskThread)
@@ -541,7 +556,7 @@ class HelpDeskModule extends AApiModule
 				}
 			}
 
-			$mResult = $this->oApiHelpDeskManager->createPost($oUser, $oThread, $oPost, $bIsNew, true, $sCc, $sBcc);
+			$mResult = $this->oMainManager->createPost($oUser, $oThread, $oPost, $bIsNew, true, $sCc, $sBcc);
 
 			if ($mResult)
 			{
@@ -576,18 +591,18 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$oThread = $this->oApiHelpDeskManager->getThreadById($oUser, $iThreadId);
+		$oThread = $this->oMainManager->getThreadById($oUser, $iThreadId);
 		if (!$oThread)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		if (!$this->oApiHelpDeskManager->verifyPostIdsBelongToUser($oUser, array($iPostId)))
+		if (!$this->oMainManager->verifyPostIdsBelongToUser($oUser, array($iPostId)))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
 
-		return $this->oApiHelpDeskManager->deletePosts($oUser, $oThread, array($iPostId));
+		return $this->oMainManager->deletePosts($oUser, $oThread, array($iPostId));
 	}	
 	
 	/**
@@ -608,19 +623,19 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$mHelpdeskThreadId = $sThreadId ? $sThreadId : $this->oApiHelpDeskManager->getThreadIdByHash($oUser->IdTenant, $sThreadHash);
+		$mHelpdeskThreadId = $sThreadId ? $sThreadId : $this->oMainManager->getThreadIdByHash($oUser->IdTenant, $sThreadHash);
 		if (!is_int($mHelpdeskThreadId) || 1 > $mHelpdeskThreadId)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$oThread = $this->oApiHelpDeskManager->getThreadById($oUser, $mHelpdeskThreadId);
+		$oThread = $this->oMainManager->getThreadById($oUser, $mHelpdeskThreadId);
 		if (!$oThread)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$aUserInfo = $this->oApiHelpDeskManager->userInformation($oUser, array($oThread->IdOwner));
+		$aUserInfo = $this->oMainManager->userInformation($oUser, array($oThread->IdOwner));
 		if (is_array($aUserInfo) && 0 < count($aUserInfo))
 		{
 			if (isset($aUserInfo[$oThread->IdOwner]) && is_array($aUserInfo[$oThread->IdOwner]))
@@ -650,64 +665,83 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function GetPosts($iThreadId = 0, $iStartFromId = 0, $iLimit = 10, $iIsExt = 1)
 	{
-//		$oAccount = null;
-//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 		$oUser = $this->getHelpdeskAccountFromParam();
 		
-		$bIsAgent = $oUser->{'HelpDesk::IsAgent'};
-
-//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
-//		$iStartFromId = (int) $this->getParamValue('StartFromId', 0);
-//		$iLimit = (int) $this->getParamValue('Limit', 10);
-//		$iIsExt = (int) $this->getParamValue('IsExt', 1);
 
 		if (1 > $iThreadId || 0 > $iStartFromId || 1 > $iLimit)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
-		$oThread = $this->oApiHelpDeskManager->getThreadById($oUser, $iThreadId);
+		
+		$oThread = $this->oMainManager->getThreadById($oUser, $iThreadId);
 		if (!$oThread)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$aList = $this->oApiHelpDeskManager->getPosts($oUser, $oThread, $iStartFromId, $iLimit);
-		$iExtPostsCount = $iIsExt ? $this->oApiHelpDeskManager->getExtPostsCount($oUser, $oThread) : 0;
+		$aPostList = $this->oMainManager->getPosts($oUser, $oThread, $iStartFromId, $iLimit);
+		$iExtPostsCount = $iIsExt ? $this->oMainManager->getExtPostsCount($oUser, $oThread) : 0;
 
-		$aIdList = array();
-		if (is_array($aList) && 0 < count($aList))
+		$aOwnerDataList = array();
+		if (is_array($aPostList) && 0 < count($aPostList))
 		{
-			foreach ($aList as &$oItem)
+			foreach ($aPostList as &$oItem)
 			{
-				if ($oItem)
+				if ($oItem && !isset($aOwnerDataList[$oItem->IdOwner]))
 				{
-					$aIdList[$oItem->IdOwner] = (int) $oItem->IdOwner;
+//					$aIdList[$oItem->IdOwner] = (int) $oItem->IdOwner;
+					$oOwnerUser = $this->oCoreDecorator->GetUser($oItem->IdOwner);
+					$oOwnerUserAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
+					
+					if ($oOwnerUser)
+					{
+						$aOwnerDataList[$oItem->IdOwner] = array(
+							'Email' => $oOwnerUserAccount->Login,
+							'Name' => $oOwnerUser->Name,
+							'NotificationEmail' => $oOwnerUserAccount->NotificationEmail
+						);
+					}
 				}
 			}
 		}
-
-		$aIdList[$oThread->IdOwner] = (int) $oThread->IdOwner;
-
-		if (0 < count($aIdList))
+		
+		if (!isset($aOwnerDataList[$oThread->IdOwner]))
 		{
-			$aIdList = array_values($aIdList);
-			$aUserInfo = $this->oApiHelpDeskManager->userInformation($oUser, $aIdList);
+			$oOwnerUser = $this->oCoreDecorator->GetUser($oThread->IdOwner);
+			$oOwnerUserAccount = $this->oAccountsManager->getAccountByUserId($oThread->IdOwner);
+
+			if ($oOwnerUser)
+			{
+				$aOwnerDataList[$oThread->IdOwner] = array(
+					'Email' => $oOwnerUserAccount->Login,
+					'Name' => $oOwnerUser->Name,
+					'NotificationEmail' => $oOwnerUserAccount->NotificationEmail
+				);
+			}
+		}
+
+		if (0 < count($aOwnerDataList))
+		{
+//			$aIdList = array_values($aIdList);
+//			$aUserInfo = $this->oMainManager->userInformation($oUser, $aIdList);
 //			$aUserInfo => id_helpdesk_user, email, name, is_agent, notification_email
 
-			if (is_array($aUserInfo) && 0 < count($aUserInfo))
-			{
-				foreach ($aList as &$oItem)
+//			if (is_array($aUserInfo) && 0 < count($aUserInfo))
+//			{
+				$bIsAgent = $oUser->{'HelpDesk::IsAgent'};
+				
+				foreach ($aPostList as &$oItem)
 				{
-					if ($oItem && isset($aUserInfo[$oItem->IdOwner]) && is_array($aUserInfo[$oItem->IdOwner]))
+					if ($oItem && isset($aOwnerDataList[$oItem->IdOwner]) && is_array($aOwnerDataList[$oItem->IdOwner]))
 					{
 						$oItem->Owner = array(
-							isset($aUserInfo[$oItem->IdOwner][0]) ? $aUserInfo[$oItem->IdOwner][0] : 'param1',
-							isset($aUserInfo[$oItem->IdOwner][1]) ? $aUserInfo[$oItem->IdOwner][1] : 'param2'
+							isset($aOwnerDataList[$oItem->IdOwner]['Email']) ? $aOwnerDataList[$oItem->IdOwner]['Email'] : '',
+							isset($aOwnerDataList[$oItem->IdOwner]['Name']) ? $aOwnerDataList[$oItem->IdOwner]['Name'] : ''
 						);
 
 						if (empty($oItem->Owner[0]))
 						{
-							$oItem->Owner[0] = isset($aUserInfo[$oItem->IdOwner][3]) ? $aUserInfo[$oItem->IdOwner][3] : '';
+							$oItem->Owner[0] = isset($aOwnerDataList[$oItem->IdOwner]['notification_email']) ? $aOwnerDataList[$oItem->IdOwner]['notification_email'] : '';
 						}
 
 						if (!$bIsAgent && 0 < strlen($oItem->Owner[1]))
@@ -720,14 +754,14 @@ class HelpDeskModule extends AApiModule
 
 					if ($oItem)
 					{
-						$oItem->ItsMe = $oUser->IdHelpdeskUser === $oItem->IdOwner;
+						$oItem->ItsMe = $oUser->iObjectId === $oItem->IdOwner;
 					}
 				}
 
-				if (isset($aUserInfo[$oThread->IdOwner]) && is_array($aUserInfo[$oThread->IdOwner]))
+				if (isset($aOwnerDataList[$oThread->IdOwner]) && is_array($aOwnerDataList[$oThread->IdOwner]))
 				{
-					$sEmail = isset($aUserInfo[$oThread->IdOwner][0]) ? $aUserInfo[$oThread->IdOwner][0] : '';
-					$sName = isset($aUserInfo[$oThread->IdOwner][1]) ? $aUserInfo[$oThread->IdOwner][1] : '';
+					$sEmail = isset($aOwnerDataList[$oThread->IdOwner]['Email']) ? $aOwnerDataList[$oThread->IdOwner]['Email'] : '';
+					$sName = isset($aOwnerDataList[$oThread->IdOwner]['Name']) ? $aOwnerDataList[$oThread->IdOwner]['Name'] : '';
 
 					if (!$bIsAgent && 0 < strlen($sName))
 					{
@@ -736,15 +770,15 @@ class HelpDeskModule extends AApiModule
 
 					$oThread->Owner = array($sEmail, $sName);
 				}
-			}
+//			}
 		}
 
 		if ($oThread->HasAttachments)
 		{
-			$aAttachments = $this->oApiHelpDeskManager->getAttachments($oUser, $oThread);
+			$aAttachments = $this->oMainManager->getAttachments($oUser, $oThread);
 			if (is_array($aAttachments))
 			{
-				foreach ($aList as &$oItem)
+				foreach ($aPostList as &$oItem)
 				{
 					if (isset($aAttachments[$oItem->IdHelpdeskPost]) && is_array($aAttachments[$oItem->IdHelpdeskPost]) &&
 						0 < count($aAttachments[$oItem->IdHelpdeskPost]))
@@ -767,8 +801,8 @@ class HelpDeskModule extends AApiModule
 			'ThreadId' => $oThread->IdHelpdeskThread,
 			'StartFromId' => $iStartFromId,
 			'Limit' => $iLimit,
-			'ItemsCount' => $iExtPostsCount ? $iExtPostsCount : ($oThread->PostCount > count($aList) ? $oThread->PostCount : count($aList)),
-			'List' => $aList
+			'ItemsCount' => $iExtPostsCount ? $iExtPostsCount : ($oThread->PostCount > count($aPostList) ? $oThread->PostCount : count($aPostList)),
+			'List' => $aPostList
 		);
 	}
 	
@@ -787,7 +821,7 @@ class HelpDeskModule extends AApiModule
 
 		$iThreadId = (int) $this->getParamValue('ThreadId', '');
 
-		if (0 < $iThreadId && !$oUser->IsAgent && !$this->oApiHelpDeskManager->verifyThreadIdsBelongToUser($oUser, array($iThreadId)))
+		if (0 < $iThreadId && !$oUser->IsAgent && !$this->oMainManager->verifyThreadIdsBelongToUser($oUser, array($iThreadId)))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
@@ -795,7 +829,7 @@ class HelpDeskModule extends AApiModule
 		$bResult = false;
 		if (0 < $iThreadId)
 		{
-			$bResult = $this->oApiHelpDeskManager->archiveThreads($oUser, array($iThreadId));
+			$bResult = $this->oMainManager->archiveThreads($oUser, array($iThreadId));
 		}
 
 		return $bResult;
@@ -830,11 +864,11 @@ class HelpDeskModule extends AApiModule
 		}
 
 		$bResult = false;
-		$oThread = $this->oApiHelpDeskManager->getThreadById($oUser, $iThreadId);
+		$oThread = $this->oMainManager->getThreadById($oUser, $iThreadId);
 		if ($oThread)
 		{
 			$oThread->Type = $iThreadType;
-			$bResult = $this->oApiHelpDeskManager->updateThread($oUser, $oThread);
+			$bResult = $this->oMainManager->updateThread($oUser, $oThread);
 		}
 		
 		return $bResult;
@@ -854,9 +888,9 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$this->oApiHelpDeskManager->setOnline($oUser, $iThreadId);
+		$this->oMainManager->setOnline($oUser, $iThreadId);
 
-		return $this->oApiHelpDeskManager->getOnline($oUser, $iThreadId);
+		return $this->oMainManager->getOnline($oUser, $iThreadId);
 	}
 	
 	public function SetThreadSeen($iThreadId = 0)
@@ -872,13 +906,13 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$oThread = $this->oApiHelpDeskManager->getThreadById($oUser, $iThreadId);
+		$oThread = $this->oMainManager->getThreadById($oUser, $iThreadId);
 		if (!$oThread)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
 
-		return $this->oApiHelpDeskManager->setThreadSeen($oUser, $oThread);
+		return $this->oMainManager->setThreadSeen($oUser, $oThread);
 	}	
 	
 	/**
@@ -886,27 +920,18 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function GetThreads($iOffset = 0, $iLimit = 10, $iFilter = \EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
-//		$oAccount = null;
-//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 		$oUser = $this->getHelpdeskAccountFromParam();
 		
-//		$iFilter = (int) $this->getParamValue('Filter', \EHelpdeskThreadFilterType::All);
-//		$sSearch = (string) $this->getParamValue('Search', '');
-//		$iOffset = (int) $this->getParamValue('Offset', 0);
-//		$iLimit = (int) $this->getParamValue('Limit', 10);
-
-		$bIsAgent = (bool)$oUser->{'HelpDesk::IsAgent'};
-
 		if (0 > $iOffset || 1 > $iLimit)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
 		$aThreadsList = array();
-		$iCount = $this->oApiHelpDeskManager->getThreadsCount($oUser, $iFilter, $sSearch);
+		$iCount = $this->oMainManager->getThreadsCount($oUser, $iFilter, $sSearch);
 		if ($iCount)
 		{
-			$aThreadsList = $this->oApiHelpDeskManager->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch);
+			$aThreadsList = $this->oMainManager->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch);
 		}
 
 		$aOwnerDataList = array();
@@ -920,9 +945,9 @@ class HelpDeskModule extends AApiModule
 				if ($oOwnerUser)
 				{
 					$aOwnerDataList[$oOwnerUser->iObjectId] = array(
-						'Email' => $oOwnerUserAccount->Email,
+						'Email' => $oOwnerUserAccount->Login,
 						'Name' => $oOwnerUser->Name,
-						'Email' => $oOwnerUserAccount->Email
+						'NotificationEmail' => $oOwnerUserAccount->NotificationEmail
 					);
 				}
 			}
@@ -932,21 +957,23 @@ class HelpDeskModule extends AApiModule
 		{
 //			$aOwnerList = array_values($aOwnerList);
 			
-//			$aUserInfo = $this->oApiHelpDeskManager->userInformation($oUser, $aOwnerList);
+//			$aUserInfo = $this->oMainManager->userInformation($oUser, $aOwnerList);
 //			id_helpdesk_user, email, name, is_agent, notification_email
 			
 			if (is_array($aOwnerDataList) && 0 < count($aOwnerDataList))
 			{
+				$bIsAgent = (bool)$oUser->{'HelpDesk::IsAgent'};
+				
 				foreach ($aThreadsList as &$oItem)
 				{
 					if ($oItem && isset($aOwnerDataList[$oItem->IdOwner]))
 					{
-						$sEmail = isset($aOwnerDataList[$oItem->IdOwner][0]) ? $aUserInfo[$oItem->IdOwner][0] : '';
-						$sName = isset($aOwnerDataList[$oItem->IdOwner][1]) ? $aUserInfo[$oItem->IdOwner][1] : '';
+						$sEmail = isset($aOwnerDataList[$oItem->IdOwner]['Email']) ? $aOwnerDataList[$oItem->IdOwner]['Email'] : '';
+						$sName = isset($aOwnerDataList[$oItem->IdOwner]['Name']) ? $aOwnerDataList[$oItem->IdOwner]['Name'] : '';
 
-						if (empty($sEmail) && !empty($aOwnerDataList[$oItem->IdOwner][3]))
+						if (empty($sEmail) && !empty($aOwnerDataList[$oItem->IdOwner]['NotificationEmail']))
 						{
-							$sEmail = $aOwnerDataList[$oItem->IdOwner][3];
+							$sEmail = $aOwnerDataList[$oItem->IdOwner]['NotificationEmail'];
 						}
 
 						if (!$bIsAgent && 0 < strlen($sName))
@@ -970,7 +997,6 @@ class HelpDeskModule extends AApiModule
 		);
 	}	
 	
-	
 	public function GetThreadsPendingCount()
 	{
 		$oAccount = null;
@@ -982,7 +1008,7 @@ class HelpDeskModule extends AApiModule
 		}
 
 
-		return $this->oApiHelpDeskManager->getThreadsPendingCount($oUser->IdTenant);
+		return $this->oMainManager->getThreadsPendingCount($oUser->IdTenant);
 	}	
 	
 	/**
@@ -1000,7 +1026,7 @@ class HelpDeskModule extends AApiModule
 		if ($oUser && $oUser->validatePassword($sCurrentPassword) && 0 < strlen($sNewPassword))
 		{
 			$oUser->setPassword($sNewPassword);
-			if (!$this->oApiHelpDeskManager->updateUser($oUser))
+			if (!$this->oMainManager->updateUser($oUser))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotChangePassword);
 			}
@@ -1030,7 +1056,7 @@ class HelpDeskModule extends AApiModule
 		$oUser->DateFormat = $sDateFormat;
 		$oUser->TimeFormat = $iTimeFormat;
 		
-		return $this->oApiHelpDeskManager->updateUser($oUser);
+		return $this->oMainManager->updateUser($oUser);
 	}	
 	
 	/**

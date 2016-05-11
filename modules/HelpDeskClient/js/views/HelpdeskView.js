@@ -73,6 +73,7 @@ function CHelpdeskView()
 
 	this.bExtApp = bExtApp;
 	this.bAgent = Settings.IsAgent;
+//	this.bAgent = true;
 	this.bNewTab = App.isNewTab();
 
 	this.signature = Settings.signature;
@@ -286,7 +287,7 @@ function CHelpdeskView()
 	}, this);
 
 	this.preventFalseClick = ko.observable(false).extend({'autoResetToFalse': 500});
-
+console.log(this.bAgent);
 	this.isQuickReplyHidden = ko.observable(!this.bAgent);
 	this.domQuickReply = ko.observable(null);
 	this.domQuickReplyTextarea = ko.observable(null);
@@ -875,10 +876,12 @@ CHelpdeskView.prototype.onRoute = function (aParams)
 };
 
 /**
+ * 
  * @param {Object} oItem
  */
 CHelpdeskView.prototype.onItemSelect = function (oItem)
 {
+	console.log('onItemSelect');
 	this.previousSelectedItem(this.selectedItem());
 	if (!this.selectedItem() || oItem && (this.selectedItem().ThreadHash !== oItem.ThreadHash || this.selectedItem().Id !== oItem.Id))
 	{
@@ -916,6 +919,7 @@ CHelpdeskView.prototype.onItemDelete = function ()
  */
 CHelpdeskView.prototype.selectItem = function (oItem)
 {
+	console.log('selectItem');
 	this.visibleNewThread(false);
 	this.selector.listCheckedAndSelected(false);
 	this.cleanAll();

@@ -962,20 +962,20 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param int $iIdThread
 	 *
 	 * @return CHelpdeskThread|false
 	 */
-	public function getThreadById($oHelpdeskUser, $iIdThread)
+	public function getThreadById(\CUser $oUser, $iIdThread)
 	{
 		$oThread = null;
 		try
 		{
-			$oThread = $this->oStorage->getThreadById($oHelpdeskUser, $iIdThread);
+			$oThread = $this->oStorage->getThreadById($oUser, $iIdThread);
 			if ($oThread)
 			{
-				$aThreadLastPostIds = $this->getThreadsLastPostIds($oHelpdeskUser, array($oThread->IdHelpdeskThread));
+				$aThreadLastPostIds = $this->getThreadsLastPostIds($oUser, array($oThread->IdHelpdeskThread));
 				if (isset($aThreadLastPostIds[$oThread->IdHelpdeskThread]) &&
 					$oThread->LastPostId === $aThreadLastPostIds[$oThread->IdHelpdeskThread])
 				{
@@ -1505,20 +1505,19 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All.
 	 * @param string $sSearch = ''
 	 * 
 	 * @return int
 	 */
-//	public function getThreadsCount(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
-	public function getThreadsCount(CUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
+	public function getThreadsCount(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
 		$iResult = 0;
 		try
 		{
-			$iSearchOwner = $this->_getOwnerFromSearch($oHelpdeskUser->IdTenant, $sSearch);
-			$iResult = $this->oStorage->getThreadsCount($oHelpdeskUser, $iFilter, $sSearch, $iSearchOwner);
+			$iSearchOwner = $this->_getOwnerFromSearch($oUser->IdTenant, $sSearch);
+			$iResult = $this->oStorage->getThreadsCount($oUser, $iFilter, $sSearch, $iSearchOwner);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -1549,7 +1548,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param int $iOffset Default value is **0**.
 	 * @param int $iLimit Default value is **20**.
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All
@@ -1557,14 +1556,13 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return array|bool
 	 */
-//	public function getThreads(CHelpdeskUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
-	public function getThreads(CUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
+	public function getThreads(\CUser $oUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
 		$aResult = null;
 		try
 		{
-			$iSearchOwner = $this->_getOwnerFromSearch($oHelpdeskUser->IdTenant, $sSearch);
-			$aResult = $this->oStorage->getThreads($oHelpdeskUser, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner);
+			$iSearchOwner = $this->_getOwnerFromSearch($oUser->IdTenant, $sSearch);
+			$aResult = $this->oStorage->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner);
 			if (is_array($aResult) && 0 < count($aResult))
 			{
 				$aThreadsIdList = array();
@@ -1573,7 +1571,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 					$aThreadsIdList[] = $oItem->IdHelpdeskThread;
 				}
 				
-				$aThreadLastPostIds = $this->getThreadsLastPostIds($oHelpdeskUser, $aThreadsIdList);
+				$aThreadLastPostIds = $this->getThreadsLastPostIds($oUser, $aThreadsIdList);
 				if (is_array($aThreadLastPostIds) && 0 < count($aThreadLastPostIds))
 				{
 					foreach ($aResult as &$oItem)
@@ -1617,18 +1615,17 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param array $aThreadIds
 	 *
 	 * @return array|bool
 	 */
-//	public function getThreadsLastPostIds(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
-	public function getThreadsLastPostIds(CUser $oHelpdeskUser, $aThreadIds)
+	public function getThreadsLastPostIds(\CUser $oUser, $aThreadIds)
 	{
 		$mResult = false;
 		try
 		{
-			$mResult = $this->oStorage->getThreadsLastPostIds($oHelpdeskUser, $aThreadIds);
+			$mResult = $this->oStorage->getThreadsLastPostIds($oUser, $aThreadIds);
 		}
 		catch (CApiBaseException $oException)
 		{

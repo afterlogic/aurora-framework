@@ -162,7 +162,38 @@ class CApiHelpDeskAccountsManager extends AApiManager
 				}
 			}
 			
-			if (count($aResults) === 0)
+			if (count($aResults) === 1)
+			{
+				$oAccount = array_values($aResults)[0];
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$oAccount = false;
+			$this->setLastException($oException);
+		}
+		return $oAccount;
+	}
+	
+	public function getAccountByUserId($sUserId)
+	{
+		$oAccount = null;
+		try
+		{
+			$aResults = $this->oEavManager->getObjects(
+				$this->sAccountClassName, 
+				array(
+					'IsDisabled', 'Login', 'IdUser'
+				),
+				0,
+				0,
+				array(
+					'IdUser' => $sUserId,
+					'IsDisabled' => false
+				)
+			);
+			
+			if (count($aResults) === 1)
 			{
 				$oAccount = array_values($aResults)[0];
 			}
