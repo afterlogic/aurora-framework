@@ -46,7 +46,7 @@ class CHelpdeskUser extends api_AContainer
 			'Activated'				=> false,
 			'Blocked'				=> false,
 			'IsAgent'				=> false,
-			//'IsSocial'				=> false,
+			//'IsSocial'			=> false,
 			'Name'					=> '',
 			'Email'					=> '',
 			'NotificationEmail'		=> '',

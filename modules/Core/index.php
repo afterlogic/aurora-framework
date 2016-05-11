@@ -936,8 +936,37 @@ class CoreModule extends AApiModule
 		return false;
 	}
 	
-	
-	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function onAccountCreate($iTenantId, $iUserId, $sLogin, $sPassword, &$oResult)
+	{
+		$oUser = null;
+		
+		if ($iUserId > 0)
+		{
+			$oUser = $this->oApiUsersManager->getUserById($iUserId);
+		}
+		else
+		{
+			$oUser = \CUser::createInstance();
+			
+			$iTenantId = $iTenantId ? $iTenantId : 0;
+			
+			if ($iTenantId)
+			{
+				$oUser->IdTenant = $iTenantId;
+			}
+				
+			if (!$this->oApiUsersManager->createUser($oUser))
+			{
+				$oUser = null;
+			}
+		}
+		
+		$oResult = $oUser;
+	}
 	
 	/**
 	 * 
@@ -1030,31 +1059,6 @@ class CoreModule extends AApiModule
 		}
 
 		return false;
-	}
-	
-	/**
-	 * 
-	 * @return boolean
-	 */
-	public function onAccountCreate($iUserId, $sLogin, $sPassword, &$oResult)
-	{
-		$oUser = null;
-		
-		if ($iUserId > 0)
-		{
-			$oUser = $this->oApiUsersManager->getUserById($iUserId);
-		}
-		else
-		{
-			$oUser = \CUser::createInstance();
-				
-			if (!$this->oApiUsersManager->createUser($oUser))
-			{
-				$oUser = null;
-			}
-		}
-		
-		$oResult = $oUser;
 	}
 	
 	public function GetUser($iUserId = 0)

@@ -12,13 +12,11 @@ class HelpDeskModule extends AApiModule
 	{
 		$this->oApiHelpDeskManager = $this->GetManager('main', 'db');
 		$this->oAccountsManager = $this->GetManager('accounts', 'db');
-
-//		$this->AddEntry('helpdesk', 'EntryHelpDesk');
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 				
 		$this->setObjectMap('CUser', array(
-				'IsAgent' => array('bool', true)
+				'IsAgent' => array('bool', false)
 			)
 		);
 		
@@ -267,6 +265,7 @@ class HelpDeskModule extends AApiModule
 				$iUserId = \CApi::getLogginedUserId();
 				
 				$this->broadcastEvent('CreateAccount', array(
+					'IdTenant' => $mIdTenant,
 					'IdUser' => $iUserId,
 					'login' => $sEmail,
 					'password' => $sPassword,
@@ -316,7 +315,7 @@ class HelpDeskModule extends AApiModule
 			return $bResult;
 //		}
 
-		return false;
+//		return false;
 	}	
 	
 	/**
@@ -326,7 +325,7 @@ class HelpDeskModule extends AApiModule
 	{
 		$oUser = $this->getHelpdeskAccountFromParam();
 
-		return $oUser && $oUser->IsAgent;
+		return $oUser && $oUser->{'HelpDesk::IsAgent'};
 	}	
 	
 	public function Forgot($sTenantHash = '', $sEmail = '', $bIsExt = false)
@@ -693,6 +692,7 @@ class HelpDeskModule extends AApiModule
 		{
 			$aIdList = array_values($aIdList);
 			$aUserInfo = $this->oApiHelpDeskManager->userInformation($oUser, $aIdList);
+//			$aUserInfo => id_helpdesk_user, email, name, is_agent, notification_email
 
 			if (is_array($aUserInfo) && 0 < count($aUserInfo))
 			{
@@ -701,8 +701,8 @@ class HelpDeskModule extends AApiModule
 					if ($oItem && isset($aUserInfo[$oItem->IdOwner]) && is_array($aUserInfo[$oItem->IdOwner]))
 					{
 						$oItem->Owner = array(
-							isset($aUserInfo[$oItem->IdOwner][0]) ? $aUserInfo[$oItem->IdOwner][0] : '',
-							isset($aUserInfo[$oItem->IdOwner][1]) ? $aUserInfo[$oItem->IdOwner][1] : ''
+							isset($aUserInfo[$oItem->IdOwner][0]) ? $aUserInfo[$oItem->IdOwner][0] : 'param1',
+							isset($aUserInfo[$oItem->IdOwner][1]) ? $aUserInfo[$oItem->IdOwner][1] : 'param2'
 						);
 
 						if (empty($oItem->Owner[0]))
@@ -902,39 +902,51 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$aList = array();
+		$aThreadsList = array();
 		$iCount = $this->oApiHelpDeskManager->getThreadsCount($oUser, $iFilter, $sSearch);
 		if ($iCount)
 		{
-			$aList = $this->oApiHelpDeskManager->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch);
+			$aThreadsList = $this->oApiHelpDeskManager->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch);
 		}
 
-		$aOwnerIdList = array();
-		if (is_array($aList) && 0 < count($aList))
+		$aOwnerDataList = array();
+		if (is_array($aThreadsList) && 0 < count($aThreadsList))
 		{
-			foreach ($aList as &$oItem)
+			foreach ($aThreadsList as &$oItem)
 			{
-				$aOwnerIdList[$oItem->IdOwner] = (int) $oItem->IdOwner;
+//				$aOwnerList[$oItem->IdOwner] = (int) $oItem->IdOwner;
+				$oOwnerUser = $this->oCoreDecorator->GetUser($oItem->IdOwner);
+				$oOwnerUserAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
+				if ($oOwnerUser)
+				{
+					$aOwnerDataList[$oOwnerUser->iObjectId] = array(
+						'Email' => $oOwnerUserAccount->Email,
+						'Name' => $oOwnerUser->Name,
+						'Email' => $oOwnerUserAccount->Email
+					);
+				}
 			}
 		}
 
-		if (0 < count($aOwnerIdList))
+		if (0 < count($aOwnerDataList))
 		{
-			$aOwnerIdList = array_values($aOwnerIdList);
-			$aUserInfo = $this->oApiHelpDeskManager->userInformation($oUser, $aOwnerIdList);
-
-			if (is_array($aUserInfo) && 0 < count($aUserInfo))
+//			$aOwnerList = array_values($aOwnerList);
+			
+//			$aUserInfo = $this->oApiHelpDeskManager->userInformation($oUser, $aOwnerList);
+//			id_helpdesk_user, email, name, is_agent, notification_email
+			
+			if (is_array($aOwnerDataList) && 0 < count($aOwnerDataList))
 			{
-				foreach ($aList as &$oItem)
+				foreach ($aThreadsList as &$oItem)
 				{
-					if ($oItem && isset($aUserInfo[$oItem->IdOwner]) && is_array($aUserInfo[$oItem->IdOwner]))
+					if ($oItem && isset($aOwnerDataList[$oItem->IdOwner]))
 					{
-						$sEmail = isset($aUserInfo[$oItem->IdOwner][0]) ? $aUserInfo[$oItem->IdOwner][0] : '';
-						$sName = isset($aUserInfo[$oItem->IdOwner][1]) ? $aUserInfo[$oItem->IdOwner][1] : '';
+						$sEmail = isset($aOwnerDataList[$oItem->IdOwner][0]) ? $aUserInfo[$oItem->IdOwner][0] : '';
+						$sName = isset($aOwnerDataList[$oItem->IdOwner][1]) ? $aUserInfo[$oItem->IdOwner][1] : '';
 
-						if (empty($sEmail) && !empty($aUserInfo[$oItem->IdOwner][3]))
+						if (empty($sEmail) && !empty($aOwnerDataList[$oItem->IdOwner][3]))
 						{
-							$sEmail = $aUserInfo[$oItem->IdOwner][3];
+							$sEmail = $aOwnerDataList[$oItem->IdOwner][3];
 						}
 
 						if (!$bIsAgent && 0 < strlen($sName))
@@ -951,7 +963,7 @@ class HelpDeskModule extends AApiModule
 		return array(
 			'Search' => $sSearch,
 			'Filter' => $iFilter,
-			'List' => $aList,
+			'List' => $aThreadsList,
 			'Offset' => $iOffset,
 			'Limit' => $iLimit,
 			'ItemsCount' =>  $iCount

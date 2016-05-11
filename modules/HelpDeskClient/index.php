@@ -14,11 +14,6 @@ class HelpDeskModuleClient extends AApiModule
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$this->oHelpDeskDecorator = \CApi::GetModuleDecorator('HelpDesk');
-				
-		$this->setObjectMap('CUser', array(
-				'IsAgent'	=> array('bool', true)
-			)
-		);
 	}
 	
 	public function EntryHelpDesk()
@@ -28,8 +23,7 @@ class HelpDeskModuleClient extends AApiModule
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
-//		$oApiTenants = \CApi::GetCoreManager('tenants');
-//		$mHelpdeskIdTenant = $oApiTenants->getTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
+		$mHelpdeskHash = $this->oHttp->GetQuery('helpdesk');
 		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByHash($this->oHttp->GetQuery('helpdesk'));
 		
 		if (!is_int($mHelpdeskIdTenant))

@@ -704,18 +704,18 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param CUser $oUser Helpdesk user object
 	 * @param array $aIdList
 	 *
 	 * @return array|bool
 	 */
-//	public function userInformation(CHelpdeskUser $oHelpdeskUser, $aIdList)
-	public function userInformation(CUser $oHelpdeskUser, $aIdList)
+//	public function userInformation(CHelpdeskUser $oUser, $aIdList)
+	public function userInformation(CUser $oUser, $aIdList)
 	{
 		$mResult = false;
 		try
 		{
-			$mResult = $this->oStorage->userInformation($oHelpdeskUser, $aIdList);
+//			$mResult = $this->oStorage->userInformation($oUser, $aIdList);
 		}
 		catch (CApiBaseException $oException)
 		{

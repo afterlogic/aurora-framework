@@ -32,7 +32,7 @@ class CApiHelpDeskAccountsManager extends AApiManager
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		
-		$this->sAccountClassName = '\Modules\HelpDesk\CAccount';
+		$this->sAccountClassName = 'Modules\HelpDesk\CAccount';
 
 		$this->incClass('account');
 	}

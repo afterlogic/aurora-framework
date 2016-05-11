@@ -294,6 +294,7 @@ class AuthModule extends AApiModule
 		
 		$oEventResult = null;
 		$this->broadcastEvent('CreateAccount', array(
+			'IdTenant' => $iUserId,
 			'IdUser' => $iUserId,
 			'login' => $sLogin,
 			'password' => $sPassword,
