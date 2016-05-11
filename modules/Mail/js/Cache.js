@@ -341,10 +341,10 @@ CMailCache.prototype.checkCurrentFolderList = function ()
 {
 	var
 		oCurrAccount = AccountList.getCurrent(),
-		oFolderList = this.oFolderListItems[oCurrAccount.id()]
+		oFolderList = oCurrAccount ? this.oFolderListItems[oCurrAccount.id()] : null
 	;
 	
-	if (oCurrAccount.allowMail() && !oFolderList && !this.messagesLoading())
+	if (oCurrAccount && oCurrAccount.allowMail() && !oFolderList && !this.messagesLoading())
 	{
 		this.messagesLoading(true);
 		this.messagesLoadingError(false);

@@ -1002,7 +1002,7 @@ CCalendarView.prototype.onGetEventsResponse = function (oResponse, oRequest)
 	var 
 		oCalendar = null,
 		oParameters = JSON.parse(oRequest.Parameters),
-		aCalendarIds = oParameters.CalendarIds ? JSON.parse(oParameters.CalendarIds) : [],
+		aCalendarIds = oParameters.CalendarIds ? oParameters.CalendarIds : [],
 		aEvents = []
 	;
 
@@ -1258,7 +1258,7 @@ CCalendarView.prototype.onUpdateCalendarShareResponse = function (oResponse, oRe
 		
 		if (oCalendar)
 		{
-			oCalendar.shares(JSON.parse(oParameters.Shares));
+			oCalendar.shares(oParameters.Shares);
 			if (oParameters.ShareToAll === 1)
 			{
 				oCalendar.isShared(true);
@@ -1476,12 +1476,12 @@ CCalendarView.prototype.getParamsFromEventData = function (oEventData)
 CCalendarView.prototype.getEventDataFromParams = function (aParameters)
 {
 	var	oEventData = aParameters;
-	oEventData.alarms = aParameters.alarms ? JSON.parse(aParameters.alarms) : [];
-	oEventData.attendees = aParameters.attendees ? JSON.parse(aParameters.attendees) : [];
+	oEventData.alarms = aParameters.alarms || [];
+	oEventData.attendees = aParameters.attendees || [];
 
-	if(aParameters.rrule)
+	if (aParameters.rrule)
 	{
-		oEventData.rrule = JSON.parse(aParameters.rrule);
+		oEventData.rrule = aParameters.rrule;
 	}
 
 	return oEventData;

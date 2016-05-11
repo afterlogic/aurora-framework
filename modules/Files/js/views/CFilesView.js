@@ -1191,7 +1191,7 @@ CFilesView.prototype.getUploadingFiles = function ()
 {
 	return _.filter(this.uploadingFiles(), _.bind(function (oItem) {
 		return oItem.path() === this.path() && oItem.storageType() === this.storageType();
-	}), this);	
+	}, this));	
 };
 
 /**

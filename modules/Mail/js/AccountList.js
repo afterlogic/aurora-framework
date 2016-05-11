@@ -394,7 +394,10 @@ CAccountListModel.prototype.onGetFetchersResponse = function (oResponse, oReques
 		oFetcherList.parse(this.defaultId(), oResponse.Result);
 	}
 	
-	oDefaultAccount.fetchers(oFetcherList);
+	if (oDefaultAccount)
+	{
+		oDefaultAccount.fetchers(oFetcherList);
+	}
 };
 
 CAccountListModel.prototype.populateIdentities = function ()
