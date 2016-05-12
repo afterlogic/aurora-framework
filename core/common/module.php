@@ -969,5 +969,10 @@ abstract class AApiModule
 	{
 		return !!in_array($sMethodName, array('Login'));
 	}
+	
+	public function GetAppData()
+	{
+		return null;
+	}
 }
 

@@ -640,19 +640,18 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 
 	/**
 	 *
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oThread
 	 * 
 	 * @return array
 	 */
-//	private function buildPostsWhere(CHelpdeskUser $oHelpdeskUser, $oThread)
-	private function buildPostsWhere(CUser $oHelpdeskUser, $oThread)
+	private function buildPostsWhere(\CUser $oUser, $oThread)
 	{
 		$aWhere = array();
 		
-		$aWhere[] = $this->escapeColumn('id_tenant').' = '.$oHelpdeskUser->IdTenant;
+		$aWhere[] = $this->escapeColumn('id_tenant').' = '.$oUser->IdTenant;
 
-		if (!$oHelpdeskUser->{'HelpDesk::IsAgent'} || $oThread->IdOwner === $oHelpdeskUser->IdHelpdeskUser)
+		if (!$oUser->Role === 1 || $oThread->IdOwner === $oUser->iObjectId)
 		{
 			$aWhere[] = $this->escapeColumn('type').' <> '.EHelpdeskPostType::Internal;
 		}

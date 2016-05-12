@@ -1502,12 +1502,12 @@ class CApiIntegratorManager extends AApiManager
 			'IsMobile' => 0,
 			'AllowMobile' => false,
 			'IsMailsuite' => false,
-			'HelpdeskSiteName' => '',
-			'HelpdeskIframeUrl' => '',
-			'HelpdeskRedirect' => false,
-			'HelpdeskThreadId' => 0,
-			'HelpdeskActivatedEmail' => '',
-			'HelpdeskForgotHash' => '',
+//			'HelpdeskSiteName' => '',
+//			'HelpdeskIframeUrl' => '',
+//			'HelpdeskRedirect' => false,
+//			'HelpdeskThreadId' => 0,
+//			'HelpdeskActivatedEmail' => '',
+//			'HelpdeskForgotHash' => '',
 			'ClientDebug' => \CApi::GetConf('labs.webmail-client-debug', false),
 			'MailExpandFolders' => \CApi::GetConf('labs.mail-expand-folders', false),
 			'HtmlEditorDefaultFontName' => \CApi::GetConf('labs.htmleditor-default-font-name', ''),
@@ -1662,7 +1662,19 @@ class CApiIntegratorManager extends AApiManager
 //			$aAppData['HelpdeskThreadId'] = null === $mThreadId ? 0 : $mThreadId;
 //			$aAppData['HelpdeskThreadAction'] = $sThreadAction ? $sThreadAction : '';
 //		}
+		
+		$aModules = \CApi::GetModules();
 
+		foreach ($aModules as $oModule)
+		{
+			$aModuleAppData = $oModule->GetAppData();
+//			
+			if ($aModuleAppData)
+			{
+				$aAppData[$oModule->GetName()] = $aModuleAppData;
+			}
+		}
+		
 //		$oDefaultAccount = null;
 		$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
 		$iUserId = $this->getLogginedUserId($sAuthToken);
@@ -1671,13 +1683,7 @@ class CApiIntegratorManager extends AApiManager
 		{
 			
 			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
-			
-//			/* @var $oApiUsersManager CApiUsersManager */
-//			$oApiUsersManager = CApi::GetCoreManager('users');
-			$oUser = $oCoreDecorator->GetUser(
-//				$sAuthToken,
-				$iUserId
-			);
+			$oUser = $oCoreDecorator->GetUser($iUserId);
 			
 //			$oUser = \CApi::ExecuteMethod('Core::GetUser', array(
 ////				'Token' => $sToken,
@@ -1688,7 +1694,13 @@ class CApiIntegratorManager extends AApiManager
 			if ($oUser)
 			{
 				$aAppData['Auth'] = true;
+				$aAppData['User'] = array(
+					'Id' => $oUser->iObjectId,
+					'Role' => $oUser->Role,
+					'Name' => $oUser->Name
+				);
 			}
+			
 //
 //			$aInfo = $oApiUsersManager->getUserAccounts($iUserId);
 //			

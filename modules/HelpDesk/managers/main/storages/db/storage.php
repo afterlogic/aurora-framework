@@ -631,7 +631,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iOffset Default value is **0**.
 	 * @param int $iLimit Default value is **20**.
 	 * @param int $iFilter Default value is **0** EHelpdeskThreadFilterType::All.
@@ -640,11 +640,10 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	 *
 	 * @return array|bool
 	 */
-//	public function getThreads(CHelpdeskUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
-	public function getThreads(CUser $oHelpdeskUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreads(\CUser $oUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getThreads($oHelpdeskUser, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner)))
 		{
 			$oRow = null;
 			$mResult = array();
@@ -653,7 +652,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 			{
 				$oHelpdeskThread = new CHelpdeskThread();
 				$oHelpdeskThread->InitByDbRow($oRow);
-				$oHelpdeskThread->ItsMe = $oHelpdeskThread->IdOwner === $oHelpdeskUser->IdHelpdeskUser;
+				$oHelpdeskThread->ItsMe = $oHelpdeskThread->IdOwner === $oUser->iObjectId;
 
 				$mResult[] = $oHelpdeskThread;
 			}
@@ -771,18 +770,17 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 	
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oThread
 	 * @param int $iStartFromId Default value is **0**.
 	 * @param int $iLimit Default value is **20**.
 	 *
 	 * @return array|bool
 	 */
-//	public function getPosts(CHelpdeskUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
-	public function getPosts(CUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
+	public function getPosts(\CUser $oUser, $oThread, $iStartFromId = 0, $iLimit = 20)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getPosts($oHelpdeskUser, $oThread, $iStartFromId, $iLimit)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getPosts($oUser, $oThread, $iStartFromId, $iLimit)))
 		{
 			$oRow = null;
 			$mResult = array();

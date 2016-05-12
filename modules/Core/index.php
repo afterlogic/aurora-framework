@@ -126,12 +126,12 @@ class CoreModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetAppData()
-	{
-		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
-		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
-		return $oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false;
-	}	
+//	public function GetAppData()
+//	{
+//		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
+//		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
+//		return $oApiIntegratorManager ? $oApiIntegratorManager->appData(false, '', '', '', $sAuthToken) : false;
+//	}
 	
 	public function EntryPull()
 	{

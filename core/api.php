@@ -238,6 +238,11 @@ class CApi
 	public static function GetModule($sModuleName)
 	{
 		return self::GetModuleManager()->GetModule($sModuleName);
+	}
+	
+	public static function GetModules()
+	{
+		return self::GetModuleManager()->GetModules();
 	}	
 	
 	/**

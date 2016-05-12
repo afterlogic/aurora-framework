@@ -80,7 +80,8 @@ class CUser extends api_APropertyBag
 			'IdTenant'							=> array('int', 0),
 			'IsDisabled'						=> array('bool', false),
 			'IdSubscription'					=> array('int', 0), //'id_subscription'),
-			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),
+//			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),
+			'Role'								=> array('int', 1), //- SuperAdmin, 1- PowerUser 2- RegisteredUser, 3- Anonymous
 
 			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
 			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),

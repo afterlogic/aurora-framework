@@ -1658,20 +1658,19 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param CHelpdeskThread $oThread Helpdesk thread object
 	 * @param int $iStartFromId Default value is **0**.
 	 * @param int $iLimit Default value is **20**.
 	 *
 	 * @return array|bool
 	 */
-//	public function getPosts(CHelpdeskUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
-	public function getPosts(CUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
+	public function getPosts(\CUser $oUser, $oThread, $iStartFromId = 0, $iLimit = 20)
 	{
 		$aResult = null;
 		try
 		{
-			$aResult = $this->oStorage->getPosts($oHelpdeskUser, $oThread, $iStartFromId, $iLimit);
+			$aResult = $this->oStorage->getPosts($oUser, $oThread, $iStartFromId, $iLimit);
 		}
 		catch (CApiBaseException $oException)
 		{
