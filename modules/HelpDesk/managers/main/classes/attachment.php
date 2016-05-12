@@ -38,15 +38,15 @@ class CHelpdeskAttachment extends api_AContainer
 	}
 
 	/**
-	 * @param \CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param string $sThreadFolderName
 	 */
-	public function encodeHash($oHelpdeskUser, $sThreadFolderName)
+	public function encodeHash(\CUser $oUser, $sThreadFolderName)
 	{
 		$this->Hash = \CApi::EncodeKeyValues(array(
 			'FilestorageFile' => true,
-			'HelpdeskTenantID' => $oHelpdeskUser->IdTenant,
-			'HelpdeskUserID' => $oHelpdeskUser->IdHelpdeskUser,
+			'HelpdeskTenantID' => $oUser->IdTenant,
+			'HelpdeskUserID' => $oUser->iObjectId,
 			'StorageType' => \EFileStorageTypeStr::Corporate,
 			'Name' => $this->FileName,
 			'Path' => $sThreadFolderName
@@ -79,7 +79,7 @@ class CHelpdeskAttachment extends api_AContainer
 	}
 
 	/**
-	 * @param \CHelpdeskUser $oUser
+	 * @param \CUser $oUser
 	 * @param \CApiHelpdeskManager $oApiHelpdesk
 	 * @param \CApiFilestorageManager $oApiFilestorage
 	 */
@@ -91,7 +91,7 @@ class CHelpdeskAttachment extends api_AContainer
 			$oHelpdeskUserFromAttachment = null;
 			if (isset($aHash['HelpdeskUserID'], $aHash['HelpdeskTenantID']))
 			{
-				if ($oUser && $aHash['HelpdeskUserID'] === $oUser->IdHelpdeskUser)
+				if ($oUser && $aHash['HelpdeskUserID'] === $oUser->iObjectId)
 				{
 					$oHelpdeskUserFromAttachment = $oUser;
 				}

@@ -404,7 +404,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 				$oUser = $this->getUserByNotificationEmail($iIdTenant, $sEmail);
 			}
 
-			return $oUser ? $oUser->IdHelpdeskUser : 0;
+			return $oUser ? $oUser->iObjectId : 0;
 		}
 
 		return 0;
@@ -757,16 +757,16 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 	/**
 	 * @param int $iIdTenant
-	 * @param int $iIdHelpdeskUser
+	 * @param int $iIdUser
 	 *
 	 * @return bool
 	 */
-	public function setUserAsBlocked($iIdTenant, $iIdHelpdeskUser)
+	public function setUserAsBlocked($iIdTenant, $iIdUser)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->setUserAsBlocked($iIdTenant, $iIdHelpdeskUser);
+			$bResult = $this->oStorage->setUserAsBlocked($iIdTenant, $iIdUser);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -1237,7 +1237,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 										{
 											$oThread = new \CHelpdeskThread();
 											$oThread->IdTenant = $iIdTenant;
-											$oThread->IdOwner = $oHelpdeskUser->IdHelpdeskUser;
+											$oThread->IdOwner = $oHelpdeskUser->iObjectId;
 											$oThread->Type = \EHelpdeskThreadType::Pending;
 											$oThread->Subject = $sSubject;
 
@@ -1261,7 +1261,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 											$oPost = new \CHelpdeskPost();
 											$oPost->IdTenant = $oHelpdeskUser->IdTenant;
-											$oPost->IdOwner = $oHelpdeskUser->IdHelpdeskUser;
+											$oPost->IdOwner = $oHelpdeskUser->iObjectId;
 											$oPost->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 											$oPost->Type = \EHelpdeskPostType::Normal;
 											$oPost->SystemType = \EHelpdeskPostSystemType::None;
@@ -1311,7 +1311,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 														$oAttachment = new \CHelpdeskAttachment();
 														$oAttachment->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 														$oAttachment->IdHelpdeskPost = $oPost->IdHelpdeskPost;
-														$oAttachment->IdOwner = $oHelpdeskUser->IdHelpdeskUser;
+														$oAttachment->IdOwner = $oHelpdeskUser->iObjectId;
 														$oAttachment->IdTenant = $oHelpdeskUser->IdTenant;
 
 														$oAttachment->FileName = $sUploadName;
@@ -1417,7 +1417,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 													$oPost = new \CHelpdeskPost();
 													$oPost->IdTenant = $oHelpdeskUser->IdTenant;
-													$oPost->IdOwner = $oHelpdeskUser->IdHelpdeskUser;
+													$oPost->IdOwner = $oHelpdeskUser->iObjectId;
 													$oPost->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 													$oPost->Type = \EHelpdeskPostType::Normal;
 													$oPost->SystemType = \EHelpdeskPostSystemType::None;
@@ -1467,7 +1467,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 																$oAttachment = new \CHelpdeskAttachment();
 																$oAttachment->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 																$oAttachment->IdHelpdeskPost = $oPost->IdHelpdeskPost;
-																$oAttachment->IdOwner = $oHelpdeskUser->IdHelpdeskUser;
+																$oAttachment->IdOwner = $oHelpdeskUser->iObjectId;
 																$oAttachment->IdTenant = $oHelpdeskUser->IdTenant;
 
 																$oAttachment->FileName = $sUploadName;
@@ -1889,10 +1889,10 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 			$sSiteName = isset($aData['SiteName']) ? $aData['SiteName'] : '';
 
-			$oHelpdeskThreadOwnerUser = $this->getUserById($oThread->IdTenant, $oThread->IdOwner);
+			$oThreadOwnerUser = $this->getUserById($oThread->IdTenant, $oThread->IdOwner);
 
 			// mail notifications
-			if ($oFromAccount && $oHelpdeskThreadOwnerUser)
+			if ($oFromAccount && $oThreadOwnerUser)
 			{
 				$oApiMail = $this->_getApiMail();
 				if ($oApiMail)
@@ -1900,28 +1900,28 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 					$oHelpdeskPostOwnerUser = $this->getUserById($oPost->IdTenant, $oPost->IdOwner);
 
 					$aDeMail = array();
-					$sEmail = $oHelpdeskThreadOwnerUser->resultEmail();
+					$sEmail = $oThreadOwnerUser->resultEmail();
 					if (!empty($sEmail))
 					{
 						$oHelpdeskSenderEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
-						$oThreadOwnerEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oHelpdeskThreadOwnerUser->Name);
+						$oThreadOwnerEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oThreadOwnerUser->Name);
 
-						if (EHelpdeskPostType::Normal === $oPost->Type && ($bIsNew || $oHelpdeskThreadOwnerUser->IdHelpdeskUser !== $oPost->IdOwner))
+						if (EHelpdeskPostType::Normal === $oPost->Type && ($bIsNew || $oThreadOwnerUser->iObjectId !== $oPost->IdOwner))
 						{
 							$oUserMessage = $this->_buildPostMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.post'.($bIsNew ? '.new' : '').'.html',
 								$oHelpdeskSenderEmail->ToString(), $oThreadOwnerEmail->ToString(),
-								'New Post', $sCc, $sBcc, $oHelpdeskThreadOwnerUser, $oHelpdeskPostOwnerUser, $oThread, $oPost, $sSiteName);
+								'New Post', $sCc, $sBcc, $oThreadOwnerUser, $oHelpdeskPostOwnerUser, $oThread, $oPost, $sSiteName);
 
 							if ($oUserMessage)
 							{
-								$aDeMail[] = $oHelpdeskThreadOwnerUser->resultEmail();
+								$aDeMail[] = $oThreadOwnerUser->resultEmail();
 								$oApiMail->sendMessage($oFromAccount, $oUserMessage);
 							}
 						}
 
-						if (EHelpdeskPostType::Internal === $oPost->Type || $oHelpdeskThreadOwnerUser->IdHelpdeskUser === $oPost->IdOwner)
+						if (EHelpdeskPostType::Internal === $oPost->Type || $oThreadOwnerUser->IobjectId === $oPost->IdOwner)
 						{
-							$aDeMail[] = $oHelpdeskThreadOwnerUser->resultEmail();
+							$aDeMail[] = $oThreadOwnerUser->resultEmail();
 						}
 
 						if (0 < count($aDeMail))
@@ -1934,7 +1934,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 						{
 							$oAgentMessage = $this->_buildPostMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/agent.post.html',
 								$oHelpdeskSenderEmail->ToString(), is_array($aAgents) && 0 < count($aAgents) ? implode(', ', $aAgents) : '',
-								'New Post', $sCc, $sBcc, $oHelpdeskThreadOwnerUser, $oHelpdeskPostOwnerUser, $oThread, $oPost, $sSiteName);
+								'New Post', $sCc, $sBcc, $oThreadOwnerUser, $oHelpdeskPostOwnerUser, $oThread, $oPost, $sSiteName);
 
 							if ($oAgentMessage)
 							{
@@ -1968,27 +1968,27 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 			$sSiteName = isset($aData['SiteName']) ? $aData['SiteName'] : '';
 
-			$oHelpdeskThreadOwnerUser = $this->getUserById($oThread->IdTenant, $oThread->IdOwner);
+			$oThreadOwnerUser = $this->getUserById($oThread->IdTenant, $oThread->IdOwner);
 
 			// mail notifications
-			if ($oFromAccount && $oHelpdeskThreadOwnerUser)
+			if ($oFromAccount && $oThreadOwnerUser)
 			{
 				$oApiMail = $this->_getApiMail();
 				if ($oApiMail)
 				{
 					$oHelpdeskPostOwnerUser = $this->getUserById($oThread->IdTenant, $oThread->IdOwner);
 
-					$sEmail = $oHelpdeskThreadOwnerUser->resultEmail();
+					$sEmail = $oThreadOwnerUser->resultEmail();
 					if (!empty($sEmail))
 					{
 						$oHelpdeskSenderEmail = \MailSo\Mime\Email::NewInstance($oFromAccount->Email, $sSiteName);
-						$oThreadOwnerEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oHelpdeskThreadOwnerUser->Name);
+						$oThreadOwnerEmail = \MailSo\Mime\Email::NewInstance($sEmail, $oThreadOwnerUser->Name);
 
-						if ($oHelpdeskThreadOwnerUser->IdHelpdeskUser === $oThread->IdOwner)
+						if ($oThreadOwnerUser->iObjectId === $oThread->IdOwner)
 						{
 							$oUserMessage = $this->_buildPostMail(PSEVEN_APP_ROOT_PATH.'templates/helpdesk/user.post.notification.html',
 								$oHelpdeskSenderEmail->ToString(), $oThreadOwnerEmail->ToString(),
-								'New Post', '', '', $oHelpdeskThreadOwnerUser, $oHelpdeskPostOwnerUser, $oThread, null, $sSiteName);
+								'New Post', '', '', $oThreadOwnerUser, $oHelpdeskPostOwnerUser, $oThread, null, $sSiteName);
 
 							if ($oUserMessage)
 							{
@@ -2002,7 +2002,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Helpdesk user object
 	 * @param CHelpdeskThread $oThread Helpdesk thread object
 	 * @param CHelpdeskPost $oPost Helpdesk post object
 	 * @param bool $bIsNew Default value is **false**.
@@ -2012,20 +2012,19 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-//	public function createPost(CHelpdeskUser $oHelpdeskUser, $oThread, CHelpdeskPost $oPost, $bIsNew = false, $bSendNotify = true, $sCc = '', $sBcc = '')
-	public function createPost(CUser $oHelpdeskUser, $oThread, CHelpdeskPost $oPost, $bIsNew = false, $bSendNotify = true, $sCc = '', $sBcc = '')
+	public function createPost(\CUser $oUser, $oThread, CHelpdeskPost $oPost, $bIsNew = false, $bSendNotify = true, $sCc = '', $sBcc = '')
 	{
 		$bResult = false;
 		try
 		{
 			if ($oPost->validate())
 			{
-				if ($oPost->Type === EHelpdeskPostType::Internal && !$oHelpdeskUser->{'HelpDesk::IsAgent'})
+				if ($oPost->Type === EHelpdeskPostType::Internal && !$oUser->{'HelpDesk::IsAgent'})
 				{
 					$oPost->Type = EHelpdeskPostType::Normal;
 				}
 
-				if ($oHelpdeskUser->{'HelpDesk::IsAgent'} && !$bIsNew && $oHelpdeskUser->IdHelpdeskUser !== $oThread->IdOwner)
+				if ($oUser->{'HelpDesk::IsAgent'} && !$bIsNew && $oUser->iObjectId !== $oThread->IdOwner)
 				{
 					if ($oPost->Type !== EHelpdeskPostType::Internal)
 					{
@@ -2037,7 +2036,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 					$oThread->Type = EHelpdeskThreadType::Pending;
 				}
 
-				$bResult = $this->oStorage->createPost($oHelpdeskUser, $oPost);
+				$bResult = $this->oStorage->createPost($oUser, $oPost);
 				if (!$bResult)
 				{
 					$this->moveStorageExceptionToManager();
@@ -2047,11 +2046,11 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 				{
 					if (is_array($oPost->Attachments) && 0 < count($oPost->Attachments))
 					{
-						$this->oStorage->addAttachments($oHelpdeskUser, $oThread, $oPost, $oPost->Attachments);
+						$this->oStorage->addAttachments($oUser, $oThread, $oPost, $oPost->Attachments);
 					}
 
 					$oThread->Updated = time();
-					$oThread->PostCount = $this->getPostsCount($oHelpdeskUser, $oThread);
+					$oThread->PostCount = $this->getPostsCount($oUser, $oThread);
 					$oThread->LastPostId = $oPost->IdHelpdeskPost;
 					$oThread->LastPostOwnerId = $oPost->IdOwner;
 					$oThread->Notificated = false;
@@ -2061,8 +2060,8 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 						$oThread->HasAttachments = is_array($oPost->Attachments) && 0 < count($oPost->Attachments);
 					}
 
-					$bResult = $this->updateThread($oHelpdeskUser, $oThread);
-					$this->setThreadSeen($oHelpdeskUser, $oThread);
+					$bResult = $this->updateThread($oUser, $oThread);
+					$this->setThreadSeen($oUser, $oThread);
 
 					if ($bSendNotify)
 					{

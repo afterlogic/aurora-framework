@@ -37,6 +37,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
+	 * TODO remove
 	 * @param string $sSql
 	 *
 	 * @return CHelpdeskUser|false
@@ -63,11 +64,11 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
+	 * TODO remove
 	 * @param CHelpdeskUser $oHelpdeskUser
 	 *
 	 * @return bool
 	 */
-//	public function createUser(CHelpdeskUser &$oHelpdeskUser)
 	public function createUser(CUser &$oHelpdeskUser)
 	{
 		$bResult = false;
@@ -82,6 +83,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
+	 * TODO use Core modue API and remove this this method
 	 * @param int $iIdTenant
 	 * @param int $iHelpdeskUserId
 	 *
@@ -93,6 +95,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
+	 * TODO
 	 * @param int $iHelpdeskUserId
 	 *
 	 * @return CHelpdeskUser|false
@@ -103,17 +106,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param int $iIdTenant
-	 * @param string $sEmail
-	 *
-	 * @return CHelpdeskUser|null|false
-	 */
-//	public function getUserByEmail($iIdTenant, $sEmail)
-//	{
-//		return $this->_getUserBySql($this->oCommandCreator->getUserByEmail($iIdTenant, $sEmail));
-//	}
-
-	/**
+	 * TODO
 	 * @param int $iIdTenant
 	 * @param string $sEmail
 	 *
@@ -239,16 +232,16 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO remove or rewrite for account check instead of user
+	 * @param \CUser $oUser
 	 *
 	 * @return bool
 	 */
-//	public function isUserExists(CHelpdeskUser $oHelpdeskUser)
-	public function isUserExists(CUser $oHelpdeskUser)
+	public function isUserExists(\CUser $oUser)
 	{
 		$bResult = false;
 
-		if ($this->oConnection->Execute($this->oCommandCreator->isUserExists($oHelpdeskUser)))
+		if ($this->oConnection->Execute($this->oCommandCreator->isUserExists($oUser)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow && 0 < (int) $oRow->item_count)
@@ -264,16 +257,17 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO
+	 * 
+	 * @param \CUser $oUser
 	 * @param array $aIdList
 	 *
 	 * @return array|bool
 	 */
-//	public function userInformation(CHelpdeskUser $oHelpdeskUser, $aIdList)
-	public function userInformation(CUser $oHelpdeskUser, $aIdList)
+	public function userInformation(\CUser $oUser, $aIdList)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->userInformation($oHelpdeskUser, $aIdList)))
+		if ($this->oConnection->Execute($this->oCommandCreator->userInformation($oUser, $aIdList)))
 		{
 			$mResult = array();
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
@@ -291,55 +285,55 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO update Account insead of User
+	 * @param \CUser $oUser
 	 *
 	 * @return bool
 	 */
-//	public function updateUser(CHelpdeskUser $oHelpdeskUser)
-	public function updateUser(CUser $oHelpdeskUser)
+	public function updateUser(\CUser $oUser)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->updateUser($oHelpdeskUser));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->updateUser($oUser));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
 	/**
 	 * @param int $iIdTenant
-	 * @param int $iIdHelpdeskUser
+	 * @param int $iIdUser
 	 *
 	 * @return bool
 	 */
-	public function setUserAsBlocked($iIdTenant, $iIdHelpdeskUser)
+	public function setUserAsBlocked($iIdTenant, $iIdUser)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->setUserAsBlocked($iIdTenant, $iIdHelpdeskUser));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->setUserAsBlocked($iIdTenant, $iIdUser));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
 	/**
+	 * TODO
 	 * @param int $iIdTenant
-	 * @param int $iIdHelpdeskUser
+	 * @param int $iIdUser
 	 *
 	 * @return bool
 	 */
-	public function deleteUser($iIdTenant, $iIdHelpdeskUser)
+	public function deleteUser($iIdTenant, $iIdUser)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteUser($iIdTenant, $iIdHelpdeskUser));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteUser($iIdTenant, $iIdUser));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oThread
 	 * @param array $aPostIds
 	 *
 	 * @return bool
 	 */
-//	public function deletePosts(CHelpdeskUser $oHelpdeskUser, $oThread, $aPostIds)
-	public function deletePosts(CUser $oHelpdeskUser, $oThread, $aPostIds)
+	public function deletePosts(\CUser $oUser, $oThread, $aPostIds)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deletePosts($oHelpdeskUser, $oThread, $aPostIds));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deletePosts($oUser, $oThread, $aPostIds));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
@@ -355,21 +349,20 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oHelpdeskThread
 	 * @param CHelpdeskPost $oHelpdeskPost
 	 * @param array $aAttachments
 	 *
 	 * @return bool
 	 */
-//	public function addAttachments(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread, CHelpdeskPost $oHelpdeskPost, $aAttachments)
-	public function addAttachments(CUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread, CHelpdeskPost $oHelpdeskPost, $aAttachments)
+	public function addAttachments(\CUser $oUser, CHelpdeskThread $oHelpdeskThread, CHelpdeskPost $oHelpdeskPost, $aAttachments)
 	{
 		foreach ($aAttachments as &$oItem)
 		{
 			$oItem->IdHelpdeskThread = $oHelpdeskThread->IdHelpdeskThread;
 			$oItem->IdHelpdeskPost = $oHelpdeskPost->IdHelpdeskPost;
-			$oItem->IdOwner = $oHelpdeskUser->IdHelpdeskUser;
+			$oItem->IdOwner = $oUser->iObjectId;
 		}
 
 		$bResult = $this->oConnection->Execute($this->oCommandCreator->addAttachments($aAttachments));
@@ -379,20 +372,19 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aThreadIds
 	 *
 	 * @return bool
 	 */
-//	public function verifyThreadIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
-	public function verifyThreadIdsBelongToUser(CUser $oHelpdeskUser, $aThreadIds)
+	public function verifyThreadIdsBelongToUser(\CUser $oUser, $aThreadIds)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->verifyThreadIdsBelongToUser($oHelpdeskUser, $aThreadIds)))
+		if ($this->oConnection->Execute($this->oCommandCreator->verifyThreadIdsBelongToUser($oUser, $aThreadIds)))
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				if ((int) $oHelpdeskUser->IdHelpdeskUser !== (int) $oRow->id_owner)
+				if ((int) $oUser->iObjectId !== (int) $oRow->id_owner)
 				{
 					$mResult = false;
 					break;
@@ -409,20 +401,19 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aPostIds
 	 *
 	 * @return bool
 	 */
-//	public function verifyPostIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aPostIds)
-	public function verifyPostIdsBelongToUser(CUser $oHelpdeskUser, $aPostIds)
+	public function verifyPostIdsBelongToUser(\CUser $oUser, $aPostIds)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->verifyPostIdsBelongToUser($oHelpdeskUser, $aPostIds)))
+		if ($this->oConnection->Execute($this->oCommandCreator->verifyPostIdsBelongToUser($oUser, $aPostIds)))
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				if ((int) $oHelpdeskUser->IdHelpdeskUser !== (int) $oRow->id_owner)
+				if ((int) $oUser->iObjectId !== (int) $oRow->id_owner)
 				{
 					$mResult = false;
 					break;
@@ -823,11 +814,10 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	 *
 	 * @return array|bool
 	 */
-//	public function getOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
-	public function getOnline(CUser $oHelpdeskUser, $iThreadID)
+	public function getOnline(\CUser $oUser, $iThreadID)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getOnline($oHelpdeskUser, $iThreadID, 5)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getOnline($oUser, $iThreadID, 5)))
 		{
 			$oRow = null;
 			$mResult = array();
@@ -837,7 +827,7 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 				if ($oRow && isset($oRow->id_helpdesk_user) && isset($oRow->name) &&
 					isset($oRow->email))
 				{
-					if ((string) $oRow->id_helpdesk_user !== (string) $oHelpdeskUser->IdHelpdeskUser)
+					if ((string) $oRow->id_helpdesk_user !== (string) $oUser->iObjectId)
 					{
 						$mResult[$oRow->id_helpdesk_user] = array((string) $oRow->name, (string) $oRow->email);
 					}

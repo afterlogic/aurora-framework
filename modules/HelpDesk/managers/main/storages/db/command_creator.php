@@ -11,6 +11,7 @@
 class CApiHelpdeskCommandCreator extends api_CommandCreator
 {
 	/**
+	 * TODO remove CHelpdeskUser::getStaticMap call
 	 * @param string $sWhere
 	 *
 	 * @return string
@@ -163,50 +164,50 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO
+	 * @param \CUser $oUser
 	 * @param int $niExceptUserId Default value is **null**.
 	 *
 	 * @return string
 	 */
-//	public function isUserExists(CHelpdeskUser $oHelpdeskUser, $niExceptUserId = null)
-	public function isUserExists(CUser $oHelpdeskUser, $niExceptUserId = null)
+	public function isUserExists(\CUser $oUser, $niExceptUserId = null)
 	{
 		$sAddSql = (is_integer($niExceptUserId)) ? ' AND id_helpdesk_user <> '.$niExceptUserId : '';
 
 		$sSql = 'SELECT COUNT(id_helpdesk_user) as item_count FROM %sahd_users WHERE %s = %s AND %s = %s%s';
 
 		return trim(sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
-			$this->escapeColumn('email'), $this->escapeString(strtolower($oHelpdeskUser->Email)),
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
+			$this->escapeColumn('email'), $this->escapeString(strtolower($oUser->Email)),
 			$sAddSql
 		));
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO
+	 * @param \CUser $oUser
 	 * @param array $aIdList
 	 *
 	 * @return string
 	 */
-//	public function userInformation(CHelpdeskUser $oHelpdeskUser, $aIdList)
-	public function userInformation(CUser $oHelpdeskUser, $aIdList)
+	public function userInformation(\CUser $oUser, $aIdList)
 	{
 		$sSql = 'SELECT id_helpdesk_user, email, name, is_agent, notification_email FROM %sahd_users WHERE %s = %d AND %s IN (%s)';
 		return sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_user'), implode(', ', $aIdList)
 		);
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO remove this method
+	 * @param \CUser $oUser
 	 *
 	 * @return string
 	 */
-//	public function createUser(CHelpdeskUser $oHelpdeskUser)
-	public function createUser(CUser $oHelpdeskUser)
+	public function createUser(\CUser $oUser)
 	{
-		$aResults = api_AContainer::DbInsertArrays($oHelpdeskUser, $this->oHelper);
+		$aResults = api_AContainer::DbInsertArrays($oUser, $this->oHelper);
 
 		if (!empty($aResults[0]) && !empty($aResults[1]))
 		{
@@ -218,23 +219,24 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO remove
+	 * @param \CUser $oUser
 	 *
 	 * @return string
 	 */
-//	public function updateUser(CHelpdeskUser $oHelpdeskUser)
-	public function updateUser(CUser $oHelpdeskUser)
+	public function updateUser(\CUser $oUser)
 	{
-		$aResult = api_AContainer::DbUpdateArray($oHelpdeskUser, $this->oHelper);
+		$aResult = api_AContainer::DbUpdateArray($oUser, $this->oHelper);
 
 		$sSql = 'UPDATE %sahd_users SET %s WHERE %s = %d AND %s = %d';
 		return sprintf($sSql, $this->prefix(), implode(', ', $aResult),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
-			$this->escapeColumn('id_helpdesk_user'), $oHelpdeskUser->IdHelpdeskUser
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
+			$this->escapeColumn('id_helpdesk_user'), $oUser->iObjectId
 		);
 	}
 
 	/**
+	 * TODO
 	 * @param int $iIdTenant
 	 * @param int $iIdHelpdeskUser
 	 *
@@ -250,6 +252,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
+	 * TODO
 	 * @param int $iIdTenant
 	 * @param int $iIdHelpdeskUser
 	 *
@@ -265,19 +268,18 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aThreadIds
 	 * @param bool $bSetArchive Default value is **true**.
 	 *
 	 * @return string
 	 */
-//	public function archiveThreads(CHelpdeskUser $oHelpdeskUser, $aThreadIds, $bSetArchive = true)
-	public function archiveThreads(CUser $oHelpdeskUser, $aThreadIds, $bSetArchive = true)
+	public function archiveThreads(\CUser $oUser, $aThreadIds, $bSetArchive = true)
 	{
 		$sSql = 'UPDATE %sahd_threads SET %s = %d WHERE %s = %d AND %s IN (%d)';
 		return sprintf($sSql, $this->prefix(),
 			$this->escapeColumn('archived'), $bSetArchive ? 1 : 0,
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_thread'), implode(', ', $aThreadIds)
 		);
 	}
@@ -328,18 +330,17 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oThread
 	 * @param array $aPostIds
 	 *
 	 * @return string
 	 */
-//	public function deletePosts(CHelpdeskUser $oHelpdeskUser, $oThread, $aPostIds)
-	public function deletePosts(CUser $oHelpdeskUser, $oThread, $aPostIds)
+	public function deletePosts(\CUser $oUser, $oThread, $aPostIds)
 	{
 		$sSql = 'UPDATE %sahd_posts SET deleted = 1 WHERE %s = %d AND %s = %d AND %s IN (%d)';
 		return sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_thread'), $oThread->IdHelpdeskThread,
 			$this->escapeColumn('id_helpdesk_post'), implode(', ', $aPostIds)
 		);
@@ -388,13 +389,12 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oHelpdeskThread
 	 *
 	 * @return string
 	 */
-//	public function createThread(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
-	public function createThread(CUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+	public function createThread(\CUser $oUser, CHelpdeskThread $oHelpdeskThread)
 	{
 		$aResults = api_AContainer::DbInsertArrays($oHelpdeskThread, $this->oHelper);
 
@@ -408,19 +408,18 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oHelpdeskThread
 	 *
 	 * @return string
 	 */
-//	public function updateThread(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
-	public function updateThread(CUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+	public function updateThread(\CUser $oUser, CHelpdeskThread $oHelpdeskThread)
 	{
 		$aResult = api_AContainer::DbUpdateArray($oHelpdeskThread, $this->oHelper);
 
 		$sSql = 'UPDATE %sahd_threads SET %s WHERE %s = %d AND %s = %d';
 		return sprintf($sSql, $this->prefix(), implode(', ', $aResult),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_thread'), $oHelpdeskThread->IdHelpdeskThread
 		);
 	}
@@ -433,7 +432,6 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 *
 	 * @return array
 	 */
-//	private function buildThreadsWhere(CHelpdeskUser $oHelpdeskUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	private function buildThreadsWhere(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$aWhere = array();
@@ -613,26 +611,24 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aThreadIds
 	 *
 	 * @return string
 	 */
-//	public function verifyThreadIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aThreadIds)
-	public function verifyThreadIdsBelongToUser(CUser $oHelpdeskUser, $aThreadIds)
+	public function verifyThreadIdsBelongToUser(\CUser $oUser, $aThreadIds)
 	{
 		$sSql = 'SELECT id_owner, id_helpdesk_thread FROM %sahd_threads WHERE %s IN (%s)';
 		return sprintf($sSql, $this->prefix(), $this->escapeColumn('id_helpdesk_thread'), implode(',', $aThreadIds));
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param array $aPostIds
 	 *
 	 * @return string
 	 */
-//	public function verifyPostIdsBelongToUser(CHelpdeskUser $oHelpdeskUser, $aPostIds)
-	public function verifyPostIdsBelongToUser(CUser $oHelpdeskUser, $aPostIds)
+	public function verifyPostIdsBelongToUser(\CUser $oUser, $aPostIds)
 	{
 		$sSql = 'SELECT id_owner FROM %sahd_posts WHERE %s IN (%s)';
 		return sprintf($sSql, $this->prefix(), $this->escapeColumn('id_helpdesk_post'), implode(',', $aPostIds));
@@ -662,53 +658,50 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 	
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oHelpdeskUser
 	 * @param CHelpdeskThread $oThread
 	 *
 	 * @return string
 	 */
-//	public function getPostsCount(CHelpdeskUser $oHelpdeskUser, $oThread)
-	public function getPostsCount(CUser $oHelpdeskUser, $oThread)
+	public function getPostsCount(\CUser $oUser, $oThread)
 	{
 		$sSql = 'SELECT COUNT(id_helpdesk_post) as item_count FROM %sahd_posts WHERE deleted = 0 AND %s = %d AND %s = %d%s';
 		
-		$aWhere = $this->buildPostsWhere($oHelpdeskUser, $oThread);
+		$aWhere = $this->buildPostsWhere($oUser, $oThread);
 		return sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_thread'), $oThread->IdHelpdeskThread,
 			0 < count($aWhere) ? ' AND '.implode(' AND ', $aWhere) : ''
 		);
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oThread
 	 *
 	 * @return string
 	 */
-//	public function getExtPostsCount(CHelpdeskUser $oHelpdeskUser, $oThread)
-	public function getExtPostsCount(CUser $oHelpdeskUser, $oThread)
+	public function getExtPostsCount(\CUser $oUser, $oThread)
 	{
 		$sSql = 'SELECT COUNT(id_helpdesk_post) as item_count FROM %sahd_posts WHERE deleted = 0 AND type = 0 AND %s = %d AND %s = %d%s';
 
-		$aWhere = $this->buildPostsWhere($oHelpdeskUser, $oThread);
+		$aWhere = $this->buildPostsWhere($oUser, $oThread);
 		return sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
 			$this->escapeColumn('id_helpdesk_thread'), $oThread->IdHelpdeskThread,
 			0 < count($aWhere) ? ' AND '.implode(' AND ', $aWhere) : ''
 		);
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oThread
 	 * @param int $iStartFromId Default value is **0**.
 	 * @param int $iLimit Default value is **20**.
 	 *
 	 * @return string
 	 */
-//	public function getPosts(CHelpdeskUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
-	public function getPosts(CUser $oHelpdeskUser, $oThread, $iStartFromId = 0, $iLimit = 20)
+	public function getPosts(\CUser $oUser, $oThread, $iStartFromId = 0, $iLimit = 20)
 	{
 		$aMap = api_AContainer::DbReadKeys(CHelpdeskPost::getStaticMap());
 		$aMap = array_map(array($this, 'escapeColumn'), $aMap);
@@ -716,7 +709,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 		$sSql = 'SELECT %s FROM %sahd_posts WHERE deleted = 0';
 		$sSql = sprintf($sSql, implode(', ', $aMap), $this->prefix());
 
-		$aWhere = $this->buildPostsWhere($oHelpdeskUser, $oThread);
+		$aWhere = $this->buildPostsWhere($oUser, $oThread);
 
 		if (0 < $iStartFromId)
 		{
@@ -734,13 +727,12 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 	
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oHelpdeskThread
 	 *
 	 * @return string
 	 */
-//	public function getAttachments(CHelpdeskUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
-	public function getAttachments(CUser $oHelpdeskUser, CHelpdeskThread $oHelpdeskThread)
+	public function getAttachments(\CUser $oUser, CHelpdeskThread $oHelpdeskThread)
 	{
 		$aMap = api_AContainer::DbReadKeys(CHelpdeskAttachment::getStaticMap());
 		$aMap = array_map(array($this, 'escapeColumn'), $aMap);
@@ -749,9 +741,9 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 		$sSql = sprintf($sSql, implode(', ', $aMap), $this->prefix());
 
 		$aWhere = array();
-		if (0 < $oHelpdeskUser->IdTenant)
+		if (0 < $oUser->IdTenant)
 		{
-			$aWhere[] = $this->escapeColumn('id_tenant').' = '.$oHelpdeskUser->IdTenant;
+			$aWhere[] = $this->escapeColumn('id_tenant').' = '.$oUser->IdTenant;
 		}
 
 		$aWhere[] = $this->escapeColumn('id_helpdesk_thread').' = '.$oHelpdeskThread->IdHelpdeskThread;
@@ -783,13 +775,12 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskPost $oHelpdeskPost
 	 *
 	 * @return string
 	 */
-//	public function createPost(CHelpdeskUser $oHelpdeskUser, CHelpdeskPost $oHelpdeskPost)
-	public function createPost(CUser $oHelpdeskUser, CHelpdeskPost $oHelpdeskPost)
+	public function createPost(\CUser $oUser, CHelpdeskPost $oHelpdeskPost)
 	{
 		$aResults = api_AContainer::DbInsertArrays($oHelpdeskPost, $this->oHelper);
 
@@ -803,65 +794,62 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oHelpdeskThread
 	 *
 	 * @return string
 	 */
-	public function clearThreadSeen(CUser $oHelpdeskUser, $oHelpdeskThread)
+	public function clearThreadSeen(\CUser $oUser, $oHelpdeskThread)
 	{
 		$sSql = 'DELETE FROM %sahd_reads WHERE %s = %d AND %s = %d AND %s = %d';
 		return sprintf($sSql, $this->prefix(),
-			$this->escapeColumn('id_tenant'), $oHelpdeskUser->IdTenant,
-			$this->escapeColumn('id_owner'), $oHelpdeskUser->IdHelpdeskUser,
+			$this->escapeColumn('id_tenant'), $oUser->IdTenant,
+			$this->escapeColumn('id_owner'), $oUser->iObjectId,
 			$this->escapeColumn('id_helpdesk_thread'), $oHelpdeskThread->IdHelpdeskThread
 		);
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param CHelpdeskThread $oHelpdeskThread
 	 *
 	 * @return string
 	 */
-//	public function setThreadSeen(CHelpdeskUser $oHelpdeskUser, $oHelpdeskThread)
-	public function setThreadSeen(CUser $oHelpdeskUser, $oHelpdeskThread)
+	public function setThreadSeen(\CUser $oUser, $oHelpdeskThread)
 	{
 		$sSql = 'INSERT INTO %sahd_reads ( id_tenant, id_owner, id_helpdesk_thread, last_post_id ) VALUES ( %d, %d, %d, %d )';
 		return sprintf($sSql, $this->prefix(),
-			$oHelpdeskUser->IdTenant, $oHelpdeskUser->IdHelpdeskUser,
+			$oUser->IdTenant, $oUser->iObjectId,
 			$oHelpdeskThread->IdHelpdeskThread, $oHelpdeskThread->LastPostId
 		);
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iThreadID
 	 * @param int $iTimeoutInMin Default value is **5**.
 	 *
 	 * @return string
 	 */
-//	public function getOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID, $iTimeoutInMin = 5)
-	public function getOnline(CUser $oHelpdeskUser, $iThreadID, $iTimeoutInMin = 5)
+	public function getOnline(\CUser $oUser, $iThreadID, $iTimeoutInMin = 5)
 	{
 		$sSql = 'SELECT * FROM %sahd_online WHERE id_helpdesk_thread = %d AND id_tenant = %d AND ping_time > %d';
-		return sprintf($sSql, $this->prefix(), $iThreadID, $oHelpdeskUser->IdTenant,
+		return sprintf($sSql, $this->prefix(), $iThreadID, $oUser->IdTenant,
 			time() - $iTimeoutInMin * 60
 		);
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * @param \CUser $oUser
 	 * @param int $iThreadID
 	 *
 	 * @return string
 	 */
-//	public function clearOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
-	public function clearOnline(CUser $oHelpdeskUser, $iThreadID)
+	public function clearOnline(\CUser $oUser, $iThreadID)
 	{
 		$sSql = 'DELETE FROM %sahd_online  WHERE id_helpdesk_user = %d AND id_tenant = %d AND id_helpdesk_thread = %d';
 		return sprintf($sSql, $this->prefix(),
-			$oHelpdeskUser->IdHelpdeskUser, $oHelpdeskUser->IdTenant, $iThreadID
+			$oUser->iObjectId, $oUser->IdTenant, $iThreadID
 		);
 	}
 
@@ -879,20 +867,20 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser
+	 * TODO email must be getted from account
+	 * @param \CUser $oUser
 	 * @param int $iThreadID
 	 * 
 	 * @return string
 	 */
-//	public function setOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
-	public function setOnline(CUser $oHelpdeskUser, $iThreadID)
+	public function setOnline(\CUser $oUser, $iThreadID)
 	{
 		$sSql = 'INSERT INTO %sahd_online (id_helpdesk_thread, id_helpdesk_user, id_tenant, name, email, ping_time) VALUES ( %d, %d, %d, %s, %s, %d )';
 		
 		//TODO save $oHelpdeskUser->Email in email column
 		return sprintf($sSql, $this->prefix(),
-			$iThreadID, $oHelpdeskUser->IdHelpdeskUser, $oHelpdeskUser->IdTenant,
-			$this->escapeString($oHelpdeskUser->Name), $this->escapeString($oHelpdeskUser->Name),
+			$iThreadID, $oUser->iObjectId, $oUser->IdTenant,
+			$this->escapeString($oUser->Name), $this->escapeString($oUser->Name),
 			time()
 		);
 	}

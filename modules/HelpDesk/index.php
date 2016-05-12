@@ -479,7 +479,6 @@ class HelpDeskModule extends AApiModule
 			
 			$oThread = new \CHelpdeskThread();
 			$oThread->IdTenant = $oUser->IdTenant;
-//			$oThread->IdOwner = $oUser->IdHelpdeskUser;
 			$oThread->IdOwner = $oUser->iObjectId;
 			$oThread->Type = \EHelpdeskThreadType::Pending;
 			$oThread->Subject = $sSubject;
@@ -498,7 +497,6 @@ class HelpDeskModule extends AApiModule
 		{
 			$oPost = new \CHelpdeskPost();
 			$oPost->IdTenant = $oUser->IdTenant;
-//			$oPost->IdOwner = $oUser->IdHelpdeskUser;
 			$oPost->IdOwner = $oUser->iObjectId;
 			$oPost->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 			$oPost->Type = $bIsInternal ? \EHelpdeskPostType::Internal : \EHelpdeskPostType::Normal;
@@ -538,7 +536,6 @@ class HelpDeskModule extends AApiModule
 						$oAttachment = new \CHelpdeskAttachment();
 						$oAttachment->IdHelpdeskThread = $oThread->IdHelpdeskThread;
 						$oAttachment->IdHelpdeskPost = $oPost->IdHelpdeskPost;
-//						$oAttachment->IdOwner = $oUser->IdHelpdeskUser;
 						$oAttachment->IdOwner = $oUser->iObjectId;
 						$oAttachment->IdTenant = $oUser->IdTenant;
 
