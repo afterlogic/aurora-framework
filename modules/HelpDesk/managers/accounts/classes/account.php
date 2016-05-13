@@ -25,11 +25,11 @@ class CAccount extends \api_APropertyBag
 		$this->aStaticMap = array(
 			'IsDisabled'	=> array('bool', false),
 			'IdUser'		=> array('int', 0),
-			'Login'			=> array('string', ''),
-			'Password'		=> array('string', ''),
-			'NotificationEmail' => array('string', ''),
+//			'Login'			=> array('string', ''),
+//			'Password'		=> array('string', ''),
+			'NotificationEmail' => array('string', '')
 			/* moved from user */
-			'IsAgent' => array('string', '')
+//			'IsAgent' => array('string', '')
 		);
 		
 		$this->SetDefaults();

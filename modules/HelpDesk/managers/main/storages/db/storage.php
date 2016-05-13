@@ -580,10 +580,10 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	 *
 	 * @return int
 	 */
-	public function getThreadsCount(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreadsCount(\CUser $oUser, $bIsAgent = false, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$iResult = 0;
-		if ($this->oConnection->Execute($this->oCommandCreator->getThreadsCount($oUser, $iFilter, $sSearch, $iSearchOwner)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getThreadsCount($oUser, $bIsAgent, $iFilter, $sSearch, $iSearchOwner)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
@@ -631,10 +631,10 @@ class CApiHelpdeskMainDbStorage extends CApiHelpdeskMainStorage
 	 *
 	 * @return array|bool
 	 */
-	public function getThreads(\CUser $oUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreads(\CUser $oUser, $bIsAgent = false, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getThreads($oUser, $bIsAgent, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner)))
 		{
 			$oRow = null;
 			$mResult = array();

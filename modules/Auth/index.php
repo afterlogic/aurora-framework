@@ -327,6 +327,32 @@ class AuthModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
+	public function SaveAccount($oAccount)
+	{
+//		$oAccount = $this->getDefaultAccountFromParam();
+		
+//		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
+		
+		if ($oAccount instanceof \CAccount)
+		{
+			$this->oApiAccountsManager->createAccount($oAccount);
+			
+			return $oAccount ? array(
+				'iObjectId' => $oAccount->iObjectId
+			) : false;
+		}
+		else
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public function UpdateAccount($iAccountId = 0, $sLogin = '', $sPassword = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();

@@ -432,7 +432,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 *
 	 * @return array
 	 */
-	private function buildThreadsWhere(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	private function _buildThreadsWhere(\CUser $oUser, $bIsAgent = false, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$aWhere = array();
 
@@ -453,7 +453,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 					$aWhere[] = $this->escapeColumn('type').' = '.EHelpdeskThreadType::Resolved;
 					break;
 				case EHelpdeskThreadFilterType::Open:
-					if ($oUser->{'HelpDesk::IsAgent'})
+					if ($bIsAgent)
 					{
 						$aWhere[] = '(('.
 							$this->escapeColumn('type').' IN ('.implode(',', array(
@@ -489,7 +489,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 			}
 		}
 
-		if (!$oUser->{'HelpDesk::IsAgent'})
+		if (!$bIsAgent)
 		{
 			$aWhere[] = $this->escapeColumn('id_owner').' = '.$oUser->iObjectId;
 		}
@@ -528,12 +528,12 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 *
 	 * @return string
 	 */
-	public function getThreadsCount(\CUser $oUser, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreadsCount(\CUser $oUser, $bIsAgent = false, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$sSql = 'SELECT COUNT(id_helpdesk_thread) as item_count FROM %sahd_threads';
 		$sSql = sprintf($sSql, $this->prefix());
 
-		$aWhere = $this->buildThreadsWhere($oUser, $iFilter, $sSearch, $iSearchOwner);
+		$aWhere = $this->_buildThreadsWhere($oUser, $bIsAgent, $iFilter, $sSearch, $iSearchOwner);
 		if (is_array($aWhere) && 0 < count($aWhere))
 		{
 			$sSql .= ' WHERE '.implode(' AND ', $aWhere);
@@ -568,7 +568,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 	 *
 	 * @return string
 	 */
-	public function getThreads(\CUser $oUser, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
+	public function getThreads(\CUser $oUser, $bIsAgent = false, $iOffset = 0, $iLimit = 20, $iFilter = EHelpdeskThreadFilterType::All, $sSearch = '', $iSearchOwner = 0)
 	{
 		$sSearch = trim($sSearch);
 
@@ -579,7 +579,7 @@ class CApiHelpdeskCommandCreator extends api_CommandCreator
 		$sSql = 'SELECT %s FROM %sahd_threads';
 		$sSql = sprintf($sSql, implode(', ', $aMap), $this->prefix());
 
-		$aWhere = $this->buildThreadsWhere($oUser, $iFilter, $sSearch, $iSearchOwner);
+		$aWhere = $this->_buildThreadsWhere($oUser, $bIsAgent, $iFilter, $sSearch, $iSearchOwner);
 		if (is_array($aWhere) && 0 < count($aWhere))
 		{
 			$sSql .= ' WHERE '.implode(' AND ', $aWhere);

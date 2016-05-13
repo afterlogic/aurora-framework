@@ -409,14 +409,17 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 
 		return 0;
 	}
-
+	
+	public function isAgent(\CUser $oUser)
+	{
+		return $oUser && $oUser->Role === 2;
+	}
 	/**
 	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
 	 * @param bool $bCreateFromFetcher Default value is **false**.
 	 * 
 	 * @return bool
 	 */
-//	public function createUser(CHelpdeskUser &$oHelpdeskUser, $bCreateFromFetcher = false)
 	public function createUser(CUser &$oHelpdeskUser, $bCreateFromFetcher = false)
 	{
 		$bResult = false;
@@ -1515,9 +1518,9 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	{
 		$iResult = 0;
 		try
-		{
+		{	$bIsAgent = $this->isAgent($oUser);
 			$iSearchOwner = $this->_getOwnerFromSearch($oUser->IdTenant, $sSearch);
-			$iResult = $this->oStorage->getThreadsCount($oUser, $iFilter, $sSearch, $iSearchOwner);
+			$iResult = $this->oStorage->getThreadsCount($oUser, $bIsAgent, $iFilter, $sSearch, $iSearchOwner);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -1561,8 +1564,9 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 		$aResult = null;
 		try
 		{
+			$bIsAgent = $this->isAgent($oUser);
 			$iSearchOwner = $this->_getOwnerFromSearch($oUser->IdTenant, $sSearch);
-			$aResult = $this->oStorage->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner);
+			$aResult = $this->oStorage->getThreads($oUser, $bIsAgent, $iOffset, $iLimit, $iFilter, $sSearch, $iSearchOwner);
 			if (is_array($aResult) && 0 < count($aResult))
 			{
 				$aThreadsIdList = array();
@@ -1726,20 +1730,19 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param int $iThreadID
 	 *
 	 * @return array|bool
 	 */
-//	public function getOnline(CHelpdeskUser $oHelpdeskUser, $iThreadID)
-	public function getOnline(CUser $oHelpdeskUser, $iThreadID)
+	public function getOnline(\CUser $oUser, $iThreadID)
 	{
 		$aResult = false;
-		if ($oHelpdeskUser && $oHelpdeskUser->{'HelpDesk::IsAgent'})
+		if ($oUser && $oUser->isAgent($oUser))
 		{
 			try
 			{
-				$aResult = $this->oStorage->getOnline($oHelpdeskUser, $iThreadID);
+				$aResult = $this->oStorage->getOnline($oUser, $iThreadID);
 			}
 			catch (CApiBaseException $oException)
 			{
@@ -2002,7 +2005,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param \CUser $oUser Helpdesk user object
+	 * @param \CUser $oUser Core user object
 	 * @param CHelpdeskThread $oThread Helpdesk thread object
 	 * @param CHelpdeskPost $oPost Helpdesk post object
 	 * @param bool $bIsNew Default value is **false**.
@@ -2019,12 +2022,12 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 		{
 			if ($oPost->validate())
 			{
-				if ($oPost->Type === EHelpdeskPostType::Internal && !$oUser->{'HelpDesk::IsAgent'})
+				if ($oPost->Type === EHelpdeskPostType::Internal && !$this->isAgent($oUser))
 				{
 					$oPost->Type = EHelpdeskPostType::Normal;
 				}
 
-				if ($oUser->{'HelpDesk::IsAgent'} && !$bIsNew && $oUser->iObjectId !== $oThread->IdOwner)
+				if ($this->isAgent($oUser) && !$bIsNew && $oUser->iObjectId !== $oThread->IdOwner)
 				{
 					if ($oPost->Type !== EHelpdeskPostType::Internal)
 					{

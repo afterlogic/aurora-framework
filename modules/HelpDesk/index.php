@@ -6,11 +6,15 @@ class HelpDeskModule extends AApiModule
 {
 	public $oCurrentAccount = null;
 	
+	public $oCurrentUser = null;
+	
 	public $oMainManager = null;
 	
 	public $oAccountsManager = null;
 	
 	public $oCoreDecorator = null;
+	
+	public $oAuthDecorator = null;
 	
 	public function init() 
 	{
@@ -18,11 +22,12 @@ class HelpDeskModule extends AApiModule
 		$this->oAccountsManager = $this->GetManager('accounts', 'db');
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$this->oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 				
-		$this->setObjectMap('CUser', array(
-				'IsAgent' => array('bool', false)
-			)
-		);
+//		$this->setObjectMap('CUser', array(
+//				'IsAgent' => array('bool', false)
+//			)
+//		);
 		
 		$this->setObjectMap('CTenant', array(
 				'AdminEmail'		=> array('string', ''),
@@ -39,7 +44,7 @@ class HelpDeskModule extends AApiModule
 			)
 		);
 		
-		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
+//		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
 	}
 	
 	protected function GetCurrentAccount()
@@ -52,6 +57,18 @@ class HelpDeskModule extends AApiModule
 		}
 		
 		return $this->oCurrentAccount;
+	}
+	
+	protected function GetCurrentUser()
+	{
+		$iUserId = \CApi::getLogginedUserId();
+	
+		if (!$this->oCurrentUser && $iUserId)
+		{
+			$this->oCurrentUser = $this->oCoreDecorator->GetUser($iUserId);
+		}
+		
+		return $this->oCurrentUser;
 	}
 	/**
 	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
@@ -250,16 +267,16 @@ class HelpDeskModule extends AApiModule
 		return true;
 	}	
 	
-	public function Register($sTenantHash = '', $sEmail = '', $sPassword = '', $sName = '', $bIsExt = false)
+	public function Register($sTenantHash = '', $sLogin = '', $sPassword = '', $sName = '', $bIsExt = false)
 	{
 		$sTenantHash = trim($sTenantHash);
 //		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 //		{
-			$sEmail = trim($sEmail);
+			$sLogin = trim($sLogin);
 			$sName = trim($sName);
 			$sPassword = trim($sPassword);
 
-			if (0 === strlen($sEmail) || 0 === strlen($sPassword))
+			if (0 === strlen($sLogin) || 0 === strlen($sPassword))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
@@ -273,32 +290,34 @@ class HelpDeskModule extends AApiModule
 			$bResult = false;
 			try
 			{
-				//$oApiIntegrator = \CApi::GetCoreManager('integrator');
-				//$bResult = !!$oApiIntegrator->registerHelpdeskAccount($mIdTenant, $sEmail, $sName, $sPassword);
-				
 				$oEventResult = null;
 				$iUserId = \CApi::getLogginedUserId();
 				
 				$this->broadcastEvent('CreateAccount', array(
 					'IdTenant' => $mIdTenant,
 					'IdUser' => $iUserId,
-					'login' => $sEmail,
+					'login' => $sLogin,
 					'password' => $sPassword,
 					'result' => &$oEventResult
 				));
 				
 				if ($oEventResult instanceOf \CUser)
 				{
+					//Create account for auth
+					$oAuthAccount = \CAccount::createInstance('HelpDesk');
+					$oAuthAccount->IdUser = $oEventResult->iObjectId;
+					$oAuthAccount->Login = $sLogin;
+					$oAuthAccount->Password = $sPassword;
+					
+					$this->oAuthDecorator->SaveAccount($oAuthAccount);
+					
+					//Create propertybag account
 					$oAccount = \Modules\HelpDesk\CAccount::createInstance();
-
 					$oAccount->IdUser = $oEventResult->iObjectId;
-					$oAccount->Login = $sEmail;
-					$oAccount->Password = $sPassword;
 
 					$this->oAccountsManager->createAccount($oAccount);
-					return $oAccount ? array(
-						'iObjectId' => $oAccount->iObjectId
-					) : false;
+					
+					return !!$oAccount;
 				}
 				else
 				{
@@ -336,11 +355,9 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function IsAgent()
+	public function IsAgent(\CUser $oUser)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
-
-		return $oUser && $oUser->{'HelpDesk::IsAgent'};
+		return $this->oMainManager->isAgent($oUser);
 	}	
 	
 	public function Forgot($sTenantHash = '', $sEmail = '', $bIsExt = false)
@@ -448,9 +465,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function CreatePost($iThreadId = 0, $sIsInternal = '0', $sSubject = '', $sText = '', $sCc = '', $sBcc = '', $mAttachments = null, $iIsExt = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
-		
-//		$bIsAgent = $oUser->{'HelpDesk::IsAgent'};
+		$oUser = $this->GetCurrentUser();
 		
 		/* @var $oAccount CAccount */
 
@@ -611,7 +626,7 @@ class HelpDeskModule extends AApiModule
 		$oThread = false;
 		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 
-		$bIsAgent = $oUser->IsAgent;
+		$bIsAgent = $this->IsAgent($oUser);
 
 		$sThreadId = (int) $this->getParamValue('ThreadId', 0);
 		$sThreadHash = (string) $this->getParamValue('ThreadHash', '');
@@ -725,7 +740,7 @@ class HelpDeskModule extends AApiModule
 
 //			if (is_array($aUserInfo) && 0 < count($aUserInfo))
 //			{
-				$bIsAgent = $oUser->{'HelpDesk::IsAgent'};
+				$bIsAgent = $this->IsAgent($oUser);
 				
 				foreach ($aPostList as &$oItem)
 				{
@@ -818,7 +833,7 @@ class HelpDeskModule extends AApiModule
 
 		$iThreadId = (int) $this->getParamValue('ThreadId', '');
 
-		if (0 < $iThreadId && !$oUser->IsAgent && !$this->oMainManager->verifyThreadIdsBelongToUser($oUser, array($iThreadId)))
+		if (0 < $iThreadId && !$this->IsAgent($oUser) && !$this->oMainManager->verifyThreadIdsBelongToUser($oUser, array($iThreadId)))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
@@ -837,8 +852,6 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function ChangeThreadState($iThreadId = 0, $iThreadType = \EHelpdeskThreadType::None, $IsExt = 0)
 	{
-//		$oAccount = null;
-//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 		$oUser = $this->getHelpdeskAccountFromParam();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
@@ -855,7 +868,7 @@ class HelpDeskModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		if (!$oUser || ($iThreadType !== \EHelpdeskThreadType::Resolved && !$oUser->{'HelpDesk::IsAgent'}))
+		if (!$oUser || ($iThreadType !== \EHelpdeskThreadType::Resolved && !$this->IsAgent($oUser)))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
@@ -874,8 +887,6 @@ class HelpDeskModule extends AApiModule
 
 	public function PingThread($iThreadId = 0)
 	{
-//		$oAccount = null;
-//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 		$oUser = $this->getHelpdeskAccountFromParam();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
@@ -892,8 +903,6 @@ class HelpDeskModule extends AApiModule
 	
 	public function SetThreadSeen($iThreadId = 0)
 	{
-//		$oAccount = null;
-//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
 		$oUser = $this->getHelpdeskAccountFromParam();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
@@ -959,7 +968,7 @@ class HelpDeskModule extends AApiModule
 			
 			if (is_array($aOwnerDataList) && 0 < count($aOwnerDataList))
 			{
-				$bIsAgent = (bool)$oUser->{'HelpDesk::IsAgent'};
+				$bIsAgent = $this->IsAgent($oUser);
 				
 				foreach ($aThreadsList as &$oItem)
 				{
@@ -1090,20 +1099,20 @@ class HelpDeskModule extends AApiModule
 		return $oApiUsers->UpdateAccount($oAccount);
 	}	
 	
-	public function checkAuth($sLogin, $sPassword, &$mResult)
-	{
-		$oAccount = $this->oAccountsManager->getAccountByCredentials($sLogin, $sPassword);
-
-		if ($oAccount)
-		{
-			$mResult = array(
-				'token' => 'auth',
-				'sign-me' => true,
-				'id' => $oAccount->IdUser,
-				'email' => $oAccount->Login
-			);
-		}
-	}
+//	public function checkAuth($sLogin, $sPassword, &$mResult)
+//	{
+//		$oAccount = $this->oAccountsManager->getAccountByCredentials($sLogin, $sPassword);
+//
+//		if ($oAccount)
+//		{
+//			$mResult = array(
+//				'token' => 'auth',
+//				'sign-me' => true,
+//				'id' => $oAccount->IdUser,
+//				'email' => $oAccount->Login
+//			);
+//		}
+//	}
 	
 	public function CheckNonAuthorizedMethodAllowed($sMethodName = '', $sAuthToken = '')
 	{
