@@ -5,7 +5,6 @@
 /**
  * @property int $IdUser
  * @property int $IdSubscription
- * @property int $IdHelpdeskUser
  * @property int $MailsPerPage
  * @property int $ContactsPerPage
  * @property int $AutoCheckMailInterval
@@ -35,18 +34,11 @@
  * @property bool $EnableOpenPgp
  * @property bool $AllowAutosaveInDrafts
  * @property bool $AutosignOutgoingEmails
- * @property bool $AllowHelpdeskNotifications
  * @property mixed $CustomFields
  * @property bool $SipEnable
  * @property string $SipImpi
  * @property string $SipPassword
  * 
- * @property string $TwilioNumber
- * @property bool $TwilioEnable
- * @property bool $TwilioDefaultNumber
- * 
- * @property string $HelpdeskSignature
- * @property bool $HelpdeskSignatureEnable
  * @property bool $FilesEnable
  * @property string $EmailNotification
  * @property string $PasswordResetHash
@@ -80,7 +72,6 @@ class CUser extends api_APropertyBag
 			'IdTenant'							=> array('int', 0),
 			'IsDisabled'						=> array('bool', false),
 			'IdSubscription'					=> array('int', 0), //'id_subscription'),
-//			'IdHelpdeskUser'					=> array('int', 0), //'id_helpdesk_user'),
 			'Role'								=> array('int', 1), //- SuperAdmin, 1- PowerUser 2- RegisteredUser, 3- Anonymous
 
 			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
@@ -114,15 +105,10 @@ class CUser extends api_APropertyBag
 			'SipImpi'							=> array('string', ''), //'sip_impi'),
 			'SipPassword'						=> array('string', ''), //'sip_password'), //must be password
 			
-			'TwilioEnable'						=> array('bool', true), //'twilio_enable'),
-			'TwilioNumber'						=> array('string', ''), //'twilio_number'),
-			'TwilioDefaultNumber'				=> array('bool', false), //'twilio_default_number'),
-
 			'UseThreads'						=> array('bool', true), //'use_threads'),
 			'SaveRepliedMessagesToCurrentFolder'=> array('bool', false), //'save_replied_messages_to_current_folder'),
 			'DesktopNotifications'				=> array('bool', false), //'desktop_notifications'),
 			'AllowChangeInputDirection'			=> array('bool', false), //'allow_change_input_direction'),
-			'AllowHelpdeskNotifications'		=> array('bool', false), //'allow_helpdesk_notifications'),
 
 			'EnableOpenPgp'						=> array('bool', true), //'enable_open_pgp'),
 			'AllowAutosaveInDrafts'				=> array('bool', true), //'allow_autosave_in_drafts'),
@@ -130,9 +116,6 @@ class CUser extends api_APropertyBag
 
 			'Capa'								=> array('string', ''), //'capa'),
 			'CustomFields'						=> array('string', ''), //'custom_fields'), //must be serialize type
-
-			'HelpdeskSignature'					=> array('string', ''), //'helpdesk_signature'),
-			'HelpdeskSignatureEnable'			=> array('bool', true), //'helpdesk_signature_enable'),
 
 			'FilesEnable'						=> array('bool', true), //'files_enable'),
 			
@@ -168,7 +151,6 @@ class CUser extends api_APropertyBag
 //				array(
 	//			'IdUser'							=> 0,
 	//			'IdSubscription'					=> 0,
-	//			'IdHelpdeskUser'					=> 0,
 
 				$this->MailsPerPage = $oParams['domain']->MailsPerPage;
 				$this->ContactsPerPage = $oParams['domain']->ContactsPerPage;
@@ -196,9 +178,6 @@ class CUser extends api_APropertyBag
 	//			'Answer1'							=> '',
 	//			'Answer2'							=> '',
 
-	//			'TwilioNumber'						=> '',
-	//			'TwilioEnable'						=> true,
-	//			'TwilioDefaultNumber'				=> false,
 	//			'SipEnable'							=> true,
 	//			'SipImpi'							=> '',
 	//			'SipPassword'						=> '',
@@ -212,11 +191,7 @@ class CUser extends api_APropertyBag
 	//			'EnableOpenPgp'						=> false,
 	//			'AllowAutosaveInDrafts'				=> true,
 	//			'AutosignOutgoingEmails'			=> false,
-	//			'AllowHelpdeskNotifications'		=> false,
 	//			'CustomFields'						=> '',
-	//
-	//			'HelpdeskSignature'					=> '',
-	//			'HelpdeskSignatureEnable'			=> false,
 	//
 	//			'FilesEnable'						=> true,
 	//			

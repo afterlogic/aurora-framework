@@ -32,10 +32,11 @@ class CoreModule extends AApiModule
 			)
 		);
 		
-		$this->setObjectMap('CUser', array(
-				'Test1'	=> array('string', 'www')
-			)
-		);
+		//example of Object Class extending
+//		$this->setObjectMap('CUser', array(
+//				'Test1'	=> array('string', 'www')
+//			)
+//		);
 		
 		$this->subscribeEvent('CreateAccount', array($this, 'onAccountCreate'));
 	}

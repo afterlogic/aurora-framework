@@ -5,9 +5,25 @@ class TwilioModule extends AApiModule
 	public function init() {
 		parent::init();
 		
+		$this->setObjectMap('CTenant', array(
+				'TwilioAllow'				=> array('bool', false, false), //, !!$oSettings->GetConf('Twilio/AllowTwilio')
+				'TwilioAllowConfiguration'	=> array('bool', false),
+				'TwilioPhoneNumber'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/PhoneNumber')
+				'TwilioAccountSID'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/AccountSID')
+				'TwilioAuthToken'			=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AuthToken')
+				'TwilioAppSID'				=> array('string', '', false) //(string) $oSettings->GetConf('Twilio/AppSID')
+			)
+		);
+		
+		$this->setObjectMap('CUser', array(
+				'TwilioEnable'						=> array('bool', true), //'twilio_enable'),
+				'TwilioNumber'						=> array('string', ''), //'twilio_number'),
+				'TwilioDefaultNumber'				=> array('bool', false), //'twilio_default_number'),
+			)
+		);
+		
 		$this->AddEntry('twilio', 'getTwiML');
 	}
-
 
 	public function getTwiML()
 	{
@@ -343,7 +359,6 @@ class TwilioModule extends AApiModule
 
 		return $aResult;
 	}	
-	
 }
 
-return new TwilioModule('1.0');
+//return new TwilioModule('1.0');

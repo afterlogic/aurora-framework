@@ -90,29 +90,12 @@ class CTenant extends api_APropertyBag
 			'LoginStyleImage'			=> array('string', ''),
 			'AppStyleImage'				=> array('string', ''),
 
-//			'HelpdeskFacebookAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/FacebookAllow')
-//			'HelpdeskFacebookId'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookId')
-//			'HelpdeskFacebookSecret'	=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookSecret')
-//			'HelpdeskGoogleAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/GoogleAllow')
-//			'HelpdeskGoogleId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleId')
-//			'HelpdeskGoogleSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleSecret')
-//			'HelpdeskTwitterAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/TwitterAllow')
-//			'HelpdeskTwitterId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterId')
-//			'HelpdeskTwitterSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterSecret')
-			
-			'SipAllow'					=> array('bool', false, false), //!!$oSettings->GetConf('Sip/AllowSip')
-			'SipAllowConfiguration'		=> array('bool', false),
-			'SipRealm'					=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/Realm')
-			'SipWebsocketProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/WebsocketProxyUrl')
-			'SipOutboundProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/OutboundProxyUrl')
-			'SipCallerID'				=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/CallerID')
-			
-			'TwilioAllow'				=> array('bool', false, false), //, !!$oSettings->GetConf('Twilio/AllowTwilio')
-			'TwilioAllowConfiguration'	=> array('bool', false),
-			'TwilioPhoneNumber'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/PhoneNumber')
-			'TwilioAccountSID'			=> array('string', '', false), //, (string) $oSettings->GetConf('Twilio/AccountSID')
-			'TwilioAuthToken'			=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AuthToken')
-			'TwilioAppSID'				=> array('string', '', false), //(string) $oSettings->GetConf('Twilio/AppSID')
+//			'SipAllow'					=> array('bool', false, false), //!!$oSettings->GetConf('Sip/AllowSip')
+//			'SipAllowConfiguration'		=> array('bool', false),
+//			'SipRealm'					=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/Realm')
+//			'SipWebsocketProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/WebsocketProxyUrl')
+//			'SipOutboundProxyUrl'		=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/OutboundProxyUrl')
+//			'SipCallerID'				=> array('string', '', false), //, (string) $oSettings->GetConf('Sip/CallerID')
 			
 //			'Socials'					=> array('array', array(), false), //$this->getDefaultSocials()
 			'CalendarNotificationEmailAccount'	=> array('string', ''),
@@ -137,51 +120,6 @@ class CTenant extends api_APropertyBag
 		{
 			$this->Capa = (string) $oSettings->GetConf('Common/TenantGlobalCapa');
 		}
-		
-//		if (isset($oMap['HelpdeskFacebookAllow'][2]) && !$oMap['HelpdeskFacebookAllow'][2])
-//		{
-//			$this->HelpdeskFacebookAllow = !!$oSettings->GetConf('Helpdesk/FacebookAllow');
-//		}
-//		
-//		if (isset($oMap['HelpdeskFacebookId'][2]) && !$oMap['HelpdeskFacebookId'][2])
-//		{
-//			$this->HelpdeskFacebookId = (string) $oSettings->GetConf('Helpdesk/FacebookId');
-//		}
-//		
-//		if (isset($oMap['HelpdeskFacebookSecret'][2]) && !$oMap['HelpdeskFacebookSecret'][2])
-//		{
-//			$this->HelpdeskFacebookSecret = (string) $oSettings->GetConf('Helpdesk/FacebookSecret');
-//		}
-//		
-//		if (isset($oMap['HelpdeskGoogleAllow'][2]) && !$oMap['HelpdeskGoogleAllow'][2])
-//		{
-//			$this->HelpdeskGoogleAllow = !!$oSettings->GetConf('Helpdesk/GoogleAllow');
-//		}
-//		
-//		if (isset($oMap['HelpdeskGoogleId'][2]) && !$oMap['HelpdeskGoogleId'][2])
-//		{
-//			$this->HelpdeskGoogleId = (string) $oSettings->GetConf('Helpdesk/GoogleId');
-//		}
-//		
-//		if (isset($oMap['HelpdeskGoogleSecret'][2]) && !$oMap['HelpdeskGoogleSecret'][2])
-//		{
-//			$this->HelpdeskGoogleSecret = (string) $oSettings->GetConf('Helpdesk/GoogleSecret');
-//		}
-//		
-//		if (isset($oMap['HelpdeskTwitterAllow'][2]) && !$oMap['HelpdeskTwitterAllow'][2])
-//		{
-//			$this->HelpdeskTwitterAllow = !!$oSettings->GetConf('Helpdesk/TwitterAllow');
-//		}
-//		
-//		if (isset($oMap['HelpdeskTwitterId'][2]) && !$oMap['HelpdeskTwitterId'][2])
-//		{
-//			$this->HelpdeskTwitterId = (string) $oSettings->GetConf('Helpdesk/TwitterId');
-//		}
-//		
-//		if (isset($oMap['HelpdeskTwitterSecret'][2]) && !$oMap['HelpdeskTwitterSecret'][2])
-//		{
-//			$this->HelpdeskTwitterSecret = (string) $oSettings->GetConf('Helpdesk/TwitterSecret');
-//		}
 		
 		if (isset($oMap['SipAllow'][2]) && !$oMap['SipAllow'][2])
 		{

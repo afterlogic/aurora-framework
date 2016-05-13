@@ -25,7 +25,9 @@ class HelpDeskModule extends AApiModule
 		$this->oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 				
 //		$this->setObjectMap('CUser', array(
-//				'IsAgent' => array('bool', false)
+//				'HelpdeskSignature'					=> array('string', ''), //'helpdesk_signature'),
+//				'HelpdeskSignatureEnable'			=> array('bool', true), //'helpdesk_signature_enable'),
+//				'AllowHelpdeskNotifications'		=> array('bool', false), //'allow_helpdesk_notifications')
 //			)
 //		);
 		
@@ -41,10 +43,75 @@ class HelpDeskModule extends AApiModule
 				'StyleText'			=> array('string', ''),
 				'AllowFetcher'		=> array('bool', false),
 				'FetcherTimer' => array('int', 0)
+			
+//			'HelpdeskFacebookAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/FacebookAllow')
+//			'HelpdeskFacebookId'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookId')
+//			'HelpdeskFacebookSecret'	=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookSecret')
+//			'HelpdeskGoogleAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/GoogleAllow')
+//			'HelpdeskGoogleId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleId')
+//			'HelpdeskGoogleSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleSecret')
+//			'HelpdeskTwitterAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/TwitterAllow')
+//			'HelpdeskTwitterId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterId')
+//			'HelpdeskTwitterSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterSecret')
 			)
 		);
 		
 //		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
+	}
+	
+	/**
+	 * TODO it must set extended properties of tenant
+	 * temp method
+	 */
+	public function setInheritedSettings()
+	{
+//		$oSettings =& CApi::GetSettings();
+//		$oMap = $this->getStaticMap();
+		
+//		if (isset($oMap['HelpdeskFacebookAllow'][2]) && !$oMap['HelpdeskFacebookAllow'][2])
+//		{
+//			$this->HelpdeskFacebookAllow = !!$oSettings->GetConf('Helpdesk/FacebookAllow');
+//		}
+//		
+//		if (isset($oMap['HelpdeskFacebookId'][2]) && !$oMap['HelpdeskFacebookId'][2])
+//		{
+//			$this->HelpdeskFacebookId = (string) $oSettings->GetConf('Helpdesk/FacebookId');
+//		}
+//		
+//		if (isset($oMap['HelpdeskFacebookSecret'][2]) && !$oMap['HelpdeskFacebookSecret'][2])
+//		{
+//			$this->HelpdeskFacebookSecret = (string) $oSettings->GetConf('Helpdesk/FacebookSecret');
+//		}
+//		
+//		if (isset($oMap['HelpdeskGoogleAllow'][2]) && !$oMap['HelpdeskGoogleAllow'][2])
+//		{
+//			$this->HelpdeskGoogleAllow = !!$oSettings->GetConf('Helpdesk/GoogleAllow');
+//		}
+//		
+//		if (isset($oMap['HelpdeskGoogleId'][2]) && !$oMap['HelpdeskGoogleId'][2])
+//		{
+//			$this->HelpdeskGoogleId = (string) $oSettings->GetConf('Helpdesk/GoogleId');
+//		}
+//		
+//		if (isset($oMap['HelpdeskGoogleSecret'][2]) && !$oMap['HelpdeskGoogleSecret'][2])
+//		{
+//			$this->HelpdeskGoogleSecret = (string) $oSettings->GetConf('Helpdesk/GoogleSecret');
+//		}
+//		
+//		if (isset($oMap['HelpdeskTwitterAllow'][2]) && !$oMap['HelpdeskTwitterAllow'][2])
+//		{
+//			$this->HelpdeskTwitterAllow = !!$oSettings->GetConf('Helpdesk/TwitterAllow');
+//		}
+//		
+//		if (isset($oMap['HelpdeskTwitterId'][2]) && !$oMap['HelpdeskTwitterId'][2])
+//		{
+//			$this->HelpdeskTwitterId = (string) $oSettings->GetConf('Helpdesk/TwitterId');
+//		}
+//		
+//		if (isset($oMap['HelpdeskTwitterSecret'][2]) && !$oMap['HelpdeskTwitterSecret'][2])
+//		{
+//			$this->HelpdeskTwitterSecret = (string) $oSettings->GetConf('Helpdesk/TwitterSecret');
+//		}
 	}
 	
 	protected function GetCurrentAccount()
