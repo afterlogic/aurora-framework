@@ -11,23 +11,7 @@
 			</select>
 		</td>
 	</tr>
-	<!--<tr>
-		<td class="wm_field_title">
-			<span id="selLayout_label">
-				<?php // echo CApi::I18N('ADMIN_PANEL/DOMAINS_WEBMAIL_LAYOUT');?>
-			</span>
-		</td>
-		<td class="wm_field_value">
-			<input type="radio" class="wm_checkbox override" name="radioLayout" id="radioLayoutSide"
-				value="<?php // echo EnumConvert::ToPost(ELayout::Side, 'ELayout'); ?>" <?php //$this->Data->PrintCheckedValue('radioLayoutSide'); ?> x-data-label="radioLayout_lable" />
-			<label class="wm_settings_layout_icon_side" for="radioLayoutSide"></label>
-			
-			<input type="radio" class="wm_checkbox override" name="radioLayout" id="radioLayoutBottom"
-				value="<?php // echo EnumConvert::ToPost(ELayout::Bottom, 'ELayout'); ?>"  <?php //$this->Data->PrintCheckedValue('radioLayoutBottom'); ?>  x-data-label="radioLayout_lable" />
-			<label class="wm_settings_layout_icon_bottom" for="radioLayoutBottom"></label>
-		</td>
-	</tr>
-	<tr>-->
+	<tr>
 		<td class="wm_field_title">
 			<span id="selAutocheckMail_label">
 				<?php echo CApi::I18N('ADMIN_PANEL/DOMAINS_WEBMAIL_AUTO');?>

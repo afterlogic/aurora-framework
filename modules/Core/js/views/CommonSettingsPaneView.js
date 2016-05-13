@@ -97,7 +97,7 @@ CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 CCommonSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'AutoCheckMailInterval': Types.pInt(this.autoRefreshInterval()),
+		'AutoRefreshInterval': Types.pInt(this.autoRefreshInterval()),
 		'Theme': this.selectedSkin(),
 		'Language': this.selectedLanguage(),
 		'TimeFormat': this.timeFormat(),
@@ -118,7 +118,7 @@ CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 	}
 	else
 	{
-		UserSettings.updateCommonSettings(oParameters.AutoCheckMailInterval,
+		UserSettings.updateCommonSettings(oParameters.AutoRefreshInterval,
 			oParameters.Theme, oParameters.Language,
 			oParameters.TimeFormat, oParameters.AllowDesktopNotifications);
 	}

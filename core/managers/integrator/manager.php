@@ -1168,9 +1168,7 @@ class CApiIntegratorManager extends AApiManager
 			$aResult['IdUser'] = $oAccount->User->IdUser;
 			$aResult['MailsPerPage'] = (int) $oAccount->User->MailsPerPage;
 			$aResult['ContactsPerPage'] = (int) $oAccount->User->ContactsPerPage;
-			$aResult['AutoCheckMailInterval'] = (int) $oAccount->User->AutoCheckMailInterval;
-			$aResult['DefaultEditor'] = (int) $oAccount->User->DefaultEditor;
-			$aResult['Layout'] = 0;
+			$aResult['AutoRefreshInterval'] = (int) $oAccount->User->AutoRefreshInterval;
 			$aResult['LoginsCount'] = $oAccount->User->LoginsCount;
 			$aResult['CanLoginWithPassword'] = $oAccount->canLoginWithPassword();
 			

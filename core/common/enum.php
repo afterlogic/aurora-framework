@@ -291,24 +291,6 @@ class EDateFormat extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELayout extends AEnumeration
-{
-	const Side = 0;
-	const Bottom = 1;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Side' => self::Side,
-		'Bottom' => self::Bottom
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
 class ESaveMail extends AEnumeration
 {
 	const Always = 0;

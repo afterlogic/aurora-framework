@@ -47,7 +47,7 @@ class Domain extends NativeService implements \saas\api\IDomain
 		return array(
 			'Name' => 'name', 'IsDisabled' => 'disabled', 'DefaultSkin' => 'skin',
 			'DefaultTimeZone' => 'timeZone', 'SiteName' => 'siteName',
-			'DefaultLanguage' => 'language', 'AutoCheckMailInterval' => 'checkInterval',
+			'DefaultLanguage' => 'language', 'AutoRefreshInterval' => 'checkInterval',
 			'CalendarWeekStartsOn' => 'weekStartsOn'
 		);
 	}
@@ -150,12 +150,12 @@ class Domain extends NativeService implements \saas\api\IDomain
 
 	function checkPeriod()
 	{
-		return $this->nativeField('AutoCheckMailInterval');
+		return $this->nativeField('AutoRefreshInterval');
 	}
 
 	function setCheckPeriod($period)
 	{
-		$this->setNativeField('AutoCheckMailInterval', $period);
+		$this->setNativeField('AutoRefreshInterval', $period);
 	}
 
 	function externalMailBoxes()

@@ -1369,14 +1369,12 @@ class Actions
 			$iContactsPerPage = 1;
 		}
 
-		$iAutoCheckMailInterval = (int) $this->oHttp->GetPost('AutoCheckMailInterval', $oAccount->User->AutoCheckMailInterval);
-		if (!in_array($iAutoCheckMailInterval, array(0, 1, 3, 5, 10, 15, 20, 30)))
+		$iAutoRefreshInterval = (int) $this->oHttp->GetPost('AutoRefreshInterval', $oAccount->User->AutoRefreshInterval);
+		if (!in_array($iAutoRefreshInterval, array(0, 1, 3, 5, 10, 15, 20, 30)))
 		{
-			$iAutoCheckMailInterval = 0;
+			$iAutoRefreshInterval = 0;
 		}
 
-		$iLayout = (int) $this->oHttp->GetPost('Layout', $oAccount->User->Layout);
-		$iDefaultEditor = (int) $this->oHttp->GetPost('DefaultEditor', $oAccount->User->DefaultEditor);
 		$bUseThreads = '1' === (string) $this->oHttp->GetPost('UseThreads', $oAccount->User->UseThreads ? '1' : '0');
 		$bSaveRepliedMessagesToCurrentFolder = '1' === (string) $this->oHttp->GetPost('SaveRepliedMessagesToCurrentFolder', $oAccount->User->SaveRepliedMessagesToCurrentFolder ? '1' : '0');
 		$bDesktopNotifications = '1' === (string) $this->oHttp->GetPost('DesktopNotifications', $oAccount->User->DesktopNotifications ? '1' : '0');
@@ -1397,13 +1395,11 @@ class Actions
 
 		$oAccount->User->MailsPerPage = $iMailsPerPage;
 		$oAccount->User->ContactsPerPage = $iContactsPerPage;
-		$oAccount->User->Layout = $iLayout;
 		$oAccount->User->DefaultSkin = $sTheme;
-		$oAccount->User->DefaultEditor = $iDefaultEditor;
 		$oAccount->User->DefaultLanguage = $sLang;
 		$oAccount->User->DefaultDateFormat = $sDateFormat;
 		$oAccount->User->DefaultTimeFormat = $iTimeFormat;
-		$oAccount->User->AutoCheckMailInterval = $iAutoCheckMailInterval;
+		$oAccount->User->AutoRefreshInterval = $iAutoRefreshInterval;
 		$oAccount->User->UseThreads = $bUseThreads;
 		$oAccount->User->SaveRepliedMessagesToCurrentFolder = $bSaveRepliedMessagesToCurrentFolder;
 		$oAccount->User->DesktopNotifications = $bDesktopNotifications;

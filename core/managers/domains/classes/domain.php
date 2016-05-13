@@ -41,7 +41,7 @@
  * @property bool $OutgoingMailUseSSL Set to true if connection to outgoing mail server must be made via dedicated SSL port. 
  * @property int $OutgoingSendingMethod
  * @property int $UserQuota
- * @property int $AutoCheckMailInterval Interval (in minutes) for invoking automated checkmail, setting its value to 0 disables the feature. 
+ * @property int $AutoRefreshInterval Interval (in minutes) for invoking automated checkmail, setting its value to 0 disables the feature. 
  * @property string $DefaultSkin Skin used by default.
  * @property int $MailsPerPage Number of messages to be displayed per page in message list. 
  * @property bool $AllowUsersChangeInterfaceSettings Set to true if users can change interface options. 
@@ -49,7 +49,6 @@
  * @property bool $AllowUsersAddNewAccounts Set to true if users are allowed to add new accounts to their primary ones. 
  * @property bool $AllowNewUsersRegister
  * @property bool $AllowOpenPGP
- * @property int $Layout Legacy value. 
  * @property int $SaveMail
  * @property int $ContactsPerPage Number of address book entries displayed per page. 
  * @property int $GlobalAddressBook
@@ -142,7 +141,7 @@ class CDomain extends api_APropertyBag
 			'ExternalHostNameOfDAVServer'	=> array('string', ''),// 'ext_dav_host'),
 
 			'UserQuota'				=> array('int', 0), // user_quota // TODO
-			'AutoCheckMailInterval'	=> array('int', 60),
+			'AutoRefreshInterval'	=> array('int', 60),
 
 			'DefaultSkin'	=> array('string', 'Default'),
 			'MailsPerPage'	=> array('int', 20),
@@ -153,7 +152,6 @@ class CDomain extends api_APropertyBag
 			'AllowNewUsersRegister'				=> array('bool', false),
 			'AllowOpenPGP'						=> array('bool', true),
 
-			'Layout'						=> array('int', 0),
 			'DetectSpecialFoldersWithXList'	=> array('int', 0),
 			'UseThreads'					=> array('bool', true),
 
@@ -322,7 +320,7 @@ class CDomain extends api_APropertyBag
 			
 			'AllowWebMail',
 //			'UserQuota', // TODO
-			'AutoCheckMailInterval',
+			'AutoRefreshInterval',
 			'DefaultSkin',
 			'MailsPerPage',
 			'AllowUsersChangeInterfaceSettings',
@@ -335,7 +333,6 @@ class CDomain extends api_APropertyBag
 			'ExternalHostNameOfLocalSmtp',
 			'ExternalHostNameOfDAVServer',
 
-			'Layout',
 			'DetectSpecialFoldersWithXList',
 
 			'AllowContacts',
@@ -392,7 +389,7 @@ class CDomain extends api_APropertyBag
 			'OutgoingMailUseSSL'	=> 'WebMail/OutgoingMailUseSSL',
 			'OutgoingSendingMethod'	=> 'WebMail/OutgoingSendingMethod',
 			'UserQuota'				=> 'WebMail/UserQuota',
-			'AutoCheckMailInterval'	=> 'WebMail/AutoCheckMailInterval',
+			'AutoRefreshInterval'	=> 'WebMail/AutoRefreshInterval',
 			'DefaultSkin'			=> 'WebMail/DefaultSkin',
 			'MailsPerPage'			=> 'WebMail/MailsPerPage',
 			'AllowUsersChangeInterfaceSettings'		=> 'WebMail/AllowUsersChangeInterfaceSettings',
@@ -405,7 +402,6 @@ class CDomain extends api_APropertyBag
 			'ExternalHostNameOfLocalImap'			=> 'WebMail/ExternalHostNameOfLocalImap',
 			'ExternalHostNameOfLocalSmtp'			=> 'WebMail/ExternalHostNameOfLocalSmtp',
 
-			'Layout'	=> 'WebMail/Layout',
 			'DetectSpecialFoldersWithXList'	=> 'WebMail/DetectSpecialFoldersWithXList',
 
 			'ContactsPerPage'		=> 'Contacts/ContactsPerPage',

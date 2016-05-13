@@ -92,7 +92,7 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 
 			$iMessagesPerPage = $oDomain->MailsPerPage;
 			$iContactsPerPage = $oDomain->ContactsPerPage;
-			$iAutocheckMail = $oDomain->AutoCheckMailInterval;
+			$iAutocheckMail = $oDomain->AutoRefreshInterval;
 
 			$iIncomingMailProtocol = $oDomain->IncomingMailProtocol;
 			$oScreen->Data->SetValue('optIncomingProtocolIMAP', EMailProtocol::IMAP4 === $iIncomingMailProtocol);
@@ -122,10 +122,6 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 			$oScreen->Data->SetValue('chAllowNewUsersRegister', !$oDomain->AllowNewUsersRegister);
 			$oScreen->Data->SetValue('IsDefault', $oDomain->IsDefault);
 			$oScreen->Data->SetValue('domainIsInternal', $oDomain->IsInternal);
-
-			$iLayout = $oDomain->Layout;
-			$oScreen->Data->SetValue('radioLayoutSide', $iLayout === ELayout::Side);
-			$oScreen->Data->SetValue('radioLayoutBottom', $iLayout === ELayout::Bottom);
 		}
 
 		$sMessagesPerPageOptions = '';

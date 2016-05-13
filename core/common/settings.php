@@ -302,7 +302,6 @@ class api_Settings
 			'webmail/incomingmailprotocol'				=> 'EMailProtocol',
 			'webmail/outgoingmailauth'					=> 'ESMTPAuthType',
 			'webmail/outgoingsendingmethod'				=> 'ESendingMethod',
-			'webmail/layout'							=> 'ELayout',
 			'webmail/savemail'							=> 'ESaveMail',
 			'webmail/loginformtype'						=> 'ELoginFormType',
 			'webmail/loginsignmetype'					=> 'ELoginSignMeType',
@@ -568,7 +567,7 @@ class api_Settings
 			'WebMail/OutgoingSendingMethod' => array(ESendingMethod::Specified, 'spec'),
 			'WebMail/UserQuota' => array(0, 'int'),
 			'WebMail/ShowQuotaBar' => array(false, 'bool'),
-			'WebMail/AutoCheckMailInterval' => array(0, 'int'),
+			'WebMail/AutoRefreshInterval' => array(0, 'int'),
 			'WebMail/DefaultSkin' => array(API_DEFAULT_SKIN, 'string'),
 			'WebMail/MailsPerPage' => array(20, 'int'),
 			'WebMail/AllowUsersChangeInterfaceSettings' => array(true, 'bool'),
@@ -592,7 +591,6 @@ class api_Settings
 			'WebMail/AllowBodySize' => array(false, 'bool'),
 			'WebMail/MaxBodySize' => array(600, 'int'),  //TODO Magic
 			'WebMail/MaxSubjectSize' => array(255, 'int'),  //TODO Magic
-			'WebMail/Layout' => array(ELayout::Side, 'spec'),
 			'WebMail/AlwaysShowImagesInMessage' => array(false, 'bool'),
 			'WebMail/SaveMail' => array(ESaveMail::Always, 'spec'),
 			'WebMail/IdleSessionTimeout' => array(0, 'int'),

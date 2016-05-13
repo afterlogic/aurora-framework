@@ -75,16 +75,6 @@ class EAccountSignatureOptions extends AEnumeration
  * @package Users
  * @subpackage Enum
  */
-class EUserHtmlEditor extends AEnumeration
-{
-	const Plain = 0;
-	const Html = 1;
-}
-
-/**
- * @package Users
- * @subpackage Enum
- */
 class EIdentityType extends AEnumeration
 {
 	const Normal = 0;

@@ -226,7 +226,6 @@ class CDbSchema
 			new CDbField('auto_checkmail_interval', CDbField::INT, 0),
 			new CDbField('def_skin', CDbField::VAR_CHAR, API_DEFAULT_SKIN),
 			new CDbField('def_editor', CDbField::BIT, 1),
-			new CDbField('layout', CDbField::INT_SHORT, ELayout::Side),
 			new CDbField('save_mail', CDbField::INT_SHORT, 0),
 			new CDbField('def_timezone', CDbField::INT_SMALL, 0),
 			new CDbField('def_time_fmt', CDbField::VAR_CHAR),
@@ -849,7 +848,6 @@ class CDbSchema
 			new CDbField('cal_show_workday', CDbField::BIT, 0),
 			new CDbField('cal_default_tab', CDbField::INT_SHORT, 2),
 
-			new CDbField('layout', CDbField::INT_SHORT, ELayout::Side),
 			new CDbField('xlist', CDbField::BIT, 1),
 
 			new CDbField('global_addr_book', CDbField::INT_SHORT, 0),

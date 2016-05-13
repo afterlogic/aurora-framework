@@ -80,12 +80,7 @@ class CWebMailAjaxAction extends ap_CoreModuleHelper
 			$oDomain->AllowWebMail = CPost::GetCheckBox('chEnableWebmail');
 
 			$oDomain->MailsPerPage = CPost::get('selMessagesPerPage', $oDomain->MailsPerPage);
-			$oDomain->AutoCheckMailInterval = CPost::get('selAutocheckMail', $oDomain->AutoCheckMailInterval);
-
-			if (CPost::Has('radioLayout'))
-			{
-				$oDomain->Layout = EnumConvert::FromPost(CPost::get('radioLayout'), 'ELayout');
-			}
+			$oDomain->AutoRefreshInterval = CPost::get('selAutocheckMail', $oDomain->AutoRefreshInterval);
 
 			// Address Book
 			$oDomain->AllowContacts = CPost::GetCheckBox('chEnableAddressBook');

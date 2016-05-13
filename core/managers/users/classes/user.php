@@ -8,16 +8,14 @@
  * @property int $IdHelpdeskUser
  * @property int $MailsPerPage
  * @property int $ContactsPerPage
- * @property int $AutoCheckMailInterval
+ * @property int $AutoRefreshInterval
  * @property int $CreatedTime
  * @property int $LastLogin
  * @property int $LastLoginNow
  * @property int $LoginsCount
  * @property string $DefaultSkin
  * @property string $DefaultLanguage
- * @property int $DefaultEditor
  * @property int $SaveMail
- * @property int $Layout
  * @property string $DefaultIncomingCharset
  * @property int $DefaultTimeZone
  * @property int $DefaultTimeFormat
@@ -103,7 +101,7 @@ class CUser extends api_APropertyBag
 
 				$this->MailsPerPage = $oParams['domain']->MailsPerPage;
 				$this->ContactsPerPage = $oParams['domain']->ContactsPerPage;
-				$this->AutoCheckMailInterval = $oParams['domain']->AutoCheckMailInterval;
+				$this->AutoRefreshInterval = $oParams['domain']->AutoRefreshInterval;
 
 	//			'CreatedTime'						=> 0,
 	//			'LastLogin'							=> 0,
@@ -112,9 +110,7 @@ class CUser extends api_APropertyBag
 
 				$this->DefaultSkin = $oParams['domain']->DefaultSkin;
 				$this->DefaultLanguage = $oParams['domain']->DefaultLanguage;
-				$this->DefaultEditor = EUserHtmlEditor::Html;
 				$this->SaveMail = $iSaveMail;
-				$this->Layout = $oParams['domain']->Layout;
 
 				$this->DefaultTimeZone = 0; // $oDomain->DefaultTimeZone, // TODO
 				$this->DefaultTimeFormat = $oParams['domain']->DefaultTimeFormat;
@@ -265,7 +261,7 @@ class CUser extends api_APropertyBag
 
 			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
 			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),
-			'AutoCheckMailInterval'				=> array('int', 0), //'auto_checkmail_interval'),
+			'AutoRefreshInterval'				=> array('int', 0), //'auto_checkmail_interval'),
 
 			'CreatedTime'						=> array('string', ''), //'created_time'), //must be datetime
 			'LastLogin'							=> array('string', ''), //'last_login', true, false), //must be datetime
@@ -274,9 +270,7 @@ class CUser extends api_APropertyBag
 
 			'DefaultSkin'						=> array('string', ''), //'def_skin'),
 			'DefaultLanguage'					=> array('string', ''), //'def_lang'),
-			'DefaultEditor'						=> array('int', 0), //'def_editor'),
 			'SaveMail'							=> array('int', 0), //'save_mail'),
-			'Layout'							=> array('int', 0), //'layout'),
 
 			'DefaultIncomingCharset'			=> array('string', ''), //'incoming_charset'),
 
