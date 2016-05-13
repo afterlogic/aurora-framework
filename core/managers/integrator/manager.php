@@ -1657,49 +1657,49 @@ class CApiIntegratorManager extends AApiManager
 //			$aAppData['HelpdeskThreadAction'] = $sThreadAction ? $sThreadAction : '';
 //		}
 		
+//		$oDefaultAccount = null;
+		$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
+		$iUserId = $this->getLogginedUserId($sAuthToken);
+		$oUser = null;
+
+		if (0 < $iUserId)
+		{
+			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+			$oUser = $oCoreDecorator->GetUser($iUserId);
+		}
+		
 		$aModules = \CApi::GetModules();
 
 		foreach ($aModules as $oModule)
 		{
-			$aModuleAppData = $oModule->GetAppData();
-//			
+			$aModuleAppData = $oModule->GetAppData($oUser);
 			if ($aModuleAppData)
 			{
 				$aAppData[$oModule->GetName()] = $aModuleAppData;
 			}
 		}
 		
-//		$oDefaultAccount = null;
-		$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
-		$iUserId = $this->getLogginedUserId($sAuthToken);
-
-		if (0 < $iUserId)
+		if ($oUser)
 		{
-			
-			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
-			$oUser = $oCoreDecorator->GetUser($iUserId);
-			
+			$aAppData['Auth'] = true;
+			$aAppData['User'] = array(
+				'Id' => $oUser->iObjectId,
+				'Role' => $oUser->Role,
+				'Name' => $oUser->Name
+			);
+		}
+
+//		if (0 < $iUserId)
+//		{
+//			
+//			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+//			$oUser = $oCoreDecorator->GetUser($iUserId);
+//			
 //			$oUser = \CApi::ExecuteMethod('Core::GetUser', array(
 ////				'Token' => $sToken,
 //				'AuthToken' => $sAuthToken,
 //				'UserId' => $iUserId
 //			));
-			
-			if ($oUser)
-			{
-				$aAppData['Auth'] = true;
-				$aAppData['User'] = array(
-					'Id' => $oUser->iObjectId,
-					'Role' => $oUser->Role,
-					'Name' => $oUser->Name,
-					'Mail::AllowAutosaveInDrafts' => $oUser->{'Mail::AllowAutosaveInDrafts'},
-					'Mail::AllowChangeInputDirection' => $oUser->{'Mail::AllowChangeInputDirection'},
-					'Mail::MailsPerPage' => $oUser->{'Mail::MailsPerPage'},
-					'Mail::SaveRepliesToCurrFolder' => $oUser->{'Mail::SaveRepliesToCurrFolder'},
-					'Mail::UseThreads' => $oUser->{'Mail::UseThreads'}
-				);
-			}
-			
 //
 //			$aInfo = $oApiUsersManager->getUserAccounts($iUserId);
 //			
@@ -1755,7 +1755,7 @@ class CApiIntegratorManager extends AApiManager
 //					}
 //				}
 //			}
-		}
+//		}
 
 //		if ($aAppData['Auth'])
 //		{

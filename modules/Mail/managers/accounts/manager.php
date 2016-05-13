@@ -227,6 +227,44 @@ class CApiMailAccountsManager extends AApiManager
 	}
 
 	/**
+	 * @param int $iUserId
+	 *
+	 * @return Array | false
+	 */
+	public function getUserAccounts($iUserId)
+	{
+		$mResult = false;
+		try
+		{
+			$aResults = $this->oEavManager->getObjects(
+				'CMailAccount',
+				array('Email', 'IncomingMailServer', 'IsDefaultAccount'),
+				0,
+				0,
+				array('IdUser' => $iUserId, 'IsDisabled' => false)
+			);
+
+			if (is_array($aResults))
+			{
+				$mResult = array();
+				foreach($aResults as $oItem)
+				{
+					$mResult[$oItem->iObjectId] = array(
+						Email => $oItem->Email,
+						IncomingMailServer => $oItem->IncomingMailServer,
+						IsDefaultAccount => $oItem->IsDefaultAccount
+					);
+				}
+			}
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+		return $mResult;
+	}
+	
+	/**
 	 * @param CMailAccount $oAccount
 	 *
 	 * @return bool

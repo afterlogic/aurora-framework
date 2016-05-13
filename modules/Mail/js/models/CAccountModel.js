@@ -210,7 +210,7 @@ CAccountModel.prototype.parse = function (oData, iDefaultId)
 
 	this.passwordSpecified(!!oData.IsPasswordSpecified);
 
-	this.parseSignature(oData.Signature);
+//	this.parseSignature(oData.Signature);
 
 	this.isCurrent(iDefaultId === this.id());
 	this.isEdited(iDefaultId === this.id());

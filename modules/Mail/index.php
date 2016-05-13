@@ -35,6 +35,20 @@ class MailModule extends AApiModule
 		$oUser->{'Mail::UseThreads'}				= $oDomain->UseThreads;
 	}
 	
+	public function GetAppData($oUser)
+	{
+		$aAcc = $this->oApiAccountsManager->getUserAccounts($oUser->iObjectId);
+		$aKeys = array_keys($aAcc);
+		return array(
+			'Accounts' => array_values($aAcc),
+			'Default' => $aKeys[0],
+			'AllowAutosaveInDrafts' => $oUser->{'Mail::AllowAutosaveInDrafts'},
+			'AllowChangeInputDirection' => $oUser->{'Mail::AllowChangeInputDirection'},
+			'MailsPerPage' => $oUser->{'Mail::MailsPerPage'},
+			'SaveRepliesToCurrFolder' => $oUser->{'Mail::SaveRepliesToCurrFolder'},
+			'UseThreads' => $oUser->{'Mail::UseThreads'}
+		);
+	}
 	/**
 	 * 
 	 * @return boolean
