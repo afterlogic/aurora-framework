@@ -381,6 +381,7 @@ class HelpDeskModule extends AApiModule
 						//Create propertybag account
 						$oAccount = \Modules\HelpDesk\CAccount::createInstance();
 						$oAccount->IdUser = $oEventResult->iObjectId;
+						$oAccount->NotificationEmail = $sLogin ? $sLogin : '';
 
 						$bResult = $this->oAccountsManager->createAccount($oAccount);
 					}
@@ -775,14 +776,14 @@ class HelpDeskModule extends AApiModule
 				{
 //					$aIdList[$oItem->IdOwner] = (int) $oItem->IdOwner;
 					$oOwnerUser = $this->oCoreDecorator->GetUser($oItem->IdOwner);
-					$oOwnerUserAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
+					$oOwnerAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
 					
 					if ($oOwnerUser)
 					{
 						$aOwnerDataList[$oItem->IdOwner] = array(
-							'Email' => $oOwnerUserAccount->Login,
+							'Email' => '',  //actualy, it's a User Login stored in Auth account
 							'Name' => $oOwnerUser->Name,
-							'NotificationEmail' => $oOwnerUserAccount->NotificationEmail
+							'NotificationEmail' => $oOwnerAccount->NotificationEmail
 						);
 					}
 				}
@@ -792,14 +793,14 @@ class HelpDeskModule extends AApiModule
 		if (!isset($aOwnerDataList[$oThread->IdOwner]))
 		{
 			$oOwnerUser = $this->oCoreDecorator->GetUser($oThread->IdOwner);
-			$oOwnerUserAccount = $this->oAccountsManager->getAccountByUserId($oThread->IdOwner);
+			$oOwnerAccount = $this->oAccountsManager->getAccountByUserId($oThread->IdOwner);
 
 			if ($oOwnerUser)
 			{
 				$aOwnerDataList[$oThread->IdOwner] = array(
-					'Email' => $oOwnerUserAccount->Login,
+					'Email' => '', //actualy, it's a User Login stored in Auth account
 					'Name' => $oOwnerUser->Name,
-					'NotificationEmail' => $oOwnerUserAccount->NotificationEmail
+					'NotificationEmail' => $oOwnerAccount->NotificationEmail
 				);
 			}
 		}
@@ -1019,13 +1020,13 @@ class HelpDeskModule extends AApiModule
 			{
 //				$aOwnerList[$oItem->IdOwner] = (int) $oItem->IdOwner;
 				$oOwnerUser = $this->oCoreDecorator->GetUser($oItem->IdOwner);
-				$oOwnerUserAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
+				$oOwnerAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
 				if ($oOwnerUser)
 				{
 					$aOwnerDataList[$oOwnerUser->iObjectId] = array(
-						'Email' => $oOwnerUserAccount->Login,
+						'Email' => '', //actualy, it's a User Login stored in Auth account
 						'Name' => $oOwnerUser->Name,
-						'NotificationEmail' => $oOwnerUserAccount->NotificationEmail
+						'NotificationEmail' => $oOwnerAccount->NotificationEmail
 					);
 				}
 			}

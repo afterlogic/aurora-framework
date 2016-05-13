@@ -1738,7 +1738,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	public function getOnline(\CUser $oUser, $iThreadID)
 	{
 		$aResult = false;
-		if ($oUser && $oUser->isAgent($oUser))
+		if ($oUser && $this->isAgent($oUser))
 		{
 			try
 			{
