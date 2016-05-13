@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Api = require('modules/Core/js/Api.js'),
@@ -160,9 +161,9 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 		$.cookie('AuthToken', oResponse.Result.AuthToken, { expires: 30 });
 		
 		if (window.location.search !== '' &&
-			Utils.getRequestParam('reset-pass') === null &&
-			Utils.getRequestParam('invite-auth') === null &&
-			Utils.getRequestParam('external-services') === null)
+			UrlUtils.getRequestParam('reset-pass') === null &&
+			UrlUtils.getRequestParam('invite-auth') === null &&
+			UrlUtils.getRequestParam('external-services') === null)
 		{
 			Utils.clearAndReloadLocation(Browser.ie8AndBelow, true);
 		}

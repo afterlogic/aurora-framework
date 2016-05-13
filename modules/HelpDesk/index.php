@@ -237,10 +237,10 @@ class HelpDeskModule extends AApiModule
 		return $oResult;
 	}	
 	
-	public function Login($sTenantHash = '', $sLogin = '', $sPassword = '', $bSignMe = 0)
+	public function Login($sLogin = '', $sPassword = '', $bSignMe = 0)
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$sTenantHash = trim($sTenantHash);
+		$sTenantHash = \CApi::getTenantHash();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
 			$sEmail = trim($sLogin);
@@ -334,9 +334,9 @@ class HelpDeskModule extends AApiModule
 		return true;
 	}	
 	
-	public function Register($sTenantHash = '', $sLogin = '', $sPassword = '', $sName = '', $bIsExt = false)
+	public function Register($sLogin = '', $sPassword = '', $sName = '', $bIsExt = false)
 	{
-		$sTenantHash = trim($sTenantHash);
+		$sTenantHash = \CApi::getTenantHash();
 //		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 //		{
 			$sLogin = trim($sLogin);
@@ -427,9 +427,9 @@ class HelpDeskModule extends AApiModule
 		return $this->oMainManager->isAgent($oUser);
 	}	
 	
-	public function Forgot($sTenantHash = '', $sEmail = '', $bIsExt = false)
+	public function Forgot($sEmail = '', $bIsExt = false)
 	{
-		$sTenantHash = trim($sTenantHash);
+		$sTenantHash = \CApi::getTenantHash();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
 			$sEmail = trim($sEmail);
@@ -496,7 +496,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function ForgotChangePassword()
 	{
-		$sTenantHash = trim($this->getParamValue('TenantHash', ''));
+		$sTenantHash = \CApi::getTenantHash();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
 			$sActivateHash = \trim($this->getParamValue('ActivateHash', ''));

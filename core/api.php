@@ -1168,9 +1168,9 @@ class CApi
 		$mResult = false;
 		if (!empty($sAuthToken))
 		{
-			if (isset(static::$aUserSession[$sAuthToken]))
+			if (isset(static::$aUserSession['UserId']))
 			{
-				$mResult = (int) static::$aUserSession[$sAuthToken];
+				$mResult = (int) static::$aUserSession['UserId'];
 			}
 			else
 			{
@@ -1179,19 +1179,16 @@ class CApi
 				if ($oApiIntegrator)
 				{
 					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);
-					static::$aUserSession[$sAuthToken] = $mResult;
+					static::$aUserSession['UserId'] = $mResult;
+					static::$aUserSession['AuthToken'] = $sAuthToken;
 				}
 			}
 		}
 		else 
 		{
-			if(is_array(static::$aUserSession) && count(static::$aUserSession) === 1)
+			if (is_array(static::$aUserSession) && isset(static::$aUserSession['UserId']))
 			{
-				$aUserSession = array_values(static::$aUserSession);
-				if(isset($aUserSession[0]))
-				{
-					$mResult = $aUserSession[0];
-				}
+				$mResult = static::$aUserSession['UserId'];
 			}
 		}
 		
@@ -1201,10 +1198,27 @@ class CApi
 	public static function getLogginedUserAuthToken()
 	{
 		$mResult = false;
-		if(is_array(static::$aUserSession) && count(static::$aUserSession) === 1)
+		
+		if (is_array(static::$aUserSession) && isset(static::$aUserSession['AuthToken']))
 		{
-			$aAuthTokens = array_keys(static::$aUserSession);
-			$mResult = $aAuthTokens[0];
+			$mResult = static::$aUserSession['AuthToken'];
+		}
+		
+		return $mResult;
+	}
+	
+	public static function setTenantHash($sTenantHash)
+	{
+		static::$aUserSession['TenantHash'] = $sTenantHash;
+	}
+	
+	public static function getTenantHash()
+	{
+		$mResult = false;
+		
+		if (is_array(static::$aUserSession) && isset(static::$aUserSession['TenantHash']))
+		{
+			$mResult = static::$aUserSession['TenantHash'];
 		}
 		
 		return $mResult;

@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
 	Ajax = require('modules/Core/js/Ajax.js'),
 	App = require('modules/Core/js/App.js'),
@@ -28,7 +28,7 @@ function CWrapLoginView()
 	
 	this.browserTitle = ko.observable(TextUtils.i18n('AUTH/HEADING_BROWSER_TAB'));
 	
-	this.bSocialInviteMode = typeof Utils.getRequestParam('invite-auth') === 'string';
+	this.bSocialInviteMode = typeof UrlUtils.getRequestParam('invite-auth') === 'string';
 	this.socialInviteTitle = TextUtils.i18n('AUTH/HEADING_SOCIAL_INVITE', {'SITENAME': UserSettings.SiteName});
 	this.socialInviteText = TextUtils.i18n('AUTH/INFO_SOCIAL_INVITE');
 	

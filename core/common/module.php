@@ -513,6 +513,9 @@ abstract class AApiModule
 						}
 					}
 					
+					$sTenantHash = $this->oHttp->GetPost('TenantHash', '');
+					\CApi::setTenantHash($sTenantHash);
+					
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
 
 					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);

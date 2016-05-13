@@ -4,6 +4,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
 	
 	AppData = window.auroraAppData,
@@ -156,7 +157,7 @@ module.exports = {
 	SiteName: AppData.App ? Types.pString(AppData.App.SiteName) : 'AfterLogic WebMail',
 	SocialName: AppData.User ? Types.pString(AppData.User.SocialName) : '', // Mail module
 	SyncIosAfterLogin: AppData.App ? !!AppData.App.IosDetectOnLogin : false, // ? AllowIosProfile
-	TenantHash: Types.pString(AppData.TenantHash),
+	TenantHash: Types.pString(AppData.TenantHash) || UrlUtils.getRequestParam('helpdesk') || '0804e764',
 	Theme: AppData.User ? Types.pString(AppData.User.DefaultTheme) : (AppData.App ? Types.pString(AppData.App.DefaultTheme) : 'Default'),
 	ThemeList: AppData.App && $.isArray(AppData.App.Themes) ? AppData.App.Themes : [],
 	timeFormat: ko.observable(AppData.User ? Types.pString(AppData.User.DefaultTimeFormat) : '0'), // 0 - 24, 1 - 12

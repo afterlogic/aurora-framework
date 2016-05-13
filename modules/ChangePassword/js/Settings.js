@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	Utils = require('modules/Core/js/utils/Common.js')
+	UrlUtils = require('modules/Core/js/utils/Url.js')
 ;
 
 module.exports = {
@@ -11,6 +11,6 @@ module.exports = {
 		_.extendOwn(this, oSettings);
 		delete this.init;
 		
-		this.ResetPassHash = Utils.getRequestParam('reset-pass') || '';
+		this.ResetPassHash = UrlUtils.getRequestParam('reset-pass') || '';
 	}
 };

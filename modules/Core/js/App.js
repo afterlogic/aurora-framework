@@ -7,6 +7,7 @@ var
 	modernizr = require('modernizr'),
 	
 	Types = require('modules/Core/js/utils/Types.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Api = require('modules/Core/js/Api.js'),
@@ -190,7 +191,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 {
 	if (!this.bAuth)
 	{
-		var iError = Types.pInt(Utils.getRequestParam('error'));
+		var iError = Types.pInt(UrlUtils.getRequestParam('error'));
 
 		if (iError !== 0)
 		{
@@ -308,6 +309,7 @@ CApp.prototype.getCommonRequestParameters = function ()
 {
 	var oParameters = {
 		AuthToken: $.cookie('AuthToken'),
+		TenantHash: UserSettings.TenantHash,
 		Token: UserSettings.CsrfToken
 	};
 	
