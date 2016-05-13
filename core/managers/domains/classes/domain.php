@@ -49,7 +49,6 @@
  * @property bool $AllowUsersAddNewAccounts Set to true if users are allowed to add new accounts to their primary ones. 
  * @property bool $AllowNewUsersRegister
  * @property bool $AllowOpenPGP
- * @property int $SaveMail
  * @property int $ContactsPerPage Number of address book entries displayed per page. 
  * @property int $GlobalAddressBook
  * @property bool $CalendarShowWeekEnds Accepted values: true or false. 

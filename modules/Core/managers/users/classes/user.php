@@ -5,7 +5,6 @@
 /**
  * @property int $IdUser
  * @property int $IdSubscription
- * @property int $MailsPerPage
  * @property int $ContactsPerPage
  * @property int $AutoRefreshInterval
  * @property int $CreatedTime
@@ -14,8 +13,6 @@
  * @property int $LoginsCount
  * @property string $DefaultSkin
  * @property string $DefaultLanguage
- * @property int $SaveMail
- * @property string $DefaultIncomingCharset
  * @property int $DefaultTimeZone
  * @property int $DefaultTimeFormat
  * @property string $DefaultDateFormat
@@ -25,12 +22,8 @@
  * @property string $Answer2
  * @property string $Capa
  * @property string $ClientTimeZone
- * @property bool $UseThreads
- * @property bool $SaveRepliedMessagesToCurrentFolder
  * @property bool $DesktopNotifications
- * @property bool $AllowChangeInputDirection
  * @property bool $EnableOpenPgp
- * @property bool $AllowAutosaveInDrafts
  * @property bool $AutosignOutgoingEmails
  * @property mixed $CustomFields
  * @property bool $SipEnable
@@ -72,7 +65,6 @@ class CUser extends api_APropertyBag
 			'IdSubscription'					=> array('int', 0), //'id_subscription'),
 			'Role'								=> array('int', 1), //- SuperAdmin, 1- PowerUser 2- RegisteredUser, 3- Anonymous
 
-			'MailsPerPage'						=> array('int', 0), //'msgs_per_page'),
 			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),
 			'AutoRefreshInterval'				=> array('int', 0), //'auto_checkmail_interval'),
 
@@ -83,9 +75,6 @@ class CUser extends api_APropertyBag
 
 			'DefaultSkin'						=> array('string', ''), //'def_skin'),
 			'DefaultLanguage'					=> array('string', ''), //'def_lang'),
-			'SaveMail'							=> array('int', 0), //'save_mail'),
-
-			'DefaultIncomingCharset'			=> array('string', ''), //'incoming_charset'),
 
 			'DefaultTimeZone'					=> array('int', 0), //'def_timezone'),
 			'DefaultTimeFormat'					=> array('int', 0), //'def_time_fmt'),
@@ -101,13 +90,9 @@ class CUser extends api_APropertyBag
 			'SipImpi'							=> array('string', ''), //'sip_impi'),
 			'SipPassword'						=> array('string', ''), //'sip_password'), //must be password
 			
-			'UseThreads'						=> array('bool', true), //'use_threads'),
-			'SaveRepliedMessagesToCurrentFolder'=> array('bool', false), //'save_replied_messages_to_current_folder'),
 			'DesktopNotifications'				=> array('bool', false), //'desktop_notifications'),
-			'AllowChangeInputDirection'			=> array('bool', false), //'allow_change_input_direction'),
 
 			'EnableOpenPgp'						=> array('bool', true), //'enable_open_pgp'),
-			'AllowAutosaveInDrafts'				=> array('bool', true), //'allow_autosave_in_drafts'),
 			'AutosignOutgoingEmails'			=> array('bool', true), //'autosign_outgoing_emails'),
 
 			'Capa'								=> array('string', ''), //'capa'),
@@ -138,9 +123,6 @@ class CUser extends api_APropertyBag
 	public function setInheritedSettings($oParams = array())
 	{
 		$oSettings =& CApi::GetSettings();
-		$iSaveMail = $oSettings->GetConf('WebMail/SaveMail');
-		$iSaveMail = ESaveMail::Always !== $iSaveMail
-			? $oSettings->GetConf('WebMail/SaveMail') : ESaveMail::DefaultOn;
 		
 		if (isset($oParams['domain']))
 		{
@@ -148,7 +130,6 @@ class CUser extends api_APropertyBag
 	//			'IdUser'							=> 0,
 	//			'IdSubscription'					=> 0,
 
-				$this->MailsPerPage = $oParams['domain']->MailsPerPage;
 				$this->ContactsPerPage = $oParams['domain']->ContactsPerPage;
 				$this->AutoRefreshInterval = $oParams['domain']->AutoRefreshInterval;
 
@@ -159,13 +140,10 @@ class CUser extends api_APropertyBag
 
 				$this->DefaultSkin = $oParams['domain']->DefaultSkin;
 				$this->DefaultLanguage = $oParams['domain']->DefaultLanguage;
-				$this->SaveMail = $iSaveMail;
 
 				$this->DefaultTimeZone = 0; // $oDomain->DefaultTimeZone, // TODO
 				$this->DefaultTimeFormat = $oParams['domain']->DefaultTimeFormat;
 				$this->DefaultDateFormat = $oParams['domain']->DefaultDateFormat;
-
-				$this->DefaultIncomingCharset = CApi::GetConf('webmail.default-inc-charset', 'iso-8859-1');
 
 	//			'Question1'							=> '',
 	//			'Question2'							=> '',
@@ -178,12 +156,8 @@ class CUser extends api_APropertyBag
 
 	//			'Capa'								=> '',
 	//			'ClientTimeZone'					=> '',
-				$this->UseThreads = $oParams['domain']->UseThreads;
-	//			'SaveRepliedMessagesToCurrentFolder'=> false,
 	//			'DesktopNotifications'				=> false,
-	//			'AllowChangeInputDirection'			=> false,
 	//			'EnableOpenPgp'						=> false,
-	//			'AllowAutosaveInDrafts'				=> true,
 	//			'AutosignOutgoingEmails'			=> false,
 	//			'CustomFields'						=> '',
 	//

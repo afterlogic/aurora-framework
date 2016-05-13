@@ -291,26 +291,6 @@ class EDateFormat extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESaveMail extends AEnumeration
-{
-	const Always = 0;
-	const DefaultOn = 1;
-	const DefaultOff = 2;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Always' => self::Always,
-		'DefaultOn' => self::DefaultOn,
-		'DefaultOff' => self::DefaultOff
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
 class ELoginFormType extends AEnumeration
 {
 	const Email = 0;

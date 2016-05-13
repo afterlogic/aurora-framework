@@ -39,11 +39,6 @@ return array(
 	'socket.verify-ssl' => false,
 
 	/**
-	 * Encoding used by default if not specified in a message
-	 */
-	'webmail.default-inc-charset' => 'iso-8859-1',
-
-	/**
 	 * Encoding used for composing mails
 	 */
 	'webmail.default-out-charset' => 'utf-8',

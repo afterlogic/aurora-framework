@@ -1357,7 +1357,7 @@ class Actions
 		setcookie('aft-cache-ctrl', '', time() - 3600);
 		$oAccount = $this->getAccountFromParam();
 
-		$iMailsPerPage = (int) $this->oHttp->GetPost('MailsPerPage', $oAccount->User->MailsPerPage);
+		$iMailsPerPage = (int) $this->oHttp->GetPost('MailsPerPage', $oAccount->User->{'Mail::MailsPerPage'});
 		if ($iMailsPerPage < 1)
 		{
 			$iMailsPerPage = 1;
@@ -1375,10 +1375,10 @@ class Actions
 			$iAutoRefreshInterval = 0;
 		}
 
-		$bUseThreads = '1' === (string) $this->oHttp->GetPost('UseThreads', $oAccount->User->UseThreads ? '1' : '0');
-		$bSaveRepliedMessagesToCurrentFolder = '1' === (string) $this->oHttp->GetPost('SaveRepliedMessagesToCurrentFolder', $oAccount->User->SaveRepliedMessagesToCurrentFolder ? '1' : '0');
+		$bUseThreads = '1' === (string) $this->oHttp->GetPost('UseThreads', $oAccount->User->{'Mail::UseThreads'} ? '1' : '0');
+		$bSaveRepliesToCurrFolder = '1' === (string) $this->oHttp->GetPost('SaveRepliesToCurrFolder', $oAccount->User->{'Mail::SaveRepliesToCurrFolder'} ? '1' : '0');
 		$bDesktopNotifications = '1' === (string) $this->oHttp->GetPost('DesktopNotifications', $oAccount->User->DesktopNotifications ? '1' : '0');
-		$bAllowChangeInputDirection = '1' === (string) $this->oHttp->GetPost('AllowChangeInputDirection', $oAccount->User->AllowChangeInputDirection ? '1' : '0');
+		$bAllowChangeInputDirection = '1' === (string) $this->oHttp->GetPost('AllowChangeInputDirection', $oAccount->User->{'Mail::AllowChangeInputDirection'} ? '1' : '0');
 		
 		$bFilesEnable = '1' === (string) $this->oHttp->GetPost('FilesEnable', $oAccount->User->FilesEnable ? '1' : '0');
 
@@ -1393,20 +1393,20 @@ class Actions
 
 		$sEmailNotification = (string) $this->oHttp->GetPost('EmailNotification', $oAccount->User->EmailNotification);
 
-		$oAccount->User->MailsPerPage = $iMailsPerPage;
+		$oAccount->User->{'Mail::MailsPerPage'} = $iMailsPerPage;
 		$oAccount->User->ContactsPerPage = $iContactsPerPage;
 		$oAccount->User->DefaultSkin = $sTheme;
 		$oAccount->User->DefaultLanguage = $sLang;
 		$oAccount->User->DefaultDateFormat = $sDateFormat;
 		$oAccount->User->DefaultTimeFormat = $iTimeFormat;
 		$oAccount->User->AutoRefreshInterval = $iAutoRefreshInterval;
-		$oAccount->User->UseThreads = $bUseThreads;
-		$oAccount->User->SaveRepliedMessagesToCurrentFolder = $bSaveRepliedMessagesToCurrentFolder;
+		$oAccount->User->{'Mail::UseThreads'} = $bUseThreads;
+		$oAccount->User->{'Mail::SaveRepliesToCurrFolder'} = $bSaveRepliesToCurrFolder;
 		$oAccount->User->DesktopNotifications = $bDesktopNotifications;
-		$oAccount->User->AllowChangeInputDirection = $bAllowChangeInputDirection;
+		$oAccount->User->{'Mail::AllowChangeInputDirection'} = $bAllowChangeInputDirection;
 
 		$oAccount->User->EnableOpenPgp = '1' === (string) $this->oHttp->GetPost('EnableOpenPgp', $oAccount->User->EnableOpenPgp ? '1' : '0');
-		$oAccount->User->AllowAutosaveInDrafts = '1' === (string) $this->oHttp->GetPost('AllowAutosaveInDrafts', $oAccount->User->AllowAutosaveInDrafts ? '1' : '0');
+		$oAccount->User->{'Mail::AllowAutosaveInDrafts'} = '1' === (string) $this->oHttp->GetPost('AllowAutosaveInDrafts', $oAccount->User->{'Mail::AllowAutosaveInDrafts'} ? '1' : '0');
 		$oAccount->User->AutosignOutgoingEmails = '1' === (string) $this->oHttp->GetPost('AutosignOutgoingEmails', $oAccount->User->AutosignOutgoingEmails ? '1' : '0');
 		$oAccount->User->FilesEnable = $bFilesEnable;
 		

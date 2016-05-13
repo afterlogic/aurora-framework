@@ -230,7 +230,6 @@ class api_Settings
 			'incomingmailprotocol'				=> 'EMailProtocol',
 			'outgoingmailauth'					=> 'ESMTPAuthType',
 			'outgoingsendingmethod'				=> 'ESendingMethod',
-			'savemail'							=> 'ESaveMail',
 			'loginformtype'						=> 'ELoginFormType',
 			'loginsignmetype'					=> 'ELoginSignMeType',
 			'globaladdressbookvisibility'		=> 'EContactsGABVisibility',

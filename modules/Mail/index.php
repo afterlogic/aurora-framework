@@ -11,13 +11,28 @@ class MailModule extends AApiModule
 		$this->oApiMainManager = $this->GetManager('main', 'db');
 		
 		$this->setObjectMap('CUser', array(
-				'MailsPerPage'	=> array('int', '20'),
-				'UseThreads'						=> array('bool', true), //'use_threads'),
-				'SaveRepliedMessagesToCurrentFolder' => array('bool', false), //'save_replied_messages_to_current_folder'),
+				'AllowAutosaveInDrafts'		=> array('bool', true), //'allow_autosave_in_drafts'),
+				'AllowChangeInputDirection'	=> array('bool', false), //'allow_change_input_direction'),
+				'MailsPerPage'				=> array('int', 20), //'msgs_per_page'),
+				'SaveRepliesToCurrFolder'	=> array('bool', false), //'save_replied_messages_to_current_folder'),
+				'UseThreads'				=> array('bool', true), //'use_threads'),
 			)
 		);
 		
 		$this->subscribeEvent('Login', array($this, 'checkAuth'));
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function SetInheritedUserSettings($oUser, $oDomain)
+	{
+		$oUser->{'Mail::AllowAutosaveInDrafts'}		= $oDomain->AllowAutosaveInDrafts;
+		$oUser->{'Mail::AllowChangeInputDirection'}	= $oDomain->AllowChangeInputDirection;
+		$oUser->{'Mail::MailsPerPage'}				= $oDomain->MailsPerPage;
+		$oUser->{'Mail::SaveRepliesToCurrFolder'}	= $oDomain->SaveRepliesToCurrFolder;
+		$oUser->{'Mail::UseThreads'}				= $oDomain->UseThreads;
 	}
 	
 	/**

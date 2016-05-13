@@ -302,7 +302,6 @@ class api_Settings
 			'webmail/incomingmailprotocol'				=> 'EMailProtocol',
 			'webmail/outgoingmailauth'					=> 'ESMTPAuthType',
 			'webmail/outgoingsendingmethod'				=> 'ESendingMethod',
-			'webmail/savemail'							=> 'ESaveMail',
 			'webmail/loginformtype'						=> 'ELoginFormType',
 			'webmail/loginsignmetype'					=> 'ELoginSignMeType',
 			'contacts/globaladdressbookvisibility'		=> 'EContactsGABVisibility',
@@ -592,7 +591,6 @@ class api_Settings
 			'WebMail/MaxBodySize' => array(600, 'int'),  //TODO Magic
 			'WebMail/MaxSubjectSize' => array(255, 'int'),  //TODO Magic
 			'WebMail/AlwaysShowImagesInMessage' => array(false, 'bool'),
-			'WebMail/SaveMail' => array(ESaveMail::Always, 'spec'),
 			'WebMail/IdleSessionTimeout' => array(0, 'int'),
 			'WebMail/UseSortImapForDateMode' => array(true, 'bool'),
 			'WebMail/UseThreadsIfSupported' => array(true, 'bool'),

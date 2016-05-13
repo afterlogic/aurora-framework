@@ -1166,7 +1166,7 @@ class CApiIntegratorManager extends AApiManager
 			/* @var $oApiCapabilityManager CApiCapabilityManager */
 
 			$aResult['IdUser'] = $oAccount->User->IdUser;
-			$aResult['MailsPerPage'] = (int) $oAccount->User->MailsPerPage;
+			$aResult['MailsPerPage'] = (int) $oAccount->User->{'Mail::MailsPerPage'};
 			$aResult['ContactsPerPage'] = (int) $oAccount->User->ContactsPerPage;
 			$aResult['AutoRefreshInterval'] = (int) $oAccount->User->AutoRefreshInterval;
 			$aResult['LoginsCount'] = $oAccount->User->LoginsCount;
@@ -1192,25 +1192,21 @@ class CApiIntegratorManager extends AApiManager
 			$aResult['AllowFetcher'] = CApi::GetConf('labs.fetchers', false) &&
 				($oAccount->Domain->IsInternal || \in_array($oAccount->IncomingMailServer, $aFetcherDomains));
 
-			$iSaveMail = $oSettings->GetConf('WebMail/SaveMail');
-			$iSaveMail = ESaveMail::Always !== $iSaveMail ? $oAccount->User->SaveMail : ESaveMail::Always;
-			$aResult['SaveMail'] = (int) $iSaveMail;
-
 			$aResult['ThreadsEnabled'] = !!$oAccount->Domain->UseThreads;
 			$aResult['UseThreads'] = false;
-			$aResult['SaveRepliedMessagesToCurrentFolder'] = false;
+			$aResult['SaveRepliesToCurrFolder'] = false;
 			$aResult['DesktopNotifications'] = (bool) $oAccount->User->DesktopNotifications;
-			$aResult['AllowChangeInputDirection'] = (bool) $oAccount->User->AllowChangeInputDirection;
+			$aResult['AllowChangeInputDirection'] = (bool) $oAccount->User->{'Mail::AllowChangeInputDirection'};
 			$aResult['EnableOpenPgp'] = (bool) $oAccount->User->EnableOpenPgp;
-			$aResult['AllowAutosaveInDrafts'] = (bool) $oAccount->User->AllowAutosaveInDrafts;
+			$aResult['AllowAutosaveInDrafts'] = (bool) $oAccount->User->{'Mail::AllowAutosaveInDrafts'};
 			$aResult['AutosignOutgoingEmails'] = (bool) $oAccount->User->AutosignOutgoingEmails;
 
 			$aResult['EmailNotification'] = !empty($oAccount->User->EmailNotification) ? $oAccount->User->EmailNotification : $oAccount->Email;
 
 			if ($aResult['ThreadsEnabled'])
 			{
-				$aResult['UseThreads'] = (bool) $oAccount->User->UseThreads;
-				$aResult['SaveRepliedMessagesToCurrentFolder'] = (bool) $oAccount->User->SaveRepliedMessagesToCurrentFolder;
+				$aResult['UseThreads'] = (bool) $oAccount->User->{'Mail::UseThreads'};
+				$aResult['SaveRepliesToCurrFolder'] = (bool) $oAccount->User->{'Mail::SaveRepliesToCurrFolder'};
 			}
 
 			$aResult['OutlookSyncEnable'] = $oApiCapabilityManager->isOutlookSyncSupported($oAccount);
@@ -1695,7 +1691,12 @@ class CApiIntegratorManager extends AApiManager
 				$aAppData['User'] = array(
 					'Id' => $oUser->iObjectId,
 					'Role' => $oUser->Role,
-					'Name' => $oUser->Name
+					'Name' => $oUser->Name,
+					'Mail::AllowAutosaveInDrafts' => $oUser->{'Mail::AllowAutosaveInDrafts'},
+					'Mail::AllowChangeInputDirection' => $oUser->{'Mail::AllowChangeInputDirection'},
+					'Mail::MailsPerPage' => $oUser->{'Mail::MailsPerPage'},
+					'Mail::SaveRepliesToCurrFolder' => $oUser->{'Mail::SaveRepliesToCurrFolder'},
+					'Mail::UseThreads' => $oUser->{'Mail::UseThreads'}
 				);
 			}
 			

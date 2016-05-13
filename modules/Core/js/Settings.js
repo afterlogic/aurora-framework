@@ -11,7 +11,7 @@ var
 	
 	bRtl = $('html').hasClass('rtl')
 ;
-
+console.log(AppData.User['Mail::AllowAutosaveInDrafts'], AppData.User['Mail::AllowChangeInputDirection'], AppData.User['Mail::MailsPerPage'], AppData.User['Mail::SaveRepliesToCurrFolder'], AppData.User['Mail::UseThreads']);
 module.exports = {
 	Modules: {
 		Auth: {
@@ -36,9 +36,9 @@ module.exports = {
 		Mail: { // AppData.App.AllowWebMail
 			AllowAddNewAccounts: AppData.App ? !!AppData.App.AllowUsersAddNewAccounts : false,
 			AllowAppRegisterMailto: AppData.App ? !!AppData.App.AllowAppRegisterMailto : false,
-			AllowAutosaveInDrafts: AppData.User ? !!AppData.User.AllowAutosaveInDrafts : true, // ??? changes in OpenPgp
+			AllowAutosaveInDrafts: AppData.User ? !!AppData.User['Mail::AllowAutosaveInDrafts'] : true, // ??? changes in OpenPgp
 			AllowChangeEmailSettings: AppData.App ? !!AppData.App.AllowUsersChangeEmailSettings : true,
-			AllowChangeInputDirection: AppData.User ? !!AppData.User.AllowChangeInputDirection : true,
+			AllowChangeInputDirection: AppData.User ? !!AppData.User['Mail::AllowChangeInputDirection'] : true,
 			AllowExpandFolders: !!AppData.MailExpandFolders,
 			AllowFetchers: AppData.User ? !!AppData.User.AllowFetcher : true,
 			AllowIdentities: !!AppData.AllowIdentities,
@@ -54,10 +54,10 @@ module.exports = {
 			DefaultFontSize: Types.pInt(AppData.HtmlEditorDefaultFontSize) || 3,
 			ImageUploadSizeLimit: AppData.App ? Types.pInt(AppData.App.ImageUploadSizeLimit) : 0,
 			JoinReplyPrefixes: AppData.App ? !!AppData.App.JoinReplyPrefixes : true,
-			MailsPerPage: AppData.User ? Types.pInt(AppData.User.MailsPerPage) : 20,
+			MailsPerPage: AppData.User ? Types.pInt(AppData.User['Mail::MailsPerPage']) : 20,
 			MaxMessagesBodiesSizeToPrefetch: 50000, // add to settings
-			SaveRepliesToCurrFolder: AppData.User ? !!AppData.User.SaveRepliedToCurrFolder : false, // ? AppData.User.SaveRepliedMessagesToCurrentFolder
-			useThreads: ko.observable(AppData.User ? !!AppData.User.UseThreads : true)
+			SaveRepliesToCurrFolder: AppData.User ? !!AppData.User['Mail::SaveRepliesToCurrFolder'] : false,
+			useThreads: ko.observable(AppData.User ? !!AppData.User['Mail::UseThreads'] : true)
 		},
 		Contacts: {
 			ContactsPerPage: AppData.User ? Types.pInt(AppData.User.ContactsPerPage) : 20,
@@ -176,7 +176,6 @@ module.exports = {
 	EmailNotification: AppData.User ? Types.pString(AppData.User.EmailNotification) : '',
 	LastLogin: AppData.User ? Types.pInt(AppData.User.LastLogin) : 0,
 	LoginsCount: AppData.User ? Types.pInt(AppData.User.LoginsCount) : 0,
-	SaveMail: AppData.User ? Types.pInt(AppData.User.SaveMail) : 0,
 	SipCallerID: AppData.User ? Types.pString(AppData.User.SipCallerID) : '',
 	SipEnable: AppData.User ? !!AppData.User.SipEnable : true,
 	TwilioEnable: AppData.User ? !!AppData.User.TwilioEnable : true,
