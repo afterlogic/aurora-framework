@@ -278,12 +278,15 @@ class CApiHelpDeskAccountsManager extends AApiManager
 		$bResult = false;
 		try
 		{
+			$this->sAccountClassName;
 			$aResults = $this->oEavManager->getObjects(
 				$this->sAccountClassName,
-				array('Login'),
+				array('IdUser'),
 				0,
 				0,
-				array('Login' => $oAccount->Login)
+				array(
+					'IdUser' => $oAccount->IdUser
+				)
 			);
 
 			if ($aResults)

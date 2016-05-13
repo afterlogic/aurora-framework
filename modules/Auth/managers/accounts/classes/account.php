@@ -24,8 +24,7 @@ class CAccount extends api_APropertyBag
 			'IsDisabled'	=> array('bool', false),
 			'IdUser'		=> array('int', 0),
 			'Login'			=> array('string', ''),
-			'Password'		=> array('string', ''),
-			'Test'			=> array('string', '')
+			'Password'		=> array('string', '')
 		);
 		
 		$this->SetDefaults();

@@ -376,15 +376,20 @@ class HelpDeskModule extends AApiModule
 					$oAuthAccount->Login = $sLogin;
 					$oAuthAccount->Password = $sPassword;
 					
-					$this->oAuthDecorator->SaveAccount($oAuthAccount);
-					
-					//Create propertybag account
-					$oAccount = \Modules\HelpDesk\CAccount::createInstance();
-					$oAccount->IdUser = $oEventResult->iObjectId;
+					if ($this->oAuthDecorator->SaveAccount($oAuthAccount))
+					{
+						//Create propertybag account
+						$oAccount = \Modules\HelpDesk\CAccount::createInstance();
+						$oAccount->IdUser = $oEventResult->iObjectId;
 
-					$this->oAccountsManager->createAccount($oAccount);
-					
-					return !!$oAccount;
+						$bResult = $this->oAccountsManager->createAccount($oAccount);
+					}
+					else
+					{
+						$this->oAuthDecorator->DeleteAccount($oAuthAccount);
+					}
+
+					return $bResult;
 				}
 				else
 				{

@@ -63,7 +63,7 @@ class CUser extends api_APropertyBag
 			'IdTenant'							=> array('int', 0),
 			'IsDisabled'						=> array('bool', false),
 			'IdSubscription'					=> array('int', 0), //'id_subscription'),
-			'Role'								=> array('int', 1), //- SuperAdmin, 1- PowerUser 2- RegisteredUser, 3- Anonymous
+			'Role'								=> array('int', 1), //0- SuperAdmin, 1- PowerUser, 2- RegisteredUser, 3- Anonymous
 
 			'ContactsPerPage'					=> array('int', 0), //'contacts_per_page'),
 			'AutoRefreshInterval'				=> array('int', 0), //'auto_checkmail_interval'),
