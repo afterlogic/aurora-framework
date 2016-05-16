@@ -238,7 +238,7 @@ class CApiMailAccountsManager extends AApiManager
 		{
 			$aResults = $this->oEavManager->getObjects(
 				'CMailAccount',
-				array('Email', 'IncomingMailServer', 'IsDefaultAccount'),
+				array('Email', 'FriendlyName', 'IsDefaultAccount'),
 				0,
 				0,
 				array('IdUser' => $iUserId, 'IsDisabled' => false)
@@ -250,9 +250,13 @@ class CApiMailAccountsManager extends AApiManager
 				foreach($aResults as $oItem)
 				{
 					$mResult[$oItem->iObjectId] = array(
-						Email => $oItem->Email,
-						IncomingMailServer => $oItem->IncomingMailServer,
-						IsDefaultAccount => $oItem->IsDefaultAccount
+						'AccountID' => $oItem->iObjectId,
+						'IsDefault' => $oItem->IsDefaultAccount,
+						'Email' => $oItem->Email,
+						'FriendlyName' => $oItem->FriendlyName,
+						'Signature' => array('Signature' => '', 'Type' => 1, 'Options' =>0),
+						'IsPasswordSpecified' => true,
+						'AllowMail' => true
 					);
 				}
 			}

@@ -35,13 +35,11 @@ class MailModule extends AApiModule
 		$oUser->{'Mail::UseThreads'}				= $oDomain->UseThreads;
 	}
 	
-	public function GetAppData($oUser)
+	public function GetAppData($oUser = null)
 	{
 		$aAcc = $this->oApiAccountsManager->getUserAccounts($oUser->iObjectId);
-		$aKeys = array_keys($aAcc);
 		return array(
 			'Accounts' => array_values($aAcc),
-			'Default' => $aKeys[0],
 			'AllowAutosaveInDrafts' => $oUser->{'Mail::AllowAutosaveInDrafts'},
 			'AllowChangeInputDirection' => $oUser->{'Mail::AllowChangeInputDirection'},
 			'MailsPerPage' => $oUser->{'Mail::MailsPerPage'},
@@ -171,6 +169,97 @@ class MailModule extends AApiModule
 			);
 		}
 	}
+	
+	public function GetExtensions($iAccountID, $sClientTimeZone)
+	{
+	
+		$mResult = false;
+		$oAccount = $this->oApiAccountsManager->getAccountById($iAccountID);
+//		$oAccount = $this->getAccountFromParam(false);
+		if ($oAccount)
+		{
+//			$sClientTimeZone = trim($this->getParamValue('ClientTimeZone', ''));
+			if ('' !== $sClientTimeZone)
+			{
+				$oAccount->User->ClientTimeZone = $sClientTimeZone;
+				$oApiUsers = \CApi::GetCoreManager('users');
+				if ($oApiUsers)
+				{
+					$oApiUsers->updateAccount($oAccount);
+				}
+			}
+
+			$mResult = array();
+			$mResult['Extensions'] = array();
+
+			// extensions
+//			if ($oAccount->isExtensionEnabled(\CAccount::IgnoreSubscribeStatus) &&
+//				!$oAccount->isExtensionEnabled(\CAccount::DisableManageSubscribe))
+//			{
+//				$oAccount->enableExtension(\CAccount::DisableManageSubscribe);
+//			}
+//
+//			$aExtensions = $oAccount->getExtensionList();
+//			foreach ($aExtensions as $sExtensionName)
+//			{
+//				if ($oAccount->isExtensionEnabled($sExtensionName))
+//				{
+//					$mResult['Extensions'][] = $sExtensionName;
+//				}
+//			}
+		}
+
+		return $mResult;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function GetFolders($iAccountID)
+	{
+		$oAccount = $this->oApiAccountsManager->getAccountById($iAccountID);
+//		$oAccount = $this->getAccountFromParam();
+		$oFolderCollection = $this->oApiMainManager->getFolders($oAccount);
+		return array(
+			'Folders' => $oFolderCollection, 
+			'Namespace' => $oFolderCollection->GetNamespace()
+		);
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function GetMessages($sFolderFullNameRaw, $iOffset, $iLimit, $sSearch, $sFilters, $sUseThreads, $iAccountID)
+	{
+		$sOffset = trim((string) $iOffset);
+		$sLimit = trim((string) $iLimit);
+		$sSearch = trim((string) $sSearch);
+		$bUseThreads = '1' === trim((string) $sUseThreads);
+		$sInboxUidnext = '';//$this->getParamValue('InboxUidnext', '');
+		
+		$aFilters = array();
+		$sFilters = strtolower(trim((string) $sFilters));
+		if (0 < strlen($sFilters))
+		{
+			$aFilters = array_filter(explode(',', $sFilters), function ($sValue) {
+				return '' !== trim($sValue);
+			});
+		}
+
+		$iOffset = 0 < strlen($sOffset) && is_numeric($sOffset) ? (int) $sOffset : 0;
+		$iLimit = 0 < strlen($sLimit) && is_numeric($sLimit) ? (int) $sLimit : 0;
+
+		if (0 === strlen(trim($sFolderFullNameRaw)) || 0 > $iOffset || 0 >= $iLimit || 200 < $sLimit)
+		{
+			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+		}
+
+		$oAccount = $this->oApiAccountsManager->getAccountById($iAccountID);
+//		$oAccount = $this->getAccountFromParam();
+
+		return $this->oApiMainManager->getMessageList(
+			$oAccount, $sFolderFullNameRaw, $iOffset, $iLimit, $sSearch, $bUseThreads, $aFilters, $sInboxUidnext);
+	}	
 }
 
 return new MailModule('1.0');

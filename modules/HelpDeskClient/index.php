@@ -112,7 +112,7 @@ class HelpDeskModuleClient extends AApiModule
 		return $sResult;
 	}
 	
-	public function GetAppData()
+	public function GetAppData($oUser = null)
 	{
 		return array(
 			'AllowEmailNotifications' => '', //AppData.User ? !!AppData.User.AllowHelpdeskNotifications : false,

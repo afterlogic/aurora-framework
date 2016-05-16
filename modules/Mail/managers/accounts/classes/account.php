@@ -9,6 +9,17 @@
  */
 class CMailAccount extends api_APropertyBag
 {
+	const ChangePasswordExtension = 'AllowChangePasswordExtension';
+	const AutoresponderExtension = 'AllowAutoresponderExtension';
+	const SpamFolderExtension = 'AllowSpamFolderExtension';
+	const DisableAccountDeletion = 'DisableAccountDeletion';
+	const DisableManageFolders = 'DisableManageFolders';
+	const SieveFiltersExtension = 'AllowSieveFiltersExtension';
+	const ForwardExtension = 'AllowForwardExtension';
+	const DisableManageSubscribe = 'DisableManageSubscribe';
+	const DisableFoldersManualSort = 'DisableFoldersManualSort';
+	const IgnoreSubscribeStatus = 'IgnoreSubscribeStatus';
+	
 	/**
 	 * Creates a new instance of the object.
 	 * 
@@ -72,5 +83,15 @@ class CMailAccount extends api_APropertyBag
 	public static function createInstance($sModule = 'Mail', $oParams = array())
 	{
 		return new CMailAccount($sModule, $oParams);
+	}
+	
+	public function isExtensionEnabled($sExtention)
+	{
+		return $sExtention === CMailAccount::DisableFoldersManualSort;
+	}
+	
+	public function getDefaultTimeOffset()
+	{
+		return 0;
 	}
 }

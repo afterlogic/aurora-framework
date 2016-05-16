@@ -316,7 +316,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 	/**
 	 * Obtains the list of IMAP folders.
 	 * 
-	 * @param CAccount $oAccount Account object.
+	 * @param CMailAccount $oAccount Account object.
 	 * @param bool $bCreateUnExistenSystemFolders = true. Creating folders is required for WebMail work, usually it is done on first login to the account.
 	 *
 	 * @return CApiMailFolderCollection Collection of folders.
@@ -380,7 +380,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 		}
 
 		$aFoldersOrderList = null;
-		if (!$oAccount->isExtensionEnabled(CAccount::DisableFoldersManualSort))
+		if (!$oAccount->isExtensionEnabled(CMailAccount::DisableFoldersManualSort))
 		{
 			$aFoldersOrderList = $this->getFoldersOrder($oAccount);
 			$aFoldersOrderList = is_array($aFoldersOrderList) && 0 < count($aFoldersOrderList) ? $aFoldersOrderList : null;
@@ -422,7 +422,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 		});
 
 		if (null === $aFoldersOrderList &&
-			!$oAccount->isExtensionEnabled(CAccount::DisableFoldersManualSort))
+			!$oAccount->isExtensionEnabled(CMailAccount::DisableFoldersManualSort))
 		{
 			$aNewFoldersOrderList = array();
 			$oFolderCollection->foreachWithSubFolders(function (/* @var $oFolder CApiMailFolder */ $oFolder) use (&$aNewFoldersOrderList) {
@@ -2538,7 +2538,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 	/**
 	 * Obtains message list with messages data.
 	 * 
-	 * @param CAccount $oAccount Account object.
+	 * @param CMailAccount $oAccount Account object.
 	 * @param string $sFolderFullNameRaw Raw full name of the folder.
 	 * @param int $iOffset = 0. Offset value for obtaining a partial list.
 	 * @param int $iLimit = 20. Limit value for obtaining a partial list.

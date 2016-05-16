@@ -28,20 +28,9 @@ var
 
 /**
  * @constructor
- * @param {number} iDefaultAccountId
  */
-function CAccountListModel(iDefaultAccountId)
+function CAccountListModel()
 {
-	this.defaultId = ko.observable(iDefaultAccountId);
-	this.currentId = ko.observable(iDefaultAccountId);
-	this.editedId = ko.observable(iDefaultAccountId);
-	
-	this.isCurrentAllowsMail = ko.observable(true);
-	
-	this.currentId.subscribe(function() {
-		this.initCurrentAccount();
-	}, this);
-
 	this.collection = ko.observableArray([]);
 }
 
@@ -181,13 +170,14 @@ CAccountListModel.prototype.getFetcherByHash = function(sHash)
  * Fills the collection of accounts. Checks for default account. If it is not listed, 
  * then assigns a credit default the first account from the list.
  *
- * @param {number} iDefaultId
  * @param {Array} aAccounts
  */
-CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
+CAccountListModel.prototype.parse = function (aAccounts)
 {
 	var
 		oAccount = null,
+		iDefaultId = 0,
+		iCurrentId = 0,
 		bHasDefault = false,
 		oDefaultAccount = null,
 		oFirstMailAccount = null
@@ -198,9 +188,10 @@ CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
 		this.collection(_.map(aAccounts, function (oRawAccount)
 		{
 			var oTempAccount = new CAccountModel(aAccounts.length === 1);
-			oTempAccount.parse(oRawAccount, iDefaultId);
-			if (oTempAccount.id() === iDefaultId)
+			oTempAccount.parse(oRawAccount);
+			if (oTempAccount.isDefault())
 			{
+				iDefaultId = oTempAccount.id();
 				bHasDefault = true;
 			}
 			return oTempAccount;
@@ -216,9 +207,7 @@ CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
 
 	if (bHasDefault)
 	{
-		this.defaultId(iDefaultId);
-		
-		oDefaultAccount = this.getDefault();
+		oDefaultAccount = this.getAccount(iDefaultId);
 		
 		if (!oDefaultAccount.allowMail())
 		{
@@ -227,20 +216,25 @@ CAccountListModel.prototype.parse = function (iDefaultId, aAccounts)
 			});
 		}
 		
-		if (oFirstMailAccount)
-		{
-			this.currentId(oFirstMailAccount.id());
-			this.editedId(iDefaultId);
-		}
-		else
-		{
-			this.currentId(iDefaultId);
-			this.editedId(iDefaultId);
-		}
-		
 		oDefaultAccount.isDefault(true);
+		
+		iCurrentId = oFirstMailAccount ? oFirstMailAccount.id() : iDefaultId;
 	}
 	
+	this.initObservables(iDefaultId, iCurrentId);
+};
+
+CAccountListModel.prototype.initObservables = function (iDefaultId, iCurrentId)
+{
+	this.defaultId = ko.observable(iDefaultId);
+	this.currentId = ko.observable(iCurrentId);
+	this.editedId = ko.observable(iCurrentId);
+	
+	this.isCurrentAllowsMail = ko.observable(true);
+	
+	this.currentId.subscribe(function() {
+		this.initCurrentAccount();
+	}, this);
 	this.initCurrentAccount();
 };
 
@@ -616,9 +610,9 @@ CAccountListModel.prototype.displaySocialWelcome = function ()
 	}
 };
 
-var AccountList = new CAccountListModel(Types.pInt(window.auroraAppData.Mail.Default));
+var AccountList = new CAccountListModel();
 
-AccountList.parse(window.auroraAppData.Mail.Default, window.auroraAppData.Mail.Accounts);
+AccountList.parse(window.auroraAppData.Mail.Accounts);
 
 if (MainTab)
 {

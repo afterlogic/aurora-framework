@@ -200,9 +200,8 @@ CAccountModel.prototype.updateQuotaParams = function ()
 
 /**
  * @param {Object} oData
- * @param {number} iDefaultId
  */
-CAccountModel.prototype.parse = function (oData, iDefaultId)
+CAccountModel.prototype.parse = function (oData)
 {
 	this.init(Types.pInt(oData.AccountID), Types.pString(oData.Email), Types.pString(oData.FriendlyName));
 		
@@ -210,10 +209,11 @@ CAccountModel.prototype.parse = function (oData, iDefaultId)
 
 	this.passwordSpecified(!!oData.IsPasswordSpecified);
 
-//	this.parseSignature(oData.Signature);
+	this.parseSignature(oData.Signature);
 
-	this.isCurrent(iDefaultId === this.id());
-	this.isEdited(iDefaultId === this.id());
+	this.isDefault(!!oData.IsDefault);
+	this.isCurrent(!!oData.IsDefault);
+	this.isEdited(!!oData.IsDefault);
 };
 
 /**
