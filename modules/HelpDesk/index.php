@@ -658,18 +658,17 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeletePost()
+	public function DeletePost($iPostId = 0, $iThreadId = 0, $bIsExt = 0)
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		if (!$oUser)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
 
-		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
-		$iPostId = (int) $this->getParamValue('PostId', 0);
+		$iThreadId = (int) $iThreadId;
+		$iPostId = (int) $iPostId;
 		
 		if (0 >= $iThreadId || 0 >= $iPostId)
 		{
@@ -894,17 +893,16 @@ class HelpDeskModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function DeleteThread()
+	public function DeleteThread($sThreadId = 0, $bIsExt = 0)
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		if (!$oUser)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
 		}
 
-		$iThreadId = (int) $this->getParamValue('ThreadId', '');
+		$iThreadId = (int) $sThreadId;
 
 		if (0 < $iThreadId && !$this->IsAgent($oUser) && !$this->oMainManager->verifyThreadIdsBelongToUser($oUser, array($iThreadId)))
 		{

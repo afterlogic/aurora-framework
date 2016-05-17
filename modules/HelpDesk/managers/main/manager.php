@@ -412,7 +412,7 @@ class CApiHelpdeskMainManager extends AApiManagerWithStorage
 	
 	public function isAgent(\CUser $oUser)
 	{
-		return $oUser && $oUser->Role === 2;
+		return $oUser && $oUser->Role === 1;
 	}
 	/**
 	 * @param CHelpdeskUser $oHelpdeskUser Helpdesk user object

@@ -463,7 +463,7 @@ CHelpdeskView.prototype.deletePost = function (oPost)
 				{
 					this.postForDelete(oPost);
 					Ajax.send('DeletePost', {
-						'Action': 'HelpdeskPostDelete',
+						//'Action': 'HelpdeskPostDelete', //probably unused
 						'PostId': oPost.Id,
 						'ThreadId': oPost.IdThread
 					}, this.onDeletePostResponse, this);
