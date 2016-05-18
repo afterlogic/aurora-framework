@@ -165,11 +165,11 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 			UrlUtils.getRequestParam('invite-auth') === null &&
 			UrlUtils.getRequestParam('external-services') === null)
 		{
-			Utils.clearAndReloadLocation(Browser.ie8AndBelow, true);
+			UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true);
 		}
 		else
 		{
-			Utils.clearAndReloadLocation(Browser.ie8AndBelow, false);
+			UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, false);
 		}
 	}
 };

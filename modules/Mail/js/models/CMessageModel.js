@@ -9,7 +9,7 @@ var
 	FilesUtils = require('modules/Core/js/utils/Files.js'),
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	Screens = require('modules/Core/js/Screens.js'),
@@ -248,7 +248,7 @@ CMessageModel.prototype.requireMailCache = function ()
 CMessageModel.prototype.viewMessage = function (oWin)
 {
 	var
-		oDomText = this.getDomText(Utils.getAppPath()),
+		oDomText = this.getDomText(UrlUtils.getAppPath()),
 		sHtml = ''
 	;
 	
@@ -656,7 +656,7 @@ CMessageModel.prototype.downloadAllAttachments = function ()
 {
 	if (this.sAllAttachmentsHash !== '')
 	{
-		Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
+		UrlUtils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
 	}
 	else
 	{
@@ -682,7 +682,7 @@ CMessageModel.prototype.onGetAttachmentsZipHashResponse = function (oResponse, o
 	if (oResponse.Result)
 	{
 		this.sAllAttachmentsHash = Types.pString(oResponse.Result);
-		Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
+		UrlUtils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
 	}
 };
 

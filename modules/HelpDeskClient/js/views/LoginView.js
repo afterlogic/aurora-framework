@@ -195,7 +195,7 @@ CLoginView.prototype.onSocialClick = function (sSocial)
 			y = screen.height/2 - 600/2
 		;
 
-		window.open(Utils.getAppPath() + '?external-services=' + sSocial + '&scopes=login', sSocial, 'location=no,toolbar=no,status=no,scrollbars=yes,resizable=yes,menubar=no,width=700,height=600,left=' + x + ',top=' + y);
+		window.open(UrlUtils.getAppPath() + '?external-services=' + sSocial + '&scopes=login', sSocial, 'location=no,toolbar=no,status=no,scrollbars=yes,resizable=yes,menubar=no,width=700,height=600,left=' + x + ',top=' + y);
 	}
 	else
 	{

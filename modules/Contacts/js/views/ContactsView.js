@@ -7,6 +7,7 @@ var
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Api = require('modules/Core/js/Api.js'),
@@ -600,12 +601,12 @@ CContactsView.prototype.executeImport = function ()
 
 CContactsView.prototype.executeCSVExport = function ()
 {
-	Utils.downloadByUrl('?/Download/Contacts/DownloadContactsAsCSV/');
+	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsCSV/');
 };
 
 CContactsView.prototype.executeVCFExport = function ()
 {
-	Utils.downloadByUrl('?/Download/Contacts/DownloadContactsAsVCF/');
+	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsVCF/');
 };
 
 CContactsView.prototype.executeCancel = function ()

@@ -8,6 +8,7 @@ var
 	FilesUtils = require('modules/Core/js/utils/Files.js'),
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Ajax = require('modules/Core/js/Ajax.js'),
@@ -234,11 +235,11 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
  */
 CAbstractFileModel.prototype.downloadFile = function ()
 {
-	//todo: Utils.downloadByUrl in nessesary context in new window
+	//todo: UrlUtils.downloadByUrl in nessesary context in new window
 	
 	if (this.allowDownload() && this.downloadLink().length > 0 && this.downloadLink() !== '#')
 	{
-		Utils.downloadByUrl(this.downloadLink());
+		UrlUtils.downloadByUrl(this.downloadLink());
 	}
 };
 
@@ -348,7 +349,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 	
 	if (!Types.isNonEmptyString(sUrl))
 	{
-		sUrl = Utils.getAppPath() + this.viewLink();
+		sUrl = UrlUtils.getAppPath() + this.viewLink();
 	}
 
 	if (this.visibleViewLink() && this.viewLink().length > 0 && this.viewLink() !== '#')
@@ -393,7 +394,7 @@ CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
 	var sLink = this.downloadLink();
 	if ('http' !== sLink.substr(0, 4))
 	{
-		sLink = Utils.getAppPath() + sLink;
+		sLink = UrlUtils.getAppPath() + sLink;
 	}
 
 	return this.type() + ':' + this.fileName() + ':' + sLink;

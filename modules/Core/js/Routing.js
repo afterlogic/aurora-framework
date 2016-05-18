@@ -5,7 +5,7 @@ var
 	ko = require('knockout'),
 	hasher = require('hasher'),
 	
-	Utils = require('modules/Core/js/utils/Common.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Screens = require('modules/Core/js/Screens.js')
 ;
 
@@ -81,7 +81,7 @@ CRouting.prototype.replaceHashFromString = function (sNewHash)
 {
 	if (location.hash !== sNewHash)
 	{
-		location.replace(Utils.getAppPath() + window.location.search + sNewHash);
+		location.replace(UrlUtils.getAppPath() + window.location.search + sNewHash);
 	}
 };
 

@@ -4,7 +4,7 @@ var
 	$ = require('jquery'),
 			
 	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
 	Storage = require('modules/Core/js/Storage.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
@@ -73,7 +73,7 @@ MailUtils.registerMailto = function (bRegisterOnce)
 	{
 		window.navigator.registerProtocolHandler(
 			'mailto',
-			Utils.getAppPath() + '#compose/to/%s',
+			UrlUtils.getAppPath() + '#compose/to/%s',
 			UserSettings.SiteName !== '' ? UserSettings.SiteName : 'WebMail'
 		);
 

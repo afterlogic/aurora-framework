@@ -6,7 +6,7 @@ var
 	moment = require('moment'),
 	
 	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
 	App = require('modules/Core/js/App.js'),
 	Storage = require('modules/Core/js/Storage.js'),
@@ -112,8 +112,8 @@ CCalendarModel.prototype.parse = function (oData)
 
 	this.color(this.parseCssColor(oData.Color));
 	this.url(Types.pString(oData.Url));
-	this.exportUrl(Utils.getAppPath() + '?/Download/Calendar/DownloadCalendar/' + Types.pString(oData.ExportHash));
-	this.pubUrl(Utils.getAppPath() + '?calendar-pub=' + Types.pString(oData.PubHash));
+	this.exportUrl(UrlUtils.getAppPath() + '?/Download/Calendar/DownloadCalendar/' + Types.pString(oData.ExportHash));
+	this.pubUrl(UrlUtils.getAppPath() + '?calendar-pub=' + Types.pString(oData.PubHash));
 	this.shares(oData.Shares || []);
 	
 	_.each(oData.Events, function (oEvent) {

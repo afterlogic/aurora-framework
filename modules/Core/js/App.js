@@ -232,7 +232,7 @@ CApp.prototype.onLogout = function ()
 	}
 	else
 	{
-		Utils.clearAndReloadLocation(Browser.ie8AndBelow, true);
+		UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true);
 	}
 };
 

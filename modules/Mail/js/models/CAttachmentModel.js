@@ -7,7 +7,7 @@ var
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
 	Ajax = require('modules/Mail/js/Ajax.js'),
 	WindowOpener = require('modules/Core/js/WindowOpener.js'),
@@ -192,12 +192,12 @@ CAttachmentModel.prototype.viewCommonFile = function ()
 {
 	var
 		oWin = null,
-		sUrl = Utils.getAppPath() + this.viewLink()
+		sUrl = UrlUtils.getAppPath() + this.viewLink()
 	;
 	
 	if (this.visibleViewLink() && this.viewLink().length > 0 && this.viewLink() !== '#')
 	{
-		sUrl = Utils.getAppPath() + this.viewLink();
+		sUrl = UrlUtils.getAppPath() + this.viewLink();
 
 		if (this.iframedView())
 		{

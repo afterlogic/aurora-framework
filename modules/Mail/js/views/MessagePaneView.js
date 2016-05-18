@@ -8,6 +8,7 @@ var
 	FilesUtils = require('modules/Core/js/utils/Files.js'),
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	App = require('modules/Core/js/App.js'),
@@ -786,7 +787,7 @@ CMessagePaneView.prototype.executePrint = function ()
 
 	if (oMessage && oWin)
 	{
-		this.textBodyForNewWindow(oMessage.getConvertedHtml(Utils.getAppPath(), true));
+		this.textBodyForNewWindow(oMessage.getConvertedHtml(UrlUtils.getAppPath(), true));
 		sHtml = $(this.domMessageForPrint()).html();
 
 		$(oWin.document.body).html(sHtml);
@@ -798,7 +799,7 @@ CMessagePaneView.prototype.executeSave = function ()
 {
 	if (this.currentMessage())
 	{
-		Utils.downloadByUrl(this.currentMessage().downloadLink());
+		UrlUtils.downloadByUrl(this.currentMessage().downloadLink());
 	}
 };
 
@@ -840,7 +841,7 @@ CMessagePaneView.prototype.executeSaveAsPdf = function ()
 		}, function (oResponse) {
 			if (oResponse.Result && oResponse.Result['Hash'])
 			{
-				Utils.downloadByUrl(FilesUtils.getDownloadLink('Mail', oResponse.Result['Hash']));
+				UrlUtils.downloadByUrl(FilesUtils.getDownloadLink('Mail', oResponse.Result['Hash']));
 			}
 			else
 			{
