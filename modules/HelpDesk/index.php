@@ -272,9 +272,12 @@ class HelpDeskModule extends AApiModule
 				$mResult = null;
 				
 				$this->broadcastEvent('Login', array(
-					'login' => $Login,
-					'password' => $Password,
-					'result' => &$mResult
+					array(
+						'Login' => $Login,
+						'Password' => $Password,
+						'SignMe' => $SignMe
+					),
+					&$mResult
 				));
 				
 				if (is_array($mResult))
