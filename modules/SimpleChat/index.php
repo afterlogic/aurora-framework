@@ -1,6 +1,6 @@
 <?php
 
-use \Modules\CommonCha\CAccount;
+use \Modules\SimpleChat\CAccount;
 
 class SimpleChatModule extends AApiModule
 {
