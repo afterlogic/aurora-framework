@@ -85,7 +85,7 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function CreateCalendar($sName, $sDescription, $sColor)
+	public function CreateCalendar($Name, $Description, $Color)
 	{
 		$mResult = false;
 		$iUserId = \CApi::getLogginedUserId();
@@ -94,7 +94,7 @@ class CalendarModule extends AApiModule
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$mCalendarId = $this->oApiCalendarManager->createCalendar($iUserId, $sName, $sDescription, 0, $sColor);
+		$mCalendarId = $this->oApiCalendarManager->createCalendar($iUserId, $Name, $Description, 0, $Color);
 		if ($mCalendarId)
 		{
 			$oCalendar = $this->oApiCalendarManager->getCalendar($iUserId, $mCalendarId);
@@ -110,32 +110,29 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendar($sName, $sDescription, $sColor, $sId)
+	public function UpdateCalendar($Name, $Description, $Color, $Id)
 	{
-		$iUserId = $this->getDefaultAccountFromParam();
+		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		return $this->oApiCalendarManager->updateCalendar($iUserId, $sId, $sName, $sDescription, 0, $sColor);
+		return $this->oApiCalendarManager->updateCalendar($iUserId, $Id, $Name, $Description, 0, $Color);
 	}	
 
 	/**
 	 * @return array
 	 */
-	public function UpdateCalendarColor()
+	public function UpdateCalendarColor($Color, $Id)
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
-		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		$iUserId = \CApi::getLogginedUserId();
+		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
-		$sColor = $this->getParamValue('Color'); 
-		$sId = $this->getParamValue('Id'); 
-		
-		return $this->oApiCalendarManager->updateCalendarColor($oAccount, $sId, $sColor);
+		return $this->oApiCalendarManager->updateCalendarColor($iUserId, $Id, $Color);
 	}
 	
 	/**
@@ -143,7 +140,7 @@ class CalendarModule extends AApiModule
 	 */
 	public function UpdateCalendarShare()
 	{
-		$oAccount = $this->getDefaultAccountFromParam();
+		$iUserId = \CApi::getLogginedUserId();
 		$sCalendarId = $this->getParamValue('Id');
 		$bIsPublic = (bool) $this->getParamValue('IsPublic');
 		$aShares = @json_decode($this->getParamValue('Shares'), true);
@@ -151,14 +148,14 @@ class CalendarModule extends AApiModule
 		$bShareToAll = (bool) $this->getParamValue('ShareToAll', false);
 		$iShareToAllAccess = (int) $this->getParamValue('ShareToAllAccess', \ECalendarPermission::Read);
 		
-		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
+		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 		}
 		
 		// Share calendar to all users
 		$aShares[] = array(
-			'email' => $this->oApiCalendarManager->getTenantUser($oAccount),
+			'email' => $this->oApiCalendarManager->getTenantUser($iUserId),
 			'access' => $bShareToAll ? $iShareToAllAccess : \ECalendarPermission::RemovePermission
 		);
 		
@@ -168,7 +165,7 @@ class CalendarModule extends AApiModule
 			'access' => $bIsPublic ? \ECalendarPermission::Read : \ECalendarPermission::RemovePermission
 		);
 		
-		return $this->oApiCalendarManager->updateCalendarShares($oAccount, $sCalendarId, $aShares);
+		return $this->oApiCalendarManager->updateCalendarShares($iUserId, $sCalendarId, $aShares);
 	}		
 	
 	/**

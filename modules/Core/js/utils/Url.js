@@ -118,4 +118,4 @@ UrlUtils.clearAndReloadLocation = function (bOnlyReload, bClearSearch)
 	}
 };
 
-module.exports = UrlUtils;
+module.exports = UrlUtils; //test

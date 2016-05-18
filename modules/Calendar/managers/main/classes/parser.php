@@ -75,7 +75,7 @@ class CalendarParser
 					$aEvent['alarms'] = self::parseAlarms($oVEvent);
 
 					$bAllDay = (isset($oVEvent->DTSTART) && !$oVEvent->DTSTART->hasTime());
-					$sTimeZone = ($bAllDay) ? 'UTC' : $oAccount->getDefaultStrTimeZone();
+					$sTimeZone = /*($bAllDay) ? 'UTC' : $oAccount->getDefaultStrTimeZone()*/ 'UTC';
 
 					if (!isset($oVEvent->DTEND))
 					{
