@@ -26,8 +26,6 @@ class Service
 	{
 		$this->oModuleManager = \CApi::GetModuleManager();
 
-//		\CApi::Plugin()->SetActions($this->oActions);
-		
 //		\MailSo\Config::$FixIconvByMbstring = false;
 		\MailSo\Config::$SystemLogger = \CApi::MailSoLogger();
 		\MailSo\Config::$PreferStartTlsIfAutoDetect = !!\CApi::GetConf('labs.prefer-starttls', true);

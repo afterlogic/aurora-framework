@@ -958,7 +958,22 @@ abstract class AApiModule
 		{
 			$this->broadcastEvent($sMethodName . '::before', array(&$aArguments));
 
-			$mResult = call_user_func_array(array($this, $sMethodName), $aArguments);
+			$oReflector = new \ReflectionMethod($this, $sMethodName);
+			$aValues = array();
+
+			foreach ($oReflector->getParameters() as $oParam) {
+				$sParamName = $oParam->getName();
+				$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
+				if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) {
+					$aValues[$oParam->getPosition()] = null;
+				}
+				else
+				{
+					$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? $aArguments[$sParamName] : $oParam->getDefaultValue();
+				}		
+			}
+			
+			$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
 
 			$aArguments['@Result'] = $mResult;
 			$this->broadcastEvent($sMethodName . '::after', array(&$aArguments));

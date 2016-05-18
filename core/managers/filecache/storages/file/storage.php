@@ -24,7 +24,7 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sValue
 	 * @param string $sFileSuffix Default value is empty string.
@@ -32,14 +32,14 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	 *
 	 * @return bool
 	 */
-	public function put($oAccount, $sKey, $sValue, $sFileSuffix = '', $sFolder = '')
+	public function put($iUserId, $sKey, $sValue, $sFileSuffix = '', $sFolder = '')
 	{
 		return false !== @file_put_contents(
-			$this->generateFileName($oAccount, $sKey, true, $sFileSuffix, $sFolder), $sValue);
+			$this->generateFileName($iUserId, $sKey, true, $sFileSuffix, $sFolder), $sValue);
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param resource $rSource
 	 * @param string $sFileSuffix Default value is empty string.
@@ -47,12 +47,12 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	 *
 	 * @return bool
 	 */
-	public function putFile($oAccount, $sKey, $rSource, $sFileSuffix = '', $sFolder = '')
+	public function putFile($iUserId, $sKey, $rSource, $sFileSuffix = '', $sFolder = '')
 	{
 		$bResult = false;
 		if ($rSource)
 		{
-			$rOpenOutput = @fopen($this->generateFileName($oAccount, $sKey, true, $sFileSuffix, $sFolder), 'w+b');
+			$rOpenOutput = @fopen($this->generateFileName($iUserId, $sKey, true, $sFileSuffix, $sFolder), 'w+b');
 			if ($rOpenOutput)
 			{
 				$bResult = (false !== \MailSo\Base\Utils::MultipleStreamWriter($rSource, array($rOpenOutput)));
@@ -63,7 +63,7 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sSource
 	 * @param string $sFileSuffix Default value is empty string.
@@ -71,37 +71,37 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	 *
 	 * @return bool
 	 */
-	public function moveUploadedFile($oAccount, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
+	public function moveUploadedFile($iUserId, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
 	{
 		return @move_uploaded_file($sSource,
-			$this->generateFileName($oAccount, $sKey, true, $sFileSuffix, $sFolder));
+			$this->generateFileName($iUserId, $sKey, true, $sFileSuffix, $sFolder));
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return string|bool
 	 */
-	public function get($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function get($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		return @file_get_contents($this->generateFileName($oAccount, $sKey, false, $sFileSuffix, $sFolder));
+		return @file_get_contents($this->generateFileName($iUserId, $sKey, false, $sFileSuffix, $sFolder));
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return resource|bool
 	 */
-	public function getFile($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function getFile($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
 		$mResult = false;
-		$sFileName = $this->generateFileName($oAccount, $sKey, false, $sFileSuffix, $sFolder);
+		$sFileName = $this->generateFileName($iUserId, $sKey, false, $sFileSuffix, $sFolder);
 		if (@file_exists($sFileName))
 		{
 			$mResult = @fopen($sFileName, 'rb');
@@ -110,29 +110,29 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sTempName
 	 * @param string $sMode Default value is empty string.
 	 *
 	 * @return resource|bool
 	 */
-	public function getTempFile($oAccount, $sTempName, $sMode = '')
+	public function getTempFile($iUserId, $sTempName, $sMode = '')
 	{
-		return @fopen($this->generateFileName($oAccount, $sTempName, true), $sMode);
+		return @fopen($this->generateFileName($iUserId, $sTempName, true), $sMode);
 	}	
 	
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return bool
 	 */
-	public function clear($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function clear($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
 		$mResult = false;
-		$sFileName = $this->generateFileName($oAccount, $sKey, false, $sFileSuffix, $sFolder);
+		$sFileName = $this->generateFileName($iUserId, $sKey, false, $sFileSuffix, $sFolder);
 		if (@file_exists($sFileName))
 		{
 			$mResult = @unlink($sFileName);
@@ -141,33 +141,33 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return int|bool
 	 */
-	public function fileSize($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function fileSize($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		return @filesize($this->generateFileName($oAccount, $sKey, false, $sFileSuffix));
+		return @filesize($this->generateFileName($iUserId, $sKey, false, $sFileSuffix));
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return bool
 	 */
-	public function isFileExists($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function isFileExists($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		return @file_exists($this->generateFileName($oAccount, $sKey, false, $sFileSuffix, $sFolder));
+		return @file_exists($this->generateFileName($iUserId, $sKey, false, $sFileSuffix, $sFolder));
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param bool $bMkDir Default value is **false**.
 	 * @param string $sFileSuffix Default value is empty string.
@@ -177,9 +177,9 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	 *
 	 * @return string
 	 */
-	protected function generateFileName($oAccount, $sKey, $bMkDir = false, $sFileSuffix = '', $sFolder = '')
+	protected function generateFileName($iUserId, $sKey, $bMkDir = false, $sFileSuffix = '', $sFolder = '')
 	{
-		$sEmailMd5 = md5(strtolower($oAccount->Email));
+		$sEmailMd5 = md5(strtolower($iUserId));
 
 		$sKeyPath = md5($sKey);
 		$sKeyPath = substr($sKeyPath, 0, 2).'/'.$sKeyPath;
@@ -200,16 +200,16 @@ class CApiFilecacheFileStorage extends CApiFilecacheStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param int $iUserId
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return string
 	 */
-	public function generateFullFilePath($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function generateFullFilePath($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		return $this->generateFileName($oAccount, $sKey, true, $sFileSuffix, $sFolder);
+		return $this->generateFileName($iUserId, $sKey, true, $sFileSuffix, $sFolder);
 	}
 
 	/**

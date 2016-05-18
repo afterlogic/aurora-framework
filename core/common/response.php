@@ -155,5 +155,45 @@ class CApiResponseManager
 
 		$oApiFileCache->clear($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
 	}	
+	
+	/**
+	 * @param string $sKey
+	 *
+	 * @return void
+	 */
+	public static function cacheByKey($sKey)
+	{
+		if (!empty($sKey))
+		{
+			$iUtcTimeStamp = time();
+			$iExpireTime = 3600 * 24 * 5;
+
+			header('Cache-Control: private', true);
+			header('Pragma: private', true);
+			header('Etag: '.md5('Etag:'.md5($sKey)), true);
+			header('Last-Modified: '.gmdate('D, d M Y H:i:s', $iUtcTimeStamp - $iExpireTime).' UTC', true);
+			header('Expires: '.gmdate('D, j M Y H:i:s', $iUtcTimeStamp + $iExpireTime).' UTC', true);
+		}
+	}
+
+	/**
+	 * @param string $sKey
+	 *
+	 * @return void
+	 */
+	public static function verifyCacheByKey($sKey)
+	{
+		if (!empty($sKey))
+		{
+			$oHttp = \MailSo\Base\Http::NewInstance();
+			$sIfModifiedSince = $oHttp->GetHeader('If-Modified-Since', '');
+			if (!empty($sIfModifiedSince))
+			{
+				$oHttp->StatusHeader(304);
+				self::cacheByKey($sKey);
+				exit();
+			}
+		}
+	}	
 }
 

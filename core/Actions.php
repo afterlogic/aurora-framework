@@ -2269,45 +2269,6 @@ class Actions
 	}
 
 	/**
-	 * @param string $sKey
-	 *
-	 * @return void
-	 */
-	public function cacheByKey($sKey)
-	{
-		if (!empty($sKey))
-		{
-			$iUtcTimeStamp = time();
-			$iExpireTime = 3600 * 24 * 5;
-
-			header('Cache-Control: private', true);
-			header('Pragma: private', true);
-			header('Etag: '.md5('Etag:'.md5($sKey)), true);
-			header('Last-Modified: '.gmdate('D, d M Y H:i:s', $iUtcTimeStamp - $iExpireTime).' UTC', true);
-			header('Expires: '.gmdate('D, j M Y H:i:s', $iUtcTimeStamp + $iExpireTime).' UTC', true);
-		}
-	}
-
-	/**
-	 * @param string $sKey
-	 *
-	 * @return void
-	 */
-	public function verifyCacheByKey($sKey)
-	{
-		if (!empty($sKey))
-		{
-			$sIfModifiedSince = $this->oHttp->GetHeader('If-Modified-Since', '');
-			if (!empty($sIfModifiedSince))
-			{
-				$this->oHttp->StatusHeader(304);
-				$this->cacheByKey($sKey);
-				exit();
-			}
-		}
-	}
-
-	/**
 	 * @param CAccount $oAccount
 	 *
 	 * @return array|null

@@ -4,6 +4,8 @@ class FilesModule extends AApiModule
 {
 	public $oApiFilesManager = null;
 	
+	protected $oMinModuleDecorator = null;
+	
 	public function init() 
 	{
 		$this->oApiFilesManager = $this->GetManager('main', 'sabredav');
@@ -11,71 +13,50 @@ class FilesModule extends AApiModule
 		$this->AddEntry('files-pub', 'EntryFilesPub');
 	}
 	
-	private function GetRawFile($bDownload = true, $bThumbnail = false)
+	public function GetMinModuleDecorator()
 	{
-		$sRawKey = (string) $this->getParamValue('RawKey', '');
-		$aValues = \CApi::DecodeKeyValues($sRawKey);
-
-		$sType = (string) $this->getParamValue('Type');
-		$sPath = (string) $this->getParamValue('Path');
-		$sName = (string) $this->getParamValue('Name');
-
+		if ($this->oMinModuleDecorator === null)
+		{
+			$this->oMinModuleDecorator = \CApi::GetModuleDecorator('Min');
+		}
+		
+		return $this->oMinModuleDecorator;
+	}
+	
+	private function GetRawFile($sType, $sPath, $sName, $sFileName, $sAuthToken, $bDownload = true, $bThumbnail = false)
+	{
 		if ($bThumbnail)
 		{
-//			$this->verifyCacheByKey($sRawKey); // todo
+//			\CApiResponseManager::verifyCacheByKey($sRawKey);
 		}
+
+		$sHash = ""; // TODO: 
+		$oModuleDecorator = $this->GetMinModuleDecorator();
+		$mMin = ($oModuleDecorator) ? $oModuleDecorator->GetMinByHash($sHash) : array();
 		
-		$sHash = (string) $this->getParamValue('TenantHash', '');
-		$oApiUsers = \CApi::GetCoreManager('users');
-
-		$mMin = \CApi::ExecuteMethod('Min::GetMinByHash', array('Hash' => $sHash));
-		$oAccount = null;
-		if (!empty($mMin['__hash__'])) {
-			
-			$oAccount = $oApiUsers->getAccountById($mMin['Account']);
-		} else {
-			
-			$mIframed = $this->getParamValue('Iframed');
-			$mTime = $this->getParamValue('Time');
-
-			if (isset($mIframed, $mTime) && $mIframed && $mTime) {
-				
-				$oAccount = $this->getAccountFromParam(true, !($mTime > \api_Utils::iframedTimestamp()));
-
-				if (!$oAccount->IsDefaultAccount) {
-					
-					$iAccountId = $oApiUsers->getDefaultAccountId($oAccount->IdUser);
-					if (0 < $iAccountId) {
-						
-						$oAccount = $oApiUsers->getAccountById($iAccountId);
-					} else {
-						
-						throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
-					}
-				}
-			} else {
-				
-				$oAccount = $this->getDefaultAccountFromParam();
-			}
-		}
+		$iUserId = (!empty($mMin['__hash__'])) ? $mMin['UserId'] : \CApi::getLogginedUserId($sAuthToken);
 
 		$oTenant = null;
-		$oApiTenants = \CApi::GetCoreManager('tenants');
-		
-		if ($oAccount && $oApiTenants) {
-			$oTenant = (0 < $oAccount->IdTenant) ? $oApiTenants->getTenantById($oAccount->IdTenant) :
+
+/*		$oApiTenants = \CApi::GetCoreManager('tenants');
+		if ($iUserId && $oApiTenants) {
+			$oTenant = (0 < $iUserId->IdTenant) ? $oApiTenants->getTenantById($iUserId->IdTenant) :
 				$oApiTenants->getDefaultGlobalTenant();
 		}
+ * 
+ */
 		
-		if ($this->oApiCapabilityManager->isFilesSupported($oAccount) && 
-				$oTenant && isset($sType, $sPath, $sName)) {
+		if ($this->oApiCapabilityManager->isFilesSupported($iUserId) && 
+				/*$oTenant &&*/ isset($sType, $sPath, $sName)) {
 			
 			$mResult = false;
 			
 			$sFileName = $sName;
 			$sContentType = (empty($sFileName)) ? 'text/plain' : \MailSo\Base\Utils::MimeContentType($sFileName);
 			
-			$oFileInfo = $this->oApiFilesManager->getFileInfo($oAccount, $sType, $sPath, $sName);
+			$oFileInfo = $this->oApiFilesManager->getFileInfo($iUserId, $sType, $sPath, $sName);
+			
+			
 			if ($oFileInfo->IsLink) {
 				
 				$iLinkType = \api_Utils::GetLinkType($oFileInfo->LinkUrl);
@@ -114,7 +95,7 @@ class FilesModule extends AApiModule
 				}
 			} else {
 				
-				$mResult = $this->oApiFilesManager->getFile($oAccount, $sType, $sPath, $sName);
+				$mResult = $this->oApiFilesManager->getFile($iUserId, $sType, $sPath, $sName);
 			}
 			if (false !== $mResult) {
 				
@@ -127,7 +108,7 @@ class FilesModule extends AApiModule
 					if ($bThumbnail) {
 						
 //						$this->cacheByKey($sRawKey);	// todo
-						\CApiResponseManager::GetThumbResource($oAccount, $mResult, $sFileName);
+						\CApiResponseManager::GetThumbResource($iUserId, $mResult, $sFileName);
 					} else if ($sContentType === 'text/html') {
 						
 						echo(\MailSo\Base\HtmlUtils::ClearHtmlSimple(stream_get_contents($mResult)));
@@ -146,16 +127,11 @@ class FilesModule extends AApiModule
 		return false;		
 	}
 	
-	public function UploadFile()
+	public function UploadFile($sType, $sSubPath, $sPath, $aFileData, $bIsExt, $sTenantHash, $sToken, $sAuthToken)
 	{
-		$iUserId = \CApi::getLogginedUserId();
+		$iUserId = \CApi::getLogginedUserId($sAuthToken);
 		$oApiFileCacheManager = \CApi::GetCoreManager('filecache');
 
-		$aFileData = $this->getParamValue('FileData', null);
-		$mAdditionalData = @json_decode(
-				$this->getParamValue('AdditionalData', '{}'), true
-		);
-		
 		$sError = '';
 		$aResponse = array();
 
@@ -165,8 +141,6 @@ class FilesModule extends AApiModule
 				
 				$sUploadName = $aFileData['name'];
 				$iSize = (int) $aFileData['size'];
-				$sType = isset($mAdditionalData['Type']) ? $mAdditionalData['Type'] : 'personal';
-				$sPath = isset($mAdditionalData['Path']) ? $mAdditionalData['Path'] : '';
 				$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
 
 				$sSavedName = 'upload-post-'.md5($aFileData['name'].$aFileData['tmp_name']);
@@ -211,19 +185,19 @@ class FilesModule extends AApiModule
 		return $aResponse;
 	}
 	
-	public function DownloadFile()
+	public function DownloadFile($sType, $sPath, $sName, $sFileName, $sMimeType, $iSize, $bIframed, $sAuthToken)
 	{
-		return $this->GetRawFile(true);
+		return $this->GetRawFile($sType, $sPath, $sName, $sFileName, $sAuthToken, true);
 	}
 	
-	public function ViewFile()
+	public function ViewFile($sType, $sPath, $sName, $sFileName, $sMimeType, $iSize, $bIframed, $sAuthToken)
 	{
-		return $this->GetRawFile(false);
+		return $this->GetRawFile($sType, $sPath, $sName, $sFileName, $sAuthToken, false);
 	}
 
-	public function GetFileThumbnail()
+	public function GetFileThumbnail($sType, $sPath, $sName, $sFileName, $sMimeType, $iSize, $bIframed, $sAuthToken)
 	{
-		return $this->GetRawFile(false, true);
+		return $this->GetRawFile($sType, $sPath, $sName, $sFileName, $sAuthToken, false, true);
 	}
 
 	public function GetExternalStorages()
