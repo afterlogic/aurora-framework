@@ -95,7 +95,7 @@ UrlUtils.clearAndReloadLocation = function (bOnlyReload, bClearSearch)
 {
 	if (!bOnlyReload && (window.location.search !== '' || window.location.hash !== ''))
 	{
-		var sNewHref = Utils.getAppPath();
+		var sNewHref = UrlUtils.getAppPath();
 
 		if (!bClearSearch && window.location.search !== '')
 		{

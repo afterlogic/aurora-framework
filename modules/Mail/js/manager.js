@@ -56,7 +56,9 @@ module.exports = function (oSettings) {
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/MailSettingsPaneView.js'); }, 'mail', TextUtils.i18n('MAIL/LABEL_SETTINGS_TAB')]);
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/AccountsSettingsPaneView.js'); }, 'accounts', TextUtils.i18n('MAIL/LABEL_ACCOUNTS_SETTINGS_TAB')]);
 		},
-		screens: oScreens,
+		getScreens: function () {
+			return oScreens;
+		},
 		getHeaderItem: function () {
 			return require('modules/Mail/js/views/HeaderItemView.js');
 		},

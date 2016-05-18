@@ -11,10 +11,12 @@ module.exports = function (oSettings) {
 		isAvaliable: function (iUserRole, bPublic) {
 			return bPublic;
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Calendar/js/views/CalendarView.js');
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					return require('modules/Calendar/js/views/CalendarView.js');
+				}
+			};
 		},
 		getHeaderItem: function () {
 			return require('modules/Calendar/js/views/PublicHeaderItem.js');

@@ -19,10 +19,12 @@ module.exports = function (oSettings) {
 		start: function (ModulesManager) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Contacts/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Contacts/js/views/ContactsView.js');
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					return require('modules/Contacts/js/views/ContactsView.js');
+				}
+			};
 		},
 		getHeaderItem: function () {
 			return require('modules/Contacts/js/views/HeaderItemView.js');

@@ -31,13 +31,15 @@ module.exports = function (oSettings) {
 		start: function () {
 			require('modules/Mail/js/koBindings.js');
 		},
-		screens: {
-			'view': function () {
-				return require('modules/Mail/js/views/MessagePaneView.js');
-			},
-			'compose': function () {
-				return GetComposeView();
-			}
+		getScreens: function () {
+			return {
+				'view': function () {
+					return require('modules/Mail/js/views/MessagePaneView.js');
+				},
+				'compose': function () {
+					return GetComposeView();
+				}
+			};
 		},
 		registerMessagePaneController: function (oController, sPlace) {
 			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');

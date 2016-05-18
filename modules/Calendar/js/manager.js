@@ -22,10 +22,12 @@ module.exports = function (oSettings) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Calendar/js/views/CalendarSettingsPaneView.js'); }, 'calendar', TextUtils.i18n('CALENDAR/LABEL_SETTINGS_TAB')]);
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Calendar/js/views/CalendarView.js');
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					return require('modules/Calendar/js/views/CalendarView.js');
+				}
+			};
 		},
 		getHeaderItem: function () {
 			return require('modules/Calendar/js/views/HeaderItemView.js');

@@ -21,11 +21,13 @@ module.exports = function (oSettings) {
 		start: function (ModulesManager) {
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Files/js/views/FilesSettingsPaneView.js'); }, 'cloud-storage', TextUtils.i18n('FILES/LABEL_SETTINGS_TAB')]);
 		},
-		screens: {
-			'main': function () {
-				var CFilesView = require('modules/Files/js/views/CFilesView.js');
-				return new CFilesView();
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					var CFilesView = require('modules/Files/js/views/CFilesView.js');
+					return new CFilesView();
+				}
+			};
 		},
 		getHeaderItem: function () {
 			var

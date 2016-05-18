@@ -6,6 +6,7 @@ var
 	ko = require('knockout'),
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
+	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	Api = require('modules/Core/js/Api.js'),
@@ -250,8 +251,7 @@ CLoginView.prototype.onHelpdeskLoginResponse = function (oResponse, oRequest)
 	{
 		$.cookie('AuthToken', oResponse.Result.AuthToken, { expires: 30 });
 		
-//		window.location.reload();
-		window.location.href = '';
+		UrlUtils.clearAndReloadLocation(false, true);
 	}
 	else
 	{

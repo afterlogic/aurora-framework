@@ -8,10 +8,12 @@ module.exports = function (oSettings) {
 		isAvaliable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Settings/js/views/SettingsView.js');
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					return require('modules/Settings/js/views/SettingsView.js');
+				}
+			};
 		},
 		getHeaderItem: function () {
 			var

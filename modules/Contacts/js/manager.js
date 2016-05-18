@@ -29,10 +29,12 @@ module.exports = function (oSettings) {
 				fComponentsStart(ModulesManager);
 			}
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Contacts/js/views/ContactsView.js');
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					return require('modules/Contacts/js/views/ContactsView.js');
+				}
+			};
 		},
 		getHeaderItem: function () {
 			return require('modules/Contacts/js/views/HeaderItemView.js');

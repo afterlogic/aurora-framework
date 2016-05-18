@@ -20,11 +20,13 @@ module.exports = function (oSettings) {
 		start: function (ModulesManager) {
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDeskClient/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('HELPDESK/LABEL_SETTINGS_TAB')]);
 		},
-		screens: {
-			'main': function () {
-				CheckState.end();
-				return require('modules/HelpDeskClient/js/views/HelpdeskView.js');
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					CheckState.end();
+					return require('modules/HelpDeskClient/js/views/HelpdeskView.js');
+				}
+			};
 		},
 		getHeaderItem: function () {
 			CheckState.start();

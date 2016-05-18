@@ -17,7 +17,6 @@ module.exports = {
 			if ($.isFunction(oAvaliableModules[sModuleName]))
 			{
 				var oModule = oAvaliableModules[sModuleName](oModuleSettings);
-				console.log('sModuleName', sModuleName, 'iUserRole', iUserRole, 'bPublic', bPublic, 'isAvaliable', oModule.isAvaliable(iUserRole, bPublic));
 				if (oModule.isAvaliable(iUserRole, bPublic))
 				{
 					oModules[sModuleName] = oModule;
@@ -42,9 +41,9 @@ module.exports = {
 		var oModulesScreens = {};
 		
 		_.each(oModules, function (oModule, sModuleName) {
-			if (!!oModule.screens)
+			if (_.isFunction(oModule.getScreens))
 			{
-				oModulesScreens[sModuleName] = oModule.screens;
+				oModulesScreens[sModuleName] = oModule.getScreens();
 			}
 		});
 		

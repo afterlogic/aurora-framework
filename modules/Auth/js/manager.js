@@ -10,19 +10,27 @@ module.exports = function (oSettings) {
 		Types = require('modules/Core/js/utils/Types.js'),
 		
 		Ajax = require('modules/Auth/js/Ajax.js'),
-		Settings = require('modules/Auth/js/Settings.js')
+		Settings = require('modules/Auth/js/Settings.js'),
+		
+		bAllowLoginView = true
 	;
 
 	Settings.init(oSettings);
 	
 	return {
 		isAvaliable: function (iUserRole, bPublic) {
+			bAllowLoginView = iUserRole === Enums.UserRole.Anonymous;
 			return !bPublic;
 		},
-		screens: {
-			'main': function () {
-				return require('modules/Auth/js/views/WrapLoginView.js');
+		getScreens: function () {
+			var oScreens = {};
+			if (bAllowLoginView)
+			{
+				oScreens['main'] = function () {
+					return require('modules/Auth/js/views/WrapLoginView.js');
+				};
 			}
+			return oScreens;
 		},
 		logout: function (iLastErrorCode, fOnLogoutResponse, oContext)
 		{

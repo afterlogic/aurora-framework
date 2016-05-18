@@ -10,11 +10,13 @@ module.exports = function (oSettings) {
 		isAvaliable: function (iUserRole, bPublic) {
 			return bPublic;
 		},
-		screens: {
-			'main': function () {
-				var CFilesView = require('modules/Files/js/views/CFilesView.js');
-				return new CFilesView();
-			}
+		getScreens: function () {
+			return {
+				'main': function () {
+					var CFilesView = require('modules/Files/js/views/CFilesView.js');
+					return new CFilesView();
+				}
+			};
 		}
 	};
 };
