@@ -983,7 +983,9 @@ CHelpdeskView.prototype.executeDelete = function ()
 
 		this.selectedItem(null);
 
-		Ajax.send('DeleteThread', { 'ThreadId': oSelectedItem.Id }, this.updateDisplayingData, this);
+		Ajax.send('DeleteThread', {
+			'ThreadId': oSelectedItem.Id
+		}, this.updateDisplayingData, this);
 		
 		Routing.setHash(['helpdesk', '']);
 	}
