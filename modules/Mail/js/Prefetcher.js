@@ -334,52 +334,52 @@ module.exports = {
 	startAll: function () {
 		var bPrefetchStarted = false;
 		
-		bPrefetchStarted = Prefetcher.prefetchFetchersIdentities();
-		
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.prefetchAccountFilters();
-		}
+//		bPrefetchStarted = Prefetcher.prefetchFetchersIdentities();
+//		
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.prefetchAccountFilters();
+//		}
 		
 		if (!bPrefetchStarted)
 		{
 			bPrefetchStarted = Prefetcher.startMessagesPrefetch();
 		}
 
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.startThreadListPrefetch();
-		}
-
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.prefetchStarredMessageList();
-		}
-
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.startPagePrefetch(MailCache.page() + 1);
-		}
-
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.startPagePrefetch(MailCache.page() - 1);
-		}
-
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.prefetchUnseenMessageList();
-		}
-
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.prefetchAccountQuota();
-		}
-
-		if (!bPrefetchStarted)
-		{
-			bPrefetchStarted = Prefetcher.startOtherFoldersPrefetch();
-		}
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.startThreadListPrefetch();
+//		}
+//
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.prefetchStarredMessageList();
+//		}
+//
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.startPagePrefetch(MailCache.page() + 1);
+//		}
+//
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.startPagePrefetch(MailCache.page() - 1);
+//		}
+//
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.prefetchUnseenMessageList();
+//		}
+//
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.prefetchAccountQuota();
+//		}
+//
+//		if (!bPrefetchStarted)
+//		{
+//			bPrefetchStarted = Prefetcher.startOtherFoldersPrefetch();
+//		}
 		
 		return bPrefetchStarted;
 	},

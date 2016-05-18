@@ -668,7 +668,7 @@ class CApiMailMainManager extends AApiManagerWithStorage
 	/**
 	 * Obtains information about particular folders.
 	 * 
-	 * @param CAccount $oAccount Account object.
+	 * @param CMailAccount $oAccount Account object.
 	 * @param array $aFolderFullNamesRaw Array containing a list of folder names to obtain information for.
 	 * @param string $sInboxUidnext = ''. UIDNEXT value for Inbox folder.
 	 * @param array $oNewInboxData = null. Extended statistics, works for Inbox only.

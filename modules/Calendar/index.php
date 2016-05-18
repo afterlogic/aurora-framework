@@ -14,7 +14,7 @@ class CalendarModule extends AApiModule
 		);
 		
 		$this->subscribeEvent('Mail::GetBodyStructureParts', array($this, 'onGetBodyStructureParts'));
-		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));
+//		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));
 	}
 	
 	/**

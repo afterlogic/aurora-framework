@@ -135,7 +135,7 @@ module.exports = {
 	AllowDesktopNotifications: AppData.User ? !!AppData.User.DesktopNotifications : true,
 	AllowIosProfile: AppData.App ? !!AppData.App.AllowIosProfile : false, // ? IosDetectOnLogin
 	AllowMobile: !!AppData.AllowMobile,
-	AllowPrefetch: AppData.App ? !!AppData.App.AllowPrefetch : false,
+	AllowPrefetch: AppData.App ? !!AppData.App.AllowPrefetch : true,
 	AttachmentSizeLimit: AppData.App ? Types.pInt(AppData.App.AttachmentSizeLimit) : 0, // Mail, Helpdesk
 	AutoRefreshIntervalMinutes: AppData.User ? Types.pInt(AppData.User.AutoRefreshInterval) : 1,
 	CsrfToken: Types.pString(AppData.Token),

@@ -39,6 +39,7 @@ CContactsCache.prototype.clearInfoAboutEmail = function (sEmail)
  */
 CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandler)
 {
+	return;
 	var
 		aContacts = [],
 		aEmailsForRequest = [],
