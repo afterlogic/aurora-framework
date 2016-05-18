@@ -210,26 +210,18 @@ class AuthModule extends AApiModule
 		return $oApiIntegrator->logoutAccount($sAuthToken);
 	}*/
 	
-	public function Login($sLogin, $sPassword, $sPassword1 = null)
+	public function Login($Login, $Password, $SignMe = 0)
 	{
 		$mResult = false;
 
-		if ($sPassword1)
-		{
-			$this->broadcastEvent('Login', array(
-				'login' => $sLogin,
-				'password' => $sPassword1,
-				'result' => &$mResult
-			));
-		}
-		else
-		{
-			$this->broadcastEvent('Login', array(
-				'login' => $sLogin,
-				'password' => $sPassword,
-				'result' => &$mResult
-			));
-		}
+		$this->broadcastEvent('Login', array(
+			array (
+				'Login' => $Login,
+				'Password' => $Password,
+				'SignMe' => $SignMe
+			),
+			&$mResult
+		));
 
 		if (is_array($mResult))
 		{
@@ -266,17 +258,20 @@ class AuthModule extends AApiModule
 		return true;
 	}
 	
-	public function checkAuth($sLogin, $sPassword, &$mResult)
+	public function checkAuth($aParams, &$mResult)
 	{
+		$sLogin = $aParams['Login'];
+		$sPassword = $aParams['Password'];
+		$bSignMe = $aParams['SignMe'];
+		
 		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sLogin, $sPassword);
 
 		if ($oAccount)
 		{
 			$mResult = array(
 				'token' => 'auth',
-				'sign-me' => true,
-				'id' => $oAccount->IdUser,
-				'email' => 'vasil@afterlogic.com'
+				'sign-me' => $bSignMe,
+				'id' => $oAccount->IdUser
 			);
 		}
 	}

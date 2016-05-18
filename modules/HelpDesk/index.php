@@ -237,17 +237,17 @@ class HelpDeskModule extends AApiModule
 		return $oResult;
 	}	
 	
-	public function Login($sLogin = '', $sPassword = '', $bSignMe = 0)
+	public function Login($Login = '', $Password = '', $SignMe = 0)
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
 		$sTenantHash = \CApi::getTenantHash();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
-			$sEmail = trim($sLogin);
-			$sPassword = trim($sPassword);
-			$bSignMe = '1' === (string) $bSignMe;
+			$sEmail = trim($Login);
+			$Password = trim($Password);
+			$SignMe = '1' === (string) $SignMe;
 
-			if (0 === strlen($sEmail) || 0 === strlen($sPassword))
+			if (0 === strlen($sEmail) || 0 === strlen($Password))
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 			}
@@ -272,8 +272,8 @@ class HelpDeskModule extends AApiModule
 				$mResult = null;
 				
 				$this->broadcastEvent('Login', array(
-					'login' => $sLogin,
-					'password' => $sPassword,
+					'login' => $Login,
+					'password' => $Password,
 					'result' => &$mResult
 				));
 				

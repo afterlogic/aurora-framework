@@ -154,18 +154,22 @@ class MailModule extends AApiModule
 		}
 	}
 	
-	public function checkAuth($sEmail, $sPassword, &$mResult)
+	public function checkAuth($aParams, &$mResult)
 	{
-		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sEmail, $sPassword);
+		$sLogin = $aParams['Login'];
+		$sPassword = $aParams['Password'];
+		$bSignMe = $aParams['SignMe'];
+		
+		$oAccount = $this->oApiAccountsManager->getAccountByCredentials($sLogin, $sPassword);
 
 		if ($oAccount)
 		{
 			$this->oApiMainManager->validateAccountConnection($oAccount);
 			$mResult = array(
 				'token' => 'auth',
-				'sign-me' => true,
-				'id' => $oAccount->IdUser,
-				'email' => $oAccount->Email
+				'sign-me' => $bSignMe,
+				'id' => $oAccount->IdUser
+//				'email' => $oAccount->Email
 			);
 		}
 	}

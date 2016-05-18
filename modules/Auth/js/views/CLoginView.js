@@ -177,9 +177,8 @@ CLoginView.prototype.onSystemLoginResponse = function (oResponse, oRequest)
 CLoginView.prototype.sendRequest = function ()
 {
 	var oParameters = {
-		'Email': this.emailVisible() ? this.email() : '',
-		'IncLogin': this.loginVisible() ? this.login() : '',
-		'IncPassword': this.password(),
+		'Login': this.emailVisible() ? this.email() : this.loginVisible() ? this.login() : '',
+		'Password': this.password(),
 		'SignMe': this.signMe() ? '1' : '0'
 	};
 
