@@ -304,7 +304,7 @@ class CApiIntegratorManager extends AApiManager
 			$aAccountHashTable = CApi::DecodeKeyValues($sKey);
 			if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
 				'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id']) && 
-					is_int($aAccountHashTable['id']) && isset($aAccountHashTable['email'])) {
+					is_int($aAccountHashTable['id'])) {
 				
 					$iUserId = $aAccountHashTable['id'];
 			}

@@ -240,7 +240,14 @@ class CApiModuleDecorator
 		$mResult = false;
 		if ($this->oModule instanceof AApiModule)
 		{
-			$mResult = $this->oModule->ExecuteMethod($sMethodName, $aArguments);
+			$oReflector = new \ReflectionMethod($this->oModule, $sMethodName);
+			
+			$aValues = array();
+			foreach ($oReflector->getParameters() as $oParam) {
+				$aValues[$oParam->getName()] = $aArguments[$oParam->getPosition()];
+			}
+			
+			$mResult = $this->oModule->ExecuteMethod($sMethodName, $aValues);
 		}
 		return $mResult;
 	}
