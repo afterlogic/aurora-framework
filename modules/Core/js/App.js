@@ -70,7 +70,6 @@ function InitModernizr()
 
 function CApp()
 {
-	this.bAuth = window.auroraAppData.Auth;
 	this.iUserRole = window.auroraAppData.User ? window.auroraAppData.User.Role : Enums.UserRole.Anonymous;
 	this.bPublic = false;
 	this.bNewTab = false;
@@ -80,11 +79,6 @@ function CApp()
 CApp.prototype.getUserRole = function ()
 {
 	return this.iUserRole;
-};
-
-CApp.prototype.isAuth = function ()
-{
-	return this.bAuth;
 };
 
 CApp.prototype.setPublic = function ()
@@ -119,14 +113,14 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
-	ModulesManager.run('Auth', 'beforeAppRunning', [this.bAuth]);
+	ModulesManager.run('Auth', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
-	if (Browser.iosDevice && this.bAuth && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
+	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
 		window.location.href = '?ios';
 	}
 	
-	if (this.bAuth && !this.bPublic)
+	if (this.iUserRole !== Enums.UserRole.Anonymous && !this.bPublic)
 	{
 		var AccountList = require('modules/Mail/js/AccountList.js');
 		this.currentAccountId = AccountList.currentId;
@@ -195,7 +189,7 @@ CApp.prototype.init = function ()
 
 CApp.prototype.showLastErrorOnLogin = function ()
 {
-	if (!this.bAuth)
+	if (this.iUserRole === Enums.UserRole.Anonymous)
 	{
 		var iError = Types.pInt(UrlUtils.getRequestParam('error'));
 
@@ -218,7 +212,7 @@ CApp.prototype.logout = function (iLastErrorCode)
 {
 	ModulesManager.run('Auth', 'logout', [iLastErrorCode, this.onLogout, this]);
 	
-	this.bAuth = false;
+	this.iUserRole = Enums.UserRole.Anonymous;
 };
 
 CApp.prototype.authProblem = function ()

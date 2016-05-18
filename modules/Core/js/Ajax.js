@@ -221,7 +221,7 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 				App.tokenProblem();
 				break;
 			case Enums.Errors.AuthError:
-				if (App.isAuth())
+				if (App.getUserRole() !== Enums.UserRole.Anonymous)
 				{
 					this.bAllowRequests = false;
 					this.abortAllRequests();

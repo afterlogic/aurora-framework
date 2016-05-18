@@ -12,6 +12,6 @@ $('body').ready(function () {
 	;
 	
 	App.setPublic();
-	ModulesManager.init(oAvaliableModules);
+	ModulesManager.init(oAvaliableModules, App.getUserRole(), App.isPublic());
 	App.init();
 });

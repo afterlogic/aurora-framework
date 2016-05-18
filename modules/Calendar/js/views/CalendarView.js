@@ -321,7 +321,7 @@ CCalendarView.prototype.applyFirstDay = function ()
 		sLastDay = ''
 	;
 
-	if (App.isAuth())
+	if (App.getUserRole() !== Enums.UserRole.Anonymous)
 	{
 		this.fullcalendarOptions.firstDay = Settings.WeekStartsOn;
 	}

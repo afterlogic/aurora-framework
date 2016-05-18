@@ -28,7 +28,7 @@ function SetSessionTimeout()
 }
 
 module.exports = function (oSettings) {
-	if (App.isAuth() && typeof oSettings.TimeoutSeconds === 'number' && oSettings.TimeoutSeconds > 0)
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && typeof oSettings.TimeoutSeconds === 'number' && oSettings.TimeoutSeconds > 0)
 	{
 		iTimeoutSeconds = oSettings.TimeoutSeconds;
 		

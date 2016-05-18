@@ -39,7 +39,7 @@ function CHeaderView()
 		});
 	}, this).extend({ rateLimit: 50 });
 	
-	this.showLogout = App.isAuth() && !App.isPublic();
+	this.showLogout = App.getUserRole() !== Enums.UserRole.Anonymous && !App.isPublic();
 
 	this.sLogoUrl = Settings.LogoUrl;
 	

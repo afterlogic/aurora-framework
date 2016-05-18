@@ -17,7 +17,7 @@ var
 
 Prefetcher.start = function ()
 {
-	if (App.isAuth() && !App.isNewTab() && !Ajax.hasInternetConnectionProblem() && !Ajax.hasOpenedRequests())
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && !App.isNewTab() && !Ajax.hasInternetConnectionProblem() && !Ajax.hasOpenedRequests())
 	{
 		Prefetcher.prefetchAll();
 	}
@@ -44,7 +44,7 @@ Prefetcher.prefetchAll = function ()
 
 Prefetcher.doServerInitializations = function ()
 {
-	if (App.isAuth() && !App.isNewTab() && !App.isPublic() && !bServerInitializationsDone)
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && !App.isNewTab() && !App.isPublic() && !bServerInitializationsDone)
 	{
 		Ajax.send('Core', 'DoServerInitializations', null);
 		bServerInitializationsDone = true;

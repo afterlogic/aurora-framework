@@ -1490,8 +1490,11 @@ class CApiIntegratorManager extends AApiManager
 	public function appData()
 	{
 		$aAppData = array(
-			'Auth' => false,
-			'User' => null,
+			'User' => array(
+				'Id' => 0,
+				'Role' => 3,
+				'Name' => ''
+			),
 //			'TenantHash' => $sHelpdeskTenantHash,
 			'IsMobile' => 0,
 			'AllowMobile' => false,
@@ -1681,7 +1684,6 @@ class CApiIntegratorManager extends AApiManager
 		
 		if ($oUser)
 		{
-			$aAppData['Auth'] = true;
 			$aAppData['User'] = array(
 				'Id' => $oUser->iObjectId,
 				'Role' => $oUser->Role,

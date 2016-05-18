@@ -520,7 +520,7 @@ CMailCache.prototype.executeCheckMail = function (bAbortPrevious)
 		oParameters = null
 	;
 	
-	if (App.isAuth() && (bAbortPrevious || !Ajax.hasOpenedRequests('GetRelevantFoldersInformation') || !bCurrentAccountCheckmailStarted) && (aFolders.length > 0))
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && (bAbortPrevious || !Ajax.hasOpenedRequests('GetRelevantFoldersInformation') || !bCurrentAccountCheckmailStarted) && (aFolders.length > 0))
 	{
 		aFolders = _.uniq(_.compact(_.union(aFolders, aFoldersFromAccount)));
 		oParameters = {
