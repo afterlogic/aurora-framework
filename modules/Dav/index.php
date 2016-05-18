@@ -139,9 +139,12 @@ class DavModule extends AApiModule
 	{
 		$mResult = false;
 		$this->broadcastEvent('Login', array(
-			'login' => $Login,
-			'password' => $Password,
-			'result' => &$mResult)
+			array(
+				'Login' => $Login,
+				'Password' => $Password,
+				'SignMe' =>false
+			),
+			&$mResult)
 		);		
 		
 		return ($mResult !== false && isset($mResult['id'])) ? $mResult['id'] : false;
