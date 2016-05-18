@@ -13,6 +13,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		getHeaderItem: function () {
 			return (!Browser.ie && !App.isMobile()) ? require('modules/Phone/js/views/PhoneView.js') : null;
 		}

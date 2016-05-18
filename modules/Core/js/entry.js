@@ -28,7 +28,7 @@ $('body').ready(function () {
 	
 	if (!bSwitchingToMobile)
 	{
-		ModulesManager.init(oAvaliableModules, !App.isAuth() && !App.isPublic());
+		ModulesManager.init(oAvaliableModules, App.getUserRole(), App.isPublic());
 		App.init();
 	}
 });

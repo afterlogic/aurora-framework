@@ -71,10 +71,16 @@ function InitModernizr()
 function CApp()
 {
 	this.bAuth = window.auroraAppData.Auth;
+	this.iUserRole = window.auroraAppData.User ? window.auroraAppData.User.Role : Enums.UserRole.Anonymous;
 	this.bPublic = false;
 	this.bNewTab = false;
 	this.bMobile = false;
 }
+
+CApp.prototype.getUserRole = function ()
+{
+	return this.iUserRole;
+};
 
 CApp.prototype.isAuth = function ()
 {

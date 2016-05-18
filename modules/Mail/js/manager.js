@@ -32,6 +32,9 @@ module.exports = function (oSettings) {
 	}
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		start: function (ModulesManager) {
 			var
 				TextUtils = require('modules/Core/js/utils/Text.js'),

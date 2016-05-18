@@ -10,6 +10,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		start: function (ModulesManager) {
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/OutlookSync/js/views/OutlookSyncSettingsPaneView.js'); }, 'outlook_sync', TextUtils.i18n('OUTLOOKSYNC/LABEL_SETTINGS_TAB')]);
 		}

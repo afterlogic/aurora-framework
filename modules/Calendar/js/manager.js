@@ -15,6 +15,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		start: function (ModulesManager) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Calendar/js/views/CalendarSettingsPaneView.js'); }, 'calendar', TextUtils.i18n('CALENDAR/LABEL_SETTINGS_TAB')]);

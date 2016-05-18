@@ -19,6 +19,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return _.extend(ComponentsMethods, {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		start: function (ModulesManager) {
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('CONTACTS/LABEL_SETTINGS_TAB')]);
 			if ($.isFunction(fComponentsStart))

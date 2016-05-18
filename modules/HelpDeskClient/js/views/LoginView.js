@@ -250,7 +250,8 @@ CLoginView.prototype.onHelpdeskLoginResponse = function (oResponse, oRequest)
 	{
 		$.cookie('AuthToken', oResponse.Result.AuthToken, { expires: 30 });
 		
-		window.location.reload();
+//		window.location.reload();
+		window.location.href = '';
 	}
 	else
 	{

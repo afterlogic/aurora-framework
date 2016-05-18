@@ -13,6 +13,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return _.extend({
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		start: function (ModulesManager) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Contacts/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
 		},

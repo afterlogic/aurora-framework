@@ -8,6 +8,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return bPublic;
+		},
 		screens: {
 			'main': function () {
 				return require('modules/Calendar/js/views/CalendarView.js');

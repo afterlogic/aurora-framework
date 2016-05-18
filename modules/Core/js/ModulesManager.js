@@ -8,26 +8,20 @@ var
 	
 	Settings = require('modules/Core/js/Settings.js'),
 	
-	oModules = {},
-	ShowOnlyAuthModule = false
+	oModules = {}
 ;
 
-function CanModuleBeDisplayed(sModuleName)
-{
-	return ShowOnlyAuthModule ? sModuleName === 'Auth' : sModuleName !== 'Auth';
-}
-
 module.exports = {
-	init: function (oAvaliableModules, bShowOnlyAuthModule) {
-		if (!_.isUndefined(bShowOnlyAuthModule))
-		{
-			ShowOnlyAuthModule = bShowOnlyAuthModule;
-		}
-		
+	init: function (oAvaliableModules, iUserRole, bPublic) {
 		_.each(Settings.Modules, function (oModuleSettings, sModuleName) {
 			if ($.isFunction(oAvaliableModules[sModuleName]))
 			{
-				oModules[sModuleName] = oAvaliableModules[sModuleName](oModuleSettings);
+				var oModule = oAvaliableModules[sModuleName](oModuleSettings);
+				console.log('sModuleName', sModuleName, 'iUserRole', iUserRole, 'bPublic', bPublic, 'isAvaliable', oModule.isAvaliable(iUserRole, bPublic));
+				if (oModule.isAvaliable(iUserRole, bPublic))
+				{
+					oModules[sModuleName] = oModule;
+				}
 			}
 		});
 		
@@ -48,7 +42,7 @@ module.exports = {
 		var oModulesScreens = {};
 		
 		_.each(oModules, function (oModule, sModuleName) {
-			if (!!oModule.screens && CanModuleBeDisplayed(sModuleName))
+			if (!!oModule.screens)
 			{
 				oModulesScreens[sModuleName] = oModule.screens;
 			}
@@ -63,20 +57,17 @@ module.exports = {
 			this.aTabs = [];
 			this.aStandardTabs = [];
 			_.each(oModules, _.bind(function (oModule, sModuleName) {
-				if (CanModuleBeDisplayed(sModuleName))
+				if ($.isFunction(oModule.getHeaderItem))
 				{
-					if ($.isFunction(oModule.getHeaderItem))
+					var oHeaderItem = oModule.getHeaderItem();
+					if (oHeaderItem)
 					{
-						var oHeaderItem = oModule.getHeaderItem();
-						if (oHeaderItem)
+						if ($.isFunction(oHeaderItem.setName))
 						{
-							if ($.isFunction(oHeaderItem.setName))
-							{
-								oHeaderItem.setName(sModuleName);
-								this.aStandardTabs.push(oHeaderItem);
-							}
-							this.aTabs.push(oHeaderItem);
+							oHeaderItem.setName(sModuleName);
+							this.aStandardTabs.push(oHeaderItem);
 						}
+						this.aTabs.push(oHeaderItem);
 					}
 				}
 			}, this));

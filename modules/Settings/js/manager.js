@@ -5,6 +5,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
+		},
 		screens: {
 			'main': function () {
 				return require('modules/Settings/js/views/SettingsView.js');

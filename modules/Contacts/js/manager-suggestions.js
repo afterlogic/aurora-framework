@@ -14,6 +14,9 @@ module.exports = function (oSettings) {
 	;
 
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		getSuggestionsAutocompleteCallback: function () {
 			return SuggestionsAutocomplete.callback;
 		},

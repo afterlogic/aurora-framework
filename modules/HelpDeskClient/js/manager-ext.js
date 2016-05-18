@@ -9,6 +9,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return bPublic;
+		},
 		screens: {
 			'main': function () {
 				var App = require('modules/Core/js/App.js');

@@ -337,14 +337,14 @@ class HelpDeskModule extends AApiModule
 		return true;
 	}	
 	
-	public function Register($sLogin = '', $sPassword = '', $sName = '', $bIsExt = false)
+	public function Register($Email, $Password, $Name = '', $IsExt = false)
 	{
 		$sTenantHash = \CApi::getTenantHash();
 //		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 //		{
-			$sLogin = trim($sLogin);
-			$sName = trim($sName);
-			$sPassword = trim($sPassword);
+			$sLogin = trim($Email);
+			$sName = trim($Name);
+			$sPassword = trim($Password);
 
 			if (0 === strlen($sLogin) || 0 === strlen($sPassword))
 			{

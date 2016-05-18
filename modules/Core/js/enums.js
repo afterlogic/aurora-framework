@@ -96,6 +96,16 @@ Enums.TimeFormat = {
 	'F12': '1'
 };
 
+/**
+ * @enum {number}
+ */
+Enums.UserRole = {
+	'SuperAdmin': 0,
+	'PowerUser': 1,
+	'RegisteredUser': 2,
+	'Anonymous': 3
+};
+
 if (typeof window.Enums === 'undefined')
 {
 	window.Enums = {};

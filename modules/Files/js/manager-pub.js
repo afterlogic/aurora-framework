@@ -7,6 +7,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return bPublic;
+		},
 		screens: {
 			'main': function () {
 				var CFilesView = require('modules/Files/js/views/CFilesView.js');

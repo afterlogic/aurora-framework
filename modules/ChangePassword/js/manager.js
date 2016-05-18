@@ -6,6 +6,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		isAvaliable: function (iUserRole, bPublic) {
+			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
+		},
 		getChangePasswordPopup: function () {
 			return require('modules/ChangePassword/js/popups/ChangePasswordPopup.js');
 		},
