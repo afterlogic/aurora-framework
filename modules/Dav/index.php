@@ -135,12 +135,12 @@ class DavModule extends AApiModule
 		}
 	}
 	
-	public function Login($sLogin, $sPassword)
+	public function Login($Login, $Password)
 	{
 		$mResult = false;
 		$this->broadcastEvent('Login', array(
-			'login' => $sLogin,
-			'password' => $sPassword,
+			'login' => $Login,
+			'password' => $Password,
 			'result' => &$mResult)
 		);		
 		

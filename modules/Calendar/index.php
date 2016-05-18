@@ -20,19 +20,20 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetCalendars($bIsPublic = false, $sPublicCalendarId = '')
+	public function GetCalendars($IsPublic = false, $PublicCalendarId = '')
 	{
 		$mResult = false;
 		$mCalendars = false;
 		
-		if ($bIsPublic) {
-			
-			$oCalendar = $this->oApiCalendarManager->getPublicCalendar($sPublicCalendarId);
+		if ($IsPublic) 
+		{
+			$oCalendar = $this->oApiCalendarManager->getPublicCalendar($PublicCalendarId);
 			$mCalendars = array($oCalendar);
-		} else {
-			
+		} else 
+		{
 			$iUserId = \CApi::getLogginedUserId();
-			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId)) {
+			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId)) 
+			{
 				
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 			}
@@ -40,7 +41,8 @@ class CalendarModule extends AApiModule
 			$mCalendars = $this->oApiCalendarManager->getCalendars($iUserId);
 		}
 		
-		if ($mCalendars) {
+		if ($mCalendars) 
+		{
 			
 			$mResult['Calendars'] = $mCalendars;
 		}
@@ -220,16 +222,16 @@ class CalendarModule extends AApiModule
 	/**
 	 * @return array
 	 */
-	public function GetEvents($aCalendarIds, $iStart, $iEnd, $bIsPublic, $iTimezoneOffset, $sTimezone)
+	public function GetEvents($CalendarIds, $Start, $End, $IsPublic, $TimezoneOffset, $Timezone)
 	{
 		$mResult = false;
 		
-		if ($bIsPublic)
+		if ($IsPublic)
 		{
 			$oPublicAccount = $this->oApiCalendarManager->getPublicAccount();
-			$oPublicAccount->User->DefaultTimeZone = $iTimezoneOffset;
-			$oPublicAccount->User->ClientTimeZone = $sTimezone;
-			$mResult = $this->oApiCalendarManager->getEvents($oPublicAccount, $aCalendarIds, $iStart, $iEnd);
+			$oPublicAccount->User->DefaultTimeZone = $TimezoneOffset;
+			$oPublicAccount->User->ClientTimeZone = $Timezone;
+			$mResult = $this->oApiCalendarManager->getEvents($oPublicAccount, $CalendarIds, $Start, $End);
 		}
 		else
 		{
@@ -238,7 +240,7 @@ class CalendarModule extends AApiModule
 			{
 				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
 			}
-			$mResult = $this->oApiCalendarManager->getEvents($iUserId, $aCalendarIds, $iStart, $iEnd);
+			$mResult = $this->oApiCalendarManager->getEvents($iUserId, $CalendarIds, $Start, $End);
 		}
 		
 		return $mResult;

@@ -240,14 +240,7 @@ class CApiModuleDecorator
 		$mResult = false;
 		if ($this->oModule instanceof AApiModule)
 		{
-			$oReflector = new \ReflectionMethod($this->oModule, $sMethodName);
-			
-			$aValues = array();
-			foreach ($oReflector->getParameters() as $oParam) {
-				$aValues[$oParam->getName()] = $aArguments[$oParam->getPosition()];
-			}
-			
-			$mResult = $this->oModule->ExecuteMethod($sMethodName, $aValues);
+			$mResult = $this->oModule->ExecuteMethod($sMethodName, $aArguments);
 		}
 		return $mResult;
 	}
@@ -480,7 +473,7 @@ abstract class AApiModule
 		
 		if ($mMethod) {
 			
-			$mResult = $this->ExecuteMethod($mMethod);
+			$mResult = $this->ExecuteMethod($mMethod, array(), true);
 		}			
 		
 		return $mResult;
@@ -523,7 +516,7 @@ abstract class AApiModule
 					$sTenantHash = $this->oHttp->GetPost('TenantHash', '');
 					\CApi::setTenantHash($sTenantHash);
 					
-					$mResult = $this->ExecuteMethod($sMethod, $aParameters);
+					$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
 
 					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
 					
@@ -603,7 +596,7 @@ abstract class AApiModule
 						);
 
 
-						$aResponseItem = $this->ExecuteMethod($sMethod, $aParameters);
+						$aResponseItem = $this->ExecuteMethod($sMethod, $aParameters, true);
 					}
 					else
 					{
@@ -671,7 +664,7 @@ abstract class AApiModule
 				$aParameters = CApi::DecodeKeyValues($sRawKey);				
 				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
 
-				$mResult = $this->ExecuteMethod($sMethod, $aParameters);
+				$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
 			}
 		}
 		catch (\Exception $oException)
@@ -958,26 +951,33 @@ abstract class AApiModule
 		return $oResult;
 	}	
 
-	public function ExecuteMethod($sMethodName, $aArguments = array())
+	public function ExecuteMethod($sMethodName, $aArguments = array(), $bReflection = false)
 	{
 		$mResult = false;
 		if (method_exists($this, $sMethodName))
 		{
 			$this->broadcastEvent($sMethodName . '::before', array(&$aArguments));
 
-			$oReflector = new \ReflectionMethod($this, $sMethodName);
 			$aValues = array();
 
-			foreach ($oReflector->getParameters() as $oParam) {
-				$sParamName = $oParam->getName();
-				$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
-				if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) {
-					$aValues[$oParam->getPosition()] = null;
+			if ($bReflection)
+			{
+				$oReflector = new \ReflectionMethod($this, $sMethodName);
+				foreach ($oReflector->getParameters() as $oParam) {
+					$sParamName = $oParam->getName();
+					$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
+					if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) {
+						$aValues[$oParam->getPosition()] = null;
+					}
+					else
+					{
+						$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? $aArguments[$sParamName] : $oParam->getDefaultValue();
+					}		
 				}
-				else
-				{
-					$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? $aArguments[$sParamName] : $oParam->getDefaultValue();
-				}		
+			}
+			else
+			{
+				$aValues = $aArguments;
 			}
 			
 			$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
