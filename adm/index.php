@@ -50,8 +50,8 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://yastatic.net/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	
-    <script src="/node_modules/underscore/underscore-min.js"></script>
-    <script src="/node_modules/knockout/build/output/knockout-latest.js"></script>
+    <script src="<?php echo $sBaseUrl; ?>../node_modules/underscore/underscore-min.js"></script>
+    <script src="<?php echo $sBaseUrl; ?>../node_modules/knockout/build/output/knockout-latest.js"></script>
     <script>
 		var staticData = {};
 	</script>
