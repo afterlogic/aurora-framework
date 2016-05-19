@@ -381,7 +381,7 @@ CAccountsSettingsPaneView.prototype.populate = function ()
 		
 		if (!oAccount.isExtended())
 		{
-			Ajax.send('GetAccount', {AccountID: oAccount.id()}, this.onGetAccountSettingsResponse, this);
+			Ajax.send('GetAccountSettings', {AccountID: oAccount.id()}, this.onGetAccountSettingsResponse, this);
 		}
 	}
 };

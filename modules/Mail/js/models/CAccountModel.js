@@ -320,7 +320,7 @@ CAccountModel.prototype.updateExtended = function (ExtendedData)
 		this.outgoingMailPort(Types.pInt(ExtendedData.OutgoingMailPort));
 		this.outgoingMailSsl(!!ExtendedData.OutgoingMailSsl);
 		
-		this.setExtensions(ExtendedData.Extensions);
+		this.setExtensions(ExtendedData.Extensions || []);
 	}
 };
 
