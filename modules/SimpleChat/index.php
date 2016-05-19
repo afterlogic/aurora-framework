@@ -24,37 +24,10 @@ class SimpleChatModule extends AApiModule
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$this->oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 				
-//		$this->setObjectMap('CUser', array(
-//				'HelpdeskSignature'					=> array('string', ''), //'helpdesk_signature'),
-//				'HelpdeskSignatureEnable'			=> array('bool', true), //'helpdesk_signature_enable'),
-//				'AllowHelpdeskNotifications'		=> array('bool', false), //'allow_helpdesk_notifications')
+//		$this->setObjectMap('CTenant', array(
+//				'AdminEmail'		=> array('string', '')
 //			)
 //		);
-		
-		$this->setObjectMap('CTenant', array(
-				'AdminEmail'		=> array('string', ''),
-				'AdminEmailAccount'	=> array('string', ''),
-				'ClientIframeUrl'	=> array('string', ''),
-				'AgentIframeUrl'	=> array('string', ''),
-				'SiteName'			=> array('string', ''),
-				'StyleAllow'		=> array('bool', false),
-				'StyleImage'		=> array('string', ''),
-				'FetcherType'		=> array('int', EHelpdeskFetcherType::NONE),
-				'StyleText'			=> array('string', ''),
-				'AllowFetcher'		=> array('bool', false),
-				'FetcherTimer' => array('int', 0)
-			
-//			'HelpdeskFacebookAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/FacebookAllow')
-//			'HelpdeskFacebookId'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookId')
-//			'HelpdeskFacebookSecret'	=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/FacebookSecret')
-//			'HelpdeskGoogleAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/GoogleAllow')
-//			'HelpdeskGoogleId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleId')
-//			'HelpdeskGoogleSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/GoogleSecret')
-//			'HelpdeskTwitterAllow'		=> array('bool', false, false), //!!$oSettings->GetConf('Helpdesk/TwitterAllow')
-//			'HelpdeskTwitterId'			=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterId')
-//			'HelpdeskTwitterSecret'		=> array('string', '', false), //(string) $oSettings->GetConf('Helpdesk/TwitterSecret')
-			)
-		);
 		
 //		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
 	}
@@ -65,53 +38,6 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function setInheritedSettings()
 	{
-//		$oSettings =& CApi::GetSettings();
-//		$oMap = $this->getStaticMap();
-		
-//		if (isset($oMap['HelpdeskFacebookAllow'][2]) && !$oMap['HelpdeskFacebookAllow'][2])
-//		{
-//			$this->HelpdeskFacebookAllow = !!$oSettings->GetConf('Helpdesk/FacebookAllow');
-//		}
-//		
-//		if (isset($oMap['HelpdeskFacebookId'][2]) && !$oMap['HelpdeskFacebookId'][2])
-//		{
-//			$this->HelpdeskFacebookId = (string) $oSettings->GetConf('Helpdesk/FacebookId');
-//		}
-//		
-//		if (isset($oMap['HelpdeskFacebookSecret'][2]) && !$oMap['HelpdeskFacebookSecret'][2])
-//		{
-//			$this->HelpdeskFacebookSecret = (string) $oSettings->GetConf('Helpdesk/FacebookSecret');
-//		}
-//		
-//		if (isset($oMap['HelpdeskGoogleAllow'][2]) && !$oMap['HelpdeskGoogleAllow'][2])
-//		{
-//			$this->HelpdeskGoogleAllow = !!$oSettings->GetConf('Helpdesk/GoogleAllow');
-//		}
-//		
-//		if (isset($oMap['HelpdeskGoogleId'][2]) && !$oMap['HelpdeskGoogleId'][2])
-//		{
-//			$this->HelpdeskGoogleId = (string) $oSettings->GetConf('Helpdesk/GoogleId');
-//		}
-//		
-//		if (isset($oMap['HelpdeskGoogleSecret'][2]) && !$oMap['HelpdeskGoogleSecret'][2])
-//		{
-//			$this->HelpdeskGoogleSecret = (string) $oSettings->GetConf('Helpdesk/GoogleSecret');
-//		}
-//		
-//		if (isset($oMap['HelpdeskTwitterAllow'][2]) && !$oMap['HelpdeskTwitterAllow'][2])
-//		{
-//			$this->HelpdeskTwitterAllow = !!$oSettings->GetConf('Helpdesk/TwitterAllow');
-//		}
-//		
-//		if (isset($oMap['HelpdeskTwitterId'][2]) && !$oMap['HelpdeskTwitterId'][2])
-//		{
-//			$this->HelpdeskTwitterId = (string) $oSettings->GetConf('Helpdesk/TwitterId');
-//		}
-//		
-//		if (isset($oMap['HelpdeskTwitterSecret'][2]) && !$oMap['HelpdeskTwitterSecret'][2])
-//		{
-//			$this->HelpdeskTwitterSecret = (string) $oSettings->GetConf('Helpdesk/TwitterSecret');
-//		}
 	}
 	
 	protected function GetCurrentAccount()
@@ -137,105 +63,6 @@ class SimpleChatModule extends AApiModule
 		
 		return $this->oCurrentUser;
 	}
-	/**
-	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
-	 *
-	 * @return \CHelpdeskUser|null
-	 */
-	protected function getHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
-	{
-		$iUserId = \CApi::getLogginedUserId();
-		$oUser = $this->oCoreDecorator ? $this->oCoreDecorator->GetUser($iUserId) : null;
-
-		return $oUser;
-		
-		/*$oResult = null;
-		$oAccount = null;
-
-		if ('0' === (string) $this->getParamValue('IsExt', '1'))
-		{
-			$oAccount = $this->getDefaultAccountFromParam($bThrowAuthExceptionOnFalse);
-			if ($oAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
-			{
-				$oResult = $this->getHelpdeskAccountFromMainAccount($oAccount);
-			}
-		}
-		else
-		{
-//			$oApiTenants = \CApi::GetCoreManager('tenants');
-//			$mTenantID = $oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
-			$mTenantID = $this->oCoreDecorator->getTenantIdByHash($this->getParamValue('TenantHash', ''));
-
-			if (is_int($mTenantID))
-			{
-				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
-			}
-		}
-
-		if (!$oResult && $bThrowAuthExceptionOnFalse)
-		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
-		}
-
-		return $oResult;*/
-	}
-	
-	/**
-	 * @param \CAccount $oAccount
-	 * 
-	 * @return \CHelpdeskUser|null
-	 */
-	protected function getHelpdeskAccountFromMainAccount(&$oAccount)
-	{
-		$oResult = null;
-		$oApiUsers = CApi::GetCoreManager('users');
-		if ($oAccount && $oAccount->IsDefaultAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
-		{
-			if (0 < $oAccount->User->IdHelpdeskUser)
-			{
-				$oHelpdeskUser = $this->oMainManager->getUserById($oAccount->IdTenant, $oAccount->User->IdHelpdeskUser);
-				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
-			}
-
-			if (!($oResult instanceof \CHelpdeskUser))
-			{
-				$oHelpdeskUser = $this->oMainManager->getUserByEmail($oAccount->IdTenant, $oAccount->Email);
-				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
-				
-				if ($oResult instanceof \CHelpdeskUser)
-				{
-					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
-					$oApiUsers->updateAccount($oAccount);
-				}
-			}
-
-			if (!($oResult instanceof \CHelpdeskUser))
-			{
-				$oHelpdeskUser = new \CHelpdeskUser();
-				$oHelpdeskUser->Email = $oAccount->Email;
-				$oHelpdeskUser->Name = $oAccount->FriendlyName;
-				$oHelpdeskUser->IdSystemUser = $oAccount->IdUser;
-				$oHelpdeskUser->IdTenant = $oAccount->IdTenant;
-				$oHelpdeskUser->Activated = true;
-				$oHelpdeskUser->IsAgent = true;
-				$oHelpdeskUser->Language = $oAccount->User->DefaultLanguage;
-				$oHelpdeskUser->DateFormat = $oAccount->User->DefaultDateFormat;
-				$oHelpdeskUser->TimeFormat = $oAccount->User->DefaultTimeFormat;
-
-				$oHelpdeskUser->setPassword($oAccount->IncomingMailPassword);
-
-				if ($this->oMainManager->createUser($oHelpdeskUser))
-				{
-					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
-					$oApiUsers->updateAccount($oAccount);
-
-					$oResult = $oHelpdeskUser;
-				}
-			}
-		}
-
-		return $oResult;
-	}	
 	
 	public function Login($sLogin = '', $sPassword = '', $bSignMe = 0)
 	{
@@ -540,16 +367,6 @@ class SimpleChatModule extends AApiModule
 	{
 		$oUser = $this->GetCurrentUser();
 		
-		/* @var $oAccount CAccount */
-
-//		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
-//		$sSubject = trim((string) $this->getParamValue('Subject', ''));
-//		$sText = trim((string) $this->getParamValue('Text', ''));
-//		$sCc = trim((string) $this->getParamValue('Cc', ''));
-//		$sBcc = trim((string) $this->getParamValue('Bcc', ''));
-//		$bIsInternal = '1' === (string) $this->getParamValue('IsInternal', '0');
-//		$mAttachments = $this->getParamValue('Attachments', null);
-		
 		$bIsInternal = '1' === $sIsInternal;
 		
 		if (0 === strlen($sText) || (0 === $iThreadId && 0 === strlen($sSubject)))
@@ -694,9 +511,8 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function GetThreadByIdOrHash()
 	{
-		$oAccount = null;
 		$oThread = false;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		$bIsAgent = $this->IsAgent($oUser);
 
@@ -749,7 +565,7 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function GetPosts($iThreadId = 0, $iStartFromId = 0, $iLimit = 10, $iIsExt = 1)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 		
 
 		if (1 > $iThreadId || 0 > $iStartFromId || 1 > $iLimit)
@@ -923,7 +739,7 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function ChangeThreadState($iThreadId = 0, $iThreadType = \EHelpdeskThreadType::None, $IsExt = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 //		$iThreadType = (int) $this->getParamValue('Type', \EHelpdeskThreadType::None);
@@ -958,7 +774,7 @@ class SimpleChatModule extends AApiModule
 
 	public function PingThread($iThreadId = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 
@@ -974,7 +790,7 @@ class SimpleChatModule extends AApiModule
 	
 	public function SetThreadSeen($iThreadId = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 
@@ -997,26 +813,25 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function GetThreads($iOffset = 0, $iLimit = 10, $iFilter = \EHelpdeskThreadFilterType::All, $sSearch = '')
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 		
 		if (0 > $iOffset || 1 > $iLimit)
 		{
 			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
 		}
 
-		$aThreadsList = array();
-		$iCount = $this->oMainManager->getThreadsCount($oUser, $iFilter, $sSearch);
+		$aPostsList = array();
+		$iCount = $this->oMainManager->getThreadsCount($oUser, $sSearch);
 		if ($iCount)
 		{
-			$aThreadsList = $this->oMainManager->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch);
+			$aPostsList = $this->oMainManager->getThreads($oUser, $iOffset, $iLimit, $iFilter, $sSearch);
 		}
 
 		$aOwnerDataList = array();
-		if (is_array($aThreadsList) && 0 < count($aThreadsList))
+		if (is_array($aPostsList) && 0 < count($aPostsList))
 		{
-			foreach ($aThreadsList as &$oItem)
+			foreach ($aPostsList as &$oItem)
 			{
-//				$aOwnerList[$oItem->IdOwner] = (int) $oItem->IdOwner;
 				$oOwnerUser = $this->oCoreDecorator->GetUser($oItem->IdOwner);
 				$oOwnerAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
 				if ($oOwnerUser)
@@ -1032,16 +847,11 @@ class SimpleChatModule extends AApiModule
 
 		if (0 < count($aOwnerDataList))
 		{
-//			$aOwnerList = array_values($aOwnerList);
-			
-//			$aUserInfo = $this->oMainManager->userInformation($oUser, $aOwnerList);
-//			id_helpdesk_user, email, name, is_agent, notification_email
-			
 			if (is_array($aOwnerDataList) && 0 < count($aOwnerDataList))
 			{
 				$bIsAgent = $this->IsAgent($oUser);
 				
-				foreach ($aThreadsList as &$oItem)
+				foreach ($aPostsList as &$oItem)
 				{
 					if ($oItem && isset($aOwnerDataList[$oItem->IdOwner]))
 					{
@@ -1067,7 +877,7 @@ class SimpleChatModule extends AApiModule
 		return array(
 			'Search' => $sSearch,
 			'Filter' => $iFilter,
-			'List' => $aThreadsList,
+			'List' => $aPostsList,
 			'Offset' => $iOffset,
 			'Limit' => $iLimit,
 			'ItemsCount' =>  $iCount
@@ -1077,7 +887,7 @@ class SimpleChatModule extends AApiModule
 	public function GetThreadsPendingCount()
 	{
 		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser($oAccount);
 
 		if (!($oUser instanceof \CHelpdeskUser))
 		{
@@ -1094,7 +904,7 @@ class SimpleChatModule extends AApiModule
 	public function UpdateUserPassword()
 	{
 		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser($oAccount);
 
 		$sCurrentPassword = (string) $this->getParamValue('CurrentPassword', '');
 		$sNewPassword = (string) $this->getParamValue('NewPassword', '');
@@ -1118,8 +928,7 @@ class SimpleChatModule extends AApiModule
 	public function UpdateSettings()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		$sName = (string) $this->getParamValue('Name', $oUser->Name);
 		$sLanguage = (string) $this->getParamValue('Language', $oUser->Language);

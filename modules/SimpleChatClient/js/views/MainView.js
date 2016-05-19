@@ -30,14 +30,14 @@ var
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	Ajax = require('modules/HelpDeskClient/js/Ajax.js'),
-	Settings = require('modules/HelpDeskClient/js/Settings.js'),
+	Ajax = require('modules/SimpleChatClient/js/Ajax.js'),
+	Settings = require('modules/SimpleChatClient/js/Settings.js'),
 	
-	CHelpdeskAttachmentModel = require('modules/HelpDeskClient/js/models/CHelpdeskAttachmentModel.js'),
-	CPostModel = require('modules/HelpDeskClient/js/models/CPostModel.js'),
-	CThreadListModel = require('modules/HelpDeskClient/js/models/CThreadListModel.js'),
+	CHelpdeskAttachmentModel = require('modules/SimpleChatClient/js/models/CHelpdeskAttachmentModel.js'),
+	CPostModel = require('modules/SimpleChatClient/js/models/CPostModel.js'),
+	CThreadListModel = require('modules/SimpleChatClient/js/models/CThreadListModel.js'),
 	
-	HeaderItemView = require('modules/HelpDeskClient/js/views/HeaderItemView.js'),
+	HeaderItemView = require('modules/SimpleChatClient/js/views/HeaderItemView.js'),
 	
 	bExtApp = false
 ;
@@ -45,11 +45,11 @@ var
 /**
  * @constructor
  */
-function CHelpdeskView()
+function CSimpleChatView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('HELPDESK/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('SIMPLECHAT/HEADING_BROWSER_TAB'));
 	
 	var
 		self = this,
@@ -73,14 +73,7 @@ function CHelpdeskView()
 
 	this.bExtApp = bExtApp;
 	this.bAgent = (window.auroraAppData.User && window.auroraAppData.User.Role === 1) ? true : false;
-//	this.bAgent = true;
 	this.bNewTab = App.isNewTab();
-
-	this.signature = Settings.signature;
-	this.signatureEnable = Settings.useSignature;
-	this.isSignatureVisible = ko.computed(function () {
-		return this.signature() !== '' && this.signatureEnable() === '1';
-	}, this);
 
 	this.loadingList = ko.observable(true);
 	this.loadingViewPane = ko.observable(false);
@@ -300,7 +293,6 @@ function CHelpdeskView()
 		if (bFocus)
 		{
 			this.isQuickReplyActive(true);
-			this.setSignature(this.replyText, this.domQuickReplyTextarea());
 		}
 	}, this);
 	this.isQuickReplyActive.subscribe(function () {
@@ -310,11 +302,11 @@ function CHelpdeskView()
 		}
 	}, this);
 	this.isQuickReplyPaneEmpty = ko.computed(function () {
-		return ($.trim(this.replyText()) === this.signature() || this.replyText() === '');
+		return this.replyText() === '';
 	}, this);
 
 	this.isNewThreadPaneEmpty = ko.computed(function () {
-		return ($.trim(this.newThreadText()) === this.signature() || this.newThreadText() === '');
+		return this.newThreadText() === '';
 	}, this);
 
 	// view pane //
@@ -363,9 +355,9 @@ function CHelpdeskView()
 	this.requestFromLogin();
 }
 
-_.extendOwn(CHelpdeskView.prototype, CAbstractScreenView.prototype);
+_.extendOwn(CSimpleChatView.prototype, CAbstractScreenView.prototype);
 
-CHelpdeskView.prototype.ViewTemplate = 'HelpDeskClient_HelpdeskView';
+CSimpleChatView.prototype.ViewTemplate = 'SimpleChatClient_MainView';
 
 /**
  * @param {Object} koAddrDom
@@ -373,7 +365,7 @@ CHelpdeskView.prototype.ViewTemplate = 'HelpDeskClient_HelpdeskView';
  * @param {Object} koLockAddr
  * @param {String} sFocusedField
  */
-CHelpdeskView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAddr, sFocusedField)
+CSimpleChatView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAddr, sFocusedField)
 {
 	if (koAddrDom() && $(koAddrDom()).length > 0)
 	{
@@ -406,7 +398,7 @@ CHelpdeskView.prototype.initInputosaurus = function (koAddrDom, koAddr, koLockAd
  * @param {Object} koRecipient
  * @param {string} sRecipient
  */
-CHelpdeskView.prototype.setRecipient = function (koRecipient, sRecipient)
+CSimpleChatView.prototype.setRecipient = function (koRecipient, sRecipient)
 {
 	if (koRecipient() === sRecipient)
 	{
@@ -418,7 +410,7 @@ CHelpdeskView.prototype.setRecipient = function (koRecipient, sRecipient)
 	}
 };
 
-CHelpdeskView.prototype.requestFromLogin = function ()
+CSimpleChatView.prototype.requestFromLogin = function ()
 {
 	if (this.bExtApp && Storage.getData('helpdeskQuestion'))
 	{
@@ -428,7 +420,7 @@ CHelpdeskView.prototype.requestFromLogin = function ()
 	}
 };
 
-CHelpdeskView.prototype.cleanAll = function ()
+CSimpleChatView.prototype.cleanAll = function ()
 {
 	this.replyText('');
 	this.replyTextFocus(false);
@@ -442,18 +434,10 @@ CHelpdeskView.prototype.cleanAll = function ()
 	this.bccAddr('');
 };
 
-CHelpdeskView.prototype.updateOpenerWindow = function ()
-{
-//	if (App.isNewTab() && window.opener && window.opener.App)
-//	{
-//		window.opener.App.updateHelpdesk();
-//	}
-};
-
 /**
  * @param {Object} oPost
  */
-CHelpdeskView.prototype.deletePost = function (oPost)
+CSimpleChatView.prototype.deletePost = function (oPost)
 {
 	if (oPost && oPost.itsMe())
 	{
@@ -477,7 +461,7 @@ CHelpdeskView.prototype.deletePost = function (oPost)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result === false)
 	{
@@ -490,10 +474,9 @@ CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 	}
 
 	this.requestPosts();
-	this.updateOpenerWindow();
 };
 
-CHelpdeskView.prototype.iHaveMoreToSay = function ()
+CSimpleChatView.prototype.iHaveMoreToSay = function ()
 {
 	this.isQuickReplyHidden(false);
 	_.delay(_.bind(function () {
@@ -501,27 +484,27 @@ CHelpdeskView.prototype.iHaveMoreToSay = function ()
 	}, this), 300);
 };
 
-CHelpdeskView.prototype.scrollPostsToBottom = function ()
+CSimpleChatView.prototype.scrollPostsToBottom = function ()
 {
 	this.scrollToBottomTrigger(!this.scrollToBottomTrigger());
 };
 
-CHelpdeskView.prototype.scrollPostsToTop = function ()
+CSimpleChatView.prototype.scrollPostsToTop = function ()
 {
 	this.scrollToTopTrigger(!this.scrollToTopTrigger());
 };
 
-CHelpdeskView.prototype.showClientDetails = function ()
+CSimpleChatView.prototype.showClientDetails = function ()
 {
 	this.clientDetailsVisible(true);
 };
 
-CHelpdeskView.prototype.hideClientDetails = function ()
+CSimpleChatView.prototype.hideClientDetails = function ()
 {
 	this.clientDetailsVisible(false);
 };
 
-CHelpdeskView.prototype.startAutoCheckState = function ()
+CSimpleChatView.prototype.startAutoCheckState = function ()
 {
 	if (UserSettings.AutoRefreshIntervalMinutes > 0)
 	{
@@ -532,7 +515,7 @@ CHelpdeskView.prototype.startAutoCheckState = function ()
 	}
 };
 
-CHelpdeskView.prototype.onBind = function ()
+CSimpleChatView.prototype.onBind = function ()
 {
 	this.selector.initOnApplyBindings(
 		'.items_sub_list .item',
@@ -580,7 +563,7 @@ CHelpdeskView.prototype.onBind = function ()
 	}
 };
 
-CHelpdeskView.prototype.onShow = function ()
+CSimpleChatView.prototype.onShow = function ()
 {
 	this.newThreadButtonWidth.notifySubscribers();
 	this.selector.useKeyboardKeys(true);
@@ -592,19 +575,19 @@ CHelpdeskView.prototype.onShow = function ()
 	this.requestThreadsList();
 };
 
-CHelpdeskView.prototype.onHide = function ()
+CSimpleChatView.prototype.onHide = function ()
 {
 	this.selector.useKeyboardKeys(false);
 	this.oPageSwitcher.hide();
 };
 
-CHelpdeskView.prototype.requestThreadsList = function ()
+CSimpleChatView.prototype.requestThreadsList = function ()
 {
 	if (!this.newThreadCreating())
 	{
 		this.loadingList(true);
 		this.checkStarted(true);
-		
+
 		Ajax.send('GetThreads', {
 			'Offset': (this.oPageSwitcher.currentPage() - 1) * Settings.ThreadsPerPage,
 			'Limit': Settings.ThreadsPerPage,
@@ -618,7 +601,7 @@ CHelpdeskView.prototype.requestThreadsList = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
 {
 	var
 		iIndex = 0,
@@ -706,7 +689,7 @@ CHelpdeskView.prototype.onGetThreadsResponse = function (oResponse, oRequest)
  * @param {number} iThreadId
  * @param {string} sThreadHash
  */
-CHelpdeskView.prototype.requestThreadByIdOrHash = function (iThreadId, sThreadHash)
+CSimpleChatView.prototype.requestThreadByIdOrHash = function (iThreadId, sThreadHash)
 {
 	Ajax.send('GetThread', {
 		'ThreadId': iThreadId ? iThreadId : 0,
@@ -718,7 +701,7 @@ CHelpdeskView.prototype.requestThreadByIdOrHash = function (iThreadId, sThreadHa
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onGetThreadResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onGetThreadResponse = function (oResponse, oRequest)
 {
 	var oItem = new CThreadListModel();
 
@@ -734,7 +717,7 @@ CHelpdeskView.prototype.onGetThreadResponse = function (oResponse, oRequest)
  * @param {Object=} oItem = undefined
  * @param {number=} iStartFromId = 0
  */
-CHelpdeskView.prototype.requestPosts = function (oItem, iStartFromId)
+CSimpleChatView.prototype.requestPosts = function (oItem, iStartFromId)
 {
 	var
 		oSelectedThread = this.selectedItem(),
@@ -764,7 +747,7 @@ CHelpdeskView.prototype.requestPosts = function (oItem, iStartFromId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onGetPostsResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 {
 	var
 		self = this,
@@ -843,7 +826,7 @@ CHelpdeskView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 /**
  * @param {Array} aParams
  */
-CHelpdeskView.prototype.onRoute = function (aParams)
+CSimpleChatView.prototype.onRoute = function (aParams)
 {
 	var
 		sThreadHash = aParams[0],
@@ -879,7 +862,7 @@ CHelpdeskView.prototype.onRoute = function (aParams)
  * 
  * @param {Object} oItem
  */
-CHelpdeskView.prototype.onItemSelect = function (oItem)
+CSimpleChatView.prototype.onItemSelect = function (oItem)
 {
 	this.previousSelectedItem(this.selectedItem());
 	if (!this.selectedItem() || oItem && (this.selectedItem().ThreadHash !== oItem.ThreadHash || this.selectedItem().Id !== oItem.Id))
@@ -908,7 +891,7 @@ CHelpdeskView.prototype.onItemSelect = function (oItem)
 	}
 };
 
-CHelpdeskView.prototype.onItemDelete = function ()
+CSimpleChatView.prototype.onItemDelete = function ()
 {
 	this.executeDelete();
 };
@@ -916,7 +899,7 @@ CHelpdeskView.prototype.onItemDelete = function ()
 /**
  * @param {object} oItem
  */
-CHelpdeskView.prototype.selectItem = function (oItem)
+CSimpleChatView.prototype.selectItem = function (oItem)
 {
 	this.visibleNewThread(false);
 	this.selector.listCheckedAndSelected(false);
@@ -939,27 +922,26 @@ CHelpdeskView.prototype.selectItem = function (oItem)
 	}
 };
 
-CHelpdeskView.prototype.openNewThread = function ()
+CSimpleChatView.prototype.openNewThread = function ()
 {
 	this.selector.itemSelected(null);
 	this.selectedItem(null);
 	this.visibleNewThread(true);
 	Routing.setHash(['helpdesk', '']);
 	this.newThreadTextFocus(true);
-	this.setSignature(this.newThreadText, this.domNewThreadTextarea());
 };
 
-CHelpdeskView.prototype.cancelNewThread = function ()
+CSimpleChatView.prototype.cancelNewThread = function ()
 {
 	this.onItemSelect(this.previousSelectedItem());
 };
 
-CHelpdeskView.prototype.isEnableListActions = function ()
+CSimpleChatView.prototype.isEnableListActions = function ()
 {
 	return !!this.selectedItem();
 };
 
-CHelpdeskView.prototype.executeDelete = function ()
+CSimpleChatView.prototype.executeDelete = function ()
 {
 	var
 		self = this,
@@ -991,13 +973,12 @@ CHelpdeskView.prototype.executeDelete = function ()
 	}
 };
 
-CHelpdeskView.prototype.updateDisplayingData = function ()
+CSimpleChatView.prototype.updateDisplayingData = function ()
 {
 	this.requestThreadsList();
-	this.updateOpenerWindow();
 };
 
-CHelpdeskView.prototype.executeOpenNewWindow = function ()
+CSimpleChatView.prototype.executeOpenNewWindow = function ()
 {
 	var sUrl = Routing.buildHashFromArray(['helpdesk', this.selectedItem().ThreadHash]);
 
@@ -1007,7 +988,7 @@ CHelpdeskView.prototype.executeOpenNewWindow = function ()
 /**
  * @param {number} iState
  */
-CHelpdeskView.prototype.executeChangeState = function (iState)
+CSimpleChatView.prototype.executeChangeState = function (iState)
 {
 	var oSelectedItem = this.selectedItem();
 
@@ -1031,7 +1012,7 @@ CHelpdeskView.prototype.executeChangeState = function (iState)
 /**
  * @param {number} iId
  */
-CHelpdeskView.prototype.executeThreadPing = function (iId)
+CSimpleChatView.prototype.executeThreadPing = function (iId)
 {
 	if (iId !== undefined)
 	{
@@ -1043,7 +1024,7 @@ CHelpdeskView.prototype.executeThreadPing = function (iId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onPingThreadResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onPingThreadResponse = function (oResponse, oRequest)
 {
 	this.watchers(
 		_.map(oResponse.Result, function (aWatcher) {
@@ -1090,7 +1071,7 @@ CHelpdeskView.prototype.onPingThreadResponse = function (oResponse, oRequest)
 /**
  * @param {string} sName
  */
-CHelpdeskView.prototype.getInitials = function (sName)
+CSimpleChatView.prototype.getInitials = function (sName)
 {
 	return _.reduce(sName.split(' ', 2), function(sMemo, sNamePath){ return sMemo + sNamePath.substr(0,1); }, ''); //get first letter from each of the two words
 };
@@ -1098,7 +1079,7 @@ CHelpdeskView.prototype.getInitials = function (sName)
 /**
  * @param {number} iId
  */
-CHelpdeskView.prototype.executeThreadSeen = function (iId)
+CSimpleChatView.prototype.executeThreadSeen = function (iId)
 {
 	if (iId !== undefined)
 	{
@@ -1110,18 +1091,16 @@ CHelpdeskView.prototype.executeThreadSeen = function (iId)
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onSetThreadSeenResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onSetThreadSeenResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result && this.selectedItem())
 	{
 		this.selectedItem().unseen(false);
 		this.setUnseenCount();
 	}
-
-	this.updateOpenerWindow();
 };
 
-CHelpdeskView.prototype.executeThreadCreate = function ()
+CSimpleChatView.prototype.executeThreadCreate = function ()
 {
 	var
 		sNewThreadSubject = $.trim(this.newThreadText().replace(/[\n\r]/, ' ')),
@@ -1142,7 +1121,7 @@ CHelpdeskView.prototype.executeThreadCreate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
 {
 	//TODO change created post
 	this.newThreadCreating(false);
@@ -1163,7 +1142,7 @@ CHelpdeskView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
 	this.updateDisplayingData();
 };
 
-CHelpdeskView.prototype.executePostCreate = function ()
+CSimpleChatView.prototype.executePostCreate = function ()
 {
 	if (this.selectedItem())
 	{
@@ -1176,7 +1155,7 @@ CHelpdeskView.prototype.executePostCreate = function ()
  * @param {Object} oResponse
  * @param {Object} oRequest
  */
-CHelpdeskView.prototype.onCreatePostResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onCreatePostResponse = function (oResponse, oRequest)
 {
 	this.replySendingStarted(false);
 
@@ -1196,7 +1175,7 @@ CHelpdeskView.prototype.onCreatePostResponse = function (oResponse, oRequest)
  * @param {string} sText
  * @param {Function} fResponseHandler
  */
-CHelpdeskView.prototype.createPost = function (iThreadId, sSubject, sText, fResponseHandler)
+CSimpleChatView.prototype.createPost = function (iThreadId, sSubject, sText, fResponseHandler)
 {
 	var
 		aAttachments = {},
@@ -1220,19 +1199,19 @@ CHelpdeskView.prototype.createPost = function (iThreadId, sSubject, sText, fResp
 	Ajax.send('CreatePost', oParameters, fResponseHandler, this);
 };
 
-CHelpdeskView.prototype.onShowThreadsByOwner = function ()
+CSimpleChatView.prototype.onShowThreadsByOwner = function ()
 {
 	this.search('owner:' + this.selectedItem().aOwner[0]);
 	this.listFilter(Enums.HelpdeskFilters.All);
 	this.requestThreadsList();
 };
 
-CHelpdeskView.prototype.onSearch = function ()
+CSimpleChatView.prototype.onSearch = function ()
 {
 	this.requestThreadsList();
 };
 
-CHelpdeskView.prototype.onClearSearch = function ()
+CSimpleChatView.prototype.onClearSearch = function ()
 {
 	this.search('');
 	this.requestThreadsList();
@@ -1241,7 +1220,7 @@ CHelpdeskView.prototype.onClearSearch = function ()
 /**
  * Initializes file uploader.
  */
-CHelpdeskView.prototype.initUploader = function ()
+CSimpleChatView.prototype.initUploader = function ()
 {
 	this.oJua = this.createJuaObject(this.uploaderButton());
 	this.oJuaCompose = this.createJuaObject(this.uploaderButtonCompose());
@@ -1250,7 +1229,7 @@ CHelpdeskView.prototype.initUploader = function ()
 /**
  * @param {Object} oButton
  */
-CHelpdeskView.prototype.createJuaObject = function (oButton)
+CSimpleChatView.prototype.createJuaObject = function (oButton)
 {
 	if (oButton)
 	{
@@ -1290,7 +1269,7 @@ CHelpdeskView.prototype.createJuaObject = function (oButton)
 /**
  * @param {string} sFileUID
  */
-CHelpdeskView.prototype.onFileRemove = function (sFileUID)
+CSimpleChatView.prototype.onFileRemove = function (sFileUID)
 {
 	var oAttach = this.getUploadedFileByUID(sFileUID);
 
@@ -1305,7 +1284,7 @@ CHelpdeskView.prototype.onFileRemove = function (sFileUID)
 /**
  * @param {string} sFileUID
  */
-CHelpdeskView.prototype.getUploadedFileByUID = function (sFileUID)
+CSimpleChatView.prototype.getUploadedFileByUID = function (sFileUID)
 {
 	return _.find(this.uploadedFiles(), function (oAttach) {
 		return oAttach.uploadUid() === sFileUID;
@@ -1316,7 +1295,7 @@ CHelpdeskView.prototype.getUploadedFileByUID = function (sFileUID)
  * @param {string} sFileUID
  * @param {Object} oFileData
  */
-CHelpdeskView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
+CSimpleChatView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
 {
 	var
 		oAttach,
@@ -1350,7 +1329,7 @@ CHelpdeskView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
  * @param {number} iUploadedSize
  * @param {number} iTotalSize
  */
-CHelpdeskView.prototype.onFileUploadProgress = function (sFileUID, iUploadedSize, iTotalSize)
+CSimpleChatView.prototype.onFileUploadProgress = function (sFileUID, iUploadedSize, iTotalSize)
 {
 	var oAttach = this.getUploadedFileByUID(sFileUID);
 
@@ -1363,7 +1342,7 @@ CHelpdeskView.prototype.onFileUploadProgress = function (sFileUID, iUploadedSize
 /**
  * @param {string} sFileUID
  */
-CHelpdeskView.prototype.onFileUploadStart = function (sFileUID)
+CSimpleChatView.prototype.onFileUploadStart = function (sFileUID)
 {
 	var oAttach = this.getUploadedFileByUID(sFileUID);
 
@@ -1378,7 +1357,7 @@ CHelpdeskView.prototype.onFileUploadStart = function (sFileUID)
  * @param {boolean} bResult
  * @param {Object} oResult
  */
-CHelpdeskView.prototype.onFileUploadComplete = function (sFileUID, bResult, oResult)
+CSimpleChatView.prototype.onFileUploadComplete = function (sFileUID, bResult, oResult)
 {
 	var
 		oAttach = this.getUploadedFileByUID(sFileUID),
@@ -1396,7 +1375,7 @@ CHelpdeskView.prototype.onFileUploadComplete = function (sFileUID, bResult, oRes
 	}
 };
 
-CHelpdeskView.prototype.setUnseenCount = function ()
+CSimpleChatView.prototype.setUnseenCount = function ()
 {
 	HeaderItemView.unseenCount(_.filter(this.threads(), function (oThreadList) {
 		return oThreadList.unseen();
@@ -1406,7 +1385,7 @@ CHelpdeskView.prototype.setUnseenCount = function ()
 /**
  * @param {string} sText
  */
-CHelpdeskView.prototype.quoteText = function (sText)
+CSimpleChatView.prototype.quoteText = function (sText)
 {
 	var
 		sReplyText = this.replyText(),
@@ -1427,41 +1406,10 @@ CHelpdeskView.prototype.quoteText = function (sText)
 	this.isQuickReplyHidden(false);
 };
 
-/**
- * @param {object} koText
- * @param {object} domTextarea
- */
-CHelpdeskView.prototype.setSignature = function (koText, domTextarea)
-{
-	if (koText && koText() === '' && this.isSignatureVisible())
-	{
-		koText("\r\n\r\n" + this.signature());
-	}
-
-	if (domTextarea)
-	{
-		setTimeout(function () {
-			domTextarea = domTextarea[0];
-			if (domTextarea.setSelectionRange)
-			{
-				domTextarea.focus();
-				domTextarea.setSelectionRange(0, 0);
-			}
-			else if (domTextarea.createTextRange)
-			{
-				var range = domTextarea.createTextRange();
-
-				range.moveStart('character', 0);
-				range.select();
-			}
-		}.bind(this), 10);
-	}
-};
-
-CHelpdeskView.prototype.changeCcbccVisibility = function ()
+CSimpleChatView.prototype.changeCcbccVisibility = function ()
 {
 	this.ccbccVisible(true);
 	$(this.ccAddrDom()).inputosaurus('focus');
 };
 
-module.exports = new CHelpdeskView();
+module.exports = new CSimpleChatView();

@@ -13,6 +13,7 @@ $('body').ready(function () {
 			'Helpdesk': require('modules/HelpDeskClient/js/manager.js'),
 			'Phone': require('modules/Phone/js/manager.js'),
 			'Settings': require('modules/Settings/js/manager.js'),
+			'SimpleChat': require('modules/SimpleChatClient/js/manager.js'),
 			
 			'OpenPgp': require('modules/OpenPgp/js/manager.js'),
 			'MailSensitivity': require('modules/MailSensitivity/js/manager.js'),

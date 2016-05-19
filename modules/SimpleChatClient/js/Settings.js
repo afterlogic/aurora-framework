@@ -8,7 +8,5 @@ module.exports = {
 	},
 	update: function (sAllowEmailNotifications, sHelpdeskSignature, sHelpdeskSignatureEnable) {
 		this.AllowEmailNotifications = sAllowEmailNotifications === '1';
-		this.signature(sHelpdeskSignature);
-		this.useSignature(sHelpdeskSignatureEnable === '1');
 	}
 };

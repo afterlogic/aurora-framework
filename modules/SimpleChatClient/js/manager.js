@@ -17,19 +17,19 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/HelpDeskClient/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('HELPDESK/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/SimpleChatClient/js/views/SettingsPaneView.js'); }, 'simplechat', TextUtils.i18n('SIMPLECHAT/LABEL_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
 			return {
 				'main': function () {
 					CheckState.end();
-					return require('modules/HelpDeskClient/js/views/HelpdeskView.js');
+					return require('modules/SimpleChatClient/js/views/MainView.js');
 				}
 			};
 		},
 		getHeaderItem: function () {
 			CheckState.start();
-			return require('modules/HelpDeskClient/js/views/HeaderItemView.js');
+			return require('modules/SimpleChatClient/js/views/HeaderItemView.js');
 		}
 	};
 };

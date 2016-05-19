@@ -106,6 +106,9 @@ module.exports = {
 		Settings: {
 			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp'] // add to settings
 		},
+		SimpleChat: {
+			AllowModule: true
+		},
 		dsbld_Phone: {
 			SipImpi: AppData.User ? Types.pString(AppData.User.SipImpi) : '102',
 			SipOutboundProxyUrl: AppData.User ? Types.pString(AppData.User.SipOutboundProxyUrl) : '',
