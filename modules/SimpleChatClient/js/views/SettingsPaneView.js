@@ -7,7 +7,7 @@ var
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Settings = require('modules/HelpDeskClient/js/Settings.js')
+	Settings = require('modules/SimpleChatClient/js/Settings.js')
 ;
 
 /**
@@ -15,37 +15,37 @@ var
  */
 function CHelpdeskSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Helpdesk');
+	CAbstractSettingsFormView.call(this, 'SimpleChat');
 
-	this.allowNotifications = ko.observable(Settings.AllowEmailNotifications);
+	this.allowChat = ko.observable(Settings.AllowModule);
 }
 
 _.extendOwn(CHelpdeskSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CHelpdeskSettingsPaneView.prototype.ViewTemplate = 'HelpDeskClient_HelpdeskSettingsPaneView';
+CHelpdeskSettingsPaneView.prototype.ViewTemplate = 'SimpleChatClient_SettingsPaneView';
 
 CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
-		this.allowNotifications()
+		this.allowChat()
 	];
 };
 
 CHelpdeskSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.allowNotifications(Settings.AllowEmailNotifications);
+	this.allowChat(Settings.AllowModule);
 };
 
 CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'AllowEmailNotifications': this.allowNotifications() ? '1' : '0'
+		'AllowModule': this.allowChat() ? '1' : '0'
 	};
 };
 
 CHelpdeskSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
-	Settings.update(oParameters.AllowEmailNotifications);
+	Settings.update(oParameters.AllowModule);
 };
 
 module.exports = new CHelpdeskSettingsPaneView();

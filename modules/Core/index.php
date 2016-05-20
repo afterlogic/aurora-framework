@@ -1031,6 +1031,11 @@ class CoreModule extends AApiModule
 		return false;
 	}
 	
+	public function UpdateUserObject($oUser)
+	{
+		$this->oApiUsersManager->updateUser($oUser);
+	}
+	
 	/**
 	 * 
 	 * @return boolean

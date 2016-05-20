@@ -1,29 +1,16 @@
-<div class="screen HelpdeskLayout" style="display: none;">
-	<div class="panels" data-bind="css: {'agent_area': bAgent, 'user_area': !bAgent}">
-		<div class="panel_helper" data-bind="splitter: {name: 'helpdesk_sub_screens', sizeLeft: 350, minLeft: 250, minRight: 550, resizeToWidth: true}">
-			<div class="panel center_panel threads_panel">
-				<div class="resize_handler"></div>
-				<div class="panel_content">
-					<div class="buttons big_single_button" data-bind="visible: !bAgent">
-						<span class="button" data-bind="click: openNewThread">
-							<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_NEW_REQUEST'}"></span>
-						</span>
-					</div>
-					<div class="middle_bar" data-bind="visible: bAgent, template: {name: 'HelpDeskClient_ThreadsList'}"></div>
-					<div class="middle_bar" data-bind="visible: !bAgent, template: {name: 'HelpDeskClient_ThreadsListExt'}"></div>
-				</div>
+<div class="panel_center" style="background: white; height: 100%;">
+	<div class="panels">
+		<div class="panel message_panel">
+			<!-- ko foreach: posts -->
+			<div style="padding: 10px;">
+				<span data-bind="text: name" style="font-weight: bold"></span>: 
+				<span data-bind="text: text"></span>
 			</div>
-			<div class="panel item_viewer thread_viewer">
-				<div class="panel_content">
-					<div class="middle_bar" data-bind="visible: !visibleNewThread() && selectedItem(), css: {'own_thread': simplePreviewPane()}, heightAdjust: {'location': 'bottom', 'elements': [domQuickReply], 'triggers': [uploadedFiles(), isQuickReplyActive(), replySendingStarted(), isQuickReplyHidden()]}">
-						<!-- ko template: { name: simplePreviewPane() ? 'HelpDeskClient_ViewThreadExt' : 'HelpDeskClient_ViewThread' } --><!-- /ko -->
-						<!-- ko template: { name: 'HelpDeskClient_QuickReply' } --><!-- /ko -->
-					</div>
-					<div class="middle_bar new_request" data-bind="visible: visibleNewThread()">
-						<!-- ko template: { name: 'HelpDeskClient_NewThread'} --><!-- /ko -->
-					</div>
-				</div>
-			</div>
+			<!-- /ko -->
 		</div>
 	</div>
+	
+	<!-- ko if: bAllowReply -->
+		<!-- ko template: {name: 'SimpleChatClient_QuickReplyView'} --><!-- /ko -->
+	<!-- /ko -->
 </div>

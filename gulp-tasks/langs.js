@@ -44,10 +44,10 @@ function BuildLang(sLanguage)
 			else
 			{
 				var
-					sPrefix = aModulesNames[iModuleIndex].toUpperCase(),
+					sPrefix = aModulesNames[iModuleIndex].toUpperCase().replace('CLIENT', ''),
 					sConstants = ''
 				;
-
+				
 				_.each(oData, function (sItem, sKey) {
 					var bInQuotes = sItem.substr(0, 1) === '"';
 					while(sItem.substr(0, 1) === '"' || sItem.substr(0, 1) === ' ')

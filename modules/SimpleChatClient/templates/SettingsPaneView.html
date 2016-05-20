@@ -1,0 +1,25 @@
+<div class="panel_top">
+	<h2 class="settings_heading" data-bind="i18n: {'key': 'SIMPLECHAT/HEADING_SETTINGS_TAB'}"></h2>
+</div>
+<div class="panel_center">
+	<div class="fields">
+		<div class="fieldset">
+			<div class="row">
+				<span class="value">
+					<label class="custom_checkbox" data-bind="css: {'checked': allowChat}">
+						<span class="icon"></span>
+						<input type="checkbox" id="allowChat" data-bind="checked: allowChat" />
+					</label>
+					<label for="allowChat" data-bind="i18n: {'key': 'SIMPLECHAT/LABEL_ALLOW_CHAT'}"></label>
+				</span>
+			</div>
+		</div>
+
+		<div class="buttons">
+			<span class="button" data-bind="click: save">
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, visible: !isSaving()"></span>
+				<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: isSaving()"></span>
+			</span>
+		</div>
+	</div>
+</div>
