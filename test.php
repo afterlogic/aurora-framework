@@ -8,29 +8,13 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 // utilizing WebMail Pro API
 include_once __DIR__.'/core/api.php';
 
-//$oCoreDecorator = \CApi::GetModuleDecorator('Core');
-//$mResult = $oCoreDecorator->SetMobile(false);
+$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 
-//var_dump($mResult);
-
-
-/* var $oEavManager \CApiEavManager */
-$oEavManager = \CApi::GetCoreManager('eav', 'db');
-
-//$iCount = $oEavManager->getObjectsCount('CUser'); 
-//echo $iCount;
-
-$aObjects = $oEavManager->getObjects('CUser');
-var_dump($aObjects);
-
-//$aObjects[0]->{'Core::TestString'} = 'aaa';
-
-//$oEavManager->saveObject($aObjects[0]);
-
-//var_dump($oEavManager->getObjectById($aObjects[0]->iObjectId));
-
-//$oEavManager->deleteObject($oAccount->iObjectId);
-
+$mResult = $oAuthDecorator->CreateAccount(
+	246,
+	'test4',
+	'p12345'
+);
 
 
 	
