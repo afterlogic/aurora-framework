@@ -546,22 +546,14 @@ class api_Utils
 	 */
 	public static function EncodePassword($sPassword)
 	{
-		if (empty($sPassword))
+		if (function_exists('mcrypt_encrypt') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size') &&
+			defined('MCRYPT_RIJNDAEL_256') && defined('MCRYPT_MODE_ECB') && defined('MCRYPT_RAND'))
 		{
-			return '';
+			return @trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(\CApi::$sSalt), $sPassword,
+				MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
 		}
 
-		$sPlainBytes = $sPassword;
-		$sEncodeByte = $sPlainBytes{0};
-		$sResult = bin2hex($sEncodeByte);
-
-		for ($iIndex = 1, $iLen = strlen($sPlainBytes); $iIndex < $iLen; $iIndex++)
-		{
-			$sPlainBytes{$iIndex} = ($sPlainBytes{$iIndex} ^ $sEncodeByte);
-			$sResult .= bin2hex($sPlainBytes{$iIndex});
-		}
-
-		return $sResult;
+		return @trim(base64_encode($sPassword));
 	}
 
 	/**
@@ -570,38 +562,16 @@ class api_Utils
 	 */
 	public static function DecodePassword($sPassword)
 	{
-		$sResult = '';
-		$iPasswordLen = strlen($sPassword);
-
-		if (0 < $iPasswordLen && strlen($sPassword) % 2 == 0)
+		if (function_exists('mcrypt_encrypt') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size') &&
+			defined('MCRYPT_RIJNDAEL_256') && defined('MCRYPT_MODE_ECB') && defined('MCRYPT_RAND'))
 		{
-			$sDecodeByte = chr(hexdec(substr($sPassword, 0, 2)));
-			$sPlainBytes = $sDecodeByte;
-			$iStartIndex = 2;
-			$iCurrentByte = 1;
-
-			do
-			{
-				$sHexByte = substr($sPassword, $iStartIndex, 2);
-				$sPlainBytes .= (chr(hexdec($sHexByte)) ^ $sDecodeByte);
-
-				$iStartIndex += 2;
-				$iCurrentByte++;
-			}
-			while ($iStartIndex < $iPasswordLen);
-
-			$sResult = $sPlainBytes;
+			return @mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(\CApi::$sSalt), base64_decode(trim($sPassword)),
+				MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND));
 		}
-		
-		// fix problem with 1-symbol password
-		if ($iPasswordLen === 2 && $iPasswordLen === strlen($sResult))
-		{
-			$sResult = substr($sResult, 0,  1);
-		}
-		
-		return $sResult;
+
+		return @base64_decode(trim($sPassword));
 	}
-
+	
 	/**
 	 * @param string $sEmail
 	 * @return string

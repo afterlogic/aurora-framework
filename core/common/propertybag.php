@@ -177,7 +177,7 @@ abstract class api_APropertyBag
 	public function __set($sKey, $mValue)
 	{
 		$aMap = $this->getMap();
-
+		
 		if (isset($aMap[$sKey]))
 		{
 			$this->setType($mValue, $aMap[$sKey][0]);
