@@ -78,12 +78,13 @@ CSimpleChatView.prototype.onGetMessagesResponse = function (oResponse)
 	{
 		this.posts(oResponse.Result);
 	}
+	this.setTimer();
 };
 
 CSimpleChatView.prototype.setTimer = function ()
 {
 	clearTimeout(this.iTimer);
-	this.iTimer = setTimeout(_.bind(this.getMessages, this));
+	this.iTimer = setTimeout(_.bind(this.getMessages, this), 2000);
 };
 
 CSimpleChatView.prototype.executeSendQuickReply = function ()

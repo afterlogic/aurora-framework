@@ -2,8 +2,12 @@
 
 class SimpleChatModule extends AApiModule
 {
+	public $oApiChatManager = null;
+	
 	public function init() 
 	{
+		$this->oApiChatManager = $this->GetManager('main', 'db');
+		
 		$this->setObjectMap('CUser', array(
 				'AllowSimpleChat' => array('bool', true)
 			)
@@ -35,10 +39,7 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function GetMessages()
 	{
-		return array(
-			array('name' => 'test', 'text' => 'Hi there!'),
-			array('name' => 'denis', 'text' => 'I miss you!')
-		);
+		return $this->oApiChatManager->GetMessages();
 	}
 
 	/**
@@ -47,6 +48,8 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function PostMessage($Message)
 	{
+		$iUserId = \CApi::getLogginedUserId();
+		$this->oApiChatManager->PostMessage($iUserId, $Message);
 		return true;
 	}	
 }

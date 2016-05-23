@@ -3,15 +3,13 @@
 /* -AFTERLOGIC LICENSE HEADER- */
 
 /**
- * @property int $IdTenant
  * @property int $IdUser
- * @property int $Created
- * @property string $Text
+ * @property string $Message
  *
  * @package SimpleChat
  * @subpackage Classes
  */
-class CSimpleChatPost extends api_AContainer
+class CSimpleChatPost extends api_APropertyBag
 {
 	public function __construct($sModule)
 	{
@@ -20,10 +18,8 @@ class CSimpleChatPost extends api_AContainer
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
 		$this->aStaticMap = array(
-			'IdTenant'			=> array('int', 0),
 			'IdUser'		=> array('int', 0),
-			'Created'	=> array('string', ''), //time()
-			'Text'	=> array('string', '')
+			'Message'	=> array('string', '')
 		);
 		
 		$this->SetDefaults();

@@ -1,16 +1,30 @@
-<div class="panel_center" style="background: white; height: 100%;">
+<div class="screen" style="display: none;">
 	<div class="panels">
-		<div class="panel message_panel">
-			<!-- ko foreach: posts -->
-			<div style="padding: 10px;">
-				<span data-bind="text: name" style="font-weight: bold"></span>: 
-				<span data-bind="text: text"></span>
+		<div class="panel item_viewer">
+			<div class="panel_content">
+				<div class="middle_bar">
+					<div class="panel_center" data-bind="heightAdjust: {'elements': [domQuickReply]}">
+						<div class="panels">
+							<div class="panel">
+								<div data-bind="customScrollbar: {x: true, y: true, 'reset': posts()}">
+									<div class="scroll-inner">
+										<!-- ko foreach: posts -->
+										<div style="padding: 10px;">
+											<span data-bind="text: name" style="font-weight: bold"></span>: 
+											<span data-bind="text: text"></span>
+										</div>
+										<!-- /ko -->
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- ko if: bAllowReply -->
+							<!-- ko template: {name: 'SimpleChatClient_QuickReplyView'} --><!-- /ko -->
+						<!-- /ko -->
+					</div>
+				</div>
 			</div>
-			<!-- /ko -->
 		</div>
 	</div>
-	
-	<!-- ko if: bAllowReply -->
-		<!-- ko template: {name: 'SimpleChatClient_QuickReplyView'} --><!-- /ko -->
-	<!-- /ko -->
 </div>
