@@ -3,7 +3,7 @@
 		<div class="panel item_viewer">
 			<div class="panel_content">
 				<div class="middle_bar">
-					<div class="panel_center" data-bind="heightAdjust: {'elements': [domQuickReply]}">
+					<div class="panel_center" data-bind="heightAdjust: {'elements': [domQuickReply], 'triggers': [posts(), replyTextFocus()]}">
 						<div class="panels">
 							<div class="panel">
 								<div data-bind="customScrollbar: {x: true, y: true, 'reset': posts()}">
