@@ -280,7 +280,7 @@ class AuthModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function CreateAccount($iUserId = 0, $sLogin = '', $sPassword = '')
+	public function CreateAccount($iTenantId = 0, $iUserId = 0, $sLogin = '', $sPassword = '')
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 
@@ -289,7 +289,7 @@ class AuthModule extends AApiModule
 		
 		$oEventResult = null;
 		$this->broadcastEvent('CreateAccount', array(
-			'IdTenant' => $iUserId,
+			'IdTenant' => $iTenantId,
 			'IdUser' => $iUserId,
 			'login' => $sLogin,
 			'password' => $sPassword,
