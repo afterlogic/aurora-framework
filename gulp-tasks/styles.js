@@ -64,7 +64,7 @@ function BuildThemeCss(sTheme, bMobile)
 		.pipe(concat('styles' + sPostfix + '.css', {
 			process: function(sSrc, sFilePath) {
 				var
-					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '.less'),
+					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less'),
 					sRes = fileExists(sThemePath) ? '@import "' + sThemePath + '";\r\n' : ''
 				;
 				
@@ -151,15 +151,15 @@ gulp.task('styles', function () {
 	MoveSharingCss();
 	_.each(aThemes, function (sTheme) {
 		MoveFiles('modules/Core/styles/themes/' + sTheme.toLowerCase() + '-images', 'static/styles/themes/' + sTheme + '/images');
-		BuildThemeCss(sTheme.toLowerCase(), false);
-		BuildThemeCss(sTheme.toLowerCase(), true);
+		BuildThemeCss(sTheme, false);
+		BuildThemeCss(sTheme, true);
 	});
 });
 
 gulp.task('cssonly', function () {
 	_.each(aThemes, function (sTheme) {
-		BuildThemeCss(sTheme.toLowerCase(), false);
-		BuildThemeCss(sTheme.toLowerCase(), true);
+		BuildThemeCss(sTheme, false);
+		BuildThemeCss(sTheme, true);
 	});
 });
 
