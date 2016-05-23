@@ -8,7 +8,7 @@ if ($oHttp->HasPost('manager'))
 	if (in_array($sManagerName, array('channels', 'tenants', 'accounts', 'users', 'contacts', 'mail')))
 	{
 //		header('Location: /adm/');
-		include $sManagerName."\actions.php";
+		include $sManagerName."/actions.php";
 		exit;
 	}
 	else if ($sManagerName === 'auth')

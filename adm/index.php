@@ -95,19 +95,19 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 				</form>
 			</div>
 			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 1 ? 'active' : ''?>" id="channels">
-				<?php include "channels\list.php"; ?>
+				<?php include "channels/list.php"; ?>
 			</div>
 			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 2 ? 'active' : ''?>" id="tenants">
-				<?php include "tenants\list.php"; ?>
+				<?php include "tenants/list.php"; ?>
 			</div>
 			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 3 ? 'active' : ''?>" id="users">
-				<?php include "users\list.php"; ?>
+				<?php include "users/list.php"; ?>
 			</div>
 			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 4 ? 'active' : ''?>" id="accounts">
-				<?php include "accounts\list.php"; ?>
+				<?php include "accounts/list.php"; ?>
 			</div>
 			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 6 ? 'active' : ''?>" id="mail">
-				<?php include "mail\list.php"; ?>
+				<?php include "mail/list.php"; ?>
 			</div>
 		</div>
 	</div>
