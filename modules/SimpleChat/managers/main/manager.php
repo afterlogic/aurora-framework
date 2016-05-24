@@ -27,7 +27,12 @@ class CApiSimpleChatMainManager extends AApiManager
 		$this->incClass('post');
 	}
 	
-	public function GetMessages()
+	public function GetMessagesCount()
+	{
+		return $this->oEavManager->getObjectsCount('CSimpleChatPost', array());
+	}
+	
+	public function GetMessages($iPage = 1, $iPerPage = 0)
 	{
 		$aResult = array();
 		try
@@ -37,8 +42,8 @@ class CApiSimpleChatMainManager extends AApiManager
 				array(
 					'IdUser', 'Message'
 				),
-				0,
-				0,
+				$iPage,
+				$iPerPage,
 				array()
 			);
 

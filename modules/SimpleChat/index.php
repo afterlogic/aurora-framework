@@ -35,11 +35,18 @@ class SimpleChatModule extends AApiModule
 	}
 	
 	/**
+	 * @param int $Page
+	 * @param int $PerPage
 	 * @return array
 	 */
-	public function GetMessages()
+	public function GetMessages($Page, $PerPage)
 	{
-		return $this->oApiChatManager->GetMessages();
+		$iMessagesCount = $this->oApiChatManager->GetMessagesCount();
+		$aMessages = $this->oApiChatManager->GetMessages($Page, $PerPage);
+		return array(
+			'Count' => $iMessagesCount,
+			'Collection' => $aMessages
+		);
 	}
 
 	/**
