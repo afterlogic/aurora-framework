@@ -18,8 +18,8 @@ class CSimpleChatPost extends api_APropertyBag
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
 		$this->aStaticMap = array(
-			'IdUser'		=> array('int', 0),
-			'Message'	=> array('string', '')
+			'IdUser'	=> array('int', 0),
+			'Message'	=> array('text', '')
 		);
 		
 		$this->SetDefaults();
