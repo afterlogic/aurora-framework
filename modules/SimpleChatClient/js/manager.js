@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = function (oSettings) {
+//	require('modules/Core/js/koBindings.js');
+	
 	var
 		TextUtils = require('modules/Core/js/utils/Text.js'),
 		

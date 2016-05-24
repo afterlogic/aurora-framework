@@ -349,7 +349,6 @@ ko.bindingHandlers.checkstate = {
 
 ko.bindingHandlers.heightAdjust = {
 	'update': function (oElement, fValueAccessor, fAllBindingsAccessor) {
-		
 		var 
 			jqElement = oElement.jqElement || null,
 			height = 0,
