@@ -10,6 +10,7 @@ function CHeaderItemView(sLinkText)
 {
 	this.sName = '';
 	
+	this.visible = ko.observable(true);
 	this.hash = ko.observable('');
 	this.linkText = ko.observable(sLinkText);
 	this.isCurrent = ko.observable(false);

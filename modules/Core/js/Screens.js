@@ -23,6 +23,7 @@ function CScreens()
 	
 	this.oGetScreenFunctions = {};
 	this.oScreens = {};
+	this.oModulesNames = {};
 
 	this.currentScreen = ko.observable('');
 	this.sDefaultScreen = '';
@@ -39,7 +40,7 @@ CScreens.prototype.init = function ()
 {
 	var
 		oModulesScreens = ModulesManager.getModulesScreens(),
-		oModulesTabs = ModulesManager.getModulesTabs(),
+		oModulesTabs = ModulesManager.getModulesTabs(false),
 		aKeys = []
 	;
 	
@@ -72,26 +73,27 @@ CScreens.prototype.init = function ()
 };
 
 /**
- * @param {string} sPrefix
+ * @param {string} sModuleName
  * @param {Object} oScreenList
  */
-CScreens.prototype.addToScreenList = function (sPrefix, oScreenList)
+CScreens.prototype.addToScreenList = function (sModuleName, oScreenList)
 {
 	_.each(oScreenList, _.bind(function (fGetScreen, sKey) {
 		var sNewKey = sKey.toLowerCase();
-		if (sPrefix !== '')
+		if (sModuleName !== '')
 		{
 			if (sKey === 'main')
 			{
-				sNewKey = sPrefix.toLowerCase();
+				sNewKey = sModuleName.toLowerCase();
 			}
 			else
 			{
-				sNewKey = sPrefix.toLowerCase() + '-' + sKey;
+				sNewKey = sModuleName.toLowerCase() + '-' + sKey;
 			}
 		}
 		
 		this.oGetScreenFunctions[sNewKey] = fGetScreen;
+		this.oModulesNames[sNewKey] = sModuleName;
 	}, this));
 };
 
@@ -120,8 +122,8 @@ CScreens.prototype.route = function (aParams)
 	{
 		sNextScreen = this.sDefaultScreen;
 	}
-
-	if (this.hasScreenData(sNextScreen))
+	
+	if (ModulesManager.isModuleEnabled(this.oModulesNames[sNextScreen]) && this.hasScreenData(sNextScreen))
 	{
 		if (sCurrentScreen !== sNextScreen)
 		{

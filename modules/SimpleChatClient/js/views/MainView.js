@@ -92,7 +92,7 @@ CSimpleChatView.prototype.onGetMessagesResponse = function (oResponse, oRequest)
 //			aNewMessages = [],
 //			aPosts = this.posts()
 		;
-		console.log(oParameters.Page * oParameters.PerPage < iCount, oParameters.Page, oParameters.PerPage, iCount);
+//		console.log(oParameters.Page * oParameters.PerPage < iCount, oParameters.Page, oParameters.PerPage, iCount);
 		this.hasMore(bHasMore);
 //		console.log('oParameters.Page', oParameters.Page);
 //		if (oParameters.Page !== 1)

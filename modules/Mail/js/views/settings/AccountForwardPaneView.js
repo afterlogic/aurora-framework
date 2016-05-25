@@ -128,7 +128,7 @@ CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 	{
 		var oParameters = JSON.parse(oRequest.Parameters);
 		
-		this.updateEditableValues(oParameters);
+		this.applySavedValues(oParameters);
 		
 		Screens.showReport(TextUtils.i18n('MAIL/REPORT_FORWARD_UPDATE_SUCCESS'));
 	}

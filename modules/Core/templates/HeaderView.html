@@ -10,7 +10,9 @@
 	</span>
 	
 	<!-- ko foreach: tabs -->
-		<!-- ko template: {name: ViewTemplate, data: $data} --><!-- /ko -->
+		<!-- ko if: $data.visible -->
+			<!-- ko template: {name: ViewTemplate, data: $data} --><!-- /ko -->
+		<!-- /ko -->
 	<!-- /ko -->
 
 	<span class="item settings" data-bind="visible: mobileDevice">

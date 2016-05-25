@@ -76,7 +76,7 @@ module.exports = {
 			WorkdayStarts: AppData.User && AppData.User.Calendar ? Types.pString(AppData.User.Calendar.CalendarWorkDayStarts) : '9'
 		},
 		Files: { // AppData.User.IsFilesSupported
-			enableFiles: ko.observable(AppData.User ? !!AppData.User.FilesEnable : true),
+			enableModule: ko.observable(true),//AppData.User.FilesEnable
 			AllowCollaboration: AppData.User ? !!AppData.User.IsCollaborationSupported : true,
 			AllowSharing: AppData.User ? !!AppData.User.AllowFilesSharing : true,
 			PublicHash: Types.pString(AppData.FileStoragePubHash),
@@ -107,7 +107,7 @@ module.exports = {
 			TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp'] // add to settings
 		},
 		SimpleChat: {
-			AllowModule: AppData.SimpleChatClient ? AppData.SimpleChatClient.AllowModule : false
+			enableModule: ko.observable(AppData.SimpleChat ? !!AppData.SimpleChat.AllowModule : false)
 		},
 		dsbld_Phone: {
 			SipImpi: AppData.User ? Types.pString(AppData.User.SipImpi) : '102',

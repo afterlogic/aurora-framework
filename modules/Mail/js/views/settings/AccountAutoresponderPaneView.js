@@ -102,7 +102,7 @@ CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oReque
 	{
 		var oParameters = JSON.parse(oRequest.Parameters);
 		
-		this.updateEditableValues(oParameters);
+		this.applySavedValues(oParameters);
 		
 		Screens.showReport(TextUtils.i18n('MAIL/REPORT_AUTORESPONDER_UPDATE_SUCCESS'));
 	}

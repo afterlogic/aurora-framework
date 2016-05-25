@@ -159,7 +159,7 @@ CAbstractSettingsFormView.prototype.onResponse = function (oResponse, oRequest)
 	{
 		var oParameters = JSON.parse(oRequest.Parameters);
 		
-		this.updateEditableValues(oParameters);
+		this.applySavedValues(oParameters);
 		
 		Screens.showReport(TextUtils.i18n('CORE/REPORT_SETTINGS_UPDATE_SUCCESS'));
 	}

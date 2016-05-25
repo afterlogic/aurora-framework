@@ -17,7 +17,7 @@ function CHelpdeskSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'SimpleChat');
 
-	this.allowChat = ko.observable(Settings.AllowModule);
+	this.allowChat = ko.observable(Settings.enableModule());
 }
 
 _.extendOwn(CHelpdeskSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
@@ -33,7 +33,7 @@ CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
 
 CHelpdeskSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.allowChat(Settings.AllowModule);
+	this.allowChat(Settings.enableModule());
 };
 
 CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()

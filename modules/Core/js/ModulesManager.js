@@ -8,7 +8,8 @@ var
 	
 	Settings = require('modules/Core/js/Settings.js'),
 	
-	oModules = {}
+	oModules = {},
+	oModulesSettings = {}
 ;
 
 module.exports = {
@@ -20,6 +21,7 @@ module.exports = {
 				if (oModule.isAvaliable(iUserRole, bPublic))
 				{
 					oModules[sModuleName] = oModule;
+					oModulesSettings[sModuleName] = oModuleSettings;
 				}
 			}
 		});
@@ -67,6 +69,14 @@ module.exports = {
 							this.aStandardTabs.push(oHeaderItem);
 						}
 						this.aTabs.push(oHeaderItem);
+						
+						if (oModulesSettings[sModuleName] && oModulesSettings[sModuleName].enableModule)
+						{
+							oHeaderItem.visible(oModulesSettings[sModuleName].enableModule());
+							oModulesSettings[sModuleName].enableModule.subscribe(function (bEnableModule) {
+								oHeaderItem.visible(bEnableModule);
+							});
+						}
 					}
 				}
 			}, this));
@@ -92,6 +102,11 @@ module.exports = {
 	isModuleIncluded: function (sModuleName)
 	{
 		return oModules[sModuleName] !== undefined;
+	},
+	
+	isModuleEnabled: function (sModuleName)
+	{
+		return oModules[sModuleName] && oModulesSettings[sModuleName] && (!oModulesSettings[sModuleName].enableModule || oModulesSettings[sModuleName].enableModule());
 	},
 	
 	run: function (sModuleName, sFunctionName, aParams)
