@@ -7,9 +7,12 @@
 						<div data-bind="customScrollbar: {x: true, y: true, 'reset': posts()}">
 							<div class="scroll-inner">
 								<!-- ko foreach: posts -->
-								<div style="padding: 10px;">
-									<span data-bind="text: name" style="font-weight: bold"></span>: 
-									<span data-bind="text: text"></span>
+								<div class="post">
+									<div>
+										<span class="name" data-bind="text: name"></span>
+										<span class="time" data-bind="text: 'time'"></span>
+									</div>
+									<div class="text" data-bind="text: text"></div>
 								</div>
 								<!-- /ko -->
 							</div>
