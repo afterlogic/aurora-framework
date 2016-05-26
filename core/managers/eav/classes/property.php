@@ -19,14 +19,16 @@ class CProperty
 	public $Name;
 	public $Value;
 	public $Type;
+	public $Encrypt;
 	
-	public function __construct($sName, $sValue, $sType = 'string')
+	public function __construct($sName, $sValue, $sType = 'string', $bEncrypt = false)
 	{
 		$this->Id = 0;
 		$this->ObjectId = '';
 		$this->Name	= $sName;
 		$this->Value = $sValue;
 		$this->Type = $sType;
+		$this->Encrypt = $bEncrypt;
 	}
 
 	/**

@@ -85,7 +85,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 	}
 			
 	public function getObjects($sObjectType, $aViewProperties = array(), 
-			$iPage = 0, $iPerPage = 0, $aWhere = array(), 
+			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
 			$sSortProperty = "", $iSortOrder = \ESortOrder::ASC, $bCount = false)
 	{
 		$sCount = "";
@@ -122,7 +122,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				}
 			}
 
-			if (!empty($sSortProperty))
+			if (!empty($sSortProperty) && $oObject->IsProperty($sSortProperty))
 			{
 				array_push($aViewProperties, $sSortProperty);
 				$sResultSort = sprintf(" ORDER BY `prop_%s` %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
@@ -181,10 +181,10 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchProperties);
 			}
 			
-			if ($iPerPage > 0)
+			if ($iLimit > 0)
 			{
-				$sLimit = sprintf("LIMIT %d", $iPerPage);
-				$sOffset = sprintf("OFFSET %d", ($iPage > 0) ? ($iPage - 1) * $iPerPage : 0);
+				$sLimit = sprintf("LIMIT %d", $iLimit);
+				$sOffset = sprintf("OFFSET %d", $iOffset /*($iOffset > 0) ? ($iOffset - 1) * $iLimit : 0*/);
 			}
 		}		
 		$sSql = sprintf(
@@ -252,14 +252,19 @@ class CApiEavCommandCreator extends api_CommandCreator
 			{
 				if ($oProperty instanceof \CProperty)
 				{
+					$sValue = $oProperty->Value;
+					if ($oProperty->Encrypt)
+					{
+						$sValue = \api_Utils::EncodePassword($sValue);
+					}
 					$aValues[] = sprintf('(%d, %s, %s, %s, %s, %d, %d)',
 						$iObjectId,
 						$this->escapeString($oProperty->Name),
 						$this->escapeString($oProperty->Type),
-						$oProperty->Type === "string" ? $this->escapeString($oProperty->Value) : 'null',
-						$oProperty->Type === "text" ? $this->escapeString($oProperty->Value) : 'null',
-						$oProperty->Type === "int" ? $oProperty->Value : 'null',
-						$oProperty->Type === "bool" ? $oProperty->Value : 'null'
+						$oProperty->Type === "string" ? $this->escapeString($sValue) : 'null',
+						$oProperty->Type === "text" ? $this->escapeString($sValue) : 'null',
+						$oProperty->Type === "int" ? $sValue : 'null',
+						$oProperty->Type === "bool" ? $sValue : 'null'
 					);
 				}
 			}

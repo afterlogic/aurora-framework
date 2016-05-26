@@ -65,9 +65,9 @@ class CApiEavManager extends AApiManagerWithStorage
 			$oObject->iObjectId = $mResult;
 			$aMap = $oObject->getMap();
 			$aProperties = array();
-			foreach ($aMap as $sKey => $aType)
+			foreach (array_keys($aMap) as $sKey)
 			{
-				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $aType[0]);
+				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
 			}
 			$this->setProperties($mResult, $aProperties);
 		}
@@ -82,9 +82,9 @@ class CApiEavManager extends AApiManagerWithStorage
 		if (0 < count($aMap))
 		{
 			$aProperties = array();
-			foreach ($aMap as $sKey => $aType)
+			foreach (array_keys($aMap) as $sKey)
 			{
-				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $aType[0]);
+				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
 			}
 			try 
 			{
@@ -133,12 +133,12 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $iCount;		
 	}
 	
-	public function getObjects($sType, $aViewProperties = array(), $iPage = 0, $iPerPage = 0, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
+	public function getObjects($sType, $aViewProperties = array(), $iOffset = 0, $iLimit = 0, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$aObjects = null;
 		try
 		{
-			$aObjects = $this->oStorage->getObjects($sType, $aViewProperties, $iPage, $iPerPage, $aSearchProperties, $sOrderBy, $iSortOrder);
+			$aObjects = $this->oStorage->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -246,39 +246,5 @@ class CApiEavManager extends AApiManagerWithStorage
 		}
 
 		return $bResult;
-	}
-
-	/**
-	 */
-	public function getProperty(CProperty $oProperty)
-	{
-		$mResult = false;
-		try
-		{
-			$mResult = $this->oStorage->getProperty($oProperty->ObjectId, $oProperty->Name);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-
-		return $mResult;
-	}
-
-	/**
-	 */
-	public function getProperties($iObjectId, $sValue = '')
-	{
-		$aResult = false;
-		try
-		{
-			$aResult = $this->oStorage->getProperties($iObjectId, $sValue);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-
-		return $aResult;
 	}
 }

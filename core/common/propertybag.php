@@ -134,21 +134,6 @@ abstract class api_APropertyBag
 		$aMap = $this->getMap();
 		return isset($aMap[$sPropertyName]);
 	}
-	
-	/**
-	 * @return array
-	 */
-	public function getPropertyType($sPropertyName)
-	{
-		$sResult = 'string';
-		$aMap = $this->getMap();
-		if (isset($aMap[$sPropertyName]) && isset($aMap[$sPropertyName][0]))
-		{
-			$sResult = $aMap[$sPropertyName][0];
-		}
-		
-		return $sResult;
-	}	
 
 	/**
 	 * @return array
@@ -160,6 +145,21 @@ abstract class api_APropertyBag
 		return ($sType === 'string' || $sType === 'text');
 	}		
 	
+	/**
+	 * @return array
+	 */
+	public function isEncryptedProperty($sPropertyName)
+	{
+		$bResult = false;
+		$aMap = $this->getMap();
+		if (isset($aMap[$sPropertyName]))
+		{
+			$bResult = ($aMap[$sPropertyName][0] === 'encrypted');
+		}
+		
+		return $bResult;
+	}		
+
 	/**
 	 * @param string $sPropertyName
 	 * @return bool
@@ -217,6 +217,12 @@ abstract class api_APropertyBag
 		return $mReturn;
 	}
 
+	public function getType($sPropertyName)
+	{
+		
+	}
+	
+	
 	/**
 	 * @param mixed $mValue
 	 * @param string $sType
@@ -281,6 +287,40 @@ abstract class api_APropertyBag
 		
 		return $aStaticMap;
 	}
+	
+	/**
+	 * @return array
+	 */
+	public function getProperyAttributes($sPropertyName)
+	{
+		$mResult = false;
+		$aMap = $this->getMap();
+		if (isset($aMap[$sPropertyName]))
+		{
+			$mResult = $aMap[$sPropertyName];
+		}
+		
+		return $mResult;
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function getPropertyType($sPropertyName)
+	{
+		$mType = false;
+		$aMap = $this->getMap();
+		if (isset($aMap[$sPropertyName]))
+		{
+			$mType = $aMap[$sPropertyName][0];
+			if ($mType === 'encrypted')
+			{
+				$mType = 'string';
+			}
+		}
+		
+		return $mType;
+	}	
 
 	/**
 	 * @return array

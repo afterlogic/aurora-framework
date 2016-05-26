@@ -8,6 +8,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 // utilizing WebMail Pro API
 include_once __DIR__.'/core/api.php';
 
+/*
 $oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 
 $mResult = $oAuthDecorator->CreateAccount(
@@ -15,6 +16,14 @@ $mResult = $oAuthDecorator->CreateAccount(
 	'test4',
 	'p12345'
 );
+ * 
+ */
 
+//$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
+
+//print_r($oAuthDecorator->CreateAccount(0, 246, 'test5', 'p12345'));
+
+$oManagerApi = \CApi::GetModule('Auth')->GetManager('accounts');
+$aItems = $oManagerApi->getAccountList(0, 0);
 
 	

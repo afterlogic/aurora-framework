@@ -85,7 +85,12 @@ class CApiEavDbStorage extends CApiEavStorage
 
 					if (isset($oRow->prop_key) && $oObject->IsProperty($oRow->prop_key))
 					{
-						$oObject->{$oRow->prop_key} = $oRow->{'prop_value_' . $oRow->prop_type};
+						$mValue = $oRow->{'prop_value_' . $oRow->prop_type};
+						if ($oObject->isEncryptedProperty($oRow->prop_type))
+						{
+							$mValue = \api_Utils::DecodePassword($mValue);
+						}
+						$oObject->{$oRow->prop_key} = $mValue;
 					}
 				}
 			}			
@@ -120,10 +125,10 @@ class CApiEavDbStorage extends CApiEavStorage
 	}
 	/**
 	 */
-	public function getObjects($sType, $aViewProperties = array(), $iPage = 0, $iPerPage = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
+	public function getObjects($sType, $aViewProperties = array(), $iOffset = 0, $iLimit = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getObjects($sType, $aViewProperties, $iPage, $iPerPage, $aSearchProperties, $sOrderBy, $iSortOrder)))
+		if (class_exists($sType) && $this->oConnection->Execute($this->oCommandCreator->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder)))
 		{
 			$oRow = null;
 			$mResult = array();
@@ -135,11 +140,16 @@ class CApiEavDbStorage extends CApiEavStorage
 				$oObject->sModuleName =  $oRow->obj_module;
 				
 				$aMap = $oObject->getMap();
-				foreach($aMap as $sKey => $aMapItem)
+				foreach(array_keys($aMap) as $sKey)
 				{
 					if (isset($oRow->{'prop_' . $sKey}))
 					{
-						$oObject->{$sKey} = $oRow->{'prop_' . $sKey};
+						$mValue = $oRow->{'prop_' . $sKey};
+						if ($oObject->isEncryptedProperty($sKey))
+						{
+							$mValue = \api_Utils::DecodePassword($mValue);
+						}
+						$oObject->{$sKey} = $mValue;
 					}
 				}
 
@@ -164,7 +174,6 @@ class CApiEavDbStorage extends CApiEavStorage
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
-	
 
 	/**
 	 */
@@ -213,55 +222,4 @@ class CApiEavDbStorage extends CApiEavStorage
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
-
-	/**
-	 */
-	public function getProperties($iObjectId, $sValue)
-	{
-		$aProperties = false;
-		if ($this->oConnection->Execute(
-			$this->oCommandCreator->getProperties($iObjectId, $sValue)))
-		{
-			$oRow = null;
-			$aProperties = array();
-			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
-			{
-				$oProperty = new \CProperty();
-				$oProperty->InitByDbRow($oRow);
-				$aProperties[] = $oProperty;
-			}
-		}
-		$this->throwDbExceptionIfExist();
-		return $aProperties;
-	}	
-	
-	/**
-	 */
-	public function getProperty(CProperty $oProperty)
-	{
-		return $this->getPropertyBySql($this->oCommandCreator->getProperty($oProperty->Id));
-	}
-	
-	/**
-	 * @param string $sSql
-	 *
-	 * @return \CProperty
-	 */
-	protected function getPropertyBySql($sSql)
-	{
-		$oProperty = null;
-		if ($this->oConnection->Execute($sSql))
-		{
-			$oRow = $this->oConnection->GetNextRecord();
-			if ($oRow)
-			{
-				$oProperty = new \CProperty();
-				$oProperty->InitByDbRow($oRow);
-			}
-			$this->oConnection->FreeResult();
-		}
-
-		$this->throwDbExceptionIfExist();
-		return $oProperty;
-	}	
 }
