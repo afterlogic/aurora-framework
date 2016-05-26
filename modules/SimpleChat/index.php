@@ -69,12 +69,13 @@ class SimpleChatModule extends AApiModule
 	 * Creates a new post for loggined user.
 	 * 
 	 * @param string $Text text of the new post.
+	 * @param string $Date date of the new post.
 	 * @return boolean
 	 */
-	public function CreatePost($Text)
+	public function CreatePost($Text, $Date)
 	{
 		$iUserId = \CApi::getLogginedUserId();
-		$this->oApiChatManager->CreatePost($iUserId, $Text);
+		$this->oApiChatManager->CreatePost($iUserId, $Text, $Date);
 		return true;
 	}	
 }

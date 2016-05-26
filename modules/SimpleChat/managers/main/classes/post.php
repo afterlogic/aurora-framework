@@ -19,7 +19,8 @@ class CSimpleChatPost extends api_APropertyBag
 		
 		$this->aStaticMap = array(
 			'UserId'	=> array('int', 0),
-			'Text'	=> array('text', '')
+			'Text'		=> array('text', ''),
+			'Date'		=> array('datetime', '')
 		);
 		
 		$this->SetDefaults();

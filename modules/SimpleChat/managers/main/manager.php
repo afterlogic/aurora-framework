@@ -55,9 +55,9 @@ class CApiSimpleChatMainManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CSimpleChatPost', 
 				array(
-					'UserId', 'Text'
+					'UserId', 'Text', 'Date'
 				),
-				$Offset + 1,
+				$Offset,
 				$Limit,
 				array()
 			);
@@ -70,7 +70,8 @@ class CApiSimpleChatMainManager extends AApiManager
 					$oUser = $oCoreDecorator->GetUser($oItem->UserId);
 					$aResult[] = array(
 						'name' => $oUser->Name,
-						'text' => $oItem->Text
+						'text' => $oItem->Text,
+						'date' => $oItem->Date
 					);
 				}
 			}
@@ -88,9 +89,10 @@ class CApiSimpleChatMainManager extends AApiManager
 	 * 
 	 * @param int $iUserId id of user that creates the new post.
 	 * @param string $sText text of the new post.
+	 * @param string $sDate date of the new post.
 	 * @return boolean
 	 */
-	public function CreatePost($iUserId, $sText)
+	public function CreatePost($iUserId, $sText, $sDate)
 	{
 		$bResult = true;
 		try
@@ -98,6 +100,7 @@ class CApiSimpleChatMainManager extends AApiManager
 			$oNewPost = new \CSimpleChatPost($this->GetModule()->GetName());
 			$oNewPost->UserId = $iUserId;
 			$oNewPost->Text = $sText;
+			$oNewPost->Date = $sDate;
 			if (!$this->oEavManager->saveObject($oNewPost))
 			{
 				throw new CApiManagerException(Errs::UsersManager_UserCreateFailed);

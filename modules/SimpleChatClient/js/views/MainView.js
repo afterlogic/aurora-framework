@@ -3,6 +3,7 @@
 var
 	_ = require('underscore'),
 	ko = require('knockout'),
+	moment = require('moment'),
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
@@ -125,9 +126,29 @@ CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 //		{
 //			aPosts = _.union(this.posts(), aNewPosts);
 //		}
+		_.each(aPosts, _.bind(function (oPost) {
+			oPost.date = this.getDisplayDate(moment.utc(oPost.date));
+		}, this));
 		this.posts(aPosts);
 	}
 	this.setTimer();
+};
+
+CSimpleChatView.prototype.getDisplayDate = function (oMomentUtc)
+{
+	var
+		oLocal = oMomentUtc.local(),
+		oNow = moment()
+	;
+	
+	if (oNow.diff(oLocal, 'days') === 0)
+	{
+		return oLocal.format('HH:mm:ss');
+	}
+	else
+	{
+		return oLocal.format('MMM Do HH:mm:ss');
+	}
 };
 
 CSimpleChatView.prototype.setTimer = function ()
@@ -140,9 +161,10 @@ CSimpleChatView.prototype.executeSendQuickReply = function ()
 {
 	if (this.bAllowReply)
 	{
-		this.posts.push({name: App.getUserName(), text: this.replyText()});
+		var oNow = moment();
 		clearTimeout(this.iTimer);
-		Ajax.send('CreatePost', {'Text': this.replyText()}, this.setTimer, this);
+		Ajax.send('CreatePost', {'Text': this.replyText(), 'Date': oNow.utc().format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
+		this.posts.push({name: App.getUserName(), text: this.replyText(), 'date': this.getDisplayDate(oNow.utc())});
 		this.replyText('');
 	}
 };
