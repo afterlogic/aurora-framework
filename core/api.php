@@ -988,7 +988,7 @@ class CApi
 			case 'Estonian':
 				$iResult = ($iNumber === 1 ? 0 : 1);
 				break;
-			case 'Finish':
+			case 'Finnish':
 				$iResult = ($iNumber === 1 ? 0 : 1);
 				break;
 			case 'French':
