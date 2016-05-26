@@ -3,8 +3,6 @@ $oHttp = \MailSo\Base\Http::NewInstance();
 
 if ($oHttp->HasPost('action'))
 {
-//	header('Location: /adm/');
-	
 	$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 
 	switch ($oHttp->GetPost('action'))
@@ -29,6 +27,8 @@ if ($oHttp->HasPost('action'))
 			);
 			break;
 	}
+	
+	header('Location: ' . $_SERVER['REQUEST_URI']);
 }
 
 

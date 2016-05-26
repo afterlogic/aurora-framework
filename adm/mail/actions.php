@@ -5,7 +5,6 @@ if ($oHttp->HasPost('action'))
 {
 	$oMailDecorator = \CApi::GetModuleDecorator('Mail');
 	
-//	header('Location: /adm/');
 	switch ($oHttp->GetPost('action'))
 	{
 		case 'create': 
@@ -31,6 +30,7 @@ if ($oHttp->HasPost('action'))
 			);
 			break;
 	}
+	header('Location: ' . $_SERVER['REQUEST_URI']);
 }
 
 

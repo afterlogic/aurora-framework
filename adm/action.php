@@ -41,6 +41,7 @@ if ($oHttp->HasPost('manager'))
 					}
 					break;
 			}
+		
 		}
 		
 	}
