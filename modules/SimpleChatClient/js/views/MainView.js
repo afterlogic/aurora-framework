@@ -66,30 +66,30 @@ CSimpleChatView.prototype.ViewTemplate = 'SimpleChatClient_MainView';
 
 CSimpleChatView.prototype.onShow = function ()
 {
-	this.getMessages(1);
+	this.getPosts(1);
 };
 
 CSimpleChatView.prototype.showMore = function ()
 {
 	this.page(this.page() + 1);
-	this.getMessages(this.page());
+	this.getPosts(this.page());
 };
 
-CSimpleChatView.prototype.getMessages = function (iPage)
+CSimpleChatView.prototype.getPosts = function (iPage)
 {
-	Ajax.send('GetMessages', {Page: 1, PerPage: 0}, this.onGetMessagesResponse, this);
+	Ajax.send('GetPosts', {Offset: 0, Limit: 10}, this.onGetPostsResponse, this);
 };
 
-CSimpleChatView.prototype.onGetMessagesResponse = function (oResponse, oRequest)
+CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result && _.isArray(oResponse.Result.Collection))
 	{
 		var
 			iCount = oResponse.Result.Count,
-			aMessages = oResponse.Result.Collection,
+			aPosts = oResponse.Result.Collection,
 			oParameters = JSON.parse(oRequest.Parameters),
 			bHasMore = oParameters.PerPage > 0 && oParameters.Page * oParameters.PerPage < iCount
-//			aNewMessages = [],
+//			aNewPosts = [],
 //			aPosts = this.posts()
 		;
 //		console.log(oParameters.Page * oParameters.PerPage < iCount, oParameters.Page, oParameters.PerPage, iCount);
@@ -97,35 +97,35 @@ CSimpleChatView.prototype.onGetMessagesResponse = function (oResponse, oRequest)
 //		console.log('oParameters.Page', oParameters.Page);
 //		if (oParameters.Page !== 1)
 //		{
-//			console.log('aMessages', aMessages);
+//			console.log('aPosts', aPosts);
 //			console.log('aPosts', aPosts);
 //		}
-//		_.each(aMessages, function (oMessage) {
-//			var oFoundMessage = _.find(aPosts, function (oMsg) {
+//		_.each(aPosts, function (oPost) {
+//			var oFoundPost = _.find(aPosts, function (oMsg) {
 ////				if (oParameters.Page !== 1)
 ////				{
-////					console.log(oMsg.name === oMessage.name && oMsg.text === oMessage.text, oMsg.name, oMessage.name, oMsg.text, oMessage.text);
+////					console.log(oMsg.name === oPost.name && oMsg.text === oPost.text, oMsg.name, oPost.name, oMsg.text, oPost.text);
 ////				}
-//				return oMsg.name === oMessage.name && oMsg.text === oMessage.text;
+//				return oMsg.name === oPost.name && oMsg.text === oPost.text;
 //			});
 //			if (oParameters.Page !== 1)
 //			{
-//				console.log('oFoundMessage', oFoundMessage, 'oMessage', oMessage);
+//				console.log('oFoundPost', oFoundPost, 'oPost', oPost);
 //			}
-//			if (!oFoundMessage)
+//			if (!oFoundPost)
 //			{
-//				aNewMessages.push(oMessage);
+//				aNewPosts.push(oPost);
 //			}
 //		});
 //		if (oParameters.Page === 1)
 //		{
-//			aMessages = _.union(aNewMessages, this.posts());
+//			aPosts = _.union(aNewPosts, this.posts());
 //		}
 //		else
 //		{
-//			aMessages = _.union(this.posts(), aNewMessages);
+//			aPosts = _.union(this.posts(), aNewPosts);
 //		}
-		this.posts(aMessages);
+		this.posts(aPosts);
 	}
 	this.setTimer();
 };
@@ -133,7 +133,7 @@ CSimpleChatView.prototype.onGetMessagesResponse = function (oResponse, oRequest)
 CSimpleChatView.prototype.setTimer = function ()
 {
 	clearTimeout(this.iTimer);
-	this.iTimer = setTimeout(_.bind(this.getMessages, this, 1), 2000);
+	this.iTimer = setTimeout(_.bind(this.getPosts, this, 1), 2000);
 };
 
 CSimpleChatView.prototype.executeSendQuickReply = function ()
@@ -141,7 +141,8 @@ CSimpleChatView.prototype.executeSendQuickReply = function ()
 	if (this.bAllowReply)
 	{
 		this.posts.push({name: App.getUserName(), text: this.replyText()});
-		Ajax.send('PostMessage', {'Message': this.replyText()}, this.setTimer, this);
+		clearTimeout(this.iTimer);
+		Ajax.send('CreatePost', {'Text': this.replyText()}, this.setTimer, this);
 		this.replyText('');
 	}
 };

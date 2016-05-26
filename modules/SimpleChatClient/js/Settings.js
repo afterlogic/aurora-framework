@@ -6,7 +6,7 @@ module.exports = {
 	init: function (oSettings) {
 		_.extendOwn(this, oSettings);
 	},
-	update: function (sEnableModule) {
-		this.enableModule(sEnableModule === '1');
+	update: function (bEnableModule) {
+		this.enableModule(bEnableModule);
 	}
 };

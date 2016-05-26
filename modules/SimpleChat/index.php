@@ -9,54 +9,72 @@ class SimpleChatModule extends AApiModule
 		$this->oApiChatManager = $this->GetManager('main', 'db');
 		
 		$this->setObjectMap('CUser', array(
-				'AllowSimpleChat' => array('bool', true)
+				'EnableModule' => array('bool', true)
 			)
 		);
 	}
 	
+	/**
+	 * Obtains settings of the Simple Chat Module.
+	 * 
+	 * @param \CUser $oUser Object of the loggined user.
+	 * @return array
+	 */
 	public function GetAppData($oUser = null)
 	{
 		return array(
-			'AllowModule' => $oUser->{$this->GetName().'::AllowSimpleChat'}
+			'EnableModule' => $oUser->{$this->GetName().'::EnableModule'}
 		);
 	}
 	
-	public function UpdateSettings($AllowModule)
+	/**
+	 * Updates settings of the Simple Chat Module.
+	 * 
+	 * @param boolean $EnableModule indicates if user turned on Simple Chat Module.
+	 * @return boolean
+	 */
+	public function UpdateSettings($EnableModule)
 	{
 		$iUserId = \CApi::getLogginedUserId();
 		if (0 < $iUserId)
 		{
 			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 			$oUser = $oCoreDecorator->GetUser($iUserId);
-			$oUser->{$this->GetName().'::AllowSimpleChat'} = $AllowModule;
+			$oUser->{$this->GetName().'::EnableModule'} = $EnableModule;
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
 		return true;
 	}
 	
 	/**
-	 * @param int $Page
-	 * @param int $PerPage
+	 * Obtains posts of Simple Chat Module.
+	 * 
+	 * @param int $Offset uses for obtaining a partial list.
+	 * @param int $Limit uses for obtaining a partial list.
 	 * @return array
 	 */
-	public function GetMessages($Page, $PerPage)
+	public function GetPosts($Offset, $Limit)
 	{
-		$iMessagesCount = $this->oApiChatManager->GetMessagesCount();
-		$aMessages = $this->oApiChatManager->GetMessages($Page, $PerPage);
+		$iPostsCount = $this->oApiChatManager->GetPostsCount();
+		$aPosts = $this->oApiChatManager->GetPosts($Offset, $Limit);
 		return array(
-			'Count' => $iMessagesCount,
-			'Collection' => $aMessages
+			'Count' => $iPostsCount,
+			'Offset' => $Offset,
+			'Limit' => $Limit,
+			'Collection' => $aPosts
 		);
 	}
 
 	/**
-	 * @param string $Message
+	 * Creates a new post for loggined user.
+	 * 
+	 * @param string $Text text of the new post.
 	 * @return boolean
 	 */
-	public function PostMessage($Message)
+	public function CreatePost($Text)
 	{
 		$iUserId = \CApi::getLogginedUserId();
-		$this->oApiChatManager->PostMessage($iUserId, $Message);
+		$this->oApiChatManager->CreatePost($iUserId, $Text);
 		return true;
 	}	
 }

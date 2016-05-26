@@ -16,7 +16,10 @@ class CApiSimpleChatMainManager extends AApiManager
 	public $oEavManager = null;
 	
 	/**
+	 * 
 	 * @param CApiGlobalManager &$oManager
+	 * @param string $sForcedStorage
+	 * @param AApiModule $oModule
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
 	{
@@ -27,12 +30,24 @@ class CApiSimpleChatMainManager extends AApiManager
 		$this->incClass('post');
 	}
 	
-	public function GetMessagesCount()
+	/**
+	 * Obtains count of all posts.
+	 * 
+	 * @return int
+	 */
+	public function GetPostsCount()
 	{
 		return $this->oEavManager->getObjectsCount('CSimpleChatPost', array());
 	}
 	
-	public function GetMessages($iPage = 1, $iPerPage = 0)
+	/**
+	 * Obtains posts of Simple Chat Module.
+	 * 
+	 * @param int $Offset uses for obtaining a partial list.
+	 * @param int $Limit uses for obtaining a partial list.
+	 * @return array
+	 */
+	public function GetPosts($Offset = 0, $Limit = 0)
 	{
 		$aResult = array();
 		try
@@ -40,10 +55,10 @@ class CApiSimpleChatMainManager extends AApiManager
 			$aResults = $this->oEavManager->getObjects(
 				'CSimpleChatPost', 
 				array(
-					'IdUser', 'Message'
+					'UserId', 'Text'
 				),
-				$iPage,
-				$iPerPage,
+				$Offset + 1,
+				$Limit,
 				array()
 			);
 
@@ -52,10 +67,10 @@ class CApiSimpleChatMainManager extends AApiManager
 				$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 				foreach($aResults as $oItem)
 				{
-					$oUser = $oCoreDecorator->GetUser($oItem->IdUser);
+					$oUser = $oCoreDecorator->GetUser($oItem->UserId);
 					$aResult[] = array(
 						'name' => $oUser->Name,
-						'text' => $oItem->Message
+						'text' => $oItem->Text
 					);
 				}
 			}
@@ -68,14 +83,21 @@ class CApiSimpleChatMainManager extends AApiManager
 		return $aResult;
 	}
 	
-	public function PostMessage($iUserId, $sMessage)
+	/**
+	 * Creates a new post for user.
+	 * 
+	 * @param int $iUserId id of user that creates the new post.
+	 * @param string $sText text of the new post.
+	 * @return boolean
+	 */
+	public function CreatePost($iUserId, $sText)
 	{
 		$bResult = true;
 		try
 		{
 			$oNewPost = new \CSimpleChatPost($this->GetModule()->GetName());
-			$oNewPost->IdUser = $iUserId;
-			$oNewPost->Message = $sMessage;
+			$oNewPost->UserId = $iUserId;
+			$oNewPost->Text = $sText;
 			if (!$this->oEavManager->saveObject($oNewPost))
 			{
 				throw new CApiManagerException(Errs::UsersManager_UserCreateFailed);

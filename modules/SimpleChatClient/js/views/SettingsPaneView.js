@@ -17,7 +17,7 @@ function CHelpdeskSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'SimpleChat');
 
-	this.allowChat = ko.observable(Settings.enableModule());
+	this.enableModule = ko.observable(Settings.enableModule());
 }
 
 _.extendOwn(CHelpdeskSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
@@ -27,25 +27,25 @@ CHelpdeskSettingsPaneView.prototype.ViewTemplate = 'SimpleChatClient_SettingsPan
 CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
-		this.allowChat()
+		this.enableModule()
 	];
 };
 
 CHelpdeskSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.allowChat(Settings.enableModule());
+	this.enableModule(Settings.enableModule());
 };
 
 CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'AllowModule': this.allowChat() ? '1' : '0'
+		'EnableModule': this.enableModule()
 	};
 };
 
 CHelpdeskSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
-	Settings.update(oParameters.AllowModule);
+	Settings.update(oParameters.EnableModule);
 };
 
 module.exports = new CHelpdeskSettingsPaneView();
