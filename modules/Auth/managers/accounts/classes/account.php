@@ -24,15 +24,14 @@ class CAccount extends api_APropertyBag
 			'IsDisabled'	=> array('bool', false),
 			'IdUser'		=> array('int', 0),
 			'Login'			=> array('string', ''),
-			'Password'		=> array('encrypted', '')
+			'Password'		=> array('encrypted', ''),
+			'LastModified'  => array('datetime', date('Y-m-d H:i:s'))
 		);
 		
 		$this->SetDefaults();
 
 		CApi::Plugin()->RunHook('api-account-construct', array(&$this));
-
 	}
-
 	
 	/**
 	 * Checks if the user has only valid data.

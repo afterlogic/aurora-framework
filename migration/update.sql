@@ -19,3 +19,6 @@ CREATE TABLE IF NOT EXISTS `eav_properties` (
 
 ALTER TABLE `eav_properties` 
 ADD UNIQUE INDEX `id_object_key` (`id_object` ASC, `key` ASC);
+
+ALTER TABLE `eav_properties`
+ADD COLUMN `value_datetime` DATETIME NULL AFTER `value_bool`;

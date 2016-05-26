@@ -140,9 +140,14 @@ abstract class api_APropertyBag
 	 */
 	public function isStringProperty($sPropertyName)
 	{
-		$sType = $this->getPropertyType($sPropertyName);
-		
-		return ($sType === 'string' || $sType === 'text');
+		return in_array(
+				$this->getPropertyType($sPropertyName), 
+				array(
+					'string', 
+					'text', 
+					'datetime'
+			)
+		);
 	}		
 	
 	/**
@@ -234,11 +239,11 @@ abstract class api_APropertyBag
 		{
 			settype($mValue, $sType);
 		}
-		else if (in_array($sType, array('datetime', 'bool')))
+		else if (in_array($sType, array('bool')))
 		{
 			settype($mValue, 'int');
 		}
-		else if (in_array($sType, array('password')))
+		else if (in_array($sType, array('encoded', 'datetime')))
 		{
 			settype($mValue, 'string');
 		}

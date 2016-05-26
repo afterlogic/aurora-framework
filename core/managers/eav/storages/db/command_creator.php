@@ -252,19 +252,20 @@ class CApiEavCommandCreator extends api_CommandCreator
 			{
 				if ($oProperty instanceof \CProperty)
 				{
-					$sValue = $oProperty->Value;
+					$mValue = $oProperty->Value;
 					if ($oProperty->Encrypt)
 					{
-						$sValue = \api_Utils::EncodePassword($sValue);
+						$mValue = \api_Utils::EncodePassword($mValue);
 					}
-					$aValues[] = sprintf('(%d, %s, %s, %s, %s, %d, %d)',
+					$aValues[] = sprintf('(%d, %s, %s, %s, %s, %d, %d, %s)',
 						$iObjectId,
 						$this->escapeString($oProperty->Name),
 						$this->escapeString($oProperty->Type),
-						$oProperty->Type === "string" ? $this->escapeString($sValue) : 'null',
-						$oProperty->Type === "text" ? $this->escapeString($sValue) : 'null',
-						$oProperty->Type === "int" ? $sValue : 'null',
-						$oProperty->Type === "bool" ? $sValue : 'null'
+						$oProperty->Type === "string" ? $this->escapeString($mValue) : 'null',
+						$oProperty->Type === "text" ? $this->escapeString($mValue) : 'null',
+						$oProperty->Type === "int" ? $mValue : 'null',
+						$oProperty->Type === "bool" ? $mValue : 'null',
+						$oProperty->Type === "datetime" ? $this->escapeString($mValue) : 'null'
 					);
 				}
 			}
@@ -274,7 +275,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$sValues = implode(",\r\n", $aValues);
 			$sSql = sprintf(
 			'INSERT INTO %seav_properties 
-				(%s, %s, %s, %s, %s, %s, %s)
+				(%s, %s, %s, %s, %s, %s, %s, %s)
 			VALUES 
 				%s
 			ON DUPLICATE KEY UPDATE 
@@ -293,6 +294,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$this->escapeColumn('value_text'),
 				$this->escapeColumn('value_int'),
 				$this->escapeColumn('value_bool'),
+				$this->escapeColumn('value_datetime'),
 				$sValues,
 				$this->escapeColumn('id_object'), $this->escapeColumn('id_object'), 
 				$this->escapeColumn('key'), $this->escapeColumn('key'),
@@ -300,7 +302,8 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$this->escapeColumn('value_string'), $this->escapeColumn('value_string'),
 				$this->escapeColumn('value_text'), $this->escapeColumn('value_text'),
 				$this->escapeColumn('value_int'), $this->escapeColumn('value_int'),
-				$this->escapeColumn('value_bool'), $this->escapeColumn('value_bool')
+				$this->escapeColumn('value_bool'), $this->escapeColumn('value_bool'),
+				$this->escapeColumn('value_datetime'), $this->escapeColumn('value_datetime')
 			);
 		}
 		

@@ -19,11 +19,11 @@ $mResult = $oAuthDecorator->CreateAccount(
  * 
  */
 
-//$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
+$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 
-//print_r($oAuthDecorator->CreateAccount(0, 246, 'test5', 'p12345'));
+$oAuthDecorator->CreateAccount(0, 246, 'test555', 'p12345');
 
-$oManagerApi = \CApi::GetModule('Auth')->GetManager('accounts');
-$aItems = $oManagerApi->getAccountList(0, 0);
+/*$oManagerApi = \CApi::GetModule('Auth')->GetManager('accounts');
+$aItems = $oManagerApi->getAccountList(0, 0);*/
 
 	
