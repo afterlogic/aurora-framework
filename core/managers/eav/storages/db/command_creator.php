@@ -70,6 +70,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				props.value_bool as prop_value_bool,
 				props.value_string as prop_value_string,
 				props.value_text as prop_value_text,
+				props.value_datetime as prop_value_datetime,
 				
 				props.type as prop_type
 			FROM %seav_properties as props
