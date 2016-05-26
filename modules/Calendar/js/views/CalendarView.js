@@ -999,15 +999,15 @@ CCalendarView.prototype.getEvents = function (aCalendarIds)
  */
 CCalendarView.prototype.onGetEventsResponse = function (oResponse, oRequest)
 {
-	var 
-		oCalendar = null,
-		oParameters = JSON.parse(oRequest.Parameters),
-		aCalendarIds = oParameters.CalendarIds ? oParameters.CalendarIds : [],
-		aEvents = []
-	;
-
-	if (oResponse.Result)
+	if (oResponse.Result && oRequest.Parameters)
 	{
+		var 
+			oCalendar = null,
+			oParameters = oRequest.Parameters,
+			aCalendarIds = oParameters.CalendarIds ? oParameters.CalendarIds : [],
+			aEvents = []
+		;
+
 		_.each(oResponse.Result, function (oEventData) {
 			oCalendar = this.calendars.getCalendarById(oEventData.calendarId);			
 			if (oCalendar)
@@ -1145,10 +1145,10 @@ CCalendarView.prototype.updateCalendar = function (sName, sDescription, sColor, 
  */
 CCalendarView.prototype.onUpdateCalendarResponse = function (oResponse, oRequest)
 {
-	if (oResponse.Result)
+	if (oResponse.Result && oRequest.Parameters)
 	{
 		var
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1184,10 +1184,10 @@ CCalendarView.prototype.updateCalendarColor = function (sColor, sId)
  */
 CCalendarView.prototype.onUpdateCalendarColorResponse = function (oResponse, oRequest)
 {
-	if (oResponse.Result)
+	if (oResponse.Result && oRequest.Parameters)
 	{
 		var
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1249,10 +1249,10 @@ CCalendarView.prototype.shareCalendar = function (sId, bIsPublic, aShares, bShar
  */
 CCalendarView.prototype.onUpdateCalendarShareResponse = function (oResponse, oRequest)
 {
-	if (oResponse.Result)
+	if (oResponse.Result && oRequest.Parameters)
 	{
 		var
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1295,12 +1295,13 @@ CCalendarView.prototype.publicCalendar = function (sId, bIsPublic)
  */
 CCalendarView.prototype.onUpdateCalendarPublicResponse = function (oResponse, oRequest)
 {
-	if (oResponse.Result)
+	if (oResponse.Result && oRequest.Parameters)
 	{
 		var
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
+		
 		if (oCalendar)
 		{
 			oCalendar.isPublic(oParameters.IsPublic);
@@ -1340,10 +1341,10 @@ CCalendarView.prototype.deleteCalendar = function (sId, bIsUnsubscribe)
  */
 CCalendarView.prototype.onDeleteCalendarResponse = function (oResponse, oRequest)
 {
-	if (oResponse.Result)
+	if (oResponse.Result && oRequest.Parameters)
 	{
 		var
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1767,8 +1768,8 @@ CCalendarView.prototype.onEventActionResponseWithSubThrottle = function (oData, 
 CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, bDoRefresh)
 {
 	var
-		oParameters = JSON.parse(oRequest.Parameters),
-		oCalendar = this.calendars.getCalendarById(oParameters.calendarId),
+		oParameters = oRequest.Parameters,
+		oCalendar = this.calendars.getCalendarById(oParameters && oParameters.calendarId),
 		oEvent = null,
 		iScrollTop = 0
 	;

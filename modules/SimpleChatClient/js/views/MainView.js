@@ -87,7 +87,7 @@ CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 		var
 			iCount = oResponse.Result.Count,
 			aPosts = oResponse.Result.Collection,
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters || {},
 			bHasMore = oParameters.PerPage > 0 && oParameters.Page * oParameters.PerPage < iCount
 //			aNewPosts = [],
 //			aPosts = this.posts()

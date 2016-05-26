@@ -8,8 +8,8 @@ var
 
 Ajax.registerAbortRequestHandler('SimpleChat', function (oRequest, oOpenedRequest) {
 	var
-		oParameters = Types.isNonEmptyString(oRequest.Parameters) ? JSON.parse(oRequest.Parameters) : null,
-		oOpenedParameters = Types.isNonEmptyString(oOpenedRequest.Parameters) ? JSON.parse(oOpenedRequest.Parameters): null
+		oParameters = oRequest.Parameters || {},
+		oOpenedParameters = oRequest.Parameters || {}
 	;
 	
 	switch (oRequest.Method)

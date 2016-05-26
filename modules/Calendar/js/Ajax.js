@@ -1,8 +1,6 @@
 'use strict';
 
 var
-	Types = require('modules/Core/js/utils/Types.js'),
-	
 	Ajax = require('modules/Core/js/Ajax.js')
 ;
 
@@ -11,8 +9,8 @@ Ajax.registerAbortRequestHandler('Calendar', function (oRequest, oOpenedRequest)
 	{
 		case 'UpdateEvent':
 			var
-				oParameters = Types.isNonEmptyString(oRequest.Parameters) ? JSON.parse(oRequest.Parameters) : null,
-				oOpenedParameters = Types.isNonEmptyString(oOpenedRequest.Parameters) ? JSON.parse(oOpenedRequest.Parameters): null
+				oParameters = oRequest.Parameters || {},
+				oOpenedParameters = oOpenedRequest.Parameters || {}
 			;
 			return	oOpenedRequest.Method === 'UpdateEvent' && 
 					oOpenedParameters.calendarId === oParameters.calendarId && 

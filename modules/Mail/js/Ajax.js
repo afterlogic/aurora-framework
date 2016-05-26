@@ -1,15 +1,13 @@
 'use strict';
 
 var
-	Types = require('modules/Core/js/utils/Types.js'),
-	
 	Ajax = require('modules/Core/js/Ajax.js')
 ;
 
 Ajax.registerAbortRequestHandler('Mail', function (oRequest, oOpenedRequest) {
 	var
-		oParameters = Types.isNonEmptyString(oRequest.Parameters) ? JSON.parse(oRequest.Parameters) : null,
-		oOpenedParameters = Types.isNonEmptyString(oOpenedRequest.Parameters) ? JSON.parse(oOpenedRequest.Parameters): null
+		oParameters = oRequest.Parameters || {},
+		oOpenedParameters = oOpenedRequest.Parameters || {}
 	;
 	
 	switch (oRequest.Method)

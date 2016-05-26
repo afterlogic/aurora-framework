@@ -131,7 +131,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 	else
 	{
 		var
-			oParameters = JSON.parse(oRequest.Parameters),
+			oParameters = oRequest.Parameters || {},
 			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = 0 < iAccountId ? AccountList.getAccount(iAccountId) : null
 		;

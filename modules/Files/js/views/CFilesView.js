@@ -643,7 +643,7 @@ CFilesView.prototype.onGetFilesResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oParameters = JSON.parse(oRequest.Parameters)
+		oParameters = oRequest.Parameters || {}
 	;
 	
 	this.onGetQuotaResponse(oResponse, oRequest);

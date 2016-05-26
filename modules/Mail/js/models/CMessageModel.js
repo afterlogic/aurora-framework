@@ -710,7 +710,7 @@ CMessageModel.prototype.getAttachmentsHashes = function ()
 CMessageModel.prototype.onSaveAttachmentsToFilesResponse = function (oResponse, oRequest)
 {
 	var
-		oParameters = JSON.parse(oRequest.Parameters),
+		oParameters = oRequest.Parameters || {},
 		iSavedCount = 0,
 		iTotalCount = oParameters.Attachments.length
 	;

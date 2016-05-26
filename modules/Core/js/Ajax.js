@@ -288,6 +288,10 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 	
 	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
+		if (Types.isNonEmptyString(oRequest.Parameters))
+		{
+			oRequest.Parameters = JSON.parse(oRequest.Parameters);
+		}
 		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
 };
