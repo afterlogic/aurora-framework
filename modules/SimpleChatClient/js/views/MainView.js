@@ -159,15 +159,13 @@ CSimpleChatView.prototype.getDisplayDate = function (oMomentUtc)
 
 CSimpleChatView.prototype.clearTimer = function ()
 {
-	console.log('clear', this.iTimer);
 	clearTimeout(this.iTimer);
 };
 
 CSimpleChatView.prototype.setTimer = function ()
 {
 	this.clearTimer();
-	this.iTimer = setTimeout(_.bind(this.getPosts, this, 1), 2000);
-	console.log('set', this.iTimer);
+	this.iTimer = setTimeout(_.bind(this.getPosts, this, 1), 3000);
 };
 
 CSimpleChatView.prototype.executeSendQuickReply = function ()
