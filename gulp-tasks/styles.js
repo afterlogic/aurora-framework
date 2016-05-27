@@ -15,7 +15,9 @@ var
 	aModulesNames = argv.getModules(),
 	aModulesWatchPaths = [],
 	
-	aThemes = argv.getParameter('--themes').split(',')
+	aThemes = argv.getParameter('--themes').split(','),
+	
+	sTenanthash = argv.getParameter('--tenant')
 ;
 
 aModulesNames.forEach(function (sModuleName) {
@@ -56,13 +58,22 @@ function BuildThemeCss(sTheme, bMobile)
 	aModulesNames.forEach(function (sModuleName) {
 		if (fileExists('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
 		{
-			aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
+			//check module override
+			if (fileExists('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
+			{
+				aModulesFiles.push('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
+			}
+			else
+			{
+				aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
+			}
 		}
 	});
-
+	
 	gulp.src(aModulesFiles)
 		.pipe(concat('styles' + sPostfix + '.css', {
 			process: function(sSrc, sFilePath) {
+//				console.log(sFilePath);
 				var
 					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less'),
 					sRes = fileExists(sThemePath) ? '@import "' + sThemePath + '";\r\n' : ''
@@ -71,6 +82,8 @@ function BuildThemeCss(sTheme, bMobile)
 				return sRes + '@import "' + sFilePath + '";\r\n'; 
 			}
 		}))
+//		.pipe(concat.header('.' + aModulesNames.join('Screen, .') + 'Screen { \n')) /* wrap styles */
+//		.pipe(concat.footer('} \n'))
 		.pipe(plumber({
 			errorHandler: function (err) {
 				console.log(err.toString());
@@ -79,7 +92,8 @@ function BuildThemeCss(sTheme, bMobile)
 			}
 		}))
 		.pipe(less())
-		.pipe(gulp.dest('static/styles/themes/' + sTheme))
+//		.pipe(gulp.dest('static/styles/themes/' + sTheme))
+		.pipe(sTenanthash ? gulp.dest('tenants/' + sTenanthash + '/static/styles/themes/' + sTheme) : gulp.dest('static/styles/themes/' + sTheme))
 		.on('error', gutil.log);
 }
 
@@ -165,6 +179,11 @@ gulp.task('cssonly', function () {
 
 gulp.task('styles:watch', ['styles'], function () {
 	gulp.watch(aModulesWatchPaths, {interval: 500}, ['cssonly']);
+});
+
+gulp.task('styles:test', function () {
+	console.log('test');
+	return 'ok';
 });
 
 module.exports = {};

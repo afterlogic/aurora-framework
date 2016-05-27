@@ -32,12 +32,24 @@
 		<input type="hidden" name="manager" value="tenants"/>
 		<input type="hidden" name="action" value="delete"/>
 		<div class="form-group">
-			<label>Account id</label>
+			<label>Tenant id</label>
 			<input name="id" readonly="true" type="text" data-bind="textInput: id;" class="form-control" />
 		</div>
 
 		<input type="submit" value="Delete" class="btn btn-danger" />
 	</form>
+	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+		<input type="hidden" name="manager" value="tenants"/>
+		<input type="hidden" name="action" value="build"/>
+		<div class="form-group">
+			<label>Tenant id</label>
+			<input name="id" readonly="true" type="text" data-bind="textInput: id;" class="form-control" />
+			<input name="login" readonly="true" type="text" data-bind="textInput: login;" class="form-control" />
+		</div>
+
+		<input type="submit" value="Build CSS" class="btn btn-danger" />
+	</form>
+	
 </fieldset>
 <fieldset data-bind="if: !selectedItem()">
 	<label>Create item</label>

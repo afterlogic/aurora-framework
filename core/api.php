@@ -1190,6 +1190,10 @@ class CApi
 			{
 				$mResult = static::$aUserSession['UserId'];
 			}
+			else
+			{
+				$mResult = 0;
+			}
 		}
 		
 		return $mResult;
@@ -1215,15 +1219,29 @@ class CApi
 	public static function getTenantHash()
 	{
 		$mResult = false;
-		
+
 		if (is_array(static::$aUserSession) && isset(static::$aUserSession['TenantHash']))
 		{
 			$mResult = static::$aUserSession['TenantHash'];
 		}
+		else
+		{
+			$mEventResult = null;
+			self::GetModuleManager()->broadcastEvent('System', 'DetectTenant', array(
+				array (
+					'URL' => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
+				),
+				&$mEventResult
+			));
+			
+			if ($mEventResult)
+			{
+				$mResult = $mEventResult;
+			}
+		}
 		
 		return $mResult;
 	}
-	
 }
 
 CApi::Run();

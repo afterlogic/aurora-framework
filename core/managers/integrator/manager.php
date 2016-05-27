@@ -1965,10 +1965,21 @@ class CApiIntegratorManager extends AApiManager
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
-		
-		$sS = 
+		$sTenantHash = \CApi::getTenantHash();
+
+		if ($sTenantHash)
+		{
+			$sS =
+'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantHash.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+		}
+		else
+		{
+			$sS =
 '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
 '<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+		}
+		
 //		if (!empty($sHelpdeskHash))
 //		{
 //			$oApiTenant = /* @var $oApiTenant CApiTenantsManager */ CApi::GetCoreManager('tenants');

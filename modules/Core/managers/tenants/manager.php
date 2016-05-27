@@ -296,7 +296,8 @@ class CApiCoreTenantsManager extends AApiManager
 	 *
 	 * @return int
 	 */
-	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
+//	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
+	public function getTenantIdByLogin($sTenantLogin)
 	{
 		$iTenantId = 0;
 		try
@@ -304,14 +305,14 @@ class CApiCoreTenantsManager extends AApiManager
 			if (!empty($sTenantLogin))
 			{
 				$oFilterBy = array('Login' => $sTenantLogin);
-				if (null !== $sTenantPassword)
-				{
-					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
+//				if (null !== $sTenantPassword)
+//				{
+//					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
 					
 					//TODO why we shoud filter by these fields?
 					$oFilterBy['IsDisabled'] = false;
-					$oFilterBy['IsEnableAdminPanelLogin'] = true;
-				}
+//					$oFilterBy['IsEnableAdminPanelLogin'] = true;
+//				}
 				
 				$aResultTenants = $this->oEavManager->getObjects(
 					'CTenant', 

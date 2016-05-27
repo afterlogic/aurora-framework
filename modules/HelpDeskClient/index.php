@@ -14,6 +14,8 @@ class HelpDeskModuleClient extends AApiModule
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$this->oHelpDeskDecorator = \CApi::GetModuleDecorator('HelpDesk');
+		
+		$this->subscribeEvent('System::DetectTenant', array($this, 'onTenantDetect'));
 	}
 	
 	public function EntryHelpDesk()
@@ -23,8 +25,8 @@ class HelpDeskModuleClient extends AApiModule
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
-		$mHelpdeskHash = $this->oHttp->GetQuery('helpdesk');
-		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByHash($mHelpdeskHash);
+		$mHelpdeskLogin = $this->oHttp->GetQuery('helpdesk');
+		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByName($mHelpdeskLogin);
 		
 		if (!is_int($mHelpdeskIdTenant))
 		{
@@ -131,6 +133,40 @@ class HelpDeskModuleClient extends AApiModule
 			'SocialIsLoggedIn' => '', //!!AppData.SocialIsLoggedIn, // ???
 			'ThreadsPerPage' => 10 // add to settings
 		);
+	}
+	
+	public function onTenantDetect($oParams, &$mResult)
+	{
+		if ($oParams && $oParams['URL'])
+		{
+			$aUrlData = \Sabre\Uri\parse($oParams['URL']);
+			
+			if ($aUrlData['query'])
+			{
+				$aParameters = explode('&', $aUrlData['query']);
+				
+				if (!is_array($aParameters))
+				{
+					$aParameters = array($aParameters);
+				}
+				
+				$aParametersTemp = $aParameters;
+				$aParameters = array();
+				
+				foreach ($aParametersTemp as &$aParameter) {
+					$aParameterData = explode('=', $aParameter);
+					if (is_array($aParameterData))
+					{
+						$aParameters[$aParameterData[0]] = $aParameterData[1];
+					}
+				}
+
+				if (isset($aParameters['helpdesk']) && $this->oCoreDecorator->GetTenantIdByName($aParameters['helpdesk']))
+				{
+					$mResult = $aParameters['helpdesk'];
+				}
+			}
+		}
 	}
 }
 

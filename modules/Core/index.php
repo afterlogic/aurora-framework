@@ -1079,10 +1079,22 @@ class CoreModule extends AApiModule
 		$aUsers = $this->oApiUsersManager->getUserList($iPage, $iUsersPerPage, $sOrderBy, $iOrderType, $sSearchDesc);
 		return $aUsers ? $aUsers : null;
 	}
-
+	/**
+	 * @depricated
+	 * 
+	 * @param type $sTenantHash
+	 * @return type
+	 */
 	public function GetTenantIdByHash($sTenantHash = '')
 	{
-		$oTenant = $this->oApiTenantsManager->GetTenantIdByHash((string) $sTenantHash);
+		$oTenant = $this->oApiTenantsManager->getTenantIdByHash((string) $sTenantHash);
+		
+		return $oTenant ? $oTenant : null;
+	}
+	
+	public function GetTenantIdByName($sTenantName = '')
+	{
+		$oTenant = $this->oApiTenantsManager->getTenantIdByLogin((string) $sTenantName);
 		
 		return $oTenant ? $oTenant : null;
 	}
