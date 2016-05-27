@@ -346,6 +346,6 @@ abstract class api_APropertyBag
 	
 	public function toArray()
 	{
-		return array_merge(array('IdObject' => $this->iObjectId), $this->aContainer);
+		return array_merge(array('iObjectId' => $this->iObjectId), $this->aContainer);
 	}
 }

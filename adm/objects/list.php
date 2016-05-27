@@ -1,25 +1,6 @@
 <?php
-//	$aItems = array();
-//	$aResultItems = array();
 	$oManagerApi = \CApi::GetCoreManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
-/*	
-	foreach ($aTypes as $sType)
-	{
-		$aItems = array_merge($aItems, $oManagerApi->getObjects($sType));
-	}
-	foreach ($aItems as $oItem)
-	{
-		var_dump($oItem->getMap());
-	}
- * 
- */
-//	$aItems = array_merge($aItems, $oManagerApi->getObjects('CMailAccount'));
-//	$aProperties = array_merge(array('IdObject'), array_keys($aItems[0]->getMap()));
-//	foreach ($aItems as $oItem)
-//	{
-//		$aResultItems[] = $oItem->toArray();
-//	}
 ?>
 <div id="objects-screen" class="row">
 	<div class="col-sm-12">
@@ -37,7 +18,7 @@
 						<!-- /ko -->
 					</tr>
 					<!-- ko foreach: $parent.objectsList -->
-					<tr>
+					<tr data-bind="click: $parents[1].selectItem, css: {'success': $parents[1].selectedItem() == $data}">
 						<!-- ko foreach: $data -->
 							<td  data-bind="text: $data;"></td>
 					<!-- /ko -->
@@ -47,16 +28,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-6">
-	</div>
-	<div class="col-sm-6">
+	<div class="col-sm-12">
 		<?php include "forms.php"; ?>
 	</div>
 </div>
 <script>
 	staticData['objects'] = <?php echo is_array($aTypes) ? json_encode($aTypes) : '[]'; ?>;
-//	staticData['objects_list'] = <?php echo is_array($aResultItems) ? json_encode($aResultItems) : '[]'; ?>;
-//	staticData['objects_props'] = <?php echo is_array($aProperties) ? json_encode($aProperties) : '[]'; ?>;
 	$('#object-tabs')
 		.click(function (e) {
 			e.preventDefault();

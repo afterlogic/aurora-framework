@@ -10,17 +10,19 @@
 		this.propsList = ko.observableArray([]);
 		
 		this.selectedItem = ko.observable(null);
+		this.selectedObjectName = ko.observable(null);
 		
-		this.reset = function () {
-			if (this.selectedItem())
-			{
-				this.selectedItem().active(false);
-			}
-			this.selectedItem(null);
-		};
+//		this.reset = function () {
+//			if (this.selectedItem())
+//			{
+//				this.selectedItem().active(false);
+//			}
+//			this.selectedItem(null);
+//		};
 		
-		this.switchTab = _.bind(this.switchTab, this),
-		this.ajaxResponse = _.bind(this.ajaxResponse, this),
+		this.switchTab = _.bind(this.switchTab, this);
+		this.ajaxResponse = _.bind(this.ajaxResponse, this);
+		this.selectItem = _.bind(this.selectItem, this);
 		
 		this.init();
 	}
@@ -28,7 +30,7 @@
 	CScreen.prototype.init = function () {
 		this.objectTypes = window.staticData['objects'];
 
-		var aListData= [];
+//		var aListData= [];
 
 //		_.each(window.staticData['objects_list'], function (oItem, iIndex) {
 //
@@ -54,14 +56,14 @@
 	
 	CScreen.prototype.selectItem = function (oItem)
 	{
-		var oCurrentItem = this.selectedItem();
-		if (oCurrentItem)
+		if (this.selectedItem() === oItem)
 		{
-			oCurrentItem.active(false);
+			this.selectedItem(null);
 		}
-		
-		this.selectedItem(oItem);
-		this.selectedItem().active(true);
+		else
+		{
+			this.selectedItem(oItem);
+		}
 	};
 	
 	
@@ -73,6 +75,8 @@
 				'ObjectName': sTabName
 			}
 		;
+		
+		this.selectedObjectName(sTabName);
 		
 		$.ajax({
 			url: '/adm/ajax.php',
