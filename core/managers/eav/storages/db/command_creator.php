@@ -80,6 +80,17 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$this->prefix(), $this->prefix(), $iId);
 	}
 	
+	/**
+	 * @return string
+	 */
+	public function getTypes()
+	{
+		return sprintf(
+			'SELECT DISTINCT object_type '
+			. 'FROM %seav_objects', 
+			$this->prefix()
+		);
+	}
 	public function getObjectsCount($sObjectType, $aSearchProperties = array())
 	{
 		return $this->getObjects($sObjectType, array(), 0, 0, $aSearchProperties, "", \ESortOrder::ASC, true);
@@ -170,7 +181,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sType = $oObject->getPropertyType($sKey);
 				if ($oObject->isEncryptedProperty($sKey))
 				{
-					$sPrpertyValue = \api_Utils::EncodePassword($sPrpertyValue);
+					$sPrpertyValue = \api_Utils::EncodeValue($sPrpertyValue);
 				}
 				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
@@ -260,7 +271,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 					$mValue = $oProperty->Value;
 					if ($oProperty->Encrypt)
 					{
-						$mValue = \api_Utils::EncodePassword($mValue);
+						$mValue = \api_Utils::EncodeValue($mValue);
 					}
 					$aValues[] = sprintf('(%d, %s, %s, %s, %s, %d, %d, %s)',
 						$iObjectId,

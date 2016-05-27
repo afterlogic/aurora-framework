@@ -88,7 +88,7 @@ class CApiEavDbStorage extends CApiEavStorage
 						$mValue = $oRow->{'prop_value_' . $oRow->prop_type};
 						if ($oObject->isEncryptedProperty($oRow->prop_type))
 						{
-							$mValue = \api_Utils::DecodePassword($mValue);
+							$mValue = \api_Utils::DecodeValue($mValue);
 						}
 						$oObject->{$oRow->prop_key} = $mValue;
 					}
@@ -108,6 +108,22 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $this->getObjectBySql($this->oCommandCreator->getObjectById($iId));
 	}	
 
+	public function getTypes()
+	{
+		$mResult = false;
+		if ($this->oConnection->Execute($this->oCommandCreator->getTypes()))
+		{
+			$oRow = null;
+			$mResult = array();
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+			{
+				$mResult[] = $oRow->object_type;
+			}
+		}
+		$this->throwDbExceptionIfExist();
+		return $mResult;
+	}	
+	
 	public function getObjectsCount($sType, $aSearchProperties)
 	{
 		$mResult = 0;
@@ -147,7 +163,7 @@ class CApiEavDbStorage extends CApiEavStorage
 						$mValue = $oRow->{'prop_' . $sKey};
 						if ($oObject->isEncryptedProperty($sKey))
 						{
-							$mValue = \api_Utils::DecodePassword($mValue);
+							$mValue = \api_Utils::DecodeValue($mValue);
 						}
 						$oObject->{$sKey} = $mValue;
 					}

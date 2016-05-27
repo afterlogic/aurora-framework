@@ -119,6 +119,20 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $bResult;
 	}
 	
+	public function getTypes()
+	{
+		$aTypes = null;
+		try
+		{
+			$aTypes = $this->oStorage->getTypes();
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+		return $aTypes;		
+	}
+
 	public function getObjectsCount($sType, $aSearchProperties = array())
 	{
 		$iCount = 0;

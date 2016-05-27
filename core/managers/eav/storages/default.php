@@ -69,6 +69,11 @@ class CApiEavStorage extends AApiManagerStorage
 		return true;
 	}	
 	
+	public function getTypes()
+	{
+		return true;
+	}	
+	
 	/**
 	 */
 	public function getObjects($sType)

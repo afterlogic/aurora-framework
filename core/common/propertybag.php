@@ -91,7 +91,7 @@ abstract class api_APropertyBag
 			{
 				if ('password' === $aTypes[0])
 				{
-					$this->{$sKey} = api_Utils::DecodePassword($oRow->{$aTypes[1]});
+					$this->{$sKey} = api_Utils::DecodeValue($oRow->{$aTypes[1]});
 				}
 				else if ('datetime' === $aTypes[0])
 				{
@@ -334,4 +334,9 @@ abstract class api_APropertyBag
 	{
 		return is_array($this->aStaticMap) ? $this->aStaticMap : array();
 	}	
+	
+	public function toArray()
+	{
+		return array_merge(array('IdObject' => $this->iObjectId), $this->aContainer);
+	}
 }
