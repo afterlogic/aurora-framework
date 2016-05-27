@@ -19,43 +19,37 @@
 			this.selectedItem(null);
 		};
 		
+		this.switchTab = _.bind(this.switchTab, this),
+		this.ajaxResponse = _.bind(this.ajaxResponse, this),
+		
 		this.init();
 	}
 	
 	CScreen.prototype.init = function () {
-		//$.ajax();
-//		if (_.isArray(window.staticData['accounts_list']))
-//		{
-			this.objectTypes = window.staticData['objects'];
+		this.objectTypes = window.staticData['objects'];
 
-			var aListData= [];
-			
-			_.each(window.staticData['objects_list'], function (oItem, iIndex) {
-				
-				aListData.push(_.map(oItem, function (oItem1) {
-					return oItem1;
-				}));
-				
-				
-/*				
-				aListData.push({
-					'id': iIndex,
-					'login': oItem[0],
-					'password': oItem[1],
-					'user_id': oItem[2],
-					'disabled': oItem[3],
-					'active': ko.observable(false)
-				});
-*/				
-			});
-			
-			console.log(aListData);
-			
-			this.objectsList(aListData);
-			this.propsList(window.staticData['objects_props']);
-			
+		var aListData= [];
 
-//		}
+//		_.each(window.staticData['objects_list'], function (oItem, iIndex) {
+//
+//			aListData.push(_.map(oItem, function (oItem1) {
+//				return oItem1;
+//			}));
+//		});
+//		this.propsList(window.staticData['objects_props']);
+
+//		this.objectsList(aListData);
+	};
+	
+	CScreen.prototype.fillData = function (aData)
+	{
+		if (aData && aData.length > 0)
+		{
+			this.propsList(_.keys(aData[0]));
+			this.objectsList(_.map(aData, function (oItem) {
+				return _.values(oItem);
+			}));
+		}
 	};
 	
 	CScreen.prototype.selectItem = function (oItem)
@@ -68,6 +62,38 @@
 		
 		this.selectedItem(oItem);
 		this.selectedItem().active(true);
+	};
+	
+	
+	CScreen.prototype.switchTab = function (sTabName)
+	{
+		var 
+			self = this,
+			oRequest = {
+				'ObjectName': sTabName
+			}
+		;
+		
+		$.ajax({
+			url: '/adm/ajax.php',
+			context: this,
+			type: 'POST',
+			data: oRequest,
+			complete: self.ajaxResponse,
+			timeout: 1000
+		});
+	};
+	
+	CScreen.prototype.ajaxResponse = function (jqXHR, textStatus) {
+		if (textStatus === "success")
+		{
+			var oResponse = JSON.parse(jqXHR.responseText);
+			this.fillData(oResponse.result);
+		}
+		else
+		{
+			console.log('ajaxResponse', textStatus);
+		}
 	};
 	
 	$(function () {

@@ -1,6 +1,6 @@
 <?php
-	$aItems = array();
-	$aResultItems = array();
+//	$aItems = array();
+//	$aResultItems = array();
 	$oManagerApi = \CApi::GetCoreManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
 /*	
@@ -14,23 +14,22 @@
 	}
  * 
  */
-	$aItems = array_merge($aItems, $oManagerApi->getObjects('CMailAccount'));
-	$aProperties = array_merge(array('IdObject'), array_keys($aItems[0]->getMap()));
-	foreach ($aItems as $oItem)
-	{
-		$aResultItems[] = $oItem->toArray();
-	}
-
-	
-//	var_dump($aItems);
+//	$aItems = array_merge($aItems, $oManagerApi->getObjects('CMailAccount'));
+//	$aProperties = array_merge(array('IdObject'), array_keys($aItems[0]->getMap()));
+//	foreach ($aItems as $oItem)
+//	{
+//		$aResultItems[] = $oItem->toArray();
+//	}
 ?>
 <div id="objects-screen" class="row">
-	<div class="col-sm-6">
+	<div class="col-sm-12">
+		<br />
+		<br />
 		<ul id="object-tabs" class="nav nav-tabs" role="tablist" data-bind="foreach: objectTypes">
-			<li role="presentation" class="<?php //echo $iStoredTab === 6 ? 'active' : ''?>"><a href="#ajax" aria-controls="ajax" role="tab" data-toggle="tab" data-bind="text: $data, attr: {'href': '#object-'+$data}"></a></li>
+			<li role="presentation" class="<?php //echo $iStoredTab === 6 ? 'active' : ''?>"><a href="#ajax" aria-controls="ajax" role="tab" data-toggle="tab" data-bind="text: $data, attr: {'href': '#object-'+$data}, click: $parent.switchTab"></a></li>
 		</ul>
 		<div class="tab-content" data-bind="foreach: objectTypes">
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 0 ? 'active' : ''?>" id="" data-bind="attr: {'id': 'object-'+$data}">
+			<div role="tabpanel" class="table-responsive tab-pane <?php echo $iStoredTab === 0 ? 'active' : ''?>" id="" data-bind="attr: {'id': 'object-'+$data}">
 				<table class="table table-striped">
 					<tr>
 						<!-- ko foreach: $parent.propsList -->
@@ -47,20 +46,22 @@
 				</table>
 			</div>
 		</div>
-	</div>	<div class="col-sm-6">
+	</div>
+	<div class="col-sm-6">
+	</div>
+	<div class="col-sm-6">
 		<?php include "forms.php"; ?>
 	</div>
 </div>
 <script>
 	staticData['objects'] = <?php echo is_array($aTypes) ? json_encode($aTypes) : '[]'; ?>;
-	staticData['objects_list'] = <?php echo is_array($aResultItems) ? json_encode($aResultItems) : '[]'; ?>;
-	staticData['objects_props'] = <?php echo is_array($aProperties) ? json_encode($aProperties) : '[]'; ?>;
-	console.log($('#object-tabs'));
+//	staticData['objects_list'] = <?php echo is_array($aResultItems) ? json_encode($aResultItems) : '[]'; ?>;
+//	staticData['objects_props'] = <?php echo is_array($aProperties) ? json_encode($aProperties) : '[]'; ?>;
 	$('#object-tabs')
 		.click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');
-		})
+		});
 		//.on('shown.bs.tab', function (e) {
 		//	var index = $(this).children().index($(e.target).parent());
 		//	document.cookie = "OBJECT_TAB="+index;
