@@ -9,8 +9,8 @@ Ajax.registerAbortRequestHandler('Calendar', function (oRequest, oOpenedRequest)
 	{
 		case 'UpdateEvent':
 			var
-				oParameters = oRequest.Parameters || {},
-				oOpenedParameters = oOpenedRequest.Parameters || {}
+				oParameters = oRequest.ParametersObject,
+				oOpenedParameters = oOpenedRequest.ParametersObject
 			;
 			return	oOpenedRequest.Method === 'UpdateEvent' && 
 					oOpenedParameters.calendarId === oParameters.calendarId && 

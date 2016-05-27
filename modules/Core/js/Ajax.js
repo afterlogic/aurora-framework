@@ -178,6 +178,8 @@ CAjax.prototype.abortRequests = function (oRequest)
 			var oOpenedRequest = oReqData.Request;
 			if (oRequest.Module === oOpenedRequest.Module)
 			{
+				oRequest.ParametersObject = Types.isNonEmptyString(oRequest.Parameters) ? JSON.parse(oRequest.Parameters) : {};
+				oOpenedRequest.ParametersObject = Types.isNonEmptyString(oOpenedRequest.Parameters) ? JSON.parse(oOpenedRequest.Parameters) : {};
 				if (fHandler(oRequest, oOpenedRequest))
 				{
 					oReqData.Xhr.abort();
@@ -288,10 +290,7 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 	
 	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
-		if (Types.isNonEmptyString(oRequest.Parameters))
-		{
-			oRequest.Parameters = JSON.parse(oRequest.Parameters);
-		}
+		oRequest.ParametersObject = Types.isNonEmptyString(oRequest.Parameters) ? JSON.parse(oRequest.Parameters) : {};
 		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
 };

@@ -994,7 +994,7 @@ CComposeView.prototype.addDataAsAttachment = function (sData, sFileName)
 CComposeView.prototype.onDataAsAttachmentUpload = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.Parameters || {},
+		oParameters = oRequest.ParametersObject,
 		oResult = oResponse.Result,
 		sHash = oParameters.Hash,
 		oAttachment = _.find(this.attachments(), function (oAttach) {
@@ -1060,7 +1060,7 @@ CComposeView.prototype.addFilesAsAttachment = function (aFiles)
 CComposeView.prototype.onFilesUpload = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.Parameters || {},
+		oParameters = oRequest.ParametersObject,
 		aResult = oResponse.Result,
 		aHashes = oParameters.Hashes,
 		sThumbSessionUid = Date.now().toString()
@@ -1135,7 +1135,7 @@ CComposeView.prototype.addContactAsAttachment = function (oContact)
 CComposeView.prototype.onContactVCardUpload = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.Parameters || {},
+		oParameters = oRequest.ParametersObject,
 		oResult = oResponse.Result,
 		oAttach = null
 	;
@@ -1516,7 +1516,7 @@ CComposeView.prototype.onSendOrSaveMessageResponse = function (oResponse, oReque
 {
 	var
 		oResData = SendingUtils.onSendOrSaveMessageResponse(oResponse, oRequest, this.requiresPostponedSending()),
-		oParameters = oRequest.Parameters || {}
+		oParameters = oRequest.ParametersObject
 	;
 
 	this.commit();

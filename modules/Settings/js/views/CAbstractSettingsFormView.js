@@ -157,7 +157,7 @@ CAbstractSettingsFormView.prototype.onResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		var oParameters = oRequest.Parameters || {};
+		var oParameters = oRequest.ParametersObject;
 		
 		this.applySavedValues(oParameters);
 		

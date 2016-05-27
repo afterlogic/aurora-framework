@@ -126,7 +126,7 @@ CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 	}
 	else
 	{
-		var oParameters = oRequest.Parameters || {};
+		var oParameters = oRequest.ParametersObject;
 		
 		this.applySavedValues(oParameters);
 		
@@ -163,7 +163,7 @@ CAccountForwardPaneView.prototype.onGetForwardResponse = function (oResponse, oR
 	if (oResponse && oResponse.Result)
 	{
 		var
-			oParameters = oRequest.Parameters || {},
+			oParameters = oRequest.ParametersObject,
 			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = AccountList.getAccount(iAccountId),
 			oForward = new CForwardModel()

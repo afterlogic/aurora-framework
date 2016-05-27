@@ -4,8 +4,12 @@
 			<div class="panel_content">
 				<div class="middle_bar">
 					<div class="panel_center" data-bind="heightAdjust: {'elements': [domQuickReply], 'triggers': [replyTextFocus()]}">
-						<div data-bind="customScrollbar: {x: true, y: true, 'reset': posts()}">
-							<div class="scroll-inner">
+						<div data-bind="customScrollbar: {x: true, y: true, 'scrollToBottomTrigger': scrollTrigger}">
+							<div class="scroll-inner" data-bind="initDom: scrolledPostsDom">
+								<div class="post" data-bind="visible: offset() > 0 || gettingMore()">
+									<a href="javascript: void()" data-bind="i18n: {'key': 'SIMPLECHAT/ACTION_LOAD_EARLIER_MESSAGES'}, click: showMore, visible: !gettingMore()"></a>
+									<span data-bind="i18n: {'key': 'SIMPLECHAT/ACTION_LOAD_EARLIER_MESSAGES_IN_PROGRESS'}, visible: gettingMore"></span>
+								</div>
 								<!-- ko foreach: posts -->
 								<div class="post">
 									<div>

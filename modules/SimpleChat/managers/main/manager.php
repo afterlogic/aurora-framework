@@ -61,15 +61,21 @@ class CApiSimpleChatMainManager extends AApiManager
 				$Limit,
 				array()
 			);
+			
+			$aUsers = array();
 
 			if (is_array($aResults))
 			{
 				$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 				foreach($aResults as $oItem)
 				{
-					$oUser = $oCoreDecorator->GetUser($oItem->UserId);
+					if (!isset($aUsers[$oItem->UserId]))
+					{
+						$oUser = $oCoreDecorator->GetUser($oItem->UserId);
+						$aUsers[$oItem->UserId] = $oUser->Name;
+					}
 					$aResult[] = array(
-						'name' => $oUser->Name,
+						'name' => $aUsers[$oItem->UserId],
 						'text' => $oItem->Text,
 						'date' => $oItem->Date
 					);

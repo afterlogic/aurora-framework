@@ -901,7 +901,7 @@ CFolderModel.prototype.onGetMessageResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oParameters = oRequest.Parameters || {},
+		oParameters = oRequest.ParametersObject,
 		oHand = null,
 		sUid = oResult ? oResult.Uid.toString() : oParameters.Uid.toString(),
 		oMessage = this.oMessages[sUid],

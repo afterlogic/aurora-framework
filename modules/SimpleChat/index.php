@@ -46,6 +46,11 @@ class SimpleChatModule extends AApiModule
 		return true;
 	}
 	
+	public function GetPostsCount()
+	{
+		return $this->oApiChatManager->GetPostsCount();
+	}
+	
 	/**
 	 * Obtains posts of Simple Chat Module.
 	 * 
@@ -55,10 +60,8 @@ class SimpleChatModule extends AApiModule
 	 */
 	public function GetPosts($Offset, $Limit)
 	{
-		$iPostsCount = $this->oApiChatManager->GetPostsCount();
 		$aPosts = $this->oApiChatManager->GetPosts($Offset, $Limit);
 		return array(
-			'Count' => $iPostsCount,
 			'Offset' => $Offset,
 			'Limit' => $Limit,
 			'Collection' => $aPosts

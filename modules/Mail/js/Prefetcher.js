@@ -280,7 +280,7 @@ Prefetcher.startMessagesPrefetch = function ()
 Prefetcher.onGetMessagesBodiesResponse = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.Parameters || {},
+		oParameters = oRequest.ParametersObject,
 		oFolder = MailCache.getFolderByFullName(oParameters.AccountID, oParameters.Folder)
 	;
 	

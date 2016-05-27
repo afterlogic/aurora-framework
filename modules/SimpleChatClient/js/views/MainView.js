@@ -6,6 +6,7 @@ var
 	moment = require('moment'),
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Types = require('modules/Core/js/utils/Types.js'),
 	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	App = require('modules/Core/js/App.js'),
@@ -26,9 +27,9 @@ function CSimpleChatView()
 	
 	this.bAllowReply = (App.getUserRole() === Enums.UserRole.PowerUser);
 	
-	this.page = ko.observable(1);
 	this.posts = ko.observableArray([]);
-	this.hasMore = ko.observable(false);
+	this.gettingMore = ko.observable(false);
+	this.offset = ko.observable(0);
 	
 	// Quick Reply Part
 	
@@ -59,79 +60,84 @@ function CSimpleChatView()
 	this.saveButtonText = ko.computed(function () {
 		return this.replyAutoSavingStarted() ? TextUtils.i18n('MAIL/ACTION_SAVE_IN_PROGRESS') : TextUtils.i18n('MAIL/ACTION_SAVE');
 	}, this);
+	
+	this.scrolledPostsDom = ko.observable(null);
+	this.scrollTrigger = ko.observable(0);
+	this.bBottom = false;
+	this.posts.subscribe(function () {
+		this.scrollIfNecessary(0);
+	}, this);
+	this.replyTextFocus.subscribe(function () {
+		this.scrollIfNecessary(500);
+	}, this);
 }
 
 _.extendOwn(CSimpleChatView.prototype, CAbstractScreenView.prototype);
 
 CSimpleChatView.prototype.ViewTemplate = 'SimpleChatClient_MainView';
 
+CSimpleChatView.prototype.scrollIfNecessary = function (iDelay)
+{
+	if (this.scrolledPostsDom() && this.scrolledPostsDom()[0])
+	{
+		var oScrolledPostsDom = this.scrolledPostsDom()[0];
+		this.bBottom = (oScrolledPostsDom.clientHeight + oScrolledPostsDom.scrollTop) === oScrolledPostsDom.scrollHeight;
+	}
+	
+	if (this.bBottom)
+	{
+		_.delay(_.bind(function () {
+			this.scrollTrigger(this.scrollTrigger() + 1);
+		}, this), iDelay);
+	}
+};
+
 CSimpleChatView.prototype.onShow = function ()
 {
-	this.getPosts(1);
+	Ajax.send('GetPostsCount', null, function (oResponse) {
+		var iCount = Types.pInt(oResponse && oResponse.Result);
+		if (iCount > 10)
+		{
+			this.offset(iCount - 10);
+		}
+		this.getPosts();
+	}, this);
 };
 
 CSimpleChatView.prototype.showMore = function ()
 {
-	this.page(this.page() + 1);
-	this.getPosts(this.page());
+	if (this.offset() > 0)
+	{
+		this.gettingMore(true);
+	}
+	this.offset((this.offset() >= 10) ? this.offset() - 10 : 0);
+	this.getPosts();
 };
 
-CSimpleChatView.prototype.getPosts = function (iPage)
+CSimpleChatView.prototype.getPosts = function ()
 {
-	Ajax.send('GetPosts', {Offset: 0, Limit: 10}, this.onGetPostsResponse, this);
+	this.clearTimer();
+	Ajax.send('GetPosts', {Offset: this.offset(), Limit: this.offset() + this.posts().length + 1000}, this.onGetPostsResponse, this);
 };
 
 CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result && _.isArray(oResponse.Result.Collection))
 	{
-		var
-			iCount = oResponse.Result.Count,
-			aPosts = oResponse.Result.Collection,
-			oParameters = oRequest.Parameters || {},
-			bHasMore = oParameters.PerPage > 0 && oParameters.Page * oParameters.PerPage < iCount
-//			aNewPosts = [],
-//			aPosts = this.posts()
-		;
-//		console.log(oParameters.Page * oParameters.PerPage < iCount, oParameters.Page, oParameters.PerPage, iCount);
-		this.hasMore(bHasMore);
-//		console.log('oParameters.Page', oParameters.Page);
-//		if (oParameters.Page !== 1)
-//		{
-//			console.log('aPosts', aPosts);
-//			console.log('aPosts', aPosts);
-//		}
-//		_.each(aPosts, function (oPost) {
-//			var oFoundPost = _.find(aPosts, function (oMsg) {
-////				if (oParameters.Page !== 1)
-////				{
-////					console.log(oMsg.name === oPost.name && oMsg.text === oPost.text, oMsg.name, oPost.name, oMsg.text, oPost.text);
-////				}
-//				return oMsg.name === oPost.name && oMsg.text === oPost.text;
-//			});
-//			if (oParameters.Page !== 1)
-//			{
-//				console.log('oFoundPost', oFoundPost, 'oPost', oPost);
-//			}
-//			if (!oFoundPost)
-//			{
-//				aNewPosts.push(oPost);
-//			}
-//		});
-//		if (oParameters.Page === 1)
-//		{
-//			aPosts = _.union(aNewPosts, this.posts());
-//		}
-//		else
-//		{
-//			aPosts = _.union(this.posts(), aNewPosts);
-//		}
+		var aPosts = oResponse.Result.Collection;
+		
 		_.each(aPosts, _.bind(function (oPost) {
 			oPost.date = this.getDisplayDate(moment.utc(oPost.date));
 		}, this));
+		
 		this.posts(aPosts);
+		this.setTimer();
 	}
-	this.setTimer();
+	else if (!this.gettingMore())
+	{
+		this.setTimer();
+	}
+	this.gettingMore(false);
 };
 
 CSimpleChatView.prototype.getDisplayDate = function (oMomentUtc)
@@ -151,20 +157,27 @@ CSimpleChatView.prototype.getDisplayDate = function (oMomentUtc)
 	}
 };
 
+CSimpleChatView.prototype.clearTimer = function ()
+{
+	console.log('clear', this.iTimer);
+	clearTimeout(this.iTimer);
+};
+
 CSimpleChatView.prototype.setTimer = function ()
 {
-	clearTimeout(this.iTimer);
+	this.clearTimer();
 	this.iTimer = setTimeout(_.bind(this.getPosts, this, 1), 2000);
+	console.log('set', this.iTimer);
 };
 
 CSimpleChatView.prototype.executeSendQuickReply = function ()
 {
 	if (this.bAllowReply)
 	{
-		var oNow = moment();
-		clearTimeout(this.iTimer);
-		Ajax.send('CreatePost', {'Text': this.replyText(), 'Date': oNow.utc().format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
-		this.posts.push({name: App.getUserName(), text: this.replyText(), 'date': this.getDisplayDate(oNow.utc())});
+		var oNowUtc = moment().utc();
+		this.clearTimer();
+		Ajax.send('CreatePost', {'Text': this.replyText(), 'Date': oNowUtc.format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
+		this.posts.push({name: App.getUserName(), text: this.replyText(), 'date': this.getDisplayDate(oNowUtc)});
 		this.replyText('');
 	}
 };

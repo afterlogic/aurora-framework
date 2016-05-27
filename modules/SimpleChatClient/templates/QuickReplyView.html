@@ -9,13 +9,12 @@
 	</div>
 	<div class="row" data-bind="css: {'focused': replyTextFocus(),
 		 'filled': replyText().length > 0}">
-		<label for="reply_text" class="placeholder"  data-bind="i18n: {'key': 'MAIL/LABEL_QUICK_REPLY'}"></label>
+		<label for="reply_text" class="placeholder"  data-bind="i18n: {'key': 'SIMPLECHAT/LABEL_YOUR_TEXT'}"></label>
 		<textarea id="reply_text" class="input" data-bind="value: replyText, 
-			hasfocus: replyTextFocus, onCtrlEnter: executeSendQuickReply, 
+			hasfocus: replyTextFocus, onEnter: executeSendQuickReply, 
 			valueUpdate: 'afterkeydown'"></textarea>
 	</div>
 	<div class="buttons">
-		<span class="button" data-bind="i18n: {'key': 'MAIL/ACTION_SEND'}, command: sendQuickReplyCommand"></span>
-		<span class="text hint" data-bind="i18n: {'key': 'CORE/LABEL_SEND_HOTKEY'}"></span>
+		<span class="button" data-bind="i18n: {'key': 'SIMPLECHAT/ACTION_SEND'}, command: sendQuickReplyCommand"></span>
 	</div>
 </div>

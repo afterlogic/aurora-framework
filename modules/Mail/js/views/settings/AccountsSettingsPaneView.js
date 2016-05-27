@@ -399,7 +399,7 @@ CAccountsSettingsPaneView.prototype.onGetAccountSettingsResponse = function (oRe
 	else
 	{
 		var
-			oParameters = oRequest.Parameters || {},
+			oParameters = oRequest.ParametersObject,
 			oAccount = AccountList.getAccount(oParameters.AccountID)
 		;
 		

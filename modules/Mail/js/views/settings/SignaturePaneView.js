@@ -154,7 +154,7 @@ CSignaturePaneView.prototype.onGetSignatureResponse = function (oResponse, oRequ
 	if (oResponse && oResponse.Result)
 	{
 		var
-			oParameters = oRequest.Parameters || {},
+			oParameters = oRequest.ParametersObject,
 			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = AccountList.getAccount(iAccountId)
 		;

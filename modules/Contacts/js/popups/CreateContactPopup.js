@@ -106,7 +106,7 @@ CCreateContactPopup.prototype.cancelPopup = function ()
  */
 CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRequest)
 {
-	var oParameters = oRequest.Parameters || {};
+	var oParameters = oRequest.ParametersObject;
 	
 	this.loading(false);
 
