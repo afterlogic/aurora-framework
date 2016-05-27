@@ -502,7 +502,7 @@ abstract class AApiModule
 					throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidToken);
 				} else if (!empty($sModule) && !empty($sMethod)) {
 					
-					$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
+					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
 					
 					if (!$this->CheckNonAuthorizedMethodAllowed($sMethod, $sAuthToken))
@@ -516,6 +516,10 @@ abstract class AApiModule
 					$sTenantHash = $this->oHttp->GetPost('TenantHash', '');
 					\CApi::setTenantHash($sTenantHash);
 					
+					if (!is_array($aParameters))
+					{
+						$aParameters = array($aParameters);
+					}
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
 
 					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
