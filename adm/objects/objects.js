@@ -11,18 +11,12 @@
 		
 		this.selectedItem = ko.observable(null);
 		this.selectedObjectName = ko.observable(null);
-		
-//		this.reset = function () {
-//			if (this.selectedItem())
-//			{
-//				this.selectedItem().active(false);
-//			}
-//			this.selectedItem(null);
-//		};
+		this.checkedItems = ko.observableArray([]);
 		
 		this.switchTab = _.bind(this.switchTab, this);
 		this.ajaxResponse = _.bind(this.ajaxResponse, this);
 		this.selectItem = _.bind(this.selectItem, this);
+		this.checkItem = _.bind(this.checkItem, this);
 		
 		this.init();
 	}
@@ -59,13 +53,49 @@
 		if (this.selectedItem() === oItem)
 		{
 			this.selectedItem(null);
+			
+			if (this.checkedItems().length === 1)
+			{
+				this.checkedItems([]);
+			}
 		}
 		else
 		{
 			this.selectedItem(oItem);
+			
+			if (this.checkedItems().length === 0)
+			{
+				this.checkedItems.push(oItem[0]);
+			}
+			else if (this.checkedItems().length === 1)
+			{
+				this.checkedItems([oItem[0]]);
+			}
 		}
 	};
 	
+	CScreen.prototype.checkItem = function (oItem, oEvent)
+	{
+		oEvent.stopPropagation();
+//		$(oEvent.target).prop('checked', true);
+//		$(oEvent.target).attr('checked', true);
+//		oEvent.target.checked = true;
+//		console.log(oItem, oEvent.target);
+
+		if (_.contains(this.checkedItems(), oItem[0]))
+		{
+			this.checkedItems.remove(oItem[0]);
+		}
+		else
+		{
+			this.checkedItems.push(oItem[0]);
+		}
+		
+		if (!this.selectedItem())
+		{
+			this.selectedItem(oItem);
+		}
+	};
 	
 	CScreen.prototype.switchTab = function (sTabName)
 	{

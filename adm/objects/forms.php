@@ -27,7 +27,7 @@
 		<input type="submit" value="Update" class="btn btn-danger" />
 	</form>
 </div>
-<div data-bind="with: selectedItem">
+<!--<div data-bind="with: selectedItem">
 	<label>Delete item</label>
 	<form method="POST" action="<?php echo $sBaseUrl; ?>">
 		<input type="hidden" name="manager" value="objects"/>
@@ -38,5 +38,16 @@
 		</div>
 
 		<input type="submit" value="Delete" class="btn btn-danger" />
+	</form>
+</div>-->
+<div data-bind="with: checkedItems().length > 0">
+	<br />
+	<label>Delete items</label>
+	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+		<input type="hidden" name="manager" value="objects" />
+		<input type="hidden" name="action" value="delete_multiple" />
+		<input type="hidden" name="ids" data-bind="textInput: $parent.checkedItems().join(',');" />
+
+		<input type="submit" value="Delete" class="btn btn-danger" data-bind="value: 'Delete: '+ $parent.checkedItems().join(', ');" />
 	</form>
 </div>

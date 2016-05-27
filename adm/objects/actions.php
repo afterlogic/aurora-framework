@@ -34,7 +34,15 @@ switch ($oHttp->GetPost('action'))
 	case 'delete':
 		$oManagerApi->deleteObject($oHttp->GetPost('iObjectId'));
 		break;
+	case 'delete_multiple':
+		if ($oHttp->HasPost('ids'))
+		{
+			$aIds = explode(',', $oHttp->GetPost('ids'));
+		}
+		foreach ($aIds as $id) {
+			$oManagerApi->deleteObject((int)$id);
+		}
+		break;
 }
-
 
 header('Location: ' . $_SERVER['REQUEST_URI']);
