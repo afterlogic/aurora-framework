@@ -39,6 +39,11 @@ abstract class api_APropertyBag
 	protected $aStaticMap;
 	
 	/**
+	 * @var array
+	 */
+	protected $aMap;
+	
+	/**
 	 * @param string $sClassName
 	 * @param string $sModuleName = ''
 	 */
@@ -282,15 +287,19 @@ abstract class api_APropertyBag
 	 */
 	public function getMap()
 	{
-		$aStaticMap = $this->getStaticMap();
-		$aModules = \CApi::GetModuleManager()->GetModules();
-		
-		foreach ($aModules as $oModule)
+		if (!isset($this->aMap))
 		{
-			$aStaticMap = array_merge($aStaticMap, $oModule->getObjectMap($this->sClassName));
+			$aStaticMap = $this->getStaticMap();
+			$aModules = \CApi::GetModuleManager()->GetModules();
+
+			foreach ($aModules as $oModule)
+			{
+				$aStaticMap = array_merge($aStaticMap, $oModule->getObjectMap($this->sClassName));
+			}
+			$this->aMap = $aStaticMap;
 		}
 		
-		return $aStaticMap;
+		return $this->aMap;
 	}
 	
 	/**
