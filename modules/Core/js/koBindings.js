@@ -467,11 +467,15 @@ ko.bindingHandlers.listWithMoreButton = {
 
 ko.bindingHandlers.onEnter = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
-		$(oElement).on('keyup', function (oEvent) {
+		$(oElement).on('keydown', function (oEvent) {
 			if (oEvent.keyCode === Enums.Key.Enter)
 			{
 				$(oElement).trigger('change');
-				fValueAccessor().call(oViewModel);
+				var mResult = fValueAccessor().call(oViewModel);
+				if (typeof mResult === 'boolean')
+				{
+					return mResult;
+				}
 			}
 		});
 	}

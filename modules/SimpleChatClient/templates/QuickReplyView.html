@@ -11,10 +11,9 @@
 		 'filled': replyText().length > 0}">
 		<label for="reply_text" class="placeholder"  data-bind="i18n: {'key': 'SIMPLECHAT/LABEL_YOUR_TEXT'}"></label>
 		<textarea id="reply_text" class="input" data-bind="value: replyText, 
-			hasfocus: replyTextFocus, onEnter: executeSendQuickReply, 
-			valueUpdate: 'afterkeydown'"></textarea>
+			hasfocus: replyTextFocus, onEnter: sendPost, valueUpdate: 'afterkeydown'"></textarea>
 	</div>
 	<div class="buttons">
-		<span class="button" data-bind="i18n: {'key': 'SIMPLECHAT/ACTION_SEND'}, command: sendQuickReplyCommand"></span>
+		<span class="button" data-bind="i18n: {'key': 'SIMPLECHAT/ACTION_SEND'}, click: sendPost"></span>
 	</div>
 </div>

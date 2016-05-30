@@ -2,12 +2,12 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
 	moment = require('moment'),
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	App = require('modules/Core/js/App.js'),
 	
@@ -54,8 +54,6 @@ function CSimpleChatView()
 		}
 		return '';
 	}, this);
-	
-	this.sendQuickReplyCommand = Utils.createCommand(this, this.executeSendQuickReply);
 	
 	this.saveButtonText = ko.computed(function () {
 		return this.replyAutoSavingStarted() ? TextUtils.i18n('MAIL/ACTION_SAVE_IN_PROGRESS') : TextUtils.i18n('MAIL/ACTION_SAVE');
@@ -168,16 +166,17 @@ CSimpleChatView.prototype.setTimer = function ()
 	this.iTimer = setTimeout(_.bind(this.getPosts, this, 1), 3000);
 };
 
-CSimpleChatView.prototype.executeSendQuickReply = function ()
+CSimpleChatView.prototype.sendPost = function ()
 {
-	if (this.bAllowReply)
+	if (this.bAllowReply && $.trim(this.replyText()) !== '')
 	{
 		var oNowUtc = moment().utc();
 		this.clearTimer();
-		Ajax.send('CreatePost', {'Text': this.replyText().replace('\n', '').replace('\r\n', ''), 'Date': oNowUtc.format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
+		Ajax.send('CreatePost', {'Text': this.replyText(), 'Date': oNowUtc.format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
 		this.posts.push({name: App.getUserName(), text: this.replyText(), 'date': this.getDisplayDate(oNowUtc)});
 		this.replyText('');
 	}
+	return false;
 };
 
 module.exports = new CSimpleChatView();
