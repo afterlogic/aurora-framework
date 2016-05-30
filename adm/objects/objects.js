@@ -109,7 +109,7 @@
 		this.selectedObjectName(sTabName);
 		
 		$.ajax({
-			url: '/adm/ajax.php',
+			url: 'ajax.php',
 			context: this,
 			type: 'POST',
 			data: oRequest,
