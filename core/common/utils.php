@@ -544,7 +544,7 @@ class api_Utils
 	 * @param string $sPassword
 	 * @return string
 	 */
-	public static function EncodeValue($sPassword)
+	public static function EncryptValue($sPassword)
 	{
 		if (function_exists('mcrypt_encrypt') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size') &&
 			defined('MCRYPT_RIJNDAEL_256') && defined('MCRYPT_MODE_ECB') && defined('MCRYPT_RAND'))
@@ -560,7 +560,7 @@ class api_Utils
 	 * @param string $sPassword
 	 * @return string
 	 */
-	public static function DecodeValue($sPassword)
+	public static function DecryptValue($sPassword)
 	{
 		if (function_exists('mcrypt_encrypt') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size') &&
 			defined('MCRYPT_RIJNDAEL_256') && defined('MCRYPT_MODE_ECB') && defined('MCRYPT_RAND'))

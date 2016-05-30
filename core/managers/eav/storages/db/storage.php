@@ -88,7 +88,7 @@ class CApiEavDbStorage extends CApiEavStorage
 						$mValue = $oRow->{'prop_value_' . $oRow->prop_type};
 						if ($oObject->isEncryptedProperty($oRow->prop_type))
 						{
-							$mValue = \api_Utils::DecodeValue($mValue);
+							$mValue = \api_Utils::DecryptValue($mValue);
 						}
 						$oObject->{$oRow->prop_key} = $mValue;
 					}
@@ -163,7 +163,7 @@ class CApiEavDbStorage extends CApiEavStorage
 						$mValue = $oRow->{'prop_' . $sKey};
 						if ($oObject->isEncryptedProperty($sKey))
 						{
-							$mValue = \api_Utils::DecodeValue($mValue);
+							$mValue = \api_Utils::DecryptValue($mValue);
 						}
 						$oObject->{$sKey} = $mValue;
 					}

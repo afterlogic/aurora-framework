@@ -96,7 +96,7 @@ abstract class api_APropertyBag
 			{
 				if ('password' === $aTypes[0])
 				{
-					$this->{$sKey} = api_Utils::DecodeValue($oRow->{$aTypes[1]});
+					$this->{$sKey} = api_Utils::DecryptValue($oRow->{$aTypes[1]});
 				}
 				else if ('datetime' === $aTypes[0])
 				{

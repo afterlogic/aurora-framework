@@ -181,7 +181,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sType = $oObject->getPropertyType($sKey);
 				if ($oObject->isEncryptedProperty($sKey))
 				{
-					$sPrpertyValue = \api_Utils::EncodeValue($sPrpertyValue);
+					$sPrpertyValue = \api_Utils::EncryptValue($sPrpertyValue);
 				}
 				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
@@ -271,7 +271,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 					$mValue = $oProperty->Value;
 					if ($oProperty->Encrypt)
 					{
-						$mValue = \api_Utils::EncodeValue($mValue);
+						$mValue = \api_Utils::EncryptValue($mValue);
 					}
 					$aValues[] = sprintf('(%d, %s, %s, %s, %s, %d, %d, %s)',
 						$iObjectId,
