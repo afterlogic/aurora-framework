@@ -72,6 +72,8 @@
 				this.checkedItems([oItem[0]]);
 			}
 		}
+		
+		return true;
 	};
 	
 	CScreen.prototype.checkItem = function (oItem, oEvent)
@@ -95,6 +97,8 @@
 		{
 			this.selectedItem(oItem);
 		}
+		
+		return true;
 	};
 	
 	CScreen.prototype.switchTab = function (sTabName)
@@ -105,6 +109,9 @@
 				'ObjectName': sTabName
 			}
 		;
+		
+		this.selectedItem(null);
+		this.checkedItems([]);
 		
 		this.selectedObjectName(sTabName);
 		

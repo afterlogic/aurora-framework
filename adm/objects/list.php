@@ -13,16 +13,20 @@
 			<div role="tabpanel" class="table-responsive tab-pane <?php echo $iStoredTab === 0 ? 'active' : ''?>" id="" data-bind="attr: {'id': 'object-'+$data}">
 				<table class="table table-striped">
 					<tr>
-						<th></th>
+						<th>
+							<input type="checkbox" name="test" />
+						</th>
 						<!-- ko foreach: $parent.propsList -->
 						<th data-bind="text: $data;"></th>
 						<!-- /ko -->
 					</tr>
 					<!-- ko foreach: $parent.objectsList -->
 					<tr data-bind="click: $parents[1].selectItem, css: {'warning': $parents[1].selectedItem() == $data, 'info': _.contains($parents[1].checkedItems(), $data[0])}">
-						<td><input type="checkbox" data-bind="click: $parents[1].checkItem" /></td>
+						<th>
+							<input type="checkbox" class="checkbox" name="test" data-bind="click: $parents[1].checkItem, checked: _.contains($parents[1].checkedItems(), $data[0])" />
+						</th>
 						<!-- ko foreach: $data -->
-							<td data-bind="text: $data;"></td>
+							<th data-bind="text: $data;"></th>
 					<!-- /ko -->
 					</tr>
 					<!-- /ko -->
