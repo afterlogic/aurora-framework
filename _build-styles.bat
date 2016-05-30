@@ -1,1 +1,1 @@
-@gulp styles --tenant 80421e8d --modules Auth,Calendar,ChangePassword,Contacts,Files,HelpDeskClient,Mail,MailSensitivity,MobileSync,OpenPgp,OutlookSync,Phone,Settings,SimpleChatClient --themes Default,Funny
+node ./node_modules/gulp/bin/gulp.js styles --tenant 80421e8d --modules Auth,Calendar,ChangePassword,Contacts,Files,HelpDeskClient,Mail,MailSensitivity,MobileSync,OpenPgp,OutlookSync,Phone,Settings,SimpleChatClient --themes Default,Funny

@@ -84,9 +84,9 @@ class CDbMySql extends CDbSql
 	 */
 	public function Connect($bWithSelect = true, $bNewLink = false)
 	{
-		if (!function_exists('mysql_connect'))
+		if (!function_exists('mysqli_connect'))
 		{
-			throw new CApiDbException('Can\'t load MySQL extension.', 0);
+			throw new CApiDbException('Can\'t load MySQLi extension.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
@@ -101,7 +101,7 @@ class CDbMySql extends CDbSql
 			CApi::Log('DB(mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 		
-		$this->_rConectionHandle = @mysql_connect($this->sHost, $this->sUser, $this->sPassword, (bool) $bNewLink);
+		$this->_rConectionHandle = @mysqli_connect($this->sHost, $this->sUser, $this->sPassword, (bool) $bNewLink);
 		if ($this->_rConectionHandle)
 		{
 			if (CApi::$bUseDbLog)
@@ -135,13 +135,13 @@ class CDbMySql extends CDbSql
 	{
 		if (0 < strlen($this->sDbName))
 		{
-			$rDbSelect = @mysql_select_db($this->sDbName, $this->_rConectionHandle);
+			$rDbSelect = @mysqli_select_db($this->_rConectionHandle, $this->sDbName);
 			if(!$rDbSelect)
 			{
 				$this->_setSqlError();
 				if ($this->_rConectionHandle)
 				{
-					@mysql_close($this->_rConectionHandle);
+					@mysqli_close($this->_rConectionHandle);
 				}
 				$this->_rConectionHandle = null;
 				return false;
@@ -150,15 +150,15 @@ class CDbMySql extends CDbSql
 			if ($this->_rConectionHandle)
 			{
 				$bSet = false;
-				if (function_exists('mysql_set_charset'))
+				if (function_exists('mysqli_set_charset'))
 				{
 					$bSet = true;
-					mysql_set_charset('utf8', $this->_rConectionHandle);
+					mysqli_set_charset($this->_rConectionHandle, 'utf8');
 				}
 
 				if (!$bSet)
 				{
-					mysql_query('SET NAMES utf8', $this->_rConectionHandle);
+					mysqli_query($this->_rConectionHandle, 'SET NAMES utf8');
 				}
 			}
 
@@ -178,7 +178,7 @@ class CDbMySql extends CDbSql
 		{
 			if (is_resource($this->_rResultId))
 			{
-				mysql_free_result($this->_rResultId);
+				mysqli_free_result($this->_rResultId);
 			}
 			$this->_resultId = null;
 
@@ -187,7 +187,7 @@ class CDbMySql extends CDbSql
 				CApi::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
 			}
 
-			$result = @mysql_close($this->_rConectionHandle);
+			$result = @mysqli_close($this->_rConectionHandle);
 			$this->_rConectionHandle = null;
 			return $result;
 		}
@@ -211,16 +211,16 @@ class CDbMySql extends CDbSql
 			$sExplainQuery = 'EXPLAIN ';
 			$sExplainQuery .= ($this->bUseExplainExtended) ? 'extended '.$sQuery : $sQuery;
 
-			$rExplainResult = @mysql_query($sExplainQuery, $this->_rConectionHandle);
-			while (false != ($mResult = mysql_fetch_assoc($rExplainResult)))
+			$rExplainResult = @mysqli_query($this->_rConectionHandle, $sExplainQuery);
+			while (false != ($mResult = mysqli_fetch_assoc($rExplainResult)))
 			{
 				$sExplainLog .= API_CRLF.print_r($mResult, true);
 			}
 
 			if ($this->bUseExplainExtended)
 			{
-				$rExplainResult = @mysql_query('SHOW warnings', $this->_rConectionHandle);
-				while (false != ($mResult = mysql_fetch_assoc($rExplainResult)))
+				$rExplainResult = @mysqli_query($this->_rConectionHandle, 'SHOW warnings');
+				while (false != ($mResult = mysqli_fetch_assoc($rExplainResult)))
 				{
 					$sExplainLog .= API_CRLF.print_r($mResult, true);
 				}
@@ -234,7 +234,7 @@ class CDbMySql extends CDbSql
 			$this->log('EXPLAIN:'.API_CRLF.trim($sExplainLog), $bIsSlaveExecute);
 		}
 
-		$this->_rResultId = @mysql_query($sQuery, $this->_rConectionHandle);
+		$this->_rResultId = @mysqli_query($this->_rConectionHandle, $sQuery);
 		if ($this->_rResultId === false)
 		{
 			$this->_setSqlError();
@@ -251,7 +251,7 @@ class CDbMySql extends CDbSql
 	{
 		if ($this->_rResultId)
 		{
-			$mResult = @mysql_fetch_object($this->_rResultId);
+			$mResult = @mysqli_fetch_object($this->_rResultId);
 			if (!$mResult && $bAutoFree)
 			{
 				$this->FreeResult();
@@ -274,7 +274,7 @@ class CDbMySql extends CDbSql
 	{
 		if ($this->_rResultId)
 		{
-			$mResult = mysql_fetch_assoc($this->_rResultId);
+			$mResult = mysqli_fetch_assoc($this->_rResultId);
 			if (!$mResult && $bAutoFree)
 			{
 				$this->FreeResult();
@@ -296,7 +296,7 @@ class CDbMySql extends CDbSql
 	 */
 	public function GetLastInsertId($sTableName = null, $sFieldName = null)
 	{
-		return (int) @mysql_insert_id($this->_rConectionHandle);
+		return (int) @mysqli_insert_id($this->_rConectionHandle);
 	}
 
 	/**
@@ -379,7 +379,7 @@ class CDbMySql extends CDbSql
 	{
 		if ($this->_rResultId)
 		{
-			if (!@mysql_free_result($this->_rResultId))
+			if (!@mysqli_free_result($this->_rResultId))
 			{
 				$this->_setSqlError();
 				return false;
@@ -397,7 +397,7 @@ class CDbMySql extends CDbSql
 	 */
 	public function ResultCount()
 	{
-		return @mysql_num_rows($this->_rResultId);
+		return @mysqli_num_rows($this->_rResultId);
 	}
 
 	/**
@@ -407,13 +407,13 @@ class CDbMySql extends CDbSql
 	{
 		if ($this->IsConnected())
 		{
-			$this->ErrorDesc = @mysql_error($this->_rConectionHandle);
-			$this->ErrorCode = @mysql_errno($this->_rConectionHandle);
+			$this->ErrorDesc = @mysqli_error($this->_rConectionHandle);
+			$this->ErrorCode = @mysqli_errno($this->_rConectionHandle);
 		}
 		else
 		{
-			$this->ErrorDesc = @mysql_error();
-			$this->ErrorCode = @mysql_errno();
+			$this->ErrorDesc = @mysqli_error();
+			$this->ErrorCode = @mysqli_errno();
 		}
 
 		if (0 < strlen($this->ErrorDesc))
