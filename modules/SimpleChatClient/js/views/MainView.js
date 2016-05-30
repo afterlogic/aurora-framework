@@ -174,7 +174,7 @@ CSimpleChatView.prototype.executeSendQuickReply = function ()
 	{
 		var oNowUtc = moment().utc();
 		this.clearTimer();
-		Ajax.send('CreatePost', {'Text': this.replyText(), 'Date': oNowUtc.format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
+		Ajax.send('CreatePost', {'Text': this.replyText().replace('\n', '').replace('\r\n', ''), 'Date': oNowUtc.format('YYYY-MM-DD HH:mm:ss')}, this.setTimer, this);
 		this.posts.push({name: App.getUserName(), text: this.replyText(), 'date': this.getDisplayDate(oNowUtc)});
 		this.replyText('');
 	}
