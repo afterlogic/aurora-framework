@@ -5,7 +5,7 @@ $oManagerApi = \CApi::GetCoreManager('eav', 'db');
 
 switch ($oHttp->GetPost('action'))
 {
-	case 'update':
+	case 'edit':
 		if ($oHttp->HasPost('ObjectName'))
 		{
 			$sObjectType = $oHttp->GetPost('ObjectName');
