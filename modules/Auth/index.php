@@ -409,5 +409,3 @@ class AuthModule extends AApiModule
 		}
 	}
 }
-
-return new AuthModule('1.0');

@@ -10,12 +10,6 @@
  */
 class CApiEavCommandCreator extends api_CommandCreator
 {
-	protected $aViewProperties;
-	
-	protected $aSearchProperties;
-	
-	protected $aSortProperties;
-	
 	/**
 	 * @return string
 	 */
@@ -52,8 +46,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 	public function deleteObject($iId)
 	{
 		return sprintf(
-			'DELETE FROM %seav_objects '
-			. 'WHERE id = %d', 
+			'DELETE FROM %seav_objects WHERE id = %d', 
 			$this->prefix(), $iId);
 	}	
 	
@@ -91,9 +84,9 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$this->prefix()
 		);
 	}
-	public function getObjectsCount($sObjectType, $aSearchProperties = array())
+	public function getObjectsCount($sObjectType, $aWhere = array())
 	{
-		return $this->getObjects($sObjectType, array(), 0, 0, $aSearchProperties, "", \ESortOrder::ASC, true);
+		return $this->getObjects($sObjectType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, true);
 	}
 			
 	public function getObjects($sObjectType, $aViewProperties = array(), 
@@ -146,15 +139,16 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sType = $oObject->getPropertyType($sProperty);
 
 				$aResultViewProperties[$sProperty] = sprintf(
-						"`props_%s`.`value_%s` as `prop_%s`", 
+						"`props_%s`.`value_%s` as `prop_%s`
+			", 
 						$sProperty, 
 						$sType, 
 						$sProperty
 				);
 				$aJoinProperties[$sProperty] = sprintf(
-						"LEFT JOIN eav_properties as `props_%s` 
-							ON `props_%s`.key = %s 
-								AND `props_%s`.id_object = objects.id",
+						"
+					LEFT JOIN eav_properties as `props_%s` 
+						ON `props_%s`.key = %s AND `props_%s`.id_object = objects.id",
 				$sProperty, $sProperty, $this->escapeString($sProperty), $sProperty);
 			}
 			if (0 < count($aViewProperties))
@@ -206,7 +200,9 @@ class CApiEavCommandCreator extends api_CommandCreator
 		$sSql = sprintf(
 			"SELECT 
 			%s #1 COUNT
-			objects.id as obj_id, objects.object_type as obj_type, objects.module_name as obj_module
+			objects.id as obj_id, 
+			objects.object_type as obj_type, 
+			objects.module_name as obj_module
 			# fields
 			%s #2
 			# ------
@@ -346,8 +342,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 	public function deleteProperties($iObjectId)
 	{
 		return sprintf(
-				'DELETE FROM %seav_properties '
-				. 'WHERE id_object = %d', 
+				'DELETE FROM %seav_properties WHERE id_object = %d', 
 				$this->prefix(), $iObjectId
 		);
 	}

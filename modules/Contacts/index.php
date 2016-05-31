@@ -1141,5 +1141,3 @@ class ContactsModule extends AApiModule
 	}
 	
 }
-
-return new ContactsModule('1.0');

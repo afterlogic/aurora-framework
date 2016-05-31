@@ -6,5 +6,3 @@ class SimpleChatEmojiModule extends AApiModule
 	{
 	}
 }
-
-return new SimpleChatEmojiModule('1.0');

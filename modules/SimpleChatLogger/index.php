@@ -23,5 +23,3 @@ class SimpleChatLoggerModule extends AApiModule
 		\CApi::Log($iUserId.' ['.$aArgs['Date'].'] '.$aArgs['Text'], ELogLevel::Full, 'simple-chat');
 	}
 }
-
-return new SimpleChatLoggerModule('1.0');

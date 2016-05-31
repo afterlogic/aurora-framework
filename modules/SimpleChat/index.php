@@ -82,5 +82,3 @@ class SimpleChatModule extends AApiModule
 		return true;
 	}	
 }
-
-return new SimpleChatModule('1.0');

@@ -360,5 +360,3 @@ class TwilioModule extends AApiModule
 		return $aResult;
 	}	
 }
-
-//return new TwilioModule('1.0');

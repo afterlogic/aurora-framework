@@ -793,5 +793,3 @@ class CalendarModule extends AApiModule
 	}
 	
 }
-
-return new CalendarModule('1.0');

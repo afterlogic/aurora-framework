@@ -116,5 +116,3 @@ class MinModule extends AApiModule
 	
 	
 }
-
-return new MinModule('1.0');

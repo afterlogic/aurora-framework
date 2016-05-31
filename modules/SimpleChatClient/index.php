@@ -6,5 +6,3 @@ class SimpleChatModuleClient extends AApiModule
 	{
 	}
 }
-
-return new SimpleChatModuleClient('1.0');

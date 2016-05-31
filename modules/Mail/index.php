@@ -1345,5 +1345,3 @@ class MailModule extends AApiModule
 		return $mResult;
 	}
 }
-
-return new MailModule('1.0');

@@ -150,5 +150,3 @@ class DavModule extends AApiModule
 		return ($mResult !== false && isset($mResult['id'])) ? $mResult['id'] : false;
 	}
 }
-
-return new DavModule('1.0');

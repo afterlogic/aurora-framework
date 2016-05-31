@@ -594,5 +594,3 @@ class FilesModule extends AApiModule
 	}	
 
 }
-
-return new FilesModule('1.0');

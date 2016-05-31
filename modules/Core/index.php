@@ -1106,5 +1106,3 @@ class CoreModule extends AApiModule
 		return $oTenant ? $oTenant : null;
 	}
 }
-
-return new CoreModule('1.0');

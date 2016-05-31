@@ -1193,5 +1193,3 @@ class HelpDeskModule extends AApiModule
 		return !!in_array($sMethodName, array('Login', 'Register', 'Forgot'));
 	}
 }
-
-return new HelpDeskModule('1.0');

@@ -5,6 +5,11 @@
  */
 class CApiModuleManager
 {
+    /**
+     * This array contains a list of modules
+     *
+     * @var array
+     */
 	protected $_aModules = array();
 	
     /**
@@ -37,13 +42,17 @@ class CApiModuleManager
 					if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem) &&
 						@file_exists($sModulesPath.$sFileItem.'/index.php'))
 					{
-						$oModule = include_once $sModulesPath.$sFileItem.'/index.php';
-						if ($oModule instanceof AApiModule)
+						include_once $sModulesPath.$sFileItem.'/index.php';
+						if (class_exists($sFileItem . 'Module'))
 						{
-							$oModule->SetName($sFileItem);
-							$oModule->SetPath($sModulesPath.$sFileItem);
-							$oModule->init();
-							$this->_aModules[strtolower($sFileItem)] = $oModule;
+							$oModule = call_user_func($sFileItem . 'Module::createInstance');
+							if ($oModule instanceof AApiModule)
+							{
+								$oModule->SetName($sFileItem);
+								$oModule->SetPath($sModulesPath.$sFileItem);
+								$oModule->init();
+								$this->_aModules[strtolower($sFileItem)] = $oModule;
+							}
 						}
 					}
 				}
@@ -300,7 +309,7 @@ abstract class AApiModule
 	/**
 	 * @param string $sVersion
 	 */
-	public function __construct($sVersion)
+	public function __construct($sVersion = '1.0')
 	{
 		$this->sVersion = (string) $sVersion;
 
@@ -316,6 +325,11 @@ abstract class AApiModule
 			'download' => 'EntryDownload'
 		);
 	}
+	
+	public static function createInstance($sVersion = '1.0')
+	{
+		return new static($sVersion);
+	}	
 
 	public function init()
 	{

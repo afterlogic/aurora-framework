@@ -73,5 +73,3 @@ class IosModule extends AApiModule
 	}
 	
 }
-
-return new IosModule('1.0');

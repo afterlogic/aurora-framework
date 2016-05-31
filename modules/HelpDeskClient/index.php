@@ -169,5 +169,3 @@ class HelpDeskModuleClient extends AApiModule
 		}
 	}
 }
-
-return new HelpDeskModuleClient('1.0');
