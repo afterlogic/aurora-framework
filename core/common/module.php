@@ -32,36 +32,65 @@ class CApiModuleManager
 	
 	public function init()
 	{
+		$sTenant = '';
 		$sModulesPath = $this->GetModulesPath();
-		if (@is_dir($sModulesPath))
+		
+		$oCoreModule = $this->loadModule('Core', $sModulesPath.'Core');
+		if ($oCoreModule !== false)
 		{
-			if (false !== ($rDirHandle = @opendir($sModulesPath)))
+			$sTenant = $oCoreModule->GetTenantHash();
+		}
+		
+		$aModulePath = array(
+			$sModulesPath
+		);
+		if (!empty(trim($sTenant)))
+		{
+			$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
+			array_unshift($aModulePath, $sTenantModulesPath);
+		}
+		foreach ($aModulePath as $sModulesPath)
+		{
+			if (@is_dir($sModulesPath))
 			{
-				while (false !== ($sFileItem = @readdir($rDirHandle)))
+				if (false !== ($rDirHandle = @opendir($sModulesPath)))
 				{
-					if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem) &&
-						@file_exists($sModulesPath.$sFileItem.'/index.php'))
+					while (false !== ($sFileItem = @readdir($rDirHandle)))
 					{
-						include_once $sModulesPath.$sFileItem.'/index.php';
-						if (class_exists($sFileItem . 'Module'))
-						{
-							$oModule = call_user_func($sFileItem . 'Module::createInstance');
-							if ($oModule instanceof AApiModule)
-							{
-								$oModule->SetName($sFileItem);
-								$oModule->SetPath($sModulesPath.$sFileItem);
-								$oModule->init();
-								$this->_aModules[strtolower($sFileItem)] = $oModule;
-							}
-						}
+						$this->loadModule($sFileItem, $sModulesPath.$sFileItem);
 					}
-				}
 
-				@closedir($rDirHandle);
+					@closedir($rDirHandle);
+				}
 			}
 		}
 	}
 	
+	public function loadModule($sModuleName, $sModulePath)
+	{
+		$mResult = false;
+		if (0 < strlen($sModuleName) && '.' !== $sModuleName{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sModuleName) &&
+			@file_exists($sModulePath.'/index.php') && !array_key_exists(strtolower($sModuleName), $this->_aModules))
+		{
+		   include_once $sModulePath.'/index.php';
+		   if (class_exists($sModuleName . 'Module'))
+		   {
+			   $oModule = call_user_func($sModuleName . 'Module::createInstance');
+			   if ($oModule instanceof AApiModule)
+			   {
+				   $oModule->SetName($sModuleName);
+				   $oModule->SetPath($sModulePath);
+				   $oModule->init();
+				   $this->_aModules[strtolower($sModuleName)] = $oModule;
+				   
+				   $mResult = $oModule;
+			   }
+		   }
+		}
+		
+		return $mResult;
+	}
+
     /**
      * Subscribe to an event.
      *
@@ -134,6 +163,14 @@ class CApiModuleManager
 	public function GetModulesPath()
 	{
 		return PSEVEN_APP_ROOT_PATH.'modules/';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetTenantModulesPath($sTenant)
+	{
+		return PSEVEN_APP_ROOT_PATH.'tenants/' . $sTenant . '/modules/';
 	}
 
 	/**
@@ -528,6 +565,7 @@ abstract class AApiModule
 					}
 					
 					$sTenantHash = $this->oHttp->GetPost('TenantHash', '');
+					
 					\CApi::setTenantHash($sTenantHash);
 					
 					if (!is_array($aParameters))

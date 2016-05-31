@@ -15,10 +15,6 @@ class CoreModule extends AApiModule
 		$this->oApiChannelsManager = $this->GetManager('channels', 'db');
 		$this->oApiUsersManager = $this->GetManager('users', 'db');
 		
-//		$oModuleManager = \CApi::GetModuleManager();
-//		$oMailModule = $oModuleManager->GetModule('Mail');
-//		CApi::GetCoreManager('tenants');
-		
 		$this->AddEntries(array(
 				'ping' => 'EntryPing',
 				'pull' => 'EntryPull',
@@ -31,12 +27,6 @@ class CoreModule extends AApiModule
 				'postlogin' => 'EntryPostlogin'
 			)
 		);
-		
-		//example of Object Class extending
-//		$this->setObjectMap('CUser', array(
-//				'Test1'	=> array('string', 'www')
-//			)
-//		);
 		
 		$this->subscribeEvent('CreateAccount', array($this, 'onAccountCreate'));
 	}
@@ -1104,5 +1094,12 @@ class CoreModule extends AApiModule
 		$oTenant = $this->oApiTenantsManager->getDefaultGlobalTenant();
 		
 		return $oTenant ? $oTenant : null;
+	}
+	
+	public function GetTenantHash()
+	{
+		$sTenant = $this->oHttp->GetQuery('tenant', '');
+		\CApi::setTenantHash($sTenant);
+		return $sTenant;
 	}
 }
