@@ -109,6 +109,7 @@ module.exports = {
 		SimpleChat: {
 			enableModule: ko.observable(AppData.SimpleChat ? !!AppData.SimpleChat.EnableModule : false)
 		},
+		SimpleChatEmoji: {},
 		dsbld_Phone: {
 			SipImpi: AppData.User ? Types.pString(AppData.User.SipImpi) : '102',
 			SipOutboundProxyUrl: AppData.User ? Types.pString(AppData.User.SipOutboundProxyUrl) : '',

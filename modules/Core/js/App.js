@@ -327,6 +327,31 @@ CApp.prototype.getCommonRequestParameters = function ()
 	return oParameters;
 };
 
+CApp.prototype.broadcastEvent = function (sEventName, oArguments)
+{
+	if (_.isArray(this.aEventsCallbacks) && _.isArray(this.aEventsCallbacks[sEventName]))
+	{
+		_.each(this.aEventsCallbacks[sEventName], function (fCallback) {
+			fCallback(oArguments);
+		});
+	}
+};
+
+CApp.prototype.subscribeEvent = function (sEventName, fCallback)
+{
+	if (!_.isArray(this.aEventsCallbacks))
+	{
+		this.aEventsCallbacks = [];
+	}
+	
+	if (!_.isArray(this.aEventsCallbacks[sEventName]))
+	{
+		this.aEventsCallbacks[sEventName] = [];
+	}
+	
+	this.aEventsCallbacks[sEventName].push(fCallback);
+};
+
 var App = new CApp();
 
 module.exports = App;
