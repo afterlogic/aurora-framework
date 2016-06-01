@@ -35,7 +35,7 @@ class CApiModuleManager
 		$sTenant = '';
 		$sModulesPath = $this->GetModulesPath();
 		
-		$oCoreModule = $this->loadModule('Core', $sModulesPath.'Core');
+		$oCoreModule = $this->loadModule('Core', $sModulesPath);
 		if ($oCoreModule !== false)
 		{
 			$sTenant = $oCoreModule->GetTenantHash();
@@ -57,7 +57,10 @@ class CApiModuleManager
 				{
 					while (false !== ($sFileItem = @readdir($rDirHandle)))
 					{
-						$this->loadModule($sFileItem, $sModulesPath.$sFileItem);
+						if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
+						{
+							$this->loadModule($sFileItem, $sModulesPath);
+						}
 					}
 
 					@closedir($rDirHandle);
@@ -69,17 +72,15 @@ class CApiModuleManager
 	public function loadModule($sModuleName, $sModulePath)
 	{
 		$mResult = false;
-		if (0 < strlen($sModuleName) && '.' !== $sModuleName{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sModuleName) &&
-			@file_exists($sModulePath.'/index.php') && !array_key_exists(strtolower($sModuleName), $this->_aModules))
+		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
+		if (@file_exists($sModuleFilePath) && !array_key_exists(strtolower($sModuleName), $this->_aModules))
 		{
-		   include_once $sModulePath.'/index.php';
+		   include_once $sModuleFilePath;
 		   if (class_exists($sModuleName . 'Module'))
 		   {
-			   $oModule = call_user_func($sModuleName . 'Module::createInstance');
+			   $oModule = call_user_func(array($sModuleName . 'Module', 'createInstance'), $sModuleName, $sModulePath);
 			   if ($oModule instanceof AApiModule)
 			   {
-				   $oModule->SetName($sModuleName);
-				   $oModule->SetPath($sModulePath);
 				   $oModule->init();
 				   $this->_aModules[strtolower($sModuleName)] = $oModule;
 				   
@@ -142,10 +143,13 @@ class CApiModuleManager
         }
 		
 		foreach($aEventSubscriptions as $fCallback) {
-			$result = call_user_func_array($fCallback, $aArguments);
-			if ($result === false) {
-				$bResult = false;
-				break;
+			if (is_callable($fCallback))
+			{
+				$result = call_user_func_array($fCallback, $aArguments);
+				if ($result === false) {
+					$bResult = false;
+					break;
+				}
 			}
 		}
 
@@ -346,12 +350,12 @@ abstract class AApiModule
 	/**
 	 * @param string $sVersion
 	 */
-	public function __construct($sVersion = '1.0')
+	public function __construct($sName, $sPath, $sVersion = '1.0')
 	{
 		$this->sVersion = (string) $sVersion;
 
-		$this->sName = '';
-		$this->sPath = '';
+		$this->sName = $sName;
+		$this->sPath = $sPath.$sName;
 		$this->aParameters = array();
 		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
@@ -363,9 +367,9 @@ abstract class AApiModule
 		);
 	}
 	
-	public static function createInstance($sVersion = '1.0')
+	public static function createInstance($sName, $sPath, $sVersion = '1.0')
 	{
-		return new static($sVersion);
+		return new static($sName, $sPath, $sVersion);
 	}	
 
 	public function init()
