@@ -40,15 +40,18 @@ if ($oHttp->HasPost('action'))
 				$aArguments[] = '--tenant '.$oHttp->GetPost('login', '');
 			}
 			
-			$sCommand = escapeshellcmd("@gulp styles ".implode($aArguments, ' '));
-//			$sCommand = escapeshellcmd("@gulp styles:test");
-			var_dump($sCommand);
-//			var_dump(shell_exec($sCommand));
-			var_dump(shell_exec($sCommand));
-			var_dump(shell_exec("whoami"));
+//			$sCommand = "node ".PSEVEN_APP_ROOT_PATH."node_modules/gulp/bin/gulp.js styles ".implode($aArguments, ' ') . " 2>&1";
+			$sCommand = ('"c:/Program Files/nodejs/node.exe" '.PSEVEN_APP_ROOT_PATH.'node_modules/gulp/bin/gulp.js styles '.implode($aArguments, ' ') . ' 2>&1');
+
+			$result = shell_exec($sCommand);
+//			$result = exec($sCommand, $output, $return_var);
+			var_dump($result);
+//			var_dump($output);
+//			var_dump($return_var);
+//			var_dump(shell_exec("whoami"));
 			break;
 	}
-	header('Location: ' . $_SERVER['REQUEST_URI']);
+//	header('Location: ' . $_SERVER['REQUEST_URI']);
 }
 
 

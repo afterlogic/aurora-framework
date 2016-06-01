@@ -1,7 +1,8 @@
 <?php
 
 /* -AFTERLOGIC LICENSE HEADER- */
-
+//phpinfo();
+//exit;
 if (!defined('PSEVEN_APP_ROOT_PATH'))
 {
 	include "init.php";

@@ -160,11 +160,11 @@ function MoveSharingCss()
 gulp.task('styles', function () {
 	BuildLibsCss();
 	MoveFiles('modules/Core/styles/vendors/jquery/images', 'static/styles/libs/images');
-	MoveFiles('modules/Core/styles/fonts', 'static/styles/fonts');
-	MoveFiles('modules/Core/styles/images', 'static/styles/images');
+	MoveFiles('modules/Core/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
+	MoveFiles('modules/Core/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
 	MoveSharingCss();
 	_.each(aThemes, function (sTheme) {
-		MoveFiles('modules/Core/styles/themes/' + sTheme.toLowerCase() + '-images', 'static/styles/themes/' + sTheme + '/images');
+		MoveFiles('modules/Core/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});
