@@ -72,6 +72,9 @@ class CApiModuleManager
 	public function loadModule($sModuleName, $sModulePath)
 	{
 		$mResult = false;
+		
+		$this->broadcastEvent($sModuleName, 'loadModule::before', array(&$sModuleName, &$sModulePath));
+		
 		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
 		if (@file_exists($sModuleFilePath) && !array_key_exists(strtolower($sModuleName), $this->_aModules))
 		{
@@ -88,6 +91,8 @@ class CApiModuleManager
 			   }
 		   }
 		}
+
+		$this->broadcastEvent($sModuleName, 'loadModule::after', array(&$mResult));
 		
 		return $mResult;
 	}
@@ -133,7 +138,9 @@ class CApiModuleManager
      */
     public function broadcastEvent($sModule, $sEvent, $aArguments = array()) 
 	{
-        $bResult = true;
+        \CApi::Log('broadcastEvent: ' . $sModule . '::' . $sEvent);
+		
+		$bResult = true;
 		$aEventSubscriptions = array();
 		if (isset($this->_aEventSubscriptions[$sModule. '::' .$sEvent])) {
 			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sModule. '::' .$sEvent]);
@@ -145,6 +152,7 @@ class CApiModuleManager
 		foreach($aEventSubscriptions as $fCallback) {
 			if (is_callable($fCallback))
 			{
+				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . '::' . $fCallback[1]);
 				$result = call_user_func_array($fCallback, $aArguments);
 				if ($result === false) {
 					$bResult = false;
