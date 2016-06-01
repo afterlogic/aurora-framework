@@ -785,7 +785,7 @@ class HelpDeskModule extends AApiModule
 						$aOwnerDataList[$oItem->IdOwner] = array(
 							'Email' => '',  //actualy, it's a User Login stored in Auth account
 							'Name' => $oOwnerUser->Name,
-							'NotificationEmail' => $oOwnerAccount->NotificationEmail
+							'NotificationEmail' => isset($oOwnerAccount) ? $oOwnerAccount->NotificationEmail : '' 
 						);
 					}
 				}
@@ -1022,12 +1022,13 @@ class HelpDeskModule extends AApiModule
 //				$aOwnerList[$oItem->IdOwner] = (int) $oItem->IdOwner;
 				$oOwnerUser = $this->oCoreDecorator->GetUser($oItem->IdOwner);
 				$oOwnerAccount = $this->oAccountsManager->getAccountByUserId($oItem->IdOwner);
+				
 				if ($oOwnerUser)
 				{
 					$aOwnerDataList[$oOwnerUser->iObjectId] = array(
 						'Email' => '', //actualy, it's a User Login stored in Auth account
 						'Name' => $oOwnerUser->Name,
-						'NotificationEmail' => $oOwnerAccount->NotificationEmail
+						'NotificationEmail' => isset($oOwnerAccount) ? $oOwnerAccount->NotificationEmail : ''
 					);
 				}
 			}
