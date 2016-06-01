@@ -75,6 +75,7 @@ class CApiSimpleChatMainManager extends AApiManager
 						$aUsers[$oItem->UserId] = $oUser->Name;
 					}
 					$aResult[] = array(
+						'userId' => $oItem->UserId,
 						'name' => $aUsers[$oItem->UserId],
 						'text' => $oItem->Text,
 						'date' => $oItem->Date

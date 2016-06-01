@@ -118,12 +118,12 @@ CSimpleChatView.prototype.getPosts = function ()
 	Ajax.send('GetPosts', {Offset: this.offset(), Limit: this.offset() + this.posts().length + 1000}, this.onGetPostsResponse, this);
 };
 
-CSimpleChatView.prototype.addPost = function (oPost, bEnd)
+CSimpleChatView.prototype.addPost = function (oPost, bEnd, bRecent)
 {
 	oPost.displayDate = this.getDisplayDate(moment.utc(oPost.date));
 	oPost.displayText = oPost.text;
 
-	App.broadcastEvent('SimpleChat::DisplayPost::before', {'Post': oPost});
+	App.broadcastEvent('SimpleChat::DisplayPost::before', {'Post': oPost, 'Recent': bRecent});
 	
 	if (bEnd)
 	{
@@ -149,7 +149,7 @@ CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 		if (this.posts().length === 0)
 		{
 			_.each(aPosts, _.bind(function (oPost) {
-				this.addPost(oPost, true);
+				this.addPost(oPost, true, false);
 			}, this));
 		}
 		else if (this.posts().length !== aPosts.length || !fEqualPosts(oLastPost, aPosts[aPosts.length - 1]))
@@ -168,12 +168,12 @@ CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 			
 			for (var iIndex = iFirstIndex - 1; iIndex >= 0; iIndex--)
 			{
-				this.addPost(aPosts[iIndex], false);
+				this.addPost(aPosts[iIndex], false, false);
 			}
 			
 			for (var iIndex = iLastIndex + 1; iIndex < aPosts.length; iIndex++)
 			{
-				this.addPost(aPosts[iIndex], true);
+				this.addPost(aPosts[iIndex], true, aPosts[iIndex].userId !== App.getUserId());
 			}
 		}
 		
@@ -235,7 +235,7 @@ CSimpleChatView.prototype.sendPost = function ()
 		var sDate = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 		this.clearTimer();
 		Ajax.send('CreatePost', {'Text': this.replyText(), 'Date': sDate}, this.setTimer, this);
-		this.addPost({name: App.getUserName(), text: this.replyText(), 'date': sDate}, true);
+		this.addPost({userId: App.getUserId(), name: App.getUserName(), text: this.replyText(), 'date': sDate}, true, false);
 		this.replyText('');
 	}
 	return false;

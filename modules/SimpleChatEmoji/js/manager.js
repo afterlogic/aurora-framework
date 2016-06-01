@@ -13,6 +13,7 @@ module.exports = function (oSettings) {
 		start: function (ModulesManager) {
 			var App = require('modules/Core/js/App.js');
 			App.subscribeEvent('SimpleChat::DisplayPost::before', function (oParameters) {
+				console.log('oParameters', oParameters);
 				oParameters.Post.displayText = oParameters.Post.text.replace(':)', '&#128522;');
 			});
 		}
