@@ -35,7 +35,7 @@ class CalendarModule extends AApiModule
 			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId)) 
 			{
 				
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+				throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 			}
 	
 			$mCalendars = $this->oApiCalendarManager->getCalendars($iUserId);
@@ -91,7 +91,7 @@ class CalendarModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		$mCalendarId = $this->oApiCalendarManager->createCalendar($iUserId, $Name, $Description, 0, $Color);
@@ -115,7 +115,7 @@ class CalendarModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		return $this->oApiCalendarManager->updateCalendar($iUserId, $Id, $Name, $Description, 0, $Color);
@@ -129,7 +129,7 @@ class CalendarModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		return $this->oApiCalendarManager->updateCalendarColor($iUserId, $Id, $Color);
@@ -150,7 +150,7 @@ class CalendarModule extends AApiModule
 		
 		if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		// Share calendar to all users
@@ -179,7 +179,7 @@ class CalendarModule extends AApiModule
 		
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		return $this->oApiCalendarManager->publicCalendar($oAccount, $sCalendarId, $bIsPublic);
@@ -206,7 +206,7 @@ class CalendarModule extends AApiModule
 		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		$sCalendarId = $this->getParamValue('calendarId');
@@ -235,7 +235,7 @@ class CalendarModule extends AApiModule
 			$iUserId = \CApi::getLogginedUserId();
 			if (!$this->oApiCapabilityManager->isCalendarSupported($iUserId))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+				throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 			}
 			$mResult = $this->oApiCalendarManager->getEvents($iUserId, $CalendarIds, $Start, $End);
 		}
@@ -251,7 +251,7 @@ class CalendarModule extends AApiModule
 		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		$oEvent = new \CEvent();
@@ -295,7 +295,7 @@ class CalendarModule extends AApiModule
 		$oAccount = $this->getDefaultAccountFromParam();
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 		
 		$sNewCalendarId = $this->getParamValue('newCalendarId'); 
@@ -389,7 +389,7 @@ class CalendarModule extends AApiModule
 
 		if (!$this->oApiCapabilityManager->isCalendarSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CalendarsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CalendarsNotAllowed);
 		}
 
 		$sCalendarId = (string) $this->getParamValue('CalendarId', '');
@@ -397,7 +397,7 @@ class CalendarModule extends AApiModule
 
 		if (empty($sCalendarId) || empty($sTempFile))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
@@ -434,7 +434,7 @@ class CalendarModule extends AApiModule
 		
 		if (empty($sAction) || empty($sCalendarId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		if ($this->oApiCapabilityManager->isCalendarAppointmentsSupported($oDefaultAccount))
@@ -615,7 +615,7 @@ class CalendarModule extends AApiModule
 						@\header('X-Frame-Options: '.$sFrameOptions);
 					}
 					
-					$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
+					$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
 						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
@@ -640,7 +640,7 @@ class CalendarModule extends AApiModule
 		
 		if (empty($sTempFile) || empty($sFromEmail))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 		if ($this->oApiCapabilityManager->isCalendarAppointmentsSupported($oAccount))
 		{
@@ -714,7 +714,7 @@ class CalendarModule extends AApiModule
 			}
 			else
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
+				throw new \System\Exceptions\ClientException(\System\Notifications::IncorrectFileExtension);
 			}
 		}
 		else

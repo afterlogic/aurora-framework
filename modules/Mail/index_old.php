@@ -277,7 +277,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -363,7 +363,7 @@ class MailModule extends AApiModule
 		
 		if (!is_array($aFolders) || 0 === count($aFolders))
 		{
-			throw new \ProjectCore\Exceptions\ClientException(\ProjectCore\Notifications::InvalidInputParameter);
+			throw new \ProjectSystem\Exceptions\ClientException(\ProjectSystem\Notifications::InvalidInputParameter);
 		}
 
 		$aResult = array();
@@ -372,7 +372,7 @@ class MailModule extends AApiModule
 		try
 		{
 			$oAccount = $this->getAccountFromParam();
-			$oReturnInboxNewData = \Core\DataByRef::createInstance(array());
+			$oReturnInboxNewData = \System\DataByRef::createInstance(array());
 			$aResult = $this->oApiMailManager->getFolderListInformation($oAccount, $aFolders, $sInboxUidnext, $oReturnInboxNewData);
 		}
 		catch (\MailSo\Net\Exceptions\ConnectionException $oException)
@@ -405,7 +405,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen($sFolderNameInUtf8) || 1 !== strlen($sDelimiter))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -472,7 +472,7 @@ class MailModule extends AApiModule
 		
 		if (0 === strlen($sPrevFolderFullNameRaw) || 0 === strlen($sNewFolderNameInUtf8))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -494,7 +494,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -514,7 +514,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -536,7 +536,7 @@ class MailModule extends AApiModule
 		$aFolderList = $this->getParamValue('FolderList', null);
 		if (!is_array($aFolderList))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -557,7 +557,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -593,7 +593,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || 0 > $iOffset || 0 >= $iLimit || 200 < $sLimit)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -612,7 +612,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -630,7 +630,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -649,7 +649,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFromFolderFullNameRaw)) || 0 === strlen(trim($sToFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -662,12 +662,12 @@ class MailModule extends AApiModule
 		catch (\MailSo\Imap\Exceptions\NegativeResponseException $oException)
 		{
 			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotMoveMessageQuota, $oException,
+			throw new \System\Exceptions\ClientException(\System\Notifications::CanNotMoveMessageQuota, $oException,
 				$oResponse instanceof \MailSo\Imap\Response ? $oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '');
 		}
 		catch (\Exception $oException)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotMoveMessage, $oException,
+			throw new \System\Exceptions\ClientException(\System\Notifications::CanNotMoveMessage, $oException,
 				$oException->getMessage());
 		}
 
@@ -682,7 +682,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFromFolderFullNameRaw)) || 0 === strlen(trim($sToFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -695,12 +695,12 @@ class MailModule extends AApiModule
 		catch (\MailSo\Imap\Exceptions\NegativeResponseException $oException)
 		{
 			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotCopyMessageQuota, $oException,
+			throw new \System\Exceptions\ClientException(\System\Notifications::CanNotCopyMessageQuota, $oException,
 				$oResponse instanceof \MailSo\Imap\Response ? $oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '');
 		}
 		catch (\Exception $oException)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotCopyMessage, $oException,
+			throw new \System\Exceptions\ClientException(\System\Notifications::CanNotCopyMessage, $oException,
 				$oException->getMessage());
 		}
 
@@ -718,7 +718,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -742,7 +742,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || 0 >= $iUid)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -904,7 +904,7 @@ class MailModule extends AApiModule
 
 		if (!($oMessage instanceof \CApiMailMessage))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotGetMessage);
+			throw new \System\Exceptions\ClientException(\System\Notifications::CanNotGetMessage);
 		}
 
 		return $oMessage;
@@ -920,7 +920,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)) || !is_array($aUids) || 0 === count($aUids))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$aList = array();
@@ -959,7 +959,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen($sDraftFolder))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oFetcher = null;
@@ -1000,8 +1000,8 @@ class MailModule extends AApiModule
 			}
 			catch (\CApiManagerException $oException)
 			{
-				$iCode = \Core\Notifications::CanNotSaveMessage;
-				throw new \Core\Exceptions\ClientException($iCode, $oException);
+				$iCode = \System\Notifications::CanNotSaveMessage;
+				throw new \System\Exceptions\ClientException($iCode, $oException);
 			}
 		}
 
@@ -1073,24 +1073,24 @@ class MailModule extends AApiModule
 			}
 			catch (\CApiManagerException $oException)
 			{
-				$iCode = \Core\Notifications::CanNotSendMessage;
+				$iCode = \System\Notifications::CanNotSendMessage;
 				switch ($oException->getCode())
 				{
 					case \Errs::Mail_InvalidRecipients:
-						$iCode = \Core\Notifications::InvalidRecipients;
+						$iCode = \System\Notifications::InvalidRecipients;
 						break;
 					case \Errs::Mail_CannotSendMessage:
-						$iCode = \Core\Notifications::CanNotSendMessage;
+						$iCode = \System\Notifications::CanNotSendMessage;
 						break;
 					case \Errs::Mail_CannotSaveMessageInSentItems:
-						$iCode = \Core\Notifications::CannotSaveMessageInSentItems;
+						$iCode = \System\Notifications::CannotSaveMessageInSentItems;
 						break;
 					case \Errs::Mail_MailboxUnavailable:
-						$iCode = \Core\Notifications::MailboxUnavailable;
+						$iCode = \System\Notifications::MailboxUnavailable;
 						break;
 				}
 
-				throw new \Core\Exceptions\ClientException($iCode, $oException, $oException->GetPreviousMessage(), $oException->GetObjectParams());
+				throw new \System\Exceptions\ClientException($iCode, $oException, $oException->GetPreviousMessage(), $oException->GetObjectParams());
 			}
 
 			if ($mResult)
@@ -1161,18 +1161,18 @@ class MailModule extends AApiModule
 			}
 			catch (\CApiManagerException $oException)
 			{
-				$iCode = \Core\Notifications::CanNotSendMessage;
+				$iCode = \System\Notifications::CanNotSendMessage;
 				switch ($oException->getCode())
 				{
 					case \Errs::Mail_InvalidRecipients:
-						$iCode = \Core\Notifications::InvalidRecipients;
+						$iCode = \System\Notifications::InvalidRecipients;
 						break;
 					case \Errs::Mail_CannotSendMessage:
-						$iCode = \Core\Notifications::CanNotSendMessage;
+						$iCode = \System\Notifications::CanNotSendMessage;
 						break;
 				}
 
-				throw new \Core\Exceptions\ClientException($iCode, $oException);
+				throw new \System\Exceptions\ClientException($iCode, $oException);
 			}
 
 			$sConfirmFolderFullNameRaw = $this->getParamValue('ConfirmFolder', '');
@@ -1202,7 +1202,7 @@ class MailModule extends AApiModule
 
 		if (0 === strlen(trim($sFolderFullNameRaw)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -1331,7 +1331,7 @@ class MailModule extends AApiModule
 		$sEmail = (string) $this->getParamValue('Email', '');
 		if (0 === strlen(trim($sEmail)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oAccount = $this->getAccountFromParam();
@@ -1409,7 +1409,7 @@ class MailModule extends AApiModule
 				}
 				else
 				{
-					throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
+					throw new \System\Exceptions\ClientException(\System\Notifications::IncorrectFileExtension);
 				}
 			}
 		}
@@ -1542,7 +1542,7 @@ class MailModule extends AApiModule
 
 				$mResult = $this->GetSieveManager()->setAutoresponder($oAccount, $sSubject, $sMessage, $bIsEnabled);
 			} else {
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
+				throw new \System\Exceptions\ClientException(\System\Notifications::DemoAccount);
 			}
 		}
 
@@ -1591,7 +1591,7 @@ class MailModule extends AApiModule
 				$mResult = $this->GetSieveManager()->setForward($oAccount, $sForwardEmail, $bIsEnabled);
 			} else {
 				
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::DemoAccount);
+				throw new \System\Exceptions\ClientException(\System\Notifications::DemoAccount);
 			}
 		}
 
@@ -1694,7 +1694,7 @@ class MailModule extends AApiModule
 			$mTime = $this->getParamValue('Time');
 			
 			$oAccount = $this->getAccountFromParam(true,
-				!(isset($mIframed, $mTime) && $mIframed && $mTime > \Core\Base\Utils::iframedTimestamp())
+				!(isset($mIframed, $mTime) && $mIframed && $mTime > \SystemBase\Utils::iframedTimestamp())
 			);
 			
 			if (!$oAccount || $mAccountID !== $oAccount->IdAccount)

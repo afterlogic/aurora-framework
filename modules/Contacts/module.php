@@ -175,7 +175,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return $aList;
@@ -196,7 +196,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return $oGroup;
@@ -217,7 +217,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return $aEvents;
@@ -332,7 +332,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return array(
@@ -425,7 +425,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return array(
@@ -453,7 +453,7 @@ class ContactsModule extends AApiModule
 
 		} else {
 
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return $oContact;
@@ -473,7 +473,7 @@ class ContactsModule extends AApiModule
 			$oContact = $this->oApiContactsManager->getContactById($oAccount->IdUser, $sContactId, false, $iTenantId);
 		} else {
 
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 		
 		return $oContact;
@@ -575,7 +575,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return $mResult;
@@ -612,7 +612,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -656,15 +656,15 @@ class ContactsModule extends AApiModule
 					switch ($oApiContacts->getLastErrorCode())
 					{
 						case \Errs::Sabre_PreconditionFailed:
-							throw new \Core\Exceptions\ClientException(
-								\Core\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
+							throw new \System\Exceptions\ClientException(
+								\System\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
 					}
 				}
 			}
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -689,7 +689,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -735,8 +735,8 @@ class ContactsModule extends AApiModule
 						switch ($oApiContacts->getLastErrorCode())
 						{
 							case \Errs::Sabre_PreconditionFailed:
-								throw new \Core\Exceptions\ClientException(
-									\Core\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
+								throw new \System\Exceptions\ClientException(
+									\System\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
 						}
 					}
 				}
@@ -746,7 +746,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -763,13 +763,13 @@ class ContactsModule extends AApiModule
 
 		if (!$this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		$sTempFile = (string) $this->getParamValue('File', '');
 		if (empty($sTempFile))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oApiFileCache = /* @var $oApiFileCache \CApiFilecacheManager */ \CApi::GetCoreManager('filecache');
@@ -811,7 +811,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -842,16 +842,16 @@ class ContactsModule extends AApiModule
 					switch ($this->oApiContactsManager->getLastErrorCode())
 					{
 						case \Errs::Sabre_PreconditionFailed:
-							throw new \Core\Exceptions\ClientException(
-								\Core\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
+							throw new \System\Exceptions\ClientException(
+								\System\Notifications::ContactDataHasBeenModifiedByAnotherApplication);
 					}
 				}
 			}
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(
-				\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(
+				\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -872,7 +872,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -922,7 +922,7 @@ class ContactsModule extends AApiModule
 					$bRes1 = false;
 					if (!$this->oApiCapabilityManager->isGlobalContactsSupported($oAccount, true))
 					{
-						throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+						throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 					}
 
 					$bRes1 = $this->oApiContactsManager->addGlobalContactsToGroup($oAccount, $oGroup, $aGlobalContacts);
@@ -939,7 +939,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -970,7 +970,7 @@ class ContactsModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 
 		return false;
@@ -1004,7 +1004,7 @@ class ContactsModule extends AApiModule
 
 		if (!$this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::ContactsNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::ContactsNotAllowed);
 		}
 		
 		$aFileData = $this->getParamValue('FileData', null);
@@ -1054,7 +1054,7 @@ class ContactsModule extends AApiModule
 				}
 			} else {
 				
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::IncorrectFileExtension);
+				throw new \System\Exceptions\ClientException(\System\Notifications::IncorrectFileExtension);
 			}
 		}
 		else {

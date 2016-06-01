@@ -14,7 +14,7 @@ class MinModule extends AApiModule
 	public function EntryMin()
 	{
 		$sResult = '';
-		$aPaths = \Core\Service::GetPaths();
+		$aPaths = \System\Service::GetPaths();
 		$sModule = empty($aPaths[1]) ? '' : $aPaths[1];
 		try
 		{

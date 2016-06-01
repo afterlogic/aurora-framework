@@ -27,7 +27,7 @@ class TwilioModule extends AApiModule
 
 	public function getTwiML()
 	{
-		$aPaths = \Core\Service::GetPaths();
+		$aPaths = \System\Service::GetPaths();
 		$oApiCapability = \CApi::GetCoreManager('capability');
 		$oApiUsers = \CApi::GetCoreManager('users');
 		$oApiTenants = \CApi::GetCoreManager('tenants');
@@ -220,7 +220,7 @@ class TwilioModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::VoiceNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::VoiceNotAllowed);
 		}
 
 		return $mToken;
@@ -354,7 +354,7 @@ class TwilioModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::VoiceNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::VoiceNotAllowed);
 		}
 
 		return $aResult;

@@ -30,8 +30,8 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	function CoreSplAutoLoad($sClassName)
 	{
 		$aClassesTree = array(
-			'core' => array(
-				'Core'
+			'system' => array(
+				'System'
 			)
 		);
 		foreach ($aClassesTree as $sFolder => $aClasses)
@@ -55,10 +55,10 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 
 	spl_autoload_register('CoreSplAutoLoad');
 
-	if (class_exists('Core\Service'))
+	if (class_exists('System\Service'))
 	{
-		include PSEVEN_APP_ROOT_PATH.'core/api.php';
-		\Core\Service::NewInstance()->Handle();	
+		include PSEVEN_APP_ROOT_PATH.'system/api.php';
+		\System\Service::NewInstance()->Handle();	
 	}
 	else
 	{

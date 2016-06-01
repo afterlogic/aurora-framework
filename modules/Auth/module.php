@@ -89,7 +89,7 @@ class AuthModule extends AApiModule
 				\ELoginFormType::Both === (int) \CApi::GetSettingsConf('WebMail/LoginFormType')) && 
 				0 === strlen($sAtDomain) && 0 < strlen($sEmail) && !\MailSo\Base\Validator::EmailString($sEmail))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AuthError);
 		}
 
 		if (\ELoginFormType::Login === (int) \CApi::GetSettingsConf('WebMail/LoginFormType') && 0 < strlen($sAtDomain))
@@ -100,7 +100,7 @@ class AuthModule extends AApiModule
 
 		if (0 === strlen($sIncPassword) || 0 === strlen($sEmail.$sIncLogin)) {
 			
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		try
@@ -119,14 +119,14 @@ class AuthModule extends AApiModule
 		}
 		catch (\Exception $oException)
 		{
-			$iErrorCode = \Core\Notifications::UnknownError;
+			$iErrorCode = \System\Notifications::UnknownError;
 			if ($oException instanceof \CApiManagerException)
 			{
 				switch ($oException->getCode())
 				{
 					case \Errs::WebMailManager_AccountDisabled:
 					case \Errs::WebMailManager_AccountWebmailDisabled:
-						$iErrorCode = \Core\Notifications::AuthError;
+						$iErrorCode = \System\Notifications::AuthError;
 						break;
 					case \Errs::UserManager_AccountAuthenticationFailed:
 					case \Errs::WebMailManager_AccountAuthentication:
@@ -134,27 +134,27 @@ class AuthModule extends AApiModule
 					case \Errs::WebMailManager_AccountCreateOnLogin:
 					case \Errs::Mail_AccountAuthentication:
 					case \Errs::Mail_AccountLoginFailed:
-						$iErrorCode = \Core\Notifications::AuthError;
+						$iErrorCode = \System\Notifications::AuthError;
 						break;
 					case \Errs::UserManager_AccountConnectToMailServerFailed:
 					case \Errs::WebMailManager_AccountConnectToMailServerFailed:
 					case \Errs::Mail_AccountConnectToMailServerFailed:
-						$iErrorCode = \Core\Notifications::MailServerError;
+						$iErrorCode = \System\Notifications::MailServerError;
 						break;
 					case \Errs::UserManager_LicenseKeyInvalid:
 					case \Errs::UserManager_AccountCreateUserLimitReached:
 					case \Errs::UserManager_LicenseKeyIsOutdated:
 					case \Errs::TenantsManager_AccountCreateUserLimitReached:
-						$iErrorCode = \Core\Notifications::LicenseProblem;
+						$iErrorCode = \System\Notifications::LicenseProblem;
 						break;
 					case \Errs::Db_ExceptionError:
-						$iErrorCode = \Core\Notifications::DataBaseError;
+						$iErrorCode = \System\Notifications::DataBaseError;
 						break;
 				}
 			}
 
 			\CApi::LogEvent(\EEvents::LoginFailed, $sEmail);
-			throw new \Core\Exceptions\ClientException($iErrorCode, $oException,
+			throw new \System\Exceptions\ClientException($iErrorCode, $oException,
 				$oException instanceof \CApiBaseException ? $oException->GetPreviousMessage() :
 				($oException ? $oException->getMessage() : ''));
 		}
@@ -180,7 +180,7 @@ class AuthModule extends AApiModule
 		}
 
 		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
-		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+		throw new \System\Exceptions\ClientException(\System\Notifications::AuthError);
 	}*/
 	
 	/**
@@ -240,7 +240,7 @@ class AuthModule extends AApiModule
 		}
 		
 //		\CApi::LogEvent(\EEvents::LoginFailed, $oAccount);
-		throw new \Core\Exceptions\ClientException(\Core\Notifications::AuthError);
+		throw new \System\Exceptions\ClientException(\System\Notifications::AuthError);
 	}
 	
 	public function Logout()
@@ -252,7 +252,7 @@ class AuthModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Auth\Notifications::IncorrentAuthToken);
+			throw new \System\Exceptions\ClientException(\Auth\Notifications::IncorrentAuthToken);
 		}
 
 		return true;
@@ -312,7 +312,7 @@ class AuthModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::NonUserPassed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::NonUserPassed);
 		}
 
 		return false;
@@ -338,7 +338,7 @@ class AuthModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -377,7 +377,7 @@ class AuthModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -405,7 +405,7 @@ class AuthModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 	}
 }

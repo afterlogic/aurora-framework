@@ -350,14 +350,14 @@ class CoreModule extends AApiModule
 				}
 				catch (\Exception $oException)
 				{
-					$iErrorCode = \Core\Notifications::UnknownError;
+					$iErrorCode = \System\Notifications::UnknownError;
 					if ($oException instanceof \CApiManagerException)
 					{
 						switch ($oException->getCode())
 						{
 							case \Errs::WebMailManager_AccountDisabled:
 							case \Errs::WebMailManager_AccountWebmailDisabled:
-								$iErrorCode = \Core\Notifications::AuthError;
+								$iErrorCode = \System\Notifications::AuthError;
 								break;
 							case \Errs::UserManager_AccountAuthenticationFailed:
 							case \Errs::WebMailManager_AccountAuthentication:
@@ -365,21 +365,21 @@ class CoreModule extends AApiModule
 							case \Errs::WebMailManager_AccountCreateOnLogin:
 							case \Errs::Mail_AccountAuthentication:
 							case \Errs::Mail_AccountLoginFailed:
-								$iErrorCode = \Core\Notifications::AuthError;
+								$iErrorCode = \System\Notifications::AuthError;
 								break;
 							case \Errs::UserManager_AccountConnectToMailServerFailed:
 							case \Errs::WebMailManager_AccountConnectToMailServerFailed:
 							case \Errs::Mail_AccountConnectToMailServerFailed:
-								$iErrorCode = \Core\Notifications::MailServerError;
+								$iErrorCode = \System\Notifications::MailServerError;
 								break;
 							case \Errs::UserManager_LicenseKeyInvalid:
 							case \Errs::UserManager_AccountCreateUserLimitReached:
 							case \Errs::UserManager_LicenseKeyIsOutdated:
 							case \Errs::TenantsManager_AccountCreateUserLimitReached:
-								$iErrorCode = \Core\Notifications::LicenseProblem;
+								$iErrorCode = \System\Notifications::LicenseProblem;
 								break;
 							case \Errs::Db_ExceptionError:
-								$iErrorCode = \Core\Notifications::DataBaseError;
+								$iErrorCode = \System\Notifications::DataBaseError;
 								break;
 						}
 					}
@@ -745,7 +745,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -785,7 +785,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -816,7 +816,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -846,7 +846,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -890,7 +890,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -921,7 +921,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -982,7 +982,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -1015,7 +1015,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;
@@ -1051,7 +1051,7 @@ class CoreModule extends AApiModule
 		}
 		else
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UserNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UserNotAllowed);
 		}
 
 		return false;

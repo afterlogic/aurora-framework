@@ -174,7 +174,7 @@ class HelpDeskModule extends AApiModule
 
 		if (!$oResult && $bThrowAuthExceptionOnFalse)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::UnknownError);
+			throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
 		}
 
 		return $oResult;*/
@@ -249,14 +249,14 @@ class HelpDeskModule extends AApiModule
 
 			if (0 === strlen($sEmail) || 0 === strlen($Password))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 			
 			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
 
 			if (!is_int($mIdTenant))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
 			try
@@ -298,27 +298,27 @@ class HelpDeskModule extends AApiModule
 			}
 			catch (\Exception $oException)
 			{
-				$iErrorCode = \Core\Notifications::UnknownError;
+				$iErrorCode = \System\Notifications::UnknownError;
 				if ($oException instanceof \CApiManagerException)
 				{
 					switch ($oException->getCode())
 					{
 						case \Errs::HelpdeskManager_AccountSystemAuthentication:
-							$iErrorCode = \Core\Notifications::HelpdeskSystemUserExists;
+							$iErrorCode = \System\Notifications::HelpdeskSystemUserExists;
 							break;
 						case \Errs::HelpdeskManager_AccountAuthentication:
-							$iErrorCode = \Core\Notifications::AuthError;
+							$iErrorCode = \System\Notifications::AuthError;
 							break;
 						case \Errs::HelpdeskManager_UnactivatedUser:
-							$iErrorCode = \Core\Notifications::HelpdeskUnactivatedUser;
+							$iErrorCode = \System\Notifications::HelpdeskUnactivatedUser;
 							break;
 						case \Errs::Db_ExceptionError:
-							$iErrorCode = \Core\Notifications::DataBaseError;
+							$iErrorCode = \System\Notifications::DataBaseError;
 							break;
 					}
 				}
 
-				throw new \Core\Exceptions\ClientException($iErrorCode);
+				throw new \System\Exceptions\ClientException($iErrorCode);
 			}
 		}
 
@@ -348,13 +348,13 @@ class HelpDeskModule extends AApiModule
 
 			if (0 === strlen($sLogin) || 0 === strlen($sPassword))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
 			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
 			if (!is_int($mIdTenant))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 			
 			$bResult = false;
@@ -397,29 +397,29 @@ class HelpDeskModule extends AApiModule
 				}
 				else
 				{
-					throw new \Core\Exceptions\ClientException(\Core\Notifications::NonUserPassed);
+					throw new \System\Exceptions\ClientException(\System\Notifications::NonUserPassed);
 				}
 			}
 			catch (\Exception $oException)
 			{
-				$iErrorCode = \Core\Notifications::UnknownError;
+				$iErrorCode = \System\Notifications::UnknownError;
 				if ($oException instanceof \CApiManagerException)
 				{
 					switch ($oException->getCode())
 					{
 						case \Errs::HelpdeskManager_UserAlreadyExists:
-							$iErrorCode = \Core\Notifications::HelpdeskUserAlreadyExists;
+							$iErrorCode = \System\Notifications::HelpdeskUserAlreadyExists;
 							break;
 						case \Errs::HelpdeskManager_UserCreateFailed:
-							$iErrorCode = \Core\Notifications::CanNotCreateHelpdeskUser;
+							$iErrorCode = \System\Notifications::CanNotCreateHelpdeskUser;
 							break;
 						case \Errs::Db_ExceptionError:
-							$iErrorCode = \Core\Notifications::DataBaseError;
+							$iErrorCode = \System\Notifications::DataBaseError;
 							break;
 					}
 				}
 
-				throw new \Core\Exceptions\ClientException($iErrorCode);
+				throw new \System\Exceptions\ClientException($iErrorCode);
 			}
 
 			return $bResult;
@@ -445,21 +445,21 @@ class HelpDeskModule extends AApiModule
 
 			if (0 === strlen($Email))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
 			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
 
 			if (!is_int($mIdTenant))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
 			$oAccount = $this->oAccountsManager->getAccountByEmail($mIdTenant, $Email);
 			
 			if (!($oAccount instanceof \Modules\HelpDesk\CAccount))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
+				throw new \System\Exceptions\ClientException(\System\Notifications::HelpdeskUnknownUser);
 			}
 
 //			return $this->oMainManager->forgotUser($oAccount);
@@ -513,20 +513,20 @@ class HelpDeskModule extends AApiModule
 
 			if (0 === strlen($sNewPassword) || 0 === strlen($sActivateHash))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
 			$oApiTenants = \CApi::GetCoreManager('tenants');
 			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
 			if (!is_int($mIdTenant))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
 			$oUser = $this->oMainManager->getUserByActivateHash($mIdTenant, $sActivateHash);
 			if (!($oUser instanceof \CHelpdeskUser))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
+				throw new \System\Exceptions\ClientException(\System\Notifications::HelpdeskUnknownUser);
 			}
 
 			$oUser->Activated = true;
@@ -557,7 +557,7 @@ class HelpDeskModule extends AApiModule
 		
 		if (0 === strlen($Text) || (0 === $ThreadId && 0 === strlen($Subject)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$mResult = false;
@@ -667,7 +667,7 @@ class HelpDeskModule extends AApiModule
 
 		if (!$oUser)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
 		}
 
 		$ThreadId = (int) $ThreadId;
@@ -675,18 +675,18 @@ class HelpDeskModule extends AApiModule
 		
 		if (0 >= $ThreadId || 0 >= $PostId)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oThread = $this->oMainManager->getThreadById($oUser, $ThreadId);
 		if (!$oThread)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		if (!$this->oMainManager->verifyPostIdsBelongToUser($oUser, array($PostId)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
 		}
 
 		return $this->oMainManager->deletePosts($oUser, $oThread, array($PostId));
@@ -707,19 +707,19 @@ class HelpDeskModule extends AApiModule
 		$sThreadHash = (string) $this->getParamValue('ThreadHash', '');
 		if (empty($sThreadHash) && $sThreadId === 0)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$mHelpdeskThreadId = $sThreadId ? $sThreadId : $this->oMainManager->getThreadIdByHash($oUser->IdTenant, $sThreadHash);
 		if (!is_int($mHelpdeskThreadId) || 1 > $mHelpdeskThreadId)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oThread = $this->oMainManager->getThreadById($oUser, $mHelpdeskThreadId);
 		if (!$oThread)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$aUserInfo = $this->oMainManager->userInformation($oUser, array($oThread->IdOwner));
@@ -757,13 +757,13 @@ class HelpDeskModule extends AApiModule
 
 		if (1 > $ThreadId || 0 > $StartFromId || 1 > $Limit)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 		
 		$oThread = $this->oMainManager->getThreadById($oUser, $ThreadId);
 		if (!$oThread)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$aPostList = $this->oMainManager->getPosts($oUser, $oThread, $StartFromId, $Limit);
@@ -902,14 +902,14 @@ class HelpDeskModule extends AApiModule
 
 		if (!$oUser)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
 		}
 
 		$iThreadId = (int) $ThreadId;
 
 		if (0 < $iThreadId && !$this->IsAgent($oUser) && !$this->oMainManager->verifyThreadIdsBelongToUser($oUser, array($iThreadId)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
 		}
 
 		$bResult = false;
@@ -939,12 +939,12 @@ class HelpDeskModule extends AApiModule
 			\EHelpdeskThreadType::Deferred
 		)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		if (!$oUser || ($ThreadType !== \EHelpdeskThreadType::Resolved && !$this->IsAgent($oUser)))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
 		}
 
 		$bResult = false;
@@ -967,7 +967,7 @@ class HelpDeskModule extends AApiModule
 
 		if (0 === $ThreadId)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$this->oMainManager->setOnline($oUser, $ThreadId);
@@ -983,13 +983,13 @@ class HelpDeskModule extends AApiModule
 
 		if (0 === $ThreadId)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$oThread = $this->oMainManager->getThreadById($oUser, $ThreadId);
 		if (!$oThread)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::AccessDenied);
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
 		}
 
 		return $this->oMainManager->setThreadSeen($oUser, $oThread);
@@ -1004,7 +1004,7 @@ class HelpDeskModule extends AApiModule
 		
 		if (0 > $Offset || 1 > $Limit)
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::InvalidInputParameter);
+			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
 		$aThreadsList = array();
@@ -1085,7 +1085,7 @@ class HelpDeskModule extends AApiModule
 
 		if (!($oUser instanceof \CHelpdeskUser))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::HelpdeskUnknownUser);
+			throw new \System\Exceptions\ClientException(\System\Notifications::HelpdeskUnknownUser);
 		}
 
 
@@ -1109,7 +1109,7 @@ class HelpDeskModule extends AApiModule
 			$oUser->setPassword($sNewPassword);
 			if (!$this->oMainManager->updateUser($oUser))
 			{
-				throw new \Core\Exceptions\ClientException(\Core\Notifications::CanNotChangePassword);
+				throw new \System\Exceptions\ClientException(\System\Notifications::CanNotChangePassword);
 			}
 		}
 

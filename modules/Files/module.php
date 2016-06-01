@@ -207,7 +207,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 		
 		\CApi::Plugin()->RunHook('filestorage.get-external-storages', array($iUserId, &$oResult));
@@ -220,7 +220,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 
 		return array(
@@ -242,7 +242,7 @@ class FilesModule extends AApiModule
 				
 				if (!$this->oApiCapabilityManager->isFilesSupported($iUserId)) {
 					
-					throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+					throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 				}
 				$Path =  implode('/', array($mMin['Path'], $mMin['Name']))  . $Path;
 
@@ -260,7 +260,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId)) {
 			
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 		
 		return array(
@@ -273,7 +273,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId)) {
 			
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 
 		return $this->oApiFilesManager->createFolder($iUserId, $Type, $Path, $FolderName);
@@ -284,7 +284,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 
 		return $this->oApiFilesManager->createLink($iUserId, $Type, $Path, $Link, $Name);
@@ -295,7 +295,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 
 		$oResult = false;
@@ -313,7 +313,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 		
 		$NewName = \trim(\MailSo\Base\Utils::ClearFileName($NewName));
@@ -327,7 +327,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 
 		$oResult = null;
@@ -349,7 +349,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 		$oResult = null;
 		
@@ -370,7 +370,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 		$IsFolder = $IsFolder === '1' ? true : false;
 		
@@ -382,7 +382,7 @@ class FilesModule extends AApiModule
 		$iUserId = \CApi::getLogginedUserId();
 		if (!$this->oApiCapabilityManager->isFilesSupported($iUserId))
 		{
-			throw new \Core\Exceptions\ClientException(\Core\Notifications::FilesNotAllowed);
+			throw new \System\Exceptions\ClientException(\System\Notifications::FilesNotAllowed);
 		}
 		
 		return $this->oApiFilesManager->deletePublicLink($iUserId, $sType, $sPath, $sName);
@@ -518,7 +518,7 @@ class FilesModule extends AApiModule
 							@\header('X-Frame-Options: '.$sFrameOptions);
 						}
 
-						$sAuthToken = isset($_COOKIE[\Core\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Core\Service::AUTH_TOKEN_KEY] : '';
+						$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
 						$sResult = strtr($sResult, array(
 							'{{AppVersion}}' => PSEVEN_APP_VERSION,
 							'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',

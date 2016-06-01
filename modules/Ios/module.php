@@ -21,7 +21,7 @@ class IosModule extends AApiModule
 		if (0 < $iUserId)
 		{
 			$oAccount = $oApiIntegrator->getLogginedDefaultAccount();
-			$aPaths = \Core\Service::GetPaths();
+			$aPaths = \System\Service::GetPaths();
 			$bError = isset($aPaths[1]) && 'error' === strtolower($aPaths[1]); // TODO
 
 			@setcookie('skip_ios', '1', time() + 3600 * 3600, '/', null, null, true);
