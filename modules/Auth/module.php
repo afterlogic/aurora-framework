@@ -251,10 +251,8 @@ class AuthModule extends AApiModule
 
 		if (is_array($mResult))
 		{
-			$aAccountHashTable = $mResult;
-
 //			$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
-			$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
+			$sAccountHashTable = \CApi::EncodeKeyValues($mResult);
 
 			$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
 

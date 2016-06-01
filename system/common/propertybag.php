@@ -188,21 +188,19 @@ abstract class api_APropertyBag
 	{
 		$aMap = $this->getMap();
 		
+		$sType = 'string';
 		if (isset($aMap[$sKey]))
 		{
-			$this->setType($mValue, $aMap[$sKey][0]);
-
-			if ($this->__USE_TRIM_IN_STRINGS__ && 0 === strpos($aMap[$sKey][0], 'string'))
-			{
-				$mValue = trim($mValue);
-			}
-
-			$this->aContainer[$sKey] = $mValue;
+			$sType = $aMap[$sKey][0];
 		}
-		else
+		$this->setType($mValue, $sType);
+
+		if ($this->__USE_TRIM_IN_STRINGS__ && 0 === strpos($sType, 'string'))
 		{
-			throw new CApiBaseException(Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
+			$mValue = trim($mValue);
 		}
+
+		$this->aContainer[$sKey] = $mValue;
 	}
 
 	/**
@@ -322,7 +320,7 @@ abstract class api_APropertyBag
 	 */
 	public function getPropertyType($sPropertyName)
 	{
-		$mType = false;
+		$mType = 'string';
 		$aMap = $this->getMap();
 		if (isset($aMap[$sPropertyName]))
 		{
@@ -347,5 +345,10 @@ abstract class api_APropertyBag
 	public function toArray()
 	{
 		return array_merge(array('iObjectId' => $this->iObjectId), $this->aContainer);
+	}
+	
+	public function getProperties()
+	{
+		return $this->aContainer;
 	}
 }

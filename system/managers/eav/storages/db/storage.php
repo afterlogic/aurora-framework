@@ -83,7 +83,7 @@ class CApiEavDbStorage extends CApiEavStorage
 				{
 					$oObject->iObjectId = $oRow->obj_id;
 
-					if (isset($oRow->prop_key) && $oObject->IsProperty($oRow->prop_key))
+					if (isset($oRow->prop_key) /*&& $oObject->IsProperty($oRow->prop_key)*/)
 					{
 						$mValue = $oRow->{'prop_value_' . $oRow->prop_type};
 						if ($oObject->isEncryptedProperty($oRow->prop_type))
@@ -151,24 +151,23 @@ class CApiEavDbStorage extends CApiEavStorage
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
 				$oObject = call_user_func($sType . '::createInstance');
-
 				$oObject->iObjectId = $oRow->obj_id;
 				$oObject->sModuleName =  $oRow->obj_module;
-				
-				$aMap = $oObject->getMap();
-				foreach(array_keys($aMap) as $sKey)
+
+				foreach (get_object_vars($oRow) as $sKey => $mValue)
 				{
-					if (isset($oRow->{'prop_' . $sKey}))
+					$sPropertyPos = strrpos($sKey, 'prop_', -5);
+					if ($sPropertyPos !== false)
 					{
-						$mValue = $oRow->{'prop_' . $sKey};
-						if ($oObject->isEncryptedProperty($sKey))
+						$sPropertyKey = substr($sKey, 5);
+						if ($oObject->isEncryptedProperty($sPropertyKey))
 						{
 							$mValue = \api_Utils::DecryptValue($mValue);
 						}
-						$oObject->{$sKey} = $mValue;
+						$oObject->{$sPropertyKey} = $mValue;
 					}
 				}
-
+				
 				$mResult[] = $oObject;
 			}
 		}

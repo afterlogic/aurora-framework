@@ -1098,7 +1098,7 @@ class CoreModule extends AApiModule
 	
 	public function GetTenantHash()
 	{
-		$sTenant = $this->oHttp->GetQuery('tenant', '');
+		$sTenant = $this->oHttp->GetRequest('tenant', '');
 		\CApi::setTenantHash($sTenant);
 		return $sTenant;
 	}

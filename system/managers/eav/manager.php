@@ -60,16 +60,19 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			throw new CApiManagerException(Errs::Main_UnknownError);
 		}
-		else if (0 < count($oObject->getMap()))
+		else if (0 < count($oObject->getProperties()))
 		{
 			$oObject->iObjectId = $mResult;
-			$aMap = $oObject->getMap();
-			$aProperties = array();
-			foreach (array_keys($aMap) as $sKey)
+			$aObjectProperties = $oObject->getProperties();
+			if (0 < count($aObjectProperties))
 			{
-				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
+				$aProperties = array();
+				foreach ($aObjectProperties as $sKey => $mValue)
+				{
+					$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
+				}
+				$this->setProperties($mResult, $aProperties);
 			}
-			$this->setProperties($mResult, $aProperties);
 		}
 		
 		return $mResult;
@@ -78,11 +81,11 @@ class CApiEavManager extends AApiManagerWithStorage
 	protected function updateObject(\api_APropertyBag $oObject)
 	{
 		$mResult = false;
-		$aMap = $oObject->getMap();
-		if (0 < count($aMap))
+		$aObjectProperties = $oObject->getProperties();
+		if (0 < count($aObjectProperties))
 		{
 			$aProperties = array();
-			foreach (array_keys($aMap) as $sKey)
+			foreach ($aObjectProperties as $sKey => $mValue)
 			{
 				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
 			}
