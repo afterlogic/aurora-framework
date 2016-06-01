@@ -9,12 +9,32 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		/**
+		 * Returns true if simple chat module is available for certain user role and public or not public mode.
+		 * 
+		 * @param {int} iUserRole User role, wich enum values are described in modules/Core/js/enums.js
+		 * @param {boolean} bPublic **true** if applications runs in public mode (for example, public calendar or public contact)
+		 * 
+		 * @returns {Boolean}
+		 */
 		isAvaliable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
+		
+		/**
+		 * Registers settings tab of simple chat module before application start.
+		 * 
+		 * @param {Object} ModulesManager
+		 */
 		start: function (ModulesManager) {
 			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/SimpleChatClient/js/views/SettingsPaneView.js'); }, 'simplechat', TextUtils.i18n('SIMPLECHAT/LABEL_SETTINGS_TAB')]);
 		},
+		
+		/**
+		 * Returns list of functions that are return module screens.
+		 * 
+		 * @returns {Object}
+		 */
 		getScreens: function () {
 			return {
 				'main': function () {
@@ -22,8 +42,16 @@ module.exports = function (oSettings) {
 				}
 			};
 		},
+		
+		/**
+		 * Returns object of header item view of simple chat module.
+		 * 
+		 * @returns {Object}
+		 */
 		getHeaderItem: function () {
-			return require('modules/SimpleChatClient/js/views/HeaderItemView.js');
+			var CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js');
+
+			return new CHeaderItemView(TextUtils.i18n('SIMPLECHAT/ACTION_SHOW_CHAT'));
 		}
 	};
 };

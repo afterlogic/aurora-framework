@@ -17,12 +17,17 @@ var
 ;
 
 /**
+ * View that is used as screen of simple chat module. Inherits from CAbstractScreenView that has showing and hiding methods.
+ * 
  * @constructor
  */
 function CSimpleChatView()
 {
 	CAbstractScreenView.call(this);
 	
+	/**
+	 * Text for displaying in browser title when simple chat screen is shown.
+	 */
 	this.browserTitle = ko.observable(TextUtils.i18n('SIMPLECHAT/HEADING_BROWSER_TAB'));
 	
 	this.bAllowReply = (App.getUserRole() === Enums.UserRole.PowerUser);
@@ -74,6 +79,11 @@ _.extendOwn(CSimpleChatView.prototype, CAbstractScreenView.prototype);
 
 CSimpleChatView.prototype.ViewTemplate = 'SimpleChatClient_MainView';
 
+/**
+ * Scrolls post list to bottom after posts getting if it was scrolled to bottom earlier.
+ * 
+ * @param {int} iDelay delay for scrolling in milliseconds.
+ */
 CSimpleChatView.prototype.scrollIfNecessary = function (iDelay)
 {
 	if (this.scrolledPostsDom() && this.scrolledPostsDom()[0])
@@ -90,18 +100,27 @@ CSimpleChatView.prototype.scrollIfNecessary = function (iDelay)
 	}
 };
 
+/**
+ * Called every time when screen is shown. Requests posts count from server at first.
+ */
 CSimpleChatView.prototype.onShow = function ()
 {
-	Ajax.send('GetPostsCount', null, function (oResponse) {
-		var iCount = Types.pInt(oResponse && oResponse.Result);
-		if (iCount > 10)
-		{
-			this.offset(iCount - 10);
-		}
-		this.getPosts();
-	}, this);
+	if (this.posts().length === 0)
+	{
+		Ajax.send('GetPostsCount', null, function (oResponse) {
+			var iCount = Types.pInt(oResponse && oResponse.Result);
+			if (iCount > 10)
+			{
+				this.offset(iCount - 10);
+			}
+			this.getPosts();
+		}, this);
+	}
 };
 
+/**
+ * Changes posts offset and request them with new value to get earlier posts.
+ */
 CSimpleChatView.prototype.showMore = function ()
 {
 	if (this.offset() > 0)
@@ -112,12 +131,23 @@ CSimpleChatView.prototype.showMore = function ()
 	this.getPosts();
 };
 
+/**
+ * Requests posts from the server with given offset and very big limit.
+ */
 CSimpleChatView.prototype.getPosts = function ()
 {
 	this.clearTimer();
 	Ajax.send('GetPosts', {Offset: this.offset(), Limit: this.offset() + this.posts().length + 1000}, this.onGetPostsResponse, this);
 };
 
+/**
+ * Prepares display values of text and date fields. Broadcasts event before post displaying.
+ * Adds prepared post into posts array.
+ * 
+ * @param {Object} oPost Post object.
+ * @param {boolean} bEnd Indicates if post should be added to the end of the posts array or to the its beginning.
+ * @param {boolean} bRecent Indicates if post is recent or not.
+ */
 CSimpleChatView.prototype.addPost = function (oPost, bEnd, bRecent)
 {
 	oPost.displayDate = this.getDisplayDate(moment.utc(oPost.date));
@@ -135,6 +165,13 @@ CSimpleChatView.prototype.addPost = function (oPost, bEnd, bRecent)
 	}
 };
 
+/**
+ * Posts request callback. Parses server response with posts. Adds new posts to the end or begining of the posts array.
+ * Starts the timer for next posts request.
+ * 
+ * @param {Object} oResponse Object with data from server.
+ * @param {Object} oRequest Object with parameters wich were used for request to the server.
+ */
 CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result && Types.isNonEmptyArray(oResponse.Result.Collection))
@@ -166,11 +203,17 @@ CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 			
 			this.removeLastPosts();
 			
+			/**
+			 * Adds all new posts to the beginning of the post list.
+			 */
 			for (var iIndex = iFirstIndex - 1; iIndex >= 0; iIndex--)
 			{
 				this.addPost(aPosts[iIndex], false, false);
 			}
 			
+			/**
+			 * Adds all new posts to the end of the post list.
+			 */
 			for (var iIndex = iLastIndex + 1; iIndex < aPosts.length; iIndex++)
 			{
 				this.addPost(aPosts[iIndex], true, aPosts[iIndex].userId !== App.getUserId());
@@ -187,6 +230,9 @@ CSimpleChatView.prototype.onGetPostsResponse = function (oResponse, oRequest)
 	this.gettingMore(false);
 };
 
+/**
+ * Removes all awn posts that were added between posts requests.
+ */
 CSimpleChatView.prototype.removeLastPosts = function ()
 {
 	var
@@ -200,6 +246,11 @@ CSimpleChatView.prototype.removeLastPosts = function ()
 	}
 };
 
+/**
+ * Formats date for displaying.
+ * 
+ * @param {Object} oMomentUtc Moment date object in utc.
+ */
 CSimpleChatView.prototype.getDisplayDate = function (oMomentUtc)
 {
 	var
@@ -217,17 +268,28 @@ CSimpleChatView.prototype.getDisplayDate = function (oMomentUtc)
 	}
 };
 
+/**
+ * Clears timer for requesting posts.
+ */
 CSimpleChatView.prototype.clearTimer = function ()
 {
 	clearTimeout(this.iTimer);
 };
 
+/**
+ * Starts timer for requesting posts.
+ */
 CSimpleChatView.prototype.setTimer = function ()
 {
 	this.clearTimer();
 	this.iTimer = setTimeout(_.bind(this.getPosts, this, 1), 3000);
 };
 
+/**
+ * Sends request to the server for creating post.
+ * 
+ * @returns {Boolean} Prevents bubbling of keyup event.
+ */
 CSimpleChatView.prototype.sendPost = function ()
 {
 	if (this.bAllowReply && $.trim(this.replyText()) !== '')

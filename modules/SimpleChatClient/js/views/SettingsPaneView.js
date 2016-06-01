@@ -11,41 +11,66 @@ var
 ;
 
 /**
+ * Inherits from CAbstractSettingsFormView that has methods for showing and hiding settings tab,
+ * updating settings values on the server, checking if there was changins on the settings page.
+ * 
  * @constructor
  */
-function CHelpdeskSettingsPaneView()
+function CSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this, 'SimpleChat');
 
 	this.enableModule = ko.observable(Settings.enableModule());
 }
 
-_.extendOwn(CHelpdeskSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
+_.extendOwn(CSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CHelpdeskSettingsPaneView.prototype.ViewTemplate = 'SimpleChatClient_SettingsPaneView';
+/**
+ * Name of template that will be binded to this JS-object. 'SimpleChatClient' - name of the object,
+ * 'SettingsPaneView' - name of template file in 'templates' folder.
+ */
+CSettingsPaneView.prototype.ViewTemplate = 'SimpleChatClient_SettingsPaneView';
 
-CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
+/**
+ * Returns array with all settings values wich is used for indicating if there were changes on the page.
+ * 
+ * @returns {Array} Array with all settings values;
+ */
+CSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.enableModule()
 	];
 };
 
-CHelpdeskSettingsPaneView.prototype.revertGlobalValues = function ()
+/**
+ * Reverts all settings values to global ones.
+ */
+CSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.enableModule(Settings.enableModule());
 };
 
-CHelpdeskSettingsPaneView.prototype.getParametersForSave = function ()
+/**
+ * Returns Object with parameters for passing to the server while settings updating.
+ * 
+ * @returns Object
+ */
+CSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
 		'EnableModule': this.enableModule()
 	};
 };
 
-CHelpdeskSettingsPaneView.prototype.applySavedValues = function (oParameters)
+/**
+ * Applies new settings values to global settings object.
+ * 
+ * @param {Object} oParameters Parameters with new values which were passed to the server.
+ */
+CSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
 	Settings.update(oParameters.EnableModule);
 };
 
-module.exports = new CHelpdeskSettingsPaneView();
+module.exports = new CSettingsPaneView();

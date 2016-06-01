@@ -1,9 +1,13 @@
 'use strict';
 
-var
-	Ajax = require('modules/Core/js/Ajax.js')
-;
+var Ajax = require('modules/Core/js/Ajax.js');
 
+/**
+ * Aborts Ajax requests to prevent receiving of obsolete data.
+ * 
+ * @param {Object} oRequest Parameters of request that is preparing to sending.
+ * @param {Object} oOpenedRequest Parameters of request that was sent earlier and is opened now.
+ */
 Ajax.registerAbortRequestHandler('SimpleChat', function (oRequest, oOpenedRequest) {
 	var
 		oParameters = oRequest.ParametersObject,
@@ -22,6 +26,14 @@ Ajax.registerAbortRequestHandler('SimpleChat', function (oRequest, oOpenedReques
 });
 
 module.exports = {
+	/**
+	 * Proxy for send method of the Core. Adds to parameters module name.
+	 * 
+	 * @param {string} sMethod Method of the request.
+	 * @param {Object} oParameters Parameters of the request.
+	 * @param {Function} fResponseHandler Callback that should be called after response receiving.
+	 * @param {Object} oContext Context for callback.
+	 */
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
 		Ajax.send('SimpleChat', sMethod, oParameters, fResponseHandler, oContext);
 	}
