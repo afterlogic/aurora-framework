@@ -1,11 +1,17 @@
 'use strict';
 
-var _ = require('underscore');
+var ko = require('knockout');
 
 module.exports = {
-	init: function (oSettings) {
-		_.extendOwn(this, oSettings);
+	enableModule: ko.observable(false),
+	
+	init: function (oAppDataSection) {
+		if (oAppDataSection)
+		{
+			this.enableModule(!!oAppDataSection.EnableModule);
+		}
 	},
+	
 	update: function (bEnableModule) {
 		this.enableModule(bEnableModule);
 	}

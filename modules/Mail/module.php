@@ -40,13 +40,33 @@ class MailModule extends AApiModule
 		$aAcc = $this->oApiAccountsManager->getUserAccounts($oUser->iObjectId);
 		return array(
 			'Accounts' => array_values($aAcc),
+			'AllowAddNewAccounts' => false, // AppData.App.AllowUsersAddNewAccounts
+			'AllowAppRegisterMailto' => false, // AppData.App.AllowAppRegisterMailto
 			'AllowAutosaveInDrafts' => $oUser->{'Mail::AllowAutosaveInDrafts'},
+			'AllowChangeEmailSettings' => false, // AppData.App.AllowUsersChangeEmailSettings
 			'AllowChangeInputDirection' => $oUser->{'Mail::AllowChangeInputDirection'},
+			'AllowExpandFolders' => false, // AppData.MailExpandFolders
+			'AllowFetchers' => false, // AppData.User.AllowFetcher
+			'AllowIdentities' => false, // AppData.AllowIdentities
+			'AllowInsertImage' => false, // AppData.App.AllowInsertImage
+			'AllowSaveMessageAsPdf' => false, // AppData.AllowSaveAsPdf
+			'AllowThreads' => false, // AppData.User.ThreadsEnabled
+			'AllowZipAttachments' => false, // AppData.ZipAttachments
+			'AutoSave' => false, // AppData.App.AutoSave ??? uses in OpenPgp
+			'AutoSaveIntervalSeconds' => false, // add to settings
+			'AutosignOutgoingEmails' => false, // AppData.User.AutosignOutgoingEmails
+			'ComposeToolbarOrder' => array('back', 'send', 'save', 'importance', 'MailSensitivity', 'confirmation', 'OpenPgp'), // add to settings
+			'DefaultFontName' => 'Tahoma', // AppData.HtmlEditorDefaultFontName
+			'DefaultFontSize' => 3, // AppData.HtmlEditorDefaultFontSize
+			'ImageUploadSizeLimit' => 0, // AppData.App.ImageUploadSizeLimit
+			'JoinReplyPrefixes' => false, // AppData.App.JoinReplyPrefixes
 			'MailsPerPage' => $oUser->{'Mail::MailsPerPage'},
+			'MaxMessagesBodiesSizeToPrefetch' => 50000, // add to settings
 			'SaveRepliesToCurrFolder' => $oUser->{'Mail::SaveRepliesToCurrFolder'},
 			'UseThreads' => $oUser->{'Mail::UseThreads'}
 		);
 	}
+	
 	/**
 	 * 
 	 * @return boolean

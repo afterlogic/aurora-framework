@@ -8,13 +8,15 @@ var
 	
 	Settings = require('modules/Core/js/Settings.js'),
 	
+	AppData = window.auroraAppData,
+	
 	oModules = {},
 	oModulesSettings = {}
 ;
 
 module.exports = {
 	init: function (oAvaliableModules, iUserRole, bPublic) {
-		_.each(Settings.Modules, function (oModuleSettings, sModuleName) {
+		_.each(AppData, function (oModuleSettings, sModuleName) {
 			if ($.isFunction(oAvaliableModules[sModuleName]))
 			{
 				var oModule = oAvaliableModules[sModuleName](oModuleSettings);

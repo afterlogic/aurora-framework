@@ -1,9 +1,14 @@
 'use strict';
 
-var _ = require('underscore');
+var ko = require('knockout');
 
 module.exports = {
-	init: function (oSettings) {
-		_.extendOwn(this, oSettings);
+	enableOpenPgp: ko.observable(true),
+	
+	init: function (oAppDataSection) {
+		if (oAppDataSection)
+		{
+			this.enableOpenPgp(!!oAppDataSection.EnableModule);
+		}
 	}
 };

@@ -1,6 +1,6 @@
 <?php
 
-class SimpleChatEmojiModule extends AApiModule
+class MailSensitivityModule extends AApiModule
 {
 	public function init()
 	{

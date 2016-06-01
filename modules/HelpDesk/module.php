@@ -59,6 +59,28 @@ class HelpDeskModule extends AApiModule
 //		$this->subscribeEvent('HelpDesk::Login', array($this, 'checkAuth'));
 	}
 	
+	public function GetAppData($oUser = null)
+	{
+		return array(
+			'ActivatedEmail' => '', // AppData.HelpdeskActivatedEmail
+			'AllowEmailNotifications' => false, // AppData.User.AllowHelpdeskNotifications
+			'AllowFacebookAuth' => true, // AppData.SocialFacebook
+			'AllowGoogleAuth' => true, // AppData.SocialGoogle
+			'AllowTwitterAuth' => true, // AppData.SocialTwitter
+			'AfterThreadsReceivingAction' => 'add', // AppData.HelpdeskThreadAction - add, close
+			'ClientDetailsUrl' => '', // AppData.HelpdeskIframeUrl
+			'ClientSiteName' => '', // AppData.HelpdeskSiteName
+			'ForgotHash' => '', // AppData.HelpdeskForgotHash
+			'LoginLogoUrl' => '', // AppData.HelpdeskStyleImage
+			'SelectedThreadId' => 0, // AppData.HelpdeskThreadId
+			'Signature' => '', // AppData.User.HelpdeskSignature
+			'SocialEmail' => '', // AppData.SocialEmail
+			'ThreadsPerPage' => 10, // add to settings
+			'UserEmail' => '', // AppData.User.Email
+			'UseSignature' => true // AppData.User.HelpdeskSignatureEnable
+		);
+	}
+	
 	/**
 	 * TODO it must set extended properties of tenant
 	 * temp method

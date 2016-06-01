@@ -1,9 +1,12 @@
 'use strict';
 
-var _ = require('underscore');
-
 module.exports = {
-	init: function (oSettings) {
-		_.extendOwn(this, oSettings);
+	TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp'],
+	
+	init: function (oAppDataSection) {
+		if (oAppDataSection)
+		{
+			this.TabsOrder = oAppDataSection.TabsOrder;
+		}
 	}
 };

@@ -13,6 +13,15 @@ class ContactsModule extends AApiModule
 		$this->subscribeEvent('CreateAccount', array($this, 'onCreateAccountEvent'));
 	}
 	
+	public function GetAppData($oUser = null)
+	{
+		return array(
+			'ContactsPerPage' => 20, // AppData.User.ContactsPerPage
+			'ImportContactsLink' => '', // AppData.Links.ImportingContacts
+			'Storages' => array('personal', 'global', 'shared') // AppData.User.ShowPersonalContacts, AppData.User.ShowGlobalContacts, AppData.App.AllowContactsSharing
+		);
+	}
+	
 	private function populateSortParams( &$iSortField, &$iSortOrder)
 	{
 		$sSortField = (string) $this->getParamValue('SortField', 'Email');

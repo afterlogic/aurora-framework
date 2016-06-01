@@ -13,6 +13,18 @@ class FilesModule extends AApiModule
 		$this->AddEntry('files-pub', 'EntryFilesPub');
 	}
 	
+	public function GetAppData($oUser = null)
+	{
+		return array(
+			'EnableModule' => true, // AppData.User.FilesEnable
+			'AllowCollaboration' => true, // AppData.User.IsCollaborationSupported
+			'AllowSharing' => true, // AppData.User.AllowFilesSharing
+			'PublicHash' => '', // AppData.FileStoragePubHash
+			'PublicName' => '', // AppData.FileStoragePubParams.Name
+			'UploadSizeLimitMb' => 0 // AppData.App.FileSizeLimit
+		);
+	}
+	
 	public function GetMinModuleDecorator()
 	{
 		if ($this->oMinModuleDecorator === null)

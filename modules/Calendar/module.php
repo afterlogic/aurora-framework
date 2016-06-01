@@ -17,6 +17,21 @@ class CalendarModule extends AApiModule
 //		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));
 	}
 	
+	public function GetAppData($oUser = null)
+	{
+		return array(
+			'AllowAppointments' => true, // AppData.User.CalendarAppointments
+			'AllowShare' => true, // AppData.User.CalendarSharing
+			'DefaultTab' => '3', // AppData.User.Calendar.CalendarDefaultTab
+			'HighlightWorkingDays' => true, // AppData.User.Calendar.CalendarShowWeekEnds
+			'HighlightWorkingHours' => true, // AppData.User.Calendar.CalendarShowWorkDay
+			'PublicCalendarId' => '', // AppData.CalendarPubHash
+			'WeekStartsOn' => '0', // AppData.User.Calendar.CalendarWeekStartsOn
+			'WorkdayEnds' => '18', // AppData.User.Calendar.CalendarWorkDayEnds
+			'WorkdayStarts' => '9' // AppData.User.Calendar.CalendarWorkDayStarts
+		);
+	}
+	
 	/**
 	 * @return array
 	 */

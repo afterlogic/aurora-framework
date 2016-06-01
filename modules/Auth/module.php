@@ -17,6 +17,32 @@ class AuthModule extends AApiModule
 		$this->subscribeEvent('Login', array($this, 'checkAuth'));
 	}
 	
+	/**
+	 * Obtains settings of the Simple Chat Module.
+	 * 
+	 * @param \CUser $oUser Object of the loggined user.
+	 * @return array
+	 */
+	public function GetAppData($oUser = null)
+	{
+		return array(
+			'AllowChangeLanguage' => false, //AppData.App.AllowLanguageOnLogin
+			'AllowRegistration' => false, //AppData.App.AllowRegistration
+			'AllowResetPassword' => false, //AppData.App.AllowPasswordReset
+			'CustomLoginUrl' => '', //AppData.App.CustomLoginUrl
+			'CustomLogoUrl' => '', //AppData.LoginStyleImage
+			'DemoLogin' => '', //AppData.App.DemoWebMailLogin
+			'DemoPassword' => '', //AppData.App.DemoWebMailPassword
+			'InfoText' => '', //AppData.App.LoginDescription
+			'LoginAtDomain' => '', //AppData.App.LoginAtDomainValue
+			'LoginFormType' => 0, //AppData.App.LoginFormType 0 - email, 3 - login, 4 - both
+			'LoginSignMeType' => 0, //AppData.App.LoginSignMeType 0 - off, 1 - on, 2 - don't use
+			'RegistrationDomains' => array(), //AppData.App.RegistrationDomains
+			'RegistrationQuestions' => array(), //AppData.App.RegistrationQuestions
+			'UseFlagsLanguagesView' => false, //AppData.App.FlagsLangSelect
+		);
+	}
+	
 //	public function IsAuth()
 //	{
 //		$mResult = false;

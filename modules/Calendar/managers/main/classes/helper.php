@@ -436,7 +436,7 @@ class CCalendarHelper
 	 * @param string $sMethod
 	 * @param string $sHtmlBody Default value is empty string.
 	 *
-	 * @throws \System\Exceptions\ClientException
+	 * @throws \Core\Exceptions\ClientException
 	 *
 	 * @return \MailSo\Mime\Message
 	 */
@@ -459,15 +459,15 @@ class CCalendarHelper
 			}
 			catch (\CApiManagerException $oException)
 			{
-				$iCode = \System\Notifications::CanNotSendMessage;
+				$iCode = \Core\Notifications::CanNotSendMessage;
 				switch ($oException->getCode())
 				{
 					case Errs::Mail_InvalidRecipients:
-						$iCode = \System\Notifications::InvalidRecipients;
+						$iCode = \Core\Notifications::InvalidRecipients;
 						break;
 				}
 
-				throw new \System\Exceptions\ClientException($iCode, $oException);
+				throw new \Core\Exceptions\ClientException($iCode, $oException);
 			}
 		}
 
