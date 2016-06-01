@@ -29,8 +29,8 @@
 	function CoreSplAutoLoad($sClassName)
 	{
 		$aClassesTree = array(
-			'core' => array(
-				'Core'
+			'system' => array(
+				'System'
 			)
 		);
 		foreach ($aClassesTree as $sFolder => $aClasses)
@@ -57,7 +57,7 @@
 	if (class_exists('System\Service'))
 	{
 		include PSEVEN_APP_ROOT_PATH.'system/api.php';
-	//		\System\Service::NewInstance()->Handle();	
+//		\System\Service::NewInstance()->Handle();	
 	}
 	else
 	{
