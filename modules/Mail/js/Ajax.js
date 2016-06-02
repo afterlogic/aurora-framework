@@ -6,8 +6,8 @@ var
 
 Ajax.registerAbortRequestHandler('Mail', function (oRequest, oOpenedRequest) {
 	var
-		oParameters = oRequest.ParametersObject,
-		oOpenedParameters = oOpenedRequest.ParametersObject
+		oParameters = oRequest.Parameters,
+		oOpenedParameters = oOpenedRequest.Parameters
 	;
 	
 	switch (oRequest.Method)

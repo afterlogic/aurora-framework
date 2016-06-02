@@ -554,7 +554,7 @@ CMailCache.prototype.isSearchExecuting = function ()
 {
 	var
 		oRequest = Ajax.getOpenedRequest('GetMessages'),
-		oParameters = oRequest && oRequest.ParametersObject
+		oParameters = oRequest && oRequest.Parameters
 	;
 	return oParameters && oParameters.Search !== '';
 };
@@ -583,7 +583,7 @@ CMailCache.prototype.checkMessageFlags = function ()
 CMailCache.prototype.onGetMessagesFlagsResponse = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		oFolderList = this.oFolderListItems[oParameters.AccountID],
 		oInbox = (oFolderList) ? oFolderList.inboxFolder() : null
 	;
@@ -1184,7 +1184,7 @@ CMailCache.prototype.onSetMessagesSeenResponse = function (oResponse, oRequest)
 CMailCache.prototype.onGetFoldersResponse = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		oFolderList = new CFolderListModel(),
 		iAccountId = oParameters.AccountID,
 		oFolderListOld = this.oFolderListItems[iAccountId],
@@ -1257,7 +1257,7 @@ CMailCache.prototype.onGetRelevantFoldersInformationResponse = function (oRespon
 {
 	var
 		bCheckMailStarted = false,
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		iAccountId = oParameters.AccountID,
 		oFolderList = this.oFolderListItems[iAccountId],
 		sCurrentFolderName = this.folderList().currentFolderFullName(),
@@ -1412,7 +1412,7 @@ CMailCache.prototype.parseMessageList = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		iAccountId = oParameters.AccountID,
 		oFolderList = this.oFolderListItems[iAccountId],
 		oFolder = null,
@@ -1492,7 +1492,7 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		oFolder = this.folderList().getFolderByFullName(oParameters.Folder),
 		oToFolder = this.folderList().getFolderByFullName(oParameters.ToFolder),
 		bToFolderTrash = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Trash)),
@@ -1575,7 +1575,7 @@ CMailCache.prototype.onCopyMessagesResponse = function (oResponse, oRequest)
 {
 	var
 		oResult = oResponse.Result,
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		oFolder = this.folderList().getFolderByFullName(oParameters.Folder),
 		oToFolder = this.folderList().getFolderByFullName(oParameters.ToFolder),
 		oCurrFolder = this.folderList().currentFolder(),

@@ -84,7 +84,7 @@ CContactsCache.prototype.getContactsByEmails = function (aEmails, fResponseHandl
 CContactsCache.prototype.onGetContactsByEmailsResponse = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		fResponseHandler = this.oResponseHandlers[oParameters.HandlerId],
 		oResult = oResponse.Result,
 		aEmails = oParameters.Emails.split(','),

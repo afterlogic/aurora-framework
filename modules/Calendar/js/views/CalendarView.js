@@ -1003,7 +1003,7 @@ CCalendarView.prototype.onGetEventsResponse = function (oResponse, oRequest)
 	{
 		var 
 			oCalendar = null,
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			aCalendarIds = oParameters.CalendarIds ? oParameters.CalendarIds : [],
 			aEvents = []
 		;
@@ -1148,7 +1148,7 @@ CCalendarView.prototype.onUpdateCalendarResponse = function (oResponse, oRequest
 	if (oResponse.Result)
 	{
 		var
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1187,7 +1187,7 @@ CCalendarView.prototype.onUpdateCalendarColorResponse = function (oResponse, oRe
 	if (oResponse.Result)
 	{
 		var
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1252,7 +1252,7 @@ CCalendarView.prototype.onUpdateCalendarShareResponse = function (oResponse, oRe
 	if (oResponse.Result)
 	{
 		var
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1298,7 +1298,7 @@ CCalendarView.prototype.onUpdateCalendarPublicResponse = function (oResponse, oR
 	if (oResponse.Result)
 	{
 		var
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1344,7 +1344,7 @@ CCalendarView.prototype.onDeleteCalendarResponse = function (oResponse, oRequest
 	if (oResponse.Result)
 	{
 		var
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			oCalendar = this.calendars.getCalendarById(oParameters.Id)
 		;
 		
@@ -1768,7 +1768,7 @@ CCalendarView.prototype.onEventActionResponseWithSubThrottle = function (oData, 
 CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, bDoRefresh)
 {
 	var
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		oCalendar = this.calendars.getCalendarById(oParameters && oParameters.calendarId),
 		oEvent = null,
 		iScrollTop = 0

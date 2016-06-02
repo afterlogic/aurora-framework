@@ -122,10 +122,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 //			AfterLogicApi.runPluginHook('ajax-default-request', [sModule, sMethod, oParameters]);
 //		}
 
-		if (oParameters)
-		{
-			oRequest.Parameters = JSON.stringify(oParameters);
-		}
+		oRequest.Parameters = oParameters || {};
 		
 		this.abortRequests(oRequest);
 	
@@ -147,15 +144,18 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		doneFunc = _.bind(this.done, this, oRequest, fResponseHandler, oContext),
 		failFunc = _.bind(this.fail, this, oRequest, fResponseHandler, oContext),
 		alwaysFunc = _.bind(this.always, this, oRequest),
-		oXhr = null
+		oXhr = null,
+		oCloneRequest = _.clone(oRequest)
 	;
+	
+	oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters);
 	
 	oXhr = $.ajax({
 		url: '?/Ajax/',
 		type: 'POST',
 		async: true,
 		dataType: 'json',
-		data: oRequest,
+		data: oCloneRequest,
 		success: doneFunc,
 		error: failFunc,
 		complete: alwaysFunc,

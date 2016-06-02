@@ -100,7 +100,7 @@ CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oReque
 	}
 	else
 	{
-		var oParameters = oRequest.ParametersObject;
+		var oParameters = oRequest.Parameters;
 		
 		this.applySavedValues(oParameters);
 		
@@ -138,7 +138,7 @@ CAccountAutoresponderPaneView.prototype.onGetAutoresponderResponse = function (o
 	if (oResponse && oResponse.Result)
 	{
 		var
-			oParameters = oRequest.ParametersObject,
+			oParameters = oRequest.Parameters,
 			iAccountId = Types.pInt(oParameters.AccountID),
 			oAccount = AccountList.getAccount(iAccountId),
 			oAutoresponder = new CAutoresponderModel()

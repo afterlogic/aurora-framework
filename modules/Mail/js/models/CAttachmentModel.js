@@ -121,7 +121,7 @@ CAttachmentModel.prototype.setMessageData = function (sFolderName, sMessageUid)
 CAttachmentModel.prototype.onGetMessageResponse = function (oResult, oRequest)
 {
 	var
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		oResult = oResult.Result,
 		CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
 		oMessage = new CMessageModel()

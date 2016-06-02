@@ -289,7 +289,7 @@ CAccountFiltersPaneView.prototype.getDependedField = function (sText, oParent)
 CAccountFiltersPaneView.prototype.onGetFiltersResponse = function (oResponse, oRequest)
 {
 	var
-		oParameters = oRequest.ParametersObject,
+		oParameters = oRequest.Parameters,
 		iAccountId = Types.pInt(oParameters.AccountID),
 		oAccount = AccountList.getAccount(iAccountId),
 		oSieveFilters = new СFiltersModel()

@@ -10,8 +10,8 @@ var Ajax = require('modules/Core/js/Ajax.js');
  */
 Ajax.registerAbortRequestHandler('SimpleChat', function (oRequest, oOpenedRequest) {
 	var
-		oParameters = oRequest.ParametersObject,
-		oOpenedParameters = oOpenedRequest.ParametersObject
+		oParameters = oRequest.Parameters,
+		oOpenedParameters = oOpenedRequest.Parameters
 	;
 	
 	switch (oRequest.Method)
