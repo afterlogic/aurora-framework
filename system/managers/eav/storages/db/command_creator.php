@@ -103,6 +103,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 		$sOffset = "";
 		
 		$oObject = call_user_func($sObjectType . '::createInstance');
+		
 		if ($oObject instanceof $sObjectType)
 		{
 			$aResultViewProperties = array();
@@ -114,18 +115,6 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sGroupByField = "obj_type";
 				$sCount = "COUNT(DISTINCT objects.id) as objects_count,";
 			}			
-			else
-			{
-				if ($aViewProperties === null)
-				{
-					$aViewProperties = array();
-				}
-				else if (count($aViewProperties) === 0)
-				{
-					$aMap = $oObject->GetMap();
-					$aViewProperties = array_keys($aMap);
-				}
-			}
 
 			if (!empty($sSortProperty) && $oObject->IsProperty($sSortProperty))
 			{
@@ -139,17 +128,11 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$sType = $oObject->getPropertyType($sProperty);
 
 				$aResultViewProperties[$sProperty] = sprintf(
-						"`props_%s`.`value_%s` as `prop_%s`
-			", 
-						$sProperty, 
-						$sType, 
-						$sProperty
-				);
-				$aJoinProperties[$sProperty] = sprintf(
 						"
-					LEFT JOIN eav_properties as `props_%s` 
-						ON `props_%s`.key = %s AND `props_%s`.id_object = objects.id",
-				$sProperty, $sProperty, $this->escapeString($sProperty), $sProperty);
+	(SELECT props.value_%s 
+		FROM %seav_properties as props 
+			WHERE props.id_object = objects.id AND props.`key` = %s ORDER BY 1 LIMIT 1) AS `prop_%s`",
+				$sType, $this->prefix(), $this->escapeString($sProperty), $sProperty);
 			}
 			if (0 < count($aViewProperties))
 			{
@@ -179,9 +162,8 @@ class CApiEavCommandCreator extends api_CommandCreator
 				}
 				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
-						"`props_%s`.`value_%s` %s " . $sValueFormat, 
+						"`prop_%s` %s " . $sValueFormat, 
 						$sKey, 
-						$sType, 
 						$sPropertyAction, 
 						$oObject->isStringProperty($sKey) ? $this->escapeString($sPrpertyValue) : $sPrpertyValue
 				);
@@ -194,44 +176,40 @@ class CApiEavCommandCreator extends api_CommandCreator
 			if ($iLimit > 0)
 			{
 				$sLimit = sprintf("LIMIT %d", $iLimit);
-				$sOffset = sprintf("OFFSET %d", $iOffset /*($iOffset > 0) ? ($iOffset - 1) * $iLimit : 0*/);
+				$sOffset = sprintf("OFFSET %d", $iOffset);
 			}
 		}		
 		$sSql = sprintf(
 			"SELECT 
-			%s #1 COUNT
-			objects.id as obj_id, 
-			objects.object_type as obj_type, 
-			objects.module_name as obj_module
-			# fields
-			%s #2
-			# ------
-			FROM eav_properties as props
+	%s #1 COUNT
+	objects.id as obj_id, 
+	objects.object_type as obj_type, 
+	objects.module_name as obj_module
+	# fields
+	%s #2
+	# ------
+	FROM %seav_properties as props
 
-			  RIGHT JOIN eav_objects as objects
-				ON objects.id = props.id_object
-			
-			# fields
-			%s #3
-			# ------
-			
-			WHERE objects.object_type = %s #4 OBJECT TYPE
-			%s #5 WHERE
-			GROUP BY %s #6 
-			%s #7 SORT
-			%s #8 LIMIT
-			%s #9 OFFSET", 
-			$sCount,
-			$sViewPoperties, 
-			$sJoinPoperties, 
-			$this->escapeString($sObjectType), 
-			$sResultWhere,
-			$sGroupByField,
-			$sResultSort,
-			$sLimit,
-			$sOffset
-		);		
-		
+	  RIGHT JOIN %seav_objects as objects
+		ON objects.id = props.id_object
+
+	GROUP BY %s #5 
+	HAVING objects.object_type = %s #6 OBJECT TYPE
+	%s #7 WHERE
+	%s #8 SORT
+	%s #9 LIMIT
+	%s #10 OFFSET", 
+			$sCount,							// #1
+			$sViewPoperties,					// #2
+			$this->prefix(),					// #3
+			$this->prefix(),					// #4
+			$sGroupByField,						// #5
+			$this->escapeString($sObjectType),	// #6
+			$sResultWhere,						// #7
+			$sResultSort,						// #8
+			$sLimit,							// #9
+			$sOffset							// #10
+		);	
 		return $sSql;
 	}
 	
@@ -379,6 +357,17 @@ class CApiEavCommandCreator extends api_CommandCreator
 				$this->escapeString($sPropertyName)
 			)
 		);
+	}
+	
+	public function getPropertiesNamesByObjectType($sObjectType)
+	{
+		return sprintf(
+				'SELECT DISTINCT(`key`) as property_name '
+				. 'FROM %seav_properties as props, %seav_objects as objects
+				WHERE object_type = %s AND objects.id = props.id_object', 
+				$this->prefix(), $this->prefix(),
+				$this->escapeString($sObjectType)
+		);	
 	}
 }
 

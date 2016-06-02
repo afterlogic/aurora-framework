@@ -144,6 +144,21 @@ class CApiEavDbStorage extends CApiEavStorage
 	public function getObjects($sType, $aViewProperties = array(), $iOffset = 0, $iLimit = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$mResult = false;
+		
+		if ($aViewProperties === null)
+		{
+			$aViewProperties = array();
+		}
+		else if (count($aViewProperties) === 0)
+		{
+			$this->oConnection->Execute($this->oCommandCreator->getPropertiesNamesByObjectType($sType));
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+			{
+				$aViewProperties[] = $oRow->property_name;
+			}
+			$this->oConnection->FreeResult();
+		}		
+		
 		if (class_exists($sType) && $this->oConnection->Execute($this->oCommandCreator->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder)))
 		{
 			$oRow = null;
@@ -167,9 +182,9 @@ class CApiEavDbStorage extends CApiEavStorage
 						$oObject->{$sPropertyKey} = $mValue;
 					}
 				}
-				
 				$mResult[] = $oObject;
 			}
+			$this->oConnection->FreeResult();
 		}
 		$this->throwDbExceptionIfExist();
 		return $mResult;
@@ -234,6 +249,16 @@ class CApiEavDbStorage extends CApiEavStorage
 	public function deleteProperties($iObjectId)
 	{
 		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteProperties($iObjectId));
+		$this->throwDbExceptionIfExist();
+		return $bResult;
+	}
+	
+		/**
+	 * @return bool
+	 */
+	public function getPropertiesNamesByObjectType($sObjectTypes)
+	{
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->getPropertiesNamesByObjectType($sObjectTypes));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}

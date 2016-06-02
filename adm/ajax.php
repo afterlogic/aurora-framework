@@ -25,8 +25,6 @@ if ($oHttp->HasPost('ObjectName'))
 	
 	if (is_array($aItems))
 	{
-		$aProperties = array_merge(array('iObjectId'), array_keys($aItems[0]->getMap()));
-		
 		foreach ($aItems as $oItem)
 		{
 			$aResultItems[] = $oItem->toArray();

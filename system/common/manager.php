@@ -692,6 +692,7 @@ abstract class AApiManagerStorage
 			$oException = $this->oConnection->GetException();
 			if ($oException instanceof CApiDbException)
 			{
+				var_dump($oException);
 				throw new CApiBaseException(Errs::Db_ExceptionError, $oException);
 			}
 		}

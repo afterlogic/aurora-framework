@@ -62,12 +62,9 @@ $oTest->Test1 = 'test1';
 $oTest->Test2 = 'test2';
 
 //$iObjectId = $oEavManager->saveObject($oTest);
-$oNew = $oEavManager->getObjects('CTest', array('Test1', 'Test2', 'Test3'), 0, 0, array('Test1' => 'test1'));
+$oNew = $oEavManager->getObjects('CTest');
 
-foreach ($oNew as $oOBj)
-{
-	print_r($oOBj->Test1);
-}
+print_r($oNew);
 
 
 //$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
