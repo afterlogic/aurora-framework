@@ -178,60 +178,61 @@ class Actions
 	}
 
 	/**
+	 * TODO remove
 	 * @param \CAccount $oAccount
 	 * 
 	 * @return \CHelpdeskUser|null
 	 */
 	public function GetHelpdeskAccountFromMainAccount(&$oAccount)
 	{
-		$oResult = null;
-		$oApiHelpdesk = $this->ApiHelpdesk();
-		if ($oAccount && $oAccount->IsDefaultAccount && $oApiHelpdesk && $this->oApiCapability->isHelpdeskSupported($oAccount))
-		{
-			if (0 < $oAccount->User->IdHelpdeskUser)
-			{
-				$oHelpdeskUser = $oApiHelpdesk->getUserById($oAccount->IdTenant, $oAccount->User->IdHelpdeskUser);
-				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
-			}
-
-			if (!($oResult instanceof \CHelpdeskUser))
-			{
-				$oHelpdeskUser = $oApiHelpdesk->getUserByEmail($oAccount->IdTenant, $oAccount->Email);
-				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
-				
-				if ($oResult instanceof \CHelpdeskUser)
-				{
-					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
-					$this->oApiUsers->updateAccount($oAccount);
-				}
-			}
-
-			if (!($oResult instanceof \CHelpdeskUser))
-			{
-				$oHelpdeskUser = new \CHelpdeskUser();
-				$oHelpdeskUser->Email = $oAccount->Email;
-				$oHelpdeskUser->Name = $oAccount->FriendlyName;
-				$oHelpdeskUser->IdSystemUser = $oAccount->IdUser;
-				$oHelpdeskUser->IdTenant = $oAccount->IdTenant;
-				$oHelpdeskUser->Activated = true;
-				$oHelpdeskUser->IsAgent = true;
-				$oHelpdeskUser->Language = $oAccount->User->DefaultLanguage;
-				$oHelpdeskUser->DateFormat = $oAccount->User->DefaultDateFormat;
-				$oHelpdeskUser->TimeFormat = $oAccount->User->DefaultTimeFormat;
-
-				$oHelpdeskUser->setPassword($oAccount->IncomingMailPassword);
-
-				if ($oApiHelpdesk->createUser($oHelpdeskUser))
-				{
-					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
-					$this->oApiUsers->updateAccount($oAccount);
-
-					$oResult = $oHelpdeskUser;
-				}
-			}
-		}
-
-		return $oResult;
+//		$oResult = null;
+//		$oApiHelpdesk = $this->ApiHelpdesk();
+//		if ($oAccount && $oAccount->IsDefaultAccount && $oApiHelpdesk && $this->oApiCapability->isHelpdeskSupported($oAccount))
+//		{
+//			if (0 < $oAccount->User->IdHelpdeskUser)
+//			{
+//				$oHelpdeskUser = $oApiHelpdesk->getUserById($oAccount->IdTenant, $oAccount->User->IdHelpdeskUser);
+//				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
+//			}
+//
+//			if (!($oResult instanceof \CHelpdeskUser))
+//			{
+//				$oHelpdeskUser = $oApiHelpdesk->getUserByEmail($oAccount->IdTenant, $oAccount->Email);
+//				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
+//				
+//				if ($oResult instanceof \CHelpdeskUser)
+//				{
+//					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
+//					$this->oApiUsers->updateAccount($oAccount);
+//				}
+//			}
+//
+//			if (!($oResult instanceof \CHelpdeskUser))
+//			{
+//				$oHelpdeskUser = new \CHelpdeskUser();
+//				$oHelpdeskUser->Email = $oAccount->Email;
+//				$oHelpdeskUser->Name = $oAccount->FriendlyName;
+//				$oHelpdeskUser->IdSystemUser = $oAccount->IdUser;
+//				$oHelpdeskUser->IdTenant = $oAccount->IdTenant;
+//				$oHelpdeskUser->Activated = true;
+//				$oHelpdeskUser->IsAgent = true;
+//				$oHelpdeskUser->Language = $oAccount->User->DefaultLanguage;
+//				$oHelpdeskUser->DateFormat = $oAccount->User->DefaultDateFormat;
+//				$oHelpdeskUser->TimeFormat = $oAccount->User->DefaultTimeFormat;
+//
+//				$oHelpdeskUser->setPassword($oAccount->IncomingMailPassword);
+//
+//				if ($oApiHelpdesk->createUser($oHelpdeskUser))
+//				{
+//					$oAccount->User->IdHelpdeskUser = $oHelpdeskUser->IdHelpdeskUser;
+//					$this->oApiUsers->updateAccount($oAccount);
+//
+//					$oResult = $oHelpdeskUser;
+//				}
+//			}
+//		}
+//
+//		return $oResult;
 	}
 
 
@@ -281,6 +282,7 @@ class Actions
 	}
 
 	/**
+	 * TODO remove
 	 * @param CAccount $oAccount
 	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
 	 *
@@ -288,50 +290,51 @@ class Actions
 	 */
 	protected function getHelpdeskAccountFromParam($oAccount, $bThrowAuthExceptionOnFalse = true)
 	{
-		$oResult = null;
-		$oAccount = null;
-
-		if ('0' === (string) $this->getParamValue('IsExt', '1'))
-		{
-			$oAccount = $this->getDefaultAccountFromParam($bThrowAuthExceptionOnFalse);
-			if ($oAccount && $this->oApiCapability->isHelpdeskSupported($oAccount))
-			{
-				$oResult = $this->GetHelpdeskAccountFromMainAccount($oAccount);
-			}
-		}
-		else
-		{
-			$mTenantID = $this->oApiTenants->getTenantIdByName($this->getParamValue('TenantName', ''));
-			if (is_int($mTenantID))
-			{
-				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
-			}
-		}
-
-		if (!$oResult && $bThrowAuthExceptionOnFalse)
-		{
-			throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
-		}
-
-		return $oResult;
+//		$oResult = null;
+//		$oAccount = null;
+//
+//		if ('0' === (string) $this->getParamValue('IsExt', '1'))
+//		{
+//			$oAccount = $this->getDefaultAccountFromParam($bThrowAuthExceptionOnFalse);
+//			if ($oAccount && $this->oApiCapability->isHelpdeskSupported($oAccount))
+//			{
+//				$oResult = $this->GetHelpdeskAccountFromMainAccount($oAccount);
+//			}
+//		}
+//		else
+//		{
+//			$mTenantID = $this->oApiTenants->getTenantIdByName($this->getParamValue('TenantName', ''));
+//			if (is_int($mTenantID))
+//			{
+//				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
+//			}
+//		}
+//
+//		if (!$oResult && $bThrowAuthExceptionOnFalse)
+//		{
+//			throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
+//		}
+//
+//		return $oResult;
 	}
 
 	/**
+	 * TODO remove
 	 * @return \CHelpdeskUser|null
 	 */
 	protected function getExtHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
 	{
-		$oResult = $this->GetExtHelpdeskAccount();
-		if (!$oResult)
-		{
-			$oResult = null;
-			if ($bThrowAuthExceptionOnFalse)
-			{
-				throw new \System\Exceptions\ClientException(\System\Notifications::AuthError);
-			}
-		}
-
-		return $oResult;
+//		$oResult = $this->GetExtHelpdeskAccount();
+//		if (!$oResult)
+//		{
+//			$oResult = null;
+//			if ($bThrowAuthExceptionOnFalse)
+//			{
+//				throw new \System\Exceptions\ClientException(\System\Notifications::AuthError);
+//			}
+//		}
+//
+//		return $oResult;
 	}
 
 	/**
@@ -2498,77 +2501,78 @@ class Actions
 	}	
 	
 	/**
+	 * TODO remove
 	 * @return array
 	 */
 	public function UploadHelpdeskFile()
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
-
-		if (!$this->oApiCapability->isHelpdeskSupported() || !$this->oApiCapability->isFilesSupported())
-		{
-			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
-		}
-
-		$aFileData = $this->getParamValue('FileData', null);
-
-		$iSizeLimit = 0;
-
-		$sError = '';
-		$aResponse = array();
-
-		if ($oUser)
-		{
-			if (is_array($aFileData))
-			{
-				if (0 < $iSizeLimit && $iSizeLimit < (int) $aFileData['size'])
-				{
-					$sError = 'size';
-				}
-				else
-				{
-					$sSavedName = 'upload-post-'.md5($aFileData['name'].$aFileData['tmp_name']);
-					if ($this->ApiFileCache()->moveUploadedFile($oUser, $sSavedName, $aFileData['tmp_name']))
-					{
-						$sUploadName = $aFileData['name'];
-						$iSize = $aFileData['size'];
-						$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
-
-						$aResponse['HelpdeskFile'] = array(
-							'Name' => $sUploadName,
-							'TempName' => $sSavedName,
-							'MimeType' => $sMimeType,
-							'Size' =>  (int) $iSize,
-							'Hash' => \CApi::EncodeKeyValues(array(
-								'TempFile' => true,
-								'HelpdeskTenantID' => $oUser->IdTenant,
-								'HelpdeskUserID' => $oUser->IdHelpdeskUser,
-								'Name' => $sUploadName,
-								'TempName' => $sSavedName
-							))
-						);
-					}
-					else
-					{
-						$sError = 'unknown';
-					}
-				}
-			}
-			else
-			{
-				$sError = 'unknown';
-			}
-		}
-		else
-		{
-			$sError = 'auth';
-		}
-
-		if (0 < strlen($sError))
-		{
-			$aResponse['Error'] = $sError;
-		}
-
-		return $this->DefaultResponse(__FUNCTION__, $aResponse);
+//		$oAccount = null;
+//		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+//
+//		if (!$this->oApiCapability->isHelpdeskSupported() || !$this->oApiCapability->isFilesSupported())
+//		{
+//			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
+//		}
+//
+//		$aFileData = $this->getParamValue('FileData', null);
+//
+//		$iSizeLimit = 0;
+//
+//		$sError = '';
+//		$aResponse = array();
+//
+//		if ($oUser)
+//		{
+//			if (is_array($aFileData))
+//			{
+//				if (0 < $iSizeLimit && $iSizeLimit < (int) $aFileData['size'])
+//				{
+//					$sError = 'size';
+//				}
+//				else
+//				{
+//					$sSavedName = 'upload-post-'.md5($aFileData['name'].$aFileData['tmp_name']);
+//					if ($this->ApiFileCache()->moveUploadedFile($oUser, $sSavedName, $aFileData['tmp_name']))
+//					{
+//						$sUploadName = $aFileData['name'];
+//						$iSize = $aFileData['size'];
+//						$sMimeType = \MailSo\Base\Utils::MimeContentType($sUploadName);
+//
+//						$aResponse['HelpdeskFile'] = array(
+//							'Name' => $sUploadName,
+//							'TempName' => $sSavedName,
+//							'MimeType' => $sMimeType,
+//							'Size' =>  (int) $iSize,
+//							'Hash' => \CApi::EncodeKeyValues(array(
+//								'TempFile' => true,
+//								'HelpdeskTenantID' => $oUser->IdTenant,
+//								'HelpdeskUserID' => $oUser->IdHelpdeskUser,
+//								'Name' => $sUploadName,
+//								'TempName' => $sSavedName
+//							))
+//						);
+//					}
+//					else
+//					{
+//						$sError = 'unknown';
+//					}
+//				}
+//			}
+//			else
+//			{
+//				$sError = 'unknown';
+//			}
+//		}
+//		else
+//		{
+//			$sError = 'auth';
+//		}
+//
+//		if (0 < strlen($sError))
+//		{
+//			$aResponse['Error'] = $sError;
+//		}
+//
+//		return $this->DefaultResponse(__FUNCTION__, $aResponse);
 	}
 }
