@@ -1,6 +1,6 @@
 <?php
 
-class HelpDeskModuleClient extends AApiModule
+class HelpDeskClientModule extends AApiModule
 {
 	public $oApiHelpDeskManager = null;
 	
