@@ -7,7 +7,7 @@
 			<div class="side_panel fields">
 				<div class="fieldset">
 					<div class="row owner">
-						<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_HOST'}"></span>:
+						<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_HOST'}"></span>:
 						<span class="value" data-bind="customTooltip: owner, text: ownerName, visible: ownerName !== '', css: {'recivedAnim': recivedAnim() && owner() === whomAnimate()}"></span>
 						<span class="value" data-bind="text: owner, visible: ownerName() === '', css: {'recivedAnim': recivedAnim() && owner() === whomAnimate()}"></span>
 					</div>
@@ -28,17 +28,17 @@
 						</div>
 					</div>
 					<div class="row add_attender" data-bind="visible: isEditable(), css: {'focused': guestEmailFocus()}">
-						<span class="control add" data-bind="customTooltip: 'CALENDAR/ACTION_ADD_GUESTS', click: onAddGuestClick"></span>
-						<label for="add_attender_input" class="label placeholder" data-bind="i18n: {'key': 'CALENDAR/LABEL_EMAIL_OR_NAME'}, visible: guestAutocomplete() === ''"></label>
+						<span class="control add" data-bind="customTooltip: '%ModuleName%/ACTION_ADD_GUESTS', click: onAddGuestClick"></span>
+						<label for="add_attender_input" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_EMAIL_OR_NAME'}, visible: guestAutocomplete() === ''"></label>
 						<input id="add_attender_input" class="value input" spellcheck="false"  type="text" autocomplete="on" data-bind="value: guestAutocomplete, hasfocus: guestEmailFocus, valueUpdate: ['blur', 'afterkeydown'], autocompleteSimple: {callback: autocompleteCallback.bind($data), dataAccessor: guestAutocompleteItem, deleteAccessor: autocompleteDeleteItem}" />
 					</div>
 					<div class="row" data-bind="visible: isAppointmentButtonsVisible">
 						<div class="buttons">
-							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_ACCEPT_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Accepted},
+							<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_ACCEPT_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Accepted},
 									click: function(){ setAppointmentAction(Enums.IcalConfig.Accepted); }"></span>
-							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_TENTATIVE_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Tentative},
+							<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_TENTATIVE_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Tentative},
 									click: function(){ setAppointmentAction(Enums.IcalConfig.Tentative); }"></span>
-							<span class="button" data-bind="i18n: {'key': 'CALENDAR/ACTION_DECLINE_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Declined},
+							<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_DECLINE_APPOINTMENT'}, css: {'selected_button': attenderStatus() === Enums.IcalConfigInt.Declined},
 									click: function(){ setAppointmentAction(Enums.IcalConfig.Declined); }"></span>
 						</div>
 					</div>
@@ -75,7 +75,7 @@
 							<span class="value" data-bind="text: endTime, visible: !allDay() && (!isEvOneDay() || !isEvOneTime())"></span>
 						</div>
 
-						<span data-bind="css: {'repeat': isRepeat()}, customTooltip: 'CALENDAR/INFO_RECURRING_EVENT'"></span>
+						<span data-bind="css: {'repeat': isRepeat()}, customTooltip: '%ModuleName%/INFO_RECURRING_EVENT'"></span>
 
 						<div class="subforms" data-bind="visible: dateEdit()">
 							<div class="dates_form">
@@ -113,50 +113,50 @@
 											<span class="icon"></span>
 											<input type="checkbox" data-bind="checked: allDay" id="allday">
 										</label>
-										<label for="allday" data-bind="i18n: {'key': 'CALENDAR/LABEL_ALL_DAY'}"></label>
+										<label for="allday" data-bind="i18n: {'key': '%ModuleName%/LABEL_ALL_DAY'}"></label>
 									</div>
 
 									<div class="repeat_panel" data-bind="visible: allEvents() === Enums.CalendarEditRecurrenceEvent.AllEvents">
 										<div class="row" data-bind="visible: true">
-											<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_REPEATS'}"></span>
+											<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_REPEATS'}"></span>
 											<select class="value input" data-bind="options: repeatPeriodOptions, optionsText: 'label', optionsValue: 'value', value: repeatPeriod"></select>
 
 											<span class="" data-bind="visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
-												<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_REPEAT_WEEKLY_ON_DAYS'}"></span>
+												<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_REPEAT_WEEKLY_ON_DAYS'}"></span>
 
 												<span class="custom_switcher">
 													<label data-bind="css: {'checked': weekMO}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_MON'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_MON'}"></span>
 														<input type="checkbox" data-bind="checked: weekMO" />
 													</label>
 
 													<label data-bind="css: {'checked': weekTU}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_TUE'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_TUE'}"></span>
 														<input type="checkbox" data-bind="checked: weekTU" />
 													</label>
 
 													<label data-bind="css: {'checked': weekWE}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_WED'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_WED'}"></span>
 														<input type="checkbox" data-bind="checked: weekWE" />
 													</label>
 
 													<label data-bind="css: {'checked': weekTH}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_THU'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_THU'}"></span>
 														<input type="checkbox" data-bind="checked: weekTH" />
 													</label>
 
 													<label data-bind="css: {'checked': weekFR}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_FRI'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_FRI'}"></span>
 														<input type="checkbox" data-bind="checked: weekFR" />
 													</label>
 
 													<label data-bind="css: {'checked': weekSA}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_SAT'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_SAT'}"></span>
 														<input type="checkbox" data-bind="checked: weekSA" />
 													</label>
 
 													<label data-bind="css: {'checked': weekSU}">
-														<span class="text" data-bind="i18n: {'key': 'CALENDAR/LABEL_SUN'}"></span>
+														<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_SUN'}"></span>
 														<input type="checkbox" data-bind="checked: weekSU" />
 													</label>
 												</span>
@@ -172,19 +172,19 @@
 
 											<span data-bind="css: {'row_weeks': repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly}">
 												<span data-bind="visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
-													<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_REPEAT_EVERY'}"></span>
+													<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_REPEAT_EVERY'}"></span>
 													<select class="value input" data-bind="options: repeatWeekIntervalOptions, value: repeatInterval"></select>
-													<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_REPEAT_WEEK'}"></span>
+													<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_REPEAT_WEEK'}"></span>
 												</span>
 
 												<label data-bind="css: {'checked': always}, visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Daily || repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
 													<input type="radio" name="always" value="1" data-bind="checked: always" />
-													<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_REPEAT_ALWAYS'}"></span>
+													<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_REPEAT_ALWAYS'}"></span>
 												</label>
 
 												<span data-bind="visible: repeatPeriod() === Enums.CalendarRepeatPeriod.Daily || repeatPeriod() === Enums.CalendarRepeatPeriod.Weekly">
 													<input type="radio" name="always" value="0" data-bind="checked: always" />
-													<span class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_REPEAT_UNTIL'}"></span>
+													<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_REPEAT_UNTIL'}"></span>
 													<input class="date input" spellcheck="false" type="text" readonly="readonly" data-bind="initDom: repeatEndDom, value: repeatEndDate" />
 												</span>
 											</span>
@@ -198,7 +198,7 @@
 
 					<div class="fieldset main">
 						<div class="row name" data-bind="css: {'focused': subjectFocus(), 'filled': subject().length > 0}">
-							<label for="event_subject" class="label placeholder" data-bind="i18n: {'key': 'CALENDAR/LABEL_SUBJECT'}"></label>
+							<label for="event_subject" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_SUBJECT'}"></label>
 							<div class="value scrollable_field" data-bind="customScrollbar: {x: false}">
 								<div class="scroll-inner">
 									<span class="input" data-bind="text: subject, visible: !isEditable()"></span>
@@ -212,7 +212,7 @@
 						<div class="row description" data-bind="css: {'focused': descriptionFocus(), 'filled': description().length > 0}">
 							<div class="value scrollable_field" data-bind="customScrollbar: {x: false}">
 								<div class="scroll-inner">
-									<label for="event_description" class="label placeholder" data-bind="i18n: {'key': 'CALENDAR/LABEL_DESCRIPTION'}, visible: isEditable()"></label>
+									<label for="event_description" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_DESCRIPTION'}, visible: isEditable()"></label>
 									<span class="input" data-bind="text: description, visible: !isEditable()"></span>
 									<textarea id="event_description" class="input autosize" data-bind="
 										autosize: {minHeight: 26, autosizeTrigger: autosizeTrigger, scrollableHeight: 150}, 
@@ -223,7 +223,7 @@
 						<div class="row location" data-bind="css: {'focused': locationFocus(), 'filled': (location()) ? location().length : false}">
 							<div class="value scrollable_field" data-bind="customScrollbar: {x: false}">
 								<div class="scroll-inner">
-									<label for="event_location" class="label placeholder" data-bind="i18n: {'key': 'CALENDAR/LABEL_LOCATION'}, visible: isEditable()"></label>
+									<label for="event_location" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_LOCATION'}, visible: isEditable()"></label>
 									<span class="input" data-bind="text: location, visible: !isEditable()"></span>
 									<textarea id="event_location" class="input autosize" data-bind="
 										autosize: {minHeight: 26, autosizeTrigger: autosizeTrigger, scrollableHeight: 74}, 
@@ -243,7 +243,7 @@
 								<div class="form_content">
 									<div class="alarms" data-bind="foreach: displayedAlarms()">
 										<span class="item alarm">
-											<span class="link remove" data-bind="i18n: {'key': 'CALENDAR/ACTION_REMOVE_ALARM'}, visible: $parent.isEditableReminders(), click: function(oItem) {$parent.removeAlarm(oItem);}"></span>
+											<span class="link remove" data-bind="i18n: {'key': '%ModuleName%/ACTION_REMOVE_ALARM'}, visible: $parent.isEditableReminders(), click: function(oItem) {$parent.removeAlarm(oItem);}"></span>
 											<!-- ko foreach: $parent.aReminderPhrase -->
 												<!-- ko if: $data !== 'REMINDERS' -->
 													<span class="part" data-bind="text: $data"></span>
@@ -266,7 +266,7 @@
 											<!-- /ko -->
 										</span>
 									</div>
-									<span class="link" data-bind="i18n: {'key': 'CALENDAR/ACTION_NEW_ALARM'}, click: addAlarm, visible: isEditableReminders() && (displayedAlarms().length < 5)"></span>
+									<span class="link" data-bind="i18n: {'key': '%ModuleName%/ACTION_NEW_ALARM'}, click: addAlarm, visible: isEditableReminders() && (displayedAlarms().length < 5)"></span>
 								</div>
 								<span class="form_arrow"></span>
 							</div>
@@ -275,15 +275,15 @@
 						<div class="additional_buttons">
 							<span class="item alarm" data-bind="click: isEditableReminders() ? addFirstAlarm : '', 
 									css: {'selected': displayedAlarms().length > 0, 'readonly': !isEditableReminders()},
-									customTooltip: 'CALENDAR/ACTION_ADD_FIRST_ALARM', visible: isEditableReminders()">
+									customTooltip: '%ModuleName%/ACTION_ADD_FIRST_ALARM', visible: isEditableReminders()">
 								<span class="icon"></span>
-								<span class="text" data-bind="i18n: {'key': 'CALENDAR/ACTION_ADD_FIRST_ALARM'}"></span>
+								<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_FIRST_ALARM'}"></span>
 							</span>
 							<span class="item guests" data-bind="visible: bAllowAppointments && isEditableReminders(), click: isEditable() ? showGuests : '', 
 									css: {'selected': guestsEdit() || attendees().length > 0, 'readonly': !isEditable()},
-									customTooltip: 'CALENDAR/ACTION_EDIT_GUESTS'">
+									customTooltip: '%ModuleName%/ACTION_EDIT_GUESTS'">
 								<span class="icon"></span>
-								<span class="text" data-bind="i18n: {'key': 'CALENDAR/ACTION_EDIT_GUESTS'}"></span>
+								<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_EDIT_GUESTS'}"></span>
 								<span class="arrow"></span>
 							</span>
 						</div>

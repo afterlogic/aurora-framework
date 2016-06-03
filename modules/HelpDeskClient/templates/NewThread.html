@@ -1,11 +1,11 @@
 <div class="panel_top">
 	<a class="link cancel" data-bind="click: cancelNewThread, i18n: {'key': 'CORE/ACTION_CANCEL'}"></a>
-	<div class="thread_heading" data-bind="i18n: {'key': 'HELPDESK/HEADING_CREATE_REQUEST'}"></div>
+	<div class="thread_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_CREATE_REQUEST'}"></div>
 </div>
 <div class="panel_center">
 	<div class="fields">
 		<div class="row" data-bind="css: { 'filled': newThreadText().length > 0 }">
-			<label class="placeholder" data-bind="i18n: {'key': 'HELPDESK/LABEL_YOUR_REQUEST'}"></label>
+			<label class="placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_YOUR_REQUEST'}"></label>
 			<span class="value">
 				<textarea class="input" data-bind="value: newThreadText, valueUpdate: 'afterkeydown', attr: {'disabled': newThreadCreating}, initDom: domNewThreadTextarea, hasfocus: newThreadTextFocus"></textarea>
 			</span>
@@ -49,11 +49,11 @@
 		<div class="buttons">
 			<span class="button upload" data-bind="visible: uploadedFiles().length < 5, initDom: uploaderButtonCompose, css: {'dragOver': bDragActive}">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_ADD_ATTACHMENT'}"></span>
+				<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_ATTACHMENT'}"></span>
 			</span>
 			<span class="button ccbcc" data-bind="visible: !ccbccVisible(), click: changeCcbccVisibility" >
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_ADD_CCBCC'}"></span>
+				<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_CCBCC'}"></span>
 			</span>
 			<button class="button create" data-bind="command: createThreadCommand, text: createThreadButtonText"></button>
 		</div>

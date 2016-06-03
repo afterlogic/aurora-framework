@@ -12,16 +12,16 @@
 		<div class="fields">
 			<div class="fieldset">
 				<div class="row">
-					<span class="label" data-bind="i18n: {'key': 'FILES/LABEL_EXTERNAL_DOC_URL'}"></span>
+					<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_EXTERNAL_DOC_URL'}"></span>
 					<input class="value input" spellcheck="false" type="text" maxlength="200" data-bind="valueUpdate: 'afterkeydown', hasfocus: linkFocus, value: link" />
 				</div>
 				<div class="hint row">
-					<span class="info" data-bind="i18n: {'key': 'FILES/INFO_UPLOAD_FILE_AS_LINK'}"></span>
+					<span class="info" data-bind="i18n: {'key': '%ModuleName%/INFO_UPLOAD_FILE_AS_LINK'}"></span>
 				</div>
 			</div>
 
 			<div class="buttons">
-				<span class="button" data-bind="css: {'disabled': !urlChecked()}, i18n: {'key': 'FILES/ACTION_ADD_SHORTCUT'}, command: saveCommand"></span>
+				<span class="button" data-bind="css: {'disabled': !urlChecked()}, i18n: {'key': '%ModuleName%/ACTION_ADD_SHORTCUT'}, command: saveCommand"></span>
 				<span class="button secondary_button" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>

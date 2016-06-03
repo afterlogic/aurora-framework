@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="i18n: {'key': 'OPENPGP/HEADING_SIGN_ENCRYPT'}"></span>
+		<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_SIGN_ENCRYPT'}"></span>
 
 		<div class="fields">
 			<div class="row">
@@ -11,7 +11,7 @@
 						<span class="icon"></span>
 						<input type="checkbox" data-bind="checked: sign" id="openpgp-sign" />
 					</label>
-					<label data-bind="i18n: {'key': 'OPENPGP/LABEL_SIGN'}" for="openpgp-sign"></label>
+					<label data-bind="i18n: {'key': '%ModuleName%/LABEL_SIGN'}" for="openpgp-sign"></label>
 					<span style="width: 100px;" class="label pgp_password" data-bind="i18n: {'key': 'CORE/LABEL_PASSWORD'}"></span>
 					<input style="width: 200px;" type="password" class="value input" data-bind="value: password, hasfocus: passwordFocused" />
 				</div>
@@ -22,7 +22,7 @@
 						<span class="icon"></span>
 						<input type="checkbox" data-bind="checked: encrypt" id="openpgp-encrypt" />
 					</label>
-					<label data-bind="i18n: {'key': 'OPENPGP/LABEL_ENCRYPT'}" for="openpgp-encrypt"></label>
+					<label data-bind="i18n: {'key': '%ModuleName%/LABEL_ENCRYPT'}" for="openpgp-encrypt"></label>
 				</div>
 			</div>
 			<div class="buttons">

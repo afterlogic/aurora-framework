@@ -10,11 +10,11 @@
 		</div>
 		<div class="row">
 			<div class="buttons" data-bind="visible: !exists()">
-				<span class="button" data-bind="i18n: {'key': 'CONTACTS/ACTION_ADD_VCARD'}, click: addContact"></span>
+				<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_VCARD'}, click: addContact"></span>
 			</div>
 			<span data-bind="visible: exists">
-				<span data-bind="i18n: {'key': 'CONTACTS/REPORT_CONTACT_ADDED'}, visible: isJustSaved"></span>
-				<span data-bind="i18n: {'key': 'CONTACTS/REPORT_CONTACT_EXISTS'}, visible: !isJustSaved()"></span>
+				<span data-bind="i18n: {'key': '%ModuleName%/REPORT_CONTACT_ADDED'}, visible: isJustSaved"></span>
+				<span data-bind="i18n: {'key': '%ModuleName%/REPORT_CONTACT_EXISTS'}, visible: !isJustSaved()"></span>
 			</span>
 		</div>
 	</div>

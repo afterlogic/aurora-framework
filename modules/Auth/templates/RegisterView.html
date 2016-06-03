@@ -7,7 +7,7 @@
 			</span>
 		</div>
 		<div class="row login" data-bind="css: {'focused': loginFocus(), 'filled': login().length > 0}">
-			<label for="reg_login" class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_LOGIN'}"></label>
+			<label for="reg_login" class="placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_LOGIN'}"></label>
 			<span class="value">
 				<input id="reg_login" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: login, hasfocus: loginFocus, valueUpdate: 'afterkeydown'" />
 			</span>
@@ -31,7 +31,7 @@
 		</div>
 		<!-- ko if: bAllowQuestionPart -->
 		<div class="row question" data-bind="css: {'focused': questionFocus(), 'filled': question().length > 0}">
-			<label class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_SELECT_QUESTION'}"></label>
+			<label class="placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_SELECT_QUESTION'}"></label>
 			<span class="value">
 				<span class="custom_selector input" data-bind="customSelect: {'control': false, 'expand': 'expand', 'expandState': questionFocus, 'options': aRegistrationQuestions, value: question, optionsText: 'text', optionsValue: 'value'}">
 					<span class="name" data-bind="text: question"></span>
@@ -49,13 +49,13 @@
 			</span>
 		</div>
 		<div class="row answer" data-bind="visible: visibleYourQuestion, css: {'focused': yourQuestionFocus(), 'filled': yourQuestion().length > 0}">
-			<label for="reg_your_question" class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_YOUR_QUESTION'}"></label>
+			<label for="reg_your_question" class="placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_YOUR_QUESTION'}"></label>
 			<span class="value">
 				<input id="reg_your_question" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: yourQuestion, hasfocus: yourQuestionFocus, valueUpdate: 'afterkeydown'" />
 			</span>
 		</div>
 		<div class="row answer" data-bind="css: {'focused': answerFocus(), 'filled': answer().length > 0}">
-			<label for="reg_answer" class="placeholder" data-bind="i18n: {'key': 'AUTH/LABEL_ANSWER_QUESTION'}"></label>
+			<label for="reg_answer" class="placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_ANSWER_QUESTION'}"></label>
 			<span class="value">
 				<input id="reg_answer" class="input" autocomplete="off" spellcheck="false" type="text" data-bind="value: answer, hasfocus: answerFocus, valueUpdate: 'afterkeydown'" />
 			</span>
@@ -68,7 +68,7 @@
 	</div>
 	<div class="row links">
 		<div class="forgot">
-			<span class="link" data-bind="click: function () {$parent.gotoRegister(false);}, i18n: {'key': 'AUTH/ACTION_BACK'}"></span>
+			<span class="link" data-bind="click: function () {$parent.gotoRegister(false);}, i18n: {'key': '%ModuleName%/ACTION_BACK'}"></span>
 		</div>
 	</div>
 </form>

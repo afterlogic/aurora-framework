@@ -141,6 +141,7 @@ class CApiIntegratorManager extends AApiManager
 
 					$sTemplateHtml = CApi::Plugin()->ParseTemplate($sTemplateID, $sTemplateHtml);
 					$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
+					$sTemplateHtml = str_replace('%ModuleName%', strtoupper($sItemName), $sTemplateHtml);
 
 					$sTemplateHtml = preg_replace('/<script([^>]*)>/', '&lt;script$1&gt;', $sTemplateHtml);
 					$sTemplateHtml = preg_replace('/<\/script>/', '&lt;/script&gt;', $sTemplateHtml);

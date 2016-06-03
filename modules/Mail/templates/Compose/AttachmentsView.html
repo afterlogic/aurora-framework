@@ -2,20 +2,20 @@
 	<div class="panel_content">
 		<div class="middle_bar">
 			<div class="panel_top">
-				<span class="uploader_button desktop" data-bind="initDom: composeUploaderButton, customTooltip: 'MAIL/ACTION_ATTACH_FROM_COMPUTER'">
+				<span class="uploader_button desktop" data-bind="initDom: composeUploaderButton, customTooltip: '%ModuleName%/ACTION_ATTACH_FROM_COMPUTER'">
 					<span class="icon"></span>
-					<span class="text" data-bind="i18n: {'key': 'MAIL/ACTION_ATTACH_FROM_COMPUTER'}"></span>
+					<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_ATTACH_FROM_COMPUTER'}"></span>
 				</span>
 				<span class="uploader_button files" data-bind="visible: allowFiles, click: onShowFilesPopupClick">
-					<span class="icon" data-bind="customTooltip: 'MAIL/ACTION_ATTACH_FROM_FILES'"></span>
-					<span class="text" data-bind="i18n: {'key': 'MAIL/ACTION_ATTACH_FROM_FILES'}"></span>
+					<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_ATTACH_FROM_FILES'"></span>
+					<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_ATTACH_FROM_FILES'}"></span>
 				</span>
 				{%INCLUDE-START/Compose-Attach-Buttons/INCLUDE-END%}
 			</div>
 			<div class="panel_center" data-bind="customScrollbar: {x: false}">
 				<div class="scroll-inner">
 					<div class="items_list">
-						<span class="list_notification" data-bind="i18n: {'key': 'MAIL/INFO_TO_ATTACH_DRAGNDROP'}, visible: allowDragNDrop() && notInlineAttachments().length === 0"></span>
+						<span class="list_notification" data-bind="i18n: {'key': '%ModuleName%/INFO_TO_ATTACH_DRAGNDROP'}, visible: allowDragNDrop() && notInlineAttachments().length === 0"></span>
 						<div class="attachments_container" data-bind="template: {name: 'Core_FileView', foreach: notInlineAttachments}"></div>
 					</div>
 				</div>

@@ -3,10 +3,10 @@
 	<span class="icon"></span>
 </span>
 <span class="item new_window"
-	data-bind="customTooltip: 'MAIL/ACTION_OPEN_IN_NEW_WINDOW', click: openInNewWindow">
+	data-bind="customTooltip: '%ModuleName%/ACTION_OPEN_IN_NEW_WINDOW', click: openInNewWindow">
 	<span class="icon"></span>
 </span>
 <span class="item minimize" data-bind="visible: typeof minimize === 'function', 
-		click: function () { if (minimize) { minimize(); } }, customTooltip: 'MAIL/ACTION_MINIMIZE'">
+		click: function () { if (minimize) { minimize(); } }, customTooltip: '%ModuleName%/ACTION_MINIMIZE'">
 	<span class="icon"></span>
 </span>

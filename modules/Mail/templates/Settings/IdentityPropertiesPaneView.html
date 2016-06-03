@@ -6,11 +6,11 @@
 					<span class="icon"></span>
 					<input type="checkbox" data-bind="checked: isDefault, enable: !disableCheckbox(), attr: {'id': 'identity_default_' + bCreate}" />
 				</label>
-				<label data-bind="i18n: {'key': 'MAIL/LABEL_IDENTITY_SET_DEFAULT'}, attr: {'for': 'identity_default_' + bCreate}"></label>
+				<label data-bind="i18n: {'key': '%ModuleName%/LABEL_IDENTITY_SET_DEFAULT'}, attr: {'for': 'identity_default_' + bCreate}"></label>
 			</div>
 		</div>
 		<div class="row">
-			<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_YOUR_NAME'}"></span>
+			<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_YOUR_NAME'}"></span>
 			<input class="value input" spellcheck="false" type="text" data-bind="value: friendlyName, onEnter: save, hasFocus: friendlyNameHasFocus"/>
 		</div>
 		<div class="row">
@@ -18,7 +18,7 @@
 			<input class="value input" spellcheck="false" type="text" data-bind="value: email, onEnter: save, disable: loyal"/>
 		</div>
 		<div class="row remove_account" data-bind="visible: !bCreate && !loyal()">
-			<span class="link" data-bind="i18n: {'key': 'MAIL/ACTION_REMOVE_IDENTITY'}, click: remove"></span>
+			<span class="link" data-bind="i18n: {'key': '%ModuleName%/ACTION_REMOVE_IDENTITY'}, click: remove"></span>
 		</div>
 	</div>
 

@@ -2,30 +2,30 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="i18n: {'key': 'MAIL/HEADING_SETUP_SPECIAL_FOLDERS'}"></span>
+		<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_SETUP_SPECIAL_FOLDERS'}"></span>
 
 		<div class="fields">
-			<div class="hint" data-bind="i18n: {'key': 'MAIL/INFO_IMAGE_DRAGNDROP'}"></div>
+			<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_IMAGE_DRAGNDROP'}"></div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_FOLDER_SENT'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_FOLDER_SENT'}"></span>
 				<select class="value input" data-bind="value: sentFolderFullName, options: options,
 					optionsText: 'displayName', optionsValue: 'fullName', optionsAfterRender: defaultOptionsAfterRender">
 				</select>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_FOLDER_DRAFTS'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_FOLDER_DRAFTS'}"></span>
 				<select class="value input" data-bind="value: draftsFolderFullName, options: options,
 					optionsText: 'displayName', optionsValue: 'fullName', optionsAfterRender: defaultOptionsAfterRender">
 				</select>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_FOLDER_TRASH'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_FOLDER_TRASH'}"></span>
 				<select class="value input" data-bind="value: trashFolderFullName, options: options,
 					optionsText: 'displayName', optionsValue: 'fullName', optionsAfterRender: defaultOptionsAfterRender">
 				</select>
 			</div>
 			<div class="row" data-bind="visible: allowSpamFolderEditing">
-				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_FOLDER_SPAM'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_FOLDER_SPAM'}"></span>
 				<select class="value input" data-bind="value: spamFolderFullName, options: options,
 					optionsText: 'displayName', optionsValue: 'fullName', optionsAfterRender: defaultOptionsAfterRender">
 				</select>

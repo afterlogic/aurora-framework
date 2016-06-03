@@ -7,15 +7,15 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="enable_ar" data-bind="checked: enable" />
 					</label>
-					<label for="enable_ar" data-bind="i18n: {'key': 'MAIL/LABEL_ENABLE_AUTORESPONDER'}"></label>
+					<label for="enable_ar" data-bind="i18n: {'key': '%ModuleName%/LABEL_ENABLE_AUTORESPONDER'}"></label>
 				</div>
 			</div>
 			<div class="row subject">
-				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_SUBJECT'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_SUBJECT'}"></span>
 				<input class="value input" spellcheck="false" type="text" data-bind="value: subject, disable: !enable()" />
 			</div>
 			<div class="row message">
-				<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_MESSAGE'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_MESSAGE'}"></span>
 				<textarea class="input" data-bind="value: message, disable: !enable()"></textarea>
 			</div>
 		</div>

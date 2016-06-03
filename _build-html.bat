@@ -1,0 +1,1 @@
+node ./node_modules/gulp/bin/gulp.js html --modules AdminPanel,Auth,Calendar,ChangePassword,Contacts,Dav,Files,HelpDesk,HelpDeskClient,Ios,Mail,MailSensitivity,Min,MobileSync,OpenPgp,OutlookSync,Phone,SessionTimeout,Settings,SimpleChat,SimpleChatClient,SimpleChatEmoji,SimpleChatLogger,Twilio

@@ -2,16 +2,16 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/HEADING_GET_CALENDAR_LINK'}"></span>
+		<span class="popup_heading" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': '%ModuleName%/HEADING_GET_CALENDAR_LINK'}"></span>
 
 		<div class="fields">
 			<div class="fieldset dav_access">
 				<div class="row">
-					<label for="dav_url" class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_DAV_URL'}"></label>
+					<label for="dav_url" class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_DAV_URL'}"></label>
 					<input id="dav_url" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: calendarUrl(), click: function () {$element.select();}" readonly />
 				</div>
 				<div class="row">
-					<label for="ics_link" class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_ICS_LINK'}"></label>
+					<label for="ics_link" class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_ICS_LINK'}"></label>
 					<input id="ics_link" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: icsLink(), click: function () {$element.select();}"  readonly />
 					<a class="control download" data-bind="attr: {href: exportUrl()}"></a>
 				</div>
@@ -22,10 +22,10 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="make_public_access" data-bind="checked: isPublic(), click: function (){isPublic(!isPublic());}" />
 					</label>
-					<label for="make_public_access" data-bind="i18n: {'key': 'CALENDAR/LABEL_WEB_ACCESS'}"></label>
+					<label for="make_public_access" data-bind="i18n: {'key': '%ModuleName%/LABEL_WEB_ACCESS'}"></label>
 				</div>
 				<div class="row" data-bind="visible: isPublic()">
-					<label for="public_link" class="label" data-bind="i18n: {'key': 'CALENDAR/LABEL_WEB_LINK'}"></label>
+					<label for="public_link" class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_WEB_LINK'}"></label>
 					<input id="public_link" class="value input" spellcheck="false" type="text" maxlength="200" data-bind="value: pubUrl(), click: function () {$element.select();}" readonly />
 				</div>
 			</div>		

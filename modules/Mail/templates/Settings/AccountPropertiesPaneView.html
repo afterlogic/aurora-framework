@@ -1,7 +1,7 @@
 <div class="fields">
 	<div class="fieldset">
 		<div class="row" data-bind="visible: !bAllowIdentities">
-			<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_YOUR_NAME'}"></span>
+			<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_YOUR_NAME'}"></span>
 			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: friendlyName, onEnter: save"/>
 		</div>
 
@@ -11,7 +11,7 @@
             </div>
 
             <div class="row">
-                <span class="label required" data-bind="i18n: {'key': 'MAIL/LABEL_LOGIN'}"></span>
+                <span class="label required" data-bind="i18n: {'key': '%ModuleName%/LABEL_LOGIN'}"></span>
                 <input class="value input" spellcheck="false" type="text" maxlength="255" data-bind="value: incomingMailLogin, hasfocus: incLoginFocused, onEnter: save"/>
             </div>
             <div class="row">
@@ -28,7 +28,7 @@
                         <span class="icon"></span>
                         <input type="checkbox" id="mail_out_auth" data-bind="checked: useSmtpAuthentication" />
                     </label>
-                    <label for="mail_out_auth" data-bind="i18n: {'key': 'MAIL/LABEL_USE_SMTP_AUTHENTICATION'}"></label>
+                    <label for="mail_out_auth" data-bind="i18n: {'key': '%ModuleName%/LABEL_USE_SMTP_AUTHENTICATION'}"></label>
                 </div>
             </div>
 			<div class="row"></div>

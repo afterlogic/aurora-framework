@@ -1,10 +1,10 @@
-<span class="item new_message" data-bind="visible: bAllowComposeMessageToAddresses, command: composeMessageCommand, customTooltip: 'CONTACTS/ACTION_NEW_MESSAGE'">
+<span class="item new_message" data-bind="visible: bAllowComposeMessageToAddresses, command: composeMessageCommand, customTooltip: '%ModuleName%/ACTION_NEW_MESSAGE'">
 	<span class="icon"></span>
-	<span class="text" data-bind="i18n: {'key': 'CONTACTS/ACTION_NEW_MESSAGE'}"></span>
+	<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_NEW_MESSAGE'}"></span>
 </span>
-<span class="item add_to" data-bind="visible: showPersonalContacts, dropdown: {control: false}, command: addContactsCommand, customTooltip: 'CONTACTS/ACTION_ADD_CONTACT_TO'">
+<span class="item add_to" data-bind="visible: showPersonalContacts, dropdown: {control: false}, command: addContactsCommand, customTooltip: '%ModuleName%/ACTION_ADD_CONTACT_TO'">
 	<span class="icon"></span>
-	<span class="text" data-bind="i18n: {'key': 'CONTACTS/ACTION_ADD_CONTACT_TO'}"></span>
+	<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_CONTACT_TO'}"></span>
 	<span class="icon arrow"></span>
 	<span class="dropdown">
 		<span class="dropdown_helper">
@@ -14,7 +14,7 @@
 					<!-- ko foreach: $root.groupFullCollection() -->
 					<span class="item" data-bind="text: Name()"></span>
 					<!-- /ko -->
-					<span class="item new-group" data-bind="i18n: {'key': 'CONTACTS/ACTION_NEW_GROUP_DROPDOWN'}"></span>
+					<span class="item new-group" data-bind="i18n: {'key': '%ModuleName%/ACTION_NEW_GROUP_DROPDOWN'}"></span>
 				</span>
 			</span>
 		</span>
@@ -25,7 +25,7 @@
 	<span class="icon"></span>
 	<span class="text" data-bind="i18n: {'key': 'CORE/ACTION_DELETE'}"></span>
 </span>
-<span class="item remove_from" data-bind="visible: showPersonalContacts() && selectedGroupType() === Enums.ContactsGroupListType.SubGroup, command: removeFromGroupCommand, customTooltip: 'CONTACTS/ACTION_REMOVE_FROM_GROUP'">
+<span class="item remove_from" data-bind="visible: showPersonalContacts() && selectedGroupType() === Enums.ContactsGroupListType.SubGroup, command: removeFromGroupCommand, customTooltip: '%ModuleName%/ACTION_REMOVE_FROM_GROUP'">
 	<span class="icon"></span>
-	<span class="text" data-bind="i18n: {'key': 'CONTACTS/ACTION_REMOVE_FROM_GROUP'}"></span>
+	<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_REMOVE_FROM_GROUP'}"></span>
 </span>

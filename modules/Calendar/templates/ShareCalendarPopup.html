@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': 'CALENDAR/HEADING_SHARE_CALENDAR'}"></span>
+		<span class="popup_heading" data-bind="style: {backgroundColor: selectedColor}, i18n: {'key': '%ModuleName%/HEADING_SHARE_CALENDAR'}"></span>
 
 		<div class="fields">
 			<div class="fieldset shares_personal">
@@ -10,7 +10,7 @@
 					<tbody>
 						<tr class="row guests">
 							<td class="label">
-								<span data-bind="i18n: {'key': 'CALENDAR/LABEL_CAN_SEE'}"></span>
+								<span data-bind="i18n: {'key': '%ModuleName%/LABEL_CAN_SEE'}"></span>
 							</td>
 							<td>
 								<div class="input inputosaurus">
@@ -25,7 +25,7 @@
 						</tr>
 						<tr class="row owners">
 							<td class="label">
-								<span data-bind="i18n: {'key': 'CALENDAR/LABEL_CAN_EDIT'}"></span>
+								<span data-bind="i18n: {'key': '%ModuleName%/LABEL_CAN_EDIT'}"></span>
 							</td>
 							<td>
 								<div class="input inputosaurus">
@@ -51,13 +51,13 @@
 							<input type="checkbox" id="share_to_all_item_input" data-bind="checked: sharedToAll" />
 						</label>
 						<span>
-							<label for="share_to_all_item_input" data-bind="i18n: {'key': 'CALENDAR/LABEL_SHARE_WITH_ALL'}"></label>
+							<label for="share_to_all_item_input" data-bind="i18n: {'key': '%ModuleName%/LABEL_SHARE_WITH_ALL'}"></label>
 						</span>
 					</div>
 					<select class="value input" data-bind="visible: sharedToAll, value: sharedToAllAccess, options: aAccess, optionsText: 'display', optionsValue: 'value'"></select>
 				</div>
 				<div class="row">
-					<span class="hint" data-bind="visible: sharedToAll, i18n: {'key': 'CALENDAR/INFO_SHARED_WITH_ALL'}"></span>
+					<span class="hint" data-bind="visible: sharedToAll, i18n: {'key': '%ModuleName%/INFO_SHARED_WITH_ALL'}"></span>
 				</div>
 			</div>
 

@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="settings_heading" data-bind="i18n: {'key': 'MOBILESYNC/HEADING_SETTINGS_TAB'}"></h2>
+	<h2 class="settings_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_SETTINGS_TAB'}"></h2>
 </div>
 
 <div class="panel_center">
@@ -8,11 +8,11 @@
 		<!-- ko template: {name: oResetPasswordViewModel.ViewTemplate, data: oResetPasswordViewModel} --><!-- /ko -->
 		
 		<div class="fieldset" data-bind="visible: enableDav">
-			<h2 class="subheading" data-bind="i18n: {'key': 'MOBILESYNC/HEADING_DAVSYNC'}"></h2>
-			<div class="hint" data-bind="i18n: {'key': 'MOBILESYNC/INFO_DAVSYNC'}"></div>
+			<h2 class="subheading" data-bind="i18n: {'key': '%ModuleName%/HEADING_DAVSYNC'}"></h2>
+			<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_DAVSYNC'}"></div>
 			
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'MOBILESYNC/LABEL_DAV_SERVER'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_DAV_SERVER'}"></span>
 				<span class="value" data-bind="text: davServer"></span>
 			</div>
 			<div class="hint" data-bind="text: credentialsHintText"></div>
@@ -26,7 +26,7 @@
 				<span class="value">
 					<a class="link" href="./?Profile">
 						<span class="icon"></span>
-						<span class="text" data-bind="i18n: {'key': 'MOBILESYNC/ACTION_GET_IOS_PROFILE'}"></span>
+						<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_GET_IOS_PROFILE'}"></span>
 					</a>
 				</span>
 			</div>
@@ -35,8 +35,8 @@
 		<!-- ko template: {name: oCalendarMobileSyncSettingsView.ViewTemplate, data: oCalendarMobileSyncSettingsView} --><!-- /ko -->
 			
 		<div class="fieldset" data-bind="visible: visibleDavViaUrls">
-			<h2 class="subheading" data-bind="i18n: {'key': 'MOBILESYNC/HEADING_DAVSYNC_URLS'}"></h2>
-			<div class="hint" data-bind="i18n: {'key': 'MOBILESYNC/INFO_DAVSYNC_URLS'}"></div>
+			<h2 class="subheading" data-bind="i18n: {'key': '%ModuleName%/HEADING_DAVSYNC_URLS'}"></h2>
+			<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_DAVSYNC_URLS'}"></div>
 		
 			<!-- ko template: {name: oContactsMobileSyncSettingsView.ViewTemplate, data: oContactsMobileSyncSettingsView} --><!-- /ko -->
 			

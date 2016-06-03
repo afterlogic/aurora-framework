@@ -6,7 +6,7 @@
 					<span class="icon"></span>
 					<input type="checkbox" id="sending_from_this_account" data-bind="checked: isOutgoingEnabled, enable: isEnabled" />
 				</label>
-				<label for="sending_from_this_account" data-bind="i18n: {'key': 'MAIL/LABEL_FETCHER_ALLOW_SENDING'}"></label>
+				<label for="sending_from_this_account" data-bind="i18n: {'key': '%ModuleName%/LABEL_FETCHER_ALLOW_SENDING'}"></label>
 			</div>
 		</div>
 		<div class="row outgoing">
@@ -19,16 +19,16 @@
 					<span class="icon"></span>
 					<input type="checkbox" id="use_smtp_authentication" data-bind="checked: outgoingMailAuth, enable: isEnabled" />
 				</label>
-				<label for="use_smtp_authentication" data-bind="i18n: {'key': 'MAIL/LABEL_USE_SMTP_AUTHENTICATION'}"></label>
+				<label for="use_smtp_authentication" data-bind="i18n: {'key': '%ModuleName%/LABEL_USE_SMTP_AUTHENTICATION'}"></label>
 			</div>
 		</div>
 
 		<div class="row hint">
-			<span data-bind="i18n: {'key': 'MAIL/INFO_FETCHER_ON_COMPOSE'}"></span>
+			<span data-bind="i18n: {'key': '%ModuleName%/INFO_FETCHER_ON_COMPOSE'}"></span>
 		</div>
 
 		<div class="row name">
-			<span class="label" data-bind="i18n: {'key': 'MAIL/LABEL_YOUR_NAME'}, css: {'disabled': !outgoingMailAuth()}"></span>
+			<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_YOUR_NAME'}, css: {'disabled': !outgoingMailAuth()}"></span>
 			<input class="value input" spellcheck="false" type="text" maxlength="65" data-bind="value: userName, onEnter: save, enable: outgoingMailAuth, css: {'disabled': !outgoingMailAuth()}"/>
 		</div>
 

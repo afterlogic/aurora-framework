@@ -2,8 +2,8 @@
 	<div class="toolbar" data-bind="style: {paddingLeft: bRtl ? '' : newThreadButtonWidth()+'px', paddingRight: bRtl ? newThreadButtonWidth()+'px' : ''}">
 		<span class="content">
 			<span class="item new_request_button" data-bind="click: openNewThread, watchWidth: newThreadButtonWidth, style: {marginLeft: bRtl ? '' : '-' + newThreadButtonWidth()+'px', marginRight: bRtl ? '-' + newThreadButtonWidth()+'px' : ''}">
-				<span class="icon" data-bind="customTooltip: 'HELPDESK/ACTION_NEW_REQUEST'"></span>
-				<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_NEW_REQUEST'}"></span>
+				<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_NEW_REQUEST'"></span>
+				<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_NEW_REQUEST'}"></span>
 			</span>
 			<span class="search_block">
 				<span class="input" data-bind="css: {'focus': isSearchFocused}">
@@ -12,8 +12,8 @@
 				</span>
 			</span>
 			<span class="item checkstate" data-bind="command: checkCommand, checkstate: {'activeClass': 'process', 'state': checkStarted(), 'duration': 800}">
-				<span class="icon" data-bind="customTooltip: 'HELPDESK/ACTION_REFRESH'"></span>
-				<span class="text" data-bind="i18n: {'key': 'HELPDESK/ACTION_REFRESH'}"></span>
+				<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_REFRESH'"></span>
+				<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_REFRESH'}"></span>
 			</span>
 		</span>
 	</div>
@@ -32,7 +32,7 @@
 			</div>
 			
 			<span class="list_notification" data-bind="visible: loadingList() && isEmptyList()">
-				<span class="description" data-bind="i18n: {'key': 'HELPDESK/INFO_LOADING_THREAD_LIST'}" ></span>
+				<span class="description" data-bind="i18n: {'key': '%ModuleName%/INFO_LOADING_THREAD_LIST'}" ></span>
 			</span>
 			
 			<span class="list_notification" data-bind="visible: !loadingList() && isEmptyList()">
@@ -56,7 +56,7 @@
 <div class="panel_bottom unselectable">
 	<!-- ko template: {name: oPageSwitcher.ViewTemplate, data: oPageSwitcher} --><!-- /ko -->
 	<a href="javascript: void(0);" data-bind="css: {'selected': listFilter() === Enums.HelpdeskFilters.All}, click: function () { listFilter(Enums.HelpdeskFilters.All); }, 
-			i18n: {'key': 'HELPDESK/ACTION_SHOW_ALL_THREADS'}"></a>
+			i18n: {'key': '%ModuleName%/ACTION_SHOW_ALL_THREADS'}"></a>
 	<a href="javascript: void(0);" data-bind="css: {'selected': listFilter() === Enums.HelpdeskFilters.Open}, click: function () { listFilter(Enums.HelpdeskFilters.Open); }, 
-			i18n: {'key': 'HELPDESK/ACTION_SHOW_OPENED_THREADS'}"></a>
+			i18n: {'key': '%ModuleName%/ACTION_SHOW_OPENED_THREADS'}"></a>
 </div>
