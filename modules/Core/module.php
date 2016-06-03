@@ -902,8 +902,6 @@ class CoreModule extends AApiModule
 	 */
 	public function DeleteTenant($iTenantId = 0)
 	{
-//		$oAccount = $this->getDefaultAccountFromParam();
-		
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
 
 		if ($iTenantId > 0)
@@ -912,6 +910,13 @@ class CoreModule extends AApiModule
 			
 			if ($oTenant)
 			{
+				$sTenantSpacePath = PSEVEN_APP_ROOT_PATH.'tenants/'.$oTenant->Login;
+				
+				if (@is_dir($sTenantSpacePath))
+				{
+					$this->deleteTree($sTenantSpacePath);
+				}
+						
 				$this->oApiTenantsManager->deleteTenant($oTenant);
 			}
 			
@@ -931,6 +936,16 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
+	public static function deleteTree($dir)
+	{
+		$files = array_diff(scandir($dir), array('.','..'));
+			
+		foreach ($files as $file) {
+			(is_dir("$dir/$file")) ? self::deleteTree("$dir/$file") : unlink("$dir/$file");
+		}
+		return rmdir($dir);
+	}
+  
 	public function onAccountCreate($iTenantId, $iUserId, $sLogin, $sPassword, &$oResult)
 	{
 		$oUser = null;
