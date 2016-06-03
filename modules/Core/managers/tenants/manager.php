@@ -257,11 +257,11 @@ class CApiCoreTenantsManager extends AApiManager
 	 * @param string $sTenantName
 	 * @param string $sTenantPassword Default value is **null**.
 	 *
-	 * @return int
+	 * @return 
 	 */
 	public function getTenantByName($sTenantName
 )	{
-		$iTenantId = 0;
+		$oTenant = null;
 		try
 		{
 			if (!empty($sTenantName))
@@ -285,10 +285,10 @@ class CApiCoreTenantsManager extends AApiManager
 					1,
 					$oFilterBy
 				);
-
+				
 				if (($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
 				{
-					$iTenantId = $aResultTenants[0]->iObjectId;
+					$oTenant = $aResultTenants[0];
 				}
 			}
 		}
@@ -296,7 +296,7 @@ class CApiCoreTenantsManager extends AApiManager
 		{
 			$this->setLastException($oException);
 		}
-		return $iTenantId;
+		return $oTenant;
 	}
 	
 	/**

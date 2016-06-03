@@ -24,8 +24,9 @@ class HelpDeskClientModule extends AApiModule
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		
-		$mHelpdeskLogin = $this->oHttp->GetQuery('helpdesk');
-		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByName($mHelpdeskLogin);
+//		$mHelpdeskLogin = $this->oHttp->GetQuery('helpdesk');
+		$sTenantName = \CApi::getTenantName();
+		$mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByName($sTenantName);
 		
 		if (!is_int($mHelpdeskIdTenant))
 		{

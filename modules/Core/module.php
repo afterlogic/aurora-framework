@@ -1089,7 +1089,7 @@ class CoreModule extends AApiModule
 	public function GetTenantIdByName($sTenantName = '')
 	{
 		$oTenant = $this->oApiTenantsManager->getTenantIdByName((string) $sTenantName);
-		
+
 		return $oTenant ? $oTenant : null;
 	}
 	
