@@ -20,13 +20,20 @@ if ($oHttp->HasPost('ObjectName'))
 	$aResultItems = array();
 	$oManagerApi = \CApi::GetCoreManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
-	
+
 	$aItems = $oManagerApi->getObjects($oHttp->GetPost('ObjectName'));
 	if (is_array($aItems))
 	{
 		foreach ($aItems as $oItem)
 		{
-			$aResultItems[] = $oItem->toArray();
+			$itemData = $oItem->toArray();
+			
+			//TODO
+			if ($itemData['Password'])
+			{
+				$itemData['Password'] = '';
+			}
+			$aResultItems[] = $itemData;
 		}
 		
 		$response['error'] = false;
@@ -39,5 +46,4 @@ else
 	$response['message'] = 'Unknown object type';
 }
 
-
-echo json_encode($response);
+echo json_encode($response, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
