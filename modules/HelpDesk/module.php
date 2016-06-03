@@ -159,48 +159,6 @@ class HelpDeskModule extends AApiModule
 		
 		return $this->oCurrentUser;
 	}
-	/**
-	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
-	 *
-	 * @return \CHelpdeskUser|null
-	 */
-	protected function getHelpdeskAccountFromParam($bThrowAuthExceptionOnFalse = true)
-	{
-		$iUserId = \CApi::getLogginedUserId();
-		$oUser = $this->oCoreDecorator ? $this->oCoreDecorator->GetUser($iUserId) : null;
-
-		return $oUser;
-		
-		/*$oResult = null;
-		$oAccount = null;
-
-		if ('0' === (string) $this->getParamValue('IsExt', '1'))
-		{
-			$oAccount = $this->getDefaultAccountFromParam($bThrowAuthExceptionOnFalse);
-			if ($oAccount && $this->oApiCapabilityManager->isHelpdeskSupported($oAccount))
-			{
-				$oResult = $this->getHelpdeskAccountFromMainAccount($oAccount);
-			}
-		}
-		else
-		{
-//			$oApiTenants = \CApi::GetCoreManager('tenants');
-//			$mTenantID = $oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
-			$mTenantID = $this->oCoreDecorator->getTenantIdByHash($this->getParamValue('TenantHash', ''));
-
-			if (is_int($mTenantID))
-			{
-				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
-			}
-		}
-
-		if (!$oResult && $bThrowAuthExceptionOnFalse)
-		{
-			throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
-		}
-
-		return $oResult;*/
-	}
 	
 	/**
 	 * @param \CAccount $oAccount
@@ -262,7 +220,7 @@ class HelpDeskModule extends AApiModule
 	public function Login($Login = '', $Password = '', $SignMe = 0)
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$sTenantHash = \CApi::getTenantHash();
+		$sTenantName = \CApi::getTenantName();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
 			$sEmail = trim($Login);
@@ -274,7 +232,7 @@ class HelpDeskModule extends AApiModule
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 			
-			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
+			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByName($sTenantName) : null;
 
 			if (!is_int($mIdTenant))
 			{
@@ -361,7 +319,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function Register($Email, $Password, $Name = '', $IsExt = false)
 	{
-		$sTenantHash = \CApi::getTenantHash();
+		$sTenantName = \CApi::getTenantName();
 //		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 //		{
 			$sLogin = trim($Email);
@@ -373,7 +331,7 @@ class HelpDeskModule extends AApiModule
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
-			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
+			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByName($sTenantName) : null;
 			if (!is_int($mIdTenant))
 			{
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
@@ -460,7 +418,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function Forgot($Email = '', $IsExt = false)
 	{
-		$sTenantHash = \CApi::getTenantHash();
+		$sTenantName = \CApi::getTenantName();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
 			$Email = trim($Email);
@@ -470,7 +428,7 @@ class HelpDeskModule extends AApiModule
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
-			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByHash($sTenantHash) : null;
+			$mIdTenant = $this->oCoreDecorator ? $this->oCoreDecorator->getTenantIdByName($sTenantName) : null;
 
 			if (!is_int($mIdTenant))
 			{
@@ -527,7 +485,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function ForgotChangePassword()
 	{
-		$sTenantHash = \CApi::getTenantHash();
+		$sTenantName = \CApi::getTenantName();
 		if ($this->oApiCapabilityManager->isHelpdeskSupported())
 		{
 			$sActivateHash = \trim($this->getParamValue('ActivateHash', ''));
@@ -539,7 +497,7 @@ class HelpDeskModule extends AApiModule
 			}
 
 			$oApiTenants = \CApi::GetCoreManager('tenants');
-			$mIdTenant = $oApiTenants->getTenantIdByHash($sTenantHash);
+			$mIdTenant = $oApiTenants->getTenantIdByName($sTenantName);
 			if (!is_int($mIdTenant))
 			{
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
@@ -719,9 +677,8 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function GetThreadByIdOrHash()
 	{
-		$oAccount = null;
 		$oThread = false;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		$bIsAgent = $this->IsAgent($oUser);
 
@@ -774,7 +731,7 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function GetPosts($ThreadId = 0, $StartFromId = 0, $Limit = 10, $IsExt = 1)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 		
 
 		if (1 > $ThreadId || 0 > $StartFromId || 1 > $Limit)
@@ -948,7 +905,7 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function ChangeThreadState($ThreadId = 0, $ThreadType = \EHelpdeskThreadType::None, $IsExt = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 //		$iThreadType = (int) $this->getParamValue('Type', \EHelpdeskThreadType::None);
@@ -983,7 +940,7 @@ class HelpDeskModule extends AApiModule
 
 	public function PingThread($ThreadId = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 
@@ -999,7 +956,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function SetThreadSeen($ThreadId = 0)
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 
 //		$iThreadId = (int) $this->getParamValue('ThreadId', 0);
 
@@ -1022,7 +979,7 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function GetThreads($Offset = 0, $Limit = 10, $Filter = \EHelpdeskThreadFilterType::All, $Search = '')
 	{
-		$oUser = $this->getHelpdeskAccountFromParam();
+		$oUser = $this->GetCurrentUser();
 		
 		if (0 > $Offset || 1 > $Limit)
 		{
@@ -1102,8 +1059,7 @@ class HelpDeskModule extends AApiModule
 	
 	public function GetThreadsPendingCount()
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		if (!($oUser instanceof \CHelpdeskUser))
 		{
@@ -1119,8 +1075,7 @@ class HelpDeskModule extends AApiModule
 	 */
 	public function UpdateUserPassword()
 	{
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		$sCurrentPassword = (string) $this->getParamValue('CurrentPassword', '');
 		$sNewPassword = (string) $this->getParamValue('NewPassword', '');
@@ -1144,8 +1099,7 @@ class HelpDeskModule extends AApiModule
 	public function UpdateSettings()
 	{
 		setcookie('aft-cache-ctrl', '', time() - 3600);
-		$oAccount = null;
-		$oUser = $this->getHelpdeskAccountFromParam($oAccount);
+		$oUser = $this->GetCurrentUser();
 
 		$sName = (string) $this->getParamValue('Name', $oUser->Name);
 		$sLanguage = (string) $this->getParamValue('Language', $oUser->Language);

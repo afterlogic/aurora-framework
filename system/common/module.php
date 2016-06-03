@@ -38,7 +38,7 @@ class CApiModuleManager
 		$oCoreModule = $this->loadModule('Core', $sModulesPath);
 		if ($oCoreModule !== false)
 		{
-			$sTenant = $oCoreModule->GetTenantHash();
+			$sTenant = $oCoreModule->GetTenantName();
 		}
 		
 		$aModulePath = array(
@@ -576,9 +576,9 @@ abstract class AApiModule
 						}
 					}
 					
-					$sTenantHash = $this->oHttp->GetPost('TenantHash', '');
+					$sTenantName = $this->oHttp->GetPost('TenantName', '');
 					
-					\CApi::setTenantHash($sTenantHash);
+					\CApi::setTenantName($sTenantName);
 					
 					if (!is_array($aParameters))
 					{
@@ -657,7 +657,7 @@ abstract class AApiModule
 							array(
 								'FileData' => $_FILES[$sInputName],
 								'IsExt' => '1' === (string) $this->oHttp->GetPost('IsExt', '0') ? '1' : '0',
-								'TenantHash' => (string) $this->oHttp->GetPost('TenantHash', ''),
+								'TenantName' => (string) $this->oHttp->GetPost('TenantName', ''),
 								'Token' => $this->oHttp->GetPost('Token', ''),
 								'AuthToken' => $this->oHttp->GetPost('AuthToken', '')
 							)

@@ -301,7 +301,7 @@ class Actions
 		}
 		else
 		{
-			$mTenantID = $this->oApiTenants->getTenantIdByHash($this->getParamValue('TenantHash', ''));
+			$mTenantID = $this->oApiTenants->getTenantIdByName($this->getParamValue('TenantName', ''));
 			if (is_int($mTenantID))
 			{
 				$oResult = \api_Utils::GetHelpdeskAccount($mTenantID);
@@ -2395,7 +2395,7 @@ class Actions
 	
 	public function AjaxSocialRegister()
 	{
-		$sTenantHash = trim($this->getParamValue('TenantHash', ''));
+		$sTenantName = trim($this->getParamValue('TenantName', ''));
 		if ($this->oApiCapability->isHelpdeskSupported())
 		{
 			$sNotificationEmail = trim($this->getParamValue('NotificationEmail', ''));
@@ -2427,7 +2427,7 @@ class Actions
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 			}
 
-			$mIdTenant = $this->oApiTenants->getTenantIdByHash($sTenantHash);
+			$mIdTenant = $this->oApiTenants->getTenantIdByName($sTenantName);
 			if (!is_int($mIdTenant))
 			{
 				throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
@@ -2436,7 +2436,7 @@ class Actions
 			$bResult = false;
 			try
 			{
-				$bResult = $this->oApiIntegrator->registerSocialAccount($mIdTenant, $sTenantHash, $sNotificationEmail, $sSocialId, $sSocialType, $sSocialName);
+				$bResult = $this->oApiIntegrator->registerSocialAccount($mIdTenant, $sTenantName, $sNotificationEmail, $sSocialId, $sSocialType, $sSocialName);
 			}
 			catch (\Exception $oException)
 			{
@@ -2463,7 +2463,7 @@ class Actions
 			if ($bResult)
 			{
 				$bResult = false;
-				$oUser = \CApi::GetCoreManager('integrator')->getAhdSocialUser($sTenantHash, $sSocialId);
+				$oUser = \CApi::GetCoreManager('integrator')->getAhdSocialUser($sTenantName, $sSocialId);
 				if ($oUser)
 				{
 					\CApi::GetCoreManager('integrator')->setHelpdeskUserAsLoggedIn($oUser, false);

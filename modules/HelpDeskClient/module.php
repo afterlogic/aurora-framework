@@ -20,8 +20,7 @@ class HelpDeskModuleClient extends AApiModule
 	
 	public function EntryHelpDesk()
 	{
-//		$oLogginedAccount = $this->GetDefaultAccount();
-		$oLogginedAccount = $this->oHelpDeskDecorator->getHelpdeskAccountFromParam();
+		$oLogginedAccount = $this->oHelpDeskDecorator->GetCurrentUser();
 
 		$oApiIntegrator = \CApi::GetCoreManager('integrator');
 		

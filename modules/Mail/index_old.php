@@ -1669,8 +1669,7 @@ class MailModule extends AApiModule
 		
 		if (isset($mHelpdeskUserID, $mHelpdeskTenantID))
 		{
-			$oAccount = null;
-			$oHelpdeskUser = $this->getHelpdeskAccountFromParam($oAccount);
+			$oHelpdeskUser = $this->GetCurrentUser();
 
 			if ($oHelpdeskUser && $oHelpdeskUser->IdTenant === $mHelpdeskTenantID)
 			{

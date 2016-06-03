@@ -223,25 +223,6 @@ class CApiCoreTenantsManager extends AApiManager
 					$oTenant = $oResult;
 				}
 			}
-			else
-			{
-				$aResultTenants = $this->oEavManager->getObjects(
-					'CTenant', 
-					array(
-						'Hash'
-					),
-					0,
-					1,
-					array('Hash' => $mTenantId)
-				);
-				
-				if (isset($aResultTenants[0]) && $aResultTenants[0] instanceOf \CTenant)
-				{
-					$oTenant = $aResultTenants[0];
-				}
-			}
-			
-			
 			
 			if ($oTenant)
 			{
@@ -269,8 +250,6 @@ class CApiCoreTenantsManager extends AApiManager
 //					$oTenant->FlushObsolete('FilesUsageDynamicQuotaInMB');
 				}
 			}
-			
-			
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -281,30 +260,19 @@ class CApiCoreTenantsManager extends AApiManager
 	}
 
 	/**
-	 * @param string $sTenantHash
-	 *
-	 * @return CTenant
-	 */
-	public function getTenantByHash($sTenantHash)
-	{
-		return $this->getTenantById($sTenantHash, true);
-	}
-
-	/**
-	 * @param string $sTenantLogin
+	 * @param string $sTenantName
 	 * @param string $sTenantPassword Default value is **null**.
 	 *
 	 * @return int
 	 */
-//	public function getTenantIdByLogin($sTenantLogin, $sTenantPassword = null)
-	public function getTenantIdByLogin($sTenantLogin)
-	{
+	public function getTenantByName($sTenantName
+)	{
 		$iTenantId = 0;
 		try
 		{
-			if (!empty($sTenantLogin))
+			if (!empty($sTenantName))
 			{
-				$oFilterBy = array('Login' => $sTenantLogin);
+				$oFilterBy = array('Login' => $sTenantName);
 //				if (null !== $sTenantPassword)
 //				{
 //					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
@@ -317,7 +285,7 @@ class CApiCoreTenantsManager extends AApiManager
 				$aResultTenants = $this->oEavManager->getObjects(
 					'CTenant', 
 					array(
-						'Login'
+						'Name'
 					),
 					0,
 					1,
@@ -338,22 +306,22 @@ class CApiCoreTenantsManager extends AApiManager
 	}
 	
 	/**
-	 * @param string $sTenantHash
+	 * @param string $sTenantName
 	 *
 	 * @return int|bool
 	 */
-	public function getTenantIdByHash($sTenantHash)
+	public function getTenantIdByName($sTenantName)
 	{
 		//TODO
 		$iResult = 0;
 
-		if (0 === strlen($sTenantHash))
+		if (0 === strlen($sTenantName))
 		{
 			return 0;
 		}
-		else if (0 < strlen($sTenantHash))
+		else if (0 < strlen($sTenantName))
 		{
-			$oTenant = $this->getTenantByHash($sTenantHash);
+			$oTenant = $this->getTenantByHash($sTenantName);
 			if ($oTenant)
 			{
 				$iResult = $oTenant->iObjectId;

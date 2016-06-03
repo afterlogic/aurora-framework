@@ -359,9 +359,9 @@ CLoginView.prototype.onHelpdeskSocialRegisterResponse = function (oResponse, oRe
 	}
 	else
 	{
-		if (UserSettings.TenantHash)
+		if (UserSettings.TenantName)
 		{
-			window.location.href = '?helpdesk=' + UserSettings.TenantHash;
+			window.location.href = '?helpdesk=' + UserSettings.TenantName;
 		}
 		else
 		{
@@ -412,7 +412,7 @@ CLoginView.prototype.onHelpdeskForgotResponse = function (oResponse, oRequest)
 
 CLoginView.prototype.backToLogin = function ()
 {
-	location.replace('?helpdesk=' + UserSettings.TenantHash);
+	location.replace('?helpdesk=' + UserSettings.TenantName);
 };
 
 CLoginView.prototype.actionChangepass = function ()

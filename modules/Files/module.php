@@ -139,7 +139,7 @@ class FilesModule extends AApiModule
 		return false;		
 	}
 	
-	public function UploadFile($Type, $SubPath, $Path, $FileData, $IsExt, $TenantHash, $Token, $AuthToken)
+	public function UploadFile($Type, $SubPath, $Path, $FileData, $IsExt, $TenantName, $Token, $AuthToken)
 	{
 		$iUserId = \CApi::getLogginedUserId($AuthToken);
 		$oApiFileCacheManager = \CApi::GetCoreManager('filecache');

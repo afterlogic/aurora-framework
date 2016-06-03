@@ -27,6 +27,7 @@
 			_.each(window.staticData['tenants_list'], function (oItem, iIndex) {
 				aListData.push({
 					'id': iIndex,
+					'name': oItem[0],
 					'login': oItem[0],
 					'description': oItem[1],
 					'channel_id': oItem[2],

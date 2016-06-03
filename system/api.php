@@ -1211,18 +1211,18 @@ class CApi
 		return $mResult;
 	}
 	
-	public static function setTenantHash($sTenantHash)
+	public static function setTenantName($sTenantName)
 	{
-		static::$aUserSession['TenantHash'] = $sTenantHash;
+		static::$aUserSession['TenantName'] = $sTenantName;
 	}
 	
-	public static function getTenantHash()
+	public static function getTenantName()
 	{
 		$mResult = false;
 
-		if (is_array(static::$aUserSession) && isset(static::$aUserSession['TenantHash']))
+		if (is_array(static::$aUserSession) && isset(static::$aUserSession['TenantName']))
 		{
-			$mResult = static::$aUserSession['TenantHash'];
+			$mResult = static::$aUserSession['TenantName'];
 		}
 		else
 		{

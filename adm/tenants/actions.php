@@ -9,7 +9,7 @@ if ($oHttp->HasPost('action'))
 	{
 		case 'create': 
 			$mResult = $oDecorator->CreateTenant(
-				$oHttp->GetPost('login', ''),
+				$oHttp->GetPost('name', ''),
 				$oHttp->GetPost('description', ''),
 				$oHttp->GetPost('channel_id', '')
 //				$oHttp->GetPost('password', '')
@@ -19,7 +19,7 @@ if ($oHttp->HasPost('action'))
 		case 'update':
 			$mResult = $oDecorator->UpdateTenant(
 				$oHttp->GetPost('id', ''),
-				$oHttp->GetPost('login', ''),
+				$oHttp->GetPost('name', ''),
 				$oHttp->GetPost('description', ''),
 				$oHttp->GetPost('channel_id', '')
 			);

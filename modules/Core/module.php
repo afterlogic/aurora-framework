@@ -826,16 +826,16 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function CreateTenant($sLogin = '', $sDescription = '', $iChannelId = 0)
+	public function CreateTenant($sName = '', $sDescription = '', $iChannelId = 0)
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 	
 //		if ($this->oApiCapabilityManager->isPersonalContactsSupported($oAccount))
-		if ($sLogin !== '' && $sDescription !== '' && $iChannelId > 0)
+		if ($sName !== '' && $sDescription !== '' && $iChannelId > 0)
 		{
 			$oTenant = \CTenant::createInstance();
 
-			$oTenant->Login = $sLogin;
+			$oTenant->Login = $sName;
 			$oTenant->Description = $sDescription;
 			$oTenant->IdChannel = $iChannelId;
 
@@ -856,7 +856,7 @@ class CoreModule extends AApiModule
 	 * 
 	 * @return boolean
 	 */
-	public function UpdateTenant($iTenantId = 0, $sLogin = '', $sDescription = '', $iChannelId = 0)
+	public function UpdateTenant($iTenantId = 0, $sName = '', $sDescription = '', $iChannelId = 0)
 	{
 //		$oAccount = $this->getDefaultAccountFromParam();
 		
@@ -868,9 +868,9 @@ class CoreModule extends AApiModule
 			
 			if ($oTenant)
 			{
-				if ($sLogin)
+				if ($sName)
 				{
-					$oTenant->Login = $sLogin;
+					$oTenant->Name = $sName;
 				}
 				if ($sDescription)
 				{
@@ -910,7 +910,7 @@ class CoreModule extends AApiModule
 			
 			if ($oTenant)
 			{
-				$sTenantSpacePath = PSEVEN_APP_ROOT_PATH.'tenants/'.$oTenant->Login;
+				$sTenantSpacePath = PSEVEN_APP_ROOT_PATH.'tenants/'.$oTenant->Name;
 				
 				if (@is_dir($sTenantSpacePath))
 				{
@@ -1084,22 +1084,10 @@ class CoreModule extends AApiModule
 		$aUsers = $this->oApiUsersManager->getUserList($iPage, $iUsersPerPage, $sOrderBy, $iOrderType, $sSearchDesc);
 		return $aUsers ? $aUsers : null;
 	}
-	/**
-	 * @depricated
-	 * 
-	 * @param type $sTenantHash
-	 * @return type
-	 */
-	public function GetTenantIdByHash($sTenantHash = '')
-	{
-		$oTenant = $this->oApiTenantsManager->getTenantIdByHash((string) $sTenantHash);
-		
-		return $oTenant ? $oTenant : null;
-	}
-	
+
 	public function GetTenantIdByName($sTenantName = '')
 	{
-		$oTenant = $this->oApiTenantsManager->getTenantIdByLogin((string) $sTenantName);
+		$oTenant = $this->oApiTenantsManager->getTenantIdByName((string) $sTenantName);
 		
 		return $oTenant ? $oTenant : null;
 	}
@@ -1111,10 +1099,10 @@ class CoreModule extends AApiModule
 		return $oTenant ? $oTenant : null;
 	}
 	
-	public function GetTenantHash()
+	public function GetTenantName()
 	{
 		$sTenant = $this->oHttp->GetRequest('tenant', '');
-		\CApi::setTenantHash($sTenant);
+		\CApi::setTenantName($sTenant);
 		return $sTenant;
 	}
 }

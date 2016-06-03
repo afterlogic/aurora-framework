@@ -894,7 +894,7 @@ class CApiIntegratorManager extends AApiManager
 
 	/**
 	 * @param int $iIdTenant
-	 * @param string $sTenantHash
+	 * @param string $sTenantName
 	 * @param string $sNotificationEmail
 	 * @param string $sSocialId
 	 * @param string $sSocialType
@@ -905,7 +905,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return bool
 	 */
-	public function registerSocialAccount($iIdTenant, $sTenantHash, $sNotificationEmail, $sSocialId, $sSocialType, $sSocialName)
+	public function registerSocialAccount($iIdTenant, $sTenantName, $sNotificationEmail, $sSocialId, $sSocialType, $sSocialName)
 	{
 		$bResult = false;
 
@@ -921,7 +921,7 @@ class CApiIntegratorManager extends AApiManager
 		$oUser = /* @var $oUser CHelpdeskUser */ $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sSocialId);
 		if (!$oUser)
 		{
-			$oAccount = $this->getAhdSocialUser($sTenantHash, $sSocialId);
+			$oAccount = $this->getAhdSocialUser($sTenantName, $sSocialId);
 			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
 			{
 				throw new CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
@@ -1487,7 +1487,6 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return array
 	 */
-//	public function appData($sHelpdeskTenantHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '', $sAuthToken = '')
 	public function appData()
 	{
 		$aAppData = array(
@@ -1496,7 +1495,6 @@ class CApiIntegratorManager extends AApiManager
 				'Role' => 3,
 				'Name' => ''
 			),
-//			'TenantHash' => $sHelpdeskTenantHash,
 			'IsMobile' => 0,
 			'AllowMobile' => false,
 			'IsMailsuite' => false,
@@ -1615,7 +1613,7 @@ class CApiIntegratorManager extends AApiManager
 //			$iUserId = $this->getLogginedHelpdeskUserId();
 //			if (0 < $iUserId && $oApiHelpdeskManager)
 //			{
-//				$oHelpdeskUser = $oApiHelpdeskManager->getUserById($oApiTenant->getTenantIdByHash($sHelpdeskTenantHash), $iUserId);
+//				$oHelpdeskUser = $oApiHelpdeskManager->getUserById($oApiTenant->getTenantIdByName($sHelpdeskTenantHash), $iUserId);
 //				if ($oHelpdeskUser)
 //				{
 //					$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($oHelpdeskUser->IdTenant);
@@ -1629,7 +1627,7 @@ class CApiIntegratorManager extends AApiManager
 //
 //			if (!$aHelpdeskMainData && $oApiHelpdeskManager)
 //			{
-//				$iIdTenant = $oApiTenant->getTenantIdByHash($sHelpdeskTenantHash);
+//				$iIdTenant = $oApiTenant->getTenantIdByName($sHelpdeskTenantHash);
 //				$aHelpdeskMainData = $oApiHelpdeskManager->getHelpdeskMainSettings($iIdTenant);
 //				$aAppData['HelpdeskSiteName'] = isset($aHelpdeskMainData['SiteName']) ? $aHelpdeskMainData['SiteName'] : '';
 //				$aAppData['HelpdeskStyleImage'] = isset($aHelpdeskMainData['StyleImage']) &&
@@ -1793,6 +1791,7 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
+	 * @depricated
 	 * @param string $sHelpdeskTenantHash Default value is empty string.
 	 * @param string $sUserId Default value is empty string.
 	 *
@@ -1802,17 +1801,17 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function getAhdSocialUser($sHelpdeskTenantHash = '', $sUserId = '')
 	{
-		$sTenantHash = $sHelpdeskTenantHash;
-		$oApiTenant = \CApi::GetCoreManager('tenants');
-		$iIdTenant = $oApiTenant->getTenantIdByHash($sTenantHash);
-		if (!is_int($iIdTenant))
-		{
-			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
-		}
-//		$oApiHelpdeskManager = CApi::Manager('helpdesk'); // TODO:
-		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
-
-		return $oUser;
+//		$sTenantHash = $sHelpdeskTenantHash;
+//		$oApiTenant = \CApi::GetCoreManager('tenants');
+//		$iIdTenant = $oApiTenant->getTenantIdByName($sTenantHash);
+//		if (!is_int($iIdTenant))
+//		{
+//			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
+//		}
+////		$oApiHelpdeskManager = CApi::Manager('helpdesk'); // TODO:
+//		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
+//
+//		return $oUser;
 	}
 
 	/**
@@ -1966,13 +1965,13 @@ class CApiIntegratorManager extends AApiManager
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
-		$sTenantHash = \CApi::getTenantHash();
+		$sTenantName = \CApi::getTenantName();
 
-		if ($sTenantHash)
+		if ($sTenantName)
 		{
 			$sS =
 '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantHash.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
 		}
 		else
 		{

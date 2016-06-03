@@ -10,12 +10,12 @@
 			<input name="id" readonly="true" type="text" data-bind="textInput: id;" class="form-control" />
 		</div>
 		<div class="form-group">
-			<label>Login</label>
-			<input name="login" data-bind="textInput: login" class="form-control" />
+			<label>Name</label>
+			<input name="name" data-bind="textInput: name" class="form-control" />
 		</div>
 		<div class="form-group">
-			<label>Hash</label>
-			<input name="hash" readonly data-bind="textInput: hash" class="form-control" />
+			<label>Login</label>
+			<input name="login" data-bind="textInput: login" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label>Description</label>
@@ -44,7 +44,7 @@
 		<div class="form-group">
 			<label>Tenant id</label>
 			<input name="id" readonly="true" type="text" data-bind="textInput: id;" class="form-control" />
-			<input name="login" readonly="true" type="text" data-bind="textInput: login;" class="form-control" />
+			<input name="name" readonly="true" type="text" data-bind="textInput: name;" class="form-control" />
 		</div>
 
 		<input type="submit" value="Build CSS" class="btn btn-danger" />
@@ -62,8 +62,8 @@
 			<input name="channel_id" class="form-control" />
 		</div>
 		<div class="form-group">
-			<label>Login</label>
-			<input name="login" class="form-control" />
+			<label>Name</label>
+			<input name="name" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label>Description</label>

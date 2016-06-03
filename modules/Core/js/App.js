@@ -321,14 +321,9 @@ CApp.prototype.getCommonRequestParameters = function ()
 {
 	var oParameters = {
 		AuthToken: $.cookie('AuthToken'),
-		TenantHash: UserSettings.TenantHash,
+		TenantName: UserSettings.TenantName,
 		Token: UserSettings.CsrfToken
 	};
-	
-	if (UserSettings.TenantHash)
-	{
-		oParameters.TenantHash = UserSettings.TenantHash;
-	}
 	
 	return oParameters;
 };
