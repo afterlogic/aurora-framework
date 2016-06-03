@@ -2218,16 +2218,7 @@ class api_Validate
 	 * @param mixed $mValue
 	 * @return bool
 	 */
-	public static function IsValidTenantLogin($mValue)
-	{
-		return preg_match('/^[a-zA-Z0-9@\-_\.]+$/', $mValue);
-	}
-
-	/**
-	 * @param mixed $mValue
-	 * @return bool
-	 */
-	public static function IsValidChannelLogin($mValue)
+	public static function IsValidLogin($mValue)
 	{
 		return preg_match('/^[a-zA-Z0-9@\-_\.]+$/', $mValue);
 	}

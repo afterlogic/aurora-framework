@@ -8,7 +8,7 @@
  * @property bool $IsDisabled
  * @property bool $IsEnableAdminPanelLogin
  * @property bool $IsDefault
- * @property string $Login
+ * @property string $Name
  * @property string $Email
  * @property string $PasswordHash
  * @property string $Description
@@ -289,14 +289,14 @@ class CTenant extends api_APropertyBag
 		{
 			switch (true)
 			{
-				case !api_Validate::IsValidTenantLogin($this->Login):
-					throw new CApiValidationException(Errs::Validation_InvalidTenantName);
-				case api_Validate::IsEmpty($this->Login):
+//				case !api_Validate::IsValidLogin($this->Login):
+//					throw new CApiValidationException(Errs::Validation_InvalidTenantName);
+				case api_Validate::IsEmpty($this->Name):
 					throw new CApiValidationException(Errs::Validation_FieldIsEmpty, null, array(
-						'{{ClassName}}' => 'CTenant', '{{ClassField}}' => 'Login'));
-				case !api_Validate::IsEmpty($this->Email) && !preg_match('/^[^@]+@[^@]+$/', $this->Email):
-					throw new CApiValidationException(Errs::Validation_InvalidEmail, null, array(
-						'{{ClassName}}' => 'CTenant', '{{ClassField}}' => 'Email'));
+						'{{ClassName}}' => 'CTenant', '{{ClassField}}' => 'Name'));
+//				case !api_Validate::IsEmpty($this->Email) && !preg_match('/^[^@]+@[^@]+$/', $this->Email):
+//					throw new CApiValidationException(Errs::Validation_InvalidEmail, null, array(
+//						'{{ClassName}}' => 'CTenant', '{{ClassField}}' => 'Email'));
 			}
 		}
 

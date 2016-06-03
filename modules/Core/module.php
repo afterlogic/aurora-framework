@@ -835,7 +835,7 @@ class CoreModule extends AApiModule
 		{
 			$oTenant = \CTenant::createInstance();
 
-			$oTenant->Login = $sName;
+			$oTenant->Name = $sName;
 			$oTenant->Description = $sDescription;
 			$oTenant->IdChannel = $iChannelId;
 
@@ -946,6 +946,7 @@ class CoreModule extends AApiModule
 		return rmdir($dir);
 	}
   
+	//TODO is it used by any code?
 	public function onAccountCreate($iTenantId, $iUserId, $sLogin, $sPassword, &$oResult)
 	{
 		$oUser = null;

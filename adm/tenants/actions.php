@@ -35,9 +35,9 @@ if ($oHttp->HasPost('action'))
 				'--themes Default,Funny'
 			);
 			
-			if ($oHttp->GetPost('id', ''))
+			if ($oHttp->GetPost('name', ''))
 			{
-				$aArguments[] = '--tenant '.$oHttp->GetPost('login', '');
+				$aArguments[] = '--tenant '.$oHttp->GetPost('name', '');
 			}
 			
 //			$sCommand = "node ".PSEVEN_APP_ROOT_PATH."node_modules/gulp/bin/gulp.js styles ".implode($aArguments, ' ') . " 2>&1";

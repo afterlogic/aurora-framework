@@ -47,13 +47,13 @@ class CApiCoreTenantsManager extends AApiManager
 	/**
 	 * @param int $iPage
 	 * @param int $iTenantsPerPage
-	 * @param string $sOrderBy Default value is **'Login'**.
+	 * @param string $sOrderBy Default value is **'Name'**.
 	 * @param bool $bOrderType Default value is **true**.
 	 * @param string $sSearchDesc Default value is empty string.
 	 *
-	 * @return array|false [Id => [Login, Description]]
+	 * @return array|false [Id => [Name, Description]]
 	 */
-	public function getTenantList($iPage, $iTenantsPerPage, $sOrderBy = 'Login', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
+	public function getTenantList($iPage, $iTenantsPerPage, $sOrderBy = 'Name', $iOrderType = \ESortOrder::ASC, $sSearchDesc = '')
 	{
 		$aResult = false;
 		try
@@ -61,10 +61,9 @@ class CApiCoreTenantsManager extends AApiManager
 			$aResultTenants = $this->oEavManager->getObjects(
 				'CTenant', 
 				array(
-					'Login', 
+					'Name', 
 					'Description',
-					'IdChannel',
-					'Hash'
+					'IdChannel'
 				),
 				$iPage,
 				$iTenantsPerPage,
@@ -78,10 +77,9 @@ class CApiCoreTenantsManager extends AApiManager
 			foreach($aResultTenants as $oTenat)
 			{
 				$aResult[$oTenat->iObjectId] = array(
-					$oTenat->Login,
+					$oTenat->Name,
 					$oTenat->Description,
-					$oTenat->IdChannel,
-					$oTenat->Hash
+					$oTenat->IdChannel
 				);
 			}
 		}
@@ -203,25 +201,21 @@ class CApiCoreTenantsManager extends AApiManager
 
 	/**
 	 * @param mixed $mTenantId
-	 * @param bool $bIdIsHash Default value is **false**.
 	 *
 	 * @return CTenant|null
 	 */
-	public function getTenantById($mTenantId, $bIdIsHash = false)
+	public function getTenantById($mTenantId)
 	{
 		$oTenant = null;
 		try
 		{
 			//TODO verify logic
 //			$oTenant = $this->oStorage->getTenantById($mTenantId, $bIdIsHash);
-			if (!$bIdIsHash)
-			{
-				$oResult = $this->oEavManager->getObjectById($mTenantId);
+			$oResult = $this->oEavManager->getObjectById($mTenantId);
 				
-				if ($oResult instanceOf \CTenant)
-				{
-					$oTenant = $oResult;
-				}
+			if ($oResult instanceOf \CTenant)
+			{
+				$oTenant = $oResult;
 			}
 			
 			if ($oTenant)
@@ -272,7 +266,7 @@ class CApiCoreTenantsManager extends AApiManager
 		{
 			if (!empty($sTenantName))
 			{
-				$oFilterBy = array('Login' => $sTenantName);
+				$oFilterBy = array('Name' => $sTenantName);
 //				if (null !== $sTenantPassword)
 //				{
 //					$oFilterBy['PasswordHash'] = CTenant::hashPassword($sTenantPassword);
@@ -321,7 +315,7 @@ class CApiCoreTenantsManager extends AApiManager
 		}
 		else if (0 < strlen($sTenantName))
 		{
-			$oTenant = $this->getTenantByHash($sTenantName);
+			$oTenant = $this->getTenantByName($sTenantName);
 			if ($oTenant)
 			{
 				$iResult = $oTenant->iObjectId;
@@ -404,10 +398,10 @@ class CApiCoreTenantsManager extends AApiManager
 		try
 		{
 			$aResultTenants = $this->oEavManager->getObjects('CTenant',
-				array('Login'),
+				array('Name'),
 				0,
 				0,
-				array('Login' => $oTenant->Login)
+				array('Name' => $oTenant->Name)
 			);
 
 			if ($aResultTenants)
@@ -521,7 +515,6 @@ class CApiCoreTenantsManager extends AApiManager
 					
 					if ($oTenant->iObjectId)
 					{
-						$oTenant->Hash = substr(md5($oTenant->iObjectId.\CApi::$sSalt), 1,8);
 						$this->oEavManager->saveObject($oTenant);
 					}
 				}
@@ -615,11 +608,6 @@ class CApiCoreTenantsManager extends AApiManager
 						}
 					}
 					
-					if ($oTenant->Hash === '')
-					{
-						$oTenant->Hash = substr(md5($oTenant->iObjectId.\CApi::$sSalt), 1,8);
-					}
-
 					if (!$this->oEavManager->saveObject($oTenant))
 					{
 						throw new CApiManagerException(Errs::TenantsManager_TenantUpdateFailed);

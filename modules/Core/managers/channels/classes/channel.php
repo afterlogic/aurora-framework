@@ -45,7 +45,7 @@ class CChannel extends api_APropertyBag
 	{
 		switch (true)
 		{
-			case !api_Validate::IsValidChannelLogin($this->Login):
+			case !api_Validate::IsValidLogin($this->Login):
 				throw new CApiValidationException(Errs::Validation_InvalidTenantName);
 			case api_Validate::IsEmpty($this->Login):
 				throw new CApiValidationException(Errs::Validation_FieldIsEmpty, null, array(
