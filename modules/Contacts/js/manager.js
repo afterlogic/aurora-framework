@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Contacts/js/MainTabExtMethods.js');
+	require('modules/%ModuleName%/js/MainTabExtMethods.js');
 	
 	var
 		_ = require('underscore'),
@@ -9,9 +9,9 @@ module.exports = function (oSettings) {
 		
 		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
-		Settings = require('modules/Contacts/js/Settings.js'),
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		
-		ManagerComponents = require('modules/Contacts/js/manager-components.js'),
+		ManagerComponents = require('modules/%ModuleName%/js/manager-components.js'),
 		ComponentsMethods = ManagerComponents(),
 		fComponentsStart = ComponentsMethods.start
 	;
@@ -23,7 +23,7 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Contacts/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('CONTACTS/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/ContactsSettingsPaneView.js'); }, 'contacts', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 			if ($.isFunction(fComponentsStart))
 			{
 				fComponentsStart(ModulesManager);
@@ -32,18 +32,18 @@ module.exports = function (oSettings) {
 		getScreens: function () {
 			return {
 				'main': function () {
-					return require('modules/Contacts/js/views/ContactsView.js');
+					return require('modules/%ModuleName%/js/views/ContactsView.js');
 				}
 			};
 		},
 		getHeaderItem: function () {
-			return require('modules/Contacts/js/views/HeaderItemView.js');
+			return require('modules/%ModuleName%/js/views/HeaderItemView.js');
 		},
 		isGlobalContactsAllowed: function () {
 			return _.indexOf(Settings.Storages, 'global') !== -1;
 		},
 		getMobileSyncSettingsView: function () {
-			return require('modules/Contacts/js/views/MobileSyncSettingsView.js');
+			return require('modules/%ModuleName%/js/views/MobileSyncSettingsView.js');
 		}
 	});
 };

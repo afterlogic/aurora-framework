@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	СFilterModel = require('modules/Mail/js/models/СFilterModel.js')
+	СFilterModel = require('modules/%ModuleName%/js/models/СFilterModel.js')
 ;
 
 /**

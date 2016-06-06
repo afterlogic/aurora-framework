@@ -11,7 +11,7 @@ var
 	Api = require('modules/Core/js/Api.js'),
 	Screens = require('modules/Core/js/Screens.js'),
 	
-	Ajax = require('modules/Auth/js/Ajax.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**
@@ -31,7 +31,7 @@ function CForgotView()
 	this.emailFocus = ko.observable(false);
 	this.gettingQuestion = ko.observable(false);
 	this.getQuestionButtonText = ko.computed(function () {
-		return this.gettingQuestion() ? TextUtils.i18n('AUTH/ACTION_GET_QUESTION_IN_PROGRESS') : TextUtils.i18n('AUTH/ACTION_GET_QUESTION');
+		return this.gettingQuestion() ? TextUtils.i18n('%MODULENAME%/ACTION_GET_QUESTION_IN_PROGRESS') : TextUtils.i18n('%MODULENAME%/ACTION_GET_QUESTION');
 	}, this);
 	this.allowGetQuestion = ko.computed(function () {
 		return !this.gettingQuestion() && $.trim(this.email()) !== '';
@@ -44,7 +44,7 @@ function CForgotView()
 	this.answerFocus = ko.observable(false);
 	this.validatingAnswer = ko.observable(false);
 	this.validateAnswerButtonText = ko.computed(function () {
-		return this.validatingAnswer() ? TextUtils.i18n('AUTH/ACTION_VALIDATE_ANSWER_IN_PROGRESS') : TextUtils.i18n('AUTH/ACTION_VALIDATE_ANSWER');
+		return this.validatingAnswer() ? TextUtils.i18n('%MODULENAME%/ACTION_VALIDATE_ANSWER_IN_PROGRESS') : TextUtils.i18n('%MODULENAME%/ACTION_VALIDATE_ANSWER');
 	}, this);
 	this.allowValidatingAnswer = ko.computed(function () {
 		return !this.validatingAnswer() && $.trim(this.answer()) !== '';
@@ -99,7 +99,7 @@ CForgotView.prototype.onAccountGetForgotQuestionResponse = function (oResponse, 
 	
 	if (false === oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('AUTH/ERROR_GETTING_QUESTION'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_GETTING_QUESTION'));
 	}
 	else
 	{
@@ -107,7 +107,7 @@ CForgotView.prototype.onAccountGetForgotQuestionResponse = function (oResponse, 
 		
 		if (sQuestion === '')
 		{
-			Screens.showError(TextUtils.i18n('AUTH/ERROR_PASSWORD_RESET_NOT_AVAILABLE'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_PASSWORD_RESET_NOT_AVAILABLE'));
 		}
 		else
 		{
@@ -144,7 +144,7 @@ CForgotView.prototype.onAccountValidateForgotQuestionResponse = function (oRespo
 	
 	if (false === oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('AUTH/ERROR_WRONG_ANSWER'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_WRONG_ANSWER'));
 	}
 	else
 	{
@@ -187,13 +187,13 @@ CForgotView.prototype.onAccountChangeForgotPasswordResponse = function (oRespons
 	
 	if (false === oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('AUTH/ERROR_RESETTING_PASSWORD'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_RESETTING_PASSWORD'));
 	}
 	else
 	{
 		this.gotoForgot(false);
-		Utils.log('CForgotView', TextUtils.i18n('AUTH/REPORT_PASSWORD_CHANGED'));
-		Screens.showReport(TextUtils.i18n('AUTH/REPORT_PASSWORD_CHANGED'));
+		Utils.log('CForgotView', TextUtils.i18n('%MODULENAME%/REPORT_PASSWORD_CHANGED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_PASSWORD_CHANGED'));
 	}
 };
 

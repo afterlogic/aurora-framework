@@ -158,7 +158,7 @@ function CContactModel()
 		if (!this.birthdayIsEmpty())
 		{
 			var fullYears = moment().diff(moment(iYear + '/' + iMonth + '/' + iDay, "YYYY/MM/DD"), 'years'),
-				text = TextUtils.i18n('CONTACTS/LABEL_YEARS_PLURAL', {
+				text = TextUtils.i18n('%MODULENAME%/LABEL_YEARS_PLURAL', {
 					'COUNT': fullYears
 				}, null, fullYears)
 			;
@@ -320,15 +320,15 @@ function CContactModel()
 		
 		if ('' !== this.personalEmail())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_PERSONAL') + ': ' + this.personalEmail(), 'value': Enums.ContactEmailType.Personal});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_PERSONAL') + ': ' + this.personalEmail(), 'value': Enums.ContactEmailType.Personal});
 		}
 		if ('' !== this.businessEmail())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_BUSINESS') + ': ' + this.businessEmail(), 'value': Enums.ContactEmailType.Business});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_BUSINESS') + ': ' + this.businessEmail(), 'value': Enums.ContactEmailType.Business});
 		}
 		if ('' !== this.otherEmail())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_OTHER') + ': ' + this.otherEmail(), 'value': Enums.ContactEmailType.Other});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_OTHER') + ': ' + this.otherEmail(), 'value': Enums.ContactEmailType.Other});
 		}
 
 		return aList;
@@ -340,15 +340,15 @@ function CContactModel()
 
 		if ('' !== this.personalMobile())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_MOBILE') + ': ' + this.personalMobile(), 'value': Enums.ContactPhoneType.Mobile});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_MOBILE') + ': ' + this.personalMobile(), 'value': Enums.ContactPhoneType.Mobile});
 		}
 		if ('' !== this.personalPhone())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_PERSONAL') + ': ' + this.personalPhone(), 'value': Enums.ContactPhoneType.Personal});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_PERSONAL') + ': ' + this.personalPhone(), 'value': Enums.ContactPhoneType.Personal});
 		}
 		if ('' !== this.businessPhone())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_BUSINESS') + ': ' + this.businessPhone(), 'value': Enums.ContactPhoneType.Business});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_BUSINESS') + ': ' + this.businessPhone(), 'value': Enums.ContactPhoneType.Business});
 		}
 		return aList;
 
@@ -359,11 +359,11 @@ function CContactModel()
 
 		if ('' !== this.personalStreetAddress())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_PERSONAL') + ': ' + this.personalStreetAddress(), 'value': Enums.ContactAddressType.Personal});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_PERSONAL') + ': ' + this.personalStreetAddress(), 'value': Enums.ContactAddressType.Personal});
 		}
 		if ('' !== this.businessStreetAddress())
 		{
-			aList.push({'text': TextUtils.i18n('CONTACTS/LABEL_BUSINESS') + ': ' + this.businessStreetAddress(), 'value': Enums.ContactAddressType.Business});
+			aList.push({'text': TextUtils.i18n('%MODULENAME%/LABEL_BUSINESS') + ': ' + this.businessStreetAddress(), 'value': Enums.ContactAddressType.Business});
 		}
 		return aList;
 
@@ -438,7 +438,7 @@ CContactModel.birthdayMonthSelect = [
 ];
 
 CContactModel.birthdayYearSelect = [
-	{'text': TextUtils.i18n('CONTACTS/LABEL_YEAR'), 'value': '0'}
+	{'text': TextUtils.i18n('%MODULENAME%/LABEL_YEAR'), 'value': '0'}
 ];
 
 CContactModel.prototype.clear = function ()

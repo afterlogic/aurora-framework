@@ -10,10 +10,10 @@ var
 	Api = require('modules/Core/js/Api.js'),
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	
-	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
+	CServerPropertiesView = require('modules/%ModuleName%/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -32,11 +32,11 @@ function CCreateAccountPopup()
 	this.incomingMailLogin = ko.observable('');
 	this.incomingLoginFocused = ko.observable(false);
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_create_incoming', TextUtils.i18n('MAIL/LABEL_IMAP_SERVER'));
+	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_create_incoming', TextUtils.i18n('%MODULENAME%/LABEL_IMAP_SERVER'));
 	
 	this.outgoingMailLogin = ko.observable('');
 	this.outgoingMailPassword = ko.observable('');
-	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_create_outgoing', TextUtils.i18n('MAIL/LABEL_SMTP_SERVER'), this.oIncoming.server);
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_create_outgoing', TextUtils.i18n('%MODULENAME%/LABEL_SMTP_SERVER'), this.oIncoming.server);
 	
 	this.useSmtpAuthentication = ko.observable(true);
 	this.friendlyNameFocus = ko.observable(false);
@@ -226,7 +226,7 @@ CCreateAccountPopup.prototype.onAccountCreateResponse = function (oResponse, oRe
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_CREATE_ACCOUNT'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_CREATE_ACCOUNT'));
 	}
 	else
 	{

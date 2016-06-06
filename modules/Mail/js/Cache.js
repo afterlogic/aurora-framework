@@ -20,15 +20,15 @@ var
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	Prefetcher = null,
-	Settings = require('modules/Mail/js/Settings.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CFolderListModel = require('modules/Mail/js/models/CFolderListModel.js'),
-	CUidListModel = require('modules/Mail/js/models/CUidListModel.js'),
+	CFolderListModel = require('modules/%ModuleName%/js/models/CFolderListModel.js'),
+	CUidListModel = require('modules/%ModuleName%/js/models/CUidListModel.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods
 ;
@@ -153,7 +153,7 @@ function CMailCache()
 
 CMailCache.prototype.requirePrefetcher = function ()
 {
-	Prefetcher = require('modules/Mail/js/Prefetcher.js');
+	Prefetcher = require('modules/%ModuleName%/js/Prefetcher.js');
 };
 
 /**
@@ -816,7 +816,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 			if (bTryToDeleteEditedDraft)
 			{
 				this.disableComposeAutosave(true);
-				Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAIL/CONFIRM_MESSAGE_FOR_DELETE_IS_EDITED'), 
+				Popups.showPopup(ConfirmPopup, [TextUtils.i18n('%MODULENAME%/CONFIRM_MESSAGE_FOR_DELETE_IS_EDITED'), 
 					_.bind(function (bOk) {
 						if (bOk)
 						{
@@ -825,7 +825,7 @@ CMailCache.prototype.moveMessagesToFolder = function (sToFolderFullName, aUids)
 						}
 						this.disableComposeAutosave(false);
 					}, this), 
-					'', TextUtils.i18n('MAIL/ACTION_CLOSE_DELETE_DRAFT')
+					'', TextUtils.i18n('%MODULENAME%/ACTION_CLOSE_DELETE_DRAFT')
 				]);
 			}
 			else
@@ -1335,7 +1335,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 		oParameters = {
 			action:'show',
 			icon: 'static/styles/images/logo_140x140.png',
-			title: TextUtils.i18n('MAIL/INFO_NEW_MESSAGES_PLURAL', {
+			title: TextUtils.i18n('%MODULENAME%/INFO_NEW_MESSAGES_PLURAL', {
 				'COUNT': iNewLength
 			}, null, iNewLength),
 			timeout: 5000,
@@ -1349,7 +1349,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 		{
 			if (Types.isNonEmptyString(oResponse.Result.New[0].Subject))
 			{
-				aBody.push(TextUtils.i18n('MAIL/LABEL_SUBJECT') + ': ' + oResponse.Result.New[0].Subject);
+				aBody.push(TextUtils.i18n('%MODULENAME%/LABEL_SUBJECT') + ': ' + oResponse.Result.New[0].Subject);
 			}
 			
 			sFrom = (_.map(oResponse.Result.New[0].From, function(oFrom) {
@@ -1357,7 +1357,7 @@ CMailCache.prototype.showNotificationsForNewMessages = function (oResponse)
 			})).join(', ');
 			if (Types.isNonEmptyString(sFrom))
 			{
-				aBody.push(TextUtils.i18n('MAIL/LABEL_FROM') + ': ' + sFrom);
+				aBody.push(TextUtils.i18n('%MODULENAME%/LABEL_FROM') + ': ' + sFrom);
 			}
 			
 			oParameters.body = aBody.join('\r\n');
@@ -1498,8 +1498,8 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 		bToFolderTrash = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Trash)),
 		bToFolderSpam = (oToFolder && (oToFolder.type() === Enums.FolderTypes.Spam)),
 		oDiffs = null,
-		sConfirm = bToFolderTrash ? TextUtils.i18n('MAIL/CONFIRM_MESSAGES_DELETE_WITHOUT_TRASH') :
-			TextUtils.i18n('MAIL/CONFIRM_MESSAGES_MARK_SPAM_WITHOUT_SPAM'),
+		sConfirm = bToFolderTrash ? TextUtils.i18n('%MODULENAME%/CONFIRM_MESSAGES_DELETE_WITHOUT_TRASH') :
+			TextUtils.i18n('%MODULENAME%/CONFIRM_MESSAGES_MARK_SPAM_WITHOUT_SPAM'),
 		fDeleteMessages = _.bind(function (bResult) {
 			if (bResult && oFolder)
 			{
@@ -1523,12 +1523,12 @@ CMailCache.prototype.onMoveMessagesResponse = function (oResponse, oRequest)
 			}
 			else
 			{
-				Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_MOVING_MESSAGES'));
+				Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_MOVING_MESSAGES'));
 			}
 		}
 		else
 		{
-			Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_DELETING_MESSAGES'));
+			Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_DELETING_MESSAGES'));
 		}
 		bFillMessages = true;
 	}
@@ -1584,7 +1584,7 @@ CMailCache.prototype.onCopyMessagesResponse = function (oResponse, oRequest)
 
 	if (oResult === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_COPYING_MESSAGES'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_COPYING_MESSAGES'));
 	}
 
 	if (sCurrFolderFullName === oFolder.fullName() || oToFolder && sCurrFolderFullName === oToFolder.fullName())

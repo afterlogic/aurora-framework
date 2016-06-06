@@ -11,10 +11,10 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
+	ErrorsUtils = require('modules/%ModuleName%/js/utils/Errors.js'),
 	
-	Enums = require('modules/OpenPgp/js/Enums.js'),
-	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js')
+	Enums = require('modules/%ModuleName%/js/Enums.js'),
+	OpenPgp = require('modules/%ModuleName%/js/OpenPgp.js')
 ;
 
 /**
@@ -29,7 +29,7 @@ function CImportKeyPopup()
 	this.keys = ko.observableArray([]);
 	this.hasExistingKeys = ko.observable(false);
 	this.headlineText = ko.computed(function () {
-		return TextUtils.i18n('OPENPGP/INFO_TEXT_INCLUDES_KEYS_PLURAL', {}, null, this.keys().length);
+		return TextUtils.i18n('%MODULENAME%/INFO_TEXT_INCLUDES_KEYS_PLURAL', {}, null, this.keys().length);
 	}, this);
 }
 
@@ -77,7 +77,7 @@ CImportKeyPopup.prototype.checkArmor = function ()
 					var
 						oSameKey = OpenPgp.findKeyByID(oKey.getId(), oKey.isPublic()),
 						bHasSameKey = (oSameKey !== null),
-						sAddInfoLangKey = oKey.isPublic() ? 'OPENPGP/INFO_PUBLIC_KEY_LENGTH' : 'OPENPGP/INFO_PRIVATE_KEY_LENGTH'
+						sAddInfoLangKey = oKey.isPublic() ? '%MODULENAME%/INFO_PUBLIC_KEY_LENGTH' : '%MODULENAME%/INFO_PRIVATE_KEY_LENGTH'
 					;
 					bHasExistingKeys = bHasExistingKeys || bHasSameKey;
 					aKeys.push({
@@ -94,7 +94,7 @@ CImportKeyPopup.prototype.checkArmor = function ()
 		
 		if (aKeys.length === 0)
 		{
-			Screens.showError(TextUtils.i18n('OPENPGP/ERROR_IMPORT_NO_KEY_FOUND'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_IMPORT_NO_KEY_FOUND'));
 		}
 		
 		this.keys(aKeys);
@@ -122,19 +122,19 @@ CImportKeyPopup.prototype.importKey = function ()
 
 		if (oRes && oRes.result)
 		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_KEY_SUCCESSFULLY_IMPORTED_PLURAL', {}, null, aArmors.length));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_KEY_SUCCESSFULLY_IMPORTED_PLURAL', {}, null, aArmors.length));
 		}
 
 		if (oRes && !oRes.result)
 		{
-			ErrorsUtils.showPgpErrorByCode(oRes, Enums.PgpAction.Import, TextUtils.i18n('OPENPGP/ERROR_IMPORT_KEY'));
+			ErrorsUtils.showPgpErrorByCode(oRes, Enums.PgpAction.Import, TextUtils.i18n('%MODULENAME%/ERROR_IMPORT_KEY'));
 		}
 
 		this.closePopup();
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('OPENPGP/ERROR_IMPORT_NO_KEY_SELECTED'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_IMPORT_NO_KEY_SELECTED'));
 	}
 };
 

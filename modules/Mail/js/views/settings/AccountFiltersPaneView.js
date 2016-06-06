@@ -12,12 +12,12 @@ var
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
 	
-	СFilterModel = require('modules/Mail/js/models/СFilterModel.js'),
-	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js')
+	СFilterModel = require('modules/%ModuleName%/js/models/СFilterModel.js'),
+	СFiltersModel = require('modules/%ModuleName%/js/models/СFiltersModel.js')
 ;
 
 /**
@@ -42,25 +42,25 @@ function CAccountFiltersPaneView()
 	this.collection = ko.observableArray([]);
 
 	this.fieldOptions = [
-		{'text': TextUtils.i18n('MAIL/LABEL_FROM'), 'value': 0},
-		{'text': TextUtils.i18n('MAIL/LABEL_TO'), 'value': 1},
-		{'text': TextUtils.i18n('MAIL/LABEL_SUBJECT'), 'value': 2}
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_FROM'), 'value': 0},
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_TO'), 'value': 1},
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_SUBJECT'), 'value': 2}
 	];
 
 	this.conditionOptions = [
-		{'text': TextUtils.i18n('MAIL/LABEL_CONTAINING'), 'value': 0},
-		{'text': TextUtils.i18n('MAIL/LABEL_EQUAL_TO'), 'value': 1},
-		{'text': TextUtils.i18n('MAIL/LABEL_NOT_CONTAINING'), 'value': 2}
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_CONTAINING'), 'value': 0},
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_EQUAL_TO'), 'value': 1},
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_NOT_CONTAINING'), 'value': 2}
 	];
 
 	this.actionOptions = [
-		{'text': TextUtils.i18n('MAIL/LABEL_MOVE_FILTER_ACTION'), 'value': 3},
-		{'text': TextUtils.i18n('MAIL/LABEL_DELETE_FILTER_ACTION'), 'value': 1}
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_MOVE_FILTER_ACTION'), 'value': 3},
+		{'text': TextUtils.i18n('%MODULENAME%/LABEL_DELETE_FILTER_ACTION'), 'value': 1}
 	];
 	
 	this.phaseArray = [''];
 	
-	_.each(TextUtils.i18n('MAIL/INFO_FILTER').split(/\s/), function (sItem) {
+	_.each(TextUtils.i18n('%MODULENAME%/INFO_FILTER').split(/\s/), function (sItem) {
 		var iIndex = this.phaseArray.length - 1;
 		if (sItem.substr(0,1) === '%' || this.phaseArray[iIndex].substr(-1,1) === '%')
 		{
@@ -102,7 +102,7 @@ CAccountFiltersPaneView.prototype.populate = function ()
 
 	if (oFolderList.iAccountId === AccountList.editedId())
 	{
-		aOptionList = oFolderList.getOptions(TextUtils.i18n('MAIL/LABEL_FOLDER_NOT_SELECTED'), true, true, false, true);
+		aOptionList = oFolderList.getOptions(TextUtils.i18n('%MODULENAME%/LABEL_FOLDER_NOT_SELECTED'), true, true, false, true);
 		this.foldersOptions(aOptionList);
 		this.populateFilters();
 	}
@@ -163,7 +163,7 @@ CAccountFiltersPaneView.prototype.save = function ()
 
 	if (bCantSave)
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_FILTER_FIELDS_EMPTY'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FILTER_FIELDS_EMPTY'));
 	}
 	else
 	{
@@ -325,7 +325,7 @@ CAccountFiltersPaneView.prototype.onAccountSieveFiltersUpdateResponse = function
 	{
 		if (oResponse && oResponse.Result)
 		{
-			Screens.showReport(TextUtils.i18n('MAIL/REPORT_FILTERS_UPDATE_SUCCESS'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_FILTERS_UPDATE_SUCCESS'));
 		}
 		else
 		{

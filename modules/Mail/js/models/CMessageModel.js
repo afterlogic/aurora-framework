@@ -11,19 +11,19 @@ var
 	Types = require('modules/Core/js/utils/Types.js'),
 	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	Screens = require('modules/Core/js/Screens.js'),
 	
 	CAddressListModel = require('modules/Core/js/models/CAddressListModel.js'),
 	CDateModel = require('modules/Core/js/models/CDateModel.js'),
 	
-	MessageUtils = require('modules/Mail/js/utils/Message.js'),
+	MessageUtils = require('modules/%ModuleName%/js/utils/Message.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	MailCache = null,
-	Settings = require('modules/Mail/js/Settings.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js')
+	CAttachmentModel = require('modules/%ModuleName%/js/models/CAttachmentModel.js')
 ;
 
 /**
@@ -41,7 +41,7 @@ function CMessageModel()
 		return ($.trim(this.subject()) === '');
 	}, this);
 	this.subjectForDisplay = ko.computed(function () {
-		return this.emptySubject() ? TextUtils.i18n('MAIL/LABEL_NO_SUBJECT') : this.subject();
+		return this.emptySubject() ? TextUtils.i18n('%MODULENAME%/LABEL_NO_SUBJECT') : this.subject();
 	}, this);
 	this.messageId = ko.observable('');
 	this.size = ko.observable(0);
@@ -113,7 +113,7 @@ function CMessageModel()
 
 			if (aSenders.length > 3)
 			{
-				this.threadMoreSendersText(TextUtils.i18n('MAIL/LABEL_PLUS_MORE_SENDERS', {'COUNT': aSenders.length - 1}));
+				this.threadMoreSendersText(TextUtils.i18n('%MODULENAME%/LABEL_PLUS_MORE_SENDERS', {'COUNT': aSenders.length - 1}));
 				return ', ' + aSenders[0];
 			}
 			else
@@ -152,17 +152,17 @@ function CMessageModel()
 		{
 			if (this.threadOpened())
 			{
-				return  TextUtils.i18n('MAIL/ACTION_FOLD_THREAD');
+				return  TextUtils.i18n('%MODULENAME%/ACTION_FOLD_THREAD');
 			}
 			else
 			{
 				if (this.threadUnreadCount() > 0)
 				{
-					return  TextUtils.i18n('MAIL/ACTION_UNFOLD_THREAD_WITH_UNREAD', {}, null, this.threadUnreadCount());
+					return  TextUtils.i18n('%MODULENAME%/ACTION_UNFOLD_THREAD_WITH_UNREAD', {}, null, this.threadUnreadCount());
 				}
 				else
 				{
-					return  TextUtils.i18n('MAIL/ACTION_UNFOLD_THREAD');
+					return  TextUtils.i18n('%MODULENAME%/ACTION_UNFOLD_THREAD');
 				}
 			}
 		}
@@ -238,7 +238,7 @@ CMessageModel.prototype.requireMailCache = function ()
 {
 	if (MailCache === null)
 	{
-		MailCache = require('modules/Mail/js/Cache.js');
+		MailCache = require('modules/%ModuleName%/js/Cache.js');
 	}
 };
 
@@ -282,11 +282,11 @@ CMessageModel.prototype.fillFromOrToText = function ()
 	
 	if (oFolder.type() === Enums.FolderTypes.Drafts || oFolder.type() === Enums.FolderTypes.Sent)
 	{
-		this.fromOrToText(this.oTo.getDisplay(TextUtils.i18n('MAIL/LABEL_ME_RECIPIENT'), oAccount.email()));
+		this.fromOrToText(this.oTo.getDisplay(TextUtils.i18n('%MODULENAME%/LABEL_ME_RECIPIENT'), oAccount.email()));
 	}
 	else
 	{
-		this.fromOrToText(this.oFrom.getDisplay(TextUtils.i18n('MAIL/LABEL_ME_SENDER'), oAccount.email()));
+		this.fromOrToText(this.oFrom.getDisplay(TextUtils.i18n('%MODULENAME%/LABEL_ME_SENDER'), oAccount.email()));
 	}
 };
 
@@ -727,18 +727,18 @@ CMessageModel.prototype.onSaveAttachmentsToFilesResponse = function (oResponse, 
 	
 	if (iSavedCount === 0)
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_CANT_SAVE_ATTACHMENTS_TO_FILES'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_CANT_SAVE_ATTACHMENTS_TO_FILES'));
 	}
 	else if (iSavedCount < iTotalCount)
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_SOME_ATTACHMENTS_WERE_NOT_SAVED', {
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_SOME_ATTACHMENTS_WERE_NOT_SAVED', {
 			'SAVED_COUNT': iSavedCount,
 			'TOTAL_COUNT': iTotalCount
 		}));
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_ATTACHMENTS_SAVED_TO_FILES'));
 	}
 };
 

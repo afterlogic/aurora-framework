@@ -15,15 +15,15 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
-	CreateAccountPopup = require('modules/Mail/js/popups/CreateAccountPopup.js'),
+	CreateAccountPopup = require('modules/%ModuleName%/js/popups/CreateAccountPopup.js'),
 	
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CAccountModel = require('modules/Mail/js/models/CAccountModel.js'),
-	CFetcherListModel = require('modules/Mail/js/models/CFetcherListModel.js'),
-	CIdentityModel = require('modules/Mail/js/models/CIdentityModel.js')
+	CAccountModel = require('modules/%ModuleName%/js/models/CAccountModel.js'),
+	CFetcherListModel = require('modules/%ModuleName%/js/models/CFetcherListModel.js'),
+	CIdentityModel = require('modules/%ModuleName%/js/models/CIdentityModel.js')
 ;
 
 /**
@@ -590,7 +590,7 @@ CAccountListModel.prototype.displaySocialWelcome = function ()
 	if (!bHasMailAccount && oDefaultAccount && !Storage.hasData('SocialWelcomeShowed' + oDefaultAccount.id()) && UserSettings.SocialName !== '')
 	{
 		Popups.showPopup(ConfirmPopup, [
-			TextUtils.i18n('MAIL/CONFIRM_SOCIAL_WELCOME', {
+			TextUtils.i18n('%MODULENAME%/CONFIRM_SOCIAL_WELCOME', {
 				'SOCIALNAME': UserSettings.SocialName,
 				'SITENAME': UserSettings.SiteName,
 				'EMAIL': oDefaultAccount.email()
@@ -602,7 +602,7 @@ CAccountListModel.prototype.displaySocialWelcome = function ()
 				}
 			},
 			'',
-			TextUtils.i18n('MAIL/ACTION_CONNECT_MAIL'),
+			TextUtils.i18n('%MODULENAME%/ACTION_CONNECT_MAIL'),
 			TextUtils.i18n('CORE/ACTION_CLOSE')
 		]);
 		

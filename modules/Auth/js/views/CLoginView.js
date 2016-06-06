@@ -12,8 +12,8 @@ var
 	Api = require('modules/Core/js/Api.js'),
 	Browser = require('modules/Core/js/Browser.js'),
 	
-	Ajax = require('modules/Auth/js/Ajax.js'),
-	Settings = require('modules/Auth/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	$html = $('html')
 ;

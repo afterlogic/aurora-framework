@@ -1,15 +1,15 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Calendar/js/koBindings.js');
-	require('modules/Calendar/js/enums.js');
+	require('modules/%ModuleName%/js/koBindings.js');
+	require('modules/%ModuleName%/js/enums.js');
 	require('fullcalendar');
-	require('modules/Calendar/js/MainTabExtMethods.js');
+	require('modules/%ModuleName%/js/MainTabExtMethods.js');
 
 	var
 		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
-		Settings = require('modules/Calendar/js/Settings.js')
+		Settings = require('modules/%ModuleName%/js/Settings.js')
 	;
 	
 	Settings.init(oSettings);
@@ -19,24 +19,24 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Calendar/js/views/CalendarSettingsPaneView.js'); }, 'calendar', TextUtils.i18n('CALENDAR/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/CalendarSettingsPaneView.js'); }, 'calendar', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
 			return {
 				'main': function () {
-					return require('modules/Calendar/js/views/CalendarView.js');
+					return require('modules/%ModuleName%/js/views/CalendarView.js');
 				}
 			};
 		},
 		getHeaderItem: function () {
-			return require('modules/Calendar/js/views/HeaderItemView.js');
+			return require('modules/%ModuleName%/js/views/HeaderItemView.js');
 		},
 		getWeekStartsOn: function () {
 			return Settings.WeekStartsOn;
 		},
 		getMobileSyncSettingsView: function () {
-			return require('modules/Calendar/js/views/MobileSyncSettingsView.js');
+			return require('modules/%ModuleName%/js/views/MobileSyncSettingsView.js');
 		}
 	};
 };

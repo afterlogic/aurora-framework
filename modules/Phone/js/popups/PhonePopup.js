@@ -6,7 +6,7 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	Phone = require('modules/Phone/js/Phone.js')
+	Phone = require('modules/%ModuleName%/js/Phone.js')
 ;
 
 /**

@@ -3,11 +3,11 @@
 var
 	_ = require('underscore'),
 	
-	Ajax = require('modules/HelpDeskClient/js/Ajax.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Settings = require('modules/HelpDeskClient/js/Settings.js'),
-	HeaderItemView = require('modules/HelpDeskClient/js/views/HeaderItemView.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
+	HeaderItemView = require('modules/%ModuleName%/js/views/HeaderItemView.js'),
 	
 	bAgent = false,
 	iTimer = 0

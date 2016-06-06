@@ -16,11 +16,11 @@ var
 	Popups = require('modules/Core/js/Popups.js'),
 	ChangePasswordPopup = ModulesManager.run('ChangePassword', 'getChangePasswordPopup'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
+	CServerPropertiesView = require('modules/%ModuleName%/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -42,10 +42,10 @@ function CAccountPropertiesPaneView()
 	this.email = ko.observable('');
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_edit_incoming', TextUtils.i18n('MAIL/LABEL_IMAP_SERVER'));
+	this.oIncoming = new CServerPropertiesView(143, 993, 'acc_edit_incoming', TextUtils.i18n('%MODULENAME%/LABEL_IMAP_SERVER'));
 	this.outgoingMailLogin = ko.observable('');
 	this.outgoingMailPassword = ko.observable('');
-	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_edit_outgoing', TextUtils.i18n('MAIL/LABEL_SMTP_SERVER'), this.oIncoming.server);
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'acc_edit_outgoing', TextUtils.i18n('%MODULENAME%/LABEL_SMTP_SERVER'), this.oIncoming.server);
 
 	this.isAllowMail = ko.observable(true);
 	this.allowChangePassword = ko.observable(false);

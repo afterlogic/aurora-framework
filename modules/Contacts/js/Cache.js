@@ -4,8 +4,8 @@ var
 	$ = require('jquery'),
 	_ = require('underscore'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js'),
-	CContactModel = require('modules/Contacts/js/models/CContactModel.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	CContactModel = require('modules/%ModuleName%/js/models/CContactModel.js')
 ;
 
 /**

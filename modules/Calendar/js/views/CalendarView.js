@@ -21,20 +21,20 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
-	EditCalendarPopup = require('modules/Calendar/js/popups/EditCalendarPopup.js'),
-	EditEventPopup = require('modules/Calendar/js/popups/EditEventPopup.js'),
-	EditEventRecurrencePopup = require('modules/Calendar/js/popups/EditEventRecurrencePopup.js'),
-	GetCalendarLinkPopup = require('modules/Calendar/js/popups/GetCalendarLinkPopup.js'),
-	ImportCalendarPopup = require('modules/Calendar/js/popups/ImportCalendarPopup.js'),
-	SelectCalendarPopup = require('modules/Calendar/js/popups/SelectCalendarPopup.js'),
-	ShareCalendarPopup = require('modules/Calendar/js/popups/ShareCalendarPopup.js'),
+	EditCalendarPopup = require('modules/%ModuleName%/js/popups/EditCalendarPopup.js'),
+	EditEventPopup = require('modules/%ModuleName%/js/popups/EditEventPopup.js'),
+	EditEventRecurrencePopup = require('modules/%ModuleName%/js/popups/EditEventRecurrencePopup.js'),
+	GetCalendarLinkPopup = require('modules/%ModuleName%/js/popups/GetCalendarLinkPopup.js'),
+	ImportCalendarPopup = require('modules/%ModuleName%/js/popups/ImportCalendarPopup.js'),
+	SelectCalendarPopup = require('modules/%ModuleName%/js/popups/SelectCalendarPopup.js'),
+	ShareCalendarPopup = require('modules/%ModuleName%/js/popups/ShareCalendarPopup.js'),
 	
-	Ajax = require('modules/Calendar/js/Ajax.js'),
-	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	Settings = require('modules/Calendar/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	CalendarCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CCalendarListModel = require('modules/Calendar/js/models/CCalendarListModel.js'),
-	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js'),
+	CCalendarListModel = require('modules/%ModuleName%/js/models/CCalendarListModel.js'),
+	CCalendarModel = require('modules/%ModuleName%/js/models/CCalendarModel.js'),
 	
 	bMobileDevice = false
 ;
@@ -46,7 +46,7 @@ function CCalendarView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('CALENDAR/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB'));
 	
 	var self = this;
 	this.initialized = ko.observable(false);
@@ -154,7 +154,7 @@ function CCalendarView()
 		header: false,
 		editable: !this.isPublic,
 		selectable: !this.isPublic,
-		allDayText: TextUtils.i18n('CALENDAR/LABEL_ALL_DAY'),
+		allDayText: TextUtils.i18n('%MODULENAME%/LABEL_ALL_DAY'),
 		dayNames: this.aDayNames,
 		isRTL: UserSettings.IsRTL,
 		scrollTime: moment.duration(8, 'hours'),
@@ -935,7 +935,7 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 					oCalendar.davUrl(Types.pString(oResponse.Result.ServerUrl));
 					if (this.isPublic)
 					{
-						var oPublicHeaderItem = require('modules/Calendar/js/views/PublicHeaderItem.js');
+						var oPublicHeaderItem = require('modules/%ModuleName%/js/views/PublicHeaderItem.js');
 						oPublicHeaderItem.linkText(oCalendar.name());
 						this.browserTitle(oCalendar.name());
 					}
@@ -946,8 +946,8 @@ CCalendarView.prototype.onGetCalendarsResponse = function (oResponse, oParameter
 
 		if (this.calendars.count() === 0 && this.isPublic && this.needsToReload)
 		{
-			this.browserTitle(TextUtils.i18n('CALENDAR/INFO_NO_CALENDAR_FOUND'));
-			Api.showErrorByCode(0, TextUtils.i18n('CALENDAR/INFO_NO_CALENDAR_FOUND'));
+			this.browserTitle(TextUtils.i18n('%MODULENAME%/INFO_NO_CALENDAR_FOUND'));
+			Api.showErrorByCode(0, TextUtils.i18n('%MODULENAME%/INFO_NO_CALENDAR_FOUND'));
 		}
 
 		this.needsToReload = false;
@@ -1318,7 +1318,7 @@ CCalendarView.prototype.deleteCalendar = function (sId, bIsUnsubscribe)
 	var
 		oCalendar = this.calendars.getCalendarById(sId),
 		sConfirm = oCalendar ?
-				bIsUnsubscribe ? TextUtils.i18n('CALENDAR/CONFIRM_UNSUBSCRIBE_CALENDAR', {'CALENDARNAME': oCalendar.name()}) : TextUtils.i18n('CALENDAR/CONFIRM_REMOVE_CALENDAR', {'CALENDARNAME' : oCalendar.name()})
+				bIsUnsubscribe ? TextUtils.i18n('%MODULENAME%/CONFIRM_UNSUBSCRIBE_CALENDAR', {'CALENDARNAME': oCalendar.name()}) : TextUtils.i18n('%MODULENAME%/CONFIRM_REMOVE_CALENDAR', {'CALENDARNAME' : oCalendar.name()})
 			: '',
 		fRemove = _.bind(function (bRemove) {
 			if (bRemove)
@@ -1841,7 +1841,7 @@ CCalendarView.prototype.onEventActionResponse = function (oResponse, oRequest, b
 	}
 	else
 	{
-		App.Api.showErrorByCode(oResponse, TextUtils.i18n('CALENDAR/ERROR_EVENT_NOT_UPDATED'));
+		App.Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_EVENT_NOT_UPDATED'));
 		
 		if (this.revertFunction)
 		{
@@ -1951,7 +1951,7 @@ CCalendarView.prototype.onFileUploadComplete = function (sFileUid, bResponseRece
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('CALENDAR/ERROR_FILE_NOT_ICS'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FILE_NOT_ICS'));
 		}
 		else
 		{

@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Calendar/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 	
-	var Settings = require('modules/Calendar/js/Settings.js');
+	var Settings = require('modules/%ModuleName%/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -11,7 +11,7 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Calendar/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
 		}
 	};
 };

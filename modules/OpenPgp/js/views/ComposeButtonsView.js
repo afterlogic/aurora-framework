@@ -10,9 +10,9 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
-	EncryptPopup = require('modules/OpenPgp/js/popups/EncryptPopup.js'),
+	EncryptPopup = require('modules/%ModuleName%/js/popups/EncryptPopup.js'),
 	
-	Settings = require('modules/OpenPgp/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -123,7 +123,7 @@ CComposeButtonsView.prototype.doBeforeSave = function (fContinueSaving)
 {
 	if (this.pgpSecured())
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('OPENPGP/CONFIRM_SAVE_ENCRYPTED_DRAFT'), fContinueSaving, '', TextUtils.i18n('COMPOSE/ACTION_SAVE')]);
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('%MODULENAME%/CONFIRM_SAVE_ENCRYPTED_DRAFT'), fContinueSaving, '', TextUtils.i18n('COMPOSE/ACTION_SAVE')]);
 		
 		return true;
 	}
@@ -137,7 +137,7 @@ CComposeButtonsView.prototype.confirmOpenPgp = function ()
 		if (this.oCompose.isHtml())
 		{
 			var
-				sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_FORMATTING'),
+				sConfirm = TextUtils.i18n('%MODULENAME%/CONFIRM_HTML_TO_PLAIN_FORMATTING'),
 				fEncryptPopup = _.bind(function (bRes) {
 					if (bRes)
 					{
@@ -148,7 +148,7 @@ CComposeButtonsView.prototype.confirmOpenPgp = function ()
 
 			if (this.oCompose.hasAttachments())
 			{
-				sConfirm += '\r\n\r\n' + TextUtils.i18n('OPENPGP/CONFIRM_HTML_TO_PLAIN_ATTACHMENTS');
+				sConfirm += '\r\n\r\n' + TextUtils.i18n('%MODULENAME%/CONFIRM_HTML_TO_PLAIN_ATTACHMENTS');
 			}
 
 			Popups.showPopup(ConfirmPopup, [sConfirm, fEncryptPopup]);

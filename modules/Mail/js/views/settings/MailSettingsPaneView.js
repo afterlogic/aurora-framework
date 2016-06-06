@@ -10,8 +10,8 @@ var
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	SettingsUtils = ModulesManager.run('Settings', 'getSettingsUtils'),
 	
-	MailUtils = require('modules/Mail/js/utils/Mail.js'),
-	Settings = require('modules/Mail/js/Settings.js')
+	MailUtils = require('modules/%ModuleName%/js/utils/Mail.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**

@@ -22,11 +22,11 @@ var
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
+	CalendarUtils = require('modules/%ModuleName%/js/utils/Calendar.js'),
 	
-	Ajax = require('modules/Calendar/js/Ajax.js'),
-	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	Settings = require('modules/Calendar/js/Settings.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	CalendarCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -220,7 +220,7 @@ function CEditEventPopup()
 		this.modified = true;
 	}, this);
 
-	this.aReminderPhrase = TextUtils.i18n('CALENDAR/INFO_REMINDER').split('%');
+	this.aReminderPhrase = TextUtils.i18n('%MODULENAME%/INFO_REMINDER').split('%');
 
 	this.isAppointmentButtonsVisible = ko.observable(false);
 }
@@ -405,7 +405,7 @@ CEditEventPopup.prototype.onSaveClick = function ()
 {
 	if (this.subject() === '')
 	{
-		Popups.showPopup(AlertPopup, [TextUtils.i18n('CALENDAR/ERROR_SUBJECT_BLANK'),
+		Popups.showPopup(AlertPopup, [TextUtils.i18n('%MODULENAME%/ERROR_SUBJECT_BLANK'),
 			_.bind(function () {
 				this.subjectFocus(true);
 			}, this)]);
@@ -636,7 +636,7 @@ CEditEventPopup.prototype.showGuests = function ()
 	if (this.attendees().length > 0)
 	{
 		var
-			sConfirm = TextUtils.i18n('CALENDAR/CONFIRM_REMOVE_ALL_ATTENDEES'),
+			sConfirm = TextUtils.i18n('%MODULENAME%/CONFIRM_REMOVE_ALL_ATTENDEES'),
 			fAction = _.bind(function (bResult) {
 				if (bResult)
 				{
@@ -670,7 +670,7 @@ CEditEventPopup.prototype.onAddGuestClick = function ()
 
 	if (oItem.email === '')
 	{
-		Screens.showError(TextUtils.i18n('CALENDAR/ERROR_EMAIL_BLANK'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_EMAIL_BLANK'));
 	}
 	else if (oItem.email === this.owner())
 	{
@@ -740,15 +740,15 @@ CEditEventPopup.prototype.getDisplayedAlarms = function (aMinutes)
 			}
 			else if (iMinutes >= 60 && iMinutes < 1440)
 			{
-				sText = (TextUtils.i18n('CALENDAR/LABEL_HOURS_PLURAL', {'COUNT': iMinutes / 60}, null, iMinutes / 60));
+				sText = (TextUtils.i18n('%MODULENAME%/LABEL_HOURS_PLURAL', {'COUNT': iMinutes / 60}, null, iMinutes / 60));
 			}
 			else if (iMinutes >= 1440 && iMinutes < 10080)
 			{
-				sText = (TextUtils.i18n('CALENDAR/LABEL_DAYS_PLURAL', {'COUNT': iMinutes / 1440}, null, iMinutes / 1440));
+				sText = (TextUtils.i18n('%MODULENAME%/LABEL_DAYS_PLURAL', {'COUNT': iMinutes / 1440}, null, iMinutes / 1440));
 			}
 			else
 			{
-				sText = (TextUtils.i18n('CALENDAR/LABEL_WEEKS_PLURAL', {'COUNT': iMinutes / 10080}, null, iMinutes / 10080));
+				sText = (TextUtils.i18n('%MODULENAME%/LABEL_WEEKS_PLURAL', {'COUNT': iMinutes / 10080}, null, iMinutes / 10080));
 			}
 
 			aDisplayedAlarms.push({
@@ -768,23 +768,23 @@ CEditEventPopup.prototype.getDisplayedPeriods = function ()
 {
 	return [
 		{
-			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_NEVER'),
+			label: TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_NEVER'),
 			value: 0
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_DAILY'),
+			label: TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_DAILY'),
 			value: 1
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_WEEKLY'),
+			label: TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_WEEKLY'),
 			value: 2
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_MONTHLY'),
+			label: TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_MONTHLY'),
 			value: 3
 		},
 		{
-			label: TextUtils.i18n('CALENDAR/LABEL_REPEAT_YEARLY'),
+			label: TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_YEARLY'),
 			value: 4
 		}
 	];
@@ -813,7 +813,7 @@ CEditEventPopup.prototype.addFirstAlarm = function ()
 	else
 	{
 		var
-			sConfirm = TextUtils.i18n('CALENDAR/CONFIRM_REMOVE_ALL_ALARMS'),
+			sConfirm = TextUtils.i18n('%MODULENAME%/CONFIRM_REMOVE_ALL_ALARMS'),
 			fAction = _.bind(function (bResult) {
 				if (bResult)
 				{
@@ -995,8 +995,8 @@ CEditEventPopup.prototype.setStartDate = function (oMomentDate, bChangeInDatepic
 	}
 	this.startDate(this.getDateWithoutYearIfMonthWord($(this.startDom()).val()));
 	
-	this.yearlyDayText(TextUtils.i18n('CALENDAR/LABEL_REPEAT_YEARLY_DAYMONTH', {'DAYMONTH': oMomentDate.format(this.getDateMonthFormat())}));
-	this.monthlyDayText(TextUtils.i18n('CALENDAR/LABEL_REPEAT_MONTHLY_DAY', {'DAY': oMomentDate.format('DD')}));
+	this.yearlyDayText(TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_YEARLY_DAYMONTH', {'DAYMONTH': oMomentDate.format(this.getDateMonthFormat())}));
+	this.monthlyDayText(TextUtils.i18n('%MODULENAME%/LABEL_REPEAT_MONTHLY_DAY', {'DAY': oMomentDate.format('DD')}));
 };
 
 CEditEventPopup.prototype.selectStartDate = function ()

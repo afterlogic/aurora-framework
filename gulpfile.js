@@ -119,6 +119,11 @@ function jsTask(sName, oData)
 					path: oData.dest,
 					filename: oData.name
 				},
+				resolveLoader: {
+					alias: {
+						"replace-module-names-loader": path.join(__dirname, "./gulp-tasks/replace-module-names-loader.js")
+					}
+				},
 				resolve: {
 					root: [
 						path.resolve('./')
@@ -129,6 +134,10 @@ function jsTask(sName, oData)
 						{ 
 							test: /[\\\/]modernizr\.js$/,
 							loader: "imports?this=>window!exports?window.Modernizr"
+						},
+						{
+							test: /\.js$/,
+							loader: 'replace-module-names-loader'
 						}
 					]
 				},

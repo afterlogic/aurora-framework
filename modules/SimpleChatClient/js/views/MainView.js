@@ -13,7 +13,7 @@ var
 	
 	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
 	
-	Ajax = require('modules/SimpleChatClient/js/Ajax.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**
@@ -28,7 +28,7 @@ function CSimpleChatView()
 	/**
 	 * Text for displaying in browser title when simple chat screen is shown.
 	 */
-	this.browserTitle = ko.observable(TextUtils.i18n('SIMPLECHAT/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB'));
 	
 	this.bAllowReply = (App.getUserRole() === Enums.UserRole.PowerUser);
 	

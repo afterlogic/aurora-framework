@@ -13,7 +13,7 @@ var
 	Api = require('modules/Core/js/Api.js'),
 	Screens = require('modules/Core/js/Screens.js'),
 	
-	Settings = require('modules/Auth/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -30,7 +30,7 @@ function CRegisterView()
 	this.answer = ko.observable('');
 	this.bAllowQuestionPart = Types.isNonEmptyArray(Settings.RegistrationQuestions);
 	this.visibleYourQuestion = ko.computed(function () {
-		return (this.question() === TextUtils.i18n('AUTH/OPTION_YOUR_QUESTION'));
+		return (this.question() === TextUtils.i18n('%MODULENAME%/OPTION_YOUR_QUESTION'));
 	}, this);
 	
 	this.nameFocus = ko.observable(false);
@@ -51,11 +51,11 @@ function CRegisterView()
 	if (this.bAllowQuestionPart)
 	{
 		this.aRegistrationQuestions = _.map(_.union('', _.without(Settings.RegistrationQuestions, '*')), function (sQuestion) {
-			return {text: (sQuestion !== '') ? sQuestion : TextUtils.i18n('AUTH/LABEL_SELECT_QUESTION'), value: sQuestion};
+			return {text: (sQuestion !== '') ? sQuestion : TextUtils.i18n('%MODULENAME%/LABEL_SELECT_QUESTION'), value: sQuestion};
 		});
 		if (_.indexOf(Settings.RegistrationQuestions, '*') !== -1)
 		{
-			this.aRegistrationQuestions.push({text: TextUtils.i18n('AUTH/OPTION_YOUR_QUESTION'), value: TextUtils.i18n('AUTH/OPTION_YOUR_QUESTION')});
+			this.aRegistrationQuestions.push({text: TextUtils.i18n('%MODULENAME%/OPTION_YOUR_QUESTION'), value: TextUtils.i18n('%MODULENAME%/OPTION_YOUR_QUESTION')});
 		}
 	}
 	

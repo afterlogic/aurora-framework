@@ -14,12 +14,12 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
-	GenerateKeyPopup = require('modules/OpenPgp/js/popups/GenerateKeyPopup.js'),
-	ImportKeyPopup = require('modules/OpenPgp/js/popups/ImportKeyPopup.js'),
-	ShowKeyArmorPopup = require('modules/OpenPgp/js/popups/ShowKeyArmorPopup.js'),
+	GenerateKeyPopup = require('modules/%ModuleName%/js/popups/GenerateKeyPopup.js'),
+	ImportKeyPopup = require('modules/%ModuleName%/js/popups/ImportKeyPopup.js'),
+	ShowKeyArmorPopup = require('modules/%ModuleName%/js/popups/ShowKeyArmorPopup.js'),
 	
-	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),
-	Settings = require('modules/OpenPgp/js/Settings.js')
+	OpenPgp = require('modules/%ModuleName%/js/OpenPgp.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -88,7 +88,7 @@ COpenPgpSettingsPaneView.prototype.removeOpenPgpKey = function (oKey)
 				var oRes = OpenPgp.deleteKey(oKey);
 				if (!oRes.result)
 				{
-					Screens.showError(TextUtils.i18n('OPENPGP/ERROR_DELETE_KEY'));
+					Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_DELETE_KEY'));
 				}
 			}
 		}, this)
@@ -96,7 +96,7 @@ COpenPgpSettingsPaneView.prototype.removeOpenPgpKey = function (oKey)
 	
 	if (oKey)
 	{
-		sConfirm = TextUtils.i18n('OPENPGP/CONFIRM_DELETE_KEY', {'KEYEMAIL': oKey.getEmail()});
+		sConfirm = TextUtils.i18n('%MODULENAME%/CONFIRM_DELETE_KEY', {'KEYEMAIL': oKey.getEmail()});
 		Popups.showPopup(ConfirmPopup, [sConfirm, fRemove]);
 	}
 };

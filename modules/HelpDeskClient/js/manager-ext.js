@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/HelpDeskClient/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 	
-	require('modules/HelpDeskClient/js/koBindings.js');
+	require('modules/%ModuleName%/js/koBindings.js');
 
-	var Settings = require('modules/HelpDeskClient/js/Settings.js');
+	var Settings = require('modules/%ModuleName%/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -15,7 +15,7 @@ module.exports = function (oSettings) {
 		getScreens: function () {
 			return {
 				'main': function () {
-					return require('modules/HelpDeskClient/js/views/LoginView.js');
+					return require('modules/%ModuleName%/js/views/LoginView.js');
 				}
 			};
 		}

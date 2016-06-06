@@ -11,9 +11,9 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
-	ConfirmAnotherMessageComposedPopup = require('modules/Mail/js/popups/ConfirmAnotherMessageComposedPopup.js'),
+	ConfirmAnotherMessageComposedPopup = require('modules/%ModuleName%/js/popups/ConfirmAnotherMessageComposedPopup.js'),
 	
-	CComposeView = require('modules/Mail/js/views/CComposeView.js')
+	CComposeView = require('modules/%ModuleName%/js/views/CComposeView.js')
 ;
 
 /**
@@ -54,7 +54,7 @@ function CComposePopup()
 	}, this);
 	
 	this.minimizedTitle = ko.computed(function () {
-		return this.subject() || TextUtils.i18n('MAIL/HEADING_MINIMIZED_NEW_MESSAGE');
+		return this.subject() || TextUtils.i18n('%MODULENAME%/HEADING_MINIMIZED_NEW_MESSAGE');
 	}, this);
 }
 

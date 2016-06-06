@@ -6,8 +6,8 @@ module.exports = function () {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/MailSensitivity/js/views/MessageControlView.js'), 'BeforeMessageHeaders']);
-			ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/MailSensitivity/js/views/ComposeDropdownView.js')]);
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/MessageControlView.js'), 'BeforeMessageHeaders']);
+			ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/%ModuleName%/js/views/ComposeDropdownView.js')]);
 		}
 	};
 };

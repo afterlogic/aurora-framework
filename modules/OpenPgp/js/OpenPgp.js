@@ -9,10 +9,10 @@ var
 	
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Pgp = require('modules/OpenPgp/js/vendors/openpgp.js'),
-	Enums = require('modules/OpenPgp/js/Enums.js'),
-	COpenPgpKey = require('modules/OpenPgp/js/COpenPgpKey.js'),
-	COpenPgpResult = require('modules/OpenPgp/js/COpenPgpResult.js')
+	Pgp = require('modules/%ModuleName%/js/vendors/openpgp.js'),
+	Enums = require('modules/%ModuleName%/js/Enums.js'),
+	COpenPgpKey = require('modules/%ModuleName%/js/COpenPgpKey.js'),
+	COpenPgpResult = require('modules/%ModuleName%/js/COpenPgpResult.js')
 ;
 
 /**

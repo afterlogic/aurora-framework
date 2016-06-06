@@ -17,8 +17,8 @@ var
 	Popups = require('modules/Core/js/Popups.js'),
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**
@@ -99,7 +99,7 @@ CAccountForwardPaneView.prototype.save = function ()
 	{
 		if (!AddressUtils.isCorrectEmail(this.email()))
 		{
-			Popups.showPopup(AlertPopup, [TextUtils.i18n('MAIL/ERROR_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
+			Popups.showPopup(AlertPopup, [TextUtils.i18n('%MODULENAME%/ERROR_INPUT_CORRECT_EMAILS') + ' ' + this.email()]);
 		}
 		else
 		{
@@ -130,7 +130,7 @@ CAccountForwardPaneView.prototype.onResponse = function (oResponse, oRequest)
 		
 		this.applySavedValues(oParameters);
 		
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_FORWARD_UPDATE_SUCCESS'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_FORWARD_UPDATE_SUCCESS'));
 	}
 };
 

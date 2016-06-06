@@ -24,17 +24,17 @@ var
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js'),
-	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	Settings = require('modules/Contacts/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CContactListItemModel = require('modules/Contacts/js/models/CContactListItemModel.js'),
-	CContactModel = require('modules/Contacts/js/models/CContactModel.js'),
-	CGroupModel = require('modules/Contacts/js/models/CGroupModel.js'),
+	CContactListItemModel = require('modules/%ModuleName%/js/models/CContactListItemModel.js'),
+	CContactModel = require('modules/%ModuleName%/js/models/CContactModel.js'),
+	CGroupModel = require('modules/%ModuleName%/js/models/CGroupModel.js'),
 	
-	CImportView = require('modules/Contacts/js/views/CImportView.js')
+	CImportView = require('modules/%ModuleName%/js/views/CImportView.js')
 ;
 
 /**
@@ -44,7 +44,7 @@ function CContactsView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('CONTACTS/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB'));
 	
 	this.contactCount = ko.observable(0);
 	this.uploaderArea = ko.observable(null);
@@ -300,7 +300,7 @@ function CContactsView()
 	}, this);
 
 	this.searchText = ko.computed(function () {
-		return TextUtils.i18n('CONTACTS/INFO_SEARCH_RESULT', {
+		return TextUtils.i18n('%MODULENAME%/INFO_SEARCH_RESULT', {
 			'SEARCH': this.search()
 		});
 	}, this);
@@ -452,7 +452,7 @@ CContactsView.prototype.executeSave = function (oData)
 	}
 	else
 	{
-		Screens.showError(TextUtils.i18n('CONTACTS/ERROR_EMAIL_OR_NAME_BLANK'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_EMAIL_OR_NAME_BLANK'));
 	}
 };
 
@@ -487,7 +487,7 @@ CContactsView.prototype.deleteContact = function ()
 				return !oItem.ReadOnly();
 			}),
 			iCount = aChecked.length,
-			sConfirmText = TextUtils.i18n('CONTACTS/CONFIRM_DELETE_CONTACTS_PLURAL', {}, null, iCount),
+			sConfirmText = TextUtils.i18n('%MODULENAME%/CONFIRM_DELETE_CONTACTS_PLURAL', {}, null, iCount),
 			fDeleteContacts = _.bind(function (bResult) {
 				if (bResult)
 				{
@@ -601,12 +601,12 @@ CContactsView.prototype.executeImport = function ()
 
 CContactsView.prototype.executeCSVExport = function ()
 {
-	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsCSV/');
+	UrlUtils.downloadByUrl('?/Download/%ModuleName%/DownloadContactsAsCSV/');
 };
 
 CContactsView.prototype.executeVCFExport = function ()
 {
-	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsVCF/');
+	UrlUtils.downloadByUrl('?/Download/%ModuleName%/DownloadContactsAsVCF/');
 };
 
 CContactsView.prototype.executeCancel = function ()
@@ -1118,7 +1118,7 @@ CContactsView.prototype.dragAndDropHelper = function (oContact)
 	oHelper.data('p7-contatcs-type', this.selectedGroupType());
 	oHelper.data('p7-contatcs-uids', aUids);
 	
-	$('.count-text', oHelper).text(TextUtils.i18n('CONTACTS/LABEL_DRAG_CONTACTS_PLURAL', {
+	$('.count-text', oHelper).text(TextUtils.i18n('%MODULENAME%/LABEL_DRAG_CONTACTS_PLURAL', {
 		'COUNT': nCount
 	}, null, nCount));
 
@@ -1257,7 +1257,7 @@ CContactsView.prototype.onCreateContactResponse = function (oResponse, oRequest)
 	if (oResponse && oResponse.Result)
 	{
 		var sReport = oResponse.Method === 'CreateContact' ?
-			TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED') : TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_UPDATED');
+			TextUtils.i18n('%MODULENAME%/REPORT_CONTACT_SUCCESSFULLY_ADDED') : TextUtils.i18n('%MODULENAME%/REPORT_CONTACT_SUCCESSFULLY_UPDATED');
 		Utils.log('CContactsView', sReport);
 		Screens.showReport(sReport);
 			
@@ -1390,8 +1390,8 @@ CContactsView.prototype.onCreateGroupResponse = function (oResponse, oRequest)
 			this.selector.itemSelected(null);
 		}
 
-		Utils.log('CContactsView', TextUtils.i18n('CONTACTS/REPORT_GROUP_SUCCESSFULLY_ADDED'));
-		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_GROUP_SUCCESSFULLY_ADDED'));
+		Utils.log('CContactsView', TextUtils.i18n('%MODULENAME%/REPORT_GROUP_SUCCESSFULLY_ADDED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_GROUP_SUCCESSFULLY_ADDED'));
 
 		this.requestContactList();
 		this.requestGroupFullList();
@@ -1561,7 +1561,7 @@ CContactsView.prototype.onContactUploadComplete = function (sFileUid, bResponseR
 	{
 		if (bResponse.ErrorCode)
 		{
-			Api.showErrorByCode(bResponse, TextUtils.i18n('CONTACTS/ERROR_FILE_NOT_CSV_OR_VCF'));
+			Api.showErrorByCode(bResponse, TextUtils.i18n('%MODULENAME%/ERROR_FILE_NOT_CSV_OR_VCF'));
 		}
 		else
 		{

@@ -12,7 +12,7 @@ var
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	MailCache = require('modules/Mail/js/Cache.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
 	
 	MailUtils = {}
 ;
@@ -63,7 +63,7 @@ MailUtils.deleteMessages = function (aUids, fAfterDelete)
 	}
 	else if (!oTrash)
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('MAIL/CONFIRM_MESSAGES_DELETE_NO_TRASH_FOLDER'), fDeleteMessages]);
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('%MODULENAME%/CONFIRM_MESSAGES_DELETE_NO_TRASH_FOLDER'), fDeleteMessages]);
 	}
 };
 

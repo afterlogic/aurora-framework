@@ -1,16 +1,16 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Contacts/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 	
 	if (oSettings)
 	{
-		var Settings = require('modules/Contacts/js/Settings.js');
+		var Settings = require('modules/%ModuleName%/js/Settings.js');
 		Settings.init(oSettings);
 	}
 	
 	var
-		SuggestionsAutocomplete = require('modules/Contacts/js/SuggestionsAutocomplete.js')
+		SuggestionsAutocomplete = require('modules/%ModuleName%/js/SuggestionsAutocomplete.js')
 	;
 
 	return {

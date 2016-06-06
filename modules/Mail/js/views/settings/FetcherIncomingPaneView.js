@@ -13,11 +13,11 @@ var
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
 	
-	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
+	CServerPropertiesView = require('modules/%ModuleName%/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -36,7 +36,7 @@ function CFetcherIncomingPaneView()
 
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(110, 995, 'fetcher_edit_incoming', TextUtils.i18n('MAIL/LABEL_POP3_SERVER'));
+	this.oIncoming = new CServerPropertiesView(110, 995, 'fetcher_edit_incoming', TextUtils.i18n('%MODULENAME%/LABEL_POP3_SERVER'));
 
 	this.sFetcherFolder = '';
 	this.folder = ko.observable('');
@@ -126,7 +126,7 @@ CFetcherIncomingPaneView.prototype.save = function ()
 {
 	if (this.isEmptyRequiredFields())
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_FETCHER_FIELDS_EMPTY'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FETCHER_FIELDS_EMPTY'));
 	}
 	else
 	{
@@ -154,7 +154,7 @@ CFetcherIncomingPaneView.prototype.onResponse = function (oResponse, oRequest)
 	{
 		AccountList.populateFetchers();
 		
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SUCCESSFULLY_SAVED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_SUCCESSFULLY_SAVED'));
 	}
 };
 

@@ -7,8 +7,8 @@ var
 	App = require('modules/Core/js/App.js'),
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	Ajax = require('modules/Files/js/Ajax.js'),
-	CFolderModel = require('modules/Files/js/models/CFolderModel.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	CFolderModel = require('modules/%ModuleName%/js/models/CFolderModel.js')
 ;
 
 /**

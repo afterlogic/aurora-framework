@@ -6,8 +6,8 @@ var
 	
 	Types = require('modules/Core/js/utils/Types.js'),
 	
-	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	CVcardModel = require('modules/Contacts/js/models/VcardModel.js')
+	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),
+	CVcardModel = require('modules/%ModuleName%/js/models/VcardModel.js')
 ;
 
 function CVcardAttachmentView()

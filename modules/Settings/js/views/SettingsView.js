@@ -8,7 +8,7 @@ var
 	Routing = require('modules/Core/js/Routing.js'),
 	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
 	
-	Settings = require('modules/Settings/js/Settings.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	$html = $('html')
 ;

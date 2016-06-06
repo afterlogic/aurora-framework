@@ -1,32 +1,32 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Mail/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 
 	var
 		_ = require('underscore'),
 		
 		App = require('modules/Core/js/App.js'),
 		
-		Settings = require('modules/Mail/js/Settings.js'),
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		Cache = null,
 		
 		oScreens = {
 			'main': function () {
-				return require('modules/Mail/js/views/MailView.js');
+				return require('modules/%ModuleName%/js/views/MailView.js');
 			}
 		}
 	;
 
 	Settings.init(oSettings);
 	
-	Cache = require('modules/Mail/js/Cache.js');
+	Cache = require('modules/%ModuleName%/js/Cache.js');
 	Cache.init();
 	
 	if (App.isMobile())
 	{
 		oScreens['compose'] = function () {
-			var CComposeView = require('modules/Mail/js/views/CComposeView.js');
+			var CComposeView = require('modules/%ModuleName%/js/views/CComposeView.js');
 			return new CComposeView();
 		};
 	}
@@ -39,13 +39,13 @@ module.exports = function (oSettings) {
 			var
 				TextUtils = require('modules/Core/js/utils/Text.js'),
 				Browser = require('modules/Core/js/Browser.js'),
-				MailUtils = require('modules/Mail/js/utils/Mail.js')
+				MailUtils = require('modules/%ModuleName%/js/utils/Mail.js')
 			;
 			
-			require('modules/Mail/js/koBindings.js');
+			require('modules/%ModuleName%/js/koBindings.js');
 			if (!App.isMobile())
 			{
-				require('modules/Mail/js/koBindingSearchHighlighter.js');
+				require('modules/%ModuleName%/js/koBindingSearchHighlighter.js');
 			}
 			
 			if (Settings.AllowAppRegisterMailto)
@@ -53,30 +53,30 @@ module.exports = function (oSettings) {
 				MailUtils.registerMailto(Browser.firefox);
 			}
 			
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/MailSettingsPaneView.js'); }, 'mail', TextUtils.i18n('MAIL/LABEL_SETTINGS_TAB')]);
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/Mail/js/views/settings/AccountsSettingsPaneView.js'); }, 'accounts', TextUtils.i18n('MAIL/LABEL_ACCOUNTS_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/settings/MailSettingsPaneView.js'); }, 'mail', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/settings/AccountsSettingsPaneView.js'); }, 'accounts', TextUtils.i18n('%MODULENAME%/LABEL_ACCOUNTS_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
 			return oScreens;
 		},
 		getHeaderItem: function () {
-			return require('modules/Mail/js/views/HeaderItemView.js');
+			return require('modules/%ModuleName%/js/views/HeaderItemView.js');
 		},
 		getPrefetcher: function () {
-			return require('modules/Mail/js/Prefetcher.js');
+			return require('modules/%ModuleName%/js/Prefetcher.js');
 		},
 		registerMessagePaneController: function (oController, sPlace) {
-			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
+			var MessagePaneView = require('modules/%ModuleName%/js/views/MessagePaneView.js');
 			MessagePaneView.registerController(oController, sPlace);
 		},
 		registerComposeToolbarController: function (oController) {
-			var ComposePopup = require('modules/Mail/js/popups/ComposePopup.js');
+			var ComposePopup = require('modules/%ModuleName%/js/popups/ComposePopup.js');
 			ComposePopup.registerToolbarController(oController);
 		},
 		getComposeMessageToAddresses: function () {
 			var
 				bAllowSendMail = true,
-				ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js')
+				ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/%ModuleName%/js/utils/ScreenCompose.js') : require('modules/%ModuleName%/js/utils/PopupCompose.js')
 			;
 			
 			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;
@@ -88,11 +88,11 @@ module.exports = function (oSettings) {
 			return _.bind(Cache.searchMessagesInCurrentFolder, Cache);
 		},
 		getAllAccountsFullEmails: function () {
-			var AccountList = require('modules/Mail/js/AccountList.js');
+			var AccountList = require('modules/%ModuleName%/js/AccountList.js');
 			return AccountList.getAllFullEmails();
 		},
 		getCreateAccountPopup: function () {
-			return require('modules/Mail/js/popups/CreateAccountPopup.js');
+			return require('modules/%ModuleName%/js/popups/CreateAccountPopup.js');
 		}
 	};
 };

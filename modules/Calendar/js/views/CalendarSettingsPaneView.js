@@ -10,10 +10,10 @@ var
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	CalendarUtils = require('modules/Calendar/js/utils/Calendar.js'),
+	CalendarUtils = require('modules/%ModuleName%/js/utils/Calendar.js'),
 	
-	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	Settings = require('modules/Calendar/js/Settings.js')
+	CalendarCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**

@@ -39,7 +39,7 @@ function IsMsgParam(sTemp)
 LinksUtils.getMailbox = function (sFolder, iPage, sUid, sSearch, sFilters)
 {
 	var
-		AccountList = require('modules/Mail/js/AccountList.js'),
+		AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 		oCurrAccount = AccountList.getCurrent(),
 		aResult = ['mail', oCurrAccount ? oCurrAccount.hash() : '']
 	;

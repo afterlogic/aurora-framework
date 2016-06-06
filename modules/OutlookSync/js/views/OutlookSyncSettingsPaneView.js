@@ -11,7 +11,7 @@ var
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Settings = require('modules/OutlookSync/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**

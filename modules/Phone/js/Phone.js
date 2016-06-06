@@ -14,9 +14,9 @@ var
 	Screens = require('modules/Core/js/Screens.js'),
 	
 	Popups = require('modules/Core/js/Popups.js'),
-	PhonePopup = require('modules/Phone/js/popups/PhonePopup.js'),
+	PhonePopup = require('modules/%ModuleName%/js/popups/PhonePopup.js'),
 	
-	Settings = require('modules/Phone/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -72,8 +72,8 @@ function CPhone()
 CPhone.prototype.init = function ()
 {
 	this.provider = Settings.VoiceProvider === 'sip' ?
-				require('modules/Phone/js/PhoneWebrtc.js') :
-				require('modules/Phone/js/PhoneTwilio.js');
+				require('modules/%ModuleName%/js/PhoneWebrtc.js') :
+				require('modules/%ModuleName%/js/PhoneTwilio.js');
 	
 	this.action(Enums.PhoneAction.OfflineInit);
 };
@@ -109,7 +109,7 @@ CPhone.prototype.showError = function (iErrCode)
 {
 	if (1 === Types.pInt(iErrCode))
 	{
-		Screens.showError(TextUtils.i18n('PHONE/ERROR_SERVER_UNAVAILABLE'), false, true);
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_SERVER_UNAVAILABLE'), false, true);
 	}
 };
 
@@ -180,14 +180,14 @@ CPhone.prototype.incomingCall = function (sNumber)
 	if (Types.isNonEmptyString(sNumber))
 	{
 		var fShowAll = _.bind(function (sText) {
-			this.report(TextUtils.i18n('PHONE/INFO_INCOMING_CALL_FROM') + ' ' + sText);
+			this.report(TextUtils.i18n('%MODULENAME%/INFO_INCOMING_CALL_FROM') + ' ' + sText);
 			
 			Popups.showPopup(PhonePopup, [sText]);
 			
 			Utils.desktopNotify({
 				action: 'show',
-				title: TextUtils.i18n('PHONE/INFO_USER_CALLING', {'USER' : sText}),
-				body: TextUtils.i18n('PHONE/INFO_CLICK_TO_ANSWER'),
+				title: TextUtils.i18n('%MODULENAME%/INFO_USER_CALLING', {'USER' : sText}),
+				body: TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_ANSWER'),
 				callback: _.bind(function() {
 					this.action(Enums.PhoneAction.IncomingConnect);
 				}, this),

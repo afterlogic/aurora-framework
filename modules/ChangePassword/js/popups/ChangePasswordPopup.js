@@ -13,7 +13,7 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	Settings = require('modules/ChangePassword/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -59,11 +59,11 @@ CChangePasswordPopup.prototype.change = function ()
 	}
 	else if (Settings.PasswordMinLength > 0 && this.newPassword().length < Settings.PasswordMinLength) 
 	{ 
-		Screens.showError(TextUtils.i18n('CHANGEPASSWORD/ERROR_PASSWORD_TOO_SHORT').replace('%N%', Settings.PasswordMinLength));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_PASSWORD_TOO_SHORT').replace('%N%', Settings.PasswordMinLength));
 	}
 	else if (Settings.PasswordMustBeComplex && (!this.newPassword().match(/([0-9])/) || !this.newPassword().match(/([!,%,&,@,#,$,^,*,?,_,~])/)))
 	{
-		Screens.showError(TextUtils.i18n('CHANGEPASSWORD/ERROR_PASSWORD_TOO_SIMPLE'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_PASSWORD_TOO_SIMPLE'));
 	}
 	else
 	{
@@ -94,17 +94,17 @@ CChangePasswordPopup.prototype.onUpdatePasswordResponse = function (oResponse, o
 {
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('CHANGEPASSWORD/ERROR_PASSWORD_NOT_SAVED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_PASSWORD_NOT_SAVED'));
 	}
 	else
 	{
 		if (this.hasOldPassword())
 		{
-			Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/REPORT_PASSWORD_CHANGED'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_PASSWORD_CHANGED'));
 		}
 		else
 		{
-			Screens.showReport(TextUtils.i18n('CHANGEPASSWORD/REPORT_PASSWORD_SET'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_PASSWORD_SET'));
 		}
 		
 		this.closePopup();

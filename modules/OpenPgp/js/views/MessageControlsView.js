@@ -7,11 +7,11 @@ var
 	
 	Screens = require('modules/Core/js/Screens.js'),
 	
-	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
+	ErrorsUtils = require('modules/%ModuleName%/js/utils/Errors.js'),
 	
-	Enums = require('modules/OpenPgp/js/Enums.js'),
-	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js'),
-	Settings = require('modules/OpenPgp/js/Settings.js')
+	Enums = require('modules/%ModuleName%/js/Enums.js'),
+	OpenPgp = require('modules/%ModuleName%/js/OpenPgp.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 function CMessageControlsView()
@@ -110,11 +110,11 @@ CMessageControlsView.prototype.decryptMessage = function ()
 		
 		if (!oRes.notices)
 		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED_AND_VERIFIED'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED_AND_VERIFIED'));
 		}
 		else
 		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED'));
 		}
 	}
 	
@@ -123,7 +123,7 @@ CMessageControlsView.prototype.decryptMessage = function ()
 		bNoSignDataNotice = ErrorsUtils.showPgpErrorByCode(oRes, Enums.PgpAction.DecryptVerify);
 		if (bNoSignDataNotice)
 		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED_AND_NOT_SIGNED'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SUCCESSFULLY_DECRYPTED_AND_NOT_SIGNED'));
 		}
 	}
 };
@@ -138,7 +138,7 @@ CMessageControlsView.prototype.verifyMessage = function ()
 		
 		this.visibleVerifyControl(false);
 		
-		Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SUCCESSFULLY_VERIFIED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SUCCESSFULLY_VERIFIED'));
 	}
 	
 	if (oRes && (oRes.errors || oRes.notices))

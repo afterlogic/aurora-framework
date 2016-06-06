@@ -13,9 +13,9 @@ var
 	SearchMessagesInCurrentFolderFunc = ModulesManager.run('Mail', 'getSearchMessagesInCurrentFolder'),
 	
 	Popups = require('modules/Core/js/Popups.js'),
-	CreateContactPopup = require('modules/Contacts/js/popups/CreateContactPopup.js'),
+	CreateContactPopup = require('modules/%ModuleName%/js/popups/CreateContactPopup.js'),
 	
-	ContactsCache = require('modules/Contacts/js/Cache.js'),
+	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),
 	
 	oContactCardsView = {
 		contacts: ko.observableArray([]),
@@ -155,7 +155,7 @@ function OnContactResponse(aElements, aContacts)
 			{
 				var $add = $('<span class="add_contact"></span>');
 				$Element.after($add);
-				CustomTooltip.init($add, 'CONTACTS/ACTION_ADD_TO_CONTACTS');
+				CustomTooltip.init($add, '%MODULENAME%/ACTION_ADD_TO_CONTACTS');
 				$add.on('click', function () {
 					Popups.showPopup(CreateContactPopup, [$Element.attr('data-name'), sEmail, function (aContacts) {
 						_.each(aElements, function ($El) {

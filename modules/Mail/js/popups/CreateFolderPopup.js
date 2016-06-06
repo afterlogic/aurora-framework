@@ -12,9 +12,9 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js')
 ;
 
 /**
@@ -58,7 +58,7 @@ CCreateFolderPopup.prototype.PopupTemplate = 'Mail_Settings_CreateFolderPopup';
  */
 CCreateFolderPopup.prototype.onShow = function (fCallback)
 {
-	this.options(MailCache.editedFolderList().getOptions(TextUtils.i18n('MAIL/LABEL_NO_PARENT_FOLDER'), true, false, true));
+	this.options(MailCache.editedFolderList().getOptions(TextUtils.i18n('%MODULENAME%/LABEL_NO_PARENT_FOLDER'), true, false, true));
 	
 	this.fCallback = fCallback;
 	this.folderName('');
@@ -92,7 +92,7 @@ CCreateFolderPopup.prototype.onCreateFolderResponse = function (oResponse, oRequ
 	if (!oResponse.Result)
 	{
 		this.isCreating(false);
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_CREATE_FOLDER'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_CREATE_FOLDER'));
 	}
 	else
 	{

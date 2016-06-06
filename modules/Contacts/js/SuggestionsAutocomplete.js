@@ -7,7 +7,7 @@ var
 	AddressUtils = require('modules/Core/js/utils/Address.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**

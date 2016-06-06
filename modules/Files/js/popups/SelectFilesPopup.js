@@ -6,8 +6,8 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	CFilesView = require('modules/Files/js/views/CFilesView.js'),
-	CFileModel = require('modules/Files/js/models/CFileModel.js')
+	CFilesView = require('modules/%ModuleName%/js/views/CFilesView.js'),
+	CFileModel = require('modules/%ModuleName%/js/models/CFileModel.js')
 ;
 
 /**

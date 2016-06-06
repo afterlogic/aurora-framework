@@ -20,11 +20,11 @@ var
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	СFiltersModel = require('modules/Mail/js/models/СFiltersModel.js'),
+	СFiltersModel = require('modules/%ModuleName%/js/models/СFiltersModel.js'),
 	
 	AccountList = null,
 	Cache = null,
-	Settings = require('modules/Mail/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -91,25 +91,25 @@ function CAccountModel(bSingle)
 		{
 			if (ModulesManager.isModuleIncluded('Calendar') && ModulesManager.isModuleIncluded('Contacts'))
 			{
-				sAndOther = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT_CONTACTS_CALENDARS');
+				sAndOther = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT_CONTACTS_CALENDARS');
 			}
 			else if (ModulesManager.isModuleIncluded('Calendar'))
 			{
-				sAndOther = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT_CALENDARS');
+				sAndOther = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT_CALENDARS');
 			}
 			else if (ModulesManager.isModuleIncluded('Contacts'))
 			{
-				sAndOther = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT_CONTACTS');
+				sAndOther = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT_CONTACTS');
 			}
-			sHint = TextUtils.i18n('MAIL/INFO_REMOVE_DEFAULT_ACCOUNT', {'AND_OTHER': sAndOther});
+			sHint = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_DEFAULT_ACCOUNT', {'AND_OTHER': sAndOther});
 			if (!bSingle)
 			{
-				sHint += TextUtils.i18n('MAIL/INFO_REMOVE_DEFAULT_ACCOUNT_NOTSINGLE');
+				sHint += TextUtils.i18n('%MODULENAME%/INFO_REMOVE_DEFAULT_ACCOUNT_NOTSINGLE');
 			}
 		}
 		else
 		{
-			sHint = TextUtils.i18n('MAIL/INFO_REMOVE_ACCOUNT');
+			sHint = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT');
 		}
 		
 		return sHint;
@@ -118,11 +118,11 @@ function CAccountModel(bSingle)
 	this.removeConfirmation = ko.computed(function () {
 		if (this.isDefault())
 		{
-			return this.removeHint() + TextUtils.i18n('MAIL/CONFIRM_REMOVE_ACCOUNTED');
+			return this.removeHint() + TextUtils.i18n('%MODULENAME%/CONFIRM_REMOVE_ACCOUNTED');
 		}
 		else
 		{
-			return TextUtils.i18n('MAIL/ACCOUNTS_REMOVE_CONFIRMATION');
+			return TextUtils.i18n('%MODULENAME%/ACCOUNTS_REMOVE_CONFIRMATION');
 		}
 	}, this);
 }
@@ -131,7 +131,7 @@ CAccountModel.prototype.requireAccounts = function ()
 {
 	if (AccountList === null)
 	{
-		AccountList = require('modules/Mail/js/AccountList.js');
+		AccountList = require('modules/%ModuleName%/js/AccountList.js');
 	}
 };
 
@@ -147,7 +147,7 @@ CAccountModel.prototype.requireAjax = function ()
 {
 	if (Ajax === null)
 	{
-		Ajax = require('modules/Mail/js/Ajax.js');
+		Ajax = require('modules/%ModuleName%/js/Ajax.js');
 	}
 };
 
@@ -155,7 +155,7 @@ CAccountModel.prototype.requireCache = function ()
 {
 	if (Cache === null)
 	{
-		Cache = require('modules/Mail/js/Cache.js');
+		Cache = require('modules/%ModuleName%/js/Cache.js');
 	}
 };
 
@@ -284,9 +284,9 @@ CAccountModel.prototype.allowMailAfterConfiguring = function ()
 		if (this.passwordSpecified())
 		{
 			Popups.showPopup(AlertPopup, [
-				TextUtils.i18n('MAIL/INFO_AFTER_CONNECT_MAIL_HTML', {'EMAIL': this.email()}),
+				TextUtils.i18n('%MODULENAME%/INFO_AFTER_CONNECT_MAIL_HTML', {'EMAIL': this.email()}),
 				null,
-				TextUtils.i18n('MAIL/HEADING_AFTER_CONNECT_MAIL_HTML', {'EMAIL': this.email()})
+				TextUtils.i18n('%MODULENAME%/HEADING_AFTER_CONNECT_MAIL_HTML', {'EMAIL': this.email()})
 			]);
 		}
 		
@@ -403,7 +403,7 @@ CAccountModel.prototype.onAccountDeleteResponse = function (oResponse, oRequest)
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_REMOVE_ACCOUNT'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_REMOVE_ACCOUNT'));
 	}
 	else
 	{

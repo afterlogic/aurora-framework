@@ -6,8 +6,8 @@ var
 	
 	Types = require('modules/Core/js/utils/Types.js'),
 			
-	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
-	AccountList = require('modules/Mail/js/AccountList.js')
+	SendingUtils = require('modules/%ModuleName%/js/utils/Sending.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js')
 ;
 
 function CSenderSelector()

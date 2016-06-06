@@ -12,10 +12,10 @@ var
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	
-	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
+	CServerPropertiesView = require('modules/%ModuleName%/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -42,7 +42,7 @@ function CFetcherOutgoingPaneView()
 
 	this.focusEmail = ko.observable(false);
 
-	this.oOutgoing = new CServerPropertiesView(25, 465, 'fetcher_edit_outgoing', TextUtils.i18n('MAIL/LABEL_SMTP_SERVER'));
+	this.oOutgoing = new CServerPropertiesView(25, 465, 'fetcher_edit_outgoing', TextUtils.i18n('%MODULENAME%/LABEL_SMTP_SERVER'));
 	this.outgoingMailAuth = ko.observable(false);
 
 	this.firstState = null;
@@ -98,7 +98,7 @@ CFetcherOutgoingPaneView.prototype.save = function ()
 {
 	if (this.isEmptyRequiredFields())
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_FETCHER_FIELDS_EMPTY'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FETCHER_FIELDS_EMPTY'));
 	}
 	else
 	{
@@ -126,7 +126,7 @@ CFetcherOutgoingPaneView.prototype.onResponse = function (oResponse, oRequest)
 	{
 		AccountList.populateFetchers();
 		
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_SUCCESSFULLY_SAVED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_SUCCESSFULLY_SAVED'));
 	}
 };
 

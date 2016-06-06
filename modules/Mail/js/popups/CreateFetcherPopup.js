@@ -12,13 +12,13 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
-	CreateFolderPopup = require('modules/Mail/js/popups/CreateFolderPopup.js'),
+	CreateFolderPopup = require('modules/%ModuleName%/js/popups/CreateFolderPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
 	
-	CServerPropertiesView = require('modules/Mail/js/views/CServerPropertiesView.js')
+	CServerPropertiesView = require('modules/%ModuleName%/js/views/CServerPropertiesView.js')
 ;
 
 /**
@@ -33,7 +33,7 @@ function CCreateFetcherPopup()
 
 	this.incomingMailLogin = ko.observable('');
 	this.incomingMailPassword = ko.observable('');
-	this.oIncoming = new CServerPropertiesView(110, 995, 'fectcher_add_incoming', TextUtils.i18n('MAIL/LABEL_POP3_SERVER'));
+	this.oIncoming = new CServerPropertiesView(110, 995, 'fectcher_add_incoming', TextUtils.i18n('%MODULENAME%/LABEL_POP3_SERVER'));
 
 	this.folder = ko.observable('');
 	this.options = ko.observableArray([]);
@@ -86,7 +86,7 @@ CCreateFetcherPopup.prototype.save = function ()
 {
 	if (this.isEmptyRequiredFields())
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_FETCHER_FIELDS_EMPTY'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FETCHER_FIELDS_EMPTY'));
 	}
 	else
 	{

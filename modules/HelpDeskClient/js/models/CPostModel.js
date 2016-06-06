@@ -8,7 +8,7 @@ var
 	
 	CDateModel = require('modules/Core/js/models/CDateModel.js'),
 	
-	CHelpdeskAttachmentModel = require('modules/HelpDeskClient/js/models/CHelpdeskAttachmentModel.js')
+	CHelpdeskAttachmentModel = require('modules/%ModuleName%/js/models/CHelpdeskAttachmentModel.js')
 ;
 
 /**
@@ -44,7 +44,7 @@ CPostModel.prototype.parse = function (oData)
 	this.IdThread = oData.IdHelpdeskThread;
 	this.IdOwner = oData.IdOwner;
 	this.bThreadOwner = oData.IsThreadOwner;
-	this.sFrom = Types.isNonEmptyArray(oData.Owner) ? oData.Owner[1] || oData.Owner[0] || '' : TextUtils.i18n('HELPDESK/LABEL_DELETED_USER');
+	this.sFrom = Types.isNonEmptyArray(oData.Owner) ? oData.Owner[1] || oData.Owner[0] || '' : TextUtils.i18n('%MODULENAME%/LABEL_DELETED_USER');
 	this.sDate = CDateModel.prototype.convertDate(oData.Created);
 	this.iType = oData.Type;
 	this.bSysType = oData.SystemType;

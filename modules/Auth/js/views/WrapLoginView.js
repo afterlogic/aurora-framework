@@ -11,12 +11,12 @@ var
 	App = require('modules/Core/js/App.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	Settings = require('modules/Auth/js/Settings.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
-	CForgotView = require('modules/Auth/js/views/CForgotView.js'),
-	CLoginView = require('modules/Auth/js/views/CLoginView.js'),
-	CRegisterView = require('modules/Auth/js/views/CRegisterView.js')
+	CForgotView = require('modules/%ModuleName%/js/views/CForgotView.js'),
+	CLoginView = require('modules/%ModuleName%/js/views/CLoginView.js'),
+	CRegisterView = require('modules/%ModuleName%/js/views/CRegisterView.js')
 ;
 
 /**
@@ -26,11 +26,11 @@ function CWrapLoginView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('AUTH/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB'));
 	
 	this.bSocialInviteMode = typeof UrlUtils.getRequestParam('invite-auth') === 'string';
-	this.socialInviteTitle = TextUtils.i18n('AUTH/HEADING_SOCIAL_INVITE', {'SITENAME': UserSettings.SiteName});
-	this.socialInviteText = TextUtils.i18n('AUTH/INFO_SOCIAL_INVITE');
+	this.socialInviteTitle = TextUtils.i18n('%MODULENAME%/HEADING_SOCIAL_INVITE', {'SITENAME': UserSettings.SiteName});
+	this.socialInviteText = TextUtils.i18n('%MODULENAME%/INFO_SOCIAL_INVITE');
 	
 	this.rtl = ko.observable(UserSettings.isRTL);
 	

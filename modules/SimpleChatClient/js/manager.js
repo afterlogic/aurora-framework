@@ -4,7 +4,7 @@ module.exports = function (oSettings) {
 	var
 		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
-		Settings = require('modules/SimpleChatClient/js/Settings.js')
+		Settings = require('modules/%ModuleName%/js/Settings.js')
 	;
 	Settings.init(oSettings);
 	
@@ -27,7 +27,7 @@ module.exports = function (oSettings) {
 		 * @param {Object} ModulesManager
 		 */
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/SimpleChatClient/js/views/SettingsPaneView.js'); }, 'simplechat', TextUtils.i18n('SIMPLECHAT/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/SettingsPaneView.js'); }, 'simplechat', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		
 		/**
@@ -38,7 +38,7 @@ module.exports = function (oSettings) {
 		getScreens: function () {
 			return {
 				'main': function () {
-					return require('modules/SimpleChatClient/js/views/MainView.js');
+					return require('modules/%ModuleName%/js/views/MainView.js');
 				}
 			};
 		},
@@ -51,7 +51,7 @@ module.exports = function (oSettings) {
 		getHeaderItem: function () {
 			var CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js');
 
-			return new CHeaderItemView(TextUtils.i18n('SIMPLECHAT/ACTION_SHOW_CHAT'));
+			return new CHeaderItemView(TextUtils.i18n('%MODULENAME%/ACTION_SHOW_CHAT'));
 		}
 	};
 };

@@ -6,7 +6,7 @@ var
 	
 	App = require('modules/Core/js/App.js'),
 	
-	Ajax = require('modules/Calendar/js/Ajax.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**

@@ -15,8 +15,8 @@ var
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**
@@ -104,7 +104,7 @@ CIdentityPropertiesPaneView.prototype.save = function ()
 {
 	if (this.email() === '')
 	{
-		Screens.showError(Utils.i18n('MAIL/ERROR_IDENTITY_FIELDS_BLANK'));
+		Screens.showError(Utils.i18n('%MODULENAME%/ERROR_IDENTITY_FIELDS_BLANK'));
 	}
 	else
 	{
@@ -126,7 +126,7 @@ CIdentityPropertiesPaneView.prototype.onResponse = function (oResponse, oRequest
 
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_IDENTITY_ADDING'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_IDENTITY_ADDING'));
 	}
 	else
 	{
@@ -201,7 +201,7 @@ CIdentityPropertiesPaneView.prototype.onAccountIdentityDeleteResponse = function
 {
 	if (!oResponse.Result)
 	{
-		Api.showErrorByCode(oResponse, Utils.i18n('MAIL/ERROR_IDENTITY_DELETING'));
+		Api.showErrorByCode(oResponse, Utils.i18n('%MODULENAME%/ERROR_IDENTITY_DELETING'));
 	}
 	AccountList.populateIdentities();
 };

@@ -4,7 +4,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Settings = require('modules/Contacts/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**

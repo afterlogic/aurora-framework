@@ -7,7 +7,7 @@ var
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	Settings = require('modules/HelpDeskClient/js/Settings.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**

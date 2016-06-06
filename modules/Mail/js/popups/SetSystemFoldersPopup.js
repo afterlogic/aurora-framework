@@ -12,9 +12,9 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js')
 ;
 
 /**
@@ -52,7 +52,7 @@ CSetSystemFoldersPopup.prototype.onShow = function ()
 {
 	var oFolderList = MailCache.editedFolderList();
 	
-	this.options(oFolderList.getOptions(TextUtils.i18n('MAIL/LABEL_NO_FOLDER_USAGE_ASSIGNED'), false, false, false));
+	this.options(oFolderList.getOptions(TextUtils.i18n('%MODULENAME%/LABEL_NO_FOLDER_USAGE_ASSIGNED'), false, false, false));
 
 	this.sentFolderFullName(oFolderList.sentFolderFullName());
 	this.draftsFolderFullName(oFolderList.draftsFolderFullName());
@@ -71,7 +71,7 @@ CSetSystemFoldersPopup.prototype.onResponseFoldersSetupSystem = function (oRespo
 {
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_SETUP_SPECIAL_FOLDERS'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_SETUP_SPECIAL_FOLDERS'));
 		MailCache.getFolderList(AccountList.editedId());
 	}
 };

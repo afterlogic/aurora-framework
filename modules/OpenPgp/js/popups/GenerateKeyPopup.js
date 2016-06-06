@@ -11,10 +11,10 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
+	ErrorsUtils = require('modules/%ModuleName%/js/utils/Errors.js'),
 	
-	Enums = require('modules/OpenPgp/js/Enums.js'),
-	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js')
+	Enums = require('modules/%ModuleName%/js/Enums.js'),
+	OpenPgp = require('modules/%ModuleName%/js/OpenPgp.js')
 ;
 
 /**
@@ -53,7 +53,7 @@ CGenerateKeyPopup.prototype.generate = function ()
 
 		if (oRes && oRes.result)
 		{
-			Screens.showReport(TextUtils.i18n('OPENPGP/REPORT_KEY_SUCCESSFULLY_GENERATED'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_KEY_SUCCESSFULLY_GENERATED'));
 		}
 
 		if (oRes && !oRes.result)

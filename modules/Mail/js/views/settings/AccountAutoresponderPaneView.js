@@ -13,8 +13,8 @@ var
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js')
 ;
 
 /**
@@ -104,7 +104,7 @@ CAccountAutoresponderPaneView.prototype.onResponse = function (oResponse, oReque
 		
 		this.applySavedValues(oParameters);
 		
-		Screens.showReport(TextUtils.i18n('MAIL/REPORT_AUTORESPONDER_UPDATE_SUCCESS'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_AUTORESPONDER_UPDATE_SUCCESS'));
 	}
 };
 

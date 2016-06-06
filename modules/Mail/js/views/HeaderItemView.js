@@ -10,18 +10,18 @@ var
 	
 	CAbstractHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js'),
 			
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Cache = require('modules/Mail/js/Cache.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Cache = require('modules/%ModuleName%/js/Cache.js')
 ;
 
 function CHeaderItemView()
 {
-	CAbstractHeaderItemView.call(this, TextUtils.i18n('MAIL/ACTION_SHOW_MAIL'));
+	CAbstractHeaderItemView.call(this, TextUtils.i18n('%MODULENAME%/ACTION_SHOW_MAIL'));
 	
 	this.unseenCount = Cache.newMessagesCount;
 	
 	this.inactiveTitle = ko.computed(function () {
-		return TextUtils.i18n('MAIL/HEADING_UNREAD_MESSAGES_BROWSER_TAB_PLURAL', {'COUNT': this.unseenCount()}, null, this.unseenCount()) + ' - ' + AccountList.getEmail();
+		return TextUtils.i18n('%MODULENAME%/HEADING_UNREAD_MESSAGES_BROWSER_TAB_PLURAL', {'COUNT': this.unseenCount()}, null, this.unseenCount()) + ' - ' + AccountList.getEmail();
 	}, this);
 	
 	this.accounts = AccountList.collection;

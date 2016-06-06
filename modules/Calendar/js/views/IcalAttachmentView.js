@@ -8,8 +8,8 @@ var
 	
 	App = require('modules/Core/js/App.js'),
 	
-	CalendarCache = require('modules/Calendar/js/Cache.js'),
-	CIcalModel = require('modules/Calendar/js/models/CIcalModel.js')
+	CalendarCache = require('modules/%ModuleName%/js/Cache.js'),
+	CIcalModel = require('modules/%ModuleName%/js/models/CIcalModel.js')
 ;
 
 function CIcalAttachmentView()

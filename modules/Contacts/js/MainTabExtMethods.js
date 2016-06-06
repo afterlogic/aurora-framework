@@ -1,7 +1,7 @@
 'use strict';
 
 var
-	ContactsCache = require('modules/Contacts/js/Cache.js'),
+	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),
 	MainTabContactsMethods = {
 		markVcardsExistentByFile: function (sFile) {
 				ContactsCache.markVcardsExistentByFile(sFile);

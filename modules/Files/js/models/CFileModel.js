@@ -71,13 +71,13 @@ function CFileModel()
 	this.owner = ko.observable('');
 	
 	this.ownerHeaderText = ko.computed(function () {
-		return TextUtils.i18n('FILES/LABEL_OWNER_EMAIL', {
+		return TextUtils.i18n('%MODULENAME%/LABEL_OWNER_EMAIL', {
 			'OWNER': this.owner()
 		});
 	}, this);
 	
 	this.lastModifiedHeaderText = ko.computed(function () {
-		return TextUtils.i18n('FILES/LABEL_LAST_MODIFIED', {
+		return TextUtils.i18n('%MODULENAME%/LABEL_LAST_MODIFIED', {
 			'LASTMODIFIED': this.lastModified()
 		});
 	}, this);

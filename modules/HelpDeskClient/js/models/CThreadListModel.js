@@ -42,19 +42,19 @@ function CThreadListModel()
 		switch (this.state())
 		{
 			case Enums.HelpdeskThreadStates.Pending:
-				sText = TextUtils.i18n('HELPDESK/LABEL_PENDING_STATE' + sLangSuffix);
+				sText = TextUtils.i18n('%MODULENAME%/LABEL_PENDING_STATE' + sLangSuffix);
 				break;
 			case Enums.HelpdeskThreadStates.Resolved:
-				sText = TextUtils.i18n('HELPDESK/LABEL_RESOLVED_STATE' + sLangSuffix);
+				sText = TextUtils.i18n('%MODULENAME%/LABEL_RESOLVED_STATE' + sLangSuffix);
 				break;
 			case Enums.HelpdeskThreadStates.Waiting:
-				sText = TextUtils.i18n('HELPDESK/LABEL_WAITING_STATE' + sLangSuffix);
+				sText = TextUtils.i18n('%MODULENAME%/LABEL_WAITING_STATE' + sLangSuffix);
 				break;
 			case Enums.HelpdeskThreadStates.Answered:
-				sText = TextUtils.i18n('HELPDESK/LABEL_ANSWERED_STATE' + sLangSuffix);
+				sText = TextUtils.i18n('%MODULENAME%/LABEL_ANSWERED_STATE' + sLangSuffix);
 				break;
 			case Enums.HelpdeskThreadStates.Deferred:
-				sText = TextUtils.i18n('HELPDESK/LABEL_DEFERRED_STATE' + sLangSuffix);
+				sText = TextUtils.i18n('%MODULENAME%/LABEL_DEFERRED_STATE' + sLangSuffix);
 				break;
 		}
 		

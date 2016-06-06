@@ -14,16 +14,16 @@ var
 	
 	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
 	
-	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/%ModuleName%/js/utils/ScreenCompose.js') : require('modules/%ModuleName%/js/utils/PopupCompose.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CFolderListView = require('modules/Mail/js/views/CFolderListView.js'),
-	CMessageListView = require('modules/Mail/js/views/CMessageListView.js'),
-	MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js')
+	CFolderListView = require('modules/%ModuleName%/js/views/CFolderListView.js'),
+	CMessageListView = require('modules/%ModuleName%/js/views/CMessageListView.js'),
+	MessagePaneView = require('modules/%ModuleName%/js/views/MessagePaneView.js')
 ;
 
 /**
@@ -34,7 +34,7 @@ function CMailView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/HEADING_BROWSER_TAB');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB');
 	});
 	
 	this.folderList = MailCache.folderList;
@@ -312,7 +312,7 @@ CMailView.prototype.dragAndDropHelper = function (oMessage, bCtrl)
 	oHelper.data('p7-message-list-folder', this.folderList().currentFolderFullName());
 	oHelper.data('p7-message-list-uids', aUids);
 
-	$('.count-text', oHelper).text(TextUtils.i18n('MAIL/LABEL_DRAG_MESSAGES_PLURAL', {
+	$('.count-text', oHelper).text(TextUtils.i18n('%MODULENAME%/LABEL_DRAG_MESSAGES_PLURAL', {
 		'COUNT': bCtrl ? '+ ' + iCount : iCount
 	}, null, iCount));
 

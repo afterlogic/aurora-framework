@@ -20,16 +20,16 @@ var
 	Popups = require('modules/Core/js/Popups.js'),
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
-	CreateFolderPopup = require('modules/Files/js/popups/CreateFolderPopup.js'),
-	CreateLinkPopup = require('modules/Files/js/popups/CreateLinkPopup.js'),
-	RenamePopup = require('modules/Files/js/popups/RenamePopup.js'),
-	SharePopup = require('modules/Files/js/popups/SharePopup.js'),
+	CreateFolderPopup = require('modules/%ModuleName%/js/popups/CreateFolderPopup.js'),
+	CreateLinkPopup = require('modules/%ModuleName%/js/popups/CreateLinkPopup.js'),
+	RenamePopup = require('modules/%ModuleName%/js/popups/RenamePopup.js'),
+	SharePopup = require('modules/%ModuleName%/js/popups/SharePopup.js'),
 	
-	Ajax = require('modules/Files/js/Ajax.js'),
-	Settings = require('modules/Files/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CFileModel = require('modules/Files/js/models/CFileModel.js'),
-	CFolderModel = require('modules/Files/js/models/CFolderModel.js')
+	CFileModel = require('modules/%ModuleName%/js/models/CFileModel.js'),
+	CFolderModel = require('modules/%ModuleName%/js/models/CFolderModel.js')
 ;
 
 /**
@@ -40,7 +40,7 @@ function CFilesView(bPopup)
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('FILES/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB'));
 	
 	this.allowSendEmails = ko.computed(function () {
 		return false;//!!(AppData.App && AppData.App.AllowWebMail && AppData.Accounts && AppData.Accounts.isCurrentAllowsMail());
@@ -55,7 +55,7 @@ function CFilesView(bPopup)
 	this.files = ko.observableArray();
 	this.uploadingFiles = ko.observableArray();
 
-	this.rootPath = ko.observable(TextUtils.i18n('FILES/LABEL_PERSONAL_STORAGE'));
+	this.rootPath = ko.observable(TextUtils.i18n('%MODULENAME%/LABEL_PERSONAL_STORAGE'));
 	this.storageType = ko.observable(Enums.FileStorageType.Personal);
 	this.storageType.subscribe(function () {
 		var  oStorage = null;
@@ -198,23 +198,23 @@ function CFilesView(bPopup)
 			{
 				if (this.isPublic)
 				{
-					sInfoText = TextUtils.i18n('FILES/INFO_PUBLIC_FOLDER_NOT_EXIST');
+					sInfoText = TextUtils.i18n('%MODULENAME%/INFO_PUBLIC_FOLDER_NOT_EXIST');
 				}
 				else
 				{
 					if (this.searchPattern() !== '' || this.isPublic)
 					{
-						sInfoText = TextUtils.i18n('FILES/INFO_NOTHING_FOUND');
+						sInfoText = TextUtils.i18n('%MODULENAME%/INFO_NOTHING_FOUND');
 					}
 					else
 					{
 						if (this.path() !== '' || this.isPopup)
 						{
-							sInfoText = TextUtils.i18n('FILES/INFO_FOLDER_IS_EMPTY');
+							sInfoText = TextUtils.i18n('%MODULENAME%/INFO_FOLDER_IS_EMPTY');
 						}
 						else if (this.bAllowDragNDrop)
 						{
-							sInfoText = TextUtils.i18n('FILES/INFO_DRAGNDROP_FILES_OR_CREATE_FOLDER');
+							sInfoText = TextUtils.i18n('%MODULENAME%/INFO_DRAGNDROP_FILES_OR_CREATE_FOLDER');
 						}
 					}
 				}
@@ -222,7 +222,7 @@ function CFilesView(bPopup)
 		}
 		else if (this.error())
 		{
-			sInfoText = TextUtils.i18n('FILES/ERROR_FILES_NOT_RECEIVED');
+			sInfoText = TextUtils.i18n('%MODULENAME%/ERROR_FILES_NOT_RECEIVED');
 		}
 		
 		return sInfoText;
@@ -328,7 +328,7 @@ CFilesView.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 	if (Settings.UploadSizeLimitMb > 0 && oFileData.Size/(1024*1024) > Settings.UploadSizeLimitMb)
 	{
 		Popups.showPopup(AlertPopup, [
-			TextUtils.i18n('FILES/ERROR_SIZE_LIMIT', {'SIZE': Settings.UploadSizeLimitMb})
+			TextUtils.i18n('%MODULENAME%/ERROR_SIZE_LIMIT', {'SIZE': Settings.UploadSizeLimitMb})
 		]);
 		return false;
 	}	
@@ -456,7 +456,7 @@ CFilesView.prototype.onDrop = function (oFile, oEvent)
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('FILES/INFO_CANNOT_UPLOAD_SEARCH_RESULT'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/INFO_CANNOT_UPLOAD_SEARCH_RESULT'));
 	}
 };
 
@@ -571,15 +571,15 @@ CFilesView.prototype.dragAndDropHelper = function (oFile)
 	
 	if (nFilesCount !== 0 && nFoldersCount !== 0)
 	{
-		sText = TextUtils.i18n('FILES/LABEL_DRAG_ITEMS_PLURAL', {'COUNT': nCount}, null, nCount);
+		sText = TextUtils.i18n('%MODULENAME%/LABEL_DRAG_ITEMS_PLURAL', {'COUNT': nCount}, null, nCount);
 	}
 	else if (nFilesCount === 0)
 	{
-		sText = TextUtils.i18n('FILES/LABEL_DRAG_FOLDERS_PLURAL', {'COUNT': nFoldersCount}, null, nFoldersCount);
+		sText = TextUtils.i18n('%MODULENAME%/LABEL_DRAG_FOLDERS_PLURAL', {'COUNT': nFoldersCount}, null, nFoldersCount);
 	}
 	else if (nFoldersCount === 0)
 	{
-		sText = TextUtils.i18n('FILES/LABEL_DRAG_FILES_PLURAL', {'COUNT': nFilesCount}, null, nFilesCount);
+		sText = TextUtils.i18n('%MODULENAME%/LABEL_DRAG_FILES_PLURAL', {'COUNT': nFilesCount}, null, nFilesCount);
 	}
 	
 	$('.count-text', oHelper).text(sText);
@@ -745,7 +745,7 @@ CFilesView.prototype.renameItem = function (sName)
 	if (!Utils.validateFileOrFolderName(sName))
 	{
 		return oItem instanceof CFolderModel ?
-			TextUtils.i18n('FILES/ERROR_INVALID_FOLDER_NAME') : TextUtils.i18n('FILES/ERROR_INVALID_FILE_NAME');
+			TextUtils.i18n('%MODULENAME%/ERROR_INVALID_FOLDER_NAME') : TextUtils.i18n('%MODULENAME%/ERROR_INVALID_FILE_NAME');
 	}
 	else
 	{
@@ -883,9 +883,9 @@ CFilesView.prototype.addStorageIfNot = function (sStorageType)
 	
 	switch (sStorageType)
 	{
-		case 'personal': sDisplayName = TextUtils.i18n('FILES/LABEL_PERSONAL_STORAGE'); break;
-		case 'corporate': sDisplayName = TextUtils.i18n('FILES/LABEL_CORPORATE_STORAGE'); break;
-		case 'shared': sDisplayName = TextUtils.i18n('FILES/LABEL_SHARED_STORAGE'); break;
+		case 'personal': sDisplayName = TextUtils.i18n('%MODULENAME%/LABEL_PERSONAL_STORAGE'); break;
+		case 'corporate': sDisplayName = TextUtils.i18n('%MODULENAME%/LABEL_CORPORATE_STORAGE'); break;
+		case 'shared': sDisplayName = TextUtils.i18n('%MODULENAME%/LABEL_SHARED_STORAGE'); break;
 	}
 	
 	if (!this.getStorageByType(sStorageType))
@@ -1223,7 +1223,7 @@ CFilesView.prototype.createFolder = function (sFolderName)
 	sFolderName = $.trim(sFolderName);
 	if (!Utils.validateFileOrFolderName(sFolderName))
 	{
-		return TextUtils.i18n('FILES/ERROR_INVALID_FOLDER_NAME');
+		return TextUtils.i18n('%MODULENAME%/ERROR_INVALID_FOLDER_NAME');
 	}
 	else
 	{

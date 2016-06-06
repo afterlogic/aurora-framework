@@ -69,8 +69,8 @@ function CShareCalendarPopup()
 	this.sharedToAllAccess = ko.observable(Enums.CalendarAccess.Read);
 	this.canAdd = ko.observable(false);
 	this.aAccess = [
-		{'value': Enums.CalendarAccess.Read, 'display': TextUtils.i18n('CALENDAR/LABEL_READ_ACCESS')},
-		{'value': Enums.CalendarAccess.Write, 'display': TextUtils.i18n('CALENDAR/LABEL_WRITE_ACCESS')}
+		{'value': Enums.CalendarAccess.Read, 'display': TextUtils.i18n('%MODULENAME%/LABEL_READ_ACCESS')},
+		{'value': Enums.CalendarAccess.Write, 'display': TextUtils.i18n('%MODULENAME%/LABEL_WRITE_ACCESS')}
 	];
 	this.allowSharedToAll = ModulesManager.run('Contacts', 'isGlobalContactsAllowed');
 }

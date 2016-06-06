@@ -11,10 +11,10 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	ErrorsUtils = require('modules/OpenPgp/js/utils/Errors.js'),
+	ErrorsUtils = require('modules/%ModuleName%/js/utils/Errors.js'),
 	
-	Enums = require('modules/OpenPgp/js/Enums.js'),
-	OpenPgp = require('modules/OpenPgp/js/OpenPgp.js')
+	Enums = require('modules/%ModuleName%/js/Enums.js'),
+	OpenPgp = require('modules/%ModuleName%/js/OpenPgp.js')
 ;
 
 /**
@@ -34,14 +34,14 @@ function CEncryptPopup()
 	this.passwordFocused = ko.observable(false);
 	this.encrypt = ko.observable(true);
 	this.signEncryptButtonText = ko.computed(function () {
-		var sText = TextUtils.i18n('OPENPGP/ACTION_SIGN_ENCRYPT');
+		var sText = TextUtils.i18n('%MODULENAME%/ACTION_SIGN_ENCRYPT');
 		if (this.sign() && !this.encrypt())
 		{
-			sText = TextUtils.i18n('OPENPGP/ACTION_SIGN');
+			sText = TextUtils.i18n('%MODULENAME%/ACTION_SIGN');
 		}
 		if (!this.sign() && this.encrypt())
 		{
-			sText = TextUtils.i18n('OPENPGP/ACTION_ENCRYPT');
+			sText = TextUtils.i18n('%MODULENAME%/ACTION_ENCRYPT');
 		}
 		return sText;
 	}, this);
@@ -93,20 +93,20 @@ CEncryptPopup.prototype.executeSignEncrypt = function ()
 	{
 		if (aPrincipalsEmail.length === 0)
 		{
-			Screens.showError(TextUtils.i18n('OPENPGP/ERROR_TO_ENCRYPT_SPECIFY_RECIPIENTS'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_TO_ENCRYPT_SPECIFY_RECIPIENTS'));
 		}
 		else
 		{
 			if (this.sign())
 			{
 				sPgpAction = Enums.PgpAction.EncryptSign;
-				sOkReport = TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SIGNED_ENCRYPTED_SUCCSESSFULLY');
+				sOkReport = TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SIGNED_ENCRYPTED_SUCCSESSFULLY');
 				oRes = OpenPgp.signAndEncrypt(sData, sPrivateEmail, aPrincipalsEmail, sPrivateKeyPassword);
 			}
 			else
 			{
 				sPgpAction = Enums.PgpAction.Encrypt;
-				sOkReport = TextUtils.i18n('OPENPGP/REPORT_MESSAGE_ENCRYPTED_SUCCSESSFULLY');
+				sOkReport = TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_ENCRYPTED_SUCCSESSFULLY');
 				oRes = OpenPgp.encrypt(sData, aPrincipalsEmail);
 			}
 		}
@@ -114,7 +114,7 @@ CEncryptPopup.prototype.executeSignEncrypt = function ()
 	else if (this.sign())
 	{
 		sPgpAction = Enums.PgpAction.Sign;
-		sOkReport = TextUtils.i18n('OPENPGP/REPORT_MESSAGE_SIGNED_SUCCSESSFULLY');
+		sOkReport = TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SIGNED_SUCCSESSFULLY');
 		oRes = OpenPgp.sign(sData, sPrivateEmail, sPrivateKeyPassword);
 	}
 	

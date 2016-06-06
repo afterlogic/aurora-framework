@@ -4,10 +4,10 @@ var
 	Screens = require('modules/Core/js/Screens.js'),
 	Routing = require('modules/Core/js/Routing.js'),
 	
-	MailUtils = require('modules/Mail/js/utils/Mail.js'),
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
-	Prefetcher = require('modules/Mail/js/Prefetcher.js'),
+	MailUtils = require('modules/%ModuleName%/js/utils/Mail.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
+	Prefetcher = require('modules/%ModuleName%/js/Prefetcher.js'),
 	
 	aComposedMessages = [],
 	aReplyData = []

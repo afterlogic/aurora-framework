@@ -8,8 +8,8 @@ var
 	App = require('modules/Core/js/App.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	MailCache = require('modules/Mail/js/Cache.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js')
 ;
 
 /**

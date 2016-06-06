@@ -14,12 +14,12 @@ var
 	CAddressModel = require('modules/Core/js/models/CAddressModel.js'),
 	CAddressListModel = require('modules/Core/js/models/CAddressListModel.js'),
 	
-	MessageUtils = require('modules/Mail/js/utils/Message.js'),
+	MessageUtils = require('modules/%ModuleName%/js/utils/Message.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods,
 	
@@ -90,7 +90,7 @@ SendingUtils.send = function (sMethod, oParameters, bShowLoading, fSendMessageRe
 			}
 			break;
 		case 'SaveMessage':
-			sLoadingMessage = TextUtils.i18n('MAIL/INFO_SAVING');
+			sLoadingMessage = TextUtils.i18n('%MODULENAME%/INFO_SAVING');
 			oParameters.DraftFolder = sDraftFolder;
 			MailCache.savingDraftUid(oParameters.DraftUid);
 			if (MainTab)
@@ -254,14 +254,14 @@ SendingUtils.onSendOrSaveMessageResponse = function (oResponse, oRequest, bRequi
 			{
 				if (oRequest.ShowReport)
 				{
-					Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_MESSAGE_SAVING'));
+					Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_MESSAGE_SAVING'));
 				}
 			}
 			else
 			{
 				if (oRequest.ShowReport && !bRequiresPostponedSending)
 				{
-					Screens.showReport(TextUtils.i18n('MAIL/REPORT_MESSAGE_SAVED'));
+					Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SAVED'));
 				}
 
 				if (!oResponse.Result.NewUid)
@@ -273,27 +273,27 @@ SendingUtils.onSendOrSaveMessageResponse = function (oResponse, oRequest, bRequi
 		case 'SendMessage':
 			if (!bResult && oResponse.ErrorCode !== Enums.Errors.NotSavedInSentItems)
 			{
-				Api.showErrorByCode(oResponse, TextUtils.i18n('MAIL/ERROR_MESSAGE_SENDING'));
+				Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_MESSAGE_SENDING'));
 			}
 			else
 			{
 				if (!bResult && oResponse.ErrorCode === Enums.Errors.NotSavedInSentItems)
 				{
-					Screens.showError(TextUtils.i18n('MAIL/ERROR_SENT_EMAIL_NOT_SAVED'));
+					Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_SENT_EMAIL_NOT_SAVED'));
 				}
 				else if (oRequest.IsQuickReply)
 				{
-					Screens.showReport(TextUtils.i18n('MAIL/REPORT_MESSAGE_SENT'));
+					Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SENT'));
 				}
 				else
 				{
 					if (MainTab)
 					{
-						MainTab.showReport(TextUtils.i18n('MAIL/REPORT_MESSAGE_SENT'));
+						MainTab.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SENT'));
 					}
 					else
 					{
-						Screens.showReport(TextUtils.i18n('MAIL/REPORT_MESSAGE_SENT'));
+						Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_MESSAGE_SENT'));
 					}
 				}
 
@@ -484,7 +484,7 @@ SendingUtils.getReplyReferences = function (oMessage)
 function GetReplyMessageBody(oMessage, iAccountId, oFetcherOrIdentity, bPasteSignatureAnchor)
 {
 	var
-		sReplyTitle = TextUtils.i18n('MAIL/TEXT_REPLY_MESSAGE', {
+		sReplyTitle = TextUtils.i18n('%MODULENAME%/TEXT_REPLY_MESSAGE', {
 			'DATE': oMessage.oDateModel.getDate(),
 			'TIME': oMessage.oDateModel.getTime(),
 			'SENDER': TextUtils.encodeHtml(oMessage.oFrom.getFull())
@@ -645,8 +645,8 @@ SendingUtils.getForwardMessageBody = function (oMessage, iAccountId, oFetcherOrI
 {
 	var
 		sCcAddr = TextUtils.encodeHtml(oMessage.oCc.getFull()),
-		sCcPart = (sCcAddr !== '') ? TextUtils.i18n('MAIL/TEXT_FORWARD_MESSAGE_CCPART', {'CCADDR': sCcAddr}) : '',
-		sForwardTitle = TextUtils.i18n('MAIL/TEXT_FORWARD_MESSAGE', {
+		sCcPart = (sCcAddr !== '') ? TextUtils.i18n('%MODULENAME%/TEXT_FORWARD_MESSAGE_CCPART', {'CCADDR': sCcAddr}) : '',
+		sForwardTitle = TextUtils.i18n('%MODULENAME%/TEXT_FORWARD_MESSAGE', {
 			'FROMADDR': TextUtils.encodeHtml(oMessage.oFrom.getFull()),
 			'TOADDR': TextUtils.encodeHtml(oMessage.oTo.getFull()),
 			'CCPART': sCcPart,
@@ -703,8 +703,8 @@ function GetReplyAllCcAddr(oMessage, iAccountId, oFetcherOrIdentity)
 SendingUtils.getReplySubject = function (sSubject, bReply)
 {
 	var
-		sRePrefix = TextUtils.i18n('MAIL/TEXT_REPLY_PREFIX'),
-		sFwdPrefix = TextUtils.i18n('MAIL/TEXT_FORWARD_PREFIX'),
+		sRePrefix = TextUtils.i18n('%MODULENAME%/TEXT_REPLY_PREFIX'),
+		sFwdPrefix = TextUtils.i18n('%MODULENAME%/TEXT_FORWARD_PREFIX'),
 		sPrefix = bReply ? sRePrefix : sFwdPrefix,
 		sReSubject = sPrefix + ': ' + sSubject
 	;

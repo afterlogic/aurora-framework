@@ -9,7 +9,7 @@ var
 	Types = require('modules/Core/js/utils/Types.js'),
 	UrlUtils = require('modules/Core/js/utils/Url.js'),
 	
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	WindowOpener = require('modules/Core/js/WindowOpener.js'),
 	
 	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js')
@@ -123,7 +123,7 @@ CAttachmentModel.prototype.onGetMessageResponse = function (oResult, oRequest)
 	var
 		oParameters = oRequest.Parameters,
 		oResult = oResult.Result,
-		CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
+		CMessageModel = require('modules/%ModuleName%/js/models/CMessageModel.js'),
 		oMessage = new CMessageModel()
 	;
 	

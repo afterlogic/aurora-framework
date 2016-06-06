@@ -4,9 +4,9 @@ module.exports = function (oSettings) {
 	var
 		_ = require('underscore'),
 		
-		Settings = require('modules/Contacts/js/Settings.js'),
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		
-		ManagerSuggestions = require('modules/Contacts/js/manager-suggestions.js'),
+		ManagerSuggestions = require('modules/%ModuleName%/js/manager-suggestions.js'),
 		SuggestionsMethods = ManagerSuggestions()
 	;
 
@@ -17,17 +17,17 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/Contacts/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
 		},
 		getScreens: function () {
 			return {
 				'main': function () {
-					return require('modules/Contacts/js/views/ContactsView.js');
+					return require('modules/%ModuleName%/js/views/ContactsView.js');
 				}
 			};
 		},
 		getHeaderItem: function () {
-			return require('modules/Contacts/js/views/HeaderItemView.js');
+			return require('modules/%ModuleName%/js/views/HeaderItemView.js');
 		}
 	}, SuggestionsMethods);
 };

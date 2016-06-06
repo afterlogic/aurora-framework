@@ -4,9 +4,9 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Settings = require('modules/Phone/js/Settings.js'),
-	Ajax = require('modules/Phone/js/Ajax.js'),
-	Phone = require('modules/Phone/js/Phone.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Phone = require('modules/%ModuleName%/js/Phone.js')
 ;
 
 /**

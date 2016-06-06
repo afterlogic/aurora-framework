@@ -7,10 +7,10 @@ var
 	Types = require('modules/Core/js/utils/Types.js'),
 	
 	App = require('modules/Core/js/App.js'),
-	Ajax = require('modules/Contacts/js/Ajax.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	
-	ContactsCache = require('modules/Contacts/js/Cache.js'),
-	HeaderItemView = !App.isNewTab() ? require('modules/Contacts/js/views/HeaderItemView.js') : null,
+	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),
+	HeaderItemView = !App.isNewTab() ? require('modules/%ModuleName%/js/views/HeaderItemView.js') : null,
 	MainTab = (App.isNewTab() && window.opener) ? window.opener.MainTabContactsMethods : null
 ;
 

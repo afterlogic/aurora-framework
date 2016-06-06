@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	CFetcherModel = require('modules/Mail/js/models/CFetcherModel.js')
+	CFetcherModel = require('modules/%ModuleName%/js/models/CFetcherModel.js')
 ;
 
 /**

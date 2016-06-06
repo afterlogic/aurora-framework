@@ -10,7 +10,7 @@ var
 	
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	
-	Phone = require('modules/Phone/js/Phone.js')
+	Phone = require('modules/%ModuleName%/js/Phone.js')
 ;
 
 /**
@@ -25,8 +25,8 @@ function CPhoneView()
 	this.logs = ko.observableArray([]);
 	this.logsToShow = ko.observableArray([]);
 	this.spinner = ko.observable(true);
-	this.statusText = ko.observable(TextUtils.i18n('PHONE/INFO_NOT_CONNECTED'));
-	this.indicator = ko.observable(TextUtils.i18n('PHONE/INFO_MISSED_CALLS'));
+	this.statusText = ko.observable(TextUtils.i18n('%MODULENAME%/INFO_NOT_CONNECTED'));
+	this.indicator = ko.observable(TextUtils.i18n('%MODULENAME%/INFO_MISSED_CALLS'));
 	this.dropdownShow = ko.observable(false);
 	this.input = ko.observable('');
 	this.input.subscribe(function (sInput) {
@@ -45,18 +45,18 @@ function CPhoneView()
 		switch (sAction)
 		{
 			case Enums.PhoneAction.Offline:
-				this.statusText(TextUtils.i18n('PHONE/INFO_NOT_CONNECTED'));
+				this.statusText(TextUtils.i18n('%MODULENAME%/INFO_NOT_CONNECTED'));
 				break;
 			case Enums.PhoneAction.OfflineError:
-				this.statusText(TextUtils.i18n('PHONE/ERROR_CONNECTION'));
+				this.statusText(TextUtils.i18n('%MODULENAME%/ERROR_CONNECTION'));
 				break;
 			case Enums.PhoneAction.OfflineInit:
-				this.statusText(TextUtils.i18n('PHONE/INFO_CONNECTING'));
+				this.statusText(TextUtils.i18n('%MODULENAME%/INFO_CONNECTING'));
 				break;
 			case Enums.PhoneAction.OfflineActive:
 				break;
 			case Enums.PhoneAction.Online:
-				this.statusText(TextUtils.i18n('PHONE/INFO_CONNECTED'));
+				this.statusText(TextUtils.i18n('%MODULENAME%/INFO_CONNECTED'));
 				this.input('');
 				this.report('');
 				this.timer('stop');
@@ -67,12 +67,12 @@ function CPhoneView()
 				this.timer('start');
 				break;
 			case Enums.PhoneAction.OutgoingConnect:
-				this.statusText(TextUtils.i18n('PHONE/INFO_IN_CALL'));
+				this.statusText(TextUtils.i18n('%MODULENAME%/INFO_IN_CALL'));
 				break;
 			case Enums.PhoneAction.Incoming:
 				break;
 			case Enums.PhoneAction.IncomingConnect:
-				this.statusText(TextUtils.i18n('PHONE/INFO_IN_CALL'));
+				this.statusText(TextUtils.i18n('%MODULENAME%/INFO_IN_CALL'));
 				this.report('');
 				this.timer('start');
 				break;
@@ -254,7 +254,7 @@ CPhoneView.prototype.timer = (function ()
 					iSeconds = 0;
 					iMinutes++;
 				}
-				this.report(TextUtils.i18n('PHONE/INFO_PASSED_TIME') + ' ' + fAddNull(iMinutes) + ':' + fAddNull(iSeconds));
+				this.report(TextUtils.i18n('%MODULENAME%/INFO_PASSED_TIME') + ' ' + fAddNull(iMinutes) + ':' + fAddNull(iSeconds));
 				iSeconds++;
 			}, this), 1000);
 		}

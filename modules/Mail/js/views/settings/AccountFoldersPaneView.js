@@ -12,12 +12,12 @@ var
 	
 	Popups = require('modules/Core/js/Popups.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
-	CreateFolderPopup = require('modules/Mail/js/popups/CreateFolderPopup.js'),
-	SetSystemFoldersPopup = require('modules/Mail/js/popups/SetSystemFoldersPopup.js'),
+	CreateFolderPopup = require('modules/%ModuleName%/js/popups/CreateFolderPopup.js'),
+	SetSystemFoldersPopup = require('modules/%ModuleName%/js/popups/SetSystemFoldersPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js')
 ;
 
 require('knockout-sortable');
@@ -141,7 +141,7 @@ CAccountFoldersPaneView.prototype.onSubscribeFolderClick = function (oFolder)
 CAccountFoldersPaneView.prototype.onDeleteFolderClick = function (oFolder)
 {
 	var
-		sWarning = TextUtils.i18n('MAIL/CONFIRM_DELETE_FOLDER'),
+		sWarning = TextUtils.i18n('%MODULENAME%/CONFIRM_DELETE_FOLDER'),
 		oFolderList = MailCache.editedFolderList(),
 		fCallBack = _.bind(oFolderList.deleteFolder, oFolderList, oFolder)
 	;

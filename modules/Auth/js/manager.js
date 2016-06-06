@@ -2,15 +2,15 @@
 
 
 module.exports = function (oSettings) {
-	require('modules/Auth/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 	require('jquery.cookie');
 
 	var
 		$ = require('jquery'),
 		Types = require('modules/Core/js/utils/Types.js'),
 		
-		Ajax = require('modules/Auth/js/Ajax.js'),
-		Settings = require('modules/Auth/js/Settings.js'),
+		Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		
 		bAllowLoginView = true
 	;
@@ -27,7 +27,7 @@ module.exports = function (oSettings) {
 			if (bAllowLoginView)
 			{
 				oScreens['main'] = function () {
-					return require('modules/Auth/js/views/WrapLoginView.js');
+					return require('modules/%ModuleName%/js/views/WrapLoginView.js');
 				};
 			}
 			return oScreens;

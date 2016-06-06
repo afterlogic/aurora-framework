@@ -19,13 +19,13 @@ var
 	
 	CPageSwitcherView = require('modules/Core/js/views/CPageSwitcherView.js'),
 	
-	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/Mail/js/utils/ScreenCompose.js') : require('modules/Mail/js/utils/PopupCompose.js'),
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	MailUtils = require('modules/Mail/js/utils/Mail.js'),
+	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/%ModuleName%/js/utils/ScreenCompose.js') : require('modules/%ModuleName%/js/utils/PopupCompose.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
+	MailUtils = require('modules/%ModuleName%/js/utils/Mail.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	MailCache  = require('modules/Mail/js/Cache.js'),
-	Settings  = require('modules/Mail/js/Settings.js')
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	MailCache  = require('modules/%ModuleName%/js/Cache.js'),
+	Settings  = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -161,7 +161,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 	this.searchText = ko.computed(function () {
 
-		return TextUtils.i18n('MAIL/INFO_SEARCH_RESULT', {
+		return TextUtils.i18n('%MODULENAME%/INFO_SEARCH_RESULT', {
 			'SEARCH': this.calculateSearchStringForDescription(),
 			'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 		});
@@ -172,13 +172,13 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 		if (this.search() === '')
 		{
-			return TextUtils.i18n('MAIL/INFO_UNREAD_MESSAGES', {
+			return TextUtils.i18n('%MODULENAME%/INFO_UNREAD_MESSAGES', {
 				'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 			});
 		}
 		else
 		{
-			return TextUtils.i18n('MAIL/INFO_UNREAD_MESSAGES_SEARCH_RESULT', {
+			return TextUtils.i18n('%MODULENAME%/INFO_UNREAD_MESSAGES_SEARCH_RESULT', {
 				'SEARCH': this.calculateSearchStringForDescription(),
 				'FOLDER': this.folderList().currentFolder() ? this.folderList().currentFolder().displayName() : ''
 			});
@@ -190,11 +190,11 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 
 		if (this.search() === '')
 		{
-			return TextUtils.i18n('MAIL/INFO_NO_UNREAD_MESSAGES');
+			return TextUtils.i18n('%MODULENAME%/INFO_NO_UNREAD_MESSAGES');
 		}
 		else
 		{
-			return TextUtils.i18n('MAIL/INFO_NO_UNREAD_MESSAGES_FOUND');
+			return TextUtils.i18n('%MODULENAME%/INFO_NO_UNREAD_MESSAGES_FOUND');
 		}
 		
 	}, this);
@@ -309,7 +309,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.searchDateEnd = ko.observable('');
 	this.dateFormatDatePicker = 'yy.mm.dd';
 	this.attachmentsPlaceholder = ko.computed(function () {
-		return TextUtils.i18n('MAIL/LABEL_HAS_ATTACHMENTS');
+		return TextUtils.i18n('%MODULENAME%/LABEL_HAS_ATTACHMENTS');
 	}, this);
 
 	_.delay(_.bind(function(){
@@ -319,7 +319,7 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	
 	this.isCurrentAllowsMail = AccountList.isCurrentAllowsMail;
 	
-	var aAddingInfo = TextUtils.i18n('MAIL/INFO_ADDING_NEW_ACCOUNT').split(/%STARTLINK%|%ENDLINK%/);
+	var aAddingInfo = TextUtils.i18n('%MODULENAME%/INFO_ADDING_NEW_ACCOUNT').split(/%STARTLINK%|%ENDLINK%/);
 	this.sAddingInfo1 = aAddingInfo.length > 0 ? aAddingInfo[0] : '';
 	this.sAddingInfo2 = aAddingInfo.length > 1 ? aAddingInfo[1] : '';
 	this.sAddingInfo3 = aAddingInfo.length > 2 ? aAddingInfo[2] : '';
@@ -872,7 +872,7 @@ CMessageListView.prototype.onFileDrop = function (oData)
 {
 	if (!(oData && oData.File && oData.File.type && oData.File.type.indexOf('message/') === 0))
 	{
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_FILE_NOT_EML'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FILE_NOT_EML'));
 	}
 };
 
@@ -888,7 +888,7 @@ CMessageListView.prototype.onFileUploadComplete = function (sFileUid, bResponseR
 	{
 		if (oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.IncorrectFileExtension)
 		{
-			Screens.showError(TextUtils.i18n('MAIL/ERROR_FILE_NOT_EML'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_FILE_NOT_EML'));
 		}
 		else
 		{

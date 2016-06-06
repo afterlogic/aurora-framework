@@ -27,20 +27,20 @@ var
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	SelectFilesPopup = ModulesManager.run('Files', 'getSelectFilesPopup'),
 	
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
-	SendingUtils = require('modules/Mail/js/utils/Sending.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
+	SendingUtils = require('modules/%ModuleName%/js/utils/Sending.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
-	MainTabExtMethods = require('modules/Mail/js/MainTabExtMethods.js'),
-	SenderSelector = require('modules/Mail/js/SenderSelector.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
+	MainTabExtMethods = require('modules/%ModuleName%/js/MainTabExtMethods.js'),
+	SenderSelector = require('modules/%ModuleName%/js/SenderSelector.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CMessageModel = require('modules/Mail/js/models/CMessageModel.js'),
-	CAttachmentModel = require('modules/Mail/js/models/CAttachmentModel.js'),
+	CMessageModel = require('modules/%ModuleName%/js/models/CMessageModel.js'),
+	CAttachmentModel = require('modules/%ModuleName%/js/models/CAttachmentModel.js'),
 	
-	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js'),
+	CHtmlEditorView = require('modules/%ModuleName%/js/views/CHtmlEditorView.js'),
 	
 	MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods,
 	bMobileApp = App.isMobile(),
@@ -56,7 +56,7 @@ function CComposeView()
 	CAbstractScreenView.call(this);
 	
 	this.browserTitle = ko.computed(function () {
-		return AccountList.getEmail() + ' - ' + TextUtils.i18n('MAIL/HEADING_COMPOSE_BROWSER_TAB');
+		return AccountList.getEmail() + ' - ' + TextUtils.i18n('%MODULENAME%/HEADING_COMPOSE_BROWSER_TAB');
 	});
 	
 	var self = this;
@@ -247,7 +247,7 @@ function CComposeView()
 		{
 			self.iUploadAttachmentsTimer = window.setTimeout(function () {
 				self.bUploadStatus = true;
-				Screens.showLoading(TextUtils.i18n('MAIL/INFO_ATTACHMENTS_LOADING'));
+				Screens.showLoading(TextUtils.i18n('%MODULENAME%/INFO_ATTACHMENTS_LOADING'));
 			}, 4000);
 		}
 		else
@@ -363,14 +363,14 @@ function CComposeView()
 	this.bAllowHeadersCompressing = !bMobileApp;
 
 	this.aHotkeys = [
-		{ value: 'Ctrl+Enter', action: TextUtils.i18n('MAIL/LABEL_SEND_HOTKEY') },
-		{ value: 'Ctrl+S', action: TextUtils.i18n('MAIL/LABEL_SAVE_HOTKEY') },
-		{ value: 'Ctrl+Z', action: TextUtils.i18n('MAIL/LABEL_UNDO_HOTKEY') },
-		{ value: 'Ctrl+Y', action: TextUtils.i18n('MAIL/LABEL_REDO_HOTKEY') },
-		{ value: 'Ctrl+K', action: TextUtils.i18n('MAIL/LABEL_LINK_HOTKEY') },
-		{ value: 'Ctrl+B', action: TextUtils.i18n('MAIL/LABEL_BOLD_HOTKEY') },
-		{ value: 'Ctrl+I', action: TextUtils.i18n('MAIL/LABEL_ITALIC_HOTKEY') },
-		{ value: 'Ctrl+U', action: TextUtils.i18n('MAIL/LABEL_UNDERLINE_HOTKEY') }
+		{ value: 'Ctrl+Enter', action: TextUtils.i18n('%MODULENAME%/LABEL_SEND_HOTKEY') },
+		{ value: 'Ctrl+S', action: TextUtils.i18n('%MODULENAME%/LABEL_SAVE_HOTKEY') },
+		{ value: 'Ctrl+Z', action: TextUtils.i18n('%MODULENAME%/LABEL_UNDO_HOTKEY') },
+		{ value: 'Ctrl+Y', action: TextUtils.i18n('%MODULENAME%/LABEL_REDO_HOTKEY') },
+		{ value: 'Ctrl+K', action: TextUtils.i18n('%MODULENAME%/LABEL_LINK_HOTKEY') },
+		{ value: 'Ctrl+B', action: TextUtils.i18n('%MODULENAME%/LABEL_BOLD_HOTKEY') },
+		{ value: 'Ctrl+I', action: TextUtils.i18n('%MODULENAME%/LABEL_ITALIC_HOTKEY') },
+		{ value: 'Ctrl+U', action: TextUtils.i18n('%MODULENAME%/LABEL_UNDERLINE_HOTKEY') }
 	];
 
 	this.allowFiles = !!SelectFilesPopup;
@@ -387,7 +387,7 @@ function CComposeView()
 	}, this);
 
 	this.saveAndCloseTooltip = ko.computed(function () {
-		return this.hasSomethingToSave() ? TextUtils.i18n('MAIL/ACTION_SAVE_CLOSE') : TextUtils.i18n('MAIL/ACTION_CLOSE');
+		return this.hasSomethingToSave() ? TextUtils.i18n('%MODULENAME%/ACTION_SAVE_CLOSE') : TextUtils.i18n('%MODULENAME%/ACTION_CLOSE');
 	}, this);
 
 	if (MainTab)
@@ -1214,7 +1214,7 @@ CComposeView.prototype.onMessageUploadAttachmentsResponse = function (oResponse,
 				oAttachment.errorFromUpload();
 			}
 		}, this);
-		Screens.showError(TextUtils.i18n('MAIL/ERROR_UPLOAD_FORWARD_ATTACHMENTS'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_FORWARD_ATTACHMENTS'));
 	}
 };
 
@@ -1562,7 +1562,7 @@ CComposeView.prototype.verifyDataForSending = function ()
 		aCcIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.ccAddr()),
 		aBccIncorrect = AddressUtils.getIncorrectEmailsFromAddressString(this.bccAddr()),
 		aIncorrect = _.union(aToIncorrect, aCcIncorrect, aBccIncorrect),
-		sWarning = TextUtils.i18n('MAIL/ERROR_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
+		sWarning = TextUtils.i18n('%MODULENAME%/ERROR_INPUT_CORRECT_EMAILS') + aIncorrect.join(', ')
 	;
 
 	if (aIncorrect.length > 0)

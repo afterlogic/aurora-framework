@@ -7,7 +7,7 @@ var
 ;
 
 module.exports = {
-	ActivatedEmail: '', // todo: showReport(Utils.i18n('HELPDESK/ACCOUNT_ACTIVATED'));
+	ActivatedEmail: '', // todo: showReport(Utils.i18n('%MODULENAME%/ACCOUNT_ACTIVATED'));
 	AllowEmailNotifications: false,
 	AllowFacebookAuth: false,
 	AllowGoogleAuth: false,
@@ -29,7 +29,7 @@ module.exports = {
 	init: function (oAppDataSection) {
 		if (oAppDataSection)
 		{
-			this.ActivatedEmail = Types.pString(oAppDataSection.ActivatedEmail); // todo: showReport(Utils.i18n('HELPDESK/ACCOUNT_ACTIVATED'));
+			this.ActivatedEmail = Types.pString(oAppDataSection.ActivatedEmail); // todo: showReport(Utils.i18n('%MODULENAME%/ACCOUNT_ACTIVATED'));
 			this.AllowEmailNotifications = !!oAppDataSection.AllowEmailNotifications;
 			this.AllowFacebookAuth = !!oAppDataSection.AllowFacebookAuth;
 			this.AllowGoogleAuth = !!oAppDataSection.AllowGoogleAuth;

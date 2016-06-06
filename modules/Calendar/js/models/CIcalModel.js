@@ -10,10 +10,10 @@ var
 	Api = require('modules/Core/js/Api.js'),
 	App = require('modules/Core/js/App.js'),
 	
-	Ajax = require('modules/Calendar/js/Ajax.js'),
-	CalendarCache = require('modules/Calendar/js/Cache.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	CalendarCache = require('modules/%ModuleName%/js/Cache.js'),
 	
-	HeaderItemView = (!App.isNewTab() && !App.isMobile()) ? require('modules/Calendar/js/views/HeaderItemView.js') : null,
+	HeaderItemView = (!App.isNewTab() && !App.isMobile()) ? require('modules/%ModuleName%/js/views/HeaderItemView.js') : null,
 	
 	MainTab = App.isNewTab() && window.opener ? window.opener.MainTabCalendarMethods : null
 ;
@@ -160,18 +160,18 @@ CIcalModel.prototype.parseType = function ()
 
 CIcalModel.prototype.fillDecisions = function ()
 {
-	this.cancelDecision(TextUtils.i18n('CALENDAR/INFO_CANCELED_APPOINTMENT', {'SENDER': App.currentAccountEmail()}));
+	this.cancelDecision(TextUtils.i18n('%MODULENAME%/INFO_CANCELED_APPOINTMENT', {'SENDER': App.currentAccountEmail()}));
 	
 	switch (this.icalConfig())
 	{
 		case Enums.IcalConfig.Accepted:
-			this.replyDecision(TextUtils.i18n('CALENDAR/INFO_ACCEPTED_APPOINTMENT', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('%MODULENAME%/INFO_ACCEPTED_APPOINTMENT', {'ATTENDEE': this.attendee()}));
 			break;
 		case Enums.IcalConfig.Declined:
-			this.replyDecision(TextUtils.i18n('CALENDAR/APPOINTMENT_DECLINED', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('%MODULENAME%/APPOINTMENT_DECLINED', {'ATTENDEE': this.attendee()}));
 			break;
 		case Enums.IcalConfig.Tentative:
-			this.replyDecision(TextUtils.i18n('CALENDAR/INFO_TENTATIVELY_ACCEPTED_APPOINTMENT', {'ATTENDEE': this.attendee()}));
+			this.replyDecision(TextUtils.i18n('%MODULENAME%/INFO_TENTATIVELY_ACCEPTED_APPOINTMENT', {'ATTENDEE': this.attendee()}));
 			break;
 	}
 };

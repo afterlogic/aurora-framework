@@ -9,8 +9,8 @@ var
 	
 	Screens = require('modules/Core/js/Screens.js'),
 	
-	Phone = require('modules/Phone/js/Phone.js'),
-	Settings = require('modules/Phone/js/Settings.js')
+	Phone = require('modules/%ModuleName%/js/Phone.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -231,11 +231,11 @@ CPhoneWebrtc.prototype.eventSession = function (ev)
 		case 'm_permission_accepted':
 			/*if(Phone.action() === 'incoming')
 			{
-				this.report(TextUtils.i18n('PHONE/INFO_INCOMING_CALL_FROM') + ' ' + this.callSession()['getRemoteFriendlyName']());
+				this.report(TextUtils.i18n('%MODULENAME%/INFO_INCOMING_CALL_FROM') + ' ' + this.callSession()['getRemoteFriendlyName']());
 			}
 			else
 			{
-				this.report(TextUtils.i18n('PHONE/INFO_CALL_IN_PROGRESS'));
+				this.report(TextUtils.i18n('%MODULENAME%/INFO_CALL_IN_PROGRESS'));
 			}*/
 			break;
 		case 'm_permission_refused':

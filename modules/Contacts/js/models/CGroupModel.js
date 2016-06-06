@@ -44,7 +44,7 @@ function CGroupModel()
 
 	this.newContactsInGroupHint = ko.computed(function () {
 		var iCount = this.newContactsInGroupCount();
-		return this.isNew() && 0 < iCount ? TextUtils.i18n('CONTACTS/INFO_NEW_GROUP_CONTACTS_PLURAL', {
+		return this.isNew() && 0 < iCount ? TextUtils.i18n('%MODULENAME%/INFO_NEW_GROUP_CONTACTS_PLURAL', {
 			'COUNT' : iCount
 		}, null, iCount) : '';
 	}, this);

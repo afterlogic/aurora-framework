@@ -3,7 +3,7 @@
 var
 	Routing = require('modules/Core/js/Routing.js'),
 	
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	
 	ScreenComposeUtils = {}
 ;

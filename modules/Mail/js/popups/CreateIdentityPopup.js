@@ -5,10 +5,10 @@ var
 			
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	
-	CIdentityModel = require('modules/Mail/js/models/CIdentityModel.js'),
-	CIdentityPropertiesPaneView = require('modules/Mail/js/views/settings/CIdentityPropertiesPaneView.js')
+	CIdentityModel = require('modules/%ModuleName%/js/models/CIdentityModel.js'),
+	CIdentityPropertiesPaneView = require('modules/%ModuleName%/js/views/settings/CIdentityPropertiesPaneView.js')
 ;
 
 /**

@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Files/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 
-	var Settings = require('modules/Files/js/Settings.js');
+	var Settings = require('modules/%ModuleName%/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -13,7 +13,7 @@ module.exports = function (oSettings) {
 		getScreens: function () {
 			return {
 				'main': function () {
-					var CFilesView = require('modules/Files/js/views/CFilesView.js');
+					var CFilesView = require('modules/%ModuleName%/js/views/CFilesView.js');
 					return new CFilesView();
 				}
 			};

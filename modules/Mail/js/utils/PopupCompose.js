@@ -3,14 +3,14 @@
 var
 	Popups = require('modules/Core/js/Popups.js'),
 	
-	LinksUtils = require('modules/Mail/js/utils/Links.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	
 	PopupComposeUtils = {}
 ;
 
 function GetComposePopup()
 {
-	return require('modules/Mail/js/popups/ComposePopup.js');
+	return require('modules/%ModuleName%/js/popups/ComposePopup.js');
 }
 
 PopupComposeUtils.composeMessage = function ()

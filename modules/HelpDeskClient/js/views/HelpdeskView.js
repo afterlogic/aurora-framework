@@ -30,14 +30,14 @@ var
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
 	
-	Ajax = require('modules/HelpDeskClient/js/Ajax.js'),
-	Settings = require('modules/HelpDeskClient/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
-	CHelpdeskAttachmentModel = require('modules/HelpDeskClient/js/models/CHelpdeskAttachmentModel.js'),
-	CPostModel = require('modules/HelpDeskClient/js/models/CPostModel.js'),
-	CThreadListModel = require('modules/HelpDeskClient/js/models/CThreadListModel.js'),
+	CHelpdeskAttachmentModel = require('modules/%ModuleName%/js/models/CHelpdeskAttachmentModel.js'),
+	CPostModel = require('modules/%ModuleName%/js/models/CPostModel.js'),
+	CThreadListModel = require('modules/%ModuleName%/js/models/CThreadListModel.js'),
 	
-	HeaderItemView = require('modules/HelpDeskClient/js/views/HeaderItemView.js'),
+	HeaderItemView = require('modules/%ModuleName%/js/views/HeaderItemView.js'),
 	
 	bExtApp = false
 ;
@@ -49,7 +49,7 @@ function CHelpdeskView()
 {
 	CAbstractScreenView.call(this);
 	
-	this.browserTitle = ko.observable(TextUtils.i18n('HELPDESK/HEADING_BROWSER_TAB'));
+	this.browserTitle = ko.observable(TextUtils.i18n('%MODULENAME%/HEADING_BROWSER_TAB'));
 	
 	var
 		self = this,
@@ -159,7 +159,7 @@ function CHelpdeskView()
 	this.search = ko.observable('');
 
 	this.searchText = ko.computed(function () {
-		return TextUtils.i18n('HELPDESK/INFO_SEARCH_RESULT', {
+		return TextUtils.i18n('%MODULENAME%/INFO_SEARCH_RESULT', {
 			'SEARCH': this.search()
 		});
 	}, this);
@@ -198,8 +198,8 @@ function CHelpdeskView()
 	});
 	this.createThreadButtonText = ko.computed(function () {
 		return this.newThreadCreating() ?
-			TextUtils.i18n('HELPDESK/ACTION_CREATE_IN_PROGRESS') :
-			TextUtils.i18n('HELPDESK/ACTION_CREATE');
+			TextUtils.i18n('%MODULENAME%/ACTION_CREATE_IN_PROGRESS') :
+			TextUtils.i18n('%MODULENAME%/ACTION_CREATE');
 	}, this);
 
 	this.commandGetOlderPosts = function () {
@@ -331,14 +331,14 @@ function CHelpdeskView()
 	{
 		this.dynamicEmptyListInfo = ko.computed(function () {
 			return this.isEmptyList() && this.isSearch() ?
-				TextUtils.i18n('HELPDESK/INFO_SEARCH_EMPTY') : TextUtils.i18n('HELPDESK/INFO_EMPTY_OPEN_THREAD_LIST_AGENT');
+				TextUtils.i18n('%MODULENAME%/INFO_SEARCH_EMPTY') : TextUtils.i18n('%MODULENAME%/INFO_EMPTY_OPEN_THREAD_LIST_AGENT');
 		}, this);
 	}
 	else
 	{
 		this.dynamicEmptyListInfo = ko.computed(function () {
 			return this.isEmptyList() && this.isSearch() ?
-				TextUtils.i18n('HELPDESK/INFO_SEARCH_EMPTY') : TextUtils.i18n('HELPDESK/INFO_EMPTY_THREAD_LIST');
+				TextUtils.i18n('%MODULENAME%/INFO_SEARCH_EMPTY') : TextUtils.i18n('%MODULENAME%/INFO_EMPTY_THREAD_LIST');
 		}, this);
 	}
 
@@ -457,7 +457,7 @@ CHelpdeskView.prototype.deletePost = function (oPost)
 {
 	if (oPost && oPost.itsMe())
 	{
-		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_DELETE_THIS_POST'),
+		Popups.showPopup(ConfirmPopup, [TextUtils.i18n('%MODULENAME%/CONFIRM_DELETE_THIS_POST'),
 			_.bind(function (bDelete) {
 				if (bDelete)
 				{
@@ -481,12 +481,12 @@ CHelpdeskView.prototype.onDeletePostResponse = function (oResponse, oRequest)
 {
 	if (oResponse.Result === false)
 	{
-		Api.showErrorByCode(oResponse, TextUtils.i18n('HELPDESK/ERROR_COULDNT_DELETE_POST'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_COULDNT_DELETE_POST'));
 	}
 	else
 	{
 		this.posts.remove(this.postForDelete());
-		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_HAS_BEEN_DELETED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_POST_HAS_BEEN_DELETED'));
 	}
 
 	this.requestPosts();
@@ -886,7 +886,7 @@ CHelpdeskView.prototype.onItemSelect = function (oItem)
 	{
 		if (!this.replySendingStarted() && (!this.isQuickReplyPaneEmpty() || !this.isNewThreadPaneEmpty()))
 		{
-			Popups.showPopup(ConfirmPopup, [TextUtils.i18n('HELPDESK/CONFIRM_CANCEL_REPLY'),
+			Popups.showPopup(ConfirmPopup, [TextUtils.i18n('%MODULENAME%/CONFIRM_CANCEL_REPLY'),
 				_.bind(function (bResult) {
 					if (bResult)
 					{
@@ -1149,7 +1149,7 @@ CHelpdeskView.prototype.onCreateThreadResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result)
 	{
-		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_THREAD_SUCCESSFULLY_CREATED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_THREAD_SUCCESSFULLY_CREATED'));
 
 		if (oResponse.Result.ThreadIsNew)
 		{
@@ -1182,7 +1182,7 @@ CHelpdeskView.prototype.onCreatePostResponse = function (oResponse, oRequest)
 
 	if (oResponse.Result)
 	{
-		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_POST_SUCCESSFULLY_ADDED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_POST_SUCCESSFULLY_ADDED'));
 		this.cleanAll();
 		this.requestPosts();
 	}
@@ -1320,7 +1320,7 @@ CHelpdeskView.prototype.onFileUploadSelect = function (sFileUID, oFileData)
 {
 	var
 		oAttach,
-		sWarningCountLimit = TextUtils.i18n('HELPDESK/ERROR_UPLOAD_FILES_COUNT'),
+		sWarningCountLimit = TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_FILES_COUNT'),
 		sButtonCountLimit = TextUtils.i18n('CORE/ACTION_CLOSE'),
 		iAttachCount = this.uploadedFiles().length
 	;

@@ -6,7 +6,7 @@ var
 	
 	Storage = require('modules/Core/js/Storage.js'),
 	
-	CCalendarModel = require('modules/Calendar/js/models/CCalendarModel.js')
+	CCalendarModel = require('modules/%ModuleName%/js/models/CCalendarModel.js')
 ;
 
 /**

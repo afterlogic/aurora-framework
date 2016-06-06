@@ -16,8 +16,8 @@ var
 	
 	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
 	
-	Ajax = require('modules/HelpDeskClient/js/Ajax.js'),
-	Settings = require('modules/HelpDeskClient/js/Settings.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	$html = $('html')
 ;
@@ -266,7 +266,7 @@ CLoginView.prototype.onHelpdeskLoginResponse = function (oResponse, oRequest)
 				oResponse.ErrorCode = Enums.Errors.DataTransferFailed;
 			}
 
-			Api.showErrorByCode(oResponse, TextUtils.i18n('HELPDESK/ERROR_LOGIN_FAILED'));
+			Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_LOGIN_FAILED'));
 
 			this.shake(true);
 			this.emailFocus(true);
@@ -308,13 +308,13 @@ CLoginView.prototype.onHelpdeskRegisterResponse = function (oResponse, oRequest)
 			oResponse.ErrorCode = Enums.Errors.DataTransferFailed;
 		}
 
-		Api.showErrorByCode(oResponse, TextUtils.i18n('HELPDESK/ERROR_REGISTRATION_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_REGISTRATION_FAILED'));
 
 		this.regEmailFocus(true);
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_CONFIRMATION_SENT', {
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_CONFIRMATION_SENT', {
 			'EMAIL': this.regEmail()
 		}));
 
@@ -353,7 +353,7 @@ CLoginView.prototype.onHelpdeskSocialRegisterResponse = function (oResponse, oRe
 			oResponse.ErrorCode = Enums.Errors.DataTransferFailed;
 		}
 
-		Api.showErrorByCode(oResponse, TextUtils.i18n('HELPDESK/ERROR_REGISTRATION_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_REGISTRATION_FAILED'));
 
 		this.regSocialEmailFocus(true);
 	}
@@ -394,13 +394,13 @@ CLoginView.prototype.onHelpdeskForgotResponse = function (oResponse, oRequest)
 			oResponse.ErrorCode = Enums.Errors.DataTransferFailed;
 		}
 
-		Api.showErrorByCode(oResponse, TextUtils.i18n('HELPDESK/ERROR_FORGOT_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_FORGOT_FAILED'));
 		
 		this.forgotEmailFocus(true);
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('HELPDESK/REPORT_RESET_INSTRUCTIONS_SENT'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_RESET_INSTRUCTIONS_SENT'));
 
 		this.email(this.forgotEmail());
 		this.passwordFocus(true);
@@ -462,13 +462,13 @@ CLoginView.prototype.onHelpdeskForgotChangePasswordResponse = function (oRespons
 			oResponse.ErrorCode = Enums.Errors.DataTransferFailed;
 		}
 
-		Api.showErrorByCode(oResponse, TextUtils.i18n('HELPDESK/ERROR_CHANGEPASS_FAILED'));
+		Api.showErrorByCode(oResponse, TextUtils.i18n('%MODULENAME%/ERROR_CHANGEPASS_FAILED'));
 
 		this.changepassNewpassFocus(true);
 	}
 	else
 	{
-		Storage.setData('ReportText', TextUtils.i18n('HELPDESK/REPORT_CHANGEPASS_SUCCESSFULL'));
+		Storage.setData('ReportText', TextUtils.i18n('%MODULENAME%/REPORT_CHANGEPASS_SUCCESSFULL'));
 		
 		this.backToLogin();
 	}

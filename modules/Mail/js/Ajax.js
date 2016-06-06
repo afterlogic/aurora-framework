@@ -46,7 +46,7 @@ module.exports = {
 	registerOnAllRequestsClosedHandler: Ajax.registerOnAllRequestsClosedHandler,
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
 		var
-			MailCache = require('modules/Mail/js/Cache.js'),
+			MailCache = require('modules/%ModuleName%/js/Cache.js'),
 			iTimeout = (sMethod === 'GetMessagesBodies') ? 100000 : undefined
 		;
 		if (oParameters && !oParameters.AccountID)

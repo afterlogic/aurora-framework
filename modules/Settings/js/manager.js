@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	var Settings = require('modules/Settings/js/Settings.js');
+	var Settings = require('modules/%ModuleName%/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -11,7 +11,7 @@ module.exports = function (oSettings) {
 		getScreens: function () {
 			return {
 				'main': function () {
-					return require('modules/Settings/js/views/SettingsView.js');
+					return require('modules/%ModuleName%/js/views/SettingsView.js');
 				}
 			};
 		},
@@ -23,17 +23,17 @@ module.exports = function (oSettings) {
 			return new CHeaderItemView(TextUtils.i18n('CORE/HEADING_SETTINGS_TABNAME'));
 		},
 		registerSettingsTab: function (fGetTabView, oTabName, oTabTitle) {
-			var SettingsView = require('modules/Settings/js/views/SettingsView.js');
+			var SettingsView = require('modules/%ModuleName%/js/views/SettingsView.js');
 			SettingsView.registerTab(fGetTabView, oTabName, oTabTitle);
 		},
 		getSettingsUtils: function () {
-			return require('modules/Settings/js/utils/Settings.js');
+			return require('modules/%ModuleName%/js/utils/Settings.js');
 		},
 		getAbstractSettingsFormViewClass: function () {
-			return require('modules/Settings/js/views/CAbstractSettingsFormView.js');
+			return require('modules/%ModuleName%/js/views/CAbstractSettingsFormView.js');
 		},
 		setAddHash: function (aAddHash) {
-			var SettingsView = require('modules/Settings/js/views/SettingsView.js');
+			var SettingsView = require('modules/%ModuleName%/js/views/SettingsView.js');
 			SettingsView.setAddHash(aAddHash);
 		}
 	};

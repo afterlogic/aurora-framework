@@ -1,10 +1,6 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	var Settings = require('modules/SimpleChatClient/js/Settings.js');
-	
-	Settings.init(oSettings);
-	
 	return {
 		/**
 		 * Returns true if simple chat emoji module is available for certain user role and public or not public mode.

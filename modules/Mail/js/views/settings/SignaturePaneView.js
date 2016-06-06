@@ -14,10 +14,10 @@ var
 	
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	
-	CHtmlEditorView = require('modules/Mail/js/views/CHtmlEditorView.js')
+	CHtmlEditorView = require('modules/%ModuleName%/js/views/CHtmlEditorView.js')
 ;
 
 /**

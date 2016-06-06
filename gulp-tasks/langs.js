@@ -44,7 +44,7 @@ function BuildLang(sLanguage)
 			else
 			{
 				var
-					sPrefix = aModulesNames[iModuleIndex].toUpperCase().replace('CLIENT', ''),
+					sPrefix = aModulesNames[iModuleIndex].toUpperCase(),
 					sConstants = ''
 				;
 				

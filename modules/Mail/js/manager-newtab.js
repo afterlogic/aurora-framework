@@ -1,18 +1,18 @@
 'use strict';
 
 module.exports = function (oSettings) {
-	require('modules/Mail/js/enums.js');
+	require('modules/%ModuleName%/js/enums.js');
 
 	var
 		_ = require('underscore'),
 		
-		Settings = require('modules/Mail/js/Settings.js'),
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		Cache = null,
 		ComposeView = null,
 		GetComposeView = function () {
 			if (ComposeView === null)
 			{
-				var CComposeView = require('modules/Mail/js/views/CComposeView.js');
+				var CComposeView = require('modules/%ModuleName%/js/views/CComposeView.js');
 				ComposeView = new CComposeView();
 			}
 			return ComposeView;
@@ -21,7 +21,7 @@ module.exports = function (oSettings) {
 
 	Settings.init(oSettings);
 	
-	Cache = require('modules/Mail/js/Cache.js');
+	Cache = require('modules/%ModuleName%/js/Cache.js');
 	Cache.init();
 	
 	return {
@@ -29,12 +29,12 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function () {
-			require('modules/Mail/js/koBindings.js');
+			require('modules/%ModuleName%/js/koBindings.js');
 		},
 		getScreens: function () {
 			return {
 				'view': function () {
-					return require('modules/Mail/js/views/MessagePaneView.js');
+					return require('modules/%ModuleName%/js/views/MessagePaneView.js');
 				},
 				'compose': function () {
 					return GetComposeView();
@@ -42,7 +42,7 @@ module.exports = function (oSettings) {
 			};
 		},
 		registerMessagePaneController: function (oController, sPlace) {
-			var MessagePaneView = require('modules/Mail/js/views/MessagePaneView.js');
+			var MessagePaneView = require('modules/%ModuleName%/js/views/MessagePaneView.js');
 			MessagePaneView.registerController(oController, sPlace);
 		},
 		registerComposeToolbarController: function (oController) {
@@ -52,7 +52,7 @@ module.exports = function (oSettings) {
 		getComposeMessageToAddresses: function () {
 			var
 				bAllowSendMail = true,
-				ComposeUtils = require('modules/Mail/js/utils/ScreenCompose.js')
+				ComposeUtils = require('modules/%ModuleName%/js/utils/ScreenCompose.js')
 			;
 			
 			return bAllowSendMail ? ComposeUtils.composeMessageToAddresses : false;

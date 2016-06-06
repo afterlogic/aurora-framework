@@ -8,8 +8,8 @@ var
 	Utils = require('modules/Core/js/utils/Common.js'),
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	Ajax = require('modules/Files/js/Ajax.js'),
-	CFileModel = require('modules/Files/js/models/CFileModel.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	CFileModel = require('modules/%ModuleName%/js/models/CFileModel.js')
 ;
 
 /**

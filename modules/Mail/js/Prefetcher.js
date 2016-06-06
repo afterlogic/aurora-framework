@@ -6,10 +6,10 @@ var
 	App = require('modules/Core/js/App.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	Ajax = require('modules/Mail/js/Ajax.js'),
-	Settings = require('modules/Mail/js/Settings.js'),
-	MailCache = require('modules/Mail/js/Cache.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
+	MailCache = require('modules/%ModuleName%/js/Cache.js'),
 	
 	Prefetcher = {},
 	bFetchersIdentitiesPrefetched = false

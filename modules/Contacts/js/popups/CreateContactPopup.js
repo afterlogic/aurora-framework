@@ -14,12 +14,12 @@ var
 	
 	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
 	
-	LinksUtils = require('modules/Contacts/js/utils/Links.js'),
+	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	
-	Ajax = require('modules/Contacts/js/Ajax.js'),
-	ContactsCache = require('modules/Contacts/js/Cache.js'),
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),
 	
-	HeaderItemView = require('modules/Contacts/js/views/HeaderItemView.js')
+	HeaderItemView = require('modules/%ModuleName%/js/views/HeaderItemView.js')
 ;
 
 /**
@@ -71,7 +71,7 @@ CCreateContactPopup.prototype.onSaveClick = function ()
 {
 	if (!this.canBeSave())
 	{
-		Screens.showError(TextUtils.i18n('CONTACTS/ERROR_EMAIL_OR_NAME_BLANK'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_EMAIL_OR_NAME_BLANK'));
 	}
 	else if (!this.loading())
 	{
@@ -116,7 +116,7 @@ CCreateContactPopup.prototype.onCreateContactResponse = function (oResponse, oRe
 	}
 	else
 	{
-		Screens.showReport(TextUtils.i18n('CONTACTS/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
+		Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_CONTACT_SUCCESSFULLY_ADDED'));
 		ContactsCache.clearInfoAboutEmail(oParameters.HomeEmail);
 		ContactsCache.getContactsByEmails([oParameters.HomeEmail], this.fCallback);
 		this.closePopup();

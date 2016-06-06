@@ -8,9 +8,9 @@ var
 	
 	Storage = require('modules/Core/js/Storage.js'),
 	
-	Settings = require('modules/Mail/js/Settings.js'),
-	AccountList = require('modules/Mail/js/AccountList.js'),
-	CFolderModel = require('modules/Mail/js/models/CFolderModel.js')
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
+	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
+	CFolderModel = require('modules/%ModuleName%/js/models/CFolderModel.js')
 ;
 
 /**

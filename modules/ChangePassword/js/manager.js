@@ -2,7 +2,7 @@
 
 module.exports = function (oSettings) {
 
-	var Settings = require('modules/ChangePassword/js/Settings.js');
+	var Settings = require('modules/%ModuleName%/js/Settings.js');
 	Settings.init(oSettings);
 	
 	return {
@@ -10,10 +10,10 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		getChangePasswordPopup: function () {
-			return require('modules/ChangePassword/js/popups/ChangePasswordPopup.js');
+			return require('modules/%ModuleName%/js/popups/ChangePasswordPopup.js');
 		},
 		getResetPasswordView: function () {
-			return require('modules/ChangePassword/js/views/ResetPasswordView.js');
+			return require('modules/%ModuleName%/js/views/ResetPasswordView.js');
 		}
 	};
 };

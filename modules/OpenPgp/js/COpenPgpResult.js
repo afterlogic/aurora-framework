@@ -1,6 +1,6 @@
 'use strict';
 
-var Enums = require('modules/OpenPgp/js/Enums.js');
+var Enums = require('modules/%ModuleName%/js/Enums.js');
 
 /**
  * @todo
