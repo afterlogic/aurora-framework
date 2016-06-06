@@ -142,7 +142,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 			
 			$aResultViewProperties[$sProperty] = sprintf(
 "
-	MAX(Case WHEN props.`key` = %s THEN props.value_%s END) `prop_%s`",
+	MAX(IF(props.`key` = %s, props.value_%s, NULL))as `prop_%s`",
 					$this->escapeString($sProperty), $sType, $sProperty);
 		}
 		if (0 < count($aViewProperties))
