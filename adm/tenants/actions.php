@@ -31,13 +31,27 @@ if ($oHttp->HasPost('action'))
 			break;
 		case 'build':
 			$aArguments = array(
-				'--modules Auth',
 				'--themes Default,Funny'
 			);
 			
 			if ($oHttp->GetPost('name', ''))
 			{
 				$aArguments[] = '--tenant '.$oHttp->GetPost('name', '');
+				
+				$aModules = array_diff(scandir(PSEVEN_APP_ROOT_PATH.'modules/'), array('.','..'));
+				if (is_dir(PSEVEN_APP_ROOT_PATH.'tenants/' . $oHttp->GetPost('name', '') . '/modules/')) 
+				{
+					$aTenantModules = array_diff(scandir(PSEVEN_APP_ROOT_PATH.'tenants/' . $oHttp->GetPost('name', '') . '/modules/'), array('.','..'));
+					$aModules = array_merge(array_diff($aModules, $aTenantModules), $aTenantModules);
+				}
+				
+				$aArguments[] =	'--modules '.implode($aModules, ',');
+			}
+			else
+			{
+				$aModules = array_diff(scandir(PSEVEN_APP_ROOT_PATH.'modules/'), array('.','..'));
+						
+				$aArguments[] =	'--modules '.implode(',', $aModules);
 			}
 			
 //			$sCommand = "node ".PSEVEN_APP_ROOT_PATH."node_modules/gulp/bin/gulp.js styles ".implode($aArguments, ' ') . " 2>&1";

@@ -158,7 +158,10 @@ function MoveSharingCss()
 }
 
 gulp.task('styles', function () {
-	BuildLibsCss();
+	if (!sTenanthash)
+	{
+		BuildLibsCss();
+	}
 	MoveFiles('modules/Core/styles/vendors/jquery/images', 'static/styles/libs/images');
 	MoveFiles('modules/Core/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
 	MoveFiles('modules/Core/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
