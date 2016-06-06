@@ -159,13 +159,20 @@ class CApiEavDbStorage extends CApiEavStorage
 			$this->oConnection->FreeResult();
 		}		
 		
-		if (class_exists($sType) && $this->oConnection->Execute($this->oCommandCreator->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder)))
 		{
 			$oRow = null;
 			$mResult = array();
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oObject = call_user_func($sType . '::createInstance');
+				if (class_exists($sType))
+				{
+					$oObject = call_user_func($sType . '::createInstance');
+				}
+				else
+				{
+					$oObject = new \api_APropertyBag($sType);
+				}
 				$oObject->iObjectId = $oRow->obj_id;
 				$oObject->sModuleName =  $oRow->obj_module;
 

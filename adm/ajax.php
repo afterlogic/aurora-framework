@@ -22,7 +22,6 @@ if ($oHttp->HasPost('ObjectName'))
 	$aTypes = $oManagerApi->getTypes();
 	
 	$aItems = $oManagerApi->getObjects($oHttp->GetPost('ObjectName'));
-	
 	if (is_array($aItems))
 	{
 		foreach ($aItems as $oItem)

@@ -102,83 +102,93 @@ class CApiEavCommandCreator extends api_CommandCreator
 		$sLimit = "";
 		$sOffset = "";
 		
-		$oObject = call_user_func($sObjectType . '::createInstance');
-		
-		if ($oObject instanceof $sObjectType)
+		if (class_exists($sObjectType))
 		{
-			$aResultViewProperties = array();
-			$aJoinProperties = array();
-			$aResultSearchProperties = array();
+			$oObject = call_user_func($sObjectType . '::createInstance');
+		}
+		else
+		{
+			$oObject = new \api_APropertyBag($sObjectType);
+		}
+		
+		$aResultViewProperties = array();
+		$aJoinProperties = array();
+		$aResultSearchProperties = array();
+
+		if ($bCount)
+		{
+			$sGroupByField = "obj_type";
+			$sCount = "COUNT(DISTINCT objects.id) as objects_count,";
+		}			
+
+		if (!empty($sSortProperty) && $oObject->IsProperty($sSortProperty))
+		{
+			array_push($aViewProperties, $sSortProperty);
+			$sResultSort = sprintf(" ORDER BY `prop_%s` %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
+		}
+		$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aWhere)));
+
+		foreach ($aViewProperties as $sProperty)
+		{
+			$sType = $oObject->getPropertyType($sProperty);
+
+#			$aResultViewProperties[$sProperty] = sprintf(
+#					"
+#(SELECT props.value_%s 
+#	FROM %seav_properties as props 
+#		WHERE props.id_object = objects.id AND props.`key` = %s ORDER BY 1 LIMIT 1) AS `prop_%s`",
+#			$sType, $this->prefix(), $this->escapeString($sProperty), $sProperty);
 			
-			if ($bCount)
-			{
-				$sGroupByField = "obj_type";
-				$sCount = "COUNT(DISTINCT objects.id) as objects_count,";
-			}			
-
-			if (!empty($sSortProperty) && $oObject->IsProperty($sSortProperty))
-			{
-				array_push($aViewProperties, $sSortProperty);
-				$sResultSort = sprintf(" ORDER BY `prop_%s` %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
-			}
-			$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aWhere)));
-
-			foreach ($aViewProperties as $sProperty)
-			{
-				$sType = $oObject->getPropertyType($sProperty);
-
-				$aResultViewProperties[$sProperty] = sprintf(
-						"
-	(SELECT props.value_%s 
-		FROM %seav_properties as props 
-			WHERE props.id_object = objects.id AND props.`key` = %s ORDER BY 1 LIMIT 1) AS `prop_%s`",
-				$sType, $this->prefix(), $this->escapeString($sProperty), $sProperty);
-			}
-			if (0 < count($aViewProperties))
-			{
-				$sViewPoperties = ', ' . implode(', ', $aResultViewProperties);
-				$sJoinPoperties = implode(' ', $aJoinProperties);
-			}
-			foreach ($aWhere as $sKey => $mValue)
-			{
-				$sPrpertyValue = $mValue;
-				$sPropertyAction = '=';
-				if (is_array($mValue) && count($mValue) > 1)
-				{
-					$sPropertyAction = $mValue[0];
-					$sPrpertyValue = $mValue[1];
-				}
-				else
-				{
-					if (strpos($sPrpertyValue, "%") !== false)
-					{
-						$sPropertyAction = 'LIKE';
-					}
-				}
-				$sType = $oObject->getPropertyType($sKey);
-				if ($oObject->isEncryptedProperty($sKey))
-				{
-					$sPrpertyValue = \api_Utils::EncryptValue($sPrpertyValue);
-				}
-				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
-				$aResultSearchProperties[] = sprintf(
-						"`prop_%s` %s " . $sValueFormat, 
-						$sKey, 
-						$sPropertyAction, 
-						$oObject->isStringProperty($sKey) ? $this->escapeString($sPrpertyValue) : $sPrpertyValue
-				);
-			}
-			if (0 < count($aWhere))
-			{
-				$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchProperties);
-			}
 			
-			if ($iLimit > 0)
+			$aResultViewProperties[$sProperty] = sprintf(
+"
+	MAX(Case WHEN props.`key` = %s THEN props.value_%s END) `prop_%s`",
+					$this->escapeString($sProperty), $sType, $sProperty);
+		}
+		if (0 < count($aViewProperties))
+		{
+			$sViewPoperties = ', ' . implode(', ', $aResultViewProperties);
+			$sJoinPoperties = implode(' ', $aJoinProperties);
+		}
+		foreach ($aWhere as $sKey => $mValue)
+		{
+			$sPrpertyValue = $mValue;
+			$sPropertyAction = '=';
+			if (is_array($mValue) && count($mValue) > 1)
 			{
-				$sLimit = sprintf("LIMIT %d", $iLimit);
-				$sOffset = sprintf("OFFSET %d", $iOffset);
+				$sPropertyAction = $mValue[0];
+				$sPrpertyValue = $mValue[1];
 			}
-		}		
+			else
+			{
+				if (strpos($sPrpertyValue, "%") !== false)
+				{
+					$sPropertyAction = 'LIKE';
+				}
+			}
+			$sType = $oObject->getPropertyType($sKey);
+			if ($oObject->isEncryptedProperty($sKey))
+			{
+				$sPrpertyValue = \api_Utils::EncryptValue($sPrpertyValue);
+			}
+			$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
+			$aResultSearchProperties[] = sprintf(
+					"`prop_%s` %s " . $sValueFormat, 
+					$sKey, 
+					$sPropertyAction, 
+					$oObject->isStringProperty($sKey) ? $this->escapeString($sPrpertyValue) : $sPrpertyValue
+			);
+		}
+		if (0 < count($aWhere))
+		{
+			$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchProperties);
+		}
+
+		if ($iLimit > 0)
+		{
+			$sLimit = sprintf("LIMIT %d", $iLimit);
+			$sOffset = sprintf("OFFSET %d", $iOffset);
+		}
 		$sSql = sprintf(
 			"SELECT 
 	%s #1 COUNT
@@ -210,6 +220,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$sLimit,							// #9
 			$sOffset							// #10
 		);	
+		
 		return $sSql;
 	}
 	
