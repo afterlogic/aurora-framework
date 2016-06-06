@@ -28,14 +28,9 @@ if ($oHttp->HasPost('ObjectName'))
 		{
 			$itemData = $oItem->toArray();
 			
-			//TODO
-			if ($itemData['Password'])
-			{
-				$itemData['Password'] = '';
-			}
 			$aResultItems[] = $itemData;
 		}
-		
+
 		$response['error'] = false;
 		$response['message'] = '';
 		$response['result'] = $aResultItems;
