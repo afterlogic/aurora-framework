@@ -38,7 +38,7 @@ function CHelpdeskSettingsPaneView()
 
 _.extendOwn(CHelpdeskSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CHelpdeskSettingsPaneView.prototype.ViewTemplate = 'HelpDeskClient_HelpdeskSettingsPaneView';
+CHelpdeskSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_HelpdeskSettingsPaneView';
 
 CHelpdeskSettingsPaneView.prototype.getCurrentValues = function ()
 {

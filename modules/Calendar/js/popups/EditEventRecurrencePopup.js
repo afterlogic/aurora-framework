@@ -26,7 +26,7 @@ function CEditEventRecurrencePopup()
 
 _.extendOwn(CEditEventRecurrencePopup.prototype, CAbstractPopup.prototype);
 
-CEditEventRecurrencePopup.prototype.PopupTemplate = 'Calendar_EditEventRecurrencePopup';
+CEditEventRecurrencePopup.prototype.PopupTemplate = '%ModuleName%_EditEventRecurrencePopup';
 
 /**
  * @param {Function} fCallback

@@ -53,7 +53,7 @@ function CCreateFetcherPopup()
 
 _.extendOwn(CCreateFetcherPopup.prototype, CAbstractPopup.prototype);
 
-CCreateFetcherPopup.prototype.PopupTemplate = 'Mail_Settings_CreateFetcherPopup';
+CCreateFetcherPopup.prototype.PopupTemplate = '%ModuleName%_Settings_CreateFetcherPopup';
 
 CCreateFetcherPopup.prototype.onShow = function ()
 {

@@ -41,7 +41,7 @@ function CColorPickerView(sCaption, fPickHandler, oPickContext)
 	this.colorPickerDom = ko.observable(null);
 }
 
-CColorPickerView.prototype.ViewTemplate = 'Mail_ColorPickerView';
+CColorPickerView.prototype.ViewTemplate = '%ModuleName%_ColorPickerView';
 
 CColorPickerView.prototype.onShow = function ()
 {

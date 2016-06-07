@@ -91,7 +91,7 @@ function CPhoneView()
 	}, this));
 }
 
-CPhoneView.prototype.ViewTemplate = 'Phone_PhoneView';
+CPhoneView.prototype.ViewTemplate = '%ModuleName%_PhoneView';
 
 CPhoneView.prototype.answer = function ()
 {

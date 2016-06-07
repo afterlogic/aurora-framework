@@ -32,7 +32,7 @@ function COutlookSyncSettingsPaneView()
 	this.credentialsHintText = ko.observable(TextUtils.i18n('CORE/INFO_MOBILE_CREDENTIALS', {'EMAIL': App.defaultAccountEmail()}));
 }
 
-COutlookSyncSettingsPaneView.prototype.ViewTemplate = 'OutlookSync_OutlookSyncSettingsPaneView';
+COutlookSyncSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_OutlookSyncSettingsPaneView';
 
 COutlookSyncSettingsPaneView.prototype.onRoute = function ()
 {

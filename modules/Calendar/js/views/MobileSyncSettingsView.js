@@ -13,7 +13,7 @@ function CMobileSyncSettingsView()
 	}, this);
 }
 
-CMobileSyncSettingsView.prototype.ViewTemplate = 'Calendar_MobileSyncSettingsView';
+CMobileSyncSettingsView.prototype.ViewTemplate = '%ModuleName%_MobileSyncSettingsView';
 
 /**
  * @param {Object} oDav

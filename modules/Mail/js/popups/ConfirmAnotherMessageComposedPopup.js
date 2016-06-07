@@ -20,7 +20,7 @@ function CConfirmAnotherMessageComposedPopup()
 
 _.extendOwn(CConfirmAnotherMessageComposedPopup.prototype, CAbstractPopup.prototype);
 
-CConfirmAnotherMessageComposedPopup.prototype.PopupTemplate = 'Mail_ConfirmAnotherMessageComposedPopup';
+CConfirmAnotherMessageComposedPopup.prototype.PopupTemplate = '%ModuleName%_ConfirmAnotherMessageComposedPopup';
 
 /**
  * @param {Function} fConfirmCallback

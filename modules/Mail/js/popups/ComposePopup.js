@@ -62,7 +62,7 @@ _.extendOwn(CComposePopup.prototype, CAbstractPopup.prototype);
 
 _.extendOwn(CComposePopup.prototype, CComposeView.prototype);
 
-CComposePopup.prototype.PopupTemplate = 'Mail_ComposePopup';
+CComposePopup.prototype.PopupTemplate = '%ModuleName%_ComposePopup';
 
 CComposePopup.prototype.preventBackspaceOn = function ()
 {

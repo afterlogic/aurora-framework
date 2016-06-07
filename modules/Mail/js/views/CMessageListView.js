@@ -324,10 +324,10 @@ function CMessageListView(fOpenMessageInNewWindowBinded)
 	this.sAddingInfo2 = aAddingInfo.length > 1 ? aAddingInfo[1] : '';
 	this.sAddingInfo3 = aAddingInfo.length > 2 ? aAddingInfo[2] : '';
 	
-	this.sSearchViewTemplate = App.isMobile() ? 'Mail_SearchMobileView' : 'Mail_SearchView';
+	this.sSearchViewTemplate = App.isMobile() ? '%ModuleName%_SearchMobileView' : '%ModuleName%_SearchView';
 }
 
-CMessageListView.prototype.ViewTemplate = 'Mail_MessagesView';
+CMessageListView.prototype.ViewTemplate = '%ModuleName%_MessagesView';
 
 CMessageListView.prototype.addNewAccount = function ()
 {

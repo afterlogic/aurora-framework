@@ -306,10 +306,10 @@ function CContactsView()
 	}, this);
 	
 	this.bVisibleDragNDropDescription = !App.isMobile();
-	this.sGroupsToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_GroupsMobileView' : 'Contacts_Toolbar_GroupsView';
-	this.sContactsToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_ContactsMobileView' : 'Contacts_Toolbar_ContactsView';
-	this.sBeforeContactToolbarTemplate = App.isMobile() ? 'Contacts_Toolbar_ContactMobileView' : '';
-	this.sContactToolbarTemplate = App.isMobile() ? '' : 'Contacts_Toolbar_ContactView';
+	this.sGroupsToolbarTemplate = App.isMobile() ? '%ModuleName%_Toolbar_GroupsMobileView' : '%ModuleName%_Toolbar_GroupsView';
+	this.sContactsToolbarTemplate = App.isMobile() ? '%ModuleName%_Toolbar_ContactsMobileView' : '%ModuleName%_Toolbar_ContactsView';
+	this.sBeforeContactToolbarTemplate = App.isMobile() ? '%ModuleName%_Toolbar_ContactMobileView' : '';
+	this.sContactToolbarTemplate = App.isMobile() ? '' : '%ModuleName%_Toolbar_ContactView';
 	this.selectedPanel = ko.observable(Enums.MobilePanel.Items);
 	this.selectedItem.subscribe(function () {
 		
@@ -329,7 +329,7 @@ function CContactsView()
 
 _.extendOwn(CContactsView.prototype, CAbstractScreenView.prototype);
 
-CContactsView.prototype.ViewTemplate = 'Contacts_ContactsScreenView';
+CContactsView.prototype.ViewTemplate = '%ModuleName%_ContactsScreenView';
 
 /**
  * 

@@ -29,7 +29,7 @@ _.extendOwn(CSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
  * Name of template that will be binded to this JS-object. 'SimpleChatClient' - name of the object,
  * 'SettingsPaneView' - name of template file in 'templates' folder.
  */
-CSettingsPaneView.prototype.ViewTemplate = 'SimpleChatClient_SettingsPaneView';
+CSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_SettingsPaneView';
 
 /**
  * Returns array with all settings values wich is used for indicating if there were changes on the page.

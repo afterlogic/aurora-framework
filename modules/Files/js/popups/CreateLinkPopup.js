@@ -33,7 +33,7 @@ function CCreateLinkPopup()
 
 _.extendOwn(CCreateLinkPopup.prototype, CAbstractPopup.prototype);
 
-CCreateLinkPopup.prototype.PopupTemplate = 'Files_CreateLinkPopup';
+CCreateLinkPopup.prototype.PopupTemplate = '%ModuleName%_CreateLinkPopup';
 
 /**
  * @param {Function} fCallback

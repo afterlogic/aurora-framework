@@ -36,7 +36,7 @@ function CAccountAutoresponderPaneView()
 
 _.extendOwn(CAccountAutoresponderPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountAutoresponderPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountAutoresponderPaneView';
+CAccountAutoresponderPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_AccountAutoresponderPaneView';
 
 CAccountAutoresponderPaneView.prototype.getCurrentValues = function ()
 {

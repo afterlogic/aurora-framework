@@ -143,7 +143,7 @@ function CHtmlEditorView(bInsertImageAsBase64, oParent)
 	this.textChanged = ko.observable(false);
 }
 
-CHtmlEditorView.prototype.ViewTemplate = 'Mail_HtmlEditorView';
+CHtmlEditorView.prototype.ViewTemplate = '%ModuleName%_HtmlEditorView';
 
 CHtmlEditorView.prototype.hasOpenedPopup = function ()
 {

@@ -17,7 +17,7 @@ function CIcalAttachmentView()
 	this.ical = ko.observable(null);
 }
 
-CIcalAttachmentView.prototype.ViewTemplate = 'Calendar_IcalAttachmentView';
+CIcalAttachmentView.prototype.ViewTemplate = '%ModuleName%_IcalAttachmentView';
 
 /**
  * Receives properties of the message that is displaying in the message pane. 

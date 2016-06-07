@@ -30,7 +30,7 @@ function CMessageControlsView()
 	}, this);
 }
 
-CMessageControlsView.prototype.ViewTemplate = 'OpenPgp_MessageControlsView';
+CMessageControlsView.prototype.ViewTemplate = '%ModuleName%_MessageControlsView';
 
 CMessageControlsView.prototype.reset = function ()
 {

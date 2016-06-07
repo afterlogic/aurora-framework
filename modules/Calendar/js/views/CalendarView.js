@@ -229,7 +229,7 @@ function CCalendarView()
 
 _.extendOwn(CCalendarView.prototype, CAbstractScreenView.prototype);
 
-CCalendarView.prototype.ViewTemplate = 'Calendar_CalendarView';
+CCalendarView.prototype.ViewTemplate = '%ModuleName%_CalendarView';
 
 /**
  * Hot keys events

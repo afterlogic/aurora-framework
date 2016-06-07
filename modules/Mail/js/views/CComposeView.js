@@ -354,12 +354,12 @@ function CComposeView()
 	this.messageFields = ko.observable(null);
 	this.bottomPanel = ko.observable(null);
 
-	this.sHotkeysHintsViewTemplate = !Browser.mobileDevice && !bMobileApp ? 'Mail_Compose_HotkeysHintsView' : '';
-	this.sAttachmentsViewTemplate = bMobileApp ? '' : 'Mail_Compose_AttachmentsView';
-	this.sAttachmentsMobileViewTemplate = bMobileApp ? 'Mail_Compose_AttachmentsMobileView' : '';
-	this.sCcBccSwitchersViewTemplate = bMobileApp ? '' : 'Mail_Compose_CcBccSwitchersView';
-	this.sCcBccSwitchersMobileViewTemplate = bMobileApp ? 'Mail_Compose_CcBccSwitchersMobileView' : '';
-	this.sPopupButtonsViewTemplate = !bMobileApp && !App.isNewTab() ? 'Mail_Compose_PopupButtonsView' : '';
+	this.sHotkeysHintsViewTemplate = !Browser.mobileDevice && !bMobileApp ? '%ModuleName%_Compose_HotkeysHintsView' : '';
+	this.sAttachmentsViewTemplate = bMobileApp ? '' : '%ModuleName%_Compose_AttachmentsView';
+	this.sAttachmentsMobileViewTemplate = bMobileApp ? '%ModuleName%_Compose_AttachmentsMobileView' : '';
+	this.sCcBccSwitchersViewTemplate = bMobileApp ? '' : '%ModuleName%_Compose_CcBccSwitchersView';
+	this.sCcBccSwitchersMobileViewTemplate = bMobileApp ? '%ModuleName%_Compose_CcBccSwitchersMobileView' : '';
+	this.sPopupButtonsViewTemplate = !bMobileApp && !App.isNewTab() ? '%ModuleName%_Compose_PopupButtonsView' : '';
 	this.bAllowHeadersCompressing = !bMobileApp;
 
 	this.aHotkeys = [
@@ -420,7 +420,7 @@ function CComposeView()
 
 _.extendOwn(CComposeView.prototype, CAbstractScreenView.prototype);
 
-CComposeView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_ComposeScreenView' : 'Mail_ComposeView';
+CComposeView.prototype.ViewTemplate = App.isNewTab() ? '%ModuleName%_ComposeScreenView' : '%ModuleName%_ComposeView';
 CComposeView.prototype.__name = 'CComposeView';
 
 /**
@@ -1800,30 +1800,30 @@ CComposeView.prototype.onShowFilesPopupClick = function ()
 CComposeView.prototype.registerOwnToolbarControllers = function ()
 {
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Compose_BackButtonView',
+		ViewTemplate: '%ModuleName%_Compose_BackButtonView',
 		sId: 'back',
 		bOnlyMobile: true,
 		backToListCommand: this.backToListCommand
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Compose_SendButtonView',
+		ViewTemplate: '%ModuleName%_Compose_SendButtonView',
 		sId: 'send',
 		bAllowMobile: true,
 		sendCommand: this.sendCommand
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Compose_SaveButtonView',
+		ViewTemplate: '%ModuleName%_Compose_SaveButtonView',
 		sId: 'save',
 		bAllowMobile: true,
 		saveCommand: this.saveCommand
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Compose_ImportanceDropdownView',
+		ViewTemplate: '%ModuleName%_Compose_ImportanceDropdownView',
 		sId: 'importance',
 		selectedImportance: this.selectedImportance
 	});
 	this.registerToolbarController({
-		ViewTemplate: 'Mail_Compose_ConfirmationCheckboxView',
+		ViewTemplate: '%ModuleName%_Compose_ConfirmationCheckboxView',
 		sId: 'confirmation',
 		readingConfirmation: this.readingConfirmation
 	});

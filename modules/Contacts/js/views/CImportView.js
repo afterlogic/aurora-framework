@@ -31,7 +31,7 @@ function CImportView(oParent)
 	this.bVisibleCloseButton = App.isMobile();
 }
 
-CImportView.prototype.ViewTemplate = 'Contacts_ImportView';
+CImportView.prototype.ViewTemplate = '%ModuleName%_ImportView';
 
 CImportView.prototype.onBind = function ()
 {

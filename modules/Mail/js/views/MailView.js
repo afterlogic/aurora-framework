@@ -104,7 +104,7 @@ function CMailView()
 
 	this.jqPanelHelper = null;
 	
-	this.sToolbarViewTemplate = App.isMobile() ? 'Mail_Messages_ToolbarMobileView' : 'Mail_Messages_ToolbarView';
+	this.sToolbarViewTemplate = App.isMobile() ? '%ModuleName%_Messages_ToolbarMobileView' : '%ModuleName%_Messages_ToolbarView';
 	
 	this.selectedPanel = ko.observable(Enums.MobilePanel.Items);
 	MailCache.currentMessage.subscribe(function () {
@@ -114,7 +114,7 @@ function CMailView()
 
 _.extendOwn(CMailView.prototype, CAbstractScreenView.prototype);
 
-CMailView.prototype.ViewTemplate = 'Mail_MailView';
+CMailView.prototype.ViewTemplate = '%ModuleName%_MailView';
 
 CMailView.prototype.executeCompose = function ()
 {

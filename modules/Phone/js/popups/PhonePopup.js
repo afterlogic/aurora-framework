@@ -24,7 +24,7 @@ function CPhonePopup()
 
 _.extendOwn(CPhonePopup.prototype, CAbstractPopup.prototype);
 
-CPhonePopup.prototype.PopupTemplate = 'Phone_PhonePopup';
+CPhonePopup.prototype.PopupTemplate = '%ModuleName%_PhonePopup';
 
 CPhonePopup.prototype.onShow = function (sText)
 {

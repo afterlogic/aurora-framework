@@ -66,7 +66,7 @@ function CCreateAccountPopup()
 
 _.extendOwn(CCreateAccountPopup.prototype, CAbstractPopup.prototype);
 
-CCreateAccountPopup.prototype.PopupTemplate = 'Mail_Settings_CreateAccountPopup';
+CCreateAccountPopup.prototype.PopupTemplate = '%ModuleName%_Settings_CreateAccountPopup';
 
 CCreateAccountPopup.prototype.init = function ()
 {

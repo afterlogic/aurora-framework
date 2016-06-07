@@ -45,7 +45,7 @@ function CSignaturePaneView()
 
 _.extendOwn(CSignaturePaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CSignaturePaneView.prototype.ViewTemplate = 'Mail_Settings_SignaturePaneView';
+CSignaturePaneView.prototype.ViewTemplate = '%ModuleName%_Settings_SignaturePaneView';
 
 CSignaturePaneView.prototype.__name = 'CSignaturePaneView';
 

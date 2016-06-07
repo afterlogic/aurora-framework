@@ -67,7 +67,7 @@ function CAccountPropertiesPaneView()
 
 _.extendOwn(CAccountPropertiesPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountPropertiesPaneView';
+CAccountPropertiesPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_AccountPropertiesPaneView';
 
 CAccountPropertiesPaneView.prototype.getCurrentValues = function ()
 {

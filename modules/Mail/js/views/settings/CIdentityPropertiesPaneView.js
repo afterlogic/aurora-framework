@@ -47,7 +47,7 @@ function CIdentityPropertiesPaneView(oParent, bCreate)
 
 _.extendOwn(CIdentityPropertiesPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CIdentityPropertiesPaneView.prototype.ViewTemplate = 'Mail_Settings_IdentityPropertiesPaneView';
+CIdentityPropertiesPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_IdentityPropertiesPaneView';
 
 CIdentityPropertiesPaneView.prototype.__name = 'CIdentityPropertiesPaneView';
 

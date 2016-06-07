@@ -40,7 +40,7 @@ function CAccountForwardPaneView()
 
 _.extendOwn(CAccountForwardPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountForwardPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountForwardPaneView';
+CAccountForwardPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_AccountForwardPaneView';
 
 CAccountForwardPaneView.prototype.getCurrentValues = function ()
 {

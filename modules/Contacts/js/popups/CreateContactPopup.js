@@ -45,7 +45,7 @@ function CCreateContactPopup()
 
 _.extendOwn(CCreateContactPopup.prototype, CAbstractPopup.prototype);
 
-CCreateContactPopup.prototype.PopupTemplate = 'Contacts_CreateContactPopup';
+CCreateContactPopup.prototype.PopupTemplate = '%ModuleName%_CreateContactPopup';
 
 /**
  * @param {string} sName

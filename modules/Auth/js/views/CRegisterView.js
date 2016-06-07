@@ -87,7 +87,7 @@ function CRegisterView()
 //	}
 }
 
-CRegisterView.prototype.ViewTemplate = 'Auth_RegisterView';
+CRegisterView.prototype.ViewTemplate = '%ModuleName%_RegisterView';
 CRegisterView.prototype.__name = 'CRegisterView';
 
 CRegisterView.prototype.registerAccount = function ()

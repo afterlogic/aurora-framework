@@ -22,7 +22,7 @@ function CFilesSettingsPaneView()
 
 _.extendOwn(CFilesSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CFilesSettingsPaneView.prototype.ViewTemplate = 'Files_FilesSettingsPaneView';
+CFilesSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_FilesSettingsPaneView';
 
 CFilesSettingsPaneView.prototype.getCurrentValues = function ()
 {

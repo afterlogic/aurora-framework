@@ -27,7 +27,7 @@ function CCreateFolderPopup()
 
 _.extendOwn(CCreateFolderPopup.prototype, CAbstractPopup.prototype);
 
-CCreateFolderPopup.prototype.PopupTemplate = 'Files_CreateFolderPopup';
+CCreateFolderPopup.prototype.PopupTemplate = '%ModuleName%_CreateFolderPopup';
 
 /**
  * @param {Function} fCallback

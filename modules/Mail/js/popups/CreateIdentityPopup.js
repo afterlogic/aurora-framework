@@ -23,7 +23,7 @@ function CCreateIdentityPopup()
 
 _.extendOwn(CCreateIdentityPopup.prototype, CAbstractPopup.prototype);
 
-CCreateIdentityPopup.prototype.PopupTemplate = 'Mail_Settings_CreateIdentityPopup';
+CCreateIdentityPopup.prototype.PopupTemplate = '%ModuleName%_Settings_CreateIdentityPopup';
 
 /**
  * @param {number} iAccountId

@@ -77,7 +77,7 @@ function CAccountFiltersPaneView()
 
 _.extendOwn(CAccountFiltersPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CAccountFiltersPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountFiltersPaneView';
+CAccountFiltersPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_AccountFiltersPaneView';
 
 /**
  * @param {Object} oAccount

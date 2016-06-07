@@ -24,7 +24,7 @@ function CSelectFilesPopup()
 
 _.extendOwn(CSelectFilesPopup.prototype, CAbstractPopup.prototype);
 
-CSelectFilesPopup.prototype.PopupTemplate = 'Files_SelectFilesPopup';
+CSelectFilesPopup.prototype.PopupTemplate = '%ModuleName%_SelectFilesPopup';
 
 /**
  * @param {Function} fCallback

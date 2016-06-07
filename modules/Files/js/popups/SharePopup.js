@@ -25,7 +25,7 @@ function CSharePopup()
 
 _.extendOwn(CSharePopup.prototype, CAbstractPopup.prototype);
 
-CSharePopup.prototype.PopupTemplate = 'Files_SharePopup';
+CSharePopup.prototype.PopupTemplate = '%ModuleName%_SharePopup';
 
 /**
  * @param {Object} oItem

@@ -77,7 +77,7 @@ function CSimpleChatView()
 
 _.extendOwn(CSimpleChatView.prototype, CAbstractScreenView.prototype);
 
-CSimpleChatView.prototype.ViewTemplate = 'SimpleChatClient_MainView';
+CSimpleChatView.prototype.ViewTemplate = '%ModuleName%_MainView';
 
 /**
  * Scrolls post list to bottom after posts getting if it was scrolled to bottom earlier.

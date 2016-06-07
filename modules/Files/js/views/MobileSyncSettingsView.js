@@ -19,7 +19,7 @@ function CMobileSyncSettingsView()
 	this.bDemo = UserSettings.IsDemo;
 }
 
-CMobileSyncSettingsView.prototype.ViewTemplate = 'Files_MobileSyncSettingsView';
+CMobileSyncSettingsView.prototype.ViewTemplate = '%ModuleName%_MobileSyncSettingsView';
 
 /**
  * @param {Object} oDav

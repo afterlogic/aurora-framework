@@ -40,7 +40,7 @@ function CMobileSyncSettingsPaneView()
 	this.credentialsHintText = ko.observable(TextUtils.i18n('CORE/INFO_MOBILE_CREDENTIALS', {'EMAIL': App.defaultAccountEmail()}));
 }
 
-CMobileSyncSettingsPaneView.prototype.ViewTemplate = 'MobileSync_MobileSyncSettingsPaneView';
+CMobileSyncSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_MobileSyncSettingsPaneView';
 
 CMobileSyncSettingsPaneView.prototype.onRoute = function ()
 {

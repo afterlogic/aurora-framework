@@ -227,7 +227,7 @@ function CEditEventPopup()
 
 _.extendOwn(CEditEventPopup.prototype, CAbstractPopup.prototype);
 
-CEditEventPopup.prototype.PopupTemplate = 'Calendar_EditEventPopup';
+CEditEventPopup.prototype.PopupTemplate = '%ModuleName%_EditEventPopup';
 
 /**
  * @param {Object} oElement

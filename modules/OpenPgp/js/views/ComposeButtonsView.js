@@ -47,7 +47,7 @@ function CComposeButtonsView()
 	this.bComposeModeChanged = false;
 }
 
-CComposeButtonsView.prototype.ViewTemplate = 'OpenPgp_ComposeButtonsView';
+CComposeButtonsView.prototype.ViewTemplate = '%ModuleName%_ComposeButtonsView';
 
 /**
  * Assigns compose external interface.

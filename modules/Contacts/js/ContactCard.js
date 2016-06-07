@@ -19,7 +19,7 @@ var
 	
 	oContactCardsView = {
 		contacts: ko.observableArray([]),
-		ViewTemplate: 'Contacts_ContactCardsView',
+		ViewTemplate: '%ModuleName%_ContactCardsView',
 		bAllowComposeMessageToAddresses: $.isFunction(ComposeMessageToAddressesFunc),
 		searchMessagesInCurrentFolder: SearchMessagesInCurrentFolderFunc,
 		bAllowSearchMessagesInCurrentFolder: $.isFunction(SearchMessagesInCurrentFolderFunc),

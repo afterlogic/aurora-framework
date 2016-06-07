@@ -33,7 +33,7 @@ function CHeaderItemView()
 
 _.extendOwn(CHeaderItemView.prototype, CAbstractHeaderItemView.prototype);
 
-CHeaderItemView.prototype.ViewTemplate = App.isMobile() ? 'Mail_HeaderItemMobileView' : 'Mail_HeaderItemView';
+CHeaderItemView.prototype.ViewTemplate = App.isMobile() ? '%ModuleName%_HeaderItemMobileView' : '%ModuleName%_HeaderItemView';
 
 var HeaderItemView = new CHeaderItemView();
 

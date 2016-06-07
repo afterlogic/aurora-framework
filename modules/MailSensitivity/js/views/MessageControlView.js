@@ -13,7 +13,7 @@ function CMessageControlView()
 	this.visible = ko.observable(false);
 }
 
-CMessageControlView.prototype.ViewTemplate = 'MailSensitivity_MessageControlView';
+CMessageControlView.prototype.ViewTemplate = '%ModuleName%_MessageControlView';
 
 /**
  * Receives properties of the message that is displaying in the message pane. 

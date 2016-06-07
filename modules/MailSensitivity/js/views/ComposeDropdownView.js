@@ -11,7 +11,7 @@ function CComposeDropdownView()
 	this.selectedSensitivity = ko.observable(Enums.Sensitivity.Nothing);
 }
 
-CComposeDropdownView.prototype.ViewTemplate = 'MailSensitivity_ComposeDropdownView';
+CComposeDropdownView.prototype.ViewTemplate = '%ModuleName%_ComposeDropdownView';
 
 /**
  * @param {Object} oParameters

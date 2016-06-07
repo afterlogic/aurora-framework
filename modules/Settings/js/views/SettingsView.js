@@ -27,7 +27,7 @@ function CSettingsView()
 
 _.extendOwn(CSettingsView.prototype, CAbstractScreenView.prototype);
 
-CSettingsView.prototype.ViewTemplate = 'Settings_SettingsView';
+CSettingsView.prototype.ViewTemplate = '%ModuleName%_SettingsView';
 
 CSettingsView.prototype.registerTab = function (fGetTabView, oTabName, oTabTitle) {
 	var iLastIndex = Settings.TabsOrder.length;

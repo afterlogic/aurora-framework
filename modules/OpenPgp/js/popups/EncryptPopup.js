@@ -54,7 +54,7 @@ function CEncryptPopup()
 
 _.extendOwn(CEncryptPopup.prototype, CAbstractPopup.prototype);
 
-CEncryptPopup.prototype.PopupTemplate = 'OpenPgp_EncryptPopup';
+CEncryptPopup.prototype.PopupTemplate = '%ModuleName%_EncryptPopup';
 
 /**
  * @param {string} sData

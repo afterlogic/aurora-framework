@@ -34,7 +34,7 @@ function CGenerateKeyPopup()
 
 _.extendOwn(CGenerateKeyPopup.prototype, CAbstractPopup.prototype);
 
-CGenerateKeyPopup.prototype.PopupTemplate = 'OpenPgp_GenerateKeyPopup';
+CGenerateKeyPopup.prototype.PopupTemplate = '%ModuleName%_GenerateKeyPopup';
 
 CGenerateKeyPopup.prototype.onShow = function ()
 {

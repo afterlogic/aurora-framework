@@ -15,7 +15,7 @@ function CVcardAttachmentView()
 	this.vcard = ko.observable(null);
 }
 
-CVcardAttachmentView.prototype.ViewTemplate = 'Contacts_VcardAttachmentView';
+CVcardAttachmentView.prototype.ViewTemplate = '%ModuleName%_VcardAttachmentView';
 
 /**
  * Receives properties of the message that is displaying in the message pane. 

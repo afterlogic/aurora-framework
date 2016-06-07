@@ -56,7 +56,7 @@ function CAccountFoldersPaneView()
 //	}
 }
 
-CAccountFoldersPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountFoldersPaneView';
+CAccountFoldersPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_AccountFoldersPaneView';
 
 CAccountFoldersPaneView.prototype.hide = function (fAfterHideHandler)
 {

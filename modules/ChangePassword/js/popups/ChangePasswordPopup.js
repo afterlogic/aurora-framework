@@ -33,7 +33,7 @@ function CChangePasswordPopup()
 
 _.extendOwn(CChangePasswordPopup.prototype, CAbstractPopup.prototype);
 
-CChangePasswordPopup.prototype.PopupTemplate = 'ChangePassword_ChangePasswordPopup';
+CChangePasswordPopup.prototype.PopupTemplate = '%ModuleName%_ChangePasswordPopup';
 
 /**
  * @param {Object} oParams

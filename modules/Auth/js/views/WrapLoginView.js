@@ -69,7 +69,7 @@ function CWrapLoginView()
 
 _.extendOwn(CWrapLoginView.prototype, CAbstractScreenView.prototype);
 
-CWrapLoginView.prototype.ViewTemplate = 'Auth_WrapLoginView';
+CWrapLoginView.prototype.ViewTemplate = '%ModuleName%_WrapLoginView';
 CWrapLoginView.prototype.__name = 'CWrapLoginView';
 
 CWrapLoginView.prototype.onShow = function ()

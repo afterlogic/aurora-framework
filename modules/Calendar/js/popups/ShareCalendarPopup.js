@@ -77,7 +77,7 @@ function CShareCalendarPopup()
 
 _.extendOwn(CShareCalendarPopup.prototype, CAbstractPopup.prototype);
 
-CShareCalendarPopup.prototype.PopupTemplate = 'Calendar_ShareCalendarPopup';
+CShareCalendarPopup.prototype.PopupTemplate = '%ModuleName%_ShareCalendarPopup';
 
 /**
  * @param {Function} fCallback

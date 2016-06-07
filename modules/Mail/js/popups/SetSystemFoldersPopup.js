@@ -46,7 +46,7 @@ function CSetSystemFoldersPopup()
 
 _.extendOwn(CSetSystemFoldersPopup.prototype, CAbstractPopup.prototype);
 
-CSetSystemFoldersPopup.prototype.PopupTemplate = 'Mail_Settings_SetSystemFoldersPopup';
+CSetSystemFoldersPopup.prototype.PopupTemplate = '%ModuleName%_Settings_SetSystemFoldersPopup';
 
 CSetSystemFoldersPopup.prototype.onShow = function ()
 {

@@ -40,7 +40,7 @@ function CCalendarSettingsPaneView()
 
 _.extendOwn(CCalendarSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CCalendarSettingsPaneView.prototype.ViewTemplate = 'Calendar_CalendarSettingsPaneView';
+CCalendarSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_CalendarSettingsPaneView';
 
 CCalendarSettingsPaneView.prototype.getCurrentValues = function()
 {

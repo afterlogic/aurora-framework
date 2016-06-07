@@ -45,7 +45,7 @@ function CResetPasswordView()
 	this.sHintSetPassword3 = aHintSetPassword.length > 2 ? aHintSetPassword[2] : '';
 }
 
-CResetPasswordView.prototype.ViewTemplate = 'ChangePassword_ResetPasswordView';
+CResetPasswordView.prototype.ViewTemplate = '%ModuleName%_ResetPasswordView';
 
 CResetPasswordView.prototype.configureMail = function ()
 {

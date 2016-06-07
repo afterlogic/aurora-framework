@@ -37,7 +37,7 @@ function CImportCalendarPopup()
 
 _.extendOwn(CImportCalendarPopup.prototype, CAbstractPopup.prototype);
 
-CImportCalendarPopup.prototype.PopupTemplate = 'Calendar_ImportCalendarPopup';
+CImportCalendarPopup.prototype.PopupTemplate = '%ModuleName%_ImportCalendarPopup';
 
 /**
  * @param {Function} fCallback

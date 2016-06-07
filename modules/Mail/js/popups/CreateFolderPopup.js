@@ -51,7 +51,7 @@ function CCreateFolderPopup()
 
 _.extendOwn(CCreateFolderPopup.prototype, CAbstractPopup.prototype);
 
-CCreateFolderPopup.prototype.PopupTemplate = 'Mail_Settings_CreateFolderPopup';
+CCreateFolderPopup.prototype.PopupTemplate = '%ModuleName%_Settings_CreateFolderPopup';
 
 /**
  * @param {Function} fCallback

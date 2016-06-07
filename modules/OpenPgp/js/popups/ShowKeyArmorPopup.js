@@ -59,7 +59,7 @@ function CShowKeyArmorPopup()
 
 _.extendOwn(CShowKeyArmorPopup.prototype, CAbstractPopup.prototype);
 
-CShowKeyArmorPopup.prototype.PopupTemplate = 'OpenPgp_ShowKeyArmorPopup';
+CShowKeyArmorPopup.prototype.PopupTemplate = '%ModuleName%_ShowKeyArmorPopup';
 
 /**
  * @param {Object} oKey

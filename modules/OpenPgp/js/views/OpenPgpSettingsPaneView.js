@@ -63,7 +63,7 @@ function COpenPgpSettingsPaneView()
 
 _.extendOwn(COpenPgpSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-COpenPgpSettingsPaneView.prototype.ViewTemplate = 'OpenPgp_OpenPgpSettingsPaneView';
+COpenPgpSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_OpenPgpSettingsPaneView';
 
 COpenPgpSettingsPaneView.prototype.importKey = function ()
 {

@@ -194,10 +194,10 @@ function CMessagePaneView()
 		return !(this.visiblePicturesControl() || this.visibleConfirmationControl() || topControllersVisible);
 	}, this);
 
-	this.sToolbarViewTemplate = App.isMobile() ? '' : 'Mail_Message_ToolbarView';
-	this.sToolbarMobileViewTemplate = App.isMobile() ? 'Mail_Message_ToolbarMobileView' : '';
-	this.sAttachmentsSwitcherViewTemplate = App.isMobile() ? 'Mail_Message_AttachmentsSwitcherView' : '';
-	this.sQuickReplyViewTemplate = App.isMobile() ? '' : 'Mail_Message_QuickReplyView';
+	this.sToolbarViewTemplate = App.isMobile() ? '' : '%ModuleName%_Message_ToolbarView';
+	this.sToolbarMobileViewTemplate = App.isMobile() ? '%ModuleName%_Message_ToolbarMobileView' : '';
+	this.sAttachmentsSwitcherViewTemplate = App.isMobile() ? '%ModuleName%_Message_AttachmentsSwitcherView' : '';
+	this.sQuickReplyViewTemplate = App.isMobile() ? '' : '%ModuleName%_Message_QuickReplyView';
 	
 	this.attachments = ko.observableArray([]);
 	this.usesAttachmentString = true;
@@ -333,7 +333,7 @@ function CMessagePaneView()
 
 _.extendOwn(CMessagePaneView.prototype, CAbstractScreenView.prototype);
 
-CMessagePaneView.prototype.ViewTemplate = App.isNewTab() ? 'Mail_MessagePaneScreenView' : 'Mail_MessagePaneView';
+CMessagePaneView.prototype.ViewTemplate = App.isNewTab() ? '%ModuleName%_MessagePaneScreenView' : '%ModuleName%_MessagePaneView';
 CMessagePaneView.prototype.__name = 'CMessagePaneView';
 
 /**

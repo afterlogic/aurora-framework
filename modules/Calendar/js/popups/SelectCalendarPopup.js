@@ -38,7 +38,7 @@ function CSelectCalendarPopup()
 
 _.extendOwn(CSelectCalendarPopup.prototype, CAbstractPopup.prototype);
 
-CSelectCalendarPopup.prototype.PopupTemplate = 'Calendar_SelectCalendarPopup';
+CSelectCalendarPopup.prototype.PopupTemplate = '%ModuleName%_SelectCalendarPopup';
 
 /**
  * @param {Object} oParameters

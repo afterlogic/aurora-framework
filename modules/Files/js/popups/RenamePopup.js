@@ -27,7 +27,7 @@ function CRenamePopup()
 
 _.extendOwn(CRenamePopup.prototype, CAbstractPopup.prototype);
 
-CRenamePopup.prototype.PopupTemplate = 'Files_RenamePopup';
+CRenamePopup.prototype.PopupTemplate = '%ModuleName%_RenamePopup';
 
 /**
  * @param {string} sName

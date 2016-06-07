@@ -35,7 +35,7 @@ function CMailSettingsPaneView()
 
 _.extendOwn(CMailSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CMailSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_MailSettingsPaneView';
+CMailSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_MailSettingsPaneView';
 
 CMailSettingsPaneView.prototype.registerMailto = function ()
 {

@@ -37,7 +37,7 @@ function CEditCalendarPopup()
 
 _.extendOwn(CEditCalendarPopup.prototype, CAbstractPopup.prototype);
 
-CEditCalendarPopup.prototype.PopupTemplate = 'Calendar_EditCalendarPopup';
+CEditCalendarPopup.prototype.PopupTemplate = '%ModuleName%_EditCalendarPopup';
 
 /**
  * @param {Function} fCallback

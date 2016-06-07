@@ -239,7 +239,7 @@ function CFilesView(bPopup)
 
 _.extendOwn(CFilesView.prototype, CAbstractScreenView.prototype);
 
-CFilesView.prototype.ViewTemplate = App.isPublic() ? 'Files_PublicFilesView' : 'Files_FilesView';
+CFilesView.prototype.ViewTemplate = App.isPublic() ? '%ModuleName%_PublicFilesView' : '%ModuleName%_FilesView';
 CFilesView.prototype.__name = 'CFilesView';
 
 /**

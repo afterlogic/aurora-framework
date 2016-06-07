@@ -50,7 +50,7 @@ function CFetcherOutgoingPaneView()
 
 _.extendOwn(CFetcherOutgoingPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CFetcherOutgoingPaneView.prototype.ViewTemplate = 'Mail_Settings_FetcherOutgoingPaneView';
+CFetcherOutgoingPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_FetcherOutgoingPaneView';
 
 /**
  * @param {Object} oFetcher

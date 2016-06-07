@@ -25,7 +25,7 @@ function CContactsSettingsPaneView()
 
 _.extendOwn(CContactsSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CContactsSettingsPaneView.prototype.ViewTemplate = 'Contacts_ContactsSettingsPaneView';
+CContactsSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_ContactsSettingsPaneView';
 
 CContactsSettingsPaneView.prototype.getCurrentValues = function ()
 {

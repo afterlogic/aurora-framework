@@ -29,7 +29,7 @@ function CGetCalendarLinkPopup()
 
 _.extendOwn(CGetCalendarLinkPopup.prototype, CAbstractPopup.prototype);
 
-CGetCalendarLinkPopup.prototype.PopupTemplate = 'Calendar_GetCalendarLinkPopup';
+CGetCalendarLinkPopup.prototype.PopupTemplate = '%ModuleName%_GetCalendarLinkPopup';
 
 /**
  * @param {Function} fCallback

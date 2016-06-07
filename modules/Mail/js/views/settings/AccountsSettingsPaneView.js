@@ -164,7 +164,7 @@ function CAccountsSettingsPaneView()
 	this.populate();
 }
 
-CAccountsSettingsPaneView.prototype.ViewTemplate = 'Mail_Settings_AccountsSettingsPaneView';
+CAccountsSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_Settings_AccountsSettingsPaneView';
 
 /**
  * @param {Function} fAfterHideHandler

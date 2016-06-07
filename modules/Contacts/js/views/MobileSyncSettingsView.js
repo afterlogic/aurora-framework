@@ -22,7 +22,7 @@ function CMobileSyncSettingsView()
 	this.davGlobalAddressBookUrl = ko.observable('');
 }
 
-CMobileSyncSettingsView.prototype.ViewTemplate = 'Contacts_MobileSyncSettingsView';
+CMobileSyncSettingsView.prototype.ViewTemplate = '%ModuleName%_MobileSyncSettingsView';
 
 /**
  * @param {Object} oDav

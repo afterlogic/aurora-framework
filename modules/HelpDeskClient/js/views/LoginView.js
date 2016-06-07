@@ -124,7 +124,7 @@ function CLoginView()
 
 _.extendOwn(CLoginView.prototype, CAbstractScreenView.prototype);
 
-CLoginView.prototype.ViewTemplate = 'HelpDeskClient_LoginView';
+CLoginView.prototype.ViewTemplate = '%ModuleName%_LoginView';
 
 CLoginView.prototype.__name = 'CLoginView';
 

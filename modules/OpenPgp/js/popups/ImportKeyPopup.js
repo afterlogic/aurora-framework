@@ -35,7 +35,7 @@ function CImportKeyPopup()
 
 _.extendOwn(CImportKeyPopup.prototype, CAbstractPopup.prototype);
 
-CImportKeyPopup.prototype.PopupTemplate = 'OpenPgp_ImportKeyPopup';
+CImportKeyPopup.prototype.PopupTemplate = '%ModuleName%_ImportKeyPopup';
 
 /**
  * @param {string} sArmor
