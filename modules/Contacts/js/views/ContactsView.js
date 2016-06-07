@@ -601,12 +601,12 @@ CContactsView.prototype.executeImport = function ()
 
 CContactsView.prototype.executeCSVExport = function ()
 {
-	UrlUtils.downloadByUrl('?/Download/%ModuleName%/DownloadContactsAsCSV/');
+	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsCSV/');
 };
 
 CContactsView.prototype.executeVCFExport = function ()
 {
-	UrlUtils.downloadByUrl('?/Download/%ModuleName%/DownloadContactsAsVCF/');
+	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsVCF/');
 };
 
 CContactsView.prototype.executeCancel = function ()

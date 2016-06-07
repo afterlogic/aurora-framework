@@ -112,7 +112,7 @@ CCalendarModel.prototype.parse = function (oData)
 
 	this.color(this.parseCssColor(oData.Color));
 	this.url(Types.pString(oData.Url));
-	this.exportUrl(UrlUtils.getAppPath() + '?/Download/%ModuleName%/DownloadCalendar/' + Types.pString(oData.ExportHash));
+	this.exportUrl(UrlUtils.getAppPath() + '?/Download/Calendar/DownloadCalendar/' + Types.pString(oData.ExportHash));
 	this.pubUrl(UrlUtils.getAppPath() + '?calendar-pub=' + Types.pString(oData.PubHash));
 	this.shares(oData.Shares || []);
 	
