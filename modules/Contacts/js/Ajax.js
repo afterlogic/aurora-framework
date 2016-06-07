@@ -1,8 +1,12 @@
 'use strict';
 
-var Ajax = require('modules/Core/js/Ajax.js');
+var
+	Ajax = require('modules/Core/js/Ajax.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
+;
 
-Ajax.registerAbortRequestHandler('Contacts', function (oRequest, oOpenedRequest) {
+Ajax.registerAbortRequestHandler(Settings.ServerModuleName, function (oRequest, oOpenedRequest) {
 	switch (oRequest.Method)
 	{
 		case 'GetContacts':
@@ -16,6 +20,6 @@ Ajax.registerAbortRequestHandler('Contacts', function (oRequest, oOpenedRequest)
 
 module.exports = {
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
-		Ajax.send('Contacts', sMethod, oParameters, fResponseHandler, oContext);
+		Ajax.send(Settings.ServerModuleName, sMethod, oParameters, fResponseHandler, oContext);
 	}
 };

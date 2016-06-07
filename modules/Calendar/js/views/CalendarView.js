@@ -1896,7 +1896,7 @@ CCalendarView.prototype.initUploader = function ()
 			'disableDragAndDrop': false,
 			'disableAutoUploadOnDrop': true,
 			'hidden': _.extendOwn({
-				'Module': 'Calendar',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadCalendar',
 				'Parameters':  function () {
 					return JSON.stringify({

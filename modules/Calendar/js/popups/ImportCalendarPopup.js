@@ -12,7 +12,9 @@ var
 	Screens = require('modules/Core/js/Screens.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js')
+	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -72,7 +74,7 @@ CImportCalendarPopup.prototype.onBind = function ($oViewModel)
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
 		'hidden': _.extendOwn({
-			'Module': 'Calendar',
+			'Module': Settings.ServerModuleName,
 			'Method': 'UploadCalendar',
 			'Parameters':  function () {
 				return JSON.stringify({

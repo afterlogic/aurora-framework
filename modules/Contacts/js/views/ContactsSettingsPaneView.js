@@ -16,7 +16,7 @@ var
  */
 function CContactsSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Contacts');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.contactsPerPageValues = ko.observableArray(SettingsUtils.getAdaptedPerPageList(Settings.ContactsPerPage));
 	

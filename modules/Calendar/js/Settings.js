@@ -3,6 +3,8 @@
 var Types = require('modules/Core/js/utils/Types.js');
 
 module.exports = {
+	ServerModuleName: 'Calendar',
+	
 	AllowAppointments: true,
 	AllowShare: true,
 	DefaultTab: '3', // 1 - day, 2 - week, 3 - month

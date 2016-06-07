@@ -6,12 +6,13 @@ var
 	
 	TextUtils = require('modules/Core/js/utils/Text.js'),
 	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
 	
 	App = require('modules/Core/js/App.js'),
 	CJua = require('modules/Core/js/CJua.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
-	Screens = require('modules/Core/js/Screens.js')
+	Screens = require('modules/Core/js/Screens.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -45,7 +46,7 @@ CImportView.prototype.onBind = function ()
 		'disableDragAndDrop': true,
 		'disableMultiple': true,
 		'hidden': _.extendOwn({
-			'Module': 'Contacts',
+			'Module': Settings.ServerModuleName,
 			'Method': 'UploadContacts'
 		}, App.getCommonRequestParameters())
 	});

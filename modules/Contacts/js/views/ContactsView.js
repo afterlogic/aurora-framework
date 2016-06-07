@@ -601,12 +601,12 @@ CContactsView.prototype.executeImport = function ()
 
 CContactsView.prototype.executeCSVExport = function ()
 {
-	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsCSV/');
+	UrlUtils.downloadByUrl('?/Download/' + Settings.ServerModuleName + '/DownloadContactsAsCSV/');
 };
 
 CContactsView.prototype.executeVCFExport = function ()
 {
-	UrlUtils.downloadByUrl('?/Download/Contacts/DownloadContactsAsVCF/');
+	UrlUtils.downloadByUrl('?/Download/' + Settings.ServerModuleName + '/DownloadContactsAsVCF/');
 };
 
 CContactsView.prototype.executeCancel = function ()
@@ -1530,7 +1530,7 @@ CContactsView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'hidden': _.extendOwn({
-				'Module': 'Contacts',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadContacts',
 				'Parameters':  function () {
 					return JSON.stringify({

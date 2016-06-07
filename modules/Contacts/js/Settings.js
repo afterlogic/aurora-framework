@@ -7,6 +7,8 @@ var
 ;
 
 module.exports = {
+	ServerModuleName: 'Contacts',
+	
 	ContactsPerPage: 20,
 	ImportContactsLink: '',
 	Storages: ['personal', 'global', 'shared'],

@@ -1,10 +1,12 @@
 'use strict';
 
 var
-	Ajax = require('modules/Core/js/Ajax.js')
+	Ajax = require('modules/Core/js/Ajax.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
-Ajax.registerAbortRequestHandler('Calendar', function (oRequest, oOpenedRequest) {
+Ajax.registerAbortRequestHandler(Settings.ServerModuleName, function (oRequest, oOpenedRequest) {
 	switch (oRequest.Method)
 	{
 		case 'UpdateEvent':
@@ -26,6 +28,6 @@ Ajax.registerAbortRequestHandler('Calendar', function (oRequest, oOpenedRequest)
 
 module.exports = {
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
-		Ajax.send('Calendar', sMethod, oParameters, fResponseHandler, oContext);
+		Ajax.send(Settings.ServerModuleName, sMethod, oParameters, fResponseHandler, oContext);
 	}
 };

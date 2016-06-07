@@ -7,6 +7,8 @@ var
 ;
 
 module.exports = {
+	ServerModuleName: 'Auth',
+	
 	AllowChangeLanguage: false,
 	AllowRegistration: false,
 	AllowResetPassword: false,
