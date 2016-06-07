@@ -89,7 +89,150 @@ class CApiEavCommandCreator extends api_CommandCreator
 		return $this->getObjects($sObjectType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, true);
 	}
 			
+	
 	public function getObjects($sObjectType, $aViewProperties = array(), 
+			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
+			$sSortProperty = "", $iSortOrder = \ESortOrder::ASC, $bCount = false)
+	{
+		$sCount = "";
+		$sViewPoperties = "";
+		$sJoinPoperties = "";
+		$sResultWhere = "";
+		$sResultSort = "";
+		$sGroupByField = "obj_id";
+		$sLimit = "";
+		$sOffset = "";
+		
+		$oObject = call_user_func($sObjectType . '::createInstance');
+		if ($oObject instanceof $sObjectType)
+		{
+			$aResultViewProperties = array();
+			$aJoinProperties = array();
+			$aResultSearchProperties = array();
+			
+			if ($bCount)
+			{
+				$sGroupByField = "obj_type";
+				$sCount = "COUNT(DISTINCT objects.id) as objects_count,";
+			}			
+			else
+			{
+				if ($aViewProperties === null)
+				{
+					$aViewProperties = array();
+				}
+				else if (count($aViewProperties) === 0)
+				{
+					$aMap = $oObject->GetMap();
+					$aViewProperties = array_keys($aMap);
+				}
+			}
+
+			if (!empty($sSortProperty))
+			{
+				array_push($aViewProperties, $sSortProperty);
+				$sResultSort = sprintf(" ORDER BY `prop_%s` %s", $sSortProperty, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
+			}
+			$aViewProperties = array_unique(array_merge($aViewProperties, array_keys($aWhere)));
+
+			foreach ($aViewProperties as $sProperty)
+			{
+				$sType = $oObject->getPropertyType($sProperty);
+
+				$aResultViewProperties[$sProperty] = sprintf(
+						"
+	`props_%s`.`value_%s` as `prop_%s`", 
+						$sProperty, 
+						$sType, 
+						$sProperty
+				);
+				$aJoinProperties[$sProperty] = sprintf(
+						"
+	LEFT JOIN eav_properties as `props_%s` 
+		ON `props_%s`.key = %s AND `props_%s`.id_object = objects.id",
+				$sProperty, $sProperty, $this->escapeString($sProperty), $sProperty);
+			}
+			if (0 < count($aViewProperties))
+			{
+				$sViewPoperties = ', ' . implode(', ', $aResultViewProperties);
+				$sJoinPoperties = implode(' ', $aJoinProperties);
+			}
+			foreach ($aWhere as $sKey => $mValue)
+			{
+				$sPrpertyValue = $mValue;
+				$sPropertyAction = '=';
+				if (is_array($mValue) && count($mValue) > 1)
+				{
+					$sPropertyAction = $mValue[0];
+					$sPrpertyValue = $mValue[1];
+				}
+				else
+				{
+					if (strpos($sPrpertyValue, "%") !== false)
+					{
+						$sPropertyAction = 'LIKE';
+					}
+				}
+				$sType = $oObject->getPropertyType($sKey);
+				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
+				$aResultSearchProperties[] = sprintf(
+						"`props_%s`.`value_%s` %s " . $sValueFormat, 
+						$sKey, 
+						$sType, 
+						$sPropertyAction, 
+						$oObject->isStringProperty($sKey) ? $this->escapeString($sPrpertyValue) : $sPrpertyValue
+				);
+			}
+			if (0 < count($aWhere))
+			{
+				$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchProperties);
+			}
+			
+			if ($iLimit > 0)
+			{
+				$sLimit = sprintf("LIMIT %d", $iLimit);
+				$sOffset = sprintf("OFFSET %d", $iOffset);
+			}
+		}		
+		$sSql = sprintf(
+			"SELECT 
+	%s #1 COUNT
+	objects.id as obj_id, 
+	objects.object_type as obj_type, 
+	objects.module_name as obj_module
+	# fields
+	%s #2
+	# ------
+	FROM eav_properties as props
+
+	  RIGHT JOIN eav_objects as objects
+		ON objects.id = props.id_object
+
+	# fields
+	%s #3
+	# ------
+
+	WHERE objects.object_type = %s #4 OBJECT TYPE
+	%s #5 WHERE
+	GROUP BY %s #6 
+	%s #7 SORT
+	%s #8 LIMIT
+	%s #9 OFFSET", 
+			$sCount,
+			$sViewPoperties, 
+			$sJoinPoperties, 
+			$this->escapeString($sObjectType), 
+			$sResultWhere,
+			$sGroupByField,
+			$sResultSort,
+			$sLimit,
+			$sOffset
+		);		
+		
+		return $sSql;
+	}	
+	
+	public function getObjects2($sObjectType, $aViewProperties = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
 			$sSortProperty = "", $iSortOrder = \ESortOrder::ASC, $bCount = false)
 	{
