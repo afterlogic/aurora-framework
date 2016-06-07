@@ -118,9 +118,16 @@ CScreens.prototype.route = function (aParams)
 		sNextScreen = aParams.shift()
 	;
 	
-	if ((sNextScreen === '' || !this.hasScreenData(sNextScreen)) && sCurrentScreen === '')
+	if (sCurrentScreen === '' && sNextScreen === '')
 	{
 		sNextScreen = this.sDefaultScreen;
+	}
+	
+	if (sCurrentScreen === '' && (!ModulesManager.isModuleEnabled(this.oModulesNames[sNextScreen]) || !this.hasScreenData(sNextScreen)))
+	{
+		sNextScreen = _.find(_.keys(this.oModulesNames), _.bind(function (sScreen) {
+			return ModulesManager.isModuleEnabled(this.oModulesNames[sScreen]) && this.hasScreenData(sScreen);
+		}, this)) || this.sDefaultScreen;
 	}
 	
 	if (ModulesManager.isModuleEnabled(this.oModulesNames[sNextScreen]) && this.hasScreenData(sNextScreen))

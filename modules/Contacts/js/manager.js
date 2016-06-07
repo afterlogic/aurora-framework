@@ -19,7 +19,7 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return _.extend(ComponentsMethods, {
-		isAvaliable: function (iUserRole, bPublic) {
+		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {

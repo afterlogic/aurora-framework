@@ -25,7 +25,7 @@ module.exports = function (oSettings) {
 	Cache.init();
 	
 	return {
-		isAvaliable: function (iUserRole, bPublic) {
+		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function () {

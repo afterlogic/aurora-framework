@@ -9,6 +9,8 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
+		enableModule: Settings.enableModule,
+		
 		/**
 		 * Returns true if simple chat module is available for certain user role and public or not public mode.
 		 * 
@@ -17,7 +19,7 @@ module.exports = function (oSettings) {
 		 * 
 		 * @returns {Boolean}
 		 */
-		isAvaliable: function (iUserRole, bPublic) {
+		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
 		

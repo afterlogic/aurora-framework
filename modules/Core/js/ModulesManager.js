@@ -10,8 +10,7 @@ var
 	
 	AppData = window.auroraAppData,
 	
-	oModules = {},
-	oModulesSettings = {}
+	oModules = {}
 ;
 
 module.exports = {
@@ -20,10 +19,9 @@ module.exports = {
 			if ($.isFunction(oAvaliableModules[sModuleName]))
 			{
 				var oModule = oAvaliableModules[sModuleName](oModuleSettings);
-				if (oModule.isAvaliable(iUserRole, bPublic))
+				if (oModule.isAvailable(iUserRole, bPublic))
 				{
 					oModules[sModuleName] = oModule;
-					oModulesSettings[sModuleName] = oModuleSettings;
 				}
 			}
 		});
@@ -72,10 +70,10 @@ module.exports = {
 						}
 						this.aTabs.push(oHeaderItem);
 						
-						if (oModulesSettings[sModuleName] && oModulesSettings[sModuleName].enableModule)
+						if (oModules[sModuleName] && oModules[sModuleName].enableModule)
 						{
-							oHeaderItem.visible(oModulesSettings[sModuleName].enableModule());
-							oModulesSettings[sModuleName].enableModule.subscribe(function (bEnableModule) {
+							oHeaderItem.visible(oModules[sModuleName].enableModule());
+							oModules[sModuleName].enableModule.subscribe(function (bEnableModule) {
 								oHeaderItem.visible(bEnableModule);
 							});
 						}
@@ -108,7 +106,7 @@ module.exports = {
 	
 	isModuleEnabled: function (sModuleName)
 	{
-		return oModules[sModuleName] && oModulesSettings[sModuleName] && (!oModulesSettings[sModuleName].enableModule || oModulesSettings[sModuleName].enableModule());
+		return oModules[sModuleName] && (!oModules[sModuleName].enableModule || oModules[sModuleName].enableModule());
 	},
 	
 	run: function (sModuleName, sFunctionName, aParams)

@@ -41,7 +41,7 @@ module.exports = function (oSettings) {
 	}
 	
 	return {
-		isAvaliable: function (iUserRole, bPublic) {
+		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		registerFunction: function (oSessionTimeoutFunction) {

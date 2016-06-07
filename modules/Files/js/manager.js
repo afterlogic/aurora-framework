@@ -15,7 +15,9 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
-		isAvaliable: function (iUserRole, bPublic) {
+		enableModule: Settings.enableModule,
+		
+		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {

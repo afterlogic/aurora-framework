@@ -8,6 +8,7 @@ var
 
 module.exports = {
 	ServerModuleName: 'Mail',
+	enableModule: ko.observable(true),
 	
 	AllowAddNewAccounts: false,
 	AllowAppRegisterMailto: false,
@@ -37,6 +38,7 @@ module.exports = {
 	init: function (oAppDataSection) {
 		if (oAppDataSection)
 		{
+			this.enableModule(Types.isNonEmptyArray(oAppDataSection.Accounts));
 			this.AllowAddNewAccounts = !!oAppDataSection.AllowUsersAddNewAccounts;
 			this.AllowAppRegisterMailto = !!oAppDataSection.AllowAppRegisterMailto;
 			this.AllowAutosaveInDrafts = !!oAppDataSection.AllowAutosaveInDrafts; // ??? changes in OpenPgp

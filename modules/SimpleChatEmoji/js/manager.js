@@ -10,7 +10,7 @@ module.exports = function (oSettings) {
 		 * 
 		 * @returns {Boolean}
 		 */
-		isAvaliable: function (iUserRole, bPublic) {
+		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
 		

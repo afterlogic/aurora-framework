@@ -18,7 +18,7 @@ module.exports = function (oSettings) {
 	Settings.init(oSettings);
 	
 	return {
-		isAvaliable: function (iUserRole, bPublic) {
+		isAvailable: function (iUserRole, bPublic) {
 			bAllowLoginView = iUserRole === Enums.UserRole.Anonymous;
 			return !bPublic;
 		},
