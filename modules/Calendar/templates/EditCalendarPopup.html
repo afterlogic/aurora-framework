@@ -6,11 +6,11 @@
 		<div class="fields">
 			<div class="fieldset">
 				<div class="row name" data-bind="css: {'focused': calendarNameFocus(), 'filled': (calendarName()) ? calendarName().length : false}">
-					<label for="calendar_name" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_CALENDAR_NAME'}"></label>
+					<label for="calendar_name" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_CALENDAR_NAME'}"></label>
 					<input id="calendar_name" class="value input" type="text" spellcheck="false"  maxlength="200" data-bind="value: calendarName, hasfocus: calendarNameFocus, onEnter: save" />
 				</div>
 				<div class="row description" data-bind="css: {'focused': calendarDescriptionFocus(), 'filled': (calendarDescription()) ? calendarDescription().length : false}">
-					<label for="calendar_description" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_CALENDAR_DESCRIPTION'}"></label>
+					<label for="calendar_description" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_CALENDAR_DESCRIPTION'}"></label>
 					<input id="calendar_description" class="value input" spellcheck="false"  type="text" maxlength="200" data-bind="value: calendarDescription, hasfocus: calendarDescriptionFocus, onEnter: save" />
 				</div>
 			</div>

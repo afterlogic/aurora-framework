@@ -40,7 +40,7 @@
 
 
 			<div class="languages demo" data-bind="visible: bAllowChangeLanguage && bUseFlagsLanguagesView">
-				<div class="langs_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_SELECT_LANGUAGE'}"></div>
+				<div class="langs_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_SELECT_LANGUAGE'}"></div>
 				<div data-bind="foreach: aLanguages">
 					<span class="item" data-bind="css: value + ($parent.currentLanguage() === value ? ' selected' : ''), click: function () { $parent.changeLanguage(value); }">
 						<span class="item_content">

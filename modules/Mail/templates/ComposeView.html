@@ -21,11 +21,11 @@
 									<span class="arrow"></span>
 								</span>
 
-								<div class="notice" data-bind="visible: bDemo, i18n: {'key': '%ModuleName%/INFO_SEND_EMAIL_TO_DEMO_ONLY'}"></div>
+								<div class="notice" data-bind="visible: bDemo, i18n: {'key': '%MODULENAME%/INFO_SEND_EMAIL_TO_DEMO_ONLY'}"></div>
 								<table class="fields">
 									<tr class="from" data-bind="visible: visibleFrom() && !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: {'key': '%ModuleName%/LABEL_FROM'}"></span>:
+											<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_FROM'}"></span>:
 										</td>
 										<td class="value">
 											<select class="input" tabindex="1" data-bind="foreach: senderList, value: selectedSender">
@@ -35,7 +35,7 @@
 									</tr>
 									<tr class="to">
 										<td class="label">
-											<span data-bind="i18n: {'key': '%ModuleName%/LABEL_TO'}"></span>:
+											<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_TO'}"></span>:
 										</td>
 										<td class="value">
 											<table>
@@ -90,7 +90,7 @@
 									</tr>
 									<tr class="subject" data-bind="visible: !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: {'key': '%ModuleName%/LABEL_SUBJECT'}"></span>:
+											<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_SUBJECT'}"></span>:
 										</td>
 										<td class="value">
 											<input type="text" class="input" maxlength="255" tabindex="5" id="selenium_compose_subject"
@@ -99,7 +99,7 @@
 									</tr>
 									<tr class="counter" data-bind="visible: bVisibleCounter && !headersCompressed()">
 										<td class="label">
-											<span data-bind="i18n: {'key': '%ModuleName%/LABEL_COUNTER'}"></span>:
+											<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_COUNTER'}"></span>:
 										</td>
 										<td class="value">
 											<input type="text" class="input" size="3" value="600" disabled="" tabindex="6"

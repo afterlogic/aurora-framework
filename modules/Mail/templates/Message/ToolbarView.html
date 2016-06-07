@@ -6,32 +6,32 @@
 			<span class="text" data-bind="i18n: {'key': 'CORE/ACTION_DELETE'}"></span>
 		</span>
 		<span class="item prev" data-bind="command: nextMessageCommand, visible: bNewTab">
-			<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_OPEN_NEXT_MESSAGE'"></span>
-			<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_OPEN_NEXT_MESSAGE'}"></span>
+			<span class="icon" data-bind="customTooltip: '%MODULENAME%/ACTION_OPEN_NEXT_MESSAGE'"></span>
+			<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_OPEN_NEXT_MESSAGE'}"></span>
 		</span>
 		<span class="item next" data-bind="command: prevMessageCommand, visible: bNewTab">
-			<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_OPEN_PREV_MESSAGE'"></span>
-			<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_OPEN_PREV_MESSAGE'}"></span>
+			<span class="icon" data-bind="customTooltip: '%MODULENAME%/ACTION_OPEN_PREV_MESSAGE'"></span>
+			<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_OPEN_PREV_MESSAGE'}"></span>
 		</span>
 		
-		<!-- ko template: {name: 'Mail_Message_ReplyButtonsView'} --><!-- /ko -->
+		<!-- ko template: {name: '%ModuleName%_Message_ReplyButtonsView'} --><!-- /ko -->
 		
 		<span class="item resend" data-bind="command: resendCommand, visible: isVisibleResendTool">
-			<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_RESEND'"></span>
-			<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_RESEND'}"></span>
+			<span class="icon" data-bind="customTooltip: '%MODULENAME%/ACTION_RESEND'"></span>
+			<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_RESEND'}"></span>
 		</span>
 		
-		<!-- ko template: {name: 'Mail_Message_ForwardButtonView'} --><!-- /ko -->
+		<!-- ko template: {name: '%ModuleName%_Message_ForwardButtonView'} --><!-- /ko -->
 
 		<a class="item new_window" href="javascript: void(0);" 
 			data-bind="click: openInNewWindow, visible: !bNewTab">
-			<span class="icon" data-bind="customTooltip: '%ModuleName%/ACTION_OPEN_IN_NEW_WINDOW'"></span>
-			<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_OPEN_IN_NEW_WINDOW'}"></span>
+			<span class="icon" data-bind="customTooltip: '%MODULENAME%/ACTION_OPEN_IN_NEW_WINDOW'"></span>
+			<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_OPEN_IN_NEW_WINDOW'}"></span>
 		</a>
 
-		<span class="item more" data-bind="dropdown: {control: false}, command: moreCommand, customTooltip: '%ModuleName%/ACTION_SHOW_MORE_ACTIONS'">
+		<span class="item more" data-bind="dropdown: {control: false}, command: moreCommand, customTooltip: '%MODULENAME%/ACTION_SHOW_MORE_ACTIONS'">
 			<span class="icon"></span>
-			<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_SHOW_MORE_ACTIONS'}"></span>
+			<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_MORE_ACTIONS'}"></span>
 			<span class="dropdown">
 				<span class="dropdown_helper">
 					<span class="dropdown_arrow">
@@ -40,22 +40,22 @@
 					<span class="dropdown_content">
 						<span class="item print" data-bind="command: printCommand">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_PRINT'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_PRINT'}"></span>
 						</span>
 
 						<span class="item save" data-bind="command: saveCommand">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_DOWNLOAD_EML'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_DOWNLOAD_EML'}"></span>
 						</span>
 
 						<span class="item save_as_pdf" data-bind="visible: bAllowSaveMessageAsPdf, command: saveAsPdfCommand">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_DOWNLOAD_PDF'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_DOWNLOAD_PDF'}"></span>
 						</span>
 
 						<span class="item headers" data-bind="visible: currentMessage() && currentMessage().completelyFilled(), click: showSourceHeaders">
 							<span class="icon"></span>
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_OPEN_MESSAGE_HEADERS'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_OPEN_MESSAGE_HEADERS'}"></span>
 						</span>
 
 						{%INCLUDE-START/Message-Pane-More-Actions-Menu/INCLUDE-END%}

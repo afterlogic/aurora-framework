@@ -1,15 +1,15 @@
 <div class="panel_top">
-	<h2 class="settings_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_SETTINGS_TAB'}"></h2>
+	<h2 class="settings_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_SETTINGS_TAB'}"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
 		<div class="fieldset">
 
 			<div class="row workday">
-				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_WORKDAY_STARTS'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_WORKDAY_STARTS'}"></span>
 				<span class="value">
 					<select class="input start" data-bind="value: selectedWorkdayStarts, options: availableTimes, optionsText: 'text', optionsValue: 'value'"></select>
-					<span data-bind="i18n: {'key': '%ModuleName%/LABEL_WORKDAY_ENDS'}"></span>
+					<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_WORKDAY_ENDS'}"></span>
 					<select class="input end" data-bind="value: selectedWorkdayEnds, options: availableTimes, optionsText: 'text', optionsValue: 'value'"></select>
 				</span>
 			</div>
@@ -21,17 +21,17 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="showWorkday" data-bind="checked: showWorkday" />
 					</label>
-					<label for="showWorkday" data-bind="i18n: {'key': '%ModuleName%/LABEL_SHOW_WORKDAY'}"></label>
+					<label for="showWorkday" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SHOW_WORKDAY'}"></label>
 				</span>
 			</div>
 
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_WEEK_STARTS_ON'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_WEEK_STARTS_ON'}"></span>
 				<span class="value">
 					<select class="input" data-bind="value: weekStartsOn">
-						<option value="6" data-bind="i18n: {'key': '%ModuleName%/LABEL_SATURDAY'}"></option>
-						<option value="0" data-bind="i18n: {'key': '%ModuleName%/LABEL_SUNDAY'}"></option>
-						<option value="1" data-bind="i18n: {'key': '%ModuleName%/LABEL_MONDAY'}"></option>
+						<option value="6" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SATURDAY'}"></option>
+						<option value="0" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SUNDAY'}"></option>
+						<option value="1" data-bind="i18n: {'key': '%MODULENAME%/LABEL_MONDAY'}"></option>
 					</select>
 				</span>
 			</div>
@@ -43,12 +43,12 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="showWeekends" data-bind="checked: showWeekends" />
 					</label>
-					<label for="showWeekends" data-bind="i18n: {'key': '%ModuleName%/LABEL_HIGHLIGHT_WORK_DAYS'}"></label>
+					<label for="showWeekends" data-bind="i18n: {'key': '%MODULENAME%/LABEL_HIGHLIGHT_WORK_DAYS'}"></label>
 				</span>
 			</div>
 
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_DEFAULT_TAB'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DEFAULT_TAB'}"></span>
 				<span class="value">
 					<label class="custom_radio" data-bind="css: {'checked': defaultTab() === Enums.CalendarDefaultTab.Day}">
 						<span class="icon"></span>
@@ -60,7 +60,7 @@
 						<span class="icon"></span>
 						<input type="radio" id="tab_week" data-bind="checked: defaultTab, attr: {'value': Enums.CalendarDefaultTab.Week}" />
 					</label>
-					<label for="tab_week" data-bind="i18n: {'key': '%ModuleName%/LABEL_WEEK'}"></label>
+					<label for="tab_week" data-bind="i18n: {'key': '%MODULENAME%/LABEL_WEEK'}"></label>
 
 					<label class="custom_radio" data-bind="css: {'checked': defaultTab() === Enums.CalendarDefaultTab.Month}">
 						<span class="icon"></span>

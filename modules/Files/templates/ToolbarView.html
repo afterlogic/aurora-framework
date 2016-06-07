@@ -5,26 +5,26 @@
 			<input class="field" spellcheck="false" type="text" data-bind="hasfocus: isSearchFocused, value: searchPattern, onEnter: onSearch" />
 		</span>
 	</span>
-	<span class="item new_folder" data-bind="click: onCreateFolderClick, customTooltip: '%ModuleName%/ACTION_NEW_FOLDER'">
+	<span class="item new_folder" data-bind="click: onCreateFolderClick, customTooltip: '%MODULENAME%/ACTION_NEW_FOLDER'">
 		<span class="icon"></span>
-		<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_NEW_FOLDER'}"></span>
+		<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_NEW_FOLDER'}"></span>
 	</span>
-	<span class="item new_link" data-bind="visible: !isCurrentStorageExternal(), click: onCreateLinkClick, customTooltip: '%ModuleName%/ACTION_CREATE_SHORTCUT'">
+	<span class="item new_link" data-bind="visible: !isCurrentStorageExternal(), click: onCreateLinkClick, customTooltip: '%MODULENAME%/ACTION_CREATE_SHORTCUT'">
 		<span class="icon"></span>
-		<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_CREATE_SHORTCUT'}"></span>
+		<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_CREATE_SHORTCUT'}"></span>
 	</span>
-	<!-- ko template: { name: 'Files_DownloadButtonView'} --><!-- /ko -->
-	<span class="item send_files command" data-bind="visible: allowSendEmails(), command: sendCommand, customTooltip: '%ModuleName%/ACTION_SEND_FILES'">
+	<!-- ko template: { name: '%ModuleName%_DownloadButtonView'} --><!-- /ko -->
+	<span class="item send_files command" data-bind="visible: allowSendEmails(), command: sendCommand, customTooltip: '%MODULENAME%/ACTION_SEND_FILES'">
 		<span class="icon"></span>
-		<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_SEND_FILES'}"></span>
+		<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SEND_FILES'}"></span>
 	</span>
-	<span class="item edit" data-bind="command: renameCommand, customTooltip: '%ModuleName%/ACTION_RENAME'">
+	<span class="item edit" data-bind="command: renameCommand, customTooltip: '%MODULENAME%/ACTION_RENAME'">
 		<span class="icon"></span>
-		<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_RENAME'}"></span>
+		<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_RENAME'}"></span>
 	</span>
-	<span class="item publish" data-bind="visible: !isCurrentStorageExternal(), command: shareCommand, customTooltip: '%ModuleName%/ACTION_CREATE_PUBLIC_LINK'">
+	<span class="item publish" data-bind="visible: !isCurrentStorageExternal(), command: shareCommand, customTooltip: '%MODULENAME%/ACTION_CREATE_PUBLIC_LINK'">
 		<span class="icon"></span>
-		<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_CREATE_PUBLIC_LINK'}"></span>
+		<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_CREATE_PUBLIC_LINK'}"></span>
 	</span>
 	<span class="item delete" data-bind="command: deleteCommand, customTooltip: 'CORE/ACTION_DELETE'">
 		<span class="icon"></span>

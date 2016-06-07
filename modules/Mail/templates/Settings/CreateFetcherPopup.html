@@ -2,16 +2,16 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_ADD_NEW_FETCHER'}"></span>
+		<span class="popup_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_ADD_NEW_FETCHER'}"></span>
 
 		<div class="fields">
 			<div class="fieldset">
 				<div class="row incoming">
-					<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
+					<!-- ko template: {name: '%ModuleName%_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
 				</div>
 
 				<div class="row login">
-					<span class="label required" data-bind="i18n: {'key': '%ModuleName%/LABEL_LOGIN'}"></span>
+					<span class="label required" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LOGIN'}"></span>
 					<input class="value input" spellcheck="false" type="text" maxlength="255" data-bind="value: incomingMailLogin, onEnter: save, hasFocus: loginIsSelected"/>
 				</div>
 				<div class="row password">
@@ -20,18 +20,18 @@
 				</div>
 
 				<div class="row hint">
-					<span class="" data-bind="i18n: {'key': '%ModuleName%/INFO_FETCHER_STORE'}"></span>
+					<span class="" data-bind="i18n: {'key': '%MODULENAME%/INFO_FETCHER_STORE'}"></span>
 				</div>
 
 				<div class="row folder">
-					<span class="label required" data-bind="i18n: {'key': '%ModuleName%/LABEL_TARGET_FOLDER'}"></span>
-					<span data-bind="i18n: {'key': '%ModuleName%/INFO_WAITING_FOLDER_LIST'}, visible: options().length === 0"></span>
+					<span class="label required" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TARGET_FOLDER'}"></span>
+					<span data-bind="i18n: {'key': '%MODULENAME%/INFO_WAITING_FOLDER_LIST'}, visible: options().length === 0"></span>
 					<select class="value input" data-bind="visible: options().length > 1,
 						value: folder, options: options, optionsText: 'translatedDisplayName', optionsValue: 'fullName', 
 						optionsAfterRender: defaultOptionsAfterRender, valueUpdate: ['blur', 'afterkeydown']
 					"></select>
 
-					<span class="link" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_NEW_FOLDER'}, command: addNewFolderCommand, visible: options().length > 1"></span>
+					<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ADD_NEW_FOLDER'}, command: addNewFolderCommand, visible: options().length > 1"></span>
 				</div>
 
 				<div class="row">
@@ -40,7 +40,7 @@
 							<span class="icon"></span>
 							<input type="checkbox" id="popup_leave_essages_on_server" data-bind="checked: leaveMessagesOnServer" />
 						</label>
-						<label for="popup_leave_essages_on_server" data-bind="i18n: {'key': '%ModuleName%/LABEL_LEAVE_MESSAGES_ON_SERVER'}"></label>
+						<label for="popup_leave_essages_on_server" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LEAVE_MESSAGES_ON_SERVER'}"></label>
 					</div>
 				</div>
 			</div>

@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_IMPORT_KEY'}"></span>
+		<span class="popup_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_IMPORT_KEY'}"></span>
 
 		<div class="fields">
 			<div class="row" data-bind="visible: keys().length === 0">
@@ -22,11 +22,11 @@
 						</label>
 					</div>
 				</div>
-				<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_EXISTING_KEYS_GREYED'}, visible: hasExistingKeys"></div>
+				<div class="hint" data-bind="i18n: {'key': '%MODULENAME%/INFO_EXISTING_KEYS_GREYED'}, visible: hasExistingKeys"></div>
 			</div>
 			<div class="buttons">
-				<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_CHECK'}, click: checkArmor, visible: keys().length === 0"></span>
-				<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_IMPORT_KEYS'}, click: importKey, visible: keys().length > 0"></span>
+				<span class="button" data-bind="i18n: {'key': '%MODULENAME%/ACTION_CHECK'}, click: checkArmor, visible: keys().length === 0"></span>
+				<span class="button" data-bind="i18n: {'key': '%MODULENAME%/ACTION_IMPORT_KEYS'}, click: importKey, visible: keys().length > 0"></span>
 				<span class="button secondary_button" data-bind="i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>

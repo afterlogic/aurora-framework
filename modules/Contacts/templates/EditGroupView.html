@@ -1,6 +1,6 @@
 <div class="panel_top">
-	<h2 class="contacts_heading" data-bind="visible: isNew(), i18n: {'key': '%ModuleName%/HEADING_NEW_GROUP'}"></h2>
-	<h2 class="contacts_heading" data-bind="visible: !isNew(), i18n: {'key': '%ModuleName%/HEADING_EDIT_GROUP'}"></h2>
+	<h2 class="contacts_heading" data-bind="visible: isNew(), i18n: {'key': '%MODULENAME%/HEADING_NEW_GROUP'}"></h2>
+	<h2 class="contacts_heading" data-bind="visible: !isNew(), i18n: {'key': '%MODULENAME%/HEADING_EDIT_GROUP'}"></h2>
 </div>
 <div class="decor"></div>
 <div class="panel_center" data-bind="customScrollbar: {}">
@@ -9,7 +9,7 @@
 			<div class="fields clearfix">
 				<div class="row">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_GROUP_NAME'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_GROUP_NAME'}"></span>:
 					</span>
 					<input class="value input" type="text" id="selenium_contacts_edit_group_name"
 						   data-bind="hasfocus: nameFocused, value: name, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
@@ -20,7 +20,7 @@
 							<span class="icon"></span> 
 							<input type="checkbox" id="selenium_contacts_edit_group_is_organization" data-bind="checked: isOrganization">
 						</label>
-						<label for="selenium_contacts_edit_group_is_organization" data-bind="i18n: {'key': '%ModuleName%/LABEL_GROUP_IS_COMPANY'}"></label>
+						<label for="selenium_contacts_edit_group_is_organization" data-bind="i18n: {'key': '%MODULENAME%/LABEL_GROUP_IS_COMPANY'}"></label>
 					</span>
 				</div>				
 				<div class="row" data-bind="visible: isOrganization">
@@ -32,55 +32,55 @@
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_COMPANY'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_COMPANY'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: company, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_COUNTRY'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_COUNTRY'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: country, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_STATE'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_STATE'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: state, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_CITY'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_CITY'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: city, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_STREET'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_STREET'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: street, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_ZIP'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_ZIP'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: zip, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_PHONE'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_PHONE'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: phone, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_FAX'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_FAX'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: fax, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>
 				<div class="row" data-bind="visible: isOrganization">
 					<span class="label">
-						<span data-bind="i18n: {'key': '%ModuleName%/LABEL_WEB'}"></span>:
+						<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_WEB'}"></span>:
 					</span>
 					<input class="value input" type="text" data-bind="value: web, valueUpdate: 'afterkeydown', onEnter: $root.saveCommand" />
 				</div>

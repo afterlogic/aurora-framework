@@ -12,7 +12,7 @@
 		<!-- /ko -->
 	<!-- /ko -->
 	<!-- ko if: searchPattern() !== '' -->		
-	&raquo; <b data-bind="i18n: {'key': '%ModuleName%/LABEL_SEARCH_RESULTS'}"></b> (<a class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_SEARCH_CLEAR'}, click: clearSearch"></a>)
+	&raquo; <b data-bind="i18n: {'key': '%MODULENAME%/LABEL_SEARCH_RESULTS'}"></b> (<a class="text" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SEARCH_CLEAR'}, click: clearSearch"></a>)
 	<!-- /ko -->
 </div>
 <div class="panel_center unselectable" data-bind="customScrollbar: {x: false}, css: {dragover: dragover()}">
@@ -23,7 +23,7 @@
 			</span>
 			<div class="items_sub_list large attachments" data-bind="columnCalc: {'prop': columnCount, 'itemSelector': '.item.helper'}">
 				<!-- ko foreach: folders -->
-					<!-- ko template: {name: 'Files_FolderView'} --><!-- /ko -->
+					<!-- ko template: {name: '%ModuleName%_FolderView'} --><!-- /ko -->
 				<!-- /ko -->
 				<!-- ko foreach: filesCollection -->
 					<!-- ko template: {name: 'Core_FileView'} --><!-- /ko -->

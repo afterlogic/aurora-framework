@@ -1,6 +1,6 @@
 <div class="panel_top">
 	<div class="buttons" data-bind="visible: bAllowAddNewAccounts">
-		<span class="button add_account_button" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_NEW_ACCOUNT'}, click: addAccount" id="selenium_settings_create_account_button"></span>
+		<span class="button add_account_button" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ADD_NEW_ACCOUNT'}, click: addAccount" id="selenium_settings_create_account_button"></span>
 	</div>
 	<h2 class="settings_heading" data-bind="text: settingsHeading"></h2>
 </div>
@@ -11,11 +11,11 @@
 			<div data-bind="foreach: accounts">
 				<div class="item account" data-bind="css: {'selected': id() === $parent.editedAccountId() && !$parent.editedFetcherId() && !$parent.editedIdentityId()},  click: function () {$parent.editAccount(hash());}">
 					<!-- ko if: allowMail() -->
-						<span class="link fetcher" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_IDENTITY'}, visible: $parent.bAllowIdentities, click: function (oModel, oEv) {$parent.addIdentity(id(), oEv);}"></span>
-						<span class="link fetcher" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_FETCHER'}, visible: (isDefault() && $parent.bAllowFetchers), click: $parent.addFetcher"></span>
+						<span class="link fetcher" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ADD_IDENTITY'}, visible: $parent.bAllowIdentities, click: function (oModel, oEv) {$parent.addIdentity(id(), oEv);}"></span>
+						<span class="link fetcher" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ADD_FETCHER'}, visible: (isDefault() && $parent.bAllowFetchers), click: $parent.addFetcher"></span>
 					<!-- /ko -->
 					<!-- ko if: !allowMail() -->
-						<span class="link fetcher" data-bind="i18n: {'key': '%ModuleName%/ACTION_CONNECT_MAIL'}, click: function (oModel, oEv) {$parent.connectToMail(id(), oEv);}"></span>
+						<span class="link fetcher" data-bind="i18n: {'key': '%MODULENAME%/ACTION_CONNECT_MAIL'}, click: function (oModel, oEv) {$parent.connectToMail(id(), oEv);}"></span>
 					<!-- /ko -->
 					<span class="title" data-bind="text: email()"></span>
 				</div>
@@ -24,7 +24,7 @@
 					<!-- ko foreach: identities -->
 					<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedIdentityId()}, click: function () {$parents[1].editIdentity($data.hash());}">
 						<span class="icon fetcher"></span>
-						<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_IDENTITY'}"></span>
+						<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_IDENTITY'}"></span>
 						<span class="title" data-bind="text: fullEmail"></span>
 						<span class="icon loyal" data-bind="visible: isDefault() && $parent.identities().length > 1">√</span>
 					</div>
@@ -34,9 +34,9 @@
 						<!-- ko foreach: fetchers().collection -->
 							<div class="item fetcher" data-bind="css: {'selected': id() === $parents[1].editedFetcherId()}, click: function () {$parents[1].editFetcher($data.hash());}">
 								<span class="icon fetcher"></span>
-								<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_FETCH_FROM'}"></span>
+								<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_FETCH_FROM'}"></span>
 								<span class="title" data-bind="text: incomingMailServer() + ' / ' + incomingMailLogin()"></span>
-								<span class="info" data-bind="i18n: {'key': '%ModuleName%/INFO_FETCHING'}, visible: isLocked()"></span>
+								<span class="info" data-bind="i18n: {'key': '%MODULENAME%/INFO_FETCHING'}, visible: isLocked()"></span>
 							</div>
 						<!-- /ko -->
 					<!-- /ko -->

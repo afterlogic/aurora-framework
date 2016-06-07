@@ -9,18 +9,18 @@
 			<span class="search_fieldset">
 				<span class="section">
 					<span class="row text" data-bind="css: {'focused': searchFromFocus(), 'filled': searchInputFrom().length > 0}">
-						<label for="search_from" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_FROM'}"></label>
+						<label for="search_from" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_FROM'}"></label>
 						<input id="search_from" class="value input" spellcheck="false"  type="text" 
 							   data-bind="hasfocus: searchFromFocus, value: searchInputFrom, valueUpdate: 'afterkeydown', onEnter: onSearchClick" />
 					</span>
 					<span class="row text" data-bind="css: {'focused': searchSubjectFocus(), 'filled': searchInputSubject().length > 0}">
-						<label for="search_subject" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_SUBJECT'}"></label>
+						<label for="search_subject" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SUBJECT'}"></label>
 						<input id="search_subject" class="value input" spellcheck="false"  type="text" 
 							   data-bind="hasfocus: searchSubjectFocus, value: searchInputSubject, valueUpdate: 'afterkeydown', onEnter: onSearchClick" />
 					</span>
 					<span class="row text">
 						<span class="row date since" data-bind="css: {'focused': searchDateStartFocus(), 'filled': searchDateStart().length > 0}">
-							<label for="search_date_start" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_SINCE'}"></label>
+							<label for="search_date_start" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SINCE'}"></label>
 							<input id="search_date_start" class="date input" spellcheck="false" type="text" 
 								   data-bind="initDom: searchDateStartDom, value: searchDateStart, hasfocus: searchDateStartFocus, valueUpdate: 'afterkeydown', onEnter: onSearchClick" />
 						</span>
@@ -28,18 +28,18 @@
 				</span>
 				<span class="section">
 					<span class="row text" data-bind="css: {'focused': searchToFocus(), 'filled': searchInputTo().length > 0}">
-						<label for="search_to" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_TO'}"></label>
+						<label for="search_to" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TO'}"></label>
 						<input id="search_to" class="value input" spellcheck="false"  type="text" 
 							   data-bind="hasfocus: searchToFocus, value: searchInputTo, valueUpdate: 'afterkeydown', onEnter: onSearchClick" />
 					</span>
 					<span class="row text" data-bind="css: {'focused': searchTextFocus(), 'filled': searchInputText().length > 0}">
-						<label for="search_text" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_TEXT'}"></label>
+						<label for="search_text" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TEXT'}"></label>
 						<input id="search_text" class="value input" spellcheck="false"  type="text" 
 							   data-bind="hasfocus: searchTextFocus, value: searchInputText, valueUpdate: 'afterkeydown', onEnter: onSearchClick" />
 					</span>
 					<span class="row text">
 						<span class="row date till" data-bind="css: {'focused': searchDateEndFocus(), 'filled': searchDateEnd().length > 0}">
-							<label for="search_date_end" class="label placeholder" data-bind="i18n: {'key': '%ModuleName%/LABEL_TILL'}"></label>
+							<label for="search_date_end" class="label placeholder" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TILL'}"></label>
 							<input id="search_date_end" class="date input" spellcheck="false" type="text" 
 								   data-bind="initDom: searchDateEndDom, value: searchDateEnd, hasfocus: searchDateEndFocus, valueUpdate: 'afterkeydown', onEnter: onSearchClick" />
 						</span>
@@ -66,6 +66,6 @@
 		</div>
 	</span>
 	<span class="control">
-		<span class="icon" data-bind="click: onAdvancedSearchClick, css: {'expand': bAdvancedSearch()}, customTooltip: '%ModuleName%/ACTION_OPEN_ADVANCED_SEARCH'"></span>
+		<span class="icon" data-bind="click: onAdvancedSearchClick, css: {'expand': bAdvancedSearch()}, customTooltip: '%MODULENAME%/ACTION_OPEN_ADVANCED_SEARCH'"></span>
 	</span>
 </span>

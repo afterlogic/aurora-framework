@@ -6,13 +6,13 @@
 		<div class="fields">
 			<div class="fieldset">
 				<div class="row">
-					<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_PUBLIC_LINK'}"></span>
+					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_PUBLIC_LINK'}"></span>
 					<input readonly="readonly" spellcheck="false" class="value input" type="text" maxlength="255" data-bind="hasfocus: pubFocus, value: pub, click: function () {$element.select();}, onEnter: onOKClick" />
 				</div>
 			</div>
 
 			<div class="buttons">
-				<span class="button remove" data-bind="i18n: {'key': '%ModuleName%/ACTION_REMOVE_PUBLIC_LINK'}, click: onCancelSharingClick"></span>
+				<span class="button remove" data-bind="i18n: {'key': '%MODULENAME%/ACTION_REMOVE_PUBLIC_LINK'}, click: onCancelSharingClick"></span>
 				<span class="button secondary_button" data-bind="i18n: {'key': 'CORE/ACTION_CLOSE'}, click: cancelPopup"></span>
 			</div>
 		</div>

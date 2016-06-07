@@ -29,9 +29,9 @@
 		</span>
 	</span>
 	<!-- ko if: !bNamespace -->
-	<div class="children" data-bind="template: { name: 'Mail_FolderView', foreach: subfolders }"></div>
+	<div class="children" data-bind="template: { name: '%ModuleName%_FolderView', foreach: subfolders }"></div>
 	<!-- /ko -->
 </div>
 <!-- ko if: bNamespace -->
-	<!-- ko template: {name: 'Mail_FolderView', foreach: subfolders} --><!-- /ko -->
+	<!-- ko template: {name: '%ModuleName%_FolderView', foreach: subfolders} --><!-- /ko -->
 <!-- /ko -->

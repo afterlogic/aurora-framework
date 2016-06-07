@@ -60,7 +60,7 @@
 							<button type="submit" class="button" data-bind="command: forgotCommand, text: forgotButtonText()"></button>
 						</div>
 						<div class="row signme forgot">
-							<span class="link" data-bind="click: function () {gotoForgot(false);}, i18n: {'key': '%ModuleName%/ACTION_GO_BACK'}"></span>
+							<span class="link" data-bind="click: function () {gotoForgot(false);}, i18n: {'key': '%MODULENAME%/ACTION_GO_BACK'}"></span>
 						</div>
 					</form>
 					<div class="clear"></div>
@@ -74,7 +74,7 @@
 						<div class="fieldset">
 							<label for="question" class="placeholder"></label>
 							<textarea id="question" class="question" data-bind="hasfocus: helpdeskQuestionFocus, value: helpdeskQuestion, valueUpdate: 'afterkeydown', 
-									i18n: {'key': '%ModuleName%/LABEL_ASK_QUESTION', 'type': 'placeholder'}"></textarea>
+									i18n: {'key': '%MODULENAME%/LABEL_ASK_QUESTION', 'type': 'placeholder'}"></textarea>
 						</div>
 
 						<div class="row buttons">
@@ -124,17 +124,17 @@
 						<button type="submit" class="button" data-bind="command: registerCommand, text: regButtonText()"></button>
 					</div>
 					<div class="row signme forgot">
-						<span class="link" data-bind="click: function () {gotoRegister(false);}, i18n: {'key': '%ModuleName%/ACTION_GO_BACK'}"></span>
+						<span class="link" data-bind="click: function () {gotoRegister(false);}, i18n: {'key': '%MODULENAME%/ACTION_GO_BACK'}"></span>
 					</div>
 					<div class="row social links">
 						<div class="facebook" data-bind="visible: bAllowFacebookAuth, click: function () { onSocialClick('facebook'); }">
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_LOGIN'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGIN'}"></span>
 						</div>
 						<div class="google" data-bind="visible: sAllowGoogleAuth, click: function () { onSocialClick('google'); }">
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_LOGIN'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGIN'}"></span>
 						</div>
 						<div class="twitter" data-bind="visible: sAllowTwitterAuth, click: function () { onSocialClick('twitter'); }">
-							<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_LOGIN'}"></span>
+							<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGIN'}"></span>
 						</div>
 					</div>
 
@@ -156,7 +156,7 @@
 						<button type="submit" class="button" data-bind="click: actionSocialRegister, text: regButtonText()"></button>
 					</div>
 					<div class="row signme forgot">
-						<span class="link" data-bind="click: function () {gotoSocialRegister(false);}, i18n: {'key': '%ModuleName%/ACTION_GO_BACK'}"></span>
+						<span class="link" data-bind="click: function () {gotoSocialRegister(false);}, i18n: {'key': '%MODULENAME%/ACTION_GO_BACK'}"></span>
 					</div>
 				</form>
 			</div>
@@ -181,7 +181,7 @@
 						<button type="submit" class="button" data-bind="click: actionChangepass, text: changepassButtonText()"></button>
 					</div>
 					<div class="row signme forgot">
-						<span class="link" data-bind="click: backToLogin, i18n: {'key': '%ModuleName%/ACTION_BACK_TO_LOGIN'}"></span>
+						<span class="link" data-bind="click: backToLogin, i18n: {'key': '%MODULENAME%/ACTION_BACK_TO_LOGIN'}"></span>
 					</div>
 				</form>
 				<div class="clear"></div>

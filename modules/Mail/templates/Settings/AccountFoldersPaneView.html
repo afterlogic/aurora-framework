@@ -3,14 +3,14 @@
 		<div class="folders items_list">
 			
 			<!-- ko if: !showMovedWithMouseItem() -->
-				<!-- ko template: {name: 'Mail_Settings_AccountFolderItem', foreach: collection} --><!-- /ko -->
+				<!-- ko template: {name: '%ModuleName%_Settings_AccountFolderItem', foreach: collection} --><!-- /ko -->
 			<!-- /ko -->
 			
 			<!-- ko if: showMovedWithMouseItem() -->
 			<div data-bind="sortable: {data: collection, connectClass: 'first_sortable_container', 
 				 afterMove: $root.afterSortableFolderMoveBinded, options: {axis: 'y', revert: true}}">
 				<div class="item canSelect canDrag" data-bind="visible: !bVirtual, 
-					 template: { name: 'Mail_Settings_AccountFolderItemMovedWithMouse'},
+					 template: { name: '%ModuleName%_Settings_AccountFolderItemMovedWithMouse'},
 					 css: {'canSubscribe': canSubscribe, 'canRename': canRename, 'canDelete': canDelete}"></div>
 			</div>
 			<!-- /ko -->
@@ -19,17 +19,17 @@
 				<span class="title">
 					<span class="count" data-bind="text: totalMessageCount"></span>
 					<span class="name">
-						<span class="text" data-bind="i18n: {'key': '%ModuleName%/LABEL_TOTAL'}"></span>
+						<span class="text" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TOTAL'}"></span>
 					</span>
 				</span>
 			</div>
 		</div>
 
-		<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_DELETING_NONEMPTY_FOLDERS'}, css: {'highlight': highlighted}"></div>
-		<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_SETUP_SPECIAL_FOLDERS'}"></div>
+		<div class="hint" data-bind="i18n: {'key': '%MODULENAME%/INFO_DELETING_NONEMPTY_FOLDERS'}, css: {'highlight': highlighted}"></div>
+		<div class="hint" data-bind="i18n: {'key': '%MODULENAME%/INFO_SETUP_SPECIAL_FOLDERS'}"></div>
 		<div class="buttons">
-			<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_NEW_FOLDER'}, command: addNewFolderCommand"></span>
-			<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_SETUP_SPECIAL_FOLDERS'}, command: setSystemFoldersCommand"></span>
+			<span class="button" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ADD_NEW_FOLDER'}, command: addNewFolderCommand"></span>
+			<span class="button" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SETUP_SPECIAL_FOLDERS'}, command: setSystemFoldersCommand"></span>
 		</div>
 		{%INCLUDE-START/Account-Folders-After-Buttons/INCLUDE-END%}
 	</div>

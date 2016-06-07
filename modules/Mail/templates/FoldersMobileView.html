@@ -13,7 +13,7 @@
 				</div>
 				<div class="empty_accounts" data-bind="visible: accounts().length === 1"></div>
 				<div class="folders">
-				<!-- ko template: {name: 'Mail_FolderView', foreach: folderList().collection} --><!-- /ko -->
+				<!-- ko template: {name: '%ModuleName%_FolderView', foreach: folderList().collection} --><!-- /ko -->
 				<span class="volumer" data-bind="visible: -1 < quotaProc(), click: $parent.onVolumerClick">
 					<span class="volumer_conteiner">
 						<span class="used" data-bind="style: {'width': '' + (-1 < quotaProc() ? quotaProc() : 0) + '%' }"></span>

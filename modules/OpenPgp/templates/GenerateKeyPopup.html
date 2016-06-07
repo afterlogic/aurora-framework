@@ -2,7 +2,7 @@
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
 		<span class="close" data-bind="click: cancelPopup"></span>
-		<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_GENERATE_NEW_KEY'}"></span>
+		<span class="popup_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_GENERATE_NEW_KEY'}"></span>
 
 		<div class="fields">
 			<div class="row">
@@ -14,12 +14,12 @@
 				<input type="password" class="value input" data-bind="value: password" />
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_KEY_LENGTH'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_KEY_LENGTH'}"></span>
 				<select class="value input" data-bind="value: selectedKeyLength, options: keyLengthOptions"></select>
 			</div>
 			<div class="buttons">
-				<span class="button" data-bind="visible: !process(), i18n: {'key': '%ModuleName%/ACTION_GENERATE'}, click: generate"></span>
-				<span class="button" data-bind="visible: process, i18n: {'key': '%ModuleName%/ACTION_GENERATE_IN_PROGRESS'}"></span>
+				<span class="button" data-bind="visible: !process(), i18n: {'key': '%MODULENAME%/ACTION_GENERATE'}, click: generate"></span>
+				<span class="button" data-bind="visible: process, i18n: {'key': '%MODULENAME%/ACTION_GENERATE_IN_PROGRESS'}"></span>
 				<span class="button secondary_button" data-bind="visible: !process(), i18n: {'key': 'CORE/ACTION_CANCEL'}, click: cancelPopup"></span>
 			</div>
 		</div>

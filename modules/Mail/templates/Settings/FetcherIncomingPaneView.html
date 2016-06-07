@@ -6,18 +6,18 @@
 					<span class="icon"></span>
 					<input type="checkbox" id="incoming_mail_enabled" data-bind="checked: isEnabled" />
 				</label>
-				<label for="incoming_mail_enabled" data-bind="i18n: {'key': '%ModuleName%/LABEL_ENABLED'}"></label>
+				<label for="incoming_mail_enabled" data-bind="i18n: {'key': '%MODULENAME%/LABEL_ENABLED'}"></label>
 			</div>
 		</div>
 		<div class="row hint">
-			<span data-bind="i18n: {'key': '%ModuleName%/INFO_POP3_FETCHER'}"></span>
+			<span data-bind="i18n: {'key': '%MODULENAME%/INFO_POP3_FETCHER'}"></span>
 		</div>
 		<div class="row incoming">
-			<!-- ko template: {name: 'Mail_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
+			<!-- ko template: {name: '%ModuleName%_Settings_ServerPropertiesView', data: oIncoming} --><!-- /ko -->
 		</div>
 
 		<div class="row login">
-			<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_LOGIN'}"></span>
+			<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LOGIN'}"></span>
 			<span class="value text" data-bind="text: incomingMailLogin"></span>
 		</div>
 		<div class="row password">
@@ -26,12 +26,12 @@
 		</div>
 
 		<div class="row hint">
-			<span data-bind="i18n: {'key': '%ModuleName%/INFO_FETCHER_STORE'}"></span>
+			<span data-bind="i18n: {'key': '%MODULENAME%/INFO_FETCHER_STORE'}"></span>
 		</div>
 
 		<div class="row folder">
-			<span class="label required" data-bind="i18n: {'key': '%ModuleName%/LABEL_TARGET_FOLDER'}"></span>
-			<span data-bind="i18n: {'key': '%ModuleName%/INFO_WAITING_FOLDER_LIST'}, visible: options().length === 0"></span>
+			<span class="label required" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TARGET_FOLDER'}"></span>
+			<span data-bind="i18n: {'key': '%MODULENAME%/INFO_WAITING_FOLDER_LIST'}, visible: options().length === 0"></span>
 			<select class="value input" data-bind="visible: options().length > 1, value: folder, options: options,
 				optionsText: 'translatedDisplayName', optionsValue: 'fullName', optionsAfterRender: defaultOptionsAfterRender, enable: isEnabled">
 			</select>
@@ -42,11 +42,11 @@
 					<span class="icon"></span>
 					<input type="checkbox" id="leave_messages_on_server" data-bind="checked: leaveMessagesOnServer, enable: isEnabled" />
 				</label>
-				<label for="leave_messages_on_server" data-bind="i18n: {'key': '%ModuleName%/LABEL_LEAVE_MESSAGES_ON_SERVER'}"></label>
+				<label for="leave_messages_on_server" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LEAVE_MESSAGES_ON_SERVER'}"></label>
 			</div>
 		</div>
 		<div class="row">
-			<span class="link" data-bind="i18n: {'key': '%ModuleName%/ACTION_REMOVE_FETCHER'}, click: function () { $parent.onFetcherDeleteClick($data); }"></span>
+			<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_REMOVE_FETCHER'}, click: function () { $parent.onFetcherDeleteClick($data); }"></span>
 		</div>
 	</div>
 	<div class="buttons">

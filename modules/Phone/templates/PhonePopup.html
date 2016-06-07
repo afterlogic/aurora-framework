@@ -5,17 +5,17 @@
 
 		<div class="fields">
 			<div class="row" data-bind="visible: action() === Enums.PhoneAction.Settings">
-				<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_ACCESS_TO_MICROPHONE'}"></span>
+				<span class="popup_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_ACCESS_TO_MICROPHONE'}"></span>
 				<div id="fake_flash" style="margin-bottom: 10px"></div>
-				<span class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_ACCESS_TO_MICROPHONE'}"></span>
+				<span class="hint" data-bind="i18n: {'key': '%MODULENAME%/INFO_ACCESS_TO_MICROPHONE'}"></span>
 			</div>
 			<div class="row" data-bind="visible: action() === Enums.PhoneAction.Incoming">
 				<span class="text call_report" data-bind="text: report"></span>
 			</div>
 			<div class="buttons">
 				<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_OK'}, visible: action() === Enums.PhoneAction.Settings, click: onOKClick"></span>
-				<span class="button answer" data-bind="i18n: {'key': '%ModuleName%/ACTION_ANSWER'}, visible: action() === Enums.PhoneAction.Incoming, click: answer"></span>
-				<span class="button hangup" data-bind="i18n: {'key': '%ModuleName%/ACTION_END_CALL'}, visible: action() === Enums.PhoneAction.Incoming, click: hangup"></span>
+				<span class="button answer" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ANSWER'}, visible: action() === Enums.PhoneAction.Incoming, click: answer"></span>
+				<span class="button hangup" data-bind="i18n: {'key': '%MODULENAME%/ACTION_END_CALL'}, visible: action() === Enums.PhoneAction.Incoming, click: hangup"></span>
 			</div>
 		</div>
 	</div>

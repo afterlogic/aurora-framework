@@ -2,8 +2,8 @@
 	<div class="fieldset">
 		<div>
 
-			<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_NO_FILTERS_SPECIFIED'}, visible: (0 === collection().length && !loading())"></div>
-			<div class="hint" data-bind="i18n: {'key': '%ModuleName%/INFO_LOADING_FILTERS'}, visible: (0 === collection().length && loading())"></div>
+			<div class="hint" data-bind="i18n: {'key': '%MODULENAME%/INFO_NO_FILTERS_SPECIFIED'}, visible: (0 === collection().length && !loading())"></div>
+			<div class="hint" data-bind="i18n: {'key': '%MODULENAME%/INFO_LOADING_FILTERS'}, visible: (0 === collection().length && loading())"></div>
 			
 			<!-- ko foreach: collection -->
 			<div class="row filter">
@@ -15,7 +15,7 @@
 							<input type="checkbox" data-bind="checked: enable" />
 						</label>
 						<!-- ko foreach: $parent.phaseArray -->
-							<!-- ko template: {name: function () { return $parents[1].displayFilterPart($data, 'Mail_Settings_AccountFilterPart'); } } --><!-- /ko -->
+							<!-- ko template: {name: function () { return $parents[1].displayFilterPart($data, '%ModuleName%_Settings_AccountFilterPart'); } } --><!-- /ko -->
 						<!-- /ko -->
 					</div>
 				</div>
@@ -24,12 +24,12 @@
 		</div>
 	</div>
 	<div class="buttons" data-bind="visible: !loading()">
-		<span class="button addlink" data-bind="i18n: {'key': '%ModuleName%/ACTION_ADD_FILTER'}, click: addFilter"></span>
+		<span class="button addlink" data-bind="i18n: {'key': '%MODULENAME%/ACTION_ADD_FILTER'}, click: addFilter"></span>
 		<span class="button" data-bind="click: save, visible: !isSaving()">
 			<span data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}"></span>
 		</span>
 		<span class="button" data-bind="visible: isSaving()">
-			<span data-bind="i18n: {'key': '%ModuleName%/INFO_SAVING'}"></span>
+			<span data-bind="i18n: {'key': '%MODULENAME%/INFO_SAVING'}"></span>
 		</span>
 	</div>
 </div>

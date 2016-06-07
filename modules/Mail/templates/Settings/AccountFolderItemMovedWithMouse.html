@@ -17,7 +17,7 @@
 <!-- ko if: subfolders().length > 0 -->
 <div class="children" data-bind="sortable: {data: subfolders, connectClass: fullNameHash(), 
 	 afterMove: $root.afterSortableFolderMoveBinded, options: {axis: 'y', revert: true}}">
-	<div class="item canSelect canDrag" data-bind="visible: !bVirtual, template: { name: 'Mail_Settings_AccountFolderItemMovedWithMouse'},
+	<div class="item canSelect canDrag" data-bind="visible: !bVirtual, template: { name: '%ModuleName%_Settings_AccountFolderItemMovedWithMouse'},
 		 css: {'canSubscribe': canSubscribe, 'canRename': canRename, 'canDelete': canDelete}"></div>
 </div>
 <!-- /ko -->

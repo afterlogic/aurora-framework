@@ -9,11 +9,11 @@
 	</div>
 	<div class="row" data-bind="css: {'focused': replyTextFocus(),
 		 'filled': replyText().length > 0}">
-		<label for="reply_text" class="placeholder"  data-bind="i18n: {'key': '%ModuleName%/LABEL_YOUR_TEXT'}"></label>
+		<label for="reply_text" class="placeholder"  data-bind="i18n: {'key': '%MODULENAME%/LABEL_YOUR_TEXT'}"></label>
 		<textarea id="reply_text" class="input" data-bind="value: replyText, 
 			hasfocus: replyTextFocus, onEnter: sendPost, valueUpdate: 'afterkeydown'"></textarea>
 	</div>
 	<div class="buttons">
-		<span class="button" data-bind="i18n: {'key': '%ModuleName%/ACTION_SEND'}, click: sendPost"></span>
+		<span class="button" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SEND'}, click: sendPost"></span>
 	</div>
 </div>

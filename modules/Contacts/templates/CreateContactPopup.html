@@ -1,11 +1,11 @@
 <div class="popup contact_create_popup" style="display: none;">
 	<div class="mask" data-bind="click: cancelPopup"></div>
 	<div class="popup_panel">
-		<span class="popup_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_NEW_CONTACT'}"></span>
+		<span class="popup_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_NEW_CONTACT'}"></span>
 		<div class="fields">
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: {'key': '%ModuleName%/LABEL_DISPLAY_NAME'}"></span>:
+					<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_DISPLAY_NAME'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: displayName, hasfocus: focusDisplayName" />
 			</div>
@@ -17,31 +17,31 @@
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: {'key': '%ModuleName%/LABEL_PHONE'}"></span>:
+					<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_PHONE'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: phone" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: {'key': '%ModuleName%/LABEL_ADDRESS'}"></span>:
+					<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_ADDRESS'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: address" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: {'key': '%ModuleName%/LABEL_SKYPE'}"></span>:
+					<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_SKYPE'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: skype" />
 			</div>
 			<div class="row">
 				<span class="label">
-					<span data-bind="i18n: {'key': '%ModuleName%/LABEL_FACEBOOK'}"></span>:
+					<span data-bind="i18n: {'key': '%MODULENAME%/LABEL_FACEBOOK'}"></span>:
 				</span>
 				<input class="value input" type="text" data-bind="value: facebook" />
 			</div>
 			<div class="clear"></div>
 		</div>
-		<span class="link" data-bind="i18n: {'key': '%ModuleName%/ACTION_SHOW_ADDITIONAL_FIELDS'}, click: goToContacts"></span>
+		<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_ADDITIONAL_FIELDS'}, click: goToContacts"></span>
 		<div class="buttons">
 			<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE'}, click: onSaveClick, visible: !loading()"></span>
 			<span class="button" data-bind="i18n: {'key': 'CORE/ACTION_SAVE_IN_PROGRESS'}, visible: loading()"></span>

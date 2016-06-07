@@ -8,9 +8,9 @@
 																		((type() === Enums.FolderTypes.Trash) ? 'selenium_moveto_folder_trash' : ''))))}"></span>
 	</span>
 	<!-- ko if: !bNamespace -->
-		<span class="children" data-bind="template: { name: 'Mail_MoveToFolderView', foreach: subfolders }"></span>
+		<span class="children" data-bind="template: { name: '%ModuleName%_MoveToFolderView', foreach: subfolders }"></span>
 	<!-- /ko -->
 </span>
 <!-- ko if: bNamespace -->
-	<!-- ko template: {name: 'Mail_MoveToFolderView', foreach: subfolders} --><!-- /ko -->
+	<!-- ko template: {name: '%ModuleName%_MoveToFolderView', foreach: subfolders} --><!-- /ko -->
 <!-- /ko -->

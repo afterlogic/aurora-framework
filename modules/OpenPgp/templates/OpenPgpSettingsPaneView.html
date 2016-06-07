@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="settings_heading" data-bind="i18n: {'key': '%ModuleName%/HEADING_SETTINGS_TAB'}"></h2>
+	<h2 class="settings_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_SETTINGS_TAB'}"></h2>
 </div>
 
 <div class="panel_center">
@@ -11,7 +11,7 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="enableOpenPgp" data-bind="checked: enableOpenPgp" />
 					</label>
-					<label for="enableOpenPgp" data-bind="i18n: {'key': '%ModuleName%/LABEL_ENABLE_OPENPGP'}"></label>
+					<label for="enableOpenPgp" data-bind="i18n: {'key': '%MODULENAME%/LABEL_ENABLE_OPENPGP'}"></label>
 				</span>
 			</div>
 			<div class="row" data-bind="visible: bAllowAutoSave">
@@ -20,11 +20,11 @@
 						<span class="icon"></span>
 						<input type="checkbox" id="allowAutosaveInDrafts" data-bind="checked: allowAutosaveInDrafts" />
 					</label>
-					<label for="allowAutosaveInDrafts" data-bind="i18n: {'key': '%ModuleName%/LABEL_ALLOW_AUTOSAVE'}"></label>
+					<label for="allowAutosaveInDrafts" data-bind="i18n: {'key': '%MODULENAME%/LABEL_ALLOW_AUTOSAVE'}"></label>
 				</span>
 			</div>
 			<div class="hint row" data-bind="visible: bAllowAutoSave">
-				<span class="value offset" data-bind="i18n: {'key': '%ModuleName%/INFO_ALLOW_AUTOSAVE'}"></span>
+				<span class="value offset" data-bind="i18n: {'key': '%MODULENAME%/INFO_ALLOW_AUTOSAVE'}"></span>
 			</div>
 		</div>
 		<div class="buttons">
@@ -36,15 +36,15 @@
 			
 		<div class="fieldset" data-bind="visible: enableOpenPgp">
 			<div class="row keys_label">
-				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_PUBLIC_KEYS'}"></span>
-				<span class="value" data-bind="i18n: {'key': '%ModuleName%/INFO_EMPTY_PUBLIC_KEYS'}, visible: publicKeys().length === 0"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_PUBLIC_KEYS'}"></span>
+				<span class="value" data-bind="i18n: {'key': '%MODULENAME%/INFO_EMPTY_PUBLIC_KEYS'}, visible: publicKeys().length === 0"></span>
 			</div>
 			<div class="row folders items_list" data-bind="foreach: publicKeys">
 				<div class="item">
 					<span class="title">
 						<span class="controls">
-							<span class="button subscribe subscribed" data-bind="customTooltip: '%ModuleName%/ACTION_VIEW_KEY', click: function () { $parent.showArmor(key); }"></span>
-							<span class="button delete" data-bind="customTooltip: '%ModuleName%/ACTION_DELETE_KEY', click: function () { $parent.removeOpenPgpKey(key); }"></span>
+							<span class="button subscribe subscribed" data-bind="customTooltip: '%MODULENAME%/ACTION_VIEW_KEY', click: function () { $parent.showArmor(key); }"></span>
+							<span class="button delete" data-bind="customTooltip: '%MODULENAME%/ACTION_DELETE_KEY', click: function () { $parent.removeOpenPgpKey(key); }"></span>
 						</span>
 						<span class="name">
 							<span class="text" data-bind="text: user"></span>
@@ -53,15 +53,15 @@
 				</div>
 			</div>
 			<div class="row keys_label">
-				<span class="label" data-bind="i18n: {'key': '%ModuleName%/LABEL_PRIVATE_KEYS'}"></span>
-				<span class="value" data-bind="i18n: {'key': '%ModuleName%/INFO_EMPTY_PRIVATE_KEYS'}, visible: privateKeys().length === 0"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_PRIVATE_KEYS'}"></span>
+				<span class="value" data-bind="i18n: {'key': '%MODULENAME%/INFO_EMPTY_PRIVATE_KEYS'}, visible: privateKeys().length === 0"></span>
 			</div>
 			<div class="row folders items_list" data-bind="foreach: privateKeys">
 				<div class="item">
 					<span class="title">
 						<span class="controls">
-							<span class="button subscribe subscribed" data-bind="customTooltip: '%ModuleName%/ACTION_VIEW_KEY', click: function () { $parent.showArmor(key); }"></span>
-							<span class="button delete" data-bind="customTooltip: '%ModuleName%/ACTION_DELETE_KEY', click: function () { $parent.removeOpenPgpKey(key); }"></span>
+							<span class="button subscribe subscribed" data-bind="customTooltip: '%MODULENAME%/ACTION_VIEW_KEY', click: function () { $parent.showArmor(key); }"></span>
+							<span class="button delete" data-bind="customTooltip: '%MODULENAME%/ACTION_DELETE_KEY', click: function () { $parent.removeOpenPgpKey(key); }"></span>
 						</span>
 						<span class="name">
 							<span class="text" data-bind="text: user"></span>
@@ -72,10 +72,10 @@
 		</div>
 		<div class="buttons" data-bind="visible: enableOpenPgp">
 			<span data-bind="click: importKey" class="button">
-				<span data-bind="i18n: {'key': '%ModuleName%/ACTION_IMPORT_KEY'}"></span>
+				<span data-bind="i18n: {'key': '%MODULENAME%/ACTION_IMPORT_KEY'}"></span>
 			</span>
 			<span data-bind="click: generateNewKey" class="button">
-				<span data-bind="i18n: {'key': '%ModuleName%/ACTION_GENERATE_NEW_KEY'}"></span>
+				<span data-bind="i18n: {'key': '%MODULENAME%/ACTION_GENERATE_NEW_KEY'}"></span>
 			</span>
 		</div>
 	</div>

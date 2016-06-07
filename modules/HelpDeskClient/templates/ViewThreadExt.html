@@ -33,13 +33,13 @@
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: {'key': 'CORE/ACTION_DELETE'}"></span>
 			</span>
-			<span class="item resolve" data-bind="command: closeCommand, customTooltip: '%ModuleName%/ACTION_CLOSE_ISSUE', visible: state() !== Enums.HelpdeskThreadStates.Resolved">
+			<span class="item resolve" data-bind="command: closeCommand, customTooltip: '%MODULENAME%/ACTION_CLOSE_ISSUE', visible: state() !== Enums.HelpdeskThreadStates.Resolved">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_CLOSE_ISSUE'}"></span>
+				<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_CLOSE_ISSUE'}"></span>
 			</span>
-			<span class="item resolved" data-bind="customTooltip: '%ModuleName%/ACTION_CLOSE_ISSUE', visible: state() === Enums.HelpdeskThreadStates.Resolved">
+			<span class="item resolved" data-bind="customTooltip: '%MODULENAME%/ACTION_CLOSE_ISSUE', visible: state() === Enums.HelpdeskThreadStates.Resolved">
 				<span class="icon"></span>
-				<span class="text" data-bind="i18n: {'key': '%ModuleName%/ACTION_CLOSE_ISSUE'}"></span>
+				<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_CLOSE_ISSUE'}"></span>
 			</span>
 		</span>
 	</div>
@@ -51,8 +51,8 @@
 	<div class="thread_content scroll-inner">
 		<div class="notification" data-bind="visible: loadingViewPane, i18n: {'key': 'CORE/INFO_LOADING'}"></div>
 		<div class="link more" data-bind="visible: hasMorePosts() && !loadingMoreMessages() && !loadingViewPane(), 
-			 click: commandGetOlderPosts, i18n: {'key': '%ModuleName%/ACTION_SHOW_MORE_MESSAGES'}"></div>
-		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: {'key': '%ModuleName%/ACTION_SHOW_MORE_MESSAGES_IN_PROGRESS'}"></div>
+			 click: commandGetOlderPosts, i18n: {'key': '%MODULENAME%/ACTION_SHOW_MORE_MESSAGES'}"></div>
+		<div class="link more" data-bind="visible: loadingMoreMessages() && !loadingViewPane(), i18n: {'key': '%MODULENAME%/ACTION_SHOW_MORE_MESSAGES_IN_PROGRESS'}"></div>
 		<div class="posts" data-bind="foreach: posts(), quoteText: {actionHandler: quoteText}">
 			<div class="post request" data-bind="css: {'request': bThreadOwner, 'response': !bThreadOwner}">
 				<div class="header">
@@ -68,8 +68,8 @@
 			</div>
 		</div>
 		<div class="buttons" data-bind="css: {'no_posts': posts().length === 0}">
-			<span class="button new_post" data-bind="click: function () { iHaveMoreToSay(); }, visible: !isQuickReplyActive(), i18n: {'key': '%ModuleName%/ACTION_SAY_MORE'}"></span>
-			<span class="button resolve" data-bind="command: closeCommand, i18n: {'key': '%ModuleName%/ACTION_CLOSE_ISSUE'}, visible: state() !== Enums.HelpdeskThreadStates.Resolved"></span>
+			<span class="button new_post" data-bind="click: function () { iHaveMoreToSay(); }, visible: !isQuickReplyActive(), i18n: {'key': '%MODULENAME%/ACTION_SAY_MORE'}"></span>
+			<span class="button resolve" data-bind="command: closeCommand, i18n: {'key': '%MODULENAME%/ACTION_CLOSE_ISSUE'}, visible: state() !== Enums.HelpdeskThreadStates.Resolved"></span>
 		</div>
 	</div>
 </div>
