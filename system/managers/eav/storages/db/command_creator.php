@@ -53,23 +53,23 @@ class CApiEavCommandCreator extends api_CommandCreator
 	public function getObjectById($iId)
 	{
 		return sprintf(
-			"SELECT 	   
-				objects.id as obj_id, 
-				objects.object_type as obj_type, 
-				objects.module_name as obj_module,
-				props.id, props.key as prop_key, 
-				
-				props.value_int as prop_value_int,
-				props.value_bool as prop_value_bool,
-				props.value_string as prop_value_string,
-				props.value_text as prop_value_text,
-				props.value_datetime as prop_value_datetime,
-				
-				props.type as prop_type
-			FROM %seav_properties as props
-				  RIGHT JOIN %seav_objects as objects
-					ON objects.id = props.id_object
-			WHERE objects.id = %d;",				
+"SELECT 	   
+	objects.id as obj_id, 
+	objects.object_type as obj_type, 
+	objects.module_name as obj_module,
+	props.id, props.key as prop_key, 
+
+	props.value_int as prop_value_int,
+	props.value_bool as prop_value_bool,
+	props.value_string as prop_value_string,
+	props.value_text as prop_value_text,
+	props.value_datetime as prop_value_datetime,
+
+	props.type as prop_type
+FROM %seav_properties as props
+	  RIGHT JOIN %seav_objects as objects
+		ON objects.id = props.id_object
+WHERE objects.id = %d;",				
 			$this->prefix(), $this->prefix(), $iId);
 	}
 	
@@ -174,6 +174,12 @@ class CApiEavCommandCreator extends api_CommandCreator
 					}
 				}
 				$sType = $oObject->getPropertyType($sKey);
+				if ($oObject->isEncryptedProperty($sKey))
+				{
+					echo $sPrpertyValue;
+					$sPrpertyValue = \api_Utils::EncryptValue($sPrpertyValue);
+					echo $sPrpertyValue; exit;
+				}
 				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
 						"`props_%s`.`value_%s` %s " . $sValueFormat, 
@@ -275,14 +281,6 @@ class CApiEavCommandCreator extends api_CommandCreator
 		{
 			$sType = $oObject->getPropertyType($sProperty);
 
-#			$aResultViewProperties[$sProperty] = sprintf(
-#					"
-#(SELECT props.value_%s 
-#	FROM %seav_properties as props 
-#		WHERE props.id_object = objects.id AND props.`key` = %s ORDER BY 1 LIMIT 1) AS `prop_%s`",
-#			$sType, $this->prefix(), $this->escapeString($sProperty), $sProperty);
-			
-			
 			$aResultViewProperties[$sProperty] = sprintf(
 "
 	MAX(IF(props.`key` = %s, props.value_%s, NULL))as `prop_%s`",

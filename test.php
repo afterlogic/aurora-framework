@@ -8,6 +8,14 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 // utilizing WebMail Pro API
 include_once __DIR__.'/system/api.php';
 
+
+$sss = \api_Utils::EncryptValue('p12345');
+var_dump($sss);
+var_dump(\api_Utils::DecryptValue($sss));
+var_dump(trim(\api_Utils::DecryptValue('SyDxsEwSIWqa3yxCYbygRMewjh2F03uBcvxFjK60qE4E4QQL8f10GmqK4M4529Sziu5RaB2n+On5SJnM5gxnBg==')));
+
+exit;
+
 /*
 $oAuthDecorator = \CApi::GetModuleDecorator('Auth');
 

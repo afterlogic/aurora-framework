@@ -19,7 +19,10 @@ class CApiModuleManager
      */
     protected $_aEventSubscriptions = array();
 	
-    protected $_aObjectsMap = array();
+    /**
+     * @var array
+     */    
+	protected $_aObjectsMap = array();
 	
 	public function __construct()
 	{
@@ -356,6 +359,11 @@ abstract class AApiModule
 	protected $oHttp;	
 	
 	/**
+	 * @var array
+	 */
+	protected $aConfig;
+	
+	/**
 	 * @param string $sVersion
 	 */
 	public function __construct($sName, $sPath, $sVersion = '1.0')
@@ -382,6 +390,11 @@ abstract class AApiModule
 
 	public function init()
 	{
+	}
+	
+	public function getConfig($sName, $sDefaultValue = null)
+	{
+		
 	}
 	
 	public function subscribeEvent($sEvent, $fCallback)
