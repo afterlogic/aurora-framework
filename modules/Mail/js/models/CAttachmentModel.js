@@ -12,7 +12,9 @@ var
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	WindowOpener = require('modules/Core/js/WindowOpener.js'),
 	
-	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js')
+	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -33,7 +35,7 @@ function CAttachmentModel(iAccountId)
 
 	this.messagePart = ko.observable(null);
 	
-	CAbstractFileModel.call(this, 'Mail');
+	CAbstractFileModel.call(this, Settings.ServerModuleName);
 	
 	this.isMessageType = ko.computed(function () {
 		this.type();

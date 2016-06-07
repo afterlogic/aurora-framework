@@ -15,7 +15,7 @@ var
  */
 function CHelpdeskSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Helpdesk');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 
 	this.allowNotifications = ko.observable(Settings.AllowEmailNotifications);
 	this.signature = ko.observable(Settings.Signature);

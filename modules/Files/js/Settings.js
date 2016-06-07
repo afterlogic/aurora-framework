@@ -7,6 +7,8 @@ var
 ;
 
 module.exports = {
+	ServerModuleName: 'Files',
+	
 	enableModule: ko.observable(true),
 	AllowCollaboration: true,
 	AllowSharing: true,

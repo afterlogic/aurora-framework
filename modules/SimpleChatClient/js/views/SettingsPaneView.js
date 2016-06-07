@@ -18,7 +18,7 @@ var
  */
 function CSettingsPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'SimpleChat');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 
 	this.enableModule = ko.observable(Settings.enableModule());
 }

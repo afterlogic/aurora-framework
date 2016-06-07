@@ -14,6 +14,7 @@ var
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	CServerPropertiesView = require('modules/%ModuleName%/js/views/CServerPropertiesView.js')
 ;
@@ -23,7 +24,7 @@ var
  */
 function CFetcherOutgoingPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Mail');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.defaultAccountId = AccountList.defaultId;
 

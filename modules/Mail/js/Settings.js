@@ -7,6 +7,8 @@ var
 ;
 
 module.exports = {
+	ServerModuleName: 'Mail',
+	
 	AllowAddNewAccounts: false,
 	AllowAppRegisterMailto: false,
 	AllowAutosaveInDrafts: true, // ??? changes in OpenPgp

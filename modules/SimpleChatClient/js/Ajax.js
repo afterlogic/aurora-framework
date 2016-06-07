@@ -1,6 +1,10 @@
 'use strict';
 
-var Ajax = require('modules/Core/js/Ajax.js');
+var
+	Ajax = require('modules/Core/js/Ajax.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
+;
 
 /**
  * Aborts Ajax requests to prevent receiving of obsolete data.
@@ -8,7 +12,7 @@ var Ajax = require('modules/Core/js/Ajax.js');
  * @param {Object} oRequest Parameters of request that is preparing to sending.
  * @param {Object} oOpenedRequest Parameters of request that was sent earlier and is opened now.
  */
-Ajax.registerAbortRequestHandler('SimpleChat', function (oRequest, oOpenedRequest) {
+Ajax.registerAbortRequestHandler(Settings.ServerModuleName, function (oRequest, oOpenedRequest) {
 	var
 		oParameters = oRequest.Parameters,
 		oOpenedParameters = oOpenedRequest.Parameters
@@ -35,6 +39,6 @@ module.exports = {
 	 * @param {Object} oContext Context for callback.
 	 */
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {
-		Ajax.send('SimpleChat', sMethod, oParameters, fResponseHandler, oContext);
+		Ajax.send(Settings.ServerModuleName, sMethod, oParameters, fResponseHandler, oContext);
 	}
 };

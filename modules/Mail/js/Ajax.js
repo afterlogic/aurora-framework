@@ -1,10 +1,12 @@
 'use strict';
 
 var
-	Ajax = require('modules/Core/js/Ajax.js')
+	Ajax = require('modules/Core/js/Ajax.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
-Ajax.registerAbortRequestHandler('Mail', function (oRequest, oOpenedRequest) {
+Ajax.registerAbortRequestHandler(Settings.ServerModuleName, function (oRequest, oOpenedRequest) {
 	var
 		oParameters = oRequest.Parameters,
 		oOpenedParameters = oOpenedRequest.Parameters
@@ -53,6 +55,6 @@ module.exports = {
 		{
 			oParameters.AccountID = MailCache.currentAccountId();
 		}
-		Ajax.send('Mail', sMethod, oParameters, fResponseHandler, oContext, iTimeout);
+		Ajax.send(Settings.ServerModuleName, sMethod, oParameters, fResponseHandler, oContext, iTimeout);
 	}
 };

@@ -3,7 +3,9 @@
 var
 	_ = require('underscore'),
 	
-	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js')
+	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -12,7 +14,7 @@ var
  */
 function CHelpdeskAttachmentModel()
 {
-	CAbstractFileModel.call(this, 'HelpDesk');
+	CAbstractFileModel.call(this, Settings.ServerModuleName);
 }
 
 _.extend(CHelpdeskAttachmentModel.prototype, CAbstractFileModel.prototype);

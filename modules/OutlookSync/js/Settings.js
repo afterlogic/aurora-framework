@@ -3,6 +3,8 @@
 var Types = require('modules/Core/js/utils/Types.js');
 
 module.exports = {
+	ServerModuleName: 'OutlookSync',
+	
 	Plugin32DownloadLink: '',
 	Plugin64DownloadLink: '',
 	PluginReadMoreLink: '',

@@ -1440,7 +1440,7 @@ CComposeView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'hidden': _.extendOwn({
-				'Module': 'Mail',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadAttachment',
 				'Parameters':  function () {
 					return JSON.stringify({

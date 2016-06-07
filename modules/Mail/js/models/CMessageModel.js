@@ -179,7 +179,7 @@ function CMessageModel()
 	this.draftInfo = ko.observableArray([]);
 	this.hash = ko.observable('');
 	this.downloadLink = ko.computed(function () {
-		return FilesUtils.getDownloadLink('Mail', this.hash());
+		return FilesUtils.getDownloadLink(Settings.ServerModuleName, this.hash());
 	}, this);
 
 	this.completelyFilled = ko.observable(false);
@@ -656,7 +656,7 @@ CMessageModel.prototype.downloadAllAttachments = function ()
 {
 	if (this.sAllAttachmentsHash !== '')
 	{
-		UrlUtils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
+		UrlUtils.downloadByUrl(FilesUtils.getDownloadLink(Settings.ServerModuleName, this.sAllAttachmentsHash));
 	}
 	else
 	{
@@ -682,7 +682,7 @@ CMessageModel.prototype.onGetAttachmentsZipHashResponse = function (oResponse, o
 	if (oResponse.Result)
 	{
 		this.sAllAttachmentsHash = Types.pString(oResponse.Result);
-		UrlUtils.downloadByUrl(FilesUtils.getDownloadLink('Mail', this.sAllAttachmentsHash));
+		UrlUtils.downloadByUrl(FilesUtils.getDownloadLink(Settings.ServerModuleName, this.sAllAttachmentsHash));
 	}
 };
 

@@ -16,7 +16,8 @@ var
 	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass'),
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
-	Ajax = require('modules/%ModuleName%/js/Ajax.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -27,7 +28,7 @@ var
  */
 function CIdentityPropertiesPaneView(oParent, bCreate)
 {
-	CAbstractSettingsFormView.call(this, 'Mail');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.identity = ko.observable(null);
 	

@@ -15,6 +15,7 @@ var
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	MailCache = require('modules/%ModuleName%/js/Cache.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	СFilterModel = require('modules/%ModuleName%/js/models/СFilterModel.js'),
 	СFiltersModel = require('modules/%ModuleName%/js/models/СFiltersModel.js')
@@ -25,7 +26,7 @@ var
  */
 function CAccountFiltersPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Mail');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.bShown = false;
 	

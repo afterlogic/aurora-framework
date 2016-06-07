@@ -291,7 +291,7 @@ CFilesView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': this.isPublic ? true : false,
 			'disableDragAndDrop': this.isPublic ? true : false,
 			'hidden': _.extendOwn({
-				'Module': 'Files',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadFile',
 				'Parameters':  function (oFile) {
 					return JSON.stringify({

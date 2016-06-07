@@ -848,7 +848,7 @@ CMessageListView.prototype.initUploader = function ()
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'hidden': _.extendOwn({
-				'Module': 'Mail',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadMessage',
 				'Parameters':  function () {
 					return JSON.stringify({

@@ -16,6 +16,7 @@ var
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	CHtmlEditorView = require('modules/%ModuleName%/js/views/CHtmlEditorView.js')
 ;
@@ -25,7 +26,7 @@ var
  */ 
 function CSignaturePaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Mail');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.fetcherOrIdentity = ko.observable(null);
 	

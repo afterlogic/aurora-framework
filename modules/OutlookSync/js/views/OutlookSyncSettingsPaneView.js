@@ -36,7 +36,7 @@ COutlookSyncSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_OutlookSyncS
 
 COutlookSyncSettingsPaneView.prototype.onRoute = function ()
 {
-	Ajax.send('OutlookSync', 'GetInfo', this.onGetInfoResponse, this);
+	Ajax.send(Settings.ServerModuleName, 'GetInfo', this.onGetInfoResponse, this);
 };
 
 /**

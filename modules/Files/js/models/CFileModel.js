@@ -15,7 +15,9 @@ var
 	CDateModel = require('modules/Core/js/models/CDateModel.js'),
 	
 	Popups = require('modules/Core/js/Popups.js'),
-	EmbedHtmlPopup = require('modules/Core/js/popups/EmbedHtmlPopup.js')
+	EmbedHtmlPopup = require('modules/Core/js/popups/EmbedHtmlPopup.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -82,13 +84,13 @@ function CFileModel()
 		});
 	}, this);
 	
-	CAbstractFileModel.call(this, 'Files');
+	CAbstractFileModel.call(this, Settings.ServerModuleName);
 	
 	this.type = this.storageType;
 	this.uploaded = ko.observable(true);
 
 	this.viewLink = ko.computed(function () {
-		return this.isLink() ? this.linkUrl() : FilesUtils.getViewLink('Files', this.hash());
+		return this.isLink() ? this.linkUrl() : FilesUtils.getViewLink(Settings.ServerModuleName, this.hash());
 	}, this);
 
 	this.isViewable = ko.computed(function () {
@@ -126,7 +128,7 @@ function CFileModel()
 		}
 		else
 		{
-			return FilesUtils.getThumbnailLink('Files', this.hash());
+			return FilesUtils.getThumbnailLink(Settings.ServerModuleName, this.hash());
 		}
 	}, this);
 

@@ -756,7 +756,7 @@ CHtmlEditorView.prototype.insertWebImageFromPopup = function (oCurrentViewModel,
 CHtmlEditorView.prototype.insertComputerImageFromPopup = function (sUid, oAttachment)
 {
 	var
-		sViewLink = FilesUtils.getViewLink('Mail', oAttachment.Hash),
+		sViewLink = FilesUtils.getViewLink(Settings.ServerModuleName, oAttachment.Hash),
 		bResult = false
 	;
 
@@ -808,7 +808,7 @@ CHtmlEditorView.prototype.initUploader = function ()
 			'disableAjaxUpload': false,
 			'disableDragAndDrop': true,
 			'hidden': _.extendOwn({
-				'Module': 'Mail',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadAttachment',
 				'Parameters':  function () {
 					return JSON.stringify({
@@ -868,7 +868,7 @@ CHtmlEditorView.prototype.initEditorUploader = function ()
 				'disableAjaxUpload': false,
 				'disableDragAndDrop': !this.bAllowImageDragAndDrop,
 				'hidden': _.extendOwn({
-					'Module': 'Mail',
+					'Module': Settings.ServerModuleName,
 					'Method': 'UploadAttachment',
 					'Parameters':  function () {
 						return JSON.stringify({

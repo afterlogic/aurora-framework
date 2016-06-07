@@ -18,7 +18,8 @@ var
 	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
-	Ajax = require('modules/%ModuleName%/js/Ajax.js')
+	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -26,7 +27,7 @@ var
  */
 function CAccountForwardPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Mail');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.enable = ko.observable(false);
 	this.email = ko.observable('');

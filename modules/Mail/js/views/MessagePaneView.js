@@ -841,7 +841,7 @@ CMessagePaneView.prototype.executeSaveAsPdf = function ()
 		}, function (oResponse) {
 			if (oResponse.Result && oResponse.Result['Hash'])
 			{
-				UrlUtils.downloadByUrl(FilesUtils.getDownloadLink('Mail', oResponse.Result['Hash']));
+				UrlUtils.downloadByUrl(FilesUtils.getDownloadLink(Settings.ServerModuleName, oResponse.Result['Hash']));
 			}
 			else
 			{

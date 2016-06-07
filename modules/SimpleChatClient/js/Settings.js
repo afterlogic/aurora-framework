@@ -3,6 +3,8 @@
 var ko = require('knockout');
 
 module.exports = {
+	ServerModuleName: 'SimpleChat',
+	
 	/**
 	 * Setting indicates if module is enabled by user or not.
 	 * The Core subscribes to this setting changes and if it is **true** displays module tab in header and its screens.

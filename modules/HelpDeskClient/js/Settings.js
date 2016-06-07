@@ -7,6 +7,8 @@ var
 ;
 
 module.exports = {
+	ServerModuleName: 'HelpDesk',
+	
 	ActivatedEmail: '', // todo: showReport(Utils.i18n('%MODULENAME%/ACCOUNT_ACTIVATED'));
 	AllowEmailNotifications: false,
 	AllowFacebookAuth: false,

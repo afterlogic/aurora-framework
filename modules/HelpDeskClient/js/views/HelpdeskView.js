@@ -1265,7 +1265,7 @@ CHelpdeskView.prototype.createJuaObject = function (oButton)
 			'disableFolderDragAndDrop': false,
 			'disableDragAndDrop': false,
 			'hidden': _.extendOwn({
-				'Module': 'Helpdesk',
+				'Module': Settings.ServerModuleName,
 				'Method': 'UploadAttachment'
 			}, App.getCommonRequestParameters())
 		});

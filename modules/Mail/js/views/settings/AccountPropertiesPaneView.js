@@ -28,7 +28,7 @@ var
  */ 
 function CAccountPropertiesPaneView()
 {
-	CAbstractSettingsFormView.call(this, 'Mail');
+	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
 	this.bAllowChangeEmailSettings =  Settings.AllowChangeEmailSettings;
 	this.bAllowIdentities = Settings.AllowIdentities;
@@ -192,7 +192,7 @@ CAccountPropertiesPaneView.prototype.changePassword = function ()
 	if (ChangePasswordPopup)
 	{
 		Popups.showPopup(ChangePasswordPopup, [{
-			sModule: 'Mail',
+			sModule: Settings.ServerModuleName,
 			bHasOldPassword: true
 		}]);
 	}

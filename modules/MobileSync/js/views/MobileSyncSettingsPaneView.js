@@ -11,7 +11,9 @@ var
 	App = require('modules/Core/js/App.js'),
 	Browser = require('modules/Core/js/Browser.js'),
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
-	UserSettings = require('modules/Core/js/Settings.js')
+	UserSettings = require('modules/Core/js/Settings.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;
 
 /**
@@ -44,7 +46,7 @@ CMobileSyncSettingsPaneView.prototype.ViewTemplate = '%ModuleName%_MobileSyncSet
 
 CMobileSyncSettingsPaneView.prototype.onRoute = function ()
 {
-	Ajax.send('MobileSync', 'GetInfo', this.onGetInfoResponse, this);
+	Ajax.send(Settings.ServerModuleName, 'GetInfo', this.onGetInfoResponse, this);
 };
 
 /**
