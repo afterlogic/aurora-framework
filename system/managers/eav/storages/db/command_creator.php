@@ -176,9 +176,7 @@ WHERE objects.id = %d;",
 				$sType = $oObject->getPropertyType($sKey);
 				if ($oObject->isEncryptedProperty($sKey))
 				{
-					echo $sPrpertyValue;
 					$sPrpertyValue = \api_Utils::EncryptValue($sPrpertyValue);
-					echo $sPrpertyValue; exit;
 				}
 				$sValueFormat = $oObject->isStringProperty($sKey) ? "%s" : "%d";
 				$aResultSearchProperties[] = sprintf(
