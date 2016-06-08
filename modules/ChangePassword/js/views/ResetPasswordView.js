@@ -27,17 +27,21 @@ function CResetPasswordView()
 {
 	this.oDefaultAccount = App.defaultAccount();
 	this.showResetPasswordButton = ko.computed(function () {
-		return !this.oDefaultAccount.allowMail();
+		return this.oDefaultAccount && !this.oDefaultAccount.allowMail();
 	}, this);
 	this.resetPasswordButtonText = ko.computed(function () {
-		if (this.oDefaultAccount.passwordSpecified())
+		if (this.oDefaultAccount)
 		{
-			return TextUtils.i18n('CORE/ACTION_RESET_PASSWORD');
+			if (this.oDefaultAccount.passwordSpecified())
+			{
+				return TextUtils.i18n('CORE/ACTION_RESET_PASSWORD');
+			}
+			else
+			{
+				return TextUtils.i18n('%MODULENAME%/ACTION_SET_PASSWORD');
+			}
 		}
-		else
-		{
-			return TextUtils.i18n('%MODULENAME%/ACTION_SET_PASSWORD');
-		}
+		return ''
 	}, this);
 	var aHintSetPassword = TextUtils.i18n('%MODULENAME%/INFO_SET_PASSWORD').split(/%STARTLINK%|%ENDLINK%/);
 	this.sHintSetPassword1 = aHintSetPassword.length > 0 ? aHintSetPassword[0] : '';
@@ -57,25 +61,28 @@ CResetPasswordView.prototype.configureMail = function ()
 
 CResetPasswordView.prototype.resetPassword = function ()
 {
-	if (Settings.ResetPassHash === '' && !this.oDefaultAccount.passwordSpecified())
+	if (this.oDefaultAccount)
 	{
-		Popups.showPopup(ConfirmPopup, [
-			TextUtils.i18n('%MODULENAME%/CONFIRM_SEND_RESET_INSTRUCTIONS', {'EMAIL': this.oDefaultAccount.email()}),
-			_.bind(this.onResetPasswordPopupAnswer, this),
-			this.oDefaultAccount.passwordSpecified() ? TextUtils.i18n('%MODULENAME%/HEADING_RESET_PASSWORD') : TextUtils.i18n('%MODULENAME%/HEADING_SET_PASSWORD'),
-			TextUtils.i18n('CORE/ACTION_SEND'),
-			TextUtils.i18n('CORE/ACTION_CANCEL')
-		]);
-	}
-	else
-	{
-		Popups.showPopup(ChangePasswordPopup, [false, this.oDefaultAccount.passwordSpecified(), function () { 
-			this.oDefaultAccount.passwordSpecified(true); 
-//			if (AfterLogicApi.runPluginHook)
-//			{
-//				AfterLogicApi.runPluginHook('api-mail-on-password-specified-success', [this.__name, this]);
-//			}	
-		}]);
+		if (Settings.ResetPassHash === '' && !this.oDefaultAccount.passwordSpecified())
+		{
+			Popups.showPopup(ConfirmPopup, [
+				TextUtils.i18n('%MODULENAME%/CONFIRM_SEND_RESET_INSTRUCTIONS', {'EMAIL': this.oDefaultAccount.email()}),
+				_.bind(this.onResetPasswordPopupAnswer, this),
+				this.oDefaultAccount.passwordSpecified() ? TextUtils.i18n('%MODULENAME%/HEADING_RESET_PASSWORD') : TextUtils.i18n('%MODULENAME%/HEADING_SET_PASSWORD'),
+				TextUtils.i18n('CORE/ACTION_SEND'),
+				TextUtils.i18n('CORE/ACTION_CANCEL')
+			]);
+		}
+		else
+		{
+			Popups.showPopup(ChangePasswordPopup, [false, this.oDefaultAccount.passwordSpecified(), function () { 
+				this.oDefaultAccount.passwordSpecified(true); 
+	//			if (AfterLogicApi.runPluginHook)
+	//			{
+	//				AfterLogicApi.runPluginHook('api-mail-on-password-specified-success', [this.__name, this]);
+	//			}	
+			}]);
+		}
 	}
 };
 

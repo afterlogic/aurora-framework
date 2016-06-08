@@ -103,6 +103,13 @@ CSettingsView.prototype.onRoute = function (aParams)
 		oNewTab = _.find(this.tabs(), function (oTab) {
 			return oTab.name === 'common';
 		});
+		
+		if (!oNewTab)
+		{
+			oNewTab = _.find(this.tabs(), function (oTab) {
+				return !oTab.visible || oTab.visible();
+			});
+		}
 	}
 	
 	if (bShow)
