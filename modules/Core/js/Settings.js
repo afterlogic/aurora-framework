@@ -40,7 +40,7 @@ module.exports = {
 	SiteName: AppData.App ? Types.pString(AppData.App.SiteName) : 'AfterLogic WebMail',
 	SocialName: AppData.User ? Types.pString(AppData.User.SocialName) : '', // Mail module
 	SyncIosAfterLogin: AppData.App ? !!AppData.App.IosDetectOnLogin : false, // ? AllowIosProfile
-	TenantName: Types.pString(AppData.TenantName) || UrlUtils.getRequestParam('helpdesk') || '0804e764',
+	TenantName: Types.pString(AppData.TenantName) || UrlUtils.getRequestParam('tenant') || '0804e764',
 	Theme: AppData.User ? Types.pString(AppData.User.DefaultTheme) : (AppData.App ? Types.pString(AppData.App.DefaultTheme) : 'Default'),
 	ThemeList: AppData.App && $.isArray(AppData.App.Themes) ? AppData.App.Themes : [],
 	timeFormat: ko.observable(AppData.User ? Types.pString(AppData.User.DefaultTimeFormat) : '0'), // 0 - 24, 1 - 12

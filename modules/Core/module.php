@@ -1093,6 +1093,14 @@ class CoreModule extends AApiModule
 		return $oTenant ? $oTenant : null;
 	}
 	
+	public function GetTenantById($iIdTenant)
+	{
+		$oTenant = $this->oApiTenantsManager->getTenantById($iIdTenant);
+
+		return $oTenant ? $oTenant : null;
+	}
+	
+	
 	public function GetDefaultGlobalTenant()
 	{
 		$oTenant = $this->oApiTenantsManager->getDefaultGlobalTenant();
@@ -1102,7 +1110,33 @@ class CoreModule extends AApiModule
 	
 	public function GetTenantName()
 	{
-		$sTenant = $this->oHttp->GetRequest('tenant', '');
+		$sTenant = '';
+		$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
+		if (!empty($sAuthToken))
+		{
+			$iUserId = \CApi::getLogginedUserId($sAuthToken);
+			if ($iUserId !== false && $iUserId > 0)
+			{
+				$oUser = $this->GetUser($iUserId);
+				if ($oUser)
+				{
+					$oTenant = $this->GetTenantById($oUser->IdTenant);
+					if ($oTenant)
+					{
+						$sTenant = $oTenant->Name;
+					}
+				}
+			}
+			$sPostTenant = $this->oHttp->GetPost('TenantName', '');
+			if (!empty($sPostTenant) && !empty($sTenant) && $sPostTenant !== $sTenant)
+			{
+				$sTenant = '';
+			}
+		}
+		else
+		{
+			$sTenant = $this->oHttp->GetRequest('tenant', '');
+		}
 		\CApi::setTenantName($sTenant);
 		return $sTenant;
 	}

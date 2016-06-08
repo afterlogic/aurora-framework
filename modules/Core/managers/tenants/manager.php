@@ -124,6 +124,9 @@ class CApiCoreTenantsManager extends AApiManager
 	public function getTenantAllocatedSize($iTenantId)
 	{
 		//TODO use new logic then Account class will be rewrited
+		return 0;
+		
+		
 		$iResult = 0;
 		if (0 < $iTenantId)
 		{

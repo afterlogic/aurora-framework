@@ -13,6 +13,13 @@ class CApiModuleManager
 	protected $_aModules = array();
 	
     /**
+     * This array contains a list of modules configs
+     *
+     * @var array
+     */
+	protected $_aModulesConfigs = array();
+	
+	/**
      * This array contains a list of callbacks we should call when certain events are triggered
      *
      * @var array
@@ -52,6 +59,7 @@ class CApiModuleManager
 			$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
 			array_unshift($aModulePath, $sTenantModulesPath);
 		}
+		$aModulesPath = array();
 		foreach ($aModulePath as $sModulesPath)
 		{
 			if (@is_dir($sModulesPath))
@@ -62,7 +70,8 @@ class CApiModuleManager
 					{
 						if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
 						{
-							$this->loadModule($sFileItem, $sModulesPath);
+							$this->loadModuleConfig($sFileItem, $sModulesPath);
+							$aModulesPath[$sModulesPath][] = $sFileItem;
 						}
 					}
 
@@ -70,8 +79,43 @@ class CApiModuleManager
 				}
 			}
 		}
+		foreach ($aModulesPath as $sModulePath => $aModulePath)
+		{
+			foreach ($aModulePath as $sModuleName)
+			{
+				$this->loadModule($sModuleName, $sModulesPath);
+			}
+		}
 	}
 	
+	public function isModuleLoaded($sModuleName)
+	{
+		return array_key_exists(strtolower($sModuleName), $this->_aModules);
+	}
+	
+	public function loadModuleConfig($sModuleName, $sModulePath)
+	{
+		$sModuleConfigPath = $sModulePath.$sModuleName.'/config.json';
+		if (@file_exists($sModuleConfigPath))
+		{
+			$sJsonData = file_get_contents($sModuleConfigPath);
+			$aModuleConfig = json_decode($sJsonData, true);
+			$_aModuleConfig = isset($this->_aModulesConfigs[$sModuleName]) ? $this->_aModulesConfigs[$sModuleName] : array();
+			$this->_aModulesConfigs[$sModuleName] = array_merge($aModuleConfig, $_aModuleConfig);
+		}
+	}
+	
+	public function getModuleConfig($sModuleName, $sConfigName, $sDefaultValue = null)
+	{
+		$mResult = $sDefaultValue;
+		if (isset($this->_aModulesConfigs[$sModuleName]) && isset($this->_aModulesConfigs[$sModuleName][$sConfigName]))
+		{
+			$mResult = $this->_aModulesConfigs[$sModuleName][$sConfigName];
+		}
+		
+		return $mResult;
+	}
+
 	public function loadModule($sModuleName, $sModulePath)
 	{
 		$mResult = false;
@@ -79,18 +123,22 @@ class CApiModuleManager
 		$this->broadcastEvent($sModuleName, 'loadModule::before', array(&$sModuleName, &$sModulePath));
 		
 		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
-		if (@file_exists($sModuleFilePath) && !array_key_exists(strtolower($sModuleName), $this->_aModules))
+		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
 		{
 		   include_once $sModuleFilePath;
-		   if (class_exists($sModuleName . 'Module'))
+		   $sModuleClassName = $sModuleName . 'Module';
+		   if (class_exists($sModuleClassName))
 		   {
-			   $oModule = call_user_func(array($sModuleName . 'Module', 'createInstance'), $sModuleName, $sModulePath);
+			   $oModule = call_user_func(array($sModuleClassName, 'createInstance'), $sModuleName, $sModulePath);
 			   if ($oModule instanceof AApiModule)
 			   {
-				   $oModule->init();
-				   $this->_aModules[strtolower($sModuleName)] = $oModule;
+					if (!$oModule->getConfig('Disabled', false))
+				    {
+						$oModule->init();
+						$this->_aModules[strtolower($sModuleName)] = $oModule;
 				   
-				   $mResult = $oModule;
+						$mResult = $oModule;
+					}
 			   }
 		   }
 		}
@@ -394,7 +442,7 @@ abstract class AApiModule
 	
 	public function getConfig($sName, $sDefaultValue = null)
 	{
-		
+		return \CApi::GetModuleManager()->getModuleConfig($this->GetName(), $sName, $sDefaultValue);
 	}
 	
 	public function subscribeEvent($sEvent, $fCallback)
