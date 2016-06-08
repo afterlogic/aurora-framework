@@ -771,7 +771,7 @@ CComposeView.prototype.beforeHide = function (fContinueScreenChanging)
 			}
 			else
 			{
-				Routing.historyBackWithoutParsing('mail-compose');
+				Routing.historyBackWithoutParsing(Settings.HashModuleName + '-compose');
 			}
 		}, this)
 	;
@@ -1768,7 +1768,7 @@ CComposeView.prototype.openInNewWindow = function ()
 	}
 	else if (!this.isChanged())
 	{
-		sHash = Routing.buildHashFromArray(_.union(['mail-compose'], this.routeParams()));
+		sHash = Routing.buildHashFromArray(_.union([Settings.HashModuleName + '-compose'], this.routeParams()));
 		oWin = WindowOpener.openTab('?message-newtab' + sHash);
 	}
 	else

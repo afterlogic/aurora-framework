@@ -29,7 +29,7 @@ module.exports = function (oSettings) {
 		 * @param {Object} ModulesManager
 		 */
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/SettingsPaneView.js'); }, 'simplechat', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/SettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		
 		/**
@@ -38,11 +38,11 @@ module.exports = function (oSettings) {
 		 * @returns {Object}
 		 */
 		getScreens: function () {
-			return {
-				'main': function () {
-					return require('modules/%ModuleName%/js/views/MainView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/MainView.js');
 			};
+			return oScreens;
 		},
 		
 		/**

@@ -5,6 +5,8 @@ var
 	
 	Types = require('modules/Core/js/utils/Types.js'),
 	
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
+	
 	LinksUtils = {}
 ;
 
@@ -18,7 +20,7 @@ var
  */
 LinksUtils.getContacts = function (iType, sGroupId, sSearch, iPage, sUid)
 {
-	var aParams = ['contacts'];
+	var aParams = [Settings.HashModuleName];
 	
 	if (typeof iType === 'number')
 	{

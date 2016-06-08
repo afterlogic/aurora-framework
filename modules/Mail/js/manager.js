@@ -11,11 +11,7 @@ module.exports = function (oSettings) {
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		Cache = null,
 		
-		oScreens = {
-			'main': function () {
-				return require('modules/%ModuleName%/js/views/MailView.js');
-			}
-		}
+		oScreens = {}
 	;
 
 	Settings.init(oSettings);
@@ -23,9 +19,12 @@ module.exports = function (oSettings) {
 	Cache = require('modules/%ModuleName%/js/Cache.js');
 	Cache.init();
 	
+	oScreens[Settings.HashModuleName] = function () {
+		return require('modules/%ModuleName%/js/views/MailView.js');
+	};
 	if (App.isMobile())
 	{
-		oScreens['compose'] = function () {
+		oScreens[Settings.HashModuleName + '-compose'] = function () {
 			var CComposeView = require('modules/%ModuleName%/js/views/CComposeView.js');
 			return new CComposeView();
 		};
@@ -54,8 +53,8 @@ module.exports = function (oSettings) {
 				MailUtils.registerMailto(Browser.firefox);
 			}
 			
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/settings/MailSettingsPaneView.js'); }, 'mail', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/settings/AccountsSettingsPaneView.js'); }, 'accounts', TextUtils.i18n('%MODULENAME%/LABEL_ACCOUNTS_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/settings/MailSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/settings/AccountsSettingsPaneView.js'); }, Settings.HashModuleName + '-accounts', TextUtils.i18n('%MODULENAME%/LABEL_ACCOUNTS_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
 			return oScreens;

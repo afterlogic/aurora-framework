@@ -84,7 +84,7 @@ CSettingsView.prototype.onRoute = function (aParams)
 		fRevertRouting = _.bind(function () {
 			if (oCurrentTab)
 			{
-				Routing.replaceHashDirectly(['settings', oCurrentTab.name]);
+				Routing.replaceHashDirectly([Settings.HashModuleName, oCurrentTab.name]);
 			}
 		}, this),
 		bShow = true
@@ -116,7 +116,7 @@ CSettingsView.prototype.onRoute = function (aParams)
  */
 CSettingsView.prototype.changeTab = function (sTabName)
 {
-	Routing.setHash(['settings', sTabName]);
+	Routing.setHash([Settings.HashModuleName, sTabName]);
 };
 
 /**
@@ -124,7 +124,7 @@ CSettingsView.prototype.changeTab = function (sTabName)
  */
 CSettingsView.prototype.setAddHash = function (aAddHash)
 {
-	Routing.setHash(_.union(['settings', this.currentTab() ? this.currentTab().name : ''], aAddHash));
+	Routing.setHash(_.union([Settings.HashModuleName, this.currentTab() ? this.currentTab().name : ''], aAddHash));
 };
 
 module.exports = new CSettingsView();

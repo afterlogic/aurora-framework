@@ -32,14 +32,14 @@ module.exports = function (oSettings) {
 			require('modules/%ModuleName%/js/koBindings.js');
 		},
 		getScreens: function () {
-			return {
-				'view': function () {
-					return require('modules/%ModuleName%/js/views/MessagePaneView.js');
-				},
-				'compose': function () {
-					return GetComposeView();
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName + '-view'] = function () {
+				return require('modules/%ModuleName%/js/views/MessagePaneView.js');
 			};
+			oScreens[Settings.HashModuleName + '-compose'] = function () {
+				return GetComposeView();
+			};
+			return oScreens;
 		},
 		registerMessagePaneController: function (oController, sPlace) {
 			var MessagePaneView = require('modules/%ModuleName%/js/views/MessagePaneView.js');

@@ -8,6 +8,7 @@ var
 
 module.exports = {
 	ServerModuleName: 'Auth',
+	HashModuleName: 'auth',
 	
 	AllowChangeLanguage: false,
 	AllowRegistration: false,

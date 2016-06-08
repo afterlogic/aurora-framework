@@ -9,11 +9,11 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					return require('modules/%ModuleName%/js/views/SettingsView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/SettingsView.js');
 			};
+			return oScreens;
 		},
 		getHeaderItem: function () {
 			var

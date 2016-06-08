@@ -61,7 +61,7 @@ function CHelpdeskView()
 				if (state === Enums.HelpdeskThreadStates.Resolved)
 				{
 					self.selectedItem(null);
-					Routing.setHash(['helpdesk', '']);
+					Routing.setHash([Settings.HashModuleName, '']);
 				}
 			};
 		}
@@ -932,7 +932,7 @@ CHelpdeskView.prototype.selectItem = function (oItem)
 
 		if (!App.isNewTab())
 		{
-			Routing.setHash(['helpdesk', oItem.ThreadHash]); //TODO this code causes a bug with switching to helpdesk when you on another screen
+			Routing.setHash([Settings.HashModuleName, oItem.ThreadHash]); //TODO this code causes a bug with switching to helpdesk when you on another screen
 		}
 		oItem.postsCount(0);
 		this.posts([]);
@@ -944,7 +944,7 @@ CHelpdeskView.prototype.openNewThread = function ()
 	this.selector.itemSelected(null);
 	this.selectedItem(null);
 	this.visibleNewThread(true);
-	Routing.setHash(['helpdesk', '']);
+	Routing.setHash([Settings.HashModuleName, '']);
 	this.newThreadTextFocus(true);
 	this.setSignature(this.newThreadText, this.domNewThreadTextarea());
 };
@@ -987,7 +987,7 @@ CHelpdeskView.prototype.executeDelete = function ()
 			'ThreadId': oSelectedItem.Id
 		}, this.updateDisplayingData, this);
 		
-		Routing.setHash(['helpdesk', '']);
+		Routing.setHash([Settings.HashModuleName, '']);
 	}
 };
 
@@ -999,7 +999,7 @@ CHelpdeskView.prototype.updateDisplayingData = function ()
 
 CHelpdeskView.prototype.executeOpenNewWindow = function ()
 {
-	var sUrl = Routing.buildHashFromArray(['helpdesk', this.selectedItem().ThreadHash]);
+	var sUrl = Routing.buildHashFromArray([Settings.HashModuleName, this.selectedItem().ThreadHash]);
 
 	WindowOpener.openTab(sUrl);
 };

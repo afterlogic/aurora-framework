@@ -20,11 +20,11 @@ module.exports = function (oSettings) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					return require('modules/%ModuleName%/js/views/ContactsView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/ContactsView.js');
 			};
+			return oScreens;
 		},
 		getHeaderItem: function () {
 			return require('modules/%ModuleName%/js/views/HeaderItemView.js');

@@ -13,11 +13,11 @@ module.exports = function (oSettings) {
 			return bPublic;
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					return require('modules/%ModuleName%/js/views/LoginView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/LoginView.js');
 			};
+			return oScreens;
 		}
 	};
 };

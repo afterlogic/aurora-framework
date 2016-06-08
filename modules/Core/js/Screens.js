@@ -79,21 +79,8 @@ CScreens.prototype.init = function ()
 CScreens.prototype.addToScreenList = function (sModuleName, oScreenList)
 {
 	_.each(oScreenList, _.bind(function (fGetScreen, sKey) {
-		var sNewKey = sKey.toLowerCase();
-		if (sModuleName !== '')
-		{
-			if (sKey === 'main')
-			{
-				sNewKey = sModuleName.toLowerCase();
-			}
-			else
-			{
-				sNewKey = sModuleName.toLowerCase() + '-' + sKey;
-			}
-		}
-		
-		this.oGetScreenFunctions[sNewKey] = fGetScreen;
-		this.oModulesNames[sNewKey] = sModuleName;
+		this.oGetScreenFunctions[sKey] = fGetScreen;
+		this.oModulesNames[sKey] = sModuleName;
 	}, this));
 };
 

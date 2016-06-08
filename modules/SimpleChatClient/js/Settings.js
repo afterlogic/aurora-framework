@@ -4,6 +4,7 @@ var ko = require('knockout');
 
 module.exports = {
 	ServerModuleName: 'SimpleChat',
+	HashModuleName: 'simplechat',
 	
 	/**
 	 * Setting indicates if module is enabled by user or not.

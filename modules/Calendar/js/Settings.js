@@ -4,6 +4,7 @@ var Types = require('modules/Core/js/utils/Types.js');
 
 module.exports = {
 	ServerModuleName: 'Calendar',
+	HashModuleName: 'calendar',
 	
 	AllowAppointments: true,
 	AllowShare: true,

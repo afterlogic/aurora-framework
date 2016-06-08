@@ -8,6 +8,7 @@ var
 
 module.exports = {
 	ServerModuleName: 'Mail',
+	HashModuleName: 'mail',
 	enableModule: ko.observable(true),
 	
 	AllowAddNewAccounts: false,

@@ -18,15 +18,14 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/HelpdeskSettingsPaneView.js'); }, 'helpdesk', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/HelpdeskSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					CheckState.end();
-					return require('modules/%ModuleName%/js/views/HelpdeskView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/HelpdeskView.js');
 			};
+			return oScreens;
 		},
 		getHeaderItem: function () {
 			CheckState.start();

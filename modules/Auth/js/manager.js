@@ -26,7 +26,7 @@ module.exports = function (oSettings) {
 			var oScreens = {};
 			if (bAllowLoginView)
 			{
-				oScreens['main'] = function () {
+				oScreens[Settings.HashModuleName] = function () {
 					return require('modules/%ModuleName%/js/views/WrapLoginView.js');
 				};
 			}

@@ -21,15 +21,15 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/FilesSettingsPaneView.js'); }, 'cloud-storage', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/FilesSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					var CFilesView = require('modules/%ModuleName%/js/views/CFilesView.js');
-					return new CFilesView();
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				var CFilesView = require('modules/%ModuleName%/js/views/CFilesView.js');
+				return new CFilesView();
 			};
+			return oScreens;
 		},
 		getHeaderItem: function () {
 			var

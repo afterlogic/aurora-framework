@@ -11,12 +11,12 @@ module.exports = function (oSettings) {
 			return bPublic;
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					var CFilesView = require('modules/%ModuleName%/js/views/CFilesView.js');
-					return new CFilesView();
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				var CFilesView = require('modules/%ModuleName%/js/views/CFilesView.js');
+				return new CFilesView();
 			};
+			return oScreens;
 		}
 	};
 };

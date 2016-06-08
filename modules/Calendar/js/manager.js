@@ -20,14 +20,14 @@ module.exports = function (oSettings) {
 		},
 		start: function (ModulesManager) {
 			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/CalendarSettingsPaneView.js'); }, 'calendar', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/CalendarSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					return require('modules/%ModuleName%/js/views/CalendarView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/CalendarView.js');
 			};
+			return oScreens;
 		},
 		getHeaderItem: function () {
 			return require('modules/%ModuleName%/js/views/HeaderItemView.js');

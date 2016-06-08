@@ -5,6 +5,8 @@ var
 	
 	Types = require('modules/Core/js/utils/Types.js'),
 	
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
+	
 	LinksUtils = {}
 ;
 
@@ -41,7 +43,7 @@ LinksUtils.getMailbox = function (sFolder, iPage, sUid, sSearch, sFilters)
 	var
 		AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 		oCurrAccount = AccountList.getCurrent(),
-		aResult = ['mail', oCurrAccount ? oCurrAccount.hash() : '']
+		aResult = [Settings.HashModuleName, oCurrAccount ? oCurrAccount.hash() : '']
 	;
 	
 	iPage = Types.pInt(iPage, 1);
@@ -168,7 +170,7 @@ LinksUtils.parseMailbox = function (aParams)
  */
 LinksUtils.getViewMessage = function (sFolder, sUid)
 {
-	return ['mail-view', sFolder, 'msg' + sUid];
+	return [Settings.HashModuleName + '-view', sFolder, 'msg' + sUid];
 };
 
 /**
@@ -176,7 +178,7 @@ LinksUtils.getViewMessage = function (sFolder, sUid)
  */
 LinksUtils.getCompose = function ()
 {
-	return ['mail-compose'];
+	return [Settings.HashModuleName + '-compose'];
 };
 
 /**
@@ -188,7 +190,7 @@ LinksUtils.getCompose = function ()
  */
 LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid)
 {
-	return ['mail-compose', sType, sFolder, sUid];
+	return [Settings.HashModuleName + '-compose', sType, sFolder, sUid];
 };
 
 /**
@@ -198,7 +200,7 @@ LinksUtils.getComposeFromMessage = function (sType, sFolder, sUid)
  */
 LinksUtils.getComposeWithToField = function (sTo)
 {
-	return ['mail-compose', 'to', sTo];
+	return [Settings.HashModuleName + '-compose', 'to', sTo];
 };
 
 /**

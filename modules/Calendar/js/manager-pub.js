@@ -12,11 +12,11 @@ module.exports = function (oSettings) {
 			return bPublic;
 		},
 		getScreens: function () {
-			return {
-				'main': function () {
-					return require('modules/%ModuleName%/js/views/CalendarView.js');
-				}
+			var oScreens = {};
+			oScreens[Settings.HashModuleName] = function () {
+				return require('modules/%ModuleName%/js/views/CalendarView.js');
 			};
+			return oScreens;
 		},
 		getHeaderItem: function () {
 			return require('modules/%ModuleName%/js/views/PublicHeaderItem.js');

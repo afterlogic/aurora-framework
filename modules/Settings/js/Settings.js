@@ -1,7 +1,9 @@
 'use strict';
 
 module.exports = {
-	TabsOrder: ['common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp'],
+	HashModuleName: 'settings',
+	
+	TabsOrder: ['common', 'mail', 'mail-accounts', 'contacts', 'calendar', 'files', 'mobilesync', 'outlooksync', 'helpdesk', 'openpgp'],
 	
 	init: function (oAppDataSection) {
 		if (oAppDataSection)

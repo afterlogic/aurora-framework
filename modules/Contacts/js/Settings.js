@@ -8,6 +8,7 @@ var
 
 module.exports = {
 	ServerModuleName: 'Contacts',
+	HashModuleName: 'contacts',
 	
 	ContactsPerPage: 20,
 	ImportContactsLink: '',

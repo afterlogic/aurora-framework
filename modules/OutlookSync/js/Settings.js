@@ -4,6 +4,7 @@ var Types = require('modules/Core/js/utils/Types.js');
 
 module.exports = {
 	ServerModuleName: 'OutlookSync',
+	HashModuleName: 'outlooksync',
 	
 	Plugin32DownloadLink: '',
 	Plugin64DownloadLink: '',

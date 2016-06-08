@@ -22,7 +22,7 @@ module.exports = function (oSettings) {
 			{
 				ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/MessageControlsView.js'), 'BeforeMessageHeaders']);
 				ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/%ModuleName%/js/views/ComposeButtonsView.js')]);
-				ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/OpenPgpSettingsPaneView.js'); }, 'pgp', TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+				ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/OpenPgpSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 			}
 		}
 	};

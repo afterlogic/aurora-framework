@@ -8,6 +8,7 @@ var
 
 module.exports = {
 	ServerModuleName: 'HelpDesk',
+	HashModuleName: 'helpdesk',
 	
 	ActivatedEmail: '', // todo: showReport(Utils.i18n('%MODULENAME%/ACCOUNT_ACTIVATED'));
 	AllowEmailNotifications: false,

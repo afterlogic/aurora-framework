@@ -9,7 +9,7 @@ class SettingsModule extends AApiModule
 	public function GetAppData($oUser = null)
 	{
 		return array(
-			'TabsOrder' => array('common', 'mail', 'accounts', 'contacts', 'calendar', 'cloud-storage', 'mobile_sync', 'outlook_sync', 'helpdesk', 'pgp')
+			'TabsOrder' => array('common', 'mail', 'mail-accounts', 'contacts', 'calendar', 'files', 'mobilesync', 'outlooksync', 'helpdesk', 'openpgp')
 		);
 	}
 }
