@@ -29,7 +29,7 @@ module.exports = function (oSettings) {
 		 * @param {Object} ModulesManager
 		 */
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/SettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('SettingsClient', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/SettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		
 		/**
@@ -53,7 +53,10 @@ module.exports = function (oSettings) {
 		getHeaderItem: function () {
 			var CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js');
 
-			return new CHeaderItemView(TextUtils.i18n('%MODULENAME%/ACTION_SHOW_CHAT'));
+			return {
+				item: new CHeaderItemView(TextUtils.i18n('%MODULENAME%/ACTION_SHOW_CHAT')),
+				name: Settings.HashModuleName
+			};
 		}
 	};
 };

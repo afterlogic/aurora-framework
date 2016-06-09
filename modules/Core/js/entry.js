@@ -5,23 +5,23 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'Auth': require('modules/Auth/js/manager.js'),
-			'Mail': require('modules/Mail/js/manager.js'),
-			'Contacts': require('modules/Contacts/js/manager.js'),
-			'Calendar': require('modules/Calendar/js/manager.js'),
-			'Files': require('modules/Files/js/manager.js'),
+			'Auth': require('modules/AuthClient/js/manager.js'),
+			'Mail': require('modules/MailClient/js/manager.js'),
+			'Contacts': require('modules/ContactsClient/js/manager.js'),
+			'Calendar': require('modules/CalendarClient/js/manager.js'),
+			'Files': require('modules/FilesClient/js/manager.js'),
 			'HelpDesk': require('modules/HelpDeskClient/js/manager.js'),
-			'Phone': require('modules/Phone/js/manager.js'),
-			'Settings': require('modules/Settings/js/manager.js'),
+			'Phone': require('modules/PhoneClient/js/manager.js'),
+			'SettingsClient': require('modules/SettingsClient/js/manager.js'),
 			'SimpleChat': require('modules/SimpleChatClient/js/manager.js'),
-			'SimpleChatEmoji': require('modules/SimpleChatEmoji/js/manager.js'),
+			'SimpleChatEmoji': require('modules/SimpleChatEmojiClient/js/manager.js'),
 			
-			'OpenPgp': require('modules/OpenPgp/js/manager.js'),
-			'MailSensitivity': require('modules/MailSensitivity/js/manager.js'),
-			'SessionTimeout': require('modules/SessionTimeout/js/manager.js'),
-			'ChangePassword': require('modules/ChangePassword/js/manager.js'),
-			'MobileSync': require('modules/MobileSync/js/manager.js'),
-			'OutlookSync': require('modules/OutlookSync/js/manager.js')
+			'OpenPgp': require('modules/OpenPgpClient/js/manager.js'),
+			'MailSensitivity': require('modules/MailSensitivityClient/js/manager.js'),
+			'SessionTimeout': require('modules/SessionTimeoutClient/js/manager.js'),
+			'ChangePassword': require('modules/ChangePasswordClient/js/manager.js'),
+			'MobileSync': require('modules/MobileSyncClient/js/manager.js'),
+			'OutlookSync': require('modules/OutlookSyncClient/js/manager.js')
 		},
 		ModulesManager = require('modules/Core/js/ModulesManager.js'),
 		App = require('modules/Core/js/App.js'),

@@ -117,7 +117,7 @@ class CoreModule extends AApiModule
 	/**
 	 * @return array
 	 */
-//	public function GetAppData($oUser)
+//	public function GetAppData($oUser = null)
 //	{
 //		$oApiIntegratorManager = \CApi::GetCoreManager('integrator');
 //		$sAuthToken = (string) $this->getParamValue('AuthToken', '');

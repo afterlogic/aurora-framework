@@ -134,7 +134,7 @@ CApp.prototype.init = function ()
 	
 	if (this.iUserRole !== Enums.UserRole.Anonymous && !this.bPublic)
 	{
-		var AccountList = require('modules/Mail/js/AccountList.js');
+		var AccountList = require('modules/MailClient/js/AccountList.js');
 		this.currentAccountId = AccountList.currentId;
 		this.defaultAccountId = AccountList.defaultId;
 		this.hasAccountWithId = _.bind(AccountList.hasAccountWithId, AccountList);

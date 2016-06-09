@@ -28,7 +28,7 @@ module.exports = {
 		
 		if (Settings.AllowChangeSettings)
 		{
-			this.run('Settings', 'registerSettingsTab', [function () { return require('modules/Core/js/views/CommonSettingsPaneView.js'); }, 'common', TextUtils.i18n('CORE/LABEL_COMMON_SETTINGS_TABNAME')]);
+			this.run('SettingsClient', 'registerSettingsTab', [function () { return require('modules/Core/js/views/CommonSettingsPaneView.js'); }, 'common', TextUtils.i18n('CORE/LABEL_COMMON_SETTINGS_TABNAME')]);
 		}
 		
 		_.each(oModules, _.bind(function (oModule) {
@@ -61,20 +61,20 @@ module.exports = {
 				if ($.isFunction(oModule.getHeaderItem))
 				{
 					var oHeaderItem = oModule.getHeaderItem();
-					if (oHeaderItem)
+					if (oHeaderItem && oHeaderItem.item)
 					{
-						if ($.isFunction(oHeaderItem.setName))
+						if ($.isFunction(oHeaderItem.item.setName))
 						{
-							oHeaderItem.setName(sModuleName);
-							this.aStandardTabs.push(oHeaderItem);
+							oHeaderItem.item.setName(oHeaderItem.name || sModuleName);
+							this.aStandardTabs.push(oHeaderItem.item);
 						}
-						this.aTabs.push(oHeaderItem);
+						this.aTabs.push(oHeaderItem.item);
 						
 						if (oModules[sModuleName] && oModules[sModuleName].enableModule)
 						{
-							oHeaderItem.visible(oModules[sModuleName].enableModule());
+							oHeaderItem.item.visible(oModules[sModuleName].enableModule());
 							oModules[sModuleName].enableModule.subscribe(function (bEnableModule) {
-								oHeaderItem.visible(bEnableModule);
+								oHeaderItem.item.visible(bEnableModule);
 							});
 						}
 					}

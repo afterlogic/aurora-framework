@@ -5,16 +5,13 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'Auth': require('modules/AuthClient/js/manager.js'),
-			'Mail': require('modules/MailClient/js/manager.js'),
-			'Contacts': require('modules/ContactsClient/js/manager-mobile.js'),
-			'SessionTimeout': require('modules/SessionTimeoutClient/js/manager.js')
+			'Calendar': require('modules/CalendarClient/js/manager-pub.js')
 		},
 		ModulesManager = require('modules/Core/js/ModulesManager.js'),
 		App = require('modules/Core/js/App.js')
 	;
 	
-	App.setMobile();
+	App.setPublic();
 	ModulesManager.init(oAvaliableModules, App.getUserRole(), App.isPublic());
 	App.init();
 });

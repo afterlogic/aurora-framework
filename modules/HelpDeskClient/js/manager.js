@@ -18,7 +18,7 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser || iUserRole === Enums.UserRole.RegisteredUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Settings', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/HelpdeskSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
+			ModulesManager.run('SettingsClient', 'registerSettingsTab', [function () { return require('modules/%ModuleName%/js/views/HelpdeskSettingsPaneView.js'); }, Settings.HashModuleName, TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')]);
 		},
 		getScreens: function () {
 			var oScreens = {};
@@ -29,7 +29,10 @@ module.exports = function (oSettings) {
 		},
 		getHeaderItem: function () {
 			CheckState.start();
-			return require('modules/%ModuleName%/js/views/HeaderItemView.js');
+			return {
+				item: require('modules/%ModuleName%/js/views/HeaderItemView.js'),
+				name: Settings.HashModuleName
+			};
 		}
 	};
 };

@@ -549,26 +549,30 @@ ko.bindingHandlers.adjustHeightToContent = {
 		;
 
 		_.delay(_.bind(function(){
-			jqTargetEl = $(_.max(jqEl.find('.title .text'), function(domEl){
-				return domEl.offsetWidth;
-			}));
-
-			jqParentEl = jqTargetEl.parent();
-			jqNearEl = jqParentEl.find('.icon');
-
-			jqEl.css('min-width',
-				Types.pInt(jqParentEl.css("margin-left")) +
-				Types.pInt(jqParentEl.css("padding-left")) +
-				Types.pInt(jqNearEl.width()) +
-				Types.pInt(jqNearEl.css("margin-left")) +
-				Types.pInt(jqNearEl.css("margin-right")) +
-				Types.pInt(jqNearEl.css("padding-left")) +
-				Types.pInt(jqNearEl.css("padding-right")) +
-				Types.pInt(jqTargetEl.width()) +
-				Types.pInt(jqTargetEl.css("margin-left")) +
-				Types.pInt(jqTargetEl.css("padding-left")) +
-				10
-			);
+			var oTitles = jqEl.find('.title .text');
+			if (oTitles.length > 0)
+			{
+				jqTargetEl = $(_.max(oTitles, function(domEl){
+					return domEl.offsetWidth;
+				}));
+				
+				jqParentEl = jqTargetEl.parent();
+				jqNearEl = jqParentEl.find('.icon');
+				
+				jqEl.css('min-width',
+					Types.pInt(jqParentEl.css("margin-left")) +
+					Types.pInt(jqParentEl.css("padding-left")) +
+					Types.pInt(jqNearEl.width()) +
+					Types.pInt(jqNearEl.css("margin-left")) +
+					Types.pInt(jqNearEl.css("margin-right")) +
+					Types.pInt(jqNearEl.css("padding-left")) +
+					Types.pInt(jqNearEl.css("padding-right")) +
+					Types.pInt(jqTargetEl.width()) +
+					Types.pInt(jqTargetEl.css("margin-left")) +
+					Types.pInt(jqTargetEl.css("padding-left")) +
+					10
+				);
+			}
 		},this), 1);
 	}
 };

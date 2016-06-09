@@ -179,7 +179,7 @@ CScreens.prototype.initView = function (sScreenId, fGetScreen)
 		if ($templatePlace.length > 0)
 		{
 			ko.applyBindings(oScreen, $templatePlace[0]);
-
+			
 			oScreen.$viewDom = $templatePlace.next();
 
 			oScreen.onBind();

@@ -63,7 +63,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/Mail/js/entry-newtab.js"
+			"./modules/MailClient/js/entry-newtab.js"
 		]
 	},
 	adminpanel: {
@@ -73,7 +73,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/AdminPanel/js/entry.js"
+			"./modules/AdminPanelClient/js/entry.js"
 		]
 	},
 	files_pub: {
@@ -83,7 +83,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/Files/js/entry-pub.js"
+			"./modules/FilesClient/js/entry-pub.js"
 		]
 	},
 	calendar_pub: {
@@ -93,7 +93,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/Calendar/js/entry-pub.js"
+			"./modules/CalendarClient/js/entry-pub.js"
 		]
 	},
 	helpdesk_ext: {

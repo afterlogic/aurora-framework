@@ -10,7 +10,7 @@ var
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
 	UserSettings = require('modules/Core/js/Settings.js'),
 	
-	CAbstractSettingsFormView = ModulesManager.run('Settings', 'getAbstractSettingsFormViewClass')
+	CAbstractSettingsFormView = ModulesManager.run('SettingsClient', 'getAbstractSettingsFormViewClass')
 ;
 
 /**

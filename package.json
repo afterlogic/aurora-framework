@@ -31,8 +31,7 @@
     "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
     "customscroll": "./modules/Core/js/vendors/customscroll.js",
     "modernizr": "./modules/Core/js/vendors/modernizr.js",
-    "jquery.cookie": "./modules/Core/js/vendors/jquery.cookie.js",
-    "knockout-sortable": "./modules/Mail/js/vendors/knockout-sortable.js"
+    "jquery.cookie": "./modules/Core/js/vendors/jquery.cookie.js"
   },
   "devDependencies": {
     "cascade-ini": "*",

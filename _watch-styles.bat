@@ -1,1 +1,1 @@
-node ./node_modules/gulp/bin/gulp.js styles:watch --modules Auth,Calendar,ChangePassword,Contacts,Files,HelpDeskClient,Mail,MailSensitivity,MobileSync,OpenPgp,OutlookSync,Phone,Settings,SimpleChatClient --themes Default,Funny
+node ./node_modules/gulp/bin/gulp.js styles:watch --modules AuthClient,CalendarClient,ChangePasswordClient,ContactsClient,FilesClient,HelpDeskClient,MailClient,MailSensitivityClient,MobileSyncClient,OpenPgpClient,OutlookSyncClient,PhoneClient,SettingsClient,SimpleChatClient --themes Default,Funny
