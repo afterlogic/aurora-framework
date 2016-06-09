@@ -38,7 +38,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $bResult;		
 	}	
 	
-	public function saveObject(\api_APropertyBag &$oObject)
+	public function saveObject(\APropertyBag &$oObject)
 	{
 		$mResult = false;
 		if (isset($oObject->iObjectId) && $this->isObjectExists($oObject->iObjectId))
@@ -53,7 +53,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}
 
-	protected function createObject(\api_APropertyBag &$oObject)
+	protected function createObject(\APropertyBag &$oObject)
 	{
 		$mResult = $this->oStorage->createObject($oObject->sModuleName, $oObject->sClassName);
 		if (!$mResult)
@@ -78,7 +78,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}
 	
-	protected function updateObject(\api_APropertyBag $oObject)
+	protected function updateObject(\APropertyBag $oObject)
 	{
 		$mResult = false;
 		$aObjectProperties = $oObject->getProperties();

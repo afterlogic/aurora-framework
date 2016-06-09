@@ -171,7 +171,7 @@ class CApiEavDbStorage extends CApiEavStorage
 				}
 				else
 				{
-					$oObject = new \api_APropertyBag($sType);
+					$oObject = new \APropertyBag($sType);
 				}
 				$oObject->iObjectId = $oRow->obj_id;
 				$oObject->sModuleName =  $oRow->obj_module;

@@ -75,7 +75,7 @@
  * @package Domains
  * @subpackage Classes
  */
-class CDomain extends api_APropertyBag
+class CDomain extends APropertyBag
 {
 	/**
 	 * @var array

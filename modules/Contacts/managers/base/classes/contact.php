@@ -63,7 +63,7 @@
  * @package Contactsmain
  * @subpackage Classes
  */
-class CContact extends api_APropertyBag
+class CContact extends APropertyBag
 {
 	const STR_PREFIX = '040000008200E00074C5B7101A82E008';
 

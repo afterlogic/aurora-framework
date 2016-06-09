@@ -6,7 +6,7 @@
 /**
  * @package Api
  */
-class api_APropertyBag
+class APropertyBag
 {
 	/**
 	 * @var bool

@@ -7,7 +7,7 @@
  * @package Users
  * @subpackage Classes
  */
-class CMailAccount extends api_APropertyBag
+class CMailAccount extends APropertyBag
 {
 	const ChangePasswordExtension = 'AllowChangePasswordExtension';
 	const AutoresponderExtension = 'AllowAutoresponderExtension';

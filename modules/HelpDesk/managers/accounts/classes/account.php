@@ -9,7 +9,7 @@ namespace Modules\HelpDesk;
  * @package Users
  * @subpackage Classes
  */
-class CAccount extends \api_APropertyBag
+class CAccount extends \APropertyBag
 {
 	/**
 	 * Creates a new instance of the object.

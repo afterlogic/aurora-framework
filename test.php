@@ -28,7 +28,7 @@ $mResult = $oAuthDecorator->CreateAccount(
  */
 
 $oEavManager = \CApi::GetCoreManager('eav', 'db');
-class CTest extends api_APropertyBag
+class CTest extends APropertyBag
 {
 	/**
 	 * Creates a new instance of the object.

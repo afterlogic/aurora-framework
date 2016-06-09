@@ -45,7 +45,7 @@
  * @package Users
  * @subpackage Classes
  */
-class CUser extends api_APropertyBag
+class CUser extends APropertyBag
 {
 	/**
 	 * @var CSubscription

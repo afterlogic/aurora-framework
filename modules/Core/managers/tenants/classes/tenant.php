@@ -52,7 +52,7 @@
  */
 //class CTenant extends api_AContainer
 
-class CTenant extends api_APropertyBag
+class CTenant extends APropertyBag
 {
 	public function __construct($sModule)
 	{
