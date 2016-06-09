@@ -1,11 +1,17 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 	
-	if (oSettings)
+	if (oAppData)
 	{
-		var Settings = require('modules/%ModuleName%/js/Settings.js');
+		var
+			_ = require('underscore'),
+			
+			Settings = require('modules/%ModuleName%/js/Settings.js'),
+			oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {})
+		;
+		
 		Settings.init(oSettings);
 	}
 	
@@ -22,7 +28,7 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('MailClient', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
 		},
 		applyContactsCards: function ($Addresses) {
 			ContactCard.applyTo($Addresses);

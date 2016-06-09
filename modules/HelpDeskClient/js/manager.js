@@ -1,16 +1,20 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 	
 	require('modules/%ModuleName%/js/koBindings.js');
 
 	var
+		_ = require('underscore'),
+		
 		TextUtils = require('modules/Core/js/utils/Text.js'),
 				
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {}),
 		CheckState = require('modules/%ModuleName%/js/CheckState.js')
 	;
+	
 	Settings.init(oSettings);
 	
 	return {

@@ -6,7 +6,7 @@ var
 	ko = require('knockout'),
 	
 	ModulesManager = require('modules/Core/js/ModulesManager.js'),
-	ComposeMessageToAddressesFunc = ModulesManager.run('Mail', 'getComposeMessageToAddresses')
+	ComposeMessageToAddressesFunc = ModulesManager.run('MailClient', 'getComposeMessageToAddresses')
 ;
 
 if ($.isFunction(ComposeMessageToAddressesFunc))

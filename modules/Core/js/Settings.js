@@ -25,7 +25,7 @@ module.exports = {
 	CustomLogoutUrl: AppData.App ? Types.pString(AppData.App.CustomLogoutUrl) : '',
 	DateFormat: AppData.User ? Types.pString(AppData.User.DefaultDateFormat) : 'DD/MM/YYYY',
 	DateFormatList: AppData.App && $.isArray(AppData.App.DateFormats) ? AppData.App.DateFormats : [],
-	EntryModule: 'Mail', // AppData.App.DefaultTab
+	EntryModule: 'MailClient', // AppData.App.DefaultTab
 	GoogleAnalyticsAccount: AppData.App ? Types.pString(AppData.App.GoogleAnalyticsAccount) : '',
 	IsDemo: AppData.User ? !!AppData.User.IsDemo : false,
 	IsMailsuite: !!AppData.IsMailsuite,

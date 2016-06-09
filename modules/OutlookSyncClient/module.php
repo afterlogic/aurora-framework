@@ -1,6 +1,6 @@
 <?php
 
-class OutlookSyncModule extends AApiModule
+class OutlookSyncClientModule extends AApiModule
 {
 	public function GetAppData($oUser = null)
 	{

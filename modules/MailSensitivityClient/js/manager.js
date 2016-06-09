@@ -1,13 +1,13 @@
 'use strict';
 
-module.exports = function () {
+module.exports = function (oAppData) {
 	return {
 		isAvailable: function (iUserRole, bPublic) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/MessageControlView.js'), 'BeforeMessageHeaders']);
-			ModulesManager.run('Mail', 'registerComposeToolbarController', [require('modules/%ModuleName%/js/views/ComposeDropdownView.js')]);
+			ModulesManager.run('MailClient', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/MessageControlView.js'), 'BeforeMessageHeaders']);
+			ModulesManager.run('MailClient', 'registerComposeToolbarController', [require('modules/%ModuleName%/js/views/ComposeDropdownView.js')]);
 		}
 	};
 };

@@ -15,10 +15,10 @@ var
 
 module.exports = {
 	init: function (oAvaliableModules, iUserRole, bPublic) {
-		_.each(AppData, function (oModuleSettings, sModuleName) {
-			if ($.isFunction(oAvaliableModules[sModuleName]))
+		_.each(oAvaliableModules, function (fModuleConstructor, sModuleName) {
+			if (_.indexOf(AppData.DisabledModules, sModuleName) === -1 && _.isFunction(fModuleConstructor))
 			{
-				var oModule = oAvaliableModules[sModuleName](oModuleSettings);
+				var oModule = fModuleConstructor(AppData);
 				if (oModule.isAvailable(iUserRole, bPublic))
 				{
 					oModules[sModuleName] = oModule;

@@ -5,10 +5,10 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'Auth': require('modules/AuthClient/js/manager.js'),
-			'Mail': require('modules/MailClient/js/manager.js'),
-			'Contacts': require('modules/ContactsClient/js/manager-mobile.js'),
-			'SessionTimeout': require('modules/SessionTimeoutClient/js/manager.js')
+			'AuthClient': require('modules/AuthClient/js/manager.js'),
+			'MailClient': require('modules/MailClient/js/manager.js'),
+			'ContactsClient': require('modules/ContactsClient/js/manager-mobile.js'),
+			'SessionTimeoutClient': require('modules/SessionTimeoutClient/js/manager.js')
 		},
 		ModulesManager = require('modules/Core/js/ModulesManager.js'),
 		App = require('modules/Core/js/App.js')

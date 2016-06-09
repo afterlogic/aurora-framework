@@ -1,9 +1,15 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 	
-	var Settings = require('modules/%ModuleName%/js/Settings.js');
+	var
+		_ = require('underscore'),
+		
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {})
+	;
+	
 	Settings.init(oSettings);
 	
 	return {
@@ -11,7 +17,7 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('MailClient', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/IcalAttachmentView.js'), 'BeforeMessageBody']);
 		}
 	};
 };

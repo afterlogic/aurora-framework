@@ -149,7 +149,7 @@ CPhoneView.prototype.multiAction = function ()
  */
 CPhoneView.prototype.autocompleteCallback = function (oRequest, fResponse)
 {
-	var fAutocompleteCallback = ModulesManager.run('Contacts', 'getSuggestionsAutocompletePhoneCallback');
+	var fAutocompleteCallback = ModulesManager.run('ContactsClient', 'getSuggestionsAutocompletePhoneCallback');
 	
 	if ($.isFunction(fAutocompleteCallback))
 	{

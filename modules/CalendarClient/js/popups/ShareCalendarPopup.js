@@ -72,7 +72,7 @@ function CShareCalendarPopup()
 		{'value': Enums.CalendarAccess.Read, 'display': TextUtils.i18n('%MODULENAME%/LABEL_READ_ACCESS')},
 		{'value': Enums.CalendarAccess.Write, 'display': TextUtils.i18n('%MODULENAME%/LABEL_WRITE_ACCESS')}
 	];
-	this.allowSharedToAll = ModulesManager.run('Contacts', 'isGlobalContactsAllowed');
+	this.allowSharedToAll = ModulesManager.run('ContactsClient', 'isGlobalContactsAllowed');
 }
 
 _.extendOwn(CShareCalendarPopup.prototype, CAbstractPopup.prototype);
@@ -140,8 +140,8 @@ CShareCalendarPopup.prototype.initInputosaurus = function (koDom, ko, koLock)
 		$(koDom()).inputosaurus({
 			width: 'auto',
 			parseOnBlur: true,
-			autoCompleteSource: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteCallback') || function () {},
-			autoCompleteDeleteItem: ModulesManager.run('Contacts', 'getSuggestionsAutocompleteDeleteHandler') || function () {},
+			autoCompleteSource: ModulesManager.run('ContactsClient', 'getSuggestionsAutocompleteCallback') || function () {},
+			autoCompleteDeleteItem: ModulesManager.run('ContactsClient', 'getSuggestionsAutocompleteDeleteHandler') || function () {},
 			change: _.bind(function (ev) {
 				koLock(true);
 				this.setRecipient(ko, ev.target.value);

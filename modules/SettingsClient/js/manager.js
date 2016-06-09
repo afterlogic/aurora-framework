@@ -1,7 +1,11 @@
 'use strict';
 
-module.exports = function (oSettings) {
-	var Settings = require('modules/%ModuleName%/js/Settings.js');
+module.exports = function (oAppData) {
+	var
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = oAppData['%ModuleName%'] || {}
+	;
+	
 	Settings.init(oSettings);
 	
 	return {

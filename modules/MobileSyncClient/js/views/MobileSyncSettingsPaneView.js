@@ -22,11 +22,11 @@ var
 function CMobileSyncSettingsPaneView()
 {
 	
-	this.oFilesMobileSyncSettingsView = ModulesManager.run('Files', 'getMobileSyncSettingsView');
-	this.oCalendarMobileSyncSettingsView = ModulesManager.run('Calendar', 'getMobileSyncSettingsView');
-	this.oContactsMobileSyncSettingsView = ModulesManager.run('Contacts', 'getMobileSyncSettingsView');
+	this.oFilesMobileSyncSettingsView = ModulesManager.run('FilesClient', 'getMobileSyncSettingsView');
+	this.oCalendarMobileSyncSettingsView = ModulesManager.run('CalendarClient', 'getMobileSyncSettingsView');
+	this.oContactsMobileSyncSettingsView = ModulesManager.run('ContactsClient', 'getMobileSyncSettingsView');
 	
-	this.oResetPasswordViewModel = ModulesManager.run('ChangePassword', 'getResetPasswordView');
+	this.oResetPasswordViewModel = ModulesManager.run('ChangePasswordClient', 'getResetPasswordView');
 	
 	this.enableDav = ko.observable(false);
 	

@@ -27,7 +27,9 @@ function SetSessionTimeout()
 	iSessionTimeout = setTimeout(LogoutBySessionTimeout, iTimeoutSeconds * 1000);
 }
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
+	var oSettings = oAppData['%ModuleName%'] || {};
+	
 	if (App.getUserRole() !== Enums.UserRole.Anonymous && typeof oSettings.TimeoutSeconds === 'number' && oSettings.TimeoutSeconds > 0)
 	{
 		iTimeoutSeconds = oSettings.TimeoutSeconds;

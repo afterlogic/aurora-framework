@@ -236,9 +236,9 @@ function CContactsView()
 		Routing.setHash(LinksUtils.getContacts(iType, sGroupId, this.searchInput()));
 	});
 
-	this.searchMessagesInInbox = ModulesManager.run('Mail', 'getSearchMessagesInInbox');
+	this.searchMessagesInInbox = ModulesManager.run('MailClient', 'getSearchMessagesInInbox');
 	this.bAllowSearchMessagesInInbox = $.isFunction(this.searchMessagesInInbox);
-	this.composeMessageToAddresses = ModulesManager.run('Mail', 'getComposeMessageToAddresses');
+	this.composeMessageToAddresses = ModulesManager.run('MailClient', 'getComposeMessageToAddresses');
 	this.bAllowComposeMessageToAddresses = $.isFunction(this.composeMessageToAddresses);
 	this.selector = new CSelector(this.collection, _.bind(this.viewContact, this), _.bind(this.deleteContact, this), this.bAllowComposeMessageToAddresses ? _.bind(this.composeMessageToContact, this) : null);
 

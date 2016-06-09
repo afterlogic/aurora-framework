@@ -1,12 +1,14 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 
 	var
 		_ = require('underscore'),
 		
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {}),
+		
 		Cache = null,
 		ComposeView = null,
 		GetComposeView = function () {

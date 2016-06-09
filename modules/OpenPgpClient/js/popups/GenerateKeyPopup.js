@@ -38,7 +38,7 @@ CGenerateKeyPopup.prototype.PopupTemplate = '%ModuleName%_GenerateKeyPopup';
 
 CGenerateKeyPopup.prototype.onShow = function ()
 {
-	this.emails(ModulesManager.run('Mail', 'getAllAccountsFullEmails'));
+	this.emails(ModulesManager.run('MailClient', 'getAllAccountsFullEmails'));
 	this.selectedEmail('');
 	this.password('');
 	this.selectedKeyLength(2048);

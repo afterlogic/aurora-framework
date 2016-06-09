@@ -1,6 +1,6 @@
 <?php
 
-class SessionTimeoutModule extends AApiModule
+class SessionTimeoutClientModule extends AApiModule
 {
 	public function GetAppData($oUser = null)
 	{

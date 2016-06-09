@@ -14,7 +14,7 @@ var
 	CAbstractSettingsFormView = ModulesManager.run('SettingsClient', 'getAbstractSettingsFormViewClass'),
 	
 	Popups = require('modules/Core/js/Popups.js'),
-	ChangePasswordPopup = ModulesManager.run('ChangePassword', 'getChangePasswordPopup'),
+	ChangePasswordPopup = ModulesManager.run('ChangePasswordClient', 'getChangePasswordPopup'),
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),

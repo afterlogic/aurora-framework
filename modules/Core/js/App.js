@@ -125,7 +125,7 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
-	ModulesManager.run('Auth', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
+	ModulesManager.run('AuthClient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
 	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
@@ -222,7 +222,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
  */
 CApp.prototype.logout = function (iLastErrorCode)
 {
-	ModulesManager.run('Auth', 'logout', [iLastErrorCode, this.onLogout, this]);
+	ModulesManager.run('AuthClient', 'logout', [iLastErrorCode, this.onLogout, this]);
 	
 	this.iUserRole = Enums.UserRole.Anonymous;
 };

@@ -1,20 +1,23 @@
 'use strict';
 
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 	require('jquery.cookie');
 
 	var
+		_ = require('underscore'),
 		$ = require('jquery'),
+		
 		Types = require('modules/Core/js/utils/Types.js'),
 		
 		Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {}),
 		
 		bAllowLoginView = true
 	;
-
+	
 	Settings.init(oSettings);
 	
 	return {

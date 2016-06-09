@@ -1690,6 +1690,8 @@ class CApiIntegratorManager extends AApiManager
 				'Name' => $oUser->Name
 			);
 		}
+		
+		$aAppData['DisabledModules'] = array();
 
 //		if (0 < $iUserId)
 //		{

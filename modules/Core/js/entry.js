@@ -5,23 +5,23 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'Auth': require('modules/AuthClient/js/manager.js'),
-			'Mail': require('modules/MailClient/js/manager.js'),
-			'Contacts': require('modules/ContactsClient/js/manager.js'),
-			'Calendar': require('modules/CalendarClient/js/manager.js'),
-			'Files': require('modules/FilesClient/js/manager.js'),
-			'HelpDesk': require('modules/HelpDeskClient/js/manager.js'),
-			'Phone': require('modules/PhoneClient/js/manager.js'),
+			'AuthClient': require('modules/AuthClient/js/manager.js'),
+			'MailClient': require('modules/MailClient/js/manager.js'),
+			'ContactsClient': require('modules/ContactsClient/js/manager.js'),
+			'CalendarClient': require('modules/CalendarClient/js/manager.js'),
+			'FilesClient': require('modules/FilesClient/js/manager.js'),
+			'HelpDeskClient': require('modules/HelpDeskClient/js/manager.js'),
+			'PhoneClient': require('modules/PhoneClient/js/manager.js'),
 			'SettingsClient': require('modules/SettingsClient/js/manager.js'),
-			'SimpleChat': require('modules/SimpleChatClient/js/manager.js'),
-			'SimpleChatEmoji': require('modules/SimpleChatEmojiClient/js/manager.js'),
+			'SimpleChatClient': require('modules/SimpleChatClient/js/manager.js'),
+			'SimpleChatEmojiClient': require('modules/SimpleChatEmojiClient/js/manager.js'),
 			
-			'OpenPgp': require('modules/OpenPgpClient/js/manager.js'),
-			'MailSensitivity': require('modules/MailSensitivityClient/js/manager.js'),
-			'SessionTimeout': require('modules/SessionTimeoutClient/js/manager.js'),
-			'ChangePassword': require('modules/ChangePasswordClient/js/manager.js'),
-			'MobileSync': require('modules/MobileSyncClient/js/manager.js'),
-			'OutlookSync': require('modules/OutlookSyncClient/js/manager.js')
+			'OpenPgpClient': require('modules/OpenPgpClient/js/manager.js'),
+			'MailSensitivityClient': require('modules/MailSensitivityClient/js/manager.js'),
+			'SessionTimeoutClient': require('modules/SessionTimeoutClient/js/manager.js'),
+			'ChangePasswordClient': require('modules/ChangePasswordClient/js/manager.js'),
+			'MobileSyncClient': require('modules/MobileSyncClient/js/manager.js'),
+			'OutlookSyncClient': require('modules/OutlookSyncClient/js/manager.js')
 		},
 		ModulesManager = require('modules/Core/js/ModulesManager.js'),
 		App = require('modules/Core/js/App.js'),

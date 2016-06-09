@@ -1,6 +1,6 @@
 <?php
 
-class PhoneModule extends AApiModule
+class PhoneClientModule extends AApiModule
 {
 	public function GetAppData($oUser = null)
 	{

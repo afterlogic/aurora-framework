@@ -1,11 +1,15 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	var
+		_ = require('underscore'),
+		
 		TextUtils = require('modules/Core/js/utils/Text.js'),
 		
-		Settings = require('modules/%ModuleName%/js/Settings.js')
+		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {})
 	;
+	
 	Settings.init(oSettings);
 	
 	return {

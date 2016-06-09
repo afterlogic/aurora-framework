@@ -1,10 +1,11 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	var
 		_ = require('underscore'),
 		
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {}),
 		
 		ManagerSuggestions = require('modules/%ModuleName%/js/manager-suggestions.js'),
 		SuggestionsMethods = ManagerSuggestions()
@@ -17,7 +18,7 @@ module.exports = function (oSettings) {
 			return !bPublic && iUserRole === Enums.UserRole.PowerUser;
 		},
 		start: function (ModulesManager) {
-			ModulesManager.run('Mail', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
+			ModulesManager.run('MailClient', 'registerMessagePaneController', [require('modules/%ModuleName%/js/views/VcardAttachmentView.js'), 'BeforeMessageBody']);
 		},
 		getScreens: function () {
 			var oScreens = {};

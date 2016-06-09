@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 
 	var
@@ -9,11 +9,13 @@ module.exports = function (oSettings) {
 		App = require('modules/Core/js/App.js'),
 		
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {}),
+		
 		Cache = null,
 		
 		oScreens = {}
 	;
-
+	
 	Settings.init(oSettings);
 	
 	Cache = require('modules/%ModuleName%/js/Cache.js');

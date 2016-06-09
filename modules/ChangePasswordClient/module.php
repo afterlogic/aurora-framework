@@ -1,6 +1,6 @@
 <?php
 
-class ChangePasswordModule extends AApiModule
+class ChangePasswordClientModule extends AApiModule
 {
 	public function GetAppData($oUser = null)
 	{

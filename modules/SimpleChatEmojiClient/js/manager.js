@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (oSettings) {
+module.exports = function (oAppData) {
 	return {
 		/**
 		 * Returns true if simple chat emoji module is available for certain user role and public or not public mode.

@@ -89,15 +89,15 @@ function CAccountModel(bSingle)
 		
 		if (this.isDefault())
 		{
-			if (ModulesManager.isModuleIncluded('Calendar') && ModulesManager.isModuleIncluded('Contacts'))
+			if (ModulesManager.isModuleIncluded('CalendarClient') && ModulesManager.isModuleIncluded('ContactsClient'))
 			{
 				sAndOther = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT_CONTACTS_CALENDARS');
 			}
-			else if (ModulesManager.isModuleIncluded('Calendar'))
+			else if (ModulesManager.isModuleIncluded('CalendarClient'))
 			{
 				sAndOther = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT_CALENDARS');
 			}
-			else if (ModulesManager.isModuleIncluded('Contacts'))
+			else if (ModulesManager.isModuleIncluded('ContactsClient'))
 			{
 				sAndOther = TextUtils.i18n('%MODULENAME%/INFO_REMOVE_ACCOUNT_CONTACTS');
 			}
