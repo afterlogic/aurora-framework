@@ -5,8 +5,8 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Routing = require('modules/Core/js/Routing.js'),
-	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
+	Routing = require('modules/CoreClient/js/Routing.js'),
+	CAbstractScreenView = require('modules/CoreClient/js/views/CAbstractScreenView.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	

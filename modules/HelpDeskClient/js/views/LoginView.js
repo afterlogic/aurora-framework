@@ -5,16 +5,16 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	UrlUtils = require('modules/Core/js/utils/Url.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	Api = require('modules/Core/js/Api.js'),
-	Screens = require('modules/Core/js/Screens.js'),
-	Storage = require('modules/Core/js/Storage.js'),
-	UserSettings = require('modules/Core/js/Settings.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
+	Storage = require('modules/CoreClient/js/Storage.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js'),
 	
-	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
+	CAbstractScreenView = require('modules/CoreClient/js/views/CAbstractScreenView.js'),
 	
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	Settings = require('modules/%ModuleName%/js/Settings.js'),

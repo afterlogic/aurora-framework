@@ -21,8 +21,8 @@ module.exports = function (oAppData) {
 		},
 		getHeaderItem: function () {
 			var
-				TextUtils = require('modules/Core/js/utils/Text.js'),
-				CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js')
+				TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+				CHeaderItemView = require('modules/CoreClient/js/views/CHeaderItemView.js')
 			;
 			return {
 				item: new CHeaderItemView(TextUtils.i18n('CORE/HEADING_SETTINGS_TABNAME')),

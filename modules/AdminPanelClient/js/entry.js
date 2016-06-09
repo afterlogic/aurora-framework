@@ -7,8 +7,8 @@ $('body').ready(function () {
 	var
 		oAvaliableModules = {
 		},
-		ModulesManager = require('modules/Core/js/ModulesManager.js'),
-		App = require('modules/Core/js/App.js')
+		ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+		App = require('modules/CoreClient/js/App.js')
 	;
 	
 	//App.setNewTab();

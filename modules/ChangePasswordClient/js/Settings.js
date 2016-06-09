@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	Types = require('modules/Core/js/utils/Types.js'),
-	UrlUtils = require('modules/Core/js/utils/Url.js')
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	UrlUtils = require('modules/CoreClient/js/utils/Url.js')
 ;
 
 module.exports = {

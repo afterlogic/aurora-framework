@@ -129,9 +129,9 @@ class Service
 				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
-			$oCoreModule = \CApi::GetModule('Core');
-			if ($oCoreModule instanceof \AApiModule) {
-				$sResult = file_get_contents($oCoreModule->GetPath().'/templates/Index.html');
+			$oCoreClientModule = \CApi::GetModule('CoreClient');
+			if ($oCoreClientModule instanceof \AApiModule) {
+				$sResult = file_get_contents($oCoreClientModule->GetPath().'/templates/Index.html');
 				if (is_string($sResult)) {
 					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
 					if (0 < \strlen($sFrameOptions)) {

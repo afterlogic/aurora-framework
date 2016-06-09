@@ -6,7 +6,7 @@ module.exports = function (oAppData) {
 	var
 		_ = require('underscore'),
 		
-		App = require('modules/Core/js/App.js'),
+		App = require('modules/CoreClient/js/App.js'),
 		
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {}),
@@ -39,8 +39,8 @@ module.exports = function (oAppData) {
 		},
 		start: function (ModulesManager) {
 			var
-				TextUtils = require('modules/Core/js/utils/Text.js'),
-				Browser = require('modules/Core/js/Browser.js'),
+				TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+				Browser = require('modules/CoreClient/js/Browser.js'),
 				MailUtils = require('modules/%ModuleName%/js/utils/Mail.js')
 			;
 			

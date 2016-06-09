@@ -3,9 +3,9 @@
 var
 	ko = require('knockout'),
 			
-	TextUtils = require('modules/Core/js/utils/Text.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 	
-	Screens = require('modules/Core/js/Screens.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
 	ErrorsUtils = require('modules/%ModuleName%/js/utils/Errors.js'),
 	

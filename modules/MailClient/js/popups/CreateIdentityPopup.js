@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 			
-	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
+	CAbstractPopup = require('modules/CoreClient/js/popups/CAbstractPopup.js'),
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	

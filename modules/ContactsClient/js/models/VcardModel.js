@@ -4,9 +4,9 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Types = require('modules/Core/js/utils/Types.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	App = require('modules/Core/js/App.js'),
+	App = require('modules/CoreClient/js/App.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	
 	ContactsCache = require('modules/%ModuleName%/js/Cache.js'),

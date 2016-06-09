@@ -5,10 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Types = require('modules/Core/js/utils/Types.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	Browser = require('modules/Core/js/Browser.js'),
-	UserSettings = require('modules/Core/js/Settings.js')
+	Browser = require('modules/CoreClient/js/Browser.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js')
 ;
 
 ko.bindingHandlers.autosize = {

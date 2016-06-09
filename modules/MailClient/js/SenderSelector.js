@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Types = require('modules/Core/js/utils/Types.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 			
 	SendingUtils = require('modules/%ModuleName%/js/utils/Sending.js'),
 	AccountList = require('modules/%ModuleName%/js/AccountList.js')

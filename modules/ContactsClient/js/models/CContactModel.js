@@ -6,14 +6,14 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	AddressUtils = require('modules/Core/js/utils/Address.js'),
-	DateUtils = require('modules/Core/js/utils/Date.js'),
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
+	AddressUtils = require('modules/CoreClient/js/utils/Address.js'),
+	DateUtils = require('modules/CoreClient/js/utils/Date.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	App = require('modules/Core/js/App.js'),
+	App = require('modules/CoreClient/js/App.js'),
 	
-	CDateModel = require('modules/Core/js/models/CDateModel.js')
+	CDateModel = require('modules/CoreClient/js/models/CDateModel.js')
 ;
 
 /**

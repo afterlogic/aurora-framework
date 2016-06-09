@@ -4,18 +4,18 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	AddressUtils = require('modules/Core/js/utils/Address.js'),
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
+	AddressUtils = require('modules/CoreClient/js/utils/Address.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	Api = require('modules/Core/js/Api.js'),
-	ModulesManager = require('modules/Core/js/ModulesManager.js'),
-	Screens = require('modules/Core/js/Screens.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
 	CAbstractSettingsFormView = ModulesManager.run('SettingsClient', 'getAbstractSettingsFormViewClass'),
 	
-	Popups = require('modules/Core/js/Popups.js'),
-	AlertPopup = require('modules/Core/js/popups/AlertPopup.js'),
+	Popups = require('modules/CoreClient/js/Popups.js'),
+	AlertPopup = require('modules/CoreClient/js/popups/AlertPopup.js'),
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),

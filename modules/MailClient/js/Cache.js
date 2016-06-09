@@ -6,19 +6,19 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	Api = require('modules/Core/js/Api.js'),
-	App = require('modules/Core/js/App.js'),
-	Pulse = require('modules/Core/js/Pulse.js'),
-	Routing = require('modules/Core/js/Routing.js'),
-	UserSettings = require('modules/Core/js/Settings.js'),
-	WindowOpener = require('modules/Core/js/WindowOpener.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	App = require('modules/CoreClient/js/App.js'),
+	Pulse = require('modules/CoreClient/js/Pulse.js'),
+	Routing = require('modules/CoreClient/js/Routing.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js'),
+	WindowOpener = require('modules/CoreClient/js/WindowOpener.js'),
 	
-	Popups = require('modules/Core/js/Popups.js'),
-	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/CoreClient/js/Popups.js'),
+	ConfirmPopup = require('modules/CoreClient/js/popups/ConfirmPopup.js'),
 	
 	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	

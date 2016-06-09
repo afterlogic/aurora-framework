@@ -1,6 +1,6 @@
 'use strict';
 
-var Ajax = require('modules/Core/js/Ajax.js');
+var Ajax = require('modules/CoreClient/js/Ajax.js');
 
 module.exports = {
 	send: function (sMethod, oParameters, fResponseHandler, oContext) {

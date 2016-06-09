@@ -5,7 +5,7 @@ module.exports = function (oAppData) {
 		/**
 		 * Returns true if simple chat emoji module is available for certain user role and public or not public mode.
 		 * 
-		 * @param {int} iUserRole User role, wich enum values are described in modules/Core/js/enums.js
+		 * @param {int} iUserRole User role, wich enum values are described in modules/CoreClient/js/enums.js
 		 * @param {boolean} bPublic **true** if applications runs in public mode (for example, public calendar or public contact)
 		 * 
 		 * @returns {Boolean}
@@ -20,7 +20,7 @@ module.exports = function (oAppData) {
 		 * @param {Object} ModulesManager
 		 */
 		start: function (ModulesManager) {
-			var App = require('modules/Core/js/App.js');
+			var App = require('modules/CoreClient/js/App.js');
 			
 			App.subscribeEvent('SimpleChat::DisplayPost::before', function (oParameters) {
 				oParameters.Post.displayText = oParameters.Post.text.replace(':)', '&#128522;');

@@ -5,23 +5,23 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 	
-	Ajax = require('modules/Core/js/Ajax.js'),
-	Api = require('modules/Core/js/Api.js'),
-	Screens = require('modules/Core/js/Screens.js'),
+	Ajax = require('modules/CoreClient/js/Ajax.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
-	Popups = require('modules/Core/js/Popups.js'),
-	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js')
+	Popups = require('modules/CoreClient/js/Popups.js'),
+	ConfirmPopup = require('modules/CoreClient/js/popups/ConfirmPopup.js')
 ;
 
 /**
  * @constructor
- * @param {string} sModule
+ * @param {string} sServerModule
  */
-function CAbstractSettingsFormView(sModule)
+function CAbstractSettingsFormView(sServerModule)
 {
-	this.sModule = sModule ? sModule : 'Core';
+	this.sServerModule = sServerModule ? sServerModule : 'Core';
 	
 	this.isSaving = ko.observable(false);
 }
@@ -124,7 +124,7 @@ CAbstractSettingsFormView.prototype.save = function ()
 	
 	this.updateSavedState();
 	
-	Ajax.send(this.sModule, 'UpdateSettings', this.getParametersForSave(), this.onResponse, this);
+	Ajax.send(this.sServerModule, 'UpdateSettings', this.getParametersForSave(), this.onResponse, this);
 };
 
 /**

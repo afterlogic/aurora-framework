@@ -9,7 +9,7 @@ module.exports = function (oAppData) {
 		_ = require('underscore'),
 		$ = require('jquery'),
 		
-		Types = require('modules/Core/js/utils/Types.js'),
+		Types = require('modules/CoreClient/js/utils/Types.js'),
 		
 		Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 		Settings = require('modules/%ModuleName%/js/Settings.js'),

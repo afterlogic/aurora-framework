@@ -9,7 +9,7 @@ module.exports = function (oAppData) {
 	var
 		_ = require('underscore'),
 		
-		TextUtils = require('modules/Core/js/utils/Text.js'),
+		TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 		
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {})

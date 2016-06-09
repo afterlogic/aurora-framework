@@ -5,11 +5,11 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Types = require('modules/Core/js/utils/Types.js'),
-	UrlUtils = require('modules/Core/js/utils/Url.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
 	
-	App = require('modules/Core/js/App.js'),
-	Storage = require('modules/Core/js/Storage.js'),
+	App = require('modules/CoreClient/js/App.js'),
+	Storage = require('modules/CoreClient/js/Storage.js'),
 	
 	CalendarUtils = require('modules/%ModuleName%/js/utils/Calendar.js'),
 	Settings = require('modules/%ModuleName%/js/Settings.js')

@@ -5,9 +5,9 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 	
-	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js')
+	CAbstractPopup = require('modules/CoreClient/js/popups/CAbstractPopup.js')
 ;
 
 /**

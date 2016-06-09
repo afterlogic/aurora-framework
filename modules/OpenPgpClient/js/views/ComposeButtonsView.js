@@ -5,11 +5,11 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 			
-	Utils = require('modules/Core/js/utils/Common.js'),
-	TextUtils = require('modules/Core/js/utils/Text.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 	
-	Popups = require('modules/Core/js/Popups.js'),
-	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/CoreClient/js/Popups.js'),
+	ConfirmPopup = require('modules/CoreClient/js/popups/ConfirmPopup.js'),
 	EncryptPopup = require('modules/%ModuleName%/js/popups/EncryptPopup.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js')

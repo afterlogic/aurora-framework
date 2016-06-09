@@ -6,16 +6,16 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	FilesUtils = require('modules/Core/js/utils/Files.js'),
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
-	UrlUtils = require('modules/Core/js/utils/Url.js'),
+	FilesUtils = require('modules/CoreClient/js/utils/Files.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
 	
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
-	Screens = require('modules/Core/js/Screens.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
-	CAddressListModel = require('modules/Core/js/models/CAddressListModel.js'),
-	CDateModel = require('modules/Core/js/models/CDateModel.js'),
+	CAddressListModel = require('modules/CoreClient/js/models/CAddressListModel.js'),
+	CDateModel = require('modules/CoreClient/js/models/CDateModel.js'),
 	
 	MessageUtils = require('modules/%ModuleName%/js/utils/Message.js'),
 	

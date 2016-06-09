@@ -4,7 +4,7 @@ module.exports = function (oAppData) {
 	var
 		_ = require('underscore'),
 		
-		TextUtils = require('modules/Core/js/utils/Text.js'),
+		TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 		
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['%ModuleName%'] || {})
@@ -18,7 +18,7 @@ module.exports = function (oAppData) {
 		/**
 		 * Returns true if simple chat module is available for certain user role and public or not public mode.
 		 * 
-		 * @param {int} iUserRole User role, wich enum values are described in modules/Core/js/enums.js
+		 * @param {int} iUserRole User role, wich enum values are described in modules/CoreClient/js/enums.js
 		 * @param {boolean} bPublic **true** if applications runs in public mode (for example, public calendar or public contact)
 		 * 
 		 * @returns {Boolean}
@@ -55,7 +55,7 @@ module.exports = function (oAppData) {
 		 * @returns {Object}
 		 */
 		getHeaderItem: function () {
-			var CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js');
+			var CHeaderItemView = require('modules/CoreClient/js/views/CHeaderItemView.js');
 
 			return {
 				item: new CHeaderItemView(TextUtils.i18n('%MODULENAME%/ACTION_SHOW_CHAT')),

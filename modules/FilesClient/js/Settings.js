@@ -3,7 +3,7 @@
 var
 	ko = require('knockout'),
 	
-	Types = require('modules/Core/js/utils/Types.js')
+	Types = require('modules/CoreClient/js/utils/Types.js')
 ;
 
 module.exports = {

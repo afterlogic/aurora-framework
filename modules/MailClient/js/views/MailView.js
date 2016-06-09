@@ -5,14 +5,14 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	App = require('modules/Core/js/App.js'),
-	Routing = require('modules/Core/js/Routing.js'),
-	WindowOpener = require('modules/Core/js/WindowOpener.js'),
+	App = require('modules/CoreClient/js/App.js'),
+	Routing = require('modules/CoreClient/js/Routing.js'),
+	WindowOpener = require('modules/CoreClient/js/WindowOpener.js'),
 	
-	CAbstractScreenView = require('modules/Core/js/views/CAbstractScreenView.js'),
+	CAbstractScreenView = require('modules/CoreClient/js/views/CAbstractScreenView.js'),
 	
 	ComposeUtils = (App.isMobile() || App.isNewTab()) ? require('modules/%ModuleName%/js/utils/ScreenCompose.js') : require('modules/%ModuleName%/js/utils/PopupCompose.js'),
 	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),

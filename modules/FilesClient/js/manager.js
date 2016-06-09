@@ -6,7 +6,7 @@ module.exports = function (oAppData) {
 	var
 		_ = require('underscore'),
 		
-		TextUtils = require('modules/Core/js/utils/Text.js'),
+		TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 				
 		Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
@@ -36,8 +36,8 @@ module.exports = function (oAppData) {
 		},
 		getHeaderItem: function () {
 			var
-				TextUtils = require('modules/Core/js/utils/Text.js'),
-				CHeaderItemView = require('modules/Core/js/views/CHeaderItemView.js')
+				TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+				CHeaderItemView = require('modules/CoreClient/js/views/CHeaderItemView.js')
 			;
 			
 			HeaderItemView = new CHeaderItemView(TextUtils.i18n('%MODULENAME%/ACTION_SHOW_FILES'));

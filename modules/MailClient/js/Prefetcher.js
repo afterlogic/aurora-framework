@@ -3,8 +3,8 @@
 var
 	_ = require('underscore'),
 	
-	App = require('modules/Core/js/App.js'),
-	UserSettings = require('modules/Core/js/Settings.js'),
+	App = require('modules/CoreClient/js/App.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js'),
 	
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),

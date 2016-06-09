@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js'),
+	CAbstractFileModel = require('modules/CoreClient/js/models/CAbstractFileModel.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;

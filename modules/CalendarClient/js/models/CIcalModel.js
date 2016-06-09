@@ -4,11 +4,11 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	Api = require('modules/Core/js/Api.js'),
-	App = require('modules/Core/js/App.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	App = require('modules/CoreClient/js/App.js'),
 	
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	CalendarCache = require('modules/%ModuleName%/js/Cache.js'),

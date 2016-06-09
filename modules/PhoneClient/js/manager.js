@@ -4,8 +4,8 @@ module.exports = function (oAppData) {
 	require('modules/%ModuleName%/js/enums.js');
 
 	var
-		Browser = require('modules/Core/js/Browser.js'),
-		App = require('modules/Core/js/App.js'),
+		Browser = require('modules/CoreClient/js/Browser.js'),
+		App = require('modules/CoreClient/js/App.js'),
 
 		Settings = require('modules/%ModuleName%/js/Settings.js'),
 		oSettings = oAppData['%ModuleName%'] || {}

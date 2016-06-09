@@ -5,15 +5,15 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	Browser = require('modules/Core/js/Browser.js'),
-	ModulesManager = require('modules/Core/js/ModulesManager.js'),
-	Screens = require('modules/Core/js/Screens.js'),
+	Browser = require('modules/CoreClient/js/Browser.js'),
+	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
-	Popups = require('modules/Core/js/Popups.js'),
+	Popups = require('modules/CoreClient/js/Popups.js'),
 	PhonePopup = require('modules/%ModuleName%/js/popups/PhonePopup.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js')

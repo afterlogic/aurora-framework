@@ -1,8 +1,8 @@
 'use strict';
 
 var
-	Screens = require('modules/Core/js/Screens.js'),
-	Routing = require('modules/Core/js/Routing.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
+	Routing = require('modules/CoreClient/js/Routing.js'),
 	
 	MailUtils = require('modules/%ModuleName%/js/utils/Mail.js'),
 	AccountList = require('modules/%ModuleName%/js/AccountList.js'),

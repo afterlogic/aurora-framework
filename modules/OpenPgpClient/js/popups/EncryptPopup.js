@@ -4,12 +4,12 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	Screens = require('modules/Core/js/Screens.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
-	CAbstractPopup = require('modules/Core/js/popups/CAbstractPopup.js'),
+	CAbstractPopup = require('modules/CoreClient/js/popups/CAbstractPopup.js'),
 	
 	ErrorsUtils = require('modules/%ModuleName%/js/utils/Errors.js'),
 	

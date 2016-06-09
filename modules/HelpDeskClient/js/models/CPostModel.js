@@ -3,10 +3,10 @@
 var
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	CDateModel = require('modules/Core/js/models/CDateModel.js'),
+	CDateModel = require('modules/CoreClient/js/models/CDateModel.js'),
 	
 	CHelpdeskAttachmentModel = require('modules/%ModuleName%/js/models/CHelpdeskAttachmentModel.js')
 ;

@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
-	UserSettings = require('modules/Core/js/Settings.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	HeaderItemView = require('modules/%ModuleName%/js/views/HeaderItemView.js'),

@@ -5,13 +5,13 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	Ajax = require('modules/Core/js/Ajax.js'),
-	Api = require('modules/Core/js/Api.js'),
-	Screens = require('modules/Core/js/Screens.js'),
+	Ajax = require('modules/CoreClient/js/Ajax.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;

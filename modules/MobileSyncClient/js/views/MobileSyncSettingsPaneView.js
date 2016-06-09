@@ -4,14 +4,14 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 	
-	Ajax = require('modules/Core/js/Ajax.js'),
-	Api = require('modules/Core/js/Api.js'),
-	App = require('modules/Core/js/App.js'),
-	Browser = require('modules/Core/js/Browser.js'),
-	ModulesManager = require('modules/Core/js/ModulesManager.js'),
-	UserSettings = require('modules/Core/js/Settings.js'),
+	Ajax = require('modules/CoreClient/js/Ajax.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	App = require('modules/CoreClient/js/App.js'),
+	Browser = require('modules/CoreClient/js/Browser.js'),
+	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js')
 ;

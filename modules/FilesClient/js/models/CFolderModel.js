@@ -3,9 +3,9 @@
 var
 	ko = require('knockout'),
 	
-	Types = require('modules/Core/js/utils/Types.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	CAbstractFileModel = require('modules/Core/js/models/CAbstractFileModel.js')
+	CAbstractFileModel = require('modules/CoreClient/js/models/CAbstractFileModel.js')
 ;
 
 /**

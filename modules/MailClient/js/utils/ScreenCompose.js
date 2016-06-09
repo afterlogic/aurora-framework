@@ -1,7 +1,7 @@
 'use strict';
 
 var
-	Routing = require('modules/Core/js/Routing.js'),
+	Routing = require('modules/CoreClient/js/Routing.js'),
 	
 	LinksUtils = require('modules/%ModuleName%/js/utils/Links.js'),
 	

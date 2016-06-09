@@ -5,13 +5,13 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
-	Utils = require('modules/Core/js/utils/Common.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Utils = require('modules/CoreClient/js/utils/Common.js'),
 	
-	Api = require('modules/Core/js/Api.js'),
-	ModulesManager = require('modules/Core/js/ModulesManager.js'),
-	Screens = require('modules/Core/js/Screens.js'),
+	Api = require('modules/CoreClient/js/Api.js'),
+	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	
 	CAbstractSettingsFormView = ModulesManager.run('SettingsClient', 'getAbstractSettingsFormViewClass'),
 	

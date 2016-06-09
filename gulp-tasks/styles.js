@@ -31,10 +31,10 @@ function BuildLibsCss()
 {
 	var
 		aLibsFiles = [
-			'modules/Core/styles/vendors/normalize.css',
-			'modules/Core/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
-			'modules/Core/styles/vendors/fullcalendar-2.2.3.min.css',
-			'modules/Core/styles/vendors/inputosaurus.css'
+			'modules/CoreClient/styles/vendors/normalize.css',
+			'modules/CoreClient/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
+			'modules/CoreClient/styles/vendors/fullcalendar-2.2.3.min.css',
+			'modules/CoreClient/styles/vendors/inputosaurus.css'
 		],
 		sDestPath = 'static/styles/libs/',
 		fBuild = function () {
@@ -145,7 +145,7 @@ function MoveSharingCss()
 {
 	var
 		fCopySharing = function () {
-			ncp('modules/Core/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
+			ncp('modules/CoreClient/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
 				if (oErr)
 				{
 					console.log('static/styles/sharing.css file copying was failed: ', oErr);
@@ -162,12 +162,12 @@ gulp.task('styles', function () {
 	{
 		BuildLibsCss();
 	}
-	MoveFiles('modules/Core/styles/vendors/jquery/images', 'static/styles/libs/images');
-	MoveFiles('modules/Core/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
-	MoveFiles('modules/Core/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
+	MoveFiles('modules/CoreClient/styles/vendors/jquery/images', 'static/styles/libs/images');
+	MoveFiles('modules/CoreClient/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
+	MoveFiles('modules/CoreClient/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
 	MoveSharingCss();
 	_.each(aThemes, function (sTheme) {
-		MoveFiles('modules/Core/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
+		MoveFiles('modules/CoreClient/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});

@@ -4,17 +4,17 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/Core/js/utils/Text.js'),
-	Types = require('modules/Core/js/utils/Types.js'),
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	Types = require('modules/CoreClient/js/utils/Types.js'),
 	
-	App = require('modules/Core/js/App.js'),
+	App = require('modules/CoreClient/js/App.js'),
 	MainTab = App.isNewTab() && window.opener ? window.opener.MainTabMailMethods : null,
-	Routing = require('modules/Core/js/Routing.js'),
-	Storage = require('modules/Core/js/Storage.js'),
-	UserSettings = require('modules/Core/js/Settings.js'),
+	Routing = require('modules/CoreClient/js/Routing.js'),
+	Storage = require('modules/CoreClient/js/Storage.js'),
+	UserSettings = require('modules/CoreClient/js/Settings.js'),
 	
-	Popups = require('modules/Core/js/Popups.js'),
-	ConfirmPopup = require('modules/Core/js/popups/ConfirmPopup.js'),
+	Popups = require('modules/CoreClient/js/Popups.js'),
+	ConfirmPopup = require('modules/CoreClient/js/popups/ConfirmPopup.js'),
 	CreateAccountPopup = require('modules/%ModuleName%/js/popups/CreateAccountPopup.js'),
 	
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
