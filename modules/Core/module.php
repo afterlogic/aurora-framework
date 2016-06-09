@@ -11,9 +11,9 @@ class CoreModule extends AApiModule
 	public function init() {
 		parent::init();
 		
-		$this->oApiTenantsManager = $this->GetManager('tenants', 'db');
-		$this->oApiChannelsManager = $this->GetManager('channels', 'db');
-		$this->oApiUsersManager = $this->GetManager('users', 'db');
+		$this->oApiTenantsManager = $this->GetManager('tenants');
+		$this->oApiChannelsManager = $this->GetManager('channels');
+		$this->oApiUsersManager = $this->GetManager('users');
 		
 		$this->AddEntries(array(
 				'ping' => 'EntryPing',
