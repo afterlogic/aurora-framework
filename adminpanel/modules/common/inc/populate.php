@@ -13,18 +13,18 @@ class CCommonPopulateData extends ap_CoreModuleHelper
 		}
 		else
 		{
-			$oScreen->Data->SetValue('radioSqlTypeMySQL', EDbType::MySQL === $this->oSettings->GetConf('Common/DBType'));
-			$oScreen->Data->SetValue('radioSqlTypePostgreSQL', EDbType::PostgreSQL === $this->oSettings->GetConf('Common/DBType'));
+			$oScreen->Data->SetValue('radioSqlTypeMySQL', EDbType::MySQL === $this->oSettings->GetConf('DBType'));
+			$oScreen->Data->SetValue('radioSqlTypePostgreSQL', EDbType::PostgreSQL === $this->oSettings->GetConf('DBType'));
 		}
 		
-		$oScreen->Data->SetValue('txtSqlLogin', $this->oSettings->GetConf('Common/DBLogin'));
-		if (0 < strlen($this->oSettings->GetConf('Common/DBLogin')))
+		$oScreen->Data->SetValue('txtSqlLogin', $this->oSettings->GetConf('DBLogin'));
+		if (0 < strlen($this->oSettings->GetConf('DBLogin')))
 		{
 			$oScreen->Data->SetValue('txtSqlPassword', AP_DUMMYPASSWORD);
 		}
 
-		$oScreen->Data->SetValue('txtSqlName', $this->oSettings->GetConf('Common/DBName'));
-		$oScreen->Data->SetValue('txtSqlSrc', $this->oSettings->GetConf('Common/DBHost'));
+		$oScreen->Data->SetValue('txtSqlName', $this->oSettings->GetConf('DBName'));
+		$oScreen->Data->SetValue('txtSqlSrc', $this->oSettings->GetConf('DBHost'));
 		$oScreen->Data->SetValue('txtToken', CApi::getCsrfToken('p7admToken'));
 
 		$this->oModule->JsAddFile('db.js');
@@ -32,7 +32,7 @@ class CCommonPopulateData extends ap_CoreModuleHelper
 
 	public function SystemSecurity(ap_Standard_Screen &$oScreen)
 	{
-		$oScreen->Data->SetValue('txtUserName', $this->oSettings->GetConf('Common/AdminLogin'));
+		$oScreen->Data->SetValue('txtUserName', $this->oSettings->GetConf('AdminLogin'));
 		$oScreen->Data->SetValue('txtOldPassword', AP_DUMMYPASSWORD);
 		$oScreen->Data->SetValue('txtToken', CApi::getCsrfToken('p7admToken'));
 		$oScreen->Data->SetValue('txtNewPassword', AP_DUMMYPASSWORD);

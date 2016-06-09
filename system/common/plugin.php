@@ -1062,7 +1062,7 @@ abstract class AApiPlugin
 		if (empty($sLanguage))
 		{
 			$oSettings =& \CApi::GetSettings();
-			$sLanguage = $oSettings->GetConf('Common/DefaultLanguage');
+			$sLanguage = $oSettings->GetConf('DefaultLanguage');
 		}
 
 		$sLangFile = rtrim(trim($this->GetPath()), '\\/').'/i18n/'.$sLanguage.'.ini';

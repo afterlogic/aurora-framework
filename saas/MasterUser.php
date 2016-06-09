@@ -51,22 +51,22 @@ class MasterUser implements \saas\api\IUser
 
 	function userName()
 	{
-		return $this->nativeSettings()->GetConf('Common/AdminLogin');
+		return $this->nativeSettings()->GetConf('AdminLogin');
 	}
 
 	function setUserName($user)
 	{
-		$this->nativeSettings()->SetConf('Common/AdminLogin', $user);
+		$this->nativeSettings()->SetConf('AdminLogin', $user);
 	}
 
 	function password()
 	{
-		return $this->nativeSettings()->GetConf('Common/AdminPassword');
+		return $this->nativeSettings()->GetConf('AdminPassword');
 	}
 
 	function setPassword($passwd)
 	{
-		$this->nativeSettings()->SetConf('Common/AdminPassword', $passwd);
+		$this->nativeSettings()->SetConf('AdminPassword', $passwd);
 	}
 
 	function validatePassword($passwd)

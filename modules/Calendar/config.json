@@ -1,3 +1,10 @@
 {
-	"Disabled": true
+	"Disabled": true,
+	"ShowWeekEnds": true,
+	"WorkdayStarts": 9,
+	"WorkdayEnds": 18,
+	"ShowWorkDay": true,
+	"WeekStartsOn": "Monday",
+	"DefaultTab": "Month",
+	"AllowReminders": true
 }

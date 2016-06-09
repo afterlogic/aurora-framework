@@ -47,7 +47,7 @@ class CAdminpanelStep extends AInstallerStep
 		}
 
 		return array(
-			'Login' => $this->oSettings->GetConf('Common/AdminLogin'),
+			'Login' => $this->oSettings->GetConf('AdminLogin'),
 			'Password1' => '',
 			'Password2' => '',
 			'FootError' => $sFootError,

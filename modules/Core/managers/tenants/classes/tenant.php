@@ -77,7 +77,7 @@ class CTenant extends api_APropertyBag
 			'QuotaInMB'					=> array('int', 0),
 			'UserCountLimit'			=> array('int', 0),
 			'DomainCountLimit'			=> array('int', 0),
-			'Capa'						=> array('string', '', false), //(string) $oSettings->GetConf('Common/TenantGlobalCapa')
+			'Capa'						=> array('string', '', false), //(string) $oSettings->GetConf('TenantGlobalCapa')
 			
 			'AllowChangeAdminEmail'		=> array('bool', true),
 			'AllowChangeAdminPassword'	=> array('bool', true),
@@ -117,7 +117,7 @@ class CTenant extends api_APropertyBag
 		
 		if (isset($oMap['Capa'][2]) && !$oMap['Capa'][2])
 		{
-			$this->Capa = (string) $oSettings->GetConf('Common/TenantGlobalCapa');
+			$this->Capa = (string) $oSettings->GetConf('TenantGlobalCapa');
 		}
 		
 		if (isset($oMap['SipAllow'][2]) && !$oMap['SipAllow'][2])

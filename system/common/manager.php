@@ -78,7 +78,7 @@ class CApiGlobalManager
 	{
 		if (null === $this->oSettings)
 		{
-			CApi::Inc('common.settings');
+			CApi::Inc('common.settings-new');
 			try
 			{
 				$this->oSettings = new api_Settings(CApi::DataPath());
@@ -170,8 +170,8 @@ class CApiGlobalManager
 
 		if ($oSettings)
 		{
-			$sDbType = $oSettings->GetConf('Common/DBType');
-			$sDbPrefix = $oSettings->GetConf('Common/DBPrefix');
+			$sDbType = $oSettings->GetConf('DBType');
+			$sDbPrefix = $oSettings->GetConf('DBPrefix');
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
@@ -417,8 +417,8 @@ abstract class AApiManager
 
 		if ($oSettings)
 		{
-			$sDbType = $oSettings->GetConf('Common/DBType');
-			$sDbPrefix = $oSettings->GetConf('Common/DBPrefix');
+			$sDbType = $oSettings->GetConf('DBType');
+			$sDbPrefix = $oSettings->GetConf('DBPrefix');
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{

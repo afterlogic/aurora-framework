@@ -67,7 +67,7 @@ class Service
 	public function RedirectToHttps()
 	{
 		$oSettings =& \CApi::GetSettings();
-		$bRedirectToHttps = $oSettings->GetConf('Common/RedirectToHttps');
+		$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
 		
 		$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
 				(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));

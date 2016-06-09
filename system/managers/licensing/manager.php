@@ -24,7 +24,7 @@ class CApiLicensingManager extends AApiManager
 	public function GetLicenseKey()
 	{
 		\CApi::Plugin()->RunHook('before-get-license-key');
-		return $this->oSettings->GetConf('Common/LicenseKey');
+		return $this->oSettings->GetConf('LicenseKey');
 	}
 
 	/**
@@ -182,7 +182,7 @@ This license is outdated, please contact AfterLogic to upgrade your license key.
 	 */
 	protected function getInfo()
 	{
-		$oK = new ALInfo($this->oSettings->GetConf('Common/LicenseKey'), defined('AL_AU') && AL_AU);
+		$oK = new ALInfo($this->oSettings->GetConf('LicenseKey'), defined('AL_AU') && AL_AU);
 		return $oK;
 	}
 

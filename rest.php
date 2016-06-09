@@ -70,8 +70,8 @@ else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 
 		if (0 < strlen($sLogin) && 0 < strlen($sPassword) && $oApiTenantsManager && $oSettings)
 		{
-			$sSettingsLogin = $oSettings->GetConf('Common/AdminLogin');
-			$sSettingsPassword = $oSettings->GetConf('Common/AdminPassword');
+			$sSettingsLogin = $oSettings->GetConf('AdminLogin');
+			$sSettingsPassword = $oSettings->GetConf('AdminPassword');
 
 			$iTenantId = $oApiTenantsManager->getTenantIdByLogin($sLogin, $sPassword);
 

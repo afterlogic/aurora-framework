@@ -6,18 +6,18 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 {
 	public function SystemLogging(ap_Standard_Screen &$oScreen)
 	{
-		$this->oSettings->GetConf('Common/LoggingLevel');
-		$this->oSettings->GetConf('Common/EnableEventLogging');
+		$this->oSettings->GetConf('LoggingLevel');
+		$this->oSettings->GetConf('EnableEventLogging');
 
-		$oScreen->Data->SetValue('ch_EnableDebugLogging', $this->oSettings->GetConf('Common/EnableLogging'));
+		$oScreen->Data->SetValue('ch_EnableDebugLogging', $this->oSettings->GetConf('EnableLogging'));
 
-		$iLogLevel = $this->oSettings->GetConf('Common/LoggingLevel');
+		$iLogLevel = $this->oSettings->GetConf('LoggingLevel');
 		$oScreen->Data->SetValue('selVerbosityFull', ELogLevel::Full === $iLogLevel);
 		$oScreen->Data->SetValue('selVerbosityWarning', ELogLevel::Warning === $iLogLevel);
 		$oScreen->Data->SetValue('selVerbosityError', ELogLevel::Error === $iLogLevel);
 		$oScreen->Data->SetValue('selVerbositySpec', ELogLevel::Spec === $iLogLevel);
 
-		$oScreen->Data->SetValue('ch_EnableUserActivityLogging', $this->oSettings->GetConf('Common/EnableEventLogging'));
+		$oScreen->Data->SetValue('ch_EnableUserActivityLogging', $this->oSettings->GetConf('EnableEventLogging'));
 
 		$aSize = $this->oModule->GetLogsSize();
 		$oScreen->Data->SetValue('DownloadLogSize', '('.api_Utils::GetFriendlySize($aSize[0]).')');

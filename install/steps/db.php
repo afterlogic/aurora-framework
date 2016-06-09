@@ -170,13 +170,13 @@ class CDbStep extends AInstallerStep
 		}
 		
 		return array(
-			'SqlTypeMySQLCheched' => EDbType::MySQL === $this->oSettings->GetConf('Common/DBType')  ? 'checked="cheched"' : '',
-			'SqlTypePostgreSQLCheched' => EDbType::PostgreSQL === $this->oSettings->GetConf('Common/DBType') ? 'checked="cheched"' : '',
-			'Login' => $this->oSettings->GetConf('Common/DBLogin'),
+			'SqlTypeMySQLCheched' => EDbType::MySQL === $this->oSettings->GetConf('DBType')  ? 'checked="cheched"' : '',
+			'SqlTypePostgreSQLCheched' => EDbType::PostgreSQL === $this->oSettings->GetConf('DBType') ? 'checked="cheched"' : '',
+			'Login' => $this->oSettings->GetConf('DBLogin'),
 			'Password' => API_DUMMY,
-			'DbName' => $this->oSettings->GetConf('Common/DBName'),
-			'Host' => $this->oSettings->GetConf('Common/DBHost'),
-			'prefix' => $this->oSettings->GetConf('Common/DBPrefix'),
+			'DbName' => $this->oSettings->GetConf('DBName'),
+			'Host' => $this->oSettings->GetConf('DBHost'),
+			'prefix' => $this->oSettings->GetConf('DBPrefix'),
 			'CreateDbCheched' => (isset($_SESSION['wm-install-create-db'])) ? '' : 'checked="cheched"',
 			'CreateDBNameText' => $sCreateDBNameText,
 			'TestDBText' => $sTestDbText,

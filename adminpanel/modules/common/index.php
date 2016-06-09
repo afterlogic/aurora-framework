@@ -468,7 +468,7 @@ class CCommonModule extends ap_Module
 			return false;
 		}
 		
-		if ($oSettings->GetConf('Common/AdminLogin') === $sLogin &&
+		if ($oSettings->GetConf('AdminLogin') === $sLogin &&
 			\CApi::ExecuteMethod('Core::ValidateAdminPassword', array('Password' => $sPassword)))
 		{
 			$this->setAdminAccessType(AP_SESS_AUTH_TYPE_SUPER_ADMIN);

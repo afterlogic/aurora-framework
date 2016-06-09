@@ -10,7 +10,7 @@ require_once dirname(__FILE__).'/../core/api.php';
 /* Get WebMail Settings */
 $oSettings =& \CApi::GetSettings();
 
-$sDbPrefix = $oSettings->GetConf('Common/DBPrefix');
+$sDbPrefix = $oSettings->GetConf('DBPrefix');
 /* Database */
 $oPdo = \CApi::GetPDO();
 

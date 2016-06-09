@@ -1008,8 +1008,8 @@ class CApiIntegratorManager extends AApiManager
 			$aResult['AllowIosProfile'] = $oApiCapabilityManager->isIosProfileSupported();
 			$aResult['DefaultTab'] = $oDomain->DefaultTab;
 
-			$aResult['PasswordMinLength'] = $oSettings->GetConf('Common/PasswordMinLength')/*$oDomain->PasswordMinLength*/;
-			$aResult['PasswordMustBeComplex'] = (bool) $oSettings->GetConf('Common/PasswordMustBeComplex')/*$oDomain->PasswordMustBeComplex*/;
+			$aResult['PasswordMinLength'] = $oSettings->GetConf('PasswordMinLength')/*$oDomain->PasswordMinLength*/;
+			$aResult['PasswordMustBeComplex'] = (bool) $oSettings->GetConf('PasswordMustBeComplex')/*$oDomain->PasswordMustBeComplex*/;
 
 			if (!\CApi::GetConf('labs.open-pgp', true))
 			{
@@ -1019,16 +1019,16 @@ class CApiIntegratorManager extends AApiManager
 			$aRegistrationDomains = array();
 			$aRegistrationQuestions = array();
 
-			$aResult['AllowRegistration'] = (bool) $oSettings->GetConf('Common/AllowRegistration');
-			$aResult['AllowPasswordReset'] = (bool) $oSettings->GetConf('Common/AllowPasswordReset');
+			$aResult['AllowRegistration'] = (bool) $oSettings->GetConf('AllowRegistration');
+			$aResult['AllowPasswordReset'] = (bool) $oSettings->GetConf('AllowPasswordReset');
 
 			if ($aResult['AllowRegistration'])
 			{
-				$sRegistrationDomains = (string) $oSettings->GetConf('Common/RegistrationDomains');
+				$sRegistrationDomains = (string) $oSettings->GetConf('RegistrationDomains');
 				$aRegistrationDomains = explode(',', strtolower($sRegistrationDomains));
 				$aRegistrationDomains = array_map('trim', $aRegistrationDomains);
 
-				$sRegistrationQuestions = (string) $oSettings->GetConf('Common/RegistrationQuestions');
+				$sRegistrationQuestions = (string) $oSettings->GetConf('RegistrationQuestions');
 				$aRegistrationQuestions = explode('|', $sRegistrationQuestions);
 				$aRegistrationQuestions = array_map('trim', $aRegistrationQuestions);
 			}
@@ -1843,9 +1843,9 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$oSettings =& CApi::GetSettings();
 			
-			$sSiteName = $oSettings->GetConf('Common/SiteName');
-			$sLanguage = $oSettings->GetConf('Common/DefaultLanguage');
-			$sTheme = $oSettings->GetConf('WebMail/DefaultSkin');
+			$sSiteName = $oSettings->GetConf('SiteName');
+			$sLanguage = $oSettings->GetConf('DefaultLanguage');
+			$sTheme = $oSettings->GetConf('DefaultSkin');
 
 //			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
 			$oUser = \CApi::getLogginedUserId();

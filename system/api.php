@@ -310,11 +310,11 @@ class CApi
 		$sDbPort = '';
 		$sUnixSocket = '';
 
-		$iDbType = $oSettings->GetConf('Common/DBType');
-		$sDbHost = $oSettings->GetConf('Common/DBHost');
-		$sDbName = $oSettings->GetConf('Common/DBName');
-		$sDbLogin = $oSettings->GetConf('Common/DBLogin');
-		$sDbPassword = $oSettings->GetConf('Common/DBPassword');
+		$iDbType = $oSettings->GetConf('DBType');
+		$sDbHost = $oSettings->GetConf('DBHost');
+		$sDbName = $oSettings->GetConf('DBName');
+		$sDbLogin = $oSettings->GetConf('DBLogin');
+		$sDbPassword = $oSettings->GetConf('DBPassword');
 
 		$iPos = strpos($sDbHost, ':');
 		if (false !== $iPos && 0 < $iPos) {
@@ -690,9 +690,9 @@ class CApi
 
 		$oSettings =& CApi::GetSettings();
 
-		if ($oSettings && $oSettings->GetConf('Common/EnableLogging') &&
-			($iLogLevel <= $oSettings->GetConf('Common/LoggingLevel') ||
-			(ELogLevel::Spec === $oSettings->GetConf('Common/LoggingLevel') &&
+		if ($oSettings && $oSettings->GetConf('EnableLogging') &&
+			($iLogLevel <= $oSettings->GetConf('LoggingLevel') ||
+			(ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
 				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging']))) {
 			$sLogFile = self::GetLogFileName($sFilePrefix);
 
@@ -927,7 +927,7 @@ class CApi
 		
 		if (empty($sLanguage)) {
 			$oSettings =& \CApi::GetSettings();
-			$sLanguage = $oSettings->GetConf('Common/DefaultLanguage');
+			$sLanguage = $oSettings->GetConf('DefaultLanguage');
 		}
 
 		$aLang = null;

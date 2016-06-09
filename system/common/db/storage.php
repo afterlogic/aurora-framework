@@ -95,23 +95,23 @@ class CDbCreator
 		if (!is_object(self::$oDbConnector))
 		{
 			CDbCreator::$oDbConnector = CDbCreator::ConnectorFabric(array(
-				'Type' => $oSettings->GetConf('Common/DBType'),
-				'DBHost' => $oSettings->GetConf('Common/DBHost'),
-				'DBLogin' => $oSettings->GetConf('Common/DBLogin'),
-				'DBPassword' => $oSettings->GetConf('Common/DBPassword'),
-				'DBName' => $oSettings->GetConf('Common/DBName'),
-				'DBTablePrefix' => $oSettings->GetConf('Common/DBPrefix')
+				'Type' => $oSettings->GetConf('DBType'),
+				'DBHost' => $oSettings->GetConf('DBHost'),
+				'DBLogin' => $oSettings->GetConf('DBLogin'),
+				'DBPassword' => $oSettings->GetConf('DBPassword'),
+				'DBName' => $oSettings->GetConf('DBName'),
+				'DBTablePrefix' => $oSettings->GetConf('DBPrefix')
 			));
 
-			if ($oSettings->GetConf('Common/UseSlaveConnection'))
+			if ($oSettings->GetConf('UseSlaveConnection'))
 			{
 				CDbCreator::$oSlaveDbConnector = CDbCreator::ConnectorFabric(array(
-					'Type' => $oSettings->GetConf('Common/DBType'),
-					'DBHost' => $oSettings->GetConf('Common/DBSlaveHost'),
-					'DBLogin' => $oSettings->GetConf('Common/DBSlaveLogin'),
-					'DBPassword' => $oSettings->GetConf('Common/DBSlavePassword'),
-					'DBName' => $oSettings->GetConf('Common/DBSlaveName'),
-					'DBTablePrefix' => $oSettings->GetConf('Common/DBPrefix')
+					'Type' => $oSettings->GetConf('DBType'),
+					'DBHost' => $oSettings->GetConf('DBSlaveHost'),
+					'DBLogin' => $oSettings->GetConf('DBSlaveLogin'),
+					'DBPassword' => $oSettings->GetConf('DBSlavePassword'),
+					'DBName' => $oSettings->GetConf('DBSlaveName'),
+					'DBTablePrefix' => $oSettings->GetConf('DBPrefix')
 				));
 			}
 		}
@@ -132,7 +132,7 @@ class CDbCreator
 		}
 
 		CDbCreator::$oCommandCreatorHelper = CDbCreator::CommandCreatorHelperFabric(
-			$oSettings->GetConf('Common/DBType'));
+			$oSettings->GetConf('DBType'));
 
 		return CDbCreator::$oCommandCreatorHelper;
 	}
@@ -177,7 +177,7 @@ class CDbStorage
 		$aConnections =& CDbCreator::CreateConnector($oSettings);
 
 		$this->oSettings = $oSettings;
-		$this->sPrefix = $this->oSettings->GetConf('Common/DBPrefix');
+		$this->sPrefix = $this->oSettings->GetConf('DBPrefix');
 		$this->oConnector = null;
 		$this->oSlaveConnector = null;
 		$this->oLastException = null;
@@ -238,10 +238,10 @@ class CDbStorage
 			}
 
 			$this->oConnector->ReInitIfNotConnected(
-				$this->oSettings->GetConf('Common/DBHost'),
-				$this->oSettings->GetConf('Common/DBLogin'),
-				$this->oSettings->GetConf('Common/DBPassword'),
-				$this->oSettings->GetConf('Common/DBName')
+				$this->oSettings->GetConf('DBHost'),
+				$this->oSettings->GetConf('DBLogin'),
+				$this->oSettings->GetConf('DBPassword'),
+				$this->oSettings->GetConf('DBName')
 			);
 
 			return $this->oConnector->Connect();
@@ -267,10 +267,10 @@ class CDbStorage
 			}
 
 			$this->oSlaveConnector->ReInitIfNotConnected(
-				$this->oSettings->GetConf('Common/DBHost'),
-				$this->oSettings->GetConf('Common/DBLogin'),
-				$this->oSettings->GetConf('Common/DBPassword'),
-				$this->oSettings->GetConf('Common/DBName')
+				$this->oSettings->GetConf('DBHost'),
+				$this->oSettings->GetConf('DBLogin'),
+				$this->oSettings->GetConf('DBPassword'),
+				$this->oSettings->GetConf('DBName')
 			);
 
 			return $this->oSlaveConnector->Connect(true, true);

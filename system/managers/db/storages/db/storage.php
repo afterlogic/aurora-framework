@@ -66,7 +66,7 @@ class CApiDbDbStorage extends CApiDbStorage
 		{
 			$oConnect->ConnectNoSelect();
 			$oConnect->Execute(
-				$this->oCommandCreator->createDatabase($this->oSettings->GetConf('Common/DBName')));
+				$this->oCommandCreator->createDatabase($this->oSettings->GetConf('DBName')));
 		}
 		else
 		{

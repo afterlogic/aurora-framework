@@ -7,7 +7,7 @@
  */
 class api_Settings
 {
-	const JSON_FILE_NAME = '/settings/settings.json';
+	const JSON_FILE_NAME = '/settings/config.json';
 
 	#<editor-fold defaultstate="collapsed" desc="protected">
 	/**

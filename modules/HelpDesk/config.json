@@ -1,0 +1,20 @@
+{
+	"Disabled": false,
+	"AdminEmailAccount": "",
+	"ClientIframeUrl": "",
+	"AgentIframeUrl": "",
+	"SiteName": "",
+	"StyleAllow": false
+	"StyleImage": "",
+	"StyleText": "",
+	"FetcherType>": "NONE",
+	"FacebookAllow": false,
+	"FacebookId": "",
+	"FacebookSecret": "",
+	"GoogleAllow": false,
+	"GoogleId": "",
+	"GoogleSecret": "",
+	"TwitterAllow": false,
+	"TwitterId": "",
+	"TwitterSecret": ""
+}

@@ -1,0 +1,23 @@
+{
+	"SiteName": "AfterLogic",
+	"DefaultLanguage": English",
+	"DefaultTimeZone": 0,
+	"DefaultTimeFormat": "F24",
+	"DefaultDateFormat": "DD/MM/YYYY",
+	"AllowRegistration": false,
+	"RegistrationDomains": "",
+	"RegistrationQuestions": "",
+	"AllowPasswordReset": false,
+	"EnableLogging": true,
+	"EnableEventLogging": false,
+	"LoggingLevel": "Full",
+	"EnableMobileSync": true,
+	"TenantGlobalCapa": "",
+	"LoginStyleImage": "",
+	"AppStyleImage": "",
+	"InvitationEmail": "cal1@afterlogic.com",
+	"DefaultTab": "contacts",
+	"RedirectToHttps": false,
+	"PasswordMinLength": 0,
+	"PasswordMustBeComplex": false
+}

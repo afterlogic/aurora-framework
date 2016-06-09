@@ -100,6 +100,7 @@ class CApiModuleManager
 		{
 			$sJsonData = file_get_contents($sModuleConfigPath);
 			$aModuleConfig = json_decode($sJsonData, true);
+			$aModuleConfig = is_array($aModuleConfig) ? $aModuleConfig : array();
 			$_aModuleConfig = isset($this->_aModulesConfigs[$sModuleName]) ? $this->_aModulesConfigs[$sModuleName] : array();
 			$this->_aModulesConfigs[$sModuleName] = array_merge($aModuleConfig, $_aModuleConfig);
 		}

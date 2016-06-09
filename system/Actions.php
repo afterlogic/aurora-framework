@@ -1462,7 +1462,7 @@ class Actions
 		\CApi::Plugin()->RunHook('webmail-register-custom-data', array($this->getParamValue('CustomRequestData', null)));
 
 		$oSettings =& \CApi::GetSettings();
-		if (!$oSettings || !$oSettings->GetConf('Common/AllowRegistration'))
+		if (!$oSettings || !$oSettings->GetConf('AllowRegistration'))
 		{
 			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
@@ -1562,7 +1562,7 @@ class Actions
 		\CApi::Plugin()->RunHook('webmail-forgot-custom-data', array($this->getParamValue('CustomRequestData', null)));
 
 		$oSettings =& \CApi::GetSettings();
-		if (!$oSettings || !$oSettings->GetConf('Common/AllowPasswordReset') || 0 === strlen($sEmail))
+		if (!$oSettings || !$oSettings->GetConf('AllowPasswordReset') || 0 === strlen($sEmail))
 		{
 			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
@@ -1589,7 +1589,7 @@ class Actions
 		$sAnswer =  trim((string) $this->getParamValue('Answer', ''));
 
 		$oSettings =& \CApi::GetSettings();
-		if (!$oSettings || !$oSettings->GetConf('Common/AllowPasswordReset') ||
+		if (!$oSettings || !$oSettings->GetConf('AllowPasswordReset') ||
 			0 === strlen($sEmail) || 0 === strlen($sAnswer) || 0 === strlen($sQuestion))
 		{
 			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
@@ -1616,7 +1616,7 @@ class Actions
 		$sPassword =  trim((string) $this->getParamValue('Password', ''));
 
 		$oSettings =& \CApi::GetSettings();
-		if (!$oSettings || !$oSettings->GetConf('Common/AllowPasswordReset') ||
+		if (!$oSettings || !$oSettings->GetConf('AllowPasswordReset') ||
 			0 === strlen($sEmail) || 0 === strlen($sAnswer) || 0 === strlen($sQuestion) || 0 === strlen($sPassword))
 		{
 			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
