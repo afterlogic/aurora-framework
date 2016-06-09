@@ -7,8 +7,8 @@ class MailModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oApiAccountsManager = $this->GetManager('accounts', 'db');
-		$this->oApiMailManager = $this->GetManager('main', 'db');
+		$this->oApiAccountsManager = $this->GetManager('accounts');
+		$this->oApiMailManager = $this->GetManager('main');
 		
 		$this->setObjectMap('CUser', array(
 				'AllowAutosaveInDrafts'		=> array('bool', true), //'allow_autosave_in_drafts'),

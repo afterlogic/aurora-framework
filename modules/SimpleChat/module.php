@@ -6,7 +6,7 @@ class SimpleChatModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oApiChatManager = $this->GetManager('main', 'db');
+		$this->oApiChatManager = $this->GetManager('main');
 		
 		$this->setObjectMap('CUser', array(
 				'EnableModule' => array('bool', true)

@@ -72,14 +72,20 @@ class CApiSimpleChatMainManager extends AApiManager
 					if (!isset($aUsers[$oItem->UserId]))
 					{
 						$oUser = $oCoreDecorator->GetUser($oItem->UserId);
-						$aUsers[$oItem->UserId] = $oUser->Name;
+						if ($oUser)
+						{
+							$aUsers[$oItem->UserId] = $oUser->Name;
+						}
 					}
-					$aResult[] = array(
-						'userId' => $oItem->UserId,
-						'name' => $aUsers[$oItem->UserId],
-						'text' => $oItem->Text,
-						'date' => $oItem->Date
-					);
+					if (isset($aUsers[$oItem->UserId]))
+					{
+						$aResult[] = array(
+							'userId' => $oItem->UserId,
+							'name' => $aUsers[$oItem->UserId],
+							'text' => $oItem->Text,
+							'date' => $oItem->Date
+						);
+					}
 				}
 			}
 		}

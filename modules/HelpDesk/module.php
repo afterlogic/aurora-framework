@@ -18,8 +18,8 @@ class HelpDeskModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oMainManager = $this->GetManager('main', 'db');
-		$this->oAccountsManager = $this->GetManager('accounts', 'db');
+		$this->oMainManager = $this->GetManager('main');
+		$this->oAccountsManager = $this->GetManager('accounts');
 		
 		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$this->oAuthDecorator = \CApi::GetModuleDecorator('Auth');

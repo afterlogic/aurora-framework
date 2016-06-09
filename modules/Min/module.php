@@ -7,7 +7,7 @@ class MinModule extends AApiModule
 	public function init() {
 		parent::init();
 		
-		$this->oApiMinManager = $this->GetManager('main', 'db');
+		$this->oApiMinManager = $this->GetManager('main');
 		$this->AddEntry('window', 'EntryMin');
 	}
 	

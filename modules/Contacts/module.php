@@ -6,7 +6,7 @@ class ContactsModule extends AApiModule
 	
 	public function init() 
 	{
-		$this->oApiContactsManager = $this->GetManager('main', 'db');
+		$this->oApiContactsManager = $this->GetManager('main');
 		
 		$this->subscribeEvent('Mail::GetBodyStructureParts', array($this, 'onGetBodyStructureParts'));
 		$this->subscribeEvent('Mail::ExtendMessageData', array($this, 'onExtendMessageData'));
