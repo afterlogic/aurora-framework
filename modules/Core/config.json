@@ -1,6 +1,6 @@
 {
 	"SiteName": "AfterLogic",
-	"DefaultLanguage": English",
+	"DefaultLanguage": "English",
 	"DefaultTimeZone": 0,
 	"DefaultTimeFormat": "F24",
 	"DefaultDateFormat": "DD/MM/YYYY",

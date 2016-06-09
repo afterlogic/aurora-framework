@@ -4,7 +4,7 @@
 	"ClientIframeUrl": "",
 	"AgentIframeUrl": "",
 	"SiteName": "",
-	"StyleAllow": false
+	"StyleAllow": false,
 	"StyleImage": "",
 	"StyleText": "",
 	"FetcherType>": "NONE",
