@@ -1,5 +1,5 @@
 {
-	"Disabled": true,
+	"Disabled": false,
 	"ShowWeekEnds": true,
 	"WorkdayStarts": 9,
 	"WorkdayEnds": 18,
