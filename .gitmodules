@@ -1,5 +1,5 @@
-[submodule "modules/AdminPanel"]
-	path = modules/AdminPanel
+[submodule "modules/AdminPanelClient"]
+	path = modules/AdminPanelClient
 	url = https://github.com/afterlogic/aurora-module-webclient-adminpanel
 [submodule "modules/BasicAuth"]
 	path = modules/BasicAuth
