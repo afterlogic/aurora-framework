@@ -85,7 +85,7 @@
 		"installer-types": ["aurora-module"],
         "installer-paths": {
 			"special/package/": ["my/package"],
-			"test/{$name}/": ["type:aurora-module"]
+			"modules/{$name}/": ["type:aurora-module"]
 		}
     }
 }
