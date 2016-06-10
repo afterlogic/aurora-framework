@@ -1,4 +1,4 @@
-git.exe submodule add   -- "https://github.com/afterlogic/aurora-module-webclient-adminpanel"  "modules/AdminPanel"
+git.exe submodule add   -- "https://github.com/afterlogic/aurora-module-webclient-adminpanel"  "modules/AdminPanelClient"
 git.exe submodule add   -- "https://github.com/afterlogic/aurora-module-basic-auth"  "modules/BasicAuth"
 git.exe submodule add   -- "https://github.com/afterlogic/aurora-module-webclient-basic-auth"  "modules/BasicAuthClient"
 git.exe submodule add   -- "https://github.com/afterlogic/aurora-module-webclient-change-password"  "modules/ChangePasswordClient"
