@@ -1,0 +1,93 @@
+[submodule "modules/AdminPanel"]
+	path = modules/AdminPanel
+	url = https://github.com/afterlogic/aurora-module-webclient-adminpanel
+[submodule "modules/BasicAuth"]
+	path = modules/BasicAuth
+	url = https://github.com/afterlogic/aurora-module-basic-auth
+[submodule "modules/BasicAuthClient"]
+	path = modules/BasicAuthClient
+	url = https://github.com/afterlogic/aurora-module-webclient-basic-auth
+[submodule "modules/ChangePasswordClient"]
+	path = modules/ChangePasswordClient
+	url = https://github.com/afterlogic/aurora-module-webclient-change-password
+[submodule "modules/Calendar"]
+	path = modules/Calendar
+	url = https://github.com/afterlogic/aurora-module-calendar
+[submodule "modules/CalendarClient"]
+	path = modules/CalendarClient
+	url = https://github.com/afterlogic/aurora-module-webclient-calendar
+[submodule "modules/Contacts"]
+	path = modules/Contacts
+	url = https://github.com/afterlogic/aurora-module-contacts
+[submodule "modules/ContactsClient"]
+	path = modules/ContactsClient
+	url = https://github.com/afterlogic/aurora-module-webclient-contacts
+[submodule "modules/Core"]
+	path = modules/Core
+	url = https://github.com/afterlogic/aurora-module-core
+[submodule "modules/CoreClient"]
+	path = modules/CoreClient
+	url = https://github.com/afterlogic/aurora-module-webclient-core
+[submodule "modules/Dav"]
+	path = modules/Dav
+	url = https://github.com/afterlogic/aurora-module-dav
+[submodule "modules/Files"]
+	path = modules/Files
+	url = https://github.com/afterlogic/aurora-module-files
+[submodule "modules/FilesClient"]
+	path = modules/FilesClient
+	url = https://github.com/afterlogic/aurora-module-webclient-files
+[submodule "modules/HelpDesk"]
+	path = modules/HelpDesk
+	url = https://github.com/afterlogic/aurora-module-helpdesk
+[submodule "modules/HelpDeskClient"]
+	path = modules/HelpDeskClient
+	url = https://github.com/afterlogic/aurora-module-webclient-helpdesk
+[submodule "modules/Ios"]
+	path = modules/Ios
+	url = https://github.com/afterlogic/aurora-module-ios
+[submodule "modules/Mail"]
+	path = modules/Mail
+	url = https://github.com/afterlogic/aurora-module-mail
+[submodule "modules/MailClient"]
+	path = modules/MailClient
+	url = https://github.com/afterlogic/aurora-module-webclient-mail
+[submodule "modules/MailSensitivityClientPlugin"]
+	path = modules/MailSensitivityClientPlugin
+	url = https://github.com/afterlogic/aurora-module-webclient-mail-sensitivity-plugin
+[submodule "modules/Min"]
+	path = modules/Min
+	url = https://github.com/afterlogic/aurora-module-min
+[submodule "modules/MobileSyncClient"]
+	path = modules/MobileSyncClient
+	url = https://github.com/afterlogic/aurora-module-webclient-mobile-sync
+[submodule "modules/OpenPgpClient"]
+	path = modules/OpenPgpClient
+	url = https://github.com/afterlogic/aurora-module-webclient-openpgp
+[submodule "modules/OutlookSyncClient"]
+	path = modules/OutlookSyncClient
+	url = https://github.com/afterlogic/aurora-module-webclient-outlook-sync
+[submodule "modules/PhoneClient"]
+	path = modules/PhoneClient
+	url = https://github.com/afterlogic/aurora-module-webclient-phone
+[submodule "modules/SessionTimeoutClient"]
+	path = modules/SessionTimeoutClient
+	url = https://github.com/afterlogic/aurora-module-webclient-session-timeout
+[submodule "modules/SettingsClient"]
+	path = modules/SettingsClient
+	url = https://github.com/afterlogic/aurora-module-webclient-settings
+[submodule "modules/SimpleChat"]
+	path = modules/SimpleChat
+	url = https://github.com/afterlogic/aurora-module-simple-chat
+[submodule "modules/Twilio"]
+	path = modules/Twilio
+	url = https://github.com/afterlogic/aurora-module-twilio
+[submodule "modules/SimpleChatEmojiClientPlugin"]
+	path = modules/SimpleChatEmojiClientPlugin
+	url = https://github.com/afterlogic/aurora-module-webclient-simple-chat-emoji-plugin
+[submodule "modules/SimpleChatLoggerPlugin"]
+	path = modules/SimpleChatLoggerPlugin
+	url = https://github.com/afterlogic/aurora-module-simple-chat-logger-plugin
+[submodule "modules/SimpleChatClient"]
+	path = modules/SimpleChatClient
+	url = https://github.com/afterlogic/aurora-module-webclient-simple-chat
