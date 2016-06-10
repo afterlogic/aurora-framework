@@ -13,6 +13,7 @@
 /migrateto20.php
 /migrateto21.php
 /composer.phar
+/composer.lock
 /_build-composer.bat
 test_t.php
 /tenants/
