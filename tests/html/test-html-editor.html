@@ -203,12 +203,12 @@
 			<div class="inline_popup" data-bind="visible: visibleLinkPopup, initDom: linkPopupDom">
 				<a target="_blank" data-bind="text: linkHref, attr: {'href': linkHref}"></a>
 				<span class="button" data-i18n="HTMLEDITOR/URL_BUTTON_CHANGE" data-bind="i18n: 'text', click: showChangeLink"></span>
-				<span class="button" data-i18n="CORE/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentLink(); }"></span>
+				<span class="button" data-i18n="CORECLIENT/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentLink(); }"></span>
 			</div>
 			<div class="inline_popup" data-bind="visible: visibleLinkHref, initDom: linkHrefDom">
 				<input type="text" spellcheck="false" data-bind="value: linkHref" />
-				<span class="button" data-i18n="CORE/BUTTON_OK" data-bind="i18n: 'text', click: changeLink"></span>
-				<span class="button" data-i18n="CORE/BUTTON_CANCEL" data-bind="i18n: 'text', click: hideChangeLink"></span>
+				<span class="button" data-i18n="CORECLIENT/BUTTON_OK" data-bind="i18n: 'text', click: changeLink"></span>
+				<span class="button" data-i18n="CORECLIENT/BUTTON_CANCEL" data-bind="i18n: 'text', click: hideChangeLink"></span>
 			</div>
 			<div class="inline_popup" data-bind="visible: visibleImagePopup, 
 					style: {'top': imagePopupTop() + 'px', 'left': imagePopupLeft() + 'px'}">
@@ -216,7 +216,7 @@
 				<span class="button" data-i18n="HTMLEDITOR/IMAGE_BUTTON_MEDIUM" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Medium); }"></span>
 				<span class="button" data-i18n="HTMLEDITOR/IMAGE_BUTTON_LARGE" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Large); }"></span>
 				<span class="button" data-i18n="HTMLEDITOR/IMAGE_BUTTON_ORIGINAL" data-bind="i18n: 'text', click: function () { resizeImage(Enums.HtmlEditorImageSizes.Original); }"></span>
-				<span class="button" data-i18n="CORE/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentImage(); }"></span>
+				<span class="button" data-i18n="CORECLIENT/BUTTON_REMOVE" data-bind="i18n: 'text', click: function () { oCrea.removeCurrentImage(); }"></span>
 			</div>
 
 		</div>
