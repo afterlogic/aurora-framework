@@ -173,7 +173,7 @@ class Service
 			$sEntryPart = strtolower($aPaths[0]);
 			
 			$mResult = $this->oModuleManager->RunEntry($sEntryPart);
-			
+/*			
 			if ($mResult === false) {
 				@ob_start();
 				\CApi::Plugin()->RunServiceHandle($sEntryPart, $aPaths);
@@ -183,6 +183,10 @@ class Service
 					$mResult = $this->generateHTML();
 				}
 			}
+ * 
+ */
+		$mResult = $this->generateHTML();
+		
 		} else {
 			$mResult = $this->generateHTML();
 		}
