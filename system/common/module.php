@@ -532,7 +532,7 @@ abstract class AApiModule
 		return $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
 	}
 
-	public function GetManager($sManagerName, $sForcedStorage = 'db')
+	public function GetManager($sManagerName = '', $sForcedStorage = 'db')
 	{
 		$mResult = false;
 		$sFileFullPath = '';
