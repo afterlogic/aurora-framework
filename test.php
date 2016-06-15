@@ -17,7 +17,7 @@ var_dump(trim(\api_Utils::DecryptValue('SyDxsEwSIWqa3yxCYbygRMewjh2F03uBcvxFjK60
 exit;
 
 /*
-$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
+$oAuthDecorator = \CApi::GetModuleDecorator('BasicAuth');
 
 $mResult = $oAuthDecorator->CreateAccount(
 	246,
@@ -75,11 +75,11 @@ $oNew = $oEavManager->getObjects('CTest');
 print_r($oNew);
 
 
-//$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
+//$oAuthDecorator = \CApi::GetModuleDecorator('BasicAuth');
 
 //$oAuthDecorator->CreateAccount(0, 246, 'test555', 'p12345');
 
-/*$oManagerApi = \CApi::GetModule('Auth')->GetManager('accounts');
+/*$oManagerApi = \CApi::GetModule('BasicAuth')->GetManager('accounts');
 $aItems = $oManagerApi->getAccountList(0, 0);*/
 
 	

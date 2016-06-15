@@ -1,5 +1,5 @@
 <?php
-	$oManagerApi = \CApi::GetModule('Auth')->GetManager('accounts');
+	$oManagerApi = \CApi::GetModule('BasicAuth')->GetManager('accounts');
 	$aItems = $oManagerApi->getAccountList(0, 0);
 ?>
 <div id="accounts-screen" class="row">

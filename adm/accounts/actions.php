@@ -3,7 +3,7 @@ $oHttp = \MailSo\Base\Http::NewInstance();
 
 if ($oHttp->HasPost('action'))
 {
-	$oAuthDecorator = \CApi::GetModuleDecorator('Auth');
+	$oAuthDecorator = \CApi::GetModuleDecorator('BasicAuth');
 
 	switch ($oHttp->GetPost('action'))
 	{
