@@ -160,7 +160,6 @@ class CApi
 		}
 	}
 	
-	
 	/**
 	 * @return string
 	 */
@@ -538,7 +537,7 @@ class CApi
 	public static function LogEvent($sDesc, $mAccount = null)
 	{
 		$oSettings =& CApi::GetSettings();
-		if ($oSettings && $oSettings->GetConf('Common/EnableEventLogging')) {
+		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) {
 			$sDate = gmdate('H:i:s');
 			$iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
 			

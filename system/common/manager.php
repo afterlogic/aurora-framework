@@ -78,7 +78,7 @@ class CApiGlobalManager
 	{
 		if (null === $this->oSettings)
 		{
-			CApi::Inc('common.settings-new');
+			CApi::Inc('common.settings');
 			try
 			{
 				$this->oSettings = new api_Settings(CApi::DataPath());
