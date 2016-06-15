@@ -1856,8 +1856,8 @@ class CApiIntegratorManager extends AApiManager
 			{
 //				$sSiteName = $oAccount->Domain->SiteName;
 				$sSiteName = '';
-				$sTheme = $oUser->DefaultSkin;
-				$sLanguage = $oUser->DefaultLanguage;
+//				$sTheme = $oUser->DefaultSkin;
+//				$sLanguage = $oUser->DefaultLanguage;
 			}
 			else
 			{
