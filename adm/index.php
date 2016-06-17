@@ -9,7 +9,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	
 	$oAppData = \CApi::GetModule('Core')->GetAppData();
 
-	$sToken = $oAppData['Token'];
+	$sToken = isset($oAppData['Token']) ? $oAppData['Token'] : null;
 	$sAuthToken = isset($_COOKIE['AUTH']) ? $_COOKIE['AUTH'] : '';
 	$iStoredTab = isset($_COOKIE['TAB']) ? (int)$_COOKIE['TAB'] : 0;
 	$iObjectsStoredTab = isset($_COOKIE['OBJECT_TAB']) ? (int)$_COOKIE['OBJECT_TAB'] : 0;
