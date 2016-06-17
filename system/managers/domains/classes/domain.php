@@ -75,7 +75,7 @@
  * @package Domains
  * @subpackage Classes
  */
-class CDomain extends APropertyBag
+class CDomain extends AEntity
 {
 	/**
 	 * @var array

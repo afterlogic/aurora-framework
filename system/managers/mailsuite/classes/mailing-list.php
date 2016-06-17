@@ -30,7 +30,7 @@ class CMailingList extends api_AContainer
 
 		$this->SetDefaults(array(
 			'IdMailingList'		=> 0,
-			'IdDomain'			=> ($oDomain) ? $oDomain->iObjectId : 0,
+			'IdDomain'			=> ($oDomain) ? $oDomain->iId : 0,
 			'Name'				=> '',
 			'Email'				=> '',
 			'Members'			=> array(),

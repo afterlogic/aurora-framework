@@ -21,7 +21,7 @@ if ($oHttp->HasPost('ObjectName'))
 	$oManagerApi = \CApi::GetCoreManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
 
-	$aItems = $oManagerApi->getObjects($oHttp->GetPost('ObjectName'));
+	$aItems = $oManagerApi->getEntities($oHttp->GetPost('ObjectName'));
 	if (is_array($aItems))
 	{
 		foreach ($aItems as $oItem)

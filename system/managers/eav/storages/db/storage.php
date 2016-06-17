@@ -38,15 +38,15 @@ class CApiEavDbStorage extends CApiEavStorage
 
 	/**
 	 */
-	public function isObjectExists($iId)
+	public function isEntityExists($iId)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->isObjectExists($iId)))
+		if ($this->oConnection->Execute($this->oCommandCreator->isEntityExists($iId)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
 			{
-				$bResult = 0 < (int) $oRow->objects_count;
+				$bResult = 0 < (int) $oRow->entities_count;
 			}
 
 			$this->oConnection->FreeResult();
@@ -55,10 +55,10 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $bResult;
 	}	
 	
-	public function createObject($sModule, $sObjectType)
+	public function createEntity($sModule, $sType)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->createObject($sModule, $sObjectType)))
+		if ($this->oConnection->Execute($this->oCommandCreator->createEntity($sModule, $sType)))
 		{
 			$bResult = $this->oConnection->GetLastInsertId();
 		}
@@ -67,30 +67,30 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $bResult;
 	}
 	
-	protected function getObjectBySql($sSql)
+	protected function getEntityBySql($sSql)
 	{
-		$oObject = null;
+		$oEntity = null;
 		if ($this->oConnection->Execute($sSql))
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				if (!isset($oObject))
+				if (!isset($oEntity))
 				{
-					$oObject = call_user_func($oRow->obj_type . '::createInstance', $oRow->obj_module);
+					$oEntity = call_user_func($oRow->entity_type . '::createInstance', $oRow->entity_module);
 				}
 
-				if (isset($oObject))
+				if (isset($oEntity))
 				{
-					$oObject->iObjectId = $oRow->obj_id;
+					$oEntity->iId = $oRow->entity_id;
 
-					if (isset($oRow->prop_key) /*&& $oObject->IsProperty($oRow->prop_key)*/)
+					if (isset($oRow->attr_name) /*&& $oObject->IsProperty($oRow->prop_key)*/)
 					{
-						$mValue = $oRow->{'prop_value_' . $oRow->prop_type};
-						if ($oObject->isEncryptedProperty($oRow->prop_type))
+						$mValue = $oRow->{'attr_value'};
+						if ($oEntity->isEncryptedAttribute($oRow->attr_type))
 						{
 							$mValue = \api_Utils::DecryptValue($mValue);
 						}
-						$oObject->{$oRow->prop_key} = $mValue;
+						$oEntity->{$oRow->attr_name} = $mValue;
 					}
 				}
 			}			
@@ -98,14 +98,14 @@ class CApiEavDbStorage extends CApiEavStorage
 		}
 
 		$this->throwDbExceptionIfExist();
-		return $oObject;
+		return $oEntity;
 	}
 	
 	/**
 	 */
-	public function getObjectById($iId)
+	public function getEntityById($iId)
 	{
-		return $this->getObjectBySql($this->oCommandCreator->getObjectById($iId));
+		return $this->getEntityBySql($this->oCommandCreator->getEntityById($iId));
 	}	
 
 	public function getTypes()
@@ -117,21 +117,21 @@ class CApiEavDbStorage extends CApiEavStorage
 			$mResult = array();
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$mResult[] = $oRow->object_type;
+				$mResult[] = $oRow->entity_type;
 			}
 		}
 		$this->throwDbExceptionIfExist();
 		return $mResult;
 	}	
 	
-	public function getObjectsCount($sType, $aSearchProperties)
+	public function getEntitiesCount($sType, $aSearchAttrs)
 	{
 		$mResult = 0;
-		if ($this->oConnection->Execute($this->oCommandCreator->getObjectsCount($sType, $aSearchProperties)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getEntitiesCount($sType, $aSearchAttrs)))
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$mResult = $oRow->objects_count;
+				$mResult = $oRow->entities_count;
 			}			
 			$this->oConnection->FreeResult();
 		}
@@ -141,25 +141,25 @@ class CApiEavDbStorage extends CApiEavStorage
 	}
 	/**
 	 */
-	public function getObjects($sType, $aViewProperties = array(), $iOffset = 0, $iLimit = 20, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$mResult = false;
 		
-		if ($aViewProperties === null)
+		if ($aViewAttrs === null)
 		{
-			$aViewProperties = array();
+			$aViewAttrs = array();
 		}
-		else if (count($aViewProperties) === 0)
+		else if (count($aViewAttrs) === 0)
 		{
-			$this->oConnection->Execute($this->oCommandCreator->getPropertiesNamesByObjectType($sType));
+			$this->oConnection->Execute($this->oCommandCreator->getAttributesNamesByEntityType($sType));
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$aViewProperties[] = $oRow->property_name;
+				$aViewAttrs[] = $oRow->name;
 			}
 			$this->oConnection->FreeResult();
 		}		
 		
-		if ($this->oConnection->Execute($this->oCommandCreator->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getEntities($sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder)))
 		{
 			$oRow = null;
 			$mResult = array();
@@ -167,29 +167,29 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (class_exists($sType))
 				{
-					$oObject = call_user_func($sType . '::createInstance');
+					$oEntity = call_user_func($sType . '::createInstance');
 				}
 				else
 				{
-					$oObject = new \APropertyBag($sType);
+					$oEntity = new \AEntity($sType);
 				}
-				$oObject->iObjectId = $oRow->obj_id;
-				$oObject->sModuleName =  $oRow->obj_module;
+				$oEntity->iId = $oRow->entity_id;
+				$oEntity->sModuleName =  $oRow->entity_module;
 
 				foreach (get_object_vars($oRow) as $sKey => $mValue)
 				{
-					$sPropertyPos = strrpos($sKey, 'prop_', -5);
-					if ($sPropertyPos !== false)
+					$sAttrPos = strrpos($sKey, 'attr_', -5);
+					if ($sAttrPos !== false)
 					{
-						$sPropertyKey = substr($sKey, 5);
-						if ($oObject->isEncryptedProperty($sPropertyKey))
+						$sAttrKey = substr($sKey, 5);
+						if ($oEntity->isEncryptedAttribute($sAttrKey))
 						{
 							$mValue = \api_Utils::DecryptValue($mValue);
 						}
-						$oObject->{$sPropertyKey} = $mValue;
+						$oEntity->{$sAttrKey} = $mValue;
 					}
 				}
-				$mResult[] = $oObject;
+				$mResult[] = $oEntity;
 			}
 			$this->oConnection->FreeResult();
 		}
@@ -197,7 +197,7 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $mResult;
 	}	
 
-	public function getObjectsByModule($sModule)
+	public function getEntitiesByModule($sModule)
 	{
 		return true;
 	}	
@@ -205,24 +205,24 @@ class CApiEavDbStorage extends CApiEavStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteObject($iId)
+	public function deleteEntity($iId)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteObject($iId));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntity($iId));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
 	/**
 	 */
-	public function isPropertyExists(CProperty $oProperty)
+	public function isAttributeExists(\CAttribute $oAttribute)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->isPropertyExists($oProperty->ObjectId, $oProperty->Name)))
+		if ($this->oConnection->Execute($this->oCommandCreator->isAttributeExists($oAttribute->EntityId, $oAttribute->Name, $oAttribute->Type)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
 			{
-				$bResult = 0 < (int) $oRow->properties_count;
+				$bResult = 0 < (int) $oRow->attrs_count;
 			}
 
 			$this->oConnection->FreeResult();
@@ -233,19 +233,28 @@ class CApiEavDbStorage extends CApiEavStorage
 	
 	/**
 	 */
-	public function setProperties($aObjectIds, $aProperties)
+	public function setAttributes($aEntitiesIds, $aAttributes)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->setProperties($aObjectIds, $aProperties));
+		$aAttributesByTypes = array();
+		foreach ($aAttributes as $oAttribute)
+		{
+			$aAttributesByTypes[$oAttribute->Type][] = $oAttribute;
+		}
+		
+		foreach ($aAttributesByTypes as $sType => $aAttributes)
+		{
+			$this->oConnection->Execute($this->oCommandCreator->setAttributes($aEntitiesIds, $aAttributes, $sType));
+		}
 		$this->throwDbExceptionIfExist();
-		return $bResult;
+		return true;
 	}	
 
 	/**
 	 * @return bool
 	 */
-	public function deleteProperty($iId)
+	public function deleteAttribute($iId)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteProperty($iId));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteAttribute($iId));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
@@ -253,9 +262,9 @@ class CApiEavDbStorage extends CApiEavStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteProperties($iObjectId)
+	public function deleteAttributes($iEntityId)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteProperties($iObjectId));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteAttributes($iEntityId));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
@@ -263,9 +272,9 @@ class CApiEavDbStorage extends CApiEavStorage
 		/**
 	 * @return bool
 	 */
-	public function getPropertiesNamesByObjectType($sObjectTypes)
+	public function getAttributesNamesByEntityType($sEntityTypes)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->getPropertiesNamesByObjectType($sObjectTypes));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}

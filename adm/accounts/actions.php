@@ -9,6 +9,7 @@ if ($oHttp->HasPost('action'))
 	{
 		case 'create': 
 			$mResult = $oAuthDecorator->CreateAccount(
+				0, // tenant id
 				$oHttp->GetPost('user_id', ''),
 				$oHttp->GetPost('login', ''),
 				$oHttp->GetPost('password', '')

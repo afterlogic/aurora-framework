@@ -707,7 +707,7 @@ class CProModule extends ap_Module
 					if (!$oAccount && null !== $iAccountId && 0 < $iAccountId)
 					{
 						$oAccount = $this->getAccount($iAccountId);
-						if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->iObjectId))
+						if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->iId))
 						{
 							$this->oAdminPanel->SetMainObject('account_edit', $oAccount);
 						}
@@ -1036,7 +1036,7 @@ class CProModule extends ap_Module
 		$bResult = false;
 		$iTenantId = $this->oAdminPanel->TenantId();
 		
-		if ($this->oTenantsApi && $oTenant && (0 === $iTenantId ||0 < $iTenantId && $iTenantId === $oTenant->iObjectId))
+		if ($this->oTenantsApi && $oTenant && (0 === $iTenantId ||0 < $iTenantId && $iTenantId === $oTenant->iId))
 		{
 			$bResult = $this->oTenantsApi->updateTenant($oTenant);
 		}
@@ -1182,7 +1182,7 @@ class CProModule extends ap_Module
 			return false;
 		}
 
-		CSession::Set(AP_SESS_DOMAIN_NEXT_EDIT_ID, $oDomain->iObjectId);
+		CSession::Set(AP_SESS_DOMAIN_NEXT_EDIT_ID, $oDomain->iId);
 		return true;
 	}
 

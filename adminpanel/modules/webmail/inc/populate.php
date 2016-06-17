@@ -41,7 +41,7 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 			$bHideProtocol = true;
 			if ($oDomain->IsDefault ||
 				(CSession::Has(AP_SESS_DOMAIN_NEXT_EDIT_ID) &&
-					$oDomain->iObjectId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null)))
+					$oDomain->iId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null)))
 			{
 				$oScreen->Data->SetValue('classHideIncomingMailProtocol', '');
 			}
@@ -52,7 +52,7 @@ class CWebMailPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('textIncomingMailProtocol', '');
 			}
 
-			$oScreen->Data->SetValue('txtFilteHrefAdd', '&filter='.$oDomain->iObjectId);
+			$oScreen->Data->SetValue('txtFilteHrefAdd', '&filter='.$oDomain->iId);
 
 			$oScreen->Data->SetValue('radioAuthTypeAuthCurrentUser', true);
 			$oScreen->Data->SetValue('classHideSsl', $this->oModule->hasSslSupport() ? '' : 'wm_hide');

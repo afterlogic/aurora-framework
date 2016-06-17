@@ -164,7 +164,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 	{
 		/* @var $oAccount CAccount */
 		$oAccount =& $this->oAdminPanel->GetMainObject('account_edit');
-		if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->iObjectId))
+		if ($oAccount && $this->oAdminPanel->HasAccessDomain($oAccount->Domain->iId))
 		{
 			$this->oAdminPanel->DeleteMainObject('account_edit');
 			if ($this->oModule->UpdateAccount($oAccount))
@@ -700,7 +700,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 			if ($this->oModule->CreateDomain($oDomain))
 			{
 				$this->checkBolleanWithMessage(true);
-				$this->Ref = ($oDomain->OverrideSettings) ? '?edit&tab=domains&uid='.$oDomain->iObjectId : '?root';
+				$this->Ref = ($oDomain->OverrideSettings) ? '?edit&tab=domains&uid='.$oDomain->iId : '?root';
 			}
 			else
 			{

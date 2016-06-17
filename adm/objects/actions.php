@@ -16,7 +16,7 @@ switch ($oHttp->GetPost('action'))
 
 			if ($oHttp->HasPost('iObjectId'))
 			{
-				$oObject->iObjectId = (int)$oHttp->GetPost('iObjectId');
+				$oObject->iId = (int)$oHttp->GetPost('iObjectId');
 
 				foreach ($aViewProperties as $property)
 				{
@@ -27,12 +27,12 @@ switch ($oHttp->GetPost('action'))
 				}
 			}
 			
-			$oManagerApi->saveObject($oObject);
+			$oManagerApi->saveEntity($oObject);
 		}
 		break;
 	
 	case 'delete':
-		$oManagerApi->deleteObject($oHttp->GetPost('iObjectId'));
+		$oManagerApi->deleteEntity($oHttp->GetPost('iObjectId'));
 		break;
 	case 'delete_multiple':
 		if ($oHttp->HasPost('ids'))
@@ -40,7 +40,7 @@ switch ($oHttp->GetPost('action'))
 			$aIds = explode(',', $oHttp->GetPost('ids'));
 		}
 		foreach ($aIds as $id) {
-			$oManagerApi->deleteObject((int)$id);
+			$oManagerApi->deleteEntity((int)$id);
 		}
 		break;
 }

@@ -120,7 +120,7 @@ class CBundlePopulateData extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_edit');
 		if ($oDomain)
 		{
-			$oScreen->Data->SetValue('txtFilteHrefAdd', '&filter='.$oDomain->iObjectId);
+			$oScreen->Data->SetValue('txtFilteHrefAdd', '&filter='.$oDomain->iId);
 			$oScreen->Data->SetValue('chEnableSignUp', $oDomain->AllowRegistration);
 			$oScreen->Data->SetValue('chAllowUsersResetPassword', $oDomain->AllowPasswordReset);
 		}

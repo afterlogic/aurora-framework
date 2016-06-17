@@ -49,7 +49,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$oDomain = null;
 		try
 		{
-			$oResult = $this->oEavManager->getObjectById($sDomainId);
+			$oResult = $this->oEavManager->getEntityById($sDomainId);
 			
 			if ($oResult instanceOf \CDomain)
 			{
@@ -75,7 +75,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$oDomain = null;
 		try
 		{
-			$aResultDomains = $this->oEavManager->getObjects('CDomain', 
+			$aResultDomains = $this->oEavManager->getEntities('CDomain', 
 				array(
 				),
 				0,
@@ -109,7 +109,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		{
 			$oDomain = $this->oStorage->getDomainByUrl($sDomainUrl);
 			
-			$aResultDomains = $this->oEavManager->getObjects('CDomain', 
+			$aResultDomains = $this->oEavManager->getEntities('CDomain', 
 				array(
 				),
 				0,
@@ -185,7 +185,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 					}
 
 //					if (!$this->oStorage->createDomain($oDomain))
-					if (!$this->oEavManager->saveObject($oDomain))
+					if (!$this->oEavManager->saveEntity($oDomain))
 					{
 						throw new CApiManagerException(Errs::DomainsManager_DomainCreateFailed);
 					}
@@ -235,7 +235,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				}
 				else
 				{
-					if (!$this->oEavManager->saveObject($oDomain))
+					if (!$this->oEavManager->saveEntity($oDomain))
 					{
 						throw new CApiManagerException(Errs::DomainsManager_DomainUpdateFailed);
 					}
@@ -381,7 +381,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 			}
 
 //			$bResult = $this->oStorage->deleteDomains(array($iDomainId));
-			$bResult = $this->oEavManager->deleteObject($iDomainId);
+			$bResult = $this->oEavManager->deleteEntity($iDomainId);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -457,7 +457,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$oDomain = $this->getDomainByName($sDomainName);
 		if ($oDomain)
 		{
-			$bResult = $this->deleteDomainById($oDomain->iObjectId, $bRemoveAllAccounts);
+			$bResult = $this->deleteDomainById($oDomain->iId, $bRemoveAllAccounts);
 		}
 		else
 		{
@@ -515,7 +515,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				$aFilters['IdTenant'] = $iTenantId;
 			}
 			
-			$aResultDomains = $this->oEavManager->getObjects(
+			$aResultDomains = $this->oEavManager->getEntities(
 				'CDomain', 
 				array(
 					'IsInternal', 
@@ -530,7 +530,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 
 			foreach($aResultDomains as $oDomain)
 			{
-				$aResult[$oDomain->iObjectId] = array($oDomain->IsInternal, $oDomain->Name);
+				$aResult[$oDomain->iId] = array($oDomain->IsInternal, $oDomain->Name);
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -551,7 +551,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$aResult = false;
 		try
 		{
-			$aResultDomains = $this->oEavManager->getObjects(
+			$aResultDomains = $this->oEavManager->getEntities(
 				'CDomain', 
 				array(
 					'IdTenant'
@@ -589,7 +589,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		{
 			$oDomain = $this->oStorage->getDefaultDomainByTenantId($iTenantId);
 			
-			$aResultDomains = $this->oEavManager->getObjects(
+			$aResultDomains = $this->oEavManager->getEntities(
 				'CDomain', 
 				array(),
 				0,
@@ -626,7 +626,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		{
 			if (0 < $iTenantId)
 			{
-				$aResultDomains = $this->oEavManager->getObjects(
+				$aResultDomains = $this->oEavManager->getEntities(
 					'CDomain', 
 					array(
 						'IdTenant'
@@ -642,10 +642,10 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				{
 					$oDomain = $aResultDomains[0];
 					
-					$oProperty = new CProperty('GlobalAddressBook', $iVisibility, $oDomain->getPropertyType('GlobalAddressBook'));
-					$oProperty->ObjectId = $oDomain->iObjectId;
+					$oProperty = new CAttribute('GlobalAddressBook', $iVisibility, $oDomain->getAttributeType('GlobalAddressBook'));
+					$oProperty->EntityId = $oDomain->iId;
 					
-					$bResult = $this->oEavManager->setProperty($oProperty);
+					$bResult = $this->oEavManager->setAttribute($oProperty);
 				}
 			}
 		}
@@ -669,7 +669,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$bResult = false;
 		try
 		{
-			$aResultDomains = $this->oEavManager->getObjects(
+			$aResultDomains = $this->oEavManager->getEntities(
 				'CDomain',
 				array('Name'),
 				0,
@@ -702,7 +702,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 		$iResult = false;
 		try
 		{
-			$aResultDomains = $this->oEavManager->getObjectsCount(
+			$aResultDomains = $this->oEavManager->getEntitiesCount(
 				'CDomain', 
 				array(
 					'Name' => $sSearchDesc,

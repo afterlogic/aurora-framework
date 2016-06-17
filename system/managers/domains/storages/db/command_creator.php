@@ -21,7 +21,7 @@ class CApiDomainsCommandCreator extends api_CommandCreator
 		$aResult = api_AContainer::DbUpdateArray($oDomain, $this->oHelper);
 
 		$sSql = 'UPDATE %sawm_domains SET %s WHERE id_domain = %d';
-		return sprintf($sSql, $this->prefix(), implode(', ', $aResult), $oDomain->iObjectId);
+		return sprintf($sSql, $this->prefix(), implode(', ', $aResult), $oDomain->iId);
 	}
 
 	/**

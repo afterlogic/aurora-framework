@@ -51,7 +51,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 			{
 //				$oAccount = $this->oStorage->getAccountByEmail($sEmail);
 				
-				$aResults = $this->oEavManager->getObjects(
+				$aResults = $this->oEavManager->getEntities(
 					'CAccount', 
 					array(),
 					0,
@@ -93,7 +93,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 			
 			if (is_array($aDomainIds))
 			{
-				$aResultTenants = $this->oEavManager->getObjectsCount(
+				$aResultTenants = $this->oEavManager->getEntitiesCount(
 					'CTenant', 
 					array(
 						'IsDefaultAccount' => true,
@@ -162,7 +162,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 				if (null === $oAccount)
 				{
 //					$oAccount = $this->oStorage->getAccountById($iAccountId);
-					$oAccount = $this->oEavManager->getObjectById($iAccountId);
+					$oAccount = $this->oEavManager->getEntityById($iAccountId);
 				}
 
 				// Default account extension
@@ -256,7 +256,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 				{
 //					$oUser = $this->oStorage->getUserById($iUserId);
 					
-					$oUser = $this->oEavManager->getObjectById($iUserId);
+					$oUser = $this->oEavManager->getEntityById($iUserId);
 					
 					if ($oUser instanceof \CUser)
 					{
@@ -303,7 +303,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 			
 //			def_acct = 1 AND id_user = %d'
 			
-			$aResults = $this->oEavManager->getObjects(
+			$aResults = $this->oEavManager->getEntities(
 				'CAccount', 
 				array('IdDomain'),
 				0,
@@ -340,7 +340,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$iResult = 0;
 		try
 		{
-			$aResults = $this->oEavManager->getObjects(
+			$aResults = $this->oEavManager->getEntities(
 				'CAccount', 
 				array('IsDefaultAccount', 'IdUser'),
 				0,
@@ -353,7 +353,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 			
 			if (isset($aResults[0]))
 			{
-				$iResult = $aResults[0]->iObjectId;
+				$iResult = $aResults[0]->iId;
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -530,7 +530,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 
 							if (0 < $oTenant->QuotaInMB)
 							{
-								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->iObjectId);
+								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->iId);
 								if (((int) ($oAccount->RealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
 								{
 									throw new CApiManagerException(Errs::TenantsManager_QuotaLimitExided);
@@ -579,7 +579,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 					if ($bConnectValid)
 					{
 //						if (!$this->oStorage->createAccount($oAccount))
-						if (!$this->oEavManager->saveObject($oAccount))
+						if (!$this->oEavManager->saveEntity($oAccount))
 						{
 							throw new CApiManagerException(Errs::UserManager_AccountCreateFailed);
 						}
@@ -640,9 +640,9 @@ class CApiUsersManager extends AApiManagerWithStorage
 //			$sSql = 'UPDATE %sawm_accounts SET deleted = %d WHERE id_acct IN (%s)';
 			$oAccount = CAccount::createInstance('Core');
 			
-			$oProperty = new CProperty('IsDisabled', $bIsEnabled, $oAccount->getPropertyType('IsDisabled'));
+			$oProperty = new CAttribute('IsDisabled', $bIsEnabled, $oAccount->getAttributeType('IsDisabled'));
 			//TODO wait for multy object ids implementation in Eav Manager
-			$this->oEavManager->setProperties($aAccountsIds, $oProperty);
+			$this->oEavManager->setAttributes($aAccountsIds, $oProperty);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -691,7 +691,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 							if (0 < $oTenant->QuotaInMB)
 							{
 								$iAccountStorageQuota = $oAccount->GetObsoleteValue('StorageQuota');
-								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->iObjectId);
+								$iSize = $oTenantsApi->GetTenantAllocatedSize($oTenant->iId);
 								$iSize -= (int) ($iAccountStorageQuota / 1024);
 								
 								if (((int) ($oAccount->RealQuotaSize() / 1024)) + $iSize > $oTenant->QuotaInMB)
@@ -726,7 +726,7 @@ class CApiUsersManager extends AApiManagerWithStorage
 				if (!$bUseOnlyHookUpdate)
 				{
 //					if (!$this->oStorage->updateAccount($oAccount))
-					if (!($this->oEavManager->saveObject($oAccount) && $this->oEavManager->saveObject($oAccount->User)))
+					if (!($this->oEavManager->saveEntity($oAccount) && $this->oEavManager->saveEntity($oAccount->User)))
 					{
 						$this->moveStorageExceptionToManager();
 						throw new CApiManagerException(Errs::UserManager_AccountUpdateFailed);

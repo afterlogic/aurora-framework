@@ -4,7 +4,50 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 {
 	define('PSEVEN_APP_ROOT_PATH', rtrim(realpath(__DIR__), '\\/').'/');
 }
+var_dump(getenv('PHP_BINARY'));
+var_dump(getenv('PHPBIN'));
+var_dump(getenv('PHP_BIN'));
+var_dump(getenv('PHP_BINDIR'));
 
+ function find($name, $default = null, array $extraDirs = array())
+    {
+        if (ini_get('open_basedir')) {
+            $searchPath = explode(PATH_SEPARATOR, ini_get('open_basedir'));
+            $dirs = array();
+            foreach ($searchPath as $path) {
+                // Silencing against https://bugs.php.net/69240
+                if (@is_dir($path)) {
+                    $dirs[] = $path;
+                } else {
+                    if (basename($path) == $name && is_executable($path)) {
+                        return $path;
+                    }
+                }
+            }
+        } else {
+            $dirs = array_merge(
+                explode(PATH_SEPARATOR, getenv('PATH') ?: getenv('Path')),
+                $extraDirs
+            );
+        }
+        $suffixes = array('');
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $pathExt = getenv('PATHEXT');
+            $suffixes = $pathExt ? explode(PATH_SEPARATOR, $pathExt) : array('.exe', '.bat', '.cmd', '.com');
+        }
+        foreach ($suffixes as $suffix) {
+            foreach ($dirs as $dir) {
+                if (is_file($file = $dir.DIRECTORY_SEPARATOR.$name.$suffix) && ('\\' === DIRECTORY_SEPARATOR || is_executable($file))) {
+                    return $file;
+                }
+            }
+        }
+        return $default;
+    }
+	
+echo find('php');
+
+exit;
 // utilizing WebMail Pro API
 include_once __DIR__.'/system/api.php';
 
@@ -28,7 +71,7 @@ $mResult = $oAuthDecorator->CreateAccount(
  */
 
 $oEavManager = \CApi::GetCoreManager('eav', 'db');
-class CTest extends APropertyBag
+class CTest extends AEntity
 {
 	/**
 	 * Creates a new instance of the object.
@@ -70,7 +113,7 @@ $oTest->Test1 = 'test1';
 $oTest->Test2 = 'test2';
 
 //$iObjectId = $oEavManager->saveObject($oTest);
-$oNew = $oEavManager->getObjects('CTest');
+$oNew = $oEavManager->getEntities('CTest');
 
 print_r($oNew);
 

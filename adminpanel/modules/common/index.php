@@ -115,7 +115,7 @@ class CCommonModule extends ap_Module
 		}
 		
 		if (CSession::Has(AP_SESS_DOMAIN_NEXT_EDIT_ID) &&
-			$oDomain->iObjectId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null))
+			$oDomain->iId === CSession::get(AP_SESS_DOMAIN_NEXT_EDIT_ID, null))
 		{
 			CSession::clear(AP_SESS_DOMAIN_NEXT_EDIT_ID);
 		}
@@ -370,7 +370,7 @@ class CCommonModule extends ap_Module
 						}
 
 						$oScreen->Data->SetValue('strDomainName', $oDomain->Name.$sTenantAddString);
-						if (0 === $oDomain->iObjectId)
+						if (0 === $oDomain->iId)
 						{
 							$oScreen->Data->SetValue('strDomainName', CApi::I18N('ADMIN_PANEL/DOMAINS_DEFAULT'));
 						}
@@ -591,7 +591,7 @@ class CCommonModule extends ap_Module
 		$bResult = false;
 		$iTenantId = $this->oAdminPanel->TenantId();
 
-		if ($this->oTenantsApi && $oTenant && (0 === $iTenantId ||0 < $iTenantId && $iTenantId === $oTenant->iObjectId))
+		if ($this->oTenantsApi && $oTenant && (0 === $iTenantId ||0 < $iTenantId && $iTenantId === $oTenant->iId))
 		{
 			$bResult = $this->oTenantsApi->updateTenant($oTenant);
 		}

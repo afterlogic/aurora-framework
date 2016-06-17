@@ -45,7 +45,7 @@
  * @package Users
  * @subpackage Classes
  */
-class CUser extends APropertyBag
+class CUser extends AEntity
 {
 	/**
 	 * @var CSubscription

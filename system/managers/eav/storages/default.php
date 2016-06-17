@@ -20,29 +20,21 @@ class CApiEavStorage extends AApiManagerStorage
 	
 	/**
 	 */
-	public function existProperty(CProperty $oProperty)
+	public function existAttribute(CAttribute $oAttribute)
 	{
 		return true;
 	}
 
 	/**
 	 */
-	public function createProperty(CProperty $oProperty)
+	public function createAttribute(CAttribute $oAttribute)
 	{
 		return true;
 	}
 
 	/**
 	 */
-	public function updateProperty(CProperty &$oProperty)
-	{
-		return true;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function deleteProperty($iId)
+	public function updateProperty(CAttribute &$oAttribute)
 	{
 		return true;
 	}
@@ -50,21 +42,29 @@ class CApiEavStorage extends AApiManagerStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteProperties($iObjectId)
+	public function deleteAttribute($iId)
+	{
+		return true;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function deleteAttributes($iEntityId)
 	{
 		return true;
 	}
 
 	/**
 	 */
-	public function getProperties($iObjectId, $sValue)
+	public function getAttributes($iEntityId, $sValue)
 	{
 		return true;
 	}	
 	
 	/**
 	 */
-	public function getProperty(CProperty $oProperty)
+	public function getAttribute(CAttribute $oAttribute)
 	{
 		return true;
 	}	
@@ -76,7 +76,7 @@ class CApiEavStorage extends AApiManagerStorage
 	
 	/**
 	 */
-	public function getObjects($sType)
+	public function getEntities($sType)
 	{
 		return true;
 	}	

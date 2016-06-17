@@ -6,7 +6,7 @@
 /**
  * @package Api
  */
-class APropertyBag
+class AEntity
 {
 	/**
 	 * @var bool
@@ -16,7 +16,7 @@ class APropertyBag
 	/**
 	 * @var int
 	 */
-	public $iObjectId;
+	public $iId;
 
 	/**
 	 * @var string
@@ -43,6 +43,14 @@ class APropertyBag
 	 */
 	protected $aMap;
 	
+	protected static $aTypes = array(
+		'int', 
+		'string', 
+		'text', 
+		'bool', 
+		'datetime'		
+	);
+	
 	/**
 	 * @param string $sClassName
 	 * @param string $sModuleName = ''
@@ -51,11 +59,16 @@ class APropertyBag
 	{
 		$this->__USE_TRIM_IN_STRINGS__ = false;
 		
-		$this->iObjectId = 0;
+		$this->iId = 0;
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 
 		$this->aContainer = array();
+	}
+	
+	public static function getTypes()
+	{
+		return self::$aTypes;
 	}
 
 	/**
@@ -143,10 +156,10 @@ class APropertyBag
 	/**
 	 * @return array
 	 */
-	public function isStringProperty($sPropertyName)
+	public function isStringAttribute($sPropertyName)
 	{
 		return in_array(
-				$this->getPropertyType($sPropertyName), 
+				$this->getAttributeType($sPropertyName), 
 				array(
 					'string', 
 					'text', 
@@ -158,7 +171,7 @@ class APropertyBag
 	/**
 	 * @return array
 	 */
-	public function isEncryptedProperty($sPropertyName)
+	public function isEncryptedAttribute($sPropertyName)
 	{
 		$bResult = false;
 		$aMap = $this->getMap();
@@ -318,7 +331,7 @@ class APropertyBag
 	/**
 	 * @return array
 	 */
-	public function getPropertyType($sPropertyName)
+	public function getAttributeType($sPropertyName)
 	{
 		$mType = 'string';
 		$aMap = $this->getMap();
@@ -344,10 +357,10 @@ class APropertyBag
 	
 	public function toArray()
 	{
-		return array_merge(array('iObjectId' => $this->iObjectId), $this->aContainer);
+		return array_merge(array('iObjectId' => $this->iId), $this->aContainer);
 	}
 	
-	public function getProperties()
+	public function getAttributes()
 	{
 		return $this->aContainer;
 	}

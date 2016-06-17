@@ -1685,7 +1685,7 @@ class CApiIntegratorManager extends AApiManager
 		if ($oUser)
 		{
 			$aAppData['User'] = array(
-				'Id' => $oUser->iObjectId,
+				'Id' => $oUser->iId,
 				'Role' => $oUser->Role,
 				'Name' => $oUser->Name
 			);

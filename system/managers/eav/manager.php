@@ -16,18 +16,18 @@ class CApiEavManager extends AApiManagerWithStorage
 	{
 		parent::__construct('eav', $oManager, $sForcedStorage);
 		
-		$this->inc('classes.property');
+		$this->inc('classes.attribute');
 	}
 	
 	/**
 	 * @return bool
 	 */
-	public function isObjectExists($iObjectId)
+	public function isEntityExists($iId)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->isObjectExists($iObjectId);
+			$bResult = $this->oStorage->isEntityExists($iId);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -38,60 +38,60 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $bResult;		
 	}	
 	
-	public function saveObject(\APropertyBag &$oObject)
+	public function saveEntity(\AEntity &$oEntity)
 	{
 		$mResult = false;
-		if (isset($oObject->iObjectId) && $this->isObjectExists($oObject->iObjectId))
+		if (isset($oEntity->iId) && $this->isEntityExists($oEntity->iId))
 		{
-			$mResult = $this->updateObject($oObject);
+			$mResult = $this->updateEntity($oEntity);
 		}
 		else
 		{
-			$mResult = $this->createObject($oObject);
+			$mResult = $this->createEntity($oEntity);
 		}
 		
 		return $mResult;
 	}
 
-	protected function createObject(\APropertyBag &$oObject)
+	protected function createEntity(\AEntity &$oEntity)
 	{
-		$mResult = $this->oStorage->createObject($oObject->sModuleName, $oObject->sClassName);
+		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName);
 		if (!$mResult)
 		{
 			throw new CApiManagerException(Errs::Main_UnknownError);
 		}
-		else if (0 < count($oObject->getProperties()))
+		else if (0 < count($oEntity->getAttributes()))
 		{
-			$oObject->iObjectId = $mResult;
-			$aObjectProperties = $oObject->getProperties();
-			if (0 < count($aObjectProperties))
+			$oEntity->iId = $mResult;
+			$aEntityAttributes = $oEntity->getAttributes();
+			if (0 < count($aEntityAttributes))
 			{
 				$aProperties = array();
-				foreach ($aObjectProperties as $sKey => $mValue)
+				foreach ($aEntityAttributes as $sKey => $mValue)
 				{
-					$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
+					$aProperties[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getAttributeType($sKey), $oEntity->isEncryptedAttribute($sKey));
 				}
-				$this->setProperties($mResult, $aProperties);
+				$this->setAttributes($mResult, $aProperties);
 			}
 		}
 		
 		return $mResult;
 	}
 	
-	protected function updateObject(\APropertyBag $oObject)
+	protected function updateEntity(\AEntity $oEntity)
 	{
 		$mResult = false;
-		$aObjectProperties = $oObject->getProperties();
-		if (0 < count($aObjectProperties))
+		$aEntityAttributes = $oEntity->getAttributes();
+		if (0 < count($aEntityAttributes))
 		{
-			$aProperties = array();
-			foreach ($aObjectProperties as $sKey => $mValue)
+			$aAttributes = array();
+			foreach ($aEntityAttributes as $sKey => $mValue)
 			{
-				$aProperties[] = new \CProperty($sKey, $oObject->{$sKey}, $oObject->getPropertyType($sKey), $oObject->isEncryptedProperty($sKey));
+				$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getAttributeType($sKey), $oEntity->isEncryptedAttribute($sKey));
 			}
 			try 
 			{
-				$this->setProperties($oObject->iObjectId, $aProperties);
+				$this->setAttributes($oEntity->iId, $aAttributes);
 				$mResult = true;
 			} 
 			catch (Exception $ex) 
@@ -104,14 +104,14 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}	
 	
-	public function deleteObject($iObjectId)
+	public function deleteEntity($iId)
 	{
 		$bResult = true;
 		try
 		{
-			if ($this->oStorage->deleteObject($iObjectId))
+			if ($this->oStorage->deleteEntity($iId))
 			{
-				$bResult = $this->deleteProperties($iObjectId);
+				$bResult = $this->deleteAttributes($iId);
 			}
 		}
 		catch (CApiBaseException $oException)
@@ -136,12 +136,12 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $aTypes;		
 	}
 
-	public function getObjectsCount($sType, $aSearchProperties = array())
+	public function getEntitiesCount($sType, $aSearchAttributes = array())
 	{
 		$iCount = 0;
 		try
 		{
-			$iCount = $this->oStorage->getObjectsCount($sType, $aSearchProperties);
+			$iCount = $this->oStorage->getEntitiesCount($sType, $aSearchAttributes);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -150,12 +150,12 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $iCount;		
 	}
 	
-	public function getObjects($sType, $aViewProperties = array(), $iOffset = 0, $iLimit = 0, $aSearchProperties = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
+	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aSearchAttributes = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$aObjects = null;
 		try
 		{
-			$aObjects = $this->oStorage->getObjects($sType, $aViewProperties, $iOffset, $iLimit, $aSearchProperties, $sOrderBy, $iSortOrder);
+			$aObjects = $this->oStorage->getEntities($sType, $aViewAttributes, $iOffset, $iLimit, $aSearchAttributes, $sOrderBy, $iSortOrder);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -164,24 +164,24 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $aObjects;		
 	}
 	
-	public function getObjectsByModule($sModule)
+	public function getEntitiesByModule($sModule)
 	{
 		// TODO:
 		return false;
 	}
 	
-	public  function getObjectsByModuleAndType($sModule, $sType)
+	public  function geEntitiesByModuleAndType($sModule, $sType)
 	{
 		// TODO:
 		return false;
 	}
 	
-	public function getObjectById($iId)
+	public function getEntityById($iId)
 	{
 		$oObject = null;
 		try
 		{
-			$oObject = $this->oStorage->getObjectById($iId);
+			$oObject = $this->oStorage->getEntityById($iId);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -191,15 +191,15 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 	
 	/**
-	 * @param int|array $mObjectId
+	 * @param int|array $mEntityId
 	 */
-	public function setProperties($mObjectId, $aProperties)
+	public function setAttributes($mEntityId, $aAttributes)
 	{
-		if (!is_array($mObjectId))
+		if (!is_array($mEntityId))
 		{
-			$mObjectId = array($mObjectId);
+			$mEntityId = array($mEntityId);
 		}
-		if (!$this->oStorage->setProperties($mObjectId, $aProperties))
+		if (!$this->oStorage->setAttributes($mEntityId, $aAttributes))
 		{
 			throw new CApiManagerException(Errs::Main_UnknownError);
 		}
@@ -207,14 +207,14 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 */
-	public function setProperty(CProperty $oProperty)
+	public function setAttribute(CAttribute $oAttribute)
 	{
 		$bResult = false;
 		try
 		{
-			if ($oProperty->validate())
+			if ($oAttribute->validate())
 			{
-				if (!$this->oStorage->setProperties(array($oProperty->ObjectId), array($oProperty)))
+				if (!$this->oStorage->setAttributes(array($oAttribute->EntityId), array($oAttribute)))
 				{
 					throw new CApiManagerException(Errs::Main_UnknownError);
 				}
@@ -232,12 +232,12 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteProperty(CProperty $oProperty)
+	public function deleteAttribute(CAttribute $oAttribute)
 	{
 		$bResult = true;
 		try
 		{
-			$bResult = $this->oStorage->deleteProperty($oProperty);
+			$bResult = $this->oStorage->deleteAttribute($oAttribute);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -250,12 +250,12 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteProperties($iObjectId)
+	public function deleteAttributes($iEntityId)
 	{
 		$bResult = true;
 		try
 		{
-			$bResult = $this->oStorage->deleteProperties($iObjectId);
+			$bResult = $this->oStorage->deleteAttributes($iEntityId);
 		}
 		catch (CApiBaseException $oException)
 		{

@@ -45,7 +45,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$sEmail = $oTenant->HelpdeskAdminEmailAccount;
 				if (!$oTenant->IsDefault)
 				{
-					$sUrl.= '='.substr(md5($oTenant->iObjectId.CApi::$sSalt), 0, 8);
+					$sUrl.= '='.substr(md5($oTenant->iId.CApi::$sSalt), 0, 8);
 				}
 
 				$oScreen->Data->SetValue('txtClientsHelpdeskURL', $sUrl);
@@ -203,7 +203,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_filter');
 		if ($oDomain)
 		{
-			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->iObjectId) ? 0 : $oDomain->iObjectId);
+			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->iId) ? 0 : $oDomain->iId);
 
 			if ($oDomain->IsDefault)
 			{
@@ -266,7 +266,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oDomain =& $this->oAdminPanel->GetMainObject('domain_filter');
 		if ($oDomain)
 		{
-			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->iObjectId) ? 0 : $oDomain->iObjectId);
+			$oScreen->Data->SetValue('hiddenDomainId', empty($oDomain->iId) ? 0 : $oDomain->iId);
 		}
 	}	
 
@@ -561,7 +561,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oChannel =& $this->oAdminPanel->GetMainObject('channel_edit');
 		if ($oChannel)
 		{
-			$oScreen->Data->SetValue('intChannelId', $oChannel->iObjectId);
+			$oScreen->Data->SetValue('intChannelId', $oChannel->iId);
 			$oScreen->Data->SetValue('txtLogin', $oChannel->Login);
 			$oScreen->Data->SetValue('txtPassword', $oChannel->Password);
 			$oScreen->Data->SetValue('txtDescription', $oChannel->Description);
@@ -576,11 +576,11 @@ class CProPopulateData extends ap_CoreModuleHelper
 		/* @var $oTenant CTenant */
 		$oTenant =& $this->oAdminPanel->GetMainObject('tenant_edit');
 		
-		if ($oTenant && 0 < $oTenant->iObjectId)
+		if ($oTenant && 0 < $oTenant->iId)
 		{
 			$oScreen->Data->SetValue('txtToken', CApi::getCsrfToken('p7admToken'));
 
-			$oScreen->Data->SetValue('intTenantId', $oTenant->iObjectId);
+			$oScreen->Data->SetValue('intTenantId', $oTenant->iId);
 			$oScreen->Data->SetValue('txtLogin', $oTenant->Login);
 			$oScreen->Data->SetValue('txtEmail', $oTenant->Email);
 			$oScreen->Data->SetValue('txtDescription', $oTenant->Description);
@@ -665,7 +665,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('txtUserLimitDesk', '('.$oTenant->getUserCount().' '.CApi::I18N('ADMIN_PANEL/TENANTS_USER_USED').')');
 			}
 
-			$aDomainsArray = $this->oModule->getTenantDomains($oTenant->iObjectId);
+			$aDomainsArray = $this->oModule->getTenantDomains($oTenant->iId);
 
 			$sDomainOptions = '';
 			if (is_array($aDomainsArray) && count($aDomainsArray) > 0)
@@ -689,7 +689,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 		$oChannel =& $this->oAdminPanel->GetMainObject('channel_edit');
 		if ($oChannel)
 		{
-			$oScreen->Data->SetValue('intChannelId', $oChannel->iObjectId);
+			$oScreen->Data->SetValue('intChannelId', $oChannel->iId);
 			$oScreen->Data->SetValue('txtLogin', $oChannel->Login);
 			$oScreen->Data->SetValue('txtPassword', $oChannel->Password);
 			$oScreen->Data->SetValue('txtDescription', $oChannel->Description);
