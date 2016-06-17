@@ -1072,12 +1072,8 @@ class CApiIntegratorManager extends AApiManager
 			$iImageUploadSizeLimit = ((bool) $oSettings->GetConf('WebMail/EnableAttachmentSizeLimit'))
 				? (int) $oSettings->GetConf('WebMail/ImageUploadSizeLimit') : 0;
 
-			$iFileSizeLimit = ((bool) $oSettings->GetConf('Files/EnableSizeLimit'))
-				? (int) $oSettings->GetConf('Files/SizeLimit') : 0;
-
 			$aResult['AttachmentSizeLimit'] = $iAttachmentSizeLimit;
 			$aResult['ImageUploadSizeLimit'] = $iImageUploadSizeLimit;
-			$aResult['FileSizeLimit'] = $iFileSizeLimit;
 			$aResult['AutoSave'] = (bool) CApi::GetConf('webmail.autosave', true);
 
 			$aResult['IdleSessionTimeout'] = (int) $oSettings->GetConf('WebMail/IdleSessionTimeout');
