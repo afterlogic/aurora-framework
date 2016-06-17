@@ -323,10 +323,7 @@ ON DUPLICATE KEY UPDATE
 	 */
 	public function deleteAttributes($iEntityId)
 	{
-		return sprintf(
-				'DELETE FROM %seav_attributes WHERE id_entity = %d', 
-				$this->prefix(), $iEntityId
-		);
+		return '';
 	}
 
 	/**

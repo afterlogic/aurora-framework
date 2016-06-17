@@ -109,10 +109,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		$bResult = true;
 		try
 		{
-			if ($this->oStorage->deleteEntity($iId))
-			{
-				$bResult = $this->deleteAttributes($iId);
-			}
+			$bResult = $this->oStorage->deleteEntity($iId);
 		}
 		catch (CApiBaseException $oException)
 		{
