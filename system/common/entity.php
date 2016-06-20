@@ -43,6 +43,9 @@ class AEntity
 	 */
 	protected $aMap;
 	
+	/**
+	 * @var array
+	 */
 	protected static $aTypes = array(
 		'int', 
 		'string', 
@@ -238,7 +241,7 @@ class AEntity
 		return $mReturn;
 	}
 
-	public function getType($sPropertyName)
+	public function getType($sAttributeName)
 	{
 		
 	}
@@ -280,14 +283,6 @@ class AEntity
 	/**
 	 * @return bool
 	 */
-	public function initBeforeChange()
-	{
-		return true;
-	}
-
-	/**
-	 * @return bool
-	 */
 	public function validate()
 	{
 		return true;
@@ -301,7 +296,7 @@ class AEntity
 		if (!isset($this->aMap))
 		{
 			$aStaticMap = $this->getStaticMap();
-			$aModules = \CApi::GetModuleManager()->GetModules();
+			$aModules = \CApi::GetModules();
 
 			foreach ($aModules as $oModule)
 			{
@@ -316,13 +311,13 @@ class AEntity
 	/**
 	 * @return array
 	 */
-	public function getProperyAttributes($sPropertyName)
+	public function getAttributeInfo($sAttributeName)
 	{
 		$mResult = false;
 		$aMap = $this->getMap();
-		if (isset($aMap[$sPropertyName]))
+		if (isset($aMap[$sAttributeName]))
 		{
-			$mResult = $aMap[$sPropertyName];
+			$mResult = $aMap[$sAttributeName];
 		}
 		
 		return $mResult;
@@ -331,13 +326,13 @@ class AEntity
 	/**
 	 * @return array
 	 */
-	public function getAttributeType($sPropertyName)
+	public function getAttributeType($sAttributeName)
 	{
 		$mType = 'string';
 		$aMap = $this->getMap();
-		if (isset($aMap[$sPropertyName]))
+		if (isset($aMap[$sAttributeName]))
 		{
-			$mType = $aMap[$sPropertyName][0];
+			$mType = $aMap[$sAttributeName][0];
 			if ($mType === 'encrypted')
 			{
 				$mType = 'string';
@@ -346,6 +341,15 @@ class AEntity
 		
 		return $mType;
 	}	
+
+	/**
+	 * @param array 
+	 */
+	public function setStaticMap($aStaticMap)
+	{
+		$this->aStaticMap = $aStaticMap;
+		$this->SetDefaults();
+	}
 
 	/**
 	 * @return array

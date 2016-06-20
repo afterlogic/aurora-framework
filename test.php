@@ -84,9 +84,9 @@ class CTest extends AEntity
 		
 		$this->__USE_TRIM_IN_STRINGS__ = true;
 		
-		$this->aStaticMap = array(
+		$this->setStaticMap(array(
 			'Test'	=> array('string', '')
-		);
+		));
 		
 		$this->SetDefaults();
 	}

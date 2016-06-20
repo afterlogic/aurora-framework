@@ -149,16 +149,16 @@ class CApiEavManager extends AApiManagerWithStorage
 	
 	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aSearchAttributes = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
-		$aObjects = null;
+		$aEntities = null;
 		try
 		{
-			$aObjects = $this->oStorage->getEntities($sType, $aViewAttributes, $iOffset, $iLimit, $aSearchAttributes, $sOrderBy, $iSortOrder);
+			$aEntities = $this->oStorage->getEntities($sType, $aViewAttributes, $iOffset, $iLimit, $aSearchAttributes, $sOrderBy, $iSortOrder);
 		}
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
-		return $aObjects;		
+		return $aEntities;		
 	}
 	
 	public function getEntitiesByModule($sModule)
@@ -175,16 +175,16 @@ class CApiEavManager extends AApiManagerWithStorage
 	
 	public function getEntityById($iId)
 	{
-		$oObject = null;
+		$oEntity = null;
 		try
 		{
-			$oObject = $this->oStorage->getEntityById($iId);
+			$oEntity = $this->oStorage->getEntityById($iId);
 		}
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
-		return $oObject;
+		return $oEntity;
 	}
 	
 	/**

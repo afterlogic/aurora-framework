@@ -52,12 +52,6 @@ class CAttribute
 			case "text" :
 				$bResult = true;
 				break;
-			case "int" :
-				$bResult = false;
-				break;
-			case "bool" :
-				$bResult = false;
-				break;
 			case "datetime" :
 				$bResult = true;
 				break;
@@ -71,20 +65,11 @@ class CAttribute
 		$bResult = '%s';
 		switch ($this->Type)
 		{
-			case "string" :
-				$bResult = '%s';
-				break;
-			case "text" :
-				$bResult = '%s';
-				break;
 			case "int" :
 				$bResult = '%d';
 				break;
 			case "bool" :
 				$bResult = '%d';
-				break;
-			case "datetime" :
-				$bResult = '%s';
 				break;
 		}	
 		
