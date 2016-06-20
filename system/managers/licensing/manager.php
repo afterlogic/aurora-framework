@@ -34,7 +34,8 @@ class CApiLicensingManager extends AApiManager
 	public function UpdateLicenseKey($sKey)
 	{
 		$this->oSettings->SetConf('Common/LicenseKey', $sKey);
-		return $this->oSettings->SaveToXml();
+//		return $this->oSettings->SaveToXml();
+		return true;
 	}
 
 	/**

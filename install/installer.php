@@ -26,8 +26,9 @@ class CInstaller
 	 */
 	var $_aSteps = array(
 		'compatibility' => 'Compatibility Test',
+		'modules' => 'Install modules',
 		'license' => 'License Agreement',
-		'license-key' => 'License Key',
+//		'license-key' => 'License Key',
 		'db' => 'Database Settings',
 		'dav' => 'Mobile Settings',
 		'admin-panel' => 'Admin Panel Settings',
@@ -58,8 +59,15 @@ class CInstaller
 
 		$this->_aTemplateCache = array();
 		$this->_aMenu = array(
-			'compatibility', 'license', 'license-key', 'db',
-			'dav', 'admin-panel', 'email-server-test', 'completed'
+			'compatibility',
+			'modules',
+			'license',
+//			'license-key',
+			'db',
+			'dav',
+			'admin-panel',
+			'email-server-test',
+			'completed'
 		);
 
 		if (@file_exists(WM_INSTALLER_PATH.'../libraries/afterlogic/common/lite.php'))

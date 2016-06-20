@@ -11,7 +11,7 @@ class CCompatibilityStep extends AInstallerStep
 
 	function CCompatibilityStep()
 	{
-		include_once WM_INSTALLER_PATH . '/../core/api.php';		
+		include_once WM_INSTALLER_PATH . '/../system/api.php';		
 		
 		$this->aCompatibility = array();
 		$this->Validate();
@@ -85,7 +85,7 @@ class CCompatibilityStep extends AInstallerStep
 		$this->aCompatibility['data.dir.delete'] =
 			(int) @rmdir($this->aCompatibility['data.dir'].'/'.$sTempPathName);
 
-		$this->aCompatibility['settings.file'] = $this->aCompatibility['data.dir'].\api_Settings::XML_FILE_NAME;
+		$this->aCompatibility['settings.file'] = $this->aCompatibility['data.dir'].\api_Settings::JSON_FILE_NAME;
 		
 		if (!@file_exists($this->aCompatibility['settings.file']))
 		{
@@ -95,7 +95,7 @@ class CCompatibilityStep extends AInstallerStep
 		$this->aCompatibility['settings.file.exist'] = (int) @file_exists($this->aCompatibility['settings.file']);
 		$this->aCompatibility['settings.file.read'] = (int) @is_readable($this->aCompatibility['settings.file']);
 		$this->aCompatibility['settings.file.write'] = (int) @is_writable($this->aCompatibility['settings.file']);
-
+		
 		$this->aCompatibility['compatibility'] = (int)
 			$this->aCompatibility['php.version.valid'] &&
 			$this->aCompatibility['safe-mode.valid'] &&
