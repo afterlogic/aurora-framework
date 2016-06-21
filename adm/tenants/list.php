@@ -1,6 +1,15 @@
 <?php
 	$oManagerApi = \CApi::GetModule('Core')->GetManager('tenants');
-	$aItems = $oManagerApi->getTenantList(0, 0);
+	$aTenants = $oManagerApi->getTenantList(0, 0);
+	$aItems = array();
+	foreach($aTenants as $oTenat)
+	{
+		$aItems[$oTenat->iId] = array(
+			$oTenat->Name,
+			$oTenat->Description,
+			$oTenat->IdChannel
+		);
+	}
 ?>
 <div id="tenants-screen" class="row">
 	<div class="col-sm-6">

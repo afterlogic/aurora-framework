@@ -1,7 +1,17 @@
 <?php
 	$oManagerApi = \CApi::GetModule('Core')->GetManager('users');
 	//	var_dump($oManagerApi);
-	$aItems = $oManagerApi->getUserList(0, 0);
+	$aResults = $oManagerApi->getUserList(0, 0);
+	$aItems = array();
+	foreach($aResults as $oUser)
+	{
+		$aItems[$oUser->iId] = array(
+			$oUser->Name,
+			$oUser->IsDisabled,
+			$oUser->LastLogin,
+			$oUser->IdTenant
+		);
+	}
 //	var_dump($aItems);
 ?>
 	
