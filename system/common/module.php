@@ -1129,5 +1129,47 @@ abstract class AApiModule
 	{
 		return null;
 	}
+	
+	/**
+	 * @param string $sData
+	 * @param array $aParams = null
+	 *
+	 * @return string
+	 */
+	public function i18N($sData, $iUserId = null, $aParams = null, $iPluralCount = null)
+	{
+		
+		// TODO:
+		$sLanguage = /*$oAccount ? $oAccount->User->DefaultLanguage :*/ '';
+		
+		if (empty($sLanguage)) {
+			$oSettings =& \CApi::GetSettings();
+			$sLanguage = $oSettings->GetConf('DefaultLanguage');
+		}
+
+		$aLang = null;
+		if (isset(\CApi::$aClientI18N[$this->GetName()][$sLanguage])) {
+			$aLang = \CApi::$aClientI18N[$this->GetName()][$sLanguage];
+		} else {
+			\CApi::$aClientI18N[$this->GetName()][$sLanguage] = false;
+				
+			$sLangFile = $this->GetPath().'/i18n/'.$sLanguage.'.ini';
+			if (!@file_exists($sLangFile)) {
+				$sLangFile = $this->GetPath().'/i18n/English.ini';
+				$sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
+			}
+
+			if (0 < strlen($sLangFile)) {
+				$aLang = \CApi::convertIniToLang($sLangFile);
+				if (is_array($aLang)) {
+					\CApi::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
+				}
+			}
+		}
+
+		//return self::processTranslateParams($aLang, $sData, $aParams);
+		return isset($iPluralCount) ? \CApi::processTranslateParams($aLang, $sData, $aParams, \CApi::getPlural($sLanguage, $iPluralCount)) : 
+			\CApi::processTranslateParams($aLang, $sData, $aParams);
+	}
 }
 

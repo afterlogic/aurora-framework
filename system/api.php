@@ -888,7 +888,7 @@ class CApi
 	 * @param array|null $aParams = null
 	 * @return array
 	 */
-	private static function processTranslateParams($mLang, $sData, $aParams = null, $iPlural = null)
+	public static function processTranslateParams($mLang, $sData, $aParams = null, $iPlural = null)
 	{
 		$sResult = $sData;
 		if ($mLang && isset($mLang[$sData])) {
