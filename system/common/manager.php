@@ -349,7 +349,9 @@ abstract class AApiManager
 			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
 		}
 		
-		return false;			}
+		return false;			
+	
+	}
 
 	/**
 	 * @param string $sInclude
