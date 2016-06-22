@@ -17,6 +17,21 @@ class CModulesStep extends AInstallerStep
 		$sPhpPath = isset($_POST['sPhpPath']) ? (string)$_POST['sPhpPath'] : '';
 		$sTempPath = PSEVEN_APP_ROOT_PATH.'data/temp/';
 		
+		if (file_exists($sTempPath.'composer.json'))
+		{
+			unlink($sTempPath.'composer.json');
+		}
+		
+		if (file_exists($sTempPath.'modules.json'))
+		{
+			unlink($sTempPath.'modules.json');
+		}
+		
+		if (file_exists($sTempPath.'composer.lock'))
+		{
+			unlink($sTempPath.'composer.lock');
+		}
+		
 		//string '"f:\web\modules\php\PHP-5.6-x64\php-cgi.EXE" F:\web\domains\project8.dev/composer.phar update -n -d "F:\web\domains\project8.dev/" 
 		
 		copy(WM_INSTALLER_PATH.'composer/composer-modules.json', $sTempPath.'composer.json');
@@ -45,11 +60,8 @@ class CModulesStep extends AInstallerStep
 //		var_dump($sCommand);
 		$result = shell_exec($sCommand);
 //		echo $result;
-//		exit;
-//		unlink($sTempPath.'composer.json');
-//		unlink($sTempPath.'modules.json');
-//		unlink($sTempPath.'composer.lock');
-
+		
+		
 		return true;
 	}
 
@@ -73,7 +85,7 @@ class CModulesStep extends AInstallerStep
 			'ModulesList' => $sModulesList,
 			'DevModeChecked' => (!isset($_POST['chDevMode'])) ? '' : 'checked="cheched"',
 			'chDevModeText' => 'Will be added .git',
-			'sPhpPath' => $this->find('php-cgi')
+			'sPhpPath' => $this->find('php')
 		);
 	}
 	

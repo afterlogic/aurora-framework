@@ -26,6 +26,16 @@ class CLibrariesStep extends AInstallerStep
 		$sPhpPath = isset($_POST['sPhpPath']) ? (string)$_POST['sPhpPath'] : '';
 		$sTempPath = PSEVEN_APP_ROOT_PATH.'data/temp/';
 		
+		if (file_exists($sTempPath.'composer.json'))
+		{
+			unlink($sTempPath.'composer.json');
+		}
+		
+		if (file_exists($sTempPath.'composer.lock'))
+		{
+			unlink($sTempPath.'composer.lock');
+		}
+		
 		copy(WM_INSTALLER_PATH.'composer/composer.json', $sTempPath.'composer.json');
 		
 		//string '"f:\web\modules\php\PHP-5.6-x64\php-cgi.EXE" F:\web\domains\project8.dev/composer.phar update -n -d "F:\web\domains\project8.dev/" 
@@ -34,9 +44,6 @@ class CLibrariesStep extends AInstallerStep
 //		var_dump($sCommand);
 		$result = shell_exec($sCommand);
 
-		unlink($sTempPath.'composer.json');
-		unlink($sTempPath.'composer.lock');
-		
 		return true;
 	}
 
@@ -58,7 +65,7 @@ class CLibrariesStep extends AInstallerStep
 		
 		return array(
 			'LibrariesList' => $sLibrariesList,
-			'sPhpPath' => $this->find('php-cgi')
+			'sPhpPath' => $this->find('php')
 		);
 	}
 	
