@@ -81,7 +81,7 @@ class CApiEavDbStorage extends CApiEavStorage
 
 				if (isset($oEntity))
 				{
-					$oEntity->iId = $oRow->entity_id;
+					$oEntity->iId = (int) $oRow->entity_id;
 
 					if (isset($oRow->attr_name) /*&& $oObject->IsProperty($oRow->prop_key)*/)
 					{
@@ -173,7 +173,7 @@ class CApiEavDbStorage extends CApiEavStorage
 				{
 					$oEntity = new \AEntity($sType);
 				}
-				$oEntity->iId = $oRow->entity_id;
+				$oEntity->iId = (int) $oRow->entity_id;
 				$oEntity->sModuleName =  $oRow->entity_module;
 
 				foreach (get_object_vars($oRow) as $sKey => $mValue)
