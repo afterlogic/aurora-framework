@@ -1,6 +1,16 @@
 <?php
 	$oManagerApi = \CApi::GetModule('Core')->GetManager('channels');
-	$aItems = $oManagerApi->getChannelList(0, 0);
+	$aResultChannels = $oManagerApi->getChannelList();
+	$aItems = array();
+	foreach($aResultChannels as $oChannel)
+	{
+		$aItems[$oChannel->iId] = array(
+			$oChannel->Login,
+			$oChannel->Description,
+			$oChannel->Password
+		);
+	}
+	
 ?>
 <div id="channels-screen" class="row">
 	<div class="col-sm-6">
