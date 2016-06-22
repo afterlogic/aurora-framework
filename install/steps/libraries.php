@@ -40,7 +40,7 @@ class CLibrariesStep extends AInstallerStep
 		
 		//string '"f:\web\modules\php\PHP-5.6-x64\php-cgi.EXE" F:\web\domains\project8.dev/composer.phar update -n -d "F:\web\domains\project8.dev/" 
 		set_time_limit(600);
-		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar install -n --working-dir "'.$sTempPath.'"';
+		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar update -n --working-dir "'.$sTempPath.'"';
 //		var_dump($sCommand);
 		$result = shell_exec($sCommand);
 

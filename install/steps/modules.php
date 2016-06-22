@@ -56,7 +56,7 @@ class CModulesStep extends AInstallerStep
 		}
 		
 		set_time_limit(600);
-		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar install -n --working-dir "'.$sTempPath.'"'.($bDevMode ? '' : ' --prefer-dist');
+		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar update -n --working-dir "'.$sTempPath.'"'.($bDevMode ? '' : ' --prefer-dist');
 //		var_dump($sCommand);
 		$result = shell_exec($sCommand);
 //		echo $result;

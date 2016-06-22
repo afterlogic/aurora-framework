@@ -97,6 +97,8 @@ class CCompatibilityStep extends AInstallerStep
 		$this->aCompatibility['settings.file.read'] = (int) @is_readable($this->aCompatibility['settings.file']);
 		$this->aCompatibility['settings.file.write'] = (int) @is_writable($this->aCompatibility['settings.file']);
 		
+		$this->aCompatibility['composer.file.exist'] = (int) @file_exists(WM_INSTALLER_PATH.'../composer.phar');
+	
 		$this->aCompatibility['compatibility'] = (int)
 			$this->aCompatibility['php.version.valid'] &&
 			$this->aCompatibility['safe-mode.valid'] &&
@@ -115,7 +117,8 @@ class CCompatibilityStep extends AInstallerStep
 			$this->aCompatibility['data.dir.delete'] &&
 			$this->aCompatibility['settings.file.exist'] &&
 			$this->aCompatibility['settings.file.read'] &&
-			$this->aCompatibility['settings.file.write'];
+			$this->aCompatibility['settings.file.write'] &&
+			$this->aCompatibility['composer.file.exist'];
 	}
 
 	function TemplateValues()
@@ -236,6 +239,11 @@ By default, the data folder is webmail subfolder, and if it\'s not the case make
 You should grant read/write permission over settings file to your web server user.
 For instructions, please refer to this section of documentation and our
 <a href="http://www.afterlogic.com/support/faq-webmail-pro-php#3.1" target="_blank">FAQ</a>.'),
+			
+			'ComposerFile' => ($this->aCompatibility['composer.file.exist'])
+				? $this->getSuccessHtmlValue('Found')
+				: $this->getErrorHtmlValue('Not Found, can\'t find Composer file.', '
+Make sure composer.phar exists in root directory. Note, you can get it at official page: <a href="https://getcomposer.org/composer.phar" target="_blank">https://getcomposer.org/composer.phar</a>'),
 
 			'Result' => ($this->aCompatibility['compatibility']) ?
 					'The current server environment meets all the requirements. Click Next to proceed.' :
