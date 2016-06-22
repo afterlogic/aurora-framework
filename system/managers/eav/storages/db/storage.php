@@ -210,7 +210,7 @@ class CApiEavDbStorage extends CApiEavStorage
 		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntity($iId));
 		if ($bResult)
 		{
-			$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteAttributes($iId));
+			$bResult = $this->deleteAttributes($iId);
 		}
 		
 		$this->throwDbExceptionIfExist();
@@ -269,9 +269,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	 */
 	public function deleteAttributes($iEntityId)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteAttributes($iEntityId));
-		$this->throwDbExceptionIfExist();
-		return $bResult;
+		return true;
 	}
 	
 		/**
