@@ -42,49 +42,52 @@ class CApiModuleManager
 	
 	public function init()
 	{
-		$sTenant = '';
 		$sModulesPath = $this->GetModulesPath();
 		
 		$oCoreModule = $this->loadModule('Core', $sModulesPath);
 		if ($oCoreModule !== false)
 		{
 			$sTenant = $oCoreModule->GetTenantName();
-		}
-		
-		$aModulePath = array(
-			$sModulesPath
-		);
-		if (!empty(trim($sTenant)))
-		{
-			$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
-			array_unshift($aModulePath, $sTenantModulesPath);
-		}
-		$aModulesPath = array();
-		foreach ($aModulePath as $sModulesPath)
-		{
-			if (@is_dir($sModulesPath))
+			$aModulePath = array(
+				$sModulesPath
+			);
+			if (!empty(trim($sTenant)))
 			{
-				if (false !== ($rDirHandle = @opendir($sModulesPath)))
+				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
+				array_unshift($aModulePath, $sTenantModulesPath);
+			}
+			$aModulesPath = array();
+			foreach ($aModulePath as $sModulesPath)
+			{
+				if (@is_dir($sModulesPath))
 				{
-					while (false !== ($sFileItem = @readdir($rDirHandle)))
+					if (false !== ($rDirHandle = @opendir($sModulesPath)))
 					{
-						if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
+						while (false !== ($sFileItem = @readdir($rDirHandle)))
 						{
-							$this->loadModuleConfig($sFileItem, $sModulesPath);
-							$aModulesPath[$sModulesPath][] = $sFileItem;
+							if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
+							{
+								$this->loadModuleConfig($sFileItem, $sModulesPath);
+								$aModulesPath[$sModulesPath][] = $sFileItem;
+							}
 						}
-					}
 
-					@closedir($rDirHandle);
+						@closedir($rDirHandle);
+					}
+				}
+			}
+			foreach ($aModulesPath as $sModulePath => $aModulePath)
+			{
+				foreach ($aModulePath as $sModuleName)
+				{
+					$this->loadModule($sModuleName, $sModulesPath);
 				}
 			}
 		}
-		foreach ($aModulesPath as $sModulePath => $aModulePath)
+		else
 		{
-			foreach ($aModulePath as $sModuleName)
-			{
-				$this->loadModule($sModuleName, $sModulesPath);
-			}
+			echo 'Can\'t load \'Core\' Module';
+			return '';
 		}
 	}
 	

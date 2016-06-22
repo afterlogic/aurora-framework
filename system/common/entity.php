@@ -228,17 +228,25 @@ class AEntity
 	 */
 	public function __get($sKey)
 	{
-		$mReturn = null;
+		$mValue = null;
 		if (array_key_exists($sKey, $this->aContainer))
 		{
-			$mReturn = $this->aContainer[$sKey];
+			$mValue = $this->aContainer[$sKey];
+			
+			$aMap = $this->getMap();
+			$sType = 'string';
+			if (isset($aMap[$sKey]))
+			{
+				$sType = $aMap[$sKey][0];
+			}
+			$this->setType($mValue, $sType);
 		}
 		else
 		{
 			throw new Exception('Undefined property '.$sKey);
 		}
 
-		return $mReturn;
+		return $mValue;
 	}
 
 	public function getType($sAttributeName)
