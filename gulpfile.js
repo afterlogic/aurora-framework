@@ -140,8 +140,7 @@ function jsTask(sName, oData)
 							loader: 'replace-module-names-loader'
 						}
 					]
-				},
-				devtool: 'source-map'
+				}
 			},
 			compileCallback = function (sTaskName, err, stats) {
 				if (err)
