@@ -11,7 +11,7 @@ class CCompatibilityStep extends AInstallerStep
 
 	function CCompatibilityStep()
 	{
-		include_once WM_INSTALLER_PATH . '/../system/api.php';		
+//		include_once WM_INSTALLER_PATH . '/../system/api.php';		
 		
 		$this->aCompatibility = array();
 		$this->Validate();
@@ -85,6 +85,7 @@ class CCompatibilityStep extends AInstallerStep
 		$this->aCompatibility['data.dir.delete'] =
 			(int) @rmdir($this->aCompatibility['data.dir'].'/'.$sTempPathName);
 
+		include_once PSEVEN_APP_ROOT_PATH.'system/common/settings.php';
 		$this->aCompatibility['settings.file'] = $this->aCompatibility['data.dir'].\api_Settings::JSON_FILE_NAME;
 		
 		if (!@file_exists($this->aCompatibility['settings.file']))

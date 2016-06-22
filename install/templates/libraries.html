@@ -1,21 +1,12 @@
 <input type="submit" name="next_btn" style="position: absolute; visibility: hidden;" value="Next" />
 
 <h1>
-	Install modules
+	Install common libraries
 </h1>
 
 <p class="description">
-	These modules will be installed:
+	These libraries will be installed:
 </p>
-<div class="field_list">
-	<span class="field_value">
-		<input type="checkbox" name="chDevMode" id="chDevMode" value="1" {{DevModeChecked}} />
-		<label for="chDevMode">Install in dev. mode</label>
-		<br />
-		<span class="field_description">{{chDevModeText}}</span>
-	</span>
-</div>
-<br />
 <div class="field_list">
 	<label class="field_label_tiny">Path to php executable:</label>
 	<span class="field_value">
@@ -24,7 +15,7 @@
 </div>
 <br />
 <div class="field_list">
-	{{ModulesList}}
+	{{LibrariesList}}
 </div>
 
 <div class="buttons">

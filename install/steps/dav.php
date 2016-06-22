@@ -1,7 +1,7 @@
 <?php
 
 // api
-include_once WM_INSTALLER_PATH.'../core/api.php';
+include_once WM_INSTALLER_PATH.'../system/api.php';
 
 class CDavStep extends AInstallerStep
 {
@@ -36,7 +36,7 @@ class CDavStep extends AInstallerStep
 
 				$bResult =
 					$oApiDavManager->setMobileSyncEnable((bool) CPost::get('chEnableMobileSync', false)) &&
-					$this->oSettings->SaveToXml()
+					$this->oSettings->Save()
 				;
 			}
 		}

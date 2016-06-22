@@ -1,7 +1,7 @@
 <?php
 
 // api
-include_once WM_INSTALLER_PATH.'../core/api.php';
+include_once WM_INSTALLER_PATH.'../system/api.php';
 
 class CDbStep extends AInstallerStep
 {
@@ -31,7 +31,8 @@ class CDbStep extends AInstallerStep
 		}
 		if (CPost::Has('txtSqlName'))
 		{
-			$this->oSettings->SetConf('Common/DBName', CPost::get('txtSqlName'));
+			$sDbName = CPost::get('txtSqlName');
+			$this->oSettings->SetConf('DBName', $sDbName);
 		}
 		if (CPost::Has('txtSqlSrc'))
 		{
@@ -42,7 +43,7 @@ class CDbStep extends AInstallerStep
 			$this->oSettings->SetConf('Common/DBPrefix', CPost::get('prefixString'));
 		}
 
-		$this->oSettings->SaveToXml();
+		$this->oSettings->Save();
 	}
 	
 	public function DoPost()
@@ -128,8 +129,30 @@ class CDbStep extends AInstallerStep
 					}
 				}
 			}
+			
+			if (isset($_POST['chSampleData']) && 1 === (int) $_POST['chSampleData'])
+			{
+				/* @var $oApiDbManager CApiDbManager */
+				$oApiDbManager = CApi::GetCoreManager('db');
+				if ($oApiDbManager->isAUsersTableExists())
+				{
+					$_SESSION['wm_install_db_foot_error'] = 'The data tables already exist. To proceed, specify another prefix or delete the existing tables.';
+					$bResult = false;
+				}
+				else
+				{
+					$bResult = $oApiDbManager->syncTables();
+					if (!$bResult)
+					{
+						$_SESSION['wm_install_db_foot_error'] = $oApiDbManager->GetLastErrorMessage();
+					}
+				}
+			}
 
 			$_SESSION['wm-install-create-db'] = true;
+			
+			$_SESSION['wm-install-sample-data'] = true;
+			
 			return $bResult;
 		}
 		
@@ -178,6 +201,7 @@ class CDbStep extends AInstallerStep
 			'Host' => $this->oSettings->GetConf('DBHost'),
 			'prefix' => $this->oSettings->GetConf('DBPrefix'),
 			'CreateDbCheched' => (isset($_SESSION['wm-install-create-db'])) ? '' : 'checked="cheched"',
+			'SampleDataCheched' => (isset($_SESSION['wm-install-sample-data'])) ? '' : 'checked="cheched"',
 			'CreateDBNameText' => $sCreateDBNameText,
 			'TestDBText' => $sTestDbText,
 			'MainFootText' => $sMainFootText

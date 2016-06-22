@@ -1,7 +1,7 @@
 <?php
 
 // api
-include_once WM_INSTALLER_PATH.'../core/api.php';
+include_once WM_INSTALLER_PATH.'../system/api.php';
 
 class CAdminpanelStep extends AInstallerStep
 {
@@ -30,7 +30,7 @@ class CAdminpanelStep extends AInstallerStep
 			else
 			{
 				$this->oSettings->SetConf('Common/AdminPassword', md5(CPost::get('txtPassword1', '')));
-				return $this->oSettings->SaveToXml();
+				return $this->oSettings->Save();
 			}
 		}
 		

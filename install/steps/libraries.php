@@ -5,74 +5,59 @@
 //use Composer\Command\UpdateCommand;
 //use Symfony\Component\Console\Input\ArrayInput;
 
-class CModulesStep extends AInstallerStep
+class CLibrariesStep extends AInstallerStep
 {
+	/**
+	 * @var api_Settings
+	 */
+//	protected $oSettings;
+
+	/**
+	 * @var CApiLicensingManager
+	 */
+	protected $oApiLicensing;
+
 	public function __construct()
 	{
 	}
 
 	public function DoPost()
 	{
-		$bDevMode = isset($_POST['chDevMode']) ? (bool)$_POST['chDevMode'] : false;
 		$sPhpPath = isset($_POST['sPhpPath']) ? (string)$_POST['sPhpPath'] : '';
 		$sTempPath = PSEVEN_APP_ROOT_PATH.'data/temp/';
 		
+		copy(WM_INSTALLER_PATH.'composer/composer.json', $sTempPath.'composer.json');
+		
 		//string '"f:\web\modules\php\PHP-5.6-x64\php-cgi.EXE" F:\web\domains\project8.dev/composer.phar update -n -d "F:\web\domains\project8.dev/" 
-		
-		copy(WM_INSTALLER_PATH.'composer/composer-modules.json', $sTempPath.'composer.json');
-		
-		if (isset($_POST['packages'])) 
-		{
-			$oData = array(
-				'repositories'=>array(),
-				'require'=>array()
-			);
-			
-			foreach ($_POST['packages'] as $sPackageName)
-			{
-				$oData['repositories'][] = array(
-					"type" => "git",
-					"url" => "https://github.com/".$sPackageName
-				);
-				$oData['require'][$sPackageName] = 'dev-master';
-				
-			}
-			file_put_contents($sTempPath.'modules.json', json_encode($oData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-		}
-		
 		set_time_limit(600);
-		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar install -n --working-dir "'.$sTempPath.'"'.($bDevMode ? '' : ' --prefer-dist');
+		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar install -n --working-dir "'.$sTempPath.'"';
 //		var_dump($sCommand);
 		$result = shell_exec($sCommand);
-//		echo $result;
-//		exit;
-//		unlink($sTempPath.'composer.json');
-//		unlink($sTempPath.'modules.json');
-//		unlink($sTempPath.'composer.lock');
 
+		unlink($sTempPath.'composer.json');
+		unlink($sTempPath.'composer.lock');
+		
 		return true;
 	}
 
 	public function TemplateValues()
 	{
-		$sJsonData = file_get_contents(PSEVEN_APP_ROOT_PATH.'/modules.json');
+		$sJsonData = file_get_contents(PSEVEN_APP_ROOT_PATH.'/composer.json');
 		$oModulesConf = json_decode($sJsonData, true);
 		
-		$sModulesList = '';
+		$sLibrariesList = '';
 		if ($oModulesConf['require'] && is_array($oModulesConf['require']))
 		{
 			$i = -1;
-			foreach ($oModulesConf['require'] as $sModuleName => $sBranchName)
+			foreach ($oModulesConf['require'] as $sLibraryName => $sVersion)
 			{
-				$i *= -1; 
-				$sModulesList .= '<label style="display: block;" class="row'.($i > 0 ? '0' : '1').'"><input type="checkbox" name="packages[]" value="'.$sModuleName.'" checked="true"/> <span class="field_label">'.$sModuleName.'</span><span class="field_value">'.$sBranchName.'</span></label>';
+				$i *= -1;
+				$sLibrariesList .= '<div class="row'.($i > 0 ? '0' : '1').'"><span class="field_label">'.$sLibraryName.'</span><span class="field_value">'.$sVersion.'</span></div>';
 			}
 		}
 		
 		return array(
-			'ModulesList' => $sModulesList,
-			'DevModeChecked' => (!isset($_POST['chDevMode'])) ? '' : 'checked="cheched"',
-			'chDevModeText' => 'Will be added .git',
+			'LibrariesList' => $sLibrariesList,
 			'sPhpPath' => $this->find('php-cgi')
 		);
 	}

@@ -1,0 +1,23 @@
+{
+	"config": {
+        "vendor-dir": "../../vendor"
+    },
+	"repositories": [
+    ],	
+	"require": {
+		"oomphinc/composer-installers-extender": "^1.1",
+		"wikimedia/composer-merge-plugin": "dev-master"
+	},
+	"extra": {
+		"installer-types": ["aurora-module"],
+        "installer-paths": {
+			"special/package/": ["my/package"],
+			"../../modules/{$name}/": ["type:aurora-module"]
+		},
+        "merge-plugin": {
+            "include": [
+                "modules.json"
+            ]
+		}
+	}
+}

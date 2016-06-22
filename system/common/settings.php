@@ -156,14 +156,14 @@ class api_Settings
 			$sLowerKey = strtolower($sKey);
 			if (isset($this->aLowerMap[$sLowerKey]))
 			{
-				if (array_key_exists($sLowerKey, $this->aContainer))
-				{
+//				if (array_key_exists($sLowerKey, $this->aContainer))
+//				{
 					$mValue = $this->aContainer[$sKey];
-				}
-				else
-				{
-					$mValue = $this->aLowerMap[$sLowerKey][0];
-				}
+//				}
+//				else
+//				{
+//					$mValue = $this->aLowerMap[$sLowerKey][0];
+//				}
 
 				$aType = $this->aLowerMap[$sLowerKey];
 				switch ($aType[1])
@@ -185,7 +185,7 @@ class api_Settings
 			$aConvertedContainer[$sKey] = $mValue;
 		}
 		
-		$sJsonData = json_encode($aConvertedContainer);
+		$sJsonData = json_encode($aConvertedContainer, JSON_PRETTY_PRINT);
 		
 		// save previous configuration
 		$sJsonFile = $this->sPath.api_Settings::JSON_FILE_NAME;

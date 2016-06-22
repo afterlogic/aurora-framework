@@ -26,6 +26,7 @@ class CInstaller
 	 */
 	var $_aSteps = array(
 		'compatibility' => 'Compatibility Test',
+		'libraries' => 'Install libraries',
 		'modules' => 'Install modules',
 		'license' => 'License Agreement',
 //		'license-key' => 'License Key',
@@ -60,6 +61,7 @@ class CInstaller
 		$this->_aTemplateCache = array();
 		$this->_aMenu = array(
 			'compatibility',
+			'libraries',
 			'modules',
 			'license',
 //			'license-key',
