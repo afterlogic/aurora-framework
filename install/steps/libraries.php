@@ -8,7 +8,7 @@
 class CLibrariesStep extends AInstallerStep
 {
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 //	protected $oSettings;
 

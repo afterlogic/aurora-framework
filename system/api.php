@@ -275,7 +275,7 @@ class CApi
 	}
 
 	/**
-	 * @return api_Settings
+	 * @return CApiSettings
 	 */
 	public static function &GetSettings()
 	{
@@ -827,7 +827,7 @@ class CApi
 		$iResult = 1;
 
 		$oSettings =& CApi::GetSettings();
-		$iResult &= $oSettings && ($oSettings instanceof api_Settings);
+		$iResult &= $oSettings && ($oSettings instanceof CApiSettings);
 
 		return (bool) $iResult;
 	}

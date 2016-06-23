@@ -86,10 +86,10 @@ class CDbCreator
 	}
 
 	/**
-	 * @param api_Settings $oSettings
+	 * @param CApiSettings $oSettings
 	 * @return &CDbMySql
 	 */
-	public static function &CreateConnector(api_Settings $oSettings)
+	public static function &CreateConnector(CApiSettings $oSettings)
 	{
 		$aResult = array();
 		if (!is_object(self::$oDbConnector))
@@ -121,10 +121,10 @@ class CDbCreator
 	}
 
 	/**
-	 * @param api_Settings $oSettings
+	 * @param CApiSettings $oSettings
 	 * @return &IDbHelper
 	 */
-	public static function &CreateCommandCreatorHelper(api_Settings $oSettings)
+	public static function &CreateCommandCreatorHelper(CApiSettings $oSettings)
 	{
 		if (is_object(CDbCreator::$oCommandCreatorHelper))
 		{
@@ -165,14 +165,14 @@ class CDbStorage
 	protected $oLastException;
 
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 	protected $oSettings;
 
 	/**
-	 * @param api_Settings $oSettings
+	 * @param CApiSettings $oSettings
 	 */
-	public function __construct(api_Settings &$oSettings)
+	public function __construct(CApiSettings &$oSettings)
 	{
 		$aConnections =& CDbCreator::CreateConnector($oSettings);
 

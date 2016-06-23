@@ -454,7 +454,7 @@ class ap_CoreModuleHelper
 	protected $oModule;
 
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 	protected $oSettings;
 

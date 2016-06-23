@@ -8,7 +8,7 @@
 class CApiGlobalManager
 {
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 	protected $oSettings;
 
@@ -72,7 +72,7 @@ class CApiGlobalManager
 	}
 
 	/**
-	 * @return api_Settings
+	 * @return CApiSettings
 	 */
 	public function &GetSettings()
 	{
@@ -81,7 +81,7 @@ class CApiGlobalManager
 			CApi::Inc('common.settings');
 			try
 			{
-				$this->oSettings = new api_Settings(CApi::DataPath());
+				$this->oSettings = new CApiSettings(CApi::DataPath() . '/settings/');
 			}
 			catch (CApiBaseException $oException)
 			{
@@ -255,7 +255,7 @@ abstract class AApiManager
 	protected $oModule;	
 	
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 	protected $oSettings;
 
@@ -293,7 +293,7 @@ abstract class AApiManager
 	}
 	
 	/**
-	 * @return &api_Settings
+	 * @return &CApiSettings
 	 */
 	public function GetGlobalManager()
 	{
@@ -301,7 +301,7 @@ abstract class AApiManager
 	}
 
 	/**
-	 * @return &api_Settings
+	 * @return &CApiSettings
 	 */
 	public function &GetSettings()
 	{
@@ -625,7 +625,7 @@ abstract class AApiManagerStorage
 	protected $oManager;
 
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 	protected $oSettings;
 
@@ -660,7 +660,7 @@ abstract class AApiManagerStorage
 	}
 
 	/**
-	 * @return &api_Settings
+	 * @return &CApiSettings
 	 */
 	public function &GetSettings()
 	{

@@ -2,12 +2,9 @@
 
 /* -AFTERLOGIC LICENSE HEADER- */
 
-/**
- * @package Api
- */
-class api_Settings
+class CApiBasicSettings
 {
-	const JSON_FILE_NAME = '/settings/config.json';
+	const JSON_FILE_NAME = 'config.json';
 
 	#<editor-fold defaultstate="collapsed" desc="protected">
 	/**
@@ -29,27 +26,27 @@ class api_Settings
 	 * @var string
 	 */
 	protected $sPath;
-	#</editor-fold>
-
+	#</editor-fold>	
+	
 	/**
 	 * @param string $sSettingsPath
 	 *
-	 * @return api_Settings
+	 * @return CApiSettings
 	 */
-	public function __construct($sSettingsPath)
+	public function __construct($sSettingsPath, $aMap = array())
 	{
-		$this->aMap = array();
+		$this->aMap = $aMap;
 		$this->aLowerMap = array();
 		$this->aContainer = array();
 		$this->sPath = $sSettingsPath;
 
-		$this->initDefaultValues();
+		$this->init();
 		
-		if (!$this->Load($this->sPath.api_Settings::JSON_FILE_NAME))
+		if (!$this->Load($this->GetJsonPath()))
 		{
-			if ($this->Load($this->sPath.api_Settings::JSON_FILE_NAME.'.bak'))
+			if ($this->Load($this->GetJsonPath().'.bak'))
 			{
-				copy($this->sPath.api_Settings::JSON_FILE_NAME.'.bak', $this->sPath.api_Settings::JSON_FILE_NAME);
+				copy($this->GetJsonPath().'.bak', $this->GetJsonPath());
 			}
 			else
 			{
@@ -57,13 +54,18 @@ class api_Settings
 			}
 		}
 	}
-
+	
+	public function GetJsonPath()
+	{
+		return $this->sPath.self::JSON_FILE_NAME;
+	}
+	
 	/**
 	 * @param string $sKey
 	 *
 	 * @return mixed
 	 */
-	public function GetConf($sKey)
+	public function GetConf($sKey, $mDefault = null)
 	{
 		$mResult = null;
 		$sLowerKey = strtolower($sKey);
@@ -71,10 +73,14 @@ class api_Settings
 		{
 			$mResult = $this->aContainer[$sKey];
 		}
+		else 
+		{
+			$mResult = $mDefault;
+		}
 
 		return $mResult;
 	}
-
+	
 	/**
 	 * @param string $sKey
 	 * @param mixed $mValue = null
@@ -103,7 +109,7 @@ class api_Settings
 					$mValue = (bool) $mValue;
 					break;
 				case 'spec':
-					$mValue = $this->specValidate($sKey, $mValue);
+					$mValue = $this->specValidate($sKey, $mValue, isset($aType[2]) ? $aType[2] : null);
 					break;
 				case 'array':
 					$mValue = $mValue;
@@ -137,8 +143,8 @@ class api_Settings
 				$sLowerKey = strtolower($sKey);
 				if (isset($this->aLowerMap[$sLowerKey]))
 				{
-					$aTypeArray = $this->aLowerMap[$sLowerKey];
-					switch ($aTypeArray[1])
+					$aType = $this->aLowerMap[$sLowerKey];
+					switch ($aType[1])
 					{
 						default:
 							$mValue = null;
@@ -153,16 +159,14 @@ class api_Settings
 							$mValue = ('on' === strtolower($mValue) || '1' === (string) $mValue);
 							break;
 						case 'spec':
-							$mValue = $this->specConver($sKey, $mValue);
+							$mValue = $this->specConver($mValue, isset($aType[2]) ? $aType[2] : null);
 							break;
 					}
-
-					if (null !== $mValue)
-					{
-						$this->aContainer[$sKey] = $mValue;
-					}
 				}
-				
+				if (null !== $mValue)
+				{
+					$this->aContainer[$sKey] = $mValue;
+				}
 			}
 			
 			$bResult = true;
@@ -189,7 +193,7 @@ class api_Settings
 				switch ($aType[1])
 				{
 					case 'string':
-						$mValue = api_Utils::EncodeSpecialXmlChars((string) $mValue);
+						$mValue = (string) $mValue;
 						break;
 					case 'int':
 						$mValue = (int) $mValue;
@@ -198,73 +202,48 @@ class api_Settings
 						$mValue = ((bool) $mValue) ? 'On' : 'Off';
 						break;
 					case 'spec':
-						$mValue = $this->specBackConver($sKey, $mValue);
+						$mValue = $this->specBackConver($mValue, isset($aTyp[2]) ? $aTyp[2] : null);
 						break;
 				}
 			}			
 			$aConvertedContainer[$sKey] = $mValue;
 		}
 		
-		$sJsonData = json_encode($aConvertedContainer, JSON_PRETTY_PRINT);
-		
-		// save previous configuration
-		$sJsonFile = $this->sPath.api_Settings::JSON_FILE_NAME;
+		// backup previous configuration
+		$sJsonFile = $this->GetJsonPath();
 		if (file_exists($sJsonFile))
 		{
 			copy($sJsonFile, $sJsonFile.'.bak');
 		}
-		return (bool) file_put_contents($sJsonFile, $sJsonData);
+		return (bool) file_put_contents($sJsonFile, json_encode($aConvertedContainer, JSON_PRETTY_PRINT));
 	}
 	
 	/**
-	 * @param string $sKey
 	 * @param string $sValue
+	 * @param string $sEnumName
 	 *
 	 * @return string
 	 */
-	protected function specBackConver($sKey, $sValue)
+	protected function specBackConver($sValue, $sEnumName)
 	{
 		$mResult = $sValue;
-		$sEnumName = $this->getEnumName($sKey);
 		if (null !== $sEnumName)
 		{
 			$mResult = EnumConvert::ToXml($sValue, $sEnumName);
 		}
 
 		return $mResult;
-	}	
+	}		
 
 	/**
-	 * @staticvar array $aValues
-	 * @param string $sKey
-	 *
-	 * @return string | null
-	 */
-	protected function getEnumName($sKey)
-	{
-		static $aValues = array(
-			'dbtype'							=> 'EDbType',
-			'defaulttimeformat'					=> 'ETimeFormat',
-			'defaultdateformat'					=> 'EDateFormat',
-			'logginglevel'						=> 'ELogLevel',
-			'defaulttab'						=> 'ECalendarDefaultTab',
-			'fetchertype'						=> 'EHelpdeskFetcherType',
-		);
-
-		$sLowerKey = strtolower($sKey);
-		return isset($aValues[$sLowerKey]) ? $aValues[$sLowerKey] : null;
-	}
-
-	/**
-	 * @param string $sKey
 	 * @param string $sValue
+	 * @param string $sEnumName
 	 *
 	 * @return string
 	 */
-	protected function specValidate($sKey, $sValue)
+	protected function specValidate($sValue, $sEnumName)
 	{
 		$mResult = null;
-		$sEnumName = $this->getEnumName($sKey);
 		if (null !== $sEnumName)
 		{
 			$mResult = EnumConvert::validate($sValue, $sEnumName);
@@ -273,29 +252,46 @@ class api_Settings
 	}
 	
 	/**
-	 * @param string $sKey
 	 * @param string $sValue
+	 * @param string $sEnumName
 	 *
 	 * @return string
 	 */
-	protected function specConver($sKey, $sValue)
+	protected function specConver($sValue, $sEnumName)
 	{
-		$mResult = $sValue;
-		$sEnumName = $this->getEnumName($sKey);
 		if (null !== $sEnumName)
 		{
 			$mResult = EnumConvert::FromXml($sValue, $sEnumName);
 		}
 
-		return $this->specValidate($sKey, $mResult);
-	}	
+		return $this->specValidate($mResult, $sEnumName);
+	}		
 
 	/**
 	 * @return void
 	 */
-	protected function initDefaultValues()
+	protected function init()
 	{
-		$this->aMap = array(
+		foreach ($this->aMap as $sKey => $aField)
+		{
+			$this->aLowerMap[strtolower($sKey)] = $aField;
+			$this->SetConf($sKey, $aField[0]);
+		}
+	}
+}
+
+
+/**
+ * @package Api
+ */
+class CApiSettings extends CApiBasicSettings
+{
+	/**
+	 * @return void
+	 */
+	public function __construct($sSettingsPath)
+	{
+		$aMap = array(
 			'SiteName' => array('AfterLogic', 'string',
 				'Default title that will be shown in browser\'s header (Default domain settings).'),
 
@@ -305,7 +301,7 @@ class api_Settings
 			'AdminLogin' => array('mailadm', 'string'),
 			'AdminPassword' => array('827ccb0eea8a706c4c34a16891f84e7b', 'string'),
 
-			'DBType' => array(EDbType::MySQL, 'spec'),
+			'DBType' => array(EDbType::MySQL, 'spec', 'EDbType'),
 			'DBPrefix' => array('', 'string'),
 
 			'DBHost' => array('127.0.0.1', 'string'),
@@ -321,15 +317,15 @@ class api_Settings
 
 			'DefaultLanguage' => array('English', 'string'),
 			'DefaultTimeZone' => array(0, 'int'), //TODO Magic
-			'DefaultTimeFormat' => array(ETimeFormat::F12, 'spec'),
-			'DefaultDateFormat' => array(EDateFormat::MMDDYYYY, 'spec'),
+			'DefaultTimeFormat' => array(ETimeFormat::F12, 'spec', 'ETimeFormat'),
+			'DefaultDateFormat' => array(EDateFormat::MMDDYYYY, 'spec', 'EDateFormat'),
 			'AllowRegistration' => array(false, 'bool'),
 			'RegistrationDomains' => array('', 'string'),
 			'RegistrationQuestions' => array('', 'string'),
 			'AllowPasswordReset' => array(false, 'bool'),
 			'EnableLogging' => array(false, 'bool'),
 			'EnableEventLogging' => array(false, 'bool'),
-			'LoggingLevel' => array(ELogLevel::Full, 'spec'),
+			'LoggingLevel' => array(ELogLevel::Full, 'spec', 'ELogLevel'),
 			'EnableMobileSync' => array(false, 'bool'),
 
 			'TenantGlobalCapa' => array('', 'string'),
@@ -344,15 +340,12 @@ class api_Settings
 			'PasswordMinLength' => array(0, 'int'),
 			'PasswordMustBeComplex' => array(false, 'bool'),
 		);
-		foreach ($this->aMap as $sKey => $aField)
-		{
-			$this->aLowerMap[strtolower($sKey)] = $aField;
-			$this->SetConf($sKey, $aField[0]);
-		}
+		
+		parent::__construct($sSettingsPath, $aMap);
 	}
 }
 
 /**
  * @package Api
  */
-class api_SettingsException extends Exception {}
+class CApiSettingsException extends Exception {}

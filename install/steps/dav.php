@@ -6,7 +6,7 @@ include_once WM_INSTALLER_PATH.'../system/api.php';
 class CDavStep extends AInstallerStep
 {
 	/**
-	 * @var api_Settings
+	 * @var CApiSettings
 	 */
 	protected $oSettings;
 
