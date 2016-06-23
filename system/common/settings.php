@@ -18,11 +18,6 @@ class api_Settings
 	/**
 	 * @var array
 	 */
-	protected $aObjectsMap;
-
-	/**
-	 * @var array
-	 */
 	protected $aLowerMap;
 
 	/**
@@ -45,7 +40,6 @@ class api_Settings
 	{
 		$this->aMap = array();
 		$this->aLowerMap = array();
-		$this->aObjectsMap = array();
 		$this->aContainer = array();
 		$this->sPath = $sSettingsPath;
 
@@ -137,7 +131,40 @@ class api_Settings
 		if (file_exists($sJsonFile))
 		{
 			$sJsonData = file_get_contents($sJsonFile);
-			$this->aContainer = json_decode($sJsonData, true);
+			$aJsonData = json_decode($sJsonData, true);
+			foreach ($aJsonData as $sKey => $mValue)
+			{
+				$sLowerKey = strtolower($sKey);
+				if (isset($this->aLowerMap[$sLowerKey]))
+				{
+					$aTypeArray = $this->aLowerMap[$sLowerKey];
+					switch ($aTypeArray[1])
+					{
+						default:
+							$mValue = null;
+							break;
+						case 'string':
+							$mValue =(string) $mValue;
+							break;
+						case 'int':
+							$mValue = (int) $mValue;
+							break;
+						case 'bool':
+							$mValue = ('on' === strtolower($mValue) || '1' === (string) $mValue);
+							break;
+						case 'spec':
+							$mValue = $this->specConver($sKey, $mValue);
+							break;
+					}
+
+					if (null !== $mValue)
+					{
+						$this->aContainer[$sKey] = $mValue;
+					}
+				}
+				
+			}
+			
 			$bResult = true;
 		}
 		
@@ -156,16 +183,9 @@ class api_Settings
 			$sLowerKey = strtolower($sKey);
 			if (isset($this->aLowerMap[$sLowerKey]))
 			{
-//				if (array_key_exists($sLowerKey, $this->aContainer))
-//				{
-					$mValue = $this->aContainer[$sKey];
-//				}
-//				else
-//				{
-//					$mValue = $this->aLowerMap[$sLowerKey][0];
-//				}
-
+				$mValue = $this->aContainer[$sKey];
 				$aType = $this->aLowerMap[$sLowerKey];
+				
 				switch ($aType[1])
 				{
 					case 'string':
@@ -227,13 +247,6 @@ class api_Settings
 			'defaulttimeformat'					=> 'ETimeFormat',
 			'defaultdateformat'					=> 'EDateFormat',
 			'logginglevel'						=> 'ELogLevel',
-			'incomingmailprotocol'				=> 'EMailProtocol',
-			'outgoingmailauth'					=> 'ESMTPAuthType',
-			'outgoingsendingmethod'				=> 'ESendingMethod',
-			'loginformtype'						=> 'ELoginFormType',
-			'loginsignmetype'					=> 'ELoginSignMeType',
-			'globaladdressbookvisibility'		=> 'EContactsGABVisibility',
-			'weekstartson'						=> 'ECalendarWeekStartOn',
 			'defaulttab'						=> 'ECalendarDefaultTab',
 			'fetchertype'						=> 'EHelpdeskFetcherType',
 		);
@@ -258,6 +271,24 @@ class api_Settings
 		}
 		return $mResult;
 	}
+	
+	/**
+	 * @param string $sKey
+	 * @param string $sValue
+	 *
+	 * @return string
+	 */
+	protected function specConver($sKey, $sValue)
+	{
+		$mResult = $sValue;
+		$sEnumName = $this->getEnumName($sKey);
+		if (null !== $sEnumName)
+		{
+			$mResult = EnumConvert::FromXml($sValue, $sEnumName);
+		}
+
+		return $this->specValidate($sKey, $mResult);
+	}	
 
 	/**
 	 * @return void
@@ -317,14 +348,6 @@ class api_Settings
 		{
 			$this->aLowerMap[strtolower($sKey)] = $aField;
 			$this->SetConf($sKey, $aField[0]);
-		}
-	
-		$this->aObjectsMap = array(
-			'Socials' => 'CTenantSocials'
-		);
-		foreach ($this->aObjectsMap as $sKey => $sClass)
-		{
-			$this->aLowerObjectsMap[strtolower($sKey)] = $sClass;
 		}
 	}
 }
