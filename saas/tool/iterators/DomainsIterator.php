@@ -17,7 +17,7 @@ class DomainsIterator implements \Iterator
 
 	protected function nativeDomainsManager()
 	{
-		return \CApi::GetCoreManager('domains');
+		return \CApi::GetSystemManager('domains');
 	}
 
 	function __construct($tenantId = 0)

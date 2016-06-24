@@ -1,7 +1,7 @@
 <?php
 $oHttp = \MailSo\Base\Http::NewInstance();
 
-$oManagerApi = \CApi::GetCoreManager('eav', 'db');
+$oManagerApi = \CApi::GetSystemManager('eav', 'db');
 
 switch ($oHttp->GetPost('action'))
 {

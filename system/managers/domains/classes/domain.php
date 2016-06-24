@@ -266,7 +266,7 @@ class CDomain extends AEntity
 		if (!$this->OverrideSettings && !$this->IsDefault)
 		{
 			/* @var $oApiDomainsManager CApiDomainsManager */
-			$oApiDomainsManager = CApi::GetCoreManager('domains');
+			$oApiDomainsManager = CApi::GetSystemManager('domains');
 
 			$oDefDomain = $oApiDomainsManager->getDefaultDomain();
 			$aOverridenSettingsMap = $this->GetOverridenSettingsMap();

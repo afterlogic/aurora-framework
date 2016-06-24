@@ -21,7 +21,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 	{
 		parent::__construct('domains', $oManager, $sForcedStorage);
 		
-		$this->oEavManager = \CApi::GetCoreManager('eav', 'db');
+		$this->oEavManager = \CApi::GetSystemManager('eav', 'db');
 
 		$this->inc('classes.domain');
 	}
@@ -156,7 +156,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 					if (0 < $oDomain->IdTenant && CApi::GetConf('tenant', false))
 					{
 						/* @var $oTenantsApi CApiTenantsManager */
-						$oTenantsApi = CApi::GetCoreManager('tenants');
+						$oTenantsApi = CApi::GetSystemManager('tenants');
 						if ($oTenantsApi)
 						{
 							/* @var $oTenant CTenant */
@@ -268,7 +268,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 //			$bResult = $this->oStorage->areDomainsEmpty($aDomainsIds);
 //			$sSql = 'SELECT COUNT(id_acct) as users_count FROM %sawm_accounts WHERE def_acct = 1 AND id_domain IN (%d)';
 //			
-			$oUsersApi = CApi::GetCoreManager('users');
+			$oUsersApi = CApi::GetSystemManager('users');
 			
 			$count = $oUsersApi->getAccountsByDomain($aDomainIds);
 			
@@ -359,7 +359,7 @@ class CApiDomainsManager extends AApiManagerWithStorage
 			if ($bRemoveAllAccounts)
 			{
 				/* @var $oUsersApi CApiUsersManager */
-				$oUsersApi = CApi::GetCoreManager('users');
+				$oUsersApi = CApi::GetSystemManager('users');
 
 				$aPrevIdList = null;
 				while (true)

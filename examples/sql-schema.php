@@ -11,7 +11,7 @@
 	if (class_exists('CApi') && CApi::IsValid())
 	{
 		// Getting required API class
-		$oApiDbManager = CApi::GetCoreManager('db');
+		$oApiDbManager = CApi::GetSystemManager('db');
 
 		$oSettings =& CApi::GetSettings();
 		$oSettings->SetConf('Common/DBPrefix', '');

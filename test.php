@@ -70,7 +70,7 @@ $mResult = $oAuthDecorator->CreateAccount(
  * 
  */
 
-$oEavManager = \CApi::GetCoreManager('eav', 'db');
+$oEavManager = \CApi::GetSystemManager('eav', 'db');
 class CTest extends AEntity
 {
 	/**

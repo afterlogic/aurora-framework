@@ -61,12 +61,12 @@ class Actions
 	{
 		$this->oHttp = null;
 
-		$this->oApiUsers = \CApi::GetCoreManager('users');
-		$this->oApiTenants = \CApi::GetCoreManager('tenants');
-		$this->oApiIntegrator = \CApi::GetCoreManager('integrator');
-		$this->oApiFileCache = \CApi::GetCoreManager('filecache');
+		$this->oApiUsers = \CApi::GetSystemManager('users');
+		$this->oApiTenants = \CApi::GetSystemManager('tenants');
+		$this->oApiIntegrator = \CApi::GetSystemManager('integrator');
+		$this->oApiFileCache = \CApi::GetSystemManager('filecache');
 		$this->oApiSieve = \CApi::Manager('sieve');
-		$this->oApiCapability = \CApi::GetCoreManager('capability');
+		$this->oApiCapability = \CApi::GetSystemManager('capability');
 
 		$this->oApiFetchers = null;
 		$this->oApiHelpdesk = null;
@@ -520,7 +520,7 @@ class Actions
 			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
-		$oApiDomains = /* @var $oApiDomains \CApiDomainsManager */ \CApi::GetCoreManager('domains');
+		$oApiDomains = /* @var $oApiDomains \CApiDomainsManager */ \CApi::GetSystemManager('domains');
 		$oDomain = $oApiDomains->getDomainByName($sDomainName);
 
 		return $this->DefaultResponse(__FUNCTION__, $oDomain ? array(
@@ -821,7 +821,7 @@ class Actions
 		$sLanguage = (string) $this->getParamValue('Language', '');
 		if (!empty($sLanguage))
 		{
-			$oApiIntegrator = \CApi::GetCoreManager('integrator');
+			$oApiIntegrator = \CApi::GetSystemManager('integrator');
 			if ($oApiIntegrator)
 			{
 				$oApiIntegrator->setLoginLanguage($sLanguage);
@@ -1026,7 +1026,7 @@ class Actions
 		$oNewAccount = null;
 		$oAccount = $this->getDefaultAccountFromParam();
 
-		$oApiDomains = \CApi::GetCoreManager('domains');
+		$oApiDomains = \CApi::GetSystemManager('domains');
 		$oDomain = $oApiDomains->getDefaultDomain();
 		if ($oDomain)
 		{
@@ -2283,7 +2283,7 @@ class Actions
 
 		if ($oAccount && $oApiDavManager)
 		{
-			$oApiCapabilityManager = \CApi::GetCoreManager('capability');
+			$oApiCapabilityManager = \CApi::GetSystemManager('capability');
 			/* @var $oApiCapabilityManager \CApiCapabilityManager */
 
 			$mResult = array();
@@ -2466,10 +2466,10 @@ class Actions
 			if ($bResult)
 			{
 				$bResult = false;
-				$oUser = \CApi::GetCoreManager('integrator')->getAhdSocialUser($sTenantName, $sSocialId);
+				$oUser = \CApi::GetSystemManager('integrator')->getAhdSocialUser($sTenantName, $sSocialId);
 				if ($oUser)
 				{
-					\CApi::GetCoreManager('integrator')->setHelpdeskUserAsLoggedIn($oUser, false);
+					\CApi::GetSystemManager('integrator')->setHelpdeskUserAsLoggedIn($oUser, false);
 					$bResult = true;
 				}
 			}

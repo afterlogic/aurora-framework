@@ -27,7 +27,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 	public function CommonHelpdesk(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		if ($oApiCapa && $oApiCapa->isHelpdeskSupported() && (
 			$this->oAdminPanel->IsTenantAuthType() ||
 			($this->oAdminPanel->IsSuperAdminAuthType() && !$oApiCapa->isTenantsSupported())
@@ -92,7 +92,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 
 	public function CommonSip(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && $oApiCapa->isSipSupported())
@@ -112,7 +112,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 	
 	public function CommonTwilio(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && $oApiCapa->isTwilioSupported())
@@ -288,7 +288,7 @@ class CProPopulateData extends ap_CoreModuleHelper
 				$oScreen->Data->SetValue('domainIsInternal', true);
 			}
 
-			$oCapabilityApi = CApi::GetCoreManager('capability');
+			$oCapabilityApi = CApi::GetSystemManager('capability');
 			/* @var $oCapabilityApi CApiCapabilityManager */
 
 			if (0 < $oAccount->IdTenant)

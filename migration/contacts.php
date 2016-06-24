@@ -25,10 +25,10 @@ $iCurUsersPage = 1;
 $iCurUserId = 0;
 
 /* @var $oApiDomainsManager CApiDomainsManager */
-$oApiDomainsManager = CApi::GetCoreManager('domains');
+$oApiDomainsManager = CApi::GetSystemManager('domains');
 
 /* @var $oApiUsersManager CApiUsersManager */
-$oApiUsersManager = CApi::GetCoreManager('users');
+$oApiUsersManager = CApi::GetSystemManager('users');
 
 /* @var $oApiContactsManagerFrom CApiContactsMainManager */
 $oApiContactsManagerFrom = CApi::Manager('contactsmain', $sStorageFrom);

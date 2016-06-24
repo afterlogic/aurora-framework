@@ -18,7 +18,7 @@ $response = array(
 if ($oHttp->HasPost('ObjectName'))
 {
 	$aResultItems = array();
-	$oManagerApi = \CApi::GetCoreManager('eav', 'db');
+	$oManagerApi = \CApi::GetSystemManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
 
 	$aItems = $oManagerApi->getEntities($oHttp->GetPost('ObjectName'));

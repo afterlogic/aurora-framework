@@ -22,7 +22,7 @@ class TenantsIterator extends PageIterator
 	{
 		$this->iPage = 0;
 		$this->iItemsPerPage = $iItemsPerPage;
-		$this->oNativeTenantsManager = \CApi::GetCoreManager('tenants');
+		$this->oNativeTenantsManager = \CApi::GetSystemManager('tenants');
 		parent::__construct();
     }
 	

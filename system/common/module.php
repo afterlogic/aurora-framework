@@ -419,7 +419,7 @@ abstract class AApiModule
 		$this->sName = $sName;
 		$this->sPath = $sPath.$sName;
 		$this->aParameters = array();
-		$this->oApiCapabilityManager = \CApi::GetCoreManager('capability');
+		$this->oApiCapabilityManager = \CApi::GetSystemManager('capability');
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
 		
 		$this->aEntries = array(
@@ -1004,12 +1004,12 @@ abstract class AApiModule
 	public function GetDefaultAccount($sAuthToken = '')
 	{
 		$oResult = null;
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		$oApiIntegrator = \CApi::GetSystemManager('integrator');
 
 		$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
 		if (0 < $iUserId) {
 			
-			$oApiUsers = \CApi::GetCoreManager('users');
+			$oApiUsers = \CApi::GetSystemManager('users');
 			$oResult = $oApiUsers->getDefaultAccount($iUserId);
 		}
 
@@ -1025,12 +1025,12 @@ abstract class AApiModule
 	public function getAccount($iAccountId, $bVerifyLogginedUserId = true, $sAuthToken = '')
 	{
 		$oResult = null;
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		$oApiIntegrator = \CApi::GetSystemManager('integrator');
 		
 		$iUserId = $bVerifyLogginedUserId ? $oApiIntegrator->getLogginedUserId($sAuthToken) : 1;
 		if (0 < $iUserId) {
 			
-			$oApiUsers = \CApi::GetCoreManager('users');
+			$oApiUsers = \CApi::GetSystemManager('users');
 			
 			$oAccount = $oApiUsers->getAccountById($iAccountId);
 			if ($oAccount instanceof \CAccount && 
@@ -1080,7 +1080,7 @@ abstract class AApiModule
 
 		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount)) {
 			
-			$oApiUsers = \CApi::GetCoreManager('users');
+			$oApiUsers = \CApi::GetSystemManager('users');
 			$oExc = $oApiUsers->GetLastException();
 			throw new \System\Exceptions\ClientException(\System\Notifications::AuthError,
 				$oExc ? $oExc : null, $oExc ? $oExc->getMessage() : '');

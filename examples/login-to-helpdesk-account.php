@@ -26,9 +26,9 @@ if (class_exists('CApi') && CApi::IsValid())
 	try
 	{
 		// Getting required API class
-		$oApiIntegratorManager = CApi::GetCoreManager('integrator');
+		$oApiIntegratorManager = CApi::GetSystemManager('integrator');
 		$oApiHelpdeskManager = CApi::Manager('helpdesk');
-		$oApiTenantsManager = CApi::GetCoreManager('tenants');
+		$oApiTenantsManager = CApi::GetSystemManager('tenants');
 
 		$iIdTenant = $oApiTenantsManager->getTenantIdByHash($sTenantHash);
 

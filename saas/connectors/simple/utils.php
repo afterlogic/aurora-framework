@@ -8,7 +8,7 @@
 function validatePartner(&$aResult, $aData)
 {
 	/* @var $oApiChannelsManager CApiChannelsManager */
-	$oApiChannelsManager = CApi::GetCoreManager('channels');
+	$oApiChannelsManager = CApi::GetSystemManager('channels');
 	if (!$oApiChannelsManager)
 	{
 		$aResult['message'] = 'Internal error';
@@ -47,7 +47,7 @@ function validatePartner(&$aResult, $aData)
 function validateTenant(&$aResult, $aData, $oChannel)
 {
 	/* @var $oApiTenantsManager CApiTenantsManager */
-	$oApiTenantsManager = CApi::GetCoreManager('tenants');
+	$oApiTenantsManager = CApi::GetSystemManager('tenants');
 	if (!$oApiTenantsManager)
 	{
 		$aResult['message'] = 'Internal error';

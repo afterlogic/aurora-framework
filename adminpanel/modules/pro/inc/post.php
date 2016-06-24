@@ -43,7 +43,7 @@ class CProPostAction extends ap_CoreModuleHelper
 
 	public function CommonBranding()
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		$oTenant = /* @var $oTenant CTenant */  $this->oModule->GetTenantAdminObject();
@@ -99,7 +99,7 @@ class CProPostAction extends ap_CoreModuleHelper
 
 	public function CommonHelpdesk()
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		if ($oApiCapa && $oApiCapa->isHelpdeskSupported() && (
 			$this->oAdminPanel->IsTenantAuthType() ||
 			($this->oAdminPanel->IsSuperAdminAuthType() && !$oApiCapa->isTenantsSupported())
@@ -149,7 +149,7 @@ class CProPostAction extends ap_CoreModuleHelper
 
 	public function CommonTwilio()
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && $oApiCapa->isTwilioSupported())
@@ -184,7 +184,7 @@ class CProPostAction extends ap_CoreModuleHelper
 
 	public function CommonSip()
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && $oApiCapa->isSipSupported())

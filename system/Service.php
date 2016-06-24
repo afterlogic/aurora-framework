@@ -45,7 +45,7 @@ class Service
 	public static function validateToken()
 	{
 		$oHttp = \MailSo\Base\Http::NewInstance();
-		$oIntegrator = \CApi::GetCoreManager('integrator');
+		$oIntegrator = \CApi::GetSystemManager('integrator');
 		return $oHttp->IsPost() ? $oIntegrator->validateCsrfToken($oHttp->GetPost('Token')) : true;
 	}
 	
@@ -114,7 +114,7 @@ class Service
 	{
 		$sResult = '';
 		
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		$oApiIntegrator = \CApi::GetSystemManager('integrator');
 		
 		if ($oApiIntegrator) {
 			

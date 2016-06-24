@@ -109,7 +109,7 @@ class CCommonPostAction extends ap_CoreModuleHelper
 
 	public function CommonSocial()
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa)

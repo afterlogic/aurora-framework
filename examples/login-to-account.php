@@ -19,7 +19,7 @@
 		try
 		{
 			// Getting required API class
-			$oApiIntegratorManager = CApi::GetCoreManager('integrator');
+			$oApiIntegratorManager = CApi::GetSystemManager('integrator');
 
 			// attempting to obtain object for account we're trying to log into
 			$oAccount = $oApiIntegratorManager->loginToAccount($sEmail, $sPassword);

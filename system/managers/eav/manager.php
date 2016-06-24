@@ -53,7 +53,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}
 
-	protected function createEntity(\AEntity &$oEntity)
+	private function createEntity(\AEntity &$oEntity)
 	{
 		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName);
 		if (!$mResult)
@@ -229,7 +229,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteAttribute(CAttribute $oAttribute)
+	private function deleteAttribute(CAttribute $oAttribute)
 	{
 		$bResult = true;
 		try
@@ -247,7 +247,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteAttributes($iEntityId)
+	private function deleteAttributes($iEntityId)
 	{
 		$bResult = true;
 		try

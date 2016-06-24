@@ -23,12 +23,12 @@ class TenantUsersIterator extends PageIterator
 
 	protected function nativeDomainsManager()
 	{
-		return \CApi::GetCoreManager('domains');
+		return \CApi::GetSystemManager('domains');
 	}
 
 	protected function nativeUsersManager()
 	{
-		return \CApi::GetCoreManager('users');
+		return \CApi::GetSystemManager('users');
 	}
 
 	function __construct($tenantId, $iItemsPerPage = 10)

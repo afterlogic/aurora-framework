@@ -2112,8 +2112,8 @@ class api_Utils
 	public static function GetDefaultAccount()
 	{
 		$oResult = null;
-		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \CApi::GetCoreManager('users');
-		$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetCoreManager('integrator');
+		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \CApi::GetSystemManager('users');
+		$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('integrator');
 		$iUserId = $oApiIntegrator->getLogginedUserId();
 		if (0 < $iUserId)
 		{
@@ -2137,10 +2137,10 @@ class api_Utils
 	public static function GetHelpdeskAccount($iTenantID)
 	{
 		$oResult = null;
-		$oApiCapability /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetCoreManager('capability');
+		$oApiCapability /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('capability');
 		if ($oApiCapability->isHelpdeskSupported())
 		{
-			$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetCoreManager('integrator');
+			$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('integrator');
 			$iIdHelpdeskUser = $oApiIntegrator->getLogginedHelpdeskUserId();
 			if (0 < $iIdHelpdeskUser)
 			{

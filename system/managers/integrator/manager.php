@@ -345,7 +345,7 @@ class CApiIntegratorManager extends AApiManager
 		$iUserId = $this->getLogginedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
-			$oApiUsers = CApi::GetCoreManager('users');
+			$oApiUsers = CApi::GetSystemManager('users');
 			if ($oApiUsers)
 			{
 				$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
@@ -656,7 +656,7 @@ class CApiIntegratorManager extends AApiManager
 		\CApi::AddSecret($sIncPassword);
 
 		/* @var $oApiUsersManager CApiUsersManager */
-		$oApiUsersManager = CApi::GetCoreManager('users');
+		$oApiUsersManager = CApi::GetSystemManager('users');
 
 		$bAuthResult = false;
 		CApi::Plugin()->RunHook('api-integrator-login-to-account', array(&$sEmail, &$sIncPassword, &$sIncLogin, &$sLanguage, &$bAuthResult));
@@ -671,7 +671,7 @@ class CApiIntegratorManager extends AApiManager
 
 			if (0 < $oAccount->IdTenant)
 			{
-				$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */ CApi::GetCoreManager('tenants');
+				$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */ CApi::GetSystemManager('tenants');
 				if ($oApiTenantsManager)
 				{
 					$oTenant = $oApiTenantsManager->getTenantById($oAccount->IdTenant);
@@ -789,8 +789,8 @@ class CApiIntegratorManager extends AApiManager
 		CApi::Plugin()->RunHook('api-integrator-login-to-helpdesk-user', array(&$sEmail, &$sPassword));
 
 //		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetCoreManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -849,8 +849,8 @@ class CApiIntegratorManager extends AApiManager
 		$mResult = false;
 
 		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetCoreManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -911,8 +911,8 @@ class CApiIntegratorManager extends AApiManager
 		$bResult = false;
 
 		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetCoreManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -962,13 +962,13 @@ class CApiIntegratorManager extends AApiManager
 	private function getDefaultAccountDomain($oAccount)
 	{
 		/* @var $oApiDomainsManager CApiDomainsManager */
-		$oApiDomainsManager = CApi::GetCoreManager('domains');
+		$oApiDomainsManager = CApi::GetSystemManager('domains');
 
 		$oDomain = ($oAccount && $oAccount->IsDefaultAccount) ? $oAccount->Domain : $oApiDomainsManager->getDefaultDomain();
 		if (null === $oDomain)
 		{
 			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager = CApi::GetCoreManager('users');
+			$oApiUsersManager = CApi::GetSystemManager('users');
 
 			$iDomainId = $oApiUsersManager->getDefaultAccountDomainId($oAccount->IdUser);
 			if (0 < $iDomainId)
@@ -995,7 +995,7 @@ class CApiIntegratorManager extends AApiManager
 		$aResult = array();
 		if ($oDomain)
 		{
-			$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetCoreManager('capability');
+			$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
 
 			$oSettings =& CApi::GetSettings();
 
@@ -1160,7 +1160,7 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$oSettings =& CApi::GetSettings();
 
-			$oApiCapabilityManager = CApi::GetCoreManager('capability');
+			$oApiCapabilityManager = CApi::GetSystemManager('capability');
 			/* @var $oApiCapabilityManager CApiCapabilityManager */
 
 			$aResult['IdUser'] = $oAccount->User->IdUser;
@@ -1172,7 +1172,7 @@ class CApiIntegratorManager extends AApiManager
 			
 			if ($oAccount->User->LoginsCount === 1)
 			{
-				$oApiSocialManager = /* @var $oApiSocialManager CApiSocialManager */ CApi::GetCoreManager('social');
+				$oApiSocialManager = /* @var $oApiSocialManager CApiSocialManager */ CApi::GetSystemManager('social');
 				$aSocials = $oApiSocialManager->getSocials($oAccount->IdAccount);
 				if (count($aSocials) > 0)
 				{
@@ -1241,7 +1241,7 @@ class CApiIntegratorManager extends AApiManager
 			$aResult['SipPassword'] = '';
 			$aResult['FilesEnable'] = $oAccount->User->FilesEnable;
 
-			$oApiTenants = CApi::GetCoreManager('tenants');
+			$oApiTenants = CApi::GetSystemManager('tenants');
 			/* @var $oApiTenants CApiTenantsManager */
 
 			if ($oApiTenants)
@@ -1298,10 +1298,10 @@ class CApiIntegratorManager extends AApiManager
 			}
 
 			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager = CApi::GetCoreManager('users');
+			$oApiUsersManager = CApi::GetSystemManager('users');
 
 			/* @var $oApiDavManager CApiDavManager */
-			$oApiDavManager = CApi::GetCoreManager('dav');
+			$oApiDavManager = CApi::GetSystemManager('dav');
 
 			$aResult['AllowCalendar'] = $oApiCapabilityManager->isCalendarSupported($oAccount);
 
@@ -1890,7 +1890,7 @@ class CApiIntegratorManager extends AApiManager
 		/*** temporary fix to the problems in mobile version in rtl mode ***/
 		
 		/* @var $oApiCapability \CApiCapabilityManager */
-		$oApiCapability = \CApi::GetCoreManager('capability');
+		$oApiCapability = \CApi::GetSystemManager('capability');
 		
 		if (in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian')) && $oApiCapability && $oApiCapability->isNotLite() && 1 === $this->isMobile())
 		{

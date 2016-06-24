@@ -25,7 +25,7 @@ class Channel extends NativeService implements \saas\api\IChannel
 
 	protected function createNativeService()
 	{
-		\CApi::GetCoreManager('channels');
+		\CApi::GetSystemManager('channels');
 		return new \CChannel();
 	}
 
@@ -36,7 +36,7 @@ class Channel extends NativeService implements \saas\api\IChannel
 
 	protected function nativeManager()
 	{
-		return \CApi::GetCoreManager('channels');
+		return \CApi::GetSystemManager('channels');
 	}
 
 	protected function findNativeById($id)

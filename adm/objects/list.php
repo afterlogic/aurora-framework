@@ -1,5 +1,5 @@
 <?php
-	$oManagerApi = \CApi::GetCoreManager('eav', 'db');
+	$oManagerApi = \CApi::GetSystemManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
 ?>
 <div id="objects-screen" class="row">

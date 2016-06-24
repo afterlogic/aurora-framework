@@ -108,7 +108,10 @@ class CDbSchemaHelper
 			'adav_cards', 'adav_locks', 'adav_groupmembers', 'adav_principals',
 			'adav_reminders', 'adav_calendarshares',
 
-            'twofa_accounts'
+            'twofa_accounts',
+			
+			'eav_entities', 'eav_properties_int', 'eav_properties_string',  
+			'eav_properties_text', 'eav_properties_bool', 'eav_properties_datetime' 
 		));
 
 		CApi::Plugin()->RunHook('api-db-tables', array(&$aTables));
@@ -1587,6 +1590,35 @@ class CDbSchema
         ));
     }
 	
+    /**
+     * @return CDbTable
+     */
+    public static function EavEntities()
+    {
+        return new CDbTable('eav_entities', CDbSchemaHelper::prefix(), array(
+            new CDbField('id', CDbField::AUTO_INT_BIG_UNSIGNED),
+            new CDbField('entity_type', CDbField::VAR_CHAR, null, 255),
+            new CDbField('module_name', CDbField::VAR_CHAR, null, 255)
+        ), array(
+            new CDbKey(CDbKey::TYPE_PRIMARY_KEY, array('id'))
+        ));
+    }	
+	
+    /**
+     * @return CDbTable
+     */
+    public static function EavAttributesInt()
+    {
+        return new CDbTable('eav_attributes_int', CDbSchemaHelper::prefix(), array(
+            new CDbField('id', CDbField::AUTO_INT_BIG_UNSIGNED),
+            new CDbField('id_entity', CDbField::INT_BIG_UNSIGNED),
+            new CDbField('name', CDbField::VAR_CHAR, null, 255),
+            new CDbField('value', CDbField::INT)
+        ), array(
+            new CDbKey(CDbKey::TYPE_PRIMARY_KEY, array('id'))
+        ));
+    }	
+		
 	/**
 	 * @return CDbFunction
 	 */

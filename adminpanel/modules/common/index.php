@@ -39,10 +39,10 @@ class CCommonModule extends ap_Module
 	{
 		parent::__construct($oAdminPanel, $sPath);
 
-		$this->oDomainsApi = CApi::GetCoreManager('domains');
-		$this->oUsersApi = CApi::GetCoreManager('users');
-		$this->oCapabilityApi = CApi::GetCoreManager('capability');
-		$this->oIntegratorApi = CApi::GetCoreManager('integrator');
+		$this->oDomainsApi = CApi::GetSystemManager('domains');
+		$this->oUsersApi = CApi::GetSystemManager('users');
+		$this->oCapabilityApi = CApi::GetSystemManager('capability');
+		$this->oIntegratorApi = CApi::GetSystemManager('integrator');
 //		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 		$this->oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 

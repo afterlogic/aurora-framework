@@ -180,6 +180,7 @@ class CApiBasicSettings
 	 */
 	public function Save()
 	{
+		$bResult = true;
 		$aConvertedContainer = array();
 		foreach ($this->aContainer as $sKey => $mValue)
 		{
@@ -208,14 +209,18 @@ class CApiBasicSettings
 			}			
 			$aConvertedContainer[$sKey] = $mValue;
 		}
-		
-		// backup previous configuration
-		$sJsonFile = $this->GetJsonPath();
-		if (file_exists($sJsonFile))
+		if (count($aConvertedContainer) > 0)
 		{
-			copy($sJsonFile, $sJsonFile.'.bak');
+			// backup previous configuration
+			$sJsonFile = $this->GetJsonPath();
+			if (file_exists($sJsonFile))
+			{
+				copy($sJsonFile, $sJsonFile.'.bak');
+			}
+			$bResult = (bool) file_put_contents($sJsonFile, json_encode($aConvertedContainer, JSON_PRETTY_PRINT));
 		}
-		return (bool) file_put_contents($sJsonFile, json_encode($aConvertedContainer, JSON_PRETTY_PRINT));
+		
+		return $bResult;
 	}
 	
 	/**

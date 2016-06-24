@@ -224,7 +224,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 			}
 		}
 
-		$oCapabylity = CApi::GetCoreManager('capability');
+		$oCapabylity = CApi::GetSystemManager('capability');
 		/* @var $oCapabylity CApiCapabilityManager */
 		if ($oAccount && $oCapabylity)
 		{
@@ -751,7 +751,7 @@ class CProAjaxAction extends ap_CoreModuleHelper
 		if ($sDomainName === '*' && $oDomain->IdTenant !== 0)
 		{
 			/* @var \CApiDomainsManager $oApiDomainsManager */
-			$oApiDomainsManager = \CApi::GetCoreManager('domains');
+			$oApiDomainsManager = \CApi::GetSystemManager('domains');
 			$oDefaultDomainForTenant = $oApiDomainsManager->GetDefaultDomainByTenantId($oDomain->IdTenant);
 			
 			if ($oDefaultDomainForTenant !== null)

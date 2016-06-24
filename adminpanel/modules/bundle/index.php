@@ -29,9 +29,9 @@ class CBundleModule extends ap_Module
 	{
 		parent::__construct($oAdminPanel, $sPath);
 
-		$this->oUsersApi = CApi::GetCoreManager('users');
-		$this->oDomainsApi = CApi::GetCoreManager('domains');
-		$this->oMailsuiteApi = CApi::GetCoreManager('mailsuite');
+		$this->oUsersApi = CApi::GetSystemManager('users');
+		$this->oDomainsApi = CApi::GetSystemManager('domains');
+		$this->oMailsuiteApi = CApi::GetSystemManager('mailsuite');
 
 		$this->aTabs[] = AP_TAB_DOMAINS;
 		$this->aTabs[] = AP_TAB_USERS;

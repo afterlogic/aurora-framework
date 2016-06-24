@@ -50,16 +50,16 @@ if (!CApi::GetConf('labs.rest', true))
 else if (class_exists('CApi') && CApi::IsValid() && $bMethod)
 {
 	/* @var $oApiDomainsManager CApiDomainsManager */
-	$oApiDomainsManager = CApi::GetCoreManager('domains');
+	$oApiDomainsManager = CApi::GetSystemManager('domains');
 
 	/* @var $oApiTenantsManager CApiTenantsManager */
-	$oApiTenantsManager = CApi::GetCoreManager('tenants');
+	$oApiTenantsManager = CApi::GetSystemManager('tenants');
 
 	/* @var $oApiUsersManager CApiUsersManager */
-	$oApiUsersManager = CApi::getCoreManager('users');
+	$oApiUsersManager = CApi::GetSystemManager('users');
 
 	/* @var $oApiIntegratorManager CApiIntegratorManager */
-	$oApiIntegratorManager = CApi::GetCoreManager('integrator');
+	$oApiIntegratorManager = CApi::GetSystemManager('integrator');
 
 	if ($sMethod === 'GET /token')
 	{

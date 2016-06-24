@@ -62,12 +62,12 @@ class TenantUsersManager implements \saas\api\IUsersManager
 
 	function nativeManager()
 	{
-		return \CApi::GetCoreManager('users');
+		return \CApi::GetSystemManager('users');
 	}
 
 	function nativeDomainManager()
 	{
-		return \CApi::GetCoreManager('domains');
+		return \CApi::GetSystemManager('domains');
 	}
 
 	/**

@@ -93,7 +93,7 @@ class CWebMailAjaxAction extends ap_CoreModuleHelper
 	protected function initNewDomainByPost(CDomain &$oDomain)
 	{
 		/* @var $oApiDomainsManager CApiDomainsManager */
-		$oApiDomainsManager = CApi::GetCoreManager('domains');
+		$oApiDomainsManager = CApi::GetSystemManager('domains');
 
 		/* @var $oDefaultDomain CDomain */
 		$oDefaultDomain = $oApiDomainsManager->getDefaultDomain();

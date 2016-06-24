@@ -54,11 +54,11 @@ class CProModule extends ap_Module
 	{
 		parent::__construct($oAdminPanel, $sPath);
 
-		$this->oDomainsApi = CApi::GetCoreManager('domains');
-		$this->oLicApi = CApi::GetCoreManager('licensing');
+		$this->oDomainsApi = CApi::GetSystemManager('domains');
+		$this->oLicApi = CApi::GetSystemManager('licensing');
 		$this->oUsersApi = CApi::GetModule('Core')->GetManager('users');
-		$this->oAccountsApi = CApi::GetCoreManager('users');
-		$this->oCapabilityApi = CApi::GetCoreManager('capability');
+		$this->oAccountsApi = CApi::GetSystemManager('users');
+		$this->oCapabilityApi = CApi::GetSystemManager('capability');
 //		$this->oTenantsApi = CApi::GetCoreManager('tenants');
 		$this->oTenantsApi = CApi::GetModule('Core')->GetManager('tenants');
 
@@ -154,7 +154,7 @@ class CProModule extends ap_Module
 
 				$oTenant = $this->GetTenantAdminObject();
 
-				$oApiCapa = CApi::GetCoreManager('capability');
+				$oApiCapa = CApi::GetSystemManager('capability');
 				/* @var $oApiCapa CApiCapabilityManager */
 
 				if ($oApiCapa && $oApiCapa->isHelpdeskSupported() && $oTenant && (
@@ -611,7 +611,7 @@ class CProModule extends ap_Module
 							$oTenant =& $this->oAdminPanel->GetMainObject('domain_edit_tenant');
 						}
 
-						$oCapabylity = CApi::GetCoreManager('capability');
+						$oCapabylity = CApi::GetSystemManager('capability');
 						/* @var $oCapabylity CApiCapabilityManager */
 						if ($oCapabylity)
 						{
@@ -723,7 +723,7 @@ class CProModule extends ap_Module
 							CM_SWITCHER_MODE_EDIT_USER_GENERAL, CM_SWITCHER_MODE_EDIT_USER_GENERAL_NAME,
 							$this->sPath.'/templates/main-edit-user-general.php');
 
-						$oCapabylity = CApi::GetCoreManager('capability');
+						$oCapabylity = CApi::GetSystemManager('capability');
 						/* @var $oCapabylity CApiCapabilityManager */
 						if ($oCapabylity)
 						{

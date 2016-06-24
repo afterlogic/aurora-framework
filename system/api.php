@@ -183,8 +183,8 @@ class CApi
 
 	public static function PostRun()
 	{
-		CApi::GetCoreManager('users');
-		CApi::GetCoreManager('domains');
+//		CApi::GetCoreManager('users');
+//		CApi::GetCoreManager('domains');
 	}
 
 	/**
@@ -208,7 +208,7 @@ class CApi
 	 * @param string $sManagerType
 	 * @param string $sForcedStorage = ''
 	 */
-	public static function GetCoreManager($sManagerType, $sForcedStorage = '')
+	public static function GetSystemManager($sManagerType, $sForcedStorage = '')
 	{
 		return CApi::Manager($sManagerType, $sForcedStorage);
 	}
@@ -363,10 +363,10 @@ class CApi
 	public static function IsMobileApplication()
 	{
 		/* @var $oApiIntegrator \CApiIntegratorManager */
-		$oApiIntegrator = \CApi::GetCoreManager('integrator');
+		$oApiIntegrator = \CApi::GetSystemManager('integrator');
 
 		/* @var $oApiCapability \CApiCapabilityManager */
-		$oApiCapability = \CApi::GetCoreManager('capability');
+		$oApiCapability = \CApi::GetSystemManager('capability');
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
 	}
@@ -1174,7 +1174,7 @@ class CApi
 			else
 			{
 				/* @var $oApiIntegrator \CApiIntegratorManager */
-				$oApiIntegrator = \CApi::GetCoreManager('integrator');
+				$oApiIntegrator = \CApi::GetSystemManager('integrator');
 				if ($oApiIntegrator)
 				{
 					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);

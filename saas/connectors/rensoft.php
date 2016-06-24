@@ -31,7 +31,7 @@ $oHttp = \MailSo\Base\Http::SingletonInstance();
 
 LogBillManager('Request: '.$oHttp->GetQueryString());
 
-$oApiChannelsManager = CApi::GetCoreManager('channels');
+$oApiChannelsManager = CApi::GetSystemManager('channels');
 /* @var $oApiChannelsManager CApiChannelsManager */
 
 if (!$oApiChannelsManager)
@@ -39,7 +39,7 @@ if (!$oApiChannelsManager)
 	SendErrorMessage('ApiChannelsManager = false');
 }
 
-$oApiTenantsManager = CApi::GetCoreManager('tenants');
+$oApiTenantsManager = CApi::GetSystemManager('tenants');
 /* @var $oApiTenantsManager CApiTenantsManager */
 
 if (!$oApiTenantsManager)

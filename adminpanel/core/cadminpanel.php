@@ -241,7 +241,7 @@ class CAdminPanel
 					$this->JsAddInitText('OnlineMsgError(\''.CApi::I18N('ADMIN_PANEL/MSG_INSTALLER_FOUND').'\');');
 				}
 
-				$oLicApiManager = /* @var $oLicApiManager CApiLicensingManager */ CApi::GetCoreManager('licensing');
+				$oLicApiManager = /* @var $oLicApiManager CApiLicensingManager */ CApi::GetSystemManager('licensing');
 				if ($oLicApiManager && $oLicApiManager->IsValidKey())
 				{
 					$iType = $oLicApiManager->GetLicenseType();
@@ -500,7 +500,7 @@ class CAdminPanel
 	protected function initAdminPanel()
 	{
 		$this->RType = (bool) CApi::GetConf('tenant', false);
-		$this->AType = !!CApi::GetCoreManager('collaboration');
+		$this->AType = !!CApi::GetSystemManager('collaboration');
 
 		$this->aTabsSort = array(
 			AP_TAB_COMMON,
@@ -810,7 +810,7 @@ class CAdminPanel
 		{
 			if (0 < $iTenantId)
 			{
-				$oDomainsApi = /* @var $oDomainsApi CApiDomainsManager */ CApi::GetCoreManager('domains');
+				$oDomainsApi = /* @var $oDomainsApi CApiDomainsManager */ CApi::GetSystemManager('domains');
 				$oDomain = /* @var $oDomain CDomain */$oDomainsApi->getDomainById($iDomainId);
 				if ($oDomain && $iTenantId === $oDomain->IdTenant)
 				{

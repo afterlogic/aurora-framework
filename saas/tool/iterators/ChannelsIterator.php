@@ -21,7 +21,7 @@ class ChannelsIterator extends PageIterator
 	{
 		$this->iPage = 0;
 		$this->iItemsPerPage = $iItemsPerPage;
-		$this->oNativeChannelsManager = \CApi::GetCoreManager('channels');
+		$this->oNativeChannelsManager = \CApi::GetSystemManager('channels');
 		
 		parent::__construct();
 	}

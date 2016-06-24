@@ -13,7 +13,7 @@
 	if (class_exists('CApi') && CApi::IsValid())
 	{
 		// Getting required API class
-		$oApiUsersManager = CApi::GetCoreManager('users');
+		$oApiUsersManager = CApi::GetSystemManager('users');
 
 		$oAccount = $oApiUsersManager->getAccountByEmail('ray@afterlogic.com');
 		if ($oAccount)

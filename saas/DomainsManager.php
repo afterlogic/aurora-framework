@@ -16,7 +16,7 @@ class DomainsManager implements \saas\api\IDomainsManager
 
 	protected function nativeManager()
 	{
-		return \CApi::GetCoreManager('domains');
+		return \CApi::GetSystemManager('domains');
 	}
 
 	function __construct($tenantId = 0)

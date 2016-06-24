@@ -95,7 +95,7 @@ class CDbStep extends AInstallerStep
 			$sError = '';
 
 			/* @var $oApiDbManager CApiDbManager */
-			$oApiDbManager = CApi::GetCoreManager('db');
+			$oApiDbManager = CApi::GetSystemManager('db');
 			
 			if ($oApiDbManager->createDatabase($sError))
 			{
@@ -114,7 +114,7 @@ class CDbStep extends AInstallerStep
 			if (isset($_POST['chNotCreate']) && 1 === (int) $_POST['chNotCreate'])
 			{
 				/* @var $oApiDbManager CApiDbManager */
-				$oApiDbManager = CApi::GetCoreManager('db');
+				$oApiDbManager = CApi::GetSystemManager('db');
 				if ($oApiDbManager->isAUsersTableExists())
 				{
 					$_SESSION['wm_install_db_foot_error'] = 'The data tables already exist. To proceed, specify another prefix or delete the existing tables.';
@@ -133,7 +133,7 @@ class CDbStep extends AInstallerStep
 			if (isset($_POST['chSampleData']) && 1 === (int) $_POST['chSampleData'])
 			{
 				/* @var $oApiDbManager CApiDbManager */
-				$oApiDbManager = CApi::GetCoreManager('db');
+				$oApiDbManager = CApi::GetSystemManager('db');
 				if ($oApiDbManager->isAUsersTableExists())
 				{
 					$_SESSION['wm_install_db_foot_error'] = 'The data tables already exist. To proceed, specify another prefix or delete the existing tables.';

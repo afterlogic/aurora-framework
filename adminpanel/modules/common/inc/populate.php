@@ -41,7 +41,7 @@ class CCommonPopulateData extends ap_CoreModuleHelper
 
 	public function CommonSocial(ap_Standard_Screen &$oScreen)
 	{
-		$oApiCapa = CApi::GetCoreManager('capability');
+		$oApiCapa = CApi::GetSystemManager('capability');
 		/* @var $oApiCapa CApiCapabilityManager */
 
 		if ($oApiCapa && !$this->oAdminPanel->IsOnlyReadAuthType())
