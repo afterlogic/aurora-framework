@@ -88,10 +88,10 @@ class CCompatibilityStep extends AInstallerStep
 		include_once PSEVEN_APP_ROOT_PATH.'system/common/settings.php';
 		$this->aCompatibility['settings.file'] = $this->aCompatibility['data.dir'].\CApiSettings::JSON_FILE_NAME;
 		
-		if (!@file_exists($this->aCompatibility['settings.file']))
-		{
-			$oSettings = new \CApiSettings($this->aCompatibility['data.dir']);
-		}
+//		if (!@file_exists($this->aCompatibility['settings.file']))
+//		{
+//			$oSettings = new \CApiSettings($this->aCompatibility['data.dir']);
+//		}
 		
 		$this->aCompatibility['settings.file.exist'] = (int) @file_exists($this->aCompatibility['settings.file']);
 		$this->aCompatibility['settings.file.read'] = (int) @is_readable($this->aCompatibility['settings.file']);
