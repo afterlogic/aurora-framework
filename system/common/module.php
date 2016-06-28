@@ -434,9 +434,7 @@ abstract class AApiModule
 		return new static($sName, $sPath, $sVersion);
 	}	
 
-	public function init()
-	{
-	}
+	public function init() {}
 
 	public function loadModuleConfig()
 	{
@@ -858,41 +856,6 @@ abstract class AApiModule
 			$this->aParameters[$sKey] = $mValue;
 		}
 	}
-
-	/**
-	 * @param string $sParamName
-	 * @param mixed $oObject
-	 *
-	 * @return void
-	 */
-	protected function paramToObject($sParamName, &$oObject, $sType = 'string')
-	{
-		switch ($sType)
-		{
-			default:
-			case 'string':
-				$oObject->{$sParamName} = (string) $this->getParamValue($sParamName, $oObject->{$sParamName});
-				break;
-			case 'int':
-				$oObject->{$sParamName} = (int) $this->getParamValue($sParamName, $oObject->{$sParamName});
-				break;
-			case 'bool':
-				$oObject->{$sParamName} = '1' === (string) $this->getParamValue($sParamName, $oObject->{$sParamName} ? '1' : '0');
-				break;
-		}
-	}
-	
-	/**
-	 * @param mixed $oObject
-	 * @param array $aParamsNames
-	 */
-	protected function paramsStrToObjectHelper(&$oObject, $aParamsNames)
-	{
-		foreach ($aParamsNames as $sName)
-		{
-			$this->paramToObject($sName, $oObject);
-		}
-	}	
 	
 	/**
 	 * @param string $sMethod
@@ -902,18 +865,16 @@ abstract class AApiModule
 	 */
 	public function DefaultResponse($sMethod, $mResult = false)
 	{
-		$aResult = array(
-			'Module' => $this->GetName(),
-			'Method' => $sMethod
-		);
-
-		$aResult['Result'] = \CApiResponseManager::GetResponseObject($mResult, array(
+		return array(
 			'Module' => $this->GetName(),
 			'Method' => $sMethod,
-			'Parameters' => $this->aParameters
-		));
-		$aResult['@Time'] = microtime(true) - PSEVEN_APP_START;
-		return $aResult;
+			'Result' => \CApiResponseManager::GetResponseObject($mResult, array(
+				'Module' => $this->GetName(),
+				'Method' => $sMethod,
+				'Parameters' => $this->aParameters
+			)),
+			'@Time' => microtime(true) - PSEVEN_APP_START
+		);
 	}	
 	
 	/**
@@ -997,98 +958,6 @@ abstract class AApiModule
 		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams);
 	}	
 	
-	/**
-	 * @param string $sAuthToken = ''
-	 * @return \CAccount | null
-	 */
-	public function GetDefaultAccount($sAuthToken = '')
-	{
-		$oResult = null;
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
-
-		$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
-		if (0 < $iUserId) {
-			
-			$oApiUsers = \CApi::GetSystemManager('users');
-			$oResult = $oApiUsers->getDefaultAccount($iUserId);
-		}
-
-		return $oResult;
-	}
-	
-	/**
-	 * @param int $iAccountId
-	 * @param bool $bVerifyLogginedUserId = true
-	 * @param string $sAuthToken = ''
-	 * @return CAccount | null
-	 */
-	public function getAccount($iAccountId, $bVerifyLogginedUserId = true, $sAuthToken = '')
-	{
-		$oResult = null;
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
-		
-		$iUserId = $bVerifyLogginedUserId ? $oApiIntegrator->getLogginedUserId($sAuthToken) : 1;
-		if (0 < $iUserId) {
-			
-			$oApiUsers = \CApi::GetSystemManager('users');
-			
-			$oAccount = $oApiUsers->getAccountById($iAccountId);
-			if ($oAccount instanceof \CAccount && 
-				($bVerifyLogginedUserId && $oAccount->IdUser === $iUserId || !$bVerifyLogginedUserId) 
-					&& !$oAccount->IsDisabled) {
-				
-				$oResult = $oAccount;
-			}
-		}
-
-		return $oResult;
-	}	
-	
-	/**
-	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
-	 *
-	 * @return \CAccount|null
-	 */
-	protected function getDefaultAccountFromParam($bThrowAuthExceptionOnFalse = true)
-	{
-		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
-		$oResult = $this->GetDefaultAccount($sAuthToken);
-		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount)) {
-			
-			throw new \System\Exceptions\ClientException(\System\Notifications::AuthError);
-		}
-
-		return $oResult;
-	}	
-	
-	/**
-	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
-	 * @param bool $bVerifyLogginedUserId Default value is **true**.
-	 *
-	 * @return \CAccount|null
-	 */
-	protected function getAccountFromParam($bThrowAuthExceptionOnFalse = true, $bVerifyLogginedUserId = true)
-	{
-		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
-		$sAccountID = (string) $this->getParamValue('AccountID', '');
-		if (0 === strlen($sAccountID) || !is_numeric($sAccountID)) {
-			
-			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
-		}
-
-		$oResult = $this->getAccount((int) $sAccountID, $bVerifyLogginedUserId, $sAuthToken);
-
-		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount)) {
-			
-			$oApiUsers = \CApi::GetSystemManager('users');
-			$oExc = $oApiUsers->GetLastException();
-			throw new \System\Exceptions\ClientException(\System\Notifications::AuthError,
-				$oExc ? $oExc : null, $oExc ? $oExc->getMessage() : '');
-		}
-
-		return $oResult;
-	}	
-
 	public function ExecuteMethod($sMethodName, $aArguments = array(), $bReflection = false)
 	{
 		$mResult = false;
@@ -1178,6 +1047,54 @@ abstract class AApiModule
 		//return self::processTranslateParams($aLang, $sData, $aParams);
 		return isset($iPluralCount) ? \CApi::processTranslateParams($aLang, $sData, $aParams, \CApi::getPlural($sLanguage, $iPluralCount)) : 
 			\CApi::processTranslateParams($aLang, $sData, $aParams);
+	}
+	
+	public function setDisabledForEntity(&$oEntity)
+	{
+		$oEavManager = \CApi::GetSystemManager('eav');
+		if ($oEavManager)
+		{
+			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
+			$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+			if($i = substr_count($sDisabledModules, "|"))
+			{
+				$aDisabledModules = explode("|", $sDisabledModules);
+			}
+				
+			if (!in_array($this->GetName(), $aDisabledModules))
+			{
+				$aDisabledModules[] = $this->GetName();
+			}
+			$sDisabledModules = implode('|', $aDisabledModules);
+			$oEntity->{'@DisabledModules'} = $sDisabledModules;
+			$oEavManager->setAttributes(
+					array($oEntity->iId), 
+					array(new \CAttribute('@DisabledModules', $sDisabledModules, 'string')));
+		}	
+	}
+	
+	public function setEnabledForEntity(&$oEntity)
+	{
+		$oEavManager = \CApi::GetSystemManager('eav');
+		if ($oEavManager)
+		{
+			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
+			$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+			if($i = substr_count($sDisabledModules, "|"))
+			{
+				$aDisabledModules = explode("|", $sDisabledModules);
+			}
+
+			if (in_array($this->GetName(), $aDisabledModules))
+			{
+				$aDisabledModules = array_diff($aDisabledModules, array($this->GetName()));
+			}
+			$sDisabledModules = implode('|', $aDisabledModules);
+			$oEntity->{'@DisabledModules'} = $sDisabledModules;
+			$oEavManager->setAttributes(
+					array($oEntity->iId), 
+					array(new \CAttribute('@DisabledModules', implode('|', $aDisabledModules), 'string')));
+		}	
 	}
 }
 

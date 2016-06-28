@@ -101,59 +101,13 @@ class AEntity
 	}	
 	
 	/**
-	 * @param stdClass $oRow
-	 */
-	public function InitByDbRow($oRow)
-	{
-		$aMap = $this->getMap();
-		foreach ($aMap as $sKey => $aTypes)
-		{
-			if (isset($aTypes[1]) && property_exists($oRow, $aTypes[1]))
-			{
-				if ('password' === $aTypes[0])
-				{
-					$this->{$sKey} = api_Utils::DecryptValue($oRow->{$aTypes[1]});
-				}
-				else if ('datetime' === $aTypes[0])
-				{
-					$iDateTime = 0;
-					$aDateTime = api_Utils::DateParse($oRow->{$aTypes[1]});
-					if (is_array($aDateTime))
-					{
-						$iDateTime = gmmktime($aDateTime['hour'], $aDateTime['minute'], $aDateTime['second'],
-							$aDateTime['month'], $aDateTime['day'], $aDateTime['year']);
-
-						if (false === $iDateTime || $iDateTime <= 0)
-						{
-							$iDateTime = 0;
-						}
-					}
-
-					$this->{$sKey} = $iDateTime;
-				}
-				else if ('serialize' === $aTypes[0])
-				{
-					$this->{$sKey} = ('' === $oRow->{$aTypes[1]} || !is_string($oRow->{$aTypes[1]})) ?
-						'' : unserialize($oRow->{$aTypes[1]});
-				}
-				else
-				{
-					$this->{$sKey} = $oRow->{$aTypes[1]};
-				}
-
-				$this->FlushObsolete($sKey);
-			}
-		}
-	}		
-
-	/**
 	 * @param string $sPropertyName
 	 * @return bool
 	 */
 	public function IsProperty($sPropertyName)
 	{
 		$aMap = $this->getMap();
-		return isset($aMap[$sPropertyName]);
+		return isset($aMap[$sPropertyName]) || isset($this->aContainer[$sPropertyName]);
 	}
 
 	/**
@@ -240,10 +194,6 @@ class AEntity
 				$sType = $aMap[$sKey][0];
 			}
 			$this->setType($mValue, $sType);
-		}
-		else
-		{
-			throw new Exception('Undefined property '.$sKey);
 		}
 
 		return $mValue;

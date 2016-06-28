@@ -139,8 +139,7 @@ class CApi
 			CApi::$oManager = new CApiGlobalManager();
 			CApi::$oPlugin = new CApiPluginManager(CApi::$oManager);
 			CApi::$bIsValid = CApi::validateApi();
-			CApi::$oModuleManager = CApiModuleManager::createInstance();
-			CApi::$oModuleManager->init();
+			CApi::GetModuleManager();
 			CApi::$oManager->PrepareStorageMap();
 			CApi::$aModuleDecorators = array();
 		}
@@ -181,12 +180,6 @@ class CApi
 		return is_array($aResult) ? $aResult : array();
 	}
 
-	public static function PostRun()
-	{
-//		CApi::GetCoreManager('users');
-//		CApi::GetCoreManager('domains');
-	}
-
 	/**
 	 * @return CApiPluginManager
 	 */
@@ -208,7 +201,7 @@ class CApi
 	 * @param string $sManagerType
 	 * @param string $sForcedStorage = ''
 	 */
-	public static function GetSystemManager($sManagerType, $sForcedStorage = '')
+	public static function GetSystemManager($sManagerType, $sForcedStorage = 'db')
 	{
 		return CApi::Manager($sManagerType, $sForcedStorage);
 	}
@@ -1244,4 +1237,3 @@ class CApi
 }
 
 CApi::Run();
-CApi::PostRun();

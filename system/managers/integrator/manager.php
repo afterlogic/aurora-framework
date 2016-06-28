@@ -1695,7 +1695,14 @@ class CApiIntegratorManager extends AApiManager
 			);
 		}
 		
-		$aAppData['DisabledModules'] = array();
+		$sDisabledModules = isset($oUser->{'@DisabledModules'}) ? $oUser->{'@DisabledModules'} : '';
+		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+		if($i = substr_count($sDisabledModules, "|"))
+		{
+			$aDisabledModules = explode("|", $sDisabledModules);
+		}
+		
+		$aAppData['DisabledModules'] = $aDisabledModules;
 
 //		if (0 < $iUserId)
 //		{
