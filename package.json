@@ -35,6 +35,8 @@
   },
   "devDependencies": {
     "cascade-ini": "*",
+	"ini-parser": "*",
+	"iniparser": "*",
     "copy-dir": "*",
 	"exports-loader": "~0.6.3",
     "file-exists": "*",

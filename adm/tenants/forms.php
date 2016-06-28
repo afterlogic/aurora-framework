@@ -2,17 +2,37 @@
 <!-- ko if: !selectedItem() -->
 <form class="form-inline" style="display: inline-block;" method="POST" action="<?php echo $sBaseUrl; ?>">
 	<input type="hidden" name="manager" value="tenants"/>
-	<input type="hidden" name="action" value="build"/>
-	<input type="submit" value="Build common CSS" class="btn btn-danger" />
+	<input type="hidden" name="action" value="build-themes"/>
+	<input type="submit" value="Build common Themes" class="btn btn-danger" />
+</form>
+<form class="form-inline" style="display: inline-block;" method="POST" action="<?php echo $sBaseUrl; ?>">
+	<input type="hidden" name="manager" value="tenants"/>
+	<input type="hidden" name="action" value="build-langs"/>
+
+	<input type="submit" value="Build common Langs" class="btn btn-danger" />
 </form>
 <!-- /ko -->
 <!-- ko with: selectedItem -->
 <form class="form-inline" style="display: inline-block;" method="POST" action="<?php echo $sBaseUrl; ?>">
 	<input type="hidden" name="manager" value="tenants"/>
-	<input type="hidden" name="action" value="build"/>
+	<input type="hidden" name="action" value="build-themes"/>
 	<input name="name" readonly="true" type="hidden" data-bind="textInput: name;" class="form-control" />
 
-	<input type="submit" value="Build CSS" class="btn btn-danger" data-bind="value: 'Build CSS for: ' + name;" />
+	<input type="submit" value="Build Themes" class="btn btn-danger" data-bind="value: 'Build CSS for: ' + name;" />
+</form>
+<form class="form-inline" style="display: inline-block;" method="POST" action="<?php echo $sBaseUrl; ?>">
+	<input type="hidden" name="manager" value="tenants"/>
+	<input type="hidden" name="action" value="build-langs"/>
+	<input name="name" readonly="true" type="hidden" data-bind="textInput: name;" class="form-control" />
+
+	<input type="submit" value="Build Langs" class="btn btn-danger" data-bind="value: 'Build Langs for: ' + name;" />
+</form>
+<form class="form-inline" style="display: inline-block;" method="POST" action="<?php echo $sBaseUrl; ?>">
+	<input type="hidden" name="manager" value="tenants"/>
+	<input type="hidden" name="action" value="build-js"/>
+	<input name="name" readonly="true" type="hidden" data-bind="textInput: name;" class="form-control" />
+
+	<input type="submit" value="Build Js" class="btn btn-danger" data-bind="value: 'Build Langs for: ' + name;" />
 </form>
 <!-- /ko -->
 <fieldset data-bind="with: selectedItem">

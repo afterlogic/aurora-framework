@@ -234,7 +234,15 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	private function getLanguageString($sLanguage)
 	{
-		$sFileName = CApi::WebMailPath().'static/i18n/'.$sLanguage.'.json';
+		$sTenantName = \CApi::getTenantName();
+		
+		$sFileName = \CApi::WebMailPath().'tenants/'.$sTenantName.'/static/i18n/'.$sLanguage.'.json';
+
+		if (!file_exists($sFileName))
+		{
+			$sFileName = \CApi::WebMailPath().'static/i18n/'.$sLanguage.'.json';
+		}
+		
 		if (!file_exists($sFileName))
 		{
 			$sFileName = CApi::WebMailPath().'static/i18n/English.json';
