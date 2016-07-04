@@ -31,6 +31,13 @@ if ($oHttp->HasPost('ObjectName'))
 			$aResultItems[] = $itemData;
 		}
 
+		//TODO: fix password encoder
+		if ($oHttp->GetPost('ObjectName') == 'CAccount') {
+			foreach ($aResultItems as &$oResultItem) {
+				$oResultItem['Password'] = htmlspecialchars($oResultItem['Password']);
+			}
+		}
+
 		$response['error'] = false;
 		$response['message'] = '';
 		$response['result'] = $aResultItems;

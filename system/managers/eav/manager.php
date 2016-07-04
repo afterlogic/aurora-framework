@@ -15,10 +15,10 @@ class CApiEavManager extends AApiManagerWithStorage
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db')
 	{
 		parent::__construct('eav', $oManager, $sForcedStorage);
-		
+
 		$this->inc('classes.attribute');
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -35,9 +35,9 @@ class CApiEavManager extends AApiManagerWithStorage
 			$this->setLastException($oException);
 		}
 
-		return $bResult;		
-	}	
-	
+		return $bResult;
+	}
+
 	public function saveEntity(\AEntity &$oEntity)
 	{
 		$mResult = false;
@@ -49,7 +49,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			$mResult = $this->createEntity($oEntity);
 		}
-		
+
 		return $mResult;
 	}
 
@@ -74,10 +74,10 @@ class CApiEavManager extends AApiManagerWithStorage
 				$this->setAttributes($mResult, $aProperties);
 			}
 		}
-		
+
 		return $mResult;
 	}
-	
+
 	protected function updateEntity(\AEntity $oEntity)
 	{
 		$mResult = false;
@@ -89,21 +89,21 @@ class CApiEavManager extends AApiManagerWithStorage
 			{
 				$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getAttributeType($sKey), $oEntity->isEncryptedAttribute($sKey));
 			}
-			try 
+			try
 			{
 				$this->setAttributes($oEntity->iId, $aAttributes);
 				$mResult = true;
-			} 
-			catch (Exception $ex) 
+			}
+			catch (Exception $ex)
 			{
 				$mResult = false;
 				throw CApiManagerException(Errs::Main_UnknownError);
 			}
 		}
-		
+
 		return $mResult;
-	}	
-	
+	}
+
 	public function deleteEntity($iId)
 	{
 		$bResult = true;
@@ -118,7 +118,7 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;
 	}
-	
+
 	public function getTypes()
 	{
 		$aTypes = null;
@@ -130,7 +130,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			$this->setLastException($oException);
 		}
-		return $aTypes;		
+		return $aTypes;
 	}
 
 	public function getEntitiesCount($sType, $aSearchAttributes = array())
@@ -144,9 +144,9 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			$this->setLastException($oException);
 		}
-		return $iCount;		
+		return $iCount;
 	}
-	
+
 	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aSearchAttributes = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
 	{
 		$aEntities = null;
@@ -158,21 +158,21 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			$this->setLastException($oException);
 		}
-		return $aEntities;		
+		return $aEntities;
 	}
-	
+
 	public function getEntitiesByModule($sModule)
 	{
 		// TODO:
 		return false;
 	}
-	
+
 	public  function geEntitiesByModuleAndType($sModule, $sType)
 	{
 		// TODO:
 		return false;
 	}
-	
+
 	public function getEntityById($iId)
 	{
 		$oEntity = null;
@@ -186,7 +186,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		}
 		return $oEntity;
 	}
-	
+
 	/**
 	 * @param int|array $mEntityId
 	 */
@@ -261,4 +261,41 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;
 	}
+
+	/**
+	 * @param bool $update
+	 * @return bool
+	 */
+	public function syncTables($update = false)
+	{
+		$bResult = true;
+		try
+		{
+            defined('WM_INSTALLER_PATH') || define('WM_INSTALLER_PATH', (dirname(__FILE__).'/'));
+
+			$path = WM_INSTALLER_PATH . 'db/';
+			if ($update) {
+				$file = $path . 'insert.sql';
+			} else {
+				$file = $path . 'create.sql';
+			}
+
+            if (@file_exists($file) && $fp = @file_get_contents($file))
+            {
+				$aSqlStrings = explode(';', $fp);
+				foreach ($aSqlStrings as $sql) {
+					$this->oStorage->execute($sql);
+				}
+			} else {
+                $bResult = false;
+            }
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+
+		return $bResult;
+	}
+
 }

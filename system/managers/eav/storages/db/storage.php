@@ -272,13 +272,25 @@ class CApiEavDbStorage extends CApiEavStorage
 		return true;
 	}
 	
-		/**
+	/**
 	 * @return bool
 	 */
 	public function getAttributesNamesByEntityType($sEntityTypes)
 	{
 		$bResult = $this->oConnection->Execute($this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes));
 		$this->throwDbExceptionIfExist();
+		return $bResult;
+	}
+
+	/**
+	 * @param $sql
+	 * @return bool
+	 * @throws CApiBaseException
+	 */
+	public function execute($sql) {
+		$bResult = $this->oConnection->Execute($sql);
+		$this->throwDbExceptionIfExist();
+
 		return $bResult;
 	}
 }

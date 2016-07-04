@@ -155,8 +155,8 @@ class ELogLevel extends AEnumeration
  */
 class EDbType extends AEnumeration
 {
-	const MySQL = 3;
-	const PostgreSQL = 4;
+	const MySQL = "MySql";
+	const PostgreSQL = "PostgreSQL";
 
 	/**
 	 * @var array

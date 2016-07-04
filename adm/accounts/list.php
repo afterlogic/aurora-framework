@@ -1,6 +1,12 @@
 <?php
 	$oManagerApi = \CApi::GetModule('BasicAuth')->GetManager('accounts');
 	$aItems = $oManagerApi->getAccountList(0, 0);
+
+//TODO: fix password encoder
+foreach ($aItems as &$oItem) {
+	$oItem[1] = htmlspecialchars($oItem[1]);
+}
+
 ?>
 <div id="accounts-screen" class="row">
 	<div class="col-sm-6">
@@ -9,7 +15,7 @@
 				<th>id</th>
 				<th>login</th>
 				<th>password</th>
-				<th>user id</td>
+				<th>user id</th>
 			</tr>
 			<!-- ko foreach: usersList -->
 			<tr data-bind="click: $parent.selectItem.bind($parent), css: {'success': active}">
@@ -25,6 +31,7 @@
 		<?php include "forms.php"; ?>
 	</div>
 </div>
+
 <script>
 	staticData['accounts_list'] = <?php echo is_array($aItems) ? json_encode($aItems) : '[]'; ?>;
 </script>

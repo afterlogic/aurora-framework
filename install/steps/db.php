@@ -113,39 +113,25 @@ class CDbStep extends AInstallerStep
 			$bResult = true;
 			if (isset($_POST['chNotCreate']) && 1 === (int) $_POST['chNotCreate'])
 			{
-				/* @var $oApiDbManager CApiDbManager */
-				$oApiDbManager = CApi::GetSystemManager('db');
-				if ($oApiDbManager->isAUsersTableExists())
+				/* @var $oApiEavManager CApiEavManager */
+				$oApiEavManager = CApi::GetSystemManager('eav', 'db');
+				$bResult = $oApiEavManager->syncTables();
+				
+				if (!$bResult)
 				{
-					$_SESSION['wm_install_db_foot_error'] = 'The data tables already exist. To proceed, specify another prefix or delete the existing tables.';
-					$bResult = false;
-				}
-				else
-				{
-					$bResult = $oApiDbManager->syncTables();
-					if (!$bResult)
-					{
-						$_SESSION['wm_install_db_foot_error'] = $oApiDbManager->GetLastErrorMessage();
-					}
+					$_SESSION['wm_install_db_foot_error'] = $oApiEavManager->GetLastErrorMessage();
 				}
 			}
 			
 			if (isset($_POST['chSampleData']) && 1 === (int) $_POST['chSampleData'])
 			{
-				/* @var $oApiDbManager CApiDbManager */
-				$oApiDbManager = CApi::GetSystemManager('db');
-				if ($oApiDbManager->isAUsersTableExists())
+				/* @var $oApiEavManager CApiEavManager */
+				$oApiEavManager = CApi::GetSystemManager('eav', 'db');
+				$bResult = $oApiEavManager->syncTables(true);
+
+				if (!$bResult)
 				{
-					$_SESSION['wm_install_db_foot_error'] = 'The data tables already exist. To proceed, specify another prefix or delete the existing tables.';
-					$bResult = false;
-				}
-				else
-				{
-					$bResult = $oApiDbManager->syncTables();
-					if (!$bResult)
-					{
-						$_SESSION['wm_install_db_foot_error'] = $oApiDbManager->GetLastErrorMessage();
-					}
+					$_SESSION['wm_install_db_foot_error'] = $oApiEavManager->GetLastErrorMessage();
 				}
 			}
 
