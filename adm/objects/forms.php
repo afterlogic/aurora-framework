@@ -1,9 +1,36 @@
 <!--<button data-bind="click: reset" class="btn btn-default">Reset</button>-->
+<div data-bind="with: propsList">
+	<label>Create item</label>
+	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+		<input type="hidden" name="ObjectName" data-bind="value: $parent.selectedObjectName"/>
+		<input type="hidden" name="manager" value="objects" />
+		<input type="hidden" name="action" value="create"/>
+
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<tr>
+					<!-- ko foreach: $parent.propsList -->
+					<th  data-bind="text: $data;"></th>
+					<!-- /ko -->
+				</tr>
+				<tr class="form-group">
+					<!-- ko foreach: $data -->
+					<td>
+						<input type="text" class="form-control" data-bind="attr: {'name': $parents[1].propsList()[$index()]}" style="min-width: 100px;" />
+					</td>
+					<!-- /ko -->
+				</tr>
+			</table>
+		</div>
+		<input type="submit" value="Create" class="btn btn-danger" />
+	</form>
+</div>
+
 <div data-bind="with: selectedItem">
+	<br />
 	<label>Edit item</label>
 	<form method="POST" action="<?php echo $sBaseUrl; ?>">
 		<input type="hidden" name="ObjectName" data-bind="value: $parent.selectedObjectName"/>
-		<input type="hidden" name="action" value="update" />
 		<input type="hidden" name="manager" value="objects" />
 		<input type="hidden" name="action" value="edit"/>
 		

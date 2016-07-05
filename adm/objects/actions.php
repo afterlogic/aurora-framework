@@ -5,6 +5,30 @@ $oManagerApi = \CApi::GetSystemManager('eav', 'db');
 
 switch ($oHttp->GetPost('action'))
 {
+	case 'create':
+		if ($oHttp->HasPost('ObjectName'))
+		{
+			$sObjectType = $oHttp->GetPost('ObjectName');
+			$oObject = call_user_func($sObjectType . '::createInstance');
+
+			$aMap = $oObject->GetMap();
+			$aViewProperties = array_keys($aMap);
+
+			if ($oHttp->HasPost('iObjectId'))
+			{
+				foreach ($aViewProperties as $property)
+				{
+					if ($oHttp->HasPost($property))
+					{
+						$oObject->{$property} = $oHttp->GetPost($property);
+					}
+				}
+			}
+
+			$oManagerApi->saveEntity($oObject);
+		}
+		break;
+	
 	case 'edit':
 		if ($oHttp->HasPost('ObjectName'))
 		{
