@@ -14,7 +14,7 @@ var
 
 function GetModuleName(sFilePath)
 {
-	return sFilePath.replace(/.*modules\\(.*?)\\i18n.*/, "$1");
+	return sFilePath.replace(/.*modules[\\\/]{1}(.*?)[\\\/]{1}i18n.*/, "$1");
 }
 
 function BuildLang(sLanguage)
