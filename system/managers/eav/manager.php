@@ -284,7 +284,7 @@ class CApiEavManager extends AApiManagerWithStorage
             {
 				$aSqlStrings = explode(';', $fp);
 				foreach ($aSqlStrings as $sql) {
-					$this->oStorage->execute($sql);
+					$this->oStorage->execute(trim($sql));
 				}
 			} else {
                 $bResult = false;
