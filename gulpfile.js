@@ -105,6 +105,16 @@ cfg.paths.js = {
 		src: [
 			"./modules/HelpDeskClient/js/entry-ext.js"
 		]
+	},
+	custom: {
+		dest: './static/js/',
+		name: 'app.js',
+		min: 'app.min.js',
+		afterlogic: true,
+		watch: true,
+		src: [
+			"entry.js"
+		]
 	}
 };
 
@@ -232,6 +242,8 @@ gulp.task('min', cfg.min);
 gulp.task('w', cfg.watch);
 
 gulp.task('default', ['js:app:watch']);
+
+gulp.task('custom', ['js:custom']);
 
 gulp.task('files', ['js:app:watch', 'js:files_pub:watch']);
 
