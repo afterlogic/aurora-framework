@@ -68,7 +68,7 @@ class EnumConvert
 	}
 
 	/**
-	 * @param mixed $mValue
+	 * @param mixed $sXmlValue
 	 * @param string $sClassName
 	 * @return int
 	 */
@@ -86,7 +86,7 @@ class EnumConvert
 	}
 
 	/**
-	 * @param mixed $mValue
+	 * @param mixed $sXmlValue
 	 * @param string $sClassName
 	 * @return int
 	 */
@@ -125,6 +125,28 @@ class EnumConvert
 	{
 		return self::ToXml($mValue, $sClassName);
 	}
+}
+
+/**
+ * @package Api
+ * @subpackage Enum
+ */
+class EUserRole extends AEnumeration
+{
+	const SuperAdmin = 0;
+	const PowerUser = 1;
+	const RegisteredUser = 2;
+	const Anonymous = 3;
+
+	/**
+	 * @var array
+	 */
+	protected $aConsts = array(
+		'SuperAdmin' => self::SuperAdmin,
+		'PowerUser' => self::PowerUser,
+		'RegisteredUser' => self::RegisteredUser,
+		'Anonymous' => self::Anonymous,
+	);
 }
 
 /**
