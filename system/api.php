@@ -1191,6 +1191,45 @@ class CApi
 		return $mResult;
 	}
 	
+	public static function getLogginedUserInfo($sAuthToken = '')
+	{
+		$mResult = false;
+		if (!empty($sAuthToken))
+		{
+			if (isset(static::$aUserSession['UserId']))
+			{
+				$mResult = array(
+					UserId => (int) static::$aUserSession['UserId'],
+					Role => (int) static::$aUserSession['Role']
+				);
+			}
+			else
+			{
+				/* @var $oApiIntegrator \CApiIntegratorManager */
+				$oApiIntegrator = \CApi::GetSystemManager('integrator');
+				if ($oApiIntegrator)
+				{
+					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);
+					static::$aUserSession['UserId'] = $mResult;
+					static::$aUserSession['AuthToken'] = $sAuthToken;
+				}
+			}
+		}
+		else 
+		{
+			if (is_array(static::$aUserSession) && isset(static::$aUserSession['UserId']))
+			{
+				$mResult = static::$aUserSession['UserId'];
+			}
+			else
+			{
+				$mResult = 0;
+			}
+		}
+		
+		return $mResult;
+	}
+	
 	public static function getLogginedUserAuthToken()
 	{
 		$mResult = false;
