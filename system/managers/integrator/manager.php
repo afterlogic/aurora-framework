@@ -1559,10 +1559,14 @@ class CApiIntegratorManager extends AApiManager
 		$iUserId = $aUserInfo['userId'];
 		$oUser = null;
 
+		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		if (0 < $iUserId)
 		{
-			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 			$oUser = $oCoreDecorator->GetUser($iUserId);
+		}
+		elseif ($aUserInfo['isAdmin'])
+		{
+			$oUser = $oCoreDecorator->GetAdminUser();
 		}
 		
 		$aModules = \CApi::GetModules();
@@ -1582,14 +1586,6 @@ class CApiIntegratorManager extends AApiManager
 				'Id' => $oUser->iId,
 				'Role' => $oUser->Role,
 				'Name' => $oUser->Name
-			);
-		}
-		else if ($aUserInfo['isAdmin'])
-		{
-			$aAppData['User'] = array(
-				'Id' => -1,
-				'Role' => 0,
-				'Name' => 'Administrator'
 			);
 		}
 		
