@@ -789,7 +789,7 @@ abstract class AApiModule
 		catch (\Exception $oException)
 		{
 			\CApi::LogException($oException);
-			$aResponseItem = $this->ExceptionResponse(null, 'Upload', $oException);
+			$aResponseItem = $this->ExceptionResponse($sMethod, $oException);
 			$sError = 'exception';
 		}
 

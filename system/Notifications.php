@@ -76,6 +76,7 @@ class Notifications
 	const HelpdeskUnactivatedUser = 808;
 	const VoiceNotAllowed = 810;
 	const IncorrectFileExtension = 811;
+	const CanNotUploadFileQuota = 812;
 
 	const MailServerError = 901;
 	const UnknownError = 999;
