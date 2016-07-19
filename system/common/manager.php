@@ -81,7 +81,7 @@ class CApiGlobalManager
 			CApi::Inc('common.settings');
 			try
 			{
-				$this->oSettings = new CApiSettings(CApi::DataPath() . '/settings/');
+				$this->oSettings = new CApiSettings(\CApi::DataPath() . '/settings/config.json');
 			}
 			catch (CApiBaseException $oException)
 			{

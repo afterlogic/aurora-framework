@@ -42,22 +42,17 @@ class CApiBasicSettings
 
 		$this->init();
 		
-		if (!$this->Load($this->GetJsonPath()))
+		if (!$this->Load($this->sPath))
 		{
-			if ($this->Load($this->GetJsonPath().'.bak'))
+			if ($this->Load($this->sPath.'.bak'))
 			{
-				copy($this->GetJsonPath().'.bak', $this->GetJsonPath());
+				copy($this->sPath.'.bak', $this->sPath);
 			}
 			else
 			{
 				$this->Save();
 			}
 		}
-	}
-	
-	public function GetJsonPath()
-	{
-		return $this->sPath.self::JSON_FILE_NAME;
 	}
 	
 	/**
@@ -138,38 +133,40 @@ class CApiBasicSettings
 		{
 			$sJsonData = file_get_contents($sJsonFile);
 			$aJsonData = json_decode($sJsonData, true);
-			foreach ($aJsonData as $sKey => $mValue)
+			if (is_array($aJsonData))
 			{
-				$sLowerKey = strtolower($sKey);
-				if (isset($this->aLowerMap[$sLowerKey]))
+				foreach ($aJsonData as $sKey => $mValue)
 				{
-					$aType = $this->aLowerMap[$sLowerKey];
-					switch ($aType[1])
+					$sLowerKey = strtolower($sKey);
+					if (isset($this->aLowerMap[$sLowerKey]))
 					{
-						default:
-							$mValue = null;
-							break;
-						case 'string':
-							$mValue =(string) $mValue;
-							break;
-						case 'int':
-							$mValue = (int) $mValue;
-							break;
-						case 'bool':
-							$mValue = ('on' === strtolower($mValue) || '1' === (string) $mValue);
-							break;
-						case 'spec':
-							$mValue = $this->specConver($mValue, isset($aType[2]) ? $aType[2] : null);
-							break;
+						$aType = $this->aLowerMap[$sLowerKey];
+						switch ($aType[1])
+						{
+							default:
+								$mValue = null;
+								break;
+							case 'string':
+								$mValue =(string) $mValue;
+								break;
+							case 'int':
+								$mValue = (int) $mValue;
+								break;
+							case 'bool':
+								$mValue = ('on' === strtolower($mValue) || '1' === (string) $mValue);
+								break;
+							case 'spec':
+								$mValue = $this->specConver($mValue, isset($aType[2]) ? $aType[2] : null);
+								break;
+						}
+					}
+					if (null !== $mValue)
+					{
+						$this->aContainer[$sKey] = $mValue;
 					}
 				}
-				if (null !== $mValue)
-				{
-					$this->aContainer[$sKey] = $mValue;
-				}
+				$bResult = true;
 			}
-			
-			$bResult = true;
 		}
 		
 		return $bResult;
@@ -212,10 +209,14 @@ class CApiBasicSettings
 		if (count($aConvertedContainer) > 0)
 		{
 			// backup previous configuration
-			$sJsonFile = $this->GetJsonPath();
+			$sJsonFile = $this->sPath;
 			if (file_exists($sJsonFile))
 			{
 				copy($sJsonFile, $sJsonFile.'.bak');
+			}
+			if (!file_exists(dirname($sJsonFile)))
+			{
+				mkdir(dirname($sJsonFile), '0777');
 			}
 			$bResult = (bool) file_put_contents($sJsonFile, json_encode($aConvertedContainer, JSON_PRETTY_PRINT));
 		}

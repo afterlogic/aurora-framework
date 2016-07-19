@@ -443,7 +443,10 @@ abstract class AApiModule
 
 	public function loadModuleConfig()
 	{
-		$this->oModuleSettings = new \CApiBasicSettings($this->GetPath().'/', $this->aSettingsMap);
+		$this->oModuleSettings = new \CApiBasicSettings(
+				\CApi::DataPath() . '/settings/modules/' . $this->sName . '.config.json', 
+				$this->aSettingsMap
+		);
 	}	
 
 	/**
