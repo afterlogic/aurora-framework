@@ -15,8 +15,6 @@ class CApiEavManager extends AApiManagerWithStorage
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db')
 	{
 		parent::__construct('eav', $oManager, $sForcedStorage);
-
-		$this->inc('classes.attribute');
 	}
 
 	/**
@@ -66,12 +64,12 @@ class CApiEavManager extends AApiManagerWithStorage
 			$aEntityAttributes = $oEntity->getAttributes();
 			if (0 < count($aEntityAttributes))
 			{
-				$aProperties = array();
+				$aAttributes = array();
 				foreach ($aEntityAttributes as $sKey => $mValue)
 				{
-					$aProperties[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getAttributeType($sKey), $oEntity->isEncryptedAttribute($sKey));
+					$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getType($sKey), $oEntity->isEncryptedAttribute($sKey));
 				}
-				$this->setAttributes($mResult, $aProperties);
+				$this->setAttributes($mResult, $aAttributes);
 			}
 		}
 
@@ -87,7 +85,7 @@ class CApiEavManager extends AApiManagerWithStorage
 			$aAttributes = array();
 			foreach ($aEntityAttributes as $sKey => $mValue)
 			{
-				$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getAttributeType($sKey), $oEntity->isEncryptedAttribute($sKey));
+				$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getType($sKey), $oEntity->isEncryptedAttribute($sKey));
 			}
 			try
 			{

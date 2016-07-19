@@ -640,9 +640,15 @@ class CApiUsersManager extends AApiManagerWithStorage
 //			$sSql = 'UPDATE %sawm_accounts SET deleted = %d WHERE id_acct IN (%s)';
 			$oAccount = CAccount::createInstance('Core');
 			
-			$oProperty = new CAttribute('IsDisabled', $bIsEnabled, $oAccount->getAttributeType('IsDisabled'));
 			//TODO wait for multy object ids implementation in Eav Manager
-			$this->oEavManager->setAttributes($aAccountsIds, $oProperty);
+			$this->oEavManager->setAttributes(
+				$aAccountsIds, 
+				\CAttribute::createInstance(
+					'IsDisabled', 
+					$bIsEnabled, 
+					$oAccount->getType('IsDisabled')
+				)
+			);
 		}
 		catch (CApiBaseException $oException)
 		{

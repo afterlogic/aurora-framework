@@ -159,7 +159,8 @@ class CApiEavDbStorage extends CApiEavStorage
 			$this->oConnection->FreeResult();
 		}		
 		
-		if ($this->oConnection->Execute($this->oCommandCreator->getEntities($sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getEntities(
+				$sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder)))
 		{
 			$oRow = null;
 			$mResult = array();
@@ -222,7 +223,8 @@ class CApiEavDbStorage extends CApiEavStorage
 	public function isAttributeExists(\CAttribute $oAttribute)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->isAttributeExists($oAttribute->EntityId, $oAttribute->Name, $oAttribute->Type)))
+		if ($this->oConnection->Execute($this->oCommandCreator->isAttributeExists(
+				$oAttribute->EntityId, $oAttribute->Name, $oAttribute->Type)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)

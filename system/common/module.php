@@ -22,7 +22,7 @@ class CApiModuleManager
     /**
      * @var array
      */    
-	protected $_aObjectsMap = array();
+	protected $_aObjects = array();
 	
 	public function __construct()
 	{
@@ -104,7 +104,7 @@ class CApiModuleManager
 	{
 		$mResult = false;
 		
-		$this->broadcastEvent($sModuleName, 'loadModule::before', array(&$sModuleName, &$sModulePath));
+		$this->broadcastEvent($sModuleName, 'loadModule' . \AApiModule::$Delimiter . 'before', array(&$sModuleName, &$sModulePath));
 		
 		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
 		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
@@ -128,7 +128,7 @@ class CApiModuleManager
 		   }
 		}
 
-		$this->broadcastEvent($sModuleName, 'loadModule::after', array(&$mResult));
+		$this->broadcastEvent($sModuleName, 'loadModule' . \AApiModule::$Delimiter . 'after', array(&$mResult));
 		
 		return $mResult;
 	}
@@ -174,12 +174,12 @@ class CApiModuleManager
      */
     public function broadcastEvent($sModule, $sEvent, $aArguments = array()) 
 	{
-        \CApi::Log('broadcastEvent: ' . $sModule . '::' . $sEvent);
+        \CApi::Log('broadcastEvent: ' . $sModule . \AApiModule::$Delimiter . $sEvent);
 		
 		$bResult = true;
 		$aEventSubscriptions = array();
-		if (isset($this->_aEventSubscriptions[$sModule. '::' .$sEvent])) {
-			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sModule. '::' .$sEvent]);
+		if (isset($this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) {
+			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]);
 		}
 		if (isset($this->_aEventSubscriptions[$sEvent])) {
 			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sEvent]);
@@ -188,7 +188,7 @@ class CApiModuleManager
 		foreach($aEventSubscriptions as $fCallback) {
 			if (is_callable($fCallback))
 			{
-				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . '::' . $fCallback[1]);
+				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
 				$result = call_user_func_array($fCallback, $aArguments);
 				if ($result === false) {
 					$bResult = false;
@@ -396,10 +396,9 @@ abstract class AApiModule
 	 */
 	protected $aConfig;
 	
-	
     /**
      *
-     * @var CApiBasicSettings
+     * @var CAPpiBasicSettings
      */
 	protected $oModuleSettings = null;	
 	
@@ -408,6 +407,12 @@ abstract class AApiModule
      * @var array
      */
 	protected $aSettingsMap = array();		
+	
+    /**
+     *
+     * @var string
+     */
+	public static $Delimiter = '::';
 	
 	/**
 	 * @param string $sVersion
@@ -440,17 +445,6 @@ abstract class AApiModule
 	{
 		$this->oModuleSettings = new \CApiBasicSettings($this->GetPath().'/', $this->aSettingsMap);
 	}	
-
-	/**
-	 * Saves module settings to config.json file.
-	 */
-	public function saveModuleConfig()
-	{
-		if (isset($this->oModuleSettings))
-		{
-			$this->oModuleSettings->Save();
-		}
-	}	
 	
 	public function getConfig($sName, $sDefaultValue = null)
 	{
@@ -462,26 +456,6 @@ abstract class AApiModule
 		
 		return $mResult;
 	}
-	
-	/**
-	 * Sets new value of module setting.
-	 * 
-	 * @param string $sName Name of module setting.
-	 * @param string $sValue New value of module setting.
-	 * 
-	 * @return boolean
-	 */
-	public function setConfig($sName, $sValue = null)
-	{
-		$bResult = false;
-		
-		if (isset($this->oModuleSettings))
-		{
-			$bResult = $this->oModuleSettings->SetConf($sName, $sValue);
-		}
-		
-		return $bResult;
-	}	
 	
 	public function subscribeEvent($sEvent, $fCallback)
 	{
@@ -498,7 +472,7 @@ abstract class AApiModule
 		$aResultMap = array();
 		foreach ($aMap as $sKey => $aValue)
 		{
-			$aResultMap[$this->GetName() . '::' . $sKey] = $aValue;
+			$aResultMap[$this->GetName() . \AApiModule::$Delimiter . $sKey] = $aValue;
 		}
 		$this->aObjects[$sType] = $aResultMap;
 	}	
@@ -789,7 +763,7 @@ abstract class AApiModule
 		catch (\Exception $oException)
 		{
 			\CApi::LogException($oException);
-			$aResponseItem = $this->ExceptionResponse($sMethod, $oException);
+			$aResponseItem = $this->ExceptionResponse(null, 'Upload', $oException);
 			$sError = 'exception';
 		}
 
@@ -872,6 +846,42 @@ abstract class AApiModule
 		}
 		
 		return false;
+	}	
+	
+	/**
+	 * @param string $sFileName
+	 * @return void
+	 */
+	public function incClass($sFileName, $bDoExitOnError = true)
+	{
+		static $aCache = array();
+
+		$sFileFullPath = '';
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
+		$sFileName = str_replace('.', '/', $sFileName);
+		if (isset($aCache[$sFileName]))
+		{
+			return true;
+		}
+		else
+		{
+			$sFileFullPath = $this->GetPath().'/classes/'.$sFileName.'.php';
+			if (@file_exists($sFileFullPath))
+			{
+				$aCache[$sFileName] = true;
+				include_once $sFileFullPath;
+				return true;
+			}
+		}
+
+		if ($bDoExitOnError)
+		{
+			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
+		}
+		
+		return false;			
+	
 	}	
 	
 	public function getParamValue($sKey, $mDefault = null)
@@ -994,7 +1004,7 @@ abstract class AApiModule
 		$mResult = false;
 		if (method_exists($this, $sMethodName))
 		{
-			$this->broadcastEvent($sMethodName . '::before', array(&$aArguments));
+			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
 			$aValues = array();
 
@@ -1021,7 +1031,7 @@ abstract class AApiModule
 			$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
 
 			$aArguments['@Result'] = $mResult;
-			$this->broadcastEvent($sMethodName . '::after', array(&$aArguments));
+			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'after', array(&$aArguments));
 			$mResult = $aArguments['@Result'];
 		}
 				

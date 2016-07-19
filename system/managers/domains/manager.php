@@ -642,10 +642,15 @@ class CApiDomainsManager extends AApiManagerWithStorage
 				{
 					$oDomain = $aResultDomains[0];
 					
-					$oProperty = new CAttribute('GlobalAddressBook', $iVisibility, $oDomain->getAttributeType('GlobalAddressBook'));
-					$oProperty->EntityId = $oDomain->iId;
-					
-					$bResult = $this->oEavManager->setAttribute($oProperty);
+					$bResult = $this->oEavManager->setAttribute(
+						\CAttribute::createInstance(
+							'GlobalAddressBook', 
+							$iVisibility, 
+							$oDomain->getType('GlobalAddressBook'), 
+							false, 
+							$oDomain->iId
+						)					
+					);
 				}
 			}
 		}

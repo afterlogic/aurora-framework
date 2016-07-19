@@ -12,6 +12,11 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	 * @var string
 	 */
 	protected $sDataPath;
+	
+	/**
+	 * @var string
+	 */
+	protected $sPath;
 
 	/**
 	 * @param AApiManager &$oManager
@@ -21,6 +26,15 @@ class CApiFilecacheStorage extends AApiManagerStorage
 		parent::__construct('filecache', $sStorageName, $oManager);
 
 		$this->sDataPath = rtrim(trim(CApi::DataPath()), '\\/');
+		$this->sPath = '/temp/.cache/'; 
+	}
+	
+	/**
+	 * @param string $sPath
+	 */
+	public function setPath($sPath)
+	{
+		$this->sPath = $sPath;
 	}
 
 	/**
@@ -187,7 +201,7 @@ class CApiFilecacheStorage extends AApiManagerStorage
 		{
 			$sKeyPath = $sFolder . '/' . $sKeyPath;
 		}
-		$sFilePath = $this->sDataPath.'/temp/.cache/'.substr($sEmailMd5, 0, 2).'/'.$sEmailMd5.'/'.$sKeyPath.$sFileSuffix;
+		$sFilePath = $this->sDataPath.$this->sPath.substr($sEmailMd5, 0, 2).'/'.$sEmailMd5.'/'.$sKeyPath.$sFileSuffix;
 		if ($bMkDir && !@is_dir(dirname($sFilePath)))
 		{
 			if (!@mkdir(dirname($sFilePath), 0777, true))
@@ -217,6 +231,6 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	 */
 	public function gc()
 	{
-		return \MailSo\Base\Utils::RecTimeDirRemove($this->sDataPath.'/temp/.cache/', 60 * 60 * 6, time());
+		return \MailSo\Base\Utils::RecTimeDirRemove($this->sDataPath.$this->sPath, 60 * 60 * 6, time());
 	}
 }

@@ -86,7 +86,7 @@ class CApi
 					'common.utils',
 					'common.crypt',
 					'common.container',
-					'common.entity',
+					'common.eav',
 					'common.manager',
 					'common.module',
 					'common.response',
@@ -96,7 +96,8 @@ class CApi
 					'common.utils.post',
 					'common.utils.session',
 					'common.http',
-					'common.db.storage'
+					'common.db.storage',
+					'common.user-session'
 				)
 			);
 			$sSalt = '';
@@ -266,6 +267,20 @@ class CApi
 
 		return $oCacher;
 	}
+	
+	/**
+	 * @return \MailSo\Cache\CacheClient
+	 */
+	public static function UserSession()
+	{
+		static $oSession = null;
+		if (null === $oSession)
+		{
+			$oSession = new \CApiUserSession();
+		}
+
+		return $oSession;
+	}	
 
 	/**
 	 * @return CApiSettings
@@ -1163,45 +1178,6 @@ class CApi
 			if (isset(static::$aUserSession['UserId']))
 			{
 				$mResult = (int) static::$aUserSession['UserId'];
-			}
-			else
-			{
-				/* @var $oApiIntegrator \CApiIntegratorManager */
-				$oApiIntegrator = \CApi::GetSystemManager('integrator');
-				if ($oApiIntegrator)
-				{
-					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);
-					static::$aUserSession['UserId'] = $mResult;
-					static::$aUserSession['AuthToken'] = $sAuthToken;
-				}
-			}
-		}
-		else 
-		{
-			if (is_array(static::$aUserSession) && isset(static::$aUserSession['UserId']))
-			{
-				$mResult = static::$aUserSession['UserId'];
-			}
-			else
-			{
-				$mResult = 0;
-			}
-		}
-		
-		return $mResult;
-	}
-	
-	public static function getLogginedUserInfo($sAuthToken = '')
-	{
-		$mResult = false;
-		if (!empty($sAuthToken))
-		{
-			if (isset(static::$aUserSession['UserId']))
-			{
-				$mResult = array(
-					UserId => (int) static::$aUserSession['UserId'],
-					Role => (int) static::$aUserSession['Role']
-				);
 			}
 			else
 			{

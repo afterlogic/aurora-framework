@@ -91,7 +91,6 @@ SELECT DISTINCT entity_type '
 		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, true);
 	}
 			
-	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
 			$sSortAttribute = "", $iSortOrder = \ESortOrder::ASC, $bCount = false)
@@ -123,7 +122,7 @@ SELECT DISTINCT entity_type '
 				{
 					$aViewAttributes = array();
 				}
-				else if (count($aViewAttributes) === 0)
+				if (count($aViewAttributes) === 0)
 				{
 					$aMap = $oEntity->GetMap();
 					$aViewAttributes = array_keys($aMap);
@@ -139,7 +138,7 @@ SELECT DISTINCT entity_type '
 
 			foreach ($aViewAttributes as $sAttribute)
 			{
-				$sType = $oEntity->getAttributeType($sAttribute);
+				$sType = $oEntity->getType($sAttribute);
 
 				$aResultViewAttributes[$sAttribute] = sprintf(
 						"
@@ -174,7 +173,7 @@ SELECT DISTINCT entity_type '
 						$sAction = 'LIKE';
 					}
 				}
-				$sType = $oEntity->getAttributeType($sKey);
+				$sType = $oEntity->getType($sKey);
 				if ($oEntity->isEncryptedAttribute($sKey))
 				{
 					$sAttributeValue = \api_Utils::EncryptValue($sAttributeValue);
