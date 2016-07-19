@@ -398,7 +398,7 @@ abstract class AApiModule
 	
     /**
      *
-     * @var CAPpiBasicSettings
+     * @var CApiBasicSettings
      */
 	protected $oModuleSettings = null;	
 	
@@ -445,6 +445,17 @@ abstract class AApiModule
 	{
 		$this->oModuleSettings = new \CApiBasicSettings($this->GetPath().'/', $this->aSettingsMap);
 	}	
+
+	/**
+	 * Saves module settings to config.json file.
+	 */
+	public function saveModuleConfig()
+	{
+		if (isset($this->oModuleSettings))
+		{
+			$this->oModuleSettings->Save();
+		}
+	}	
 	
 	public function getConfig($sName, $sDefaultValue = null)
 	{
@@ -456,6 +467,26 @@ abstract class AApiModule
 		
 		return $mResult;
 	}
+	
+	/**
+	 * Sets new value of module setting.
+	 * 
+	 * @param string $sName Name of module setting.
+	 * @param string $sValue New value of module setting.
+	 * 
+	 * @return boolean
+	 */
+	public function setConfig($sName, $sValue = null)
+	{
+		$bResult = false;
+		
+		if (isset($this->oModuleSettings))
+		{
+			$bResult = $this->oModuleSettings->SetConf($sName, $sValue);
+		}
+		
+		return $bResult;
+	}	
 	
 	public function subscribeEvent($sEvent, $fCallback)
 	{
@@ -763,7 +794,7 @@ abstract class AApiModule
 		catch (\Exception $oException)
 		{
 			\CApi::LogException($oException);
-			$aResponseItem = $this->ExceptionResponse(null, 'Upload', $oException);
+			$aResponseItem = $this->ExceptionResponse($sMethod, $oException);
 			$sError = 'exception';
 		}
 

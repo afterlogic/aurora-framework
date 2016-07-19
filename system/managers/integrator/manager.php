@@ -318,33 +318,25 @@ class CApiIntegratorManager extends AApiManager
 			'isAdmin' => false,
 			'userId' => 0
 		);
-		$sKey = '';
-		if (strlen($sAuthToken) !== 0) {
+		$aAccountHashTable = \CApi::UserSession()->Get($sAuthToken);
+		if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
+			'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id']) && 
+				is_int($aAccountHashTable['id'])) {
 			
-			$sKey = \CApi::Cacher()->get('AUTHTOKEN:'.$sAuthToken);
+			$aInfo = array(
+				'isAdmin' => false,
+				'userId' => $aAccountHashTable['id']
+			);
 		}
-		if (!empty($sKey) && is_string($sKey)) {
-			
-			$aAccountHashTable = CApi::DecodeKeyValues($sKey);
-			if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-				'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id']) && 
-					is_int($aAccountHashTable['id'])) {
-				
-				$aInfo = array(
-					'isAdmin' => false,
-					'userId' => $aAccountHashTable['id']
-				);
-			}
-			elseif (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-				'admin' === $aAccountHashTable['token'])
-			{
-				$aInfo = array(
-					'isAdmin' => true,
-					'userId' => -1
-				);
-			}
+		elseif (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
+			'admin' === $aAccountHashTable['token'])
+		{
+			$aInfo = array(
+				'isAdmin' => true,
+				'userId' => -1
+			);
+		}
 //			CApi::Plugin()->RunHook('api-integrator-get-loggined-user-id', array(&$iUserId));
-		}
 
 		return $aInfo;
 	}
@@ -462,7 +454,7 @@ class CApiIntegratorManager extends AApiManager
 	{
 		if (strlen($sAuthToken) !== 0)
 		{
-			$sKey = \CApi::Cacher()->Delete('AUTHTOKEN:'.$sAuthToken);
+			$sKey = \CApi::UserSession()->Delete($sAuthToken);
 		}
 		
 		@setcookie(\System\Service::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
