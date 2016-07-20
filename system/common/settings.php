@@ -333,6 +333,9 @@ class CApiSettings extends CApiBasicSettings
 			'EnableEventLogging' => array(false, 'bool'),
 			'LoggingLevel' => array(ELogLevel::Full, 'spec', 'ELogLevel'),
 			'EnableMobileSync' => array(false, 'bool'),
+			
+			'EnableMultiChannel' => array(false, 'bool'),
+			'EnableMultiTenant' => array(false, 'bool'),
 
 			'TenantGlobalCapa' => array('', 'string'),
 

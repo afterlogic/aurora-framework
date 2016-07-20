@@ -261,30 +261,31 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param bool $update
+	 * @param bool $bUpdate
 	 * @return bool
 	 */
-	public function syncTables($update = false)
+	public function syncTables($bUpdate = false)
 	{
 		$bResult = true;
+		
 		try
 		{
-            defined('WM_INSTALLER_PATH') || define('WM_INSTALLER_PATH', (dirname(__FILE__).'/'));
-
-			$path = WM_INSTALLER_PATH . 'db/';
-			if ($update) {
-				$file = $path . 'insert.sql';
-			} else {
-				$file = $path . 'create.sql';
-			}
-
-            if (@file_exists($file) && $fp = @file_get_contents($file))
+			$sFileName = $bUpdate ? 'insert.sql' : 'create.sql';
+			
+			$sFilePath = dirname(__FILE__) . '/storages/db/sql/' . $sFileName;
+			
+			$mFileContent = file_exists($sFilePath) ? file_get_contents($sFilePath) : false;
+			
+            if ($mFileContent)
             {
-				$aSqlStrings = explode(';', $fp);
-				foreach ($aSqlStrings as $sql) {
-					$this->oStorage->execute(trim($sql));
+				$aSqlStrings = explode(';', $mFileContent);
+				foreach ($aSqlStrings as $sSql)
+				{
+					$this->oStorage->execute(trim($sSql));
 				}
-			} else {
+			}
+			else
+			{
                 $bResult = false;
             }
 		}
@@ -295,5 +296,9 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;
 	}
-
+	
+	public function testStorageConnection()
+	{
+		return $this->oStorage->testConnection();
+	}
 }
