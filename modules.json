@@ -21,6 +21,7 @@
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-mail"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-mail-sensitivity-plugin"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-min"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-mobile-sync"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-mobile-sync"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-openpgp"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-outlook-sync"},
