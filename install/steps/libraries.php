@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL & ~E_NOTICE);
 //Use the Composer classes
 //use Composer\Console\Application;
 //use Composer\Command\UpdateCommand;
@@ -39,11 +39,16 @@ class CLibrariesStep extends AInstallerStep
 		copy(WM_INSTALLER_PATH.'composer/composer.json', $sTempPath.'composer.json');
 		
 		//string '"f:\web\modules\php\PHP-5.6-x64\php-cgi.EXE" F:\web\domains\project8.dev/composer.phar update -n -d "F:\web\domains\project8.dev/" 
+		
 		set_time_limit(600);
-		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : 'php ') . PSEVEN_APP_ROOT_PATH.'composer.phar update -n --working-dir "'.$sTempPath.'"';
-//		var_dump($sCommand);
-		$result = shell_exec($sCommand);
+		
+		$sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : '/opt/afterlogic/bin/x86_64-php ') . PSEVEN_APP_ROOT_PATH.'composer.phar update -n --working-dir "'.$sTempPath.'"';
+		// $sCommand = ($sPhpPath ? '"'.$sPhpPath.'" ' : '/opt/afterlogic/bin/x86_64-php ') . PSEVEN_APP_ROOT_PATH.'composer.php';
 
+		shell_exec($sCommand);
+//		print_r($result);
+//		print_r($return_var);
+//		exit;
 		return true;
 	}
 
@@ -117,7 +122,7 @@ class CLibrariesStep extends AInstallerStep
 	public function runComposer($bDevMode = false)
 	{
 		//http://stackoverflow.com/questions/17219436/run-composer-with-a-php-script-in-browser
-		$sTmpDir = PSEVEN_APP_ROOT_PATH."/tmp/composer";
+		$sTmpDir = PSEVEN_APP_ROOT_PATH.'data/temp/';
 
 		if (file_exists($sTmpDir.'/vendor/autoload.php') == true) {
 			echo "Extracted autoload already exists. Skipping phar extraction as presumably it's already extracted.";
@@ -137,7 +142,7 @@ class CLibrariesStep extends AInstallerStep
 		//Create the commands
 		$aConfig = array(
 			'command' => 'update',
-			'--working-dir' => PSEVEN_APP_ROOT_PATH,
+			'--working-dir' => $sTmpDir,
 			'--prefer-dist' => !(bool)$bDevMode
 		);
 		

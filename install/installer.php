@@ -30,11 +30,11 @@ class CInstaller
 		'modules' => 'Install modules',
 		'license' => 'License Agreement',
 //		'license-key' => 'License Key',
-		'db' => 'Database Settings',
-		'dav' => 'Mobile Settings',
-		'admin-panel' => 'Admin Panel Settings',
-		'email-server-test' => 'E-mail Server Test',
-		'completed' => 'Completed',
+//		'db' => 'Database Settings',
+//		'dav' => 'Mobile Settings',
+//		'admin-panel' => 'Admin Panel Settings',
+//		'email-server-test' => 'E-mail Server Test',
+		'completed' => 'Completed'
 	);
 
 	function __construct()
@@ -65,10 +65,10 @@ class CInstaller
 			'modules',
 			'license',
 //			'license-key',
-			'db',
-			'dav',
-			'admin-panel',
-			'email-server-test',
+//			'db',
+//			'dav',
+//			'admin-panel',
+//			'email-server-test',
 			'completed'
 		);
 
