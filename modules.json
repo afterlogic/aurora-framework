@@ -56,6 +56,7 @@
 			"afterlogic/aurora-module-webclient-mail": "dev-master",
 			"afterlogic/aurora-module-webclient-mail-sensitivity-plugin": "dev-master",
 			"afterlogic/aurora-module-min": "dev-master",
+			"afterlogic/aurora-module-mobile-sync": "dev-master",
 			"afterlogic/aurora-module-webclient-mobile-sync": "dev-master",
 			"afterlogic/aurora-module-webclient-openpgp": "dev-master",
 			"afterlogic/aurora-module-webclient-outlook-sync": "dev-master",
