@@ -114,7 +114,7 @@ class CApiModuleManager
 		   if (class_exists($sModuleClassName))
 		   {
 			   $oModule = call_user_func(array($sModuleClassName, 'createInstance'), $sModuleName, $sModulePath);
-			   if ($oModule instanceof AApiModule)
+			   if ($oModule instanceof \AApiModule)
 			   {
 				   $oModule->loadModuleConfig();
 				   if (!$oModule->getConfig('Disabled', false))
@@ -236,7 +236,7 @@ class CApiModuleManager
 	public function GetModule($sModuleName)
 	{
 		$sModuleName = strtolower($sModuleName);
-		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof AApiModule) ? $this->_aModules[$sModuleName] : false;
+		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof \AApiModule) ? $this->_aModules[$sModuleName] : false;
 	}
 	
 	/**
@@ -244,29 +244,25 @@ class CApiModuleManager
 	 */
 	public function GetModuleByEntry($sEntryName)
 	{
+		$mResult = false;
 		$sModule = '';
 		$oHttp = \MailSo\Base\Http::NewInstance();
-		if ($oHttp->IsPost()) {
+		if ($oHttp->IsPost()) 
+		{
 			$sModule = $oHttp->GetPost('Module', null);
-		} else {
+		} 
+		else 
+		{
 			$aPath = \System\Service::GetPaths();
 			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
 		}
 			
-		$oResult = $this->GetModule($sModule);
-		if ($oResult && !$oResult->HasEntry($sEntryName)) {
-			$oResult = false;
+		$oModule = $this->GetModule($sModule);
+		if ($oModule instanceof \AApiModule) 
+		{
+			$mResult = $oModule->HasEntry($sEntryName) ? $oModule : false;
 		}
-		if ($oResult === false) {
-			foreach ($this->_aModules as $oModule) {
-				if ($oModule instanceof AApiModule && $oModule->HasEntry($sEntryName)) {
-					$oResult = $oModule;
-					break;
-				}
-			}
-		}
-		
-		return $oResult;
+		return $mResult;
 	}
 	
 	/**
@@ -282,7 +278,7 @@ class CApiModuleManager
 	{
 		$mResult = false;
 		$oModule = $this->GetModuleByEntry($sEntryName);
-		if ($oModule instanceof AApiModule) {
+		if ($oModule instanceof \AApiModule) {
 			
 			$mResult = $oModule->RunEntry($sEntryName);
 		}

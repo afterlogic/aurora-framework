@@ -168,22 +168,17 @@ class Service
 
 		$aPaths = $this->GetPaths();
 
-		if (0 < count($aPaths) && !empty($aPaths[0])) {
-			
-			$sEntryPart = strtolower($aPaths[0]);
-			
-			$mResult = $this->oModuleManager->RunEntry($sEntryPart);
-			
-			if ($mResult === false) {
-				@ob_start();
-				\CApi::Plugin()->RunServiceHandle($sEntryPart, $aPaths);
-				$mResult = @ob_get_clean();
+		if (0 < count($aPaths) && !empty($aPaths[0])) 
+		{
+			$sEntryName = strtolower($aPaths[0]);
+			$oModule = $this->oModuleManager->GetModuleByEntry(strtolower($sEntryName));
+			if ($oModule instanceof \AApiModule) {
 
-				if (0 === strlen($mResult)) {
-					$mResult = $this->generateHTML();
-				}
+				$mResult = $oModule->RunEntry($sEntryName);
 			}
-		} else {
+		} 
+		else 
+		{
 			$mResult = $this->generateHTML();
 		}
 
