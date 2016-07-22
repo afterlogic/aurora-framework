@@ -261,32 +261,6 @@ class CApiModuleManager
 	}
 	
 	/**
-	 * @return array
-	 */
-	public function GetModuleByEntry($sEntryName)
-	{
-		$mResult = false;
-		$sModule = '';
-		$oHttp = \MailSo\Base\Http::NewInstance();
-		if ($oHttp->IsPost()) 
-		{
-			$sModule = $oHttp->GetPost('Module', null);
-		} 
-		else 
-		{
-			$aPath = \System\Service::GetPaths();
-			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
-		}
-			
-		$oModule = $this->GetModule($sModule);
-		if ($oModule instanceof \AApiModule) 
-		{
-			$mResult = $oModule->HasEntry($sEntryName) ? $oModule : false;
-		}
-		return $mResult;
-	}
-	
-	/**
 	 * @param string $sModuleName
 	 * @return bool
 	 */
