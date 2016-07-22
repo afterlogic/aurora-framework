@@ -239,6 +239,27 @@ class CApiModuleManager
 		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof \AApiModule) ? $this->_aModules[$sModuleName] : false;
 	}
 	
+	
+	/**
+	 * @return \AApiModule
+	 */
+	public function GetModuleFromRequest()
+	{
+		$sModule = '';
+		$oHttp = \MailSo\Base\Http::NewInstance();
+		if ($oHttp->IsPost()) 
+		{
+			$sModule = $oHttp->GetPost('Module', null);
+		} 
+		else 
+		{
+			$aPath = \System\Service::GetPaths();
+			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
+		}
+			
+		return $this->GetModule($sModule);
+	}
+	
 	/**
 	 * @return array
 	 */
@@ -277,8 +298,8 @@ class CApiModuleManager
 	public function RunEntry($sEntryName)
 	{
 		$mResult = false;
-		$oModule = $this->GetModuleByEntry($sEntryName);
-		if ($oModule instanceof \AApiModule) {
+		$oModule = $this->GetModuleFromRequest();
+		if ($oModule instanceof \AApiModule && $oModule->HasEntry($sEntryName)) {
 			
 			$mResult = $oModule->RunEntry($sEntryName);
 		}

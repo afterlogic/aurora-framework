@@ -170,11 +170,22 @@ class Service
 
 		if (0 < count($aPaths) && !empty($aPaths[0])) 
 		{
-			$sEntryName = strtolower($aPaths[0]);
-			$oModule = $this->oModuleManager->GetModuleByEntry(strtolower($sEntryName));
-			if ($oModule instanceof \AApiModule) {
-
-				$mResult = $oModule->RunEntry($sEntryName);
+			$sEntry = strtolower($aPaths[0]);
+			$oModule = $this->oModuleManager->GetModuleFromRequest();
+			if ($oModule instanceof \AApiModule) 
+			{
+				if ($oModule->HasEntry($sEntry))
+				{
+					$mResult = $oModule->RunEntry($sEntry);
+				}
+				else 
+				{
+					$mResult = '\'' . $sEntry . '\' entry not found in \'' . $oModule->GetName() . '\' module.';
+				}
+			}
+			else
+			{
+				$mResult = $this->generateHTML();
 			}
 		} 
 		else 
