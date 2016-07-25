@@ -116,38 +116,43 @@ class Service
 		
 		$oApiIntegrator = \CApi::GetSystemManager('integrator');
 		
-		if ($oApiIntegrator) {
-			
+		if ($oApiIntegrator) 
+		{
+			$sModuleHash = '';
+			$oModuleManager = \CApi::GetModuleManager();
+			$oModuleManager->broadcastEvent('System', 'GenerateHTML', array(&$sModuleHash));
+					
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
-			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox')) {
+			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox')) 
+			{
 				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 			}
 			
-			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) {
+			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
+			{
 				setcookie('aft-cache-ctrl', '', time() - 3600);
 				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
 			$oCoreClientModule = \CApi::GetModule('CoreClient');
-			if ($oCoreClientModule instanceof \AApiModule) {
+			if ($oCoreClientModule instanceof \AApiModule) 
+			{
 				$sResult = file_get_contents($oCoreClientModule->GetPath().'/templates/Index.html');
-				if (is_string($sResult)) {
+				if (is_string($sResult)) 
+				{
 					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-					if (0 < \strlen($sFrameOptions)) {
+					if (0 < \strlen($sFrameOptions)) 
+					{
 						@\header('X-Frame-Options: '.$sFrameOptions);
 					}
-					
-//					$sAuthToken = isset($_COOKIE[self::AUTH_TOKEN_KEY]) ? $_COOKIE[self::AUTH_TOKEN_KEY] : '';
 					
 					$sResult = strtr($sResult, array(
 						'{{AppVersion}}' => PSEVEN_APP_VERSION,
 						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
 						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
+						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sModuleHash)
 					));
-//					var_dump($sResult);
-//					exit;
 				}
 			}
 		}

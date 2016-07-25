@@ -620,7 +620,7 @@ abstract class AApiManagerStorage
 	protected $sStorageName;
 	
 	/**
-	 * @var string
+	 * @var AApiManager
 	 */
 	protected $oManager;
 
