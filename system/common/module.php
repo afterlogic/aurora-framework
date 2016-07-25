@@ -1068,15 +1068,18 @@ abstract class AApiModule
 			if ($bReflection)
 			{
 				$oReflector = new \ReflectionMethod($this, $sMethodName);
-				foreach ($oReflector->getParameters() as $oParam) {
+				foreach ($oReflector->getParameters() as $oParam) 
+				{
 					$sParamName = $oParam->getName();
 					$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
-					if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) {
+					if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
+					{
 						$aValues[$oParam->getPosition()] = null;
 					}
 					else
 					{
-						$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? $aArguments[$sParamName] : $oParam->getDefaultValue();
+						$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? 
+								$aArguments[$sParamName] : $oParam->getDefaultValue();
 					}		
 				}
 			}
