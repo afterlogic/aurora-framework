@@ -261,6 +261,38 @@ class CApiModuleManager
 	}
 	
 	/**
+	 * @return array
+	 */
+	public function GetModulesByEntry($sEntryName)
+	{
+		$aModules = array();
+		$oResult = $this->GetModuleFromRequest();
+		
+		if ($oResult && !$oResult->HasEntry($sEntryName)) 
+		{
+			$oResult = false;
+		}
+		if ($oResult === false) 
+		{
+			foreach ($this->_aModules as $oModule) 
+			{
+				if ($oModule instanceof AApiModule && $oModule->HasEntry($sEntryName)) 
+				{
+					$aModules[] = $oModule;
+				}
+			}
+		}
+		else
+		{
+			$aModules = array(
+				$oResult
+			);
+		}
+		
+		return $aModules;
+	}
+	
+	/**
 	 * @param string $sModuleName
 	 * @return bool
 	 */

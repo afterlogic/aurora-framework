@@ -135,6 +135,7 @@ class Service
 				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
 				exit();
 			}
+			
 			$oCoreClientModule = \CApi::GetModule('CoreClient');
 			if ($oCoreClientModule instanceof \AApiModule) 
 			{
@@ -173,6 +174,7 @@ class Service
 
 		$aPaths = $this->GetPaths();
 
+		$aModules = array();
 		if (0 < count($aPaths) && !empty($aPaths[0])) 
 		{
 			$sEntry = strtolower($aPaths[0]);
@@ -181,7 +183,7 @@ class Service
 			{
 				if ($oModule->HasEntry($sEntry))
 				{
-					$mResult = $oModule->RunEntry($sEntry);
+					$aModules[] = $oModule;
 				}
 				else 
 				{
@@ -190,7 +192,18 @@ class Service
 			}
 			else
 			{
-				$mResult = $this->generateHTML();
+				$aModules = $this->oModuleManager->GetModulesByEntry($sEntry);
+			}
+			if (count($aModules) > 0)
+			{
+				foreach ($aModules as $oModule)
+				{
+					$mResult .= $oModule->RunEntry($sEntry);
+				}
+			}
+			else 
+			{
+				$mResult = $this->generateHTML();	
 			}
 		} 
 		else 
