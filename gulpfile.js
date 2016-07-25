@@ -246,7 +246,7 @@ gulp.task('w', cfg.watch);
 
 gulp.task('default', ['js:app:watch']);
 
-gulp.task('custom', ['js:custom']);
+gulp.task('custom', ['js:custom', 'js:files_pub']);
 
 gulp.task('files', ['js:app:watch', 'js:files_pub:watch']);
 
