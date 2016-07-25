@@ -177,7 +177,10 @@ function jsTask(sName, oData)
 			}
 		;
 		
-		cfg.all.push('js:' + sName);
+		if (sName !== 'custom')
+		{
+			cfg.all.push('js:' + sName);
+		}
 		
 		gulp.task('js:' + sName, function() {
 			webpack(oWebPackConfig).run(function (err, stats) {
@@ -185,7 +188,7 @@ function jsTask(sName, oData)
 			});
 		});
 		
-		if (oData.watch)
+		if (sName !== 'custom' && oData.watch)
 		{
 			cfg.watch.push('js:' + sName + ':watch');
 			gulp.task('js:' + sName + ':watch', function() {
@@ -199,7 +202,7 @@ function jsTask(sName, oData)
 			});
 		}
 
-		if (oData.min)
+		if (sName !== 'custom' && oData.min)
 		{
 			cfg.min.push('js:' + sName + ':min');
 			gulp.task('js:' + sName + ':min', function() {
