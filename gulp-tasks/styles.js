@@ -135,10 +135,6 @@ function MoveFiles(sFromDir, sToDir)
 	{
 		CheckFolderAndCallHandler(sToDir, fCopyDir);
 	}
-	else
-	{
-		console.log(sFromDir + ' directory does not exist');
-	}
 }
 
 function MoveSharingCss()
