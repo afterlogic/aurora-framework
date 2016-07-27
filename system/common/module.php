@@ -24,6 +24,11 @@ class CApiModuleManager
      */    
 	protected $_aObjects = array();
 	
+	/**
+	 * @var array
+	 */
+	private $_aTemplates;
+	
 	public function __construct()
 	{
 	}
@@ -199,6 +204,43 @@ class CApiModuleManager
 
         return $bResult;
     }	
+	
+	/**
+	 * @param string $sParsedTemplateID
+	 * @param string $sParsedPlace
+	 * @param string $sTemplateFileName
+	 */
+	public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName)
+	{
+		if (!isset($this->_aTemplates[$sParsedTemplateID]))
+		{
+			$this->_aTemplates[$sParsedTemplateID] = array();
+		}
+
+		$this->_aTemplates[$sParsedTemplateID][] = array(
+			$sParsedPlace, $sTemplateFileName
+		);
+	}	
+	
+	/**
+	 * @return string
+	 */
+	public function ParseTemplate($sTemplateID, $sTemplateSource)
+	{
+		if (isset($this->_aTemplates[$sTemplateID]) && is_array($this->_aTemplates[$sTemplateID]))
+		{
+			foreach ($this->_aTemplates[$sTemplateID] as $aItem)
+			{
+				if (!empty($aItem[0]) && !empty($aItem[1]) && file_exists($aItem[1]))
+				{
+					$sTemplateSource = str_replace('{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
+						file_get_contents($aItem[1]).'{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}', $sTemplateSource);
+				}
+			}
+		}
+
+		return $sTemplateSource;
+	}	
 	
 	public function setObjectMap()
 	{
@@ -523,6 +565,19 @@ abstract class AApiModule
 	{
 		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments);
 	}
+	
+	/**
+	 * @param string $sParsedTemplateID
+	 * @param string $sParsedPlace
+	 * @param string $sTemplateFileName
+	 */
+	public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName)
+	{
+		if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName))
+		{
+			\CApi::GetModuleManager()->includeTemplate($sParsedTemplateID, $sParsedPlace, $this->GetPath().'/'.$sTemplateFileName);
+		}
+	}	
 	
 	public function setObjectMap($sType, $aMap)
 	{
@@ -914,9 +969,9 @@ abstract class AApiModule
 		static $aCache = array();
 
 		$sFileFullPath = '';
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
-		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
-		$sFileName = str_replace('.', '/', $sFileName);
+//		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+//		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
+//		$sFileName = str_replace('.', '/', $sFileName);
 		if (isset($aCache[$sFileName]))
 		{
 			return true;

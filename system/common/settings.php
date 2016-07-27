@@ -158,6 +158,8 @@ class CApiBasicSettings
 							case 'spec':
 								$mValue = $this->specConver($mValue, isset($aType[2]) ? $aType[2] : null);
 								break;
+							case 'array':
+								break;
 						}
 					}
 					if (null !== $mValue)

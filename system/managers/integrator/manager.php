@@ -94,13 +94,13 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function compileTemplates()
 	{
-		$sHash = CApi::Plugin()->Hash();
+		$sHash = \CApi::GetModuleManager()->Hash();
 		
 		$sCacheFileName = '';
 		if (CApi::GetConf('labs.cache.templates', $this->bCache))
 		{
 			$sCacheFileName = 'templates-'.md5(CApi::Version().$sHash).'.cache';
-			$sCacheFullFileName = CApi::DataPath().'/cache/'.$sCacheFileName;
+			$sCacheFullFileName = \CApi::DataPath().'/cache/'.$sCacheFileName;
 			if (file_exists($sCacheFullFileName))
 			{
 				return file_get_contents($sCacheFullFileName);
@@ -139,7 +139,7 @@ class CApiIntegratorManager extends AApiManager
 					$sTemplateID = $sItemName.'_'.preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
 					$sTemplateHtml = file_get_contents($sFileName);
 
-					$sTemplateHtml = CApi::Plugin()->ParseTemplate($sTemplateID, $sTemplateHtml);
+					$sTemplateHtml = \CApi::GetModuleManager()->ParseTemplate($sTemplateID, $sTemplateHtml);
 					$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
 					$sTemplateHtml = str_replace('%ModuleName%', $sItemName, $sTemplateHtml);
 					$sTemplateHtml = str_replace('%MODULENAME%', strtoupper($sItemName), $sTemplateHtml);
@@ -151,22 +151,6 @@ class CApiIntegratorManager extends AApiManager
 						preg_replace('/[\r\n\t]+/', ' ', $sTemplateHtml).'</script>';
 				}
 			}
-		}
-		
-		$aPluginsTemplates = CApi::Plugin()->GetPluginsTemplates();
-		foreach ($aPluginsTemplates as $aData)
-		{
-			$sTemplateID = preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', $aData[0]));
-			$sTemplateHtml = file_get_contents($aData[1]);
-
-			$sTemplateHtml = CApi::Plugin()->ParseTemplate($sTemplateID, $sTemplateHtml);
-			$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
-
-			$sTemplateHtml = preg_replace('/<script([^>]*)>/', '&lt;script$1&gt;', $sTemplateHtml);
-			$sTemplateHtml = preg_replace('/<\/script>/', '&lt;/script&gt;', $sTemplateHtml);
-
-			$sResult .= '<script id="'.$sTemplateID.'" type="text/html">'.
-				preg_replace('/[\r\n\t]+/', ' ', $sTemplateHtml).'</script>';
 		}
 
 		$sResult = trim($sResult);
