@@ -148,9 +148,9 @@ SELECT DISTINCT entity_type '
 				);
 				$aJoinAttributes[$sAttribute] = sprintf(
 						"
-	LEFT JOIN eav_attributes_%s as `attrs_%s` 
+	LEFT JOIN %seav_attributes_%s as `attrs_%s` 
 		ON `attrs_%s`.name = %s AND `attrs_%s`.id_entity = entities.id",
-				$sType, $sAttribute, $sAttribute, $this->escapeString($sAttribute), $sAttribute);
+				$this->prefix(),$sType, $sAttribute, $sAttribute, $this->escapeString($sAttribute), $sAttribute);
 			}
 			if (0 < count($aViewAttributes))
 			{
@@ -206,7 +206,7 @@ SELECT
 	# fields
 	%s #2
 	# ------
-FROM eav_entities as entities
+FROM %seav_entities as entities
 	# fields
 	%s #3
 	# ------
@@ -219,6 +219,7 @@ GROUP BY %s #6
 %s #9 OFFSET", 
 			$sCount,
 			$sViewAttributes, 
+			$this->prefix(),
 			$sJoinAttrbutes, 
 			$this->escapeString($sEntityType), 
 			$sResultWhere,

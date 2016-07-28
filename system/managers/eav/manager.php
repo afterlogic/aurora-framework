@@ -259,35 +259,30 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;
 	}
-
+	
 	/**
-	 * @param bool $bUpdate
-	 * @return bool
+	 * Tests if there is connection to storage with current settings values.
+	 * 
+	 * @return boolean
 	 */
-	public function syncTables($bUpdate = false)
+	public function testStorageConnection()
+	{
+		return $this->oStorage->testConnection();
+	}
+	
+	/**
+	 * Creates tables required for module work by executing create.sql file.
+	 * 
+	 * @return boolean
+	 */
+	public function createTablesFromFile()
 	{
 		$bResult = true;
 		
 		try
 		{
-			$sFileName = $bUpdate ? 'insert.sql' : 'create.sql';
-			
-			$sFilePath = dirname(__FILE__) . '/storages/db/sql/' . $sFileName;
-			
-			$mFileContent = file_exists($sFilePath) ? file_get_contents($sFilePath) : false;
-			
-            if ($mFileContent)
-            {
-				$aSqlStrings = explode(';', $mFileContent);
-				foreach ($aSqlStrings as $sSql)
-				{
-					$this->oStorage->execute(trim($sSql));
-				}
-			}
-			else
-			{
-                $bResult = false;
-            }
+			$sFilePath = dirname(__FILE__) . '/storages/db/sql/create.sql';
+			$bResult = $this->oStorage->executeSqlFile($sFilePath);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -295,10 +290,5 @@ class CApiEavManager extends AApiManagerWithStorage
 		}
 
 		return $bResult;
-	}
-	
-	public function testStorageConnection()
-	{
-		return $this->oStorage->testConnection();
 	}
 }

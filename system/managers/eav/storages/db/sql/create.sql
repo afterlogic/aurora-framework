@@ -1,9 +1,5 @@
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0 */;
-/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
 
-CREATE TABLE IF NOT EXISTS `eav_attributes_bool` (
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_bool` (
   `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
   `name`      VARCHAR(255)                 DEFAULT NULL,
@@ -12,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_bool` (
   UNIQUE KEY `idx_unique` (`id_entity`, `name`),
   KEY `idx_value` (`value`),
   KEY `fk_id_entity_idx` (`id_entity`),
-  CONSTRAINT `fk_eav_attributes_bool_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `eav_entities` (`id`)
+  CONSTRAINT `%PREFIX%fk_eav_attributes_bool_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `%PREFIX%eav_entities` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 )
@@ -20,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_bool` (
   AUTO_INCREMENT = 38
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE IF NOT EXISTS `eav_attributes_datetime` (
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_datetime` (
   `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
   `name`      VARCHAR(255)                 DEFAULT NULL,
@@ -29,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_datetime` (
   UNIQUE KEY `idx_unique` (`id_entity`, `name`),
   KEY `idx_value` (`value`),
   KEY `fk_id_entity_idx` (`id_entity`),
-  CONSTRAINT `fk_eav_attributes_datetime_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `eav_entities` (`id`)
+  CONSTRAINT `%PREFIX%fk_eav_attributes_datetime_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `%PREFIX%eav_entities` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 )
@@ -37,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_datetime` (
   AUTO_INCREMENT = 5
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE IF NOT EXISTS `eav_attributes_int` (
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_int` (
   `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
   `name`      VARCHAR(255)                 DEFAULT NULL,
@@ -46,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_int` (
   UNIQUE KEY `idx_unique` (`id_entity`, `name`),
   KEY `idx_value` (`value`),
   KEY `fk_id_entity_idx` (`id_entity`),
-  CONSTRAINT `fk_eav_attributes_int_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `eav_entities` (`id`)
+  CONSTRAINT `%PREFIX%fk_eav_attributes_int_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `%PREFIX%eav_entities` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 )
@@ -54,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_int` (
   AUTO_INCREMENT = 34
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE IF NOT EXISTS `eav_attributes_string` (
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_string` (
   `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
   `name`      VARCHAR(255)                 DEFAULT NULL,
@@ -63,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_string` (
   UNIQUE KEY `idx_unique` (`id_entity`, `name`),
   KEY `idx_value` (`value`),
   KEY `fk_id_entity_idx` (`id_entity`),
-  CONSTRAINT `fk_eav_attributes_string_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `eav_entities` (`id`)
+  CONSTRAINT `%PREFIX%fk_eav_attributes_string_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `%PREFIX%eav_entities` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 )
@@ -71,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_string` (
   AUTO_INCREMENT = 66
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE IF NOT EXISTS `eav_attributes_text` (
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_text` (
   `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
   `name`      VARCHAR(255)                 DEFAULT NULL,
@@ -79,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_text` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_unique` (`id_entity`, `name`),
   KEY `fk_id_entity_idx` (`id_entity`),
-  CONSTRAINT `fk_eav_attributes_text_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `eav_entities` (`id`)
+  CONSTRAINT `%PREFIX%fk_eav_attributes_text_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `%PREFIX%eav_entities` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 )
@@ -87,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `eav_attributes_text` (
   AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE IF NOT EXISTS `eav_entities` (
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_entities` (
   `id`          BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `entity_type` VARCHAR(255)                 DEFAULT NULL,
   `module_name` VARCHAR(255)                 DEFAULT NULL,
@@ -96,7 +92,3 @@ CREATE TABLE IF NOT EXISTS `eav_entities` (
   ENGINE = InnoDB
   AUTO_INCREMENT = 9
   DEFAULT CHARSET = utf8;
-
-/*!40101 SET SQL_MODE = IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS = IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;

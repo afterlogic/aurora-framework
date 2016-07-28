@@ -310,7 +310,7 @@ class CApiSettings extends CApiBasicSettings
 			'AdminPassword' => array('827ccb0eea8a706c4c34a16891f84e7b', 'string'),
 
 			'DBType' => array(EDbType::MySQL, 'spec', 'EDbType'),
-			'DBPrefix' => array('', 'string'),
+			'DBPrefix' => array('au_', 'string'),
 
 			'DBHost' => array('127.0.0.1', 'string'),
 			'DBName' => array('', 'string'),

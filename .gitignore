@@ -19,3 +19,5 @@ test_t.php
 /tenants/
 /modules/
 /entry.js
+/apigen.phar
+/_build-apigen.bat

@@ -284,19 +284,6 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $bResult;
 	}
 
-	/**
-	 * @param $sql
-	 * @return bool
-	 * @throws CApiBaseException
-	 */
-	public function execute($sql)
-	{
-		$bResult = $this->oConnection->Execute($sql);
-		$this->throwDbExceptionIfExist();
-
-		return $bResult;
-	}
-	
 	public function testConnection()
 	{
 		return $this->oConnection->Connect();

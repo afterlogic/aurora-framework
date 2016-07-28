@@ -747,6 +747,42 @@ abstract class AApiManagerStorage
 		
 		return false;		
 	}
+	
+	/**
+	 * Executes queries from sql file.
+	 * 
+	 * @param string $sFilePath Path to sql file.
+	 * 
+	 * @return boolean
+	 */
+	public function executeSqlFile($sFilePath)
+	{
+		$bResult = true;
+		
+		$sDbPrefix = $this->oCommandCreator->prefix();
+		
+		$mFileContent = file_exists($sFilePath) ? file_get_contents($sFilePath) : false;
+
+		if ($mFileContent && $this->oConnection)
+		{
+			$aSqlStrings = explode(';', $mFileContent);
+			foreach ($aSqlStrings as $sSql)
+			{
+				$sPrepSql = str_replace('%PREFIX%', $sDbPrefix, $sSql);
+				if (!empty($sPrepSql))
+				{
+					$bResult = $this->oConnection->Execute($sPrepSql);
+				}
+				$this->throwDbExceptionIfExist();
+			}
+		}
+		else
+		{
+			$bResult = false;
+		}
+
+		return $bResult;
+	}
 }
 
 /**
