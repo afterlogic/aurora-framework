@@ -336,7 +336,12 @@ class AEntity
 	 */	
 	public function toArray()
 	{
-		return array_merge(array('iObjectId' => $this->iId), $this->aAttributes);
+		$aResult = array();
+		foreach($this->aAttributes as $oAttribute)
+		{
+			$aResult[$oAttribute->Name] = $oAttribute->Value;
+		}
+		return array_merge(array('iObjectId' => $this->iId), $aResult);
 	}
 }
 

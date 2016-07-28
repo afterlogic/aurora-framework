@@ -80,6 +80,13 @@ class CApiModuleManager
 					$this->loadModule($sModuleName, $sModulesPath);
 				}
 			}
+			foreach ($this->_aModules as $oModule)
+			{
+				if ($oModule instanceof \AApiModule)
+				{
+					$oModule->initialize();
+				}
+			}
 		}
 		else
 		{
@@ -124,7 +131,7 @@ class CApiModuleManager
 				   $oModule->loadModuleConfig();
 				   if (!$oModule->getConfig('Disabled', false))
 				    {
-						$oModule->init();
+//						$oModule->init();
 						$this->_aModules[strtolower($sModuleName)] = $oModule;
 				   
 						$mResult = $oModule;
@@ -347,8 +354,8 @@ class CApiModuleManager
 	{
 		$mResult = false;
 		$oModule = $this->GetModuleFromRequest();
-		if ($oModule instanceof \AApiModule && $oModule->HasEntry($sEntryName)) {
-			
+		if ($oModule instanceof \AApiModule && $oModule->HasEntry($sEntryName)) 
+		{
 			$mResult = $oModule->RunEntry($sEntryName);
 		}
 		
@@ -359,7 +366,8 @@ class CApiModuleManager
 	{
 		$mResult = false;
 		$oModule = $this->GetModule($sModuleName);
-		if ($oModule instanceof AApiModule) {
+		if ($oModule instanceof AApiModule) 
+		{
 			
 			$mResult = $oModule->ExecuteMethod($sMethod, $aParameters);
 		}
@@ -479,6 +487,14 @@ abstract class AApiModule
      */
 	public static $Delimiter = '::';
 	
+    /**
+     *
+     * @var bool
+     */
+	protected $bInitialized = false;
+	
+	protected $aRequireModules = array();
+	
 	/**
 	 * @param string $sVersion
 	 */
@@ -504,6 +520,28 @@ abstract class AApiModule
 		return new static($sName, $sPath, $sVersion);
 	}	
 
+	public function isInitialized()
+	{
+		return (bool) $this->bInitialized;
+	}
+
+	public function initialize()
+	{
+		if (!$this->isInitialized())
+		{
+			foreach ($this->aRequireModules as $sModule)
+			{
+				$oModule = \CApi::GetModule($sModule);
+				if (!$oModule->isInitialized())
+				{
+					$oModule->initialize();
+				}
+			}
+			$this->bInitialized = true;
+			$this->init();
+		}
+	}
+	
 	public function init() {}
 
 	public function loadModuleConfig()
