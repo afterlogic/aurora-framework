@@ -45,6 +45,7 @@ class CApiModuleManager
 		$oCoreModule = $this->loadModule('Core', $sModulesPath);
 		if ($oCoreModule !== false)
 		{
+			$oCoreModule->initialize();
 			$sTenant = $oCoreModule->GetTenantName();
 			$aModulePath = array(
 				$sModulesPath
