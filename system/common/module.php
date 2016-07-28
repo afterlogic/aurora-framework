@@ -510,7 +510,7 @@ abstract class AApiModule
 		$this->oHttp = \MailSo\Base\Http::NewInstance();
 		
 		$this->aEntries = array(
-			'ajax' => 'EntryAjax',
+			'api' => 'EntryApi',
 			'upload' => 'EntryUpload',
 			'download' => 'EntryDownload'
 		);
@@ -766,7 +766,7 @@ abstract class AApiModule
 		return $mResult;
 	}
 
-	public function EntryAjax()
+	public function EntryApi()
 	{
 		@ob_start();
 
@@ -779,7 +779,7 @@ abstract class AApiModule
 			$sParameters = $this->oHttp->GetPost('Parameters', null);
 			try
 			{
-				\CApi::Log('AJAX:');
+				\CApi::Log('API:');
 				\CApi::Log('Module: '. $sModule);
 				\CApi::Log('Method: '. $sMethod);
 
@@ -849,7 +849,7 @@ abstract class AApiModule
 
 			@header('Content-Type: application/json; charset=utf-8');
 
-			\CApi::Plugin()->RunHook('ajax.response-result', array($sMethod, &$aResponseItem));
+			\CApi::Plugin()->RunHook('api.response-result', array($sMethod, &$aResponseItem));
 		}
 
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
