@@ -766,9 +766,13 @@ abstract class AApiManagerStorage
 		if ($mFileContent && $this->oConnection)
 		{
 			$aSqlStrings = explode(';', $mFileContent);
+			$iIndex = 0;
 			foreach ($aSqlStrings as $sSql)
 			{
 				$sPrepSql = trim(str_replace('%PREFIX%', $sDbPrefix, $sSql));
+				CApi::Log('******** '.$iIndex.' ********');
+				CApi::Log($sPrepSql);
+				$iIndex++;
 				if (!empty($sPrepSql))
 				{
 					$bResult = $this->oConnection->Execute($sPrepSql);

@@ -1,4 +1,14 @@
 
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_entities` (
+  `id`          BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `entity_type` VARCHAR(255)                 DEFAULT NULL,
+  `module_name` VARCHAR(255)                 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 9
+  DEFAULT CHARSET = utf8;
+
 CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_bool` (
   `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
@@ -81,14 +91,4 @@ CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_text` (
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 2
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE IF NOT EXISTS `%PREFIX%eav_entities` (
-  `id`          BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `entity_type` VARCHAR(255)                 DEFAULT NULL,
-  `module_name` VARCHAR(255)                 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-)
-  ENGINE = InnoDB
-  AUTO_INCREMENT = 9
   DEFAULT CHARSET = utf8;
