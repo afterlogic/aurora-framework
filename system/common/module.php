@@ -494,7 +494,18 @@ abstract class AApiModule
      */
 	protected $bInitialized = false;
 	
+    /**
+     *
+     * @var array
+     */	
 	protected $aRequireModules = array();
+	
+    /**
+     *
+     * @var array
+     */
+	protected $aNonAuthorizedMethods = array();
+	
 	
 	/**
 	 * @param string $sVersion
@@ -562,6 +573,11 @@ abstract class AApiModule
 	}
 	
 	public function init() {}
+	
+	protected function setNonAuthorizedMethods($aMethods)
+	{
+		$this->aNonAuthorizedMethods = $aMethods;
+	}
 
 	public function loadModuleConfig()
 	{
@@ -805,7 +821,7 @@ abstract class AApiModule
 					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
 					
-					if (!$this->CheckNonAuthorizedMethodAllowed($sMethod, $sAuthToken))
+					if (!$this->CheckNonAuthorizedMethodAllowed($sMethod))
 					{
 						if (!\CApi::getLogginedUserId($sAuthToken))
 						{
@@ -1039,6 +1055,17 @@ abstract class AApiModule
 		return false;			
 	
 	}	
+	
+	public function incClasses($aFileNames, $bDoExitOnError = true)
+	{
+		if (is_array($aFileNames))
+		{
+			foreach($aFileNames as $sFileName)
+			{
+				$this->incClass($sFileName, $bDoExitOnError);
+			}
+		}
+	}
 
 	/**
 	 * @param string $sMethod
@@ -1183,9 +1210,9 @@ abstract class AApiModule
 		return $mResult;
 	}
 	
-	public function CheckNonAuthorizedMethodAllowed($sMethodName = '', $sAuthToken = '')
+	public function CheckNonAuthorizedMethodAllowed($sMethodName = '')
 	{
-		return !!in_array($sMethodName, array('Login', 'GetServices'));
+		return !!in_array($sMethodName, $this->aNonAuthorizedMethods);
 	}
 	
 	public function GetAppData($oUser = null)
