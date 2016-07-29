@@ -528,19 +528,37 @@ abstract class AApiModule
 
 	public function initialize()
 	{
+		$mResult = true;
 		if (!$this->isInitialized())
 		{
 			foreach ($this->aRequireModules as $sModule)
 			{
+				$mResult = false;
 				$oModule = \CApi::GetModule($sModule);
-				if (!$oModule->isInitialized())
+				if ($oModule)
 				{
-					$oModule->initialize();
+					if (!$oModule->isInitialized())
+					{
+						$mResult = $oModule->initialize();
+					}
+					else 
+					{
+						$mResult = true;
+					}
+				}
+				if (!$mResult)
+				{
+					break;
 				}
 			}
-			$this->bInitialized = true;
-			$this->init();
+			if ($mResult)
+			{
+				$this->bInitialized = true;
+				$this->init();
+			}
 		}
+		
+		return $mResult;
 	}
 	
 	public function init() {}
@@ -595,9 +613,9 @@ abstract class AApiModule
 		return $bResult;
 	}	
 	
-	public function subscribeEvent($sEvent, $fCallback)
+	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
-		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback);
+		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
 	}
 
 	public function broadcastEvent($sEvent, $aArguments = array())
@@ -689,18 +707,13 @@ abstract class AApiModule
 		return $this->sName.'-'.$this->sVersion;
 	}
 	
-	protected function GetManagerPath($sManagerName)
-	{
-		return $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
-	}
-
 	public function GetManager($sManagerName = '', $sForcedStorage = 'db')
 	{
 		$mResult = false;
 		$sFileFullPath = '';
 		if (!isset($this->aManagersCache[$sManagerName]))
 		{
-			$sFileFullPath = $this->GetManagerPath($sManagerName);
+			$sFileFullPath = $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
 			if (@file_exists($sFileFullPath))
 			{
 				if (include_once $sFileFullPath)
@@ -745,8 +758,8 @@ abstract class AApiModule
 	public function GetEntry($sName)
 	{
 		$mResult = false;
-		if (isset($this->aEntries[$sName])) {
-			
+		if (isset($this->aEntries[$sName])) 
+		{
 			$mResult = $this->aEntries[$sName];
 		}
 		
@@ -758,8 +771,8 @@ abstract class AApiModule
 		$mResult = false;
 		$mMethod = $this->GetEntry($sName);
 		
-		if ($mMethod) {
-			
+		if ($mMethod) 
+		{
 			$mResult = $this->ExecuteMethod($mMethod, array(), true);
 		}			
 		
@@ -811,14 +824,6 @@ abstract class AApiModule
 					$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
 
 					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
-					
-	/*						
-					else if (\CApi::Plugin()->JsonHookExists($sMethodName))
-					{
-						$this->oActions->SetActionParams($this->oHttp->GetPostAsArray());
-						$aResponseItem = \CApi::Plugin()->RunJsonHook($this->oActions, $sMethodName);
-					}
-	*/
 				}
 
 				if (!is_array($aResponseItem)) {
@@ -1034,21 +1039,7 @@ abstract class AApiModule
 		return false;			
 	
 	}	
-	
-	public function getParamValue($sKey, $mDefault = null)
-	{
-		return is_array($this->aParameters) && isset($this->aParameters[$sKey])
-			? $this->aParameters[$sKey] : $mDefault;
-	}
-	
-	public function setParamValue($sKey, $mValue)
-	{
-		if (is_array($this->aParameters)) {
-			
-			$this->aParameters[$sKey] = $mValue;
-		}
-	}
-	
+
 	/**
 	 * @param string $sMethod
 	 * @param mixed $mResult = false
@@ -1173,7 +1164,7 @@ abstract class AApiModule
 					else
 					{
 						$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? 
-								$aArguments[$sParamName] : $oParam->getDefaultValue();
+							$aArguments[$sParamName] : $oParam->getDefaultValue();
 					}		
 				}
 			}
