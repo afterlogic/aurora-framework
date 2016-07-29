@@ -49,6 +49,16 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 				}
 			}
 		}
+		
+		if (substr($sClassName, -6) === 'Module')
+		{
+			$sModuleName = substr($sClassName, 0, -6);
+			$sFileName = PSEVEN_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
+			if (file_exists($sFileName))
+			{
+				return include_once $sFileName;
+			}
+		}
 
 		return false;
 	}
