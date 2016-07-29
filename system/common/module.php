@@ -1194,7 +1194,7 @@ abstract class AApiModule
 	
 	public function CheckNonAuthorizedMethodAllowed($sMethodName = '', $sAuthToken = '')
 	{
-		return !!in_array($sMethodName, array('Login'));
+		return !!in_array($sMethodName, array('Login', 'GetServices'));
 	}
 	
 	public function GetAppData($oUser = null)
