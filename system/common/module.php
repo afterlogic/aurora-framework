@@ -132,9 +132,7 @@ class CApiModuleManager
 				   $oModule->loadModuleConfig();
 				   if (!$oModule->getConfig('Disabled', false))
 				    {
-//						$oModule->init();
 						$this->_aModules[strtolower($sModuleName)] = $oModule;
-				   
 						$mResult = $oModule;
 					}
 			   }
