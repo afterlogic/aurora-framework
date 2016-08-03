@@ -1185,7 +1185,8 @@ class CApi
 				$oApiIntegrator = \CApi::GetSystemManager('integrator');
 				if ($oApiIntegrator)
 				{
-					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);
+					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
+					$mResult = $aInfo['userId'];
 					static::$aUserSession['UserId'] = $mResult;
 					static::$aUserSession['AuthToken'] = $sAuthToken;
 				}
@@ -1206,43 +1207,24 @@ class CApi
 		return $mResult;
 	}
 	
-	public static function getLogginedUserInfo($sAuthToken = '')
+	public static function getAuthenticatedUser($sAuthToken = '')
 	{
-		$mResult = false;
 		if (!empty($sAuthToken))
 		{
-			if (isset(static::$aUserSession['UserId']))
-			{
-				$mResult = array(
-					UserId => (int) static::$aUserSession['UserId'],
-					Role => (int) static::$aUserSession['Role']
-				);
-			}
-			else
-			{
-				/* @var $oApiIntegrator \CApiIntegratorManager */
-				$oApiIntegrator = \CApi::GetSystemManager('integrator');
-				if ($oApiIntegrator)
-				{
-					$mResult = $oApiIntegrator->getLogginedUserId($sAuthToken);
-					static::$aUserSession['UserId'] = $mResult;
-					static::$aUserSession['AuthToken'] = $sAuthToken;
-				}
-			}
+			$iUserId = \CApi::getLogginedUserId($sAuthToken); // called for saving in session
 		}
-		else 
+		else if (!empty(static::$aUserSession['AuthToken']))
 		{
-			if (is_array(static::$aUserSession) && isset(static::$aUserSession['UserId']))
-			{
-				$mResult = static::$aUserSession['UserId'];
-			}
-			else
-			{
-				$mResult = 0;
-			}
+			$sAuthToken = static::$aUserSession['AuthToken'];
 		}
 		
-		return $mResult;
+		$oUser = null;
+		$oApiIntegrator = \CApi::GetSystemManager('integrator');
+		if ($oApiIntegrator)
+		{
+			$oUser = $oApiIntegrator->getAuthenticatedUserHelper($sAuthToken);
+		}
+		return $oUser;
 	}
 	
 	public static function getLogginedUserAuthToken()

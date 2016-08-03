@@ -283,12 +283,23 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @param string $sAuthToken Default value is empty string.
 	 *
-	 * @return int
+	 * @return \CUser
 	 */
-	public function getLogginedUserId($sAuthToken = '')
+	public function getAuthenticatedUserHelper($sAuthToken = '')
 	{
-		$aInfo = $this->getLogginedUserInfo($sAuthToken);
-		return $aInfo['userId'];
+		$aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
+		$iUserId = $aUserInfo['userId'];
+		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$oUser = null;
+		if (0 < $iUserId)
+		{
+			$oUser = $oCoreDecorator->GetUser($iUserId);
+		}
+		elseif ($aUserInfo['isAdmin'])
+		{
+			$oUser = $oCoreDecorator->GetAdminUser();
+		}
+		return $oUser;
 	}
 	
 	/**
@@ -296,7 +307,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return int
 	 */
-	public function getLogginedUserInfo($sAuthToken = '')
+	public function getAuthenticatedUserInfo($sAuthToken = '')
 	{
 		$aInfo = array(
 			'isAdmin' => false,
@@ -351,7 +362,7 @@ class CApiIntegratorManager extends AApiManager
 	public function getLogginedDefaultAccount($sAuthToken = '')
 	{
 		$oResult = null;
-		$iUserId = $this->getLogginedUserId($sAuthToken);
+		$iUserId = \CApi::getLogginedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
 			$oApiUsers = CApi::GetSystemManager('users');
@@ -1531,20 +1542,8 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
-		$aUserInfo = $this->getLogginedUserInfo($sAuthToken);
-		$iUserId = $aUserInfo['userId'];
-		$oUser = null;
+		$oUser = \CApi::getAuthenticatedUser($sAuthToken);
 
-		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
-		if (0 < $iUserId)
-		{
-			$oUser = $oCoreDecorator->GetUser($iUserId);
-		}
-		elseif ($aUserInfo['isAdmin'])
-		{
-			$oUser = $oCoreDecorator->GetAdminUser();
-		}
-		
 		$aModules = \CApi::GetModules();
 
 		foreach ($aModules as $oModule)
@@ -1634,7 +1633,7 @@ class CApiIntegratorManager extends AApiManager
 			$sTheme = $oSettings->GetConf('DefaultSkin');
 
 //			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
-			$oUser = \CApi::getLogginedUserId();
+			$oUser = \CApi::getAuthenticatedUser();
 
 			if ($oUser)
 			{
