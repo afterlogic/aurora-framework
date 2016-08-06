@@ -1170,7 +1170,7 @@ class CApi
 		return $sToken;
 	}
 	
-	public static function getLogginedUserId($sAuthToken = '')
+	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;
 		if (!empty($sAuthToken))
@@ -1211,7 +1211,7 @@ class CApi
 	{
 		if (!empty($sAuthToken))
 		{
-			$iUserId = \CApi::getLogginedUserId($sAuthToken); // called for saving in session
+			$iUserId = \CApi::getAuthenticatedUserId($sAuthToken); // called for saving in session
 		}
 		else if (!empty(static::$aUserSession['AuthToken']))
 		{
@@ -1227,7 +1227,7 @@ class CApi
 		return $oUser;
 	}
 	
-	public static function getLogginedUserAuthToken()
+	public static function getAuthenticatedUserAuthToken()
 	{
 		$mResult = false;
 		

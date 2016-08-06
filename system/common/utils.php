@@ -2114,7 +2114,7 @@ class api_Utils
 		$oResult = null;
 		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \CApi::GetSystemManager('users');
 		$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('integrator');
-		$iUserId = $oApiIntegrator->getLogginedUserId();
+		$iUserId = \CApi::getAuthenticatedUserId();
 		if (0 < $iUserId)
 		{
 			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
@@ -2141,7 +2141,7 @@ class api_Utils
 		if ($oApiCapability->isHelpdeskSupported())
 		{
 			$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('integrator');
-			$iIdHelpdeskUser = $oApiIntegrator->getLogginedHelpdeskUserId();
+			$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
 			if (0 < $iIdHelpdeskUser)
 			{
 				$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = \CApi::Manager('helpdesk');

@@ -821,7 +821,7 @@ abstract class AApiModule
 					
 					if (!$this->CheckNonAuthorizedMethodAllowed($sMethod))
 					{
-						if (!\CApi::getLogginedUserId($sAuthToken))
+						if (!\CApi::getAuthenticatedUserId($sAuthToken))
 						{
 							throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
 						}

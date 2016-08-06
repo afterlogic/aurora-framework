@@ -15,7 +15,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	$iObjectsStoredTab = isset($_COOKIE['OBJECT_TAB']) ? (int)$_COOKIE['OBJECT_TAB'] : 0;
 	
 	$oApiIntegrator = \CApi::GetSystemManager('integrator');
-	$iUserId = $oApiIntegrator->getLogginedUserId($sAuthToken);
+	$iUserId = \CApi::getAuthenticatedUserId($sAuthToken);
 	$sBaseUrl = $_SERVER['REQUEST_URI'];
 	if (!$iUserId)
 	{

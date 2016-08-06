@@ -331,7 +331,7 @@ class CApiIntegratorManager extends AApiManager
 				'userId' => -1
 			);
 		}
-//			CApi::Plugin()->RunHook('api-integrator-get-loggined-user-id', array(&$iUserId));
+//			CApi::Plugin()->RunHook('api-integrator-get-authenticated-user-id', array(&$iUserId));
 
 		return $aInfo;
 	}
@@ -339,7 +339,7 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return int
 	 */
-	public function getLogginedHelpdeskUserId()
+	public function getAuthenticatedHelpdeskUserId()
 	{
 		$iHdUserId = 0;
 		$sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
@@ -359,10 +359,10 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * @return CAccount|null
 	 */
-	public function getLogginedDefaultAccount($sAuthToken = '')
+	public function getAuthenticatedDefaultAccount($sAuthToken = '')
 	{
 		$oResult = null;
-		$iUserId = \CApi::getLogginedUserId($sAuthToken);
+		$iUserId = \CApi::getAuthenticatedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
 			$oApiUsers = CApi::GetSystemManager('users');
@@ -1632,7 +1632,7 @@ class CApiIntegratorManager extends AApiManager
 			$sLanguage = $oSettings->GetConf('DefaultLanguage');
 			$sTheme = $oSettings->GetConf('DefaultSkin');
 
-//			$oAccount = $this->getLogginedDefaultAccount($sAccessToken);
+//			$oAccount = $this->getAuthenticatedDefaultAccount($sAccessToken);
 			$oUser = \CApi::getAuthenticatedUser();
 
 			if ($oUser)

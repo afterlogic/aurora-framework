@@ -124,19 +124,19 @@ class Actions
 
 	/**
 	 * @param int $iAccountId
-	 * @param bool $bVerifyLogginedUserId = true
+	 * @param bool $bVerifyAuthenticatedUserId = true
 	 * @param string $sAuthToken = ''
 	 * @return CAccount | null
 	 */
-	public function getAccount($iAccountId, $bVerifyLogginedUserId = true, $sAuthToken = '')
+	public function getAccount($iAccountId, $bVerifyAuthenticatedUserId = true, $sAuthToken = '')
 	{
 		$oResult = null;
-		$iUserId = $bVerifyLogginedUserId ? $this->oApiIntegrator->getLogginedUserId($sAuthToken) : 1;
+		$iUserId = $bVerifyAuthenticatedUserId ? \CApi::getAuthenticatedUserId($sAuthToken) : 1;
 		if (0 < $iUserId)
 		{
 			$oAccount = $this->oApiUsers->getAccountById($iAccountId);
 			if ($oAccount instanceof \CAccount && 
-				($bVerifyLogginedUserId && $oAccount->IdUser === $iUserId || !$bVerifyLogginedUserId) && !$oAccount->IsDisabled)
+				($bVerifyAuthenticatedUserId && $oAccount->IdUser === $iUserId || !$bVerifyAuthenticatedUserId) && !$oAccount->IsDisabled)
 			{
 				$oResult = $oAccount;
 			}
@@ -152,7 +152,7 @@ class Actions
 	public function GetDefaultAccount($sAuthToken = '')
 	{
 		$oResult = null;
-		$iUserId = $this->oApiIntegrator->getLogginedUserId($sAuthToken);
+		$iUserId = \CApi::getAuthenticatedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
 			$iAccountId = $this->oApiUsers->getDefaultAccountId($iUserId);
@@ -238,11 +238,11 @@ class Actions
 
 	/**
 	 * @param bool $bThrowAuthExceptionOnFalse Default value is **true**.
-	 * @param bool $bVerifyLogginedUserId Default value is **true**.
+	 * @param bool $bVerifyAuthenticatedUserId Default value is **true**.
 	 *
 	 * @return \CAccount|null
 	 */
-	protected function getAccountFromParam($bThrowAuthExceptionOnFalse = true, $bVerifyLogginedUserId = true)
+	protected function getAccountFromParam($bThrowAuthExceptionOnFalse = true, $bVerifyAuthenticatedUserId = true)
 	{
 		$oResult = null;
 		$sAuthToken = (string) $this->getParamValue('AuthToken', '');
@@ -252,7 +252,7 @@ class Actions
 			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
 		}
 
-		$oResult = $this->getAccount((int) $sAccountID, $bVerifyLogginedUserId, $sAuthToken);
+		$oResult = $this->getAccount((int) $sAccountID, $bVerifyAuthenticatedUserId, $sAuthToken);
 
 		if ($bThrowAuthExceptionOnFalse && !($oResult instanceof \CAccount))
 		{
