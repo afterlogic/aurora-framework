@@ -1213,7 +1213,7 @@ abstract class AApiModule
 		return !!in_array($sMethodName, $this->aNonAuthorizedMethods);
 	}
 	
-	public function GetAppData($oUser = null)
+	public function GetAppData()
 	{
 		return null;
 	}
