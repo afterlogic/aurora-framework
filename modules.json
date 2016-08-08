@@ -38,6 +38,7 @@
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-simple-chat"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-simple-chat-emoji-plugin"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-simple-chat-logger-plugin"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-standard-auth"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-twilio"}
     ],
 	"require": {
@@ -78,6 +79,7 @@
 			"afterlogic/aurora-module-webclient-simple-chat": "dev-master",
 			"afterlogic/aurora-module-webclient-simple-chat-emoji-plugin": "dev-master",
 			"afterlogic/aurora-module-simple-chat-logger-plugin": "dev-master",
+			"afterlogic/aurora-module-webclient-standard-auth": "dev-master",
 			"afterlogic/aurora-module-twilio": "dev-master"
 	}
 }
