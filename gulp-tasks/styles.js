@@ -17,7 +17,9 @@ var
 	
 	aThemes = argv.getParameter('--themes').split(','),
 	
-	sTenanthash = argv.getParameter('--tenant')
+	sTenanthash = argv.getParameter('--tenant'),
+	
+	sPathToCoreWebclient = 'modules/CoreWeblient'
 ;
 
 aModulesNames.forEach(function (sModuleName) {
@@ -31,10 +33,10 @@ function BuildLibsCss()
 {
 	var
 		aLibsFiles = [
-			'modules/CoreClient/styles/vendors/normalize.css',
-			'modules/CoreClient/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
-			'modules/CoreClient/styles/vendors/fullcalendar-2.2.3.min.css',
-			'modules/CoreClient/styles/vendors/inputosaurus.css'
+			sPathToCoreWebclient + '/styles/vendors/normalize.css',
+			sPathToCoreWebclient + '/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
+			sPathToCoreWebclient + '/styles/vendors/fullcalendar-2.2.3.min.css',
+			sPathToCoreWebclient + '/styles/vendors/inputosaurus.css'
 		],
 		sDestPath = 'static/styles/libs/',
 		fBuild = function () {
@@ -145,7 +147,7 @@ function MoveSharingCss()
 {
 	var
 		fCopySharing = function () {
-			ncp('modules/CoreClient/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
+			ncp(sPathToCoreWebclient + '/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
 				if (oErr)
 				{
 					console.log('static/styles/sharing.css file copying was failed: ', oErr);
@@ -162,12 +164,12 @@ gulp.task('styles', function () {
 	{
 		BuildLibsCss();
 	}
-	MoveFiles('modules/CoreClient/styles/vendors/jquery/images', 'static/styles/libs/images');
-	MoveFiles('modules/CoreClient/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
-	MoveFiles('modules/CoreClient/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
+	MoveFiles(sPathToCoreWebclient + '/styles/vendors/jquery/images', 'static/styles/libs/images');
+	MoveFiles(sPathToCoreWebclient + '/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
+	MoveFiles(sPathToCoreWebclient + '/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
 	MoveSharingCss();
 	_.each(aThemes, function (sTheme) {
-		MoveFiles('modules/CoreClient/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
+		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});

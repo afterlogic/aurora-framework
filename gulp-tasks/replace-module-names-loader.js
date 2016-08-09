@@ -9,7 +9,10 @@ module.exports = function (sSource) {
 	
 	if (sModule)
 	{
-		sSource = sSource.replace(new RegExp('%ModuleName%', 'g'), sModule).replace(new RegExp('%MODULENAME%', 'g'), sModule.toUpperCase());
+		sSource = sSource
+					.replace(new RegExp('%ModuleName%', 'g'), sModule)
+					.replace(new RegExp('%MODULENAME%', 'g'), sModule.toUpperCase())
+					.replace(new RegExp('%PathToCoreWebclientModule%', 'g'), 'modules/CoreWebclient');
 	}
 	
 	return sSource;

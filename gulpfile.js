@@ -43,7 +43,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/CoreClient/js/entry.js"
+			"./modules/CoreWebclient/js/entry.js"
 		]
 	},
 	mobile: {
@@ -53,7 +53,7 @@ cfg.paths.js = {
 		afterlogic: true,
 		watch: true,
 		src: [
-			"./modules/CoreClient/js/entry-mobile.js"
+			"./modules/CoreWebclient/js/entry-mobile.js"
 		]
 	},
 	message_newtab: {

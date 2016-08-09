@@ -29,9 +29,9 @@
     "underscore": "./node_modules/underscore/underscore-min.js",
     "knockout": "./node_modules/knockout/build/output/knockout-latest.js",
     "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
-    "customscroll": "./modules/CoreClient/js/vendors/customscroll.js",
-    "modernizr": "./modules/CoreClient/js/vendors/modernizr.js",
-    "jquery.cookie": "./modules/CoreClient/js/vendors/jquery.cookie.js"
+    "customscroll": "./modules/CoreWebclient/js/vendors/customscroll.js",
+    "modernizr": "./modules/CoreWebclient/js/vendors/modernizr.js",
+    "jquery.cookie": "./modules/CoreWebclient/js/vendors/jquery.cookie.js"
   },
   "devDependencies": {
     "cascade-ini": "*",
