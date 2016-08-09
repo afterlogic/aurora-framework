@@ -1,5 +1,5 @@
 <?php
-	$oManagerApi = \CApi::GetModule('BasicAuth')->GetManager('accounts');
+	$oManagerApi = \CApi::GetModule('StandardAuth')->GetManager('accounts');
 	$aItems = $oManagerApi->getAccountList(0, 0);
 
 //TODO: fix password encoder

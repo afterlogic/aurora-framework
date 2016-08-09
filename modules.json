@@ -2,7 +2,7 @@
 	"repositories": [
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-admin-auth"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-adminpanel"},
-		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-basic-auth"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-standard-auth"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-standard-login-form"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-calendar"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-calendar"},
@@ -44,7 +44,7 @@
 	"require": {
 			"afterlogic/aurora-module-admin-auth": "dev-master",
 			"afterlogic/aurora-module-webclient-adminpanel": "dev-master",
-			"afterlogic/aurora-module-basic-auth": "dev-master",
+			"afterlogic/aurora-module-standard-auth": "dev-master",
 			"afterlogic/aurora-module-webclient-standard-login-form": "dev-master",
 			"afterlogic/aurora-module-calendar": "dev-master",
 			"afterlogic/aurora-module-webclient-calendar": "dev-master",
