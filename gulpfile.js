@@ -66,16 +66,6 @@ cfg.paths.js = {
 			"./modules/MailWebclient/js/entry-newtab.js"
 		]
 	},
-	adminpanel: {
-		dest: './static/js/',
-		name: 'app-adminpanel.js',
-		min: 'app-adminpanel.min.js',
-		afterlogic: true,
-		watch: true,
-		src: [
-			"./modules/AdminPanelClient/js/entry.js"
-		]
-	},
 	files_pub: {
 		dest: './static/js/',
 		name: 'app-files-pub.js',
