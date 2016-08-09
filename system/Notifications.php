@@ -18,6 +18,7 @@ class Notifications
 	const CaptchaError = 107;
 	const AccessDenied = 108;
 	const UnknownEmail = 109;
+	const UserNotAllowed = 110;
 
 	const CanNotGetMessageList = 201;
 	const CanNotGetMessage = 202;

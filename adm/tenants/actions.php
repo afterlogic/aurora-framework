@@ -9,9 +9,9 @@ if ($oHttp->HasPost('action'))
 	{
 		case 'create': 
 			$mResult = $oDecorator->CreateTenant(
+				$oHttp->GetPost('channel_id', ''),
 				$oHttp->GetPost('name', ''),
 				$oHttp->GetPost('description', ''),
-				$oHttp->GetPost('channel_id', '')
 //				$oHttp->GetPost('password', '')
 			);
 			
