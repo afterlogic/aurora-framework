@@ -70,7 +70,7 @@ function BuildThemeCss(sTheme, bMobile)
 				aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 			}
 		}
-		if (sModuleName !== 'CoreClient' && fs.existsSync('modules/' + sModuleName + '/styles/images'))
+		if (sModuleName !== 'CoreWebclient' && fs.existsSync('modules/' + sModuleName + '/styles/images'))
 		{
 			MoveFiles('modules/' + sModuleName + '/styles/images', 'static/styles/images/modules/' + sModuleName);
 		}

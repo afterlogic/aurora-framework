@@ -21,6 +21,6 @@ module.exports = {
 	{
 		var sModules = this.getParameter('--modules');
 
-		return _.union(['CoreClient'], sModules.split(','));
+		return _.union(['CoreWebclient'], sModules.split(','));
 	}
 };
