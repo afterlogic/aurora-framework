@@ -1209,20 +1209,23 @@ class CApi
 	
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
-		if (!empty($sAuthToken))
+		static $oUser = null;
+		if ($oUser === null)
 		{
-			$iUserId = \CApi::getAuthenticatedUserId($sAuthToken); // called for saving in session
-		}
-		else if (!empty(static::$aUserSession['AuthToken']))
-		{
-			$sAuthToken = static::$aUserSession['AuthToken'];
-		}
-		
-		$oUser = null;
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
-		if ($oApiIntegrator)
-		{
-			$oUser = $oApiIntegrator->getAuthenticatedUserHelper($sAuthToken);
+			if (!empty($sAuthToken))
+			{
+				\CApi::getAuthenticatedUserId($sAuthToken); // called for saving in session
+			}
+			else if (!empty(static::$aUserSession['AuthToken']))
+			{
+				$sAuthToken = static::$aUserSession['AuthToken'];
+			}
+
+			$oApiIntegrator = \CApi::GetSystemManager('integrator');
+			if ($oApiIntegrator)
+			{
+				$oUser = $oApiIntegrator->getAuthenticatedUserHelper($sAuthToken);
+			}
 		}
 		return $oUser;
 	}
