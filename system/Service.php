@@ -136,10 +136,10 @@ class Service
 				exit();
 			}
 			
-			$oCoreClientModule = \CApi::GetModule('CoreWebclient');
-			if ($oCoreClientModule instanceof \AApiModule) 
+			$oCoreWebclientModule = \CApi::GetModule('CoreWebclient');
+			if ($oCoreWebclientModule instanceof \AApiModule) 
 			{
-				$sResult = file_get_contents($oCoreClientModule->GetPath().'/templates/Index.html');
+				$sResult = file_get_contents($oCoreWebclientModule->GetPath().'/templates/Index.html');
 				if (is_string($sResult)) 
 				{
 					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
