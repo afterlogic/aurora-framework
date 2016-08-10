@@ -19,7 +19,7 @@ var
 	
 	sTenanthash = argv.getParameter('--tenant'),
 	
-	sPathToCoreWebclient = 'modules/CoreWeblient'
+	sPathToCoreWebclient = 'modules/CoreWebclient'
 ;
 
 aModulesNames.forEach(function (sModuleName) {
