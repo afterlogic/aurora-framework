@@ -13,7 +13,7 @@
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-core"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-dav"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-oauth-integrator.git"},
-		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-google-auth.git"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-google-auth.git"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-dropbox.git"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-dropbox-auth.git"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-facebook-auth.git"},
