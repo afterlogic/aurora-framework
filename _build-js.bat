@@ -1,0 +1,3 @@
+::node ./node_modules/gulp/bin/gulp.js js1:build --output app
+::node ./node_modules/gulp/bin/gulp.js js1:build --output app-files-pub --modules FilesWebclient
+node ./node_modules/gulp/bin/gulp.js js1:build --output app --modules AdminPanelWebclient,StandardAuthWebclient,StandardLoginFormWebclient,FilesWebclient,SettingsWebclient,MobileSyncWebclient,OAuthIntegratorWebclient,FacebookAuthWebclient,GoogleAuthWebclient,DropBocAuthWebclient
