@@ -252,6 +252,8 @@ gulp.task('adm', ['js:adminpanel:watch']);
 
 require('./gulp-tasks/langs.js');
 
+require('./gulp-tasks/javascript.js');
+
 require('./gulp-tasks/styles.js');
 
 //require('./gulp-tasks/html.js');

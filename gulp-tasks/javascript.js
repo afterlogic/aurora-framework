@@ -118,8 +118,8 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
             "\t\t" + "oAvaliableModules = {" + crlf
         ))
         .pipe(concat.footer(crlf + "\t\t}," + crlf +
-            "\t\t" + "ModulesManager = require('modules/CoreClient/js/ModulesManager.js')," + crlf +
-            "\t\t" + "App = require('modules/CoreClient/js/App.js')," + crlf +
+            "\t\t" + "ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js')," + crlf +
+            "\t\t" + "App = require('modules/CoreWebclient/js/App.js')," + crlf +
             "\t\t" + "bSwitchingToMobile = App.checkMobile()" + crlf +
             "\t" + ";" + crlf +
             "\t" + "if (!bSwitchingToMobile)" + crlf +

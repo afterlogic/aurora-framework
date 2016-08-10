@@ -55,7 +55,8 @@
     "ncp": "*",
     "vinyl-buffer": "*",
     "vinyl-source-stream": "*",
-    "webpack": "~1.12.14"
+    "webpack": "~1.12.14",
+	"webpack-stream": "*"
   },
   "license": "Custom"
 }
