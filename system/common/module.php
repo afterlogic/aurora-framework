@@ -215,8 +215,9 @@ class CApiModuleManager
 	 * @param string $sParsedTemplateID
 	 * @param string $sParsedPlace
 	 * @param string $sTemplateFileName
+	 * @param string $sModuleName
 	 */
-	public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName)
+	public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName, $sModuleName = '')
 	{
 		if (!isset($this->_aTemplates[$sParsedTemplateID]))
 		{
@@ -224,7 +225,7 @@ class CApiModuleManager
 		}
 
 		$this->_aTemplates[$sParsedTemplateID][] = array(
-			$sParsedPlace, $sTemplateFileName
+			$sParsedPlace, $sTemplateFileName, $sModuleName
 		);
 	}	
 	
@@ -239,8 +240,14 @@ class CApiModuleManager
 			{
 				if (!empty($aItem[0]) && !empty($aItem[1]) && file_exists($aItem[1]))
 				{
+					$sTemplateHtml = file_get_contents($aItem[1]);
+					if (!empty($aItem[2]))
+					{
+						$sTemplateHtml = str_replace('%ModuleName%', $aItem[2], $sTemplateHtml);
+						$sTemplateHtml = str_replace('%MODULENAME%', strtoupper($aItem[2]), $sTemplateHtml);
+					}
 					$sTemplateSource = str_replace('{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
-						file_get_contents($aItem[1]).'{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}', $sTemplateSource);
+						$sTemplateHtml.'{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}', $sTemplateSource);
 				}
 			}
 		}
@@ -641,12 +648,13 @@ abstract class AApiModule
 	 * @param string $sParsedTemplateID
 	 * @param string $sParsedPlace
 	 * @param string $sTemplateFileName
+	 * @param string $sModuleName
 	 */
-	public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName)
+	public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName, $sModuleName = '')
 	{
 		if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName))
 		{
-			\CApi::GetModuleManager()->includeTemplate($sParsedTemplateID, $sParsedPlace, $this->GetPath().'/'.$sTemplateFileName);
+			\CApi::GetModuleManager()->includeTemplate($sParsedTemplateID, $sParsedPlace, $this->GetPath().'/'.$sTemplateFileName, $sModuleName);
 		}
 	}	
 	
