@@ -1,13 +1,9 @@
 /.idea
 /nbproject
 /node_modules
-/build/dist
-/build/tmp
-/build/docs
 /data
 /npm-debug.log
 /static/
-/build/
 /vendor/
 /migrateto30.php
 /migrateto20.php
