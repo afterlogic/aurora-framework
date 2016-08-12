@@ -1,6 +1,11 @@
 <?php
-	$oManagerApi = \CApi::GetModule('Mail')->GetManager('accounts');
-	$aItems = $oManagerApi->getAccountList(0, 0);
+	$aItems = [];
+	$oModule = \CApi::GetModule('Mail');
+	if (!empty($oModule))
+	{
+		$oManagerApi = \CApi::GetModule('Mail')->GetManager('accounts');
+		$aItems = $oManagerApi->getAccountList(0, 0);
+	}
 ?>
 <div id="mail-screen" class="row">
 	<div class="col-sm-6">
