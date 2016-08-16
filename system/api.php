@@ -1170,6 +1170,25 @@ class CApi
 		return $sToken;
 	}
 	
+	/**
+	 * Checks if authenticated user has at least specified role.
+	 * @param int $iRole
+	 * @throws \System\Exceptions\ClientException
+	 */
+	public static function checkUserRoleIsAtLeast($iRole)
+	{
+		$oUser = \CApi::getAuthenticatedUser();
+		$bUserRoleIsAtLeast = empty($oUser) && $iRole === \EUserRole::Anonymous ||
+				!empty($oUser) && $oUser->Role === \EUserRole::Customer && ($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \EUserRole::NormalUser && ($iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \EUserRole::TenantAdmin && ($iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && ($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
+		if (!$bUserRoleIsAtLeast)
+		{
+			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
+		}
+	}
+	
 	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;

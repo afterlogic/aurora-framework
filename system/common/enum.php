@@ -134,17 +134,19 @@ class EnumConvert
 class EUserRole extends AEnumeration
 {
 	const SuperAdmin = 0;
-	const PowerUser = 1;
-	const RegisteredUser = 2;
-	const Anonymous = 3;
+	const TenantAdmin = 1;
+	const NormalUser = 2;
+	const Customer = 3;
+	const Anonymous = 4;
 
 	/**
 	 * @var array
 	 */
 	protected $aConsts = array(
 		'SuperAdmin' => self::SuperAdmin,
-		'PowerUser' => self::PowerUser,
-		'RegisteredUser' => self::RegisteredUser,
+		'TenantAdmin' => self::TenantAdmin,
+		'NormalUser' => self::NormalUser,
+		'Customer' => self::Customer,
 		'Anonymous' => self::Anonymous,
 	);
 }

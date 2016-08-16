@@ -1509,7 +1509,7 @@ class CApiIntegratorManager extends AApiManager
 		$aAppData = array(
 			'User' => array(
 				'Id' => 0,
-				'Role' => 3, // anonimus
+				'Role' => \EUserRole::Anonymous,
 				'Name' => ''
 			),
 			'IsMobile' => 0,
