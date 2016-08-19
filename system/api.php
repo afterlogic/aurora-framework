@@ -1173,7 +1173,7 @@ class CApi
 	/**
 	 * Checks if authenticated user has at least specified role.
 	 * @param int $iRole
-	 * @throws \System\Exceptions\ClientException
+	 * @throws \System\Exceptions\AuroraApiException
 	 */
 	public static function checkUserRoleIsAtLeast($iRole)
 	{
@@ -1185,7 +1185,7 @@ class CApi
 				!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && ($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
 		if (!$bUserRoleIsAtLeast)
 		{
-			throw new \System\Exceptions\ClientException(\System\Notifications::AccessDenied);
+			throw new \System\Exceptions\AuroraApiException(\System\Notifications::AccessDenied);
 		}
 	}
 	

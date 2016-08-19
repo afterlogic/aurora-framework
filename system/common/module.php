@@ -821,7 +821,7 @@ abstract class AApiModule
 				if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'SystemGetAppData' &&
 					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\System\Service::validateToken()) {
 					
-					throw new \System\Exceptions\ClientException(\System\Notifications::InvalidToken);
+					throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
 				} else if (!empty($sModule) && !empty($sMethod)) {
 					
 					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
@@ -831,7 +831,7 @@ abstract class AApiModule
 					{
 						if (!\CApi::getAuthenticatedUserId($sAuthToken))
 						{
-							throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
+							throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
 						}
 					}
 					
@@ -850,12 +850,12 @@ abstract class AApiModule
 
 				if (!is_array($aResponseItem)) {
 					
-					throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
+					throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
 				}
 			}
 			catch (\Exception $oException)
 			{
-				//if ($oException instanceof \System\Exceptions\ClientException &&
+				//if ($oException instanceof \System\Exceptions\AuroraApiException &&
 				//	\System\Notifications::AuthError === $oException->getCode())
 				//{
 				//	$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::GetCoreManager('integrator');
@@ -866,7 +866,7 @@ abstract class AApiModule
 				\CApi::LogException($oException);
 
 				$aAdditionalParams = null;
-				if ($oException instanceof \System\Exceptions\ClientException) {
+				if ($oException instanceof \System\Exceptions\AuroraApiException) {
 					
 					$aAdditionalParams = $oException->GetObjectParams();
 				}
@@ -935,7 +935,7 @@ abstract class AApiModule
 
 			if (!is_array($aResponseItem) && empty($sError))
 			{
-				throw new \System\Exceptions\ClientException(\System\Notifications::UnknownError);
+				throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
 			}
 		}
 		catch (\Exception $oException)
@@ -1148,12 +1148,12 @@ abstract class AApiModule
 
 		$bShowError = \CApi::GetConf('labs.webmail.display-server-error-information', false);
 
-		if ($oException instanceof \System\Exceptions\ClientException) {
+		if ($oException instanceof \System\Exceptions\AuroraApiException) {
 			$iErrorCode = $oException->getCode();
 			$sErrorMessage = null;
 			if ($bShowError) {
 				$sErrorMessage = $oException->getMessage();
-				if (empty($sErrorMessage) || 'ClientException' === $sErrorMessage) {
+				if (empty($sErrorMessage) || 'AuroraApiException' === $sErrorMessage) {
 					$sErrorMessage = null;
 				}
 			}

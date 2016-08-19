@@ -1581,7 +1581,7 @@ class CApiIntegratorManager extends AApiManager
 	 * @param string $sHelpdeskTenantHash Default value is empty string.
 	 * @param string $sUserId Default value is empty string.
 	 *
-	 * @throws \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter) 103
+	 * @throws \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter) 103
 	 *
 	 * @return CUser|bool
 	 */
@@ -1592,7 +1592,7 @@ class CApiIntegratorManager extends AApiManager
 //		$iIdTenant = $oApiTenant->getTenantIdByName($sTenantHash);
 //		if (!is_int($iIdTenant))
 //		{
-//			throw new \System\Exceptions\ClientException(\System\Notifications::InvalidInputParameter);
+//			throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter);
 //		}
 ////		$oApiHelpdeskManager = CApi::Manager('helpdesk'); // TODO:
 //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
