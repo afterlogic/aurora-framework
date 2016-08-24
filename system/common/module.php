@@ -777,6 +777,11 @@ abstract class AApiModule
 		return isset($this->aEntries[$sName]);
 	}
 	
+	public function HasEntryCallback($mCallbak)
+	{
+		return in_array($mCallbak, array_values($this->aEntries));
+	}
+
 	public function GetEntry($sName)
 	{
 		$mResult = false;
@@ -1177,7 +1182,7 @@ abstract class AApiModule
 	public function ExecuteMethod($sMethodName, $aArguments = array(), $bReflection = false)
 	{
 		$mResult = false;
-		if (method_exists($this, $sMethodName))
+		if (method_exists($this, $sMethodName) && !$this->HasEntryCallback($sMethodName))
 		{
 			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
