@@ -144,6 +144,11 @@ class CApiModuleManager
 		return $mResult;
 	}
 
+    public function getEvents($sModule) 
+	{
+		return $this->_aEventSubscriptions;
+	}	
+	
     /**
      * Subscribe to an event.
      *
@@ -634,6 +639,29 @@ abstract class AApiModule
 		return $bResult;
 	}	
 	
+	public function isEventCallback($sMethod)
+	{
+		return in_array($sMethod, $this->getEventsCallbacks());
+	}
+	
+	public function getEventsCallbacks()
+	{
+		$aEventsValues = array();
+		$aEvents = \CApi::GetModuleManager()->getEvents($this->GetName());
+		foreach(array_values($aEvents) as $aEvent)
+		{
+			foreach ($aEvent as $aEv)
+			{
+				if ($aEv[0]->GetName() === $this->GetName())
+				{
+					$aEventsValues[] = $aEv[1];
+				}
+			}
+		}
+		
+		return $aEventsValues;
+	}
+
 	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
 		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
@@ -777,7 +805,7 @@ abstract class AApiModule
 		return isset($this->aEntries[$sName]);
 	}
 	
-	public function HasEntryCallback($mCallbak)
+	public function IsEntryCallback($mCallbak)
 	{
 		return in_array($mCallbak, array_values($this->aEntries));
 	}
@@ -836,7 +864,7 @@ abstract class AApiModule
 					{
 						if (!\CApi::getAuthenticatedUserId($sAuthToken))
 						{
-							throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
+//							throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
 						}
 					}
 					
@@ -1183,9 +1211,8 @@ abstract class AApiModule
 	{
 		$mResult = false;
 		
-		;
-		
-		if (method_exists($this, $sMethodName) && !($bApi && $this->HasEntryCallback($sMethodName)))
+		if (method_exists($this, $sMethodName) && 
+				!($bApi && ($sMethodName !== 'init' || $this->IsEntryCallback($sMethodName) || $this->getEventsCallbacks())))
 		{
 			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
