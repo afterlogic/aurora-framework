@@ -800,7 +800,7 @@ abstract class AApiModule
 		
 		if ($mMethod) 
 		{
-			$mResult = $this->ExecuteMethod($mMethod, array(), true);
+			$mResult = $this->ExecuteMethod($mMethod, array());
 		}			
 		
 		return $mResult;
@@ -1179,16 +1179,19 @@ abstract class AApiModule
 		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams);
 	}	
 	
-	public function ExecuteMethod($sMethodName, $aArguments = array(), $bReflection = false)
+	public function ExecuteMethod($sMethodName, $aArguments = array(), $bApi = false)
 	{
 		$mResult = false;
-		if (method_exists($this, $sMethodName) && !$this->HasEntryCallback($sMethodName))
+		
+		;
+		
+		if (method_exists($this, $sMethodName) && !($bApi && $this->HasEntryCallback($sMethodName)))
 		{
 			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
-			$aValues = array();
+			$aValues = $aArguments;
 
-			if ($bReflection)
+			if ($bApi)
 			{
 				$oReflector = new \ReflectionMethod($this, $sMethodName);
 				foreach ($oReflector->getParameters() as $oParam) 
@@ -1205,10 +1208,6 @@ abstract class AApiModule
 							$aArguments[$sParamName] : $oParam->getDefaultValue();
 					}		
 				}
-			}
-			else
-			{
-				$aValues = $aArguments;
 			}
 			
 			$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
