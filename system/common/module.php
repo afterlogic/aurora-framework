@@ -1211,8 +1211,10 @@ abstract class AApiModule
 	{
 		$mResult = false;
 		
-		if (method_exists($this, $sMethodName) && 
-				!($bApi && ($sMethodName !== 'init' || $this->IsEntryCallback($sMethodName) || $this->getEventsCallbacks())))
+		$b = method_exists($this, $sMethodName);
+		
+		if (method_exists($this, $sMethodName) &&  !($bApi && 
+				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
 		{
 			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
