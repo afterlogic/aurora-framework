@@ -510,13 +510,6 @@ abstract class AApiModule
      */	
 	protected $aRequireModules = array();
 	
-    /**
-     *
-     * @var array
-     */
-	protected $aNonAuthorizedMethods = array();
-	
-	
 	/**
 	 * @param string $sVersion
 	 */
@@ -584,11 +577,6 @@ abstract class AApiModule
 	
 	public function init() {}
 	
-	protected function setNonAuthorizedMethods($aMethods)
-	{
-		$this->aNonAuthorizedMethods = $aMethods;
-	}
-
 	public function loadModuleConfig()
 	{
 		$this->oModuleSettings = new \CApiBasicSettings(
@@ -851,7 +839,7 @@ abstract class AApiModule
 				\CApi::Log('Module: '. $sModule);
 				\CApi::Log('Method: '. $sMethod);
 
-				if (strtolower($sModule) !== 'core' && strtolower($sMethod) !== 'SystemGetAppData' &&
+				if (strtolower($sModule) !== 'core' && 
 					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\System\Service::validateToken()) {
 					
 					throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
@@ -859,14 +847,6 @@ abstract class AApiModule
 					
 					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
-					
-					if (!$this->CheckNonAuthorizedMethodAllowed($sMethod))
-					{
-						if (!\CApi::getAuthenticatedUserId($sAuthToken))
-						{
-//							throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
-						}
-					}
 					
 					$sTenantName = $this->oHttp->GetPost('TenantName', '');
 					
@@ -1247,11 +1227,6 @@ abstract class AApiModule
 		}
 				
 		return $mResult;
-	}
-	
-	public function CheckNonAuthorizedMethodAllowed($sMethodName = '')
-	{
-		return !!in_array($sMethodName, $this->aNonAuthorizedMethods);
 	}
 	
 	public function GetAppData()
