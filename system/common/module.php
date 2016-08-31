@@ -995,6 +995,7 @@ abstract class AApiModule
 				$sRawKey = empty($aPaths[3]) ? '' : $aPaths[3];
 				$aParameters = CApi::DecodeKeyValues($sRawKey);				
 				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
+				$aParameters['SharedHash'] = empty($aPaths[5]) ? '' : $aPaths[5];
 
 				$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
 			}
