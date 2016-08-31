@@ -1124,22 +1124,29 @@ abstract class AApiModule
 	 *
 	 * @return array
 	 */
-	public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null)
+	public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null, $sModule = null)
 	{
 		$aResponseItem = $this->DefaultResponse($sMethod, false);
 
-		if (null !== $iErrorCode) {
-			
+		if (null !== $iErrorCode) 
+		{
 			$aResponseItem['ErrorCode'] = (int) $iErrorCode;
-			if (null !== $sErrorMessage) {
+			if (null !== $sErrorMessage) 
+			{
 				
 				$aResponseItem['ErrorMessage'] = null === $sErrorMessage ? '' : (string) $sErrorMessage;
 			}
 		}
 
-		if (is_array($aAdditionalParams)) {
-			
-			foreach ($aAdditionalParams as $sKey => $mValue) {
+		if (null !== $sModule) 
+		{
+			$aResponseItem['Module'] = $sModule;
+		}
+
+		if (is_array($aAdditionalParams)) 
+		{			
+			foreach ($aAdditionalParams as $sKey => $mValue) 
+			{
 				$aResponseItem[$sKey] = $mValue;
 			}
 		}
@@ -1158,72 +1165,100 @@ abstract class AApiModule
 	{
 		$iErrorCode = null;
 		$sErrorMessage = null;
+		$sModule = '';
 
 		$bShowError = \CApi::GetConf('labs.webmail.display-server-error-information', false);
 
-		if ($oException instanceof \System\Exceptions\AuroraApiException) {
+		if ($oException instanceof \System\Exceptions\AuroraApiException) 
+		{
 			$iErrorCode = $oException->getCode();
 			$sErrorMessage = null;
-			if ($bShowError) {
+			if ($bShowError) 
+			{
 				$sErrorMessage = $oException->getMessage();
-				if (empty($sErrorMessage) || 'AuroraApiException' === $sErrorMessage) {
+				if (empty($sErrorMessage) || 'AuroraApiException' === $sErrorMessage) 
+				{
 					$sErrorMessage = null;
 				}
 			}
+			$oModule = $oException->GetModule();
+			if ($oModule)
+			{
+				$sModule = $oModule->GetName();
+			}
 		}
-		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) {
+		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
+		{
 			$iErrorCode = \System\Notifications::MailServerError;
 			
 			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
-			if ($oResponse instanceof \MailSo\Imap\Response) {
+			if ($oResponse instanceof \MailSo\Imap\Response) 
+			{
 				$sErrorMessage = $oResponse instanceof \MailSo\Imap\Response ?
 					$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : null;
 			}
-		} else {
+		} 
+		else 
+		{
 			$iErrorCode = \System\Notifications::UnknownError;
 //			$sErrorMessage = $oException->getCode().' - '.$oException->getMessage();
 		}
 
-		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams);
+		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
 	}	
 	
 	public function ExecuteMethod($sMethodName, $aArguments = array(), $bApi = false)
 	{
 		$mResult = false;
-		
-		$b = method_exists($this, $sMethodName);
-		
-		if (method_exists($this, $sMethodName) &&  !($bApi && 
-				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
+		try 
 		{
-			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
-
-			$aValues = $aArguments;
-
-			if ($bApi)
+			if (method_exists($this, $sMethodName) &&  !($bApi && 
+					($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
 			{
-				$oReflector = new \ReflectionMethod($this, $sMethodName);
-				foreach ($oReflector->getParameters() as $oParam) 
-				{
-					$sParamName = $oParam->getName();
-					$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
-					if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
-					{
-						$aValues[$oParam->getPosition()] = null;
-					}
-					else
-					{
-						$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? 
-							$aArguments[$sParamName] : $oParam->getDefaultValue();
-					}		
-				}
-			}
-			
-			$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
+				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
-			$aArguments['@Result'] = $mResult;
-			$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'after', array(&$aArguments));
-			$mResult = $aArguments['@Result'];
+				$aValues = array();
+
+				if ($bApi)
+				{
+					$oReflector = new \ReflectionMethod($this, $sMethodName);
+					foreach ($oReflector->getParameters() as $oParam) 
+					{
+						$sParamName = $oParam->getName();
+						$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
+						if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
+						{
+							$aValues[$oParam->getPosition()] = null;
+						}
+						else
+						{
+							$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? 
+								$aArguments[$sParamName] : $oParam->getDefaultValue();
+						}		
+					}
+				}
+				else
+				{
+					$aValues = $aArguments;
+				}
+
+				$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
+
+				$aArguments['@Result'] = $mResult;
+				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'after', array(&$aArguments));
+				$mResult = $aArguments['@Result'];
+			}
+		}
+		catch (\Exception $oException)
+		{
+			if (!($oException instanceof \System\Exceptions\AuroraApiException))
+			{
+				throw new \System\Exceptions\Exception($oException->getMessage(), $oException->getCode(), $oException);
+			}
+			else
+			{
+				throw $oException;
+			}
 		}
 				
 		return $mResult;

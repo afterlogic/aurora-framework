@@ -15,14 +15,21 @@ class AuroraApiException extends Exception
 	 */
 	protected $aObjectParams;
 
+	
+	/**
+	 * @var \AApiModule
+	 */
+	protected $oModule;
+	
 	/**
 	 * @param type $iCode
 	 * @param type $oPrevious
 	 * @param type $sMessage
 	 */
-	public function __construct($iCode, $oPrevious = null, $sMessage = '', $aObjectParams = array())
+	public function __construct($iCode, $oPrevious = null, $sMessage = '', $aObjectParams = array(), $oModule = null)
 	{
 		$this->aObjectParams = $aObjectParams;
+		$this->oModule = $oModule;
 		parent::__construct('' === $sMessage ? 'AuroraApiException' : $sMessage, $iCode, $oPrevious);
 	}
 	
@@ -32,5 +39,13 @@ class AuroraApiException extends Exception
 	public function GetObjectParams()
 	{
 		return $this->aObjectParams;
+	}	
+	
+	/**
+	 * @return \AApiModule
+	 */
+	public function GetModule()
+	{
+		return $this->oModule;
 	}	
 }
