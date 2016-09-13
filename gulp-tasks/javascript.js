@@ -25,7 +25,7 @@ var
 // });
 
 function GetModuleName(sFilePath) {
-    return sFilePath.replace(/.*modules\\(.*?)\\js.*/, "$1");
+    return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
 }
 
 var 
