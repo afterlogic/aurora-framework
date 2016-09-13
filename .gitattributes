@@ -1,0 +1,10 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+*.php text eol=crlf
+*.js text eol=crlf
+*.ini text eol=crlf
+*.json text eol=crlf
+*.html text eol=crlf
+*.less text eol=crlf
+*.gitattributes text eol=crlf
