@@ -124,7 +124,7 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
             "\t" + ";" + crlf +
             "\t" + "if (!bSwitchingToMobile)" + crlf +
             "\t" + "{" + crlf +
-            "\t\t" + "ModulesManager.init(oAvaliableModules, App.getUserRole(), App.isPublic());" + crlf +
+            "\t\t" + "ModulesManager.init(oAvaliableModules);" + crlf +
             "\t\t" + "App.init();" + crlf +
             "\t" + "}" + crlf +
             "});" + crlf
