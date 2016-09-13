@@ -1917,15 +1917,7 @@ class api_Utils
 	public static function GetLinkType($sLink)
 	{
 		$iResult = \EFileStorageLinkType::Unknown;
-		if (false !== strpos($sLink, 'drive.google.com'))
-		{
-			$iResult = \EFileStorageLinkType::GoogleDrive;
-		}
-		else if (false !== strpos($sLink, 'dl.dropboxusercontent.com') || false !== strpos($sLink, 'dropbox.com'))
-		{
-			$iResult = \EFileStorageLinkType::DropBox;
-		}
-		else if (preg_match('/(youtube.com|youtu.be|vimeo.com|soundcloud.com)/i', $sLink))
+		if (preg_match('/(youtube.com|youtu.be|vimeo.com|soundcloud.com)/i', $sLink))
 		{
 			$oInfo = \api_Utils::GetOembedFileInfo($sLink);
 			if ($oInfo)

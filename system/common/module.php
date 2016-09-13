@@ -205,9 +205,8 @@ class CApiModuleManager
 			if (is_callable($fCallback))
 			{
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
-				$result = call_user_func_array($fCallback, $aArguments);
-				if ($result === false) {
-					$bResult = false;
+				$bBreak = call_user_func_array($fCallback, $aArguments);
+				if ($bBreak === true) {
 					break;
 				}
 			}
