@@ -1,5 +1,6 @@
 var
-	_ = require('underscore')
+	_ = require('underscore'),
+	fs = require('fs')
 ;
 
 module.exports = {
@@ -19,8 +20,20 @@ module.exports = {
 
 	getModules: function ()
 	{
-		var sModules = this.getParameter('--modules');
-
-		return _.union(['CoreWebclient'], sModules.split(','));
+		var 
+			aModules = [],
+			sModules = this.getParameter('--modules')
+		;
+		
+		if (sModules)
+		{
+			aModules = _.union(['CoreWebclient'], _.compact(sModules.split(',')));
+		}
+		else
+		{
+			aModules = fs.readdirSync('modules/');
+		}
+		
+		return aModules;
 	}
 };

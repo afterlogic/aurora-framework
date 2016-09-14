@@ -6,7 +6,6 @@ var
     gutil = require('gulp-util'),
     concat = require('gulp-concat-util'),
     plumber = require('gulp-plumber'),
-    fs = require('fs'),
     gulpWebpack = require('webpack-stream'),
     path = require('path'),
 
