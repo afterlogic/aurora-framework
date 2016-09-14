@@ -85,19 +85,19 @@ class CCompatibilityStep extends AInstallerStep
 		$this->aCompatibility['data.dir.delete'] =
 			(int) @rmdir($this->aCompatibility['data.dir'].'/'.$sTempPathName);
 
-		include_once PSEVEN_APP_ROOT_PATH.'system/common/settings.php';
-		$this->aCompatibility['settings.file'] = $this->aCompatibility['data.dir'].DIRECTORY_SEPARATOR.'settings'.DIRECTORY_SEPARATOR.\CApiSettings::JSON_FILE_NAME;
+		// include_once PSEVEN_APP_ROOT_PATH.'system/common/settings.php';
+		// $this->aCompatibility['settings.file'] = $this->aCompatibility['data.dir'].DIRECTORY_SEPARATOR.'settings'.DIRECTORY_SEPARATOR.\CApiSettings::JSON_FILE_NAME;
 		
 //		if (!@file_exists($this->aCompatibility['settings.file']))
 //		{
 //			$oSettings = new \CApiSettings($this->aCompatibility['data.dir']);
 //		}
 		
-		$this->aCompatibility['settings.file.exist'] = (int) @file_exists($this->aCompatibility['settings.file']);
-		$this->aCompatibility['settings.file.read'] = (int) @is_readable($this->aCompatibility['settings.file']);
-		$this->aCompatibility['settings.file.write'] = (int) @is_writable($this->aCompatibility['settings.file']);
+		// $this->aCompatibility['settings.file.exist'] = (int) @file_exists($this->aCompatibility['settings.file']);
+		// $this->aCompatibility['settings.file.read'] = (int) @is_readable($this->aCompatibility['settings.file']);
+		// $this->aCompatibility['settings.file.write'] = (int) @is_writable($this->aCompatibility['settings.file']);
 		
-		$this->aCompatibility['composer.file.exist'] = (int) @file_exists(WM_INSTALLER_PATH.'../composer.phar');
+		// $this->aCompatibility['composer.file.exist'] = (int) @file_exists(WM_INSTALLER_PATH.'../composer.phar');
 	
 		$this->aCompatibility['compatibility'] = (int)
 			$this->aCompatibility['php.version.valid'] &&
@@ -114,11 +114,11 @@ class CCompatibilityStep extends AInstallerStep
 			$this->aCompatibility['data.dir.create'] &&
 			$this->aCompatibility['data.file.create'] &&
 			$this->aCompatibility['data.file.delete'] &&
-			$this->aCompatibility['data.dir.delete'] &&
-			$this->aCompatibility['settings.file.exist'] &&
-			$this->aCompatibility['settings.file.read'] &&
-			$this->aCompatibility['settings.file.write'] &&
-			$this->aCompatibility['composer.file.exist'];
+			$this->aCompatibility['data.dir.delete'];
+			// $this->aCompatibility['settings.file.exist'] &&
+			// $this->aCompatibility['settings.file.read'] &&
+			// $this->aCompatibility['settings.file.write'] &&
+			// $this->aCompatibility['composer.file.exist'];
 	}
 
 	function TemplateValues()
@@ -227,23 +227,23 @@ You need to grant read/write permission over data folder and all its contents to
 For instructions, please refer to this section of documentation and our
 <a href="http://www.afterlogic.com/support/faq-webmail-pro-php#3.1" target="_blank">FAQ</a>.'),
 			
-			'WebMailSettingsFile' => ($this->aCompatibility['settings.file.exist'])
-				? $this->getSuccessHtmlValue('Found')
-				: $this->getErrorHtmlValue('Not Found, can\'t find "'.$this->aCompatibility['settings.file'].'" file.', '
-Make sure you completely copied the data folder with all its contents from installation package.
-By default, the data folder is webmail subfolder, and if it\'s not the case make sure its location matches one specified in inc_settings_path.php file.'),
+			// 'WebMailSettingsFile' => ($this->aCompatibility['settings.file.exist'])
+				// ? $this->getSuccessHtmlValue('Found')
+				// : $this->getErrorHtmlValue('Not Found, can\'t find "'.$this->aCompatibility['settings.file'].'" file.', '
+// Make sure you completely copied the data folder with all its contents from installation package.
+// By default, the data folder is webmail subfolder, and if it\'s not the case make sure its location matches one specified in inc_settings_path.php file.'),
 			
-			'ReadWriteSettingsFile' => ($this->aCompatibility['settings.file.read'] && $this->aCompatibility['settings.file.write'])
-				? $this->getSuccessHtmlValue('OK / OK')
-				: $this->getErrorHtmlValue('Not Found, can\'t find "'.$this->aCompatibility['settings.file'].'" file.', '
-You should grant read/write permission over settings file to your web server user.
-For instructions, please refer to this section of documentation and our
-<a href="http://www.afterlogic.com/support/faq-webmail-pro-php#3.1" target="_blank">FAQ</a>.'),
+			// 'ReadWriteSettingsFile' => ($this->aCompatibility['settings.file.read'] && $this->aCompatibility['settings.file.write'])
+				// ? $this->getSuccessHtmlValue('OK / OK')
+				// : $this->getErrorHtmlValue('Not Found, can\'t find "'.$this->aCompatibility['settings.file'].'" file.', '
+// You should grant read/write permission over settings file to your web server user.
+// For instructions, please refer to this section of documentation and our
+// <a href="http://www.afterlogic.com/support/faq-webmail-pro-php#3.1" target="_blank">FAQ</a>.'),
 			
-			'ComposerFile' => ($this->aCompatibility['composer.file.exist'])
-				? $this->getSuccessHtmlValue('Found')
-				: $this->getErrorHtmlValue('Not Found, can\'t find Composer file.', '
-Make sure composer.phar exists in root directory. Note, you can get it at official page: <a href="https://getcomposer.org/composer.phar" target="_blank">https://getcomposer.org/composer.phar</a>'),
+			// 'ComposerFile' => ($this->aCompatibility['composer.file.exist'])
+				// ? $this->getSuccessHtmlValue('Found')
+				// : $this->getErrorHtmlValue('Not Found, can\'t find Composer file.', '
+// Make sure composer.phar exists in root directory. Note, you can get it at official page: <a href="https://getcomposer.org/composer.phar" target="_blank">https://getcomposer.org/composer.phar</a>'),
 
 			'Result' => ($this->aCompatibility['compatibility']) ?
 					'The current server environment meets all the requirements. Click Next to proceed.' :

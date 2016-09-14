@@ -26,13 +26,13 @@ class CInstaller
 	 */
 	var $_aSteps = array(
 		'compatibility' => 'Compatibility Test',
-		'libraries' => 'Install libraries',
-		'modules' => 'Install modules',
+		// 'libraries' => 'Install libraries',
+		// 'modules' => 'Install modules',
 		'license' => 'License Agreement',
 //		'license-key' => 'License Key',
-//		'db' => 'Database Settings',
-//		'dav' => 'Mobile Settings',
-//		'admin-panel' => 'Admin Panel Settings',
+		'db' => 'Database Settings',
+		'dav' => 'Mobile Settings',
+		'admin-panel' => 'Admin Panel Settings',
 //		'email-server-test' => 'E-mail Server Test',
 		'completed' => 'Completed'
 	);
@@ -61,13 +61,13 @@ class CInstaller
 		$this->_aTemplateCache = array();
 		$this->_aMenu = array(
 			'compatibility',
-			'libraries',
-			'modules',
+			// 'libraries',
+			// 'modules',
 			'license',
 //			'license-key',
-//			'db',
-//			'dav',
-//			'admin-panel',
+			'db',
+			'dav',
+			'admin-panel',
 //			'email-server-test',
 			'completed'
 		);
