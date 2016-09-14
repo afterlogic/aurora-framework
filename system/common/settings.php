@@ -306,8 +306,8 @@ class CApiSettings extends CApiBasicSettings
 			'LicenseKey' => array('', 'string',
 				'License key is supplied here.'),
 
-			'AdminLogin' => array('mailadm', 'string'),
-			'AdminPassword' => array('827ccb0eea8a706c4c34a16891f84e7b', 'string'),
+			'AdminLogin' => array('superadmin', 'string'),
+			'AdminPassword' => array('', 'string'),
 
 			'DBType' => array(EDbType::MySQL, 'spec', 'EDbType'),
 			'DBPrefix' => array('au_', 'string'),
