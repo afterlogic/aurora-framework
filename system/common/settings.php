@@ -104,7 +104,7 @@ class CApiBasicSettings
 					$mValue = (bool) $mValue;
 					break;
 				case 'spec':
-					$mValue = $this->specValidate($sKey, $mValue, isset($aType[2]) ? $aType[2] : null);
+					$mValue = $this->specValidate($mValue, isset($aType[2]) ? $aType[2] : null);
 					break;
 				case 'array':
 					$mValue = $mValue;
