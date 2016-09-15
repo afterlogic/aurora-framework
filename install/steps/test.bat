@@ -1,1 +1,0 @@
-f:\web\modules\php\PHP-5.6-x64\php-cgi.exe F:\web\domains\project8.dev/composer.phar update -n -d "F:\web\domains\project8.dev/"
