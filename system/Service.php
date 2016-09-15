@@ -167,7 +167,8 @@ class Service
 	public function Handle()
 	{
 		$mResult = '';
-
+		$bError = false;
+		
 		$this->GetVersion();
 		$this->CheckApi();
 		$this->RedirectToHttps();
@@ -188,22 +189,26 @@ class Service
 				else 
 				{
 					$mResult = '\'' . $sEntry . '\' entry not found in \'' . $oModule->GetName() . '\' module.';
+					$bError = true;
 				}
 			}
 			else
 			{
 				$aModules = $this->oModuleManager->GetModulesByEntry($sEntry);
 			}
-			if (count($aModules) > 0)
+			if (!$bError)
 			{
-				foreach ($aModules as $oModule)
+				if (count($aModules) > 0)
 				{
-					$mResult .= $oModule->RunEntry($sEntry);
+					foreach ($aModules as $oModule)
+					{
+						$mResult .= $oModule->RunEntry($sEntry);
+					}
 				}
-			}
-			else 
-			{
-				$mResult = $this->generateHTML();	
+				else 
+				{
+					$mResult = $this->generateHTML();	
+				}
 			}
 		} 
 		else 
