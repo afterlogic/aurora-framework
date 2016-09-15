@@ -1264,6 +1264,11 @@ abstract class AApiModule
 		return $mResult;
 	}
 	
+	/**
+	 * Obtaines list of module settings for authenticated user.
+	 * 
+	 * @return array
+	 */
 	public function GetAppData()
 	{
 		return null;
