@@ -1,6 +1,6 @@
 {
 	"config": {
-		"github-protocols": ["https", "ssh"]
+		"github-protocols": ["https"]
 	},
 	"repositories": [
     ],	
