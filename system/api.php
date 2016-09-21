@@ -1204,6 +1204,23 @@ class CApi
 		}
 	}
 	
+	public static function getAutToken()
+	{
+		$oHttp = \MailSo\Base\Http::SingletonInstance();
+		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
+		if (empty($sAuthToken))
+		{
+			$sAuthToken = $oHttp->GetPost('AuthToken', '');
+		}
+		
+		return $sAuthToken;
+	}		
+	
+	public static function authorise()
+	{
+		return \CApi::getAuthenticatedUserId(\CApi::getAutToken());
+	}	
+	
 	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;

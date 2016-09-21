@@ -62,6 +62,8 @@ class CApiModuleManager
 		$oCoreModule = $this->loadModule('Core', $sModulesPath);
 		if ($oCoreModule !== false)
 		{
+			\CApi::authorise();
+			
 			$oCoreModule->initialize();
 			$sTenant = $oCoreModule->GetTenantName();
 			$aModulePath = array(
@@ -334,7 +336,7 @@ class CApiModuleManager
 	public function GetModuleFromRequest()
 	{
 		$sModule = '';
-		$oHttp = \MailSo\Base\Http::NewInstance();
+		$oHttp = \MailSo\Base\Http::SingletonInstance();
 		if ($oHttp->IsPost()) 
 		{
 			$sModule = $oHttp->GetPost('Module', null);
@@ -501,7 +503,7 @@ abstract class AApiModule
 	/**
 	 * @var \MailSo\Base\Http
 	 */
-	protected $oHttp;	
+	public $oHttp;	
 	
 	/**
 	 * @var array
@@ -549,7 +551,7 @@ abstract class AApiModule
 		$this->sPath = $sPath.$sName;
 		$this->aParameters = array();
 		$this->oApiCapabilityManager = \CApi::GetSystemManager('capability');
-		$this->oHttp = \MailSo\Base\Http::NewInstance();
+		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
 		
 		$this->aEntries = array(
 			'api' => 'EntryApi',
@@ -826,7 +828,7 @@ abstract class AApiModule
 		return in_array($mCallbak, array_values($this->aEntries));
 	}
 
-	public function GetEntry($sName)
+	public function GetEntryCallback($sName)
 	{
 		$mResult = false;
 		if (isset($this->aEntries[$sName])) 
@@ -840,7 +842,7 @@ abstract class AApiModule
 	public function RunEntry($sName)
 	{
 		$mResult = false;
-		$mMethod = $this->GetEntry($sName);
+		$mMethod = $this->GetEntryCallback($sName);
 		
 		if ($mMethod) 
 		{
@@ -857,8 +859,8 @@ abstract class AApiModule
 		$aResponseItem = null;
 		$sModule = $this->oHttp->GetPost('Module', null);
 
-		if (strtolower($sModule) === strtolower($this->GetName())) {
-			
+		if (strtolower($sModule) === strtolower($this->GetName())) 
+		{
 			$sMethod = $this->oHttp->GetPost('Method', null);
 			$sParameters = $this->oHttp->GetPost('Parameters', null);
 			try
@@ -868,11 +870,12 @@ abstract class AApiModule
 				\CApi::Log('Method: '. $sMethod);
 
 				if (strtolower($sModule) !== 'core' && 
-					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\System\Service::validateToken()) {
-					
+					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\System\Service::validateToken()) 
+				{
 					throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
-				} else if (!empty($sModule) && !empty($sMethod)) {
-					
+				} 
+				else if (!empty($sModule) && !empty($sMethod)) 
+				{
 					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
 					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
 					
@@ -889,8 +892,8 @@ abstract class AApiModule
 					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
 				}
 
-				if (!is_array($aResponseItem)) {
-					
+				if (!is_array($aResponseItem)) 
+				{
 					throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
 				}
 			}
@@ -907,8 +910,8 @@ abstract class AApiModule
 				\CApi::LogException($oException);
 
 				$aAdditionalParams = null;
-				if ($oException instanceof \System\Exceptions\AuroraApiException) {
-					
+				if ($oException instanceof \System\Exceptions\AuroraApiException) 
+				{
 					$aAdditionalParams = $oException->GetObjectParams();
 				}
 
@@ -916,8 +919,6 @@ abstract class AApiModule
 			}
 
 			@header('Content-Type: application/json; charset=utf-8');
-
-			\CApi::Plugin()->RunHook('api.response-result', array($sMethod, &$aResponseItem));
 		}
 
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
