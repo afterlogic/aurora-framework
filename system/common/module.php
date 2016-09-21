@@ -184,10 +184,12 @@ class CApiModuleManager
      */
     public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
 	{
-        if (!isset($this->_aEventSubscriptions[$sEvent])) {
+        if (!isset($this->_aEventSubscriptions[$sEvent])) 
+		{
             $this->_aEventSubscriptions[$sEvent] = array();
         }
-        while(isset($this->_aEventSubscriptions[$sEvent][$iPriority]))	{
+        while(isset($this->_aEventSubscriptions[$sEvent][$iPriority]))	
+		{
 			$iPriority++;
 		}
         $this->_aEventSubscriptions[$sEvent][$iPriority] = $fCallback;
@@ -211,19 +213,29 @@ class CApiModuleManager
 		
 		$bResult = true;
 		$aEventSubscriptions = array();
-		if (isset($this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) {
-			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]);
+		if (isset($this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) 
+		{
+			$aEventSubscriptions = array_merge(
+					$aEventSubscriptions, 
+					$this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]
+			);
 		}
-		if (isset($this->_aEventSubscriptions[$sEvent])) {
-			$aEventSubscriptions = array_merge($aEventSubscriptions, $this->_aEventSubscriptions[$sEvent]);
+		if (isset($this->_aEventSubscriptions[$sEvent])) 
+		{
+			$aEventSubscriptions = array_merge(
+					$aEventSubscriptions, 
+					$this->_aEventSubscriptions[$sEvent]
+			);
         }
 		
-		foreach($aEventSubscriptions as $fCallback) {
+		foreach($aEventSubscriptions as $fCallback) 
+		{
 			if (is_callable($fCallback))
 			{
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
 				$bBreak = call_user_func_array($fCallback, $aArguments);
-				if ($bBreak === true) {
+				if ($bBreak) 
+				{
 					break;
 				}
 			}

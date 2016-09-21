@@ -43,7 +43,8 @@
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-standard-login-form"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-standard-register-form"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-twilio"},
-		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-eav-object-viewer"}
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-eav-object-viewer"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-oembed-files"}
     ],
 	"require": {
 			"afterlogic/aurora-module-admin-auth": "dev-master",
@@ -89,6 +90,7 @@
 			"afterlogic/aurora-module-webclient-standard-login-form": "dev-master",
 			"afterlogic/aurora-module-webclient-standard-register-form": "dev-master",
 			"afterlogic/aurora-module-twilio": "dev-master",
-			"afterlogic/aurora-module-eav-object-viewer": "dev-master"
+			"afterlogic/aurora-module-eav-object-viewer": "dev-master",
+			"afterlogic/aurora-module-oembed-files": "dev-master"
 	}
 }
