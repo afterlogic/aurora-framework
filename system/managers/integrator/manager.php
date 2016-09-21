@@ -1556,7 +1556,9 @@ class CApiIntegratorManager extends AApiManager
 			$this->clearLastErrorCode();
 		}
 
+		// AuthToken reads from coockie for HTML
 		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
+		
 		$oUser = \CApi::getAuthenticatedUser($sAuthToken);
 
 		$aModules = \CApi::GetModules();
