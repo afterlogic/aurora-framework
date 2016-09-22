@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#git pull
+git pull
 
 cd ../modules
 
@@ -8,7 +8,7 @@ for dir in $(find . -name ".git");
 do
     cd ${dir%/*} > /dev/null;
     #echo ${dir%/*};
-    #git pull;
+    git pull;
     cd -  > /dev/null;
 done
 
