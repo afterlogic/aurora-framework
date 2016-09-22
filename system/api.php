@@ -1203,7 +1203,7 @@ class CApi
 			throw new \System\Exceptions\AuroraApiException(\System\Notifications::AccessDenied);
 		}
 	}
-	
+
 	public static function getAutToken()
 	{
 		$oHttp = \MailSo\Base\Http::SingletonInstance();
@@ -1216,6 +1216,20 @@ class CApi
 		return $sAuthToken;
 	}		
 	
+	public static function validateAutToken()
+	{
+		$bResult = true;
+		if (isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]))
+		{
+			$oHttp = \MailSo\Base\Http::SingletonInstance();
+			$sAuthToken = $oHttp->GetPost('AuthToken', '');
+
+			$bResult = ($sAuthToken === $_COOKIE[\System\Service::AUTH_TOKEN_KEY]);
+		}
+		
+		return $bResult;
+	}		
+
 	public static function authorise()
 	{
 		return \CApi::getAuthenticatedUserId(\CApi::getAutToken());

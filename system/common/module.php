@@ -870,15 +870,13 @@ abstract class AApiModule
 				\CApi::Log('Method: '. $sMethod);
 
 				if (strtolower($sModule) !== 'core' && 
-					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\System\Service::validateToken()) 
+					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\CApi::validateAutToken()) 
 				{
 					throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
 				} 
 				else if (!empty($sModule) && !empty($sMethod)) 
 				{
 					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
-					$sAuthToken = $this->oHttp->GetPost('AuthToken', '');
-					
 					$sTenantName = $this->oHttp->GetPost('TenantName', '');
 					
 					\CApi::setTenantName($sTenantName);

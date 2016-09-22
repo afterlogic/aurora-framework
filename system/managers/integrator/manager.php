@@ -400,26 +400,6 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getCsrfToken()
-	{
-		static $sToken = null;
-		if (null === $sToken)
-		{
-			$sToken = !empty($_COOKIE[self::TOKEN_KEY]) ? $_COOKIE[self::TOKEN_KEY] : null;
-		}
-
-		if (null === $sToken)
-		{
-			$sToken = md5(rand(1000, 9999).CApi::$sSalt.microtime(true));
-			@setcookie(self::TOKEN_KEY, $sToken, time() + 60 * 60 * 24 * 30, $this->getCookiePath(), null, null, true);
-		}
-
-		return $sToken;
-	}
-
-	/**
 	 * @param int $iCode
 	 */
 	public function setLastErrorCode($iCode)
@@ -443,16 +423,6 @@ class CApiIntegratorManager extends AApiManager
 		}
 		
 		@setcookie(self::TOKEN_LAST_CODE, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
-	}
-
-	/**
-	 * @param string $sToken
-	 *
-	 * @return bool
-	 */
-	public function validateCsrfToken($sToken)
-	{
-		return isset($_COOKIE[self::TOKEN_KEY]) ? $sToken === $this->getCsrfToken() : true;
 	}
 
 	/**

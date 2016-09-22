@@ -53,16 +53,6 @@ class Service
 	{
 		return new self();
 	}
-
-	/**
-	 * @return bool
-	 */
-	public static function validateToken()
-	{
-		$oHttp = \MailSo\Base\Http::NewInstance();
-		$oIntegrator = \CApi::GetSystemManager('integrator');
-		return $oHttp->IsPost() ? $oIntegrator->validateCsrfToken($oHttp->GetPost('Token')) : true;
-	}
 	
 	public function GetVersion()
 	{
