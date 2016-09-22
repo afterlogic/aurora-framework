@@ -1515,7 +1515,8 @@ class CApiIntegratorManager extends AApiManager
 				'OutlookSyncPlugin32' => \CApi::GetConf('links.outlook-sync-plugin-32', ''),
 				'OutlookSyncPlugin64' => \CApi::GetConf('links.outlook-sync-plugin-64', ''),
 				'OutlookSyncPluginReadMore' => \CApi::GetConf('links.outlook-sync-read-more', '')
-			)
+			),
+			'TenantName' => \CApi::getTenantName()
 		);
 		
 		CApi::Plugin()->RunHook('api-pre-app-data', array(&$aAppData));
@@ -1717,29 +1718,29 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @return string
+	 * Indicates if rtl interface should be turned on.
+	 * 
+	 * @return bool
 	 */
-//	public function IsRtl($sAccessToken = '')
 	public function IsRtl()
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return \in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian'));
 	}
-
+	
 	/**
-	 * @param string $sHelpdeskHash Default value is empty string.
-	 * @param string $sCalendarPubHash Default value is empty string.
-	 * @param string $sFileStoragePubHash Default value is empty string.
+	 * Returns css links for building in html.
+	 * 
 	 * @return string
 	 */
-//	public function buildHeadersLink($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
 	public function buildHeadersLink()
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
 		$sTenantName = \CApi::getTenantName();
-
-		if ($sTenantName)
+		$oSettings =& CApi::GetSettings();
+		
+		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
 		{
 			$sS =
 '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
@@ -1752,70 +1753,18 @@ class CApiIntegratorManager extends AApiManager
 '<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
 		}
 		
-//		if (!empty($sHelpdeskHash))
-//		{
-//			$oApiTenant = /* @var $oApiTenant CApiTenantsManager */ CApi::GetCoreManager('tenants');
-//
-//			$oTenant = $oApiTenant->getTenantByHash($sHelpdeskHash);
-//			if (!$oTenant)
-//			{
-//				$oTenant = $oApiTenant->getDefaultGlobalTenant();
-//			}
-//
-//			if ($oTenant && $oTenant->HelpdeskStyleAllow)
-//			{
-//				$sS .= '<style>'.strip_tags($oTenant->getHelpdeskStyleText()).'</style>';
-//			}
-//		}
-//		else if (empty($sCalendarPubHash) && empty($sFileStoragePubHash))
-//		{
-//			$sS .= '<style>'.\CApi::Plugin()->CompileCss().'</style>';
-//		}
 		return $sS;
 	}
-
+	
 	/**
-	 * @param string $sHelpdeskHash Default value is empty string.
-	 * @param string $sCalendarPubHash Default value is empty string.
-	 * @param string $sFileStoragePubHash Default value is empty string.
-	 *
+	 * Returns css links for building in html.
+	 * 
+	 * @param string $sModuleHash
 	 * @return string
 	 */
-//	public function buildBody($sAccessToken = '', $sHelpdeskHash = '', $sCalendarPubHash = '', $sFileStoragePubHash = '')
-	public function buildBody($sModuleHash = '')
+	public function getJsLinks($sModuleHash)
 	{
 		$sPostfix = '';
-//		$oHttp = \MailSo\Base\Http::NewInstance();
-//		$sMessageNewtab = $oHttp->GetQuery('message-newtab');
-//		$sAdminPanel = $oHttp->GetQuery('adminpanel');
-		
-//		$bMobile = \CApi::IsMobileApplication();
-//		$bHelpdesk = !empty($sHelpdeskHash); 		
-//		if (isset($sAdminPanel))
-//		{
-//			$sPostfix = '-adminpanel';
-//		} 
-//		else if ($bMobile && !$bHelpdesk)
-//		{
-//			$sPostfix = '-mobile';
-//		}
-//		else if (isset($sMessageNewtab))
-//		{
-//			$sPostfix = '-message-newtab';
-//		}
-//		else if ($bHelpdesk)
-//		{
-//			$sPostfix = '-helpdesk';
-//		}
-//		else if (!empty($sCalendarPubHash))
-//		{
-//			$sPostfix = '-calendar-pub';
-//		}
-//		else if (!empty($sFileStoragePubHash))
-//		{
-//			$sPostfix = '-files-pub';
-//		}
-		
 		if ($sModuleHash !== '')
 		{
 			$sPostfix = $sModuleHash;
@@ -1826,8 +1775,31 @@ class CApiIntegratorManager extends AApiManager
 			$sPostfix = $sPostfix.'.min';
 		}
 		
+		$sTenantName = \CApi::getTenantName();
+		$oSettings =& CApi::GetSettings();
+		
+		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
+		{
+			return '<script src="./tenants/'.$sTenantName.'/static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
+				(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '');
+		}
+		else
+		{
+			return '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
+				(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '');
+		}
+	}
+	
+	/**
+	 * Returns application html.
+	 * 
+	 * @param string $sModuleHash
+	 * @return string
+	 */
+	public function buildBody($sModuleHash = '')
+	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
-		return 
+		return
 '<div class="auroraMain">
 	<div id="auroraContent">
 		<div class="screens"></div>
@@ -1838,10 +1810,8 @@ class CApiIntegratorManager extends AApiManager
 $this->compileTemplates().
 $this->compileLanguage($sLanguage).
 $this->compileAppData().
-'<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
-	(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '').
+$this->getJsLinks($sModuleHash).
 '</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'
 		;
 	}
-	
 }
