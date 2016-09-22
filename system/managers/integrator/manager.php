@@ -1506,7 +1506,6 @@ class CApiIntegratorManager extends AApiManager
 			'HtmlEditorDefaultFontSize' => \CApi::GetConf('labs.htmleditor-default-font-size', ''),
 			'AllowSaveAsPdf' => !!\CApi::GetConf('labs.allow-save-as-pdf', false),
 			'LastErrorCode' => $this->getLastErrorCode(),
-			'Token' => $this->getCsrfToken(),
 			'ZipAttachments' => !!class_exists('ZipArchive'),
 			'AllowIdentities' => !!$this->oSettings->GetConf('WebMail/AllowIdentities'),
 			'SocialEmail' => '',

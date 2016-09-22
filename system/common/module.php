@@ -870,7 +870,7 @@ abstract class AApiModule
 				\CApi::Log('Method: '. $sMethod);
 
 				if (strtolower($sModule) !== 'core' && 
-					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\CApi::validateAutToken()) 
+					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\CApi::validateAuthToken()) 
 				{
 					throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
 				} 

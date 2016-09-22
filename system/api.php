@@ -1160,30 +1160,6 @@ class CApi
 
 		return self::processTranslateParams(CApi::$aI18N, $sData, $aParams);
 	}
-
-	public static function getCsrfToken($sTokenName='p7token')
-	{
-		$sToken = !empty($_COOKIE[$sTokenName]) ? $_COOKIE[$sTokenName] : null;
-
-		if (null === $sToken) {
-			$sToken = md5(rand(1000, 9999).self::$sSalt.microtime(true));
-			@setcookie($sTokenName, $sToken, time() + 60 * 60 * 24 * 30, self::GetConf('labs.app-cookie-path', '/'), null, null, true);
-		}
-
-		return $sToken;
-	}
-	
-	public static function GetDataByRef()
-	{
-		$sToken = !empty($_COOKIE[$sTokenName]) ? $_COOKIE[$sTokenName] : null;
-
-		if (null === $sToken) {
-			$sToken = md5(rand(1000, 9999).self::$sSalt.microtime(true));
-			@setcookie($sTokenName, $sToken, time() + 60 * 60 * 24 * 30, self::GetConf('labs.app-cookie-path', '/'), null, null, true);
-		}
-
-		return $sToken;
-	}
 	
 	/**
 	 * Checks if authenticated user has at least specified role.
@@ -1204,7 +1180,7 @@ class CApi
 		}
 	}
 
-	public static function getAutToken()
+	public static function getAuthToken()
 	{
 		$oHttp = \MailSo\Base\Http::SingletonInstance();
 		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
@@ -1216,7 +1192,7 @@ class CApi
 		return $sAuthToken;
 	}		
 	
-	public static function validateAutToken()
+	public static function validateAuthToken()
 	{
 		$bResult = true;
 		if (isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]))
@@ -1232,7 +1208,7 @@ class CApi
 
 	public static function authorise()
 	{
-		return \CApi::getAuthenticatedUserId(\CApi::getAutToken());
+		return \CApi::getAuthenticatedUserId(\CApi::getAuthToken());
 	}	
 	
 	public static function getAuthenticatedUserId($sAuthToken = '')
