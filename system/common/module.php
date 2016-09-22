@@ -858,6 +858,7 @@ abstract class AApiModule
 
 		$aResponseItem = null;
 		$sModule = $this->oHttp->GetPost('Module', null);
+		$sFormat = $this->oHttp->GetPost('Format', null);
 
 		if (strtolower($sModule) === strtolower($this->GetName())) 
 		{
@@ -916,7 +917,10 @@ abstract class AApiModule
 				$aResponseItem = $this->ExceptionResponse($sMethod, $oException, $aAdditionalParams);
 			}
 
-			@header('Content-Type: application/json; charset=utf-8');
+			if ($sFormat !== 'Raw')
+			{
+				@header('Content-Type: application/json; charset=utf-8');
+			}
 		}
 
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
