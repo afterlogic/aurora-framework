@@ -54,6 +54,18 @@ class Service
 		return new self();
 	}
 	
+	public static function SingletonInstance()
+	{
+		static $oInstance = null;
+		if (null === $oInstance)
+		{
+			$oInstance = self::NewInstance();
+		}
+
+		return $oInstance;
+	}
+
+	
 	public function GetVersion()
 	{
 		$sVersion = @file_get_contents(PSEVEN_APP_ROOT_PATH.'VERSION');
@@ -173,6 +185,7 @@ class Service
 	{
 		$mResult = '';
 		$bError = false;
+		$bIsHtml = false;
 		
 		$this->GetVersion();
 		$this->CheckApi();
@@ -207,18 +220,26 @@ class Service
 				{
 					foreach ($aModules as $oModule)
 					{
-						$mResult .= $oModule->RunEntry($sEntry);
+						$mEntryResult = $oModule->RunEntry($sEntry);
+						if ($mEntryResult !== 'null')
+						{
+							$mResult .= $mEntryResult;
+						}
 					}
 				}
 				else 
 				{
-					$mResult = $this->generateHTML();	
+					$bIsHtml = true;
 				}
 			}
 		} 
 		else 
 		{
-			$mResult = $this->generateHTML();
+			$bIsHtml = true;
+		}
+		if ($bIsHtml)
+		{
+			$mResult = $this->generateHTML();	
 		}
 		$oHttp = \MailSo\Base\Http::SingletonInstance();
 		if ($oHttp->GetRequest('Format') !== 'Raw')
