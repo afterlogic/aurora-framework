@@ -88,6 +88,4 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 	{
 		spl_autoload_unregister('ProjectCoreSplAutoLoad');
 	}
-	
-	
 }
