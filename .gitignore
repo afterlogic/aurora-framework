@@ -18,3 +18,5 @@ test_t.php
 /apigen.phar
 /_build-apigen.bat
 /docs/
+/_build-langs.bat
+/_watch-js.bat
