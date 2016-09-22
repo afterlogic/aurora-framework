@@ -86,7 +86,7 @@ class Service
 		$aResult = array();
 		$aQuery = array();
 		
-		$oHttp = \MailSo\Base\Http::NewInstance();
+		$oHttp = \MailSo\Base\Http::SingletonInstance();
 		$aPathInfo = array_filter(explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/'))));
 		if (0 < count($aPathInfo)) {
 			$aQuery = $aPathInfo;
@@ -137,7 +137,7 @@ class Service
 			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
 			{
 				setcookie('aft-cache-ctrl', '', time() - 3600);
-				\MailSo\Base\Http::NewInstance()->StatusHeader(304);
+				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
 				exit();
 			}
 			
@@ -220,7 +220,10 @@ class Service
 		{
 			$mResult = $this->generateHTML();
 		}
-
-		echo $mResult;
+		$oHttp = \MailSo\Base\Http::SingletonInstance();
+		if ($oHttp->GetRequest('Format') !== 'Raw')
+		{
+			echo $mResult;
+		}
 	}
 }
