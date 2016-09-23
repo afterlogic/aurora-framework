@@ -165,8 +165,7 @@ class CApiResponseManager
 					$oApiFileCache->generateFullFilePath($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName)
 				);
 
-				//$oThumb->adaptiveResize(120, 100)->show();
-				$oThumb->adaptiveResize(120, 100)->getImageAsString();
+				$oThumb->adaptiveResize(120, 100)->show();
 			}
 			catch (\Exception $oE) {}
 		}
