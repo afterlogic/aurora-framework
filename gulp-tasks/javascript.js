@@ -93,6 +93,10 @@ var
 
 
 function jsTask(sTaskName, sName, oWebPackConfig) {
+	var
+		bPublic = sName.indexOf('-pub') !== -1,
+		sPublicInit = bPublic ? "\t\t" + "App.setPublic();" + crlf : ''
+	;
 	
     gulp.src(aModules)
 		.pipe(plumber({
@@ -123,6 +127,7 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
             "\t" + ";" + crlf +
             "\t" + "if (!bSwitchingToMobile)" + crlf +
             "\t" + "{" + crlf +
+            sPublicInit +
             "\t\t" + "ModulesManager.init(oAvaliableModules);" + crlf +
             "\t\t" + "App.init();" + crlf +
             "\t" + "}" + crlf +
