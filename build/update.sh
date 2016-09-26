@@ -7,7 +7,7 @@ cd ../modules
 for dir in $(find . -name ".git");
 do
     cd ${dir%/*} > /dev/null;
-    #echo ${dir%/*};
+    echo ${dir%/*};
     git pull;
     cd -  > /dev/null;
 done
