@@ -156,7 +156,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	}
 	/**
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC)
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIds = array())
 	{
 		$mResult = false;
 		
@@ -175,7 +175,7 @@ class CApiEavDbStorage extends CApiEavStorage
 		}		
 		
 		if ($this->oConnection->Execute($this->oCommandCreator->getEntities(
-				$sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder)))
+				$sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder, $aIds)))
 		{
 			$oRow = null;
 			$mResult = array();

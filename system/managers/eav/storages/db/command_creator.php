@@ -103,12 +103,12 @@ SELECT DISTINCT entity_type '
 	}
 	public function getEntitiesCount($sType, $aWhere = array())
 	{
-		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, true);
+		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, array(), true);
 	}
 			
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
-			$sSortAttribute = "", $iSortOrder = \ESortOrder::ASC, $bCount = false)
+			$sSortAttribute = "", $iSortOrder = \ESortOrder::ASC, $aIds = array(), $bCount = false)
 	{
 		$sCount = "";
 		$sViewAttributes = "";
@@ -204,6 +204,10 @@ SELECT DISTINCT entity_type '
 			if (0 < count($aWhere))
 			{
 				$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchAttributes);
+			}
+			if (0 < count($aIds))
+			{
+				$sResultWhere .= ' AND entity_id IN (' . implode(',', $aIds) . ')';
 			}
 			
 			if ($iLimit > 0)
