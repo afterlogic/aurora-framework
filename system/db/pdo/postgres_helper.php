@@ -17,13 +17,13 @@
  * 
  */
 
-CApi::Inc('common.db.helper');
+CApi::Inc('db.helper');
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CPdoMySqlHelper implements IDbHelper
+class CPdoPostgresHelper implements IDbHelper
 {
 	/**
 	 * @param string $sValue
@@ -36,11 +36,11 @@ class CPdoMySqlHelper implements IDbHelper
 		$sResult = '';
 		if ($bWithOutQuote)
 		{
-			$sResult = addslashes($sValue);
+			$sResult = str_replace('\'', '\'\'', $sValue);
 		}
 		else
 		{
-			$sResult = 0 === strlen($sValue) ? '\'\'' : '\''.addslashes($sValue).'\'';
+			$sResult = 0 === strlen($sValue) ? '\'\'' : '\''.str_replace('\'', '\'\'', $sValue).'\'';
 		}
 
 		if ($bSearch)
@@ -57,7 +57,7 @@ class CPdoMySqlHelper implements IDbHelper
 	 */
 	public function EscapeColumn($sValue)
 	{
-		return 0 === strlen($sValue) ? $sValue : '`'.$sValue.'`';
+		return '"'.str_replace('"', '\\"', trim($sValue)).'"';
 	}
 
 	/**
@@ -94,15 +94,7 @@ class CPdoMySqlHelper implements IDbHelper
 	 */
 	public function UseSingleIndexRequest()
 	{
-		return false;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function CreateIndexRequest($iIndexType, $sTableName, $sIndexName, $aFields)
-	{
-		return '';
+		return true;
 	}
 
 	/**
@@ -110,7 +102,29 @@ class CPdoMySqlHelper implements IDbHelper
 	 */
 	public function DropIndexRequest($sIndexesName, $sTableName)
 	{
-		return sprintf('DROP INDEX %s ON %s', $sIndexesName, $sTableName);
+		return sprintf('DROP INDEX %s', $sIndexesName);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function CreateIndexRequest($iIndexType, $sTableName, $sIndexName, $aFields)
+	{
+		$sResult = '';
+		if (CDbKey::TYPE_INDEX === $iIndexType)
+		{
+			$aValues = array_map(array(&$this, 'EscapeColumn'), $aFields);
+			$sResult = 'CREATE INDEX '.$this->EscapeColumn($sIndexName).
+				' ON '.$sTableName.' ('.implode(', ', $aValues).')';
+		}
+		else if (CDbKey::TYPE_UNIQUE_KEY === $iIndexType)
+		{
+			$aValues = array_map(array(&$this, 'EscapeColumn'), $aFields);
+			$sResult = 'CREATE UNIQUE INDEX '.$this->EscapeColumn($sIndexName).
+				' ON '.$sTableName.' ('.implode(', ', $aValues).')';
+		}
+
+		return $sResult;
 	}
 
 	/**
@@ -124,44 +138,44 @@ class CPdoMySqlHelper implements IDbHelper
 		switch ($iFieldType)
 		{
 			case CDbField::AUTO_INT:
-				$sResult .= 'int(11) NOT NULL auto_increment';
+				$sResult .= 'serial NOT NULL';
 				break;
 			case CDbField::AUTO_INT_BIG:
-				$sResult .= 'bigint(20) NOT NULL auto_increment';
+				$sResult .= 'bigserial NOT NULL';
 				break;
 			case CDbField::AUTO_INT_UNSIGNED:
-				$sResult .= 'int(11) unsigned NOT NULL auto_increment';
+				$sResult .= 'serial NOT NULL';
 				break;
 			case CDbField::AUTO_INT_BIG_UNSIGNED:
-				$sResult .= 'bigint(20) unsigned NOT NULL auto_increment';
+				$sResult .= 'bigserial NOT NULL';
 				break;
 
 			case CDbField::BIT:
-				$sResult .= 'tinyint(1)';
+				$sResult .= 'smallint';
 				break;
 			case CDbField::INT:
-				$sResult .= 'int(11)';
+				$sResult .= 'integer';
 				break;
 			case CDbField::INT_UNSIGNED:
-				$sResult .= 'int(11) unsigned';
+				$sResult .= 'bigint';
 				break;
 			case CDbField::INT_SHORT:
-				$sResult .= 'tinyint(4)';
+				$sResult .= 'smallint';
 				break;
 			case CDbField::INT_SHORT_SMALL:
-				$sResult .= 'tinyint(2)';
+				$sResult .= 'smallint';
 				break;
 			case CDbField::INT_SMALL:
-				$sResult .= 'smallint(6)';
+				$sResult .= 'integer';
 				break;
 			case CDbField::INT_BIG:
-				$sResult .= 'bigint(20)';
+				$sResult .= 'bigint';
 				break;
 			case CDbField::INT_UNSIGNED:
-				$sResult .= 'int(11) UNSIGNED';
+				$sResult .= 'bigint';
 				break;
 			case CDbField::INT_BIG_UNSIGNED:
-				$sResult .= 'bigint UNSIGNED';
+				$sResult .= 'bigint';
 				break;
 
 			case CDbField::CHAR:
@@ -175,20 +189,20 @@ class CPdoMySqlHelper implements IDbHelper
 				$sResult .= 'text';
 				break;
 			case CDbField::TEXT_LONG:
-				$sResult .= 'longtext';
+				$sResult .= 'text';
 				break;
 			case CDbField::TEXT_MEDIUM:
-				$sResult .= 'mediumtext';
+				$sResult .= 'text';
 				break;
 			case CDbField::BLOB:
-				$sResult .= 'blob';
+				$sResult .= 'bytea';
 				break;
 			case CDbField::BLOB_LONG:
-				$sResult .= 'longblob';
+				$sResult .= 'bytea';
 				break;
 
 			case CDbField::DATETIME:
-				$sResult .= 'datetime';
+				$sResult .= 'timestamp';
 				break;
 		}
 
@@ -223,7 +237,7 @@ class CPdoMySqlHelper implements IDbHelper
 	 */
 	public function CreateTableLastLine()
 	{
-		return '/*!40101 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */';
+		return '';
 	}
 
 	/**
@@ -231,6 +245,6 @@ class CPdoMySqlHelper implements IDbHelper
 	 */
 	public function GenerateLastIdSeq($sTableName, $sFiledName)
 	{
-		return null;
+		return \strtolower($sTableName.'_'.$sFiledName.'_seq');
 	}
 }

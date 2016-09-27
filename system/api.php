@@ -90,24 +90,24 @@ class CApi
 
 		if (!is_object(CApi::$oManager)) {
 			CApi::IncArray(array(
-					'common.functions',
-					'common.constants',
-					'common.enum',
-					'common.exception',
-					'common.utils',
-					'common.crypt',
-					'common.container',
-					'common.eav',
-					'common.manager',
-					'common.module',
-					'common.response',
-					'common.xml',
-					'common.utils.get',
-					'common.utils.post',
-					'common.utils.session',
-					'common.http',
-					'common.db.storage',
-					'common.user-session'
+					'functions',
+					'constants',
+					'enum',
+					'exception',
+					'utils',
+					'crypt',
+					'container',
+					'eav',
+					'manager',
+					'module',
+					'response',
+					'xml',
+					'utils.get',
+					'utils.post',
+					'utils.session',
+					'http',
+					'db.storage',
+					'user-session'
 				)
 			);
 			$sSalt = '';
@@ -120,7 +120,7 @@ class CApi
 			}
 
 			CApi::$sSalt = $sSalt;
-			CApi::$aConfig = include CApi::RootPath().'common/config.php';
+			CApi::$aConfig = include CApi::RootPath().'config.php';
 			
 			$sSettingsFile = CApi::DataPath().'/settings/config.php';
 			if (@file_exists($sSettingsFile))

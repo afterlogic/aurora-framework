@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('common.db.sql');
+CApi::Inc('db.sql');
 
 /**
  * @package Api

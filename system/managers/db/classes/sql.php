@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('common.db.table');
+CApi::Inc('db.table');
 
 /**
  * @package Db

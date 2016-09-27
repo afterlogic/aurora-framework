@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('common.net.abstract');
+CApi::Inc('net.abstract');
 
 /**
  * @package Api

@@ -93,7 +93,7 @@ class CApiGlobalManager
 	{
 		if (null === $this->oSettings)
 		{
-			CApi::Inc('common.settings');
+			CApi::Inc('settings');
 			try
 			{
 				$this->oSettings = new CApiSettings(\CApi::DataPath() . '/settings/config.json');
@@ -171,7 +171,7 @@ class CApiGlobalManager
 	 */
 	public function GetSimpleMailProtocol($sHost, $iPort, $bUseSsl = false)
 	{
-		CApi::Inc('common.net.protocols.imap4');
+		CApi::Inc('net.protocols.imap4');
 		return new CApiImap4MailProtocol($sHost, $iPort, $bUseSsl);
 	}
 
@@ -189,7 +189,7 @@ class CApiGlobalManager
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
-				CApi::Inc('common.db.command_creator');
+				CApi::Inc('db.command_creator');
 				CApi::StorageInc($oStorage->GetManagerName(), $oStorage->GetStorageName(), 'command_creator');
 
 				$oCommandCreator =
@@ -438,7 +438,7 @@ abstract class AApiManager
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
-				CApi::Inc('common.db.command_creator');
+				CApi::Inc('db.command_creator');
 				$oStorage->inc('command_creator');
 //				$this->incStorage('db.command_creator');
 

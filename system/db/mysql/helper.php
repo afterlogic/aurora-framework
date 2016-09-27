@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('common.db.helper');
+CApi::Inc('db.helper');
 
 /**
  * @package Api

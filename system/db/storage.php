@@ -65,12 +65,12 @@ class CDbCreator
 			{
 				if (EDbType::PostgreSQL === $iDbType)
 				{
-					CApi::Inc('common.db.pdo.postgres');
+					CApi::Inc('db.pdo.postgres');
 					$oConnector = new CDbPdoPostgres($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
 				}
 				else
 				{
-					CApi::Inc('common.db.pdo.mysql');
+					CApi::Inc('db.pdo.mysql');
 					$oConnector = new CDbPdoMySql($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
 				}
 			}
@@ -88,12 +88,12 @@ class CDbCreator
 		$oHelper = null;
 		if (EDbType::PostgreSQL === $iDbType)
 		{
-			CApi::Inc('common.db.pdo.postgres_helper');
+			CApi::Inc('db.pdo.postgres_helper');
 			$oHelper = new CPdoPostgresHelper();
 		}
 		else
 		{
-			CApi::Inc('common.db.pdo.mysql_helper');
+			CApi::Inc('db.pdo.mysql_helper');
 			$oHelper = new CPdoMySqlHelper();
 		}
 

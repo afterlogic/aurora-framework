@@ -17,13 +17,13 @@
  * 
  */
 
-CApi::Inc('common.db.sql');
+CApi::Inc('db.sql');
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CDbPdoMySql extends CDbSql
+class CDbPdoPostgres extends CDbSql
 {
 	/**
 	 * @var bool
@@ -97,9 +97,9 @@ class CDbPdoMySql extends CDbSql
 		}
 
 		$mPdoDrivers = PDO::getAvailableDrivers();
-		if (!is_array($mPdoDrivers) || !in_array('mysql', $mPdoDrivers))
+		if (!is_array($mPdoDrivers) || !in_array('pgsql', $mPdoDrivers))
 		{
-			throw new CApiDbException('Can\'t load PDO mysql driver.', 0);
+			throw new CApiDbException('Can\'t load PDO postgresql driver.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
@@ -109,18 +109,13 @@ class CDbPdoMySql extends CDbSql
 
 		if (CApi::$bUseDbLog)
 		{
-			CApi::Log('DB(PDO/mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
+			CApi::Log('DB(PDO/postgresql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 
 		$aPDOAttr = array(PDO::ATTR_TIMEOUT => 5, PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-		if (defined('PDO::MYSQL_ATTR_MAX_BUFFER_SIZE'))
+		if (defined('PDO::MYSQL_ATTR_MAX_BUFFER_SIZE' ))
 		{
 			$aPDOAttr[PDO::MYSQL_ATTR_MAX_BUFFER_SIZE] = 1024*1024*50;
-		}
-		
-		if (defined('PDO::MYSQL_ATTR_USE_BUFFERED_QUERY'))
-		{
-			$aPDOAttr[PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = true;
 		}
 
 		$sDbPort = '';
@@ -169,14 +164,13 @@ class CDbPdoMySql extends CDbSql
 				{
 					$aParts[] = 'unix_socket='.$sUnixSocket;
 				}
-				$aParts[] = 'charset=utf8';
 
-				$sPdoString = 'mysql:'.implode(';', $aParts);
+				$sPdoString = 'pgsql:'.implode(';', $aParts);
 				if (CApi::$bUseDbLog)
 				{
 					CApi::Log('DB : PDO('.$sPdoString.')');
 				}
-
+				
 				$this->oPDO = @new PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
 				if (CApi::$bUseDbLog)
 				{
@@ -190,16 +184,14 @@ class CDbPdoMySql extends CDbSql
 			}
 			catch (Exception $oException)
 			{
-				CApi::Log($oException->getMessage(), ELogLevel::Error);
-				CApi::Log($oException->getTraceAsString(), ELogLevel::Error);
+				self::Log($oException->getMessage(), ELogLevel::Error);
+				self::Log($oException->getTraceAsString(), ELogLevel::Error);
 				$this->oPDO = false;
-
-				throw new CApiDbException($oException->getMessage(), $oException->getCode(), $oException);
 			}
 		}
 		else
 		{
-			CApi::Log('Class PDO dosn\'t exist', ELogLevel::Error);
+			self::Log('Class PDO dosn\'t exist', ELogLevel::Error);
 		}
 
 		return !!$this->oPDO;
@@ -227,7 +219,7 @@ class CDbPdoMySql extends CDbSql
 	public function Disconnect()
 	{
 		$result = false;
-		if ($this->oPDO)
+		if ($this->oPDO != null)
 		{
 			if (is_resource($this->rResultId))
 			{
@@ -262,21 +254,22 @@ class CDbPdoMySql extends CDbSql
 	 */
 	private function SilentQuery($sQuery)
 	{
+		$res = false;
 		if (!$this->oPDO)
 		{
-			return false;
+			return $res;
 		}
 		
 		try
 		{
 			$res = $this->oPDO->query($sQuery);
-			return $res;
 		}
 		catch (Exception $e)
 		{
+			$res = false;
 		}
 
-		return false;
+		return $res;
 	}
 
 	/**
@@ -288,7 +281,6 @@ class CDbPdoMySql extends CDbSql
 	{
 		$sExplainLog = '';
 		$sQuery = trim($sQuery);
-		
 		if (($this->bUseExplain || $this->bUseExplainExtended) && 0 === strpos($sQuery, 'SELECT'))
 		{
 			$sExplainQuery = 'EXPLAIN ';
@@ -392,7 +384,13 @@ class CDbPdoMySql extends CDbSql
 	{
 		try
 		{
-			return (int) $this->oPDO->lastInsertId();
+			$sName = null;
+			if (null !== $sTableName && null !== $sFieldName)
+			{
+				$sName = $this->sDbTablePrefix.$sTableName.'_'.$sFieldName.'_seq';
+			}
+
+			return (int) ($sName ? $this->oPDO->lastInsertId($sName) : $this->oPDO->lastInsertId());
 		}
 		catch( Exception $e)
 		{
@@ -407,7 +405,7 @@ class CDbPdoMySql extends CDbSql
 	 */
 	public function GetTableNames()
 	{
-		if (!$this->Execute('SHOW TABLES'))
+		if (!$this->Execute('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\''))
 		{
 			return false;
 		}
@@ -431,7 +429,7 @@ class CDbPdoMySql extends CDbSql
 	 */
 	public function GetTableFields($sTableName)
 	{
-		if (!$this->Execute('SHOW COLUMNS FROM `'.$sTableName.'`'))
+		if (!$this->Execute('SELECT column_name FROM information_schema.columns WHERE table_name =\''.$sTableName.'\''))
 		{
 			return false;
 		}
@@ -439,9 +437,9 @@ class CDbPdoMySql extends CDbSql
 		$aResult = array();
 		while (false !== ($oValue = $this->GetNextRecord()))
 		{
-			if ($oValue && isset($oValue->Field) && 0 < strlen($oValue->Field))
+			if ($oValue && isset($oValue->column_name) && 0 < strlen($oValue->column_name))
 			{
-				$aResult[] = $oValue->Field;
+				$aResult[] = $oValue->column_name;
 			}
 		}
 
@@ -454,7 +452,7 @@ class CDbPdoMySql extends CDbSql
 	 */
 	public function GetTableIndexes($sTableName)
 	{
-		if (!$this->Execute('SHOW INDEX FROM `'.$sTableName.'`'))
+		if (!$this->Execute('SELECT * FROM pg_indexes WHERE tablename = \''.$sTableName.'\''))
 		{
 			return false;
 		}
@@ -462,13 +460,22 @@ class CDbPdoMySql extends CDbSql
 		$aResult = array();
 		while (false !== ($oValue = $this->GetNextRecord()))
 		{
-			if ($oValue && isset($oValue->Key_name, $oValue->Column_name))
+			if ($oValue && !empty($oValue->indexname) && !empty($oValue->indexdef))
 			{
-				if (!isset($aResult[$oValue->Key_name]))
+				if (!isset($aResult[$oValue->indexname]))
 				{
-					$aResult[$oValue->Key_name] = array();
+					$aMatch = array();
+					if (preg_match('/\(([a-z0-9 _,]+)\)/i', $oValue->indexdef, $aMatch) && !empty($aMatch[1]))
+					{
+						$aCols = explode(',', $aMatch[1]);
+						$aCols = array_map('trim', $aCols);
+
+						if (0 < count($aCols))
+						{
+							$aResult[$oValue->indexname] = $aCols;
+						}
+					}
 				}
-				$aResult[$oValue->Key_name][] = $oValue->Column_name;
 			}
 		}
 

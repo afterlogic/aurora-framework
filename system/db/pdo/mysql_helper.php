@@ -17,13 +17,13 @@
  * 
  */
 
-CApi::Inc('common.db.helper');
+CApi::Inc('db.helper');
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CPdoPostgresHelper implements IDbHelper
+class CPdoMySqlHelper implements IDbHelper
 {
 	/**
 	 * @param string $sValue
@@ -36,11 +36,11 @@ class CPdoPostgresHelper implements IDbHelper
 		$sResult = '';
 		if ($bWithOutQuote)
 		{
-			$sResult = str_replace('\'', '\'\'', $sValue);
+			$sResult = addslashes($sValue);
 		}
 		else
 		{
-			$sResult = 0 === strlen($sValue) ? '\'\'' : '\''.str_replace('\'', '\'\'', $sValue).'\'';
+			$sResult = 0 === strlen($sValue) ? '\'\'' : '\''.addslashes($sValue).'\'';
 		}
 
 		if ($bSearch)
@@ -57,7 +57,7 @@ class CPdoPostgresHelper implements IDbHelper
 	 */
 	public function EscapeColumn($sValue)
 	{
-		return '"'.str_replace('"', '\\"', trim($sValue)).'"';
+		return 0 === strlen($sValue) ? $sValue : '`'.$sValue.'`';
 	}
 
 	/**
@@ -94,15 +94,7 @@ class CPdoPostgresHelper implements IDbHelper
 	 */
 	public function UseSingleIndexRequest()
 	{
-		return true;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function DropIndexRequest($sIndexesName, $sTableName)
-	{
-		return sprintf('DROP INDEX %s', $sIndexesName);
+		return false;
 	}
 
 	/**
@@ -110,21 +102,15 @@ class CPdoPostgresHelper implements IDbHelper
 	 */
 	public function CreateIndexRequest($iIndexType, $sTableName, $sIndexName, $aFields)
 	{
-		$sResult = '';
-		if (CDbKey::TYPE_INDEX === $iIndexType)
-		{
-			$aValues = array_map(array(&$this, 'EscapeColumn'), $aFields);
-			$sResult = 'CREATE INDEX '.$this->EscapeColumn($sIndexName).
-				' ON '.$sTableName.' ('.implode(', ', $aValues).')';
-		}
-		else if (CDbKey::TYPE_UNIQUE_KEY === $iIndexType)
-		{
-			$aValues = array_map(array(&$this, 'EscapeColumn'), $aFields);
-			$sResult = 'CREATE UNIQUE INDEX '.$this->EscapeColumn($sIndexName).
-				' ON '.$sTableName.' ('.implode(', ', $aValues).')';
-		}
+		return '';
+	}
 
-		return $sResult;
+	/**
+	 * @return string
+	 */
+	public function DropIndexRequest($sIndexesName, $sTableName)
+	{
+		return sprintf('DROP INDEX %s ON %s', $sIndexesName, $sTableName);
 	}
 
 	/**
@@ -138,44 +124,44 @@ class CPdoPostgresHelper implements IDbHelper
 		switch ($iFieldType)
 		{
 			case CDbField::AUTO_INT:
-				$sResult .= 'serial NOT NULL';
+				$sResult .= 'int(11) NOT NULL auto_increment';
 				break;
 			case CDbField::AUTO_INT_BIG:
-				$sResult .= 'bigserial NOT NULL';
+				$sResult .= 'bigint(20) NOT NULL auto_increment';
 				break;
 			case CDbField::AUTO_INT_UNSIGNED:
-				$sResult .= 'serial NOT NULL';
+				$sResult .= 'int(11) unsigned NOT NULL auto_increment';
 				break;
 			case CDbField::AUTO_INT_BIG_UNSIGNED:
-				$sResult .= 'bigserial NOT NULL';
+				$sResult .= 'bigint(20) unsigned NOT NULL auto_increment';
 				break;
 
 			case CDbField::BIT:
-				$sResult .= 'smallint';
+				$sResult .= 'tinyint(1)';
 				break;
 			case CDbField::INT:
-				$sResult .= 'integer';
+				$sResult .= 'int(11)';
 				break;
 			case CDbField::INT_UNSIGNED:
-				$sResult .= 'bigint';
+				$sResult .= 'int(11) unsigned';
 				break;
 			case CDbField::INT_SHORT:
-				$sResult .= 'smallint';
+				$sResult .= 'tinyint(4)';
 				break;
 			case CDbField::INT_SHORT_SMALL:
-				$sResult .= 'smallint';
+				$sResult .= 'tinyint(2)';
 				break;
 			case CDbField::INT_SMALL:
-				$sResult .= 'integer';
+				$sResult .= 'smallint(6)';
 				break;
 			case CDbField::INT_BIG:
-				$sResult .= 'bigint';
+				$sResult .= 'bigint(20)';
 				break;
 			case CDbField::INT_UNSIGNED:
-				$sResult .= 'bigint';
+				$sResult .= 'int(11) UNSIGNED';
 				break;
 			case CDbField::INT_BIG_UNSIGNED:
-				$sResult .= 'bigint';
+				$sResult .= 'bigint UNSIGNED';
 				break;
 
 			case CDbField::CHAR:
@@ -189,20 +175,20 @@ class CPdoPostgresHelper implements IDbHelper
 				$sResult .= 'text';
 				break;
 			case CDbField::TEXT_LONG:
-				$sResult .= 'text';
+				$sResult .= 'longtext';
 				break;
 			case CDbField::TEXT_MEDIUM:
-				$sResult .= 'text';
+				$sResult .= 'mediumtext';
 				break;
 			case CDbField::BLOB:
-				$sResult .= 'bytea';
+				$sResult .= 'blob';
 				break;
 			case CDbField::BLOB_LONG:
-				$sResult .= 'bytea';
+				$sResult .= 'longblob';
 				break;
 
 			case CDbField::DATETIME:
-				$sResult .= 'timestamp';
+				$sResult .= 'datetime';
 				break;
 		}
 
@@ -237,7 +223,7 @@ class CPdoPostgresHelper implements IDbHelper
 	 */
 	public function CreateTableLastLine()
 	{
-		return '';
+		return '/*!40101 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */';
 	}
 
 	/**
@@ -245,6 +231,6 @@ class CPdoPostgresHelper implements IDbHelper
 	 */
 	public function GenerateLastIdSeq($sTableName, $sFiledName)
 	{
-		return \strtolower($sTableName.'_'.$sFiledName.'_seq');
+		return null;
 	}
 }
