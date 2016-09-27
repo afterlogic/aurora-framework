@@ -151,7 +151,7 @@ class CApiResponseManager
 		header('Content-Transfer-Encoding: binary');	
 	}
 	
-	public static function GetThumbResource($oAccount, $rResource, $sFileName)
+	public static function GetThumbResource($oAccount, $rResource, $sFileName, $bShow = true)
 	{
 		$sMd5Hash = md5(rand(1000, 9999));
 
@@ -165,7 +165,14 @@ class CApiResponseManager
 					$oApiFileCache->generateFullFilePath($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName)
 				);
 
-				$oThumb->adaptiveResize(120, 100)->show();
+				if ($bShow)
+				{
+					$oThumb->adaptiveResize(120, 100)->show();
+				}
+				else 
+				{
+					return $oThumb->adaptiveResize(120, 100)->getImageAsString();
+				}
 			}
 			catch (\Exception $oE) {}
 		}
