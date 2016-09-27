@@ -129,8 +129,6 @@ class CDbSchemaHelper
 			'eav_properties_text', 'eav_properties_bool', 'eav_properties_datetime' 
 		));
 
-		CApi::Plugin()->RunHook('api-db-tables', array(&$aTables));
-
 		$aTablesCache = $aTables;
 		return $aTablesCache;
 	}

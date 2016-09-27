@@ -40,11 +40,6 @@ class CApi
 	static $aModuleDecorators;
 
 	/**
-	 * @var CApiPluginManager
-	 */
-	static $oPlugin;
-
-	/**
 	 * @var array
 	 */
 	static $aConfig;
@@ -107,7 +102,6 @@ class CApi
 					'common.module',
 					'common.response',
 					'common.xml',
-					'common.plugin',
 					'common.utils.get',
 					'common.utils.post',
 					'common.utils.session',
@@ -154,7 +148,6 @@ class CApi
 			}
 
 			CApi::$oManager = new CApiGlobalManager();
-			CApi::$oPlugin = new CApiPluginManager(CApi::$oManager);
 			CApi::$bIsValid = CApi::validateApi();
 			CApi::GetModuleManager();
 			CApi::$oManager->PrepareStorageMap();
@@ -195,14 +188,6 @@ class CApi
 				api_Utils::UrlSafeBase64Decode($sEncodedValues), substr(md5(self::$sSalt), 0, $iSaltLen)));
 
 		return is_array($aResult) ? $aResult : array();
-	}
-
-	/**
-	 * @return CApiPluginManager
-	 */
-	public static function Plugin()
-	{
-		return CApi::$oPlugin;
 	}
 
 	/**
@@ -1104,9 +1089,7 @@ class CApi
 	 */
 	public static function isExpandMimeTypeSupported($sMimeType, $sFileName = '')
 	{
-		$bResult = false;
-		\CApi::Plugin()->RunHook('webmail.supports-expanding-attachments', array(&$bResult, $sMimeType, $sFileName));
-		return $bResult;
+		return false;
 	}
 
 	/**
@@ -1120,7 +1103,6 @@ class CApi
 			\CApi::GetConf('labs.allow-officeapps-viewer', true) &&
 			!!preg_match('/\.(doc|docx|docm|dotm|dotx|xlsx|xlsb|xls|xlsm|pptx|ppsx|ppt|pps|pptm|potm|ppam|potx|ppsm)$/', strtolower(trim($sFileName)));
 
-		\CApi::Plugin()->RunHook('webmail.supports-iframed-attachments', array(&$bResult, $sMimeType, $sFileName));
 		return $bResult;
 	}
 

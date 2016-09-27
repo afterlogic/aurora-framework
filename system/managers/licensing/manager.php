@@ -38,7 +38,6 @@ class CApiLicensingManager extends AApiManager
 	 */
 	public function GetLicenseKey()
 	{
-		\CApi::Plugin()->RunHook('before-get-license-key');
 		return $this->oSettings->GetConf('LicenseKey');
 	}
 

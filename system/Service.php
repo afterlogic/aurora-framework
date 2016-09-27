@@ -110,8 +110,6 @@ class Service
 		{
 			$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
 
-			\CApi::Plugin()->RunQueryHandle($sQuery);
-
 			$iPos = \strpos($sQuery, '&');
 			if (0 < $iPos) 
 			{

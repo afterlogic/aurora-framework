@@ -227,7 +227,6 @@ class CDomain extends AEntity
 //		$this->SetLower(array('Name', 'IncomingMailServer',/* 'IncomingMailLogin',*/
 //			'OutgoingMailServer'/*, 'OutgoingMailLogin'*/));
 
-		CApi::Plugin()->RunHook('api-domain-construct', array(&$this));
 	}
 	
 	public static function createInstance($sModule = 'Core')

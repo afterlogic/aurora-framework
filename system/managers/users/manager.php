@@ -61,7 +61,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 		$oAccount = null;
 		try
 		{
-			CApi::Plugin()->RunHook('api-get-account-on-login-precall', array(&$sEmail, &$oAccount));
 			if (null === $oAccount)
 			{
 //				$oAccount = $this->oStorage->getAccountByEmail($sEmail);
@@ -82,7 +81,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 					$oAccount = $aResults[0];
 				}
 			}
-			CApi::Plugin()->RunHook('api-change-account-on-login', array(&$oAccount));
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -170,10 +168,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 			if (is_numeric($iAccountId))
 			{
 				$iAccountId = (int) $iAccountId;
-				if (CApi::Plugin() !== null)
-				{
-					CApi::Plugin()->RunHook('api-get-account-by-id-precall', array(&$iAccountId, &$oAccount));
-				}
 				if (null === $oAccount)
 				{
 //					$oAccount = $this->oStorage->getAccountById($iAccountId);
@@ -232,8 +226,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 						}
 					}
 				}
-
-				CApi::Plugin()->RunHook('api-change-account-by-id', array(&$oAccount));
 			}
 			else
 			{
@@ -266,7 +258,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 			if (is_numeric($iUserId))
 			{
 				$iUserId = (int) $iUserId;
-				CApi::Plugin()->RunHook('api-get-user-by-id-precall', array(&$iUserId, &$oUser));
 				if (null === $oUser)
 				{
 //					$oUser = $this->oStorage->getUserById($iUserId);
@@ -284,7 +275,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 						));
 					}
 				}
-				CApi::Plugin()->RunHook('api-change-user-by-id', array(&$oUser));
 			}
 			else
 			{
@@ -562,9 +552,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 						$iConnectTimeOut = CApi::GetConf('socket.connect-timeout', 10);
 						$iSocketTimeOut = CApi::GetConf('socket.get-timeout', 20);
 
-						CApi::Plugin()->RunHook('webmail-imap-update-socket-timeouts',
-							array(&$iConnectTimeOut, &$iSocketTimeOut));
-
 						try
 						{
 							$oImapClient = \MailSo\Imap\ImapClient::NewInstance();
@@ -603,8 +590,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 						{
 							\CApi::GetModuleManager()->broadcastEvent('CreateAccount', array(&$oAccount));
 						}
-
-						CApi::Plugin()->RunHook('statistics.signup', array(&$oAccount));
 					}
 					else
 					{
@@ -743,7 +728,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 				}
 */
 				$bUseOnlyHookUpdate = false;
-				CApi::Plugin()->RunHook('api-update-account', array(&$oAccount, &$bUseOnlyHookUpdate));
 				if (!$bUseOnlyHookUpdate)
 				{
 //					if (!$this->oStorage->updateAccount($oAccount))
@@ -826,7 +810,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 			if ($oIdentity->Validate())
 			{
 				$bUseOnlyHookUpdate = false;
-				CApi::Plugin()->RunHook('api-update-identity', array(&$oIdentity, &$bUseOnlyHookUpdate));
 
 				if ($bUseOnlyHookUpdate)
 				{
@@ -1564,13 +1547,10 @@ class CApiUsersManager extends AApiManagerWithStorage
 			if (is_numeric($iUserId))
 			{
 				$iUserId = (int) $iUserId;
-				CApi::Plugin()->RunHook('api-get-cal-user-by-id-precall', array(&$iUserId, &$oCalUser));
 				if (null === $oCalUser)
 				{
 					$oCalUser = $this->oStorage->getCalUser($iUserId);
 				}
-
-				CApi::Plugin()->RunHook('api-change-cal-user-by-id', array(&$oCalUser));
 			}
 			else
 			{
@@ -1640,16 +1620,10 @@ class CApiUsersManager extends AApiManagerWithStorage
 		if (null === $oCalUser)
 		{
 			$oCalUser = new CCalUser($iUserId);
-			CApi::Plugin()->RunHook('api-create-cal-user', array(&$iUserId, &$oCalUser));
 
 			if ($oCalUser && !$this->createCalUser($oCalUser))
 			{
 				$oCalUser = false;
-			}
-
-			if ($oCalUser)
-			{
-				CApi::Plugin()->RunHook('api-create-cal-user-success', array(&$iUserId, &$oCalUser));
 			}
 		}
 
@@ -1673,7 +1647,6 @@ class CApiUsersManager extends AApiManagerWithStorage
 			if ($oCalUser->Validate())
 			{
 				$bUseOnlyHookUpdate = false;
-				CApi::Plugin()->RunHook('api-update-cal-user', array(&$oCalUser, &$bUseOnlyHookUpdate));
 				if (!$bUseOnlyHookUpdate)
 				{
 					if (!$this->oStorage->updateCalUser($oCalUser))

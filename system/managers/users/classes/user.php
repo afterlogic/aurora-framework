@@ -86,8 +86,6 @@ class CUser extends AEntity
 //		$this->SetUpper(array('Capa'));
 
 		$this->setInheritedSettings($oParams);
-
-		CApi::Plugin()->RunHook('api-user-construct', array(&$this));
 	}
 	
 	/**

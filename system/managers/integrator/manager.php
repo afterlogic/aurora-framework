@@ -346,8 +346,6 @@ class CApiIntegratorManager extends AApiManager
 				'userId' => -1
 			);
 		}
-//			CApi::Plugin()->RunHook('api-integrator-get-authenticated-user-id', array(&$iUserId));
-
 		return $aInfo;
 	}
 
@@ -664,8 +662,6 @@ class CApiIntegratorManager extends AApiManager
 		$oApiUsersManager = CApi::GetSystemManager('users');
 
 		$bAuthResult = false;
-		CApi::Plugin()->RunHook('api-integrator-login-to-account', array(&$sEmail, &$sIncPassword, &$sIncLogin, &$sLanguage, &$bAuthResult));
-
 		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
 		if ($oAccount instanceof CAccount)
 		{
@@ -704,13 +700,11 @@ class CApiIntegratorManager extends AApiManager
 				}
 				catch (Exception $oException)
 				{
-					\CApi::Plugin()->RunHook('api-integrator-login-authentication-error', array($sEmail)); 
 					throw $oException;
 				}
 			}
 			else if ($sIncPassword !== $oAccount->IncomingMailPassword)
 			{
-				\CApi::Plugin()->RunHook('api-integrator-login-authentication-error', array($sEmail)); 
 				throw new CApiManagerException(Errs::Mail_AccountAuthentication);
 			}
 
@@ -744,14 +738,10 @@ class CApiIntegratorManager extends AApiManager
 			));
 			if ($oAccount instanceof CAccount)
 			{
-				CApi::Plugin()->RunHook('api-integrator-login-success-post-create-account-call', array(&$oAccount));
-
 				$oResult = $oAccount;
 			}
 			else
 			{
-				CApi::Plugin()->RunHook('api-integrator-login-error-post-create-account-call', array(&$oException));
-
 				throw new CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 			}
 		}
@@ -759,19 +749,10 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$oException = $oApiUsersManager->GetLastException();
 
-			CApi::Plugin()->RunHook('api-integrator-login-error-post-create-account-call', array(&$oException));
-
 			throw (is_object($oException))
 				? $oException
 				: new CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 		}
-
-		if ($oResult instanceof CAccount)
-		{
-			CApi::Plugin()->RunHook('statistics.login', array(&$oResult, null));
-		}
-
-		CApi::Plugin()->RunHook('api-integrator-login-to-account-result', array(&$oResult));
 
 		return $oResult;
 	}
@@ -790,8 +771,6 @@ class CApiIntegratorManager extends AApiManager
 	public function loginToHelpdeskAccount($iIdTenant, $sEmail, $sPassword)
 	{
 		$oResult = null;
-
-		CApi::Plugin()->RunHook('api-integrator-login-to-helpdesk-user', array(&$sEmail, &$sPassword));
 
 //		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
 		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
@@ -820,19 +799,11 @@ class CApiIntegratorManager extends AApiManager
 			}
 
 			$oResult = $oUser;
-			CApi::Plugin()->RunHook('statistics.helpdesk-login', array(&$oResult, null));
 		}
 		else
 		{
 			throw new CApiManagerException(Errs::HelpdeskManager_AccountAuthentication);
 		}
-
-		if ($oResult instanceof CHelpdeskUser)
-		{
-			CApi::Plugin()->RunHook('statistics.helpdesk-login', array(&$oResult, null));
-		}
-
-		CApi::Plugin()->RunHook('api-integrator-login-to-helpdesk-user-result', array(&$oResult));
 
 		return $oResult;
 	}
@@ -1125,7 +1096,6 @@ class CApiIntegratorManager extends AApiManager
 
 			$aResult['LoginDescription'] = '';
 
-			CApi::Plugin()->RunHook('api-app-domain-data', array($oDomain, &$aResult));
 		}
 
 		return $aResult;
@@ -1343,10 +1313,7 @@ class CApiIntegratorManager extends AApiManager
 			}
 			
 			$bIsDemo = false;
-			CApi::Plugin()->RunHook('plugin-is-demo-account', array(&$oAccount, &$bIsDemo));
 			$aResult['IsDemo'] = $bIsDemo;
-
-			CApi::Plugin()->RunHook('api-app-user-data', array(&$oAccount, &$aResult));
 
 		}
 
@@ -1519,8 +1486,6 @@ class CApiIntegratorManager extends AApiManager
 			'TenantName' => \CApi::getTenantName()
 		);
 		
-		CApi::Plugin()->RunHook('api-pre-app-data', array(&$aAppData));
-
 		if (0 < $aAppData['LastErrorCode'])
 		{
 			$this->clearLastErrorCode();
@@ -1780,13 +1745,11 @@ class CApiIntegratorManager extends AApiManager
 		
 		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
 		{
-			return '<script src="./tenants/'.$sTenantName.'/static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
-				(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '');
+			return '<script src="./tenants/'.$sTenantName.'/static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>';
 		}
 		else
 		{
-			return '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>'.
-				(CApi::Plugin()->HasJsFiles() ? '<script src="?/Plugins/js/'.CApi::Plugin()->Hash().'/"></script>' : '');
+			return '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>';
 		}
 	}
 	

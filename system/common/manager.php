@@ -109,7 +109,6 @@ class CApiGlobalManager
 
 	public function PrepareStorageMap()
 	{
-		CApi::Plugin()->RunHook('api-prepare-storage-map', array(&$this->aStorageMap));
 	}
 
 	/**
