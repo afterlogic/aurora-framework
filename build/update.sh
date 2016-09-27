@@ -1,6 +1,8 @@
 #!/bin/bash
 
+echo "Aurora Core";
 git pull
+echo "";
 
 cd ../modules
 
@@ -9,6 +11,7 @@ do
     cd ${dir%/*} > /dev/null;
     echo ${dir%/*};
     git pull;
+	echo "";
     cd -  > /dev/null;
 done
 
