@@ -17,7 +17,7 @@
  * 
  */
 
-define('API_PATH_TO_WEBMAIL', '/../');
+define('API_PATH_TO_AURORA', '/../');
 
 define('API_CRLF', "\r\n");
 define('API_TAB', "\t");

@@ -778,7 +778,7 @@ class CApi
 	 */
 	public static function WebMailPath()
 	{
-		return CApi::RootPath().ltrim(API_PATH_TO_WEBMAIL, '/');
+		return CApi::RootPath().ltrim(API_PATH_TO_AURORA, '/');
 	}
 
 	/**

@@ -1925,25 +1925,6 @@ class api_Utils
 		return ($iCode === 200 || $iCode === 0 || $iCode === 400) ? $sUrl : false; //final result
 	}
 
-	/**
-	 * @param string $sLink
-	 * @return int
-	 */
-	public static function GetLinkType($sLink)
-	{
-		$iResult = \EFileStorageLinkType::Unknown;
-		if (preg_match('/(youtube.com|youtu.be|vimeo.com|soundcloud.com)/i', $sLink))
-		{
-			$oInfo = \api_Utils::GetOembedFileInfo($sLink);
-			if ($oInfo)
-			{
-				$iResult = constant('\EFileStorageLinkType::' . $oInfo->provider_name);
-			}
-		}
-		
-		return $iResult;
-	}
-
 	public static function PopulateGoogleDriveFileInfo(&$oFileInfo)
 	{
 		if ($oFileInfo->mimeType !== "application/vnd.google-apps.folder" && !isset($oFileInfo->downloadUrl))
@@ -2008,109 +1989,6 @@ class api_Utils
  * 
  */
 		}
-	}
-	
-	public static function GetGoogleDriveFileInfo($sLink, $sGoogleAPIKey, $sAccessToken = null, $bLinkAsId = false)
-	{
-		$mResult = false;
-		$sGDId = '';
-		if ($bLinkAsId)
-		{
-			$sGDId = $sLink;
-		}
-		else
-		{
-			$matches = array();
-			preg_match("%https://\w+\.google\.com/\w+/d/(.*?)/.*%", $sLink, $matches);
-			if (!isset($matches[1]))
-			{
-				preg_match("%https://\w+\.google\.com/open\?id=(.*)%", $sLink, $matches);
-			}
-			
-			$sGDId = isset($matches[1]) ? $matches[1] : '';	
-		}
-		
-		if ($sGDId !== '')
-		{
-			$sUrl = "https://www.googleapis.com/drive/v2/files/".$sGDId.'?key='.$sGoogleAPIKey;
-			$aHeaders = $sAccessToken ? array('Authorization: Bearer '. $sAccessToken) : array();
-
-			$sContentType = '';
-			$iCode = 0;
-
-			$mResult = \MailSo\Base\Http::SingletonInstance()->GetUrlAsString($sUrl, '', $sContentType, $iCode, null, 10, '', '', $aHeaders);
-			if ($iCode === 200)
-			{
-				$mResult = json_decode($mResult);	
-				self::PopulateGoogleDriveFileInfo($mResult);
-			}
-			else
-			{
-				$mResult = false;
-			}
-		}
-		else
-		{
-			$mResult = false;
-		}
-		
-		return $mResult;
-	}
-
-	public static function GetOembedFileInfo($sUrl)
-	{
-		$mResult = false;
-		$sOembedUrl = '';
-		if (false !== strpos($sUrl, 'youtube.com') || false !== strpos($sUrl, 'youtu.be'))
-		{
-			$sOembedUrl = 'https://youtube.com/oembed?format=json&url='.$sUrl;
-		}
-		else if (false !== strpos($sUrl, 'vimeo.com'))
-		{
-			$sOembedUrl = 'https://vimeo.com/api/oembed.json?format=json&url='.$sUrl;
-		}
-		else if (false !== strpos($sUrl, 'soundcloud.com'))
-		{
-			$sOembedUrl = 'https://soundcloud.com/oembed?format=json&url='.$sUrl;
-		}
-
-		if (strlen($sOembedUrl) > 0)
-		{
-			$oCurl = curl_init();
-			\curl_setopt_array($oCurl, array(
-				CURLOPT_URL => $sOembedUrl,
-				CURLOPT_HEADER => 0,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_FOLLOWLOCATION => 1,
-				CURLOPT_FOLLOWLOCATION => true,
-				CURLOPT_ENCODING => '',
-				CURLOPT_AUTOREFERER => true,
-				CURLOPT_SSL_VERIFYPEER => false, //required for https urls
-				CURLOPT_CONNECTTIMEOUT => 5,
-				CURLOPT_TIMEOUT => 5,
-				CURLOPT_MAXREDIRS => 5
-			));
-			$sResult = curl_exec($oCurl);
-			curl_close($oCurl);
-			$oResult = json_decode($sResult);
-
-			if ($oResult)
-			{
-				$sSearch = $oResult->html;
-				$aPatterns = array('/ width="\d+."/', '/ height="\d+."/', '/(src="[^\"]+)/');
-				$aResults = array(' width="896"', ' height="504"', '$1?&autoplay=1&auto_play=true');
-				$oResult->html = preg_replace($aPatterns, $aResults, $sSearch);
-
-				$aRemoteFileInfo = \api_Utils::GetRemoteFileInfo($sUrl);
-				$oResult->fileSize = $aRemoteFileInfo['size'];
-
-				$oResult->thumbnailLink = $oResult->thumbnail_url;
-
-				$mResult = $oResult;
-			}
-		}
-
-		return $mResult;
 	}
 	
 	/**
