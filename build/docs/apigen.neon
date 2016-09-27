@@ -1,5 +1,6 @@
 # Source file or directory to parse
-source: ./system/
+source:
+	- ../../modules/
 # Directory where to save the generated documentation
 destination: ./docs/api
 # List of allowed file extensions
@@ -7,6 +8,10 @@ destination: ./docs/api
 # Mask to exclude file or directory from processing
 exclude: 
 	- managers/licensing
+	- */managers/
+	- */Dropbox/
+	- */Google/
+	- */OAuthClient/
 # Don't generate documentation for classes from file or directory with this mask
 # skipDocPath:
 # Don't generate documentation for classes with this name prefix
@@ -14,7 +19,7 @@ exclude:
 # Character set of source files
 #charset: auto
 # Main project name prefix
-# main:
+main: Modules
 
 # Title of generated documentation
 title: Afterlogic Aurora Core Documentation
@@ -28,8 +33,8 @@ title: Afterlogic Aurora Core Documentation
 # googleAnalytics:
 # Template config file
 # templateConfig: './templates/default/config.neon'
-# Grouping of classes
-# groups: auto
+# Grouping of classes: auto 
+groups: packages
 # List of allowed HTML tags in documentation
 # allowedHtml: [b, i, a, ul, ol, li, p, br, var, samp, kbd, tt]
 # Element types for search input autocomplete
