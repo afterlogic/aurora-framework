@@ -211,7 +211,7 @@ class CApiModuleManager
      */
     public function broadcastEvent($sModule, $sEvent, $aArguments = array()) 
 	{
-        \CApi::Log('broadcastEvent: ' . $sModule . \AApiModule::$Delimiter . $sEvent);
+//        \CApi::Log('broadcastEvent: ' . $sModule . \AApiModule::$Delimiter . $sEvent);
 		
 		$bResult = true;
 		$aEventSubscriptions = array();

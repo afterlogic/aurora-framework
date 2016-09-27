@@ -229,7 +229,7 @@ return array(
 	'labs.db.log-query-params' => false,
 	'labs.htmleditor-default-font-name' => '',
 	'labs.htmleditor-default-font-size' => '',
-	'labs.log.post-view' => false,
+	'labs.log.post-view' => true,
 	'labs.allow-social-integration' => true,
 	'labs.use-app-min-js' => true,
 	'labs.webmail.gmail-fix-folders' => true,

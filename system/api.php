@@ -77,20 +77,21 @@ class CApi
 	/**
 	 * @var bool
 	 */
-	static $bUseDbLog = true;
+	static $bUseDbLog;
 	
 	/**
 	 * @var array
 	 */
 	protected static $aUserSession = array();
 	
-	public static function Run()
+	public static function Init()
 	{
 		include_once self::LibrariesPath().'autoload.php';
 
 		CApi::$aI18N = null;
 		CApi::$aClientI18N = array();
 		CApi::$aSecretWords = array();
+		CApi::$bUseDbLog = false;
 
 		if (!is_object(CApi::$oManager)) {
 			CApi::IncArray(array(
@@ -1316,7 +1317,7 @@ class CApi
 	}
 }
 
-CApi::Run();
+CApi::Init();
 
 
 

@@ -19,4 +19,8 @@
 include_once 'common.php';
 include_once PSEVEN_APP_ROOT_PATH.'system/api.php';
 
-\System\Service::SingletonInstance()->Handle();	
+$oService = \System\Service::SingletonInstance();
+
+\CApi::$bUseDbLog = false;
+
+$oService->Handle();
