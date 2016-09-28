@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://p7.afterlogic.com/" />
+<title>03. New Message</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">03. New Message</td></tr>
+</thead><tbody>
+<tr>
+	<td>storeEval</td>
+	<td>&quot;Test Subject#&quot;+(Math.floor(Math.random() * 90000) + 10000);</td>
+	<td>msg_subject</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>&quot;Test Message #&quot;+(Math.floor(Math.random() * 90000) + 10000);</td>
+	<td>msg_body</td>
+</tr>
+<!--create new message-->
+<tr>
+	<td>click</td>
+	<td>id=selenium_new_message_button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=div.compose_popup .crea-content-editable</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assignId</td>
+	<td>css=div.compose_popup .crea-content-editable</td>
+	<td>areaid</td>
+</tr>
+<tr>
+	<td>runScript</td>
+	<td>document.getElementById('areaid').innerHTML = '${msg_body}'</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=#selenium_compose_toaddr input.ui-autocomplete-input</td>
+	<td>${email}</td>
+</tr>
+<tr>
+	<td>fireEvent</td>
+	<td>css=#selenium_compose_toaddr input.ui-autocomplete-input</td>
+	<td>blur</td>
+</tr>
+<tr>
+	<td>fireEvent</td>
+	<td>id=selenium_compose_subject</td>
+	<td>focus</td>
+</tr>
+<tr>
+	<td>focus</td>
+	<td>id=selenium_compose_subject</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=selenium_compose_subject</td>
+	<td>${msg_subject}</td>
+</tr>
+<!--send created message-->
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>css=#selenium_compose_send_button.command-disabled</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=selenium_compose_send_button</td>
+	<td></td>
+</tr>
+<!--wait for report about success sending-->
+<tr>
+	<td>waitForVisible</td>
+	<td>id=selenium_report</td>
+	<td></td>
+</tr>
+<!--read new message-->
+<tr>
+	<td>click</td>
+	<td>id=selenium_mail_check_button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>${msg_subject}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//*[contains(@class,&quot;subject&quot;)]//span[.='${msg_subject}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[contains(@class,&quot;selected&quot;)]//*[contains(@class,&quot;subject&quot;)]//span[.='${msg_subject}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>${msg_body}</td>
+	<td></td>
+</tr>
+<!--remove readed message-->
+<tr>
+	<td>click</td>
+	<td>id=selenium_mail_delete_button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//div[contains(@class,&quot;selected&quot;)]//*[@class=&quot;subject&quot;][.='${msg_subject}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>${msg_body}</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

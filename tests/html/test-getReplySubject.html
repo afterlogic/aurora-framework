@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>test getReplySubject</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<script type="text/javascript" src="dev/Vendors/underscore-min.js"></script>
+		<script type="text/javascript" src="dev/Vendors/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="dev/Common/Utils/@ExtUtilsDeclaration.js"></script>
+		<script type="text/javascript" src="dev/Common/Utils.js"></script>
+		<script type="text/javascript" src="dev/Common/Utils/MessageUtils.js"></script>
+		<script type="text/javascript">
+			$(window).load(function () {
+				var
+					aSubjects = [
+						'Re:Re[2]: SVN',
+						'Re:Re:Re[2]:Fwd:Fwd[3]:Fwd:Re:Re: фывфыв',
+						'Fwd[2]: Hi there, I\'m currently modifying Webmail Pro to suit my',
+						'Fwd: Re[2]: Здравствуйте! После установки web-интерфейса и входа в аккаунт',
+						'Re:Fwd: sdf: sdf',
+						'asdfasdf: aksjfgk :adsfaksjg ',
+						'FW: FW: 145_VMEUG: Entering to the VM part of CC GUI - rollback!!!! - - [TS CC GUI] Updated package CC_0.9.187'
+					]
+				;
+				
+				_.each(aSubjects, function (sSubject) {
+					var sNewSubject = Utils.Message.joinReplyPrefixesInSubject(sSubject, 'Re', 'Fwd');
+					console.log('**sbj**', sSubject);
+					console.log('**new**', sNewSubject);
+				});
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
