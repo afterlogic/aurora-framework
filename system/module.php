@@ -1254,7 +1254,10 @@ abstract class AApiModule
 
 				if ($bWebApi)
 				{
-					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
+					if (!isset($aArguments['UserId']))
+					{
+						$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
+					}
 					$oReflector = new \ReflectionMethod($this, $sMethodName);
 					foreach ($oReflector->getParameters() as $oParam) 
 					{
