@@ -1134,6 +1134,7 @@ abstract class AApiModule
 				'Method' => $sMethod,
 				'Parameters' => $this->aParameters
 			)),
+			'AuthenticatedUserId' => \CApi::getAuthenticatedUserId(),
 			'@Time' => microtime(true) - PSEVEN_APP_START
 		);
 	}	
