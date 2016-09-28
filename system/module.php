@@ -1239,20 +1239,21 @@ abstract class AApiModule
 		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
 	}	
 	
-	public function ExecuteMethod($sMethodName, $aArguments = array(), $bApi = false)
+	public function ExecuteMethod($sMethodName, $aArguments = array(), $bWebApi = false)
 	{
 		$mResult = false;
 		try 
 		{
-			if (method_exists($this, $sMethodName) &&  !($bApi && 
-					($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
+			if (method_exists($this, $sMethodName) &&  !($bWebApi && 
+				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
 			{
 				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
 
 				$aValues = array();
 
-				if ($bApi)
+				if ($bWebApi)
 				{
+					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
 					$oReflector = new \ReflectionMethod($this, $sMethodName);
 					foreach ($oReflector->getParameters() as $oParam) 
 					{
