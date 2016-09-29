@@ -555,7 +555,6 @@ abstract class AApiModule
 		
 		$this->aEntries = array(
 			'api' => 'EntryApi',
-			'upload' => 'EntryUpload',
 			'download' => 'EntryDownload'
 		);
 	}
@@ -851,6 +850,36 @@ abstract class AApiModule
 		
 		return $mResult;
 	}
+	
+	private function getUploadData()
+	{
+		$mResult = false;
+		$sError = '';
+		$sInputName = 'jua-uploader';
+
+		$iError = UPLOAD_ERR_OK;
+		$_FILES = isset($_FILES) ? $_FILES : null;
+		if (isset($_FILES, 
+			$_FILES[$sInputName], 
+			$_FILES[$sInputName]['name'], 
+			$_FILES[$sInputName]['tmp_name'], 
+			$_FILES[$sInputName]['size'], 
+			$_FILES[$sInputName]['type']))
+		{
+			$iError = (isset($_FILES[$sInputName]['error'])) ? 
+					(int) $_FILES[$sInputName]['error'] : UPLOAD_ERR_OK;
+			if (UPLOAD_ERR_OK === $iError)
+			{
+				$mResult = $_FILES[$sInputName];
+			}
+			else
+			{
+				$sError = 'unknown';
+			}
+		}
+		
+		return $mResult;
+	}
 
 	public function EntryApi()
 	{
@@ -877,7 +906,8 @@ abstract class AApiModule
 				} 
 				else if (!empty($sModule) && !empty($sMethod)) 
 				{
-					$aParameters = isset($sParameters) &&  is_string($sParameters) ? @json_decode($sParameters, true) : array();
+					$aParameters = isset($sParameters) &&  is_string($sParameters) ? 
+						@json_decode($sParameters, true) : array();
 					$sTenantName = $this->oHttp->GetPost('TenantName', '');
 					
 					\CApi::setTenantName($sTenantName);
@@ -886,9 +916,20 @@ abstract class AApiModule
 					{
 						$aParameters = array($aParameters);
 					}
-					$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
+					$mUploadData = $this->getUploadData();
+					if (is_array($mUploadData))
+					{
+						$aParameters['UploadData'] = $mUploadData;
+					}
 
-					$aResponseItem = $this->DefaultResponse($sMethod, $mResult);
+					$aResponseItem = $this->DefaultResponse(
+						$sMethod, 
+						$this->ExecuteMethod(
+							$sMethod, 
+							$aParameters, 
+							true
+						)
+					);
 				}
 
 				if (!is_array($aResponseItem)) 
@@ -924,92 +965,6 @@ abstract class AApiModule
 		}
 
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
-	}
-
-	public function EntryUpload()
-	{
-		@ob_start();
-		$aResponseItem = null;
-		$sModule = $this->oHttp->GetPost('Module', null);
-		$sMethod = $this->oHttp->GetPost('Method', null);
-		$sParameters = $this->oHttp->GetPost('Parameters', null);
-		try
-		{
-			if (!empty($sModule) && !empty($sMethod))
-			{
-				$aParameters = isset($sParameters) ? @json_decode($sParameters, true) : array();
-				$sError = '';
-				$sInputName = 'jua-uploader';
-
-				$iError = UPLOAD_ERR_OK;
-				$_FILES = isset($_FILES) ? $_FILES : null;
-				if (isset($_FILES, $_FILES[$sInputName], $_FILES[$sInputName]['name'], $_FILES[$sInputName]['tmp_name'], $_FILES[$sInputName]['size'], $_FILES[$sInputName]['type']))
-				{
-					$iError = (isset($_FILES[$sInputName]['error'])) ? (int) $_FILES[$sInputName]['error'] : UPLOAD_ERR_OK;
-					if (UPLOAD_ERR_OK === $iError)
-					{
-						$aParameters = array_merge($aParameters, 
-							array(
-								'FileData' => $_FILES[$sInputName],
-								'IsExt' => '1' === (string) $this->oHttp->GetPost('IsExt', '0') ? '1' : '0',
-								'TenantName' => (string) $this->oHttp->GetPost('TenantName', ''),
-								'Token' => $this->oHttp->GetPost('Token', ''),
-								'AuthToken' => $this->oHttp->GetPost('AuthToken', '')
-							)
-						);
-
-
-						$aResponseItem = $this->ExecuteMethod($sMethod, $aParameters, true);
-					}
-					else
-					{
-						$sError = 'unknown';
-//								$sError = $this->oActions->convertUploadErrorToString($iError);
-					}
-				}
-				else if (!isset($_FILES) || !is_array($_FILES) || 0 === count($_FILES))
-				{
-					$sError = 'size';
-				}
-				else
-				{
-					$sError = 'unknown';
-				}
-			}					
-
-			if (!is_array($aResponseItem) && empty($sError))
-			{
-				throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
-			}
-		}
-		catch (\Exception $oException)
-		{
-			\CApi::LogException($oException);
-			$aResponseItem = $this->ExceptionResponse($sMethod, $oException);
-			$sError = 'exception';
-		}
-
-		if (0 < strlen($sError))
-		{
-			$aResponseItem['Error'] = $sError;
-		}
-		else 
-		{
-			$aResponseItem = $this->DefaultResponse($sMethod, $aResponseItem);
-		}
-
-		@ob_get_clean();
-		@header('Content-Type: text/html; charset=utf-8');
-//				if ('iframe' === $this->oHttp->GetPost('jua-post-type', ''))
-//				{
-//					@header('Content-Type: text/html; charset=utf-8');
-//				}
-//				else
-//				{
-//					@header('Content-Type: application/json; charset=utf-8');
-//				}
-
-		return \MailSo\Base\Utils::Php2js($aResponseItem);		
 	}
 
 	public function EntryDownload()
