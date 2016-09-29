@@ -33,6 +33,11 @@ class AEntity
 	public $iId;
 
 	/**
+	 * @var int
+	 */
+	public $sUUID;
+
+	/**
 	 * @var string
 	 */
 	public $sModuleName;
@@ -77,6 +82,7 @@ class AEntity
 		$this->__USE_TRIM_IN_STRINGS__ = false;
 		
 		$this->iId = 0;
+		$this->sUUID = '';
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 

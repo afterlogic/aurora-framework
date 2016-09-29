@@ -97,6 +97,7 @@ class CApiEavDbStorage extends CApiEavStorage
 				if (isset($oEntity))
 				{
 					$oEntity->iId = (int) $oRow->entity_id;
+					$oEntity->sUUID = (int) $oRow->entity_uuid;
 
 					if (isset($oRow->attr_name) /*&& $oObject->IsProperty($oRow->prop_key)*/)
 					{
@@ -116,6 +117,13 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $oEntity;
 	}
 	
+	/**
+	 */
+	public function getEntityByUUID($sUUID)
+	{
+		return $this->getEntityBySql($this->oCommandCreator->getEntityByUUID($sUUID));
+	}	
+
 	/**
 	 */
 	public function getEntityById($iId)

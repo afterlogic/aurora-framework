@@ -96,6 +96,7 @@ WHERE entities.id = %d)
 		$sSubSql = "
 (SELECT 	   
 	entities.id as entity_id, 
+	entities.uuid as entity_uuid, 
 	entities.entity_type, 
 	entities.module_name as entity_module,
 	attrs.name as attr_name,
