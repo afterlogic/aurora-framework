@@ -200,6 +200,20 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $oEntity;
 	}
 
+	public function getEntityByUUID($sUUID)
+	{
+		$oEntity = null;
+		try
+		{
+			$oEntity = $this->oStorage->getEntityByUUID($sUUID);
+		}
+		catch (CApiBaseException $oException)
+		{
+			$this->setLastException($oException);
+		}
+		return $oEntity;
+	}
+
 	/**
 	 * @param int|array $mEntityId
 	 */

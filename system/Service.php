@@ -141,8 +141,7 @@ class Service
 		if ($oApiIntegrator) 
 		{
 			$sModuleHash = '';
-			$oModuleManager = \CApi::GetModuleManager();
-			$oModuleManager->broadcastEvent('System', 'GenerateHTML', array(&$sModuleHash));
+			$this->oModuleManager->broadcastEvent('System', 'GenerateHTML', array(&$sModuleHash));
 					
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			

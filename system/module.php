@@ -346,7 +346,6 @@ class CApiModuleManager
 			$aPath = \System\Service::GetPaths();
 			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
 		}
-			
 		return $this->GetModule($sModule);
 	}
 	

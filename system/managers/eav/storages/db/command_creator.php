@@ -43,9 +43,10 @@ class CApiEavCommandCreator extends api_CommandCreator
 	public function createEntity($sModule, $sType)
 	{
 		return sprintf(
-			'INSERT INTO %seav_entities ( %s, %s ) '
-			. 'VALUES ( %s, %s )', 
+			'INSERT INTO %seav_entities ( %s, %s, %s ) '
+			. 'VALUES ( UUID(), %s, %s )', 
 			$this->prefix(),
+			$this->escapeColumn('uuid'), 
 			$this->escapeColumn('module_name'), 
 			$this->escapeColumn('entity_type'), 
 			$this->escapeString($sModule),
@@ -89,6 +90,31 @@ WHERE entities.id = %d)
 
 		return $sSql;
 	}
+	
+	public function getEntityByUUID($sUUID)
+	{
+		$sSubSql = "
+(SELECT 	   
+	entities.id as entity_id, 
+	entities.entity_type, 
+	entities.module_name as entity_module,
+	attrs.name as attr_name,
+    attrs.value as attr_value,
+	%s as attr_type
+FROM %seav_entities as entities
+	  INNER JOIN %seav_attributes_%s as attrs ON entities.id = attrs.id_entity
+WHERE entities.uuid = %s)
+";
+		
+		foreach (\AEntity::getTypes() as $sSqlType)
+		{
+			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $sUUID);
+		}
+		$sSql = implode("UNION
+", $aSql);
+
+		return $sSql;
+	}	
 	
 	/**
 	 * @return string
