@@ -71,6 +71,7 @@ class CApiEavCommandCreator extends api_CommandCreator
 		$sSubSql = "
 (SELECT 	   
 	entities.id as entity_id, 
+	entities.uuid as entity_uuid, 
 	entities.entity_type, 
 	entities.module_name as entity_module,
 	attrs.name as attr_name,
@@ -247,6 +248,7 @@ SELECT DISTINCT entity_type '
 SELECT 
 	%s #1 COUNT
 	entities.id as entity_id, 
+	entities.uuid as entity_uuid, 
 	entities.entity_type, 
 	entities.module_name as entity_module
 	# fields
