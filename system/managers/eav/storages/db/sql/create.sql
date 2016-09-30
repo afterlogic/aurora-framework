@@ -1,6 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS `%PREFIX%eav_entities` (
   `id`          BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid`        CHAR(36) 					 NOT NULL,
   `entity_type` VARCHAR(255)                 DEFAULT NULL,
   `module_name` VARCHAR(255)                 DEFAULT NULL,
   PRIMARY KEY (`id`)
