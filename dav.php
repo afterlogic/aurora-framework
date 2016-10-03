@@ -20,7 +20,7 @@ $sCurrentFile = \basename(__FILE__);
 $sRequestUri = empty($_SERVER['REQUEST_URI']) ? '' : \trim($_SERVER['REQUEST_URI']);
 
 include_once 'common.php';
-include_once PSEVEN_APP_ROOT_PATH.'system/api.php';
+include_once AURORA_APP_ROOT_PATH.'system/api.php';
 
 \set_time_limit(3000);
 \set_error_handler(function ($errno, $errstr, $errfile, $errline) {

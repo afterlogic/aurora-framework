@@ -68,8 +68,8 @@ class Service
 	
 	public function GetVersion()
 	{
-		$sVersion = @file_get_contents(PSEVEN_APP_ROOT_PATH.'VERSION');
-		define('PSEVEN_APP_VERSION', $sVersion);
+		$sVersion = @file_get_contents(AURORA_APP_ROOT_PATH.'VERSION');
+		define('AURORA_APP_VERSION', $sVersion);
 		return $sVersion;
 	}
 	
@@ -170,7 +170,7 @@ class Service
 					}
 					
 					$sResult = strtr($sResult, array(
-						'{{AppVersion}}' => PSEVEN_APP_VERSION,
+						'{{AppVersion}}' => AURORA_APP_VERSION,
 						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
 						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
 						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sModuleHash)

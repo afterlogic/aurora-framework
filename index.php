@@ -17,7 +17,7 @@
  */
 
 include_once 'common.php';
-include_once PSEVEN_APP_ROOT_PATH.'system/api.php';
+include_once AURORA_APP_ROOT_PATH.'system/api.php';
 
 $oService = \System\Service::SingletonInstance();
 

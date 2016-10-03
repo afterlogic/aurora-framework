@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-if (!defined('PSEVEN_APP_ROOT_PATH'))
+if (!defined('AURORA_APP_ROOT_PATH'))
 {
 	$sV = PHP_VERSION;
 	if (-1 === version_compare($sV, '5.3.0') || !function_exists('spl_autoload_register'))
@@ -33,8 +33,8 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 		exit(0);
 	}
 
-	define('PSEVEN_APP_ROOT_PATH', rtrim(realpath(__DIR__), '\\/').'/');
-	define('PSEVEN_APP_START', microtime(true));
+	define('AURORA_APP_ROOT_PATH', rtrim(realpath(__DIR__), '\\/').'/');
+	define('AURORA_APP_START', microtime(true));
 
 	/**
 	 * @param string $sClassName
@@ -55,7 +55,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 				if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\'))
 				{
 					$sClassPath = (strtolower($sClass) === strtolower($sFolder)) ? '' : $sClass . '/';
-					$sFileName = PSEVEN_APP_ROOT_PATH.$sFolder.'/'.$sClassPath.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
+					$sFileName = AURORA_APP_ROOT_PATH.$sFolder.'/'.$sClassPath.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
 					if (file_exists($sFileName))
 					{
 						return include_once $sFileName;
@@ -67,7 +67,7 @@ if (!defined('PSEVEN_APP_ROOT_PATH'))
 		if (substr($sClassName, -6) === 'Module')
 		{
 			$sModuleName = substr($sClassName, 0, -6);
-			$sFileName = PSEVEN_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
+			$sFileName = AURORA_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
 			if (file_exists($sFileName))
 			{
 				return include_once $sFileName;

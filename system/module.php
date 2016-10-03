@@ -300,7 +300,7 @@ class CApiModuleManager
 	 */
 	public function GetModulesPath()
 	{
-		return PSEVEN_APP_ROOT_PATH.'modules/';
+		return AURORA_APP_ROOT_PATH.'modules/';
 	}
 
 	/**
@@ -308,7 +308,7 @@ class CApiModuleManager
 	 */
 	public function GetTenantModulesPath($sTenant)
 	{
-		return PSEVEN_APP_ROOT_PATH.'tenants/' . $sTenant . '/modules/';
+		return AURORA_APP_ROOT_PATH.'tenants/' . $sTenant . '/modules/';
 	}
 
 	/**
@@ -1089,7 +1089,7 @@ abstract class AApiModule
 				'Parameters' => $this->aParameters
 			)),
 			'AuthenticatedUserId' => \CApi::getAuthenticatedUserId(),
-			'@Time' => microtime(true) - PSEVEN_APP_START
+			'@Time' => microtime(true) - AURORA_APP_START
 		);
 	}	
 	

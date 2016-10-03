@@ -54,25 +54,10 @@ class CApiGlobalManager
 		$this->oSqlHelper = null;
 		$this->aManagers = array();
 		$this->aStorageMap = array(
-			'mailsuite' => 'db',
-			'min' => 'db',
-			'fetchers' => 'db',
-			'helpdesk' => 'db',
-			'subscriptions' => 'db',
 			'db' => 'db',
 			'domains' => 'db',
 			'tenants' => 'db',
-			'channels' => 'db',
-			'users' => 'db',
-			'webmail' => 'db',
-			'mail' => 'db',
-			'gcontacts' => 'db',
-			'contactsmain' => 'db',
-			'filecache' => 'file',
-			'calendar' => 'sabredav',
-			'filestorage' => 'sabredav',
-			'social' => 'db',
-            'twofactorauth' => 'db'
+			'filecache' => 'file'
 		);
 
 		if (CApi::GetConf('gcontacts.ldap', false))

@@ -21,7 +21,7 @@ define('API_PATH_TO_AURORA', '/../');
 
 define('API_CRLF', "\r\n");
 define('API_TAB', "\t");
-define('API_P7', true);
+define('API_AURORA', true);
 
 define('API_SESSION_WEBMAIL_NAME', 'PHPWEBMAILSESSID');
 define('API_SESSION_ADMINPANEL_NAME', 'PHPWMADMINSESSID');

@@ -88,34 +88,37 @@ class CApi
 		CApi::$aSecretWords = array();
 		CApi::$bUseDbLog = false;
 
-		if (!is_object(CApi::$oManager)) {
+		if (!is_object(CApi::$oManager)) 
+		{
 			CApi::IncArray(array(
-					'functions',
-					'constants',
-					'enum',
-					'exception',
-					'utils',
-					'crypt',
-					'container',
-					'eav',
-					'manager',
-					'module',
-					'response',
-					'xml',
-					'utils.get',
-					'utils.post',
-					'utils.session',
-					'http',
-					'db.storage',
-					'user-session'
-				)
-			);
+				'functions',
+				'constants',
+				'enum',
+				'exception',
+				'utils',
+				'crypt',
+				'container',
+				'eav',
+				'manager',
+				'module',
+				'response',
+				'xml',
+				'utils.get',
+				'utils.post',
+				'utils.session',
+				'http',
+				'db.storage',
+				'user-session'
+			));
 			$sSalt = '';
 			$sSaltFile = CApi::DataPath().'/salt.php';
-			if (!@file_exists($sSaltFile)) {
+			if (!@file_exists($sSaltFile)) 
+			{
 				$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
 				@file_put_contents($sSaltFile, $sSaltDesc);
-			} else {
+			} 
+			else 
+			{
 				$sSalt = '$2y$07$' . md5(file_get_contents($sSaltFile)) . '$';
 			}
 
