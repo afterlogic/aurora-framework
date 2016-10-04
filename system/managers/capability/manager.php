@@ -78,15 +78,6 @@ class CApiCapabilityManager extends AApiManager
 	public function isCalendarSupported($oAccount = null)
 	{
 		return true; // TODO
-		
-		$bResult = false;
-
-		if ($this->isNotLite() && $oAccount)
-		{
-			$bResult = $oAccount->Domain->AllowCalendar && $oAccount->User->getCapa(ECapa::CALENDAR);
-		}
-
-		return $bResult;
 	}
 
 	/**
@@ -104,15 +95,6 @@ class CApiCapabilityManager extends AApiManager
 	public function isCalendarSharingSupported($oAccount = null)
 	{
 		return true; // TODO
-		
-		if ($oAccount)
-		{
-			$bResult = $this->isCollaborationSupported() && 
-					$this->isCalendarSupported($oAccount) && 
-						$oAccount->User->getCapa(ECapa::CAL_SHARING);
-		}
-
-		return $bResult;
 	}
 
 	/**
@@ -122,13 +104,6 @@ class CApiCapabilityManager extends AApiManager
 	public function isCalendarAppointmentsSupported($iUserId = null)
 	{
 		return true; // TODO:
-		$bResult = false;
-		if ($this->isCollaborationSupported() && $iUserId)
-		{
-			$bResult = $this->isCalendarSupported($iUserId) && $iUserId->User->getCapa(ECapa::MEETINGS); // TODO
-		}
-
-		return $bResult;
 	}
 
 	/**
@@ -137,14 +112,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isContactsSupported($oAccount = null)
 	{
-		$bResult = true;
-		if ($oAccount)
-		{
-			$bResult = $oAccount->Domain->AllowContacts &&
-				($oAccount->User->getCapa(ECapa::PAB) || $oAccount->User->getCapa(ECapa::GAB));
-		}
-
-		return $bResult;
+		return true; // TODO
 	}
 
 	/**
@@ -153,13 +121,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isPersonalContactsSupported($oAccount = null)
 	{
-		$bResult = $this->isContactsSupported();
-		if ($oAccount)
-		{
-			$bResult = $this->isContactsSupported($oAccount) && $oAccount->User->getCapa(ECapa::PAB);
-		}
-		
-		return $bResult;
+		return true; // TODO
 	}
 
 	/**
@@ -220,26 +182,6 @@ class CApiCapabilityManager extends AApiManager
 	public function isFilesSupported($oAccount = null)
 	{
 		return true; //TODO: sash
-		$bResult = !!CApi::GetConf('files', false) && $this->isNotLite();
-		if ($bResult && $oAccount)
-		{
-			if ($this->isTenantsSupported())
-			{
-				$bResult = false;
-				$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
-				if ($oTenant)
-				{
-					$bResult = $oTenant->isFilesSupported();
-				}
-			}
-
-			if ($bResult)
-			{
-				$bResult = $oAccount->Domain->AllowFiles && $oAccount->User->getCapa(ECapa::FILES);
-			}			
-		}
-
-		return $bResult;
 	}
 
 	/**
