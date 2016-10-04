@@ -361,7 +361,13 @@ class AEntity
 		{
 			$aResult[$oAttribute->Name] = $oAttribute->Value;
 		}
-		return array_merge(array('iObjectId' => $this->iId), $aResult);
+		return array_merge(
+			array(
+				'iObjectId' => $this->iId,
+				'sUUID' => $this->sUUID
+			), 
+			$aResult
+		);
 	}
 }
 

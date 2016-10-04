@@ -19,6 +19,8 @@
 include_once 'common.php';
 include_once AURORA_APP_ROOT_PATH.'system/api.php';
 
+\CApi::Init();
+
 $oService = \System\Service::SingletonInstance();
 
 \CApi::$bUseDbLog = false;

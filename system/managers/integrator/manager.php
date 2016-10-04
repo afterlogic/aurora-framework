@@ -302,9 +302,9 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function getAuthenticatedUserHelper($sAuthToken = '')
 	{
+		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
 		$iUserId = $aUserInfo['userId'];
-		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$oUser = null;
 		if (0 < $iUserId)
 		{
@@ -317,6 +317,26 @@ class CApiIntegratorManager extends AApiManager
 		return $oUser;
 	}
 	
+	/**
+	 * @param int $iUserId Default value is empty string.
+	 *
+	 * @return \CUser
+	 */
+	public function getAuthenticatedUserByIdHelper($iUserId = '')
+	{
+		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$oUser = null;
+		if (0 < $iUserId)
+		{
+			$oUser = $oCoreDecorator->GetUser($iUserId);
+		}
+		elseif ($iUserId === -1)
+		{
+			$oUser = $oCoreDecorator->GetAdminUser();
+		}
+		return $oUser;
+	}
+
 	/**
 	 * @param string $sAuthToken Default value is empty string.
 	 *

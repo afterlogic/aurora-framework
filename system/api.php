@@ -79,9 +79,15 @@ class CApi
 	 */
 	protected static $aUserSession = array();
 	
-	public static function Init()
+	public static function Init($bGrantAdminPrivileges = false)
 	{
 		include_once self::LibrariesPath().'autoload.php';
+		
+		if ($bGrantAdminPrivileges)
+		{
+			\CApi::$aUserSession['UserId'] = -1;
+			\CApi::$aUserSession['AuthToken'] = '';
+		}
 
 		CApi::$aI18N = null;
 		CApi::$aClientI18N = array();
@@ -1168,11 +1174,11 @@ class CApi
 
 	public static function getAuthToken()
 	{
-		$oHttp = \MailSo\Base\Http::SingletonInstance();
-		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
+		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? 
+				$_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
 		if (empty($sAuthToken))
 		{
-			$sAuthToken = $oHttp->GetPost('AuthToken', '');
+			$sAuthToken = \MailSo\Base\Http::SingletonInstance()->GetPost('AuthToken', '');
 		}
 		
 		return $sAuthToken;
@@ -1194,7 +1200,16 @@ class CApi
 
 	public static function authorise()
 	{
-		return \CApi::getAuthenticatedUserId(\CApi::getAuthToken());
+		$mUserId = false;
+		if (isset(\CApi::$aUserSession['UserId']))
+		{
+			$mUserId = \CApi::$aUserSession['UserId'];
+		}
+		else
+		{
+			$mUserId = \CApi::getAuthenticatedUserId(\CApi::getAuthToken());
+		}
+		return $mUserId;
 	}	
 	
 	public static function getAuthenticatedUserId($sAuthToken = '')
@@ -1234,24 +1249,24 @@ class CApi
 		return $mResult;
 	}
 	
-	public static function getAuthenticatedUser($sAuthToken = '')
+	public static function getAuthenticatedUser($iUserId = '')
 	{
 		static $oUser = null;
 		if ($oUser === null)
 		{
-			if (!empty($sAuthToken))
+			if (!empty($iUserId))
 			{
-				\CApi::getAuthenticatedUserId($sAuthToken); // called for saving in session
+				\CApi::getAuthenticatedUserId($iUserId); // called for saving in session
 			}
-			else if (!empty(static::$aUserSession['AuthToken']))
+			else if (!empty(static::$aUserSession['UserId']))
 			{
-				$sAuthToken = static::$aUserSession['AuthToken'];
+				$iUserId = static::$aUserSession['UserId'];
 			}
 
 			$oApiIntegrator = \CApi::GetSystemManager('integrator');
 			if ($oApiIntegrator)
 			{
-				$oUser = $oApiIntegrator->getAuthenticatedUserHelper($sAuthToken);
+				$oUser = $oApiIntegrator->getAuthenticatedUserByIdHelper($iUserId);
 			}
 		}
 		return $oUser;
@@ -1301,9 +1316,6 @@ class CApi
 		return $mResult;
 	}
 }
-
-CApi::Init();
-
 
 
 
