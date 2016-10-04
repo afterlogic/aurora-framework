@@ -45,7 +45,7 @@ accessLevels: [public, protected]
 # Generate documentation for elements marked as internal and display internal documentation parts
 internal: No
 # Generate documentation for PHP internal classes
-php: Yes
+php: No
 # Generate tree view of classes, interfaces and exceptions
 tree: Yes
 # Generate documentation for deprecated classes, methods, properties and constants
@@ -55,7 +55,7 @@ todo: Yes
 # Generate highlighted source code files
 sourceCode: Yes
 # Add a link to download documentation as a ZIP archive
-download: Yes
+download: No
 # Save a checkstyle report of poorly documented elements into a file
 # report:
 
