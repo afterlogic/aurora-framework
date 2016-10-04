@@ -25,7 +25,9 @@
 class CApiEavManager extends AApiManagerWithStorage
 {
 	/**
-	 * @param CApiGlobalManager &$oManager
+	 * 
+	 * @param CApiGlobalManager $oManager
+	 * @param string $sForcedStorage
 	 */
 	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db')
 	{
@@ -33,7 +35,9 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @return bool
+	 * 
+	 * @param int $iId
+	 * @return boolean
 	 */
 	public function isEntityExists($iId)
 	{
@@ -51,6 +55,11 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $bResult;
 	}
 
+	/**
+	 * 
+	 * @param \AEntity $oEntity
+	 * @return bool
+	 */
 	public function saveEntity(\AEntity &$oEntity)
 	{
 		$mResult = false;
@@ -65,7 +74,13 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $mResult;
 	}
-
+	
+	/**
+	 * 
+	 * @param \AEntity $oEntity
+	 * @return type
+	 * @throws CApiManagerException
+	 */
 	private function createEntity(\AEntity &$oEntity)
 	{
 		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName);
@@ -90,7 +105,13 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $mResult;
 	}
-
+	
+	/**
+	 * 
+	 * @param \AEntity $oEntity
+	 * @return boolean
+	 * @throws type
+	 */
 	protected function updateEntity(\AEntity $oEntity)
 	{
 		$mResult = false;
@@ -117,6 +138,11 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $mResult;
 	}
 
+	/**
+	 * 
+	 * @param type $iId
+	 * @return type
+	 */
 	public function deleteEntity($iId)
 	{
 		$bResult = true;
@@ -131,7 +157,11 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;
 	}
-
+	
+	/**
+	 * 
+	 * @return array
+	 */
 	public function getTypes()
 	{
 		$aTypes = null;
@@ -146,6 +176,12 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $aTypes;
 	}
 
+	/**
+	 * 
+	 * @param string $sType
+	 * @param array $aSearchAttributes
+	 * @return int
+	 */
 	public function getEntitiesCount($sType, $aSearchAttributes = array())
 	{
 		$iCount = 0;
@@ -159,7 +195,19 @@ class CApiEavManager extends AApiManagerWithStorage
 		}
 		return $iCount;
 	}
-
+	
+	/**
+	 * 
+	 * @param string $sType
+	 * @param array $aViewAttributes
+	 * @param int $iOffset
+	 * @param int $iLimit
+	 * @param array $aSearchAttributes
+	 * @param string $sOrderBy
+	 * @param int $iSortOrder
+	 * @param array $aIds
+	 * @return array
+	 */
 	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aSearchAttributes = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIds = array())
 	{
 		$aEntities = null;
@@ -174,18 +222,34 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $aEntities;
 	}
 
+	/**
+	 * 
+	 * @param string $sModule
+	 * @return boolean
+	 */
 	public function getEntitiesByModule($sModule)
 	{
 		// TODO:
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param string $sModule
+	 * @param string $sType
+	 * @return boolean
+	 */
 	public  function geEntitiesByModuleAndType($sModule, $sType)
 	{
 		// TODO:
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param type $iId
+	 * @return \AEntity
+	 */
 	public function getEntityById($iId)
 	{
 		$oEntity = null;
@@ -200,6 +264,11 @@ class CApiEavManager extends AApiManagerWithStorage
 		return $oEntity;
 	}
 
+	/**
+	 * 
+	 * @param string $sUUID
+	 * @return \AEntity
+	 */
 	public function getEntityByUUID($sUUID)
 	{
 		$oEntity = null;
@@ -216,6 +285,7 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 * @param int|array $mEntityId
+	 * @param array $aAttributes
 	 */
 	public function setAttributes($mEntityId, $aAttributes)
 	{
@@ -230,6 +300,10 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * 
+	 * @param CAttribute $oAttribute
+	 * @return boolean
+	 * @throws CApiManagerException
 	 */
 	public function setAttribute(CAttribute $oAttribute)
 	{
@@ -254,6 +328,8 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * 
+	 * @param CAttribute $oAttribute
 	 * @return bool
 	 */
 	private function deleteAttribute(CAttribute $oAttribute)
@@ -272,6 +348,8 @@ class CApiEavManager extends AApiManagerWithStorage
 	}
 
 	/**
+	 * 
+	 * @param int $iEntityId
 	 * @return bool
 	 */
 	private function deleteAttributes($iEntityId)
