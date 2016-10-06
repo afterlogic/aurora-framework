@@ -195,13 +195,16 @@ class AEntity
 			$mValue = trim($mValue);
 		}
 
-		$this->addAttribute(\CAttribute::createInstance(
-			$sKey, 
-			$mValue, 
-			$sType, 
-			$this->isEncryptedAttribute($sKey), 
-			$this->iId
-		), true);
+		$this->addAttribute(
+			\CAttribute::createInstance(
+				$sKey, 
+				$mValue, 
+				$sType, 
+				$this->isEncryptedAttribute($sKey), 
+				$this->iId
+			), 
+			true
+		);
 	}
 
 	/**
@@ -332,6 +335,22 @@ class AEntity
 	public function getAttributes()
 	{
 		return $this->aAttributes;
+	}	
+	
+	/**
+	 * @return array
+	 */
+	public function getAttributesKeys()
+	{
+		return array_keys($this->aAttributes);
+	}		
+
+	/**
+	 * @return int
+	 */
+	public function countAttributes()
+	{
+		return count($this->aAttributes);
 	}	
 
 	/**

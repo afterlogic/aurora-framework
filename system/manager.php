@@ -55,8 +55,6 @@ class CApiGlobalManager
 		$this->aManagers = array();
 		$this->aStorageMap = array(
 			'db' => 'db',
-			'domains' => 'db',
-			'tenants' => 'db',
 			'filecache' => 'file'
 		);
 

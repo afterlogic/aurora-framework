@@ -88,19 +88,20 @@ class CApiEavManager extends AApiManagerWithStorage
 		{
 			throw new CApiManagerException(Errs::Main_UnknownError);
 		}
-		else if (0 < count($oEntity->getAttributes()))
+		else if (0 < $oEntity->countAttributes())
 		{
 			$oEntity->iId = $mResult;
-			$aEntityAttributes = $oEntity->getAttributes();
-			if (0 < count($aEntityAttributes))
+			$aAttributes = array();
+			foreach ($oEntity->getAttributesKeys() as $sKey)
 			{
-				$aAttributes = array();
-				foreach ($aEntityAttributes as $sKey => $mValue)
-				{
-					$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getType($sKey), $oEntity->isEncryptedAttribute($sKey));
-				}
-				$this->setAttributes($mResult, $aAttributes);
+				$aAttributes[] = new \CAttribute(
+					$sKey, 
+					$oEntity->{$sKey}, 
+					$oEntity->getType($sKey), 
+					$oEntity->isEncryptedAttribute($sKey)
+				);
 			}
+			$this->setAttributes($mResult, $aAttributes);
 		}
 
 		return $mResult;
@@ -115,13 +116,18 @@ class CApiEavManager extends AApiManagerWithStorage
 	protected function updateEntity(\AEntity $oEntity)
 	{
 		$mResult = false;
-		$aEntityAttributes = $oEntity->getAttributes();
+		$aEntityAttributes = $oEntity->getAttributesKeys();
 		if (0 < count($aEntityAttributes))
 		{
 			$aAttributes = array();
-			foreach ($aEntityAttributes as $sKey => $mValue)
+			foreach ($aEntityAttributes as $sKey)
 			{
-				$aAttributes[] = new \CAttribute($sKey, $oEntity->{$sKey}, $oEntity->getType($sKey), $oEntity->isEncryptedAttribute($sKey));
+				$aAttributes[] = new \CAttribute(
+					$sKey, 
+					$oEntity->{$sKey}, 
+					$oEntity->getType($sKey),
+					$oEntity->isEncryptedAttribute($sKey)
+				);
 			}
 			try
 			{
