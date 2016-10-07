@@ -17,6 +17,7 @@
 		"afterlogic/dav": "dev-master",
 		"afterlogic/mailso": "dev-master",
 		"anahkiasen/underscore-php": "*",
+		"phpmailer/phpmailer": "~5.2",
 		
 		"oomphinc/composer-installers-extender": "^1.1",
 		"wikimedia/composer-merge-plugin": "dev-master"

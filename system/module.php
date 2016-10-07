@@ -237,26 +237,24 @@ class CApiModuleManager
      *
      * @param string $sEvent
      * @param array $aArguments
-     * @return bool
+     * @return boolean
      */
     public function broadcastEvent($sModule, $sEvent, $aArguments = array()) 
 	{
-//        \CApi::Log('broadcastEvent: ' . $sModule . \AApiModule::$Delimiter . $sEvent);
-		
 		$bResult = true;
 		$aEventSubscriptions = array();
 		if (isset($this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) 
 		{
 			$aEventSubscriptions = array_merge(
-					$aEventSubscriptions, 
-					$this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]
+				$aEventSubscriptions, 
+				$this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]
 			);
 		}
 		if (isset($this->_aEventSubscriptions[$sEvent])) 
 		{
 			$aEventSubscriptions = array_merge(
-					$aEventSubscriptions, 
-					$this->_aEventSubscriptions[$sEvent]
+				$aEventSubscriptions, 
+				$this->_aEventSubscriptions[$sEvent]
 			);
         }
 		
@@ -1063,13 +1061,21 @@ abstract class AApiModule
 						$aParameters['UploadData'] = $mUploadData;
 					}
 
-					$aResponseItem = $this->DefaultResponse(
-						$sMethod, 
-						$this->ExecuteMethod(
-							$sMethod, 
-							$aParameters, 
-							true
+					$aResult = array(
+						array(
+							'Method' => $sMethod,
+							'Module' => $this->GetName(),
+							'Result' => $this->ExecuteMethod(
+								$sMethod, 
+								$aParameters, 
+								true
+							)
 						)
+					);
+						
+					$aResponseItem = $this->DefaultResponse(
+						$sMethod,
+						$aResult
 					);
 				}
 
@@ -1231,14 +1237,23 @@ abstract class AApiModule
 	 */
 	public function DefaultResponse($sMethod, $mResult = false)
 	{
+		$aResult = array();
+		if (is_array($mResult))
+		{
+			foreach ($mResult as $aValue)
+			{
+				$aResult =  \CApiResponseManager::GetResponseObject(
+					$mResult, 
+					array(
+						'Module' => $aValue['Module'],
+						'Method' => $aValue['Method'],
+					)
+				);
+			}
+		}
+		
 		return array(
-			'Module' => $this->GetName(),
-			'Method' => $sMethod,
-			'Result' => \CApiResponseManager::GetResponseObject($mResult, array(
-				'Module' => $this->GetName(),
-				'Method' => $sMethod,
-				'Parameters' => $this->aParameters
-			)),
+			'Result' => $aResult,
 			'AuthenticatedUserId' => \CApi::getAuthenticatedUserId(),
 			'@Time' => microtime(true) - AURORA_APP_START
 		);
