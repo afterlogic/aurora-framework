@@ -258,7 +258,7 @@ class CApi
 
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
-		list($sModuleName, $sMethodName) = explode('::', $sMethodName);
+		list($sModuleName, $sMethodName) = explode(\AApiModule::$Delimiter, $sMethodName);
 		$oModule = CApi::GetModule($sModuleName);
 		if ($oModule instanceof AApiModule)
 		{
@@ -559,7 +559,8 @@ class CApi
 	public static function LogEvent($sDesc, $mAccount = null)
 	{
 		$oSettings =& CApi::GetSettings();
-		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) {
+		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) 
+		{
 			$sDate = gmdate('H:i:s');
 			$iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
 			
@@ -589,7 +590,8 @@ class CApi
 	public static function LogException($mObject, $iLogLevel = ELogLevel::Error, $sFilePrefix = '')
 	{
 		$sDesc = (string) $mObject;
-		if (0 < \count(self::$aSecretWords)) {
+		if (0 < \count(self::$aSecretWords)) 
+		{
 			$sDesc = \str_replace(self::$aSecretWords, '*******', $sDesc);
 		}
 		
@@ -611,9 +613,12 @@ class CApi
 	 */
 	public static function SpecifiedUserLogging($bOn = true)
 	{
-		if ($bOn) {
+		if ($bOn) 
+		{
 			@setcookie('SpecifiedUserLogging', '1', 0, CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
-		} else {
+		} 
+		else 
+		{
 			@setcookie('SpecifiedUserLogging', '0', 0, CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
 		}
 	}
@@ -624,7 +629,8 @@ class CApi
 	public static function MailSoLogger()
 	{
 		static $oLogger = null;
-		if (null === $oLogger) {
+		if (null === $oLogger) 
+		{
 			$oLogger = \MailSo\Log\Logger::NewInstance()
 				->Add(
 					\MailSo\Log\Drivers\Callback::NewInstance(function ($sDesc) {
@@ -646,50 +652,62 @@ class CApi
 	{
 		static $iDbBacktraceCount = null;
 		
-		if (null === $iDbBacktraceCount) {
+		if (null === $iDbBacktraceCount) 
+		{
 			$iDbBacktraceCount = (int) CApi::GetConf('labs.db-debug-backtrace-limit', 0);
-			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) {
+			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
+			{
 				$iDbBacktraceCount = 0;
 			}
 		}
 
 		if (0 < $iDbBacktraceCount && is_string($sDesc) && 
-				(false !== strpos($sDesc, 'DB[') || false !== strpos($sDesc, 'DB ERROR'))) {
+				(false !== strpos($sDesc, 'DB[') || false !== strpos($sDesc, 'DB ERROR'))) 
+		{
 			$bSkip = true;
 			$sLogData = '';
 			$iCount = $iDbBacktraceCount;
 
-			foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 20) as $aData) {
+			foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 20) as $aData) 
+			{
 				if ($aData && isset($aData['function']) && !in_array(strtolower($aData['function']), array(
-					'log', 'logonly', 'logend', 'logevent', 'logexception', 'logobject', 'dbdebugbacktrace'
-				)))	{
+					'log', 'logonly', 'logend', 'logevent', 'logexception', 'logobject', 'dbdebugbacktrace')))	
+				{
 					$bSkip = false;
 				}
 
-				if (!$bSkip) {
+				if (!$bSkip) 
+				{
 					$iCount--;
-					if (isset($aData['class'], $aData['type'], $aData['function'])) {
+					if (isset($aData['class'], $aData['type'], $aData['function'])) 
+					{
 						$sLogData .= $aData['class'].$aData['type'].$aData['function'];
-					} else if (isset($aData['function'])) {
+					} 
+					else if (isset($aData['function'])) 
+					{
 						$sLogData .= $aData['function'];
 					}
 
-					if (isset($aData['file'])) {
+					if (isset($aData['file'])) 
+					{
 						$sLogData .= ' ../'.basename($aData['file']);
 					}
-					if (isset($aData['line'])) {
+					if (isset($aData['line'])) 
+					{
 						$sLogData .= ' *'.$aData['line'];
 					}
 
 					$sLogData .= "\n";
 				}
 
-				if (0 === $iCount) {
+				if (0 === $iCount) 
+				{
 					break;
 				}
 			}
 
-			if (0 < strlen($sLogData)) {
+			if (0 < strlen($sLogData)) 
+			{
 				try
 				{
 					@error_log('['.\MailSo\Log\Logger::Guid().'][DB/backtrace]'.API_CRLF.trim($sLogData).API_CRLF, 3, $sLogFile);
@@ -714,22 +732,28 @@ class CApi
 		if ($oSettings && $oSettings->GetConf('EnableLogging') &&
 			($iLogLevel <= $oSettings->GetConf('LoggingLevel') ||
 			(ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
-				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging']))) {
+				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging']))) 
+		{
 			$sLogFile = self::GetLogFileName($sFilePrefix);
 
 			$sGuid = \MailSo\Log\Logger::Guid();
 			$aMicro = explode('.', microtime(true));
 			$sDate = gmdate('H:i:s.').str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
-			if ($bIsFirst) {
+			if ($bIsFirst) 
+			{
 				$sUri = api_Utils::RequestUri();
 				$bIsFirst = false;
 				$sPost = (isset($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
 
 				CApi::LogOnly(API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
-				if (!empty($sPost)) {
-					if (CApi::GetConf('labs.log.post-view', false)) {
+				if (!empty($sPost)) 
+				{
+					if (CApi::GetConf('labs.log.post-view', false)) 
+					{
 						CApi::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
-					} else {
+					} 
+					else 
+					{
 						CApi::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
 					}
 				}
@@ -751,14 +775,17 @@ class CApi
 		static $bDir = null;
 		static $sLogDir = null;
 
-		if (null === $sLogDir) {
+		if (null === $sLogDir) 
+		{
 			$sS = CApi::GetConf('log.custom-full-path', '');
 			$sLogDir = empty($sS) ? CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
 		}
 		
-		if (null === $bDir) {
+		if (null === $bDir) 
+		{
 			$bDir = true;
-			if (!@is_dir($sLogDir)) {
+			if (!@is_dir($sLogDir)) 
+			{
 				@mkdir($sLogDir, 0777);
 			}
 		}
@@ -808,7 +835,8 @@ class CApi
 	public static function Version()
 	{
 		static $sVersion = null;
-		if (null === $sVersion) {
+		if (null === $sVersion) 
+		{
 			$sAppVersion = @file_get_contents(CApi::WebMailPath().'VERSION');
 			$sVersion = (false === $sAppVersion) ? '0.0.0' : $sAppVersion;
 		}
@@ -830,11 +858,13 @@ class CApi
 	public static function DataPath()
 	{
 		$dataPath = 'data';
-		if (!defined('API_DATA_FOLDER') && @file_exists(CApi::WebMailPath().'inc_settings_path.php')) {
+		if (!defined('API_DATA_FOLDER') && @file_exists(CApi::WebMailPath().'inc_settings_path.php')) 
+		{
 			include CApi::WebMailPath().'inc_settings_path.php';
 		}
 
-		if (!defined('API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) {
+		if (!defined('API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
+		{
 			define('API_DATA_FOLDER', api_Utils::GetFullPath($dataPath, CApi::WebMailPath()));
 		}
 
@@ -888,14 +918,20 @@ class CApi
 		$aResultLang = false;
 
 		$aLang = @parse_ini_string(file_get_contents($sLangFile), true);
-		if (is_array($aLang)) {
+		if (is_array($aLang)) 
+		{
 			$aResultLang = array();
-			foreach ($aLang as $sKey => $mValue) {
-				if (is_array($mValue)) {
-					foreach ($mValue as $sSecKey => $mSecValue) {
+			foreach ($aLang as $sKey => $mValue) 
+			{
+				if (is_array($mValue)) 
+				{
+					foreach ($mValue as $sSecKey => $mSecValue) 
+					{
 						$aResultLang[$sKey.'/'.$sSecKey] = $mSecValue;
 					}
-				} else {
+				} 
+				else 
+				{
 					$aResultLang[$sKey] = $mValue;
 				}
 			}
@@ -913,19 +949,23 @@ class CApi
 	public static function processTranslateParams($mLang, $sData, $aParams = null, $iPlural = null)
 	{
 		$sResult = $sData;
-		if ($mLang && isset($mLang[$sData])) {
+		if ($mLang && isset($mLang[$sData])) 
+		{
 			$sResult = $mLang[$sData];
 		}
 
-		if (isset($iPlural)) {
+		if (isset($iPlural)) 
+		{
 			$aPluralParts = explode('|', $sResult);
 
 			$sResult = ($aPluralParts && $aPluralParts[$iPlural]) ? $aPluralParts[$iPlural] : (
 			$aPluralParts && $aPluralParts[0] ? $aPluralParts[0] : $sResult);
 		}
 
-		if (null !== $aParams && is_array($aParams)) {
-			foreach ($aParams as $sKey => $sValue) {
+		if (null !== $aParams && is_array($aParams)) 
+		{
+			foreach ($aParams as $sKey => $sValue) 
+			{
 				$sResult = str_replace('%'.$sKey.'%', $sValue, $sResult);
 			}
 		}
@@ -946,26 +986,33 @@ class CApi
 		// TODO:
 		$sLanguage = /*$oAccount ? $oAccount->User->DefaultLanguage :*/ '';
 		
-		if (empty($sLanguage)) {
+		if (empty($sLanguage)) 
+		{
 			$oSettings =& \CApi::GetSettings();
 			$sLanguage = $oSettings->GetConf('DefaultLanguage');
 		}
 
 		$aLang = null;
-		if (isset(CApi::$aClientI18N[$sLanguage])) {
+		if (isset(CApi::$aClientI18N[$sLanguage])) 
+		{
 			$aLang = CApi::$aClientI18N[$sLanguage];
-		} else {
+		} 
+		else 
+		{
 			CApi::$aClientI18N[$sLanguage] = false;
 				
 			$sLangFile = CApi::WebMailPath().'i18n/'.$sLanguage.'.ini';
-			if (!@file_exists($sLangFile)) {
+			if (!@file_exists($sLangFile)) 
+			{
 				$sLangFile = CApi::WebMailPath().'i18n/English.ini';
 				$sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
 			}
 
-			if (0 < strlen($sLangFile)) {
+			if (0 < strlen($sLangFile)) 
+			{
 				$aLang = self::convertIniToLang($sLangFile);
-				if (is_array($aLang)) {
+				if (is_array($aLang)) 
+				{
 					CApi::$aClientI18N[$sLanguage] = $aLang;
 				}
 			}
@@ -1127,28 +1174,35 @@ class CApi
 	 */
 	public static function I18N($sData, $aParams = null, $sForceCustomInitialisationLang = '')
 	{
-		if (null === CApi::$aI18N) {
+		if (null === CApi::$aI18N) 
+		{
 			CApi::$aI18N = false;
 
-			if ('' !== $sForceCustomInitialisationLang) {
+			if ('' !== $sForceCustomInitialisationLang) 
+			{
 				$sLang = $sForceCustomInitialisationLang;
 			}
-			else {
+			else 
+			{
 				$sLang = CApi::GetConf('labs.i18n', '');
 			}
 			
 			$sLangFile = '';
-			if (0 < strlen($sLang)) {
+			if (0 < strlen($sLang)) 
+			{
 				$sLangFile = CApi::RootPath().'common/i18n/'.$sLang.'.ini';
 			}
 
-			if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) {
+			if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) 
+			{
 				$sLangFile = CApi::RootPath().'common/i18n/English.ini';
 			}
 
-			if (0 < strlen($sLangFile) && @file_exists($sLangFile)) {
+			if (0 < strlen($sLangFile) && @file_exists($sLangFile)) 
+			{
 				$aResultLang = self::convertIniToLang($sLangFile);
-				if (is_array($aResultLang)) {
+				if (is_array($aResultLang)) 
+				{
 					CApi::$aI18N = $aResultLang;
 				}
 			}
@@ -1166,10 +1220,14 @@ class CApi
 	{
 		$oUser = \CApi::getAuthenticatedUser();
 		$bUserRoleIsAtLeast = empty($oUser) && $iRole === \EUserRole::Anonymous ||
-				!empty($oUser) && $oUser->Role === \EUserRole::Customer && ($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \EUserRole::NormalUser && ($iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \EUserRole::TenantAdmin && ($iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && ($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
+			!empty($oUser) && $oUser->Role === \EUserRole::Customer && 
+				($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+			!empty($oUser) && $oUser->Role === \EUserRole::NormalUser && 
+				($iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+			!empty($oUser) && $oUser->Role === \EUserRole::TenantAdmin && 
+				($iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+			!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && 
+				($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
 		if (!$bUserRoleIsAtLeast)
 		{
 			throw new \System\Exceptions\AuroraApiException(\System\Notifications::AccessDenied);
