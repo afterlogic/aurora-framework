@@ -50,11 +50,19 @@ class CApiModuleManager
 	{
 	}
 	
+	/**
+	 * 
+	 * @return \self
+	 */
 	public static function createInstance()
 	{
 		return new self();
 	}
 	
+	/**
+	 * 
+	 * @return string
+	 */
 	public function init()
 	{
 		$sModulesPath = $this->GetModulesPath();
@@ -93,7 +101,7 @@ class CApiModuleManager
 					}
 				}
 			}
-			foreach ($aModulesPath as $sModulePath => $aModulePath)
+			foreach ($aModulesPath as $aModulePath)
 			{
 				foreach ($aModulePath as $sModuleName)
 				{
@@ -115,11 +123,23 @@ class CApiModuleManager
 		}
 	}
 	
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @return boolean
+	 */
 	public function isModuleLoaded($sModuleName)
 	{
 		return array_key_exists(strtolower($sModuleName), $this->_aModules);
 	}
 
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @param string $sConfigName
+	 * @param string $sDefaultValue
+	 * @return mixed
+	 */
 	public function getModuleConfig($sModuleName, $sConfigName, $sDefaultValue = null)
 	{
 		$mResult = $sDefaultValue;
@@ -132,6 +152,12 @@ class CApiModuleManager
 		return $mResult;
 	}
 
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @param string $sModulePath
+	 * @return \AApiModule
+	 */
 	public function loadModule($sModuleName, $sModulePath)
 	{
 		$mResult = false;
@@ -163,7 +189,11 @@ class CApiModuleManager
 		return $mResult;
 	}
 
-    public function getEvents($sModule) 
+    /**
+	 * 
+	 * @return array
+	 */
+	public function getEvents() 
 	{
 		return $this->_aEventSubscriptions;
 	}	
@@ -265,6 +295,9 @@ class CApiModuleManager
 	}	
 	
 	/**
+	 * 
+	 * @param string $sTemplateID
+	 * @param string $sTemplateSource
 	 * @return string
 	 */
 	public function ParseTemplate($sTemplateID, $sTemplateSource)
@@ -292,7 +325,6 @@ class CApiModuleManager
 	
 	public function setObjectMap()
 	{
-		
 	}
 
 	/**
@@ -350,6 +382,8 @@ class CApiModuleManager
 	}
 	
 	/**
+	 * 
+	 * @param string $sEntryName
 	 * @return array
 	 */
 	public function GetModulesByEntry($sEntryName)
@@ -390,6 +424,11 @@ class CApiModuleManager
 		return ($this->GetModule($sModuleName)) ? true  : false;
 	}
 	
+	/**
+	 * 
+	 * @param string $sEntryName
+	 * @return mixed
+	 */
 	public function RunEntry($sEntryName)
 	{
 		$mResult = false;
@@ -397,19 +436,6 @@ class CApiModuleManager
 		if ($oModule instanceof \AApiModule && $oModule->HasEntry($sEntryName)) 
 		{
 			$mResult = $oModule->RunEntry($sEntryName);
-		}
-		
-		return $mResult;
-	}
-
-	public function ExecuteMethod($sModuleName, $sMethod, $aParameters = array())
-	{
-		$mResult = false;
-		$oModule = $this->GetModule($sModuleName);
-		if ($oModule instanceof AApiModule) 
-		{
-			
-			$mResult = $oModule->ExecuteMethod($sMethod, $aParameters);
 		}
 		
 		return $mResult;
@@ -435,13 +461,27 @@ class CApiModuleManager
  */
 class CApiModuleDecorator
 {
-    protected $oModule;
+    /**
+	 *
+	 * @var \AApiModule
+	 */
+	protected $oModule;
 
-    public function __construct($sModuleName) 
+    /**
+	 * 
+	 * @param type $sModuleName
+	 */
+	public function __construct($sModuleName) 
 	{
        $this->oModule = \CApi::GetModule($sModuleName);
     }	
 	
+	/**
+	 * 
+	 * @param string $sMethodName
+	 * @param array $aArguments
+	 * @return mixed
+	 */
 	public function __call($sMethodName, $aArguments) 
 	{
 		$mResult = false;
@@ -558,16 +598,32 @@ abstract class AApiModule
 		);
 	}
 	
+	/**
+	 * 
+	 * @param string $sName
+	 * @param string $sPath
+	 * @param string $sVersion
+	 * @return \AApiModule
+	 */
 	public static function createInstance($sName, $sPath, $sVersion = '1.0')
 	{
 		return new static($sName, $sPath, $sVersion);
 	}	
 
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public function isInitialized()
 	{
 		return (bool) $this->bInitialized;
 	}
 
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public function initialize()
 	{
 		$mResult = true;
@@ -603,13 +659,19 @@ abstract class AApiModule
 		return $mResult;
 	}
 	
+	/**
+	 * 
+	 */
 	public function init() {}
 	
+	/**
+	 * 
+	 */
 	public function loadModuleConfig()
 	{
 		$this->oModuleSettings = new \CApiBasicSettings(
-				\CApi::DataPath() . '/settings/modules/' . $this->sName . '.config.json', 
-				$this->aSettingsMap
+			\CApi::DataPath() . '/settings/modules/' . $this->sName . '.config.json', 
+			$this->aSettingsMap
 		);
 	}	
 
@@ -624,12 +686,18 @@ abstract class AApiModule
 		}
 	}	
 	
-	public function getConfig($sName, $sDefaultValue = null)
+	/**
+	 * 
+	 * @param string $sName
+	 * @param mixed $mDefaultValue
+	 * @return mixed
+	 */
+	public function getConfig($sName, $mDefaultValue = null)
 	{
-		$mResult = $sDefaultValue;
+		$mResult = $mDefaultValue;
 		if (isset($this->oModuleSettings))
 		{
-			$mResult = $this->oModuleSettings->GetConf($sName, $sDefaultValue);
+			$mResult = $this->oModuleSettings->GetConf($sName, $mDefaultValue);
 		}
 		
 		return $mResult;
@@ -655,15 +723,24 @@ abstract class AApiModule
 		return $bResult;
 	}	
 	
+	/**
+	 * 
+	 * @param string $sMethod
+	 * @return boolean
+	 */
 	public function isEventCallback($sMethod)
 	{
 		return in_array($sMethod, $this->getEventsCallbacks());
 	}
 	
+	/**
+	 * 
+	 * @return array
+	 */
 	public function getEventsCallbacks()
 	{
 		$aEventsValues = array();
-		$aEvents = \CApi::GetModuleManager()->getEvents($this->GetName());
+		$aEvents = \CApi::GetModuleManager()->getEvents();
 		foreach(array_values($aEvents) as $aEvent)
 		{
 			foreach ($aEvent as $aEv)
@@ -678,11 +755,22 @@ abstract class AApiModule
 		return $aEventsValues;
 	}
 
+	/**
+	 * 
+	 * @param string $sEvent
+	 * @param callback $fCallback
+	 * @param int $iPriority
+	 */
 	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
 		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
 	}
 
+	/**
+	 * 
+	 * @param string $sEvent
+	 * @param array $aArguments
+	 */
 	public function broadcastEvent($sEvent, $aArguments = array())
 	{
 		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments);
@@ -702,6 +790,11 @@ abstract class AApiModule
 		}
 	}	
 	
+	/**
+	 * 
+	 * @param string $sType
+	 * @param array $aMap
+	 */
 	public function setObjectMap($sType, $aMap)
 	{
 		$aResultMap = array();
@@ -712,6 +805,11 @@ abstract class AApiModule
 		$this->aObjects[$sType] = $aResultMap;
 	}	
 	
+	/**
+	 * 
+	 * @param string $sType
+	 * @return array
+	 */
 	public function getObjectMap($sType)
 	{
 		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : array();
@@ -773,6 +871,12 @@ abstract class AApiModule
 		return $this->sName.'-'.$this->sVersion;
 	}
 	
+	/**
+	 * 
+	 * @param string $sManagerName
+	 * @param string $sForcedStorage
+	 * @return \AApiModule
+	 */
 	public function GetManager($sManagerName = '', $sForcedStorage = 'db')
 	{
 		$mResult = false;
@@ -800,6 +904,11 @@ abstract class AApiModule
 		return $mResult;
 	}
 	
+	/**
+	 * 
+	 * @param string $sName
+	 * @param callback $mCallbak
+	 */
 	public function AddEntry($sName, $mCallbak)
 	{
 		if (!isset($this->aEntries[$sName]))
@@ -808,6 +917,10 @@ abstract class AApiModule
 		}
 	}
 	
+	/**
+	 * 
+	 * @param array $aEntries
+	 */
 	public function AddEntries($aEntries)
 	{
 		foreach ($aEntries as $sName => $mCallbak)
@@ -816,16 +929,31 @@ abstract class AApiModule
 		}
 	}
 	
+	/**
+	 * 
+	 * @param string $sName
+	 * @return boolean
+	 */
 	public function HasEntry($sName)
 	{
 		return isset($this->aEntries[$sName]);
 	}
 	
+	/**
+	 * 
+	 * @param callback $mCallbak
+	 * @return boolean
+	 */
 	public function IsEntryCallback($mCallbak)
 	{
 		return in_array($mCallbak, array_values($this->aEntries));
 	}
 
+	/**
+	 * 
+	 * @param stranig $sName
+	 * @return mixed
+	 */
 	public function GetEntryCallback($sName)
 	{
 		$mResult = false;
@@ -837,6 +965,11 @@ abstract class AApiModule
 		return $mResult;
 	}	
 	
+	/**
+	 * 
+	 * @param string $sName
+	 * @return mixed
+	 */
 	public function RunEntry($sName)
 	{
 		$mResult = false;
@@ -850,6 +983,10 @@ abstract class AApiModule
 		return $mResult;
 	}
 	
+	/**
+	 * 
+	 * @return mixed
+	 */
 	private function getUploadData()
 	{
 		$mResult = false;
@@ -880,6 +1017,11 @@ abstract class AApiModule
 		return $mResult;
 	}
 
+	/**
+	 * 
+	 * @return string
+	 * @throws \System\Exceptions\AuroraApiException
+	 */
 	public function EntryApi()
 	{
 		@ob_start();
@@ -966,6 +1108,10 @@ abstract class AApiModule
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
 	}
 
+	/**
+	 * 
+	 * @return mixed
+	 */
 	public function EntryDownload()
 	{
 		$mResult = false;
@@ -1061,6 +1207,11 @@ abstract class AApiModule
 	
 	}	
 	
+	/**
+	 * 
+	 * @param array $aFileNames
+	 * @param boolean $bDoExitOnError
+	 */
 	public function incClasses($aFileNames, $bDoExitOnError = true)
 	{
 		if (is_array($aFileNames))
@@ -1307,6 +1458,10 @@ abstract class AApiModule
 			\CApi::processTranslateParams($aLang, $sData, $aParams);
 	}
 	
+	/**
+	 * 
+	 * @param \AEntity $oEntity
+	 */
 	public function setDisabledForEntity(&$oEntity)
 	{
 		$oEavManager = \CApi::GetSystemManager('eav');
@@ -1326,11 +1481,16 @@ abstract class AApiModule
 			$sDisabledModules = implode('|', $aDisabledModules);
 			$oEntity->{'@DisabledModules'} = $sDisabledModules;
 			$oEavManager->setAttributes(
-					array($oEntity->iId), 
-					array(new \CAttribute('@DisabledModules', $sDisabledModules, 'string')));
+				array($oEntity->iId), 
+				array(new \CAttribute('@DisabledModules', $sDisabledModules, 'string'))
+			);
 		}	
 	}
 	
+	/**
+	 * 
+	 * @param \AEntity $oEntity
+	 */
 	public function setEnabledForEntity(&$oEntity)
 	{
 		$oEavManager = \CApi::GetSystemManager('eav');
@@ -1350,8 +1510,9 @@ abstract class AApiModule
 			$sDisabledModules = implode('|', $aDisabledModules);
 			$oEntity->{'@DisabledModules'} = $sDisabledModules;
 			$oEavManager->setAttributes(
-					array($oEntity->iId), 
-					array(new \CAttribute('@DisabledModules', implode('|', $aDisabledModules), 'string')));
+				array($oEntity->iId), 
+				array(new \CAttribute('@DisabledModules', implode('|', $aDisabledModules), 'string'))
+			);
 		}	
 	}
 }
