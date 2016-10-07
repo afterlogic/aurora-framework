@@ -259,7 +259,11 @@ class CApi
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
 		list($sModuleName, $sMethodName) = explode('::', $sMethodName);
-		return CApi::GetModuleManager()->ExecuteMethod($sModuleName, $sMethodName, $aParameters);
+		$oModule = CApi::GetModule($sModuleName);
+		if ($oModule instanceof AApiModule)
+		{
+			return $oModule->ExecuteMethod($sModuleName, $sMethodName, $aParameters);
+		}
 	}
 
 	/**
