@@ -46,6 +46,11 @@ class CApiModuleManager
 	 */
 	private $_aTemplates;
 	
+	/**
+	 * @var array
+	 */
+	private $_aResults;
+	
 	public function __construct()
 	{
 	}
@@ -237,9 +242,10 @@ class CApiModuleManager
      *
      * @param string $sEvent
      * @param array $aArguments
+     * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, $aArguments = array()) 
+    public function broadcastEvent($sModule, $sEvent, $aArguments = array(), $mResult = null) 
 	{
 		$bResult = true;
 		$aEventSubscriptions = array();
@@ -260,10 +266,17 @@ class CApiModuleManager
 		
 		foreach($aEventSubscriptions as $fCallback) 
 		{
+			$bBreak = false;
 			if (is_callable($fCallback))
 			{
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
-				$bBreak = call_user_func_array($fCallback, $aArguments);
+				call_user_func_array($fCallback, array($aArguments, &$mResult));
+				\CApi::GetModuleManager()->AddResult(
+					$fCallback[0]->GetName(), 
+					$fCallback[1], 
+					$mResult
+				);
+				
 				if ($bBreak) 
 				{
 					break;
@@ -451,6 +464,26 @@ class CApiModuleManager
 		}
 
 		return $sResult;
+	}
+	
+	/**
+	 * 
+	 * @param string $sModule
+	 * @param string $sMethod
+	 * @param mixed $mResult
+	 */
+	public function AddResult($sModule, $sMethod, $mResult)
+	{
+		$this->_aResults[] = array(
+			'Module' => $sModule,
+			'Method' => $sMethod,
+			'Result' => $mResult
+		);
+	}
+	
+	public function GetResults()
+	{
+		return $this->_aResults;
 	}
 }
 
@@ -769,9 +802,9 @@ abstract class AApiModule
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
-	public function broadcastEvent($sEvent, $aArguments = array())
+	public function broadcastEvent($sEvent, $aArguments = array(), &$mResult)
 	{
-		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments);
+		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments, $mResult);
 	}
 	
 	/**
@@ -1061,21 +1094,14 @@ abstract class AApiModule
 						$aParameters['UploadData'] = $mUploadData;
 					}
 
-					$aResult = array(
-						array(
-							'Method' => $sMethod,
-							'Module' => $this->GetName(),
-							'Result' => $this->ExecuteMethod(
-								$sMethod, 
-								$aParameters, 
-								true
-							)
-						)
+					$this->ExecuteMethod(
+						$sMethod, 
+						$aParameters, 
+						true
 					);
-						
 					$aResponseItem = $this->DefaultResponse(
 						$sMethod,
-						$aResult
+						\CApi::GetModuleManager()->GetResults()
 					);
 				}
 
@@ -1368,7 +1394,7 @@ abstract class AApiModule
 			if (method_exists($this, $sMethodName) &&  !($bWebApi && 
 				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
 			{
-				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', array(&$aArguments));
+				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', $aArguments, $mResult);
 
 				$aValues = array();
 
@@ -1400,10 +1426,10 @@ abstract class AApiModule
 				}
 
 				$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
+				
+				\CApi::GetModuleManager()->AddResult($this->GetName(), $sMethodName, $mResult);
 
-				$aArguments['@Result'] = $mResult;
-				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'after', array(&$aArguments));
-				$mResult = $aArguments['@Result'];
+				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'after', $aArguments, $mResult);
 			}
 		}
 		catch (\Exception $oException)
