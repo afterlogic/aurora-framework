@@ -233,7 +233,7 @@ class CApiBasicSettings
 			}
 			if (!file_exists(dirname($sJsonFile)))
 			{
-				mkdir(dirname($sJsonFile), '0777');
+				mkdir(dirname($sJsonFile), 0777);
 			}
 			$bResult = (bool) file_put_contents($sJsonFile, json_encode($aConvertedContainer, JSON_PRETTY_PRINT));
 		}
