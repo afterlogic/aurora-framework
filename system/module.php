@@ -1452,7 +1452,7 @@ abstract class AApiModule
 	 * 
 	 * @return array
 	 */
-	public function GetAppData()
+	public function GetSettings()
 	{
 		return null;
 	}

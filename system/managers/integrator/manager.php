@@ -1105,7 +1105,7 @@ class CApiIntegratorManager extends AApiManager
 
 		foreach ($aModules as $oModule)
 		{
-			$aModuleAppData = $oModule->GetAppData();
+			$aModuleAppData = $oModule->GetSettings();
 			if (is_array($aModuleAppData))
 			{
 				$aAppData[$oModule->GetName()] = $aModuleAppData;
