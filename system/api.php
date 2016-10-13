@@ -262,7 +262,7 @@ class CApi
 		$oModule = CApi::GetModule($sModuleName);
 		if ($oModule instanceof AApiModule)
 		{
-			return $oModule->ExecuteMethod($sModuleName, $sMethodName, $aParameters);
+			return $oModule->CallMethod($sModuleName, $sMethodName, $aParameters);
 		}
 	}
 

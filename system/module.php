@@ -245,7 +245,7 @@ class CApiModuleManager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, $aArguments = array(), $mResult = null) 
+    public function broadcastEvent($sModule, $sEvent, $aArguments = array(), &$mResult = null) 
 	{
 		$bResult = true;
 		$aEventSubscriptions = array();
@@ -269,8 +269,9 @@ class CApiModuleManager
 			$bBreak = false;
 			if (is_callable($fCallback))
 			{
+				$aArguments['__Result__'] = &$mResult;
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
-				call_user_func_array($fCallback, array($aArguments, &$mResult));
+				call_user_func_array($fCallback, $aArguments);
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
 					$fCallback[1], 
@@ -518,7 +519,7 @@ class CApiModuleDecorator
 		$mResult = false;
 		if ($this->oModule instanceof AApiModule)
 		{
-			$mResult = $this->oModule->ExecuteMethod($sMethodName, $aArguments);
+			$mResult = $this->oModule->CallMethod($sMethodName, $aArguments);
 		}
 		return $mResult;
 	}
@@ -802,7 +803,7 @@ abstract class AApiModule
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
-	public function broadcastEvent($sEvent, $aArguments = array(), &$mResult)
+	public function broadcastEvent($sEvent, $aArguments = array(), &$mResult = null)
 	{
 		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments, $mResult);
 	}
@@ -1008,7 +1009,7 @@ abstract class AApiModule
 		
 		if ($mMethod) 
 		{
-			$mResult = $this->ExecuteMethod($mMethod, array());
+			$mResult = $this->CallMethod($mMethod, array());
 		}			
 		
 		return $mResult;
@@ -1094,7 +1095,7 @@ abstract class AApiModule
 						$aParameters['UploadData'] = $mUploadData;
 					}
 
-					$this->ExecuteMethod(
+					$this->CallMethod(
 						$sMethod, 
 						$aParameters, 
 						true
@@ -1160,7 +1161,7 @@ abstract class AApiModule
 				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
 				$aParameters['SharedHash'] = empty($aPaths[5]) ? '' : $aPaths[5];
 
-				$mResult = $this->ExecuteMethod($sMethod, $aParameters, true);
+				$mResult = $this->CallMethod($sMethod, $aParameters, true);
 			}
 		}
 		catch (\Exception $oException)
@@ -1386,7 +1387,7 @@ abstract class AApiModule
 		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
 	}	
 	
-	public function ExecuteMethod($sMethodName, $aArguments = array(), $bWebApi = false)
+	public function CallMethod($sMethodName, $aArguments = array(), $bWebApi = false)
 	{
 		$mResult = false;
 		try 
@@ -1396,6 +1397,11 @@ abstract class AApiModule
 			{
 				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', $aArguments, $mResult);
 
+				if (isset($mResult['UserId']))
+				{
+					$aArguments['UserId'] = (int) $mResult['UserId'];
+				}
+				
 				$aValues = array();
 
 				if ($bWebApi)
