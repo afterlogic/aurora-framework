@@ -11,4 +11,4 @@ do
 	fi
 done
 
-gulp js1:watch --output app --modules $(IFS=, ; echo "${Modules[*]}")
+gulp js:watch --output app --modules $(IFS=, ; echo "${Modules[*]}")
