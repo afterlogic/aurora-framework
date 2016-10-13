@@ -1,14 +1,12 @@
 var
 	_ = require('underscore'),
 	argv = require('./argv.js'),
-	fileExists = require('file-exists'),
 	gulp = require('gulp'),
 	less = require('gulp-less'),
 	gutil = require('gulp-util'),
 	concat = require('gulp-concat-util'),
 	plumber = require('gulp-plumber'),
 	fs = require('fs'),
-	copyDir = require('copy-dir'),
 	ncp = require('ncp').ncp,
 	mkdirp = require('mkdirp'),
 
@@ -23,7 +21,7 @@ var
 ;
 
 aModulesNames.forEach(function (sModuleName) {
-	if (fileExists('./modules/' + sModuleName + '/styles/styles.less'))
+	if (fs.existsSync('./modules/' + sModuleName + '/styles/styles.less'))
 	{
 		aModulesWatchPaths.push('./modules/' + sModuleName + '/styles/**/*.less');
 	}
@@ -58,10 +56,10 @@ function BuildThemeCss(sTheme, bMobile)
 	;
 	
 	aModulesNames.forEach(function (sModuleName) {
-		if (fileExists('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
+		if (fs.existsSync('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
 		{
 			//check module override
-			if (fileExists('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
+			if (fs.existsSync('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
 			{
 				aModulesFiles.push('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 			}
@@ -82,7 +80,7 @@ function BuildThemeCss(sTheme, bMobile)
 //				console.log(sFilePath);
 				var
 					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less'),
-					sRes = fileExists(sThemePath) ? '@import "' + sThemePath + '";\r\n' : ''
+					sRes = fs.existsSync(sThemePath) ? '@import "' + sThemePath + '";\r\n' : ''
 				;
 				
 				return sRes + '@import "' + sFilePath + '";\r\n'; 
@@ -128,7 +126,7 @@ function MoveFiles(sFromDir, sToDir)
 {
 	var
 		fCopyDir = function () {
-			copyDir(sFromDir, sToDir, function (oErr) {
+			ncp(sFromDir, sToDir, function (oErr) {
 				if (oErr)
 				{
 					console.log(sFromDir + ' directory copying was failed: ', oErr);

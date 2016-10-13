@@ -1,12 +1,12 @@
 var
-	_ = require('underscore'),
 	argv = require('./argv.js'),
-	fileExists = require('file-exists'),
+	_ = require('underscore'),
+	fs = require('fs'),
 	gulp = require('gulp'),
 	concat = require('gulp-concat-util'),
 	plumber = require('gulp-plumber'),
-	ini = require('iniparser'),
 	gutil = require('gulp-util'),
+	ini = require('iniparser'),
 	
 	aModulesNames = argv.getModules(),
 	sTenantName = argv.getParameter('--tenant')
@@ -28,13 +28,13 @@ function BuildLang(sLanguage)
 			;
 			
 			//check module override
-			if (fileExists(sTenantFilePath))
+			if (fs.existsSync(sTenantFilePath))
 			{
 				sFoundedFilePath = sTenantFilePath;
 			}
 			else
 			{
-				sFoundedFilePath = fileExists(sFilePath) ? sFilePath : './modules/' + sModuleName + '/i18n/English.ini';
+				sFoundedFilePath = fs.existsSync(sFilePath) ? sFilePath : './modules/' + sModuleName + '/i18n/English.ini';
 			}
 
 			return sFoundedFilePath;

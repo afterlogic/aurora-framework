@@ -1,7 +1,7 @@
 var
     _ = require('underscore'),
     argv = require('./argv.js'),
-    fileExists = require('file-exists'),
+	fs = require('fs'),
     gulp = require('gulp'),
     gutil = require('gulp-util'),
     concat = require('gulp-concat-util'),
@@ -18,12 +18,6 @@ var
     crlf = '\n'
 ;
 
-// aModulesNames.forEach(function (sModuleName) {
-    // if (fileExists('./modules/' + sModuleName + '/js/*.js')) {
-        // aModulesWatchPaths.push('./modules/' + sModuleName + '/js/**/*.js');
-    // }
-// });
-
 function GetModuleName(sFilePath) {
     return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
 }
@@ -36,9 +30,12 @@ var
 			sFoundedFilePath = ''
 		;
 
-		if (fileExists(sTenantFilePath)) {
+		if (fs.existsSync(sTenantFilePath))
+		{
 			sFoundedFilePath = sTenantFilePath;
-		} else if (fileExists(sFilePath)) {
+		}
+		else if (fs.existsSync(sFilePath))
+		{
 			sFoundedFilePath = sFilePath;
 		}
 
@@ -144,16 +141,16 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 	;
 }
 
-gulp.task('js1:build', function () {
-	jsTask('js1:build', sOutputName, _.defaults({
+gulp.task('js:build', function () {
+	jsTask('js:build', sOutputName, _.defaults({
 		'output':  {
 			'filename': sOutputName + '.js'
 		}
 	}, oWebPackConfig));
 });
 
-gulp.task('js1:watch', function () {
-	jsTask('js1:watch', sOutputName, _.defaults({
+gulp.task('js:watch', function () {
+	jsTask('js:watch', sOutputName, _.defaults({
 		'watch': true,
 		'aggregateTimeout': 300,
 		'poll': true,
@@ -163,8 +160,8 @@ gulp.task('js1:watch', function () {
 	}, oWebPackConfig));
 });
 
-gulp.task('js1:min', function () {
-	jsTask('js1:min', sOutputName, _.defaults({
+gulp.task('js:min', function () {
+	jsTask('js:min', sOutputName, _.defaults({
 		'plugins': [
 			new webpack.optimize.UglifyJsPlugin({
 				compress: {

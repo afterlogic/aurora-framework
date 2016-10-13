@@ -1,12 +1,13 @@
 {
-  "name": "p8",
-  "title": "AfterLogic Aurora Project",
+  "title": "Afterlogic Aurora Cloud",
+  "description": "",
   "version": "8.0.0",
-  "release": "700",
   "main": "gulpfile.js",
-  "homepage": "http://afterlogic.com",
+  "homepage": "http://afterlogic.org/aurora-cloud",
+  "repository": "https://github.com/afterlogic/aurora-core",
+  "license": "AGPL-3.0",
   "author": {
-    "name": "AfterLogic",
+    "name": "Afterlogic Corp.",
     "email": "support@afterlogic.com",
     "web": "http://afterlogic.com"
   },
@@ -14,7 +15,6 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "signals": "~1.0.0",
     "hasher": "~1.2.0",
     "underscore": "~1.8.3",
     "knockout": "~3.3.0",
@@ -24,39 +24,24 @@
     "fullcalendar": "~2.4.0"
   },
   "browser": {
-    "signals": "./node_modules/signals/dist/signals.min.js",
-    "hasher": "./node_modules/hasher/dist/js/hasher.min.js",
     "underscore": "./node_modules/underscore/underscore-min.js",
     "knockout": "./node_modules/knockout/build/output/knockout-latest.js",
-    "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
-    "customscroll": "./modules/CoreWebclient/js/vendors/customscroll.js",
-    "modernizr": "./modules/CoreWebclient/js/vendors/modernizr.js",
-    "jquery.cookie": "./modules/CoreWebclient/js/vendors/jquery.cookie.js"
+    "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js"
   },
   "devDependencies": {
-    "cascade-ini": "*",
-	"ini-parser": "*",
-	"iniparser": "*",
-    "copy-dir": "*",
-	"exports-loader": "~0.6.3",
-    "file-exists": "*",
-    "fs": "*",
-	"imports-loader": "~0.6.5",
-    "gulp": "*",
-    "gulp-concat-util": "*",
-    "gulp-eol": "*",
-    "gulp-header": "*",
-    "gulp-jshint": "*",
-    "gulp-less": "*",
-    "gulp-plumber": "~1.1.0",
-    "gulp-rename": "*",
-    "gulp-util": "2.2.20",
-    "mkdirp": "*",
-    "ncp": "*",
-    "vinyl-buffer": "*",
-    "vinyl-source-stream": "*",
-    "webpack": "~1.12.14",
-	"webpack-stream": "*"
-  },
-  "license": "Custom"
+    "exports-loader": "^0.6.3",
+    "gulp": "^3.9.1",
+    "gulp-concat-util": "^0.5.5",
+    "gulp-less": "^3.1.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-util": "^3.0.7",
+    "imports-loader": "^0.6.5",
+    "iniparser": "^1.0.5",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "webpack": "^1.13.2",
+    "webpack-stream": "^3.2.0"
+  }
 }
