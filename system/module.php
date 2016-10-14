@@ -34,7 +34,7 @@ class CApiModuleManager
      *
      * @var array
      */
-    protected $_aEventSubscriptions = array();
+    protected $_aSubscriptions = array();
 	
     /**
      * @var array
@@ -166,8 +166,12 @@ class CApiModuleManager
 	public function loadModule($sModuleName, $sModulePath)
 	{
 		$mResult = false;
-		
-		$this->broadcastEvent($sModuleName, 'loadModule' . \AApiModule::$Delimiter . 'before', array(&$sModuleName, &$sModulePath));
+		$aArgs = array($sModuleName, $sModulePath);
+		$this->broadcastEvent(
+			$sModuleName, 
+			'loadModule' . \AApiModule::$Delimiter . 'before', 
+			$aArgs
+		);
 		
 		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
 		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
@@ -189,7 +193,12 @@ class CApiModuleManager
 		   }
 		}
 
-		$this->broadcastEvent($sModuleName, 'loadModule' . \AApiModule::$Delimiter . 'after', array(&$mResult));
+		$this->broadcastEvent(
+			$sModuleName, 
+			'loadModule' . \AApiModule::$Delimiter . 'after', 
+			$aArgs,
+			$mResult
+		);
 		
 		return $mResult;
 	}
@@ -200,7 +209,7 @@ class CApiModuleManager
 	 */
 	public function getEvents() 
 	{
-		return $this->_aEventSubscriptions;
+		return $this->_aSubscriptions;
 	}	
 	
     /**
@@ -221,16 +230,16 @@ class CApiModuleManager
      */
     public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
 	{
-        if (!isset($this->_aEventSubscriptions[$sEvent])) 
+        if (!isset($this->_aSubscriptions[$sEvent])) 
 		{
-            $this->_aEventSubscriptions[$sEvent] = array();
+            $this->_aSubscriptions[$sEvent] = array();
         }
-        while(isset($this->_aEventSubscriptions[$sEvent][$iPriority]))	
+        while(isset($this->_aSubscriptions[$sEvent][$iPriority]))	
 		{
 			$iPriority++;
 		}
-        $this->_aEventSubscriptions[$sEvent][$iPriority] = $fCallback;
-        ksort($this->_aEventSubscriptions[$sEvent]);
+        $this->_aSubscriptions[$sEvent][$iPriority] = $fCallback;
+        ksort($this->_aSubscriptions[$sEvent]);
     }	
 	
     /**
@@ -245,36 +254,41 @@ class CApiModuleManager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, $aArguments = array(), &$mResult = null) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null) 
 	{
 		$bResult = true;
-		$aEventSubscriptions = array();
-		if (isset($this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) 
+		$aSubscriptions = array();
+		if (isset($this->_aSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) 
 		{
-			$aEventSubscriptions = array_merge(
-				$aEventSubscriptions, 
-				$this->_aEventSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]
+			$aSubscriptions = array_merge(
+				$aSubscriptions, 
+				$this->_aSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]
 			);
 		}
-		if (isset($this->_aEventSubscriptions[$sEvent])) 
+		if (isset($this->_aSubscriptions[$sEvent])) 
 		{
-			$aEventSubscriptions = array_merge(
-				$aEventSubscriptions, 
-				$this->_aEventSubscriptions[$sEvent]
+			$aSubscriptions = array_merge(
+				$aSubscriptions, 
+				$this->_aSubscriptions[$sEvent]
 			);
         }
 		
-		foreach($aEventSubscriptions as $fCallback) 
+		foreach($aSubscriptions as $fCallback) 
 		{
 			$bBreak = false;
 			if (is_callable($fCallback))
 			{
-				$aArguments['__Result__'] = &$mResult;
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
-				call_user_func_array($fCallback, $aArguments);
+				call_user_func_array(
+					$fCallback, 
+					array(
+						&$aArguments,
+						&$mResult
+					)
+				);
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
-					$fCallback[1], 
+					$sEvent, 
 					$mResult
 				);
 				
@@ -803,9 +817,14 @@ abstract class AApiModule
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
-	public function broadcastEvent($sEvent, $aArguments = array(), &$mResult = null)
+	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null)
 	{
-		\CApi::GetModuleManager()->broadcastEvent($this->GetName(), $sEvent, $aArguments, $mResult);
+		\CApi::GetModuleManager()->broadcastEvent(
+			$this->GetName(), 
+			$sEvent, 
+			$aArguments, 
+			$mResult
+		);
 	}
 	
 	/**
@@ -1395,13 +1414,12 @@ abstract class AApiModule
 			if (method_exists($this, $sMethodName) &&  !($bWebApi && 
 				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
 			{
-				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'before', $aArguments, $mResult);
+				$this->broadcastEvent(
+					$sMethodName . \AApiModule::$Delimiter . 'before', 
+					$aArguments, 
+					$mResult
+				);
 
-				if (isset($mResult['UserId']))
-				{
-					$aArguments['UserId'] = (int) $mResult['UserId'];
-				}
-				
 				$aValues = array();
 
 				if ($bWebApi)
@@ -1433,9 +1451,17 @@ abstract class AApiModule
 
 				$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
 				
-				\CApi::GetModuleManager()->AddResult($this->GetName(), $sMethodName, $mResult);
+				\CApi::GetModuleManager()->AddResult(
+					$this->GetName(), 
+					$sMethodName, 
+					$mResult
+				);
 
-				$this->broadcastEvent($sMethodName . \AApiModule::$Delimiter . 'after', $aArguments, $mResult);
+				$this->broadcastEvent(
+					$sMethodName . \AApiModule::$Delimiter . 'after', 
+					$aArguments, 
+					$mResult
+				);
 			}
 		}
 		catch (\Exception $oException)
