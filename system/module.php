@@ -1451,15 +1451,15 @@ abstract class AApiModule
 
 				$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
 				
-				\CApi::GetModuleManager()->AddResult(
-					$this->GetName(), 
-					$sMethodName, 
-					$mResult
-				);
-
 				$this->broadcastEvent(
 					$sMethodName . \AApiModule::$Delimiter . 'after', 
 					$aArguments, 
+					$mResult
+				);
+				
+				\CApi::GetModuleManager()->AddResult(
+					$this->GetName(), 
+					$sMethodName, 
 					$mResult
 				);
 			}
