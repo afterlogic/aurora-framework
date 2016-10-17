@@ -279,7 +279,7 @@ class CApiModuleManager
 			if (is_callable($fCallback))
 			{
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
-				call_user_func_array(
+				$mCallBackResult = call_user_func_array(
 					$fCallback, 
 					array(
 						&$aArguments,
@@ -289,7 +289,7 @@ class CApiModuleManager
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
 					$sEvent, 
-					$mResult
+					$mCallBackResult
 				);
 				
 				if ($bBreak) 
@@ -487,7 +487,7 @@ class CApiModuleManager
 	 * @param string $sMethod
 	 * @param mixed $mResult
 	 */
-	public function AddResult($sModule, $sMethod, $mResult)
+	public function AddResult($sModule, $sMethod, &$mResult)
 	{
 		$this->_aResults[] = array(
 			'Module' => $sModule,
