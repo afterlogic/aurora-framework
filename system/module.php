@@ -288,7 +288,7 @@ class CApiModuleManager
 				);
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
-					$sEvent, 
+					$sModule."::".$sEvent, 
 					$mCallBackResult
 				);
 				
