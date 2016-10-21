@@ -487,13 +487,20 @@ class CApiModuleManager
 	 * @param string $sMethod
 	 * @param mixed $mResult
 	 */
-	public function AddResult($sModule, $sMethod, &$mResult)
+	public function AddResult($sModule, $sMethod, &$mResult, $iErrorCode = 0)
 	{
-		$this->_aResults[] = array(
+		$aResult = array(
 			'Module' => $sModule,
 			'Method' => $sMethod,
 			'Result' => $mResult
 		);
+		
+		if ($iErrorCode > 0)
+		{
+			$aResult['ErrorCode'] = $iErrorCode;
+		}
+		
+		$this->_aResults[] = $aResult;
 	}
 	
 	public function GetResults()
@@ -1148,7 +1155,10 @@ abstract class AApiModule
 					$aAdditionalParams = $oException->GetObjectParams();
 				}
 
-				$aResponseItem = $this->ExceptionResponse($sMethod, $oException, $aAdditionalParams);
+				$aResponseItem = $this->DefaultResponse(
+					$sMethod,
+					\CApi::GetModuleManager()->GetResults()
+				);
 			}
 
 			if ($sFormat !== 'Raw')
@@ -1380,11 +1390,7 @@ abstract class AApiModule
 					$sErrorMessage = null;
 				}
 			}
-			$oModule = $oException->GetModule();
-			if ($oModule)
-			{
-				$sModule = $oModule->GetName();
-			}
+				$sModule = $this->GetName();
 		}
 		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
 		{
@@ -1449,7 +1455,27 @@ abstract class AApiModule
 					$aValues = $aArguments;
 				}
 
-				$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
+				try
+				{
+					$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
+				} 
+				catch (\Exception $oException) 
+				{
+					\CApi::GetModuleManager()->AddResult(
+						$this->GetName(), 
+						$sMethodName, 
+						$mResult,
+						$oException->getCode()
+					);
+					if (!($oException instanceof \System\Exceptions\AuroraApiException))
+					{
+						throw new \System\Exceptions\Exception($oException->getMessage(), $oException->getCode(), $oException);
+					}
+					else
+					{
+						throw $oException;
+					}
+				}
 				
 				$this->broadcastEvent(
 					$sMethodName . \AApiModule::$Delimiter . 'after', 
@@ -1460,7 +1486,8 @@ abstract class AApiModule
 				\CApi::GetModuleManager()->AddResult(
 					$this->GetName(), 
 					$sMethodName, 
-					$mResult
+					$mResult,
+					$iErrorCode
 				);
 			}
 		}
