@@ -1486,8 +1486,7 @@ abstract class AApiModule
 				\CApi::GetModuleManager()->AddResult(
 					$this->GetName(), 
 					$sMethodName, 
-					$mResult,
-					$iErrorCode
+					$mResult
 				);
 			}
 		}
