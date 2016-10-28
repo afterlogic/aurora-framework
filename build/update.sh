@@ -18,3 +18,5 @@ done
 cd ../build
 
 ./build.sh
+
+./docs/build-apidoc.sh
