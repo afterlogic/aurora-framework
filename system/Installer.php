@@ -11,6 +11,7 @@ class Installer
 		$sourcePath = "web/";
 		$destPath = "";
 		
+		self::recurse_copy($sourcePath."system/", $destPath."system/");
 		self::recurse_copy($sourcePath."build/", $destPath."build/");
 		self::recurse_copy($sourcePath."gulp-tasks/", $destPath."gulp-tasks/");
 		
