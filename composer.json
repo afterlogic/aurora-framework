@@ -3,7 +3,7 @@
 		"github-protocols": ["https"]
 	},
 	"repositories": [
-    ],	
+	],
 	"require": {
 		"google/recaptcha": "~1.1",
 		"sabre/dav": "3.0.*",
@@ -24,14 +24,14 @@
 	},
 	"extra": {
 		"installer-types": ["aurora-module"],
-        "installer-paths": {
+		"installer-paths": {
 			"special/package/": ["my/package"],
 			"modules/{$name}/": ["type:aurora-module"]
 		},
-        "merge-plugin": {
-            "include": [
-                "modules.json"
-            ]
+		"merge-plugin": {
+			"include": [
+				"modules.json"
+			]
 		}
 	}
 }
