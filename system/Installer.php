@@ -18,7 +18,7 @@ class Installer
 		copy($sourcePath."gulpfile.js", $destPath."gulpfile.js");
 		copy($sourcePath."index.php", $destPath."index.php");
 		copy($sourcePath."dav.php", $destPath."dav.php");
-		copy($sourcePath."common.php.php", $destPath."common.php.php");
+		copy($sourcePath."common.php", $destPath."common.php");
     }
 	
 	public static function recurse_copy($src,$dst) { 
