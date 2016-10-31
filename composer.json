@@ -1,27 +1,9 @@
 {
-	"name": "afterlogic/aurora-core",
-	"version": "dev-master",
-	"source": {
-		"type": "git",
-		"url": "https://github.com/afterlogic/aurora-core",
-		"reference": "master"
+	"config": {
+		"github-protocols": ["https"]
 	},
-	"dist": {
-		"type": "zip",
-		"url": "https://github.com/afterlogic/aurora-core/archive/master.zip",
-		"reference": "master"
-	},
-	"autoload": {
-		"psr-4" : {
-			"AuroraPlatform\\": "system/"
-		}
-	},
-	"type": "aurora-core",
-	"scripts": {
-		"post-update-cmd": [
-			"AuroraPlatform\\Installer::postInstall"
-		]
-	},
+	"repositories": [
+    ],	
 	"require": {
 		"google/recaptcha": "~1.1",
 		"sabre/dav": "3.0.*",
@@ -35,6 +17,21 @@
 		"afterlogic/dav": "dev-master",
 		"afterlogic/mailso": "dev-master",
 		"anahkiasen/underscore-php": "*",
-		"phpmailer/phpmailer": "~5.2"
+		"phpmailer/phpmailer": "~5.2",
+		
+		"oomphinc/composer-installers-extender": "^1.1",
+		"wikimedia/composer-merge-plugin": "dev-master"
+	},
+	"extra": {
+		"installer-types": ["aurora-module"],
+        "installer-paths": {
+			"special/package/": ["my/package"],
+			"modules/{$name}/": ["type:aurora-module"]
+		},
+        "merge-plugin": {
+            "include": [
+                "modules.json"
+            ]
+		}
 	}
 }
