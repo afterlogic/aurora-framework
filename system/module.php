@@ -254,7 +254,7 @@ class CApiModuleManager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
 	{
 		$bResult = true;
 		$aSubscriptions = array();
@@ -824,13 +824,14 @@ abstract class AApiModule
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
-	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null)
+	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true)
 	{
 		\CApi::GetModuleManager()->broadcastEvent(
 			$this->GetName(), 
 			$sEvent, 
 			$aArguments, 
-			$mResult
+			$mResult,
+			$bCountinue
 		);
 	}
 	
@@ -1420,6 +1421,11 @@ abstract class AApiModule
 			if (method_exists($this, $sMethodName) &&  !($bWebApi && 
 				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
 			{
+				if ($bWebApi && !isset($aArguments['UserId']))
+				{
+					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
+				}
+
 				$this->broadcastEvent(
 					$sMethodName . \AApiModule::$Delimiter . 'before', 
 					$aArguments, 
@@ -1430,10 +1436,6 @@ abstract class AApiModule
 
 				if ($bWebApi)
 				{
-					if (!isset($aArguments['UserId']))
-					{
-						$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
-					}
 					$oReflector = new \ReflectionMethod($this, $sMethodName);
 					foreach ($oReflector->getParameters() as $oParam) 
 					{
@@ -1457,7 +1459,15 @@ abstract class AApiModule
 
 				try
 				{
-					$mResult = call_user_func_array(array($this, $sMethodName), $aValues);
+					$mMethodResult = call_user_func_array(array($this, $sMethodName), $aValues);
+					if (is_array($mMethodResult) && is_array($mResult))
+					{
+						$mResult = array_merge($mMethodResult, $mResult);
+					}
+					else 
+					{
+						$mResult = $mMethodResult;
+					}
 				} 
 				catch (\Exception $oException) 
 				{
