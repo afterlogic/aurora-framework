@@ -275,7 +275,6 @@ class CApiModuleManager
 		
 		foreach($aSubscriptions as $fCallback) 
 		{
-			$bBreak = false;
 			if (is_callable($fCallback))
 			{
 				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
@@ -292,7 +291,7 @@ class CApiModuleManager
 					$mCallBackResult
 				);
 				
-				if ($bBreak) 
+				if ($mCallBackResult) 
 				{
 					break;
 				}
@@ -1504,7 +1503,7 @@ abstract class AApiModule
 		{
 			if (!($oException instanceof \System\Exceptions\AuroraApiException))
 			{
-				throw new \System\Exceptions\Exception($oException->getMessage(), $oException->getCode(), $oException);
+				throw new \System\Exceptions\AuroraApiException($oException->getCode(), $oException, $oException->getMessage());
 			}
 			else
 			{
