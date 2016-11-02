@@ -285,12 +285,13 @@ class CApiModuleManager
 						&$mResult
 					)
 				);
+
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
 					$sModule."::".$sEvent, 
 					$mCallBackResult
 				);
-				
+
 				if ($mCallBackResult) 
 				{
 					break;
@@ -506,6 +507,17 @@ class CApiModuleManager
 	{
 		return $this->_aResults;
 	}
+	
+	public function GetResult($sModule, $sMethod)
+	{
+		foreach($this->_aResults as $aResult)
+		{
+			if ($aResult['Module'] === $sModule && $aResult['Method'] === $sMethod)
+			{
+				return array($aResult);
+			}
+		}
+	}	
 }
 
 /**
@@ -1293,26 +1305,33 @@ abstract class AApiModule
 	 */
 	public function DefaultResponse($sMethod, $mResult = false)
 	{
-		$aResult = array();
+		$aResult = array(
+			'AuthenticatedUserId' => \CApi::getAuthenticatedUserId(),
+			'@Time' => microtime(true) - AURORA_APP_START
+		);
 		if (is_array($mResult))
 		{
 			foreach ($mResult as $aValue)
 			{
-				$aResult =  \CApiResponseManager::GetResponseObject(
-					$mResult, 
+				$aResponseResult = \CApiResponseManager::GetResponseObject(
+					$aValue, 
 					array(
 						'Module' => $aValue['Module'],
 						'Method' => $aValue['Method'],
 					)
 				);
+				if ($aValue['Module'] === $this->GetName() && $aValue['Method'] === $sMethod)
+				{
+					$aResult = array_merge($aResult, $aResponseResult);
+				}
+				else
+				{
+					$aResult['Stack'][] =  $aResponseResult;
+				}
 			}
 		}
 		
-		return array(
-			'Result' => $aResult,
-			'AuthenticatedUserId' => \CApi::getAuthenticatedUserId(),
-			'@Time' => microtime(true) - AURORA_APP_START
-		);
+		return $aResult;
 	}	
 	
 	/**
