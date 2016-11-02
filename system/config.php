@@ -143,9 +143,9 @@ return array(
 	/**
 	 * Which email should be treated as primary one in contact object
 	 * Supported values:
-	 *     EPrimaryEmailType::Home, EPrimaryEmailType::Business, EPrimaryEmailType::Other
+	 *     EContactsPrimaryEmail::Personal, EContactsPrimaryEmail::Business, EContactsPrimaryEmail::Other
 	 */
-	'contacts.default-primary-email' => EPrimaryEmailType::Home,
+	'contacts.default-primary-email' => EContactsPrimaryEmail::Personal,
 
 	'links.importing-contacts' => '',
 	

@@ -492,9 +492,9 @@ class EFolderType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPrimaryEmailType extends AEnumeration
+class EContactsPrimaryEmail extends AEnumeration
 {
-	const Home = 0;
+	const Personal = 0;
 	const Business = 1;
 	const Other = 2;
 
@@ -502,9 +502,47 @@ class EPrimaryEmailType extends AEnumeration
 	 * @var array
 	 */
 	protected $aConsts = array(
-		'Home' => self::Home,
+		'Personal' => self::Personal,
 		'Business' => self::Business,
 		'Other' => self::Other
+	);
+}
+
+/**
+ * @package Api
+ * @subpackage Enum
+ */
+class EContactsPrimaryPhone extends AEnumeration
+{
+	const Mobile = 0;
+	const Personal = 1;
+	const Business = 2;
+
+	/**
+	 * @var array
+	 */
+	protected $aConsts = array(
+		'Mobile' => self::Mobile,
+		'Personal' => self::Personal,
+		'Business' => self::Business
+	);
+}
+
+/**
+ * @package Api
+ * @subpackage Enum
+ */
+class EContactsPrimaryAddress extends AEnumeration
+{
+	const Personal = 0;
+	const Business = 1;
+
+	/**
+	 * @var array
+	 */
+	protected $aConsts = array(
+		'Personal' => self::Personal,
+		'Business' => self::Business,
 	);
 }
 
@@ -828,9 +866,18 @@ class EContactFileType extends AEnumeration
 class EContactSortField extends AEnumeration
 {
 	const Name = 1;
-	const EMail = 2;
+	const Email = 2;
 	const Frequency = 3;
 
+	/**
+	 * @var array
+	 */
+	protected $aConsts = array(
+		'Name' => self::Name,
+		'Email' => self::Email,
+		'Frequency' => self::Frequency
+	);
+	
 	/**
 	 * @param int $iValue
 	 * @return string
@@ -843,7 +890,7 @@ class EContactSortField extends AEnumeration
 			case self::Name:
 				$sResult = 'fullname';
 				break;
-			case self::EMail:
+			case self::Email:
 				$sResult = 'view_email';
 				break;
 			case self::Frequency:
@@ -865,7 +912,7 @@ class EContactSortField extends AEnumeration
 			case self::Name:
 				$sResult = 'friendly_nm';
 				break;
-			case self::EMail:
+			case self::Email:
 				$sResult = 'email';
 				break;
 		}
