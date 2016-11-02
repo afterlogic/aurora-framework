@@ -1463,7 +1463,7 @@ abstract class AApiModule
 					{
 						$mResult = array_merge($mMethodResult, $mResult);
 					}
-					else 
+					else if ($mMethodResult !== null)
 					{
 						$mResult = $mMethodResult;
 					}
