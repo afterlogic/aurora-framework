@@ -51,10 +51,6 @@ class CApiModuleManager
 	 */
 	private $_aResults;
 	
-	public function __construct()
-	{
-	}
-	
 	/**
 	 * 
 	 * @return \self
@@ -180,7 +176,11 @@ class CApiModuleManager
 		   $sModuleClassName = $sModuleName . 'Module';
 		   if (class_exists($sModuleClassName))
 		   {
-			   $oModule = call_user_func(array($sModuleClassName, 'createInstance'), $sModuleName, $sModulePath);
+			   $oModule = call_user_func(
+					array($sModuleClassName, 'createInstance'), 
+					$sModuleName, 
+					$sModulePath
+				);
 			   if ($oModule instanceof \AApiModule)
 			   {
 				   $oModule->loadModuleConfig();
@@ -856,7 +856,12 @@ abstract class AApiModule
 	{
 		if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName))
 		{
-			\CApi::GetModuleManager()->includeTemplate($sParsedTemplateID, $sParsedPlace, $this->GetPath().'/'.$sTemplateFileName, $sModuleName);
+			\CApi::GetModuleManager()->includeTemplate(
+				$sParsedTemplateID, 
+				$sParsedPlace, 
+				$this->GetPath().'/'.$sTemplateFileName, 
+				$sModuleName
+			);
 		}
 	}	
 	
@@ -1047,9 +1052,12 @@ abstract class AApiModule
 		
 		if ($mMethod) 
 		{
-			$mResult = $this->CallMethod($mMethod, array());
+			$mResult = call_user_func_array(
+				array($this, $mMethod), 
+				array()
+			);
+			
 		}			
-		
 		return $mResult;
 	}
 	
@@ -1098,85 +1106,85 @@ abstract class AApiModule
 
 		$aResponseItem = null;
 		$sModule = $this->oHttp->GetPost('Module', null);
+		$sMethod = $this->oHttp->GetPost('Method', null);
+		$sParameters = $this->oHttp->GetPost('Parameters', null);
 		$sFormat = $this->oHttp->GetPost('Format', null);
 
-		if (strtolower($sModule) === strtolower($this->GetName())) 
+		try
 		{
-			$sMethod = $this->oHttp->GetPost('Method', null);
-			$sParameters = $this->oHttp->GetPost('Parameters', null);
-			try
+			if (isset($sModule, $sMethod))
 			{
-				\CApi::Log('API:');
-				\CApi::Log('Module: '. $sModule);
-				\CApi::Log('Method: '. $sMethod);
+				if (strtolower($sModule) === strtolower($this->GetName())) 
+				{
+					\CApi::Log('API:');
+					\CApi::Log('Module: '. $sModule);
+					\CApi::Log('Method: '. $sMethod);
 
-				if (strtolower($sModule) !== 'core' && 
-					\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\CApi::validateAuthToken()) 
-				{
-					throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
-				} 
-				else if (!empty($sModule) && !empty($sMethod)) 
-				{
-					$aParameters = isset($sParameters) &&  is_string($sParameters) ? 
-						@json_decode($sParameters, true) : array();
-					$sTenantName = $this->oHttp->GetPost('TenantName', '');
-					
-					\CApi::setTenantName($sTenantName);
-					
-					if (!is_array($aParameters))
+					if (strtolower($sModule) !== 'core' && 
+						\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\CApi::validateAuthToken()) 
 					{
-						$aParameters = array($aParameters);
-					}
-					$mUploadData = $this->getUploadData();
-					if (is_array($mUploadData))
+						throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
+					} 
+					else if (!empty($sModule) && !empty($sMethod)) 
 					{
-						$aParameters['UploadData'] = $mUploadData;
+						$aParameters = isset($sParameters) &&  is_string($sParameters) ? 
+							@json_decode($sParameters, true) : array();
+						$sTenantName = $this->oHttp->GetPost('TenantName', '');
+
+						\CApi::setTenantName($sTenantName);
+
+						if (!is_array($aParameters))
+						{
+							$aParameters = array($aParameters);
+						}
+						$mUploadData = $this->getUploadData();
+						if (is_array($mUploadData))
+						{
+							$aParameters['UploadData'] = $mUploadData;
+						}
+
+						$this->CallMethod(
+							$sMethod, 
+							$aParameters, 
+							true
+						);
+						$aResponseItem = $this->DefaultResponse(
+							$sMethod,
+							\CApi::GetModuleManager()->GetResults()
+						);
 					}
 
-					$this->CallMethod(
-						$sMethod, 
-						$aParameters, 
-						true
-					);
-					$aResponseItem = $this->DefaultResponse(
-						$sMethod,
-						\CApi::GetModuleManager()->GetResults()
-					);
-				}
+					if (!is_array($aResponseItem)) 
+					{
+						throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
+					}
 
-				if (!is_array($aResponseItem)) 
-				{
-					throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
+					if ($sFormat !== 'Raw')
+					{
+						@header('Content-Type: application/json; charset=utf-8');
+					}
 				}
 			}
-			catch (\Exception $oException)
+			else
 			{
-				//if ($oException instanceof \System\Exceptions\AuroraApiException &&
-				//	\System\Notifications::AuthError === $oException->getCode())
-				//{
-				//	$oApiIntegrator = /* @var $oApiIntegrator \CApiIntegratorManager */ \CApi::GetCoreManager('integrator');
-				//	$oApiIntegrator->setLastErrorCode(\System\Notifications::AuthError);
-				//	$oApiIntegrator->logoutAccount();
-				//}
-
-				\CApi::LogException($oException);
-
-				$aAdditionalParams = null;
-				if ($oException instanceof \System\Exceptions\AuroraApiException) 
-				{
-					$aAdditionalParams = $oException->GetObjectParams();
-				}
-
-				$aResponseItem = $this->DefaultResponse(
-					$sMethod,
-					\CApi::GetModuleManager()->GetResults()
-				);
+				throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter);
 			}
+		}
+		catch (\Exception $oException)
+		{
+			\CApi::LogException($oException);
 
-			if ($sFormat !== 'Raw')
+			$aAdditionalParams = null;
+			if ($oException instanceof \System\Exceptions\AuroraApiException) 
 			{
-				@header('Content-Type: application/json; charset=utf-8');
+				$aAdditionalParams = $oException->GetObjectParams();
 			}
+
+			$aResponseItem = $this->ExceptionResponse(
+				$sMethod,
+				$oException,
+				$aAdditionalParams
+			);
 		}
 
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
@@ -1450,7 +1458,7 @@ abstract class AApiModule
 					$mResult
 				);
 
-				$aValues = array();
+				$aMethodArgs = array();
 
 				if ($bWebApi)
 				{
@@ -1461,23 +1469,26 @@ abstract class AApiModule
 						$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
 						if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
 						{
-							$aValues[$oParam->getPosition()] = null;
+							$aMethodArgs[$oParam->getPosition()] = null;
 						}
 						else
 						{
-							$aValues[$oParam->getPosition()] = $bIsArgumentGiven ? 
+							$aMethodArgs[$oParam->getPosition()] = $bIsArgumentGiven ? 
 								$aArguments[$sParamName] : $oParam->getDefaultValue();
 						}		
 					}
 				}
 				else
 				{
-					$aValues = $aArguments;
+					$aMethodArgs = $aArguments;
 				}
 
 				try
 				{
-					$mMethodResult = call_user_func_array(array($this, $sMethodName), $aValues);
+					$mMethodResult = call_user_func_array(
+						array($this, $sMethodName), 
+						$aMethodArgs
+					);
 					if (is_array($mMethodResult) && is_array($mResult))
 					{
 						$mResult = array_merge($mMethodResult, $mResult);
@@ -1497,7 +1508,11 @@ abstract class AApiModule
 					);
 					if (!($oException instanceof \System\Exceptions\AuroraApiException))
 					{
-						throw new \System\Exceptions\Exception($oException->getMessage(), $oException->getCode(), $oException);
+						throw new \System\Exceptions\AuroraApiException(
+							$oException->getCode(), 
+							$oException, 
+							$oException->getMessage()
+						);
 					}
 					else
 					{
@@ -1522,7 +1537,11 @@ abstract class AApiModule
 		{
 			if (!($oException instanceof \System\Exceptions\AuroraApiException))
 			{
-				throw new \System\Exceptions\AuroraApiException($oException->getCode(), $oException, $oException->getMessage());
+				throw new \System\Exceptions\AuroraApiException(
+					$oException->getCode(), 
+					$oException, 
+					$oException->getMessage()
+				);
 			}
 			else
 			{

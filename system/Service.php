@@ -222,7 +222,18 @@ class Service
 			}
 			else
 			{
-				$aModules = $this->oModuleManager->GetModulesByEntry($sEntry);
+				 if ($sEntry === 'api')
+				 {
+					 $oCoreModule = \CApi::GetModule('Core');
+					 if ($oCoreModule instanceof \AApiModule)
+					 {
+						 $aModules[] = $oCoreModule;
+					 }
+				 }
+				else 
+				{
+					$aModules = $this->oModuleManager->GetModulesByEntry($sEntry);
+				 }
 			}
 			if (!$bError)
 			{
