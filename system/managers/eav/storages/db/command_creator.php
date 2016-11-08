@@ -66,6 +66,19 @@ class CApiEavCommandCreator extends api_CommandCreator
 			$this->prefix(), $iId);
 	}	
 	
+	/**
+	 * @param $aIds
+	 *
+	 * @return string
+	 */
+	public function deleteEntities($aIds)
+	{
+		return sprintf(
+			'DELETE FROM %seav_entities WHERE id IN (' . implode(',', $aIds) . ')', 
+			$this->prefix()
+		);
+	}	
+	
 	public function getEntityById($iId)
 	{
 		$sSubSql = "
