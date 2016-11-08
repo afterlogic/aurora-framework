@@ -248,7 +248,7 @@ SELECT DISTINCT entity_type '
 			}
 			if (0 < count($aIds))
 			{
-				$sResultWhere .= ' AND entity_id IN (' . implode(',', $aIds) . ')';
+				$sResultWhere .= ' AND entities.id IN (' . implode(',', $aIds) . ')';
 			}
 			
 			if ($iLimit > 0)
