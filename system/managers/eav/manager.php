@@ -172,13 +172,17 @@ class CApiEavManager extends AApiManagerWithStorage
 	public function deleteEntities($aIds)
 	{
 		$bResult = true;
-		try
+		
+		if (!empty($aIds))
 		{
-			$bResult = $this->oStorage->deleteEntities($aIds);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
+			try
+			{
+				$bResult = $this->oStorage->deleteEntities($aIds);
+			}
+			catch (CApiBaseException $oException)
+			{
+				$this->setLastException($oException);
+			}
 		}
 
 		return $bResult;
