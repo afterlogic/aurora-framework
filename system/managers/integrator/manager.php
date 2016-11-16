@@ -1340,18 +1340,11 @@ class CApiIntegratorManager extends AApiManager
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return
-'<div class="auroraMain">
-	<div id="auroraContent">
-		<div class="screens"></div>
-		<div class="popups"></div>
-	</div>
-	<div id="pSevenHidden"></div>'.
-'<div>'.
 $this->compileTemplates().
 $this->compileLanguage($sLanguage).
 $this->compileAppData().
 $this->getJsLinks($sModuleHash).
-'</div></div>'."\r\n".'<!-- '.CApi::Version().' -->'
+"\r\n".'<!-- '.CApi::Version().' -->'
 		;
 	}
 }
