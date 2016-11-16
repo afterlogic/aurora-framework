@@ -151,7 +151,8 @@ class Service
 					
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
-			if (!strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'firefox')) 
+			$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			if (!strpos(strtolower($sUserAgent), 'firefox')) 
 			{
 				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 			}
