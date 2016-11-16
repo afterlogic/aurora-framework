@@ -156,7 +156,7 @@ SELECT DISTINCT entity_type '
 		$sJoinAttrbutes = "";
 		$sResultWhere = "";
 		$sResultSort = "";
-		$sGroupByField = "entity_id";
+		$sGroupByFields = "entity_id";
 		$sLimit = "";
 		$sOffset = "";
 		
@@ -169,7 +169,7 @@ SELECT DISTINCT entity_type '
 			
 			if ($bCount)
 			{
-				$sGroupByField = "entity_type";
+				$sGroupByFields = "entity_type";
 				$sCount = "COUNT(DISTINCT entities.id) as entities_count,";
 			}			
 			else
@@ -202,6 +202,7 @@ SELECT DISTINCT entity_type '
 						$sAttribute, 
 						$sAttribute
 				);
+				$sGroupByFields .= ', ' . sprintf("`attr_%s`", $sAttribute);
 				$aJoinAttributes[$sAttribute] = sprintf(
 						"
 	LEFT JOIN %seav_attributes_%s as `attrs_%s` 
@@ -284,11 +285,12 @@ GROUP BY %s #6
 			$sJoinAttrbutes, 
 			$this->escapeString($sEntityType), 
 			$sResultWhere,
-			$sGroupByField,
+			$sGroupByFields,
 			$sResultSort,
 			$sLimit,
 			$sOffset
 		);		
+		echo $sSql; exit;
 		return $sSql;
 	}	
 	
