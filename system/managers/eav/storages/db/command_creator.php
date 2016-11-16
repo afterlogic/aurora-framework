@@ -290,7 +290,6 @@ GROUP BY %s #6
 			$sLimit,
 			$sOffset
 		);		
-		echo $sSql; exit;
 		return $sSql;
 	}	
 	
