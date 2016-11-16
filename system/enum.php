@@ -488,27 +488,6 @@ class EFolderType extends AEnumeration
 	);
 }
 
-/**
- * @package Api
- * @subpackage Enum
- */
-class EContactsStorage extends AEnumeration
-{
-	const Personal = 0;
-	const Global_ = 1;
-	const Shared = 2;
-	const All = 3;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Personal' => self::Personal,
-		'Global_' => self::Global_,
-		'Shared' => self::Shared,
-		'All' => self::All,
-	);
-}
 
 /**
  * @package Api
@@ -959,18 +938,6 @@ class EContactSortField extends AEnumeration
 		}
 		return $sResult;
 	}
-}
-
-/**
- * @package Contacts
- * @subpackage Enum
- */
-class EContactType extends AEnumeration
-{
-    const Personal = 0;
-    const Global_ = 1;
-    const GlobalAccounts = 2;
-    const GlobalMailingList = 3;
 }
 
 /**
