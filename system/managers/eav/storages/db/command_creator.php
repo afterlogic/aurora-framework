@@ -147,50 +147,17 @@ SELECT DISTINCT entity_type '
 		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, array(), true);
 	}
 			
-	public function prepareWhere($aWhere, $oEntity, &$aWhereAttributes)
+	public function prepareWhere($aWhere, $oEntity, &$aWhereAttributes, $sOperator = 'AND')
 	{
-		$aOperations = array();
-		$sOperator = 'AND';
+		$aResultOperations = array();
 		foreach ($aWhere as $sKey => $mValue)
 		{
 			if (strpos($sKey, '$') !== false)
 			{
 				$sKey = substr($sKey, 1);
-				foreach ($mValue as $sSubKey => $mSubValue)
-				{
-					if (strpos($sSubKey, '$') !== false)
-					{
-						$aOperations[] = $this->prepareWhere($mValue, $oEntity, $aWhereAttributes);
-					}
-					else
-					{
-						$mResultValue = null;
-						$mResultOperator = '=';
-						if (is_array($mSubValue))
-						{
-							if (0 < count($mSubValue))
-							{
-								$mResultValue = $mSubValue[0];
-								$mResultOperator = $mSubValue[1];
-							}
-						}
-						else
-						{
-							$mResultValue = $mSubValue;
-						}
-						if (isset($mResultValue))
-						{
-							$aOperations[] = array (
-								'Key' => $sSubKey, 
-								'Operator' => $mResultOperator, 
-								'Value' => $mResultValue
-							);
-						}
-					}
-				}
-				$sOperator = $sKey;
+				$aResultOperations[] = $this->prepareWhere($mValue, $oEntity, $aWhereAttributes, $sKey);
 			}
-			else 
+			else
 			{
 				$mResultValue = null;
 				$mResultOperator = '=';
@@ -206,31 +173,25 @@ SELECT DISTINCT entity_type '
 				{
 					$mResultValue = $mValue;
 				}
-				$aOperations[] = array (
-					'Key' => $sKey, 
-					'Operator' => $mResultOperator, 
-					'Value' => $mResultValue
-				);
+				if (isset($mResultValue))
+				{
+					if (!in_array($sKey, $aWhereAttributes))
+					{
+						$aWhereAttributes[] = $sKey;
+					}
+					if ($oEntity->isEncryptedAttribute($sKey))
+					{
+						$mResultValue = \api_Utils::EncryptValue($mResultValue);
+					}
+					$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
+					$aResultOperations[] = sprintf(
+						"`attrs_%s`.`value` %s " . $sValueFormat, 
+						$sKey, 
+						$mResultOperator, 
+						$oEntity->isStringAttribute($sKey) ? $this->escapeString($mResultValue) : $mResultValue
+					);
+				}
 			}
-		}
-		$aResultOperations = array();
-		foreach ($aOperations as $aValues)
-		{
-			if (!in_array($aValues['Key'], $aWhereAttributes))
-			{
-				$aWhereAttributes[] = $aValues['Key'];
-			}
-			if ($oEntity->isEncryptedAttribute($aValues['Key']))
-			{
-				$aValues['Value'] = \api_Utils::EncryptValue($aValues['Value']);
-			}
-			$sValueFormat = $oEntity->isStringAttribute($aValues['Key']) ? "%s" : "%d";
-			$aResultOperations[] = sprintf(
-				"`attrs_%s`.`value` %s " . $sValueFormat, 
-				$aValues['Key'], 
-				$aValues['Operator'], 
-				$oEntity->isStringAttribute($aValues['Key']) ? $this->escapeString($aValues['Value']) : $aValues['Value']
-			);
 		}
 		return sprintf(
 			'(%s)', 
@@ -320,7 +281,7 @@ SELECT DISTINCT entity_type '
 			}
 			
 			$aWhereAttrs = array();
-			if (0 < count($aWhereAttrs))
+			if (0 < count($aWhere))
 			{
 				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttrs);
 			}
