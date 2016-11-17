@@ -147,6 +147,131 @@ SELECT DISTINCT entity_type '
 		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, array(), true);
 	}
 			
+	public function prepareWhere($aWhere, $oEntity, &$aWhereAttributes)
+	{
+		$aOperations = array();
+		$sOperator = 'AND';
+		foreach ($aWhere as $sKey => $mValue)
+		{
+			if (strpos($sKey, '$') !== false)
+			{
+				$sKey = substr($sKey, 1);
+				foreach ($mValue as $sSubKey => $mSubValue)
+				{
+					if (strpos($sSubKey, '$') !== false)
+					{
+						$aOperations[] = $this->prepareWhere($mValue, $oEntity, $aWhereAttributes);
+					}
+					else
+					{
+						$mResultValue = null;
+						$mResultOperator = '=';
+						if (is_array($mSubValue))
+						{
+							if (0 < count($mSubValue))
+							{
+								$mResultValue = $mSubValue[0];
+								$mResultOperator = $mSubValue[1];
+							}
+						}
+						else
+						{
+							$mResultValue = $mSubValue;
+						}
+						if (isset($mResultValue))
+						{
+							$aOperations[] = array (
+								'Key' => $sSubKey, 
+								'Operator' => $mResultOperator, 
+								'Value' => $mResultValue
+							);
+						}
+					}
+				}
+				$sOperator = $sKey;
+			}
+			else 
+			{
+				$mResultValue = null;
+				$mResultOperator = '=';
+				if (is_array($mValue))
+				{
+					if (0 < count($mValue))
+					{
+						$mResultValue = $mValue[0];
+						$mResultOperator = $mValue[1];
+					}
+				}
+				else
+				{
+					$mResultValue = $mValue;
+				}
+				$aOperations[] = array (
+					'Key' => $sKey, 
+					'Operator' => $mResultOperator, 
+					'Value' => $mResultValue
+				);
+			}
+		}
+		$aResultOperations = array();
+		foreach ($aOperations as $aValues)
+		{
+			if (!in_array($aValues['Key'], $aWhereAttributes))
+			{
+				$aWhereAttributes[] = $aValues['Key'];
+			}
+			if ($oEntity->isEncryptedAttribute($aValues['Key']))
+			{
+				$aValues['Value'] = \api_Utils::EncryptValue($aValues['Value']);
+			}
+			$sValueFormat = $oEntity->isStringAttribute($aValues['Key']) ? "%s" : "%d";
+			$aResultOperations[] = sprintf(
+				"`attrs_%s`.`value` %s " . $sValueFormat, 
+				$aValues['Key'], 
+				$aValues['Operator'], 
+				$oEntity->isStringAttribute($aValues['Key']) ? $this->escapeString($aValues['Value']) : $aValues['Value']
+			);
+		}
+		return sprintf(
+			'(%s)', 
+			implode(' ' . $sOperator . ' ', $aResultOperations)
+		);
+	}
+
+/**
+ * 
+ * @param type $sEntityType
+ * @param type $aViewAttributes
+ * @param type $iOffset
+ * @param type $iLimit
+ * @param type $aWhere
+ * @param type $sSortAttribute
+ * @param type $iSortOrder
+ * @param type $aIds
+ * @param type $bCount
+ * @return type
+ * 
+ * 		$aWhere = [
+			'$OR' => [
+				'$AND' => [
+					'UserId' => [
+						3,
+						'='
+					],
+					'Storage' => [
+						'personal',
+						'='
+					]
+				],
+				'Storage' => [
+					'global',
+					'='
+				]
+			]
+		];
+
+ */	
+	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
 			$sSortAttribute = "", $iSortOrder = \ESortOrder::ASC, $aIds = array(), $bCount = false)
@@ -165,7 +290,6 @@ SELECT DISTINCT entity_type '
 		{
 			$aResultViewAttributes = array();
 			$aJoinAttributes = array();
-			$aResultSearchAttributes = array();
 			
 			if ($bCount)
 			{
@@ -188,9 +312,19 @@ SELECT DISTINCT entity_type '
 			if (!empty($sSortAttribute))
 			{
 				array_push($aViewAttributes, $sSortAttribute);
-				$sResultSort = sprintf(" ORDER BY `attr_%s` %s", $sSortAttribute, $iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
+				$sResultSort = sprintf(
+					" ORDER BY `attr_%s` %s", 
+					$sSortAttribute, 
+					$iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC"
+				);
 			}
-			$aViewAttributes = array_unique(array_merge($aViewAttributes, array_keys($aWhere)));
+			
+			$aWhereAttrs = array();
+			if (0 < count($aWhereAttrs))
+			{
+				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttrs);
+			}
+			$aViewAttributes = array_unique(array_merge($aViewAttributes, $aWhereAttrs));
 
 			foreach ($aViewAttributes as $sAttribute)
 			{
@@ -207,45 +341,18 @@ SELECT DISTINCT entity_type '
 						"
 	LEFT JOIN %seav_attributes_%s as `attrs_%s` 
 		ON `attrs_%s`.name = %s AND `attrs_%s`.id_entity = entities.id",
-				$this->prefix(),$sType, $sAttribute, $sAttribute, $this->escapeString($sAttribute), $sAttribute);
+					$this->prefix(),
+					$sType, 
+					$sAttribute, 
+					$sAttribute, 
+					$this->escapeString($sAttribute), 
+					$sAttribute
+				);
 			}
 			if (0 < count($aViewAttributes))
 			{
 				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
 				$sJoinAttrbutes = implode(' ', $aJoinAttributes);
-			}
-			foreach ($aWhere as $sKey => $mValue)
-			{
-				$sAttributeValue = $mValue;
-				$sAction = '=';
-				if (is_array($mValue) && count($mValue) > 1)
-				{
-					$sAction = $mValue[0];
-					$sAttributeValue = $mValue[1];
-				}
-				else
-				{
-					if (strpos($sAttributeValue, "%") !== false)
-					{
-						$sAction = 'LIKE';
-					}
-				}
-				$sType = $oEntity->getType($sKey);
-				if ($oEntity->isEncryptedAttribute($sKey))
-				{
-					$sAttributeValue = \api_Utils::EncryptValue($sAttributeValue);
-				}
-				$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
-				$aResultSearchAttributes[] = sprintf(
-						"`attrs_%s`.`value` %s " . $sValueFormat, 
-						$sKey, 
-						$sAction, 
-						$oEntity->isStringAttribute($sKey) ? $this->escapeString($sAttributeValue) : $sAttributeValue
-				);
-			}
-			if (0 < count($aWhere))
-			{
-				$sResultWhere = ' AND ' . implode(' AND ', $aResultSearchAttributes);
 			}
 			if (0 < count($aIds))
 			{
@@ -290,6 +397,7 @@ GROUP BY %s #6
 			$sLimit,
 			$sOffset
 		);		
+
 		return $sSql;
 	}	
 	
