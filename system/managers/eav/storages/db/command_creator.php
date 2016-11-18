@@ -296,7 +296,10 @@ SELECT DISTINCT entity_type '
 						$sAttribute, 
 						$sAttribute
 				);
-				$sGroupByFields .= ', ' . sprintf("`attr_%s`", $sAttribute);
+				if (!$bCount)
+				{
+					$sGroupByFields .= ', ' . sprintf("`attr_%s`", $sAttribute);
+				}
 				$aJoinAttributes[$sAttribute] = sprintf(
 						"
 	LEFT JOIN %seav_attributes_%s as `attrs_%s` 
@@ -311,7 +314,10 @@ SELECT DISTINCT entity_type '
 			}
 			if (0 < count($aViewAttributes))
 			{
-				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
+				if (!$bCount)
+				{
+					$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
+				}
 				$sJoinAttrbutes = implode(' ', $aJoinAttributes);
 			}
 			if (0 < count($aIds))
