@@ -194,7 +194,7 @@ SELECT DISTINCT entity_type '
 			}
 		}
 		return sprintf(
-			'(%s)', 
+			count($aResultOperations) > 1 ? '(%s)' : '%s', 
 			implode(' ' . $sOperator . ' ', $aResultOperations)
 		);
 	}
@@ -234,8 +234,8 @@ SELECT DISTINCT entity_type '
  */	
 	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
-			$iOffset = 0, $iLimit = 0, $aWhere = array(), 
-			$sSortAttribute = "", $iSortOrder = \ESortOrder::ASC, $aIds = array(), $bCount = false)
+			$iOffset = 0, $iLimit = 0, $aWhere = array(), $sSortAttribute = "", 
+			$iSortOrder = \ESortOrder::ASC, $aIds = array(), $bCount = false)
 	{
 		$sCount = "";
 		$sViewAttributes = "";
