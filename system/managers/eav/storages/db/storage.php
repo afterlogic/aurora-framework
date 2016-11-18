@@ -147,10 +147,10 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $mResult;
 	}	
 	
-	public function getEntitiesCount($sType, $aSearchAttrs)
+	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
 	{
 		$mResult = 0;
-		if ($this->oConnection->Execute($this->oCommandCreator->getEntitiesCount($sType, $aSearchAttrs)))
+		if ($this->oConnection->Execute($this->oCommandCreator->getEntitiesCount($sType, $aWhere, $aIds)))
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{

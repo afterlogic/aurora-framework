@@ -209,15 +209,15 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * 
 	 * @param string $sType
-	 * @param array $aSearchAttributes
+	 * @param array $aWhere
 	 * @return int
 	 */
-	public function getEntitiesCount($sType, $aSearchAttributes = array())
+	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
 	{
 		$iCount = 0;
 		try
 		{
-			$iCount = $this->oStorage->getEntitiesCount($sType, $aSearchAttributes);
+			$iCount = $this->oStorage->getEntitiesCount($sType, $aWhere, $aIds);
 		}
 		catch (CApiBaseException $oException)
 		{
