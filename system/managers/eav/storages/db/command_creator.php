@@ -195,9 +195,9 @@ SELECT DISTINCT entity_type '
 		);
 	}
 	
-	public function getEntitiesCount($sType, $aWhere = array())
+	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
 	{
-		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, array(), true);
+		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, $aIds, true);
 	}
 
 /**
