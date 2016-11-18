@@ -194,7 +194,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	 */
 	public function getTypes()
 	{
-		$aTypes = null;
+		$aTypes = array();
 		try
 		{
 			$aTypes = $this->oStorage->getTypes();
@@ -232,18 +232,27 @@ class CApiEavManager extends AApiManagerWithStorage
 	 * @param array $aViewAttributes
 	 * @param int $iOffset
 	 * @param int $iLimit
-	 * @param array $aSearchAttributes
+	 * @param array $aWhere
 	 * @param string $sOrderBy
 	 * @param int $iSortOrder
 	 * @param array $aIds
 	 * @return array
 	 */
-	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aSearchAttributes = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIds = array())
+	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIds = array())
 	{
 		$aEntities = null;
 		try
 		{
-			$aEntities = $this->oStorage->getEntities($sType, $aViewAttributes, $iOffset, $iLimit, $aSearchAttributes, $sOrderBy, $iSortOrder, $aIds);
+			$aEntities = $this->oStorage->getEntities(
+				$sType, 
+				$aViewAttributes, 
+				$iOffset, 
+				$iLimit, 
+				$aWhere, 
+				$sOrderBy, 
+				$iSortOrder, 
+				$aIds
+			);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -424,6 +433,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
+			$bResult = false;
 		}
 
 		return $bResult;

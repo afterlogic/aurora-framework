@@ -142,10 +142,6 @@ SELECT DISTINCT entity_type '
 			$this->prefix()
 		);
 	}
-	public function getEntitiesCount($sType, $aWhere = array())
-	{
-		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, array(), true);
-	}
 			
 	public function prepareWhere($aWhere, $oEntity, &$aWhereAttributes, $sOperator = 'AND')
 	{
@@ -198,6 +194,11 @@ SELECT DISTINCT entity_type '
 			implode(' ' . $sOperator . ' ', $aResultOperations)
 		);
 	}
+	
+	public function getEntitiesCount($sType, $aWhere = array())
+	{
+		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, array(), true);
+	}
 
 /**
  * 
@@ -212,27 +213,25 @@ SELECT DISTINCT entity_type '
  * @param type $bCount
  * @return type
  * 
- * 		$aWhere = [
-			'$OR' => [
-				'$AND' => [
-					'UserId' => [
-						3,
-						'='
-					],
-					'Storage' => [
-						'personal',
-						'='
-					]
-				],
-				'Storage' => [
-					'global',
-					'='
-				]
-			]
-		];
-
+	$aWhere = [
+	   '$OR' => [
+		   '$AND' => [
+			   'IdUser' => [
+				   1,
+				   '='
+			   ],
+			   'Storage' => [
+				   'personal',
+				   '='
+			   ]
+		   ],
+		   'Storage' => [
+			   'global',
+			   '='
+		   ]
+	   ]
+   ];
  */	
-	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), $sSortAttribute = "", 
 			$iSortOrder = \ESortOrder::ASC, $aIds = array(), $bCount = false)
