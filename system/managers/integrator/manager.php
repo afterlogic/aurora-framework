@@ -355,7 +355,8 @@ class CApiIntegratorManager extends AApiManager
 			
 			$aInfo = array(
 				'isAdmin' => false,
-				'userId' => $aAccountHashTable['id']
+				'userId' => $aAccountHashTable['id'],
+				'account' => isset($aAccountHashTable['account']) ? $aAccountHashTable['account'] : 0,
 			);
 		}
 		elseif (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&

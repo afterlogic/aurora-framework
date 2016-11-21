@@ -378,7 +378,13 @@ class AEntity
 		$aResult = array();
 		foreach($this->aAttributes as $oAttribute)
 		{
-			$aResult[$oAttribute->Name] = $oAttribute->Value;
+			$mValue = $oAttribute->Value;
+			if ($this->isEncryptedAttribute($oAttribute->Name))
+			{
+				$mValue = \api_Utils::DecryptValue($oAttribute->Value);
+			}
+
+			$aResult[$oAttribute->Name] = $mValue;
 		}
 		return array_merge(
 			array(
@@ -387,6 +393,16 @@ class AEntity
 			), 
 			$aResult
 		);
+	}
+	
+	/**
+	 * alias to toArray
+	 * 
+	 * @return array
+	 */	
+	public function toResponseArray()
+	{
+		return $this->toArray();
 	}
 }
 
