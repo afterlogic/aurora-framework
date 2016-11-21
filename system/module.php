@@ -256,15 +256,8 @@ class CApiModuleManager
      */
     public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
 	{
-		$bResult = true;
+		$bResult = false;
 		$aSubscriptions = array();
-		if (isset($this->_aSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent])) 
-		{
-			$aSubscriptions = array_merge(
-				$aSubscriptions, 
-				$this->_aSubscriptions[$sModule . \AApiModule::$Delimiter . $sEvent]
-			);
-		}
 		if (isset($this->_aSubscriptions[$sEvent])) 
 		{
 			$aSubscriptions = array_merge(
@@ -272,6 +265,14 @@ class CApiModuleManager
 				$this->_aSubscriptions[$sEvent]
 			);
         }
+		$sEvent = $sModule . \AApiModule::$Delimiter . $sEvent;
+		if (isset($this->_aSubscriptions[$sEvent])) 
+		{
+			$aSubscriptions = array_merge(
+				$aSubscriptions, 
+				$this->_aSubscriptions[$sEvent]
+			);
+		}
 		
 		foreach($aSubscriptions as $fCallback) 
 		{
@@ -288,12 +289,13 @@ class CApiModuleManager
 
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
-					$sModule."::".$sEvent, 
+					$sEvent, 
 					$mCallBackResult
 				);
 
 				if ($mCallBackResult) 
 				{
+					$bResult = $mCallBackResult;
 					break;
 				}
 			}
@@ -316,7 +318,9 @@ class CApiModuleManager
 		}
 
 		$this->_aTemplates[$sParsedTemplateID][] = array(
-			$sParsedPlace, $sTemplateFileName, $sModuleName
+			$sParsedPlace, 
+			$sTemplateFileName, 
+			$sModuleName
 		);
 	}	
 	
@@ -835,14 +839,13 @@ abstract class AApiModule
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
-	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true)
+	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null)
 	{
-		\CApi::GetModuleManager()->broadcastEvent(
+		return \CApi::GetModuleManager()->broadcastEvent(
 			$this->GetName(), 
 			$sEvent, 
 			$aArguments, 
-			$mResult,
-			$bCountinue
+			$mResult
 		);
 	}
 	
@@ -1235,18 +1238,23 @@ abstract class AApiModule
 		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName])) {
+		if (isset($aCache[$sFileName])) 
+		{
 			return true;
-		} else {
+		} 
+		else 
+		{
 			$sFileFullPath = $this->GetPath().'/managers/'.$sFileName.'.php';
-			if (@file_exists($sFileFullPath)) {
+			if (@file_exists($sFileFullPath)) 
+			{
 				$aCache[$sFileName] = true;
 				include_once $sFileFullPath;
 				return true;
 			}
 		}
 
-		if ($bDoExitOnError) {
+		if ($bDoExitOnError) 
+		{
 			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
 		
@@ -1452,7 +1460,7 @@ abstract class AApiModule
 					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
 				}
 
-				$this->broadcastEvent(
+				$bEventResult = $this->broadcastEvent(
 					$sMethodName . \AApiModule::$Delimiter . 'before', 
 					$aArguments, 
 					$mResult
@@ -1460,7 +1468,7 @@ abstract class AApiModule
 
 				$aMethodArgs = array();
 
-				if ($bWebApi)
+				if ($bWebApi && !$bEventResult)
 				{
 					$oReflector = new \ReflectionMethod($this, $sMethodName);
 					foreach ($oReflector->getParameters() as $oParam) 
