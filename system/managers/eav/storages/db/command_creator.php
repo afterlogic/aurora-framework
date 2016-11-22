@@ -150,7 +150,7 @@ SELECT DISTINCT entity_type '
 		{
 			if (strpos($sKey, '$') !== false)
 			{
-				list($sKey) = explode('$', $sKey);
+				list(,$sKey) = explode('$', $sKey);
 				$aResultOperations[] = $this->prepareWhere($mValue, $oEntity, $aWhereAttributes, $sKey);
 			}
 			else
