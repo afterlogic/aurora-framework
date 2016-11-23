@@ -179,12 +179,26 @@ SELECT DISTINCT entity_type '
 					{
 						$mResultValue = \api_Utils::EncryptValue($mResultValue);
 					}
+					$bIsInOperator = false;
+					if (strtolower($mResultOperator) === 'in' || strtolower($mResultOperator) === 'not in'  
+						&& is_array($mResultValue))
+					{
+						$bIsInOperator = true;
+						$mResultValue = array_map(
+							function ($mValue) use ($oEntity, $sKey) {
+								return $oEntity->isStringAttribute($sKey) ? $this->escapeString($mValue) : $mValue;
+							}, 
+							$mResultValue
+						);
+						$mResultValue = '(' . implode(', ', $mResultValue)  . ')';
+					}
+					
 					$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
 					$aResultOperations[] = sprintf(
 						"`attrs_%s`.`value` %s " . $sValueFormat, 
 						$sKey, 
 						$mResultOperator, 
-						$oEntity->isStringAttribute($sKey) ? $this->escapeString($mResultValue) : $mResultValue
+						($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
 					);
 				}
 			}
