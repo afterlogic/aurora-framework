@@ -878,66 +878,6 @@ class EContactSortField extends AEnumeration
 		'Email' => self::Email,
 		'Frequency' => self::Frequency
 	);
-	
-	/**
-	 * @param int $iValue
-	 * @return string
-	 */
-	public static function GetContactDbField($iValue)
-	{
-		$sResult = 'view_email';
-		switch ($iValue)
-		{
-			case self::Name:
-				$sResult = 'fullname';
-				break;
-			case self::Email:
-				$sResult = 'view_email';
-				break;
-			case self::Frequency:
-				$sResult = 'use_frequency';
-				break;
-		}
-		return $sResult;
-	}
-
-	/**
-	 * @param int $iValue
-	 * @return string
-	 */
-	public static function GetGlobalContactDbField($iValue)
-	{
-		$sResult = 'email';
-		switch ($iValue)
-		{
-			case self::Name:
-				$sResult = 'friendly_nm';
-				break;
-			case self::Email:
-				$sResult = 'email';
-				break;
-		}
-		return $sResult;
-	}
-
-	/**
-	 * @param int $iValue
-	 * @return string
-	 */
-	public static function GetGroupDbField($iValue)
-	{
-		$sResult = 'group_nm';
-		switch ($iValue)
-		{
-			case self::Name:
-				$sResult = 'group_nm';
-				break;
-			case self::Frequency:
-				$sResult = 'use_frequency';
-				break;
-		}
-		return $sResult;
-	}
 }
 
 /**
