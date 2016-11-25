@@ -390,28 +390,6 @@ class EImapSortUsage extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EContactsGABVisibility extends AEnumeration
-{
-	const Off = 0;
-	const DomainWide = 1;
-	const SystemWide = 2;
-	const TenantWide = 3;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Off' => self::Off,
-		'DomainWide' => self::DomainWide,
-		'SystemWide' => self::SystemWide,
-		'TenantWide' => self::TenantWide
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
 class ECalendarDefaultWorkDay
 {
 	const Starts = 9;
@@ -485,65 +463,6 @@ class EFolderType extends AEnumeration
 		'Quarantine' => self::Virus,
 		'System' => self::System,
 		'Custom' => self::Custom
-	);
-}
-
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EContactsPrimaryEmail extends AEnumeration
-{
-	const Personal = 0;
-	const Business = 1;
-	const Other = 2;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Personal' => self::Personal,
-		'Business' => self::Business,
-		'Other' => self::Other
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EContactsPrimaryPhone extends AEnumeration
-{
-	const Mobile = 0;
-	const Personal = 1;
-	const Business = 2;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Mobile' => self::Mobile,
-		'Personal' => self::Personal,
-		'Business' => self::Business
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EContactsPrimaryAddress extends AEnumeration
-{
-	const Personal = 0;
-	const Business = 1;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Personal' => self::Personal,
-		'Business' => self::Business,
 	);
 }
 
@@ -851,37 +770,6 @@ class ESocialTypeStr extends AEnumeration
 }
 
 /**
- * @package Api
- * @subpackage Enum
- */
-class EContactFileType extends AEnumeration
-{
-	const CSV = 'csv';
-	const VCF = 'vcf';
-}	
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EContactSortField extends AEnumeration
-{
-	const Name = 1;
-	const Email = 2;
-	const Frequency = 3;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Name' => self::Name,
-		'Email' => self::Email,
-		'Frequency' => self::Frequency
-	);
-}
-
-/**
- * @package Contacts
  * @subpackage Enum
  */
 class ETwofaType extends AEnumeration
@@ -891,4 +779,3 @@ class ETwofaType extends AEnumeration
 
     CONST AUTH_TYPE_GOOGLE = 'google';
 }
-

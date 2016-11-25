@@ -1022,39 +1022,6 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
-	 * @param CDomain $oDomain
-	 *
-	 * @return array
-	 */
-	public function getTabList($oDomain)
-	{
-		$aList = array();
-
-		if ($oDomain->AllowWebMail)
-		{
-			$aList['mailbox'] = CApi::ClientI18N('TITLE/MAILBOX_TAB');
-		}
-		if ($oDomain->AllowContacts)
-		{
-			$aList['contacts'] = CApi::ClientI18N('TITLE/CONTACTS');
-		}
-		if ($oDomain->AllowCalendar)
-		{
-			$aList['calendar'] = CApi::ClientI18N('TITLE/CALENDAR');
-		}
-		if ($oDomain->AllowFiles)
-		{
-			$aList['files'] = CApi::ClientI18N('TITLE/FILESTORAGE');
-		}
-		if ($oDomain->AllowHelpdesk)
-		{
-			$aList['helpdesk'] = CApi::ClientI18N('TITLE/HELPDESK');
-		}
-
-		return $aList;
-	}
-
-	/**
 	 * @param string $sHelpdeskTenantHash Default value is empty string.
 	 * @param string $sCalendarPubHash Default value is empty string.
 	 * @param string $sFileStoragePubHash Default value is empty string.
@@ -1084,7 +1051,6 @@ class CApiIntegratorManager extends AApiManager
 			'SocialEmail' => '',
 			'SocialIsLoggedIn' => false,
 			'Links' => array(
-				'ImportingContacts' => \CApi::GetConf('links.importing-contacts', ''),
 				'OutlookSyncPlugin32' => \CApi::GetConf('links.outlook-sync-plugin-32', ''),
 				'OutlookSyncPlugin64' => \CApi::GetConf('links.outlook-sync-plugin-64', ''),
 				'OutlookSyncPluginReadMore' => \CApi::GetConf('links.outlook-sync-read-more', '')

@@ -105,11 +105,6 @@ return array(
 	'webmail.time-limit' => 3000,
 
 	/**
-	 * Max number of contacts, for autocompletion drop-down
-	 */
-	'webmail.suggest-contacts-limit' => 20,
-
-	/**
 	 * Enable saving drafts automatically. Saving is performed once a minute,
 	 * assuming it is supported by particular IMAP server.
 	 * Default value: true
@@ -140,15 +135,6 @@ return array(
 
 	'themes' => array('Default', 'DeepForest', 'OpenWater', 'Funny', 'BlueJeans', 'White'),
 
-	/**
-	 * Which email should be treated as primary one in contact object
-	 * Supported values:
-	 *     EContactsPrimaryEmail::Personal, EContactsPrimaryEmail::Business, EContactsPrimaryEmail::Other
-	 */
-	'contacts.default-primary-email' => EContactsPrimaryEmail::Personal,
-
-	'links.importing-contacts' => '',
-	
 	'links.outlook-sync-plugin-32' => 'http://www.afterlogic.com/download/OutlookSyncAddIn.msi',
 	'links.outlook-sync-plugin-64' => 'http://www.afterlogic.com/download/OutlookSyncAddIn64.msi',
 	'links.outlook-sync-read-more' => 'http://www.afterlogic.com/wiki/Outlook_sync_(Aurora)',

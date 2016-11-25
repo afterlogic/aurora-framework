@@ -143,7 +143,8 @@ class CApiCapabilityManager extends AApiManager
 
 		if ($bResult && $iUserId)
 		{
-			$bResult = $this->isContactsSupported($iUserId) && $iUserId->User->getCapa(ECapa::GAB) && $iUserId->GlobalAddressBook !== \EContactsGABVisibility::Off;
+			$bIsGlobalContactsEnabled = true;
+			$bResult = $this->isContactsSupported($iUserId) && $iUserId->User->getCapa(ECapa::GAB) && $bIsGlobalContactsEnabled;
 		}		
 
 		return $bResult;
@@ -160,7 +161,8 @@ class CApiCapabilityManager extends AApiManager
 		
 		if ($bResult && $oAccount)
 		{
-			$bResult = $this->isContactsSupported($oAccount) && $oAccount->User->getCapa(ECapa::CONTACTS_SHARING) && $oAccount->GlobalAddressBook !== \EContactsGABVisibility::Off;
+			$bIsGlobalContactsEnabled = true;
+			$bResult = $this->isContactsSupported($oAccount) && $oAccount->User->getCapa(ECapa::CONTACTS_SHARING) && $bIsGlobalContactsEnabled;
 		}
 
 		return $bResult;
