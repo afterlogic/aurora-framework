@@ -36,15 +36,15 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 * 
-	 * @param int $iId
+	 * @param int|string $mIdOrUUID
 	 * @return boolean
 	 */
-	public function isEntityExists($iId)
+	public function isEntityExists($mIdOrUUID)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->isEntityExists($iId);
+			$bResult = $this->oStorage->isEntityExists($mIdOrUUID);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -146,15 +146,15 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 * 
-	 * @param type $iId
+	 * @param int|string $mIdOrUUID
 	 * @return type
 	 */
-	public function deleteEntity($iId)
+	public function deleteEntity($mIdOrUUID)
 	{
 		$bResult = true;
 		try
 		{
-			$bResult = $this->oStorage->deleteEntity($iId);
+			$bResult = $this->oStorage->deleteEntity($mIdOrUUID);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -166,18 +166,18 @@ class CApiEavManager extends AApiManagerWithStorage
 	
 	/**
 	 * 
-	 * @param array $aIds
+	 * @param array $aIdsOrUUIDs
 	 * @return type
 	 */
-	public function deleteEntities($aIds)
+	public function deleteEntities($aIdsOrUUIDs)
 	{
 		$bResult = true;
 		
-		if (!empty($aIds))
+		if (!empty($aIdsOrUUIDs))
 		{
 			try
 			{
-				$bResult = $this->oStorage->deleteEntities($aIds);
+				$bResult = $this->oStorage->deleteEntities($aIdsOrUUIDs);
 			}
 			catch (CApiBaseException $oException)
 			{
@@ -212,12 +212,12 @@ class CApiEavManager extends AApiManagerWithStorage
 	 * @param array $aWhere
 	 * @return int
 	 */
-	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
+	public function getEntitiesCount($sType, $aWhere = array(), $aIdsOrUUIDs = array())
 	{
 		$iCount = 0;
 		try
 		{
-			$iCount = $this->oStorage->getEntitiesCount($sType, $aWhere, $aIds);
+			$iCount = $this->oStorage->getEntitiesCount($sType, $aWhere, $aIdsOrUUIDs);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -235,10 +235,10 @@ class CApiEavManager extends AApiManagerWithStorage
 	 * @param array $aWhere
 	 * @param string $sOrderBy
 	 * @param int $iSortOrder
-	 * @param array $aIds
+	 * @param array $aIdsOrUUIDs
 	 * @return array
 	 */
-	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIds = array())
+	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
 		$aEntities = null;
 		try
@@ -251,7 +251,7 @@ class CApiEavManager extends AApiManagerWithStorage
 				$aWhere, 
 				$sOrderBy, 
 				$iSortOrder, 
-				$aIds
+				$aIdsOrUUIDs
 			);
 		}
 		catch (CApiBaseException $oException)
@@ -286,34 +286,15 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 * 
-	 * @param type $iId
+	 * @param int|string $mIdOrUUID
 	 * @return \AEntity
 	 */
-	public function getEntityById($iId)
+	public function getEntity($mIdOrUUID)
 	{
 		$oEntity = null;
 		try
 		{
-			$oEntity = $this->oStorage->getEntityById($iId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-		return $oEntity;
-	}
-
-	/**
-	 * 
-	 * @param string $sUUID
-	 * @return \AEntity
-	 */
-	public function getEntityByUUID($sUUID)
-	{
-		$oEntity = null;
-		try
-		{
-			$oEntity = $this->oStorage->getEntityByUUID($sUUID);
+			$oEntity = $this->oStorage->getEntity($mIdOrUUID);
 		}
 		catch (CApiBaseException $oException)
 		{

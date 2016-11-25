@@ -28,12 +28,16 @@ class CApiEavCommandCreator extends api_CommandCreator
 	/**
 	 * @return string
 	 */
-	public function isEntityExists($iId)
+	public function isEntityExists($mIdOrUUID)
 	{
+		$sWhere = is_int($mIdOrUUID) ? 
+				sprintf('id = %d', $mIdOrUUID) : 
+					sprintf('uuid = %s', $this->escapeString($mIdOrUUID));
+
 		return sprintf(
 			'SELECT COUNT(id) as entities_count '
-			. 'FROM %seav_entities WHERE %s = %d', 
-			$this->prefix(), $this->escapeColumn('id'), $iId
+			. 'FROM %seav_entities WHERE %s', 
+			$this->prefix(), $sWhere
 		);
 	}
 
@@ -55,32 +59,62 @@ class CApiEavCommandCreator extends api_CommandCreator
 	}
 	
 	/**
-	 * @param $iId
+	 * @param $mIdOrUUID
 	 *
 	 * @return string
 	 */
-	public function deleteEntity($iId)
+	public function deleteEntity($mIdOrUUID)
 	{
+		$sWhere = is_int($mIdOrUUID) ? 
+				sprintf('id = %d', $mIdOrUUID) : 
+					sprintf('uuid = %s', $this->escapeString($mIdOrUUID));
+
 		return sprintf(
-			'DELETE FROM %seav_entities WHERE id = %d', 
-			$this->prefix(), $iId);
+			'DELETE FROM %seav_entities WHERE %s', 
+			$this->prefix(), $sWhere);
 	}	
 	
 	/**
-	 * @param $aIds
+	 * @param $aIdsOrUUIDs
 	 *
 	 * @return string
 	 */
-	public function deleteEntities($aIds)
+	public function deleteEntities($aIdsOrUUIDs)
 	{
-		return sprintf(
-			'DELETE FROM %seav_entities WHERE id IN (' . implode(',', $aIds) . ')', 
-			$this->prefix()
-		);
+		$sResult = '';
+		if (count($aIdsOrUUIDs) > 0)
+		{
+			$sIdOrUUID = 'id';
+			if(!is_int($aIdsOrUUIDs[0]))
+			{
+				$sIdOrUUID = 'uuid';
+				$aUUIDs = array_map(
+					function ($mValue) {
+						return $this->escapeString($mValue);
+					}, 
+					$aUUIDs
+				);
+			}
+			$sResult = sprintf(
+				'DELETE FROM %seav_entities WHERE %s IN (' . implode(',', $aIdsOrUUIDs) . ')', 
+				$this->prefix(), $sIdOrUUID
+			);
+		}
+		
+		return $sResult;
 	}	
 	
-	public function getEntityById($iId)
+	/**
+	 * 
+	 * @param int|string $mIdOrUUID
+	 * @return string
+	 */
+	public function getEntity($mIdOrUUID)
 	{
+		$sWhere = is_int($mIdOrUUID) ? 
+				sprintf('entities.id = %d', $mIdOrUUID) : 
+					sprintf('entities.uuid = %s', $this->escapeString($mIdOrUUID));
+		
 		$sSubSql = "
 (SELECT 	   
 	entities.id as entity_id, 
@@ -92,45 +126,19 @@ class CApiEavCommandCreator extends api_CommandCreator
 	%s as attr_type
 FROM %seav_entities as entities
 	  INNER JOIN %seav_attributes_%s as attrs ON entities.id = attrs.id_entity
-WHERE entities.id = %d)
+WHERE %s)
 ";
 		
 		foreach (\AEntity::getTypes() as $sSqlType)
 		{
-			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $iId);
+			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $sWhere);
 		}
 		$sSql = implode("UNION
 ", $aSql);
 
 		return $sSql;
 	}
-	
-	public function getEntityByUUID($sUUID)
-	{
-		$sSubSql = "
-(SELECT 	   
-	entities.id as entity_id, 
-	entities.uuid as entity_uuid, 
-	entities.entity_type, 
-	entities.module_name as entity_module,
-	attrs.name as attr_name,
-    attrs.value as attr_value,
-	%s as attr_type
-FROM %seav_entities as entities
-	  INNER JOIN %seav_attributes_%s as attrs ON entities.id = attrs.id_entity
-WHERE entities.uuid = %s)
-";
-		
-		foreach (\AEntity::getTypes() as $sSqlType)
-		{
-			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $sUUID);
-		}
-		$sSql = implode("UNION
-", $aSql);
 
-		return $sSql;
-	}	
-	
 	/**
 	 * @return string
 	 */
@@ -209,46 +217,46 @@ SELECT DISTINCT entity_type '
 		);
 	}
 	
-	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
+	public function getEntitiesCount($sType, $aWhere = array(), $aIdsOrUUIDs = array())
 	{
-		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, $aIds, true);
+		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, $aIdsOrUUIDs, true);
 	}
 
-/**
- * 
- * @param type $sEntityType
- * @param type $aViewAttributes
- * @param type $iOffset
- * @param type $iLimit
- * @param type $aWhere
- * @param type $sSortAttribute
- * @param type $iSortOrder
- * @param type $aIds
- * @param type $bCount
- * @return type
- * 
-	$aWhere = [
-	   '$OR' => [
-		   '$AND' => [
-			   'IdUser' => [
-				   1,
-				   '='
+	/**
+	 * 
+	 * @param type $sEntityType
+	 * @param type $aViewAttributes
+	 * @param type $iOffset
+	 * @param type $iLimit
+	 * @param type $aWhere
+	 * @param type $sSortAttribute
+	 * @param type $iSortOrder
+	 * @param type $aIdsOrUUIDs
+	 * @param type $bCount
+	 * @return type
+	 * 
+		$aWhere = [
+		   '$OR' => [
+			   '$AND' => [
+				   'IdUser' => [
+					   1,
+					   '='
+				   ],
+				   'Storage' => [
+					   'personal',
+					   '='
+				   ]
 			   ],
 			   'Storage' => [
-				   'personal',
+				   'global',
 				   '='
 			   ]
-		   ],
-		   'Storage' => [
-			   'global',
-			   '='
 		   ]
-	   ]
-   ];
- */	
+	   ];
+	 */	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), $sSortAttribute = "", 
-			$iSortOrder = \ESortOrder::ASC, $aIds = array(), $bCount = false)
+			$iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
 	{
 		$sCount = "";
 		$sViewAttributes = "";
@@ -334,9 +342,9 @@ SELECT DISTINCT entity_type '
 				}
 				$sJoinAttrbutes = implode(' ', $aJoinAttributes);
 			}
-			if (0 < count($aIds))
+			if (0 < count($aIdsOrUUIDs))
 			{
-				$sResultWhere .= ' AND entities.id IN (' . implode(',', $aIds) . ')';
+				$sResultWhere .= ' AND entities.id IN (' . implode(',', $aIdsOrUUIDs) . ')';
 			}
 			
 			if ($iLimit > 0)

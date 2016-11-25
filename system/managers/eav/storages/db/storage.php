@@ -53,10 +53,10 @@ class CApiEavDbStorage extends CApiEavStorage
 
 	/**
 	 */
-	public function isEntityExists($iId)
+	public function isEntityExists($mIdOrUUID)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->isEntityExists($iId)))
+		if ($this->oConnection->Execute($this->oCommandCreator->isEntityExists($mIdOrUUID)))
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
@@ -119,16 +119,9 @@ class CApiEavDbStorage extends CApiEavStorage
 	
 	/**
 	 */
-	public function getEntityByUUID($sUUID)
+	public function getEntity($mIdOrUUID)
 	{
-		return $this->getEntityBySql($this->oCommandCreator->getEntityByUUID($sUUID));
-	}	
-
-	/**
-	 */
-	public function getEntityById($iId)
-	{
-		return $this->getEntityBySql($this->oCommandCreator->getEntityById($iId));
+		return $this->getEntityBySql($this->oCommandCreator->getEntity($mIdOrUUID));
 	}	
 
 	public function getTypes()
@@ -164,7 +157,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	}
 	/**
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIds = array())
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
 		$mResult = false;
 		
@@ -183,7 +176,7 @@ class CApiEavDbStorage extends CApiEavStorage
 		}		
 		
 		if ($this->oConnection->Execute($this->oCommandCreator->getEntities(
-				$sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder, $aIds)))
+				$sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder, $aIdsOrUUIDs)))
 		{
 			$oRow = null;
 			$mResult = array();
@@ -230,9 +223,9 @@ class CApiEavDbStorage extends CApiEavStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteEntity($iId)
+	public function deleteEntity($mIdOrUUID)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntity($iId));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntity($mIdOrUUID));
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
@@ -240,9 +233,9 @@ class CApiEavDbStorage extends CApiEavStorage
 	/**
 	 * @return bool
 	 */
-	public function deleteEntities($aIds)
+	public function deleteEntities($aIdsOrUUIDs)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntities($aIds));
+		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntities($aIdsOrUUIDs));
 
 		$this->throwDbExceptionIfExist();
 		return $bResult;
