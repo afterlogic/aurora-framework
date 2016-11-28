@@ -83,7 +83,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	 */
 	private function createEntity(\AEntity &$oEntity)
 	{
-		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName);
+		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName, $oEntity->sUUID);
 		if (!$mResult)
 		{
 			throw new CApiManagerException(Errs::Main_UnknownError);

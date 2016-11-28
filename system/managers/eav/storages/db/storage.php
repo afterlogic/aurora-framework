@@ -70,10 +70,10 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $bResult;
 	}	
 	
-	public function createEntity($sModule, $sType)
+	public function createEntity($sModule, $sType, $sUUID)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->createEntity($sModule, $sType)))
+		if ($this->oConnection->Execute($this->oCommandCreator->createEntity($sModule, $sType, $sUUID)))
 		{
 			$bResult = $this->oConnection->GetLastInsertId();
 		}

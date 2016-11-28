@@ -44,15 +44,16 @@ class CApiEavCommandCreator extends api_CommandCreator
 	/**
 	 * @return string
 	 */
-	public function createEntity($sModule, $sType)
+	public function createEntity($sModule, $sType, $sUUID = '')
 	{
 		return sprintf(
 			'INSERT INTO %seav_entities ( %s, %s, %s ) '
-			. 'VALUES ( UUID(), %s, %s )', 
+			. 'VALUES ( %s, %s, %s )', 
 			$this->prefix(),
 			$this->escapeColumn('uuid'), 
 			$this->escapeColumn('module_name'), 
 			$this->escapeColumn('entity_type'), 
+			empty($sUUID) ? 'UUID()' : $this->escapeString($sUUID), 
 			$this->escapeString($sModule),
 			$this->escapeString($sType)
 		);
