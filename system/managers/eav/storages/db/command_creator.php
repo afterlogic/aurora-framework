@@ -345,7 +345,21 @@ SELECT DISTINCT entity_type '
 			}
 			if (0 < count($aIdsOrUUIDs))
 			{
-				$sResultWhere .= ' AND entities.id IN (' . implode(',', $aIdsOrUUIDs) . ')';
+				$bUUID = !is_numeric($aIdsOrUUIDs[0]);
+				if ($bUUID)
+				{
+					$aIdsOrUUIDs = array_map(
+						function ($mValue) use ($bUUID) {
+							return $bUUID ? $this->escapeString($mValue) : $mValue;
+						}, 
+						$aIdsOrUUIDs
+					);
+				}
+				$sResultWhere .= sprintf(
+					' AND entities.%s IN (%s)', 
+					$bUUID ? 'uuid' : 'id',
+					implode(',', $aIdsOrUUIDs)
+				);
 			}
 			
 			if ($iLimit > 0)
@@ -386,7 +400,7 @@ GROUP BY %s #6
 			$sLimit,
 			$sOffset
 		);		
-
+\CApi::Log($sSql, \ELogLevel::Full, 'db_');
 		return $sSql;
 	}	
 	
