@@ -88,11 +88,11 @@ class CApiEavCommandCreator extends api_CommandCreator
 			if(!is_int($aIdsOrUUIDs[0]))
 			{
 				$sIdOrUUID = 'uuid';
-				$aUUIDs = array_map(
+				$aIdsOrUUIDs = array_map(
 					function ($mValue) {
 						return $this->escapeString($mValue);
 					}, 
-					$aUUIDs
+					$aIdsOrUUIDs
 				);
 			}
 			$sResult = sprintf(
