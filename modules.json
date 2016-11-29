@@ -51,7 +51,7 @@
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-eav-object-viewer"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-oembed-files"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-files-zipfolder"},
-		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-iframe-app"}
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-iframe-app"}
     ],
 	"require": {
 			"afterlogic/aurora-module-admin-auth": "dev-master",
@@ -105,6 +105,6 @@
 			"afterlogic/aurora-module-eav-object-viewer": "dev-master",
 			"afterlogic/aurora-module-oembed-files": "dev-master",
 			"afterlogic/aurora-module-files-zipfolder": "dev-master",
-			"afterlogic/aurora-module-iframe-app": "dev-master"
+			"afterlogic/aurora-module-webclient-iframe-app": "dev-master"
 	}
 }
