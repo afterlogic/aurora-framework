@@ -745,12 +745,14 @@ abstract class AApiModule
 
 	/**
 	 * Saves module settings to config.json file.
+	 * 
+	 * returns bool
 	 */
 	public function saveModuleConfig()
 	{
 		if (isset($this->oModuleSettings))
 		{
-			$this->oModuleSettings->Save();
+			return $this->oModuleSettings->Save();
 		}
 	}	
 	
@@ -1668,6 +1670,23 @@ abstract class AApiModule
 				array(new \CAttribute('@DisabledModules', implode('|', $aDisabledModules), 'string'))
 			);
 		}	
+	}
+	
+	/**
+	 * 
+	 * @param AEntity $oEntity
+	 * @return bool
+	 */
+	public function isEnabledForEntity(&$oEntity)
+	{
+		$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
+		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+		if (substr_count($sDisabledModules, "|") > 0)
+		{
+			$aDisabledModules = explode("|", $sDisabledModules);
+		}
+		
+		return !in_array($this->GetName(), $aDisabledModules);
 	}
 }
 
