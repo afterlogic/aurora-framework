@@ -15,13 +15,14 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
+    "bluebird": "^3.4.6",
+    "fullcalendar": "~2.4.0",
     "hasher": "~1.2.0",
-    "underscore": "~1.8.3",
-    "knockout": "~3.3.0",
-    "moment": "~2.10.6",
     "jquery": "~1.11.3",
     "jquery-ui": "~1.10.5",
-    "fullcalendar": "~2.4.0"
+    "knockout": "~3.3.0",
+    "moment": "~2.10.6",
+    "underscore": "~1.8.3"
   },
   "browser": {
     "underscore": "./node_modules/underscore/underscore-min.js",
