@@ -61,6 +61,10 @@ var
 				{
 					test: /\.js$/,
 					loader: 'replace-module-names-loader'
+				},
+				{
+					test: /\.less$/,
+					loader: "style-loader!css-loader!less-loader"
 				}
 			]
 		}
@@ -95,7 +99,8 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 		bPublic = sName.indexOf('-pub') !== -1,
 		sPublicInit = bPublic ? "\t\t" + "App.setPublic();" + crlf : ''
 	;
-	
+	// console.log(JSON.stringify(oWebPackConfig, null, 2));
+	// return;
     gulp.src(aModules)
 		.pipe(plumber({
             errorHandler: function (err) {
@@ -145,6 +150,8 @@ gulp.task('js:build', function () {
 	jsTask('js:build', sOutputName, _.defaults({
 		'output':  {
 			'filename': sOutputName + '.js',
+			// 'chunkFilename': '[name].[hash].js',
+			'chunkFilename': '[name].js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));

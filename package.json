@@ -30,7 +30,9 @@
     "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js"
   },
   "devDependencies": {
+    "css-loader": "^0.26.0",
     "exports-loader": "^0.6.3",
+    "extract-text-webpack-plugin": "^1.0.1",
     "gulp": "^3.9.1",
     "gulp-concat-util": "^0.5.5",
     "gulp-less": "^3.1.0",
@@ -38,8 +40,11 @@
     "gulp-util": "^3.0.7",
     "imports-loader": "^0.6.5",
     "iniparser": "^1.0.5",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
+    "style-loader": "^0.13.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.13.2",
