@@ -92,7 +92,7 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	}
 
 	/**
-	 * @param int $iUserId
+	 * @param string $sUUID
 	 * @param string $sKey
 	 * @param string $sSource
 	 * @param string $sFileSuffix Default value is empty string.
@@ -100,10 +100,10 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	 *
 	 * @return bool
 	 */
-	public function moveUploadedFile($iUserId, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
+	public function moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
 	{
 		return @move_uploaded_file($sSource,
-			$this->generateFileName($iUserId, $sKey, true, $sFileSuffix, $sFolder));
+			$this->generateFileName($sUUID, $sKey, true, $sFileSuffix, $sFolder));
 	}
 
 	/**
@@ -151,22 +151,22 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	}
 
 	/**
-	 * @param int $iUserId
+	 * @param string $sUUID
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return bool
 	 */
-	public function clear($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function clear($sUUID, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		$mResult = false;
-		$sFileName = $this->generateFileName($iUserId, $sKey, false, $sFileSuffix, $sFolder);
+		$bResult = false;
+		$sFileName = $this->generateFileName($sUUID, $sKey, false, $sFileSuffix, $sFolder);
 		if (@file_exists($sFileName))
 		{
-			$mResult = @unlink($sFileName);
+			$bResult = @unlink($sFileName);
 		}
-		return $mResult;
+		return $bResult;
 	}
 
 	/**
@@ -229,16 +229,16 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	}
 
 	/**
-	 * @param int $iUserId
+	 * @param string $sUUID
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return string
 	 */
-	public function generateFullFilePath($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function generateFullFilePath($sUUID, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		return $this->generateFileName($iUserId, $sKey, true, $sFileSuffix, $sFolder);
+		return $this->generateFileName($sUUID, $sKey, true, $sFileSuffix, $sFolder);
 	}
 
 	/**

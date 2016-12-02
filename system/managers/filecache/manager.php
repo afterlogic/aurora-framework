@@ -81,7 +81,7 @@ class CApiFilecacheManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param string $sUUID
 	 * @param string $sKey
 	 * @param string $sSource
 	 * @param string $sFileSuffix Default value is empty string.
@@ -89,12 +89,12 @@ class CApiFilecacheManager extends AApiManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function moveUploadedFile($oAccount, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
+	public function moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->moveUploadedFile($oAccount, $sKey, $sSource, $sFileSuffix, $sFolder);
+			$bResult = $this->oStorage->moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix, $sFolder);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -169,19 +169,19 @@ class CApiFilecacheManager extends AApiManagerWithStorage
 	}	
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param string $sUUID
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
 	 * @return bool
 	 */
-	public function clear($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function clear($sUUID, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->clear($oAccount, $sKey, $sFileSuffix, $sFolder);
+			$bResult = $this->oStorage->clear($sUUID, $sKey, $sFileSuffix, $sFolder);
 		}
 		catch (CApiBaseException $oException)
 		{
@@ -235,25 +235,25 @@ class CApiFilecacheManager extends AApiManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param string $sUUID
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
-	 * @return bool
+	 * @return bool|string
 	 */
-	public function generateFullFilePath($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function generateFullFilePath($sUUID, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		$bResult = false;
+		$mResult = false;
 		try
 		{
-			$bResult = $this->oStorage->generateFullFilePath($oAccount, $sKey, $sFileSuffix, $sFolder);
+			$mResult = $this->oStorage->generateFullFilePath($sUUID, $sKey, $sFileSuffix, $sFolder);
 		}
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
-		return $bResult;
+		return $mResult;
 	}
 
 	/**
