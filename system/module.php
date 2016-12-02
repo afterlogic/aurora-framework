@@ -1613,12 +1613,12 @@ abstract class AApiModule
 		return isset($iPluralCount) ? \CApi::processTranslateParams($aLang, $sData, $aParams, \CApi::getPlural($sLanguage, $iPluralCount)) : 
 			\CApi::processTranslateParams($aLang, $sData, $aParams);
 	}
-	
+
 	/**
 	 * 
 	 * @param \AEntity $oEntity
 	 */
-	public function setDisabledForEntity(&$oEntity)
+	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
 		$oEavManager = \CApi::GetSystemManager('eav');
 		if ($oEavManager)
@@ -1629,44 +1629,25 @@ abstract class AApiModule
 			{
 				$aDisabledModules = explode("|", $sDisabledModules);
 			}
-				
-			if (!in_array($this->GetName(), $aDisabledModules))
+			if ($bEnabled)
 			{
-				$aDisabledModules[] = $this->GetName();
+				if (!in_array($this->GetName(), $aDisabledModules))
+				{
+					$aDisabledModules[] = $this->GetName();
+				}				
+			}
+			else
+			{
+				if (in_array($this->GetName(), $aDisabledModules))
+				{
+					$aDisabledModules = array_diff($aDisabledModules, array($this->GetName()));
+				}
 			}
 			$sDisabledModules = implode('|', $aDisabledModules);
 			$oEntity->{'@DisabledModules'} = $sDisabledModules;
 			$oEavManager->setAttributes(
 				array($oEntity->iId), 
 				array(new \CAttribute('@DisabledModules', $sDisabledModules, 'string'))
-			);
-		}	
-	}
-	
-	/**
-	 * 
-	 * @param \AEntity $oEntity
-	 */
-	public function setEnabledForEntity(&$oEntity)
-	{
-		$oEavManager = \CApi::GetSystemManager('eav');
-		if ($oEavManager)
-		{
-			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
-			$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
-			if($i = substr_count($sDisabledModules, "|"))
-			{
-				$aDisabledModules = explode("|", $sDisabledModules);
-			}
-
-			if (in_array($this->GetName(), $aDisabledModules))
-			{
-				$aDisabledModules = array_diff($aDisabledModules, array($this->GetName()));
-			}
-			$oEntity->{'@DisabledModules'} = implode('|', $aDisabledModules);
-			$oEavManager->setAttributes(
-				array($oEntity->iId), 
-				array(new \CAttribute('@DisabledModules', implode('|', $aDisabledModules), 'string'))
 			);
 		}	
 	}
