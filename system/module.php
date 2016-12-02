@@ -1631,17 +1631,17 @@ abstract class AApiModule
 			}
 			if ($bEnabled)
 			{
-				if (!in_array($this->GetName(), $aDisabledModules))
-				{
-					$aDisabledModules[] = $this->GetName();
-				}				
-			}
-			else
-			{
 				if (in_array($this->GetName(), $aDisabledModules))
 				{
 					$aDisabledModules = array_diff($aDisabledModules, array($this->GetName()));
 				}
+			}
+			else
+			{
+				if (!in_array($this->GetName(), $aDisabledModules))
+				{
+					$aDisabledModules[] = $this->GetName();
+				}				
 			}
 			$sDisabledModules = implode('|', $aDisabledModules);
 			$oEntity->{'@DisabledModules'} = $sDisabledModules;
