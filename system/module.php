@@ -1663,8 +1663,7 @@ abstract class AApiModule
 			{
 				$aDisabledModules = array_diff($aDisabledModules, array($this->GetName()));
 			}
-			$sDisabledModules = implode('|', $aDisabledModules);
-			$oEntity->{'@DisabledModules'} = $sDisabledModules;
+			$oEntity->{'@DisabledModules'} = implode('|', $aDisabledModules);
 			$oEavManager->setAttributes(
 				array($oEntity->iId), 
 				array(new \CAttribute('@DisabledModules', implode('|', $aDisabledModules), 'string'))

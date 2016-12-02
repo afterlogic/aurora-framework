@@ -1279,9 +1279,9 @@ class CApi
 		$mResult = false;
 		if (empty($sAuthToken))
 		{
-			if (is_array(static::$aUserSession) && isset(static::$aUserSession['AuthToken']))
+			if (is_array(self::$aUserSession) && isset(self::$aUserSession['AuthToken']))
 			{
-				$sAuthToken = static::$aUserSession['AuthToken'];
+				$sAuthToken = self::$aUserSession['AuthToken'];
 			}
 		}
 		/* @var $oApiIntegrator \CApiIntegratorManager */
@@ -1299,9 +1299,9 @@ class CApi
 		$mResult = false;
 		if (!empty($sAuthToken))
 		{
-			if (isset(static::$aUserSession['UserId']))
+			if (isset(self::$aUserSession['UserId']))
 			{
-				$mResult = (int) static::$aUserSession['UserId'];
+				$mResult = (int) self::$aUserSession['UserId'];
 			}
 			else
 			{
@@ -1311,16 +1311,16 @@ class CApi
 				{
 					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
 					$mResult = $aInfo['userId'];
-					static::$aUserSession['UserId'] = $mResult;
-					static::$aUserSession['AuthToken'] = $sAuthToken;
+					self::$aUserSession['UserId'] = $mResult;
+					self::$aUserSession['AuthToken'] = $sAuthToken;
 				}
 			}
 		}
 		else 
 		{
-			if (is_array(static::$aUserSession) && isset(static::$aUserSession['UserId']))
+			if (is_array(self::$aUserSession) && isset(self::$aUserSession['UserId']))
 			{
-				$mResult = static::$aUserSession['UserId'];
+				$mResult = self::$aUserSession['UserId'];
 			}
 			else
 			{
@@ -1340,9 +1340,9 @@ class CApi
 			{
 				\CApi::getAuthenticatedUserId($iUserId); // called for saving in session
 			}
-			else if (!empty(static::$aUserSession['UserId']))
+			else if (!empty(self::$aUserSession['UserId']))
 			{
-				$iUserId = static::$aUserSession['UserId'];
+				$iUserId = self::$aUserSession['UserId'];
 			}
 
 			$oApiIntegrator = \CApi::GetSystemManager('integrator');
@@ -1358,9 +1358,9 @@ class CApi
 	{
 		$mResult = false;
 		
-		if (is_array(static::$aUserSession) && isset(static::$aUserSession['AuthToken']))
+		if (is_array(self::$aUserSession) && isset(self::$aUserSession['AuthToken']))
 		{
-			$mResult = static::$aUserSession['AuthToken'];
+			$mResult = self::$aUserSession['AuthToken'];
 		}
 		
 		return $mResult;
@@ -1368,16 +1368,26 @@ class CApi
 	
 	public static function setTenantName($sTenantName)
 	{
-		static::$aUserSession['TenantName'] = $sTenantName;
+		self::$aUserSession['TenantName'] = $sTenantName;
+	}
+
+	public static function setUserId($iUserId)
+	{
+		self::$aUserSession['UserId'] = $iUserId;
 	}
 	
+	public static function setAuthToken($sAuthToken)
+	{
+		self::$aUserSession['AuthToken'] = $sAuthToken;
+	}
+
 	public static function getTenantName()
 	{
 		$mResult = false;
 
-		if (is_array(static::$aUserSession) && isset(static::$aUserSession['TenantName']))
+		if (is_array(self::$aUserSession) && isset(self::$aUserSession['TenantName']))
 		{
-			$mResult = static::$aUserSession['TenantName'];
+			$mResult = self::$aUserSession['TenantName'];
 		}
 		else
 		{
