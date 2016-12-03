@@ -228,11 +228,17 @@ class CApi
 		return CApi::$oModuleManager;
 	}
 	
-	public static function GetModuleDecorator($sModuleName)
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @param int $iUser
+	 * @return type
+	 */
+	public static function GetModuleDecorator($sModuleName, $iUser = null)
 	{
 		if (!isset(CApi::$aModuleDecorators[$sModuleName]))
 		{
-			CApi::$aModuleDecorators[$sModuleName] = new \CApiModuleDecorator($sModuleName);
+			CApi::$aModuleDecorators[$sModuleName] = new \CApiModuleDecorator($sModuleName, $iUser);
 		}
 		
 		return CApi::$aModuleDecorators[$sModuleName];

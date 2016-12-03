@@ -537,11 +537,11 @@ class CApiModuleDecorator
 
     /**
 	 * 
-	 * @param type $sModuleName
+	 * @param string $sModuleName
 	 */
 	public function __construct($sModuleName) 
 	{
-       $this->oModule = \CApi::GetModule($sModuleName);
+		$this->oModule = \CApi::GetModule($sModuleName);
     }	
 	
 	/**
