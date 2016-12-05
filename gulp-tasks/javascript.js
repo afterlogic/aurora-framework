@@ -164,6 +164,7 @@ gulp.task('js:watch', function () {
 		'poll': true,
 		'output':  {
 			'filename': sOutputName + '.js',
+			'chunkFilename': '[name].js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
@@ -182,6 +183,7 @@ gulp.task('js:min', function () {
 		],
 		'output':  {
 			'filename': sOutputName + '.min.js',
+			'chunkFilename': '[name].js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
