@@ -69,11 +69,11 @@ var
 			]
 		}
 	},
-	compileCallback = function (sName, err, stats) {
+	compileCallback = function (err, stats) {
 		if (err) {
-			throw new gutil.PluginError(sName, err);
+			throw new gutil.PluginError(err);
 		}
-		gutil.log(sName, stats.toString({
+		gutil.log(stats.toString({
 			colors: true,
 			//context: true,
 			hash: false,
@@ -137,10 +137,7 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
             "});" + crlf
         ))
 		.pipe(gulp.dest(sPath))
-		.pipe(gulpWebpack(oWebPackConfig, null, function (err, stats) {
-			compileCallback.call(null, sTaskName, err, stats);
-		}))
-		// .pipe(concat(oData.name)) //break file saving in watch mode
+		.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
 		.pipe(plumber.stop())
         .pipe(gulp.dest(sPath))
 	;
@@ -150,10 +147,12 @@ gulp.task('js:build', function () {
 	jsTask('js:build', sOutputName, _.defaults({
 		'output':  {
 			'filename': sOutputName + '.js',
-			// 'chunkFilename': '[name].[hash].js',
 			'chunkFilename': '[name].js',
 			'publicPath': sPath
-		}
+		},
+		'plugins': [
+			new webpack.optimize.DedupePlugin()
+		]
 	}, oWebPackConfig));
 });
 
