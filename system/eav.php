@@ -89,6 +89,24 @@ class AEntity
 		$this->aAttributes = array();
 	}
 	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->sClassName;
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getModule()
+	{
+		return $this->sModuleName;
+	}
+	
     /**
      * Returns a pseudo-random v4 UUID
      *
