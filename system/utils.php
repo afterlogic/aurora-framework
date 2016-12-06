@@ -2074,6 +2074,20 @@ class api_Utils
 	{
 		return time() - 60 * 2;
 	}	
+	
+	public static function parseIniString($sIniString) 
+	{
+		$aResult = array(); 
+		foreach (explode("\n", $sIniString) as $sLine) 
+		{
+			$aValues = explode("=", $sLine, 2);
+			if (isset($aValues[0], $aValues[1]))
+			{
+				$aResult[$aValues[0]] = trim(rtrim($aValues[1], "\r"), "\"");
+			}
+		}
+		return $aResult;
+	}	
 }
 
 /**

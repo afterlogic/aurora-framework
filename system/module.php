@@ -798,7 +798,7 @@ abstract class AApiModule
 	 * @param string $sMethod
 	 * @return boolean
 	 */
-	public function isEventCallback($sMethod)
+	protected function isEventCallback($sMethod)
 	{
 		return in_array($sMethod, $this->getEventsCallbacks());
 	}
@@ -1024,7 +1024,7 @@ abstract class AApiModule
 	 * @param callback $mCallbak
 	 * @return boolean
 	 */
-	public function IsEntryCallback($mCallbak)
+	protected function isEntryCallback($mCallbak)
 	{
 		return in_array($mCallbak, array_values($this->aEntries));
 	}
@@ -1449,96 +1449,147 @@ abstract class AApiModule
 		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
 	}	
 	
-	public function CallMethod($sMethodName, $aArguments = array(), $bWebApi = false)
+	/**
+	 * 
+	 * @param string $sMethodName
+	 * @param array $aArguments
+	 * @param boolean $bWebApi
+	 * @return array
+	 */
+	protected function getMethodArguments($sMethodName, &$aArguments, $bWebApi)
+	{
+		$aMethodArgs = array();
+		$oReflector = new \ReflectionMethod($this, $sMethodName);
+		$aReflectionParameters = $oReflector->getParameters();
+		if ($bWebApi)
+		{
+			foreach ($aReflectionParameters as $oParam) 
+			{
+				$sParamName = $oParam->getName();
+				$iParamPosition = $oParam->getPosition();
+				$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
+				if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
+				{
+					$aMethodArgs[$iParamPosition] = null;
+				}
+				else
+				{
+					$aMethodArgs[$iParamPosition] = $bIsArgumentGiven ? 
+						$aArguments[$sParamName] : $oParam->getDefaultValue();
+				}		
+			}
+		}
+		else
+		{
+			$aTempArguments = array();
+			$aMethodArgs = $aArguments;
+			foreach ($aReflectionParameters as $oParam) 
+			{
+				$sParamName = $oParam->getName();
+				$iParamPosition = $oParam->getPosition();
+				$mArgumentValue = null;
+				if (isset($aArguments[$iParamPosition]))
+				{
+					$mArgumentValue = $aArguments[$iParamPosition];
+				}
+				else if ($oParam->isDefaultValueAvailable())
+				{
+					$mArgumentValue = $oParam->getDefaultValue();
+				}
+				$aTempArguments[$sParamName] = $mArgumentValue;
+			}
+			$aArguments = $aTempArguments;
+		}
+		
+		return $aMethodArgs;
+	}
+	
+	/**
+	 * 
+	 * @param string $sMethod
+	 * @return boolean
+	 */
+	protected function isCallbackMethod($sMethod)
+	{
+		return ($this->isEntryCallback($sMethod) || $this->isEventCallback($sMethod));
+	}
+	
+	/**
+	 * 
+	 * @param string $sMethod
+	 * @param array $aArguments
+	 * @param boolean $bWebApi
+	 * @return mixed
+	 */
+	public function CallMethod($sMethod, $aArguments = array(), $bWebApi = false)
 	{
 		$mResult = false;
 		try 
 		{
-			if (method_exists($this, $sMethodName) &&  !($bWebApi && 
-				($sMethodName === 'init' || $this->IsEntryCallback($sMethodName) || $this->isEventCallback($sMethodName))))
+			if (method_exists($this, $sMethod) &&  !($bWebApi && $this->isCallbackMethod($sMethod)))
 			{
 				if ($bWebApi && !isset($aArguments['UserId']))
 				{
 					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
 				}
 
+				$aMethodArgs = $this->getMethodArguments($sMethod, $aArguments, $bWebApi);
+
 				$bEventResult = $this->broadcastEvent(
-					$sMethodName . \AApiModule::$Delimiter . 'before', 
+					$sMethod . \AApiModule::$Delimiter . 'before', 
 					$aArguments, 
 					$mResult
 				);
 
-				$aMethodArgs = array();
-
-				if ($bWebApi && !$bEventResult)
+				if (!$bEventResult)
 				{
-					$oReflector = new \ReflectionMethod($this, $sMethodName);
-					foreach ($oReflector->getParameters() as $oParam) 
+					try
 					{
-						$sParamName = $oParam->getName();
-						$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
-						if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
+						$mMethodResult = call_user_func_array(
+							array($this, $sMethod), 
+							$aMethodArgs
+						);
+						if (is_array($mMethodResult) && is_array($mResult))
 						{
-							$aMethodArgs[$oParam->getPosition()] = null;
+							$mResult = array_merge($mMethodResult, $mResult);
+						}
+						else if ($mMethodResult !== null)
+						{
+							$mResult = $mMethodResult;
+						}
+					} 
+					catch (\Exception $oException) 
+					{
+						\CApi::GetModuleManager()->AddResult(
+							$this->GetName(), 
+							$sMethod, 
+							$mResult,
+							$oException->getCode()
+						);
+						if (!($oException instanceof \System\Exceptions\AuroraApiException))
+						{
+							throw new \System\Exceptions\AuroraApiException(
+								$oException->getCode(), 
+								$oException, 
+								$oException->getMessage()
+							);
 						}
 						else
 						{
-							$aMethodArgs[$oParam->getPosition()] = $bIsArgumentGiven ? 
-								$aArguments[$sParamName] : $oParam->getDefaultValue();
-						}		
-					}
-				}
-				else
-				{
-					$aMethodArgs = $aArguments;
-				}
-
-				try
-				{
-					$mMethodResult = call_user_func_array(
-						array($this, $sMethodName), 
-						$aMethodArgs
-					);
-					if (is_array($mMethodResult) && is_array($mResult))
-					{
-						$mResult = array_merge($mMethodResult, $mResult);
-					}
-					else if ($mMethodResult !== null)
-					{
-						$mResult = $mMethodResult;
-					}
-				} 
-				catch (\Exception $oException) 
-				{
-					\CApi::GetModuleManager()->AddResult(
-						$this->GetName(), 
-						$sMethodName, 
-						$mResult,
-						$oException->getCode()
-					);
-					if (!($oException instanceof \System\Exceptions\AuroraApiException))
-					{
-						throw new \System\Exceptions\AuroraApiException(
-							$oException->getCode(), 
-							$oException, 
-							$oException->getMessage()
-						);
-					}
-					else
-					{
-						throw $oException;
+							throw $oException;
+						}
 					}
 				}
 				
 				$this->broadcastEvent(
-					$sMethodName . \AApiModule::$Delimiter . 'after', 
+					$sMethod . \AApiModule::$Delimiter . 'after', 
 					$aArguments, 
 					$mResult
 				);
 				
 				\CApi::GetModuleManager()->AddResult(
 					$this->GetName(), 
-					$sMethodName, 
+					$sMethod, 
 					$mResult
 				);
 			}

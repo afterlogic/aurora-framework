@@ -63,7 +63,8 @@ class CApiEavManager extends AApiManagerWithStorage
 	public function saveEntity(\AEntity &$oEntity)
 	{
 		$mResult = false;
-		if (isset($oEntity->iId) && $this->isEntityExists($oEntity->iId))
+		if (isset($oEntity->iId) && $this->isEntityExists($oEntity->iId) ||
+			isset($oEntity->sUUID) && $this->isEntityExists($oEntity->sUUID))
 		{
 			$mResult = $this->updateEntity($oEntity);
 		}
@@ -131,7 +132,10 @@ class CApiEavManager extends AApiManagerWithStorage
 			}
 			try
 			{
-				$this->setAttributes($oEntity->iId, $aAttributes);
+				$this->setAttributes(
+					$oEntity->iId, 
+					$aAttributes
+				);
 				$mResult = true;
 			}
 			catch (Exception $ex)
