@@ -894,6 +894,16 @@ abstract class AApiModule
 	{
 		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : array();
 	}
+	
+	/**
+	 * 
+	 * @param string $sType
+	 * @return boolean
+	 */
+	public function issetObject($sType)
+	{
+		return isset($this->aObjects[$sType]);
+	}
 
 	/**
 	 * @param string $sName
