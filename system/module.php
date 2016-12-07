@@ -1543,6 +1543,7 @@ abstract class AApiModule
 					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
 				}
 
+				// prepare arguments for before event
 				$aMethodArgs = $this->getMethodArguments($sMethod, $aArguments, $bWebApi);
 
 				$bEventResult = $this->broadcastEvent(
@@ -1550,6 +1551,9 @@ abstract class AApiModule
 					$aArguments, 
 					$mResult
 				);
+				
+				// prepare arguments for main action after event
+				$aMethodArgs = $this->getMethodArguments($sMethod, $aArguments, $bWebApi);				
 
 				if (!$bEventResult)
 				{
