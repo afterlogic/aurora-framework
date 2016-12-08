@@ -32,43 +32,6 @@ class CApiEavStorage extends AApiManagerStorage
 	{
 		parent::__construct('eav', $sStorageName, $oManager);
 	}
-	
-	/**
-	 */
-	public function existAttribute(CAttribute $oAttribute)
-	{
-		return true;
-	}
-
-	/**
-	 */
-	public function createAttribute(CAttribute $oAttribute)
-	{
-		return true;
-	}
-
-	/**
-	 */
-	public function updateProperty(CAttribute &$oAttribute)
-	{
-		return true;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function deleteAttribute($iId)
-	{
-		return true;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function deleteAttributes($iEntityId)
-	{
-		return true;
-	}
 
 	/**
 	 */

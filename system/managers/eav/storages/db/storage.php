@@ -52,11 +52,18 @@ class CApiEavDbStorage extends CApiEavStorage
 	}
 
 	/**
+	 * 
+	 * @param type $mIdOrUUID
+	 * @return type
 	 */
 	public function isEntityExists($mIdOrUUID)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->isEntityExists($mIdOrUUID)))
+		
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->isEntityExists($mIdOrUUID)
+			)
+		)
 		{
 			$oRow = $this->oConnection->GetNextRecord();
 			if ($oRow)
@@ -70,10 +77,20 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $bResult;
 	}	
 	
+	/**
+	 * 
+	 * @param type $sModule
+	 * @param type $sType
+	 * @param type $sUUID
+	 * @return type
+	 */
 	public function createEntity($sModule, $sType, $sUUID)
 	{
 		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->createEntity($sModule, $sType, $sUUID)))
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->createEntity($sModule, $sType, $sUUID)
+			)
+		)
 		{
 			$bResult = $this->oConnection->GetLastInsertId();
 		}
@@ -82,16 +99,27 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $bResult;
 	}
 	
-	protected function getEntityBySql($sSql)
+	/**
+	 * 
+	 * @param type $mIdOrUUID
+	 * @return type
+	 */
+	public function getEntity($mIdOrUUID)
 	{
 		$oEntity = null;
-		if ($this->oConnection->Execute($sSql))
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->getEntity($mIdOrUUID)
+			)
+		)
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
 				if (!isset($oEntity))
 				{
-					$oEntity = call_user_func($oRow->entity_type . '::createInstance', $oRow->entity_module);
+					$oEntity = call_user_func(
+						$oRow->entity_type . '::createInstance', 
+						$oRow->entity_module
+					);
 				}
 
 				if (isset($oEntity))
@@ -99,14 +127,23 @@ class CApiEavDbStorage extends CApiEavStorage
 					$oEntity->iId = (int) $oRow->entity_id;
 					$oEntity->sUUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
 
-					if (isset($oRow->attr_name) /*&& $oObject->IsProperty($oRow->prop_key)*/)
+					if (isset($oRow->attr_name))
 					{
-						$mValue = $oRow->{'attr_value'};
+						$mValue = $oRow->attr_value;
+						$bEncrypt = false;
 						if ($oEntity->isEncryptedAttribute($oRow->attr_type))
 						{
+							$bEncrypt = true;
 							$mValue = \api_Utils::DecryptValue($mValue);
 						}
-						$oEntity->{$oRow->attr_name} = $mValue;
+						$oEntity->{$oRow->attr_name} = 
+							\CAttribute::createInstance(
+								$oRow->attr_name, 
+								$mValue, 
+								$oRow->attr_type, 
+								$bEncrypt, 
+								$oEntity->iId
+						);
 					}
 				}
 			}			
@@ -115,19 +152,15 @@ class CApiEavDbStorage extends CApiEavStorage
 
 		$this->throwDbExceptionIfExist();
 		return $oEntity;
-	}
-	
-	/**
-	 */
-	public function getEntity($mIdOrUUID)
-	{
-		return $this->getEntityBySql($this->oCommandCreator->getEntity($mIdOrUUID));
 	}	
 
 	public function getTypes()
 	{
 		$mResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->getTypes()))
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->getTypes()
+			)
+		)
 		{
 			$oRow = null;
 			$mResult = array();
@@ -140,10 +173,20 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $mResult;
 	}	
 	
+	/**
+	 * 
+	 * @param type $sType
+	 * @param type $aWhere
+	 * @param type $aIds
+	 * @return type
+	 */
 	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
 	{
 		$mResult = 0;
-		if ($this->oConnection->Execute($this->oCommandCreator->getEntitiesCount($sType, $aWhere, $aIds)))
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->getEntitiesCount($sType, $aWhere, $aIds)
+			)
+		)
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
@@ -155,7 +198,18 @@ class CApiEavDbStorage extends CApiEavStorage
 		$this->throwDbExceptionIfExist();
 		return $mResult;
 	}
+	
 	/**
+	 * 
+	 * @param type $sType
+	 * @param type $aViewAttrs
+	 * @param type $iOffset
+	 * @param type $iLimit
+	 * @param type $aSearchAttrs
+	 * @param type $sOrderBy
+	 * @param type $iSortOrder
+	 * @param type $aIdsOrUUIDs
+	 * @return \AEntity
 	 */
 	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
@@ -167,7 +221,9 @@ class CApiEavDbStorage extends CApiEavStorage
 		}
 		else if (count($aViewAttrs) === 0)
 		{
-			$this->oConnection->Execute($this->oCommandCreator->getAttributesNamesByEntityType($sType));
+			$this->oConnection->Execute(
+				$this->oCommandCreator->getAttributesNamesByEntityType($sType)
+			);
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
 				$aViewAttrs[] = $oRow->name;
@@ -175,8 +231,19 @@ class CApiEavDbStorage extends CApiEavStorage
 			$this->oConnection->FreeResult();
 		}		
 		
-		if ($this->oConnection->Execute($this->oCommandCreator->getEntities(
-				$sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $sOrderBy, $iSortOrder, $aIdsOrUUIDs)))
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->getEntities(
+					$sType, 
+					$aViewAttrs, 
+					$iOffset, 
+					$iLimit, 
+					$aSearchAttrs, 
+					$sOrderBy, 
+					$iSortOrder, 
+					$aIdsOrUUIDs
+				)
+			)
+		)
 		{
 			$oRow = null;
 			$mResult = array();
@@ -196,8 +263,7 @@ class CApiEavDbStorage extends CApiEavStorage
 
 				foreach (get_object_vars($oRow) as $sKey => $mValue)
 				{
-					$sAttrPos = strrpos($sKey, 'attr_', -5);
-					if ($sAttrPos !== false)
+					if (strrpos($sKey, 'attr_', -5) !== false)
 					{
 						$sAttrKey = substr($sKey, 5);
 						if ($oEntity->isEncryptedAttribute($sAttrKey))
@@ -215,17 +281,14 @@ class CApiEavDbStorage extends CApiEavStorage
 		return $mResult;
 	}	
 
-	public function getEntitiesByModule($sModule)
-	{
-		return true;
-	}	
-	
 	/**
 	 * @return bool
 	 */
 	public function deleteEntity($mIdOrUUID)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntity($mIdOrUUID));
+		$bResult = $this->oConnection->Execute(
+			$this->oCommandCreator->deleteEntity($mIdOrUUID)
+		);
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
@@ -235,32 +298,13 @@ class CApiEavDbStorage extends CApiEavStorage
 	 */
 	public function deleteEntities($aIdsOrUUIDs)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteEntities($aIdsOrUUIDs));
-
+		$bResult = $this->oConnection->Execute(
+			$this->oCommandCreator->deleteEntities($aIdsOrUUIDs)
+		);
 		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
-	/**
-	 */
-	public function isAttributeExists(\CAttribute $oAttribute)
-	{
-		$bResult = false;
-		if ($this->oConnection->Execute($this->oCommandCreator->isAttributeExists(
-				$oAttribute->EntityId, $oAttribute->Name, $oAttribute->Type)))
-		{
-			$oRow = $this->oConnection->GetNextRecord();
-			if ($oRow)
-			{
-				$bResult = 0 < (int) $oRow->attrs_count;
-			}
-
-			$this->oConnection->FreeResult();
-		}
-		$this->throwDbExceptionIfExist();
-		return $bResult;
-	}
-	
 	/**
 	 */
 	public function setAttributes($aEntitiesIds, $aAttributes)
@@ -273,29 +317,13 @@ class CApiEavDbStorage extends CApiEavStorage
 		
 		foreach ($aAttributesByTypes as $sType => $aAttributes)
 		{
-			$this->oConnection->Execute($this->oCommandCreator->setAttributes($aEntitiesIds, $aAttributes, $sType));
+			$this->oConnection->Execute(
+				$this->oCommandCreator->setAttributes($aEntitiesIds, $aAttributes, $sType)
+			);
 		}
 		$this->throwDbExceptionIfExist();
 		return true;
 	}	
-
-	/**
-	 * @return bool
-	 */
-	public function deleteAttribute($iId)
-	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->deleteAttribute($iId));
-		$this->throwDbExceptionIfExist();
-		return $bResult;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function deleteAttributes($iEntityId)
-	{
-		return true;
-	}
 	
 	/**
 	 * @return bool

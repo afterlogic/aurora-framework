@@ -85,24 +85,17 @@ class CApiEavManager extends AApiManagerWithStorage
 	private function createEntity(\AEntity &$oEntity)
 	{
 		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName, $oEntity->sUUID);
-		if (!$mResult)
-		{
-			throw new CApiManagerException(Errs::Main_UnknownError);
-		}
-		else if (0 < $oEntity->countAttributes())
+		if ($mResult !== false)
 		{
 			$oEntity->iId = $mResult;
-			$aAttributes = array();
-			foreach ($oEntity->getAttributesKeys() as $sKey)
+			if (0 < $oEntity->countAttributes())
 			{
-				$aAttributes[] = new \CAttribute(
-					$sKey, 
-					$oEntity->{$sKey}, 
-					$oEntity->getType($sKey), 
-					$oEntity->isEncryptedAttribute($sKey)
-				);
+				$this->setAttributes($mResult, $oEntity->getAttributes());
 			}
-			$this->setAttributes($mResult, $aAttributes);
+		}
+		else
+		{
+			throw new CApiManagerException(Errs::Main_UnknownError);
 		}
 
 		return $mResult;
@@ -117,24 +110,13 @@ class CApiEavManager extends AApiManagerWithStorage
 	protected function updateEntity(\AEntity $oEntity)
 	{
 		$mResult = false;
-		$aEntityAttributes = $oEntity->getAttributesKeys();
-		if (0 < count($aEntityAttributes))
+		if (0 < $oEntity->countAttributes())
 		{
-			$aAttributes = array();
-			foreach ($aEntityAttributes as $sKey)
-			{
-				$aAttributes[] = new \CAttribute(
-					$sKey, 
-					$oEntity->{$sKey}, 
-					$oEntity->getType($sKey),
-					$oEntity->isEncryptedAttribute($sKey)
-				);
-			}
 			try
 			{
 				$this->setAttributes(
 					$oEntity->iId, 
-					$aAttributes
+					$oEntity->getAttributes()
 				);
 				$mResult = true;
 			}
@@ -151,11 +133,11 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * 
 	 * @param int|string $mIdOrUUID
-	 * @return type
+	 * @return bool
 	 */
 	public function deleteEntity($mIdOrUUID)
 	{
-		$bResult = true;
+		$bResult = false;
 		try
 		{
 			$bResult = $this->oStorage->deleteEntity($mIdOrUUID);
@@ -171,11 +153,11 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * 
 	 * @param array $aIdsOrUUIDs
-	 * @return type
+	 * @return bool
 	 */
 	public function deleteEntities($aIdsOrUUIDs)
 	{
-		$bResult = true;
+		$bResult = false;
 		
 		if (!empty($aIdsOrUUIDs))
 		{
@@ -267,29 +249,6 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 * 
-	 * @param string $sModule
-	 * @return boolean
-	 */
-	public function getEntitiesByModule($sModule)
-	{
-		// TODO:
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param string $sModule
-	 * @param string $sType
-	 * @return boolean
-	 */
-	public  function geEntitiesByModuleAndType($sModule, $sType)
-	{
-		// TODO:
-		return false;
-	}
-
-	/**
-	 * 
 	 * @param int|string $mIdOrUUID
 	 * @return \AEntity
 	 */
@@ -350,46 +309,6 @@ class CApiEavManager extends AApiManagerWithStorage
 
 		return $bResult;
 	}
-
-	/**
-	 * 
-	 * @param CAttribute $oAttribute
-	 * @return bool
-	 */
-	private function deleteAttribute(CAttribute $oAttribute)
-	{
-		$bResult = true;
-		try
-		{
-			$bResult = $this->oStorage->deleteAttribute($oAttribute);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-
-		return $bResult;
-	}
-
-	/**
-	 * 
-	 * @param int $iEntityId
-	 * @return bool
-	 */
-	private function deleteAttributes($iEntityId)
-	{
-		$bResult = true;
-		try
-		{
-			$bResult = $this->oStorage->deleteAttributes($iEntityId);
-		}
-		catch (CApiBaseException $oException)
-		{
-			$this->setLastException($oException);
-		}
-
-		return $bResult;
-	}
 	
 	/**
 	 * Tests if there is connection to storage with current settings values.
@@ -408,17 +327,17 @@ class CApiEavManager extends AApiManagerWithStorage
 	 */
 	public function createTablesFromFile()
 	{
-		$bResult = true;
+		$bResult = false;
 		
 		try
 		{
-			$sFilePath = dirname(__FILE__) . '/storages/db/sql/create.sql';
-			$bResult = $this->oStorage->executeSqlFile($sFilePath);
+			$bResult = $this->oStorage->executeSqlFile(
+				dirname(__FILE__) . '/storages/db/sql/create.sql'
+			);
 		}
 		catch (CApiBaseException $oException)
 		{
 			$this->setLastException($oException);
-			$bResult = false;
 		}
 
 		return $bResult;

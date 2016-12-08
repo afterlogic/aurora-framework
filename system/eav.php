@@ -169,7 +169,7 @@ class AEntity
 	public function SetDefaults()
 	{
 		$aDefaultValues = array();
-		foreach ($this->getMap()as $sMapKey => $aMap)
+		foreach ($this->getMap() as $sMapKey => $aMap)
 		{
 			$aDefaultValues[$sMapKey] = $aMap[1];
 		}
@@ -188,16 +188,6 @@ class AEntity
 			$this->{$sKey} = $mValue;
 		}
 	}	
-	
-	/**
-	 * @param string $sPropertyName
-	 * @return bool
-	 */
-	public function isAttribute($sPropertyName)
-	{
-		$aMap = $this->getMap();
-		return isset($aMap[$sPropertyName]) || isset($this->aAttributes[$sPropertyName]);
-	}
 
 	/**
 	 * @param string $sPropertyName
@@ -232,68 +222,61 @@ class AEntity
 	}		
 
 	/**
-	 * @param string $sPropertyName
+	 * @param string $sName
 	 * @return bool
 	 */
-	public function __isset($sPropertyName)
+	public function __isset($sName)
 	{
-		return $this->isAttribute($sPropertyName);
+		$aMap = $this->getMap();
+		return isset($aMap[$sName]) || isset($this->aAttributes[$sName]);
 	}
 
 	/**
-	 * @param string $sKey
+	 * @param string $sAttribute
 	 * @param mixed $mValue
 	 * @return void
 	 */
-	public function __set($sKey, $mValue)
+	public function __set($sAttribute, $mValue)
 	{
-		$aMap = $this->getMap();
-		
-		$sType = 'string';
-		if (isset($aMap[$sKey]) && isset($aMap[$sKey][0]))
+		if ($mValue instanceof \CAttribute)
 		{
-			$sType = $aMap[$sKey][0];
+			$this->setAttribute($mValue);
 		}
-		$this->setType($mValue, $sType);
-
-		if ($this->__USE_TRIM_IN_STRINGS__ && 0 === strpos($sType, 'string'))
+		else
 		{
-			$mValue = trim($mValue);
+			$this->setAttribute(
+				\CAttribute::createInstance(
+					$sAttribute, 
+					$mValue, 
+					$this->getType($sAttribute), 
+					$this->isEncryptedAttribute($sAttribute), 
+					$this->iId
+				)
+			);
 		}
-
-		$this->addAttribute(
-			\CAttribute::createInstance(
-				$sKey, 
-				$mValue, 
-				$sType, 
-				$this->isEncryptedAttribute($sKey), 
-				$this->iId
-			), 
-			true
-		);
 	}
 
 	/**
-	 * @param string $sKey
+	 * @param string $sName
 	 *
 	 * @throws Exception
 	 *
 	 * @return mixed
 	 */
-	public function __get($sKey)
+	public function __get($sName)
 	{
 		$mValue = null;
-		$oAttribute = $this->getAttribute($sKey);
+		$oAttribute = $this->getAttribute($sName);
 		if ($oAttribute instanceof \CAttribute)
 		{
 			$aMap = $this->getMap();
 			$sType = 'string';
-			if (isset($aMap[$sKey]))
+			if (isset($aMap[$sName]))
 			{
-				$sType = $aMap[$sKey][0];
+				$sType = $aMap[$sName][0];
 			}
 			$mValue = $oAttribute->Value;
-			$this->setType($mValue, $sType);
+			$oAttribute->setType($mValue, $sType);
 		}
 
 		return $mValue;
@@ -302,14 +285,14 @@ class AEntity
 	/**
 	 * @return string
 	 */
-	public function getType($sAttributeName)
+	public function getType($sAttribute)
 	{
 		$mType = 'string';
 		
 		$aMap = $this->getMap();
-		if (isset($aMap[$sAttributeName]))
+		if (isset($aMap[$sAttribute]))
 		{
-			$mType = $aMap[$sAttributeName][0];
+			$mType = $aMap[$sAttribute][0];
 			if ($mType === 'encrypted')
 			{
 				$mType = 'string';
@@ -319,39 +302,6 @@ class AEntity
 		return $mType;
 	}
 	
-	/**
-	 * @param mixed $mValue
-	 * @param string $sType
-	 */
-	protected function setType(&$mValue, $sType)
-	{
-		$sType = strtolower($sType);
-		if (in_array($sType, array('string', 'int', 'array')))
-		{
-			settype($mValue, $sType);
-		}
-		else if (in_array($sType, array('bool')))
-		{
-			settype($mValue, 'int');
-		}
-		else if (in_array($sType, array('encoded', 'datetime')))
-		{
-			settype($mValue, 'string');
-		}
-		else if (0 === strpos($sType, 'string('))
-		{
-			settype($mValue, 'string');
-			if (0 < strlen($mValue))
-			{
-				$iSize = substr($sType, 7, -1);
-				if (is_numeric($iSize) && (int) $iSize < strlen($mValue))
-				{
-					$mValue = api_Utils::Utf8Truncate($mValue, (int) $iSize);
-				}
-			}
-		}
-	}
-
 	/**
 	 * @return bool
 	 */
@@ -379,12 +329,9 @@ class AEntity
 		return $this->aMap;
 	}
 	
-	public function addAttribute(\CAttribute $oAttribute, $bOverwrite = false)
+	public function setAttribute(\CAttribute $oAttribute)
 	{
-		if (!isset($this->aAttributes[$oAttribute->Name]) || $bOverwrite)
-		{
-			$this->aAttributes[$oAttribute->Name] = $oAttribute;
-		}
+		$this->aAttributes[$oAttribute->Name] = $oAttribute;
 	}
 	
 	/**
@@ -510,19 +457,33 @@ class CAttribute
 	
 	/**
 	 * @param string $sName
-	 * @param mixed $sValue
+	 * @param mixed $mValue
 	 * @param string $sType
 	 * @param bool $bEncrypt
 	 * @param int $iEntityId
 	 */
-	public function __construct($sName, $sValue = null, $sType = 'string', $bEncrypt = false, $iEntityId = 0)
+	public function __construct($sName, $mValue = null, $sType = 'string', $bEncrypt = false, $iEntityId = 0)
 	{
 		$this->Id = 0;
 		$this->EntityId = $iEntityId;
 		$this->Name	= $sName;
-		$this->Value = $sValue;
-		$this->Type = $sType;
 		$this->Encrypt = $bEncrypt;
+		
+		if ($sType === null)
+		{
+			$sType = gettype($mValue);
+		}
+		else
+		{
+			$this->setType($mValue, $sType);
+		}
+		$this->Type = $sType;
+		if ($bEncrypt)
+		{
+			$mValue = \api_Utils::DecryptValue($mValue);
+		}
+		$this->Value = $mValue;
+		
 	}
 	
 	/**
@@ -534,7 +495,7 @@ class CAttribute
 	 * 
 	 * @return \CAttribute
 	 */
-	public static function createInstance($sName, $sValue = null, $sType = 'string', $bEncrypt = false, $iEntityId = 0)
+	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0)
 	{
 		return new self($sName, $sValue, $sType, $bEncrypt, $iEntityId);
 	}
@@ -570,6 +531,40 @@ class CAttribute
 		
 		return $bResult;
 	}
+	
+	
+	/**
+	 * @param mixed $mValue
+	 * @param string $sType
+	 */
+	public function setType(&$mValue, $sType)
+	{
+		$sType = strtolower($sType);
+		if (in_array($sType, array('string', 'int', 'array')))
+		{
+			settype($mValue, $sType);
+		}
+		else if (in_array($sType, array('bool')))
+		{
+			$mValue = (bool) $mValue;
+		}
+		else if (in_array($sType, array('encoded', 'datetime')))
+		{
+			settype($mValue, 'string');
+		}
+		else if (0 === strpos($sType, 'string('))
+		{
+			settype($mValue, 'string');
+			if (0 < strlen($mValue))
+			{
+				$iSize = substr($sType, 7, -1);
+				if (is_numeric($iSize) && (int) $iSize < strlen($mValue))
+				{
+					$mValue = api_Utils::Utf8Truncate($mValue, (int) $iSize);
+				}
+			}
+		}
+	}	
 	
 	/**
 	 * @return bool

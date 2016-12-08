@@ -146,8 +146,7 @@ WHERE %s)
 	public function getTypes()
 	{
 		return sprintf('
-SELECT DISTINCT entity_type '
-			. 'FROM %seav_entities', 
+SELECT DISTINCT entity_type FROM %seav_entities', 
 			$this->prefix()
 		);
 	}
@@ -400,21 +399,7 @@ GROUP BY %s #6
 			$sLimit,
 			$sOffset
 		);		
-\CApi::Log($sSql, \ELogLevel::Full, 'db_');
 		return $sSql;
-	}	
-	
-	/**
-	 * @param CAttribute $oAttribute
-	 *
-	 * @return string
-	 */
-	public function createAttribute(CAttribute $oAttribute)
-	{
-		return $this->setAttributes(
-				array($oAttribute->EntityId),
-				array($oAttribute)
-		);
 	}	
 	
 	/**
@@ -476,43 +461,6 @@ ON DUPLICATE KEY UPDATE
 		}
 		return $sSql;
 	}	
-	
-	/**
-	 * @param $oAttribute
-	 *
-	 * @return string
-	 */
-	public function deleteAttribute(CAttribute $oAttribute)
-	{
-		return sprintf(
-				'DELETE FROM %seav_attributes_%s WHERE id = %d', 
-				$this->prefix(), $oAttribute->Type, $oAttribute->Id);
-	}
-	
-	/**
-	 * @param $iEntityId
-	 *
-	 * @return string
-	 */
-	public function deleteAttributes($iEntityId)
-	{
-		return '';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function isAttributeExists($iEntityId, $sAttributeName, $sAttributeType)
-	{
-		return sprintf(
-				'SELECT COUNT(id) as attrs_count '
-				. 'FROM %seav_attributes_%s WHERE %s = %d and %s = %s', 
-				$this->prefix(),
-				$sAttributeType,
-				$this->escapeColumn('id_entity'), $iEntityId,
-				$this->escapeColumn('name'), $this->escapeString($sAttributeName)
-		);
-	}
 	
 	public function getAttributesNamesByEntityType($sEntityType)
 	{

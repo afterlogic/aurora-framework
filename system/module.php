@@ -1466,7 +1466,7 @@ abstract class AApiModule
 	 * @param boolean $bWebApi
 	 * @return array
 	 */
-	protected function getMethodArguments($sMethodName, &$aArguments, $bWebApi)
+	protected function prepareMethodArguments($sMethodName, &$aArguments, $bWebApi)
 	{
 		$aMethodArgs = array();
 		$oReflector = new \ReflectionMethod($this, $sMethodName);
@@ -1544,7 +1544,7 @@ abstract class AApiModule
 				}
 
 				// prepare arguments for before event
-				$aMethodArgs = $this->getMethodArguments($sMethod, $aArguments, $bWebApi);
+				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, $bWebApi);
 
 				$bEventResult = $this->broadcastEvent(
 					$sMethod . \AApiModule::$Delimiter . 'before', 
@@ -1553,7 +1553,7 @@ abstract class AApiModule
 				);
 				
 				// prepare arguments for main action after event
-				$aMethodArgs = $this->getMethodArguments($sMethod, $aArguments, $bWebApi);				
+				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, $bWebApi);				
 
 				if (!$bEventResult)
 				{
