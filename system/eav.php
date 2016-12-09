@@ -82,7 +82,7 @@ class AEntity
 		$this->__USE_TRIM_IN_STRINGS__ = false;
 		
 		$this->iId = 0;
-		$this->sUUID = self::getUUID();
+		$this->sUUID = self::generateUUID();
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 
@@ -115,7 +115,7 @@ class AEntity
      * @see http://www.php.net/manual/en/function.uniqid.php#94959
      * @return string
      */
-    static public function getUUID() 
+    static public function generateUUID() 
 	{
         return sprintf(
 
@@ -238,22 +238,21 @@ class AEntity
 	 */
 	public function __set($sAttribute, $mValue)
 	{
-		if ($mValue instanceof \CAttribute)
+		if (!($mValue instanceof \CAttribute))
 		{
-			$this->setAttribute($mValue);
-		}
-		else
-		{
-			$this->setAttribute(
-				\CAttribute::createInstance(
-					$sAttribute, 
-					$mValue, 
-					$this->getType($sAttribute), 
-					$this->isEncryptedAttribute($sAttribute), 
-					$this->iId
-				)
+			$mValue = \CAttribute::createInstance(
+				$sAttribute, 
+				$mValue, 
+				$this->getType($sAttribute), 
+				$this->isEncryptedAttribute($sAttribute), 
+				$this->iId
 			);
 		}
+		if ($mValue->Encrypted)
+		{
+			$mValue->Encrypt();
+		}
+		$this->setAttribute($mValue);
 	}
 
 	/**
@@ -275,8 +274,13 @@ class AEntity
 			{
 				$sType = $aMap[$sName][0];
 			}
+			$oAttribute->setType($sType);
+			
+			if ($oAttribute->Encrypted)
+			{
+				$oAttribute->Decrypt();
+			}
 			$mValue = $oAttribute->Value;
-			$oAttribute->setType($mValue, $sType);
 		}
 
 		return $mValue;
@@ -451,23 +455,23 @@ class CAttribute
 	public $Type;
 
 	/*
-	 * @var bool $Encrypt
+	 * @var bool $Encrypted
 	 */
-	public $Encrypt;
+	public $Encrypted;
 	
 	/**
 	 * @param string $sName
 	 * @param mixed $mValue
 	 * @param string $sType
-	 * @param bool $bEncrypt
+	 * @param bool $bEncrypted
 	 * @param int $iEntityId
 	 */
-	public function __construct($sName, $mValue = null, $sType = 'string', $bEncrypt = false, $iEntityId = 0)
+	public function __construct($sName, $mValue = null, $sType = 'string', $bEncrypted = false, $iEntityId = 0)
 	{
 		$this->Id = 0;
 		$this->EntityId = $iEntityId;
 		$this->Name	= $sName;
-		$this->Encrypt = $bEncrypt;
+		$this->Encrypted = $bEncrypted;
 		
 		if ($sType === null)
 		{
@@ -475,13 +479,9 @@ class CAttribute
 		}
 		else
 		{
-			$this->setType($mValue, $sType);
+			$this->setType($sType);
 		}
 		$this->Type = $sType;
-		if ($bEncrypt)
-		{
-			$mValue = \api_Utils::DecryptValue($mValue);
-		}
 		$this->Value = $mValue;
 		
 	}
@@ -534,33 +534,32 @@ class CAttribute
 	
 	
 	/**
-	 * @param mixed $mValue
 	 * @param string $sType
 	 */
-	public function setType(&$mValue, $sType)
+	public function setType($sType)
 	{
 		$sType = strtolower($sType);
 		if (in_array($sType, array('string', 'int', 'array')))
 		{
-			settype($mValue, $sType);
+			settype($this->Value, $sType);
 		}
 		else if (in_array($sType, array('bool')))
 		{
-			$mValue = (bool) $mValue;
+			$this->Value = (bool) $this->Value;
 		}
 		else if (in_array($sType, array('encoded', 'datetime')))
 		{
-			settype($mValue, 'string');
+			settype($this->Value, 'string');
 		}
 		else if (0 === strpos($sType, 'string('))
 		{
-			settype($mValue, 'string');
-			if (0 < strlen($mValue))
+			settype($this->Value, 'string');
+			if (0 < strlen($this->Value))
 			{
 				$iSize = substr($sType, 7, -1);
-				if (is_numeric($iSize) && (int) $iSize < strlen($mValue))
+				if (is_numeric($iSize) && (int) $iSize < strlen($this->Value))
 				{
-					$mValue = api_Utils::Utf8Truncate($mValue, (int) $iSize);
+					$this->Value = api_Utils::Utf8Truncate($this->Value, (int) $iSize);
 				}
 			}
 		}
@@ -585,5 +584,14 @@ class CAttribute
 		return $sResult;	
 	}
 	
+	public function Encrypt()
+	{
+		$this->Value = \api_Utils::EncryptValue($this->Value);
+	}
+	
+	public function Dencrypt()
+	{
+		$this->Value = \api_Utils::DecryptValue($this->Value);
+	}	
 }
 

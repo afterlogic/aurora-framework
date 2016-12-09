@@ -419,10 +419,6 @@ GROUP BY %s #6
 				if ($oAttribute instanceof \CAttribute)
 				{
 					$mValue = $oAttribute->Value;
-					if ($oAttribute->Encrypt)
-					{
-						$mValue = \api_Utils::EncryptValue($mValue);
-					}
 					$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
 					$sSqlValueType = $oAttribute->getValueFormat();
 					

@@ -134,7 +134,6 @@ class CApiEavDbStorage extends CApiEavStorage
 						if ($oEntity->isEncryptedAttribute($oRow->attr_type))
 						{
 							$bEncrypt = true;
-							$mValue = \api_Utils::DecryptValue($mValue);
 						}
 						$oEntity->{$oRow->attr_name} = 
 							\CAttribute::createInstance(
@@ -266,11 +265,15 @@ class CApiEavDbStorage extends CApiEavStorage
 					if (strrpos($sKey, 'attr_', -5) !== false)
 					{
 						$sAttrKey = substr($sKey, 5);
-						if ($oEntity->isEncryptedAttribute($sAttrKey))
-						{
-							$mValue = \api_Utils::DecryptValue($mValue);
-						}
-						$oEntity->{$sAttrKey} = $mValue;
+						$oEntity->{$sAttrKey} = 
+							\CAttribute::createInstance(
+								$sAttrKey, 
+								$mValue, 
+								null, 
+								$oEntity->isEncryptedAttribute($sAttrKey), 
+								$oEntity->iId
+						);
+						
 					}
 				}
 				$mResult[] = $oEntity;
