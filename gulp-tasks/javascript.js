@@ -147,7 +147,7 @@ gulp.task('js:build', function () {
 	jsTask('js:build', sOutputName, _.defaults({
 		'output':  {
 			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].js',
+			'chunkFilename': '[name].' + sOutputName + '.js',
 			'publicPath': sPath
 		},
 		'plugins': [
@@ -163,7 +163,7 @@ gulp.task('js:watch', function () {
 		'poll': true,
 		'output':  {
 			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].js',
+			'chunkFilename': '[name].' + sOutputName + '.js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
@@ -182,7 +182,7 @@ gulp.task('js:min', function () {
 		],
 		'output':  {
 			'filename': sOutputName + '.min.js',
-			'chunkFilename': '[name].js',
+			'chunkFilename': '[name].' + sOutputName + '.js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
