@@ -2,7 +2,8 @@
 	"name": "afterlogic/aurora-framework",
 	"version":"0.2.0",
 	"config": {
-		"github-protocols": ["https"]
+		"github-protocols": ["https"],
+		"cache-dir": "_composer_cache/"
 	},
 	"repositories": [
 	],
