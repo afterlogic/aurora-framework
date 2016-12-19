@@ -79,7 +79,13 @@ class CApiGlobalManager
 			CApi::Inc('settings');
 			try
 			{
-				$this->oSettings = new CApiSettings(\CApi::DataPath() . '/settings/config.json');
+				$sSettingsPath = \CApi::DataPath() . '/settings/';
+				if (!file_exists($sSettingsPath))
+				{
+					mkdir(dirname($sSettingsPath), 0777);
+				}
+				
+				$this->oSettings = new CApiSettings($sSettingsPath . 'config.json');
 			}
 			catch (CApiBaseException $oException)
 			{
