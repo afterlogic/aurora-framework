@@ -205,12 +205,12 @@ class CApiEavDbStorage extends CApiEavStorage
 	 * @param type $iOffset
 	 * @param type $iLimit
 	 * @param type $aSearchAttrs
-	 * @param type $sOrderBy
+	 * @param type $mOrderBy
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
 	 * @return \AEntity
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
 		$mResult = false;
 		
@@ -237,7 +237,7 @@ class CApiEavDbStorage extends CApiEavStorage
 					$iOffset, 
 					$iLimit, 
 					$aSearchAttrs, 
-					$sOrderBy, 
+					$mOrderBy, 
 					$iSortOrder, 
 					$aIdsOrUUIDs
 				)

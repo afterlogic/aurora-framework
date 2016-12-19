@@ -34,29 +34,104 @@ class CApiEavStorage extends AApiManagerStorage
 	}
 
 	/**
+	 * 
+	 * @param type $mIdOrUUID
+	 * @return type
 	 */
-	public function getAttributes($iEntityId, $sValue)
+	public function isEntityExists($mIdOrUUID)
 	{
-		return true;
+		return false;
 	}	
 	
 	/**
+	 * 
+	 * @param type $sModule
+	 * @param type $sType
+	 * @param type $sUUID
+	 * @return type
 	 */
-	public function getAttribute(CAttribute $oAttribute)
+	public function createEntity($sModule, $sType, $sUUID)
 	{
-		return true;
-	}	
+		return false;
+	}
 	
+	/**
+	 * 
+	 * @param type $mIdOrUUID
+	 * @return type
+	 */
+	public function getEntity($mIdOrUUID)
+	{
+		return null;
+	}	
+
 	public function getTypes()
 	{
-		return true;
+		return false;
 	}	
 	
 	/**
+	 * 
+	 * @param type $sType
+	 * @param type $aWhere
+	 * @param type $aIds
+	 * @return type
 	 */
-	public function getEntities($sType)
+	public function getEntitiesCount($sType, $aWhere = array(), $aIds = array())
+	{
+		return 0;
+	}
+	
+	/**
+	 * 
+	 * @param type $sType
+	 * @param type $aViewAttrs
+	 * @param type $iOffset
+	 * @param type $iLimit
+	 * @param type $aSearchAttrs
+	 * @param type $mOrderBy
+	 * @param type $iSortOrder
+	 * @param type $aIdsOrUUIDs
+	 * @return \AEntity
+	 */
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
+	{
+		return false;
+	}	
+
+	/**
+	 * @return bool
+	 */
+	public function deleteEntity($mIdOrUUID)
+	{
+		return false;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function deleteEntities($aIdsOrUUIDs)
+	{
+		return false;
+	}
+
+	/**
+	 */
+	public function setAttributes($aEntitiesIds, $aAttributes)
 	{
 		return true;
 	}	
 	
+	/**
+	 * @return bool
+	 */
+	public function getAttributesNamesByEntityType($sEntityTypes)
+	{
+		return false;
+	}
+
+	public function testConnection()
+	{
+		return false;
+	}
 }

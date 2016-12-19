@@ -219,14 +219,14 @@ class CApiEavManager extends AApiManagerWithStorage
 	 * @param int $iOffset
 	 * @param int $iLimit
 	 * @param array $aWhere
-	 * @param string $sOrderBy
+	 * @param string|array $mOrderBy
 	 * @param int $iSortOrder
 	 * @param array $aIdsOrUUIDs
 	 * @return array
 	 */
-	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $sOrderBy = '', $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
-		$aEntities = null;
+		$aEntities = array();
 		try
 		{
 			$aEntities = $this->oStorage->getEntities(
@@ -235,7 +235,7 @@ class CApiEavManager extends AApiManagerWithStorage
 				$iOffset, 
 				$iLimit, 
 				$aWhere, 
-				$sOrderBy, 
+				$mOrderBy, 
 				$iSortOrder, 
 				$aIdsOrUUIDs
 			);

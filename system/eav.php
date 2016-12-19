@@ -275,7 +275,6 @@ class AEntity
 				$sType = $aMap[$sName][0];
 			}
 			$oAttribute->setType($sType);
-			
 			if ($oAttribute->Encrypted)
 			{
 				$oAttribute->Decrypt();

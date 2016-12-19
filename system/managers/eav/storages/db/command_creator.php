@@ -229,7 +229,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	 * @param type $iOffset
 	 * @param type $iLimit
 	 * @param type $aWhere
-	 * @param type $sSortAttribute
+	 * @param string|array $mSortAttributes
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
 	 * @param type $bCount
@@ -255,7 +255,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	   ];
 	 */	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
-			$iOffset = 0, $iLimit = 0, $aWhere = array(), $sSortAttribute = "", 
+			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mSortAttributes = array(), 
 			$iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
 	{
 		$sCount = "";
@@ -291,15 +291,31 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				}
 			}
 
-			if (!empty($sSortAttribute))
+			if (!is_array($mSortAttributes))
 			{
-				array_push($aViewAttributes, $sSortAttribute);
-				$sResultSort = sprintf(
-					" ORDER BY `attr_%s` %s", 
-					$sSortAttribute, 
-					$iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC"
-				);
+				if (!empty($mSortAttributes))
+				{
+					$mSortAttributes = array($mSortAttributes);
+				}
+				else 
+				{
+					$mSortAttributes = array();
+				}
 			}
+			
+			$aViewAttributes = array_merge($aViewAttributes, $mSortAttributes);
+
+			$mSortAttributes = array_map(function($sValue){
+				return $this->escapeColumn(
+					sprintf("attr_%s", $sValue)
+				);
+			}, $mSortAttributes);
+			$mSortAttributes[] = 'entity_id';
+
+			$sResultSort = sprintf(
+				" ORDER BY " . implode(' ,', $mSortAttributes) . " %s", 
+				$iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC"
+			);
 			
 			$aWhereAttrs = array();
 			if (0 < count($aWhere))
