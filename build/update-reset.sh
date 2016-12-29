@@ -19,6 +19,12 @@ done
 
 cd ../build
 
+chmod +x build.sh;
+chmod +x update.sh;
+chmod +x update-reset.sh;
+chmod +x pack.sh;
+chmod +x ./docs/build-apidoc.sh;
+
 ./build.sh
 
 ./docs/build-apidoc.sh
