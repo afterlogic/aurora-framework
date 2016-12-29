@@ -79,6 +79,11 @@ class CApi
 	 */
 	protected static $aUserSession = array();
 	
+	/**
+	 * @var bool
+	 */
+	public static $__SKIP_CHECK_USER_ROLE__ = false;
+	
 	public static function Init($bGrantAdminPrivileges = false)
 	{
 		include_once self::LibrariesPath().'autoload.php';
@@ -1224,19 +1229,22 @@ class CApi
 	 */
 	public static function checkUserRoleIsAtLeast($iRole)
 	{
-		$oUser = \CApi::getAuthenticatedUser();
-		$bUserRoleIsAtLeast = empty($oUser) && $iRole === \EUserRole::Anonymous ||
-			!empty($oUser) && $oUser->Role === \EUserRole::Customer && 
-				($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-			!empty($oUser) && $oUser->Role === \EUserRole::NormalUser && 
-				($iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-			!empty($oUser) && $oUser->Role === \EUserRole::TenantAdmin && 
-				($iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-			!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && 
-				($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
-		if (!$bUserRoleIsAtLeast)
+		if (!\CApi::$__SKIP_CHECK_USER_ROLE__)
 		{
-			throw new \System\Exceptions\AuroraApiException(\System\Notifications::AccessDenied);
+			$oUser = \CApi::getAuthenticatedUser();
+			$bUserRoleIsAtLeast = empty($oUser) && $iRole === \EUserRole::Anonymous ||
+				!empty($oUser) && $oUser->Role === \EUserRole::Customer && 
+					($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \EUserRole::NormalUser && 
+					($iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \EUserRole::TenantAdmin && 
+					($iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && 
+					($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
+			if (!$bUserRoleIsAtLeast)
+			{
+				throw new \System\Exceptions\AuroraApiException(\System\Notifications::AccessDenied);
+			}
 		}
 	}
 
