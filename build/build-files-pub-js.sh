@@ -11,4 +11,4 @@ fi
 #Build static data
 cd ../modules
 
-gulp js1:build --output app-files-pub $(echo "$tenant") --modules FilesWebclient
+gulp js:build --output app-files-pub $(echo "$tenant") --modules FilesWebclient
