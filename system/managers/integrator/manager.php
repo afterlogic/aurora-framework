@@ -1287,14 +1287,12 @@ class CApiIntegratorManager extends AApiManager
 		$sTenantName = \CApi::getTenantName();
 		$oSettings =& CApi::GetSettings();
 		
-		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
-		{
-			return '<script src="./tenants/'.$sTenantName.'/static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>';
-		}
-		else
-		{
-			return '<script src="./static/js/app'.$sPostfix.'.js?'.CApi::VersionJs().'"></script>';
-		}
+		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
+		$aModules = array("AdminPanelWebclient","CalendarWebclient","ChangePasswordWebclient","ContactsWebclient","Dropbox","Facebook","FilesWebclient","Google","HelpDeskWebclient","IframeAppWebclient","InvitationLinkWebclient","MailAuthWebclient","MailSensitivityWebclientPlugin","MailWebclient","MobileSyncWebclient","OAuthIntegratorWebclient","OpenPgpWebclient","OutlookSyncWebclient","PhoneWebclient","SessionTimeoutWeblient","SettingsWebclient","SimpleChat","SimpleChatEmojiWebclientPlugin","StandardAuthWebclient","StandardLoginFormWebclient","StandardRegisterFormWebclient");
+		$bIspablic = false;
+		
+		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aModules).'"];</script>
+		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".CApi::VersionJs().'"></script>';
 	}
 	
 	/**
