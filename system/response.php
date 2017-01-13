@@ -140,7 +140,7 @@ class CApiResponseManager
 			}
 			else
 			{
-				header('Content-Type: text/plain', true);
+				header('Content-Type: text/plain; charset=', true);
 			}
 		}
 
@@ -148,7 +148,6 @@ class CApiResponseManager
 			\trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
 		
 		header('Accept-Ranges: none', true);
-		header('Content-Transfer-Encoding: binary');	
 	}
 	
 	public static function GetThumbResource($oAccount, $rResource, $sFileName, $bShow = true)
