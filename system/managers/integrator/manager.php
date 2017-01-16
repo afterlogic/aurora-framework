@@ -1275,25 +1275,28 @@ class CApiIntegratorManager extends AApiManager
 	 * @param string $sModuleHash
 	 * @return string
 	 */
-	public function getJsLinks($sModuleHash)
+//	public function getJsLinks($sModuleHash)
+	public function getJsLinks($aConfig = array())
 	{
 		$sPostfix = '';
-		if ($sModuleHash !== '')
-		{
-			$sPostfix = $sModuleHash;
-		}
+//		if ($sModuleHash !== '')
+//		{
+//			$sPostfix = $sModuleHash;
+//		}
 		
 		if (CApi::GetConf('labs.use-app-min-js', false))
 		{
-			$sPostfix = $sPostfix.'.min';
+//			$sPostfix = $sPostfix.'.min';
+			$sPostfix .= '.min';
 		}
 		
 		$sTenantName = \CApi::getTenantName();
 		$oSettings =& CApi::GetSettings();
 		
 		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
-		$aModules = array("AdminPanelWebclient","CalendarWebclient","ChangePasswordWebclient","ContactsWebclient","Dropbox","Facebook","FilesWebclient","Google","HelpDeskWebclient","IframeAppWebclient","InvitationLinkWebclient","MailAuthWebclient","MailSensitivityWebclientPlugin","MailWebclient","MobileSyncWebclient","OAuthIntegratorWebclient","OpenPgpWebclient","OutlookSyncWebclient","PhoneWebclient","SessionTimeoutWeblient","SettingsWebclient","SimpleChat","SimpleChatEmojiWebclientPlugin","StandardAuthWebclient","StandardLoginFormWebclient","StandardRegisterFormWebclient");
-		$bIspablic = false;
+		
+		$aModules = isset($aConfig['modules_list']) ? $aConfig['modules_list'] : array("AdminPanelWebclient","CalendarWebclient","ChangePasswordWebclient","ContactsWebclient","Dropbox","Facebook","FilesWebclient","Google","HelpDeskWebclient","IframeAppWebclient","InvitationLinkWebclient","MailAuthWebclient","MailSensitivityWebclientPlugin","MailWebclient","MobileSyncWebclient","OAuthIntegratorWebclient","OpenPgpWebclient","OutlookSyncWebclient","PhoneWebclient","SessionTimeoutWeblient","SettingsWebclient","SimpleChat","SimpleChatEmojiWebclientPlugin","StandardAuthWebclient","StandardLoginFormWebclient","StandardRegisterFormWebclient");
+		$bIspablic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
 		
 		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aModules).'"];</script>
 		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".CApi::VersionJs().'"></script>';
@@ -1305,14 +1308,16 @@ class CApiIntegratorManager extends AApiManager
 	 * @param string $sModuleHash
 	 * @return string
 	 */
-	public function buildBody($sModuleHash = '')
+//	public function buildBody($sModuleHash = '')
+	public function buildBody($aConfig)
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return
 $this->compileTemplates().
 $this->compileLanguage($sLanguage).
 $this->compileAppData().
-$this->getJsLinks($sModuleHash).
+//$this->getJsLinks($sModuleHash).
+$this->getJsLinks($aConfig).
 "\r\n".'<!-- '.CApi::Version().' -->'
 		;
 	}
