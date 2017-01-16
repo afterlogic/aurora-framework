@@ -1092,15 +1092,6 @@ class CApiIntegratorManager extends AApiManager
 			\CApi::UserSession()->Delete($sAuthToken);
 		}
 		
-		$sDisabledModules = isset($oUser->{'@DisabledModules'}) ? $oUser->{'@DisabledModules'} : '';
-		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
-		if (substr_count($sDisabledModules, "|") > 0)
-		{
-			$aDisabledModules = explode("|", $sDisabledModules);
-		}
-		
-		$aAppData['DisabledModules'] = $aDisabledModules;
-
 		return $aAppData;
 	}
 
