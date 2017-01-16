@@ -1295,10 +1295,28 @@ class CApiIntegratorManager extends AApiManager
 		
 		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
 		
-		$aModules = isset($aConfig['modules_list']) ? $aConfig['modules_list'] : array("AdminPanelWebclient","CalendarWebclient","ChangePasswordWebclient","ContactsWebclient","Dropbox","Facebook","FilesWebclient","Google","HelpDeskWebclient","IframeAppWebclient","InvitationLinkWebclient","MailAuthWebclient","MailSensitivityWebclientPlugin","MailWebclient","MobileSyncWebclient","OAuthIntegratorWebclient","OpenPgpWebclient","OutlookSyncWebclient","PhoneWebclient","SessionTimeoutWeblient","SettingsWebclient","SimpleChat","SimpleChatEmojiWebclientPlugin","StandardAuthWebclient","StandardLoginFormWebclient","StandardRegisterFormWebclient");
+		if (isset($aConfig['modules_list']))
+		{
+			$aModuleNames = $aConfig['modules_list'];
+		}
+		else
+		{
+			$aModules = \CApi::GetModules();
+			$aModuleNames = array();
+			
+			foreach ($aModules as $oModule)
+			{
+				$sModuleName = $oModule->GetName();
+				if (substr($sModuleName, -9) === "Webclient")
+				{
+					$aModuleNames[] = $sModuleName;
+				}
+			}
+		}
+		
 		$bIspablic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
 		
-		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aModules).'"];</script>
+		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aModuleNames).'"];</script>
 		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".CApi::VersionJs().'"></script>';
 	}
 	
