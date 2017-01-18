@@ -113,8 +113,12 @@ class CApiModuleManager
 			{
 				foreach ($aModulePath as $sModuleName)
 				{
-					$this->_aAllowedModulesName[strtolower($sModuleName)] = $sModuleName;
-					$this->loadModule($sModuleName, $sModulesPath);
+					$oModuleSettings = \CApi::GetModuleManager()->GetModuleSettings($sModuleName);
+					if (!$oModuleSettings->GetConf('Disabled', false))
+					{
+						$this->_aAllowedModulesName[strtolower($sModuleName)] = $sModuleName;
+						$this->loadModule($sModuleName, $sModulesPath);
+					}
 				}
 			}
 			foreach ($this->_aModules as $oModule)
@@ -191,12 +195,8 @@ class CApiModuleManager
 				);
 			   if ($oModule instanceof \AApiModule)
 			   {
-				   $oModule->loadModuleSettings();
-				   if (!$oModule->getConfig('Disabled', false))
-				    {
-						$this->_aModules[strtolower($sModuleName)] = $oModule;
-						$mResult = $oModule;
-					}
+					$this->_aModules[strtolower($sModuleName)] = $oModule;
+					$mResult = $oModule;
 			   }
 		   }
 		}
