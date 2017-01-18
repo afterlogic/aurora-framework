@@ -1288,26 +1288,24 @@ class CApiIntegratorManager extends AApiManager
 		
 		if (isset($aConfig['modules_list']))
 		{
-			$aModuleNames = $aConfig['modules_list'];
+			$aClientModuleNames = $aConfig['modules_list'];
 		}
 		else
 		{
-			$aModules = \CApi::GetModules();
-			$aModuleNames = array();
+			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
 			
-			foreach ($aModules as $oModule)
+			foreach ($aModuleNames as $sModuleName)
 			{
-				$sModuleName = $oModule->GetName();
 				if (substr($sModuleName, -9) === "Webclient")
 				{
-					$aModuleNames[] = $sModuleName;
+					$aClientModuleNames[] = $sModuleName;
 				}
 			}
 		}
 		
 		$bIspablic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
 		
-		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aModuleNames).'"];</script>
+		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aClientModuleNames).'"];</script>
 		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".CApi::VersionJs().'"></script>';
 	}
 	
