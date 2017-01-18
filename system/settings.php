@@ -17,21 +17,51 @@
  * 
  */
 
-class CApiBasicSettings
+
+class CApiSettingsProperty
+{
+	/**
+	 * @var string
+	 */
+	public $Name;
+
+	/**
+	 * @var mixed
+	 */
+	public $Value;
+
+	/**
+	 * @var string
+	 */
+	public $Type;
+	
+	/**
+	 * @var string
+	 */
+	public $SpecType;
+	
+	/**
+	 * 
+	 * @param string $sName
+	 * @param mixed $mValue
+	 * @param string $sType
+	 * @param string $sSpecType
+	 */
+	public function __construct($sName, $mValue, $sType, $sSpecType = null) 
+	{
+		$this->Name = $sName;
+		$this->Value = $mValue;
+		$this->Type = $sType;
+		$this->SpecType = $sSpecType;
+	}
+}
+
+
+class CApiSettings
 {
 	const JSON_FILE_NAME = 'config.json';
 
 	#<editor-fold defaultstate="collapsed" desc="protected">
-	/**
-	 * @var array
-	 */
-	protected $aMap;
-
-	/**
-	 * @var array
-	 */
-	protected $aLowerMap;
-
 	/**
 	 * @var array
 	 */
@@ -48,15 +78,11 @@ class CApiBasicSettings
 	 *
 	 * @return CApiSettings
 	 */
-	public function __construct($sSettingsPath, $aMap = array())
+	public function __construct($sSettingsPath)
 	{
-		$this->aMap = $aMap;
-		$this->aLowerMap = array();
 		$this->aContainer = array();
 		$this->sPath = $sSettingsPath;
 
-		$this->init();
-		
 		if (!$this->Load($this->sPath))
 		{
 			if ($this->Load($this->sPath.'.bak'))
@@ -77,18 +103,7 @@ class CApiBasicSettings
 	 */
 	public function GetConf($sKey, $mDefault = null)
 	{
-		$mResult = null;
-		$sLowerKey = strtolower($sKey);
-		if (array_key_exists($sLowerKey, $this->aLowerMap))
-		{
-			$mResult = $this->aContainer[$sKey];
-		}
-		else 
-		{
-			$mResult = $mDefault;
-		}
-
-		return $mResult;
+		return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Value : $mDefault;
 	}
 	
 	/**
@@ -100,37 +115,35 @@ class CApiBasicSettings
 	public function SetConf($sKey, $mValue)
 	{
 		$bResult = false;
-		$sLowerKey = strtolower($sKey);
-		if (isset($this->aLowerMap[$sLowerKey]))
-		{
-			$aType = $this->aLowerMap[$sLowerKey];
-			switch ($aType[1])
-			{
-				default:
-					$mValue = null;
-					break;
-				case 'string':
-					$mValue = (string) $mValue;
-					break;
-				case 'int':
-					$mValue = (int) $mValue;
-					break;
-				case 'bool':
-					$mValue = (bool) $mValue;
-					break;
-				case 'spec':
-					$mValue = $this->specValidate($mValue, isset($aType[2]) ? $aType[2] : null);
-					break;
-				case 'array':
-					$mValue = $mValue;
-					break;
-			}
 
-			if (null !== $mValue)
-			{
-				$bResult = true;
-				$this->aContainer[$sKey] = $mValue;
-			}
+		$sType = (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Type : gettype($mValue);
+		if (!isset($this->aContainer[$sKey]))
+		{
+			$this->aContainer[$sKey] = new CApiSettingsProperty($sKey, $mValue, $sType);
+		}
+		
+		switch ($sType)
+		{
+			default:
+				$this->aContainer[$sKey]->Value = null;
+				break;
+			case 'string':
+				$this->aContainer[$sKey]->Value = (string) $mValue;
+				break;
+			case 'int':
+			case 'integer':
+				$this->aContainer[$sKey]->Value = (int) $mValue;
+				break;
+			case 'bool':
+			case 'boolean':
+				$this->aContainer[$sKey]->Value = (bool) $mValue;
+				break;
+			case 'spec':
+				$this->aContainer[$sKey]->Value = $this->specValidate($mValue, $this->aContainer[$sKey]->SpecType);
+				break;
+			case 'array':
+				$this->aContainer[$sKey]->Value = $mValue;
+				break;
 		}
 
 		return $bResult;
@@ -152,34 +165,45 @@ class CApiBasicSettings
 			{
 				foreach ($aJsonData as $sKey => $mValue)
 				{
-					$sLowerKey = strtolower($sKey);
-					if (isset($this->aLowerMap[$sLowerKey]))
+					$sSpecType = null;
+					if (is_array($mValue))
 					{
-						$aType = $this->aLowerMap[$sLowerKey];
-						switch ($aType[1])
-						{
-							default:
-								$mValue = null;
-								break;
-							case 'string':
-								$mValue =(string) $mValue;
-								break;
-							case 'int':
-								$mValue = (int) $mValue;
-								break;
-							case 'bool':
-								$mValue = ('on' === strtolower($mValue) || '1' === (string) $mValue);
-								break;
-							case 'spec':
-								$mValue = $this->specConver($mValue, isset($aType[2]) ? $aType[2] : null);
-								break;
-							case 'array':
-								break;
-						}
+						$sType = isset($mValue[1]) ? $mValue[1] : gettype($mValue[0]);
+						$sSpecType = isset($mValue[2]) ? $mValue[2] : null;
+						$mValue = $mValue[0];
+					}
+					else
+					{
+						$sType = gettype($mValue);
+					}
+					
+					switch ($sType)
+					{
+						default:
+							$mValue = null;
+							break;
+						case 'string':
+							$mValue =(string) $mValue;
+							break;
+						case 'int':
+						case 'integer':
+							$sType = 'int';
+							$mValue = (int) $mValue;
+							break;
+						case 'bool':
+						case 'boolean':
+							$sType = 'bool';
+							$mValue = (bool) $mValue;
+							break;
+						case 'spec':
+							$mValue = $this->specConver($mValue, $sSpecType);
+							break;
+						case 'array':
+							break;
 					}
 					if (null !== $mValue)
 					{
-						$this->aContainer[$sKey] = $mValue;
+						$this->aContainer[$sKey] = new CApiSettingsProperty($sKey, $mValue, $sType, $sSpecType);
 					}
 				}
 				$bResult = true;
@@ -198,30 +222,19 @@ class CApiBasicSettings
 		$aConvertedContainer = array();
 		foreach ($this->aContainer as $sKey => $mValue)
 		{
-			$mValue = null;
-			$sLowerKey = strtolower($sKey);
-			if (isset($this->aLowerMap[$sLowerKey]))
+			if ($mValue->Type === 'spec')
 			{
-				$mValue = $this->aContainer[$sKey];
-				$aType = $this->aLowerMap[$sLowerKey];
-				
-				switch ($aType[1])
-				{
-					case 'string':
-						$mValue = (string) $mValue;
-						break;
-					case 'int':
-						$mValue = (int) $mValue;
-						break;
-					case 'bool':
-						$mValue = ((bool) $mValue) ? 'On' : 'Off';
-						break;
-					case 'spec':
-						$mValue = $this->specBackConver($mValue, isset($aType[2]) ? $aType[2] : null);
-						break;
-				}
-			}			
-			$aConvertedContainer[$sKey] = $mValue;
+				$mValue->Value = $this->specBackConver($mValue->Value, $mValue->SpecType);
+			}
+			$aValue = array(
+				$mValue->Value, 
+				$mValue->Type
+			);
+			if ($mValue->Type === 'spec')
+			{
+				$aValue[] = $mValue->SpecType;
+			}
+			$aConvertedContainer[$sKey] = $aValue;
 		}
 		if (count($aConvertedContainer) > 0)
 		{
@@ -235,7 +248,13 @@ class CApiBasicSettings
 			{
 				mkdir(dirname($sJsonFile), 0777);
 			}
-			$bResult = (bool) file_put_contents($sJsonFile, json_encode($aConvertedContainer, JSON_PRETTY_PRINT));
+			$bResult = (bool) file_put_contents(
+				$sJsonFile, 
+				json_encode(
+					$aConvertedContainer, 
+					JSON_PRETTY_PRINT | JSON_OBJECT_AS_ARRAY
+				)
+			);
 		}
 		
 		return $bResult;
@@ -307,69 +326,29 @@ class CApiBasicSettings
 /**
  * @package Api
  */
-class CApiSettings extends CApiBasicSettings
+class CApiModuleSettings extends CApiSettings
 {
+	public $ModuleName;
+	
 	/**
 	 * @return void
 	 */
-	public function __construct($sSettingsPath)
+	public function __construct($sModuleName)
 	{
-		$aMap = array(
-			'SiteName' => array('AfterLogic', 'string',
-				'Default title that will be shown in browser\'s header (Default domain settings).'),
+		$this->ModuleName = $sModuleName;
+		$sConfigFilePath = \CApi::DataPath() . '/settings/modules/' . $sModuleName . '.config.json';
+		if (!file_exists($sConfigFilePath))
+		{
+			$sDefaultConfigFilePath = \CApi::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
+			if (file_exists($sDefaultConfigFilePath))
+			{
+				copy($sDefaultConfigFilePath, $sConfigFilePath);
+			}
+		}
 
-			'LicenseKey' => array('', 'string',
-				'License key is supplied here.'),
-
-			'AdminLogin' => array('superadmin', 'string'),
-			'AdminPassword' => array('', 'string'),
-
-			'DBType' => array(EDbType::MySQL, 'spec', 'EDbType'),
-			'DBPrefix' => array('au_', 'string'),
-
-			'DBHost' => array('127.0.0.1', 'string'),
-			'DBName' => array('', 'string'),
-			'DBLogin' => array('root', 'string'),
-			'DBPassword' => array('', 'string'),
-
-			'UseSlaveConnection' => array(false, 'bool'),
-			'DBSlaveHost' => array('127.0.0.1', 'string'),
-			'DBSlaveName' => array('', 'string'),
-			'DBSlaveLogin' => array('root', 'string'),
-			'DBSlavePassword' => array('', 'string'),
-
-			'DefaultLanguage' => array('English', 'string'),
-			'DefaultTimeZone' => array(0, 'int'), //TODO Magic
-			'DefaultTimeFormat' => array(ETimeFormat::F12, 'spec', 'ETimeFormat'),
-			'DefaultDateFormat' => array(EDateFormat::MMDDYYYY, 'spec', 'EDateFormat'),
-			'AllowRegistration' => array(false, 'bool'),
-			'RegistrationDomains' => array('', 'string'),
-			'RegistrationQuestions' => array('', 'string'),
-			'AllowPasswordReset' => array(false, 'bool'),
-			'EnableLogging' => array(false, 'bool'),
-			'EnableEventLogging' => array(false, 'bool'),
-			'LoggingLevel' => array(ELogLevel::Full, 'spec', 'ELogLevel'),
-			'EnableMobileSync' => array(false, 'bool'),
-			
-			'EnableMultiChannel' => array(false, 'bool'),
-			'EnableMultiTenant' => array(false, 'bool'),
-
-			'TenantGlobalCapa' => array('', 'string'),
-
-			'LoginStyleImage' => array('', 'string'),
-			'AppStyleImage' => array('', 'string'),
-			'InvitationEmail' => array('', 'string'),
-			
-			'DefaultTab' => array('', 'string'),
-			'RedirectToHttps' => array(false, 'bool'),
-
-			'PasswordMinLength' => array(0, 'int'),
-			'PasswordMustBeComplex' => array(false, 'bool'),
-		);
-		
-		parent::__construct($sSettingsPath, $aMap);
+		parent::__construct(\CApi::DataPath() . '/settings/modules/' . $sModuleName . '.config.json');
 	}
-}
+}	
 
 /**
  * @package Api

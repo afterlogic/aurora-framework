@@ -29,6 +29,13 @@ class CApiModuleManager
      */
 	protected $_aModules = array();
 	
+    /**
+     * This array contains a list of modules
+     *
+     * @var array
+     */
+	protected $_aAllowedModulesName = array();
+
 	/**
      * This array contains a list of callbacks we should call when certain events are triggered
      *
@@ -106,6 +113,7 @@ class CApiModuleManager
 			{
 				foreach ($aModulePath as $sModuleName)
 				{
+					$this->_aAllowedModulesName[strtolower($sModuleName)] = $sModuleName;
 					$this->loadModule($sModuleName, $sModulesPath);
 				}
 			}
@@ -141,13 +149,13 @@ class CApiModuleManager
 	 * @param string $sDefaultValue
 	 * @return mixed
 	 */
-	public function getModuleConfig($sModuleName, $sConfigName, $sDefaultValue = null)
+	public function getModuleConfigValue($sModuleName, $sConfigName, $sDefaultValue = null)
 	{
 		$mResult = $sDefaultValue;
-		$oModule = $this->GetModule($sModuleName);
-		if ($oModule)
+		$oModuleConfig = $this->GetModuleConfig($sModuleName);
+		if ($oModuleConfig)
 		{
-			$mResult = $oModule->getConfig($sConfigName, $sDefaultValue);
+			$mResult = $oModuleConfig->GetConf($sConfigName, $sDefaultValue);
 		}
 		
 		return $mResult;
@@ -183,7 +191,7 @@ class CApiModuleManager
 				);
 			   if ($oModule instanceof \AApiModule)
 			   {
-				   $oModule->loadModuleConfig();
+				   $oModule->loadModuleSettings();
 				   if (!$oModule->getConfig('Disabled', false))
 				    {
 						$this->_aModules[strtolower($sModuleName)] = $oModule;
@@ -376,9 +384,27 @@ class CApiModuleManager
 	/**
 	 * @return array
 	 */
+	public function GetAllowedModulesName()
+	{
+		return $this->_aAllowedModulesName;
+	}
+
+	/**
+	 * @return array
+	 */
 	public function GetModules()
 	{
 		return $this->_aModules;
+	}
+	
+	public function GetModuleSettings($sModuleName)
+	{
+		if (!isset($this->aModulesSettings[strtolower($sModuleName)]))
+		{
+			$this->aModulesSettings[strtolower($sModuleName)] = new \CApiModuleSettings($sModuleName);
+		}
+		
+		return $this->aModulesSettings[strtolower($sModuleName)];
 	}
 	
 	/**
@@ -619,7 +645,7 @@ abstract class AApiModule
 	
     /**
      *
-     * @var CApiBasicSettings
+     * @var CApiSettings
      */
 	protected $oModuleSettings = null;	
 	
@@ -735,12 +761,9 @@ abstract class AApiModule
 	/**
 	 * 
 	 */
-	public function loadModuleConfig()
+	public function loadModuleSettings()
 	{
-		$this->oModuleSettings = new \CApiBasicSettings(
-			\CApi::DataPath() . '/settings/modules/' . $this->sName . '.config.json', 
-			$this->aSettingsMap
-		);
+		$this->oModuleSettings = \CApi::GetModuleManager()->GetModuleSettings($this->sName);
 	}	
 
 	/**
