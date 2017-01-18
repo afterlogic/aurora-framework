@@ -745,6 +745,7 @@ abstract class AApiModule
 			}
 			if ($mResult)
 			{
+				$this->loadModuleSettings();
 				$this->bInitialized = true;
 				$this->init();
 			}
