@@ -213,7 +213,7 @@ gulp.task('js:min', function () {
 		],
 		'output':  {
 			'filename': sOutputName + '.min.js',
-			'chunkFilename': '[name].' + sOutputName + '.js',
+			'chunkFilename': '[name].' + sOutputName + '.min.js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
