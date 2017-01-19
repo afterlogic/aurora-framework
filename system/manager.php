@@ -85,7 +85,7 @@ class CApiGlobalManager
 					mkdir(dirname($sSettingsPath), 0777);
 				}
 				
-				$this->oSettings = new CApiSettings($sSettingsPath . 'config.json');
+				$this->oSettings = new CApiSystemSettings($sSettingsPath . 'config.json');
 			}
 			catch (CApiBaseException $oException)
 			{

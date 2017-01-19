@@ -148,6 +148,61 @@ class CApiSettings
 
 		return $bResult;
 	}
+	
+	protected function Populate($aData)
+	{
+		$bResult = false;
+		
+		if (is_array($aData))
+		{
+			foreach ($aData as $sKey => $mValue)
+			{
+				$sSpecType = null;
+				if (is_array($mValue))
+				{
+					$sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? gettype($mValue[0]) : "string");
+					$sSpecType = isset($mValue[2]) ? $mValue[2] : null;
+					$mValue = isset($mValue[0]) ? $mValue[0] : "";
+				}
+				else
+				{
+					$sType = gettype($mValue);
+				}
+
+				switch ($sType)
+				{
+					default:
+						$mValue = null;
+						break;
+					case 'string':
+						$mValue =(string) $mValue;
+						break;
+					case 'int':
+					case 'integer':
+						$sType = 'int';
+						$mValue = (int) $mValue;
+						break;
+					case 'bool':
+					case 'boolean':
+						$sType = 'bool';
+						$mValue = (bool) $mValue;
+						break;
+					case 'spec':
+						$mValue = $this->specConver($mValue, $sSpecType);
+						break;
+					case 'array':
+						break;
+				}
+				if (null !== $mValue)
+				{
+					$this->aContainer[$sKey] = new CApiSettingsProperty($sKey, $mValue, $sType, $sSpecType);
+				}
+			}
+			$bResult = true;
+		}	
+		
+		return $bResult;
+	}
 
 	/**
 	 * @param string $sJsonFile
@@ -157,57 +212,12 @@ class CApiSettings
 	public function Load($sJsonFile)
 	{
 		$bResult = false;
+		
 		if (file_exists($sJsonFile))
 		{
 			$sJsonData = file_get_contents($sJsonFile);
-			$aJsonData = json_decode($sJsonData, true);
-			if (is_array($aJsonData))
-			{
-				foreach ($aJsonData as $sKey => $mValue)
-				{
-					$sSpecType = null;
-					if (is_array($mValue))
-					{
-						$sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? gettype($mValue[0]) : "string");
-						$sSpecType = isset($mValue[2]) ? $mValue[2] : null;
-						$mValue = isset($mValue[0]) ? $mValue[0] : "";
-					}
-					else
-					{
-						$sType = gettype($mValue);
-					}
-					
-					switch ($sType)
-					{
-						default:
-							$mValue = null;
-							break;
-						case 'string':
-							$mValue =(string) $mValue;
-							break;
-						case 'int':
-						case 'integer':
-							$sType = 'int';
-							$mValue = (int) $mValue;
-							break;
-						case 'bool':
-						case 'boolean':
-							$sType = 'bool';
-							$mValue = (bool) $mValue;
-							break;
-						case 'spec':
-							$mValue = $this->specConver($mValue, $sSpecType);
-							break;
-						case 'array':
-							break;
-					}
-					if (null !== $mValue)
-					{
-						$this->aContainer[$sKey] = new CApiSettingsProperty($sKey, $mValue, $sType, $sSpecType);
-					}
-				}
-				$bResult = true;
-			}
+			$aData = json_decode($sJsonData, true);
+			$bResult = $this->Populate($aData);
 		}
 		
 		return $bResult;
@@ -322,6 +332,80 @@ class CApiSettings
 	}
 }
 
+/**
+ * @package Api
+ */
+class CApiSystemSettings extends CApiSettings
+{
+	protected function initDefaults()
+	{
+		$this->aContainer = array(
+			'SiteName' => new CApiSettingsProperty('SiteName', 'AfterLogic', 'string'),
+			'LicenseKey' => new CApiSettingsProperty('LicenseKey', '', 'string'),
+			
+			'AdminLogin' =>  new CApiSettingsProperty('AdminLogin', 'superadmin', 'string'),
+			'AdminPassword' => new CApiSettingsProperty('AdminPassword', '', 'string'),
+			
+			'DBType' => new CApiSettingsProperty('DBType', \EDbType::MySQL, 'spec', 'EDbType'),
+			'DBPrefix' => new CApiSettingsProperty('DBPrefix', 'au_', 'string'),
+			'DBHost' => new CApiSettingsProperty('DBHost', '127.0.0.1', 'string'),
+			'DBName' => new CApiSettingsProperty('DBName', '', 'string'),
+			'DBLogin' => new CApiSettingsProperty('DBLogin', 'root', 'string'),
+			'DBPassword' => new CApiSettingsProperty('DBPassword', '', 'string'),
+
+			'UseSlaveConnection' => new CApiSettingsProperty('UseSlaveConnection', false, 'bool'),
+			'DBSlaveHost' => new CApiSettingsProperty('DBSlaveHost', '127.0.0.1', 'string'),
+			'DBSlaveName' => new CApiSettingsProperty('DBSlaveName', '', 'string'),
+			'DBSlaveLogin' => new CApiSettingsProperty('DBSlaveLogin', 'root', 'string'),
+			'DBSlavePassword' => new CApiSettingsProperty('DBSlavePassword', '', 'string'),
+
+			'DefaultLanguage' => new CApiSettingsProperty('DefaultLanguage', 'English', 'string'),
+			'DefaultTimeZone' => new CApiSettingsProperty('DefaultTimeZone', 0, 'int'),
+			'DefaultTimeFormat' => new CApiSettingsProperty('DefaultTimeFormat', ETimeFormat::F12, 'spec', 'ETimeFormat'),
+			'DefaultDateFormat' => new CApiSettingsProperty('DefaultDateFormat', EDateFormat::MMDDYYYY, 'spec', 'EDateFormat'),
+			'AllowRegistration' => new CApiSettingsProperty('AllowRegistration', false, 'bool'),
+			'RegistrationDomains' => new CApiSettingsProperty('RegistrationDomains', '', 'string'),
+			'RegistrationQuestions' => new CApiSettingsProperty('RegistrationQuestions', '', 'string'),
+			'AllowPasswordReset' => new CApiSettingsProperty('AllowPasswordReset', false, 'bool'),
+			'EnableLogging' => new CApiSettingsProperty('EnableLogging', false, 'bool'),
+			'EnableEventLogging' => new CApiSettingsProperty('EnableEventLogging', false, 'bool'),
+			'LoggingLevel' => new CApiSettingsProperty('LoggingLevel', ELogLevel::Full, 'spec', 'ELogLevel'),
+			'EnableMobileSync' => new CApiSettingsProperty('EnableMobileSync', false, 'bool'),
+			
+			'EnableMultiChannel' => new CApiSettingsProperty('EnableMultiChannel', false, 'bool'),
+			'EnableMultiTenant' => new CApiSettingsProperty('EnableMultiTenant', false, 'bool'),
+
+			'TenantGlobalCapa' => new CApiSettingsProperty('TenantGlobalCapa', '', 'string'),
+
+			'LoginStyleImage' => new CApiSettingsProperty('LoginStyleImage', '', 'string'),
+			'AppStyleImage' => new CApiSettingsProperty('AppStyleImage', '', 'string'),
+			'InvitationEmail' => new CApiSettingsProperty('InvitationEmail', '', 'string'),
+			
+			'DefaultTab' => new CApiSettingsProperty('DefaultTab', '', 'string'),
+			'RedirectToHttps' => new CApiSettingsProperty('RedirectToHttps', false, 'bool'),
+
+			'PasswordMinLength' => new CApiSettingsProperty('PasswordMinLength', 0, 'int'),
+			'PasswordMustBeComplex' => new CApiSettingsProperty('PasswordMustBeComplex', false, 'bool')
+		);		
+		
+		$this->Save();
+	}
+
+	/**
+	 * @param string $sJsonFile
+	 *
+	 * @return bool
+	 */
+	public function Load($sJsonFile)
+	{
+		if (!file_exists($sJsonFile))
+		{
+			$this->initDefaults();
+		}
+		
+		return parent::Load($sJsonFile);
+	}
+}
 
 /**
  * @package Api

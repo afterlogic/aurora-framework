@@ -107,6 +107,18 @@ class AEntity
 		return $this->sModuleName;
 	}
 	
+	public function isModuleDisabled($sModuleName)
+	{
+		$sDisabledModules = isset($this->{'@DisabledModules'}) ? $this->{'@DisabledModules'} : '';
+		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+		if (substr_count($sDisabledModules, "|") > 0)
+		{
+			$aDisabledModules = explode("|", $sDisabledModules);
+		}
+		
+		return in_array($sModuleName, $aDisabledModules);
+	}
+	
     /**
      * Returns a pseudo-random v4 UUID
      *

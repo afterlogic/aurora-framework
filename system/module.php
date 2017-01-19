@@ -114,7 +114,15 @@ class CApiModuleManager
 				foreach ($aModulePath as $sModuleName)
 				{
 					$oModuleSettings = \CApi::GetModuleManager()->GetModuleSettings($sModuleName);
-					if (!$oModuleSettings->GetConf('Disabled', false))
+					$bIsModuleDisabledForUser = false;
+					$oUser = CApi::getAuthenticatedUser();
+					if ($oUser instanceof CUser)
+					{
+						$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
+					
+					}
+					
+					if (!$oModuleSettings->GetConf('Disabled', false) && !$bIsModuleDisabledForUser)
 					{
 						$this->_aAllowedModulesName[strtolower($sModuleName)] = $sModuleName;
 						$this->loadModule($sModuleName, $sModulesPath);
