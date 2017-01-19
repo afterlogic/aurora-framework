@@ -105,6 +105,8 @@ class CApiIntegratorManager extends AApiManager
 	}
 
 	/**
+	 * @TODO use tenants modules if exist
+	 * 
 	 * @return string
 	 */
 	public function compileTemplates()
@@ -124,16 +126,12 @@ class CApiIntegratorManager extends AApiManager
 
 		$sResult = '';
 		$sPath = CApi::WebMailPath().'modules';
-		$aFolderItems = scandir($sPath);
+		
+		$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
 
-		foreach ($aFolderItems as $sItemName)
+		foreach ($aModuleNames as $sModuleName)
 		{
-			if ($sItemName === '.' or $sItemName === '..')
-			{
-				continue;
-			}
-			
-			$sDirName = $sPath . '/' . $sItemName . '/templates';
+			$sDirName = $sPath . '/' . $sModuleName . '/templates';
 			$iDirNameLen = strlen($sDirName);
 			if (is_dir($sDirName))
 			{
@@ -151,13 +149,13 @@ class CApiIntegratorManager extends AApiManager
 						$sName = '@errorName'.md5(rand(10000, 20000));
 					}
 
-					$sTemplateID = $sItemName.'_'.preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
+					$sTemplateID = $sModuleName.'_'.preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
 					$sTemplateHtml = file_get_contents($sFileName);
 
 					$sTemplateHtml = \CApi::GetModuleManager()->ParseTemplate($sTemplateID, $sTemplateHtml);
 					$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
-					$sTemplateHtml = str_replace('%ModuleName%', $sItemName, $sTemplateHtml);
-					$sTemplateHtml = str_replace('%MODULENAME%', strtoupper($sItemName), $sTemplateHtml);
+					$sTemplateHtml = str_replace('%ModuleName%', $sModuleName, $sTemplateHtml);
+					$sTemplateHtml = str_replace('%MODULENAME%', strtoupper($sModuleName), $sTemplateHtml);
 
 					$sTemplateHtml = preg_replace('/<script([^>]*)>/', '&lt;script$1&gt;', $sTemplateHtml);
 					$sTemplateHtml = preg_replace('/<\/script>/', '&lt;/script&gt;', $sTemplateHtml);
@@ -253,6 +251,7 @@ class CApiIntegratorManager extends AApiManager
 	}
 	
 	/**
+	 * @TODO use tenants modules if exist
 	 * @param string $sLanguage
 	 *
 	 * @return string
@@ -260,7 +259,72 @@ class CApiIntegratorManager extends AApiManager
 	public function compileLanguage($sLanguage)
 	{
 		$sLanguage = $this->validatedLanguageValue($sLanguage);
-		return '<script>window.auroraI18n='.$this->getLanguageString($sLanguage).';'.$this->getMomentLanguageString($sLanguage).'</script>';
+		$sResult = "";
+		
+		$sHash = \CApi::GetModuleManager()->Hash();
+
+		$sCacheFileName = '';
+		if (CApi::GetConf('labs.cache.langs', $this->bCache))
+		{
+			$sCacheFileName = 'langs-'.md5(CApi::Version().$sHash).'.cache';
+			$sCacheFullFileName = \CApi::DataPath().'/cache/'.$sCacheFileName;
+			if (file_exists($sCacheFullFileName))
+			{
+				$sResult = file_get_contents($sCacheFullFileName);
+			}
+		}
+		
+		if ($sResult === "")
+		{
+			$aResult = array();
+			$sPath = CApi::WebMailPath().'modules';
+
+			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
+
+			foreach ($aModuleNames as $sModuleName)
+			{
+				$aLangContent = '';
+
+				$sFileName = $sPath . '/' . $sModuleName . '/i18n/'.$sLanguage.'.ini';
+
+				if (file_exists($sFileName))
+				{
+					$aLangContent = parse_ini_file($sFileName);
+				} 
+				else if (file_exists($sPath . '/' . $sModuleName . '/i18n/English.ini'))
+				{
+					$aLangContent = parse_ini_file($sPath . '/' . $sModuleName . '/i18n/English.ini');
+				}
+				else
+				{
+					continue;
+				}
+
+				if ($aLangContent)
+				{
+					foreach ($aLangContent as $sLangKey => $sLangValue)
+					{
+						$aResult[strtoupper($sModuleName)."/".$sLangKey] = $sLangValue;
+					}
+				}
+			}
+			
+			$sResult .= json_encode($aResult);
+			
+			if (CApi::GetConf('labs.cache.langs', $this->bCache))
+			{
+				if (!is_dir(dirname($sCacheFullFileName)))
+				{
+					mkdir(dirname($sCacheFullFileName), 0777, true);
+				}
+
+				$sResult = '/* '.$sCacheFileName.' */'.$sResult;
+				file_put_contents($sCacheFullFileName, $sResult);
+			}
+		}
+
+//		return '<script>window.auroraI18n='.$this->getLanguageString($sLanguage).';'.$this->getMomentLanguageString($sLanguage).'</script>';
+		return '<script>window.auroraI18n='.($sResult ? $sResult : '{}').';'.$this->getMomentLanguageString($sLanguage).'</script>';
 	}
 
 	/**
@@ -1320,9 +1384,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return
-$this->compileTemplates().
-$this->compileLanguage($sLanguage).
-$this->compileAppData().
+$this->compileTemplates()."\r\n".
+$this->compileLanguage($sLanguage)."\r\n".
+$this->compileAppData()."\r\n".
 //$this->getJsLinks($sModuleHash).
 $this->getJsLinks($aConfig).
 "\r\n".'<!-- '.CApi::Version().' -->'
