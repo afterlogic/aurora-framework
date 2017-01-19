@@ -168,9 +168,9 @@ class CApiSettings
 					$sSpecType = null;
 					if (is_array($mValue))
 					{
-						$sType = isset($mValue[1]) ? $mValue[1] : gettype($mValue[0]);
+						$sType = isset($mValue[1]) ? $mValue[1] : isset($mValue[0]) ? gettype($mValue[0]) : "string";
 						$sSpecType = isset($mValue[2]) ? $mValue[2] : null;
-						$mValue = $mValue[0];
+						$mValue = isset($mValue[0]) ? $mValue[0] : "";
 					}
 					else
 					{
