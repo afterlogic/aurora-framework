@@ -336,7 +336,7 @@ class AEntity
 
 			foreach (\CApi::GetModules() as $oModule)
 			{
-				$aStaticMap = array_merge($aStaticMap, $oModule->getObjectMap($this->sClassName));
+				$aStaticMap = array_merge($aStaticMap, $oModule->getExtendedObject($this->sClassName));
 			}
 			$this->aMap = $aStaticMap;
 		}

@@ -907,7 +907,7 @@ abstract class AApiModule
 	 * @param string $sType
 	 * @param array $aMap
 	 */
-	public function setObjectMap($sType, $aMap)
+	public function extendObject($sType, $aMap)
 	{
 		$aResultMap = array();
 		foreach ($aMap as $sKey => $aValue)
@@ -922,7 +922,7 @@ abstract class AApiModule
 	 * @param string $sType
 	 * @return array
 	 */
-	public function getObjectMap($sType)
+	public function getExtendedObject($sType)
 	{
 		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : array();
 	}
