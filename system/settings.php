@@ -360,7 +360,6 @@ class CApiSystemSettings extends CApiSettings
 			'DBSlavePassword' => new CApiSettingsProperty('DBSlavePassword', '', 'string'),
 
 			'DefaultTimeZone' => new CApiSettingsProperty('DefaultTimeZone', 0, 'int'),
-			'DefaultDateFormat' => new CApiSettingsProperty('DefaultDateFormat', EDateFormat::MMDDYYYY, 'spec', 'EDateFormat'),
 			'AllowRegistration' => new CApiSettingsProperty('AllowRegistration', false, 'bool'),
 			'RegistrationDomains' => new CApiSettingsProperty('RegistrationDomains', '', 'string'),
 			'RegistrationQuestions' => new CApiSettingsProperty('RegistrationQuestions', '', 'string'),
@@ -376,7 +375,6 @@ class CApiSystemSettings extends CApiSettings
 			'TenantGlobalCapa' => new CApiSettingsProperty('TenantGlobalCapa', '', 'string'),
 
 			'LoginStyleImage' => new CApiSettingsProperty('LoginStyleImage', '', 'string'),
-			'LogoUrl' => new CApiSettingsProperty('LogoUrl', '', 'string'),
 			'InvitationEmail' => new CApiSettingsProperty('InvitationEmail', '', 'string'),
 			
 			'DefaultTab' => new CApiSettingsProperty('DefaultTab', '', 'string'),

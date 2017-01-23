@@ -1049,8 +1049,9 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$sList = array();
 
-			$aThemes = CApi::GetConf('themes', array());
-			$sDir = CApi::WebMailPath().'skins';
+			$oModuleManager = \CApi::GetModuleManager();
+			$aThemes = $oModuleManager->getModuleConfigValue('CoreWebclient', 'ThemeList');
+			$sDir = CApi::WebMailPath().'static/styles/themes/';
 
 			if (is_array($aThemes))
 			{
