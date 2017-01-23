@@ -288,7 +288,6 @@ class AEntity
 			if (isset($aMapItem))
 			{
 				$oAttribute = \CAttribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
-				$oAttribute->setType($sType);
 				if ($oAttribute->Encrypted)
 				{
 					$oAttribute->Decrypt();
