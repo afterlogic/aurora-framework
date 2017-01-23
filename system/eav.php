@@ -176,20 +176,6 @@ class AEntity
 	}
 
 	/**
-	 * @return void
-	 */
-	public function SetDefaults()
-	{
-		$aDefaultValues = array();
-		foreach ($this->getMap() as $sMapKey => $aMap)
-		{
-			$aDefaultValues[$sMapKey] = $aMap[1];
-		}
-		
-		$this->setValues($aDefaultValues);
-	}
-
-	/**
 	 * @param array $aValues
 	 * @return void
 	 */
@@ -224,10 +210,10 @@ class AEntity
 	public function isEncryptedAttribute($sPropertyName)
 	{
 		$bResult = false;
-		$aMap = $this->getMap();
-		if (isset($aMap[$sPropertyName]))
+		$aMapItem = $this->getMapItem($sPropertyName);
+		if ($aMapItem !== null && is_array($aMapItem))
 		{
-			$bResult = ($aMap[$sPropertyName][0] === 'encrypted');
+			$bResult = ($aMapItem[0] === 'encrypted');
 		}
 		
 		return $bResult;
@@ -239,8 +225,7 @@ class AEntity
 	 */
 	public function __isset($sName)
 	{
-		$aMap = $this->getMap();
-		return isset($aMap[$sName]) || isset($this->aAttributes[$sName]);
+		return ($this->getMapItem($sName) !== null) || isset($this->aAttributes[$sName]);
 	}
 
 	/**
@@ -252,13 +237,22 @@ class AEntity
 	{
 		if (!($mValue instanceof \CAttribute))
 		{
-			$mValue = \CAttribute::createInstance(
-				$sAttribute, 
-				$mValue, 
-				$this->getType($sAttribute), 
-				$this->isEncryptedAttribute($sAttribute), 
-				$this->iId
-			);
+			if ($this->issetAttribute($sAttribute))
+			{
+				$oAttribute = $this->getAttribute($sAttribute);
+				$oAttribute->Value = $mValue;
+				$mValue = $oAttribute;
+			}
+			else
+			{
+				$mValue = \CAttribute::createInstance(
+					$sAttribute, 
+					$mValue, 
+					$this->getType($sAttribute), 
+					$this->isEncryptedAttribute($sAttribute), 
+					$this->iId
+				);
+			}
 		}
 		if ($mValue->Encrypted)
 		{
@@ -280,18 +274,28 @@ class AEntity
 		$oAttribute = $this->getAttribute($sName);
 		if ($oAttribute instanceof \CAttribute)
 		{
-			$aMap = $this->getMap();
-			$sType = 'string';
-			if (isset($aMap[$sName]))
-			{
-				$sType = $aMap[$sName][0];
-			}
-			$oAttribute->setType($sType);
+			$oAttribute->setType($oAttribute->Type);
 			if ($oAttribute->Encrypted)
 			{
 				$oAttribute->Decrypt();
 			}
 			$mValue = $oAttribute->Value;
+		}
+		else
+		{
+			
+			$aMapItem = $this->getMapItem($sName);
+			if (isset($aMapItem))
+			{
+				$oAttribute = \CAttribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
+				$oAttribute->setType($sType);
+				if ($oAttribute->Encrypted)
+				{
+					$oAttribute->Decrypt();
+				}	
+				$this->setAttribute($oAttribute);
+				$mValue = $oAttribute->Value;
+			}
 		}
 
 		return $mValue;
@@ -330,22 +334,45 @@ class AEntity
 	 */
 	public function getMap()
 	{
+/*
 		if (!isset($this->aMap))
 		{
-			$aStaticMap = $this->getStaticMap();
-
-			foreach (\CApi::GetModules() as $oModule)
-			{
-				$aStaticMap = array_merge($aStaticMap, $oModule->getExtendedObject($this->sClassName));
-			}
-			$this->aMap = $aStaticMap;
+			$this->aMap = array_merge(
+				$this->getStaticMap(), 
+				\CApi::GetModuleManager()->getExtendedObject($this->sClassName)
+			);
 		}
 		
 		return $this->aMap;
+ * 
+ */
+		
+		return array_merge(
+			$this->getStaticMap(), 
+			\CApi::GetModuleManager()->getExtendedObject($this->sClassName)
+		);
 	}
 	
+	/**
+	 * @return array
+	 */
+	public function getMapItem($sName)
+	{
+		$aMap = $this->getMap();
+		return isset($aMap[$sName]) ? $aMap[$sName] : null;
+	}	
+	
+	/**
+	 * @return bool
+	 */
+	public function issetAttribute($sAttributeName)
+	{
+		return isset($this->aAttributes[$sAttributeName]);
+	}	
+
 	public function setAttribute(\CAttribute $oAttribute)
 	{
+		$oAttribute->EntityId = $this->iId;
 		$this->aAttributes[$oAttribute->Name] = $oAttribute;
 	}
 	
@@ -387,7 +414,10 @@ class AEntity
 	public function setStaticMap($aStaticMap)
 	{
 		$this->aStaticMap = $aStaticMap;
-		$this->SetDefaults();
+		foreach ($this->getMap() as $sKey => $aMap)
+		{
+			$this->{$sKey} = $aMap[1];
+		}
 	}
 
 	/**

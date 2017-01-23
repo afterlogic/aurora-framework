@@ -164,7 +164,6 @@ class CApi
 			CApi::$oManager = new CApiGlobalManager();
 			CApi::$bIsValid = CApi::validateApi();
 			CApi::GetModuleManager();
-			CApi::$oManager->PrepareStorageMap();
 			CApi::$aModuleDecorators = array();
 		}
 	}

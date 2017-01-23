@@ -286,8 +286,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				}
 				if (count($aViewAttributes) === 0)
 				{
-					$aMap = $oEntity->GetMap();
-					$aViewAttributes = array_keys($aMap);
+					$aViewAttributes = $oEntity->getAttributesKeys();
 				}
 			}
 

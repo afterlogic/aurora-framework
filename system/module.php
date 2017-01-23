@@ -369,8 +369,38 @@ class CApiModuleManager
 		return $sTemplateSource;
 	}	
 	
-	public function setObjectMap()
+	/**
+	 * 
+	 * @param string $sModule
+	 * @param string $sType
+	 * @param array $aMap
+	 */
+	public function extendObject($sModule, $sType, $aMap)
 	{
+		foreach ($aMap as $sKey => $aValue)
+		{
+			$this->_aObjects[$sType][$sModule . \AApiModule::$Delimiter . $sKey] = $aValue;
+		}
+	}	
+	
+	/**
+	 * 
+	 * @param string $sType
+	 * @return array
+	 */
+	public function getExtendedObject($sType)
+	{
+		return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : array();
+	}
+	
+	/**
+	 * 
+	 * @param string $sType
+	 * @return boolean
+	 */
+	public function issetObject($sType)
+	{
+		return isset($this->_aObjects[$sType]);
 	}
 
 	/**
@@ -909,12 +939,7 @@ abstract class AApiModule
 	 */
 	public function extendObject($sType, $aMap)
 	{
-		$aResultMap = array();
-		foreach ($aMap as $sKey => $aValue)
-		{
-			$aResultMap[$this->GetName() . \AApiModule::$Delimiter . $sKey] = $aValue;
-		}
-		$this->aObjects[$sType] = $aResultMap;
+		\CApi::GetModuleManager()->extendObject($this->GetName(), $sType, $aMap);
 	}	
 	
 	/**
@@ -924,7 +949,7 @@ abstract class AApiModule
 	 */
 	public function getExtendedObject($sType)
 	{
-		return isset($this->aObjects[$sType]) ? $this->aObjects[$sType] : array();
+		return \CApi::GetModuleManager()->getExtendedObject($sType);
 	}
 	
 	/**
@@ -934,7 +959,7 @@ abstract class AApiModule
 	 */
 	public function issetObject($sType)
 	{
-		return isset($this->aObjects[$sType]);
+		return \CApi::GetModuleManager()->issetObject($sType);
 	}
 
 	/**

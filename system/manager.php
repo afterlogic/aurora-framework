@@ -96,10 +96,6 @@ class CApiGlobalManager
 		return $this->oSettings;
 	}
 
-	public function PrepareStorageMap()
-	{
-	}
-
 	/**
 	 * @param string $sManagerName
 	 * @return string
