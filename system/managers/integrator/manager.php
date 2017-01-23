@@ -1360,7 +1360,7 @@ class CApiIntegratorManager extends AApiManager
 			
 			foreach ($aModuleNames as $sModuleName)
 			{
-				if (substr($sModuleName, -9) === "Webclient")
+				if (preg_match('/Webclient/', $sModuleName))
 				{
 					$aClientModuleNames[] = $sModuleName;
 				}
