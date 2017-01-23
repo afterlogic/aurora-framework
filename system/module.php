@@ -164,7 +164,7 @@ class CApiModuleManager
 	public function getModuleConfigValue($sModuleName, $sConfigName, $sDefaultValue = null)
 	{
 		$mResult = $sDefaultValue;
-		$oModuleConfig = $this->GetModuleConfig($sModuleName);
+		$oModuleConfig = $this->GetModuleSettings($sModuleName);
 		if ($oModuleConfig)
 		{
 			$mResult = $oModuleConfig->GetConf($sConfigName, $sDefaultValue);
@@ -1702,15 +1702,18 @@ abstract class AApiModule
 	 */
 	public function i18N($sData, $iUserId = null, $aParams = null, $iPluralCount = null)
 	{
-		
-		// TODO:
-		$sLanguage = /*$oAccount ? $oAccount->User->DefaultLanguage :*/ '';
-		
-		if (empty($sLanguage)) {
-			$oSettings =& \CApi::GetSettings();
-			$sLanguage = $oSettings->GetConf('DefaultLanguage');
+		$oModuleManager = \CApi::GetModuleManager();
+		$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
+		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		if ($oCoreDecorator && 0 < $iUserId)
+		{
+			$oUser = $oCoreDecorator->GetUser($iUserId);
+			if ($oUser)
+			{
+				$sLanguage = $oUser->Language;
+			}
 		}
-
+		
 		$aLang = null;
 		if (isset(\CApi::$aClientI18N[$this->GetName()][$sLanguage])) {
 			$aLang = \CApi::$aClientI18N[$this->GetName()][$sLanguage];

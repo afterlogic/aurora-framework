@@ -223,32 +223,6 @@ class CApiIntegratorManager extends AApiManager
 			$sMoment = 'window.moment && window.moment.locale && window.moment.locale(\'' . $sMomentLanguage . '\');';
 		}
 	}
-
-	/**
-	 * @param string $sLanguage
-	 *
-	 * @return string
-	 */
-	private function getLanguageString($sLanguage)
-	{
-		$sTenantName = \CApi::getTenantName();
-		
-		$sFileName = \CApi::WebMailPath().'tenants/'.$sTenantName.'/static/i18n/'.$sLanguage.'.json';
-
-		if (!file_exists($sFileName))
-		{
-			$sFileName = \CApi::WebMailPath().'static/i18n/'.$sLanguage.'.json';
-		}
-		
-		if (!file_exists($sFileName))
-		{
-			$sFileName = CApi::WebMailPath().'static/i18n/English.json';
-		}
-		
-		$sFileContent = @file_get_contents($sFileName);
-		
-		return str_replace("\r\n", "", $sFileContent);
-	}
 	
 	/**
 	 * @TODO use tenants modules if exist
@@ -768,9 +742,9 @@ class CApiIntegratorManager extends AApiManager
 				}
 			}
 
-			if (0 < strlen($sLanguage) && $sLanguage !== $oAccount->User->DefaultLanguage)
+			if (0 < strlen($sLanguage) && $sLanguage !== $oAccount->User->Language)
 			{
-				$oAccount->User->DefaultLanguage = $sLanguage;
+				$oAccount->User->Language = $sLanguage;
 			}
 
 			if ($oAccount->Domain->AllowWebMail && $oAccount->AllowMail)
@@ -794,9 +768,9 @@ class CApiIntegratorManager extends AApiManager
 			}
 
 			$sObsoleteIncPassword = $oAccount->GetObsoleteValue('IncomingMailPassword');
-			$sObsoleteLanguage = $oAccount->User->GetObsoleteValue('DefaultLanguage');
+			$sObsoleteLanguage = $oAccount->User->GetObsoleteValue('Language');
 			if (null !== $sObsoleteIncPassword && $sObsoleteIncPassword !== $oAccount->IncomingMailPassword ||
-				null !== $sObsoleteLanguage && $sObsoleteLanguage !== $oAccount->User->DefaultLanguage ||
+				null !== $sObsoleteLanguage && $sObsoleteLanguage !== $oAccount->User->Language ||
 				$oAccount->ForceSaveOnLogin)
 			{
 				$oApiUsersManager->updateAccount($oAccount);
@@ -1021,39 +995,47 @@ class CApiIntegratorManager extends AApiManager
 	public function getLanguageList()
 	{
 		static $aList = null;
+		
 		if (null === $aList)
 		{
 			$aList = array();
+			$sPath = CApi::WebMailPath().'modules';
 
-			$sDir = CApi::WebMailPath().'i18n';
-			if (@is_dir($sDir))
+			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
+
+			foreach ($aModuleNames as $sModuleName)
 			{
-				$rDirH = @opendir($sDir);
-				if ($rDirH)
+				$sModuleLangsDir = $sPath . '/' . $sModuleName . '/i18n';
+
+				if (@is_dir($sModuleLangsDir))
 				{
-					while (($sFile = @readdir($rDirH)) !== false)
+					$rDirH = @opendir($sModuleLangsDir);
+					if ($rDirH)
 					{
-						if ('.' !== $sFile{0} && is_file($sDir.'/'.$sFile) && '.ini' === substr($sFile, -4))
+						while (($sFile = @readdir($rDirH)) !== false)
 						{
-							$sLang = strtolower(substr($sFile, 0, -4));
-							if (0 < strlen($sLang))
+							$sLanguage = substr($sFile, 0, -4);
+							if ('.' !== $sFile{0} && is_file($sModuleLangsDir.'/'.$sFile) && '.ini' === substr($sFile, -4))
 							{
-								if ('english' === $sLang)
+								if (0 < strlen($sLanguage) && !in_array($sLanguage, $aList))
 								{
-									array_unshift($aList, substr($sFile, 0, -4));
-								}
-								else
-								{
-									$aList[] = substr($sFile, 0, -4);
+									if ('english' === strtolower($sLanguage))
+									{
+										array_unshift($aList, $sLanguage);
+									}
+									else
+									{
+										$aList[] = $sLanguage;
+									}
 								}
 							}
 						}
+						@closedir($rDirH);
 					}
-					@closedir($rDirH);
-				}
+				} 
 			}
 		}
-
+		
 		return $aList;
 	}
 
@@ -1100,33 +1082,9 @@ class CApiIntegratorManager extends AApiManager
 				'Id' => 0,
 				'Role' => \EUserRole::Anonymous,
 				'Name' => ''
-			),
-			'IsMobile' => 0,
-			'AllowMobile' => false,
-			'IsMailsuite' => false,
-			'ClientDebug' => \CApi::GetConf('labs.webmail-client-debug', false),
-			'MailExpandFolders' => \CApi::GetConf('labs.mail-expand-folders', false),
-			'HtmlEditorDefaultFontName' => \CApi::GetConf('labs.htmleditor-default-font-name', ''),
-			'HtmlEditorDefaultFontSize' => \CApi::GetConf('labs.htmleditor-default-font-size', ''),
-			'AllowSaveAsPdf' => !!\CApi::GetConf('labs.allow-save-as-pdf', false),
-			'LastErrorCode' => $this->getLastErrorCode(),
-			'ZipAttachments' => !!class_exists('ZipArchive'),
-			'AllowIdentities' => !!$this->oSettings->GetConf('WebMail/AllowIdentities'),
-			'SocialEmail' => '',
-			'SocialIsLoggedIn' => false,
-			'Links' => array(
-				'OutlookSyncPlugin32' => \CApi::GetConf('links.outlook-sync-plugin-32', ''),
-				'OutlookSyncPlugin64' => \CApi::GetConf('links.outlook-sync-plugin-64', ''),
-				'OutlookSyncPluginReadMore' => \CApi::GetConf('links.outlook-sync-read-more', '')
-			),
-			'TenantName' => \CApi::getTenantName()
+			)
 		);
 		
-		if (0 < $aAppData['LastErrorCode'])
-		{
-			$this->clearLastErrorCode();
-		}
-
 		// AuthToken reads from coockie for HTML
 		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
 		
@@ -1209,10 +1167,12 @@ class CApiIntegratorManager extends AApiManager
 		if (false === $sLanguage && false === $sTheme && false === $sSiteName)
 		{
 			$oSettings =& CApi::GetSettings();
+			$oUser = \CApi::getAuthenticatedUser();
+			$oModuleManager = \CApi::GetModuleManager();
 			
 			$sSiteName = $oSettings->GetConf('SiteName');
-			$sLanguage = $oSettings->GetConf('DefaultLanguage');
-			$sTheme = $oSettings->GetConf('DefaultSkin');
+			$sLanguage = $oUser ? $oUser->Language : $oModuleManager->getModuleConfigValue('Core', 'Language');
+			$sTheme = $oUser ? $oUser->{'CoreWebclient::Theme'} : $oModuleManager->getModuleConfigValue('CoreWebclient', 'Theme');
 
 			$oUser = \CApi::getAuthenticatedUser();
 

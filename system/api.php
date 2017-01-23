@@ -992,16 +992,10 @@ class CApi
 	 */
 	public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
 	{
+		$oUser = \CApi::getAuthenticatedUser();
+		$oModuleManager = \CApi::GetModuleManager();
+		$sLanguage = $oUser ? $oUser->Language : $oModuleManager->getModuleConfigValue('Core', 'Language');
 		
-		// TODO:
-		$sLanguage = /*$oAccount ? $oAccount->User->DefaultLanguage :*/ '';
-		
-		if (empty($sLanguage)) 
-		{
-			$oSettings =& \CApi::GetSettings();
-			$sLanguage = $oSettings->GetConf('DefaultLanguage');
-		}
-
 		$aLang = null;
 		if (isset(CApi::$aClientI18N[$sLanguage])) 
 		{
