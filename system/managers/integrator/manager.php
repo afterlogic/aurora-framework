@@ -111,7 +111,7 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function compileTemplates()
 	{
-		$sHash = \CApi::GetModuleManager()->Hash();
+		$sHash = \CApi::GetModuleManager()->GetModulesHash();
 		
 		$sCacheFileName = '';
 		if (CApi::GetConf('labs.cache.templates', $this->bCache))
@@ -235,7 +235,7 @@ class CApiIntegratorManager extends AApiManager
 		$sLanguage = $this->validatedLanguageValue($sLanguage);
 		$sResult = "";
 		
-		$sHash = \CApi::GetModuleManager()->Hash();
+		$sHash = \CApi::GetModuleManager()->GetModulesHash();
 
 		$sCacheFileName = '';
 		if (CApi::GetConf('labs.cache.langs', $this->bCache))

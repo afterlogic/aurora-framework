@@ -404,6 +404,8 @@ class CApiModuleManager
 	}
 
 	/**
+	 * @todo return correct path according to curent tenant 
+	 * 
 	 * @return string
 	 */
 	public function GetModulesPath()
@@ -538,15 +540,33 @@ class CApiModuleManager
 	/**
 	 * @return string
 	 */
-	public function Hash()
+	public function GetModulesHash()
 	{
 		$sResult = md5(CApi::Version());
-		foreach ($this->_aModules as $oModule) {
-			
-			$sResult = md5($sResult.$oModule->GetPath().$oModule->GetName().$oModule->GetHash());
+		$aModuleNames = $this->GetAllowedModulesName(); 
+		foreach ($aModuleNames as $sModuleName)
+		{
+			$sResult = md5($sResult.$this->GetModuleHashByName($sModuleName));
 		}
 
 		return $sResult;
+	}
+	
+	/**
+	 * @toto need to add module version to information string
+	 * @param string $sModuleName
+	 * 
+	 * @return string
+	 */
+	public function GetModuleHashByName($sModuleName)
+	{
+		$sResult = '';
+		$sTenantName = \CApi::getTenantName();
+
+		$sResult .= $sTenantName !== 'Default' ? $this->GetModulesPath() : $this->GetTenantModulesPath($sTenantName);
+		$sResult .= $sModuleName;
+
+		return md5($sResult);
 	}
 	
 	/**
