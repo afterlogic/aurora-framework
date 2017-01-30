@@ -1328,9 +1328,10 @@ class CApiIntegratorManager extends AApiManager
 			}
 		}
 		
-		$bIspablic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
+		$bIsPublic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
+		$bIsNewTab = isset($aConfig['new_tab']) ? (bool)$aConfig['new_tab'] : false;
 		
-		return '<script>window.isPublic = '.($bIspablic ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aClientModuleNames).'"];</script>
+		return '<script>window.isPublic = '.($bIsPublic ? 'true' : 'false').'; window.isNewTab = '.($bIsNewTab ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aClientModuleNames).'"];</script>
 		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".CApi::VersionJs().'"></script>';
 	}
 	

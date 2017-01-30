@@ -146,6 +146,9 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 			"\t\t" + "if (window.isPublic) {" + crlf +
 			"\t\t\t" + "App.setPublic();" + crlf +
 			"\t\t" + "}" + crlf +
+			"\t\t" + "if (window.isNewTab) {" + crlf +
+			"\t\t\t" + "App.setNewTab();" + crlf +
+			"\t\t" + "}" + crlf +
             "\t\t" + "ModulesManager.init(_.object(_.keys(oAvaliableModules), aModules));" + crlf +
             "\t\t" + "App.init();" + crlf +
             "\t" + "}" + crlf +
