@@ -578,7 +578,7 @@ class CApi
 				(is_string($mAccount) ? $mAccount : 'unknown');
 
 			CApi::Log('Event: '.$sAccount.' > '.$sDesc);
-			CApi::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, CApi::GetConf('log.event-file', 'event.txt'));
+			CApi::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, self::GetLogFileName('event-'));
 		}
 	}
 
@@ -615,7 +615,18 @@ class CApi
 	 */
 	public static function GetLogFileName($sFilePrefix = '')
 	{
-		return $sFilePrefix.CApi::GetConf('log.log-file', 'log.txt');
+		$oSettings =& \CApi::GetSettings();
+
+		$sFileName = "log.txt";
+		
+		if ($oSettings && $oSettings->GetConf('LogFileName'))
+		{
+			$sFileName = preg_replace_callback('/\{([\w|-]*)\}/',  function ($matches) {
+	            return date($matches[1]);
+	        }, $oSettings->GetConf('LogFileName'));
+		}
+		
+		return $sFilePrefix.$sFileName;
 	}
 
 	/**
@@ -787,7 +798,9 @@ class CApi
 
 		if (null === $sLogDir) 
 		{
-			$sS = CApi::GetConf('log.custom-full-path', '');
+			$oSettings =& \CApi::GetSettings();
+
+			$sS = $oSettings->GetConf('LogCustomFullPath', '');
 			$sLogDir = empty($sS) ? CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
 		}
 		

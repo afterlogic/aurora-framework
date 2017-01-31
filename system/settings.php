@@ -367,6 +367,8 @@ class CApiSystemSettings extends CApiSettings
 			'EnableLogging' => new CApiSettingsProperty('EnableLogging', false, 'bool'),
 			'EnableEventLogging' => new CApiSettingsProperty('EnableEventLogging', false, 'bool'),
 			'LoggingLevel' => new CApiSettingsProperty('LoggingLevel', ELogLevel::Full, 'spec', 'ELogLevel'),
+			'LogFileName' => new CApiSettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
+			'LogCustomFullPath' => new CApiSettingsProperty('LogCustomFullPath', '', 'string'),
 			'EnableMobileSync' => new CApiSettingsProperty('EnableMobileSync', false, 'bool'),
 			
 			'EnableMultiChannel' => new CApiSettingsProperty('EnableMultiChannel', false, 'bool'),

@@ -17,25 +17,7 @@
  * 
  */
 
-$sCurrentDate = date('Y-m-d');
-
 return array(
-
-	/**
-	 * File used for webmail logging
-	 */
-	'log.log-file' => "log-$sCurrentDate.txt",
-
-	/**
-	 * File used for webmail logging
-	 */
-	'log.custom-full-path' => '',
-
-	/**
-	 * File used for for users activity logging
-	 */
-	'log.event-file' => "event-$sCurrentDate.txt",
-
 	/**
 	 * Socket connection timeout limit (in seconds)
 	 */
