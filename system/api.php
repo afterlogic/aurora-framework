@@ -1356,7 +1356,7 @@ class CApi
 		static $oUser = null;
 		if ($oUser === null)
 		{
-			$iUserId = -1;
+			$iUserId = 0;
 			if (!empty($sAuthToken))
 			{
 				$iUserId = \CApi::getAuthenticatedUserId($iUserId); // called for saving in session
