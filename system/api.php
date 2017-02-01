@@ -1359,7 +1359,7 @@ class CApi
 			$iUserId = 0;
 			if (!empty($sAuthToken))
 			{
-				$iUserId = \CApi::getAuthenticatedUserId($iUserId); // called for saving in session
+				$iUserId = \CApi::getAuthenticatedUserId($sAuthToken); // called for saving in session
 			}
 			else if (!empty(self::$aUserSession['UserId']))
 			{
