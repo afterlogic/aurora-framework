@@ -1351,14 +1351,15 @@ class CApi
 		return $mResult;
 	}
 	
-	public static function getAuthenticatedUser($iUserId = '')
+	public static function getAuthenticatedUser($sAuthToken = '')
 	{
 		static $oUser = null;
 		if ($oUser === null)
 		{
-			if (!empty($iUserId))
+			$iUserId = -1;
+			if (!empty($sAuthToken))
 			{
-				\CApi::getAuthenticatedUserId($iUserId); // called for saving in session
+				$iUserId = \CApi::getAuthenticatedUserId($iUserId); // called for saving in session
 			}
 			else if (!empty(self::$aUserSession['UserId']))
 			{

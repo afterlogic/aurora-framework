@@ -360,7 +360,7 @@ class CApiIntegratorManager extends AApiManager
 	 *
 	 * @return \CUser
 	 */
-	public function getAuthenticatedUserByIdHelper($iUserId = '')
+	public function getAuthenticatedUserByIdHelper($iUserId)
 	{
 		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
 		$oUser = null;
