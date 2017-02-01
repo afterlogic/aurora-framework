@@ -1331,7 +1331,7 @@ class CApi
 				{
 					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
 					$mResult = $aInfo['userId'];
-					self::$aUserSession['UserId'] = $mResult;
+					self::$aUserSession['UserId'] = (int) $mResult;
 					self::$aUserSession['AuthToken'] = $sAuthToken;
 				}
 			}
@@ -1394,7 +1394,7 @@ class CApi
 
 	public static function setUserId($iUserId)
 	{
-		self::$aUserSession['UserId'] = $iUserId;
+		self::$aUserSession['UserId'] = (int) $iUserId;
 	}
 	
 	public static function setAuthToken($sAuthToken)

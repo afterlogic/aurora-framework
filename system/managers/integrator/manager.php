@@ -388,12 +388,11 @@ class CApiIntegratorManager extends AApiManager
 		);
 		$aAccountHashTable = \CApi::UserSession()->Get($sAuthToken);
 		if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-			'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id']) && 
-				is_int($aAccountHashTable['id'])) {
+			'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
 			
 			$aInfo = array(
 				'isAdmin' => false,
-				'userId' => $aAccountHashTable['id'],
+				'userId' => (int) $aAccountHashTable['id'],
 				'account' => isset($aAccountHashTable['account']) ? $aAccountHashTable['account'] : 0,
 			);
 		}
