@@ -578,7 +578,7 @@ class CApi
 				(is_string($mAccount) ? $mAccount : 'unknown');
 
 			CApi::Log('Event: '.$sAccount.' > '.$sDesc);
-			CApi::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, self::GetLogFileName('event-'));
+			CApi::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, self::GetLogFileDir().self::GetLogFileName('event-'));
 		}
 	}
 
@@ -627,6 +627,31 @@ class CApi
 		}
 		
 		return $sFilePrefix.$sFileName;
+	}
+	
+	public static function GetLogFileDir()
+	{
+		static $bDir = null;
+		static $sLogDir = null;
+
+		if (null === $sLogDir) 
+		{
+			$oSettings =& \CApi::GetSettings();
+
+			$sS = $oSettings->GetConf('LogCustomFullPath', '');
+			$sLogDir = empty($sS) ? CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
+		}
+		
+		if (null === $bDir) 
+		{
+			$bDir = true;
+			if (!@is_dir($sLogDir)) 
+			{
+				@mkdir($sLogDir, 0777);
+			}
+		}
+		
+		return $sLogDir;
 	}
 
 	/**
@@ -755,7 +780,7 @@ class CApi
 			(ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
 				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging']))) 
 		{
-			$sLogFile = self::GetLogFileName($sFilePrefix);
+			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFilePrefix);
 
 			$sGuid = \MailSo\Log\Logger::Guid();
 			$aMicro = explode('.', microtime(true));
@@ -793,39 +818,25 @@ class CApi
 	 */
 	public static function LogOnly($sDesc, $sLogFile)
 	{
-		static $bDir = null;
-		static $sLogDir = null;
-
-		if (null === $sLogDir) 
-		{
-			$oSettings =& \CApi::GetSettings();
-
-			$sS = $oSettings->GetConf('LogCustomFullPath', '');
-			$sLogDir = empty($sS) ? CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
-		}
-		
-		if (null === $bDir) 
-		{
-			$bDir = true;
-			if (!@is_dir($sLogDir)) 
-			{
-				@mkdir($sLogDir, 0777);
-			}
-		}
-
 		try
 		{
-			@error_log($sDesc.API_CRLF, 3, $sLogDir.$sLogFile);
+			@error_log($sDesc.API_CRLF, 3, $sLogFile);
 		}
 		catch (Exception $oE) {}
 
-		self::dbDebugBacktrace($sDesc, $sLogDir.$sLogFile);
+		self::dbDebugBacktrace($sDesc, $sLogFile);
 	}
 
 	public static function LogEnd()
 	{
 		CApi::Log('# script shutdown');
 	}
+	
+	public static function ClearLog($sFileFullPath)
+	{
+		return (@file_exists($sFileFullPath)) ? @unlink($sFileFullPath) : true;
+	}
+	
 
 	/**
 	 * @return string
