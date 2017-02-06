@@ -1094,7 +1094,15 @@ class CApiIntegratorManager extends AApiManager
 
 		foreach ($aModules as $oModule)
 		{
-			$aModuleAppData = $oModule->GetSettings();
+			try
+			{
+				$aModuleAppData = $oModule->GetSettings();
+			}
+			catch (\System\Exceptions\AuroraApiException $oEx)
+			{
+				$aModuleAppData = null;
+			}
+			
 			if (is_array($aModuleAppData))
 			{
 				$aAppData[$oModule->GetName()] = $aModuleAppData;
