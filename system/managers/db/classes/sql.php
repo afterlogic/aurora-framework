@@ -188,7 +188,7 @@ class CDbSchema
 			new CDbField('email', CDbField::VAR_CHAR, ''),
 			new CDbField('friendly_nm', CDbField::VAR_CHAR),
 
-			new CDbField('mail_protocol', CDbField::INT_SHORT, EMailProtocol::IMAP4),
+			new CDbField('mail_protocol', CDbField::INT_SHORT, 1),
 			new CDbField('mail_inc_host', CDbField::VAR_CHAR),
 			new CDbField('mail_inc_port', CDbField::INT, API_INC_PROTOCOL_IMAP4_DEF_PORT),
 			new CDbField('mail_inc_login', CDbField::VAR_CHAR),
@@ -817,7 +817,7 @@ class CDbSchema
 			new CDbField('user_quota', CDbField::INT, 0),
 			new CDbField('override_settings', CDbField::BIT, 0),
 
-			new CDbField('mail_protocol', CDbField::INT_SHORT, EMailProtocol::IMAP4),
+			new CDbField('mail_protocol', CDbField::INT_SHORT, 1),
 			new CDbField('mail_inc_host', CDbField::VAR_CHAR),
 			new CDbField('mail_inc_port', CDbField::INT, API_INC_PROTOCOL_IMAP4_DEF_PORT),
 			new CDbField('mail_inc_ssl', CDbField::BIT, 0),

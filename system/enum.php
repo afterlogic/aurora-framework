@@ -230,64 +230,6 @@ class EHelpdeskFetcherType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EMailProtocol extends AEnumeration
-{
-	const POP3 = 0;
-	const IMAP4 = 1;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'POP3' => self::POP3,
-		'IMAP4' => self::IMAP4
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class ESMTPAuthType extends AEnumeration
-{
-	const NoAuth = 0;
-	const AuthSpecified = 1;
-	const AuthCurrentUser = 2;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'NoAuth' => self::NoAuth,
-		'AuthSpecified' => self::AuthSpecified,
-		'AuthCurrentUser' => self::AuthCurrentUser
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class ESendingMethod extends AEnumeration
-{
-	const Local = 0;
-	const Specified = 1;
-	const PhpMail = 2;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Local' => self::Local,
-		'Specified' => self::Specified,
-		'PhpMail' => self::PhpMail
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
 class ETimeFormat extends AEnumeration
 {
 	const F12 = 1;
@@ -370,26 +312,6 @@ class ELoginSignMeType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EImapSortUsage extends AEnumeration
-{
-	const Always = 0;
-	const DateOnly = 1;
-	const Never = 2;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Always' => self::Always,
-		'DateOnly' => self::DateOnly,
-		'Never' => self::Never
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
 class ECalendarDefaultWorkDay
 {
 	const Starts = 9;
@@ -433,36 +355,6 @@ class ECalendarDefaultTab extends AEnumeration
 		'Day' => self::Day,
 		'Week' => self::Week,
 		'Month' => self::Month
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EFolderType extends AEnumeration
-{
-	const Inbox = 1;
-	const Sent = 2;
-	const Drafts = 3;
-	const Spam = 4;
-	const Trash = 5;
-	const Virus = 6;
-	const System = 9;
-	const Custom = 10;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Inbox' => self::Inbox,
-		'Sent' => self::Sent,
-		'Drafts' => self::Drafts,
-		'Spam' => self::Spam,
-		'Trash' => self::Trash,
-		'Quarantine' => self::Virus,
-		'System' => self::System,
-		'Custom' => self::Custom
 	);
 }
 
