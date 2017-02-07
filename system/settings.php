@@ -385,8 +385,6 @@ class CApiSystemSettings extends CApiSettings
 			'PasswordMinLength' => new CApiSettingsProperty('PasswordMinLength', 0, 'int'),
 			'PasswordMustBeComplex' => new CApiSettingsProperty('PasswordMustBeComplex', false, 'bool')
 		);		
-		
-		$this->Save();
 	}
 
 	/**
@@ -396,9 +394,10 @@ class CApiSystemSettings extends CApiSettings
 	 */
 	public function Load($sJsonFile)
 	{
+		$this->initDefaults();
 		if (!file_exists($sJsonFile))
 		{
-			$this->initDefaults();
+			$this->Save();
 		}
 		
 		return parent::Load($sJsonFile);

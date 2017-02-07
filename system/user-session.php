@@ -68,9 +68,14 @@ class CApiUserSession
 
 	public function Set($aData)
 	{
-			$sAccountHashTable = \CApi::EncodeKeyValues($aData);
-			$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
-			return $this->Session->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
+		if (!file_exists($this->Path))
+		{
+			@mkdir($this->Path, 0777);
+		}
+		
+		$sAccountHashTable = \CApi::EncodeKeyValues($aData);
+		$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
+		return $this->Session->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
 	}
 	
 	public function Get($sAuthToken)
