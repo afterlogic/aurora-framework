@@ -623,7 +623,7 @@ class CApiIntegratorManager extends AApiManager
 		$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
 		$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
 		
-		$sAuthToken = \md5($oAccount->IdUser.$oAccount->IncomingMailLogin.\microtime(true).\rand(10000, 99999));
+		$sAuthToken = \md5($oAccount->IdUser.$oAccount->IncomingLogin.\microtime(true).\rand(10000, 99999));
 		
 		return \CApi::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
 	}
@@ -748,9 +748,9 @@ class CApiIntegratorManager extends AApiManager
 
 			if ($oAccount->Domain->AllowWebMail && $oAccount->AllowMail)
 			{
-				if ($sIncPassword !== $oAccount->IncomingMailPassword)
+				if ($sIncPassword !== $oAccount->IncomingPassword)
 				{
-					$oAccount->IncomingMailPassword = $sIncPassword;
+					$oAccount->IncomingPassword = $sIncPassword;
 				}
 				try
 				{
@@ -761,14 +761,14 @@ class CApiIntegratorManager extends AApiManager
 					throw $oException;
 				}
 			}
-			else if ($sIncPassword !== $oAccount->IncomingMailPassword)
+			else if ($sIncPassword !== $oAccount->IncomingPassword)
 			{
 				throw new CApiManagerException(Errs::Mail_AccountAuthentication);
 			}
 
-			$sObsoleteIncPassword = $oAccount->GetObsoleteValue('IncomingMailPassword');
+			$sObsoleteIncPassword = $oAccount->GetObsoleteValue('IncomingPassword');
 			$sObsoleteLanguage = $oAccount->User->GetObsoleteValue('Language');
-			if (null !== $sObsoleteIncPassword && $sObsoleteIncPassword !== $oAccount->IncomingMailPassword ||
+			if (null !== $sObsoleteIncPassword && $sObsoleteIncPassword !== $oAccount->IncomingPassword ||
 				null !== $sObsoleteLanguage && $sObsoleteLanguage !== $oAccount->User->Language ||
 				$oAccount->ForceSaveOnLogin)
 			{
@@ -841,7 +841,7 @@ class CApiIntegratorManager extends AApiManager
 
 		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
 		if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount) &&
-			$oAccount->IncomingMailPassword === $sPassword)
+			$oAccount->IncomingPassword === $sPassword)
 		{
 			$this->setAccountAsLoggedIn($oAccount);
 			$this->setThreadIdFromRequest(0);
