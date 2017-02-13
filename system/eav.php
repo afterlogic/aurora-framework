@@ -35,7 +35,7 @@ class AEntity
 	/**
 	 * @var int
 	 */
-	public $sUUID;
+	public $UUID;
 
 	/**
 	 * @var string
@@ -82,7 +82,7 @@ class AEntity
 		$this->__USE_TRIM_IN_STRINGS__ = false;
 		
 		$this->iId = 0;
-		$this->sUUID = self::generateUUID();
+		$this->UUID = self::generateUUID();
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 
@@ -299,6 +299,17 @@ class AEntity
 
 		return $mValue;
 	}
+	
+	public function populate($aProperties)
+	{
+		foreach ($aProperties as $sKey => $mValue)
+		{
+			if (isset($this->aMap[$sKey]))
+			{
+				$this->{$sKey} = $mValue;
+			}
+		}
+	}
 
 	/**
 	 * @return string
@@ -446,7 +457,7 @@ class AEntity
 		return array_merge(
 			array(
 				'iObjectId' => $this->iId,
-				'sUUID' => $this->sUUID
+				'sUUID' => $this->UUID
 			), 
 			$aResult
 		);

@@ -64,7 +64,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	{
 		$mResult = false;
 		if (isset($oEntity->iId) && $this->isEntityExists($oEntity->iId) ||
-			isset($oEntity->sUUID) && $this->isEntityExists($oEntity->sUUID))
+			isset($oEntity->UUID) && $this->isEntityExists($oEntity->UUID))
 		{
 			$mResult = $this->updateEntity($oEntity);
 		}
@@ -84,7 +84,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	 */
 	private function createEntity(\AEntity &$oEntity)
 	{
-		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName, $oEntity->sUUID);
+		$mResult = $this->oStorage->createEntity($oEntity->sModuleName, $oEntity->sClassName, $oEntity->UUID);
 		if ($mResult !== false)
 		{
 			$oEntity->iId = $mResult;
