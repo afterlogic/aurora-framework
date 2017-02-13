@@ -443,7 +443,10 @@ class AEntity
 	 */	
 	public function toArray()
 	{
-		$aResult = array();
+		$aResult = array(
+			'iObjectId' => $this->iId,
+			'sUUID' => $this->UUID
+		);
 		foreach($this->aAttributes as $oAttribute)
 		{
 			$mValue = $oAttribute->Value;
@@ -454,13 +457,7 @@ class AEntity
 
 			$aResult[$oAttribute->Name] = $mValue;
 		}
-		return array_merge(
-			array(
-				'iObjectId' => $this->iId,
-				'sUUID' => $this->UUID
-			), 
-			$aResult
-		);
+		return $aResult;
 	}
 	
 	/**
