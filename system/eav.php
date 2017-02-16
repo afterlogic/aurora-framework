@@ -254,7 +254,7 @@ class AEntity
 				);
 			}
 		}
-		if ($mValue->Encrypted)
+		if ($mValue->IsEncrypt)
 		{
 			$mValue->Encrypt();
 		}
@@ -275,7 +275,7 @@ class AEntity
 		if ($oAttribute instanceof \CAttribute)
 		{
 			$oAttribute->setType($oAttribute->Type);
-			if ($oAttribute->Encrypted)
+			if ($oAttribute->IsEncrypt)
 			{
 				$oAttribute->Decrypt();
 			}
@@ -288,7 +288,7 @@ class AEntity
 			if (isset($aMapItem))
 			{
 				$oAttribute = \CAttribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
-				if ($oAttribute->Encrypted)
+				if ($oAttribute->IsEncrypt)
 				{
 					$oAttribute->Decrypt();
 				}	
@@ -344,19 +344,6 @@ class AEntity
 	 */
 	public function getMap()
 	{
-/*
-		if (!isset($this->aMap))
-		{
-			$this->aMap = array_merge(
-				$this->getStaticMap(), 
-				\CApi::GetModuleManager()->getExtendedObject($this->sClassName)
-			);
-		}
-		
-		return $this->aMap;
- * 
- */
-		
 		return array_merge(
 			$this->getStaticMap(), 
 			\CApi::GetModuleManager()->getExtendedObject($this->sClassName)
@@ -503,35 +490,32 @@ class CAttribute
 	public $Type;
 
 	/*
+	 * @var bool $IsEncrypt
+	 */
+	public $IsEncrypt;
+	
+	/*
 	 * @var bool $Encrypted
 	 */
-	public $Encrypted;
+	public $Encrypted;	
 	
 	/**
 	 * @param string $sName
 	 * @param mixed $mValue
 	 * @param string $sType
-	 * @param bool $bEncrypted
+	 * @param bool $bIsEncrypt
 	 * @param int $iEntityId
 	 */
-	public function __construct($sName, $mValue = null, $sType = 'string', $bEncrypted = false, $iEntityId = 0)
+	public function __construct($sName, $mValue = null, $sType = 'string', $bIsEncrypt = false, $iEntityId = 0)
 	{
 		$this->Id = 0;
 		$this->EntityId = $iEntityId;
 		$this->Name	= $sName;
-		$this->Encrypted = $bEncrypted;
-		
-		if ($sType === null)
-		{
-			$sType = gettype($mValue);
-		}
-		else
-		{
-			$this->setType($sType);
-		}
-		$this->Type = $sType;
 		$this->Value = $mValue;
-		
+		$this->IsEncrypt = $bIsEncrypt;
+		$this->Encrypted = false;
+
+		$this->setType($sType);
 	}
 	
 	/**
@@ -586,6 +570,12 @@ class CAttribute
 	 */
 	public function setType($sType)
 	{
+		if ($sType === null)
+		{
+			$sType = gettype($this->Value);
+		}
+		$this->Type = $sType;
+		
 		$sType = strtolower($sType);
 		if (in_array($sType, array('string', 'int', 'array')))
 		{
@@ -634,12 +624,20 @@ class CAttribute
 	
 	public function Encrypt()
 	{
-		$this->Value = \api_Utils::EncryptValue($this->Value);
+		if (!empty($this->Value) && !$this->Encrypted)
+		{
+			$this->Value = \api_Utils::EncryptValue($this->Value);
+			$this->Encrypted = true;
+		}
 	}
 	
-	public function Dencrypt()
+	public function Decrypt()
 	{
-		$this->Value = \api_Utils::DecryptValue($this->Value);
+		if ($this->Encrypted)
+		{
+			$this->Value = \api_Utils::DecryptValue($this->Value);
+			$this->Encrypted = false;
+		}
 	}	
 }
 

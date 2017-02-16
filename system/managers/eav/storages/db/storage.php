@@ -130,19 +130,16 @@ class CApiEavDbStorage extends CApiEavStorage
 					if (isset($oRow->attr_name))
 					{
 						$mValue = $oRow->attr_value;
-						$bEncrypt = false;
-						if ($oEntity->isEncryptedAttribute($oRow->attr_type))
-						{
-							$bEncrypt = true;
-						}
-						$oEntity->{$oRow->attr_name} = 
-							\CAttribute::createInstance(
-								$oRow->attr_name, 
-								$mValue, 
-								$oRow->attr_type, 
-								$bEncrypt, 
-								$oEntity->EntityId
+						$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
+						$oAttribute = \CAttribute::createInstance(
+							$oRow->attr_name, 
+							$mValue, 
+							$oRow->attr_type, 
+							$bEncrypt, 
+							$oEntity->EntityId
 						);
+						$oAttribute->Encrypted = $bEncrypt;
+						$oEntity->{$oRow->attr_name} = $oAttribute;
 					}
 				}
 			}			
@@ -265,15 +262,16 @@ class CApiEavDbStorage extends CApiEavStorage
 					if (strrpos($sKey, 'attr_', -5) !== false)
 					{
 						$sAttrKey = substr($sKey, 5);
-						$oEntity->{$sAttrKey} = 
-							\CAttribute::createInstance(
-								$sAttrKey, 
-								$mValue, 
-								$oEntity->getType($sAttrKey), 
-								$oEntity->isEncryptedAttribute($sAttrKey), 
-								$oEntity->EntityId
+						$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
+						$oAttribute = \CAttribute::createInstance(
+							$sAttrKey, 
+							$mValue, 
+							$oEntity->getType($sAttrKey), 
+							$bIsEncrypted, 
+							$oEntity->EntityId
 						);
-						
+						$oAttribute->Encrypted = $bIsEncrypted;
+						$oEntity->{$sAttrKey} = $oAttribute;
 					}
 				}
 				$mResult[] = $oEntity;

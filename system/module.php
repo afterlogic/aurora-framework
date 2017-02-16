@@ -1788,12 +1788,8 @@ abstract class AApiModule
 					$aDisabledModules[] = $this->GetName();
 				}				
 			}
-			$sDisabledModules = implode('|', $aDisabledModules);
-			$oEntity->{'@DisabledModules'} = $sDisabledModules;
-			$oEavManager->setAttributes(
-				array($oEntity->EntityId), 
-				array(new \CAttribute('@DisabledModules', $sDisabledModules, 'string'))
-			);
+			$oEntity->{'@DisabledModules'} = implode('|', $aDisabledModules);
+			$oEavManager->saveEntity($oEntity);
 		}	
 	}
 	
