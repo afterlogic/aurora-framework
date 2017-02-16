@@ -746,7 +746,7 @@ class CApiIntegratorManager extends AApiManager
 				$oAccount->User->Language = $sLanguage;
 			}
 
-			if ($oAccount->Domain->AllowWebMail && $oAccount->AllowMail)
+			if ($oAccount->Domain->AllowWebMail)
 			{
 				if ($sIncPassword !== $oAccount->IncomingPassword)
 				{
