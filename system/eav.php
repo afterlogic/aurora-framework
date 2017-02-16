@@ -30,7 +30,7 @@ class AEntity
 	/**
 	 * @var int
 	 */
-	public $Id;
+	public $EntityId;
 
 	/**
 	 * @var int
