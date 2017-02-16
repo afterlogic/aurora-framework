@@ -124,7 +124,7 @@ class CApiEavDbStorage extends CApiEavStorage
 
 				if (isset($oEntity))
 				{
-					$oEntity->iId = (int) $oRow->entity_id;
+					$oEntity->EntityId = (int) $oRow->entity_id;
 					$oEntity->UUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
 
 					if (isset($oRow->attr_name))
@@ -141,7 +141,7 @@ class CApiEavDbStorage extends CApiEavStorage
 								$mValue, 
 								$oRow->attr_type, 
 								$bEncrypt, 
-								$oEntity->iId
+								$oEntity->EntityId
 						);
 					}
 				}
@@ -256,7 +256,7 @@ class CApiEavDbStorage extends CApiEavStorage
 				{
 					$oEntity = new \AEntity($sType);
 				}
-				$oEntity->iId = (int) $oRow->entity_id;
+				$oEntity->EntityId = (int) $oRow->entity_id;
 				$oEntity->UUID = $oRow->entity_uuid;
 				$oEntity->sModuleName =  $oRow->entity_module;
 
@@ -271,7 +271,7 @@ class CApiEavDbStorage extends CApiEavStorage
 								$mValue, 
 								$oEntity->getType($sAttrKey), 
 								$oEntity->isEncryptedAttribute($sAttrKey), 
-								$oEntity->iId
+								$oEntity->EntityId
 						);
 						
 					}

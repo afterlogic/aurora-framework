@@ -1791,7 +1791,7 @@ abstract class AApiModule
 			$sDisabledModules = implode('|', $aDisabledModules);
 			$oEntity->{'@DisabledModules'} = $sDisabledModules;
 			$oEavManager->setAttributes(
-				array($oEntity->iId), 
+				array($oEntity->EntityId), 
 				array(new \CAttribute('@DisabledModules', $sDisabledModules, 'string'))
 			);
 		}	

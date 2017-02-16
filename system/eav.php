@@ -30,7 +30,7 @@ class AEntity
 	/**
 	 * @var int
 	 */
-	public $iId;
+	public $Id;
 
 	/**
 	 * @var int
@@ -81,7 +81,7 @@ class AEntity
 	{
 		$this->__USE_TRIM_IN_STRINGS__ = false;
 		
-		$this->iId = 0;
+		$this->EntityId = 0;
 		$this->UUID = self::generateUUID();
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
@@ -250,7 +250,7 @@ class AEntity
 					$mValue, 
 					$this->getType($sAttribute), 
 					$this->isEncryptedAttribute($sAttribute), 
-					$this->iId
+					$this->EntityId
 				);
 			}
 		}
@@ -382,7 +382,7 @@ class AEntity
 
 	public function setAttribute(\CAttribute $oAttribute)
 	{
-		$oAttribute->EntityId = $this->iId;
+		$oAttribute->EntityId = $this->EntityId;
 		$this->aAttributes[$oAttribute->Name] = $oAttribute;
 	}
 	
@@ -444,8 +444,8 @@ class AEntity
 	public function toArray()
 	{
 		$aResult = array(
-			'iObjectId' => $this->iId,
-			'sUUID' => $this->UUID
+			'EntityId' => $this->EntityId,
+			'UUID' => $this->UUID
 		);
 		foreach($this->aAttributes as $oAttribute)
 		{
