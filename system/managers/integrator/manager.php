@@ -1081,7 +1081,8 @@ class CApiIntegratorManager extends AApiManager
 			'User' => array(
 				'Id' => 0,
 				'Role' => \EUserRole::Anonymous,
-				'Name' => ''
+				'Name' => '',
+				'PublicId' => '',
 			)
 		);
 		
@@ -1114,7 +1115,8 @@ class CApiIntegratorManager extends AApiManager
 			$aAppData['User'] = array(
 				'Id' => $oUser->EntityId,
 				'Role' => $oUser->Role,
-				'Name' => $oUser->Name
+				'Name' => $oUser->Name,
+				'PublicId' => $oUser->PublicId,
 			);
 		}
 		else
