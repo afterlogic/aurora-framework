@@ -86,10 +86,7 @@ class AEntity
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 
-		$this->aAttributes = array(
-			'EntityId' => \CAttribute::createInstance('EntityId', $this->EntityId, 'int'),
-			'UUID' => \CAttribute::createInstance('UUID', $this->UUID, 'string')
-		);
+		$this->aAttributes = array();
 	}
 	
 	/**
@@ -389,7 +386,13 @@ class AEntity
 	 */
 	public function getAttributes()
 	{
-		return $this->aAttributes;
+		return array_merge(
+				array(
+					'EntityId' => \CAttribute::createInstance('EntityId', $this->EntityId, 'int'),
+					'UUID' => \CAttribute::createInstance('UUID', $this->UUID, 'string')
+				),
+				$this->aAttributes
+		);
 	}	
 	
 	/**
