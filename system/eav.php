@@ -370,6 +370,10 @@ class AEntity
 	public function setAttribute(\CAttribute $oAttribute)
 	{
 		$oAttribute->EntityId = $this->EntityId;
+		if ($this->issetAttribute($oAttribute->Name) && $this->aAttributes[$oAttribute->Name]->ReadOnly)
+		{
+			return;
+		}
 		$this->aAttributes[$oAttribute->Name] = $oAttribute;
 	}
 	
@@ -388,8 +392,8 @@ class AEntity
 	{
 		return array_merge(
 				array(
-					'EntityId' => \CAttribute::createInstance('EntityId', $this->EntityId, 'int'),
-					'UUID' => \CAttribute::createInstance('UUID', $this->UUID, 'string')
+					'EntityId' => \CAttribute::createInstance('EntityId', $this->EntityId, 'int', false, $this->EntityId, true),
+					'UUID' => \CAttribute::createInstance('UUID', $this->UUID, 'string', false, $this->EntityId, true)
 				),
 				$this->aAttributes
 		);
@@ -505,14 +509,20 @@ class CAttribute
 	 */
 	public $Encrypted;	
 	
+	/*
+	 * @var bool $ReadOnly
+	 */
+	public $ReadOnly;	
+
 	/**
 	 * @param string $sName
 	 * @param mixed $mValue
 	 * @param string $sType
 	 * @param bool $bIsEncrypt
 	 * @param int $iEntityId
+	 * @param bool $bReadOnly
 	 */
-	public function __construct($sName, $mValue = null, $sType = 'string', $bIsEncrypt = false, $iEntityId = 0)
+	public function __construct($sName, $mValue = null, $sType = 'string', $bIsEncrypt = false, $iEntityId = 0, $bReadOnly = false)
 	{
 		$this->Id = 0;
 		$this->EntityId = $iEntityId;
@@ -520,6 +530,7 @@ class CAttribute
 		$this->Value = $mValue;
 		$this->IsEncrypt = $bIsEncrypt;
 		$this->Encrypted = false;
+		$this->ReadOnly = $bReadOnly;
 
 		$this->setType($sType);
 	}
@@ -530,12 +541,13 @@ class CAttribute
 	 * @param string $sType
 	 * @param bool $bEncrypt
 	 * @param int $iEntityId
+	 * @param bool $bReadOnly
 	 * 
 	 * @return \CAttribute
 	 */
-	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0)
+	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0, $bReadOnly = false)
 	{
-		return new self($sName, $sValue, $sType, $bEncrypt, $iEntityId);
+		return new self($sName, $sValue, $sType, $bEncrypt, $iEntityId, $bReadOnly);
 	}
 
 	/**
