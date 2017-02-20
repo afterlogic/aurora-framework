@@ -116,10 +116,8 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (!isset($oEntity))
 				{
-					$oEntity = call_user_func(
-						$oRow->entity_type . '::createInstance', 
-						$oRow->entity_module
-					);
+					$oEntity = \AEntity::createInstance($oRow->entity_type, $oRow->entity_module);
+					
 				}
 
 				if (isset($oEntity))
@@ -247,7 +245,7 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (class_exists($sType))
 				{
-					$oEntity = call_user_func($sType . '::createInstance');
+					$oEntity = \AEntity::createInstance($sType);
 				}
 				else
 				{

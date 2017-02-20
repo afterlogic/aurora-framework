@@ -267,7 +267,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sLimit = "";
 		$sOffset = "";
 		
-		$oEntity = call_user_func($sEntityType . '::createInstance');
+		$oEntity = \AEntity::createInstance($sEntityType);
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array();

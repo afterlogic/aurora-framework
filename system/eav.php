@@ -38,11 +38,6 @@ class AEntity
 	protected $sModuleName;
 
 	/**
-	 * @var string
-	 */
-	protected $sClassName;
-
-	/**
 	 * @var array
 	 */
 	protected $aAttributes;
@@ -55,7 +50,7 @@ class AEntity
 	/**
 	 * @var array
 	 */
-	protected $aMap;
+	protected $aMap = null;
 	
 	/**
 	 * @var array
@@ -75,20 +70,25 @@ class AEntity
 		'entityid', 
 		'uuid'
 	);
+	
+	public static function createInstance($sClassName, $sModuleName = '')
+	{
+		return new $sClassName($sModuleName);
+	}
 
 	/**
-	 * @param string $sClassName
 	 * @param string $sModuleName = ''
 	 */
-	public function __construct($sClassName, $sModuleName = '')
+	public function __construct($sModuleName = '')
 	{
 		$this->EntityId = 0;
 		$this->UUID = self::generateUUID();
 		
-		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 
 		$this->aAttributes = array();
+		
+		$this->setStaticMap();
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class AEntity
 	 */
 	public function getName()
 	{
-		return $this->sClassName;
+		return get_class($this);
 	}
 	
 	/**
@@ -355,12 +355,16 @@ class AEntity
 	/**
 	 * @return array
 	 */
-	public function getMap()
+	protected function getMap()
 	{
-		return array_merge(
-			$this->getStaticMap(), 
-			\CApi::GetModuleManager()->getExtendedObject($this->sClassName)
-		);
+		if (!isset($this->aMap))
+		{
+			$this->aMap = array_merge(
+				$this->getStaticMap(), 
+				\CApi::GetModuleManager()->getExtendedObject($this->getName())
+			);
+		}
+		return $this->aMap;
 	}
 	
 	/**
@@ -424,9 +428,8 @@ class AEntity
 	/**
 	 * @param array 
 	 */
-	public function setStaticMap($aStaticMap)
+	public function setStaticMap()
 	{
-		$this->aStaticMap = $aStaticMap;
 		foreach ($this->getMap() as $sKey => $aMap)
 		{
 			$this->{$sKey} = $aMap[1];
