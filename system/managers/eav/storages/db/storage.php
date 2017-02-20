@@ -116,7 +116,7 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (!isset($oEntity))
 				{
-					$oEntity = \AEntity::createInstance($oRow->entity_type, $oRow->entity_module);
+					$oEntity = \CEntity::createInstance($oRow->entity_type, $oRow->entity_module);
 					
 				}
 
@@ -203,7 +203,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	 * @param type $mOrderBy
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
-	 * @return \AEntity
+	 * @return \CEntity
 	 */
 	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
@@ -245,11 +245,11 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (class_exists($sType))
 				{
-					$oEntity = \AEntity::createInstance($sType);
+					$oEntity = \CEntity::createInstance($sType);
 				}
 				else
 				{
-					$oEntity = new \AEntity($sType);
+					$oEntity = new \CEntity($sType);
 				}
 				$oEntity->EntityId = (int) $oRow->entity_id;
 				$oEntity->UUID = $oRow->entity_uuid;

@@ -130,7 +130,7 @@ FROM %seav_entities as entities
 WHERE %s)
 ";
 		
-		foreach (\AEntity::getTypes() as $sSqlType)
+		foreach (\CEntity::getTypes() as $sSqlType)
 		{
 			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $sWhere);
 		}
@@ -267,7 +267,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sLimit = "";
 		$sOffset = "";
 		
-		$oEntity = \AEntity::createInstance($sEntityType);
+		$oEntity = \CEntity::createInstance($sEntityType);
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array();
@@ -418,16 +418,16 @@ GROUP BY %s #6
 	}	
 	
 	/**
-	 * @param array $aEntityIds
+	 * @param array $CEntityIds
 	 * @param array $aAttributes
 	 *
 	 * @return string
 	 */
-	public function setAttributes($aEntityIds, $aAttributes, $sType)
+	public function setAttributes($CEntityIds, $aAttributes, $sType)
 	{
 		$sSql = '';
 		$aValues = array();
-		foreach ($aEntityIds as $iEntityId)
+		foreach ($CEntityIds as $iEntityId)
 		{
 			foreach ($aAttributes as $oAttribute)
 			{
@@ -480,7 +480,7 @@ ON DUPLICATE KEY UPDATE
 	WHERE entity_type = %s AND entities.id = attrs.id_entity)
 ";
 		
-		foreach (\AEntity::getTypes() as $sSqlType)
+		foreach (\CEntity::getTypes() as $sSqlType)
 		{
 			$aSql[] = sprintf($sSubSql, $this->prefix(), $sSqlType, $this->prefix(), $this->escapeString($sEntityType));
 		}

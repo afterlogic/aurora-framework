@@ -20,7 +20,7 @@
 /**
  * @package Api
  */
-class AEntity
+class CEntity
 {
 	/**
 	 * @var int
@@ -75,11 +75,11 @@ class AEntity
 	 * 
 	 * @param string $sClassName
 	 * @param string $sModuleName
-	 * @return \AEntity
+	 * @return \CEntity
 	 */
 	public static function createInstance($sClassName, $sModuleName = '')
 	{
-		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new \AEntity($sModuleName);
+		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new \CEntity($sModuleName);
 	}
 
 	/**
@@ -392,7 +392,7 @@ class AEntity
 
 	public function setAttribute(\CAttribute $oAttribute)
 	{
-		if (!in_array(strtolower($oAttribute->Name), \AEntity::$aReadOnlyAttributes))
+		if (!in_array(strtolower($oAttribute->Name), \CEntity::$aReadOnlyAttributes))
 		{
 			$oAttribute->EntityId = $this->EntityId;
 			$this->aAttributes[$oAttribute->Name] = $oAttribute;

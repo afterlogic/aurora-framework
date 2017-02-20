@@ -57,10 +57,10 @@ class CApiEavManager extends AApiManagerWithStorage
 
 	/**
 	 * 
-	 * @param \AEntity $oEntity
+	 * @param \CEntity $oEntity
 	 * @return bool
 	 */
-	public function saveEntity(\AEntity &$oEntity)
+	public function saveEntity(\CEntity &$oEntity)
 	{
 		$mResult = false;
 		if (isset($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId) ||
@@ -78,11 +78,11 @@ class CApiEavManager extends AApiManagerWithStorage
 	
 	/**
 	 * 
-	 * @param \AEntity $oEntity
+	 * @param \CEntity $oEntity
 	 * @return type
 	 * @throws CApiManagerException
 	 */
-	private function createEntity(\AEntity &$oEntity)
+	private function createEntity(\CEntity &$oEntity)
 	{
 		$mResult = $this->oStorage->createEntity($oEntity->getModule(), $oEntity->getName(), $oEntity->UUID);
 		if ($mResult !== false)
@@ -103,11 +103,11 @@ class CApiEavManager extends AApiManagerWithStorage
 	
 	/**
 	 * 
-	 * @param \AEntity $oEntity
+	 * @param \CEntity $oEntity
 	 * @return boolean
 	 * @throws type
 	 */
-	protected function updateEntity(\AEntity $oEntity)
+	protected function updateEntity(\CEntity $oEntity)
 	{
 		$mResult = false;
 		if (0 < $oEntity->countAttributes())
@@ -250,7 +250,7 @@ class CApiEavManager extends AApiManagerWithStorage
 	/**
 	 * 
 	 * @param int|string $mIdOrUUID
-	 * @return \AEntity
+	 * @return \CEntity
 	 */
 	public function getEntity($mIdOrUUID)
 	{

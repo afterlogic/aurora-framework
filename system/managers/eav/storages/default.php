@@ -92,7 +92,7 @@ class CApiEavStorage extends AApiManagerStorage
 	 * @param type $mOrderBy
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
-	 * @return \AEntity
+	 * @return \CEntity
 	 */
 	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{

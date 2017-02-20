@@ -1761,7 +1761,7 @@ abstract class AApiModule
 
 	/**
 	 * 
-	 * @param \AEntity $oEntity
+	 * @param \CEntity $oEntity
 	 */
 	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
@@ -1795,7 +1795,7 @@ abstract class AApiModule
 	
 	/**
 	 * 
-	 * @param AEntity $oEntity
+	 * @param CEntity $oEntity
 	 * @return bool
 	 */
 	public function isEnabledForEntity(&$oEntity)
