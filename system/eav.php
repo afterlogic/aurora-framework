@@ -71,9 +71,15 @@ class AEntity
 		'uuid'
 	);
 	
+	/**
+	 * 
+	 * @param string $sClassName
+	 * @param string $sModuleName
+	 * @return \AEntity
+	 */
 	public static function createInstance($sClassName, $sModuleName = '')
 	{
-		return new $sClassName($sModuleName);
+		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new \AEntity($sModuleName);
 	}
 
 	/**
@@ -355,7 +361,7 @@ class AEntity
 	/**
 	 * @return array
 	 */
-	protected function getMap()
+	public function getMap()
 	{
 		if (!isset($this->aMap))
 		{
@@ -370,7 +376,7 @@ class AEntity
 	/**
 	 * @return array
 	 */
-	public function getMapItem($sName)
+	protected function getMapItem($sName)
 	{
 		$aMap = $this->getMap();
 		return isset($aMap[$sName]) ? $aMap[$sName] : null;
