@@ -255,7 +255,7 @@ class CApiEavDbStorage extends CApiEavStorage
 				}
 				$oEntity->EntityId = (int) $oRow->entity_id;
 				$oEntity->UUID = $oRow->entity_uuid;
-				$oEntity->sModuleName =  $oRow->entity_module;
+				$oEntity->setModule($oRow->entity_module);
 
 				foreach (get_object_vars($oRow) as $sKey => $mValue)
 				{

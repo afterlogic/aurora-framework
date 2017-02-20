@@ -23,11 +23,6 @@
 class AEntity
 {
 	/**
-	 * @var bool
-	 */
-	public $__USE_TRIM_IN_STRINGS__;
-
-	/**
 	 * @var int
 	 */
 	public $EntityId;
@@ -40,12 +35,12 @@ class AEntity
 	/**
 	 * @var string
 	 */
-	public $sModuleName;
+	protected $sModuleName;
 
 	/**
 	 * @var string
 	 */
-	public $sClassName;
+	protected $sClassName;
 
 	/**
 	 * @var array
@@ -74,21 +69,38 @@ class AEntity
 	);
 	
 	/**
+	 * @var array
+	 */
+	protected static $aReadOnlyAttributes = array(
+		'entityid', 
+		'uuid'
+	);
+
+	/**
 	 * @param string $sClassName
 	 * @param string $sModuleName = ''
 	 */
 	public function __construct($sClassName, $sModuleName = '')
 	{
-		$this->__USE_TRIM_IN_STRINGS__ = false;
-		
 		$this->EntityId = 0;
 		$this->UUID = self::generateUUID();
+		
 		$this->sClassName = $sClassName;
 		$this->sModuleName = $sModuleName;
 
 		$this->aAttributes = array();
 	}
 	
+	/**
+	 * 
+     * @param string $sModuleName
+	 * @return string
+	 */
+	public function setModule($sModuleName)
+	{
+		return $this->sModuleName = $sModuleName;
+	}
+
 	/**
 	 * 
 	 * @return string
@@ -302,9 +314,10 @@ class AEntity
 	
 	public function populate($aProperties)
 	{
+		$aMap = $this->getMap();
 		foreach ($aProperties as $sKey => $mValue)
 		{
-			if (isset($this->aMap[$sKey]))
+			if (isset($aMap[$sKey]))
 			{
 				$this->{$sKey} = $mValue;
 			}
@@ -369,12 +382,11 @@ class AEntity
 
 	public function setAttribute(\CAttribute $oAttribute)
 	{
-		$oAttribute->EntityId = $this->EntityId;
-		if ($this->issetAttribute($oAttribute->Name) && $this->aAttributes[$oAttribute->Name]->ReadOnly)
+		if (!in_array(strtolower($oAttribute->Name), \AEntity::$aReadOnlyAttributes))
 		{
-			return;
+			$oAttribute->EntityId = $this->EntityId;
+			$this->aAttributes[$oAttribute->Name] = $oAttribute;
 		}
-		$this->aAttributes[$oAttribute->Name] = $oAttribute;
 	}
 	
 	/**
@@ -390,13 +402,7 @@ class AEntity
 	 */
 	public function getAttributes()
 	{
-		return array_merge(
-				array(
-					'EntityId' => \CAttribute::createInstance('EntityId', $this->EntityId, 'int', false, $this->EntityId, true),
-					'UUID' => \CAttribute::createInstance('UUID', $this->UUID, 'string', false, $this->EntityId, true)
-				),
-				$this->aAttributes
-		);
+		return $this->aAttributes;
 	}	
 	
 	/**
