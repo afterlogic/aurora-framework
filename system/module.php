@@ -306,6 +306,7 @@ class CApiModuleManager
 				\CApi::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
 					$sEvent, 
+					$aArguments,
 					$mCallBackResult
 				);
 
@@ -575,11 +576,12 @@ class CApiModuleManager
 	 * @param string $sMethod
 	 * @param mixed $mResult
 	 */
-	public function AddResult($sModule, $sMethod, &$mResult, $iErrorCode = 0)
+	public function AddResult($sModule, $sMethod, $aParameters, &$mResult, $iErrorCode = 0)
 	{
 		$aResult = array(
 			'Module' => $sModule,
 			'Method' => $sMethod,
+			'Parameters' => $aParameters,
 			'Result' => $mResult
 		);
 		
@@ -1423,6 +1425,7 @@ abstract class AApiModule
 					array(
 						'Module' => $aValue['Module'],
 						'Method' => $aValue['Method'],
+						'Parameters' => $aValue['Parameters']
 					)
 				);
 				if ($aValue['Module'] === $this->GetName() && $aValue['Method'] === $sMethod)
@@ -1654,6 +1657,7 @@ abstract class AApiModule
 						\CApi::GetModuleManager()->AddResult(
 							$this->GetName(), 
 							$sMethod, 
+							$aArguments,
 							$mResult,
 							$oException->getCode()
 						);
@@ -1681,6 +1685,7 @@ abstract class AApiModule
 				\CApi::GetModuleManager()->AddResult(
 					$this->GetName(), 
 					$sMethod, 
+					$aArguments,
 					$mResult
 				);
 			}

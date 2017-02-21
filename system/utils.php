@@ -286,7 +286,7 @@ class api_Utils
 	 */
 	public static function UrlSafeBase64Encode($sValue)
 	{
-		return str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($sValue));
+		return \rtrim(\strtr(\base64_encode($sValue), '+/', '-_'), '=');
 	}
 
 	/**
@@ -295,14 +295,8 @@ class api_Utils
 	 */
 	public static function UrlSafeBase64Decode($sValue)
 	{
-		$sData = str_replace(array('-', '_', '.'), array('+', '/', '='), $sValue);
-		$sMode = strlen($sData) % 4;
-		if ($sMode)
-		{
-			$sData .= substr('====', $sMode);
-		}
-
-		return base64_decode($sData);
+		$sValue = \rtrim(\strtr($sValue, '-_.', '+/='), '=');
+		return \MailSo\Base\Utils::Base64Decode(\str_pad($sValue, \strlen($sValue) + (\strlen($sValue) % 4), '=', STR_PAD_RIGHT));
 	}
 
 	/**
