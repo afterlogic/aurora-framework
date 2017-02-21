@@ -57,13 +57,6 @@ class CApiErrorCodes
 	const Validation_InvalidTenantName = 1109;
 	const Validation_InvalidChannelName = 1110;
 
-	// domains
-	const DomainsManager_DomainAlreadyExists = 1301;
-	const DomainsManager_DomainCreateFailed = 1302;
-	const DomainsManager_DomainUpdateFailed = 1303;
-	const DomainsManager_DomainNotEmpty = 1304;
-	const DomainsManager_DomainDoesNotExist = 1305;
-
 	// mailsuite
 	const MailSuiteManager_MailingListAlreadyExists = 1401;
 	const MailSuiteManager_MailingListCreateFailed = 1402;
@@ -77,7 +70,6 @@ class CApiErrorCodes
 	const WebMailManager_AccountCreateOnLogin = 1503;
 	const WebMailManager_NewUserRegistrationDisabled = 1504;
 	const WebMailManager_AccountAuthentication = 1505;
-	const WebMailManager_DomainDoesNotExist = 1506;
 	const WebMailManager_AccountConnectToMailServerFailed = 1507;
 
 	// container
@@ -89,7 +81,6 @@ class CApiErrorCodes
 	const TenantsManager_TenantUpdateFailed = 1703;
 	const TenantsManager_TenantDoesNotExist = 1704;
 	const TenantsManager_AccountCreateUserLimitReached = 1705;
-	const TenantsManager_DomainCreateUserLimitReached = 1706;
 	const TenantsManager_QuotaLimitExided = 1707;
 	const TenantsManager_AccountUpdateUserLimitReached = 1705;
 
@@ -152,10 +143,6 @@ class CApiErrorCodes
 	const Rest_AccountDisableFailed = 7015;
 	const Rest_AccountPasswordChangeFailed = 7016;
 	const Rest_AccountListGetFailed = 7017;
-	const Rest_DomainCreateFailed = 7020;
-	const Rest_DomainUpdateFailed = 7021;
-	const Rest_DomainFindFailed = 7022;
-	const Rest_DomainListGetFailed = 7023;
 	const Rest_TenantFindFailed = 7030;*/
 
 	/**
@@ -191,19 +178,12 @@ class CApiErrorCodes
 
 				self::UserManager_SocialAccountAlreadyExists => CApi::I18N('API/USERMANAGER_SOCIAL_ACCOUNT_ALREADY_EXISTS'),
 
-				self::DomainsManager_DomainAlreadyExists => CApi::I18N('API/DOMAINSMANAGER_DOMAIN_ALREADY_EXISTS'),
-				self::DomainsManager_DomainCreateFailed => CApi::I18N('API/DOMAINSMANAGER_DOMAIN_CREATE_FAILED'),
-				self::DomainsManager_DomainUpdateFailed => CApi::I18N('API/DOMAINSMANAGER_DOMAIN_UPDATE_FAILED'),
-				self::DomainsManager_DomainNotEmpty => CApi::I18N('API/DOMAINSMANAGER_DOMAIN_NOT_EMPTY'),
-				self::DomainsManager_DomainDoesNotExist => CApi::I18N('API/DOMAINSMANAGER_DOMAIN_DOES_NOT_EXIST'),
-
 				self::TenantsManager_TenantAlreadyExists => CApi::I18N('API/TENANTSMANAGER_TENANT_ALREADY_EXISTS'),
 				self::TenantsManager_TenantCreateFailed => CApi::I18N('API/TENANTSMANAGER_TENANT_CREATE_FAILED'),
 				self::TenantsManager_TenantUpdateFailed => CApi::I18N('API/TENANTSMANAGER_TENANT_UPDATE_FAILED'),
 				self::TenantsManager_TenantDoesNotExist => CApi::I18N('API/TENANTSMANAGER_TENANT_DOES_NOT_EXIST'),
 				self::TenantsManager_AccountCreateUserLimitReached => CApi::I18N('API/TENANTSMANAGER_ACCOUNT_CREATE_USER_LIMIT_REACHED'),
 				self::TenantsManager_AccountUpdateUserLimitReached => CApi::I18N('API/TENANTSMANAGER_ACCOUNT_UPDATE_USER_LIMIT_REACHED'),
-				self::TenantsManager_DomainCreateUserLimitReached => CApi::I18N('API/TENANTSMANAGER_DOMAIN_CREATE_USER_LIMIT_REACHED'),
 				self::TenantsManager_QuotaLimitExided => CApi::I18N('API/TENANTS_MANAGER_QUOTA_LIMIT_EXCEEDED'),
 
 				self::ChannelsManager_ChannelAlreadyExists => CApi::I18N('API/CHANNELSMANAGER_CHANNEL_ALREADY_EXISTS'),
@@ -220,7 +200,6 @@ class CApiErrorCodes
 				self::WebMailManager_AccountWebmailDisabled => CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_WEBMAIL_DISABLED'),
 				self::WebMailManager_AccountCreateOnLogin => CApi::I18N('API/WEBMAILMANAGER_CREATE_ON_LOGIN'),
 				self::WebMailManager_AccountAuthentication => CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_AUTHENTICATION'),
-				self::WebMailManager_DomainDoesNotExist => CApi::I18N('API/WEBMAILMANAGER_DOMAIN_DOES_NOT_EXIST'),
 				self::WebMailManager_AccountConnectToMailServerFailed => CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
 
 				self::Validation_InvalidPort => CApi::I18N('API/VALIDATION_INVALID_PORT'),
@@ -267,10 +246,6 @@ class CApiErrorCodes
 				self::Rest_AccountDisableFailed => CApi::I18N('API/REST_ACCOUNT_DISABLE_FAILED'),
 				self::Rest_AccountPasswordChangeFailed => CApi::I18N('API/REST_ACCOUNT_PASSWORD_CHANGE_FAILED'),
 				self::Rest_AccountListGetFailed => CApi::I18N('API/REST_ACCOUNT_LIST_GET_FAILED'),
-				self::Rest_DomainCreateFailed => CApi::I18N('API/REST_DOMAIN_CREATE_FAILED'),
-				self::Rest_DomainUpdateFailed => CApi::I18N('API/REST_DOMAIN_UPDATE_FAILED'),
-				self::Rest_DomainFindFailed => CApi::I18N('API/REST_DOMAIN_FIND_FAILED'),
-				self::Rest_DomainListGetFailed => CApi::I18N('API/REST_DOMAIN_LIST_GET_FAILED'),
 				self::Rest_TenantFindFailed => CApi::I18N('API/REST_TENANT_FIND_FAILED'),*/
 			);
 		}

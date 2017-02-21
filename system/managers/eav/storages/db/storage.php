@@ -31,7 +31,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	protected $oConnection;
 
 	/**
-	 * @var CApiDomainsCommandCreator
+	 * @var CApiEavCommandCreatorMySQL|CApiEavCommandCreatorPostgreSQL
 	 */
 	protected $oCommandCreator;
 

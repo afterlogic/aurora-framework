@@ -80,7 +80,6 @@ class Notifications
 	const RestInvalidToken = 715;
 	const RestTokenExpired = 716;
 	const RestAccountFindFailed = 717;
-	const RestDomainFindFailed = 718;
 	const RestTenantFindFailed = 719;
 
 	const CalendarsNotAllowed = 801;

@@ -723,7 +723,7 @@ class CApiIntegratorManager extends AApiManager
 		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
 		if ($oAccount instanceof CAccount)
 		{
-			if ($oAccount->IsDisabled || ($oAccount->Domain && $oAccount->Domain->IsDisabled))
+			if ($oAccount->IsDisabled)
 			{
 				throw new CApiManagerException(Errs::WebMailManager_AccountDisabled);
 			}
@@ -746,7 +746,8 @@ class CApiIntegratorManager extends AApiManager
 				$oAccount->User->Language = $sLanguage;
 			}
 
-			if ($oAccount->Domain->AllowWebMail)
+			$bAllowWebMail = true;
+			if ($bAllowWebMail)
 			{
 				if ($sIncPassword !== $oAccount->IncomingPassword)
 				{

@@ -597,24 +597,6 @@ class api_Utils
 	}
 
 	/**
-	 * @param string $sEmail
-	 * @return string
-	 */
-	public static function GetDomainFromEmail($sEmail)
-	{
-		$sResult = '';
-		if (!empty($sEmail))
-		{
-			$iPos = strpos($sEmail, '@');
-			if (false !== $iPos)
-			{
-				$sResult = substr($sEmail, $iPos + 1);
-			}
-		}
-		return $sResult;
-	}
-
-	/**
 	 * @param string $iSizeInBytes
 	 * @return string
 	 */

@@ -150,13 +150,13 @@ class CApi
 			
 			if (0 < \strlen($sHost))
 			{
-				$sDomainSettingsFile = CApi::DataPath().'/settings/'.$sHost.'.config.php';
-				if (@file_exists($sDomainSettingsFile))
+				$sHostConfigFile = CApi::DataPath().'/settings/'.$sHost.'.config.php';
+				if (@file_exists($sHostConfigFile))
 				{
-					$aDomainAppConfig = include $sDomainSettingsFile;
-					if (is_array($aDomainAppConfig))
+					$aHostConfig = include $sHostConfigFile;
+					if (is_array($aHostConfig))
 					{
-						CApi::$aConfig = array_merge(CApi::$aConfig, $aDomainAppConfig);
+						CApi::$aConfig = array_merge(CApi::$aConfig, $aHostConfig);
 					}
 				}
 			}

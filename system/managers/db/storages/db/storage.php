@@ -29,7 +29,7 @@ class CApiDbDbStorage extends CApiDbStorage
 	protected $oConnection;
 
 	/**
-	 * @var CApiDomainsCommandCreator
+	 * @var CApiDbCommandCreatorMySQL|CApiDbCommandCreatorPostgreSQL
 	 */
 	protected $oCommandCreator;
 

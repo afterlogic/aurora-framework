@@ -248,11 +248,6 @@ class CApiCapabilityManager extends AApiManager
 			{
 				$bResult = $oTenant->isHelpdeskSupported();
 			}
-
-			if ($bResult)
-			{
-				$bResult = $oAccount->Domain->AllowHelpdesk && $oAccount->User->getCapa(ECapa::HELPDESK);
-			}
 		}
 
 		return $bResult;
