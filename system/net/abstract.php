@@ -62,8 +62,8 @@ abstract class CApiNetAbstract
 	 */
 	public function __construct($sHost, $iPort, $bUseSsl = false, $iConnectTimeOut = null, $iSocketTimeOut = null)
 	{
-		$iConnectTimeOut = (null === $iConnectTimeOut) ? CApi::GetConf('socket.connect-timeout', 5) : $iConnectTimeOut;
-		$iSocketTimeOut = (null === $iSocketTimeOut) ? CApi::GetConf('socket.get-timeout', 5) : $iSocketTimeOut;
+		$iConnectTimeOut = (null === $iConnectTimeOut) ?\CApi::GetConf('socket.connect-timeout', 5) : $iConnectTimeOut;
+		$iSocketTimeOut = (null === $iSocketTimeOut) ?\CApi::GetConf('socket.get-timeout', 5) : $iSocketTimeOut;
 
 		$this->sHost = $sHost;
 		$this->iPort = $iPort;

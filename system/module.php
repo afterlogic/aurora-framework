@@ -115,7 +115,7 @@ class CApiModuleManager
 				{
 					$oModuleSettings = \CApi::GetModuleManager()->GetModuleSettings($sModuleName);
 					$bIsModuleDisabledForUser = false;
-					$oUser = CApi::getAuthenticatedUser();
+					$oUser =\CApi::getAuthenticatedUser();
 					if ($oUser instanceof CUser)
 					{
 						$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
@@ -193,7 +193,7 @@ class CApiModuleManager
 		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
 		{
 		   include_once $sModuleFilePath;
-		   $sModuleClassName = $sModuleName . 'Module';
+		   $sModuleClassName = 'Aurora\\Modules\\' . $sModuleName . 'Module';
 		   if (class_exists($sModuleClassName))
 		   {
 			   $oModule = call_user_func(
@@ -759,7 +759,7 @@ abstract class AApiModule
 	 * @param string $sVersion
 	 * @return \AApiModule
 	 */
-	public static function createInstance($sName, $sPath, $sVersion = '1.0')
+	final public static function createInstance($sName, $sPath, $sVersion = '1.0')
 	{
 		return new static($sName, $sPath, $sVersion);
 	}	
@@ -891,7 +891,7 @@ abstract class AApiModule
 	 * 
 	 * @return array
 	 */
-	public function getEventsCallbacks()
+	protected function getEventsCallbacks()
 	{
 		$aEventsValues = array();
 		$aEvents = \CApi::GetModuleManager()->getEvents();
@@ -1300,7 +1300,7 @@ abstract class AApiModule
 			if (!empty($sMethod)) {
 				
 				$sRawKey = empty($aPaths[3]) ? '' : $aPaths[3];
-				$aParameters = CApi::DecodeKeyValues($sRawKey);				
+				$aParameters =\CApi::DecodeKeyValues($sRawKey);				
 				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
 				$aParameters['SharedHash'] = empty($aPaths[5]) ? '' : $aPaths[5];
 

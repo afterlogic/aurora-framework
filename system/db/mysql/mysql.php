@@ -64,8 +64,8 @@ class CDbMySql extends CDbSql
 		$this->_rResultId = null;
 
 		$this->iExecuteCount = 0;
-		$this->bUseExplain = CApi::GetConf('labs.db.use-explain', false);
-		$this->bUseExplainExtended = CApi::GetConf('labs.db.use-explain-extended', false);
+		$this->bUseExplain =\CApi::GetConf('labs.db.use-explain', false);
+		$this->bUseExplainExtended =\CApi::GetConf('labs.db.use-explain-extended', false);
 	}
 
 	/**

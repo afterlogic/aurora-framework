@@ -479,7 +479,7 @@ abstract class api_AContainer
 		$aExclude = is_array($aExclude) && 0 < count($aExclude) ? $aExclude : array();
 
 		$sQueryParams = '';
-		$bUseLogQueryParams = (bool) CApi::GetConf('labs.db.log-query-params', false);
+		$bUseLogQueryParams = (bool)\CApi::GetConf('labs.db.log-query-params', false);
 
 		$oObject->initBeforeChange();
 
@@ -597,7 +597,7 @@ abstract class api_AContainer
 		$aResult = array(false, false);
 
 		$sQueryParams = '';
-		$bUseLogQueryParams = (bool) CApi::GetConf('labs.db.log-query-params', false);
+		$bUseLogQueryParams = (bool)\CApi::GetConf('labs.db.log-query-params', false);
 
 		$oObject->initBeforeChange();
 

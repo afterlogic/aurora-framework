@@ -441,7 +441,7 @@ abstract class AApiManager
 	 */
 	public function path($sInclude)
 	{
-		return CApi::ManagerPath($this->GetManagerName(), $sInclude);
+		return\CApi::ManagerPath($this->GetManagerName(), $sInclude);
 	}
 
 	/**
@@ -735,7 +735,7 @@ abstract class AApiManagerStorage
 			}
 			else
 			{
-				return CApi::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sFileName);
+				return\CApi::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sFileName);
 			}
 		}
 

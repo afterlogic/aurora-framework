@@ -102,7 +102,7 @@ class CApiImap4MailProtocol extends CApiNetAbstract
 	{
 		$bReturn = false;
 
-		$bPlain = ((bool) CApi::GetConf('login.enable-plain-auth', false)) && $this->IsSupported('AUTH=PLAIN');
+		$bPlain = ((bool)\CApi::GetConf('login.enable-plain-auth', false)) && $this->IsSupported('AUTH=PLAIN');
 		if ($bPlain)
 		{
 			$sAuth = base64_encode($sLoginAuthKey."\0".$sLogin."\0".$sPassword);

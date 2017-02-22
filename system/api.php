@@ -122,7 +122,7 @@ class CApi
 				'user-session'
 			));
 			$sSalt = '';
-			$sSaltFile = CApi::DataPath().'/salt.php';
+			$sSaltFile =\CApi::DataPath().'/salt.php';
 			if (!@file_exists($sSaltFile)) 
 			{
 				$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
@@ -134,9 +134,9 @@ class CApi
 			}
 
 			CApi::$sSalt = $sSalt;
-			CApi::$aConfig = include CApi::RootPath().'config.php';
+			CApi::$aConfig = include\CApi::RootPath().'config.php';
 			
-			$sSettingsFile = CApi::DataPath().'/settings/config.php';
+			$sSettingsFile =\CApi::DataPath().'/settings/config.php';
 			if (@file_exists($sSettingsFile))
 			{
 				$aAppConfig = include $sSettingsFile;
@@ -150,7 +150,7 @@ class CApi
 			
 			if (0 < \strlen($sHost))
 			{
-				$sHostConfigFile = CApi::DataPath().'/settings/'.$sHost.'.config.php';
+				$sHostConfigFile =\CApi::DataPath().'/settings/'.$sHost.'.config.php';
 				if (@file_exists($sHostConfigFile))
 				{
 					$aHostConfig = include $sHostConfigFile;
@@ -162,7 +162,7 @@ class CApi
 			}
 
 			CApi::$oManager = new CApiGlobalManager();
-			CApi::$bIsValid = CApi::validateApi();
+			CApi::$bIsValid =\CApi::validateApi();
 			CApi::GetModuleManager();
 			CApi::$aModuleDecorators = array();
 		}
@@ -209,7 +209,7 @@ class CApi
 	 */
 	public static function Manager($sManagerType, $sForcedStorage = '')
 	{
-		return CApi::$oManager->GetByType($sManagerType, $sForcedStorage);
+		return\CApi::$oManager->GetByType($sManagerType, $sForcedStorage);
 	}
 
 	/**
@@ -218,7 +218,7 @@ class CApi
 	 */
 	public static function GetSystemManager($sManagerType, $sForcedStorage = 'db')
 	{
-		return CApi::Manager($sManagerType, $sForcedStorage);
+		return\CApi::Manager($sManagerType, $sForcedStorage);
 	}
 
 	public static function GetModuleManager()
@@ -229,7 +229,7 @@ class CApi
 			CApi::$oModuleManager->init();
 		}
 		
-		return CApi::$oModuleManager;
+		return\CApi::$oModuleManager;
 	}
 	
 	/**
@@ -245,7 +245,7 @@ class CApi
 			CApi::$aModuleDecorators[$sModuleName] = new \CApiModuleDecorator($sModuleName, $iUser);
 		}
 		
-		return CApi::$aModuleDecorators[$sModuleName];
+		return\CApi::$aModuleDecorators[$sModuleName];
 	}
 
 	public static function GetModule($sModuleName)
@@ -263,13 +263,13 @@ class CApi
 	 */
 	public static function GetManager()
 	{
-		return CApi::$oManager;
+		return\CApi::$oManager;
 	}
 
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
 		list($sModuleName, $sMethodName) = explode(\AApiModule::$Delimiter, $sMethodName);
-		$oModule = CApi::GetModule($sModuleName);
+		$oModule =\CApi::GetModule($sModuleName);
 		if ($oModule instanceof AApiModule)
 		{
 			return $oModule->CallMethod($sModuleName, $sMethodName, $aParameters);
@@ -311,7 +311,7 @@ class CApi
 	 */
 	public static function &GetSettings()
 	{
-		return CApi::$oManager->GetSettings();
+		return\CApi::$oManager->GetSettings();
 	}
 
 	/**
@@ -321,7 +321,7 @@ class CApi
 	 */
 	public static function GetSettingsConf($sKey)
 	{
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 		return $oSettings->GetConf($sKey);
 	}
 
@@ -336,7 +336,7 @@ class CApi
 			return $oPdoCache;
 		}
 
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 
 		$sDbPort = '';
 		$sUnixSocket = '';
@@ -445,7 +445,7 @@ class CApi
 	 */
 	public static function GetConf($sKey, $mDefault = null)
 	{
-		return (isset(CApi::$aConfig[$sKey])) ? CApi::$aConfig[$sKey] : $mDefault;
+		return (isset(CApi::$aConfig[$sKey])) ?\CApi::$aConfig[$sKey] : $mDefault;
 	}
 
 	/**
@@ -464,7 +464,7 @@ class CApi
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return CApi::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
+		return\CApi::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
 	/**
@@ -473,7 +473,7 @@ class CApi
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return CApi::IncPath('managers.'.$sManagerName.'.'.$sFileName);
+		return\CApi::IncPath('managers.'.$sManagerName.'.'.$sFileName);
 	}
 
 	/**
@@ -483,7 +483,7 @@ class CApi
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
 		$sStorageName = preg_replace('/[^a-z]/', '', strtolower($sStorageName));
-		return CApi::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
+		return\CApi::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
 	}
 
 	/**
@@ -495,7 +495,7 @@ class CApi
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
 
-		return CApi::RootPath().$sFileName.'.php';
+		return\CApi::RootPath().$sFileName.'.php';
 	}
 	
 	/**
@@ -514,7 +514,7 @@ class CApi
 		if (isset($aCache[$sFileName])) {
 			return true;
 		} else {
-			$sFileFullPath = CApi::RootPath().$sFileName.'.php';
+			$sFileFullPath =\CApi::RootPath().$sFileName.'.php';
 			if (@file_exists($sFileFullPath)) {
 				$aCache[$sFileName] = true;
 				include_once $sFileFullPath;
@@ -568,7 +568,7 @@ class CApi
 	 */
 	public static function LogEvent($sDesc, $mAccount = null)
 	{
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) 
 		{
 			$sDate = gmdate('H:i:s');
@@ -639,7 +639,7 @@ class CApi
 			$oSettings =& \CApi::GetSettings();
 
 			$sS = $oSettings->GetConf('LogCustomFullPath', '');
-			$sLogDir = empty($sS) ? CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
+			$sLogDir = empty($sS) ?\CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
 		}
 		
 		if (null === $bDir) 
@@ -661,11 +661,11 @@ class CApi
 	{
 		if ($bOn) 
 		{
-			@setcookie('SpecifiedUserLogging', '1', 0, CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
+			@setcookie('SpecifiedUserLogging', '1', 0,\CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
 		} 
 		else 
 		{
-			@setcookie('SpecifiedUserLogging', '0', 0, CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
+			@setcookie('SpecifiedUserLogging', '0', 0,\CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
 		}
 	}
 	
@@ -700,7 +700,7 @@ class CApi
 		
 		if (null === $iDbBacktraceCount) 
 		{
-			$iDbBacktraceCount = (int) CApi::GetConf('labs.db-debug-backtrace-limit', 0);
+			$iDbBacktraceCount = (int)\CApi::GetConf('labs.db-debug-backtrace-limit', 0);
 			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
 			{
 				$iDbBacktraceCount = 0;
@@ -773,7 +773,7 @@ class CApi
 	{
 		static $bIsFirst = true;
 
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 
 		if ($oSettings && $oSettings->GetConf('EnableLogging') &&
 			($iLogLevel <= $oSettings->GetConf('LoggingLevel') ||
@@ -852,7 +852,7 @@ class CApi
 	 */
 	public static function WebMailPath()
 	{
-		return CApi::RootPath().ltrim(API_PATH_TO_AURORA, '/');
+		return\CApi::RootPath().ltrim(API_PATH_TO_AURORA, '/');
 	}
 
 	/**
@@ -860,7 +860,7 @@ class CApi
 	 */
 	public static function LibrariesPath()
 	{
-		return CApi::RootPath().'../vendor/';
+		return\CApi::RootPath().'../vendor/';
 	}
 
 	/**
@@ -882,7 +882,7 @@ class CApi
 	 */
 	public static function VersionJs()
 	{
-		return preg_replace('/[^0-9a-z]/', '', CApi::Version().
+		return preg_replace('/[^0-9a-z]/', '',\CApi::Version().
 			(CApi::GetConf('labs.cache.static', true) ? '' : '-'.md5(time())));
 	}
 
@@ -894,12 +894,12 @@ class CApi
 		$dataPath = 'data';
 		if (!defined('API_DATA_FOLDER') && @file_exists(CApi::WebMailPath().'inc_settings_path.php')) 
 		{
-			include CApi::WebMailPath().'inc_settings_path.php';
+			include\CApi::WebMailPath().'inc_settings_path.php';
 		}
 
 		if (!defined('API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
 		{
-			define('API_DATA_FOLDER', api_Utils::GetFullPath($dataPath, CApi::WebMailPath()));
+			define('API_DATA_FOLDER', api_Utils::GetFullPath($dataPath,\CApi::WebMailPath()));
 		}
 
 		return defined('API_DATA_FOLDER') ? API_DATA_FOLDER : '';
@@ -912,7 +912,7 @@ class CApi
 	{
 		$iResult = 1;
 
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 		$iResult &= $oSettings && ($oSettings instanceof CApiSettings);
 
 		return (bool) $iResult;
@@ -923,7 +923,7 @@ class CApi
 	 */
 	public static function IsValid()
 	{
-		return (bool) CApi::$bIsValid;
+		return (bool)\CApi::$bIsValid;
 	}
 
 	/**
@@ -936,7 +936,7 @@ class CApi
 	{
 		$sSsoHash = \md5($sEmail.$sPassword.$sLogin.\microtime(true).\rand(10000, 99999));
 		
-		return CApi::Cacher()->Set('SSO:'.$sSsoHash, CApi::EncodeKeyValues(array(
+		return\CApi::Cacher()->Set('SSO:'.$sSsoHash,\CApi::EncodeKeyValues(array(
 			'Email' => $sEmail,
 			'Password' => $sPassword,
 			'Login' => $sLogin
@@ -1023,16 +1023,16 @@ class CApi
 		$aLang = null;
 		if (isset(CApi::$aClientI18N[$sLanguage])) 
 		{
-			$aLang = CApi::$aClientI18N[$sLanguage];
+			$aLang =\CApi::$aClientI18N[$sLanguage];
 		} 
 		else 
 		{
 			CApi::$aClientI18N[$sLanguage] = false;
 				
-			$sLangFile = CApi::WebMailPath().'i18n/'.$sLanguage.'.ini';
+			$sLangFile =\CApi::WebMailPath().'i18n/'.$sLanguage.'.ini';
 			if (!@file_exists($sLangFile)) 
 			{
-				$sLangFile = CApi::WebMailPath().'i18n/English.ini';
+				$sLangFile =\CApi::WebMailPath().'i18n/English.ini';
 				$sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
 			}
 
@@ -1202,7 +1202,7 @@ class CApi
 	 */
 	public static function I18N($sData, $aParams = null, $sForceCustomInitialisationLang = '')
 	{
-		if (null === CApi::$aI18N) 
+		if (null ===\CApi::$aI18N) 
 		{
 			CApi::$aI18N = false;
 
@@ -1212,18 +1212,18 @@ class CApi
 			}
 			else 
 			{
-				$sLang = CApi::GetConf('labs.i18n', '');
+				$sLang =\CApi::GetConf('labs.i18n', '');
 			}
 			
 			$sLangFile = '';
 			if (0 < strlen($sLang)) 
 			{
-				$sLangFile = CApi::RootPath().'common/i18n/'.$sLang.'.ini';
+				$sLangFile =\CApi::RootPath().'common/i18n/'.$sLang.'.ini';
 			}
 
 			if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) 
 			{
-				$sLangFile = CApi::RootPath().'common/i18n/English.ini';
+				$sLangFile =\CApi::RootPath().'common/i18n/English.ini';
 			}
 
 			if (0 < strlen($sLangFile) && @file_exists($sLangFile)) 

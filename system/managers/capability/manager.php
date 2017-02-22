@@ -137,7 +137,7 @@ class CApiCapabilityManager extends AApiManager
 		if ($bResult && $bCheckShowSettings)
 		{
 			$oSettings = null;
-			$oSettings =& CApi::GetSettings();
+			$oSettings =&\CApi::GetSettings();
 			$bResult = $oSettings && !!$oSettings->GetConf('Contacts/ShowGlobalContactsInAddressBook');
 		}
 
@@ -397,7 +397,7 @@ class CApiCapabilityManager extends AApiManager
 		}
 		else
 		{
-			$oApiTenants = /* @var $oApiTenants CApiTenantsManager */ CApi::GetSystemManager('tenants');
+			$oApiTenants = /* @var $oApiTenants CApiTenantsManager */\CApi::GetSystemManager('tenants');
 			if ($oApiTenants)
 			{
 				$oTenant = (0 < $iIdTenant) ? $oApiTenants->getTenantById($iIdTenant) : $oApiTenants->getDefaultGlobalTenant();

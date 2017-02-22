@@ -125,7 +125,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$sResult = '';
-		$sPath = CApi::WebMailPath().'modules';
+		$sPath =\CApi::WebMailPath().'modules';
 		
 		$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
 
@@ -251,7 +251,7 @@ class CApiIntegratorManager extends AApiManager
 		if ($sResult === "")
 		{
 			$aResult = array();
-			$sPath = CApi::WebMailPath().'modules';
+			$sPath =\CApi::WebMailPath().'modules';
 
 			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
 
@@ -309,7 +309,7 @@ class CApiIntegratorManager extends AApiManager
 		static $sPath = false;
 		if (false === $sPath) {
 			
-			$sPath = CApi::GetConf('labs.app-cookie-path', '/');
+			$sPath =\CApi::GetConf('labs.app-cookie-path', '/');
 		}
 
 		return $sPath;
@@ -416,7 +416,7 @@ class CApiIntegratorManager extends AApiManager
 		$sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
 		if (!empty($sKey) && is_string($sKey))
 		{
-			$aUserHashTable = CApi::DecodeKeyValues($sKey);
+			$aUserHashTable =\CApi::DecodeKeyValues($sKey);
 			if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
 				'hd_auth' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id']))
 			{
@@ -436,7 +436,7 @@ class CApiIntegratorManager extends AApiManager
 		$iUserId = \CApi::getAuthenticatedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
-			$oApiUsers = CApi::GetSystemManager('users');
+			$oApiUsers =\CApi::GetSystemManager('users');
 			if ($oApiUsers)
 			{
 				$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
@@ -512,8 +512,8 @@ class CApiIntegratorManager extends AApiManager
 
 		CApi::LogObject($aHashTable);
 
-		$_COOKIE[self::TOKEN_HD_THREAD_ID] = CApi::EncodeKeyValues($aHashTable);
-		@setcookie(self::TOKEN_HD_THREAD_ID, CApi::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
+		$_COOKIE[self::TOKEN_HD_THREAD_ID] =\CApi::EncodeKeyValues($aHashTable);
+		@setcookie(self::TOKEN_HD_THREAD_ID,\CApi::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
 	}
 
 	/**
@@ -525,7 +525,7 @@ class CApiIntegratorManager extends AApiManager
 		$sKey = empty($_COOKIE[self::TOKEN_HD_THREAD_ID]) ? '' : $_COOKIE[self::TOKEN_HD_THREAD_ID];
 		if (!empty($sKey) && is_string($sKey))
 		{
-			$aUserHashTable = CApi::DecodeKeyValues($sKey);
+			$aUserHashTable =\CApi::DecodeKeyValues($sKey);
 			if (is_array($aUserHashTable) && isset($aUserHashTable['token'], $aUserHashTable['id']) &&
 				'thread_id' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id']))
 			{
@@ -571,8 +571,8 @@ class CApiIntegratorManager extends AApiManager
 			'email' => $oHelpdeskUser->Email
 		);
 
-		$_COOKIE[self::TOKEN_HD_ACTIVATED] = CApi::EncodeKeyValues($aHashTable);
-		@setcookie(self::TOKEN_HD_ACTIVATED, CApi::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
+		$_COOKIE[self::TOKEN_HD_ACTIVATED] =\CApi::EncodeKeyValues($aHashTable);
+		@setcookie(self::TOKEN_HD_ACTIVATED,\CApi::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
 	}
 
 	/**
@@ -584,7 +584,7 @@ class CApiIntegratorManager extends AApiManager
 		$sKey = empty($_COOKIE[self::TOKEN_HD_ACTIVATED]) ? '' : $_COOKIE[self::TOKEN_HD_ACTIVATED];
 		if (!empty($sKey) && is_string($sKey))
 		{
-			$aUserHashTable = CApi::DecodeKeyValues($sKey);
+			$aUserHashTable =\CApi::DecodeKeyValues($sKey);
 			if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
 				'hd_activated_email' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['email']))
 			{
@@ -641,8 +641,8 @@ class CApiIntegratorManager extends AApiManager
 		);
 
 		$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
-		$_COOKIE[self::AUTH_HD_KEY] = CApi::EncodeKeyValues($aUserHashTable);
-		@setcookie(self::AUTH_HD_KEY, CApi::EncodeKeyValues($aUserHashTable), $iTime, $this->getCookiePath(), null, null, true);
+		$_COOKIE[self::AUTH_HD_KEY] =\CApi::EncodeKeyValues($aUserHashTable);
+		@setcookie(self::AUTH_HD_KEY,\CApi::EncodeKeyValues($aUserHashTable), $iTime, $this->getCookiePath(), null, null, true);
 	}
 
 	/**
@@ -689,10 +689,10 @@ class CApiIntegratorManager extends AApiManager
 		$sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
 		if (0 < strlen($sHelpdeskHash))
 		{
-			$aHelpdeskHashTable = CApi::DecodeKeyValues($sHelpdeskHash);
+			$aHelpdeskHashTable =\CApi::DecodeKeyValues($sHelpdeskHash);
 			if (isset($aHelpdeskHashTable['sign-me']) && $aHelpdeskHashTable['sign-me'])
 			{
-				@setcookie(self::AUTH_HD_KEY, CApi::EncodeKeyValues($aHelpdeskHashTable),
+				@setcookie(self::AUTH_HD_KEY,\CApi::EncodeKeyValues($aHelpdeskHashTable),
 					time() + 60 * 60 * 24 * 30, $this->getCookiePath(), null, null, true);
 			}
 		}
@@ -717,7 +717,7 @@ class CApiIntegratorManager extends AApiManager
 		\CApi::AddSecret($sIncPassword);
 
 		/* @var $oApiUsersManager CApiUsersManager */
-		$oApiUsersManager = CApi::GetSystemManager('users');
+		$oApiUsersManager =\CApi::GetSystemManager('users');
 
 		$bAuthResult = false;
 		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
@@ -730,7 +730,7 @@ class CApiIntegratorManager extends AApiManager
 
 			if (0 < $oAccount->IdTenant)
 			{
-				$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */ CApi::GetSystemManager('tenants');
+				$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */\CApi::GetSystemManager('tenants');
 				if ($oApiTenantsManager)
 				{
 					$oTenant = $oApiTenantsManager->getTenantById($oAccount->IdTenant);
@@ -831,9 +831,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$oResult = null;
 
-//		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
+//		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\CApi::Manager('helpdesk');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\CApi::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\CApi::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -883,9 +883,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$mResult = false;
 
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
+		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\CApi::Manager('helpdesk');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\CApi::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\CApi::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -945,9 +945,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$bResult = false;
 
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */ CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */ CApi::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */ CApi::GetSystemManager('capability');
+		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\CApi::Manager('helpdesk');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\CApi::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\CApi::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -999,7 +999,7 @@ class CApiIntegratorManager extends AApiManager
 		if (null === $aList)
 		{
 			$aList = array();
-			$sPath = CApi::WebMailPath().'modules';
+			$sPath =\CApi::WebMailPath().'modules';
 
 			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
 
@@ -1051,7 +1051,7 @@ class CApiIntegratorManager extends AApiManager
 
 			$oModuleManager = \CApi::GetModuleManager();
 			$aThemes = $oModuleManager->getModuleConfigValue('CoreWebclient', 'ThemeList');
-			$sDir = CApi::WebMailPath().'static/styles/themes/';
+			$sDir =\CApi::WebMailPath().'static/styles/themes/';
 
 			if (is_array($aThemes))
 			{
@@ -1146,7 +1146,7 @@ class CApiIntegratorManager extends AApiManager
 //		{
 //			throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter);
 //		}
-////		$oApiHelpdeskManager = CApi::Manager('helpdesk'); // TODO:
+////		$oApiHelpdeskManager =\CApi::Manager('helpdesk'); // TODO:
 //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
 //
 //		return $oUser;
@@ -1177,7 +1177,7 @@ class CApiIntegratorManager extends AApiManager
 
 		if (false === $sLanguage && false === $sTheme && false === $sSiteName)
 		{
-			$oSettings =& CApi::GetSettings();
+			$oSettings =&\CApi::GetSettings();
 			$oUser = \CApi::getAuthenticatedUser();
 			$oModuleManager = \CApi::GetModuleManager();
 			
@@ -1277,7 +1277,7 @@ class CApiIntegratorManager extends AApiManager
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
 		$sTenantName = \CApi::getTenantName();
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 		
 		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
 		{
@@ -1317,7 +1317,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 		
 		$sTenantName = \CApi::getTenantName();
-		$oSettings =& CApi::GetSettings();
+		$oSettings =&\CApi::GetSettings();
 		
 		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
 		

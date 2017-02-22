@@ -64,8 +64,8 @@ class CDbPdoPostgres extends CDbSql
 		$this->rResultId = null;
 
 		$this->iExecuteCount = 0;
-		$this->bUseExplain = CApi::GetConf('labs.db.use-explain', false);
-		$this->bUseExplainExtended = CApi::GetConf('labs.db.use-explain-extended', false);
+		$this->bUseExplain =\CApi::GetConf('labs.db.use-explain', false);
+		$this->bUseExplainExtended =\CApi::GetConf('labs.db.use-explain-extended', false);
 	}
 
 	/**
