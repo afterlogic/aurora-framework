@@ -1267,11 +1267,23 @@ class CApi
 
 	public static function getAuthToken()
 	{
-		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? 
-				$_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
-		if (empty($sAuthToken))
+		$sAuthHeader =  \MailSo\Base\Http::SingletonInstance()->GetHeader('Authorization');
+		if (!empty($sAuthHeader))
 		{
-			$sAuthToken = \MailSo\Base\Http::SingletonInstance()->GetPost('AuthToken', '');
+			list($sAuthTypeFromHeader, $sAuthTokenFromHeader) = explode(' ', $sAuthHeader);
+			if (strtolower($sAuthTypeFromHeader) === 'bearer' && !empty($sAuthTokenFromHeader))
+			{
+				$sAuthToken = $sAuthTokenFromHeader;
+			}
+		}
+		else
+		{
+			$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? 
+					$_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
+			if (empty($sAuthToken))
+			{
+				$sAuthToken = \MailSo\Base\Http::SingletonInstance()->GetPost('AuthToken', '');
+			}
 		}
 		
 		return $sAuthToken;
