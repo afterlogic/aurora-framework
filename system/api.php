@@ -1288,10 +1288,6 @@ class CApi
 		{
 			$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? 
 					$_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
-			if (empty($sAuthToken))
-			{
-				$sAuthToken = \MailSo\Base\Http::SingletonInstance()->GetPost('AuthToken', '');
-			}
 		}
 		
 		return $sAuthToken;
