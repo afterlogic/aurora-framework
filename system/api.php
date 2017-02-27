@@ -1302,8 +1302,7 @@ class CApi
 		$bResult = true;
 		if (isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]))
 		{
-			$oHttp = \MailSo\Base\Http::SingletonInstance();
-			$sAuthToken = $oHttp->GetPost('AuthToken', '');
+			$sAuthToken = self::getAuthTokenFromHeaders();
 
 			$bResult = ($sAuthToken === $_COOKIE[\System\Service::AUTH_TOKEN_KEY]);
 		}
