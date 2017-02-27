@@ -1264,19 +1264,27 @@ class CApi
 			}
 		}
 	}
-
-	public static function getAuthToken()
+	
+	public static function getAuthTokenFromHeaders()
 	{
+		$sResult = false;
 		$sAuthHeader =  \MailSo\Base\Http::SingletonInstance()->GetHeader('Authorization');
 		if (!empty($sAuthHeader))
 		{
 			list($sAuthTypeFromHeader, $sAuthTokenFromHeader) = explode(' ', $sAuthHeader);
 			if (strtolower($sAuthTypeFromHeader) === 'bearer' && !empty($sAuthTokenFromHeader))
 			{
-				$sAuthToken = $sAuthTokenFromHeader;
+				$sResult = $sAuthTokenFromHeader;
 			}
-		}
-		else
+		}	
+		
+		return $sResult;
+	}
+
+	public static function getAuthToken()
+	{
+		$sAuthToken = self::getAuthTokenFromHeaders();
+		if (!$sAuthToken)
 		{
 			$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? 
 					$_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
