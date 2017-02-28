@@ -105,6 +105,16 @@ class Api
 	{
 		self::$aConfig = include self::RootPath().'config.php';
 
+		$sSettingsFile = self::DataPath().'/settings/config.php';
+		if (@file_exists($sSettingsFile))
+		{
+			$aAppConfig = include $sSettingsFile;
+			if (is_array($aAppConfig))
+			{
+				self::$aConfig = array_merge(self::$aConfig, $aAppConfig);
+			}
+		}			
+
 		$sHost = \MailSo\Base\Http::SingletonInstance()->GetHost();
 		if (0 < \strlen($sHost))
 		{
@@ -118,18 +128,6 @@ class Api
 				}
 			}
 		}		
-		else
-		{
-			$sSettingsFile = self::DataPath().'/settings/config.php';
-			if (@file_exists($sSettingsFile))
-			{
-				$aAppConfig = include $sSettingsFile;
-				if (is_array($aAppConfig))
-				{
-					self::$aConfig = array_merge(self::$aConfig, $aAppConfig);
-				}
-			}			
-		}
 	}	
 	
 	public static function Init($bGrantAdminPrivileges = false)
