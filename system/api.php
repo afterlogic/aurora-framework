@@ -17,8 +17,6 @@
  * 
  */
 
-use UndersSystemTypes\Arrays;
-
 namespace Aurora\System;
 
 /**
@@ -86,6 +84,54 @@ class Api
 	 */
 	public static $__SKIP_CHECK_USER_ROLE__ = false;
 	
+	public static function InitSalt()
+	{
+		$sSalt = '';
+		$sSaltFile = self::DataPath().'/salt.php';
+		if (!@file_exists($sSaltFile)) 
+		{
+			$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
+			@file_put_contents($sSaltFile, $sSaltDesc);
+		} 
+		else 
+		{
+			$sSalt = '$2y$07$' . md5(file_get_contents($sSaltFile)) . '$';
+		}
+
+		self::$sSalt = $sSalt;		
+	}
+	
+	public static function InitConfig()
+	{
+		self::$aConfig = include self::RootPath().'config.php';
+
+		$sHost = \MailSo\Base\Http::SingletonInstance()->GetHost();
+		if (0 < \strlen($sHost))
+		{
+			$sHostConfigFile = self::DataPath().'/settings/'.$sHost.'.config.php';
+			if (@file_exists($sHostConfigFile))
+			{
+				$aHostConfig = include $sHostConfigFile;
+				if (is_array($aHostConfig))
+				{
+					self::$aConfig = array_merge(self::$aConfig, $aHostConfig);
+				}
+			}
+		}		
+		else
+		{
+			$sSettingsFile = self::DataPath().'/settings/config.php';
+			if (@file_exists($sSettingsFile))
+			{
+				$aAppConfig = include $sSettingsFile;
+				if (is_array($aAppConfig))
+				{
+					self::$aConfig = array_merge(self::$aConfig, $aAppConfig);
+				}
+			}			
+		}
+	}	
+	
 	public static function Init($bGrantAdminPrivileges = false)
 	{
 		include_once self::LibrariesPath().'autoload.php';
@@ -123,45 +169,9 @@ class Api
 				'db.storage',
 				'user-session'
 			));
-			$sSalt = '';
-			$sSaltFile = self::DataPath().'/salt.php';
-			if (!@file_exists($sSaltFile)) 
-			{
-				$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
-				@file_put_contents($sSaltFile, $sSaltDesc);
-			} 
-			else 
-			{
-				$sSalt = '$2y$07$' . md5(file_get_contents($sSaltFile)) . '$';
-			}
 
-			self::$sSalt = $sSalt;
-			self::$aConfig = include self::RootPath().'config.php';
-			
-			$sSettingsFile = self::DataPath().'/settings/config.php';
-			if (@file_exists($sSettingsFile))
-			{
-				$aAppConfig = include $sSettingsFile;
-				if (is_array($aAppConfig))
-				{
-					self::$aConfig = array_merge(self::$aConfig, $aAppConfig);
-				}
-			}
-
-			$sHost = \MailSo\Base\Http::SingletonInstance()->GetHost();
-			
-			if (0 < \strlen($sHost))
-			{
-				$sHostConfigFile = self::DataPath().'/settings/'.$sHost.'.config.php';
-				if (@file_exists($sHostConfigFile))
-				{
-					$aHostConfig = include $sHostConfigFile;
-					if (is_array($aHostConfig))
-					{
-						self::$aConfig = array_merge(self::$aConfig, $aHostConfig);
-					}
-				}
-			}
+			self::InitSalt();
+			self::InitConfig();
 
 			self::$oManager = new GlobalManager();
 			self::$bIsValid = self::validateApi();
@@ -178,7 +188,8 @@ class Api
 	 */
 	public static function AddSecret($sWord)
 	{
-		if (0 < \strlen(\trim($sWord))) {
+		if (0 < \strlen(\trim($sWord))) 
+		{
 			self::$aSecretWords[] = $sWord;
 			self::$aSecretWords = \array_unique(self::$aSecretWords);
 		}
@@ -350,19 +361,24 @@ class Api
 		$sDbPassword = $oSettings->GetConf('DBPassword');
 
 		$iPos = strpos($sDbHost, ':');
-		if (false !== $iPos && 0 < $iPos) {
+		if (false !== $iPos && 0 < $iPos) 
+		{
 			$sAfter = substr($sDbHost, $iPos + 1);
 			$sDbHost = substr($sDbHost, 0, $iPos);
 
-			if (is_numeric($sAfter)) {
+			if (is_numeric($sAfter)) 
+			{
 				$sDbPort = $sAfter;
-			} else {
+			} 
+			else 
+			{
 				$sUnixSocket = $sAfter;
 			}
 		}
 
 		$oPdo = false;
-		if (class_exists('PDO')) {
+		if (class_exists('PDO')) 
+		{
 			try
 			{
 				$oPdo = @new \PDO((\EDbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
@@ -370,7 +386,8 @@ class Api
 					(empty($sDbPort) ? '' : ';port='.$sDbPort).
 					(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
 
-				if ($oPdo) {
+				if ($oPdo) 
+				{
 					$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 				}
 			}
@@ -380,11 +397,14 @@ class Api
 				self::Log($oException->getTraceAsString(), \ELogLevel::Error);
 				$oPdo = false;
 			}
-		} else {
+		} 
+		else 
+		{
 			self::Log('Class PDO dosn\'t exist', \ELogLevel::Error);
 		}
 
-		if (false !== $oPdo) {
+		if (false !== $oPdo) 
+		{
 			$oPdoCache = $oPdo;
 		}
 
@@ -513,18 +533,23 @@ class Api
 		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName])) {
+		if (isset($aCache[$sFileName])) 
+		{
 			return true;
-		} else {
+		} 
+		else 
+		{
 			$sFileFullPath = self::RootPath().$sFileName.'.php';
-			if (@file_exists($sFileFullPath)) {
+			if (@file_exists($sFileFullPath)) 
+			{
 				$aCache[$sFileName] = true;
 				include_once $sFileFullPath;
 				return true;
 			}
 		}
 
-		if ($bDoExitOnError) {
+		if ($bDoExitOnError) 
+		{
 			//TODO check functionality
 			//echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
@@ -542,7 +567,8 @@ class Api
 	 */
 	public static function IncArray($aFileNames, $bDoExitOnError = true)
 	{
-		foreach ($aFileNames as $sFileName) {
+		foreach ($aFileNames as $sFileName) 
+		{
 			self::Inc($sFileName, $bDoExitOnError);
 		}
 	}
