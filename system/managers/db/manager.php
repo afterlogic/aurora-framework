@@ -22,14 +22,14 @@
  *
  * @package Db
  */
-class CApiDbManager extends AApiManagerWithStorage
+class CApiDbManager extends \Aurora\System\AbstractManagerWithStorage
 {
 	/**
 	 * Creates a new instance of the object.
 	 *
-	 * @param CApiGlobalManager &$oManager
+	 * @param \Aurora\System\GlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('db', $oManager, $sForcedStorage);
 

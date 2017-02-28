@@ -23,7 +23,7 @@
  * @package EAV
  * @subpackage Storages
  */
-class CApiEavCommandCreator extends api_CommandCreator
+class CApiEavCommandCreator extends \Aurora\System\Db\AbstractCommandCreator
 {
 	/**
 	 * @return string
@@ -185,7 +185,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					}
 					if ($oEntity->isEncryptedAttribute($sKey))
 					{
-						$mResultValue = \api_Utils::EncryptValue($mResultValue);
+						$mResultValue = \Aurora\System\Utils::EncryptValue($mResultValue);
 					}
 					$bIsInOperator = false;
 					if (strtolower($mResultOperator) === 'in' || strtolower($mResultOperator) === 'not in'  

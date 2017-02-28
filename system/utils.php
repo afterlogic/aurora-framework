@@ -20,7 +20,10 @@
 /**
  * @package Api
  */
-class api_Utils
+
+namespace Aurora\System;
+
+class Utils
 {
 	/**
 	* @var array
@@ -271,7 +274,7 @@ class api_Utils
 				$sResult = @iconv($sFromEncoding, $sToEncoding.'//IGNORE', $sResult);
 				if (false === $sResult)
 				{
-					CApi::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', ELogLevel::Error);
+					\Aurora\System\Api::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', ELogLevel::Error);
 					$sResult = $sString;
 				}
 				break;
@@ -558,7 +561,7 @@ class api_Utils
 		if (function_exists('mcrypt_encrypt') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size') &&
 			defined('MCRYPT_RIJNDAEL_256') && defined('MCRYPT_MODE_ECB') && defined('MCRYPT_RAND'))
 		{
-			return @trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(\CApi::$sSalt), $sPassword,
+			return @trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(\Aurora\System\Api::$sSalt), $sPassword,
 				MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
 		}
 
@@ -574,7 +577,7 @@ class api_Utils
 		if (function_exists('mcrypt_encrypt') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size') &&
 			defined('MCRYPT_RIJNDAEL_256') && defined('MCRYPT_MODE_ECB') && defined('MCRYPT_RAND'))
 		{
-			return trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(\CApi::$sSalt), base64_decode(trim($sPassword)),
+			return trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(\Aurora\System\Api::$sSalt), base64_decode(trim($sPassword)),
 				MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
 		}
 		return @base64_decode(trim($sPassword));
@@ -793,8 +796,8 @@ class api_Utils
 			}
 			catch (Exception $oE)
 			{
-				CApi::Log($sClientTimeZone);
-				CApi::LogObject($oE, ELogLevel::Warning);
+				\Aurora\System\Api::Log($sClientTimeZone);
+				\Aurora\System\Api::LogObject($oE, ELogLevel::Warning);
 			}
 		}
 
@@ -1897,7 +1900,7 @@ class api_Utils
 /*			
 			if (!isset($oFileInfo->fileSize))
 			{
-				$aRemoteFileInfo = \api_Utils::GetRemoteFileInfo($oFileInfo->downloadUrl);
+				$aRemoteFileInfo = \Aurora\System\Utils::GetRemoteFileInfo($oFileInfo->downloadUrl);
 				$oFileInfo->fileSize = $aRemoteFileInfo['size'];
 			}
  * 
@@ -1911,9 +1914,9 @@ class api_Utils
 	public static function GetDefaultAccount()
 	{
 		$oResult = null;
-		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \CApi::GetSystemManager('users');
-		$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('integrator');
-		$iUserId = \CApi::getAuthenticatedUserId();
+		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \Aurora\System\Api::GetSystemManager('users');
+		$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \Aurora\System\Api::GetSystemManager('integrator');
+		$iUserId = \Aurora\System\Api::getAuthenticatedUserId();
 		if (0 < $iUserId)
 		{
 			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
@@ -1936,14 +1939,14 @@ class api_Utils
 	public static function GetHelpdeskAccount($iTenantID)
 	{
 		$oResult = null;
-		$oApiCapability /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('capability');
+		$oApiCapability /* @var $oApiIntegrator \CApiIntegratorManager */ = \Aurora\System\Api::GetSystemManager('capability');
 		if ($oApiCapability->isHelpdeskSupported())
 		{
-			$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \CApi::GetSystemManager('integrator');
+			$oApiIntegrator /* @var $oApiIntegrator \CApiIntegratorManager */ = \Aurora\System\Api::GetSystemManager('integrator');
 			$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
 			if (0 < $iIdHelpdeskUser)
 			{
-				$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = \CApi::Manager('helpdesk');
+				$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = \Aurora\System\Api::Manager('helpdesk');
 				$oHelpdeskUser = $oApiHelpdesk->getUserById($iTenantID, $iIdHelpdeskUser);
 				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
 			}
@@ -2007,7 +2010,7 @@ class api_Utils
 /**
  * @package Api
  */
-class api_Validate
+class Validate
 {
 	/**
 	 * @param string $sFuncName
@@ -2066,12 +2069,12 @@ class api_Validate
 /**
  * @package Api
  */
-class CApiValidationException extends CApiBaseException  {}
+class ValidationException extends BaseException  {}
 
 /**
  * @package Api
  */
-class api_Ints
+class Ints
 {
 	/**
 	 * @return int
@@ -2091,5 +2094,5 @@ class api_Ints
 
 function fNullCallback() {}
 
-defined('API_PHP_INT_MAX') || define('API_PHP_INT_MAX', (int) api_Ints::getIntMax());
+defined('API_PHP_INT_MAX') || define('API_PHP_INT_MAX', (int) Ints::getIntMax());
 defined('API_PHP_INT_MIN') || define('API_PHP_INT_MIN', (int) (API_PHP_INT_MAX + 1));

@@ -32,7 +32,7 @@ class AuroraApiException extends Exception
 
 	
 	/**
-	 * @var \AApiModule
+	 * @var \Aurora\System\AbstractModule
 	 */
 	protected $oModule;
 	
@@ -57,7 +57,7 @@ class AuroraApiException extends Exception
 	}	
 	
 	/**
-	 * @return \AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	public function GetModule()
 	{

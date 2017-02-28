@@ -142,12 +142,12 @@ abstract class api_AContainer
 			{
 				if ('password' === $aTypes[0])
 				{
-					$this->{$sKey} = api_Utils::DecryptValue($oRow->{$aTypes[1]});
+					$this->{$sKey} = \Aurora\System\Utils::DecryptValue($oRow->{$aTypes[1]});
 				}
 				else if ('datetime' === $aTypes[0])
 				{
 					$iDateTime = 0;
-					$aDateTime = api_Utils::DateParse($oRow->{$aTypes[1]});
+					$aDateTime = \Aurora\System\Utils::DateParse($oRow->{$aTypes[1]});
 					if (is_array($aDateTime))
 					{
 						$iDateTime = gmmktime($aDateTime['hour'], $aDateTime['minute'], $aDateTime['second'],
@@ -322,7 +322,7 @@ abstract class api_AContainer
 		}
 		else
 		{
-			throw new CApiBaseException(Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
+			throw new \CApiBaseException(Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
 		}
 	}
 
@@ -376,7 +376,7 @@ abstract class api_AContainer
 				if (is_numeric($iSize) && (int) $iSize < strlen($mValue))
 				{
 					// $mValue = substr($mValue, 0, (int) $iSize);
-					$mValue = api_Utils::Utf8Truncate($mValue, (int) $iSize);
+					$mValue = \Aurora\System\Utils::Utf8Truncate($mValue, (int) $iSize);
 				}
 			}
 		}
@@ -479,7 +479,7 @@ abstract class api_AContainer
 		$aExclude = is_array($aExclude) && 0 < count($aExclude) ? $aExclude : array();
 
 		$sQueryParams = '';
-		$bUseLogQueryParams = (bool)\CApi::GetConf('labs.db.log-query-params', false);
+		$bUseLogQueryParams = (bool)\Aurora\System\Api::GetConf('labs.db.log-query-params', false);
 
 		$oObject->initBeforeChange();
 
@@ -498,7 +498,7 @@ abstract class api_AContainer
 			{
 				if ('password' === $aStaticMap[$sObjectKey][0])
 				{
-					$mValue = api_Utils::EncryptValue($mValue);
+					$mValue = \Aurora\System\Utils::EncryptValue($mValue);
 				}
 				else if ('datetime' === $aStaticMap[$sObjectKey][0])
 				{
@@ -523,7 +523,7 @@ abstract class api_AContainer
 
 		if ($bUseLogQueryParams)
 		{
-			CApi::Log($sQueryParams);
+			\Aurora\System\Api::Log($sQueryParams);
 		}
 
 		return $aResult;
@@ -597,7 +597,7 @@ abstract class api_AContainer
 		$aResult = array(false, false);
 
 		$sQueryParams = '';
-		$bUseLogQueryParams = (bool)\CApi::GetConf('labs.db.log-query-params', false);
+		$bUseLogQueryParams = (bool)\Aurora\System\Api::GetConf('labs.db.log-query-params', false);
 
 		$oObject->initBeforeChange();
 
@@ -615,7 +615,7 @@ abstract class api_AContainer
 			{
 				if ('password' === $aStaticMap[$sKey][0])
 				{
-					$mValue = api_Utils::EncryptValue($mValue);
+					$mValue = \Aurora\System\Utils::EncryptValue($mValue);
 				}
 				else if ('datetime' === $aStaticMap[$sKey][0])
 				{
@@ -641,7 +641,7 @@ abstract class api_AContainer
 
 		if ($bUseLogQueryParams)
 		{
-			CApi::Log($sQueryParams);
+			\Aurora\System\Api::Log($sQueryParams);
 		}
 
 		return $aResult;

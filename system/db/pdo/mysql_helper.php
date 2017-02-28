@@ -17,13 +17,15 @@
  * 
  */
 
-CApi::Inc('db.helper');
+namespace Aurora\System\Db;
+
+\Aurora\System\Api::Inc('db.helper');
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CPdoMySqlHelper implements IDbHelper
+class PdoMySqlHelper implements IHelper
 {
 	/**
 	 * @param string $sValue
@@ -123,78 +125,78 @@ class CPdoMySqlHelper implements IDbHelper
 		$sResult = $this->EscapeColumn($sName).' ';
 		switch ($iFieldType)
 		{
-			case CDbField::AUTO_INT:
+			case Field::AUTO_INT:
 				$sResult .= 'int(11) NOT NULL auto_increment';
 				break;
-			case CDbField::AUTO_INT_BIG:
+			case Field::AUTO_INT_BIG:
 				$sResult .= 'bigint(20) NOT NULL auto_increment';
 				break;
-			case CDbField::AUTO_INT_UNSIGNED:
+			case Field::AUTO_INT_UNSIGNED:
 				$sResult .= 'int(11) unsigned NOT NULL auto_increment';
 				break;
-			case CDbField::AUTO_INT_BIG_UNSIGNED:
+			case Field::AUTO_INT_BIG_UNSIGNED:
 				$sResult .= 'bigint(20) unsigned NOT NULL auto_increment';
 				break;
 
-			case CDbField::BIT:
+			case Field::BIT:
 				$sResult .= 'tinyint(1)';
 				break;
-			case CDbField::INT:
+			case Field::INT:
 				$sResult .= 'int(11)';
 				break;
-			case CDbField::INT_UNSIGNED:
+			case Field::INT_UNSIGNED:
 				$sResult .= 'int(11) unsigned';
 				break;
-			case CDbField::INT_SHORT:
+			case Field::INT_SHORT:
 				$sResult .= 'tinyint(4)';
 				break;
-			case CDbField::INT_SHORT_SMALL:
+			case Field::INT_SHORT_SMALL:
 				$sResult .= 'tinyint(2)';
 				break;
-			case CDbField::INT_SMALL:
+			case Field::INT_SMALL:
 				$sResult .= 'smallint(6)';
 				break;
-			case CDbField::INT_BIG:
+			case Field::INT_BIG:
 				$sResult .= 'bigint(20)';
 				break;
-			case CDbField::INT_UNSIGNED:
+			case Field::INT_UNSIGNED:
 				$sResult .= 'int(11) UNSIGNED';
 				break;
-			case CDbField::INT_BIG_UNSIGNED:
+			case Field::INT_BIG_UNSIGNED:
 				$sResult .= 'bigint UNSIGNED';
 				break;
 
-			case CDbField::CHAR:
+			case Field::CHAR:
 				$sResult .= 'varchar(1)';
 				break;
-			case CDbField::VAR_CHAR:
+			case Field::VAR_CHAR:
 				$sResult .= (null === $iCustomLen)
 					? 'varchar(255)' : 'varchar('.((int) $iCustomLen).')';
 				break;
-			case CDbField::TEXT:
+			case Field::TEXT:
 				$sResult .= 'text';
 				break;
-			case CDbField::TEXT_LONG:
+			case Field::TEXT_LONG:
 				$sResult .= 'longtext';
 				break;
-			case CDbField::TEXT_MEDIUM:
+			case Field::TEXT_MEDIUM:
 				$sResult .= 'mediumtext';
 				break;
-			case CDbField::BLOB:
+			case Field::BLOB:
 				$sResult .= 'blob';
 				break;
-			case CDbField::BLOB_LONG:
+			case Field::BLOB_LONG:
 				$sResult .= 'longblob';
 				break;
 
-			case CDbField::DATETIME:
+			case Field::DATETIME:
 				$sResult .= 'datetime';
 				break;
 		}
 
-		if (in_array($iFieldType, array(CDbField::AUTO_INT, CDbField::AUTO_INT_BIG,
-			CDbField::AUTO_INT_UNSIGNED, CDbField::AUTO_INT_BIG_UNSIGNED,
-			CDbField::TEXT, CDbField::TEXT_LONG, CDbField::BLOB, CDbField::BLOB_LONG)))
+		if (in_array($iFieldType, array(Field::AUTO_INT, Field::AUTO_INT_BIG,
+			Field::AUTO_INT_UNSIGNED, Field::AUTO_INT_BIG_UNSIGNED,
+			Field::TEXT, Field::TEXT_LONG, Field::BLOB, Field::BLOB_LONG)))
 		{
 			// no need default
 		}

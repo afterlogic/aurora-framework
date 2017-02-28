@@ -20,12 +20,12 @@
 /**
  * @package Capability
  */
-class CApiCapabilityManager extends AApiManager
+class CApiCapabilityManager extends \Aurora\System\AbstractManager
 {
 	/**
-	 * @param CApiGlobalManager &$oManager
+	 * @param &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(\Aurora\System\GlobalManager &$oManager)
 	{
 		parent::__construct('capability', $oManager);
 	}
@@ -35,7 +35,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isNotLite()
 	{
-		return !!CApi::GetSystemManager('licensing');
+		return !!\Aurora\System\Api::GetSystemManager('licensing');
 	}
 
 	/**
@@ -43,7 +43,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isCollaborationSupported()
 	{
-		return $this->isNotLite() && !!CApi::GetSystemManager('collaboration');
+		return $this->isNotLite() && !!\Aurora\System\Api::GetSystemManager('collaboration');
 	}
 
 	/**
@@ -51,7 +51,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isMailsuite()
 	{
-		return !!CApi::GetConf('mailsuite', false) && !!CApi::GetSystemManager('mailsuite');
+		return !!\Aurora\System\Api::GetConf('mailsuite', false) && !!\Aurora\System\Api::GetSystemManager('mailsuite');
 	}
 
 	/**
@@ -59,7 +59,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isDavSupported()
 	{
-		return $this->isNotLite() && !!CApi::GetModuleManager()->ModuleExists('Dav');
+		return $this->isNotLite() && !!\Aurora\System\Api::GetModuleManager()->ModuleExists('Dav');
 	}
 
 	/**
@@ -67,7 +67,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isTenantsSupported()
 	{
-		return $this->isNotLite() && !!CApi::GetConf('tenant', false);
+		return $this->isNotLite() && !!\Aurora\System\Api::GetConf('tenant', false);
 	}
 
 	/**
@@ -137,7 +137,7 @@ class CApiCapabilityManager extends AApiManager
 		if ($bResult && $bCheckShowSettings)
 		{
 			$oSettings = null;
-			$oSettings =&\CApi::GetSettings();
+			$oSettings =&\Aurora\System\Api::GetSettings();
 			$bResult = $oSettings && !!$oSettings->GetConf('Contacts/ShowGlobalContactsInAddressBook');
 		}
 
@@ -157,7 +157,7 @@ class CApiCapabilityManager extends AApiManager
 	public function isSharedContactsSupported($oAccount = null)
 	{
 		$bResult = $this->isContactsSupported() && $this->isCollaborationSupported() &&
-			\CApi::GetConf('labs.contacts-sharing', false);
+			\Aurora\System\Api::GetConf('labs.contacts-sharing', false);
 		
 		if ($bResult && $oAccount)
 		{
@@ -192,7 +192,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isTwilioSupported($oAccount = null)
 	{
-		$bResult = $this->isCollaborationSupported() && !!CApi::GetConf('labs.twilio', false);
+		$bResult = $this->isCollaborationSupported() && !!\Aurora\System\Api::GetConf('labs.twilio', false);
 		if ($bResult && $oAccount)
 		{
 			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
@@ -216,7 +216,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isSipSupported($oAccount = null)
 	{
-		$bResult = $this->isCollaborationSupported() && !!CApi::GetConf('labs.voice', false);
+		$bResult = $this->isCollaborationSupported() && !!\Aurora\System\Api::GetConf('labs.voice', false);
 		if ($bResult && $oAccount)
 		{
 			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
@@ -240,7 +240,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function isHelpdeskSupported($oAccount = null)
 	{
-		$bResult = $this->isCollaborationSupported() && !!CApi::GetConf('helpdesk', false);
+		$bResult = $this->isCollaborationSupported() && !!\Aurora\System\Api::GetConf('helpdesk', false);
 		if ($bResult && $oAccount)
 		{
 			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
@@ -265,7 +265,7 @@ class CApiCapabilityManager extends AApiManager
 
 		if ($bResult)
 		{
-			$bResult = \CApi::GetSettingsConf('Common/EnableMobileSync');
+			$bResult = \Aurora\System\Api::GetSettingsConf('Common/EnableMobileSync');
 		}
 			
 		if ($bResult && $oAccount)
@@ -371,7 +371,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function hasSslSupport()
 	{
-		return api_Utils::hasSslSupport();
+		return \Aurora\System\Utils::hasSslSupport();
 	}
 
 	/**
@@ -379,7 +379,7 @@ class CApiCapabilityManager extends AApiManager
 	 */
 	public function hasGdSupport()
 	{
-		return api_Utils::HasGdSupport();
+		return \Aurora\System\Utils::HasGdSupport();
 	}
 
 	/**
@@ -397,7 +397,7 @@ class CApiCapabilityManager extends AApiManager
 		}
 		else
 		{
-			$oApiTenants = /* @var $oApiTenants CApiTenantsManager */\CApi::GetSystemManager('tenants');
+			$oApiTenants = /* @var $oApiTenants CApiTenantsManager */\Aurora\System\Api::GetSystemManager('tenants');
 			if ($oApiTenants)
 			{
 				$oTenant = (0 < $iIdTenant) ? $oApiTenants->getTenantById($iIdTenant) : $oApiTenants->getDefaultGlobalTenant();

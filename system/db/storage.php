@@ -22,7 +22,10 @@
  * @package Api
  * @subpackage Db
  */
-class CDbCreator
+
+namespace Aurora\System\Db;
+
+class Creator
 {
 	/**
 	 * @var DbMySql;
@@ -52,7 +55,7 @@ class CDbCreator
 
 	/**
 	 * @param array $aData
-	 * @return CDbSql
+	 * @return Sql
 	 */
 	public static function ConnectorFabric($aData)
 	{
@@ -63,15 +66,15 @@ class CDbCreator
 
 			if (isset($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']))
 			{
-				if (EDbType::PostgreSQL === $iDbType)
+				if (\EDbType::PostgreSQL === $iDbType)
 				{
-					CApi::Inc('db.pdo.postgres');
-					$oConnector = new CDbPdoPostgres($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
+					\Aurora\System\Api::Inc('db.pdo.postgres');
+					$oConnector = new PdoPostgres($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
 				}
 				else
 				{
-					CApi::Inc('db.pdo.mysql');
-					$oConnector = new CDbPdoMySql($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
+					\Aurora\System\Api::Inc('db.pdo.mysql');
+					$oConnector = new PdoMySql($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
 				}
 			}
 		}
@@ -86,30 +89,30 @@ class CDbCreator
 	public static function CommandCreatorHelperFabric($iDbType = EDbType::MySQL)
 	{
 		$oHelper = null;
-		if (EDbType::PostgreSQL === $iDbType)
+		if (\EDbType::PostgreSQL === $iDbType)
 		{
-			CApi::Inc('db.pdo.postgres_helper');
-			$oHelper = new CPdoPostgresHelper();
+			\Aurora\System\Api::Inc('db.pdo.postgres_helper');
+			$oHelper = new PdoPostgresHelper();
 		}
 		else
 		{
-			CApi::Inc('db.pdo.mysql_helper');
-			$oHelper = new CPdoMySqlHelper();
+			\Aurora\System\Api::Inc('db.pdo.mysql_helper');
+			$oHelper = new PdoMySqlHelper();
 		}
 
 		return $oHelper;
 	}
 
 	/**
-	 * @param CApiSettings $oSettings
-	 * @return &CDbMySql
+	 * @param \Aurora\System\Settingss $oSettings
+	 * @return &MySql
 	 */
-	public static function &CreateConnector(CApiSettings $oSettings)
+	public static function &CreateConnector(\Aurora\System\Settings $oSettings)
 	{
 		$aResult = array();
 		if (!is_object(self::$oDbConnector))
 		{
-			CDbCreator::$oDbConnector = CDbCreator::ConnectorFabric(array(
+			Creator::$oDbConnector = Creator::ConnectorFabric(array(
 				'Type' => $oSettings->GetConf('DBType'),
 				'DBHost' => $oSettings->GetConf('DBHost'),
 				'DBLogin' => $oSettings->GetConf('DBLogin'),
@@ -120,7 +123,7 @@ class CDbCreator
 
 			if ($oSettings->GetConf('UseSlaveConnection'))
 			{
-				CDbCreator::$oSlaveDbConnector = CDbCreator::ConnectorFabric(array(
+				Creator::$oSlaveDbConnector = Creator::ConnectorFabric(array(
 					'Type' => $oSettings->GetConf('DBType'),
 					'DBHost' => $oSettings->GetConf('DBSlaveHost'),
 					'DBLogin' => $oSettings->GetConf('DBSlaveLogin'),
@@ -131,25 +134,25 @@ class CDbCreator
 			}
 		}
 
-		$aResult = array(&CDbCreator::$oDbConnector, &CDbCreator::$oSlaveDbConnector);
+		$aResult = array(&Creator::$oDbConnector, &Creator::$oSlaveDbConnector);
 		return $aResult;
 	}
 
 	/**
-	 * @param CApiSettings $oSettings
+	 * @param \Aurora\System\Settings $oSettings
 	 * @return &IDbHelper
 	 */
-	public static function &CreateCommandCreatorHelper(CApiSettings $oSettings)
+	public static function &CreateCommandCreatorHelper(\Aurora\System\Settings $oSettings)
 	{
-		if (is_object(CDbCreator::$oCommandCreatorHelper))
+		if (is_object(Creator::$oCommandCreatorHelper))
 		{
-			return CDbCreator::$oCommandCreatorHelper;
+			return Creator::$oCommandCreatorHelper;
 		}
 
-		CDbCreator::$oCommandCreatorHelper = CDbCreator::CommandCreatorHelperFabric(
+		Creator::$oCommandCreatorHelper = Creator::CommandCreatorHelperFabric(
 			$oSettings->GetConf('DBType'));
 
-		return CDbCreator::$oCommandCreatorHelper;
+		return Creator::$oCommandCreatorHelper;
 	}
 }
 
@@ -157,7 +160,7 @@ class CDbCreator
  * @package Api
  * @subpackage Db
  */
-class CDbStorage
+class Storage
 {
 	/**
 	 * @var string
@@ -165,12 +168,12 @@ class CDbStorage
 	protected $sPrefix;
 
 	/**
-	 * @var CDbSql
+	 * @var Sql
 	 */
 	protected $oConnector;
 
 	/**
-	 * @var CDbSql
+	 * @var Sql
 	 */
 	protected $oSlaveConnector;
 
@@ -187,9 +190,9 @@ class CDbStorage
 	/**
 	 * @param CApiSettings $oSettings
 	 */
-	public function __construct(CApiSettings &$oSettings)
+	public function __construct(\Aurora\System\Settings &$oSettings)
 	{
-		$aConnections =& CDbCreator::CreateConnector($oSettings);
+		$aConnections =& Creator::CreateConnector($oSettings);
 
 		$this->oSettings = $oSettings;
 		$this->sPrefix = $this->oSettings->GetConf('DBPrefix');
@@ -208,7 +211,7 @@ class CDbStorage
 	}
 
 	/**
-	 * @return &CDbSql
+	 * @return &Sql
 	 */
 	public function &GetConnector()
 	{
@@ -216,7 +219,7 @@ class CDbStorage
 	}
 
 	/**
-	 * @return &CDbSql
+	 * @return &Sql
 	 */
 	public function &GetSlaveConnector()
 	{

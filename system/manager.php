@@ -20,7 +20,10 @@
 /**
  * @package Api
  */
-class CApiGlobalManager
+
+namespace Aurora\System;
+
+class GlobalManager
 {
 	/**
 	 * @var CApiSettings
@@ -58,12 +61,12 @@ class CApiGlobalManager
 			'filecache' => 'file'
 		);
 
-		if (CApi::GetConf('gcontacts.ldap', false))
+		if (\Aurora\System\Api::GetConf('gcontacts.ldap', false))
 		{
 			$this->aStorageMap['gcontacts'] = 'ldap';
 		}
 
-		if (CApi::GetConf('contacts.ldap', false))
+		if (\Aurora\System\Api::GetConf('contacts.ldap', false))
 		{
 			$this->aStorageMap['contactsmain'] = 'ldap';
 		}
@@ -76,18 +79,18 @@ class CApiGlobalManager
 	{
 		if (null === $this->oSettings)
 		{
-			CApi::Inc('settings');
+			\Aurora\System\Api::Inc('settings');
 			try
 			{
-				$sSettingsPath = \CApi::DataPath() . '/settings/';
+				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
 				if (!file_exists($sSettingsPath))
 				{
 					mkdir(dirname($sSettingsPath), 0777);
 				}
 				
-				$this->oSettings = new CApiSystemSettings($sSettingsPath . 'config.json');
+				$this->oSettings = new SystemSettings($sSettingsPath . 'config.json');
 			}
-			catch (CApiBaseException $oException)
+			catch (BaseException $oException)
 			{
 				$this->oSettings = false;
 			}
@@ -117,7 +120,7 @@ class CApiGlobalManager
 
 			if ($oSettings)
 			{
-				$this->oConnection = new CDbStorage($oSettings);
+				$this->oConnection = new Db\Storage($oSettings);
 			}
 			else
 			{
@@ -139,7 +142,7 @@ class CApiGlobalManager
 
 			if ($oSettings)
 			{
-				$this->oSqlHelper = CDbCreator::CreateCommandCreatorHelper($oSettings);
+				$this->oSqlHelper = Db\Creator::CreateCommandCreatorHelper($oSettings);
 			}
 			else
 			{
@@ -156,11 +159,11 @@ class CApiGlobalManager
 	 */
 	public function GetSimpleMailProtocol($sHost, $iPort, $bUseSsl = false)
 	{
-		CApi::Inc('net.protocols.imap4');
-		return new CApiImap4MailProtocol($sHost, $iPort, $bUseSsl);
+		\Aurora\System\Api::Inc('net.protocols.imap4');
+		return new \CApiImap4MailProtocol($sHost, $iPort, $bUseSsl);
 	}
 
-	public function &GetCommandCreator(AApiManagerStorage &$oStorage, $aCommandCreatorsNames)
+	public function &GetCommandCreator(\Aurora\System\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
 	{
 		$oSettings =& $oStorage->GetSettings();
 		$oCommandCreatorHelper =& $this->GetSqlHelper();
@@ -174,8 +177,8 @@ class CApiGlobalManager
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
-				CApi::Inc('db.command_creator');
-				CApi::StorageInc($oStorage->GetManagerName(), $oStorage->GetStorageName(), 'command_creator');
+				\Aurora\System\Api::Inc('db.command_creator');
+				\Aurora\System\Api::StorageInc($oStorage->GetManagerName(), $oStorage->GetStorageName(), 'command_creator');
 
 				$oCommandCreator =
 					new $aCommandCreatorsNames[$sDbType]($oCommandCreatorHelper, $sDbPrefix);
@@ -192,7 +195,7 @@ class CApiGlobalManager
 	public function GetByType($sManagerType, $sForcedStorage = '')
 	{
 		$oResult = null;
-		if (CApi::IsValid())
+		if (\Aurora\System\Api::IsValid())
 		{
 			$sManagerKey = empty($sForcedStorage) ? $sManagerType : $sManagerType.'/'.$sForcedStorage;
 			if (isset($this->aManagers[$sManagerKey]))
@@ -205,7 +208,7 @@ class CApiGlobalManager
 				$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
 				if (!class_exists($sClassName))
 				{
-					CApi::Inc('managers.'.$sManagerType.'.manager', false);
+					\Aurora\System\Api::Inc('managers.'.$sManagerType.'.manager', false);
 				}
 				if (class_exists($sClassName))
 				{
@@ -226,12 +229,12 @@ class CApiGlobalManager
 /**
  * @package Api
  */
-class CApiGlobalManagerException extends CApiBaseException {}
+class GlobalManagerException extends BaseException {}
 
 /**
  * @package Api
  */
-abstract class AApiManager
+abstract class AbstractManager
 {
 	/**
 	 * @var CApiManagerException
@@ -244,12 +247,12 @@ abstract class AApiManager
 	protected $sManagerName;
 
 	/**
-	 * @var CApiGlobalManager
+	 * @var \Aurora\System\GlobalManager
 	 */
 	protected $oManager;
 
 	/**
-	 * @var AApiModule
+	 * @var \Aurora\System\AbstractModule
 	 */
 	protected $oModule;	
 	
@@ -258,7 +261,7 @@ abstract class AApiManager
 	 */
 	protected $oSettings;
 
-	public function __construct($sManagerName, CApiGlobalManager &$oManager, AApiModule $oModule = null)
+	public function __construct($sManagerName, GlobalManager &$oManager, \Aurora\System\AbstractModule $oModule = null)
 	{
 		$this->sManagerName = strtolower($sManagerName);
 		$this->oSettings =& $oManager->GetSettings();
@@ -284,7 +287,7 @@ abstract class AApiManager
 	}
 
 	/**
-	 * @return AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	public function GetModule()
 	{
@@ -313,7 +316,7 @@ abstract class AApiManager
 	 */
 	protected function inc($sInclude, $bDoExitOnError = true)
 	{
-		CApi::ManagerInc($this->GetManagerName(), $sInclude, $bDoExitOnError);
+		\Aurora\System\Api::ManagerInc($this->GetManagerName(), $sInclude, $bDoExitOnError);
 	}
 
 	/**
@@ -409,7 +412,7 @@ abstract class AApiManager
 		return $this->oManager->GetConnection();
 	}
 	
-	public function &GetCommandCreator(AApiManagerStorage &$oStorage, $aCommandCreatorsNames)
+	public function &GetCommandCreator(\Aurora\System\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
 	{
 		$oSettings =& $oStorage->GetSettings();
 		$oCommandCreatorHelper =& $this->oManager->GetSqlHelper();
@@ -423,7 +426,7 @@ abstract class AApiManager
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
-				CApi::Inc('db.command_creator');
+				\Aurora\System\Api::Inc('db.command_creator');
 				$oStorage->inc('command_creator');
 //				$this->incStorage('db.command_creator');
 
@@ -441,7 +444,7 @@ abstract class AApiManager
 	 */
 	public function path($sInclude)
 	{
-		return\CApi::ManagerPath($this->GetManagerName(), $sInclude);
+		return\Aurora\System\Api::ManagerPath($this->GetManagerName(), $sInclude);
 	}
 
 	/**
@@ -455,10 +458,10 @@ abstract class AApiManager
 		if ($bLog)
 		{
 			$sFile = str_replace(
-				str_replace('\\', '/', strtolower(realpath(CApi::WebMailPath()))), '~ ',
+				str_replace('\\', '/', strtolower(realpath(\Aurora\System\Api::WebMailPath()))), '~ ',
 				str_replace('\\', '/', strtolower($oException->getFile())));
 
-			CApi::Log('Exception['.$oException->getCode().']: '.$oException->getMessage().
+			\Aurora\System\Api::Log('Exception['.$oException->getCode().']: '.$oException->getMessage().
 				API_CRLF.$sFile.' ('.$oException->getLine().')'.
 				API_CRLF.'----------------------------------------------------------------------'.
 				API_CRLF.$oException->getTraceAsString(), ELogLevel::Error);
@@ -503,7 +506,7 @@ abstract class AApiManager
 /**
  * @package Api
  */
-abstract class AApiManagerWithStorage extends AApiManager
+abstract class AbstractManagerWithStorage extends AbstractManager
 {
 	/**
 	 * @var string
@@ -511,17 +514,17 @@ abstract class AApiManagerWithStorage extends AApiManager
 	protected $sStorageName;
 
 	/**
-	 * @var AApiManagerStorage
+	 * @var \Aurora\System\AbstractManagerStorage
 	 */
 	protected $oStorage;
 
 	/**
 	 * @param string $sManagerName
-	 * @param CApiGlobalManager &$oManager
+	 * @param \Aurora\System\GlobalManager &$oManager
 	 * @param string $sForcedStorage
-	 * @return AApiManager
+	 * @return \Aurora\System\AbstractManager
 	 */
-	public function __construct($sManagerName, CApiGlobalManager &$oManager, $sForcedStorage = '', AApiModule $oModule = null)
+	public function __construct($sManagerName, \Aurora\System\GlobalManager &$oManager, $sForcedStorage = '', \Aurora\System\AbstractModule $oModule = null)
 	{
 		parent::__construct($sManagerName, $oManager, $oModule);
 
@@ -546,9 +549,9 @@ abstract class AApiManagerWithStorage extends AApiManager
 		}
 		else
 		{
-			CApi::Inc('managers.'.$this->GetManagerName().'.storages.default');
+			\Aurora\System\Api::Inc('managers.'.$this->GetManagerName().'.storages.default');
 
-			if (CApi::Inc('managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
+			if (\Aurora\System\Api::Inc('managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
 			{
 				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
 				$this->oStorage = new $sClassName($this);
@@ -573,7 +576,7 @@ abstract class AApiManagerWithStorage extends AApiManager
 	}
 
 	/**
-	 * @return AApiManagerStorage
+	 * @return \Aurora\System\AbstractManagerStorage
 	 */
 	public function &GetStorage()
 	{
@@ -593,7 +596,7 @@ abstract class AApiManagerWithStorage extends AApiManager
 	}
 }
 
-class CApiCoreManagerWithStorage extends AApiManagerWithStorage
+class CoreManagerWithStorage extends AbstractManagerWithStorage
 {
 	
 }
@@ -601,12 +604,12 @@ class CApiCoreManagerWithStorage extends AApiManagerWithStorage
 /**
  * @package Api
  */
-class CApiManagerException extends CApiBaseException {}
+class ManagerException extends BaseException {}
 
 /**
  * @package Api
  */
-abstract class AApiManagerStorage
+abstract class AbstractManagerStorage
 {
 	/**
 	 * @var string
@@ -619,7 +622,7 @@ abstract class AApiManagerStorage
 	protected $sStorageName;
 	
 	/**
-	 * @var AApiManager
+	 * @var \Aurora\System\AbstractManager
 	 */
 	protected $oManager;
 
@@ -633,7 +636,7 @@ abstract class AApiManagerStorage
 	 */
 	protected $oLastException;
 
-	public function __construct($sManagerName, $sStorageName, AApiManager &$oManager)
+	public function __construct($sManagerName, $sStorageName, \Aurora\System\AbstractManager &$oManager)
 	{
 		$this->sManagerName = strtolower($sManagerName);
 		$this->sStorageName = strtolower($sStorageName);
@@ -693,7 +696,7 @@ abstract class AApiManagerStorage
 			$oException = $this->oConnection->GetException();
 			if ($oException instanceof CApiDbException)
 			{
-				throw new CApiBaseException(Errs::Db_ExceptionError, $oException);
+				throw new \CApiBaseException(Errs::Db_ExceptionError, $oException);
 			}
 		}
 	}
@@ -735,7 +738,7 @@ abstract class AApiManagerStorage
 			}
 			else
 			{
-				return\CApi::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sFileName);
+				return\Aurora\System\Api::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sFileName);
 			}
 		}
 
@@ -787,4 +790,4 @@ abstract class AApiManagerStorage
 /**
  * @package Api
  */
-class CApiStorageException extends CApiBaseException {}
+class StorageException extends BaseException {}

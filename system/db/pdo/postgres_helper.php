@@ -17,13 +17,15 @@
  * 
  */
 
-CApi::Inc('db.helper');
+\Aurora\System\Api::Inc('db.helper');
+
+use Aurora\System\Db;
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CPdoPostgresHelper implements IDbHelper
+class PdoPostgresHelper implements IHelper
 {
 	/**
 	 * @param string $sValue
@@ -111,13 +113,13 @@ class CPdoPostgresHelper implements IDbHelper
 	public function CreateIndexRequest($iIndexType, $sTableName, $sIndexName, $aFields)
 	{
 		$sResult = '';
-		if (CDbKey::TYPE_INDEX === $iIndexType)
+		if (Key::TYPE_INDEX === $iIndexType)
 		{
 			$aValues = array_map(array(&$this, 'EscapeColumn'), $aFields);
 			$sResult = 'CREATE INDEX '.$this->EscapeColumn($sIndexName).
 				' ON '.$sTableName.' ('.implode(', ', $aValues).')';
 		}
-		else if (CDbKey::TYPE_UNIQUE_KEY === $iIndexType)
+		else if (Key::TYPE_UNIQUE_KEY === $iIndexType)
 		{
 			$aValues = array_map(array(&$this, 'EscapeColumn'), $aFields);
 			$sResult = 'CREATE UNIQUE INDEX '.$this->EscapeColumn($sIndexName).
@@ -137,78 +139,78 @@ class CPdoPostgresHelper implements IDbHelper
 		$sResult = $this->EscapeColumn($sName).' ';
 		switch ($iFieldType)
 		{
-			case CDbField::AUTO_INT:
+			case Field::AUTO_INT:
 				$sResult .= 'serial NOT NULL';
 				break;
-			case CDbField::AUTO_INT_BIG:
+			case Field::AUTO_INT_BIG:
 				$sResult .= 'bigserial NOT NULL';
 				break;
-			case CDbField::AUTO_INT_UNSIGNED:
+			case Field::AUTO_INT_UNSIGNED:
 				$sResult .= 'serial NOT NULL';
 				break;
-			case CDbField::AUTO_INT_BIG_UNSIGNED:
+			case Field::AUTO_INT_BIG_UNSIGNED:
 				$sResult .= 'bigserial NOT NULL';
 				break;
 
-			case CDbField::BIT:
+			case Field::BIT:
 				$sResult .= 'smallint';
 				break;
-			case CDbField::INT:
+			case Field::INT:
 				$sResult .= 'integer';
 				break;
-			case CDbField::INT_UNSIGNED:
+			case Field::INT_UNSIGNED:
 				$sResult .= 'bigint';
 				break;
-			case CDbField::INT_SHORT:
+			case Field::INT_SHORT:
 				$sResult .= 'smallint';
 				break;
-			case CDbField::INT_SHORT_SMALL:
+			case Field::INT_SHORT_SMALL:
 				$sResult .= 'smallint';
 				break;
-			case CDbField::INT_SMALL:
+			case Field::INT_SMALL:
 				$sResult .= 'integer';
 				break;
-			case CDbField::INT_BIG:
+			case Field::INT_BIG:
 				$sResult .= 'bigint';
 				break;
-			case CDbField::INT_UNSIGNED:
+			case Field::INT_UNSIGNED:
 				$sResult .= 'bigint';
 				break;
-			case CDbField::INT_BIG_UNSIGNED:
+			case Field::INT_BIG_UNSIGNED:
 				$sResult .= 'bigint';
 				break;
 
-			case CDbField::CHAR:
+			case Field::CHAR:
 				$sResult .= 'varchar(1)';
 				break;
-			case CDbField::VAR_CHAR:
+			case Field::VAR_CHAR:
 				$sResult .= (null === $iCustomLen)
 					? 'varchar(255)' : 'varchar('.((int) $iCustomLen).')';
 				break;
-			case CDbField::TEXT:
+			case Field::TEXT:
 				$sResult .= 'text';
 				break;
-			case CDbField::TEXT_LONG:
+			case Field::TEXT_LONG:
 				$sResult .= 'text';
 				break;
-			case CDbField::TEXT_MEDIUM:
+			case Field::TEXT_MEDIUM:
 				$sResult .= 'text';
 				break;
-			case CDbField::BLOB:
+			case Field::BLOB:
 				$sResult .= 'bytea';
 				break;
-			case CDbField::BLOB_LONG:
+			case Field::BLOB_LONG:
 				$sResult .= 'bytea';
 				break;
 
-			case CDbField::DATETIME:
+			case Field::DATETIME:
 				$sResult .= 'timestamp';
 				break;
 		}
 
-		if (in_array($iFieldType, array(CDbField::AUTO_INT, CDbField::AUTO_INT_BIG,
-			CDbField::AUTO_INT_UNSIGNED, CDbField::AUTO_INT_BIG_UNSIGNED,
-			CDbField::TEXT, CDbField::TEXT_LONG, CDbField::BLOB, CDbField::BLOB_LONG)))
+		if (in_array($iFieldType, array(Field::AUTO_INT, Field::AUTO_INT_BIG,
+			Field::AUTO_INT_UNSIGNED, Field::AUTO_INT_BIG_UNSIGNED,
+			Field::TEXT, Field::TEXT_LONG, Field::BLOB, Field::BLOB_LONG)))
 		{
 			// no need default
 		}

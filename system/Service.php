@@ -30,7 +30,7 @@ class Service
 	const AUTH_TOKEN_KEY = 'AuthToken';
 	
 	/**
-	 * @var CApiModuleManager
+	 * @var \Aurora\System\ModuleManager
 	 */
 	protected $oModuleManager;
 
@@ -39,11 +39,11 @@ class Service
 	 */
 	protected function __construct()
 	{
-		$this->oModuleManager = \CApi::GetModuleManager();
+		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
 
 //		\MailSo\Config::$FixIconvByMbstring = false;
-		\MailSo\Config::$SystemLogger = \CApi::MailSoLogger();
-		\MailSo\Config::$PreferStartTlsIfAutoDetect = !!\CApi::GetConf('labs.prefer-starttls', true);
+		\MailSo\Config::$SystemLogger = \Aurora\System\Api::MailSoLogger();
+		\MailSo\Config::$PreferStartTlsIfAutoDetect = !!\Aurora\System\Api::GetConf('labs.prefer-starttls', true);
 	}
 
 	/**
@@ -75,16 +75,16 @@ class Service
 	
 	public function CheckApi()
 	{
-		if (!class_exists('\\CApi') || !\CApi::IsValid()) 
+		if (!class_exists('\\Aurora\\System\\Api') || !\Aurora\System\Api::IsValid()) 
 		{
-			echo 'AfterLogic API';
+			echo 'Aurora API not found';
 			return '';
 		}
 	}
 	
 	public function RedirectToHttps()
 	{
-		$oSettings =& \CApi::GetSettings();
+		$oSettings =& \Aurora\System\Api::GetSettings();
 		$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
 		
 		$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
@@ -127,16 +127,13 @@ class Service
 	}
 			
 	/**
-	 * @param string $sHelpdeskHash = ''
-	 * @param string $sCalendarPubHash = ''
-	 * @param string $sFileStoragePubHash = ''
 	 * @return string
 	 */
 	private function generateHTML()
 	{
 		$sResult = '';
 		
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
+		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
 		
 		if ($oApiIntegrator) 
 		{
@@ -152,25 +149,25 @@ class Service
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
 			$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-			if (!strpos(strtolower($sUserAgent), 'firefox')) 
+			if (!\strpos(\strtolower($sUserAgent), 'firefox')) 
 			{
 				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 			}
 			
-			if ((\CApi::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
+			if ((\Aurora\System\Api::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
 			{
-				setcookie('aft-cache-ctrl', '', time() - 3600);
+				\setcookie('aft-cache-ctrl', '', time() - 3600);
 				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
 				exit();
 			}
 			
-			$oCoreWebclientModule = \CApi::GetModule('CoreWebclient');
-			if ($oCoreWebclientModule instanceof \AApiModule) 
+			$oCoreWebclientModule = \Aurora\System\Api::GetModule('CoreWebclient');
+			if ($oCoreWebclientModule instanceof \Aurora\System\AbstractModule) 
 			{
-				$sResult = file_get_contents($oCoreWebclientModule->GetPath().'/templates/Index.html');
-				if (is_string($sResult)) 
+				$sResult = \file_get_contents($oCoreWebclientModule->GetPath().'/templates/Index.html');
+				if (\is_string($sResult)) 
 				{
-					$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
+					$sFrameOptions = \Aurora\System\Api::GetConf('labs.x-frame-options', '');
 					if (0 < \strlen($sFrameOptions)) 
 					{
 						@\header('X-Frame-Options: '.$sFrameOptions);
@@ -205,11 +202,11 @@ class Service
 		$aPaths = self::GetPaths();
 
 		$aModules = array();
-		if (0 < count($aPaths) && !empty($aPaths[0])) 
+		if (0 < \count($aPaths) && !empty($aPaths[0])) 
 		{
-			$sEntry = strtolower($aPaths[0]);
+			$sEntry = \strtolower($aPaths[0]);
 			$oModule = $this->oModuleManager->GetModuleFromRequest();
-			if ($oModule instanceof \AApiModule) 
+			if ($oModule instanceof \Aurora\System\AbstractModule) 
 			{
 				if ($oModule->HasEntry($sEntry))
 				{
@@ -225,8 +222,8 @@ class Service
 			{
 				 if ($sEntry === 'api')
 				 {
-					 $oCoreModule = \CApi::GetModule('Core');
-					 if ($oCoreModule instanceof \AApiModule)
+					 $oCoreModule = \Aurora\System\Api::GetModule('Core');
+					 if ($oCoreModule instanceof \Aurora\System\AbstractModule)
 					 {
 						 $aModules[] = $oCoreModule;
 					 }

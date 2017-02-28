@@ -39,9 +39,9 @@ class CApiDbDbStorage extends CApiDbStorage
 	protected $oHelper;
 
 	/**
-	 * @param CApiGlobalManager &$oManager
+	 * @param \Aurora\System\GlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(\Aurora\System\GlobalManager &$oManager)
 	{
 		parent::__construct('db', $oManager);
 
@@ -85,7 +85,7 @@ class CApiDbDbStorage extends CApiDbStorage
 		}
 		else
 		{
-			throw new CApiBaseException(Errs::Db_ExceptionError);
+			throw new \CApiBaseException(Errs::Db_ExceptionError);
 		}
 
 		return true;

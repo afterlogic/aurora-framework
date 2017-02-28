@@ -23,12 +23,12 @@
  * @package EAV
  * @subpackage Storages
  */
-class CApiEavStorage extends AApiManagerStorage
+class CApiEavStorage extends \Aurora\System\AbstractManagerStorage
 {
 	/**
-	 * @param CApiGlobalManager &$oManager
+	 * @param \Aurora\System\GlobalManager &$oManager
 	 */
-	public function __construct($sStorageName, AApiManager &$oManager)
+	public function __construct($sStorageName, \Aurora\System\AbstractManager &$oManager)
 	{
 		parent::__construct('eav', $sStorageName, $oManager);
 	}

@@ -18,7 +18,9 @@
  */
 
 
-class CApiSettingsProperty
+namespace Aurora\System;
+
+class SettingsProperty
 {
 	/**
 	 * @var string
@@ -57,7 +59,7 @@ class CApiSettingsProperty
 }
 
 
-class CApiSettings
+class Settings
 {
 	const JSON_FILE_NAME = 'config.json';
 
@@ -76,7 +78,7 @@ class CApiSettings
 	/**
 	 * @param string $sSettingsPath
 	 *
-	 * @return CApiSettings
+	 * @return Settings
 	 */
 	public function __construct($sSettingsPath)
 	{
@@ -119,7 +121,7 @@ class CApiSettings
 		$sType = (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Type : gettype($mValue);
 		if (!isset($this->aContainer[$sKey]))
 		{
-			$this->aContainer[$sKey] = new CApiSettingsProperty($sKey, $mValue, $sType);
+			$this->aContainer[$sKey] = new \SettingsProperty($sKey, $mValue, $sType);
 		}
 		
 		switch ($sType)
@@ -195,7 +197,7 @@ class CApiSettings
 				}
 				if (null !== $mValue)
 				{
-					$this->aContainer[$sKey] = new CApiSettingsProperty($sKey, $mValue, $sType, $sSpecType);
+					$this->aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType, $sSpecType);
 				}
 			}
 			$bResult = true;
@@ -281,7 +283,7 @@ class CApiSettings
 		$mResult = $sValue;
 		if (null !== $sEnumName)
 		{
-			$mResult = EnumConvert::ToXml($sValue, $sEnumName);
+			$mResult = \EnumConvert::ToXml($sValue, $sEnumName);
 		}
 
 		return $mResult;
@@ -298,7 +300,7 @@ class CApiSettings
 		$mResult = null;
 		if (null !== $sEnumName)
 		{
-			$mResult = EnumConvert::validate($sValue, $sEnumName);
+			$mResult = \EnumConvert::validate($sValue, $sEnumName);
 		}
 		return $mResult;
 	}
@@ -313,7 +315,7 @@ class CApiSettings
 	{
 		if (null !== $sEnumName)
 		{
-			$mResult = EnumConvert::FromXml($sValue, $sEnumName);
+			$mResult = \EnumConvert::FromXml($sValue, $sEnumName);
 		}
 
 		return $this->specValidate($mResult, $sEnumName);
@@ -335,55 +337,55 @@ class CApiSettings
 /**
  * @package Api
  */
-class CApiSystemSettings extends CApiSettings
+class SystemSettings extends Settings
 {
 	protected function initDefaults()
 	{
 		$this->aContainer = array(
-			'SiteName' => new CApiSettingsProperty('SiteName', 'AfterLogic', 'string'),
-			'LicenseKey' => new CApiSettingsProperty('LicenseKey', '', 'string'),
+			'SiteName' => new SettingsProperty('SiteName', 'AfterLogic', 'string'),
+			'LicenseKey' => new SettingsProperty('LicenseKey', '', 'string'),
 			
-			'AdminLogin' =>  new CApiSettingsProperty('AdminLogin', 'superadmin', 'string'),
-			'AdminPassword' => new CApiSettingsProperty('AdminPassword', '', 'string'),
+			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
+			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
 			
-			'DBType' => new CApiSettingsProperty('DBType', \EDbType::MySQL, 'spec', 'EDbType'),
-			'DBPrefix' => new CApiSettingsProperty('DBPrefix', 'au_', 'string'),
-			'DBHost' => new CApiSettingsProperty('DBHost', '127.0.0.1', 'string'),
-			'DBName' => new CApiSettingsProperty('DBName', '', 'string'),
-			'DBLogin' => new CApiSettingsProperty('DBLogin', 'root', 'string'),
-			'DBPassword' => new CApiSettingsProperty('DBPassword', '', 'string'),
+			'DBType' => new SettingsProperty('DBType', \EDbType::MySQL, 'spec', 'EDbType'),
+			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
+			'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
+			'DBName' => new SettingsProperty('DBName', '', 'string'),
+			'DBLogin' => new SettingsProperty('DBLogin', 'root', 'string'),
+			'DBPassword' => new SettingsProperty('DBPassword', '', 'string'),
 
-			'UseSlaveConnection' => new CApiSettingsProperty('UseSlaveConnection', false, 'bool'),
-			'DBSlaveHost' => new CApiSettingsProperty('DBSlaveHost', '127.0.0.1', 'string'),
-			'DBSlaveName' => new CApiSettingsProperty('DBSlaveName', '', 'string'),
-			'DBSlaveLogin' => new CApiSettingsProperty('DBSlaveLogin', 'root', 'string'),
-			'DBSlavePassword' => new CApiSettingsProperty('DBSlavePassword', '', 'string'),
+			'UseSlaveConnection' => new SettingsProperty('UseSlaveConnection', false, 'bool'),
+			'DBSlaveHost' => new SettingsProperty('DBSlaveHost', '127.0.0.1', 'string'),
+			'DBSlaveName' => new SettingsProperty('DBSlaveName', '', 'string'),
+			'DBSlaveLogin' => new SettingsProperty('DBSlaveLogin', 'root', 'string'),
+			'DBSlavePassword' => new SettingsProperty('DBSlavePassword', '', 'string'),
 
-			'DefaultTimeZone' => new CApiSettingsProperty('DefaultTimeZone', 0, 'int'),
-			'AllowRegistration' => new CApiSettingsProperty('AllowRegistration', false, 'bool'),
-			'RegistrationDomains' => new CApiSettingsProperty('RegistrationDomains', '', 'string'),
-			'RegistrationQuestions' => new CApiSettingsProperty('RegistrationQuestions', '', 'string'),
-			'AllowPasswordReset' => new CApiSettingsProperty('AllowPasswordReset', false, 'bool'),
-			'EnableLogging' => new CApiSettingsProperty('EnableLogging', false, 'bool'),
-			'EnableEventLogging' => new CApiSettingsProperty('EnableEventLogging', false, 'bool'),
-			'LoggingLevel' => new CApiSettingsProperty('LoggingLevel', ELogLevel::Full, 'spec', 'ELogLevel'),
-			'LogFileName' => new CApiSettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
-			'LogCustomFullPath' => new CApiSettingsProperty('LogCustomFullPath', '', 'string'),
-			'EnableMobileSync' => new CApiSettingsProperty('EnableMobileSync', false, 'bool'),
+			'DefaultTimeZone' => new SettingsProperty('DefaultTimeZone', 0, 'int'),
+			'AllowRegistration' => new SettingsProperty('AllowRegistration', false, 'bool'),
+			'RegistrationDomains' => new SettingsProperty('RegistrationDomains', '', 'string'),
+			'RegistrationQuestions' => new SettingsProperty('RegistrationQuestions', '', 'string'),
+			'AllowPasswordReset' => new SettingsProperty('AllowPasswordReset', false, 'bool'),
+			'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
+			'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
+			'LoggingLevel' => new SettingsProperty('LoggingLevel', \ELogLevel::Full, 'spec', 'ELogLevel'),
+			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
+			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
+			'EnableMobileSync' => new SettingsProperty('EnableMobileSync', false, 'bool'),
 			
-			'EnableMultiChannel' => new CApiSettingsProperty('EnableMultiChannel', false, 'bool'),
-			'EnableMultiTenant' => new CApiSettingsProperty('EnableMultiTenant', false, 'bool'),
+			'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
+			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
 
-			'TenantGlobalCapa' => new CApiSettingsProperty('TenantGlobalCapa', '', 'string'),
+			'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
 
-			'LoginStyleImage' => new CApiSettingsProperty('LoginStyleImage', '', 'string'),
-			'InvitationEmail' => new CApiSettingsProperty('InvitationEmail', '', 'string'),
+			'LoginStyleImage' => new SettingsProperty('LoginStyleImage', '', 'string'),
+			'InvitationEmail' => new SettingsProperty('InvitationEmail', '', 'string'),
 			
-			'DefaultTab' => new CApiSettingsProperty('DefaultTab', '', 'string'),
-			'RedirectToHttps' => new CApiSettingsProperty('RedirectToHttps', false, 'bool'),
+			'DefaultTab' => new SettingsProperty('DefaultTab', '', 'string'),
+			'RedirectToHttps' => new SettingsProperty('RedirectToHttps', false, 'bool'),
 
-			'PasswordMinLength' => new CApiSettingsProperty('PasswordMinLength', 0, 'int'),
-			'PasswordMustBeComplex' => new CApiSettingsProperty('PasswordMustBeComplex', false, 'bool')
+			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
+			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool')
 		);		
 	}
 
@@ -407,7 +409,7 @@ class CApiSystemSettings extends CApiSettings
 /**
  * @package Api
  */
-class CApiModuleSettings extends CApiSettings
+class ModuleSettings extends Settings
 {
 	public $ModuleName;
 	
@@ -417,21 +419,21 @@ class CApiModuleSettings extends CApiSettings
 	public function __construct($sModuleName)
 	{
 		$this->ModuleName = $sModuleName;
-		$sConfigFilePath = \CApi::DataPath() . '/settings/modules/' . $sModuleName . '.config.json';
+		$sConfigFilePath = \Aurora\System\Api::DataPath() . '/settings/modules/' . $sModuleName . '.config.json';
 		if (!file_exists($sConfigFilePath))
 		{
-			$sDefaultConfigFilePath = \CApi::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
+			$sDefaultConfigFilePath = \Aurora\System\Api::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
 			if (file_exists($sDefaultConfigFilePath))
 			{
 				copy($sDefaultConfigFilePath, $sConfigFilePath);
 			}
 		}
 
-		parent::__construct(\CApi::DataPath() . '/settings/modules/' . $sModuleName . '.config.json');
+		parent::__construct(\Aurora\System\Api::DataPath() . '/settings/modules/' . $sModuleName . '.config.json');
 	}
 }	
 
 /**
  * @package Api
  */
-class CApiSettingsException extends Exception {}
+class SettingsException extends Exception {}

@@ -20,6 +20,7 @@
 /**
  * @package Api
  */
+
 class CEntity
 {
 	/**
@@ -367,7 +368,7 @@ class CEntity
 		{
 			$this->aMap = array_merge(
 				$this->getStaticMap(), 
-				\CApi::GetModuleManager()->getExtendedObject($this->getName())
+				\Aurora\System\Api::GetModuleManager()->getExtendedObject($this->getName())
 			);
 		}
 		return $this->aMap;
@@ -464,7 +465,7 @@ class CEntity
 			$mValue = $oAttribute->Value;
 			if ($this->isEncryptedAttribute($oAttribute->Name))
 			{
-				$mValue = \api_Utils::DecryptValue($oAttribute->Value);
+				$mValue = \Aurora\System\Utils::DecryptValue($oAttribute->Value);
 			}
 
 			$aResult[$oAttribute->Name] = $mValue;
@@ -630,7 +631,7 @@ class CAttribute
 				$iSize = substr($sType, 7, -1);
 				if (is_numeric($iSize) && (int) $iSize < strlen($this->Value))
 				{
-					$this->Value = api_Utils::Utf8Truncate($this->Value, (int) $iSize);
+					$this->Value = \Aurora\System\Utils::Utf8Truncate($this->Value, (int) $iSize);
 				}
 			}
 		}
@@ -659,7 +660,7 @@ class CAttribute
 	{
 		if (!empty($this->Value) && !$this->Encrypted)
 		{
-			$this->Value = \api_Utils::EncryptValue($this->Value);
+			$this->Value = \Aurora\System\Utils::EncryptValue($this->Value);
 			$this->Encrypted = true;
 		}
 	}
@@ -668,7 +669,7 @@ class CAttribute
 	{
 		if ($this->Encrypted)
 		{
-			$this->Value = \api_Utils::DecryptValue($this->Value);
+			$this->Value = \Aurora\System\Utils::DecryptValue($this->Value);
 			$this->Encrypted = false;
 		}
 	}	

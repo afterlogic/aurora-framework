@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('db.helper');
+\Aurora\System\Api::Inc('db.helper');
 
 /**
  * @package Api

@@ -21,7 +21,10 @@
  * @package Api
  * @subpackage Db
  */
-interface IDbHelper
+
+namespace Aurora\System\Db;
+
+interface IHelper
 {
 	/**
 	 * @param string $sValue

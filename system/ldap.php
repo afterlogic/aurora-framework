@@ -92,13 +92,13 @@ class CLdapConnector
 	{
 		if (!extension_loaded('ldap'))
 		{
-			CApi::Log('LDAP: Can\'t load LDAP extension.', ELogLevel::Error);
+			\Aurora\System\Api::Log('LDAP: Can\'t load LDAP extension.', ELogLevel::Error);
 			return false;
 		}
 
 		if (!is_resource($this->rLink))
 		{
-			CApi::Log('LDAP: connect to '.$sHost.':'.$iPort);
+			\Aurora\System\Api::Log('LDAP: connect to '.$sHost.':'.$iPort);
 			
 			$rLink = @ldap_connect($sHost, $iPort);
 			if ($rLink)
@@ -107,7 +107,7 @@ class CLdapConnector
 				@ldap_set_option($rLink, LDAP_OPT_REFERRALS, 0);
 				@ldap_set_option($rLink, LDAP_SCOPE_SUBTREE, 0);
 				
-				CApi::Log('LDAP: bind = "'.$sBindDb.'" / "'.$sBindPassword.'"');
+				\Aurora\System\Api::Log('LDAP: bind = "'.$sBindDb.'" / "'.$sBindPassword.'"');
 				if (0 < strlen($sBindDb) && 0 < strlen($sBindPassword) ?
 					!@ldap_bind($rLink, $sBindDb, $sBindPassword) : !@ldap_bind($rLink)
 				)
@@ -154,7 +154,7 @@ class CLdapConnector
 	{
 		if (is_resource($this->rLink))
 		{
-			CApi::Log('LDAP: rebind '.$sBindDb);
+			\Aurora\System\Api::Log('LDAP: rebind '.$sBindDb);
 
 			if (!@ldap_bind($this->rLink, $sBindDb, $sBindPassword))
 			{
@@ -180,11 +180,11 @@ class CLdapConnector
 		{
 			if ($this->rLink)
 			{
-				CApi::Log('LDAP: error #'.@ldap_errno($this->rLink).': '.@ldap_error($this->rLink), ELogLevel::Error);
+				\Aurora\System\Api::Log('LDAP: error #'.@ldap_errno($this->rLink).': '.@ldap_error($this->rLink), ELogLevel::Error);
 			}
 			else
 			{
-				CApi::Log('LDAP: unknown ldap error', ELogLevel::Error);
+				\Aurora\System\Api::Log('LDAP: unknown ldap error', ELogLevel::Error);
 			}
 		}
 
@@ -199,14 +199,14 @@ class CLdapConnector
 	{
 		if ($this->rSearch && $this->sLastRequest === $this->sSearchDN.$sObjectFilter)
 		{
-			CApi::Log('LDAP: search repeat = "'.$this->sSearchDN.'" / '.$sObjectFilter);
+			\Aurora\System\Api::Log('LDAP: search repeat = "'.$this->sSearchDN.'" / '.$sObjectFilter);
 
 			$this->validateLdapErrorOnFalse($this->rSearch);
 			return is_resource($this->rSearch);
 		}
 		else
 		{
-			CApi::Log('LDAP: search = "'.$this->sSearchDN.'" / '.$sObjectFilter);
+			\Aurora\System\Api::Log('LDAP: search = "'.$this->sSearchDN.'" / '.$sObjectFilter);
 			$this->rSearch = @ldap_search($this->rLink, $this->sSearchDN, $sObjectFilter, array('*'), 0, 3000);
 
 			$this->validateLdapErrorOnFalse($this->rSearch);
@@ -223,8 +223,8 @@ class CLdapConnector
 	 */
 	public function Add($sNewDn, $aEntry)
 	{
-		CApi::Log('ldap_add = '.((empty($sNewDn) ? '' : $sNewDn.',').$this->sSearchDN));
-		CApi::LogObject($aEntry);
+		\Aurora\System\Api::Log('ldap_add = '.((empty($sNewDn) ? '' : $sNewDn.',').$this->sSearchDN));
+		\Aurora\System\Api::LogObject($aEntry);
 
 		$bResult = !!@ldap_add($this->rLink, (empty($sNewDn) ? '' : $sNewDn.',').$this->sSearchDN, $aEntry);
 		$this->validateLdapErrorOnFalse($bResult);
@@ -240,7 +240,7 @@ class CLdapConnector
 		$bResult = false;
 		if (!empty($sDeleteDn))
 		{
-			CApi::Log('ldap_delete = '.($sDeleteDn.','.$this->sSearchDN));
+			\Aurora\System\Api::Log('ldap_delete = '.($sDeleteDn.','.$this->sSearchDN));
 			$bResult = !!@ldap_delete($this->rLink, $sDeleteDn.','.$this->sSearchDN);
 			$this->validateLdapErrorOnFalse($bResult);
 		}
@@ -261,8 +261,8 @@ class CLdapConnector
 				$sModifyDn = $sModifyDn.','.$this->sSearchDN;
 			}
 			
-			CApi::Log('ldap_modify = '.$sModifyDn);
-			CApi::LogObject($aModifyEntry);
+			\Aurora\System\Api::Log('ldap_modify = '.$sModifyDn);
+			\Aurora\System\Api::LogObject($aModifyEntry);
 
 			$bResult = !!@ldap_modify($this->rLink, $sModifyDn, $aModifyEntry);
 			$this->validateLdapErrorOnFalse($bResult);

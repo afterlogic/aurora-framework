@@ -17,13 +17,15 @@
  * 
  */
 
-CApi::Inc('db.sql');
+\Aurora\System\Api::Inc('db.sql');
+
+use Aurora\System\Db;
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CDbPdoPostgres extends CDbSql
+class PdoPostgres extends Sql
 {
 	/**
 	 * @var bool
@@ -64,8 +66,8 @@ class CDbPdoPostgres extends CDbSql
 		$this->rResultId = null;
 
 		$this->iExecuteCount = 0;
-		$this->bUseExplain =\CApi::GetConf('labs.db.use-explain', false);
-		$this->bUseExplainExtended =\CApi::GetConf('labs.db.use-explain-extended', false);
+		$this->bUseExplain =\Aurora\System\Api::GetConf('labs.db.use-explain', false);
+		$this->bUseExplainExtended =\Aurora\System\Api::GetConf('labs.db.use-explain-extended', false);
 	}
 
 	/**
@@ -93,23 +95,23 @@ class CDbPdoPostgres extends CDbSql
 	{
 		if (!class_exists('PDO'))
 		{
-			throw new CApiDbException('Can\'t load PDO extension.', 0);
+			throw new \CApiDbException('Can\'t load PDO extension.', 0);
 		}
 
 		$mPdoDrivers = PDO::getAvailableDrivers();
 		if (!is_array($mPdoDrivers) || !in_array('pgsql', $mPdoDrivers))
 		{
-			throw new CApiDbException('Can\'t load PDO postgresql driver.', 0);
+			throw new \CApiDbException('Can\'t load PDO postgresql driver.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
 		{
-			throw new CApiDbException('Not enough details required to establish connection.', 0);
+			throw new \CApiDbException('Not enough details required to establish connection.', 0);
 		}
 
-		if (CApi::$bUseDbLog)
+		if (\Aurora\System\Api::$bUseDbLog)
 		{
-			CApi::Log('DB(PDO/postgresql) : start connect to '.$this->sUser.'@'.$this->sHost);
+			\Aurora\System\Api::Log('DB(PDO/postgresql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 
 		$aPDOAttr = array(PDO::ATTR_TIMEOUT => 5, PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
@@ -166,15 +168,15 @@ class CDbPdoPostgres extends CDbSql
 				}
 
 				$sPdoString = 'pgsql:'.implode(';', $aParts);
-				if (CApi::$bUseDbLog)
+				if (\Aurora\System\Api::$bUseDbLog)
 				{
-					CApi::Log('DB : PDO('.$sPdoString.')');
+					\Aurora\System\Api::Log('DB : PDO('.$sPdoString.')');
 				}
 				
 				$this->oPDO = @new PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
-				if (CApi::$bUseDbLog)
+				if (\Aurora\System\Api::$bUseDbLog)
 				{
-					CApi::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
+					\Aurora\System\Api::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
 				}
 
 				if ($this->oPDO)
@@ -228,9 +230,9 @@ class CDbPdoPostgres extends CDbSql
 
 			$this->rResultId = null;
 
-			if (CApi::$bUseDbLog)
+			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				CApi::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Api::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
 			}
 
 			unset($this->oPDO);
@@ -394,7 +396,7 @@ class CDbPdoPostgres extends CDbSql
 		}
 		catch( Exception $e)
 		{
-			CApi::LogException($e);
+			\Aurora\System\Api::LogException($e);
 		}
 		
 		return 0;
@@ -536,7 +538,7 @@ class CDbPdoPostgres extends CDbSql
 		if (0 < strlen($this->ErrorDesc))
 		{
 			$this->errorLog($this->ErrorDesc);
-			throw new CApiDbException($this->ErrorDesc, $this->ErrorCode);
+			throw new \CApiDbException($this->ErrorDesc, $this->ErrorCode);
 		}
 	}
 }

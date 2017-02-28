@@ -62,8 +62,8 @@ abstract class CApiNetAbstract
 	 */
 	public function __construct($sHost, $iPort, $bUseSsl = false, $iConnectTimeOut = null, $iSocketTimeOut = null)
 	{
-		$iConnectTimeOut = (null === $iConnectTimeOut) ?\CApi::GetConf('socket.connect-timeout', 5) : $iConnectTimeOut;
-		$iSocketTimeOut = (null === $iSocketTimeOut) ?\CApi::GetConf('socket.get-timeout', 5) : $iSocketTimeOut;
+		$iConnectTimeOut = (null === $iConnectTimeOut) ?\Aurora\System\Api::GetConf('socket.connect-timeout', 5) : $iConnectTimeOut;
+		$iSocketTimeOut = (null === $iSocketTimeOut) ?\Aurora\System\Api::GetConf('socket.get-timeout', 5) : $iSocketTimeOut;
 
 		$this->sHost = $sHost;
 		$this->iPort = $iPort;
@@ -81,7 +81,7 @@ abstract class CApiNetAbstract
 
 		if ($this->IsConnected())
 		{
-			CApi::Log('already connected['.$sHost.':'.$this->iPort.']: result = false', ELogLevel::Error);
+			\Aurora\System\Api::Log('already connected['.$sHost.':'.$this->iPort.']: result = false', ELogLevel::Error);
 
 			$this->Disconnect();
 			return false;
@@ -90,17 +90,17 @@ abstract class CApiNetAbstract
 		$sErrorStr = '';
 		$iErrorNo = 0;
 
-		CApi::Log('start connect to '.$sHost.':'.$this->iPort);
+		\Aurora\System\Api::Log('start connect to '.$sHost.':'.$this->iPort);
 		$this->rConnect = @fsockopen($sHost, $this->iPort, $iErrorNo, $sErrorStr, $this->iConnectTimeOut);
 
 		if (!$this->IsConnected())
 		{
-			CApi::Log('connection error['.$sHost.':'.$this->iPort.']: fsockopen = false ('.$iErrorNo.': '.$sErrorStr.')', ELogLevel::Error);
+			\Aurora\System\Api::Log('connection error['.$sHost.':'.$this->iPort.']: fsockopen = false ('.$iErrorNo.': '.$sErrorStr.')', ELogLevel::Error);
 			return false;
 		}
 		else
 		{
-			CApi::Log('connected');
+			\Aurora\System\Api::Log('connected');
 		}
 
 		if (\MailSo\Base\Utils::FunctionExistsAndEnabled('stream_set_timeout'))
@@ -123,7 +123,7 @@ abstract class CApiNetAbstract
 	{
 		if ($this->IsConnected())
 		{
-			CApi::Log('disconnect from '.$this->sHost.':'.$this->iPort);
+			\Aurora\System\Api::Log('disconnect from '.$this->sHost.':'.$this->iPort);
 			@fclose($this->rConnect);
 		}
 		$this->rConnect = null;
@@ -152,18 +152,18 @@ abstract class CApiNetAbstract
 	public function ReadLine()
 	{
 		$sLine = @fgets($this->rConnect, 4096);
-		CApi::Log('NET < '.api_Utils::ShowCRLF($sLine));
+		\Aurora\System\Api::Log('NET < '.\Aurora\System\Utils::ShowCRLF($sLine));
 
 		if (false === $sLine)
 		{
 		    $aSocketStatus = @socket_get_status($this->rConnect);
 		    if (isset($aSocketStatus['timed_out']) && $aSocketStatus['timed_out'])
 		    {
-				CApi::Log('NET[Error] < Socket timeout reached during connection.', ELogLevel::Error);
+				\Aurora\System\Api::Log('NET[Error] < Socket timeout reached during connection.', ELogLevel::Error);
 		    }
 			else
 			{
-				CApi::Log('NET[Error] < fgets = false', ELogLevel::Error);
+				\Aurora\System\Api::Log('NET[Error] < fgets = false', ELogLevel::Error);
 			}
 		}
 
@@ -180,11 +180,11 @@ abstract class CApiNetAbstract
 		$sLogLine = (0 < count($aHideValues))
 			? str_replace($aHideValues, '*******', $sLine) : $sLine;
 
-		CApi::Log('NET > '.api_Utils::ShowCRLF($sLogLine));
+		\Aurora\System\Api::Log('NET > '.\Aurora\System\Utils::ShowCRLF($sLogLine));
 
 		if (!@fputs($this->rConnect, $sLine))
 		{
-			CApi::Log('NET[Error] < Could not send user request', ELogLevel::Error);
+			\Aurora\System\Api::Log('NET[Error] < Could not send user request', ELogLevel::Error);
 			return false;
 		}
 

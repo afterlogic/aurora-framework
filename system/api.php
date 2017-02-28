@@ -19,18 +19,20 @@
 
 use UndersSystemTypes\Arrays;
 
+namespace Aurora\System;
+
 /**
  * @package Api
  */
-class CApi
+class Api
 {
 	/**
-	 * @var CApiGlobalManager
+	 * @var \Aurora\System\GlobalManager
 	 */
 	static $oManager;
 
 	/**
-	 * @var CApiModuleManager
+	 * @var \Aurora\System\ModuleManager
 	 */
 	static $oModuleManager;
 
@@ -90,18 +92,18 @@ class CApi
 		
 		if ($bGrantAdminPrivileges)
 		{
-			\CApi::$aUserSession['UserId'] = -1;
-			\CApi::$aUserSession['AuthToken'] = '';
+			self::$aUserSession['UserId'] = -1;
+			self::$aUserSession['AuthToken'] = '';
 		}
 
-		CApi::$aI18N = null;
-		CApi::$aClientI18N = array();
-		CApi::$aSecretWords = array();
-		CApi::$bUseDbLog = false;
+		self::$aI18N = null;
+		self::$aClientI18N = array();
+		self::$aSecretWords = array();
+		self::$bUseDbLog = false;
 
-		if (!is_object(CApi::$oManager)) 
+		if (!is_object(self::$oManager)) 
 		{
-			CApi::IncArray(array(
+			self::IncArray(array(
 				'functions',
 				'constants',
 				'enum',
@@ -122,7 +124,7 @@ class CApi
 				'user-session'
 			));
 			$sSalt = '';
-			$sSaltFile =\CApi::DataPath().'/salt.php';
+			$sSaltFile = self::DataPath().'/salt.php';
 			if (!@file_exists($sSaltFile)) 
 			{
 				$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
@@ -133,16 +135,16 @@ class CApi
 				$sSalt = '$2y$07$' . md5(file_get_contents($sSaltFile)) . '$';
 			}
 
-			CApi::$sSalt = $sSalt;
-			CApi::$aConfig = include\CApi::RootPath().'config.php';
+			self::$sSalt = $sSalt;
+			self::$aConfig = include self::RootPath().'config.php';
 			
-			$sSettingsFile =\CApi::DataPath().'/settings/config.php';
+			$sSettingsFile = self::DataPath().'/settings/config.php';
 			if (@file_exists($sSettingsFile))
 			{
 				$aAppConfig = include $sSettingsFile;
 				if (is_array($aAppConfig))
 				{
-					CApi::$aConfig = array_merge(CApi::$aConfig, $aAppConfig);
+					self::$aConfig = array_merge(self::$aConfig, $aAppConfig);
 				}
 			}
 
@@ -150,21 +152,21 @@ class CApi
 			
 			if (0 < \strlen($sHost))
 			{
-				$sHostConfigFile =\CApi::DataPath().'/settings/'.$sHost.'.config.php';
+				$sHostConfigFile = self::DataPath().'/settings/'.$sHost.'.config.php';
 				if (@file_exists($sHostConfigFile))
 				{
 					$aHostConfig = include $sHostConfigFile;
 					if (is_array($aHostConfig))
 					{
-						CApi::$aConfig = array_merge(CApi::$aConfig, $aHostConfig);
+						self::$aConfig = array_merge(self::$aConfig, $aHostConfig);
 					}
 				}
 			}
 
-			CApi::$oManager = new CApiGlobalManager();
-			CApi::$bIsValid =\CApi::validateApi();
-			CApi::GetModuleManager();
-			CApi::$aModuleDecorators = array();
+			self::$oManager = new GlobalManager();
+			self::$bIsValid = self::validateApi();
+			self::GetModuleManager();
+			self::$aModuleDecorators = array();
 		}
 	}
 
@@ -187,8 +189,8 @@ class CApi
 	 */
 	public static function EncodeKeyValues(array $aValues, $iSaltLen = 32)
 	{
-		return api_Utils::UrlSafeBase64Encode(
-			api_Crypt::XxteaEncrypt(serialize($aValues), substr(md5(self::$sSalt), 0, $iSaltLen)));
+		return \Aurora\System\Utils::UrlSafeBase64Encode(
+			\api_Crypt::XxteaEncrypt(\serialize($aValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
 	}
 
 	/**
@@ -197,10 +199,10 @@ class CApi
 	public static function DecodeKeyValues($sEncodedValues, $iSaltLen = 32)
 	{
 		$aResult = unserialize(
-			api_Crypt::XxteaDecrypt(
-				api_Utils::UrlSafeBase64Decode($sEncodedValues), substr(md5(self::$sSalt), 0, $iSaltLen)));
+			\api_Crypt::XxteaDecrypt(
+				\Aurora\System\Utils::UrlSafeBase64Decode($sEncodedValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
 
-		return is_array($aResult) ? $aResult : array();
+		return \is_array($aResult) ? $aResult : array();
 	}
 
 	/**
@@ -209,7 +211,7 @@ class CApi
 	 */
 	public static function Manager($sManagerType, $sForcedStorage = '')
 	{
-		return\CApi::$oManager->GetByType($sManagerType, $sForcedStorage);
+		return self::$oManager->GetByType($sManagerType, $sForcedStorage);
 	}
 
 	/**
@@ -218,18 +220,18 @@ class CApi
 	 */
 	public static function GetSystemManager($sManagerType, $sForcedStorage = 'db')
 	{
-		return\CApi::Manager($sManagerType, $sForcedStorage);
+		return self::Manager($sManagerType, $sForcedStorage);
 	}
 
 	public static function GetModuleManager()
 	{
-		if (!isset(CApi::$oModuleManager))
+		if (!isset(self::$oModuleManager))
 		{
-			CApi::$oModuleManager = CApiModuleManager::createInstance();
-			CApi::$oModuleManager->init();
+			self::$oModuleManager = \Aurora\System\ModuleManager::createInstance();
+			self::$oModuleManager->init();
 		}
 		
-		return\CApi::$oModuleManager;
+		return self::$oModuleManager;
 	}
 	
 	/**
@@ -240,12 +242,12 @@ class CApi
 	 */
 	public static function GetModuleDecorator($sModuleName, $iUser = null)
 	{
-		if (!isset(CApi::$aModuleDecorators[$sModuleName]))
+		if (!isset(self::$aModuleDecorators[$sModuleName]))
 		{
-			CApi::$aModuleDecorators[$sModuleName] = new \CApiModuleDecorator($sModuleName, $iUser);
+			self::$aModuleDecorators[$sModuleName] = new ModuleDecorator($sModuleName, $iUser);
 		}
 		
-		return\CApi::$aModuleDecorators[$sModuleName];
+		return self::$aModuleDecorators[$sModuleName];
 	}
 
 	public static function GetModule($sModuleName)
@@ -259,18 +261,18 @@ class CApi
 	}	
 	
 	/**
-	 * @return CApiGlobalManager
+	 * @return \Aurora\System\GlobalManager
 	 */
 	public static function GetManager()
 	{
-		return\CApi::$oManager;
+		return self::$oManager;
 	}
 
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
-		list($sModuleName, $sMethodName) = explode(\AApiModule::$Delimiter, $sMethodName);
-		$oModule =\CApi::GetModule($sModuleName);
-		if ($oModule instanceof AApiModule)
+		list($sModuleName, $sMethodName) = explode(\Aurora\System\AbstractModule::$Delimiter, $sMethodName);
+		$oModule = self::GetModule($sModuleName);
+		if ($oModule instanceof \Aurora\System\AbstractModule)
 		{
 			return $oModule->CallMethod($sModuleName, $sMethodName, $aParameters);
 		}
@@ -285,7 +287,7 @@ class CApi
 		if (null === $oCacher)
 		{
 			$oCacher = \MailSo\Cache\CacheClient::NewInstance();
-			$oCacher->SetDriver(\MailSo\Cache\Drivers\File::NewInstance(CApi::DataPath().'/cache'));
+			$oCacher->SetDriver(\MailSo\Cache\Drivers\File::NewInstance(self::DataPath().'/cache'));
 			$oCacher->SetCacheIndex(self::Version());
 		}
 
@@ -300,7 +302,7 @@ class CApi
 		static $oSession = null;
 		if (null === $oSession)
 		{
-			$oSession = new \CApiUserSession();
+			$oSession = new UserSession();
 		}
 
 		return $oSession;
@@ -311,7 +313,7 @@ class CApi
 	 */
 	public static function &GetSettings()
 	{
-		return\CApi::$oManager->GetSettings();
+		return self::$oManager->GetSettings();
 	}
 
 	/**
@@ -321,7 +323,7 @@ class CApi
 	 */
 	public static function GetSettingsConf($sKey)
 	{
-		$oSettings =&\CApi::GetSettings();
+		$oSettings = &self::GetSettings();
 		return $oSettings->GetConf($sKey);
 	}
 
@@ -336,7 +338,7 @@ class CApi
 			return $oPdoCache;
 		}
 
-		$oSettings =&\CApi::GetSettings();
+		$oSettings = &self::GetSettings();
 
 		$sDbPort = '';
 		$sUnixSocket = '';
@@ -363,23 +365,23 @@ class CApi
 		if (class_exists('PDO')) {
 			try
 			{
-				$oPdo = @new PDO((EDbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
+				$oPdo = @new \PDO((\EDbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
 					(empty($sDbHost) ? '' : ';host='.$sDbHost).
 					(empty($sDbPort) ? '' : ';port='.$sDbPort).
 					(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
 
 				if ($oPdo) {
-					$oPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 				}
 			}
-			catch (Exception $oException)
+			catch (\Exception $oException)
 			{
-				self::Log($oException->getMessage(), ELogLevel::Error);
-				self::Log($oException->getTraceAsString(), ELogLevel::Error);
+				self::Log($oException->getMessage(), \ELogLevel::Error);
+				self::Log($oException->getTraceAsString(), \ELogLevel::Error);
 				$oPdo = false;
 			}
 		} else {
-			self::Log('Class PDO dosn\'t exist', ELogLevel::Error);
+			self::Log('Class PDO dosn\'t exist', \ELogLevel::Error);
 		}
 
 		if (false !== $oPdo) {
@@ -395,10 +397,10 @@ class CApi
 	public static function IsMobileApplication()
 	{
 		/* @var $oApiIntegrator \CApiIntegratorManager */
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
+		$oApiIntegrator = self::GetSystemManager('integrator');
 
 		/* @var $oApiCapability \CApiCapabilityManager */
-		$oApiCapability = \CApi::GetSystemManager('capability');
+		$oApiCapability = self::GetSystemManager('capability');
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
 	}
@@ -435,7 +437,7 @@ class CApi
 	 */
 	public static function IsMainModule()
 	{
-		return !CApi::IsMobileApplication() && !CApi::IsHelpdeskModule() && !CApi::IsCalendarPubModule() && !CApi::IsFilesPubModule();
+		return !self::IsMobileApplication() && !self::IsHelpdeskModule() && !self::IsCalendarPubModule() && !self::IsFilesPubModule();
 	}
 
 	/**
@@ -445,7 +447,7 @@ class CApi
 	 */
 	public static function GetConf($sKey, $mDefault = null)
 	{
-		return (isset(CApi::$aConfig[$sKey])) ?\CApi::$aConfig[$sKey] : $mDefault;
+		return (isset(self::$aConfig[$sKey])) ?self::$aConfig[$sKey] : $mDefault;
 	}
 
 	/**
@@ -455,7 +457,7 @@ class CApi
 	 */
 	public static function SetConf($sKey, $mValue)
 	{
-		CApi::$aConfig[$sKey] = $mValue;
+		self::$aConfig[$sKey] = $mValue;
 	}
 
 	/**
@@ -464,7 +466,7 @@ class CApi
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return\CApi::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
+		return self::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
 	/**
@@ -473,7 +475,7 @@ class CApi
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		return\CApi::IncPath('managers.'.$sManagerName.'.'.$sFileName);
+		return self::IncPath('managers.'.$sManagerName.'.'.$sFileName);
 	}
 
 	/**
@@ -483,7 +485,7 @@ class CApi
 	{
 		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
 		$sStorageName = preg_replace('/[^a-z]/', '', strtolower($sStorageName));
-		return\CApi::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
+		return self::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
 	}
 
 	/**
@@ -495,7 +497,7 @@ class CApi
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
 
-		return\CApi::RootPath().$sFileName.'.php';
+		return self::RootPath().$sFileName.'.php';
 	}
 	
 	/**
@@ -514,7 +516,7 @@ class CApi
 		if (isset($aCache[$sFileName])) {
 			return true;
 		} else {
-			$sFileFullPath =\CApi::RootPath().$sFileName.'.php';
+			$sFileFullPath = self::RootPath().$sFileName.'.php';
 			if (@file_exists($sFileFullPath)) {
 				$aCache[$sFileName] = true;
 				include_once $sFileFullPath;
@@ -550,7 +552,7 @@ class CApi
 	 */
 	public static function Location($sNewLocation)
 	{
-		CApi::Log('Location: '.$sNewLocation);
+		self::Log('Location: '.$sNewLocation);
 		@header('Location: '.$sNewLocation);
 	}
 	
@@ -568,7 +570,7 @@ class CApi
 	 */
 	public static function LogEvent($sDesc, $mAccount = null)
 	{
-		$oSettings =&\CApi::GetSettings();
+		$oSettings = &self::GetSettings();
 		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) 
 		{
 			$sDate = gmdate('H:i:s');
@@ -577,8 +579,8 @@ class CApi
 			$sAccount = $mAccount instanceof \CAccount ? $mAccount->Email :
 				(is_string($mAccount) ? $mAccount : 'unknown');
 
-			CApi::Log('Event: '.$sAccount.' > '.$sDesc);
-			CApi::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, self::GetLogFileDir().self::GetLogFileName('event-'));
+			self::Log('Event: '.$sAccount.' > '.$sDesc);
+			self::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, self::GetLogFileDir().self::GetLogFileName('event-'));
 		}
 	}
 
@@ -587,9 +589,9 @@ class CApi
 	 * @param int $iLogLevel = ELogLevel::Full
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogObject($mObject, $iLogLevel = ELogLevel::Full, $sFilePrefix = '')
+	public static function LogObject($mObject, $iLogLevel = \ELogLevel::Full, $sFilePrefix = '')
 	{
-		CApi::Log(print_r($mObject, true), $iLogLevel, $sFilePrefix);
+		self::Log(print_r($mObject, true), $iLogLevel, $sFilePrefix);
 	}
 
 	/**
@@ -597,7 +599,7 @@ class CApi
 	 * @param int $iLogLevel = ELogLevel::Error
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogException($mObject, $iLogLevel = ELogLevel::Error, $sFilePrefix = '')
+	public static function LogException($mObject, $iLogLevel = \ELogLevel::Error, $sFilePrefix = '')
 	{
 		$sDesc = (string) $mObject;
 		if (0 < \count(self::$aSecretWords)) 
@@ -605,7 +607,7 @@ class CApi
 			$sDesc = \str_replace(self::$aSecretWords, '*******', $sDesc);
 		}
 		
-		CApi::Log($sDesc, $iLogLevel, $sFilePrefix);
+		self::Log($sDesc, $iLogLevel, $sFilePrefix);
 	}
 
 	/**
@@ -615,7 +617,7 @@ class CApi
 	 */
 	public static function GetLogFileName($sFilePrefix = '')
 	{
-		$oSettings =& \CApi::GetSettings();
+		$oSettings =& self::GetSettings();
 
 		$sFileName = "log.txt";
 		
@@ -636,10 +638,10 @@ class CApi
 
 		if (null === $sLogDir) 
 		{
-			$oSettings =& \CApi::GetSettings();
+			$oSettings =& self::GetSettings();
 
 			$sS = $oSettings->GetConf('LogCustomFullPath', '');
-			$sLogDir = empty($sS) ?\CApi::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
+			$sLogDir = empty($sS) ?self::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
 		}
 		
 		if (null === $bDir) 
@@ -661,11 +663,11 @@ class CApi
 	{
 		if ($bOn) 
 		{
-			@setcookie('SpecifiedUserLogging', '1', 0,\CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
+			@setcookie('SpecifiedUserLogging', '1', 0,self::GetConf('labs.app-cookie-path', '/'), null, null, true);
 		} 
 		else 
 		{
-			@setcookie('SpecifiedUserLogging', '0', 0,\CApi::GetConf('labs.app-cookie-path', '/'), null, null, true);
+			@setcookie('SpecifiedUserLogging', '0', 0,self::GetConf('labs.app-cookie-path', '/'), null, null, true);
 		}
 	}
 	
@@ -680,7 +682,7 @@ class CApi
 			$oLogger = \MailSo\Log\Logger::NewInstance()
 				->Add(
 					\MailSo\Log\Drivers\Callback::NewInstance(function ($sDesc) {
-						CApi::Log($sDesc);
+						self::Log($sDesc);
 					})->DisableTimePrefix()->DisableGuidPrefix()
 				)
 				->AddForbiddenType(\MailSo\Log\Enumerations\Type::TIME)
@@ -700,7 +702,7 @@ class CApi
 		
 		if (null === $iDbBacktraceCount) 
 		{
-			$iDbBacktraceCount = (int)\CApi::GetConf('labs.db-debug-backtrace-limit', 0);
+			$iDbBacktraceCount = (int)self::GetConf('labs.db-debug-backtrace-limit', 0);
 			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
 			{
 				$iDbBacktraceCount = 0;
@@ -769,15 +771,15 @@ class CApi
 	 * @param string $sFilePrefix = ''
 	 * @param bool $bIdDb = false
 	 */
-	public static function Log($sDesc, $iLogLevel = ELogLevel::Full, $sFilePrefix = '')
+	public static function Log($sDesc, $iLogLevel = \ELogLevel::Full, $sFilePrefix = '')
 	{
 		static $bIsFirst = true;
 
-		$oSettings =&\CApi::GetSettings();
+		$oSettings = &self::GetSettings();
 
 		if ($oSettings && $oSettings->GetConf('EnableLogging') &&
 			($iLogLevel <= $oSettings->GetConf('LoggingLevel') ||
-			(ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
+			(\ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
 				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging']))) 
 		{
 			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFilePrefix);
@@ -787,28 +789,28 @@ class CApi
 			$sDate = gmdate('H:i:s.').str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
 			if ($bIsFirst) 
 			{
-				$sUri = api_Utils::RequestUri();
+				$sUri = \Aurora\System\Utils::RequestUri();
 				$bIsFirst = false;
 				$sPost = (isset($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
 
-				CApi::LogOnly(API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
+				self::LogOnly(API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
 				if (!empty($sPost)) 
 				{
-					if (CApi::GetConf('labs.log.post-view', false)) 
+					if (self::GetConf('labs.log.post-view', false)) 
 					{
-						CApi::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
+						self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
 					} 
 					else 
 					{
-						CApi::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
+						self::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
 					}
 				}
-				CApi::LogOnly('['.$sDate.']['.$sGuid.']', $sLogFile);
+				self::LogOnly('['.$sDate.']['.$sGuid.']', $sLogFile);
 
-//				@register_shutdown_function('CApi::LogEnd');
+//				@register_shutdown_function('self::LogEnd');
 			}
 
-			CApi::LogOnly('['.$sDate.']['.$sGuid.'] '.(is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
+			self::LogOnly('['.$sDate.']['.$sGuid.'] '.(is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
 		}
 	}
 
@@ -829,7 +831,7 @@ class CApi
 
 	public static function LogEnd()
 	{
-		CApi::Log('# script shutdown');
+		self::Log('# script shutdown');
 	}
 	
 	public static function ClearLog($sFileFullPath)
@@ -852,7 +854,7 @@ class CApi
 	 */
 	public static function WebMailPath()
 	{
-		return\CApi::RootPath().ltrim(API_PATH_TO_AURORA, '/');
+		return self::RootPath().ltrim(API_PATH_TO_AURORA, '/');
 	}
 
 	/**
@@ -860,7 +862,7 @@ class CApi
 	 */
 	public static function LibrariesPath()
 	{
-		return\CApi::RootPath().'../vendor/';
+		return self::RootPath().'../vendor/';
 	}
 
 	/**
@@ -871,7 +873,7 @@ class CApi
 		static $sVersion = null;
 		if (null === $sVersion) 
 		{
-			$sAppVersion = @file_get_contents(CApi::WebMailPath().'VERSION');
+			$sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
 			$sVersion = (false === $sAppVersion) ? '0.0.0' : $sAppVersion;
 		}
 		return $sVersion;
@@ -882,8 +884,8 @@ class CApi
 	 */
 	public static function VersionJs()
 	{
-		return preg_replace('/[^0-9a-z]/', '',\CApi::Version().
-			(CApi::GetConf('labs.cache.static', true) ? '' : '-'.md5(time())));
+		return preg_replace('/[^0-9a-z]/', '',self::Version().
+			(self::GetConf('labs.cache.static', true) ? '' : '-'.md5(time())));
 	}
 
 	/**
@@ -892,14 +894,14 @@ class CApi
 	public static function DataPath()
 	{
 		$dataPath = 'data';
-		if (!defined('API_DATA_FOLDER') && @file_exists(CApi::WebMailPath().'inc_settings_path.php')) 
+		if (!defined('API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) 
 		{
-			include\CApi::WebMailPath().'inc_settings_path.php';
+			include self::WebMailPath().'inc_settings_path.php';
 		}
 
 		if (!defined('API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
 		{
-			define('API_DATA_FOLDER', api_Utils::GetFullPath($dataPath,\CApi::WebMailPath()));
+			define('API_DATA_FOLDER', \Aurora\System\Utils::GetFullPath($dataPath,self::WebMailPath()));
 		}
 
 		return defined('API_DATA_FOLDER') ? API_DATA_FOLDER : '';
@@ -912,8 +914,8 @@ class CApi
 	{
 		$iResult = 1;
 
-		$oSettings =&\CApi::GetSettings();
-		$iResult &= $oSettings && ($oSettings instanceof CApiSettings);
+		$oSettings = &self::GetSettings();
+		$iResult &= $oSettings && ($oSettings instanceof \Aurora\System\Settings);
 
 		return (bool) $iResult;
 	}
@@ -923,7 +925,7 @@ class CApi
 	 */
 	public static function IsValid()
 	{
-		return (bool)\CApi::$bIsValid;
+		return (bool)self::$bIsValid;
 	}
 
 	/**
@@ -936,7 +938,7 @@ class CApi
 	{
 		$sSsoHash = \md5($sEmail.$sPassword.$sLogin.\microtime(true).\rand(10000, 99999));
 		
-		return\CApi::Cacher()->Set('SSO:'.$sSsoHash,\CApi::EncodeKeyValues(array(
+		return self::Cacher()->Set('SSO:'.$sSsoHash,self::EncodeKeyValues(array(
 			'Email' => $sEmail,
 			'Password' => $sPassword,
 			'Login' => $sLogin
@@ -951,13 +953,13 @@ class CApi
 	{
 		$aResultLang = false;
 
-		$aLang = @parse_ini_string(file_get_contents($sLangFile), true);
+		$aLang = @\parse_ini_string(file_get_contents($sLangFile), true);
 		if (is_array($aLang)) 
 		{
 			$aResultLang = array();
 			foreach ($aLang as $sKey => $mValue) 
 			{
-				if (is_array($mValue)) 
+				if (\is_array($mValue)) 
 				{
 					foreach ($mValue as $sSecKey => $mSecValue) 
 					{
@@ -1016,23 +1018,23 @@ class CApi
 	 */
 	public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
 	{
-		$oUser = \CApi::getAuthenticatedUser();
-		$oModuleManager = \CApi::GetModuleManager();
+		$oUser = self::getAuthenticatedUser();
+		$oModuleManager = self::GetModuleManager();
 		$sLanguage = $oUser ? $oUser->Language : $oModuleManager->getModuleConfigValue('Core', 'Language');
 		
 		$aLang = null;
-		if (isset(CApi::$aClientI18N[$sLanguage])) 
+		if (isset(self::$aClientI18N[$sLanguage])) 
 		{
-			$aLang =\CApi::$aClientI18N[$sLanguage];
+			$aLang = self::$aClientI18N[$sLanguage];
 		} 
 		else 
 		{
-			CApi::$aClientI18N[$sLanguage] = false;
+			self::$aClientI18N[$sLanguage] = false;
 				
-			$sLangFile =\CApi::WebMailPath().'i18n/'.$sLanguage.'.ini';
+			$sLangFile = self::WebMailPath().'i18n/'.$sLanguage.'.ini';
 			if (!@file_exists($sLangFile)) 
 			{
-				$sLangFile =\CApi::WebMailPath().'i18n/English.ini';
+				$sLangFile = self::WebMailPath().'i18n/English.ini';
 				$sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
 			}
 
@@ -1041,7 +1043,7 @@ class CApi
 				$aLang = self::convertIniToLang($sLangFile);
 				if (is_array($aLang)) 
 				{
-					CApi::$aClientI18N[$sLanguage] = $aLang;
+					self::$aClientI18N[$sLanguage] = $aLang;
 				}
 			}
 		}
@@ -1188,7 +1190,7 @@ class CApi
 	public static function isIframedMimeTypeSupported($sMimeType, $sFileName = '')
 	{
 		$bResult = /*!$this->oHttp->IsLocalhost() &&*/ // TODO
-			\CApi::GetConf('labs.allow-officeapps-viewer', true) &&
+			self::GetConf('labs.allow-officeapps-viewer', true) &&
 			!!preg_match('/\.(doc|docx|docm|dotm|dotx|xlsx|xlsb|xls|xlsm|pptx|ppsx|ppt|pps|pptm|potm|ppam|potx|ppsm)$/', strtolower(trim($sFileName)));
 
 		return $bResult;
@@ -1202,9 +1204,9 @@ class CApi
 	 */
 	public static function I18N($sData, $aParams = null, $sForceCustomInitialisationLang = '')
 	{
-		if (null ===\CApi::$aI18N) 
+		if (null === self::$aI18N) 
 		{
-			CApi::$aI18N = false;
+			self::$aI18N = false;
 
 			if ('' !== $sForceCustomInitialisationLang) 
 			{
@@ -1212,18 +1214,18 @@ class CApi
 			}
 			else 
 			{
-				$sLang =\CApi::GetConf('labs.i18n', '');
+				$sLang = self::GetConf('labs.i18n', '');
 			}
 			
 			$sLangFile = '';
 			if (0 < strlen($sLang)) 
 			{
-				$sLangFile =\CApi::RootPath().'common/i18n/'.$sLang.'.ini';
+				$sLangFile = self::RootPath().'common/i18n/'.$sLang.'.ini';
 			}
 
 			if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) 
 			{
-				$sLangFile =\CApi::RootPath().'common/i18n/English.ini';
+				$sLangFile = self::RootPath().'common/i18n/English.ini';
 			}
 
 			if (0 < strlen($sLangFile) && @file_exists($sLangFile)) 
@@ -1231,12 +1233,12 @@ class CApi
 				$aResultLang = self::convertIniToLang($sLangFile);
 				if (is_array($aResultLang)) 
 				{
-					CApi::$aI18N = $aResultLang;
+					self::$aI18N = $aResultLang;
 				}
 			}
 		}
 
-		return self::processTranslateParams(CApi::$aI18N, $sData, $aParams);
+		return self::processTranslateParams(self::$aI18N, $sData, $aParams);
 	}
 	
 	/**
@@ -1246,9 +1248,9 @@ class CApi
 	 */
 	public static function checkUserRoleIsAtLeast($iRole)
 	{
-		if (!\CApi::$__SKIP_CHECK_USER_ROLE__)
+		if (!self::$__SKIP_CHECK_USER_ROLE__)
 		{
-			$oUser = \CApi::getAuthenticatedUser();
+			$oUser = self::getAuthenticatedUser();
 			$bUserRoleIsAtLeast = empty($oUser) && $iRole === \EUserRole::Anonymous ||
 				!empty($oUser) && $oUser->Role === \EUserRole::Customer && 
 					($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
@@ -1309,13 +1311,13 @@ class CApi
 	public static function authorise()
 	{
 		$mUserId = false;
-		if (isset(\CApi::$aUserSession['UserId']))
+		if (isset(self::$aUserSession['UserId']))
 		{
-			$mUserId = \CApi::$aUserSession['UserId'];
+			$mUserId = self::$aUserSession['UserId'];
 		}
 		else
 		{
-			$mUserId = \CApi::getAuthenticatedUserId(\CApi::getAuthToken());
+			$mUserId = self::getAuthenticatedUserId(self::getAuthToken());
 		}
 		return $mUserId;
 	}	
@@ -1331,7 +1333,7 @@ class CApi
 			}
 		}
 		/* @var $oApiIntegrator \CApiIntegratorManager */
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
+		$oApiIntegrator = self::GetSystemManager('integrator');
 		if ($oApiIntegrator)
 		{
 			$mResult = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1352,7 +1354,7 @@ class CApi
 			else
 			{
 				/* @var $oApiIntegrator \CApiIntegratorManager */
-				$oApiIntegrator = \CApi::GetSystemManager('integrator');
+				$oApiIntegrator = self::GetSystemManager('integrator');
 				if ($oApiIntegrator)
 				{
 					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1385,14 +1387,14 @@ class CApi
 			$iUserId = 0;
 			if (!empty($sAuthToken))
 			{
-				$iUserId = \CApi::getAuthenticatedUserId($sAuthToken); // called for saving in session
+				$iUserId = self::getAuthenticatedUserId($sAuthToken); // called for saving in session
 			}
 			else if (!empty(self::$aUserSession['UserId']))
 			{
 				$iUserId = self::$aUserSession['UserId'];
 			}
 
-			$oApiIntegrator = \CApi::GetSystemManager('integrator');
+			$oApiIntegrator = self::GetSystemManager('integrator');
 			if ($oApiIntegrator)
 			{
 				$oUser = $oApiIntegrator->getAuthenticatedUserByIdHelper($iUserId);

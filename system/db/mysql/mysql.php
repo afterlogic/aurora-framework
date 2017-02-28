@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('db.sql');
+\Aurora\System\Api::Inc('db.sql');
 
 /**
  * @package Api
@@ -64,8 +64,8 @@ class CDbMySql extends CDbSql
 		$this->_rResultId = null;
 
 		$this->iExecuteCount = 0;
-		$this->bUseExplain =\CApi::GetConf('labs.db.use-explain', false);
-		$this->bUseExplainExtended =\CApi::GetConf('labs.db.use-explain-extended', false);
+		$this->bUseExplain =\Aurora\System\Api::GetConf('labs.db.use-explain', false);
+		$this->bUseExplainExtended =\Aurora\System\Api::GetConf('labs.db.use-explain-extended', false);
 	}
 
 	/**
@@ -101,27 +101,27 @@ class CDbMySql extends CDbSql
 	{
 		if (!function_exists('mysqli_connect'))
 		{
-			throw new CApiDbException('Can\'t load MySQLi extension.', 0);
+			throw new \CApiDbException('Can\'t load MySQLi extension.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
 		{
-			throw new CApiDbException('Not enough details required to establish connection.', 0);
+			throw new \CApiDbException('Not enough details required to establish connection.', 0);
 		}
 
 		@ini_set('mysql.connect_timeout', 5);
 
-		if (CApi::$bUseDbLog)
+		if (\Aurora\System\Api::$bUseDbLog)
 		{
-			CApi::Log('DB(mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
+			\Aurora\System\Api::Log('DB(mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 		
 		$this->_rConectionHandle = @mysqli_connect($this->sHost, $this->sUser, $this->sPassword, (bool) $bNewLink);
 		if ($this->_rConectionHandle)
 		{
-			if (CApi::$bUseDbLog)
+			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				CApi::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Api::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
 			}
 			
 			@register_shutdown_function(array(&$this, 'Disconnect'));
@@ -129,7 +129,7 @@ class CDbMySql extends CDbSql
 		}
 		else
 		{
-			CApi::Log('DB : connect to '.$this->sUser.'@'.$this->sHost.' failed', ELogLevel::Error);
+			\Aurora\System\Api::Log('DB : connect to '.$this->sUser.'@'.$this->sHost.' failed', ELogLevel::Error);
 			$this->_setSqlError();
 			return false;
 		}
@@ -197,9 +197,9 @@ class CDbMySql extends CDbSql
 			}
 			$this->_resultId = null;
 
-			if (CApi::$bUseDbLog)
+			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				CApi::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Api::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
 			}
 
 			$result = @mysqli_close($this->_rConectionHandle);
@@ -434,7 +434,7 @@ class CDbMySql extends CDbSql
 		if (0 < strlen($this->ErrorDesc))
 		{
 			$this->errorLog($this->ErrorDesc);
-			throw new CApiDbException($this->ErrorDesc, $this->ErrorCode);
+			throw new \CApiDbException($this->ErrorDesc, $this->ErrorCode);
 		}
 	}
 }

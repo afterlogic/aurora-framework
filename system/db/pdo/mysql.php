@@ -17,13 +17,15 @@
  * 
  */
 
-CApi::Inc('db.sql');
+namespace Aurora\System\Db;
+
+\Aurora\System\Api::Inc('db.sql');
 
 /**
  * @package Api
  * @subpackage Db
  */
-class CDbPdoMySql extends CDbSql
+class PdoMySql extends Sql
 {
 	/**
 	 * @var bool
@@ -64,8 +66,8 @@ class CDbPdoMySql extends CDbSql
 		$this->rResultId = null;
 
 		$this->iExecuteCount = 0;
-		$this->bUseExplain =\CApi::GetConf('labs.db.use-explain', false);
-		$this->bUseExplainExtended =\CApi::GetConf('labs.db.use-explain-extended', false);
+		$this->bUseExplain =\Aurora\System\Api::GetConf('labs.db.use-explain', false);
+		$this->bUseExplainExtended =\Aurora\System\Api::GetConf('labs.db.use-explain-extended', false);
 	}
 
 	/**
@@ -93,34 +95,34 @@ class CDbPdoMySql extends CDbSql
 	{
 		if (!class_exists('PDO'))
 		{
-			throw new CApiDbException('Can\'t load PDO extension.', 0);
+			throw new \DbException('Can\'t load PDO extension.', 0);
 		}
 
-		$mPdoDrivers = PDO::getAvailableDrivers();
+		$mPdoDrivers = \PDO::getAvailableDrivers();
 		if (!is_array($mPdoDrivers) || !in_array('mysql', $mPdoDrivers))
 		{
-			throw new CApiDbException('Can\'t load PDO mysql driver.', 0);
+			throw new \DbException('Can\'t load PDO mysql driver.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
 		{
-			throw new CApiDbException('Not enough details required to establish connection.', 0);
+			throw new \DbException('Not enough details required to establish connection.', 0);
 		}
 
-		if (CApi::$bUseDbLog)
+		if (\Aurora\System\Api::$bUseDbLog)
 		{
-			CApi::Log('DB(PDO/mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
+			\Aurora\System\Api::Log('DB(PDO/mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 
-		$aPDOAttr = array(PDO::ATTR_TIMEOUT => 5, PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+		$aPDOAttr = array(\PDO::ATTR_TIMEOUT => 5, \PDO::ATTR_EMULATE_PREPARES => false, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);
 		if (defined('PDO::MYSQL_ATTR_MAX_BUFFER_SIZE'))
 		{
-			$aPDOAttr[PDO::MYSQL_ATTR_MAX_BUFFER_SIZE] = 1024*1024*50;
+			$aPDOAttr[\PDO::MYSQL_ATTR_MAX_BUFFER_SIZE] = 1024*1024*50;
 		}
 		
 		if (defined('PDO::MYSQL_ATTR_USE_BUFFERED_QUERY'))
 		{
-			$aPDOAttr[PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = true;
+			$aPDOAttr[\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = true;
 		}
 
 		$sDbPort = '';
@@ -172,15 +174,15 @@ class CDbPdoMySql extends CDbSql
 				$aParts[] = 'charset=utf8';
 
 				$sPdoString = 'mysql:'.implode(';', $aParts);
-				if (CApi::$bUseDbLog)
+				if (\Aurora\System\Api::$bUseDbLog)
 				{
-					CApi::Log('DB : PDO('.$sPdoString.')');
+					\Aurora\System\Api::Log('DB : PDO('.$sPdoString.')');
 				}
 
-				$this->oPDO = @new PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
-				if (CApi::$bUseDbLog)
+				$this->oPDO = @new \PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
+				if (\Aurora\System\Api::$bUseDbLog)
 				{
-					CApi::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
+					\Aurora\System\Api::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
 				}
 
 				if ($this->oPDO)
@@ -190,16 +192,16 @@ class CDbPdoMySql extends CDbSql
 			}
 			catch (Exception $oException)
 			{
-				CApi::Log($oException->getMessage(), ELogLevel::Error);
-				CApi::Log($oException->getTraceAsString(), ELogLevel::Error);
+				\Aurora\System\Api::Log($oException->getMessage(), ELogLevel::Error);
+				\Aurora\System\Api::Log($oException->getTraceAsString(), ELogLevel::Error);
 				$this->oPDO = false;
 
-				throw new CApiDbException($oException->getMessage(), $oException->getCode(), $oException);
+				throw new \DbException($oException->getMessage(), $oException->getCode(), $oException);
 			}
 		}
 		else
 		{
-			CApi::Log('Class PDO dosn\'t exist', ELogLevel::Error);
+			\Aurora\System\Api::Log('Class PDO dosn\'t exist', ELogLevel::Error);
 		}
 
 		return !!$this->oPDO;
@@ -236,9 +238,9 @@ class CDbPdoMySql extends CDbSql
 
 			$this->rResultId = null;
 
-			if (CApi::$bUseDbLog)
+			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				CApi::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Api::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
 			}
 
 			unset($this->oPDO);
@@ -344,7 +346,7 @@ class CDbPdoMySql extends CDbSql
 	{
 		if ($this->rResultId)
 		{
-			$mResult = $this->rResultId->fetch(PDO::FETCH_OBJ);
+			$mResult = $this->rResultId->fetch(\PDO::FETCH_OBJ);
 			if (!$mResult && $bAutoFree)
 			{
 				$this->FreeResult();
@@ -396,7 +398,7 @@ class CDbPdoMySql extends CDbSql
 		}
 		catch( Exception $e)
 		{
-			CApi::LogException($e);
+			\Aurora\System\Api::LogException($e);
 		}
 		
 		return 0;
@@ -529,7 +531,7 @@ class CDbPdoMySql extends CDbSql
 		if (0 < strlen($this->ErrorDesc))
 		{
 			$this->errorLog($this->ErrorDesc);
-			throw new CApiDbException($this->ErrorDesc, $this->ErrorCode);
+			throw new \CApiDbException($this->ErrorDesc, $this->ErrorCode);
 		}
 	}
 }

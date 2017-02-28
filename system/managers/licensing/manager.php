@@ -20,12 +20,12 @@
 /**
  * @package Licensing
  */
-class CApiLicensingManager extends AApiManager
+class CApiLicensingManager extends \Aurora\System\AbstractManager
 {
 	/**
-	 * @param CApiGlobalManager &$oManager
+	 * @param \Aurora\System\GlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('licensing', $oManager);
 
@@ -61,7 +61,7 @@ class CApiLicensingManager extends AApiManager
 		if (null === $iCache)
 		{
 			/* @var $oApiUsersManager CApiUsersManager */
-			$oApiUsersManager =\CApi::GetSystemManager('users');
+			$oApiUsersManager =\Aurora\System\Api::GetSystemManager('users');
 			$iCache = $oApiUsersManager->getTotalUsersCount();
 		}
 		return $iCache;

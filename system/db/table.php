@@ -21,7 +21,10 @@
  * @package Api
  * @subpackage Db
  */
-class CDbTable
+
+namespace Aurora\System\Db;
+
+class Table
 {
 	const CRLF = "\r\n";
 	const TAB = "\t";
@@ -82,7 +85,7 @@ class CDbTable
 	public function GetFieldNames()
 	{
 		$aField = array();
-		foreach ($this->aFields as /* @var $oField CDbField */ $oField)
+		foreach ($this->aFields as /* @var $oField Field */ $oField)
 		{
 			$aField[] = $oField->Name();
 		}
@@ -95,9 +98,9 @@ class CDbTable
 	public function GetIndexesFieldsNames()
 	{
 		$aKeyLines = array();
-		foreach ($this->aKeys as /* @var $oKey CDbKey */ $oKey)
+		foreach ($this->aKeys as /* @var $oKey Key */ $oKey)
 		{
-			if (CDbKey::TYPE_PRIMARY_KEY !== $oKey->GetType())
+			if (Key::TYPE_PRIMARY_KEY !== $oKey->GetType())
 			{
 				$aKeyFields = $oKey->GetIndexesFields();
 				if (is_array($aKeyFields) && 0 < count($aKeyFields))
@@ -111,12 +114,12 @@ class CDbTable
 
 	/**
 	 * @param string $sName
-	 * @return CDbField
+	 * @return Field
 	 */
 	public function GetFieldByName($sName)
 	{
 		$oResultField = false;
-		foreach ($this->aFields as /* @var $oField CDbField */ $oField)
+		foreach ($this->aFields as /* @var $oField Field */ $oField)
 		{
 			if ($sName === $oField->Name())
 			{
@@ -137,27 +140,27 @@ class CDbTable
 		$sResult = '';
 		if ($bAddDropTable)
 		{
-			$sResult .= 'DROP TABLE IF EXISTS '.$oHelper->EscapeColumn($this->Name()).';'.CDbTable::CRLF;
+			$sResult .= 'DROP TABLE IF EXISTS '.$oHelper->EscapeColumn($this->Name()).';'.Table::CRLF;
 		}
 
 		$sResult .= 'CREATE TABLE '.$oHelper->EscapeColumn($this->Name())
-			.' ('.CDbTable::CRLF.CDbTable::TAB;
+			.' ('.Table::CRLF.Table::TAB;
 
 		$aFieldLines = array();
-		foreach ($this->aFields as /* @var $oField CDbField */ $oField)
+		foreach ($this->aFields as /* @var $oField Field */ $oField)
 		{
 			$aFieldLines[] = $oField->ToString($oHelper);
 		}
 
-		$sResult .= implode(','.CDbTable::CRLF.CDbTable::TAB, $aFieldLines);
+		$sResult .= implode(','.Table::CRLF.Table::TAB, $aFieldLines);
 		unset($aFieldLines);
 
 		$aAdditionalRequests = array();
 		
 		$aKeyLines = array();
-		foreach ($this->aKeys as /* @var $oKey CDbKey */ $oKey)
+		foreach ($this->aKeys as /* @var $oKey Key */ $oKey)
 		{
-			if (CDbKey::TYPE_PRIMARY_KEY === $oKey->GetType() || !$oHelper->UseSingleIndexRequest())
+			if (Key::TYPE_PRIMARY_KEY === $oKey->GetType() || !$oHelper->UseSingleIndexRequest())
 			{
 				$sLine = $oKey->ToString($oHelper, $this->Name());
 				if (!empty($sLine))
@@ -177,13 +180,13 @@ class CDbTable
 
 		if (0 < count($aKeyLines))
 		{
-			$sResult .= ','.CDbTable::CRLF.CDbTable::TAB.
-				implode(','.CDbTable::CRLF.CDbTable::TAB, $aKeyLines);
+			$sResult .= ','.Table::CRLF.Table::TAB.
+				implode(','.Table::CRLF.Table::TAB, $aKeyLines);
 		}
 		
 		unset($aKeyLines);
 
-		return trim($sResult.CDbTable::CRLF.') '.$oHelper->CreateTableLastLine()).
+		return trim($sResult.Table::CRLF.') '.$oHelper->CreateTableLastLine()).
 			(0 < count($aAdditionalRequests) ? ";\n\n".implode(";\n\n", $aAdditionalRequests) : '');
 	}
 
@@ -197,7 +200,7 @@ class CDbTable
 		if (0 < count($aFieldsToAdd))
 		{
 			$aLines = array();
-			foreach ($this->aFields as /* @var $oField CDbField */ $oField)
+			foreach ($this->aFields as /* @var $oField Field */ $oField)
 			{
 				if (in_array($oField->Name(), $aFieldsToAdd))
 				{
@@ -271,7 +274,7 @@ class CDbTable
  * @package Api
  * @subpackage Db
  */
-class CDbField
+class Field
 {
 	const AUTO_INT = 10;
 	const AUTO_INT_BIG = 11;
@@ -370,7 +373,7 @@ class CDbField
  * @package Api
  * @subpackage Db
  */
-class CDbKey
+class Key
 {
 	const TYPE_KEY = 0;
 	const TYPE_UNIQUE_KEY = 1;
@@ -436,16 +439,16 @@ class CDbKey
 		{
 			switch ($this->iType)
 			{
-				case CDbKey::TYPE_PRIMARY_KEY:
+				case Key::TYPE_PRIMARY_KEY:
 					$sResult .= 'PRIMARY KEY';
 					break;
-				case CDbKey::TYPE_UNIQUE_KEY:
+				case Key::TYPE_UNIQUE_KEY:
 					$sResult .= 'UNIQUE '.$oHelper->EscapeColumn($this->GetName($sTableName));
 					break;
-				case CDbKey::TYPE_INDEX:
+				case Key::TYPE_INDEX:
 					$sResult .= 'INDEX '.$oHelper->EscapeColumn($this->GetName($sTableName));
 					break;
-//				case CDbKey::TYPE_FULLTEXT:
+//				case Key::TYPE_FULLTEXT:
 //					$sResult .= 'FULLTEXT '.$oHelper->EscapeColumn($this->GetName($sTableName));
 //					break;
 			}
@@ -470,7 +473,7 @@ class CDbKey
  * @package Api
  * @subpackage Db
  */
-class CDbFunction
+class Func
 {
 	/**
 	 * @var string
@@ -514,11 +517,11 @@ class CDbFunction
 		$sResult = '';
 		if ($bAddDropFunction)
 		{
-			$sResult .= 'DROP FUNCTION IF EXISTS '.$this->sName.';;'.CDbTable::CRLF;
+			$sResult .= 'DROP FUNCTION IF EXISTS '.$this->sName.';;'.Table::CRLF;
 		}
 
 		$sResult .= 'CREATE FUNCTION '.$this->sName.'('.$this->sIncParams.') RETURNS '.$this->sResult;
-		$sResult .= CDbTable::CRLF.$this->sText;
+		$sResult .= Table::CRLF.$this->sText;
 
 		return trim($sResult);
 	}

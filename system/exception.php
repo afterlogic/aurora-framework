@@ -20,7 +20,10 @@
 /**
  * @package Api
  */
-class CApiErrorCodes
+
+namespace Aurora\System;
+
+class ErrorCodes
 {
 	// users
 	const UserManager_AccountAlreadyExists = 1001;
@@ -156,103 +159,103 @@ class CApiErrorCodes
 		if (null === $aMessages)
 		{
 			$aMessages = array(
-				self::UserManager_AccountAlreadyExists =>\CApi::I18N('API/USERMANAGER_ACCOUNT_ALREADY_EXISTS'),
-				self::UserManager_AccountCreateFailed =>\CApi::I18N('API/USERMANAGER_ACCOUNT_CREATE_FAILED'),
-				self::UserManager_AccountUpdateFailed =>\CApi::I18N('API/USERMANAGER_ACCOUNT_UPDATE_FAILED'),
-				self::UserManager_AccountAuthenticationFailed =>\CApi::I18N('API/USERMANAGER_ACCOUNT_AUTHENTICATION_FAILED'),
-				self::UserManager_AccountCreateUserLimitReached =>\CApi::I18N('API/USERMANAGER_ACCOUNT_CREATE_USER_LIMIT_REACHED'),
-				self::UserManager_AccountDoesNotExist =>\CApi::I18N('API/USERMANAGER_ACCOUNT_DOES_NOT_EXIST'),
-				self::UserManager_LicenseKeyIsOutdated =>\CApi::I18N('API/USERMANAGER_LICENSE_KEY_IS_OUTDATED'),
-				self::UserManager_LicenseKeyInvalid =>\CApi::I18N('API/USERMANAGER_LICENSE_KEY_INVALID'),
-				self::UserManager_IdentityCreateFailed =>\CApi::I18N('API/USERMANAGER_IDENTIFY_CREATE_FAILED'),
-				self::UserManager_IdentityUpdateFailed =>\CApi::I18N('API/USERMANAGER_IDENTITI_UPDATE_FAILED'),
-				self::UserManager_AccountConnectToMailServerFailed =>\CApi::I18N('API/USERMANAGER_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
+				self::UserManager_AccountAlreadyExists =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_ALREADY_EXISTS'),
+				self::UserManager_AccountCreateFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_CREATE_FAILED'),
+				self::UserManager_AccountUpdateFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_UPDATE_FAILED'),
+				self::UserManager_AccountAuthenticationFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_AUTHENTICATION_FAILED'),
+				self::UserManager_AccountCreateUserLimitReached =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_CREATE_USER_LIMIT_REACHED'),
+				self::UserManager_AccountDoesNotExist =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_DOES_NOT_EXIST'),
+				self::UserManager_LicenseKeyIsOutdated =>\Aurora\System\Api::I18N('API/USERMANAGER_LICENSE_KEY_IS_OUTDATED'),
+				self::UserManager_LicenseKeyInvalid =>\Aurora\System\Api::I18N('API/USERMANAGER_LICENSE_KEY_INVALID'),
+				self::UserManager_IdentityCreateFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_IDENTIFY_CREATE_FAILED'),
+				self::UserManager_IdentityUpdateFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_IDENTITI_UPDATE_FAILED'),
+				self::UserManager_AccountConnectToMailServerFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
 
-				self::UserManager_AccountOldPasswordNotCorrect =>\CApi::I18N('API/USERMANAGER_ACCOUNT_OLD_PASSWORD_NOT_CORRECT'),
-				self::UserManager_AccountNewPasswordUpdateError =>\CApi::I18N('API/USERMANAGER_ACCOUNT_NEW_PASSWORD_UPDATE_ERROR'),
-				self::UserManager_AccountNewPasswordRejected =>\CApi::I18N('API/USERMANAGER_ACCOUNT_NEW_PASSWORD_REJECTED'),
+				self::UserManager_AccountOldPasswordNotCorrect =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_OLD_PASSWORD_NOT_CORRECT'),
+				self::UserManager_AccountNewPasswordUpdateError =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_NEW_PASSWORD_UPDATE_ERROR'),
+				self::UserManager_AccountNewPasswordRejected =>\Aurora\System\Api::I18N('API/USERMANAGER_ACCOUNT_NEW_PASSWORD_REJECTED'),
 
-				self::UserManager_CalUserCreateFailed =>\CApi::I18N('API/USERMANAGER_CALUSER_CREATE_FAILED'),
-				self::UserManager_CalUserUpdateFailed =>\CApi::I18N('API/USERMANAGER_CALUSER_UPDATE_FAILED'),
-				self::UserManager_CalUserAlreadyExists =>\CApi::I18N('API/USERMANAGER_CALUSER_ALREADY_EXISTS'),
+				self::UserManager_CalUserCreateFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_CALUSER_CREATE_FAILED'),
+				self::UserManager_CalUserUpdateFailed =>\Aurora\System\Api::I18N('API/USERMANAGER_CALUSER_UPDATE_FAILED'),
+				self::UserManager_CalUserAlreadyExists =>\Aurora\System\Api::I18N('API/USERMANAGER_CALUSER_ALREADY_EXISTS'),
 
-				self::UserManager_SocialAccountAlreadyExists =>\CApi::I18N('API/USERMANAGER_SOCIAL_ACCOUNT_ALREADY_EXISTS'),
+				self::UserManager_SocialAccountAlreadyExists =>\Aurora\System\Api::I18N('API/USERMANAGER_SOCIAL_ACCOUNT_ALREADY_EXISTS'),
 
-				self::TenantsManager_TenantAlreadyExists =>\CApi::I18N('API/TENANTSMANAGER_TENANT_ALREADY_EXISTS'),
-				self::TenantsManager_TenantCreateFailed =>\CApi::I18N('API/TENANTSMANAGER_TENANT_CREATE_FAILED'),
-				self::TenantsManager_TenantUpdateFailed =>\CApi::I18N('API/TENANTSMANAGER_TENANT_UPDATE_FAILED'),
-				self::TenantsManager_TenantDoesNotExist =>\CApi::I18N('API/TENANTSMANAGER_TENANT_DOES_NOT_EXIST'),
-				self::TenantsManager_AccountCreateUserLimitReached =>\CApi::I18N('API/TENANTSMANAGER_ACCOUNT_CREATE_USER_LIMIT_REACHED'),
-				self::TenantsManager_AccountUpdateUserLimitReached =>\CApi::I18N('API/TENANTSMANAGER_ACCOUNT_UPDATE_USER_LIMIT_REACHED'),
-				self::TenantsManager_QuotaLimitExided =>\CApi::I18N('API/TENANTS_MANAGER_QUOTA_LIMIT_EXCEEDED'),
+				self::TenantsManager_TenantAlreadyExists =>\Aurora\System\Api::I18N('API/TENANTSMANAGER_TENANT_ALREADY_EXISTS'),
+				self::TenantsManager_TenantCreateFailed =>\Aurora\System\Api::I18N('API/TENANTSMANAGER_TENANT_CREATE_FAILED'),
+				self::TenantsManager_TenantUpdateFailed =>\Aurora\System\Api::I18N('API/TENANTSMANAGER_TENANT_UPDATE_FAILED'),
+				self::TenantsManager_TenantDoesNotExist =>\Aurora\System\Api::I18N('API/TENANTSMANAGER_TENANT_DOES_NOT_EXIST'),
+				self::TenantsManager_AccountCreateUserLimitReached =>\Aurora\System\Api::I18N('API/TENANTSMANAGER_ACCOUNT_CREATE_USER_LIMIT_REACHED'),
+				self::TenantsManager_AccountUpdateUserLimitReached =>\Aurora\System\Api::I18N('API/TENANTSMANAGER_ACCOUNT_UPDATE_USER_LIMIT_REACHED'),
+				self::TenantsManager_QuotaLimitExided =>\Aurora\System\Api::I18N('API/TENANTS_MANAGER_QUOTA_LIMIT_EXCEEDED'),
 
-				self::ChannelsManager_ChannelAlreadyExists =>\CApi::I18N('API/CHANNELSMANAGER_CHANNEL_ALREADY_EXISTS'),
-				self::ChannelsManager_ChannelCreateFailed =>\CApi::I18N('API/CHANNELSMANAGER_CHANNEL_CREATE_FAILED'),
-				self::ChannelsManager_ChannelUpdateFailed =>\CApi::I18N('API/CHANNELSMANAGER_CHANNEL_UPDATE_FAILED'),
-				self::ChannelsManager_ChannelDoesNotExist =>\CApi::I18N('API/CHANNELSMANAGER_CHANNEL_DOES_NOT_EXIST'),
+				self::ChannelsManager_ChannelAlreadyExists =>\Aurora\System\Api::I18N('API/CHANNELSMANAGER_CHANNEL_ALREADY_EXISTS'),
+				self::ChannelsManager_ChannelCreateFailed =>\Aurora\System\Api::I18N('API/CHANNELSMANAGER_CHANNEL_CREATE_FAILED'),
+				self::ChannelsManager_ChannelUpdateFailed =>\Aurora\System\Api::I18N('API/CHANNELSMANAGER_CHANNEL_UPDATE_FAILED'),
+				self::ChannelsManager_ChannelDoesNotExist =>\Aurora\System\Api::I18N('API/CHANNELSMANAGER_CHANNEL_DOES_NOT_EXIST'),
 
-				self::MailSuiteManager_MailingListAlreadyExists =>\CApi::I18N('API/MAILSUITEMANAGER_MAILING_LIST_ALREADY_EXISTS'),
-				self::MailSuiteManager_MailingListCreateFailed =>\CApi::I18N('API/MAILSUITEMANAGER_MAILING_LIST_CREATE_FAILED'),
-				self::MailSuiteManager_MailingListUpdateFailed =>\CApi::I18N('API/MAILSUITEMANAGER_MAILING_LIST_UPDATE_FAILED'),
-				self::MailSuiteManager_MailingListInvalid =>\CApi::I18N('API/MAILSUITEMANAGER_MAILING_LIST_INVALID'),
+				self::MailSuiteManager_MailingListAlreadyExists =>\Aurora\System\Api::I18N('API/MAILSUITEMANAGER_MAILING_LIST_ALREADY_EXISTS'),
+				self::MailSuiteManager_MailingListCreateFailed =>\Aurora\System\Api::I18N('API/MAILSUITEMANAGER_MAILING_LIST_CREATE_FAILED'),
+				self::MailSuiteManager_MailingListUpdateFailed =>\Aurora\System\Api::I18N('API/MAILSUITEMANAGER_MAILING_LIST_UPDATE_FAILED'),
+				self::MailSuiteManager_MailingListInvalid =>\Aurora\System\Api::I18N('API/MAILSUITEMANAGER_MAILING_LIST_INVALID'),
 
-				self::WebMailManager_AccountDisabled =>\CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_DISABLED'),
-				self::WebMailManager_AccountWebmailDisabled =>\CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_WEBMAIL_DISABLED'),
-				self::WebMailManager_AccountCreateOnLogin =>\CApi::I18N('API/WEBMAILMANAGER_CREATE_ON_LOGIN'),
-				self::WebMailManager_AccountAuthentication =>\CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_AUTHENTICATION'),
-				self::WebMailManager_AccountConnectToMailServerFailed =>\CApi::I18N('API/WEBMAILMANAGER_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
+				self::WebMailManager_AccountDisabled =>\Aurora\System\Api::I18N('API/WEBMAILMANAGER_ACCOUNT_DISABLED'),
+				self::WebMailManager_AccountWebmailDisabled =>\Aurora\System\Api::I18N('API/WEBMAILMANAGER_ACCOUNT_WEBMAIL_DISABLED'),
+				self::WebMailManager_AccountCreateOnLogin =>\Aurora\System\Api::I18N('API/WEBMAILMANAGER_CREATE_ON_LOGIN'),
+				self::WebMailManager_AccountAuthentication =>\Aurora\System\Api::I18N('API/WEBMAILMANAGER_ACCOUNT_AUTHENTICATION'),
+				self::WebMailManager_AccountConnectToMailServerFailed =>\Aurora\System\Api::I18N('API/WEBMAILMANAGER_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
 
-				self::Validation_InvalidPort =>\CApi::I18N('API/VALIDATION_INVALID_PORT'),
-				self::Validation_InvalidEmail =>\CApi::I18N('API/VALIDATION_INVALID_EMAIL'),
-				self::Validation_FieldIsEmpty =>\CApi::I18N('API/VALIDATION_FIELD_IS_EMPTY'),
-				self::Validation_InvalidPort_OutInfo =>\CApi::I18N('API/VALIDATION_INVALID_PORT_OUTINFO'),
-				self::Validation_InvalidEmail_OutInfo =>\CApi::I18N('API/VALIDATION_INVALID_EMAIL_OUTINFO'),
-				self::Validation_FieldIsEmpty_OutInfo =>\CApi::I18N('API/VALIDATION_FIELD_IS_EMPTY_OUTINFO'),
-				self::Validation_InvalidParameters =>\CApi::I18N('API/VALIDATION_INVALID_PARAMETERS'),
-				self::Validation_InvalidTenantName =>\CApi::I18N('API/VALIDATION_INVALID_TENANT_NAME'),
-				self::Validation_InvalidChannelName =>\CApi::I18N('API/VALIDATION_INVALID_CHANNEL_NAME'),
+				self::Validation_InvalidPort =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_PORT'),
+				self::Validation_InvalidEmail =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_EMAIL'),
+				self::Validation_FieldIsEmpty =>\Aurora\System\Api::I18N('API/VALIDATION_FIELD_IS_EMPTY'),
+				self::Validation_InvalidPort_OutInfo =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_PORT_OUTINFO'),
+				self::Validation_InvalidEmail_OutInfo =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_EMAIL_OUTINFO'),
+				self::Validation_FieldIsEmpty_OutInfo =>\Aurora\System\Api::I18N('API/VALIDATION_FIELD_IS_EMPTY_OUTINFO'),
+				self::Validation_InvalidParameters =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_PARAMETERS'),
+				self::Validation_InvalidTenantName =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_TENANT_NAME'),
+				self::Validation_InvalidChannelName =>\Aurora\System\Api::I18N('API/VALIDATION_INVALID_CHANNEL_NAME'),
 
-				self::Container_UndefinedProperty =>\CApi::I18N('API/CONTAINER_UNDEFINED_PROPERTY'),
+				self::Container_UndefinedProperty =>\Aurora\System\Api::I18N('API/CONTAINER_UNDEFINED_PROPERTY'),
 
-				self::Main_SettingLoadError =>\CApi::I18N('API/MAIN_SETTINGS_LOAD_ERROR'),
-				self::Main_UnknownError =>\CApi::I18N('API/MAIN_UNKNOWN_ERROR'),
-				self::Main_CustomError =>\CApi::I18N('API/MAIN_CUSTOM_ERROR'),
+				self::Main_SettingLoadError =>\Aurora\System\Api::I18N('API/MAIN_SETTINGS_LOAD_ERROR'),
+				self::Main_UnknownError =>\Aurora\System\Api::I18N('API/MAIN_UNKNOWN_ERROR'),
+				self::Main_CustomError =>\Aurora\System\Api::I18N('API/MAIN_CUSTOM_ERROR'),
 
-				self::Db_ExceptionError =>\CApi::I18N('API/DB_EXCEPTION_ERROR'),
-				self::Db_PdoExceptionError =>\CApi::I18N('API/DB_PDO_EXCEPTION_ERROR'),
+				self::Db_ExceptionError =>\Aurora\System\Api::I18N('API/DB_EXCEPTION_ERROR'),
+				self::Db_PdoExceptionError =>\Aurora\System\Api::I18N('API/DB_PDO_EXCEPTION_ERROR'),
 
-				self::Mail_FolderNameContainDelimiter =>\CApi::I18N('API/MAIL_FOLDER_NAME_CONTAIN_DELIMITER'),
-				self::Mail_AccountAuthentication =>\CApi::I18N('API/MAIL_ACCOUNT_AUTHENTICATION'),
-				self::Mail_AccountConnectToMailServerFailed =>\CApi::I18N('API/MAIL_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
-				self::Mail_CannotRenameNonExistenFolder =>\CApi::I18N('API/MAIL_CANNOT_RENAME_NON_EXITEN_FOLDER'),
-				self::Mail_CannotSendMessage =>\CApi::I18N('API/MAIL_CANNOT_SEND_MESSAGE'),
-				self::Mail_MailboxUnavailable =>\CApi::I18N('API/MAIL_MAILBOX_UNAVAILABLE'),
+				self::Mail_FolderNameContainDelimiter =>\Aurora\System\Api::I18N('API/MAIL_FOLDER_NAME_CONTAIN_DELIMITER'),
+				self::Mail_AccountAuthentication =>\Aurora\System\Api::I18N('API/MAIL_ACCOUNT_AUTHENTICATION'),
+				self::Mail_AccountConnectToMailServerFailed =>\Aurora\System\Api::I18N('API/MAIL_ACCOUNT_CONNECT_TO_MAIL_SERVER_FAILED'),
+				self::Mail_CannotRenameNonExistenFolder =>\Aurora\System\Api::I18N('API/MAIL_CANNOT_RENAME_NON_EXITEN_FOLDER'),
+				self::Mail_CannotSendMessage =>\Aurora\System\Api::I18N('API/MAIL_CANNOT_SEND_MESSAGE'),
+				self::Mail_MailboxUnavailable =>\Aurora\System\Api::I18N('API/MAIL_MAILBOX_UNAVAILABLE'),
 
-				self::Fetcher_ConnectToMailServerFailed =>\CApi::I18N('API/FETCHER_CONNECT_TO_MAIL_SERVER_FAILED'),
-				self::Fetcher_AuthError =>\CApi::I18N('API/FETCHER_AUTH_ERROR'),
+				self::Fetcher_ConnectToMailServerFailed =>\Aurora\System\Api::I18N('API/FETCHER_CONNECT_TO_MAIL_SERVER_FAILED'),
+				self::Fetcher_AuthError =>\Aurora\System\Api::I18N('API/FETCHER_AUTH_ERROR'),
 
-				self::Sabre_Exception =>\CApi::I18N('API/SABRE_EXCEPTION'),
-				self::Sabre_PreconditionFailed =>\CApi::I18N('API/SABRE_PRECONDITION_FAILED')
+				self::Sabre_Exception =>\Aurora\System\Api::I18N('API/SABRE_EXCEPTION'),
+				self::Sabre_PreconditionFailed =>\Aurora\System\Api::I18N('API/SABRE_PRECONDITION_FAILED')
 
-				/*self::Rest_InvalidParameters =>\CApi::I18N('API/REST_INVALID_PARAMETERS'),
-				self::Rest_InvalidCredentials =>\CApi::I18N('API/REST_INVALID_CREDENTIALS'),
-				self::Rest_InvalidToken =>\CApi::I18N('API/REST_INVALID_TOKEN'),
-				self::Rest_TokenExpired =>\CApi::I18N('API/REST_TOKEN_EXPIRED'),
-				self::Rest_AccountCreateFailed =>\CApi::I18N('API/REST_ACCOUNT_CREATE_FAILED'),
-				self::Rest_AccountUpdateFailed =>\CApi::I18N('API/REST_ACCOUNT_UPDATE_FAILED'),
-				self::Rest_AccountDeleteFailed =>\CApi::I18N('API/REST_ACCOUNT_DELETE_FAILED'),
-				self::Rest_AccountFindFailed =>\CApi::I18N('API/REST_ACCOUNT_FIND_FAILED'),
-				self::Rest_AccountEnableFailed =>\CApi::I18N('API/REST_ACCOUNT_ENABLE_FAILED'),
-				self::Rest_AccountDisableFailed =>\CApi::I18N('API/REST_ACCOUNT_DISABLE_FAILED'),
-				self::Rest_AccountPasswordChangeFailed =>\CApi::I18N('API/REST_ACCOUNT_PASSWORD_CHANGE_FAILED'),
-				self::Rest_AccountListGetFailed =>\CApi::I18N('API/REST_ACCOUNT_LIST_GET_FAILED'),
-				self::Rest_TenantFindFailed =>\CApi::I18N('API/REST_TENANT_FIND_FAILED'),*/
+				/*self::Rest_InvalidParameters =>\Aurora\System\Api::I18N('API/REST_INVALID_PARAMETERS'),
+				self::Rest_InvalidCredentials =>\Aurora\System\Api::I18N('API/REST_INVALID_CREDENTIALS'),
+				self::Rest_InvalidToken =>\Aurora\System\Api::I18N('API/REST_INVALID_TOKEN'),
+				self::Rest_TokenExpired =>\Aurora\System\Api::I18N('API/REST_TOKEN_EXPIRED'),
+				self::Rest_AccountCreateFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_CREATE_FAILED'),
+				self::Rest_AccountUpdateFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_UPDATE_FAILED'),
+				self::Rest_AccountDeleteFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_DELETE_FAILED'),
+				self::Rest_AccountFindFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_FIND_FAILED'),
+				self::Rest_AccountEnableFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_ENABLE_FAILED'),
+				self::Rest_AccountDisableFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_DISABLE_FAILED'),
+				self::Rest_AccountPasswordChangeFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_PASSWORD_CHANGE_FAILED'),
+				self::Rest_AccountListGetFailed =>\Aurora\System\Api::I18N('API/REST_ACCOUNT_LIST_GET_FAILED'),
+				self::Rest_TenantFindFailed =>\Aurora\System\Api::I18N('API/REST_TENANT_FIND_FAILED'),*/
 			);
 		}
 
 		return isset($aMessages[$iCode])
 			? ((0 < count($aParams)) ? strtr($aMessages[$iCode], $aParams) : $aMessages[$iCode])
-			:\CApi::I18N('API/UNKNOWN_ERROR');
+			:\Aurora\System\Api::I18N('API/UNKNOWN_ERROR');
 	}
 }
 
@@ -261,27 +264,27 @@ class CApiErrorCodes
  *
  * @package Api
  */
-class Errs extends CApiErrorCodes {}
+class Errs extends ErrorCodes {}
 
 /**
  * @package Api
  */
-class CApiException extends Exception {}
+class Exception extends \Exception {}
 
 /**
  * @package Api
  */
-class CApiInvalidArgumentException extends CApiException {}
+class InvalidArgumentException extends Exception {}
 
 /**
  * @package Api
  */
-class CApiDbException extends CApiException {}
+class DbException extends Exception {}
 
 /**
  * @package Api
  */
-class CApiBaseException extends CApiException
+class BaseException extends Exception
 {
 	/**
 	 * @var array
@@ -303,17 +306,17 @@ class CApiBaseException extends CApiException
 	{
 		if (CApiErrorCodes::Validation_InvalidPort === $iCode)
 		{
-			CApi::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
 			$iCode = CApiErrorCodes::Validation_InvalidPort_OutInfo;
 		}
 		else if (CApiErrorCodes::Validation_InvalidEmail === $iCode)
 		{
-			CApi::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
 			$iCode = CApiErrorCodes::Validation_InvalidEmail_OutInfo;
 		}
 		else if (CApiErrorCodes::Validation_FieldIsEmpty === $iCode)
 		{
-			CApi::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
 			$iCode = CApiErrorCodes::Validation_FieldIsEmpty_OutInfo;
 		}
 
@@ -322,7 +325,7 @@ class CApiBaseException extends CApiException
 
 		if ($this->oPrevious)
 		{
-			CApi::Log('Previous Exception: '.$this->oPrevious->getMessage(), ELogLevel::Error);
+			\Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), ELogLevel::Error);
 		}
 
 		parent::__construct(CApiErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);

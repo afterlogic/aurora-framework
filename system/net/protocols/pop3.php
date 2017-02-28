@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('net.abstract');
+\Aurora\System\Api::Inc('net.abstract');
 
 /**
  * @package Api

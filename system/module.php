@@ -17,10 +17,12 @@
  * 
  */
 
+namespace Aurora\System;
+
 /**
  * @package Api
  */
-class CApiModuleManager
+class ModuleManager
 {
     /**
      * This array contains a list of modules
@@ -78,7 +80,7 @@ class CApiModuleManager
 		$oCoreModule = $this->loadModule('Core', $sModulesPath);
 		if ($oCoreModule !== false)
 		{
-			\CApi::authorise();
+			\Aurora\System\Api::authorise();
 			
 			$oCoreModule->initialize();
 			$sTenant = $oCoreModule->GetTenantName();
@@ -113,9 +115,9 @@ class CApiModuleManager
 			{
 				foreach ($aModulePath as $sModuleName)
 				{
-					$oModuleSettings = \CApi::GetModuleManager()->GetModuleSettings($sModuleName);
+					$oModuleSettings = \Aurora\System\Api::GetModuleManager()->GetModuleSettings($sModuleName);
 					$bIsModuleDisabledForUser = false;
-					$oUser =\CApi::getAuthenticatedUser();
+					$oUser =\Aurora\System\Api::getAuthenticatedUser();
 					if ($oUser instanceof CUser)
 					{
 						$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
@@ -131,7 +133,7 @@ class CApiModuleManager
 			}
 			foreach ($this->_aModules as $oModule)
 			{
-				if ($oModule instanceof \AApiModule)
+				if ($oModule instanceof \Aurora\System\AbstractModule)
 				{
 					$oModule->initialize();
 				}
@@ -177,7 +179,7 @@ class CApiModuleManager
 	 * 
 	 * @param string $sModuleName
 	 * @param string $sModulePath
-	 * @return \AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	public function loadModule($sModuleName, $sModulePath)
 	{
@@ -185,7 +187,7 @@ class CApiModuleManager
 		$aArgs = array($sModuleName, $sModulePath);
 		$this->broadcastEvent(
 			$sModuleName, 
-			'loadModule' . \AApiModule::$Delimiter . 'before', 
+			'loadModule' . AbstractModule::$Delimiter . 'before', 
 			$aArgs
 		);
 		
@@ -201,7 +203,7 @@ class CApiModuleManager
 					$sModuleName, 
 					$sModulePath
 				);
-			   if ($oModule instanceof \AApiModule)
+			   if ($oModule instanceof \Aurora\System\AbstractModule)
 			   {
 					$this->_aModules[strtolower($sModuleName)] = $oModule;
 					$mResult = $oModule;
@@ -211,7 +213,7 @@ class CApiModuleManager
 
 		$this->broadcastEvent(
 			$sModuleName, 
-			'loadModule' . \AApiModule::$Delimiter . 'after', 
+			'loadModule' . \Aurora\System\AbstractModule::$Delimiter . 'after', 
 			$aArgs,
 			$mResult
 		);
@@ -281,7 +283,7 @@ class CApiModuleManager
 				$this->_aSubscriptions[$sEvent]
 			);
         }
-		$sEvent = $sModule . \AApiModule::$Delimiter . $sEvent;
+		$sEvent = $sModule . AbstractModule::$Delimiter . $sEvent;
 		if (isset($this->_aSubscriptions[$sEvent])) 
 		{
 			$aSubscriptions = array_merge(
@@ -292,9 +294,9 @@ class CApiModuleManager
 		
 		foreach($aSubscriptions as $fCallback) 
 		{
-			if (is_callable($fCallback))
+			if (\is_callable($fCallback))
 			{
-				\CApi::Log('Execute subscription: '. $fCallback[0]->GetName() . \AApiModule::$Delimiter . $fCallback[1]);
+				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . \Aurora\System\AbstractModule::$Delimiter . $fCallback[1]);
 				$mCallBackResult = call_user_func_array(
 					$fCallback, 
 					array(
@@ -303,7 +305,7 @@ class CApiModuleManager
 					)
 				);
 
-				\CApi::GetModuleManager()->AddResult(
+				\Aurora\System\Api::GetModuleManager()->AddResult(
 					$fCallback[0]->GetName(), 
 					$sEvent, 
 					$aArguments,
@@ -380,7 +382,7 @@ class CApiModuleManager
 	{
 		foreach ($aMap as $sKey => $aValue)
 		{
-			$this->_aObjects[$sType][$sModule . \AApiModule::$Delimiter . $sKey] = $aValue;
+			$this->_aObjects[$sType][$sModule . \Aurora\System\AbstractModule::$Delimiter . $sKey] = $aValue;
 		}
 	}	
 	
@@ -442,7 +444,7 @@ class CApiModuleManager
 	{
 		if (!isset($this->aModulesSettings[strtolower($sModuleName)]))
 		{
-			$this->aModulesSettings[strtolower($sModuleName)] = new \CApiModuleSettings($sModuleName);
+			$this->aModulesSettings[strtolower($sModuleName)] = new ModuleSettings($sModuleName);
 		}
 		
 		return $this->aModulesSettings[strtolower($sModuleName)];
@@ -450,17 +452,17 @@ class CApiModuleManager
 	
 	/**
 	 * @param string $sModuleName
-	 * @return AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	public function GetModule($sModuleName)
 	{
 		$sModuleName = strtolower($sModuleName);
-		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof \AApiModule) ? $this->_aModules[$sModuleName] : false;
+		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof \Aurora\System\AbstractModule) ? $this->_aModules[$sModuleName] : false;
 	}
 	
 	
 	/**
-	 * @return \AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	public function GetModuleFromRequest()
 	{
@@ -496,7 +498,7 @@ class CApiModuleManager
 		{
 			foreach ($this->_aModules as $oModule) 
 			{
-				if ($oModule instanceof AApiModule && $oModule->HasEntry($sEntryName)) 
+				if ($oModule instanceof \Aurora\System\AbstractModule && $oModule->HasEntry($sEntryName)) 
 				{
 					$aModules[] = $oModule;
 				}
@@ -530,7 +532,7 @@ class CApiModuleManager
 	{
 		$mResult = false;
 		$oModule = $this->GetModuleFromRequest();
-		if ($oModule instanceof \AApiModule && $oModule->HasEntry($sEntryName)) 
+		if ($oModule instanceof \Aurora\System\AbstractModule && $oModule->HasEntry($sEntryName)) 
 		{
 			$mResult = $oModule->RunEntry($sEntryName);
 		}
@@ -543,7 +545,7 @@ class CApiModuleManager
 	 */
 	public function GetModulesHash()
 	{
-		$sResult = md5(CApi::Version());
+		$sResult = md5(\Aurora\System\Api::Version());
 		$aModuleNames = $this->GetAllowedModulesName(); 
 		foreach ($aModuleNames as $sModuleName)
 		{
@@ -562,7 +564,7 @@ class CApiModuleManager
 	public function GetModuleHashByName($sModuleName)
 	{
 		$sResult = '';
-		$sTenantName = \CApi::getTenantName();
+		$sTenantName = \Aurora\System\Api::getTenantName();
 
 		$sResult .= $sTenantName !== 'Default' ? $this->GetModulesPath() : $this->GetTenantModulesPath($sTenantName);
 		$sResult .= $sModuleName;
@@ -613,11 +615,11 @@ class CApiModuleManager
 /**
  * @package Api
  */
-class CApiModuleDecorator
+class ModuleDecorator
 {
     /**
 	 *
-	 * @var \AApiModule
+	 * @var \Aurora\System\AbstractModule
 	 */
 	protected $oModule;
 
@@ -627,7 +629,7 @@ class CApiModuleDecorator
 	 */
 	public function __construct($sModuleName) 
 	{
-		$this->oModule = \CApi::GetModule($sModuleName);
+		$this->oModule = \Aurora\System\Api::GetModule($sModuleName);
     }	
 	
 	/**
@@ -639,7 +641,7 @@ class CApiModuleDecorator
 	public function __call($sMethodName, $aArguments) 
 	{
 		$mResult = false;
-		if ($this->oModule instanceof AApiModule)
+		if ($this->oModule instanceof \Aurora\System\AbstractModule)
 		{
 			$mResult = $this->oModule->CallMethod($sMethodName, $aArguments);
 		}
@@ -651,7 +653,7 @@ class CApiModuleDecorator
 /**
  * @package Api
  */
-abstract class AApiModule
+abstract class AbstractModule
 {
 	/**
 	 * @var string
@@ -743,7 +745,7 @@ abstract class AApiModule
 		$this->sName = $sName;
 		$this->sPath = $sPath.$sName;
 		$this->aParameters = array();
-		$this->oApiCapabilityManager = \CApi::GetSystemManager('capability');
+		$this->oApiCapabilityManager = \Aurora\System\Api::GetSystemManager('capability');
 		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
 		
 		$this->aEntries = array(
@@ -757,7 +759,7 @@ abstract class AApiModule
 	 * @param string $sName
 	 * @param string $sPath
 	 * @param string $sVersion
-	 * @return \AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	final public static function createInstance($sName, $sPath, $sVersion = '1.0')
 	{
@@ -786,7 +788,7 @@ abstract class AApiModule
 			foreach ($this->aRequireModules as $sModule)
 			{
 				$mResult = false;
-				$oModule = \CApi::GetModule($sModule);
+				$oModule = \Aurora\System\Api::GetModule($sModule);
 				if ($oModule)
 				{
 					if (!$oModule->isInitialized())
@@ -824,7 +826,7 @@ abstract class AApiModule
 	 */
 	public function loadModuleSettings()
 	{
-		$this->oModuleSettings = \CApi::GetModuleManager()->GetModuleSettings($this->sName);
+		$this->oModuleSettings = \Aurora\System\Api::GetModuleManager()->GetModuleSettings($this->sName);
 	}	
 
 	/**
@@ -894,7 +896,7 @@ abstract class AApiModule
 	protected function getEventsCallbacks()
 	{
 		$aEventsValues = array();
-		$aEvents = \CApi::GetModuleManager()->getEvents();
+		$aEvents = \Aurora\System\Api::GetModuleManager()->getEvents();
 		foreach(array_values($aEvents) as $aEvent)
 		{
 			foreach ($aEvent as $aEv)
@@ -917,7 +919,7 @@ abstract class AApiModule
 	 */
 	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
-		\CApi::GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
+		\Aurora\System\Api::GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
 	}
 
 	/**
@@ -927,7 +929,7 @@ abstract class AApiModule
 	 */
 	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null)
 	{
-		return \CApi::GetModuleManager()->broadcastEvent(
+		return \Aurora\System\Api::GetModuleManager()->broadcastEvent(
 			$this->GetName(), 
 			$sEvent, 
 			$aArguments, 
@@ -945,7 +947,7 @@ abstract class AApiModule
 	{
 		if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName))
 		{
-			\CApi::GetModuleManager()->includeTemplate(
+			\Aurora\System\Api::GetModuleManager()->includeTemplate(
 				$sParsedTemplateID, 
 				$sParsedPlace, 
 				$this->GetPath().'/'.$sTemplateFileName, 
@@ -961,7 +963,7 @@ abstract class AApiModule
 	 */
 	public function extendObject($sType, $aMap)
 	{
-		\CApi::GetModuleManager()->extendObject($this->GetName(), $sType, $aMap);
+		\Aurora\System\Api::GetModuleManager()->extendObject($this->GetName(), $sType, $aMap);
 	}	
 	
 	/**
@@ -971,7 +973,7 @@ abstract class AApiModule
 	 */
 	public function getExtendedObject($sType)
 	{
-		return \CApi::GetModuleManager()->getExtendedObject($sType);
+		return \Aurora\System\Api::GetModuleManager()->getExtendedObject($sType);
 	}
 	
 	/**
@@ -981,7 +983,7 @@ abstract class AApiModule
 	 */
 	public function issetObject($sType)
 	{
-		return \CApi::GetModuleManager()->issetObject($sType);
+		return \Aurora\System\Api::GetModuleManager()->issetObject($sType);
 	}
 
 	/**
@@ -1044,7 +1046,7 @@ abstract class AApiModule
 	 * 
 	 * @param string $sManagerName
 	 * @param string $sForcedStorage
-	 * @return \AApiModule
+	 * @return \Aurora\System\AbstractModule
 	 */
 	public function GetManager($sManagerName = '', $sForcedStorage = 'db')
 	{
@@ -1066,7 +1068,7 @@ abstract class AApiModule
 			$sClassName = 'CApi'.ucfirst($this->GetName()).ucfirst($sManagerName).'Manager';
 			if (class_exists($sClassName))
 			{
-				$mResult = new $sClassName(\CApi::$oManager, $sForcedStorage, $this);
+				$mResult = new $sClassName(\Aurora\System\Api::$oManager, $sForcedStorage, $this);
 			}
 		}
 		
@@ -1210,12 +1212,12 @@ abstract class AApiModule
 			{
 				if (strtolower($sModule) === strtolower($this->GetName())) 
 				{
-					\CApi::Log('API:');
-					\CApi::Log('Module: '. $sModule);
-					\CApi::Log('Method: '. $sMethod);
+					\Aurora\System\Api::Log('API:');
+					\Aurora\System\Api::Log('Module: '. $sModule);
+					\Aurora\System\Api::Log('Method: '. $sMethod);
 
 					if (strtolower($sModule) !== 'core' && 
-						\CApi::GetConf('labs.webmail.csrftoken-protection', true) && !\CApi::validateAuthToken()) 
+						\Aurora\System\Api::GetConf('labs.webmail.csrftoken-protection', true) && !\Aurora\System\Api::validateAuthToken()) 
 					{
 						throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
 					} 
@@ -1225,7 +1227,7 @@ abstract class AApiModule
 							@json_decode($sParameters, true) : array();
 						$sTenantName = $this->oHttp->GetPost('TenantName', '');
 
-						\CApi::setTenantName($sTenantName);
+						\Aurora\System\Api::setTenantName($sTenantName);
 
 						if (!is_array($aParameters))
 						{
@@ -1244,7 +1246,7 @@ abstract class AApiModule
 						);
 						$aResponseItem = $this->DefaultResponse(
 							$sMethod,
-							\CApi::GetModuleManager()->GetResults()
+							\Aurora\System\Api::GetModuleManager()->GetResults()
 						);
 					}
 
@@ -1266,7 +1268,7 @@ abstract class AApiModule
 		}
 		catch (\Exception $oException)
 		{
-			\CApi::LogException($oException);
+			\Aurora\System\Api::LogException($oException);
 
 			$aAdditionalParams = null;
 			if ($oException instanceof \System\Exceptions\AuroraApiException) 
@@ -1281,7 +1283,7 @@ abstract class AApiModule
 			);
 		}
 
-		return \MailSo\Base\Utils::Php2js($aResponseItem, \CApi::MailSoLogger());		
+		return \MailSo\Base\Utils::Php2js($aResponseItem, \Aurora\System\Api::MailSoLogger());		
 	}
 
 	/**
@@ -1300,7 +1302,7 @@ abstract class AApiModule
 			if (!empty($sMethod)) {
 				
 				$sRawKey = empty($aPaths[3]) ? '' : $aPaths[3];
-				$aParameters =\CApi::DecodeKeyValues($sRawKey);				
+				$aParameters =\Aurora\System\Api::DecodeKeyValues($sRawKey);				
 				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
 				$aParameters['SharedHash'] = empty($aPaths[5]) ? '' : $aPaths[5];
 
@@ -1309,7 +1311,7 @@ abstract class AApiModule
 		}
 		catch (\Exception $oException)
 		{
-			\CApi::LogException($oException);
+			\Aurora\System\Api::LogException($oException);
 			$this->oHttp->StatusHeader(404);
 		}
 		
@@ -1413,7 +1415,7 @@ abstract class AApiModule
 	public function DefaultResponse($sMethod, $mResult = false)
 	{
 		$aResult = array(
-			'AuthenticatedUserId' => \CApi::getAuthenticatedUserId(),
+			'AuthenticatedUserId' => \Aurora\System\Api::getAuthenticatedUserId(),
 			'@Time' => microtime(true) - AURORA_APP_START
 		);
 		if (is_array($mResult))
@@ -1503,7 +1505,7 @@ abstract class AApiModule
 		$sErrorMessage = null;
 		$sModule = '';
 
-		$bShowError = \CApi::GetConf('labs.webmail.display-server-error-information', false);
+		$bShowError = \Aurora\System\Api::GetConf('labs.webmail.display-server-error-information', false);
 
 		if ($oException instanceof \System\Exceptions\AuroraApiException) 
 		{
@@ -1620,14 +1622,14 @@ abstract class AApiModule
 			{
 				if ($bWebApi && !isset($aArguments['UserId']))
 				{
-					$aArguments['UserId'] = \CApi::getAuthenticatedUserId();
+					$aArguments['UserId'] = \Aurora\System\Api::getAuthenticatedUserId();
 				}
 
 				// prepare arguments for before event
 				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, $bWebApi);
 
 				$bEventResult = $this->broadcastEvent(
-					$sMethod . \AApiModule::$Delimiter . 'before', 
+					$sMethod . \Aurora\System\AbstractModule::$Delimiter . 'before', 
 					$aArguments, 
 					$mResult
 				);
@@ -1654,7 +1656,7 @@ abstract class AApiModule
 					} 
 					catch (\Exception $oException) 
 					{
-						\CApi::GetModuleManager()->AddResult(
+						\Aurora\System\Api::GetModuleManager()->AddResult(
 							$this->GetName(), 
 							$sMethod, 
 							$aArguments,
@@ -1677,12 +1679,12 @@ abstract class AApiModule
 				}
 				
 				$this->broadcastEvent(
-					$sMethod . \AApiModule::$Delimiter . 'after', 
+					$sMethod . \Aurora\System\AbstractModule::$Delimiter . 'after', 
 					$aArguments, 
 					$mResult
 				);
 				
-				\CApi::GetModuleManager()->AddResult(
+				\Aurora\System\Api::GetModuleManager()->AddResult(
 					$this->GetName(), 
 					$sMethod, 
 					$aArguments,
@@ -1727,9 +1729,9 @@ abstract class AApiModule
 	 */
 	public function i18N($sData, $iUserId = null, $aParams = null, $iPluralCount = null)
 	{
-		$oModuleManager = \CApi::GetModuleManager();
+		$oModuleManager = \Aurora\System\Api::GetModuleManager();
 		$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
-		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
 		if ($oCoreDecorator && 0 < $iUserId)
 		{
 			$oUser = $oCoreDecorator->GetUser($iUserId);
@@ -1740,10 +1742,10 @@ abstract class AApiModule
 		}
 		
 		$aLang = null;
-		if (isset(\CApi::$aClientI18N[$this->GetName()][$sLanguage])) {
-			$aLang = \CApi::$aClientI18N[$this->GetName()][$sLanguage];
+		if (isset(\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage])) {
+			$aLang = \Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage];
 		} else {
-			\CApi::$aClientI18N[$this->GetName()][$sLanguage] = false;
+			\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = false;
 				
 			$sLangFile = $this->GetPath().'/i18n/'.$sLanguage.'.ini';
 			if (!@file_exists($sLangFile)) {
@@ -1752,16 +1754,16 @@ abstract class AApiModule
 			}
 
 			if (0 < strlen($sLangFile)) {
-				$aLang = \CApi::convertIniToLang($sLangFile);
+				$aLang = \Aurora\System\Api::convertIniToLang($sLangFile);
 				if (is_array($aLang)) {
-					\CApi::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
+					\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
 				}
 			}
 		}
 
 		//return self::processTranslateParams($aLang, $sData, $aParams);
-		return isset($iPluralCount) ? \CApi::processTranslateParams($aLang, $sData, $aParams, \CApi::getPlural($sLanguage, $iPluralCount)) : 
-			\CApi::processTranslateParams($aLang, $sData, $aParams);
+		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) : 
+			\Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams);
 	}
 
 	/**
@@ -1770,7 +1772,7 @@ abstract class AApiModule
 	 */
 	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
-		$oEavManager = \CApi::GetSystemManager('eav');
+		$oEavManager = \Aurora\System\Api::GetSystemManager('eav');
 		if ($oEavManager)
 		{
 			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';

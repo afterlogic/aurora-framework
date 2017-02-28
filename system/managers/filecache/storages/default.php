@@ -21,7 +21,7 @@
  * @package Filecache
  * @subpackage Storages
  */
-class CApiFilecacheStorage extends AApiManagerStorage
+class CApiFilecacheStorage extends \Aurora\System\AbstractManagerStorage
 {
 	/**
 	 * @var string
@@ -34,13 +34,13 @@ class CApiFilecacheStorage extends AApiManagerStorage
 	protected $sPath;
 
 	/**
-	 * @param AApiManager &$oManager
+	 * @param \Aurora\System\AbstractManager &$oManager
 	 */
-	public function __construct($sStorageName, AApiManager &$oManager)
+	public function __construct($sStorageName, \Aurora\System\AbstractManager &$oManager)
 	{
 		parent::__construct('filecache', $sStorageName, $oManager);
 
-		$this->sDataPath = rtrim(trim(CApi::DataPath()), '\\/');
+		$this->sDataPath = rtrim(trim(\Aurora\System\Api::DataPath()), '\\/');
 		$this->sPath = '/temp/.cache/'; 
 	}
 	

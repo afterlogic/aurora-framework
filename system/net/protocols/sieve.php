@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('net.abstract');
+\Aurora\System\Api::Inc('net.abstract');
 
 /**
  * @package Api
@@ -92,7 +92,7 @@ class CApiSieveProtocol extends CApiNetAbstract
 			$bResult = true;
 		}
 
-		if (CApi::GetConf('labs.sieve.use-starttls', false) && $bResult && isset($this->aData['STARTTLS']) && $this->aData['STARTTLS'])
+		if (\Aurora\System\Api::GetConf('labs.sieve.use-starttls', false) && $bResult && isset($this->aData['STARTTLS']) && $this->aData['STARTTLS'])
 		{
 			$rConnect = $this->GetConnectResource();
 			if (is_resource($rConnect) && function_exists('stream_socket_enable_crypto'))

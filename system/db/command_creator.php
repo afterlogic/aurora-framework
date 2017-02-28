@@ -17,11 +17,13 @@
  * 
  */
 
+namespace Aurora\System\Db;
+
 /**
  * @package Api
  * @subpackage Db
  */
-abstract class api_CommandCreator
+abstract class AbstractCommandCreator
 {
 	/**
 	 * @var IDbHelper
@@ -34,7 +36,7 @@ abstract class api_CommandCreator
 	protected $sPrefix;
 
 	/**
-	 * @param IDbHelper $oHelper
+	 * @param IHelper $oHelper
 	 * @param string $sPrefix
 	 */
 	public function __construct($oHelper, $sPrefix)

@@ -21,7 +21,10 @@
  * @package Api
  * @subpackage Db
  */
-class CDbGeneralSql
+
+namespace Aurora\System\Db;
+
+class GeneralSql
 {
 	/**
 	 * @var	int
@@ -53,15 +56,15 @@ class CDbGeneralSql
 	 */
 	protected function log($sLogDesc, $bIsSlaveExecute = false)
 	{
-		if (CApi::$bUseDbLog)
+		if (\Aurora\System\Api::$bUseDbLog)
 		{
 			if ($bIsSlaveExecute)
 			{
-				CApi::Log('DB-Slave['.$this->iExecuteCount.'] > '.trim($sLogDesc));
+				\Aurora\System\Api::Log('DB-Slave['.$this->iExecuteCount.'] > '.trim($sLogDesc));
 			}
 			else
 			{
-				CApi::Log('DB['.$this->iExecuteCount.'] > '.trim($sLogDesc));
+				\Aurora\System\Api::Log('DB['.$this->iExecuteCount.'] > '.trim($sLogDesc));
 			}
 		}
 	}
@@ -72,7 +75,7 @@ class CDbGeneralSql
 	 */
 	protected function errorLog($sErrorDesc)
 	{
-		CApi::Log('DB ERROR < '.trim($sErrorDesc), ELogLevel::Error);
+		\Aurora\System\Api::Log('DB ERROR < '.trim($sErrorDesc), ELogLevel::Error);
 	}
 }
 
@@ -80,7 +83,7 @@ class CDbGeneralSql
  * @package Api
  * @subpackage Db
  */
-class CDbSql extends CDbGeneralSql
+class Sql extends GeneralSql
 {
 	/**
 	 * @var	string

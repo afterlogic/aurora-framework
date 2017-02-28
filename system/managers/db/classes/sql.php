@@ -17,7 +17,7 @@
  * 
  */
 
-CApi::Inc('db.table');
+\Aurora\System\Api::Inc('db.table');
 
 /**
  * @package Db
@@ -35,7 +35,7 @@ class CDbSchemaHelper
 		static $sPrefix = null;
 		if (null === $sPrefix)
 		{
-			$oSettings =&\CApi::GetSettings();
+			$oSettings =&\Aurora\System\Api::GetSettings();
 			$sPrefix = $oSettings->GetConf('DBPrefix');
 		}
 

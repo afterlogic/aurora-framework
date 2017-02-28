@@ -24,9 +24,9 @@
 class CApiDbNodbStorage extends CApiDbStorage
 {
 	/**
-	 * @param CApiGlobalManager &$oManager
+	 * @param \Aurora\System\GlobalManager &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(\Aurora\System\GlobalManager &$oManager)
 	{
 		parent::__construct('nodb', $oManager);
 	}

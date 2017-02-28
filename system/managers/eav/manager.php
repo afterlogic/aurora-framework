@@ -22,14 +22,14 @@
  *
  * @package EAV
  */
-class CApiEavManager extends AApiManagerWithStorage
+class CApiEavManager extends \Aurora\System\AbstractManagerWithStorage
 {
 	/**
 	 * 
-	 * @param CApiGlobalManager $oManager
+	 * @param \Aurora\System\GlobalManager $oManager
 	 * @param string $sForcedStorage
 	 */
-	public function __construct(CApiGlobalManager &$oManager, $sForcedStorage = 'db')
+	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = 'db')
 	{
 		parent::__construct('eav', $oManager, $sForcedStorage);
 	}
@@ -95,7 +95,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		}
 		else
 		{
-			throw new CApiManagerException(Errs::Main_UnknownError);
+			throw new \CApiManagerException(Errs::Main_UnknownError);
 		}
 
 		return $mResult;
@@ -278,7 +278,7 @@ class CApiEavManager extends AApiManagerWithStorage
 		}
 		if (!$this->oStorage->setAttributes($mEntityId, $aAttributes))
 		{
-			throw new CApiManagerException(Errs::Main_UnknownError);
+			throw new \CApiManagerException(Errs::Main_UnknownError);
 		}
 	}
 
@@ -297,7 +297,7 @@ class CApiEavManager extends AApiManagerWithStorage
 			{
 				if (!$this->oStorage->setAttributes(array($oAttribute->EntityId), array($oAttribute)))
 				{
-					throw new CApiManagerException(Errs::Main_UnknownError);
+					throw new \CApiManagerException(Errs::Main_UnknownError);
 				}
 			}
 		}

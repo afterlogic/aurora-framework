@@ -22,7 +22,7 @@
  *
  * @package Integrator
  */
-class CApiIntegratorManager extends AApiManager
+class CApiIntegratorManager extends \Aurora\System\AbstractManager
 {
 	/**
 	 * @type string
@@ -72,9 +72,9 @@ class CApiIntegratorManager extends AApiManager
 	/**
 	 * Creates a new instance of the object.
 	 *
-	 * @param CApiGlobalManager &$oManager
+	 * @param &$oManager
 	 */
-	public function __construct(CApiGlobalManager &$oManager)
+	public function __construct(\Aurora\System\GlobalManager &$oManager)
 	{
 		$this->bCache = false;
 		parent::__construct('integrator', $oManager);
@@ -91,7 +91,7 @@ class CApiIntegratorManager extends AApiManager
 		$aResult = array();
 		if (is_dir($sDir))
 		{
-			$aFiles = api_Utils::GlobRecursive($sDir.'/*'.$sType);
+			$aFiles = \Aurora\System\Utils::GlobRecursive($sDir.'/*'.$sType);
 			foreach ($aFiles as $sFile)
 			{
 				if ((empty($sType) || $sType === substr($sFile, -strlen($sType))) && is_file($sFile))
@@ -111,13 +111,13 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function compileTemplates()
 	{
-		$sHash = \CApi::GetModuleManager()->GetModulesHash();
+		$sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 		
 		$sCacheFileName = '';
-		if (CApi::GetConf('labs.cache.templates', $this->bCache))
+		if (\Aurora\System\Api::GetConf('labs.cache.templates', $this->bCache))
 		{
-			$sCacheFileName = 'templates-'.md5(CApi::Version().$sHash).'.cache';
-			$sCacheFullFileName = \CApi::DataPath().'/cache/'.$sCacheFileName;
+			$sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
+			$sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
 			if (file_exists($sCacheFullFileName))
 			{
 				return file_get_contents($sCacheFullFileName);
@@ -125,9 +125,9 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$sResult = '';
-		$sPath =\CApi::WebMailPath().'modules';
+		$sPath =\Aurora\System\Api::WebMailPath().'modules';
 		
-		$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
+		$aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
 		foreach ($aModuleNames as $sModuleName)
 		{
@@ -152,7 +152,7 @@ class CApiIntegratorManager extends AApiManager
 					$sTemplateID = $sModuleName.'_'.preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
 					$sTemplateHtml = file_get_contents($sFileName);
 
-					$sTemplateHtml = \CApi::GetModuleManager()->ParseTemplate($sTemplateID, $sTemplateHtml);
+					$sTemplateHtml = \Aurora\System\Api::GetModuleManager()->ParseTemplate($sTemplateID, $sTemplateHtml);
 					$sTemplateHtml = preg_replace('/\{%INCLUDE-START\/[a-zA-Z\-_]+\/INCLUDE-END%\}/', '', $sTemplateHtml);
 					$sTemplateHtml = str_replace('%ModuleName%', $sModuleName, $sTemplateHtml);
 					$sTemplateHtml = str_replace('%MODULENAME%', strtoupper($sModuleName), $sTemplateHtml);
@@ -167,7 +167,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 
 		$sResult = trim($sResult);
-		if (CApi::GetConf('labs.cache.templates', $this->bCache))
+		if (\Aurora\System\Api::GetConf('labs.cache.templates', $this->bCache))
 		{
 			if (!is_dir(dirname($sCacheFullFileName)))
 			{
@@ -213,7 +213,7 @@ class CApiIntegratorManager extends AApiManager
 
 	private function getMomentLanguageString($sLanguage)
 	{
-		$sMomentLanguage = api_Utils::ConvertLanguageNameToShort($sLanguage);
+		$sMomentLanguage = \Aurora\System\Utils::ConvertLanguageNameToShort($sLanguage);
 		if ($sLanguage === 'Arabic' || $sLanguage === 'Persian')
 		{
 			$sMoment = 'window.moment && window.moment.locale && window.moment.locale(\'en\');';
@@ -235,13 +235,13 @@ class CApiIntegratorManager extends AApiManager
 		$sLanguage = $this->validatedLanguageValue($sLanguage);
 		$sResult = "";
 		
-		$sHash = \CApi::GetModuleManager()->GetModulesHash();
+		$sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 
 		$sCacheFileName = '';
-		if (CApi::GetConf('labs.cache.langs', $this->bCache))
+		if (\Aurora\System\Api::GetConf('labs.cache.langs', $this->bCache))
 		{
-			$sCacheFileName = 'langs-'.md5(CApi::Version().$sHash).'.cache';
-			$sCacheFullFileName = \CApi::DataPath().'/cache/'.$sCacheFileName;
+			$sCacheFileName = 'langs-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
+			$sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
 			if (file_exists($sCacheFullFileName))
 			{
 				$sResult = file_get_contents($sCacheFullFileName);
@@ -251,9 +251,9 @@ class CApiIntegratorManager extends AApiManager
 		if ($sResult === "")
 		{
 			$aResult = array();
-			$sPath =\CApi::WebMailPath().'modules';
+			$sPath =\Aurora\System\Api::WebMailPath().'modules';
 
-			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
+			$aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
 			foreach ($aModuleNames as $sModuleName)
 			{
@@ -285,7 +285,7 @@ class CApiIntegratorManager extends AApiManager
 			
 			$sResult .= json_encode($aResult);
 			
-			if (CApi::GetConf('labs.cache.langs', $this->bCache))
+			if (\Aurora\System\Api::GetConf('labs.cache.langs', $this->bCache))
 			{
 				if (!is_dir(dirname($sCacheFullFileName)))
 				{
@@ -309,7 +309,7 @@ class CApiIntegratorManager extends AApiManager
 		static $sPath = false;
 		if (false === $sPath) {
 			
-			$sPath =\CApi::GetConf('labs.app-cookie-path', '/');
+			$sPath =\Aurora\System\Api::GetConf('labs.app-cookie-path', '/');
 		}
 
 		return $sPath;
@@ -340,7 +340,7 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function getAuthenticatedUserHelper($sAuthToken = '')
 	{
-		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
 		$aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
 		$iUserId = $aUserInfo['userId'];
 		$oUser = null;
@@ -362,7 +362,7 @@ class CApiIntegratorManager extends AApiManager
 	 */
 	public function getAuthenticatedUserByIdHelper($iUserId)
 	{
-		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
 		$oUser = null;
 		if (0 < $iUserId)
 		{
@@ -386,7 +386,7 @@ class CApiIntegratorManager extends AApiManager
 			'isAdmin' => false,
 			'userId' => 0
 		);
-		$aAccountHashTable = \CApi::UserSession()->Get($sAuthToken);
+		$aAccountHashTable = \Aurora\System\Api::UserSession()->Get($sAuthToken);
 		if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
 			'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
 			
@@ -416,7 +416,7 @@ class CApiIntegratorManager extends AApiManager
 		$sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
 		if (!empty($sKey) && is_string($sKey))
 		{
-			$aUserHashTable =\CApi::DecodeKeyValues($sKey);
+			$aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
 			if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
 				'hd_auth' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id']))
 			{
@@ -433,10 +433,10 @@ class CApiIntegratorManager extends AApiManager
 	public function getAuthenticatedDefaultAccount($sAuthToken = '')
 	{
 		$oResult = null;
-		$iUserId = \CApi::getAuthenticatedUserId($sAuthToken);
+		$iUserId = \Aurora\System\Api::getAuthenticatedUserId($sAuthToken);
 		if (0 < $iUserId)
 		{
-			$oApiUsers =\CApi::GetSystemManager('users');
+			$oApiUsers =\Aurora\System\Api::GetSystemManager('users');
 			if ($oApiUsers)
 			{
 				$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
@@ -490,7 +490,7 @@ class CApiIntegratorManager extends AApiManager
 	{
 		if (strlen($sAuthToken) !== 0)
 		{
-			$sKey = \CApi::UserSession()->Delete($sAuthToken);
+			$sKey = \Aurora\System\Api::UserSession()->Delete($sAuthToken);
 		}
 		
 		@setcookie(\System\Service::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
@@ -510,10 +510,10 @@ class CApiIntegratorManager extends AApiManager
 			'action' => (string) $sThreadAction
 		);
 
-		CApi::LogObject($aHashTable);
+		\Aurora\System\Api::LogObject($aHashTable);
 
-		$_COOKIE[self::TOKEN_HD_THREAD_ID] =\CApi::EncodeKeyValues($aHashTable);
-		@setcookie(self::TOKEN_HD_THREAD_ID,\CApi::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
+		$_COOKIE[self::TOKEN_HD_THREAD_ID] =\Aurora\System\Api::EncodeKeyValues($aHashTable);
+		@setcookie(self::TOKEN_HD_THREAD_ID,\Aurora\System\Api::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
 	}
 
 	/**
@@ -525,7 +525,7 @@ class CApiIntegratorManager extends AApiManager
 		$sKey = empty($_COOKIE[self::TOKEN_HD_THREAD_ID]) ? '' : $_COOKIE[self::TOKEN_HD_THREAD_ID];
 		if (!empty($sKey) && is_string($sKey))
 		{
-			$aUserHashTable =\CApi::DecodeKeyValues($sKey);
+			$aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
 			if (is_array($aUserHashTable) && isset($aUserHashTable['token'], $aUserHashTable['id']) &&
 				'thread_id' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id']))
 			{
@@ -571,8 +571,8 @@ class CApiIntegratorManager extends AApiManager
 			'email' => $oHelpdeskUser->Email
 		);
 
-		$_COOKIE[self::TOKEN_HD_ACTIVATED] =\CApi::EncodeKeyValues($aHashTable);
-		@setcookie(self::TOKEN_HD_ACTIVATED,\CApi::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
+		$_COOKIE[self::TOKEN_HD_ACTIVATED] =\Aurora\System\Api::EncodeKeyValues($aHashTable);
+		@setcookie(self::TOKEN_HD_ACTIVATED,\Aurora\System\Api::EncodeKeyValues($aHashTable), 0, $this->getCookiePath(), null, null, true);
 	}
 
 	/**
@@ -584,7 +584,7 @@ class CApiIntegratorManager extends AApiManager
 		$sKey = empty($_COOKIE[self::TOKEN_HD_ACTIVATED]) ? '' : $_COOKIE[self::TOKEN_HD_ACTIVATED];
 		if (!empty($sKey) && is_string($sKey))
 		{
-			$aUserHashTable =\CApi::DecodeKeyValues($sKey);
+			$aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
 			if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
 				'hd_activated_email' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['email']))
 			{
@@ -621,11 +621,11 @@ class CApiIntegratorManager extends AApiManager
 		);
 		
 		$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
-		$sAccountHashTable = \CApi::EncodeKeyValues($aAccountHashTable);
+		$sAccountHashTable = \Aurora\System\Api::EncodeKeyValues($aAccountHashTable);
 		
 		$sAuthToken = \md5($oAccount->IdUser.$oAccount->IncomingLogin.\microtime(true).\rand(10000, 99999));
 		
-		return \CApi::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
+		return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
 	}
 
 	/**
@@ -641,8 +641,8 @@ class CApiIntegratorManager extends AApiManager
 		);
 
 		$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
-		$_COOKIE[self::AUTH_HD_KEY] =\CApi::EncodeKeyValues($aUserHashTable);
-		@setcookie(self::AUTH_HD_KEY,\CApi::EncodeKeyValues($aUserHashTable), $iTime, $this->getCookiePath(), null, null, true);
+		$_COOKIE[self::AUTH_HD_KEY] =\Aurora\System\Api::EncodeKeyValues($aUserHashTable);
+		@setcookie(self::AUTH_HD_KEY,\Aurora\System\Api::EncodeKeyValues($aUserHashTable), $iTime, $this->getCookiePath(), null, null, true);
 	}
 
 	/**
@@ -689,10 +689,10 @@ class CApiIntegratorManager extends AApiManager
 		$sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
 		if (0 < strlen($sHelpdeskHash))
 		{
-			$aHelpdeskHashTable =\CApi::DecodeKeyValues($sHelpdeskHash);
+			$aHelpdeskHashTable =\Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
 			if (isset($aHelpdeskHashTable['sign-me']) && $aHelpdeskHashTable['sign-me'])
 			{
-				@setcookie(self::AUTH_HD_KEY,\CApi::EncodeKeyValues($aHelpdeskHashTable),
+				@setcookie(self::AUTH_HD_KEY,\Aurora\System\Api::EncodeKeyValues($aHelpdeskHashTable),
 					time() + 60 * 60 * 24 * 30, $this->getCookiePath(), null, null, true);
 			}
 		}
@@ -714,10 +714,10 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$oResult = null;
 		
-		\CApi::AddSecret($sIncPassword);
+		\Aurora\System\Api::AddSecret($sIncPassword);
 
 		/* @var $oApiUsersManager CApiUsersManager */
-		$oApiUsersManager =\CApi::GetSystemManager('users');
+		$oApiUsersManager =\Aurora\System\Api::GetSystemManager('users');
 
 		$bAuthResult = false;
 		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
@@ -725,18 +725,18 @@ class CApiIntegratorManager extends AApiManager
 		{
 			if ($oAccount->IsDisabled)
 			{
-				throw new CApiManagerException(Errs::WebMailManager_AccountDisabled);
+				throw new \CApiManagerException(Errs::WebMailManager_AccountDisabled);
 			}
 
 			if (0 < $oAccount->IdTenant)
 			{
-				$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */\CApi::GetSystemManager('tenants');
+				$oApiTenantsManager = /* @var $oApiTenantsManager CApiTenantsManager */\Aurora\System\Api::GetSystemManager('tenants');
 				if ($oApiTenantsManager)
 				{
 					$oTenant = $oApiTenantsManager->getTenantById($oAccount->IdTenant);
 					if ($oTenant && ($oTenant->IsDisabled || (0 < $oTenant->Expared && $oTenant->Expared < \time())))
 					{
-						throw new CApiManagerException(Errs::WebMailManager_AccountDisabled);
+						throw new \CApiManagerException(Errs::WebMailManager_AccountDisabled);
 					}
 				}
 			}
@@ -755,7 +755,7 @@ class CApiIntegratorManager extends AApiManager
 				}
 				try
 				{
-					\CApi::ExecuteMethod('Mail::ValidateAccountConnection', array('Account' => $oAccount));
+					\Aurora\System\Api::ExecuteMethod('Mail::ValidateAccountConnection', array('Account' => $oAccount));
 				}
 				catch (Exception $oException)
 				{
@@ -764,7 +764,7 @@ class CApiIntegratorManager extends AApiManager
 			}
 			else if ($sIncPassword !== $oAccount->IncomingPassword)
 			{
-				throw new CApiManagerException(Errs::Mail_AccountAuthentication);
+				throw new \CApiManagerException(Errs::Mail_AccountAuthentication);
 			}
 
 			$sObsoleteIncPassword = $oAccount->GetObsoleteValue('IncomingPassword');
@@ -789,7 +789,7 @@ class CApiIntegratorManager extends AApiManager
 			}
 			$aExtValues['ApiIntegratorLoginToAccountResult'] = $bAuthResult;
 
-			$oAccount = \CApi::ExecuteMethod('Core::CreateAccount', array(
+			$oAccount = \Aurora\System\Api::ExecuteMethod('Core::CreateAccount', array(
 				'Email' => $sEmail, 
 				'Password' => $sIncPassword, 
 				'Language' => $sLanguage, 
@@ -801,7 +801,7 @@ class CApiIntegratorManager extends AApiManager
 			}
 			else
 			{
-				throw new CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
+				throw new \CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 			}
 		}
 		else
@@ -810,7 +810,7 @@ class CApiIntegratorManager extends AApiManager
 
 			throw (is_object($oException))
 				? $oException
-				: new CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
+				: new \CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 		}
 
 		return $oResult;
@@ -831,9 +831,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$oResult = null;
 
-//		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\CApi::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\CApi::GetSystemManager('capability');
+//		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\Aurora\System\Api::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -846,7 +846,7 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$this->setAccountAsLoggedIn($oAccount);
 			$this->setThreadIdFromRequest(0);
-			throw new CApiManagerException(Errs::HelpdeskManager_AccountSystemAuthentication);
+			throw new \CApiManagerException(Errs::HelpdeskManager_AccountSystemAuthentication);
 		}
 
 		$oUser = /* @var $oUser CHelpdeskUser */ $oApiHelpdeskManager->getUserByEmail($iIdTenant, $sEmail);
@@ -854,14 +854,14 @@ class CApiIntegratorManager extends AApiManager
 		{
 			if (!$oUser->Activated)
 			{
-				throw new CApiManagerException(Errs::HelpdeskManager_UnactivatedUser);
+				throw new \CApiManagerException(Errs::HelpdeskManager_UnactivatedUser);
 			}
 
 			$oResult = $oUser;
 		}
 		else
 		{
-			throw new CApiManagerException(Errs::HelpdeskManager_AccountAuthentication);
+			throw new \CApiManagerException(Errs::HelpdeskManager_AccountAuthentication);
 		}
 
 		return $oResult;
@@ -883,9 +883,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$mResult = false;
 
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\CApi::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\CApi::GetSystemManager('capability');
+		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\Aurora\System\Api::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -898,7 +898,7 @@ class CApiIntegratorManager extends AApiManager
 			$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
 			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
 			{
-				throw new CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+				throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 			}
 
 			$oUser = new CHelpdeskUser();
@@ -913,7 +913,7 @@ class CApiIntegratorManager extends AApiManager
 			$oApiHelpdeskManager->createUser($oUser, $bCreateFromFetcher);
 			if (!$oUser || 0 === $oUser->IdHelpdeskUser)
 			{
-				throw new CApiManagerException(Errs::HelpdeskManager_UserCreateFailed);
+				throw new \CApiManagerException(Errs::HelpdeskManager_UserCreateFailed);
 			}
 			else
 			{
@@ -922,7 +922,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 		else
 		{
-			throw new CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+			throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 		}
 
 		return $mResult;
@@ -945,9 +945,9 @@ class CApiIntegratorManager extends AApiManager
 	{
 		$bResult = false;
 
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\CApi::Manager('helpdesk');
-		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\CApi::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\CApi::GetSystemManager('capability');
+		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
+		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
+		$oApiCapabilityManager = /* @var $oApiCapabilityManager CApiCapabilityManager */\Aurora\System\Api::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
 			!$oApiCapabilityManager->isHelpdeskSupported())
 		{
@@ -960,7 +960,7 @@ class CApiIntegratorManager extends AApiManager
 			$oAccount = $this->getAhdSocialUser($sTenantName, $sSocialId);
 			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
 			{
-				throw new CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+				throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 			}
 
 			$oUser = new CHelpdeskUser();
@@ -974,7 +974,7 @@ class CApiIntegratorManager extends AApiManager
 			$oApiHelpdeskManager->createUser($oUser);
 			if (!$oUser || 0 === $oUser->IdHelpdeskUser)
 			{
-				throw new CApiManagerException(Errs::HelpdeskManager_UserCreateFailed);
+				throw new \CApiManagerException(Errs::HelpdeskManager_UserCreateFailed);
 			}
 			else
 			{
@@ -983,7 +983,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 		else
 		{
-			throw new CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+			throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 		}
 
 		return $bResult;
@@ -999,9 +999,9 @@ class CApiIntegratorManager extends AApiManager
 		if (null === $aList)
 		{
 			$aList = array();
-			$sPath =\CApi::WebMailPath().'modules';
+			$sPath =\Aurora\System\Api::WebMailPath().'modules';
 
-			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
+			$aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
 			foreach ($aModuleNames as $sModuleName)
 			{
@@ -1049,9 +1049,9 @@ class CApiIntegratorManager extends AApiManager
 		{
 			$sList = array();
 
-			$oModuleManager = \CApi::GetModuleManager();
+			$oModuleManager = \Aurora\System\Api::GetModuleManager();
 			$aThemes = $oModuleManager->getModuleConfigValue('CoreWebclient', 'ThemeList');
-			$sDir =\CApi::WebMailPath().'static/styles/themes/';
+			$sDir =\Aurora\System\Api::WebMailPath().'static/styles/themes/';
 
 			if (is_array($aThemes))
 			{
@@ -1090,9 +1090,9 @@ class CApiIntegratorManager extends AApiManager
 		// AuthToken reads from coockie for HTML
 		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
 		
-		$oUser = \CApi::getAuthenticatedUser($sAuthToken);
+		$oUser = \Aurora\System\Api::getAuthenticatedUser($sAuthToken);
 
-		$aModules = \CApi::GetModules();
+		$aModules = \Aurora\System\Api::GetModules();
 
 		foreach ($aModules as $oModule)
 		{
@@ -1122,7 +1122,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 		else
 		{
-			\CApi::UserSession()->Delete($sAuthToken);
+			\Aurora\System\Api::UserSession()->Delete($sAuthToken);
 		}
 		
 		return $aAppData;
@@ -1140,13 +1140,13 @@ class CApiIntegratorManager extends AApiManager
 	public function getAhdSocialUser($sHelpdeskTenantHash = '', $sUserId = '')
 	{
 //		$sTenantHash = $sHelpdeskTenantHash;
-//		$oApiTenant = \CApi::GetCoreManager('tenants');
+//		$oApiTenant = \Aurora\System\Api::GetCoreManager('tenants');
 //		$iIdTenant = $oApiTenant->getTenantIdByName($sTenantHash);
 //		if (!is_int($iIdTenant))
 //		{
 //			throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter);
 //		}
-////		$oApiHelpdeskManager =\CApi::Manager('helpdesk'); // TODO:
+////		$oApiHelpdeskManager =\Aurora\System\Api::Manager('helpdesk'); // TODO:
 //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
 //
 //		return $oUser;
@@ -1177,15 +1177,15 @@ class CApiIntegratorManager extends AApiManager
 
 		if (false === $sLanguage && false === $sTheme && false === $sSiteName)
 		{
-			$oSettings =&\CApi::GetSettings();
-			$oUser = \CApi::getAuthenticatedUser();
-			$oModuleManager = \CApi::GetModuleManager();
+			$oSettings =&\Aurora\System\Api::GetSettings();
+			$oUser = \Aurora\System\Api::getAuthenticatedUser();
+			$oModuleManager = \Aurora\System\Api::GetModuleManager();
 			
 			$sSiteName = $oSettings->GetConf('SiteName');
 			$sLanguage = $oUser ? $oUser->Language : $oModuleManager->getModuleConfigValue('Core', 'Language');
 			$sTheme = $oUser ? $oUser->{'CoreWebclient::Theme'} : $oModuleManager->getModuleConfigValue('CoreWebclient', 'Theme');
 
-			$oUser = \CApi::getAuthenticatedUser();
+			$oUser = \Aurora\System\Api::getAuthenticatedUser();
 
 			if ($oUser)
 			{
@@ -1203,7 +1203,7 @@ class CApiIntegratorManager extends AApiManager
 		/*** temporary fix to the problems in mobile version in rtl mode ***/
 		
 		/* @var $oApiCapability \CApiCapabilityManager */
-		$oApiCapability = \CApi::GetSystemManager('capability');
+		$oApiCapability = \Aurora\System\Api::GetSystemManager('capability');
 		
 		if (in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian')) && $oApiCapability && $oApiCapability->isNotLite() && 1 === $this->isMobile())
 		{
@@ -1275,21 +1275,21 @@ class CApiIntegratorManager extends AApiManager
 	public function buildHeadersLink()
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
-		$sMobileSuffix = \CApi::IsMobileApplication() ? '-mobile' : '';
-		$sTenantName = \CApi::getTenantName();
-		$oSettings =&\CApi::GetSettings();
+		$sMobileSuffix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
+		$sTenantName = \Aurora\System\Api::getTenantName();
+		$oSettings =&\Aurora\System\Api::GetSettings();
 		
 		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
 		{
 			$sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
 		}
 		else
 		{
 			$sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.CApi::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.CApi::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
 		}
 		
 		return $sS;
@@ -1310,14 +1310,14 @@ class CApiIntegratorManager extends AApiManager
 //			$sPostfix = $sModuleHash;
 //		}
 		
-		if (CApi::GetConf('labs.use-app-min-js', false))
+		if (\Aurora\System\Api::GetConf('labs.use-app-min-js', false))
 		{
 //			$sPostfix = $sPostfix.'.min';
 			$sPostfix .= '.min';
 		}
 		
-		$sTenantName = \CApi::getTenantName();
-		$oSettings =&\CApi::GetSettings();
+		$sTenantName = \Aurora\System\Api::getTenantName();
+		$oSettings =&\Aurora\System\Api::GetSettings();
 		
 		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
 		
@@ -1327,7 +1327,7 @@ class CApiIntegratorManager extends AApiManager
 		}
 		else
 		{
-			$aModuleNames = \CApi::GetModuleManager()->GetAllowedModulesName();
+			$aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 			
 			foreach ($aModuleNames as $sModuleName)
 			{
@@ -1342,7 +1342,7 @@ class CApiIntegratorManager extends AApiManager
 		$bIsNewTab = isset($aConfig['new_tab']) ? (bool)$aConfig['new_tab'] : false;
 		
 		return '<script>window.isPublic = '.($bIsPublic ? 'true' : 'false').'; window.isNewTab = '.($bIsNewTab ? 'true' : 'false').'; window.aAvaliableModules = ["'.implode('","', $aClientModuleNames).'"];</script>
-		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".CApi::VersionJs().'"></script>';
+		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".\Aurora\System\Api::VersionJs().'"></script>';
 	}
 	
 	/**
@@ -1361,7 +1361,7 @@ $this->compileLanguage($sLanguage)."\r\n".
 $this->compileAppData()."\r\n".
 //$this->getJsLinks($sModuleHash).
 $this->getJsLinks($aConfig).
-"\r\n".'<!-- '.CApi::Version().' -->'
+"\r\n".'<!-- '.\Aurora\System\Api::Version().' -->'
 		;
 	}
 }

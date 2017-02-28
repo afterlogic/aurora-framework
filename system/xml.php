@@ -63,7 +63,7 @@ class CXmlDomNode
 		$this->Value = ($bIsCDATA && null !== $sValue)
 			? '<![CDATA['.
 				(($bIsSimpleCharsCode) ?
-					api_Utils::EncodeSimpleSpecialXmlChars($sValue) : api_Utils::EncodeSpecialXmlChars($sValue))
+					\Aurora\System\Utils::EncodeSimpleSpecialXmlChars($sValue) : \Aurora\System\Utils::EncodeSpecialXmlChars($sValue))
 			.']]>' : $sValue;
 
 		$this->Comment = $sNodeComment;
@@ -130,7 +130,7 @@ class CXmlDomNode
 		$oNode =& $this->GetChildNodeByTagName($sTagName);
 		if (null !== $oNode)
 		{
-			$sResult = api_Utils::DecodeSpecialXmlChars($oNode->Value);
+			$sResult = \Aurora\System\Utils::DecodeSpecialXmlChars($oNode->Value);
 		}
 		return $sResult;
 	}
@@ -212,7 +212,7 @@ class CXmlDomNode
 	 */
 	public function GetAttribute($sName, $sDefault = null)
 	{
-		return isset($this->Attributes[$sName]) ? api_Utils::DecodeSpecialXmlChars($this->Attributes[$sName]) : $sDefault;
+		return isset($this->Attributes[$sName]) ? \Aurora\System\Utils::DecodeSpecialXmlChars($this->Attributes[$sName]) : $sDefault;
 	}
 }
 
@@ -324,7 +324,7 @@ class CXmlDocument
 	{
 		$oParam =& $this->getParamNodeByName($sName);
 		return (null !== $oParam && isset($oParam->Attributes['value']))
-			? api_Utils::DecodeSpecialXmlChars($oParam->Attributes['value']) : '';
+			? \Aurora\System\Utils::DecodeSpecialXmlChars($oParam->Attributes['value']) : '';
 	}
 
 	/**
@@ -334,7 +334,7 @@ class CXmlDocument
 	public function GetParamTagValueByName($sName)
 	{
 		$oParam =& $this->getParamNodeByName($sName);
-		return (null !== $oParam) ? api_Utils::DecodeSpecialXmlChars($oParam->Value) : '';
+		return (null !== $oParam) ? \Aurora\System\Utils::DecodeSpecialXmlChars($oParam->Value) : '';
 	}
 
 	/**
