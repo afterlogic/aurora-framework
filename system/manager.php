@@ -451,7 +451,7 @@ abstract class AbstractManager
 	 * @param Exception $oException
 	 * @param bool $bLog = true
 	 */
-	protected function setLastException(Exception $oException, $bLog = true)
+	protected function setLastException(\Exception $oException, $bLog = true)
 	{
 		$this->oLastException = $oException;
 
