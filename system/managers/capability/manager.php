@@ -17,10 +17,12 @@
  * 
  */
 
+namespace Aurora\System\Managers;
+
 /**
  * @package Capability
  */
-class CApiCapabilityManager extends \Aurora\System\AbstractManager
+class Capability extends \Aurora\System\AbstractManager
 {
 	/**
 	 * @param &$oManager

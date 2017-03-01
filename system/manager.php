@@ -71,7 +71,21 @@ class GlobalManager
 			$this->aStorageMap['contactsmain'] = 'ldap';
 		}
 	}
+	
+	public function GetManagers()
+	{
+		return $this->aManagers;
+	}
 
+	public function &GetManager($sKey)
+	{
+		return $this->aManagers[$sKey];
+	}
+
+	public function SetManager($sKey, $oManager)
+	{
+		$this->aManagers[$sKey] = $oManager;
+	}	
 	/**
 	 * @return CApiSettings
 	 */

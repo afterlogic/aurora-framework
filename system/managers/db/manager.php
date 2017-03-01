@@ -17,12 +17,14 @@
  * 
  */
 
+namespace Aurora\System\Managers;
+
 /**
  * CApiDbManager class summary
  *
  * @package Db
  */
-class CApiDbManager extends \Aurora\System\AbstractManagerWithStorage
+class Manager extends \Aurora\System\AbstractManagerWithStorage
 {
 	/**
 	 * Creates a new instance of the object.

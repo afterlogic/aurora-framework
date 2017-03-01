@@ -17,12 +17,15 @@
  * 
  */
 
+namespace Aurora\System\Managers;
+
+
 /**
  * CApiEAVManager class summary
  *
  * @package EAV
  */
-class CApiEavManager extends \Aurora\System\AbstractManagerWithStorage
+class Eav extends \Aurora\System\AbstractManagerWithStorage
 {
 	/**
 	 * 

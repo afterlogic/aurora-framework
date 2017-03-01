@@ -229,7 +229,36 @@ class Api
 	 */
 	public static function GetSystemManager($sManagerType, $sForcedStorage = 'db')
 	{
-		return self::Manager($sManagerType, $sForcedStorage);
+		$oResult = null;
+		if (\Aurora\System\Api::IsValid())
+		{
+			$sManagerKey = empty($sForcedStorage) ? $sManagerType : $sManagerType.'/'.$sForcedStorage;
+			$aManagers = self::$oManager->GetManagers();
+			if (isset($aManagers[$sManagerKey]))
+			{
+				$oResult =& $aManagers[$sManagerKey];
+			}
+			else
+			{
+				$sManagerType = \strtolower($sManagerType);
+				$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType);
+				if (!\class_exists($sClassName))
+				{
+					\Aurora\System\Api::Inc('managers.'.$sManagerType.'.manager', false);
+				}
+				if (\class_exists($sClassName))
+				{
+					$oMan = new $sClassName(self::$oManager, $sForcedStorage);
+					$sCurrentStorageName = $oMan->GetStorageName();
+
+					$sManagerKey = empty($sCurrentStorageName) ? $sManagerType : $sManagerType.'/'.$sCurrentStorageName;
+					self::$oManager->SetManager($sManagerKey, $oMan);
+					$oResult =& self::$oManager->GetManager($sManagerKey);
+				}
+			}
+		}
+
+		return $oResult;		
 	}
 
 	public static function GetModuleManager()

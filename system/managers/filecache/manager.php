@@ -17,12 +17,14 @@
  * 
  */
 
+namespace Aurora\System\Managers;
+
 /**
  * CApiFilecacheManager class summary
  *
  * @package Filecache
  */
-class CApiFilecacheManager extends \Aurora\System\AbstractManagerWithStorage
+class Filecache extends \Aurora\System\AbstractManagerWithStorage
 {
 	/**
 	 * Creates a new instance of the object.

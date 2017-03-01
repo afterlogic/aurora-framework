@@ -17,12 +17,14 @@
  * 
  */
 
+namespace Aurora\System\Managers;
+
 /**
  * CApiIntegratorManager class summary
  *
  * @package Integrator
  */
-class CApiIntegratorManager extends \Aurora\System\AbstractManager
+class Integrator extends \Aurora\System\AbstractManager
 {
 	/**
 	 * @type string
