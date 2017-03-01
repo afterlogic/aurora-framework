@@ -1283,6 +1283,10 @@ abstract class AbstractModule
 			);
 		}
 
+		if (isset($aResponseItem['Parameters']))
+		{
+			unset($aResponseItem['Parameters']);
+		}
 		return \MailSo\Base\Utils::Php2js($aResponseItem, \Aurora\System\Api::MailSoLogger());		
 	}
 
