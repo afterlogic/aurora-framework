@@ -130,6 +130,10 @@ class Api
 		}		
 	}	
 	
+	/**
+	 * 
+	 * @param type $bGrantAdminPrivileges
+	 */
 	public static function Init($bGrantAdminPrivileges = false)
 	{
 		include_once self::LibrariesPath().'autoload.php';
@@ -233,12 +237,9 @@ class Api
 		if (\Aurora\System\Api::IsValid())
 		{
 			$sManagerKey = empty($sForcedStorage) ? $sManagerType : $sManagerType.'/'.$sForcedStorage;
-			$aManagers = self::$oManager->GetManagers();
-			if (isset($aManagers[$sManagerKey]))
-			{
-				$oResult =& $aManagers[$sManagerKey];
-			}
-			else
+			
+			$oResult =& self::$oManager->GetManager($sManagerKey);
+			if (!$oResult)
 			{
 				$sManagerType = \strtolower($sManagerType);
 				$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType);
@@ -288,6 +289,11 @@ class Api
 		return self::$aModuleDecorators[$sModuleName];
 	}
 
+	/**
+	 * 
+	 * @param type $sModuleName
+	 * @return type
+	 */
 	public static function GetModule($sModuleName)
 	{
 		return self::GetModuleManager()->GetModule($sModuleName);
@@ -306,6 +312,12 @@ class Api
 		return self::$oManager;
 	}
 
+	/**
+	 * 
+	 * @param type $sMethodName
+	 * @param type $aParameters
+	 * @return type
+	 */
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
 		list($sModuleName, $sMethodName) = explode(\Aurora\System\AbstractModule::$Delimiter, $sMethodName);
