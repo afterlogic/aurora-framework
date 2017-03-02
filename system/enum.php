@@ -146,7 +146,7 @@ class EnumConvert
  * @package Api
  * @subpackage Enum
  */
-class EUserRole extends AbstractEnumeration
+class EUserRole extends \AbstractEnumeration
 {
 	const SuperAdmin = 0;
 	const TenantAdmin = 1;
@@ -170,7 +170,7 @@ class EUserRole extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELogLevel extends AbstractEnumeration
+class ELogLevel extends \AbstractEnumeration
 {
 	const Full = 100;
 	const Warning = 50;
@@ -192,7 +192,7 @@ class ELogLevel extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EDbType extends AbstractEnumeration
+class EDbType extends \AbstractEnumeration
 {
 	const MySQL = "MySql";
 	const PostgreSQL = "PostgreSQL";
@@ -210,7 +210,7 @@ class EDbType extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EHelpdeskFetcherType extends AbstractEnumeration
+class EHelpdeskFetcherType extends \AbstractEnumeration
 {
 	const NONE = 0;
 	const REPLY = 1;
@@ -230,7 +230,7 @@ class EHelpdeskFetcherType extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ETimeFormat extends AbstractEnumeration
+class ETimeFormat extends \AbstractEnumeration
 {
 	const F12 = 1;
 	const F24 = 0;
@@ -248,7 +248,7 @@ class ETimeFormat extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EDateFormat extends AbstractEnumeration
+class EDateFormat extends \AbstractEnumeration
 {
 	const DD_MONTH_YYYY = 'DD Month YYYY';
 	const MMDDYYYY = 'MM/DD/YYYY';
@@ -272,7 +272,7 @@ class EDateFormat extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELoginFormType extends AbstractEnumeration
+class ELoginFormType extends \AbstractEnumeration
 {
 	const Email = 0;
 	const Login = 3;
@@ -292,7 +292,7 @@ class ELoginFormType extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELoginSignMeType extends AbstractEnumeration
+class ELoginSignMeType extends \AbstractEnumeration
 {
 	const DefaultOff = 0;
 	const DefaultOn = 1;
@@ -322,7 +322,7 @@ class ECalendarDefaultWorkDay
  * @package Api
  * @subpackage Enum
  */
-class ECalendarWeekStartOn extends AbstractEnumeration
+class ECalendarWeekStartOn extends \AbstractEnumeration
 {
 	const Saturday = 6;
 	const Sunday = 0;
@@ -342,7 +342,7 @@ class ECalendarWeekStartOn extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECalendarDefaultTab extends AbstractEnumeration
+class ECalendarDefaultTab extends \AbstractEnumeration
 {
 	const Day = 1;
 	const Week = 2;
@@ -362,7 +362,7 @@ class ECalendarDefaultTab extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESortOrder extends AbstractEnumeration
+class ESortOrder extends \AbstractEnumeration
 {
 	const ASC = 0;
 	const DESC = 1;
@@ -380,7 +380,7 @@ class ESortOrder extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECapa extends AbstractEnumeration
+class ECapa extends \AbstractEnumeration
 {
 	const WEBMAIL = 'WEBMAIL';
 	const CALENDAR = 'CALENDAR';
@@ -404,7 +404,7 @@ class ECapa extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ETenantCapa extends AbstractEnumeration
+class ETenantCapa extends \AbstractEnumeration
 {
 	const SIP = 'SIP';
 	const TWILIO = 'TWILIO';
@@ -416,7 +416,7 @@ class ETenantCapa extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECalendarPermission extends AbstractEnumeration
+class ECalendarPermission extends \AbstractEnumeration
 {
 	const RemovePermission = -1;
 	const Write = 1;
@@ -437,7 +437,7 @@ class ECalendarPermission extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageType extends AbstractEnumeration
+class EFileStorageType extends \AbstractEnumeration
 {
 	const Personal = 0;
 	const Corporate = 1;
@@ -458,7 +458,7 @@ class EFileStorageType extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageTypeStr extends AbstractEnumeration
+class EFileStorageTypeStr extends \AbstractEnumeration
 {
 	const Personal = 'personal';
 	const Corporate = 'corporate';
@@ -479,7 +479,7 @@ class EFileStorageTypeStr extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPeriodStr extends AbstractEnumeration
+class EPeriodStr extends \AbstractEnumeration
 {
 	const Secondly = 'secondly';
 	const Minutely = 'minutely';
@@ -507,7 +507,7 @@ class EPeriodStr extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPeriod extends AbstractEnumeration
+class EPeriod extends \AbstractEnumeration
 {
 	const Never   = 0;
 	const Daily	   = 1;
@@ -531,7 +531,7 @@ class EPeriod extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ERepeatEnd extends AbstractEnumeration
+class ERepeatEnd extends \AbstractEnumeration
 {
 	const Never		= 0;
 	const Count		= 1;
@@ -553,7 +553,7 @@ class ERepeatEnd extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EAttendeeStatus extends AbstractEnumeration
+class EAttendeeStatus extends \AbstractEnumeration
 {
 	const Unknown = 0;
 	const Accepted = 1;
@@ -575,7 +575,7 @@ class EAttendeeStatus extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EEvents extends AbstractEnumeration
+class EEvents extends \AbstractEnumeration
 {
 	const LoginSuccess = 'login-success';
 	const LoginFailed = 'login-failed';
@@ -587,7 +587,7 @@ class EEvents extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageLinkType extends AbstractEnumeration
+class EFileStorageLinkType extends \AbstractEnumeration
 {
 	const Unknown = 0;
 	const GoogleDrive = 1;
@@ -613,7 +613,7 @@ class EFileStorageLinkType extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESocialType extends AbstractEnumeration
+class ESocialType extends \AbstractEnumeration
 {
 	const Unknown   = 0;
 	const Google    = 1;
@@ -639,7 +639,7 @@ class ESocialType extends AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESocialTypeStr extends AbstractEnumeration
+class ESocialTypeStr extends \AbstractEnumeration
 {
 	const Unknown   = '';
 	const Google    = 'google';
@@ -664,7 +664,7 @@ class ESocialTypeStr extends AbstractEnumeration
 /**
  * @subpackage Enum
  */
-class ETwofaType extends AbstractEnumeration
+class ETwofaType extends \AbstractEnumeration
 {
     CONST AUTH_TYPE_AUTHY = 'authy';
     CONST DATA_TYPE_AUTHY_ID = 1;

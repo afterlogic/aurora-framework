@@ -21,7 +21,7 @@
  * @package Db
  * @subpackage Enum
  */
-class ESyncVerboseType extends AbstractEnumeration
+class ESyncVerboseType extends \AbstractEnumeration
 {
 	const CreateTable = 0;
 	const CreateField = 1;
