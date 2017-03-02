@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -130,7 +130,7 @@ FROM %seav_entities as entities
 WHERE %s)
 ";
 		
-		foreach (\CEntity::getTypes() as $sSqlType)
+		foreach (\Aurora\System\EAV\Entity::getTypes() as $sSqlType)
 		{
 			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $sWhere);
 		}
@@ -267,7 +267,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sLimit = "";
 		$sOffset = "";
 		
-		$oEntity = \CEntity::createInstance($sEntityType);
+		$oEntity = \Aurora\System\EAV\Entity::createInstance($sEntityType);
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array();
@@ -418,20 +418,20 @@ GROUP BY %s #6
 	}	
 	
 	/**
-	 * @param array $CEntityIds
+	 * @param array $aEntityIds
 	 * @param array $aAttributes
 	 *
 	 * @return string
 	 */
-	public function setAttributes($CEntityIds, $aAttributes, $sType)
+	public function setAttributes($aEntityIds, $aAttributes, $sType)
 	{
 		$sSql = '';
 		$aValues = array();
-		foreach ($CEntityIds as $iEntityId)
+		foreach ($aEntityIds as $iEntityId)
 		{
 			foreach ($aAttributes as $oAttribute)
 			{
-				if ($oAttribute instanceof \CAttribute)
+				if ($oAttribute instanceof \Aurora\System\EAV\Attribute)
 				{
 					$mValue = $oAttribute->Value;
 					$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
@@ -480,7 +480,7 @@ ON DUPLICATE KEY UPDATE
 	WHERE entity_type = %s AND entities.id = attrs.id_entity)
 ";
 		
-		foreach (\CEntity::getTypes() as $sSqlType)
+		foreach (\Aurora\System\EAV\Entity::getTypes() as $sSqlType)
 		{
 			$aSql[] = sprintf($sSubSql, $this->prefix(), $sSqlType, $this->prefix(), $this->escapeString($sEntityType));
 		}

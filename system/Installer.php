@@ -1,5 +1,5 @@
 <?php
-namespace AuroraPlatform;
+namespace Aurora\System;
 
 use Composer\Script\Event;
 use Composer\Installer\PackageEvent;

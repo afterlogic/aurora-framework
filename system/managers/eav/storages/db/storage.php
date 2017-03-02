@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -116,7 +116,7 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (!isset($oEntity))
 				{
-					$oEntity = \CEntity::createInstance($oRow->entity_type, $oRow->entity_module);
+					$oEntity = \Aurora\System\EAV\Entity::createInstance($oRow->entity_type, $oRow->entity_module);
 					
 				}
 
@@ -129,7 +129,7 @@ class CApiEavDbStorage extends CApiEavStorage
 					{
 						$mValue = $oRow->attr_value;
 						$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
-						$oAttribute = \CAttribute::createInstance(
+						$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
 							$oRow->attr_name, 
 							$mValue, 
 							$oRow->attr_type, 
@@ -203,7 +203,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	 * @param type $mOrderBy
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
-	 * @return \CEntity
+	 * @return \Aurora\System\EAV\Entity
 	 */
 	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{
@@ -245,11 +245,11 @@ class CApiEavDbStorage extends CApiEavStorage
 			{
 				if (class_exists($sType))
 				{
-					$oEntity = \CEntity::createInstance($sType);
+					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
 				}
 				else
 				{
-					$oEntity = new \CEntity($sType);
+					$oEntity = new \Aurora\System\EAV\Entity($sType);
 				}
 				$oEntity->EntityId = (int) $oRow->entity_id;
 				$oEntity->UUID = $oRow->entity_uuid;
@@ -261,7 +261,7 @@ class CApiEavDbStorage extends CApiEavStorage
 					{
 						$sAttrKey = substr($sKey, 5);
 						$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
-						$oAttribute = \CAttribute::createInstance(
+						$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
 							$sAttrKey, 
 							$mValue, 
 							$oEntity->getType($sAttrKey), 

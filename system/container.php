@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -17,10 +17,12 @@
  * 
  */
 
+namespace Aurora\System;
+
 /**
  * @package Api
  */
-abstract class api_AContainer
+abstract class AbstractContainer
 {
 	const SESSION_CONTAINER_PREFIX = 'sess_object_container';
 
@@ -216,7 +218,7 @@ abstract class api_AContainer
 	 */
 	public function GetSessionValue($sKey, $mDefault = null)
 	{
-		$aValues = CSession::get($this->getSessionUniqueKey(), null);
+		$aValues = Session::get($this->getSessionUniqueKey(), null);
 
 		return (is_array($aValues) && array_key_exists($sKey, $aValues)) ? $aValues[$sKey] : $mDefault;
 	}
@@ -228,14 +230,14 @@ abstract class api_AContainer
 	public function SetSessionValue($sKey, $mValue)
 	{
 		$sUniqueKey = $this->getSessionUniqueKey();
-		$aValues = CSession::get($sUniqueKey, array());
+		$aValues = Session::get($sUniqueKey, array());
 		if (!is_array($aValues))
 		{
 			$aValues = array();
 		}
 
 		$aValues[$sKey] = $mValue;
-		CSession::Set($sUniqueKey, $aValues);
+		Session::Set($sUniqueKey, $aValues);
 	}
 
 	/**
@@ -244,7 +246,7 @@ abstract class api_AContainer
 	protected function getSessionUniqueKey()
 	{
 		$sUniqueKey = (0 === strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
-		return api_AContainer::SESSION_CONTAINER_PREFIX.$this->sParentClassName.$sUniqueKey;
+		return \Aurora\System\AbstractContainer::SESSION_CONTAINER_PREFIX.$this->sParentClassName.$sUniqueKey;
 	}
 
 	/**
@@ -484,7 +486,7 @@ abstract class api_AContainer
 		$oObject->initBeforeChange();
 
 		$aStaticMap = $oObject->getMap();
-		$aMap = api_AContainer::DbWriteKeys($aStaticMap, false);
+		$aMap = \Aurora\System\AbstractContainer::DbWriteKeys($aStaticMap, false);
 
 		foreach ($aMap as $sDbKey => $sObjectKey)
 		{
@@ -539,7 +541,7 @@ abstract class api_AContainer
 	 */
 	public static function DbGetObjectSqlString($sWhere, $sTableName, $aStaticMap, $oHelper)
 	{
-		$aMap = api_AContainer::DbReadKeys($aStaticMap);
+		$aMap = \Aurora\System\AbstractContainer::DbReadKeys($aStaticMap);
 		$aMap = array_map(array($oHelper, 'EscapeColumn'), $aMap);
 
 		$sSql = 'SELECT %s FROM %s WHERE %s';
@@ -602,7 +604,7 @@ abstract class api_AContainer
 		$oObject->initBeforeChange();
 
 		$aStaticMap = $oObject->getMap();
-		$aMap = api_AContainer::DbWriteKeys($aStaticMap, true);
+		$aMap = \Aurora\System\AbstractContainer::DbWriteKeys($aStaticMap, true);
 
 		$aDbKeys = array_keys($aMap);
 		$aResult[0] = array_map(array(&$oHelper, 'EscapeColumn'), $aDbKeys);

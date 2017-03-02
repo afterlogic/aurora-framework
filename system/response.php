@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -17,10 +17,12 @@
  * 
  */
 
+namespace Aurora\System;
+
 /**
  * @package Api
  */
-class CApiResponseManager
+class ResponseManager
 {
 	protected static $sMethod = null;
 
@@ -96,6 +98,10 @@ class CApiResponseManager
 			if (method_exists($mResponse, 'toResponseArray'))	
 			{
 				$mResult = array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
+			}
+			else
+			{
+				$mResult = array_merge(self::objectWrapper($mResponse, $aParameters), self::CollectionToResponseArray($mResponse, $aParameters));
 			}
 		}
 		else if (is_array($mResponse))
@@ -218,5 +224,24 @@ class CApiResponseManager
 			}
 		}
 	}	
+	
+	public static function CollectionToResponseArray($oCollection, $aParameters = array())
+	{
+		$aResult = array();
+		if ($oCollection instanceof \MailSo\Base\Collection)
+		{
+			$aNames = explode('\\', get_class($oCollection));
+			$sObjectName = end($aNames);
+
+			$aResult = array(
+				'@Object' => 'Collection/'. self::GetObjectName($sObjectName),
+				'@Count' => $oCollection->Count(),
+				'@Collection' => self::GetResponseObject($oCollection->CloneAsArray(), $aParameters)
+			);
+		}
+		
+		return $aResult;
+	}
+	
 }
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -474,7 +474,7 @@ class ModuleManager
 		} 
 		else 
 		{
-			$aPath = \System\Service::GetPaths();
+			$aPath = \Aurora\System\Service::GetPaths();
 			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
 		}
 		return $this->GetModule($sModule);
@@ -1194,7 +1194,7 @@ abstract class AbstractModule
 	/**
 	 * 
 	 * @return string
-	 * @throws \System\Exceptions\AuroraApiException
+	 * @throws \System\Exceptions\ApiException
 	 */
 	public function EntryApi()
 	{
@@ -1219,7 +1219,7 @@ abstract class AbstractModule
 					if (strtolower($sModule) !== 'core' && 
 						\Aurora\System\Api::GetConf('labs.webmail.csrftoken-protection', true) && !\Aurora\System\Api::validateAuthToken()) 
 					{
-						throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidToken);
+						throw new \System\Exceptions\ApiException(\System\Notifications::InvalidToken);
 					} 
 					else if (!empty($sModule) && !empty($sMethod)) 
 					{
@@ -1252,7 +1252,7 @@ abstract class AbstractModule
 
 					if (!is_array($aResponseItem)) 
 					{
-						throw new \System\Exceptions\AuroraApiException(\System\Notifications::UnknownError);
+						throw new \System\Exceptions\ApiException(\System\Notifications::UnknownError);
 					}
 
 					if ($sFormat !== 'Raw')
@@ -1263,7 +1263,7 @@ abstract class AbstractModule
 			}
 			else
 			{
-				throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter);
+				throw new \System\Exceptions\ApiException(\System\Notifications::InvalidInputParameter);
 			}
 		}
 		catch (\Exception $oException)
@@ -1271,7 +1271,7 @@ abstract class AbstractModule
 			\Aurora\System\Api::LogException($oException);
 
 			$aAdditionalParams = null;
-			if ($oException instanceof \System\Exceptions\AuroraApiException) 
+			if ($oException instanceof \System\Exceptions\ApiException) 
 			{
 				$aAdditionalParams = $oException->GetObjectParams();
 			}
@@ -1298,7 +1298,7 @@ abstract class AbstractModule
 	{
 		$mResult = false;
 		
-		$aPaths = \System\Service::GetPaths();
+		$aPaths = \Aurora\System\Service::GetPaths();
 		$sMethod = empty($aPaths[2]) ? '' : $aPaths[2];
 
 		try
@@ -1426,7 +1426,7 @@ abstract class AbstractModule
 		{
 			foreach ($mResult as $aValue)
 			{
-				$aResponseResult = \CApiResponseManager::GetResponseObject(
+				$aResponseResult = \Aurora\System\ResponseManager::GetResponseObject(
 					$aValue, 
 					array(
 						'Module' => $aValue['Module'],
@@ -1511,14 +1511,14 @@ abstract class AbstractModule
 
 		$bShowError = \Aurora\System\Api::GetConf('labs.webmail.display-server-error-information', false);
 
-		if ($oException instanceof \System\Exceptions\AuroraApiException) 
+		if ($oException instanceof \System\Exceptions\ApiException) 
 		{
 			$iErrorCode = $oException->getCode();
 			$sErrorMessage = null;
 			if ($bShowError) 
 			{
 				$sErrorMessage = $oException->getMessage();
-				if (empty($sErrorMessage) || 'AuroraApiException' === $sErrorMessage) 
+				if (empty($sErrorMessage) || 'ApiException' === $sErrorMessage) 
 				{
 					$sErrorMessage = null;
 				}
@@ -1667,9 +1667,9 @@ abstract class AbstractModule
 							$mResult,
 							$oException->getCode()
 						);
-						if (!($oException instanceof \System\Exceptions\AuroraApiException))
+						if (!($oException instanceof \System\Exceptions\ApiException))
 						{
-							throw new \System\Exceptions\AuroraApiException(
+							throw new \System\Exceptions\ApiException(
 								$oException->getCode(), 
 								$oException, 
 								$oException->getMessage()
@@ -1698,9 +1698,9 @@ abstract class AbstractModule
 		}
 		catch (\Exception $oException)
 		{
-			if (!($oException instanceof \System\Exceptions\AuroraApiException))
+			if (!($oException instanceof \System\Exceptions\ApiException))
 			{
-				throw new \System\Exceptions\AuroraApiException(
+				throw new \System\Exceptions\ApiException(
 					$oException->getCode(), 
 					$oException, 
 					$oException->getMessage()
@@ -1772,7 +1772,7 @@ abstract class AbstractModule
 
 	/**
 	 * 
-	 * @param \CEntity $oEntity
+	 * @param \Aurora\System\EAV\Entity $oEntity
 	 */
 	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
@@ -1806,7 +1806,7 @@ abstract class AbstractModule
 	
 	/**
 	 * 
-	 * @param CEntity $oEntity
+	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return bool
 	 */
 	public function isEnabledForEntity(&$oEntity)

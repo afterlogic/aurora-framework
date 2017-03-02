@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -17,10 +17,12 @@
  * 
  */
 
+namespace Aurora\System;
+
 /**
  * @package Api
  */
-class CSession
+class Session
 {
 	/**
 	 * @var string
@@ -52,7 +54,7 @@ class CSession
 	{
 		if (!CSession::$bFirstStarted)
 		{
-			CSession::Start();
+			self::Start();
 		}
 		return (isset($_SESSION[$sKey]));
 	}
@@ -63,7 +65,7 @@ class CSession
 	 */
 	public static function clear($sKey)
 	{
-		CSession::Start();
+		self::Start();
 		unset($_SESSION[$sKey]);
 	}
 
@@ -72,7 +74,7 @@ class CSession
 	 */
 	public static function ClearAll()
 	{
-		CSession::Start();
+		self::Start();
 		$_SESSION = array();
 	}
 
@@ -81,8 +83,8 @@ class CSession
 	 */
 	public static function Destroy()
 	{
-		CSession::Start();
-		CSession::$bStarted = false;
+		self::Start();
+		self::$bStarted = false;
 		@session_destroy();
 	}
 
@@ -93,12 +95,12 @@ class CSession
 	 */
 	public static function get($sKey, $nmDefault = null)
 	{
-		if (!CSession::$bFirstStarted)
+		if (!self::$bFirstStarted)
 		{
-			CSession::Start();
+			self::Start();
 		}
 
-		return (isset($_SESSION[$sKey])) ? CSession::stripSlashesValue($_SESSION[$sKey]) : $nmDefault;
+		return (isset($_SESSION[$sKey])) ? self::stripSlashesValue($_SESSION[$sKey]) : $nmDefault;
 	}
 
 	/**
@@ -107,7 +109,7 @@ class CSession
 	 */
 	public static function Set($sKey, $mValue)
 	{
-		CSession::Start();
+		self::Start();
 		$_SESSION[$sKey] = $mValue;
 	}
 
@@ -116,7 +118,7 @@ class CSession
 	 */
 	public static function Id()
 	{
-		CSession::Start();
+		self::Start();
 		return @session_id();
 	}
 
@@ -127,9 +129,9 @@ class CSession
 	 */
 	public static function SetId($sId)
 	{
-		CSession::Stop();
+		self::Stop();
 		@session_id($sId);
-		CSession::Start();
+		self::Start();
 		return @session_id();
 	}
 
@@ -138,10 +140,10 @@ class CSession
 	 */
 	public static function DestroySessionById($sId)
 	{
-		CSession::Stop();
+		self::Stop();
 		@session_id($sId);
-		CSession::Start();
-		CSession::Destroy();
+		self::Start();
+		self::Destroy();
 	}
 
 	/**
@@ -149,7 +151,7 @@ class CSession
 	 */
 	public static function Start()
 	{
-		if (@session_name() !== CSession::$sSessionName || !CSession::$bStarted || !CSession::$bFirstStarted)
+		if (@session_name() !== self::$sSessionName || !self::$bStarted || !self::$bFirstStarted)
 		{
 			if (@session_name())
 			{
@@ -161,13 +163,13 @@ class CSession
 			}
 
 			@session_set_cookie_params(0);
-			if (!empty(CSession::$sSessionName))
+			if (!empty(self::$sSessionName))
 			{
-				@session_name(CSession::$sSessionName);
+				@session_name(self::$sSessionName);
 			}
 
-			CSession::$bFirstStarted = true;
-			CSession::$bStarted = true;
+			self::$bFirstStarted = true;
+			self::$bStarted = true;
 
 			return @session_start();
 		}
@@ -180,9 +182,9 @@ class CSession
 	 */
 	public static function Stop()
 	{
-		if (CSession::$bStarted)
+		if (self::$bStarted)
 		{
-			CSession::$bStarted = false;
+			self::$bStarted = false;
 			@session_write_close();
 		}
 	}
@@ -193,7 +195,7 @@ class CSession
 	 */
 	private static function stripSlashesValue($mValue)
 	{
-		if (!CSession::$bIsMagicQuotesOn)
+		if (!self::$bIsMagicQuotesOn)
 		{
 			return $mValue;
 		}
@@ -209,7 +211,7 @@ class CSession
 			$mValueKeys = array_keys($mValue);
 			foreach($mValueKeys as $sKey)
 			{
-				$aReturnValue[$sKey] = CSession::stripSlashesValue($mValue[$sKey]);
+				$aReturnValue[$sKey] = self::stripSlashesValue($mValue[$sKey]);
 			}
 			return $aReturnValue;
 		}
@@ -220,5 +222,5 @@ class CSession
 	}
 }
 
-CSession::$bIsMagicQuotesOn = (bool) ini_get('magic_quotes_gpc');
-CSession::$sSessionName = API_SESSION_WEBMAIL_NAME;
+self::$bIsMagicQuotesOn = (bool) ini_get('magic_quotes_gpc');
+self::$sSessionName = API_SESSION_WEBMAIL_NAME;

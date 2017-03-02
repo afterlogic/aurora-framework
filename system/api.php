@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -203,7 +203,7 @@ class Api
 	public static function EncodeKeyValues(array $aValues, $iSaltLen = 32)
 	{
 		return \Aurora\System\Utils::UrlSafeBase64Encode(
-			\api_Crypt::XxteaEncrypt(\serialize($aValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
+			\Aurora\System\Crypt::XxteaEncrypt(\serialize($aValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
 	}
 
 	/**
@@ -212,7 +212,7 @@ class Api
 	public static function DecodeKeyValues($sEncodedValues, $iSaltLen = 32)
 	{
 		$aResult = unserialize(
-			\api_Crypt::XxteaDecrypt(
+			\Aurora\System\Crypt::XxteaDecrypt(
 				\Aurora\System\Utils::UrlSafeBase64Decode($sEncodedValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
 
 		return \is_array($aResult) ? $aResult : array();
@@ -242,7 +242,7 @@ class Api
 			if (!$oResult)
 			{
 				$sManagerType = \strtolower($sManagerType);
-				$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType);
+				$sClassName = '\Aurora\\System\\Managers\\'.\ucfirst($sManagerType);
 				if (!\class_exists($sClassName))
 				{
 					\Aurora\System\Api::Inc('managers.'.$sManagerType.'.manager', false);
@@ -1309,7 +1309,7 @@ class Api
 	/**
 	 * Checks if authenticated user has at least specified role.
 	 * @param int $iRole
-	 * @throws \System\Exceptions\AuroraApiException
+	 * @throws \System\Exceptions\ApiException
 	 */
 	public static function checkUserRoleIsAtLeast($iRole)
 	{
@@ -1327,7 +1327,7 @@ class Api
 					($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
 			if (!$bUserRoleIsAtLeast)
 			{
-				throw new \System\Exceptions\AuroraApiException(\System\Notifications::AccessDenied);
+				throw new \System\Exceptions\ApiException(\System\Notifications::AccessDenied);
 			}
 		}
 	}
@@ -1353,8 +1353,8 @@ class Api
 		$sAuthToken = self::getAuthTokenFromHeaders();
 		if (!$sAuthToken)
 		{
-			$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? 
-					$_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
+			$sAuthToken = isset($_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]) ? 
+					$_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY] : '';
 		}
 		
 		return $sAuthToken;
@@ -1363,11 +1363,11 @@ class Api
 	public static function validateAuthToken()
 	{
 		$bResult = true;
-		if (isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]))
+		if (isset($_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]))
 		{
 			$sAuthToken = self::getAuthTokenFromHeaders();
 
-			$bResult = ($sAuthToken === $_COOKIE[\System\Service::AUTH_TOKEN_KEY]);
+			$bResult = ($sAuthToken === $_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]);
 		}
 		
 		return $bResult;

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -21,7 +21,9 @@
  * @package Api
  */
 
-class CEntity
+namespace Aurora\System\EAV;
+
+class Entity
 {
 	/**
 	 * @var int
@@ -76,11 +78,11 @@ class CEntity
 	 * 
 	 * @param string $sClassName
 	 * @param string $sModuleName
-	 * @return \CEntity
+	 * @return \Aurora\System\EAV\Entity
 	 */
 	public static function createInstance($sClassName, $sModuleName = '')
 	{
-		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new \CEntity($sModuleName);
+		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new \Aurora\System\EAV\Entity($sModuleName);
 	}
 
 	/**
@@ -254,7 +256,7 @@ class CEntity
 	 */
 	public function __set($sAttribute, $mValue)
 	{
-		if (!($mValue instanceof \CAttribute))
+		if (!($mValue instanceof \Aurora\System\EAV\Attribute))
 		{
 			if ($this->issetAttribute($sAttribute))
 			{
@@ -264,7 +266,7 @@ class CEntity
 			}
 			else
 			{
-				$mValue = \CAttribute::createInstance(
+				$mValue = \Aurora\System\EAV\Attribute::createInstance(
 					$sAttribute, 
 					$mValue, 
 					$this->getType($sAttribute), 
@@ -291,7 +293,7 @@ class CEntity
 	{
 		$mValue = null;
 		$oAttribute = $this->getAttribute($sName);
-		if ($oAttribute instanceof \CAttribute)
+		if ($oAttribute instanceof \Aurora\System\EAV\Attribute)
 		{
 			$oAttribute->setType($oAttribute->Type);
 			if ($oAttribute->IsEncrypt)
@@ -306,7 +308,7 @@ class CEntity
 			$aMapItem = $this->getMapItem($sName);
 			if (isset($aMapItem))
 			{
-				$oAttribute = \CAttribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
+				$oAttribute = \Aurora\System\EAV\Attribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
 				if ($oAttribute->IsEncrypt)
 				{
 					$oAttribute->Decrypt();
@@ -391,9 +393,9 @@ class CEntity
 		return isset($this->aAttributes[$sAttributeName]);
 	}	
 
-	public function setAttribute(\CAttribute $oAttribute)
+	public function setAttribute(\Aurora\System\EAV\Attribute $oAttribute)
 	{
-		if (!in_array(strtolower($oAttribute->Name), \CEntity::$aReadOnlyAttributes))
+		if (!in_array(strtolower($oAttribute->Name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
 		{
 			$oAttribute->EntityId = $this->EntityId;
 			$this->aAttributes[$oAttribute->Name] = $oAttribute;
@@ -488,7 +490,7 @@ class CEntity
  * @package EAV
  * @subpackage Classes
  */
-class CAttribute
+class Attribute
 {
 	/*
 	 * @var int $Id
@@ -559,7 +561,7 @@ class CAttribute
 	 * @param int $iEntityId
 	 * @param bool $bReadOnly
 	 * 
-	 * @return \CAttribute
+	 * @return \Aurora\System\EAV\Attribute
 	 */
 	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0, $bReadOnly = false)
 	{

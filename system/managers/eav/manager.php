@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -60,10 +60,10 @@ class Eav extends \Aurora\System\AbstractManagerWithStorage
 
 	/**
 	 * 
-	 * @param \CEntity $oEntity
+	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return bool
 	 */
-	public function saveEntity(\CEntity &$oEntity)
+	public function saveEntity(\Aurora\System\EAV\Entity &$oEntity)
 	{
 		$mResult = false;
 		if (isset($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId) ||
@@ -81,11 +81,11 @@ class Eav extends \Aurora\System\AbstractManagerWithStorage
 	
 	/**
 	 * 
-	 * @param \CEntity $oEntity
+	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return type
 	 * @throws CApiManagerException
 	 */
-	private function createEntity(\CEntity &$oEntity)
+	private function createEntity(\Aurora\System\EAV\Entity &$oEntity)
 	{
 		$mResult = $this->oStorage->createEntity($oEntity->getModule(), $oEntity->getName(), $oEntity->UUID);
 		if ($mResult !== false)
@@ -106,11 +106,11 @@ class Eav extends \Aurora\System\AbstractManagerWithStorage
 	
 	/**
 	 * 
-	 * @param \CEntity $oEntity
+	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return boolean
 	 * @throws type
 	 */
-	protected function updateEntity(\CEntity $oEntity)
+	protected function updateEntity(\Aurora\System\EAV\Entity $oEntity)
 	{
 		$mResult = false;
 		if (0 < $oEntity->countAttributes())
@@ -253,7 +253,7 @@ class Eav extends \Aurora\System\AbstractManagerWithStorage
 	/**
 	 * 
 	 * @param int|string $mIdOrUUID
-	 * @return \CEntity
+	 * @return \Aurora\System\EAV\Entity
 	 */
 	public function getEntity($mIdOrUUID)
 	{
@@ -287,11 +287,11 @@ class Eav extends \Aurora\System\AbstractManagerWithStorage
 
 	/**
 	 * 
-	 * @param CAttribute $oAttribute
+	 * @param \Aurora\System\EAV\Attribute $oAttribute
 	 * @return boolean
 	 * @throws CApiManagerException
 	 */
-	public function setAttribute(CAttribute $oAttribute)
+	public function setAttribute(\Aurora\System\EAV\Attribute $oAttribute)
 	{
 		$bResult = false;
 		try

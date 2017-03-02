@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -495,7 +495,7 @@ class Integrator extends \Aurora\System\AbstractManager
 			$sKey = \Aurora\System\Api::UserSession()->Delete($sAuthToken);
 		}
 		
-		@setcookie(\System\Service::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
+		@setcookie(\Aurora\System\Service::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
 		@setcookie(self::TOKEN_LANGUAGE, '', 0, $this->getCookiePath());
 		return true;
 	}
@@ -1090,7 +1090,7 @@ class Integrator extends \Aurora\System\AbstractManager
 		);
 		
 		// AuthToken reads from coockie for HTML
-		$sAuthToken = isset($_COOKIE[\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\System\Service::AUTH_TOKEN_KEY] : '';
+		$sAuthToken = isset($_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY] : '';
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser($sAuthToken);
 
@@ -1102,7 +1102,7 @@ class Integrator extends \Aurora\System\AbstractManager
 			{
 				$aModuleAppData = $oModule->GetSettings();
 			}
-			catch (\System\Exceptions\AuroraApiException $oEx)
+			catch (\System\Exceptions\ApiException $oEx)
 			{
 				$aModuleAppData = null;
 			}
@@ -1135,7 +1135,7 @@ class Integrator extends \Aurora\System\AbstractManager
 	 * @param string $sHelpdeskTenantHash Default value is empty string.
 	 * @param string $sUserId Default value is empty string.
 	 *
-	 * @throws \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter) 103
+	 * @throws \System\Exceptions\ApiException(\System\Notifications::InvalidInputParameter) 103
 	 *
 	 * @return CUser|bool
 	 */
@@ -1146,7 +1146,7 @@ class Integrator extends \Aurora\System\AbstractManager
 //		$iIdTenant = $oApiTenant->getTenantIdByName($sTenantHash);
 //		if (!is_int($iIdTenant))
 //		{
-//			throw new \System\Exceptions\AuroraApiException(\System\Notifications::InvalidInputParameter);
+//			throw new \System\Exceptions\ApiException(\System\Notifications::InvalidInputParameter);
 //		}
 ////		$oApiHelpdeskManager =\Aurora\System\Api::Manager('helpdesk'); // TODO:
 //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);

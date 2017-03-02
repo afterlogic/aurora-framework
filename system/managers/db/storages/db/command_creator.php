@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * @package Db
  * @subpackage Storages
  */
-class CApiDbCommandCreator extends api_CommandCreator
+class CApiDbCommandCreator extends \Aurora\System\Db\CommandCreator
 {
 }
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * @package Api
  * @subpackage Enum
  */
-abstract class AEnumeration
+abstract class AbstractEnumeration
 {
 	/**
 	 * @var array
@@ -146,7 +146,7 @@ class EnumConvert
  * @package Api
  * @subpackage Enum
  */
-class EUserRole extends AEnumeration
+class EUserRole extends AbstractEnumeration
 {
 	const SuperAdmin = 0;
 	const TenantAdmin = 1;
@@ -170,7 +170,7 @@ class EUserRole extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELogLevel extends AEnumeration
+class ELogLevel extends AbstractEnumeration
 {
 	const Full = 100;
 	const Warning = 50;
@@ -192,7 +192,7 @@ class ELogLevel extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EDbType extends AEnumeration
+class EDbType extends AbstractEnumeration
 {
 	const MySQL = "MySql";
 	const PostgreSQL = "PostgreSQL";
@@ -210,7 +210,7 @@ class EDbType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EHelpdeskFetcherType extends AEnumeration
+class EHelpdeskFetcherType extends AbstractEnumeration
 {
 	const NONE = 0;
 	const REPLY = 1;
@@ -230,7 +230,7 @@ class EHelpdeskFetcherType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ETimeFormat extends AEnumeration
+class ETimeFormat extends AbstractEnumeration
 {
 	const F12 = 1;
 	const F24 = 0;
@@ -248,7 +248,7 @@ class ETimeFormat extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EDateFormat extends AEnumeration
+class EDateFormat extends AbstractEnumeration
 {
 	const DD_MONTH_YYYY = 'DD Month YYYY';
 	const MMDDYYYY = 'MM/DD/YYYY';
@@ -272,7 +272,7 @@ class EDateFormat extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELoginFormType extends AEnumeration
+class ELoginFormType extends AbstractEnumeration
 {
 	const Email = 0;
 	const Login = 3;
@@ -292,7 +292,7 @@ class ELoginFormType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELoginSignMeType extends AEnumeration
+class ELoginSignMeType extends AbstractEnumeration
 {
 	const DefaultOff = 0;
 	const DefaultOn = 1;
@@ -322,7 +322,7 @@ class ECalendarDefaultWorkDay
  * @package Api
  * @subpackage Enum
  */
-class ECalendarWeekStartOn extends AEnumeration
+class ECalendarWeekStartOn extends AbstractEnumeration
 {
 	const Saturday = 6;
 	const Sunday = 0;
@@ -342,7 +342,7 @@ class ECalendarWeekStartOn extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECalendarDefaultTab extends AEnumeration
+class ECalendarDefaultTab extends AbstractEnumeration
 {
 	const Day = 1;
 	const Week = 2;
@@ -362,7 +362,7 @@ class ECalendarDefaultTab extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESortOrder extends AEnumeration
+class ESortOrder extends AbstractEnumeration
 {
 	const ASC = 0;
 	const DESC = 1;
@@ -380,7 +380,7 @@ class ESortOrder extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECapa extends AEnumeration
+class ECapa extends AbstractEnumeration
 {
 	const WEBMAIL = 'WEBMAIL';
 	const CALENDAR = 'CALENDAR';
@@ -404,7 +404,7 @@ class ECapa extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ETenantCapa extends AEnumeration
+class ETenantCapa extends AbstractEnumeration
 {
 	const SIP = 'SIP';
 	const TWILIO = 'TWILIO';
@@ -416,7 +416,7 @@ class ETenantCapa extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECalendarPermission extends AEnumeration
+class ECalendarPermission extends AbstractEnumeration
 {
 	const RemovePermission = -1;
 	const Write = 1;
@@ -437,7 +437,7 @@ class ECalendarPermission extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageType extends AEnumeration
+class EFileStorageType extends AbstractEnumeration
 {
 	const Personal = 0;
 	const Corporate = 1;
@@ -458,7 +458,7 @@ class EFileStorageType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageTypeStr extends AEnumeration
+class EFileStorageTypeStr extends AbstractEnumeration
 {
 	const Personal = 'personal';
 	const Corporate = 'corporate';
@@ -479,7 +479,7 @@ class EFileStorageTypeStr extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPeriodStr extends AEnumeration
+class EPeriodStr extends AbstractEnumeration
 {
 	const Secondly = 'secondly';
 	const Minutely = 'minutely';
@@ -507,7 +507,7 @@ class EPeriodStr extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPeriod extends AEnumeration
+class EPeriod extends AbstractEnumeration
 {
 	const Never   = 0;
 	const Daily	   = 1;
@@ -531,7 +531,7 @@ class EPeriod extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ERepeatEnd extends AEnumeration
+class ERepeatEnd extends AbstractEnumeration
 {
 	const Never		= 0;
 	const Count		= 1;
@@ -553,7 +553,7 @@ class ERepeatEnd extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EAttendeeStatus extends AEnumeration
+class EAttendeeStatus extends AbstractEnumeration
 {
 	const Unknown = 0;
 	const Accepted = 1;
@@ -575,7 +575,7 @@ class EAttendeeStatus extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EEvents extends AEnumeration
+class EEvents extends AbstractEnumeration
 {
 	const LoginSuccess = 'login-success';
 	const LoginFailed = 'login-failed';
@@ -587,7 +587,7 @@ class EEvents extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageLinkType extends AEnumeration
+class EFileStorageLinkType extends AbstractEnumeration
 {
 	const Unknown = 0;
 	const GoogleDrive = 1;
@@ -613,7 +613,7 @@ class EFileStorageLinkType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESocialType extends AEnumeration
+class ESocialType extends AbstractEnumeration
 {
 	const Unknown   = 0;
 	const Google    = 1;
@@ -639,7 +639,7 @@ class ESocialType extends AEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESocialTypeStr extends AEnumeration
+class ESocialTypeStr extends AbstractEnumeration
 {
 	const Unknown   = '';
 	const Google    = 'google';
@@ -664,7 +664,7 @@ class ESocialTypeStr extends AEnumeration
 /**
  * @subpackage Enum
  */
-class ETwofaType extends AEnumeration
+class ETwofaType extends AbstractEnumeration
 {
     CONST AUTH_TYPE_AUTHY = 'authy';
     CONST DATA_TYPE_AUTHY_ID = 1;

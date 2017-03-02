@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -92,7 +92,7 @@ class CApiEavStorage extends \Aurora\System\AbstractManagerStorage
 	 * @param type $mOrderBy
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
-	 * @return \CEntity
+	 * @return \Aurora\System\EAV\Entity
 	 */
 	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
 	{

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -20,4 +20,4 @@ include_once 'common.php';
 include_once AURORA_APP_ROOT_PATH.'system/api.php';
 
 \Aurora\System\Api::Init();
-$oService = \System\Service::SingletonInstance()->Handle();
+$oService = \Aurora\System\Service::SingletonInstance()->Handle();

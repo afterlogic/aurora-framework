@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -17,7 +17,9 @@
  * 
  */
 
-class CLdapConnector
+namespace Aurora\System;
+
+class LdapConnector
 {
 	/**
 	 * @var resource 
@@ -63,7 +65,7 @@ class CLdapConnector
 
 	/**
 	 * @param string $sSearchDN
-	 * @return CLdapConnector
+	 * @return LdapConnector
 	 */
 	public function SetSearchDN($sSearchDN)
 	{
