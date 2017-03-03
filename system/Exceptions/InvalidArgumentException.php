@@ -17,7 +17,7 @@
  * 
  */
 
-namespace System\Exceptions;
+namespace Aurora\System\Exceptions;
 
 /**
  * @category Core

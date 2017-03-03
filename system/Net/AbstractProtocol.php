@@ -17,11 +17,13 @@
  * 
  */
 
+namespace Aurora\System\Net;
+
 /**
  * @package Api
  * @subpackage Net
  */
-abstract class CApiNetAbstract
+abstract class AbstractProtocol
 {
 	/**
 	 * @var resource

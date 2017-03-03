@@ -17,10 +17,41 @@
  * 
  */
 
-namespace Aurora\System\Exceptions;
+/**
+ * @package Api
+ * @subpackage Db
+ */
+
+namespace Aurora\System\Db;
 
 /**
- * @category Core
- * @package Exceptions
+ * @package Api
+ * @subpackage Db
  */
-class RuntimeException extends Exception {}
+class Sql extends GeneralSql
+{
+	/**
+	 * @var	string
+	 */
+	protected $sHost;
+
+	/**
+	 * @var	string
+	 */
+	protected $sUser;
+
+	/**
+	 * @var	string
+	 */
+	protected $sPassword;
+
+	/**
+	 * @var	string
+	 */
+	protected $sDbName;
+
+	/**
+	 * @var	string
+	 */
+	protected $sDbTablePrefix;
+}

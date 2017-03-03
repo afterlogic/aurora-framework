@@ -17,7 +17,7 @@
  * 
  */
 
-namespace System\Exceptions;
+namespace Aurora\System\Exceptions;
 
 /**
  * @category Core
@@ -32,7 +32,7 @@ class ApiException extends Exception
 
 	
 	/**
-	 * @var \Aurora\System\AbstractModule
+	 * @var \Aurora\System\Module\AbstractModule
 	 */
 	protected $oModule;
 	
@@ -57,7 +57,7 @@ class ApiException extends Exception
 	}	
 	
 	/**
-	 * @return \Aurora\System\AbstractModule
+	 * @return \Aurora\System\Module\AbstractModule
 	 */
 	public function GetModule()
 	{

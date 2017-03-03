@@ -37,5 +37,45 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 	define('AURORA_APP_START', microtime(true));
 	
 	
-	include_once 'system/service.php';
+	/**
+	 * @param string $sClassName
+	 *
+	 * @return mixed
+	 */
+	function CoreSplAutoLoad($sClassName)
+	{
+		$aClassesTree = array(
+			'system' => array(
+				'Aurora\\System'
+			)
+		);
+		foreach ($aClassesTree as $sFolder => $aClasses)
+		{
+			foreach ($aClasses as $sClass)
+			{
+				if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\'))
+				{
+					$sFileName = AURORA_APP_ROOT_PATH.$sFolder.'/'.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
+					if (file_exists($sFileName))
+					{
+						return include_once $sFileName;
+					}
+				}
+			}
+		}
+		
+		if (substr($sClassName, -6) === 'Module')
+		{
+			$sModuleName = substr($sClassName, 0, -6);
+			$sFileName = AURORA_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
+			if (file_exists($sFileName))
+			{
+				return include_once $sFileName;
+			}
+		}
+
+		return false;
+	}
+
+	spl_autoload_register('CoreSplAutoLoad');
 }

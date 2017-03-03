@@ -17,10 +17,43 @@
  * 
  */
 
-namespace Aurora\System\Exceptions;
 
-/**
- * @category Core
- * @package Exceptions
- */
-class RuntimeException extends Exception {}
+namespace Aurora\System;
+
+class SettingsProperty
+{
+	/**
+	 * @var string
+	 */
+	public $Name;
+
+	/**
+	 * @var mixed
+	 */
+	public $Value;
+
+	/**
+	 * @var string
+	 */
+	public $Type;
+	
+	/**
+	 * @var string
+	 */
+	public $SpecType;
+	
+	/**
+	 * 
+	 * @param string $sName
+	 * @param mixed $mValue
+	 * @param string $sType
+	 * @param string $sSpecType
+	 */
+	public function __construct($sName, $mValue, $sType, $sSpecType = null) 
+	{
+		$this->Name = $sName;
+		$this->Value = $mValue;
+		$this->Type = $sType;
+		$this->SpecType = $sSpecType;
+	}
+}

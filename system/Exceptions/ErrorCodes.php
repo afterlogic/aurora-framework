@@ -17,11 +17,7 @@
  * 
  */
 
-/**
- * @package Api
- */
-
-namespace Aurora\System;
+namespace Aurora\System\Exceptions;
 
 class ErrorCodes
 {
@@ -256,123 +252,5 @@ class ErrorCodes
 		return isset($aMessages[$iCode])
 			? ((0 < count($aParams)) ? strtr($aMessages[$iCode], $aParams) : $aMessages[$iCode])
 			:\Aurora\System\Api::I18N('API/UNKNOWN_ERROR');
-	}
-}
-
-/**
- * Alias
- *
- * @package Api
- */
-class Errs extends ErrorCodes {}
-
-/**
- * @package Api
- */
-class Exception extends \Exception {}
-
-/**
- * @package Api
- */
-class InvalidArgumentException extends Exception {}
-
-/**
- * @package Api
- */
-class DbException extends Exception {}
-
-/**
- * @package Api
- */
-class BaseException extends Exception
-{
-	/**
-	 * @var array
-	 */
-	protected $aObjectParams;
-
-	/**
-	 * @var Exception
-	 */
-	protected $oPrevious;
-
-	/**
-	 * @param int $iCode
-	 * @param Exception $oPrevious = null
-	 * @param array $aParams = array()
-	 * @param array $aObjectParams = array()
-	 */
-	public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
-	{
-		if (CApiErrorCodes::Validation_InvalidPort === $iCode)
-		{
-			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
-			$iCode = CApiErrorCodes::Validation_InvalidPort_OutInfo;
-		}
-		else if (CApiErrorCodes::Validation_InvalidEmail === $iCode)
-		{
-			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
-			$iCode = CApiErrorCodes::Validation_InvalidEmail_OutInfo;
-		}
-		else if (CApiErrorCodes::Validation_FieldIsEmpty === $iCode)
-		{
-			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
-			$iCode = CApiErrorCodes::Validation_FieldIsEmpty_OutInfo;
-		}
-
-		$this->aObjectParams = $aObjectParams;
-		$this->oPrevious = $oPrevious ? $oPrevious : null;
-
-		if ($this->oPrevious)
-		{
-			\Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), ELogLevel::Error);
-		}
-
-		parent::__construct(CApiErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
-	}
-
-	/**
-	 * @return array
-	 */
-	public function GetObjectParams()
-	{
-		return $this->aObjectParams;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetPreviousMessage()
-	{
-		$sMessage = '';
-		if ($this->oPrevious instanceof \MailSo\Imap\Exceptions\NegativeResponseException)
-		{
-			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $this->oPrevious->GetLastResponse();
-			
-			$sMessage = $oResponse instanceof \MailSo\Imap\Response ?
-				$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '';
-		}
-		else if ($this->oPrevious instanceof \MailSo\Smtp\Exceptions\NegativeResponseException)
-		{
-			$sMessage = $this->oPrevious->getMessage();
-//			$oSub = $this->oPrevious->getPrevious();
-//			$oSub = $oSub instanceof \MailSo\Smtp\Exceptions\NegativeResponseException ? $oSub : null;
-//
-//			$sMessage = $oSub ? $oSub->getMessage() : $this->oPrevious->getMessage();
-		}
-		else if ($this->oPrevious instanceof \Exception)
-		{
-			$sMessage = $this->oPrevious->getMessage();
-		}
-
-		return $sMessage;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetPreviousException()
-	{
-		return $this->oPrevious;
 	}
 }

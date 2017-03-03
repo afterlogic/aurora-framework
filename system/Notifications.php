@@ -17,7 +17,7 @@
  * 
  */
 
-namespace System;
+namespace Aurora\System;
 
 /**
  * @category Core

@@ -17,10 +17,41 @@
  * 
  */
 
-namespace Aurora\System\Exceptions;
+namespace Aurora\System\Module;
 
 /**
- * @category Core
- * @package Exceptions
+ * @package Api
  */
-class RuntimeException extends Exception {}
+class Decorator
+{
+    /**
+	 *
+	 * @var \Aurora\System\Module\AbstractModule
+	 */
+	protected $oModule;
+
+    /**
+	 * 
+	 * @param string $sModuleName
+	 */
+	public function __construct($sModuleName) 
+	{
+		$this->oModule = \Aurora\System\Api::GetModule($sModuleName);
+    }	
+	
+	/**
+	 * 
+	 * @param string $sMethodName
+	 * @param array $aArguments
+	 * @return mixed
+	 */
+	public function __call($sMethodName, $aArguments) 
+	{
+		$mResult = false;
+		if ($this->oModule instanceof \Aurora\System\Module\AbstractModule)
+		{
+			$mResult = $this->oModule->CallMethod($sMethodName, $aArguments);
+		}
+		return $mResult;
+	}
+}
