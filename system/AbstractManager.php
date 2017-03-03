@@ -29,7 +29,7 @@ namespace Aurora\System;
 abstract class AbstractManager
 {
 	/**
-	 * @var CApiManagerException
+	 * @var \Aurora\System\Exceptions\ManagerException
 	 */
 	protected $oLastException;
 

@@ -67,7 +67,7 @@ class CApiDbDbStorage extends CApiDbStorage
 	}
 
 	/**
-	 * @throws CApiBaseException(Errs::Db_ExceptionError) 3001
+	 * @throws \Aurora\System\Exceptions\BaseException(Errs::Db_ExceptionError) 3001
 	 *
 	 * @return bool
 	 */
@@ -85,7 +85,7 @@ class CApiDbDbStorage extends CApiDbStorage
 		}
 		else
 		{
-			throw new \CApiBaseException(Errs::Db_ExceptionError);
+			throw new \Aurora\System\Exceptions\BaseException(Errs::Db_ExceptionError);
 		}
 
 		return true;

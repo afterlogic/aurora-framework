@@ -324,7 +324,7 @@ abstract class AbstractContainer
 		}
 		else
 		{
-			throw new \CApiBaseException(Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
+			throw new \Aurora\System\Exceptions\BaseException(Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
 		}
 	}
 

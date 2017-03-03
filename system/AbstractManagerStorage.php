@@ -45,7 +45,7 @@ abstract class AbstractManagerStorage
 	protected $oSettings;
 
 	/**
-	 * @var CApiBaseException
+	 * @var \Aurora\System\Exceptions\BaseException
 	 */
 	protected $oLastException;
 
@@ -83,7 +83,7 @@ abstract class AbstractManagerStorage
 	}
 
 	/**
-	 * @return CApiBaseException
+	 * @return \Aurora\System\Exceptions\BaseException
 	 */
 	public function GetStorageException()
 	{
@@ -91,7 +91,7 @@ abstract class AbstractManagerStorage
 	}
 
 	/**
-	 * @param CApiBaseException $oException
+	 * @param \Aurora\System\Exceptions\BaseException $oException
 	 */
 	public function SetStorageException($oException)
 	{
@@ -109,7 +109,7 @@ abstract class AbstractManagerStorage
 			$oException = $this->oConnection->GetException();
 			if ($oException instanceof CApiDbException)
 			{
-				throw new \CApiBaseException(Errs::Db_ExceptionError, $oException);
+				throw new \Aurora\System\Exceptions\BaseException(Errs::Db_ExceptionError, $oException);
 			}
 		}
 	}

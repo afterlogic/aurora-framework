@@ -706,9 +706,9 @@ class Manager extends \Aurora\System\AbstractManager
 	 * @param string $sIncLogin Default value is empty string.
 	 * @param string $sLanguage Default value is empty string.
 	 *
-	 * @throws CApiManagerException(Errs::WebMailManager_AccountDisabled) 1501
-	 * @throws CApiManagerException(Errs::Mail_AccountAuthentication) 4002
-	 * @throws CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin) 1503
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::WebMailManager_AccountDisabled) 1501
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::Mail_AccountAuthentication) 4002
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::WebMailManager_AccountCreateOnLogin) 1503
 	 *
 	 * @return CAccount|null|bool
 	 */
@@ -727,7 +727,7 @@ class Manager extends \Aurora\System\AbstractManager
 		{
 			if ($oAccount->IsDisabled)
 			{
-				throw new \CApiManagerException(Errs::WebMailManager_AccountDisabled);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::WebMailManager_AccountDisabled);
 			}
 
 			if (0 < $oAccount->IdTenant)
@@ -738,7 +738,7 @@ class Manager extends \Aurora\System\AbstractManager
 					$oTenant = $oApiTenantsManager->getTenantById($oAccount->IdTenant);
 					if ($oTenant && ($oTenant->IsDisabled || (0 < $oTenant->Expared && $oTenant->Expared < \time())))
 					{
-						throw new \CApiManagerException(Errs::WebMailManager_AccountDisabled);
+						throw new \Aurora\System\Exceptions\ManagerException(Errs::WebMailManager_AccountDisabled);
 					}
 				}
 			}
@@ -766,7 +766,7 @@ class Manager extends \Aurora\System\AbstractManager
 			}
 			else if ($sIncPassword !== $oAccount->IncomingPassword)
 			{
-				throw new \CApiManagerException(Errs::Mail_AccountAuthentication);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::Mail_AccountAuthentication);
 			}
 
 			$sObsoleteIncPassword = $oAccount->GetObsoleteValue('IncomingPassword');
@@ -803,7 +803,7 @@ class Manager extends \Aurora\System\AbstractManager
 			}
 			else
 			{
-				throw new \CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 			}
 		}
 		else
@@ -812,7 +812,7 @@ class Manager extends \Aurora\System\AbstractManager
 
 			throw (is_object($oException))
 				? $oException
-				: new \CApiManagerException(Errs::WebMailManager_AccountCreateOnLogin);
+				: new \Aurora\System\Exceptions\ManagerException(Errs::WebMailManager_AccountCreateOnLogin);
 		}
 
 		return $oResult;
@@ -823,9 +823,9 @@ class Manager extends \Aurora\System\AbstractManager
 	 * @param string $sEmail
 	 * @param string $sPassword
 	 *
-	 * @throws CApiManagerException(Errs::HelpdeskManager_AccountSystemAuthentication) 6008
-	 * @throws CApiManagerException(Errs::HelpdeskManager_UnactivatedUser) 6010
-	 * @throws CApiManagerException(Errs::HelpdeskManager_AccountAuthentication) 6004
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountSystemAuthentication) 6008
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UnactivatedUser) 6010
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountAuthentication) 6004
 	 *
 	 * @return CHelpdeskUser|null|bool
 	 */
@@ -848,7 +848,7 @@ class Manager extends \Aurora\System\AbstractManager
 		{
 			$this->setAccountAsLoggedIn($oAccount);
 			$this->setThreadIdFromRequest(0);
-			throw new \CApiManagerException(Errs::HelpdeskManager_AccountSystemAuthentication);
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountSystemAuthentication);
 		}
 
 		$oUser = /* @var $oUser CHelpdeskUser */ $oApiHelpdeskManager->getUserByEmail($iIdTenant, $sEmail);
@@ -856,14 +856,14 @@ class Manager extends \Aurora\System\AbstractManager
 		{
 			if (!$oUser->Activated)
 			{
-				throw new \CApiManagerException(Errs::HelpdeskManager_UnactivatedUser);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UnactivatedUser);
 			}
 
 			$oResult = $oUser;
 		}
 		else
 		{
-			throw new \CApiManagerException(Errs::HelpdeskManager_AccountAuthentication);
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountAuthentication);
 		}
 
 		return $oResult;
@@ -876,8 +876,8 @@ class Manager extends \Aurora\System\AbstractManager
 	 * @param string $sPassword
 	 * @param bool $bCreateFromFetcher Default value is **false**.
 	 *
-	 * @throws CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists) 6001
-	 * @throws CApiManagerException(Errs::HelpdeskManager_UserCreateFailed) 6002
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists) 6001
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed) 6002
 	 *
 	 * @return CHelpdeskUser|bool
 	 */
@@ -900,7 +900,7 @@ class Manager extends \Aurora\System\AbstractManager
 			$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
 			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
 			{
-				throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 			}
 
 			$oUser = new CHelpdeskUser();
@@ -915,7 +915,7 @@ class Manager extends \Aurora\System\AbstractManager
 			$oApiHelpdeskManager->createUser($oUser, $bCreateFromFetcher);
 			if (!$oUser || 0 === $oUser->IdHelpdeskUser)
 			{
-				throw new \CApiManagerException(Errs::HelpdeskManager_UserCreateFailed);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed);
 			}
 			else
 			{
@@ -924,7 +924,7 @@ class Manager extends \Aurora\System\AbstractManager
 		}
 		else
 		{
-			throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 		}
 
 		return $mResult;
@@ -938,8 +938,8 @@ class Manager extends \Aurora\System\AbstractManager
 	 * @param string $sSocialType
 	 * @param string $sSocialName
 	 *
-	 * @throws CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists) 6001
-	 * @throws CApiManagerException(Errs::HelpdeskManager_UserCreateFailed) 6002
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists) 6001
+	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed) 6002
 	 *
 	 * @return bool
 	 */
@@ -962,7 +962,7 @@ class Manager extends \Aurora\System\AbstractManager
 			$oAccount = $this->getAhdSocialUser($sTenantName, $sSocialId);
 			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
 			{
-				throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 			}
 
 			$oUser = new CHelpdeskUser();
@@ -976,7 +976,7 @@ class Manager extends \Aurora\System\AbstractManager
 			$oApiHelpdeskManager->createUser($oUser);
 			if (!$oUser || 0 === $oUser->IdHelpdeskUser)
 			{
-				throw new \CApiManagerException(Errs::HelpdeskManager_UserCreateFailed);
+				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed);
 			}
 			else
 			{
@@ -985,7 +985,7 @@ class Manager extends \Aurora\System\AbstractManager
 		}
 		else
 		{
-			throw new \CApiManagerException(Errs::HelpdeskManager_UserAlreadyExists);
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 		}
 
 		return $bResult;

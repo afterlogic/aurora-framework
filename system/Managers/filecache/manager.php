@@ -52,7 +52,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->put($oAccount, $sKey, $sValue, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -75,7 +75,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->putFile($oAccount, $sKey, $rSource, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -98,7 +98,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -120,7 +120,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$mResult = $this->oStorage->get($oAccount, $sKey, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -142,7 +142,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$mResult = $this->oStorage->getFile($oAccount, $sKey, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -163,7 +163,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$mResult = $this->oStorage->getTempFile($oAccount, $sTempName, $sMode);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -185,7 +185,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->clear($sUUID, $sKey, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -207,7 +207,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$mResult = $this->oStorage->fileSize($oAccount, $sKey, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -229,7 +229,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->isFileExists($oAccount, $sKey, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -251,7 +251,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$mResult = $this->oStorage->generateFullFilePath($sUUID, $sKey, $sFileSuffix, $sFolder);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -268,7 +268,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->gc();
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}

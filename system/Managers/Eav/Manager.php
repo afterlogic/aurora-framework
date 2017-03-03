@@ -49,7 +49,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->isEntityExists($mIdOrUUID);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$bResult = false;
 			$this->setLastException($oException);
@@ -83,7 +83,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 	 * 
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return type
-	 * @throws CApiManagerException
+	 * @throws \Aurora\System\Exceptions\ManagerException
 	 */
 	private function createEntity(\Aurora\System\EAV\Entity &$oEntity)
 	{
@@ -98,7 +98,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		}
 		else
 		{
-			throw new \CApiManagerException(Errs::Main_UnknownError);
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
 		}
 
 		return $mResult;
@@ -126,7 +126,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 			catch (Exception $ex)
 			{
 				$mResult = false;
-				throw CApiManagerException(Errs::Main_UnknownError);
+				throw \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
 			}
 		}
 
@@ -145,7 +145,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->deleteEntity($mIdOrUUID);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -168,7 +168,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 			{
 				$bResult = $this->oStorage->deleteEntities($aIdsOrUUIDs);
 			}
-			catch (CApiBaseException $oException)
+			catch (\Aurora\System\Exceptions\BaseException $oException)
 			{
 				$this->setLastException($oException);
 			}
@@ -188,7 +188,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$aTypes = $this->oStorage->getTypes();
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -208,7 +208,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$iCount = $this->oStorage->getEntitiesCount($sType, $aWhere, $aIdsOrUUIDs);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -243,7 +243,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 				$aIdsOrUUIDs
 			);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -262,7 +262,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$oEntity = $this->oStorage->getEntity($mIdOrUUID);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -281,7 +281,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		}
 		if (!$this->oStorage->setAttributes($mEntityId, $aAttributes))
 		{
-			throw new \CApiManagerException(Errs::Main_UnknownError);
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
 		}
 	}
 
@@ -289,7 +289,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 	 * 
 	 * @param \Aurora\System\EAV\Attribute $oAttribute
 	 * @return boolean
-	 * @throws CApiManagerException
+	 * @throws \Aurora\System\Exceptions\ManagerException
 	 */
 	public function setAttribute(\Aurora\System\EAV\Attribute $oAttribute)
 	{
@@ -300,11 +300,11 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 			{
 				if (!$this->oStorage->setAttributes(array($oAttribute->EntityId), array($oAttribute)))
 				{
-					throw new \CApiManagerException(Errs::Main_UnknownError);
+					throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
 				}
 			}
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$bResult = false;
 			$this->setLastException($oException);
@@ -338,7 +338,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 				dirname(__FILE__) . '/storages/db/sql/create.sql'
 			);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}

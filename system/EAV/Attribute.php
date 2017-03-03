@@ -106,7 +106,7 @@ class Attribute
 	}
 
 	/**
-	 * @throws CApiValidationException
+	 * @throws \Aurora\System\Exceptions\ValidationException
 	 *
 	 * @return bool
 	 */

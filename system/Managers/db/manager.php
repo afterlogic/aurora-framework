@@ -49,7 +49,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->testConnection();
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -70,7 +70,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$sError = $oException->getMessage();
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$sError = $oException->getMessage();
 			$this->setLastException($oException);
@@ -93,7 +93,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->syncTables($fVerboseCallback);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -110,7 +110,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->isAUsersTableExists();
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -127,7 +127,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->createTables();
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -146,7 +146,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$sResult = $this->oStorage->getSqlSchemaAsString($bAddDropTable);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -165,7 +165,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$aResult = $this->oStorage->getSqlSchemaAsArray($bAddDropTable);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -184,7 +184,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 		{
 			$aResult = $this->oStorage->getSqlFunctionsAsArray($bAddDropFunction);
 		}
-		catch (CApiBaseException $oException)
+		catch (\Aurora\System\Exceptions\BaseException $oException)
 		{
 			$this->setLastException($oException);
 		}
