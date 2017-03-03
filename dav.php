@@ -20,7 +20,6 @@ $sCurrentFile = \basename(__FILE__);
 $sRequestUri = empty($_SERVER['REQUEST_URI']) ? '' : \trim($_SERVER['REQUEST_URI']);
 
 include_once 'common.php';
-include_once AURORA_APP_ROOT_PATH.'system/api.php';
 
 \Aurora\System\Api::Init(true);
 
