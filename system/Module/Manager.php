@@ -474,7 +474,7 @@ class Manager
 		} 
 		else 
 		{
-			$aPath = \Aurora\System\Service::GetPaths();
+			$aPath = \Aurora\System\Application::GetPaths();
 			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
 		}
 		return $this->GetModule($sModule);

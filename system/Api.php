@@ -1330,8 +1330,8 @@ class Api
 		$sAuthToken = self::getAuthTokenFromHeaders();
 		if (!$sAuthToken)
 		{
-			$sAuthToken = isset($_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]) ? 
-					$_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY] : '';
+			$sAuthToken = isset($_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]) ? 
+					$_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY] : '';
 		}
 		
 		return $sAuthToken;
@@ -1340,11 +1340,11 @@ class Api
 	public static function validateAuthToken()
 	{
 		$bResult = true;
-		if (isset($_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]))
+		if (isset($_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]))
 		{
 			$sAuthToken = self::getAuthTokenFromHeaders();
 
-			$bResult = ($sAuthToken === $_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]);
+			$bResult = ($sAuthToken === $_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]);
 		}
 		
 		return $bResult;

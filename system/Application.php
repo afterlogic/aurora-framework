@@ -22,7 +22,7 @@ namespace Aurora\System;
 /**
  * @category Core
  */
-class Service
+class Application
 {
 	/**
 	 * @type string
@@ -47,7 +47,7 @@ class Service
 	}
 
 	/**
-	 * @return \Aurora\System\Service
+	 * @return \Aurora\System\Application
 	 */
 	public static function NewInstance()
 	{

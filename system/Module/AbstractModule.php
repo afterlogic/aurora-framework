@@ -667,7 +667,7 @@ abstract class AbstractModule
 	{
 		$mResult = false;
 		
-		$aPaths = \Aurora\System\Service::GetPaths();
+		$aPaths = \Aurora\System\Application::GetPaths();
 		$sMethod = empty($aPaths[2]) ? '' : $aPaths[2];
 
 		try

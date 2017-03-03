@@ -495,7 +495,7 @@ class Manager extends \Aurora\System\AbstractManager
 			$sKey = \Aurora\System\Api::UserSession()->Delete($sAuthToken);
 		}
 		
-		@setcookie(\Aurora\System\Service::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
+		@setcookie(\Aurora\System\Application::AUTH_TOKEN_KEY, '', time() - 60 * 60 * 24 * 30, $this->getCookiePath());
 		@setcookie(self::TOKEN_LANGUAGE, '', 0, $this->getCookiePath());
 		return true;
 	}
@@ -1090,7 +1090,7 @@ class Manager extends \Aurora\System\AbstractManager
 		);
 		
 		// AuthToken reads from coockie for HTML
-		$sAuthToken = isset($_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY]) ? $_COOKIE[\Aurora\System\Service::AUTH_TOKEN_KEY] : '';
+		$sAuthToken = isset($_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]) ? $_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY] : '';
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser($sAuthToken);
 

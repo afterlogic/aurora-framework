@@ -17,7 +17,6 @@
  */
 
 include_once 'common.php';
-include_once AURORA_APP_ROOT_PATH.'system/api.php';
 
 \Aurora\System\Api::Init();
-$oService = \Aurora\System\Service::SingletonInstance()->Handle();
+\Aurora\System\Application::SingletonInstance()->Handle();
