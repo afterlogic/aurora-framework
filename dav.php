@@ -30,6 +30,5 @@ include_once 'common.php';
 
 $sBaseUri = \substr($sRequestUri, 0, \strpos($sRequestUri,'/'.$sCurrentFile)).'/'.$sCurrentFile.'/';
 	
-$oServer = \Afterlogic\DAV\Server::getInstance($sBaseUri);
-$oServer->exec();
+\Afterlogic\DAV\Server::getInstance($sBaseUri)->exec();
 
