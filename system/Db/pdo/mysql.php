@@ -19,6 +19,8 @@
 
 namespace Aurora\System\Db;
 
+use Aurora\System\Exceptions\DbException;
+
 \Aurora\System\Api::Inc('db.sql');
 
 /**
@@ -95,18 +97,18 @@ class PdoMySql extends Sql
 	{
 		if (!class_exists('PDO'))
 		{
-			throw new \DbException('Can\'t load PDO extension.', 0);
+			throw new DbException('Can\'t load PDO extension.', 0);
 		}
 
 		$mPdoDrivers = \PDO::getAvailableDrivers();
 		if (!is_array($mPdoDrivers) || !in_array('mysql', $mPdoDrivers))
 		{
-			throw new \DbException('Can\'t load PDO mysql driver.', 0);
+			throw new DbException('Can\'t load PDO mysql driver.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
 		{
-			throw new \DbException('Not enough details required to establish connection.', 0);
+			throw new DbException('Not enough details required to establish connection.', 0);
 		}
 
 		if (\Aurora\System\Api::$bUseDbLog)
@@ -196,7 +198,7 @@ class PdoMySql extends Sql
 				\Aurora\System\Api::Log($oException->getTraceAsString(), ELogLevel::Error);
 				$this->oPDO = false;
 
-				throw new \DbException($oException->getMessage(), $oException->getCode(), $oException);
+				throw new DbException($oException->getMessage(), $oException->getCode(), $oException);
 			}
 		}
 		else
