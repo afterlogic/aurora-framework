@@ -517,7 +517,6 @@ class Api
 	 */
 	public static function StorageInc($sManagerName, $sStorageName, $sFileName)
 	{
-		$sStorageName = preg_replace('/[^a-z]/', '', $sStorageName);
 		return self::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
 	}
 
