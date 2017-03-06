@@ -160,7 +160,7 @@ class ResponseManager
 	{
 		$sMd5Hash = md5(rand(1000, 9999));
 
-		$oApiFileCache = \Aurora\System\Api::GetSystemManager('filecache');
+		$oApiFileCache = \Aurora\System\Api::GetSystemManager('Filecache');
 		$oApiFileCache->putFile($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
 		if ($oApiFileCache->isFileExists($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))
 		{
