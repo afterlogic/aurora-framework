@@ -191,7 +191,7 @@ class Manager
 			$aArgs
 		);
 		
-		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
+		$sModuleFilePath = $sModulePath.$sModuleName.'/Module.php';
 		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
 		{		
 			$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';

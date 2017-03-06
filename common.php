@@ -67,8 +67,8 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 		if (strpos($sClassName, 'Aurora\\Modules') !== false)
 		{
 			$sModuleClassName = substr($sClassName, strlen('Aurora\\Modules\\'));
-			$sModuleName = substr($sModuleClassName, 0, -6);
-			$sFileName = AURORA_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
+			$sModuleName = substr($sModuleClassName, 0, -7);
+			$sFileName = AURORA_APP_ROOT_PATH.'modules/'.$sModuleName.'/Module.php';
 			if (file_exists($sFileName))
 			{
 				include_once $sFileName;
