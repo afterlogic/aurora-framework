@@ -191,12 +191,16 @@ class Manager
 			$aArgs
 		);
 		
-		$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . 'Module';
-		$oModule = new $sModuleClassName($sModuleName, $sModulePath);
-		if ($oModule instanceof \Aurora\System\Module\AbstractModule)
-		{
-			 $this->_aModules[strtolower($sModuleName)] = $oModule;
-			 $mResult = $oModule;
+		$sModuleFilePath = $sModulePath.$sModuleName.'/module.php';
+		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
+		{		
+			$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
+			$oModule = new $sModuleClassName($sModuleName, $sModulePath);
+			if ($oModule instanceof \Aurora\System\Module\AbstractModule)
+			{
+				 $this->_aModules[strtolower($sModuleName)] = $oModule;
+				 $mResult = $oModule;
+			}
 		}
 
 		$this->broadcastEvent(
