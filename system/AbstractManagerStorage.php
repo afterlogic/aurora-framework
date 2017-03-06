@@ -51,8 +51,8 @@ abstract class AbstractManagerStorage
 
 	public function __construct($sManagerName, $sStorageName, \Aurora\System\AbstractManager &$oManager)
 	{
-		$this->sManagerName = strtolower($sManagerName);
-		$this->sStorageName = strtolower($sStorageName);
+		$this->sManagerName = $sManagerName;
+		$this->sStorageName = $sStorageName;
 		$this->oManager = $oManager;
 		$this->oSettings =& $oManager->GetGlobalManager()->GetSettings();
 		$this->oLastException = null;

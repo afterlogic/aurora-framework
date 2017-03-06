@@ -55,7 +55,7 @@ abstract class AbstractManager
 
 	public function __construct($sManagerName, GlobalManager &$oManager, \Aurora\System\Module\AbstractModule $oModule = null)
 	{
-		$this->sManagerName = strtolower($sManagerName);
+		$this->sManagerName = $sManagerName;
 		$this->oSettings =& $oManager->GetSettings();
 		$this->oManager =& $oManager;
 		$this->oLastException = null;
