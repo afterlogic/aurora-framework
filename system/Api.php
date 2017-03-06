@@ -501,7 +501,6 @@ class Api
 	 */
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
-		$sManagerName = preg_replace('/[^a-z]/', '', $sManagerName);
 		return self::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
@@ -510,7 +509,6 @@ class Api
 	 */
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
-		$sManagerName = preg_replace('/[^a-z]/', '', $sManagerName);
 		return self::IncPath('managers.'.$sManagerName.'.'.$sFileName);
 	}
 
@@ -519,7 +517,6 @@ class Api
 	 */
 	public static function StorageInc($sManagerName, $sStorageName, $sFileName)
 	{
-		$sManagerName = preg_replace('/[^a-z]/', '', $sManagerName);
 		$sStorageName = preg_replace('/[^a-z]/', '', $sStorageName);
 		return self::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
 	}
