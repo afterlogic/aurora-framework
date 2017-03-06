@@ -567,7 +567,7 @@ class Api
 		if ($bDoExitOnError) 
 		{
 			//TODO check functionality
-			//echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
+			echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
 		}
 		
 		return false;
