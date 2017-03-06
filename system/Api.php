@@ -501,7 +501,7 @@ class Api
 	 */
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
-		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
+		$sManagerName = preg_replace('/[^a-z]/', '', $sManagerName);
 		return self::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
@@ -510,7 +510,7 @@ class Api
 	 */
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
-		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
+		$sManagerName = preg_replace('/[^a-z]/', '', $sManagerName);
 		return self::IncPath('managers.'.$sManagerName.'.'.$sFileName);
 	}
 
@@ -519,8 +519,8 @@ class Api
 	 */
 	public static function StorageInc($sManagerName, $sStorageName, $sFileName)
 	{
-		$sManagerName = preg_replace('/[^a-z]/', '', strtolower($sManagerName));
-		$sStorageName = preg_replace('/[^a-z]/', '', strtolower($sStorageName));
+		$sManagerName = preg_replace('/[^a-z]/', '', $sManagerName);
+		$sStorageName = preg_replace('/[^a-z]/', '', $sStorageName);
 		return self::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
 	}
 
@@ -529,7 +529,7 @@ class Api
 	 */
 	public static function IncPath($sFileName)
 	{
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', $sFileName);
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
 
@@ -546,7 +546,7 @@ class Api
 		static $aCache = array();
 
 		$sFileFullPath = '';
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
+		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', $sFileName);
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
 		if (isset($aCache[$sFileName])) 

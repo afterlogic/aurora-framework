@@ -118,7 +118,7 @@ class GlobalManager
 	 */
 	public function GetStorageByType($sManagerName)
 	{
-		$sManagerName = strtolower($sManagerName);
+//		$sManagerName = strtolower($sManagerName);
 		return isset($this->aStorageMap[$sManagerName]) ? $this->aStorageMap[$sManagerName] : '';
 	}
 
