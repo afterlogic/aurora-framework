@@ -65,9 +65,9 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 		}
 		else
 		{
-			\Aurora\System\Api::Inc('managers.'.$this->GetManagerName().'.storages.default');
+			\Aurora\System\Api::Inc('managers.'.ucfirst($this->GetManagerName()).'.storages.default');
 
-			if (\Aurora\System\Api::Inc('managers.'.$this->GetManagerName().'.storages.'.$this->GetStorageName().'.storage', false))
+			if (\Aurora\System\Api::Inc('managers.'.ucfirst($this->GetManagerName()).'.storages.'.$this->GetStorageName().'.storage', false))
 			{
 				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
 				$this->oStorage = new $sClassName($this);
