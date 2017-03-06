@@ -225,7 +225,7 @@ class Api
 			$oResult =& self::$oManager->GetManager($sManagerKey);
 			if (!$oResult)
 			{
-				$sManagerType = \strtolower($sManagerType);
+//				$sManagerType = \strtolower($sManagerType);
 				$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType).'\\Manager';
 				$oMan = new $sClassName(self::$oManager, $sForcedStorage);
 				$sCurrentStorageName = $oMan->GetStorageName();
