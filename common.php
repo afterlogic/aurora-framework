@@ -64,9 +64,10 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 			}
 		}
 		
-		if (substr($sClassName, -6) === 'Module')
+		if (strpos($sClassName, 'Aurora\\Modules') !== false)
 		{
-			$sModuleName = substr($sClassName, 0, -6);
+			$sModuleClassName = substr($sClassName, strlen('Aurora\\Modules\\'));
+			$sModuleName = substr($sModuleClassName, 0, -6);
 			$sFileName = AURORA_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
 			if (file_exists($sFileName))
 			{
