@@ -2,19 +2,20 @@
 
 read -p "Commit message: " response
 
-tenant=""
-if [ "$response" != "" ]; 
-then
-	tenant=" --tenant $response";
-fi
+echo "Aurora Core";
+git add -A;
+git commit -m $response;
+git push origin/master;
+echo "";
 
-#Build static data
 cd ../modules
 
-Modules=();
-for dir in *;
+for dir in $(find . -name ".git");
 do
-	if [ -d "$dir" ];then
-		Modules=("${Modules[@]}" "$dir");
-	fi
+    cd ${dir%/*} > /dev/null;
+    echo ${dir%/*};
+    git add -A;
+	git commit -m $response;
+	git push origin/master;
+    cd -  > /dev/null;
 done
