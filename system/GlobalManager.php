@@ -217,7 +217,6 @@ class GlobalManager
 			}
 			else
 			{
-				$sManagerType = strtolower($sManagerType);
 				$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
 				if (!class_exists($sClassName))
 				{
