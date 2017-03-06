@@ -542,7 +542,6 @@ class Api
 		static $aCache = array();
 
 		$sFileFullPath = '';
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', $sFileName);
 		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
 		$sFileName = str_replace('.', '/', $sFileName);
 		if (isset($aCache[$sFileName])) 
