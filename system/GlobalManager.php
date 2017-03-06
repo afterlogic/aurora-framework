@@ -220,7 +220,7 @@ class GlobalManager
 				$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
 				if (!class_exists($sClassName))
 				{
-					\Aurora\System\Api::Inc('managers.'.$sManagerType.'.manager', false);
+					\Aurora\System\Api::Inc('Managers.'.$sManagerType.'.manager', false);
 				}
 				if (class_exists($sClassName))
 				{

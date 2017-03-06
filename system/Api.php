@@ -501,7 +501,7 @@ class Api
 	 */
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
 	{
-		return self::Inc('managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
+		return self::Inc('Managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
 	}
 
 	/**
@@ -509,7 +509,7 @@ class Api
 	 */
 	public static function ManagerPath($sManagerName, $sFileName)
 	{
-		return self::IncPath('managers.'.$sManagerName.'.'.$sFileName);
+		return self::IncPath('Managers.'.$sManagerName.'.'.$sFileName);
 	}
 
 	/**
