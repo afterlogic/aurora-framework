@@ -29,7 +29,7 @@ class Manager extends \Aurora\System\AbstractManager
 	 */
 	public function __construct(\Aurora\System\GlobalManager &$oManager)
 	{
-		parent::__construct('capability', $oManager);
+		parent::__construct('Сapability', $oManager);
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Manager extends \Aurora\System\AbstractManager
 	 */
 	public function isNotLite()
 	{
-		return !!\Aurora\System\Api::GetSystemManager('licensing');
+		return !!\Aurora\System\Api::GetSystemManager('Licensing');
 	}
 
 	/**

@@ -33,7 +33,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 	 */
 	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = '')
 	{
-		parent::__construct('db', $oManager, $sForcedStorage);
+		parent::__construct('Db', $oManager, $sForcedStorage);
 
 		$this->inc('classes.enum');
 		$this->inc('classes.sql');

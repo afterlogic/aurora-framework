@@ -29,7 +29,7 @@ class Manager extends \Aurora\System\AbstractManager
 	 */
 	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = '')
 	{
-		parent::__construct('licensing', $oManager);
+		parent::__construct('Licensing', $oManager);
 
 		$this->inc('classes.enc');
 		$this->inc('classes.inc', false);

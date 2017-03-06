@@ -34,7 +34,7 @@ class Manager extends \Aurora\System\AbstractManagerWithStorage
 	 */
 	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = 'db')
 	{
-		parent::__construct('eav', $oManager, $sForcedStorage);
+		parent::__construct('Eav', $oManager, $sForcedStorage);
 	}
 
 	/**
