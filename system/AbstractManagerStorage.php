@@ -151,7 +151,7 @@ abstract class AbstractManagerStorage
 			}
 			else
 			{
-				return\Aurora\System\Api::StorageInc($this->GetManagerName(), $this->GetStorageName(), $sFileName);
+				return\Aurora\System\Api::StorageInc(ucfirst($this->GetManagerName()), $this->GetStorageName(), $sFileName);
 			}
 		}
 

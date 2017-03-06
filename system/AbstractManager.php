@@ -108,7 +108,7 @@ abstract class AbstractManager
 	 */
 	protected function inc($sInclude, $bDoExitOnError = true)
 	{
-		\Aurora\System\Api::ManagerInc($this->GetManagerName(), $sInclude, $bDoExitOnError);
+		\Aurora\System\Api::ManagerInc(ucfirst($this->GetManagerName()), $sInclude, $bDoExitOnError);
 	}
 
 	/**
