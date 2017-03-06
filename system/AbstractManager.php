@@ -129,7 +129,7 @@ abstract class AbstractManager
 		}
 		else
 		{
-			$sFileFullPath = $this->oModule->GetPath().'/managers/'.$this->GetManagerName().'/classes/'.$sFileName.'.php';
+			$sFileFullPath = $this->oModule->GetPath().'/managers/'.ucfirst($this->GetManagerName()).'/classes/'.$sFileName.'.php';
 			if (@file_exists($sFileFullPath))
 			{
 				$aCache[$sFileName] = true;
@@ -161,7 +161,7 @@ abstract class AbstractManager
 	 */
 	public function getPath()
 	{
-		return $this->oModule->GetPath().'/managers/'.$this->GetManagerName();
+		return $this->oModule->GetPath().'/managers/'.ucfirst($this->GetManagerName());
 	}	
 	
 	/**
@@ -182,7 +182,7 @@ abstract class AbstractManager
 		}
 		else
 		{
-			$sFileFullPath = $this->oModule->GetPath().'/managers/'.$this->GetManagerName().'/storages/'.$sFileName.'.php';
+			$sFileFullPath = $this->oModule->GetPath().'/managers/'.ucfirst($this->GetManagerName()).'/storages/'.$sFileName.'.php';
 			if (@file_exists($sFileFullPath))
 			{
 				$aCache[$sFileName] = true;
@@ -236,7 +236,7 @@ abstract class AbstractManager
 	 */
 	public function path($sInclude)
 	{
-		return\Aurora\System\Api::ManagerPath($this->GetManagerName(), $sInclude);
+		return\Aurora\System\Api::ManagerPath(ucfirst($this->GetManagerName()), $sInclude);
 	}
 
 	/**
