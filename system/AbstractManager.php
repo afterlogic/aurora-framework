@@ -218,9 +218,7 @@ abstract class AbstractManager
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
-				\Aurora\System\Api::Inc('db.command_creator');
 				$oStorage->inc('command_creator');
-//				$this->incStorage('db.command_creator');
 
 				$oCommandCreator =
 					new $aCommandCreatorsNames[$sDbType]($oCommandCreatorHelper, $sDbPrefix);

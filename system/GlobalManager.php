@@ -190,6 +190,7 @@ class GlobalManager
 
 			if (isset($aCommandCreatorsNames[$sDbType]))
 			{
+				\Aurora\System\Api::Inc('db.command_creator');
 				\Aurora\System\Api::StorageInc($oStorage->GetManagerName(), $oStorage->GetStorageName(), 'command_creator');
 
 				$oCommandCreator =
