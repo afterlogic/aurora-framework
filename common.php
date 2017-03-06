@@ -58,7 +58,7 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 					$sFileName = AURORA_APP_ROOT_PATH.$sFolder.'/'.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
 					if (file_exists($sFileName))
 					{
-						return include_once $sFileName;
+						include_once $sFileName;
 					}
 				}
 			}
@@ -71,7 +71,7 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 			$sFileName = AURORA_APP_ROOT_PATH.'modules/'.$sModuleName.'/module.php';
 			if (file_exists($sFileName))
 			{
-				return include_once $sFileName;
+				include_once $sFileName;
 			}
 		}
 

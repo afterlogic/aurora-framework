@@ -45,7 +45,8 @@ class Manager extends \Aurora\System\AbstractManager
 	 */
 	public function isCollaborationSupported()
 	{
-		return $this->isNotLite() && !!\Aurora\System\Api::GetSystemManager('collaboration');
+		return true;
+//		return $this->isNotLite() && !!\Aurora\System\Api::GetSystemManager('collaboration');
 	}
 
 	/**
