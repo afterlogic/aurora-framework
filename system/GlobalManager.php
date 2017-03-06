@@ -93,7 +93,6 @@ class GlobalManager
 	{
 		if (null === $this->oSettings)
 		{
-			\Aurora\System\Api::Inc('settings');
 			try
 			{
 				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
