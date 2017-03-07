@@ -103,7 +103,7 @@ class Creator
 	 * @param \Aurora\System\Settingss $oSettings
 	 * @return &MySql
 	 */
-	public static function &CreateConnector(\Aurora\System\Settings $oSettings)
+	public static function &CreateConnector(\Aurora\System\AbstractSettings $oSettings)
 	{
 		$aResult = array();
 		if (!is_object(self::$oDbConnector))
@@ -135,10 +135,10 @@ class Creator
 	}
 
 	/**
-	 * @param \Aurora\System\Settings $oSettings
+	 * @param \Aurora\System\AbstractSettings $oSettings
 	 * @return &IDbHelper
 	 */
-	public static function &CreateCommandCreatorHelper(\Aurora\System\Settings $oSettings)
+	public static function &CreateCommandCreatorHelper(\Aurora\System\AbstractSettings $oSettings)
 	{
 		if (is_object(Creator::$oCommandCreatorHelper))
 		{

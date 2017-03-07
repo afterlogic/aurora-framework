@@ -21,7 +21,7 @@
  * @package Api
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Managers;
 
 /**
  * @package Api
@@ -39,7 +39,7 @@ abstract class AbstractManager
 	protected $sManagerName;
 
 	/**
-	 * @var \Aurora\System\GlobalManager
+	 * @var \Aurora\System\Managers\GlobalManager
 	 */
 	protected $oManager;
 
@@ -204,7 +204,7 @@ abstract class AbstractManager
 		return $this->oManager->GetConnection();
 	}
 	
-	public function &GetCommandCreator(\Aurora\System\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
+	public function &GetCommandCreator(\Aurora\System\Managers\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
 	{
 		$oSettings =& $oStorage->GetSettings();
 		$oCommandCreatorHelper =& $this->oManager->GetSqlHelper();

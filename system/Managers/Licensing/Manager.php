@@ -22,12 +22,12 @@ namespace Aurora\System\Managers\Licensing;
 /**
  * @package Licensing
  */
-class Manager extends \Aurora\System\AbstractManager
+class Manager extends \Aurora\System\Managers\AbstractManager
 {
 	/**
-	 * @param \Aurora\System\GlobalManager &$oManager
+	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 */
-	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('Licensing', $oManager);
 

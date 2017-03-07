@@ -24,14 +24,14 @@ namespace Aurora\System\Managers\Filecache;
  *
  * @package Filecache
  */
-class Manager extends \Aurora\System\AbstractManagerWithStorage
+class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
 	 * Creates a new instance of the object.
 	 *
-	 * @param \Aurora\System\GlobalManager &$oManager
+	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 */
-	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = '')
 	{
 		parent::__construct('Filecache', $oManager, $sForcedStorage);
 	}

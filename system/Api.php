@@ -31,7 +31,7 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 class Api
 {
 	/**
-	 * @var \Aurora\System\GlobalManager
+	 * @var \Aurora\System\Managers\GlobalManager
 	 */
 	static $oManager;
 
@@ -165,7 +165,7 @@ class Api
 			self::InitSalt();
 			self::InitConfig();
 
-			self::$oManager = new GlobalManager();
+			self::$oManager = new \Aurora\System\Managers\GlobalManager();
 			self::$bIsValid = self::validateApi();
 			self::GetModuleManager();
 			self::$aModuleDecorators = array();
@@ -288,7 +288,7 @@ class Api
 	}	
 	
 	/**
-	 * @return \Aurora\System\GlobalManager
+	 * @return \Aurora\System\Managers\GlobalManager
 	 */
 	public static function GetManager()
 	{
@@ -958,7 +958,7 @@ class Api
 		$iResult = 1;
 
 		$oSettings = &self::GetSettings();
-		$iResult &= $oSettings && ($oSettings instanceof \Aurora\System\Settings);
+		$iResult &= $oSettings && ($oSettings instanceof \Aurora\System\AbstractSettings);
 
 		return (bool) $iResult;
 	}

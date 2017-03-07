@@ -23,7 +23,7 @@ namespace Aurora\System\Module;
 /**
  * @package Api
  */
-class Settings extends \Aurora\System\Settings
+class Settings extends \Aurora\System\AbstractSettings
 {
 	public $ModuleName;
 	

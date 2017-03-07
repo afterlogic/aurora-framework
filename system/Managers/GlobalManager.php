@@ -21,7 +21,7 @@
  * @package Api
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Managers;
 
 class GlobalManager
 {
@@ -101,7 +101,7 @@ class GlobalManager
 					mkdir(dirname($sSettingsPath), 0777);
 				}
 				
-				$this->oSettings = new SystemSettings($sSettingsPath . 'config.json');
+				$this->oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
 			}
 			catch (BaseException $oException)
 			{
@@ -133,7 +133,7 @@ class GlobalManager
 
 			if ($oSettings)
 			{
-				$this->oConnection = new Db\Storage($oSettings);
+				$this->oConnection = new \Aurora\System\Db\Storage($oSettings);
 			}
 			else
 			{
@@ -155,7 +155,7 @@ class GlobalManager
 
 			if ($oSettings)
 			{
-				$this->oSqlHelper = Db\Creator::CreateCommandCreatorHelper($oSettings);
+				$this->oSqlHelper = \Aurora\System\Db\Creator::CreateCommandCreatorHelper($oSettings);
 			}
 			else
 			{
@@ -176,7 +176,7 @@ class GlobalManager
 		return new \CApiImap4MailProtocol($sHost, $iPort, $bUseSsl);
 	}
 
-	public function &GetCommandCreator(\Aurora\System\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
+	public function &GetCommandCreator(\Aurora\System\Managers\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
 	{
 		$oSettings =& $oStorage->GetSettings();
 		$oCommandCreatorHelper =& $this->GetSqlHelper();

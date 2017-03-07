@@ -39,9 +39,9 @@ class CApiDbDbStorage extends CApiDbStorage
 	protected $oHelper;
 
 	/**
-	 * @param \Aurora\System\GlobalManager &$oManager
+	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 */
-	public function __construct(\Aurora\System\GlobalManager &$oManager)
+	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager)
 	{
 		parent::__construct('db', $oManager);
 

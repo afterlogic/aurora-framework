@@ -24,7 +24,7 @@ namespace Aurora\System\Managers\Integrator;
  *
  * @package Integrator
  */
-class Manager extends \Aurora\System\AbstractManager
+class Manager extends \Aurora\System\Managers\AbstractManager
 {
 	/**
 	 * @type string
@@ -76,7 +76,7 @@ class Manager extends \Aurora\System\AbstractManager
 	 *
 	 * @param &$oManager
 	 */
-	public function __construct(\Aurora\System\GlobalManager &$oManager)
+	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager)
 	{
 		$this->bCache = false;
 		parent::__construct('Integrator', $oManager);

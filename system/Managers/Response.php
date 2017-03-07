@@ -17,12 +17,12 @@
  * 
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Managers;
 
 /**
  * @package Api
  */
-class ResponseManager
+class Response
 {
 	protected static $sMethod = null;
 

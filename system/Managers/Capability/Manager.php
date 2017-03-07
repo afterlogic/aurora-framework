@@ -22,12 +22,12 @@ namespace Aurora\System\Managers\Capability;
 /**
  * @package Capability
  */
-class Manager extends \Aurora\System\AbstractManager
+class Manager extends \Aurora\System\Managers\AbstractManager
 {
 	/**
 	 * @param &$oManager
 	 */
-	public function __construct(\Aurora\System\GlobalManager &$oManager)
+	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager)
 	{
 		parent::__construct('Сapability', $oManager);
 	}

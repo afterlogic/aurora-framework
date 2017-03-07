@@ -21,12 +21,12 @@
  * @package Db
  * @subpackage Storages
  */
-class CApiDbStorage extends \Aurora\System\AbstractManagerStorage
+class CApiDbStorage extends \Aurora\System\Managers\AbstractManagerStorage
 {
 	/**
-	 * @param \Aurora\System\GlobalManager &$oManager
+	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 */
-	public function __construct($sStorageName, \Aurora\System\GlobalManager &$oManager)
+	public function __construct($sStorageName, \Aurora\System\Managers\GlobalManager &$oManager)
 	{
 		parent::__construct('db', $sStorageName, $oManager);
 	}

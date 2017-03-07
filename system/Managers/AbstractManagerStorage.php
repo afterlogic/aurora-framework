@@ -17,7 +17,7 @@
  * 
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Managers;
 
 /**
  * @package Api
@@ -35,7 +35,7 @@ abstract class AbstractManagerStorage
 	protected $sStorageName;
 	
 	/**
-	 * @var \Aurora\System\AbstractManager
+	 * @var \Aurora\System\Managers\AbstractManager
 	 */
 	protected $oManager;
 
@@ -49,7 +49,7 @@ abstract class AbstractManagerStorage
 	 */
 	protected $oLastException;
 
-	public function __construct($sManagerName, $sStorageName, \Aurora\System\AbstractManager &$oManager)
+	public function __construct($sManagerName, $sStorageName, \Aurora\System\Managers\AbstractManager &$oManager)
 	{
 		$this->sManagerName = $sManagerName;
 		$this->sStorageName = $sStorageName;

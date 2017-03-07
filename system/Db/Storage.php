@@ -59,7 +59,7 @@ class Storage
 	/**
 	 * @param CApiSettings $oSettings
 	 */
-	public function __construct(\Aurora\System\Settings &$oSettings)
+	public function __construct(\Aurora\System\AbstractSettings &$oSettings)
 	{
 		$aConnections =& Creator::CreateConnector($oSettings);
 

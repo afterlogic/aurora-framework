@@ -21,7 +21,7 @@
  * @package Filecache
  * @subpackage Storages
  */
-class CApiFilecacheStorage extends \Aurora\System\AbstractManagerStorage
+class CApiFilecacheStorage extends \Aurora\System\Managers\AbstractManagerStorage
 {
 	/**
 	 * @var string
@@ -34,9 +34,9 @@ class CApiFilecacheStorage extends \Aurora\System\AbstractManagerStorage
 	protected $sPath;
 
 	/**
-	 * @param \Aurora\System\AbstractManager &$oManager
+	 * @param \Aurora\System\Managers\AbstractManager &$oManager
 	 */
-	public function __construct($sStorageName, \Aurora\System\AbstractManager &$oManager)
+	public function __construct($sStorageName, \Aurora\System\Managers\AbstractManager &$oManager)
 	{
 		parent::__construct('filecache', $sStorageName, $oManager);
 

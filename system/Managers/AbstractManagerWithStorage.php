@@ -17,7 +17,7 @@
  * 
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Managers;
 
 /**
  * @package Api
@@ -30,17 +30,17 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 	protected $sStorageName;
 
 	/**
-	 * @var \Aurora\System\AbstractManagerStorage
+	 * @var \Aurora\System\Managers\AbstractManagerStorage
 	 */
 	protected $oStorage;
 
 	/**
 	 * @param string $sManagerName
-	 * @param \Aurora\System\GlobalManager &$oManager
+	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 * @param string $sForcedStorage
-	 * @return \Aurora\System\AbstractManager
+	 * @return \Aurora\System\Managers\AbstractManager
 	 */
-	public function __construct($sManagerName, \Aurora\System\GlobalManager &$oManager, $sForcedStorage = '', \Aurora\System\Module\AbstractModule $oModule = null)
+	public function __construct($sManagerName, \Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = '', \Aurora\System\Module\AbstractModule $oModule = null)
 	{
 		parent::__construct($sManagerName, $oManager, $oModule);
 
@@ -92,7 +92,7 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 	}
 
 	/**
-	 * @return \Aurora\System\AbstractManagerStorage
+	 * @return \Aurora\System\Managers\AbstractManagerStorage
 	 */
 	public function &GetStorage()
 	{

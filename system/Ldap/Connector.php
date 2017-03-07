@@ -17,9 +17,9 @@
  * 
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Ldap;
 
-class LdapConnector
+class Connector
 {
 	/**
 	 * @var resource 
@@ -65,7 +65,7 @@ class LdapConnector
 
 	/**
 	 * @param string $sSearchDN
-	 * @return LdapConnector
+	 * @return Connector
 	 */
 	public function SetSearchDN($sSearchDN)
 	{

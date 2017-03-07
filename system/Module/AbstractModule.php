@@ -795,7 +795,7 @@ abstract class AbstractModule
 		{
 			foreach ($mResult as $aValue)
 			{
-				$aResponseResult = \Aurora\System\ResponseManager::GetResponseObject(
+				$aResponseResult = \Aurora\System\Managers\Response::GetResponseObject(
 					$aValue, 
 					array(
 						'Module' => $aValue['Module'],
