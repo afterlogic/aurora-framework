@@ -64,6 +64,12 @@ class Application
 
 		return $oInstance;
 	}
+	
+	public static function Start()
+	{
+		\Aurora\System\Api::Init();
+		self::SingletonInstance()->Handle();
+	}
 
 	
 	public function GetVersion()

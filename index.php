@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-include_once 'common.php';
+include_once 'system\autoload.php';
 
-\Aurora\System\Api::Init();
-\Aurora\System\Application::SingletonInstance()->Handle();
+\Aurora\System\Application::Start();

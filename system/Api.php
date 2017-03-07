@@ -19,6 +19,12 @@
 
 namespace Aurora\System;
 
+if (!defined('AURORA_APP_ROOT_PATH'))
+{
+	define('AURORA_APP_ROOT_PATH', rtrim(realpath(dirname(__DIR__)), '\\/').'/');
+	define('AURORA_APP_START', microtime(true));
+}
+
 /**
  * @package Api
  */
