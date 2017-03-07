@@ -25,14 +25,14 @@ namespace Aurora\System\Managers\Eav;
  *
  * @package EAV
  */
-class Manager extends \Aurora\System\AbstractManagerWithStorage
+class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
 	 * 
-	 * @param \Aurora\System\GlobalManager $oManager
+	 * @param \Aurora\System\Managers\GlobalManager $oManager
 	 * @param string $sForcedStorage
 	 */
-	public function __construct(\Aurora\System\GlobalManager &$oManager, $sForcedStorage = 'db')
+	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = 'db')
 	{
 		parent::__construct('eav', $oManager, $sForcedStorage);
 	}
