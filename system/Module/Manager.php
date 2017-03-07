@@ -409,6 +409,16 @@ class Manager
 	}
 
 	/**
+	 * @todo return correct path according to curent tenant 
+	 * 
+	 * @return string
+	 */
+	public function GetModulesSettingsPath()
+	{
+		return \Aurora\System\Api::DataPath() . '/settings/modules/';
+	}	
+	
+	/**
 	 * @return string
 	 */
 	public function GetTenantModulesPath($sTenant)

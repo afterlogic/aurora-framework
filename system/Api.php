@@ -245,6 +245,10 @@ class Api
 		return $oResult;		
 	}
 
+	/**
+	 * 
+	 * @return \Aurora\System\Module\Manager
+	 */
 	public static function GetModuleManager()
 	{
 		if (!isset(self::$oModuleManager))
