@@ -310,11 +310,12 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				);
 			}, $mSortAttributes);
 			$mSortAttributes[] = 'entity_id';
+			
+			$mSortAttributes = array_map(function ($sSortField) use ($iSortOrder) {
+				return $sSortField . ' ' . ($iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
+			}, $mSortAttributes);
 
-			$sResultSort = sprintf(
-				" ORDER BY " . implode(' ,', $mSortAttributes) . " %s", 
-				$iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC"
-			);
+			$sResultSort = " ORDER BY " . implode(',', $mSortAttributes) . "";
 			
 			$aWhereAttrs = array();
 			if (0 < count($aWhere))
