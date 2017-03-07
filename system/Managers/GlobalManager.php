@@ -26,7 +26,7 @@ namespace Aurora\System\Managers;
 class GlobalManager
 {
 	/**
-	 * @var CApiSettings
+	 * @var \Aurora\System\Settings
 	 */
 	protected $oSettings;
 
@@ -87,7 +87,7 @@ class GlobalManager
 		$this->aManagers[$sKey] = $oManager;
 	}	
 	/**
-	 * @return CApiSettings
+	 * @return \Aurora\System\Settings
 	 */
 	public function &GetSettings()
 	{

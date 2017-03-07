@@ -49,7 +49,7 @@ abstract class AbstractManager
 	protected $oModule;	
 	
 	/**
-	 * @var CApiSettings
+	 * @var \Aurora\System\Settings
 	 */
 	protected $oSettings;
 
@@ -87,7 +87,7 @@ abstract class AbstractManager
 	}
 	
 	/**
-	 * @return &CApiSettings
+	 * @return &\Aurora\System\Settings
 	 */
 	public function GetGlobalManager()
 	{
@@ -95,7 +95,7 @@ abstract class AbstractManager
 	}
 
 	/**
-	 * @return &CApiSettings
+	 * @return &\Aurora\System\Settings
 	 */
 	public function &GetSettings()
 	{

@@ -42,20 +42,20 @@ class BaseException extends Exception
 	 */
 	public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
 	{
-		if (CApiErrorCodes::Validation_InvalidPort === $iCode)
+		if (\Aurora\System\Ecxeptions\ErrorCodes::Validation_InvalidPort === $iCode)
 		{
-			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
-			$iCode = CApiErrorCodes::Validation_InvalidPort_OutInfo;
+			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Ecxeptions\ErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			$iCode = \Aurora\System\Ecxeptions\ErrorCodes::Validation_InvalidPort_OutInfo;
 		}
-		else if (CApiErrorCodes::Validation_InvalidEmail === $iCode)
+		else if (\Aurora\System\Ecxeptions\ErrorCodes::Validation_InvalidEmail === $iCode)
 		{
-			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
-			$iCode = CApiErrorCodes::Validation_InvalidEmail_OutInfo;
+			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Ecxeptions\ErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			$iCode = \Aurora\System\Ecxeptions\ErrorCodes::Validation_InvalidEmail_OutInfo;
 		}
-		else if (CApiErrorCodes::Validation_FieldIsEmpty === $iCode)
+		else if (\Aurora\System\Ecxeptions\ErrorCodes::Validation_FieldIsEmpty === $iCode)
 		{
-			\Aurora\System\Api::Log('Exception error: '.CApiErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
-			$iCode = CApiErrorCodes::Validation_FieldIsEmpty_OutInfo;
+			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Ecxeptions\ErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			$iCode = \Aurora\System\Ecxeptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;
 		}
 
 		$this->aObjectParams = $aObjectParams;
@@ -66,7 +66,7 @@ class BaseException extends Exception
 			\Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), ELogLevel::Error);
 		}
 
-		parent::__construct(CApiErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
+		parent::__construct(\Aurora\System\Ecxeptions\ErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
 	}
 
 	/**

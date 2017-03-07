@@ -19,7 +19,6 @@
 
 namespace Aurora\System\Managers\Eav;
 
-
 /**
  * CApiEAVManager class summary
  *

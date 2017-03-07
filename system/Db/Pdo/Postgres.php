@@ -93,18 +93,18 @@ class Postgres extends \Aurora\System\Db\Sql
 	{
 		if (!class_exists('PDO'))
 		{
-			throw new \CApiDbException('Can\'t load PDO extension.', 0);
+			throw new \Aurora\System\Ecxeptions\DbException('Can\'t load PDO extension.', 0);
 		}
 
 		$mPdoDrivers = PDO::getAvailableDrivers();
 		if (!is_array($mPdoDrivers) || !in_array('pgsql', $mPdoDrivers))
 		{
-			throw new \CApiDbException('Can\'t load PDO postgresql driver.', 0);
+			throw new \Aurora\System\Ecxeptions\DbException('Can\'t load PDO postgresql driver.', 0);
 		}
 
 		if (strlen($this->sHost) == 0 || strlen($this->sUser) == 0 || strlen($this->sDbName) == 0)
 		{
-			throw new \CApiDbException('Not enough details required to establish connection.', 0);
+			throw new \Aurora\System\Ecxeptions\DbException('Not enough details required to establish connection.', 0);
 		}
 
 		if (\Aurora\System\Api::$bUseDbLog)
@@ -536,7 +536,7 @@ class Postgres extends \Aurora\System\Db\Sql
 		if (0 < strlen($this->ErrorDesc))
 		{
 			$this->errorLog($this->ErrorDesc);
-			throw new \CApiDbException($this->ErrorDesc, $this->ErrorCode);
+			throw new \Aurora\System\Ecxeptions\DbException($this->ErrorDesc, $this->ErrorCode);
 		}
 	}
 }

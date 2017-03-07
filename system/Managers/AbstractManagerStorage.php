@@ -40,7 +40,7 @@ abstract class AbstractManagerStorage
 	protected $oManager;
 
 	/**
-	 * @var CApiSettings
+	 * @var \Aurora\System\Settings
 	 */
 	protected $oSettings;
 
@@ -75,7 +75,7 @@ abstract class AbstractManagerStorage
 	}
 
 	/**
-	 * @return &CApiSettings
+	 * @return &\Aurora\System\Settings
 	 */
 	public function &GetSettings()
 	{
@@ -107,7 +107,7 @@ abstract class AbstractManagerStorage
 		if ($this->oConnection)
 		{
 			$oException = $this->oConnection->GetException();
-			if ($oException instanceof CApiDbException)
+			if ($oException instanceof \Aurora\System\Ecxeptions\DbException)
 			{
 				throw new \Aurora\System\Exceptions\BaseException(Errs::Db_ExceptionError, $oException);
 			}

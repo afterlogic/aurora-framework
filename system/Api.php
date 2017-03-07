@@ -342,7 +342,7 @@ class Api
 	}	
 
 	/**
-	 * @return CApiSettings
+	 * @return \Aurora\System\Settings
 	 */
 	public static function &GetSettings()
 	{
@@ -427,10 +427,10 @@ class Api
 	 */
 	public static function IsMobileApplication()
 	{
-		/* @var $oApiIntegrator \CApiIntegratorManager */
+		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
 		$oApiIntegrator = self::GetSystemManager('integrator');
 
-		/* @var $oApiCapability \CApiCapabilityManager */
+		/* @var $oApiCapability \Aurora\System\Managers\Capability\Manager */
 		$oApiCapability = self::GetSystemManager('capability');
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
@@ -1364,7 +1364,7 @@ class Api
 				$sAuthToken = self::$aUserSession['AuthToken'];
 			}
 		}
-		/* @var $oApiIntegrator \CApiIntegratorManager */
+		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
 		$oApiIntegrator = self::GetSystemManager('integrator');
 		if ($oApiIntegrator)
 		{
@@ -1385,7 +1385,7 @@ class Api
 			}
 			else
 			{
-				/* @var $oApiIntegrator \CApiIntegratorManager */
+				/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
 				$oApiIntegrator = self::GetSystemManager('integrator');
 				if ($oApiIntegrator)
 				{

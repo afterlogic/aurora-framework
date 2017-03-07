@@ -66,7 +66,7 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->createDatabase();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$sError = $oException->getMessage();
 		}

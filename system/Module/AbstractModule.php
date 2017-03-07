@@ -60,7 +60,7 @@ abstract class AbstractModule
 	protected $aObjects = array();	
 
 	/**
-	 * @var \CApiCapabilityManager
+	 * @var \Aurora\System\Managers\Capability\Manager
 	 */
 	public $oApiCapabilityManager = null;
 	
@@ -76,7 +76,7 @@ abstract class AbstractModule
 	
     /**
      *
-     * @var CApiSettings
+     * @var \Aurora\System\Settings
      */
 	protected $oModuleSettings = null;	
 	

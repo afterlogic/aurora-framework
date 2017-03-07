@@ -531,7 +531,7 @@ class MySql extends \Aurora\System\Db\Sql
 		if (0 < strlen($this->ErrorDesc))
 		{
 			$this->errorLog($this->ErrorDesc);
-			throw new \CApiDbException($this->ErrorDesc, $this->ErrorCode);
+			throw new \Aurora\System\Ecxeptions\DbException($this->ErrorDesc, $this->ErrorCode);
 		}
 	}
 }

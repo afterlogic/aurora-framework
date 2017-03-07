@@ -47,17 +47,17 @@ class Storage
 	protected $oSlaveConnector;
 
 	/**
-	 * @var CApiDbException
+	 * @var \Aurora\System\Ecxeptions\DbException
 	 */
 	protected $oLastException;
 
 	/**
-	 * @var CApiSettings
+	 * @var \Aurora\System\Settings
 	 */
 	protected $oSettings;
 
 	/**
-	 * @param CApiSettings $oSettings
+	 * @param \Aurora\System\Settings $oSettings
 	 */
 	public function __construct(\Aurora\System\AbstractSettings &$oSettings)
 	{
@@ -104,7 +104,7 @@ class Storage
 		{
 			return $this->oConnector->IsConnected();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -133,7 +133,7 @@ class Storage
 
 			return $this->oConnector->Connect();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -162,7 +162,7 @@ class Storage
 
 			return $this->oSlaveConnector->Connect(true, true);
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -183,7 +183,7 @@ class Storage
 			}
 			return $this->oConnector->ConnectNoSelect();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -205,7 +205,7 @@ class Storage
 			}
 			return true;
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -222,7 +222,7 @@ class Storage
 		{
 			return $this->oConnector->Select();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -256,7 +256,7 @@ class Storage
 				}
 			}
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -278,7 +278,7 @@ class Storage
 			}
 			return $this->oConnector->GetNextArrayRecord($bAutoFree);
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -300,7 +300,7 @@ class Storage
 			
 			return $this->oConnector->GetNextRecord($bAutoFree);
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -321,7 +321,7 @@ class Storage
 			
 			return $this->oConnector->FreeResult();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -365,7 +365,7 @@ class Storage
 		{
 			return $this->oConnector->GetLastInsertId($sTableName, $sFieldName);
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -386,7 +386,7 @@ class Storage
 			}
 			return $this->oConnector->ResultCount();
 		}
-		catch (CApiDbException $oException)
+		catch (\Aurora\System\Ecxeptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -405,7 +405,7 @@ class Storage
 			{
 				$aResult = $this->oConnector->GetTableNames();
 			}
-			catch (CApiDbException $oException)
+			catch (\Aurora\System\Ecxeptions\DbException $oException)
 			{
 				$this->SetException($oException);
 			}
@@ -426,7 +426,7 @@ class Storage
 			{
 				$aResult = $this->oConnector->GetTableFields($sTableName);
 			}
-			catch (CApiDbException $oException)
+			catch (\Aurora\System\Ecxeptions\DbException $oException)
 			{
 				$this->SetException($oException);
 			}
@@ -447,7 +447,7 @@ class Storage
 			{
 				$aResult = $this->oConnector->GetTableIndexes($sTableName);
 			}
-			catch (CApiDbException $oException)
+			catch (\Aurora\System\Ecxeptions\DbException $oException)
 			{
 				$this->SetException($oException);
 			}
@@ -472,7 +472,7 @@ class Storage
 	}
 
 	/**
-	 * @return CApiDbException
+	 * @return \Aurora\System\Ecxeptions\DbException
 	 */
 	public function GetException()
 	{
@@ -480,7 +480,7 @@ class Storage
 	}
 
 	/**
-	 * @param CApiDbException $oException
+	 * @param \Aurora\System\Ecxeptions\DbException $oException
 	 */
 	public function SetException($oException)
 	{

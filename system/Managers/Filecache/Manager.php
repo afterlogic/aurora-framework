@@ -20,7 +20,7 @@
 namespace Aurora\System\Managers\Filecache;
 
 /**
- * CApiFilecacheManager class summary
+ * \Aurora\System\Managers\Filecache\Manager class summary
  *
  * @package Filecache
  */
