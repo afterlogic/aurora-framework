@@ -268,7 +268,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 
 		if ($bResult)
 		{
-			$bResult = \Aurora\System\Api::GetSettingsConf('Common/EnableMobileSync');
+			$bResult = \Aurora\System\Api::GetSettings()->GetConf('Common/EnableMobileSync');
 		}
 			
 		if ($bResult && $oAccount)

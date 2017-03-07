@@ -350,17 +350,6 @@ class Api
 	}
 
 	/**
-	 * @param string $sKey
-	 *
-	 * @return mixed
-	 */
-	public static function GetSettingsConf($sKey)
-	{
-		$oSettings = &self::GetSettings();
-		return $oSettings->GetConf($sKey);
-	}
-
-	/**
 	 * @return PDO|false
 	 */
 	public static function GetPDO()
