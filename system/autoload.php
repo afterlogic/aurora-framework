@@ -19,7 +19,7 @@ spl_autoload_register(function ($sClassName) {
 		{
 			if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\'))
 			{
-				$sFileName = realpath($sFolder.'/'.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php');
+				$sFileName = dirname(__DIR__) . '/' .$sFolder.'/'.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
 				if (file_exists($sFileName))
 				{
 					include_once $sFileName;
@@ -32,7 +32,7 @@ spl_autoload_register(function ($sClassName) {
 	{
 		$sModuleClassName = substr($sClassName, strlen('Aurora\\Modules\\'));
 		$sModuleName = substr($sModuleClassName, 0, -7);
-		$sFileName = realpath('modules/'.$sModuleName.'/Module.php');
+		$sFileName = dirname(__DIR__) . '/modules/'.$sModuleName.'/Module.php';
 		if (file_exists($sFileName))
 		{
 			include_once $sFileName;
