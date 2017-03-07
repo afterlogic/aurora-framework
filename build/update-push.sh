@@ -18,12 +18,9 @@ update_push ()
 	git push --repo $resultUrl
 } 
 
-
 read -p "GitHub Login: " login
 read -p "GitHub Password: " password
 read -p "Commit message: " commit
-
-
 
 echo "Aurora Core";
 
@@ -36,9 +33,12 @@ cd ../modules
 for dir in $(find . -name ".git")
 do
     cd ${dir%/*} > /dev/null
-    echo ${dir%/*}
-	
+    
+	echo ${dir%/*}
+
 	update_push $login $password $commit
+
+	echo "";
 
     cd -  > /dev/null
 done
