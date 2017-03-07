@@ -261,6 +261,10 @@ class Entity
 			if ($this->issetAttribute($sAttribute))
 			{
 				$oAttribute = $this->getAttribute($sAttribute);
+				if ($oAttribute->Encrypted)
+				{
+					$oAttribute->Encrypted = false;
+				}
 				$oAttribute->Value = $mValue;
 				$mValue = $oAttribute;
 			}
@@ -403,7 +407,7 @@ class Entity
 	}
 	
 	/**
-	 * @return array
+	 * @return \Aurora\System\EAV\Attribute
 	 */
 	public function getAttribute($sAttributeName)
 	{
