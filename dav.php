@@ -19,7 +19,7 @@
 $sCurrentFile = \basename(__FILE__);
 $sRequestUri = empty($_SERVER['REQUEST_URI']) ? '' : \trim($_SERVER['REQUEST_URI']);
 
-include_once 'system\autoload.php';
+include_once 'system/autoload.php';
 
 \Aurora\System\Api::Init(true);
 
