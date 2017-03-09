@@ -16,6 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-include_once 'system\autoload.php';
+include_once 'system/autoload.php';
 
 \Aurora\System\Application::Start();
