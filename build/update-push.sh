@@ -22,6 +22,8 @@ read -p "GitHub Login: " login
 read -p "GitHub Password: " password
 read -p "Commit message: " commit
 
+clear
+
 echo "Aurora Core";
 
 update_push $login $password $commit
