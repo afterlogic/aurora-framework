@@ -107,7 +107,7 @@ abstract class AbstractManagerStorage
 		if ($this->oConnection)
 		{
 			$oException = $this->oConnection->GetException();
-			if ($oException instanceof \Aurora\System\Ecxeptions\DbException)
+			if ($oException instanceof \Aurora\System\Exceptions\DbException)
 			{
 				throw new \Aurora\System\Exceptions\BaseException(Errs::Db_ExceptionError, $oException);
 			}

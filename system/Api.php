@@ -220,6 +220,8 @@ class Api
 	/**
 	 * @param string $sManagerType
 	 * @param string $sForcedStorage = ''
+	 * 
+	 * @return \Aurora\System\Managers\AbstractManager
 	 */
 	public static function GetSystemManager($sManagerType, $sForcedStorage = 'db')
 	{

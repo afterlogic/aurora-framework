@@ -254,7 +254,7 @@ abstract class AbstractManager
 			\Aurora\System\Api::Log('Exception['.$oException->getCode().']: '.$oException->getMessage().
 				API_CRLF.$sFile.' ('.$oException->getLine().')'.
 				API_CRLF.'----------------------------------------------------------------------'.
-				API_CRLF.$oException->getTraceAsString(), ELogLevel::Error);
+				API_CRLF.$oException->getTraceAsString(), \ELogLevel::Error);
 		}
 	}
 

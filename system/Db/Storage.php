@@ -47,7 +47,7 @@ class Storage
 	protected $oSlaveConnector;
 
 	/**
-	 * @var \Aurora\System\Ecxeptions\DbException
+	 * @var \Aurora\System\Exceptions\DbException
 	 */
 	protected $oLastException;
 
@@ -104,7 +104,7 @@ class Storage
 		{
 			return $this->oConnector->IsConnected();
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -133,7 +133,7 @@ class Storage
 
 			return $this->oConnector->Connect();
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -162,7 +162,7 @@ class Storage
 
 			return $this->oSlaveConnector->Connect(true, true);
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -183,7 +183,7 @@ class Storage
 			}
 			return $this->oConnector->ConnectNoSelect();
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -205,7 +205,7 @@ class Storage
 			}
 			return true;
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -222,7 +222,7 @@ class Storage
 		{
 			return $this->oConnector->Select();
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -256,7 +256,7 @@ class Storage
 				}
 			}
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -278,7 +278,7 @@ class Storage
 			}
 			return $this->oConnector->GetNextArrayRecord($bAutoFree);
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -300,7 +300,7 @@ class Storage
 			
 			return $this->oConnector->GetNextRecord($bAutoFree);
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -321,7 +321,7 @@ class Storage
 			
 			return $this->oConnector->FreeResult();
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -365,7 +365,7 @@ class Storage
 		{
 			return $this->oConnector->GetLastInsertId($sTableName, $sFieldName);
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -386,7 +386,7 @@ class Storage
 			}
 			return $this->oConnector->ResultCount();
 		}
-		catch (\Aurora\System\Ecxeptions\DbException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->SetException($oException);
 		}
@@ -405,7 +405,7 @@ class Storage
 			{
 				$aResult = $this->oConnector->GetTableNames();
 			}
-			catch (\Aurora\System\Ecxeptions\DbException $oException)
+			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
 				$this->SetException($oException);
 			}
@@ -426,7 +426,7 @@ class Storage
 			{
 				$aResult = $this->oConnector->GetTableFields($sTableName);
 			}
-			catch (\Aurora\System\Ecxeptions\DbException $oException)
+			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
 				$this->SetException($oException);
 			}
@@ -447,7 +447,7 @@ class Storage
 			{
 				$aResult = $this->oConnector->GetTableIndexes($sTableName);
 			}
-			catch (\Aurora\System\Ecxeptions\DbException $oException)
+			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
 				$this->SetException($oException);
 			}
@@ -472,7 +472,7 @@ class Storage
 	}
 
 	/**
-	 * @return \Aurora\System\Ecxeptions\DbException
+	 * @return \Aurora\System\Exceptions\DbException
 	 */
 	public function GetException()
 	{
@@ -480,7 +480,7 @@ class Storage
 	}
 
 	/**
-	 * @param \Aurora\System\Ecxeptions\DbException $oException
+	 * @param \Aurora\System\Exceptions\DbException $oException
 	 */
 	public function SetException($oException)
 	{

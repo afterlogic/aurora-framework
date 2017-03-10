@@ -106,7 +106,7 @@ class CApiDbDbStorage extends CApiDbStorage
 		{
 			$iResult = 1;
 			$aTables = CDbSchemaHelper::getSqlTables();
-			foreach ($aTables as /* @var $oTable CDbTable */ $oTable)
+			foreach ($aTables as /* @var $oTable \Aurora\System\Db\Table */ $oTable)
 			{
 				if (in_array($oTable->Name(), $aDbTables))
 				{
@@ -141,14 +141,14 @@ class CApiDbDbStorage extends CApiDbStorage
 	}
 
 	/**
-	 * @param CDbTable $oTable
+	 * @param \Aurora\System\Db\Table $oTable
 	 * @param mixed $fVerboseCallback
 	 * @param bool $bDropFields Default value is **false**.
 	 * @param bool $bDropIndex Default value is **false**.
 	 *
 	 * @return bool
 	 */
-	protected function syncTable(CDbTable $oTable, $fVerboseCallback, $bDropFields = false, $bDropIndex = false)
+	protected function syncTable(\Aurora\System\Db\Table $oTable, $fVerboseCallback, $bDropFields = false, $bDropIndex = false)
 	{
 		$iResult = 1;
 		$aDbFields = $this->oConnection->GetTableFields($oTable->Name());
@@ -301,7 +301,7 @@ class CApiDbDbStorage extends CApiDbStorage
 		$aResult = array();
 		$aTables = CDbSchemaHelper::getSqlTables();
 
-		foreach ($aTables as /* @var $oTable CDbTable */ $oTable)
+		foreach ($aTables as /* @var $oTable \Aurora\System\Db\Table */ $oTable)
 		{
 			$aResult[] = $oTable->ToString($this->oHelper, $bAddDropTable);
 		}
