@@ -1330,10 +1330,10 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		else
 		{
 			$aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
-			
+			$sModulesPath = \Aurora\System\Api::GetModuleManager()->GetModulesPath();
 			foreach ($aModuleNames as $sModuleName)
 			{
-				if (preg_match('/Webclient/', $sModuleName))
+				if (file_exists($sModulesPath . $sModuleName . '/js/manager.js'))
 				{
 					$aClientModuleNames[] = $sModuleName;
 				}
