@@ -140,7 +140,7 @@ abstract class AbstractContainer
 		$aMap = $this->getMap();
 		foreach ($aMap as $sKey => $aTypes)
 		{
-			if (isset($aTypes[1]) && property_exists($oRow, $aTypes[1]))
+			if (isset($aTypes[1]) && \property_exists($oRow, $aTypes[1]))
 			{
 				if ('password' === $aTypes[0])
 				{
@@ -150,9 +150,9 @@ abstract class AbstractContainer
 				{
 					$iDateTime = 0;
 					$aDateTime = \Aurora\System\Utils::DateParse($oRow->{$aTypes[1]});
-					if (is_array($aDateTime))
+					if (\is_array($aDateTime))
 					{
-						$iDateTime = gmmktime($aDateTime['hour'], $aDateTime['minute'], $aDateTime['second'],
+						$iDateTime = \gmmktime($aDateTime['hour'], $aDateTime['minute'], $aDateTime['second'],
 							$aDateTime['month'], $aDateTime['day'], $aDateTime['year']);
 
 						if (false === $iDateTime || $iDateTime <= 0)
@@ -165,8 +165,8 @@ abstract class AbstractContainer
 				}
 				else if ('serialize' === $aTypes[0])
 				{
-					$this->{$sKey} = ('' === $oRow->{$aTypes[1]} || !is_string($oRow->{$aTypes[1]})) ?
-						'' : unserialize($oRow->{$aTypes[1]});
+					$this->{$sKey} = ('' === $oRow->{$aTypes[1]} || !\is_string($oRow->{$aTypes[1]})) ?
+						'' : \unserialize($oRow->{$aTypes[1]});
 				}
 				else
 				{
@@ -184,7 +184,7 @@ abstract class AbstractContainer
 	 */
 	public function GetObsoleteValue($sKey)
 	{
-		if (key_exists($sKey, $this->aObsolete))
+		if (\key_exists($sKey, $this->aObsolete))
 		{
 			return $this->aObsolete[$sKey];
 		}
@@ -204,7 +204,7 @@ abstract class AbstractContainer
 		}
 		else
 		{
-			if (key_exists($nsKey, $this->aObsolete))
+			if (\key_exists($nsKey, $this->aObsolete))
 			{
 				unset($this->aObsolete[$nsKey]);
 			}
@@ -220,7 +220,7 @@ abstract class AbstractContainer
 	{
 		$aValues = Session::get($this->getSessionUniqueKey(), null);
 
-		return (is_array($aValues) && array_key_exists($sKey, $aValues)) ? $aValues[$sKey] : $mDefault;
+		return (\is_array($aValues) && \array_key_exists($sKey, $aValues)) ? $aValues[$sKey] : $mDefault;
 	}
 
 	/**
@@ -231,7 +231,7 @@ abstract class AbstractContainer
 	{
 		$sUniqueKey = $this->getSessionUniqueKey();
 		$aValues = Session::get($sUniqueKey, array());
-		if (!is_array($aValues))
+		if (!\is_array($aValues))
 		{
 			$aValues = array();
 		}
@@ -245,7 +245,7 @@ abstract class AbstractContainer
 	 */
 	protected function getSessionUniqueKey()
 	{
-		$sUniqueKey = (0 === strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
+		$sUniqueKey = (0 === \strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
 		return \Aurora\System\AbstractContainer::SESSION_CONTAINER_PREFIX.$this->sParentClassName.$sUniqueKey;
 	}
 
@@ -262,7 +262,7 @@ abstract class AbstractContainer
 	 */
 	public function SessionUniquePropertyValue()
 	{
-		return (0 === strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
+		return (0 === \strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
 	}
 
 	/**
@@ -297,26 +297,26 @@ abstract class AbstractContainer
 		{
 			$this->setType($mValue, $aMap[$sKey][0]);
 
-			if (key_exists($sKey, $this->aContainer))
+			if (\key_exists($sKey, $this->aContainer))
 			{
 				$this->aObsolete[$sKey] = $this->aContainer[$sKey];
 			}
 
-			if (($this->__USE_TRIM_IN_STRINGS__ && 0 === strpos($aMap[$sKey][0], 'string')) ||
-				(in_array($sKey, $this->aTrimer) && is_string($mValue)))
+			if (($this->__USE_TRIM_IN_STRINGS__ && 0 === \strpos($aMap[$sKey][0], 'string')) ||
+				(\in_array($sKey, $this->aTrimer) && \is_string($mValue)))
 			{
 				$mValue = trim($mValue);
 			}
 
-			if (is_string($mValue))
+			if (\is_string($mValue))
 			{
-				if (in_array($sKey, $this->aLower))
+				if (\in_array($sKey, $this->aLower))
 				{
-					$mValue = strtolower($mValue);
+					$mValue = \strtolower($mValue);
 				}
-				else if (in_array($sKey, $this->aUpper))
+				else if (\in_array($sKey, $this->aUpper))
 				{
-					$mValue = strtoupper($mValue);
+					$mValue = \strtoupper($mValue);
 				}
 			}
 
@@ -338,13 +338,13 @@ abstract class AbstractContainer
 	public function __get($sKey)
 	{
 		$mReturn = null;
-		if (array_key_exists($sKey, $this->aContainer))
+		if (\array_key_exists($sKey, $this->aContainer))
 		{
 			$mReturn = $this->aContainer[$sKey];
 		}
 		else
 		{
-			throw new Exception('Undefined property '.$sKey);
+			throw new \Aurora\System\Exceptions\Exception('Undefined property '.$sKey);
 		}
 
 		return $mReturn;
@@ -356,26 +356,26 @@ abstract class AbstractContainer
 	 */
 	protected function setType(&$mValue, $sType)
 	{
-		$sType = strtolower($sType);
-		if (in_array($sType, array('string', 'int', 'bool', 'array')))
+		$sType = \strtolower($sType);
+		if (\in_array($sType, array('string', 'int', 'bool', 'array')))
 		{
-			settype($mValue, $sType);
+			\settype($mValue, $sType);
 		}
-		else if (in_array($sType, array('datetime')))
+		else if (\in_array($sType, array('datetime')))
 		{
-			settype($mValue, 'int');
+			\settype($mValue, 'int');
 		}
-		else if (in_array($sType, array('password')))
+		else if (\in_array($sType, array('password')))
 		{
-			settype($mValue, 'string');
+			\settype($mValue, 'string');
 		}
-		else if (0 === strpos($sType, 'string('))
+		else if (0 === \strpos($sType, 'string('))
 		{
-			settype($mValue, 'string');
-			if (0 < strlen($mValue))
+			\settype($mValue, 'string');
+			if (0 < \strlen($mValue))
 			{
-				$iSize = substr($sType, 7, -1);
-				if (is_numeric($iSize) && (int) $iSize < strlen($mValue))
+				$iSize = \substr($sType, 7, -1);
+				if (\is_numeric($iSize) && (int) $iSize < \strlen($mValue))
 				{
 					// $mValue = substr($mValue, 0, (int) $iSize);
 					$mValue = \Aurora\System\Utils::Utf8Truncate($mValue, (int) $iSize);
@@ -478,7 +478,7 @@ abstract class AbstractContainer
 	public static function DbUpdateArray($oObject, $oHelper, $aExclude = array())
 	{
 		$aResult = array();
-		$aExclude = is_array($aExclude) && 0 < count($aExclude) ? $aExclude : array();
+		$aExclude = \is_array($aExclude) && 0 < \count($aExclude) ? $aExclude : array();
 
 		$sQueryParams = '';
 		$bUseLogQueryParams = (bool)\Aurora\System\Api::GetConf('labs.db.log-query-params', false);
@@ -490,7 +490,7 @@ abstract class AbstractContainer
 
 		foreach ($aMap as $sDbKey => $sObjectKey)
 		{
-			if (in_array($sDbKey, $aExclude))
+			if (\in_array($sDbKey, $aExclude))
 			{
 				continue;
 			}
@@ -508,18 +508,18 @@ abstract class AbstractContainer
 				}
 				else if ('serialize' === $aStaticMap[$sObjectKey][0])
 				{
-					$mValue = '' === $mValue ? '' : serialize($mValue);
+					$mValue = '' === $mValue ? '' : \serialize($mValue);
 				}
 			}
 
 			$aResult[] = $oHelper->EscapeColumn($sDbKey).' = '.
-				(is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue);
+				(\is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue);
 
 			if ($bUseLogQueryParams)
 			{
 				$sQueryParams .=
 					API_CRLF.API_TAB.$sDbKey.' = '.(
-						is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue);
+						\is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue);
 			}
 		}
 
@@ -542,11 +542,11 @@ abstract class AbstractContainer
 	public static function DbGetObjectSqlString($sWhere, $sTableName, $aStaticMap, $oHelper)
 	{
 		$aMap = \Aurora\System\AbstractContainer::DbReadKeys($aStaticMap);
-		$aMap = array_map(array($oHelper, 'EscapeColumn'), $aMap);
+		$aMap = \array_map(array($oHelper, 'EscapeColumn'), $aMap);
 
 		$sSql = 'SELECT %s FROM %s WHERE %s';
 
-		return sprintf($sSql, implode(', ', $aMap), $sTableName, $sWhere);
+		return \sprintf($sSql, \implode(', ', $aMap), $sTableName, $sWhere);
 	}
 
 	/**
@@ -564,7 +564,7 @@ abstract class AbstractContainer
 		if ($aResults[0] && $aResults[1])
 		{
 			$sSql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
-			$sSql = sprintf($sSql, $sTableName, implode(', ', $aResults[0]), implode(', ', $aResults[1]));
+			$sSql = \sprintf($sSql, $sTableName, \implode(', ', $aResults[0]), \implode(', ', $aResults[1]));
 		}
 
 		return $sSql;
@@ -583,9 +583,9 @@ abstract class AbstractContainer
 		$mValue = $oObject->SessionUniquePropertyValue();
 
 		$sSql = 'UPDATE %s SET %s WHERE %s = %s';
-		return sprintf($sSql, $sTableName, implode(', ', $aResult),
+		return \sprintf($sSql, $sTableName, \implode(', ', $aResult),
 			$oHelper->EscapeColumn($oObject->SessionUniqueProperty()),
-			(is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue)
+			(\is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue)
 		);
 	}
 
@@ -606,10 +606,10 @@ abstract class AbstractContainer
 		$aStaticMap = $oObject->getMap();
 		$aMap = \Aurora\System\AbstractContainer::DbWriteKeys($aStaticMap, true);
 
-		$aDbKeys = array_keys($aMap);
-		$aResult[0] = array_map(array(&$oHelper, 'EscapeColumn'), $aDbKeys);
+		$aDbKeys = \array_keys($aMap);
+		$aResult[0] = \array_map(array(&$oHelper, 'EscapeColumn'), $aDbKeys);
 
-		$aDbValues = array_values($aMap);
+		$aDbValues = \array_values($aMap);
 		foreach ($aDbValues as $iIndex => $sKey)
 		{
 			$mValue = $oObject->{$sKey};
@@ -629,7 +629,7 @@ abstract class AbstractContainer
 				}
 			}
 
-			$aDbValues[$iIndex] = is_string($mValue)
+			$aDbValues[$iIndex] = \is_string($mValue)
 				? $oHelper->EscapeString($mValue) : (int) $mValue;
 
 			if ($bUseLogQueryParams)

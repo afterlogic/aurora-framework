@@ -1321,6 +1321,10 @@ class Api
 		return $sResult;
 	}
 
+	/**
+	 * 
+	 * @return string
+	 */
 	public static function getAuthToken()
 	{
 		$sAuthToken = self::getAuthTokenFromHeaders();
@@ -1333,6 +1337,10 @@ class Api
 		return $sAuthToken;
 	}		
 	
+	/**
+	 * 
+	 * @return bool
+	 */
 	public static function validateAuthToken()
 	{
 		$bResult = true;
@@ -1346,6 +1354,10 @@ class Api
 		return $bResult;
 	}		
 
+	/**
+	 * 
+	 * @return int
+	 */
 	public static function authorise()
 	{
 		$mUserId = false;
@@ -1468,6 +1480,10 @@ class Api
 		self::$aUserSession['AuthToken'] = $sAuthToken;
 	}
 
+	/**
+	 * 
+	 * @return string
+	 */
 	public static function getTenantName()
 	{
 		$mResult = false;

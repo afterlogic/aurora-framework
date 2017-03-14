@@ -54,6 +54,9 @@ class Application
 		return new self();
 	}
 	
+	/**
+	 * @return \Aurora\System\Application
+	 */
 	public static function SingletonInstance()
 	{
 		static $oInstance = null;
@@ -71,21 +74,14 @@ class Application
 		self::SingletonInstance()->Handle();
 	}
 
-	
+	/**
+	 * @return string
+	 */
 	public function GetVersion()
 	{
-		$sVersion = @file_get_contents(AURORA_APP_ROOT_PATH.'VERSION');
-		define('AURORA_APP_VERSION', $sVersion);
+		$sVersion = @\file_get_contents(AURORA_APP_ROOT_PATH.'VERSION');
+		\define('AURORA_APP_VERSION', $sVersion);
 		return $sVersion;
-	}
-	
-	public function CheckApi()
-	{
-		if (!class_exists('\Aurora\\System\\Api') || !\Aurora\System\Api::IsValid()) 
-		{
-			echo 'Aurora API not found';
-			return '';
-		}
 	}
 	
 	public function RedirectToHttps()
@@ -97,18 +93,21 @@ class Application
 				(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));
 		if ($bRedirectToHttps && !$bHttps) 
 		{
-			header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+			\header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 		}
 	}
 	
+	/**
+	 * @return array
+	 */
 	public static function GetPaths()
 	{
 		$aResult = array();
 		$aQuery = array();
 		
 		$oHttp = \MailSo\Base\Http::SingletonInstance();
-		$aPathInfo = array_filter(explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/'))));
-		if (0 < count($aPathInfo)) 
+		$aPathInfo = \array_filter(\explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/'))));
+		if (0 < \count($aPathInfo)) 
 		{
 			$aQuery = $aPathInfo;
 		} 
@@ -121,7 +120,7 @@ class Application
 			{
 				$sQuery = \substr($sQuery, 0, $iPos);
 			}
-			$aQuery = explode('/', $sQuery);
+			$aQuery = \explode('/', $sQuery);
 		}
 		foreach ($aQuery as $sQueryItem) 
 		{
@@ -133,141 +132,23 @@ class Application
 	}
 			
 	/**
-	 * @return string
-	 */
-	private function generateHTML()
-	{
-		$sResult = '';
-		
-		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
-		
-		if ($oApiIntegrator) 
-		{
-			$sModuleHash = '';
-			$aArgs = array();
-			$this->oModuleManager->broadcastEvent(
-				'System', 
-				'GenerateHTML', 
-				$aArgs,
-				$sModuleHash
-			);
-					
-			@\header('Content-Type: text/html; charset=utf-8', true);
-			
-			$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-			if (!\strpos(\strtolower($sUserAgent), 'firefox')) 
-			{
-				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
-			}
-			
-			if ((\Aurora\System\Api::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
-			{
-				\setcookie('aft-cache-ctrl', '', time() - 3600);
-				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
-				exit();
-			}
-			
-			$oCoreWebclientModule = \Aurora\System\Api::GetModule('CoreWebclient');
-			if ($oCoreWebclientModule instanceof \Aurora\System\Module\AbstractModule) 
-			{
-				$sResult = \file_get_contents($oCoreWebclientModule->GetPath().'/templates/Index.html');
-				if (\is_string($sResult)) 
-				{
-					$sFrameOptions = \Aurora\System\Api::GetConf('labs.x-frame-options', '');
-					if (0 < \strlen($sFrameOptions)) 
-					{
-						@\header('X-Frame-Options: '.$sFrameOptions);
-					}
-					
-					$sResult = strtr($sResult, array(
-						'{{AppVersion}}' => AURORA_APP_VERSION,
-						'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-						'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-						'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sModuleHash)
-					));
-				}
-			}
-		}
-
-		return $sResult;
-	}
-
-	/**
 	 * @return void
 	 */
 	public function Handle()
 	{
 		$mResult = '';
-		$bError = false;
-		$bIsHtml = false;
 		
-		$this->GetVersion();
-		$this->CheckApi();
 		$this->RedirectToHttps();
+		$this->GetVersion();
 
 		$aPaths = self::GetPaths();
 
-		$aModules = array();
-		if (0 < \count($aPaths) && !empty($aPaths[0])) 
+		if (0 < \count($aPaths) && isset($aPaths[0])) 
 		{
-			$sEntry = \strtolower($aPaths[0]);
-			$oModule = $this->oModuleManager->GetModuleFromRequest();
-			if ($oModule instanceof \Aurora\System\Module\AbstractModule) 
-			{
-				if ($oModule->HasEntry($sEntry))
-				{
-					$aModules[] = $oModule;
-				}
-				else 
-				{
-					$mResult = '\'' . $sEntry . '\' entry not found in \'' . $oModule->GetName() . '\' module.';
-					$bError = true;
-				}
-			}
-			else
-			{
-				 if ($sEntry === 'api')
-				 {
-					 $oCoreModule = \Aurora\System\Api::GetModule('Core');
-					 if ($oCoreModule instanceof \Aurora\System\Module\AbstractModule)
-					 {
-						 $aModules[] = $oCoreModule;
-					 }
-				 }
-				else 
-				{
-					$aModules = $this->oModuleManager->GetModulesByEntry($sEntry);
-				 }
-			}
-			if (!$bError)
-			{
-				if (count($aModules) > 0)
-				{
-					foreach ($aModules as $oModule)
-					{
-						$mEntryResult = $oModule->RunEntry($sEntry);
-						if ($mEntryResult !== 'null')
-						{
-							$mResult .= $mEntryResult;
-						}
-					}
-				}
-				else 
-				{
-					$bIsHtml = true;
-				}
-			}
+			$mResult = $this->oModuleManager->RunEntry(\strtolower($aPaths[0]));
 		} 
-		else 
-		{
-			$bIsHtml = true;
-		}
-		if ($bIsHtml)
-		{
-			$mResult = $this->generateHTML();	
-		}
-		$oHttp = \MailSo\Base\Http::SingletonInstance();
-		if ($oHttp->GetRequest('Format') !== 'Raw')
+
+		if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw')
 		{
 			echo $mResult;
 		}

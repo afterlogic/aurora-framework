@@ -61,9 +61,9 @@ class Response
 	public static function objectWrapper($oData, $aParameters = array())
 	{
 		$mResult = false;
-		if (is_object($oData))
+		if (\is_object($oData))
 		{
-			$aNames = explode('\\', get_class($oData));
+			$aNames = \explode('\\', \get_class($oData));
 			$sObjectName = end($aNames);
 			$mResult = array(
 				'@Object' => self::GetObjectName($sObjectName)
@@ -93,18 +93,18 @@ class Response
 	{
 		$mResult = null;
 
-		if (is_object($mResponse))
+		if (\is_object($mResponse))
 		{
-			if (method_exists($mResponse, 'toResponseArray'))	
+			if (\method_exists($mResponse, 'toResponseArray'))	
 			{
-				$mResult = array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
+				$mResult = \array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
 			}
 			else
 			{
-				$mResult = array_merge(self::objectWrapper($mResponse, $aParameters), self::CollectionToResponseArray($mResponse, $aParameters));
+				$mResult = \array_merge(self::objectWrapper($mResponse, $aParameters), self::CollectionToResponseArray($mResponse, $aParameters));
 			}
 		}
-		else if (is_array($mResponse))
+		else if (\is_array($mResponse))
 		{
 			foreach ($mResponse as $iKey => $oItem)
 			{
@@ -134,31 +134,31 @@ class Response
 	
 		if ($bDownload)
 		{
-			header('Content-Type: '.$sContentType, true);
+			\header('Content-Type: '.$sContentType, true);
 		}
 		else
 		{
-			$aParts = explode('/', $sContentType, 2);
-			if (in_array(strtolower($aParts[0]), array('image', 'video', 'audio')) ||
-				in_array(strtolower($sContentType), array('application/pdf', 'application/x-pdf', 'text/html')))
+			$aParts = \explode('/', $sContentType, 2);
+			if (\in_array(\strtolower($aParts[0]), array('image', 'video', 'audio')) ||
+				\in_array(\strtolower($sContentType), array('application/pdf', 'application/x-pdf', 'text/html')))
 			{
-				header('Content-Type: '.$sContentType, true);
+				\header('Content-Type: '.$sContentType, true);
 			}
 			else
 			{
-				header('Content-Type: text/plain; charset=', true);
+				\header('Content-Type: text/plain; charset=', true);
 			}
 		}
 
-		header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline' ).'; '.
+		\header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline' ).'; '.
 			\trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
 		
-		header('Accept-Ranges: none', true);
+		\header('Accept-Ranges: none', true);
 	}
 	
 	public static function GetThumbResource($oAccount, $rResource, $sFileName, $bShow = true)
 	{
-		$sMd5Hash = md5(rand(1000, 9999));
+		$sMd5Hash = \md5(\rand(1000, 9999));
 
 		$oApiFileCache = \Aurora\System\Api::GetSystemManager('Filecache');
 		$oApiFileCache->putFile($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
@@ -197,11 +197,11 @@ class Response
 			$iUtcTimeStamp = time();
 			$iExpireTime = 3600 * 24 * 5;
 
-			header('Cache-Control: private', true);
-			header('Pragma: private', true);
-			header('Etag: '.md5('Etag:'.md5($sKey)), true);
-			header('Last-Modified: '.gmdate('D, d M Y H:i:s', $iUtcTimeStamp - $iExpireTime).' UTC', true);
-			header('Expires: '.gmdate('D, j M Y H:i:s', $iUtcTimeStamp + $iExpireTime).' UTC', true);
+			\header('Cache-Control: private', true);
+			\header('Pragma: private', true);
+			\header('Etag: '.\md5('Etag:'.\md5($sKey)), true);
+			\header('Last-Modified: '.\gmdate('D, d M Y H:i:s', $iUtcTimeStamp - $iExpireTime).' UTC', true);
+			\header('Expires: '.\gmdate('D, j M Y H:i:s', $iUtcTimeStamp + $iExpireTime).' UTC', true);
 		}
 	}
 
@@ -230,7 +230,7 @@ class Response
 		$aResult = array();
 		if ($oCollection instanceof \MailSo\Base\Collection)
 		{
-			$aNames = explode('\\', get_class($oCollection));
+			$aNames = \explode('\\', \get_class($oCollection));
 			$sObjectName = end($aNames);
 
 			$aResult = array(

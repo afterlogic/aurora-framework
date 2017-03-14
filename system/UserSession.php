@@ -69,13 +69,13 @@ class UserSession
 		return $aResult;
 	}
 
-	public function Set($aData)
+	public function Set($aData, $iTime = 0)
 	{
 		if (!file_exists($this->Path))
 		{
 			@mkdir($this->Path, 0777);
 		}
-		
+		$aData['@time'] = $iTime;
 		$sAccountHashTable = \Aurora\System\Api::EncodeKeyValues($aData);
 		$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
 		return $this->Session->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
@@ -85,13 +85,18 @@ class UserSession
 	{
 		$mResult = false;
 		
-		if (strlen($sAuthToken) !== 0) {
-			
+		if (strlen($sAuthToken) !== 0) 
+		{
 			$sKey = $this->Session->get('AUTHTOKEN:'.$sAuthToken);
 		}
-		if (!empty($sKey) && is_string($sKey)) {
-			
+		if (!empty($sKey) && is_string($sKey)) 
+		{
 			$mResult = \Aurora\System\Api::DecodeKeyValues($sKey);
+			if (isset($mResult['@time']) && time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)
+			{
+				$this->Delete($sAuthToken);
+				$mResult = false;
+			}
 		}
 		
 		return $mResult;

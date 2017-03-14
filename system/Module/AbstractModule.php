@@ -117,10 +117,7 @@ abstract class AbstractModule
 		$this->oApiCapabilityManager = \Aurora\System\Api::GetSystemManager('capability');
 		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
 		
-		$this->aEntries = array(
-			'api' => 'EntryApi',
-			'download' => 'EntryDownload'
-		);
+		$this->aEntries = array();
 	}
 	
 	/**
@@ -417,7 +414,7 @@ abstract class AbstractModule
 	 * @param string $sForcedStorage
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
-	public function GetManager($sManagerName = '', $sForcedStorage = 'db')
+	final public function GetManager($sManagerName = '', $sForcedStorage = 'db')
 	{
 		$mResult = false;
 		$sFileFullPath = '';
@@ -449,7 +446,7 @@ abstract class AbstractModule
 	 * @param string $sName
 	 * @param callback $mCallbak
 	 */
-	public function AddEntry($sName, $mCallbak)
+	final public function AddEntry($sName, $mCallbak)
 	{
 		if (!isset($this->aEntries[$sName]))
 		{
@@ -461,7 +458,7 @@ abstract class AbstractModule
 	 * 
 	 * @param array $aEntries
 	 */
-	public function AddEntries($aEntries)
+	final public function AddEntries($aEntries)
 	{
 		foreach ($aEntries as $sName => $mCallbak)
 		{
@@ -474,7 +471,7 @@ abstract class AbstractModule
 	 * @param string $sName
 	 * @return boolean
 	 */
-	public function HasEntry($sName)
+	final public function HasEntry($sName)
 	{
 		return isset($this->aEntries[$sName]);
 	}
@@ -494,7 +491,7 @@ abstract class AbstractModule
 	 * @param stranig $sName
 	 * @return mixed
 	 */
-	public function GetEntryCallback($sName)
+	final public function GetEntryCallback($sName)
 	{
 		$mResult = false;
 		if (isset($this->aEntries[$sName])) 
@@ -510,9 +507,13 @@ abstract class AbstractModule
 	 * @param string $sName
 	 * @return mixed
 	 */
-	public function RunEntry($sName)
+	final public function RunEntry($sName)
 	{
 		$mResult = false;
+		
+		$aArguments = array();
+		$this->broadcastEvent($sName.'-entry' . self::$Delimiter . 'before', $aArguments, $mResult);
+		
 		$mMethod = $this->GetEntryCallback($sName);
 		
 		if ($mMethod) 
@@ -523,174 +524,12 @@ abstract class AbstractModule
 			);
 			
 		}			
+		
+		$this->broadcastEvent($sName.'-entry' . self::$Delimiter . 'after', $aArguments, $mResult);
+		
 		return $mResult;
 	}
 	
-	/**
-	 * 
-	 * @return mixed
-	 */
-	private function getUploadData()
-	{
-		$mResult = false;
-		$sError = '';
-		$sInputName = 'jua-uploader';
-
-		$iError = UPLOAD_ERR_OK;
-		$_FILES = isset($_FILES) ? $_FILES : null;
-		if (isset($_FILES, 
-			$_FILES[$sInputName], 
-			$_FILES[$sInputName]['name'], 
-			$_FILES[$sInputName]['tmp_name'], 
-			$_FILES[$sInputName]['size'], 
-			$_FILES[$sInputName]['type']))
-		{
-			$iError = (isset($_FILES[$sInputName]['error'])) ? 
-					(int) $_FILES[$sInputName]['error'] : UPLOAD_ERR_OK;
-			if (UPLOAD_ERR_OK === $iError)
-			{
-				$mResult = $_FILES[$sInputName];
-			}
-			else
-			{
-				$sError = 'unknown';
-			}
-		}
-		
-		return $mResult;
-	}
-
-	/**
-	 * 
-	 * @return string
-	 * @throws \Aurora\System\Exceptions\ApiException
-	 */
-	public function EntryApi()
-	{
-		@ob_start();
-
-		$aResponseItem = null;
-		$sModule = $this->oHttp->GetPost('Module', null);
-		$sMethod = $this->oHttp->GetPost('Method', null);
-		$sParameters = $this->oHttp->GetPost('Parameters', null);
-		$sFormat = $this->oHttp->GetPost('Format', null);
-
-		try
-		{
-			if (isset($sModule, $sMethod))
-			{
-				if (strtolower($sModule) === strtolower($this->GetName())) 
-				{
-					\Aurora\System\Api::Log('API:');
-					\Aurora\System\Api::Log('Module: '. $sModule);
-					\Aurora\System\Api::Log('Method: '. $sMethod);
-
-					if (strtolower($sModule) !== 'core' && 
-						\Aurora\System\Api::GetConf('labs.webmail.csrftoken-protection', true) && !\Aurora\System\Api::validateAuthToken()) 
-					{
-						throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::InvalidToken);
-					} 
-					else if (!empty($sModule) && !empty($sMethod)) 
-					{
-						$aParameters = isset($sParameters) &&  is_string($sParameters) ? 
-							@json_decode($sParameters, true) : array();
-						$sTenantName = $this->oHttp->GetPost('TenantName', '');
-
-						\Aurora\System\Api::setTenantName($sTenantName);
-
-						if (!is_array($aParameters))
-						{
-							$aParameters = array($aParameters);
-						}
-						$mUploadData = $this->getUploadData();
-						if (is_array($mUploadData))
-						{
-							$aParameters['UploadData'] = $mUploadData;
-						}
-
-						$this->CallMethod(
-							$sMethod, 
-							$aParameters, 
-							true
-						);
-						$aResponseItem = $this->DefaultResponse(
-							$sMethod,
-							\Aurora\System\Api::GetModuleManager()->GetResults()
-						);
-					}
-
-					if (!is_array($aResponseItem)) 
-					{
-						throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::UnknownError);
-					}
-
-					if ($sFormat !== 'Raw')
-					{
-						@header('Content-Type: application/json; charset=utf-8');
-					}
-				}
-			}
-			else
-			{
-				throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::InvalidInputParameter);
-			}
-		}
-		catch (\Exception $oException)
-		{
-			\Aurora\System\Api::LogException($oException);
-
-			$aAdditionalParams = null;
-			if ($oException instanceof \Aurora\System\Exceptions\ApiException) 
-			{
-				$aAdditionalParams = $oException->GetObjectParams();
-			}
-
-			$aResponseItem = $this->ExceptionResponse(
-				$sMethod,
-				$oException,
-				$aAdditionalParams
-			);
-		}
-
-		if (isset($aResponseItem['Parameters']))
-		{
-			unset($aResponseItem['Parameters']);
-		}
-		return \MailSo\Base\Utils::Php2js($aResponseItem, \Aurora\System\Api::MailSoLogger());		
-	}
-
-	/**
-	 * 
-	 * @return mixed
-	 */
-	public function EntryDownload()
-	{
-		$mResult = false;
-		
-		$aPaths = \Aurora\System\Application::GetPaths();
-		$sMethod = empty($aPaths[2]) ? '' : $aPaths[2];
-
-		try
-		{
-			if (!empty($sMethod)) {
-				
-				$sRawKey = empty($aPaths[3]) ? '' : $aPaths[3];
-				$aParameters =\Aurora\System\Api::DecodeKeyValues($sRawKey);				
-				$aParameters['AuthToken'] = empty($aPaths[4]) ? '' : $aPaths[4];
-				$aParameters['SharedHash'] = empty($aPaths[5]) ? '' : $aPaths[5];
-
-				$mResult = $this->CallMethod($sMethod, $aParameters, true);
-			}
-		}
-		catch (\Exception $oException)
-		{
-			\Aurora\System\Api::LogException($oException);
-			$this->oHttp->StatusHeader(404);
-		}
-		
-		return $mResult;
-	}
-
 	/**
 	 * @param string $sFileName
 	 * @param bool $bDoExitOnError = true
@@ -986,7 +825,7 @@ abstract class AbstractModule
 	 * @param boolean $bWebApi
 	 * @return mixed
 	 */
-	public function CallMethod($sMethod, $aArguments = array(), $bWebApi = false)
+	final public function CallMethod($sMethod, $aArguments = array(), $bWebApi = false)
 	{
 		$mResult = false;
 		try 
@@ -1115,20 +954,26 @@ abstract class AbstractModule
 		}
 		
 		$aLang = null;
-		if (isset(\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage])) {
+		if (isset(\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage])) 
+		{
 			$aLang = \Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage];
-		} else {
+		} 
+		else 
+		{
 			\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = false;
 				
 			$sLangFile = $this->GetPath().'/i18n/'.$sLanguage.'.ini';
-			if (!@file_exists($sLangFile)) {
+			if (!@\file_exists($sLangFile)) 
+			{
 				$sLangFile = $this->GetPath().'/i18n/English.ini';
-				$sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
+				$sLangFile = @\file_exists($sLangFile) ? $sLangFile : '';
 			}
 
-			if (0 < strlen($sLangFile)) {
+			if (0 < \strlen($sLangFile)) 
+			{
 				$aLang = \Aurora\System\Api::convertIniToLang($sLangFile);
-				if (is_array($aLang)) {
+				if (\is_array($aLang)) 
+				{
 					\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
 				}
 			}
@@ -1149,26 +994,26 @@ abstract class AbstractModule
 		if ($oEavManager)
 		{
 			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
-			$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
-			if($i = substr_count($sDisabledModules, "|"))
+			$aDisabledModules =  !empty(\trim($sDisabledModules)) ? array($sDisabledModules) : array();
+			if($i = \substr_count($sDisabledModules, "|"))
 			{
-				$aDisabledModules = explode("|", $sDisabledModules);
+				$aDisabledModules = \explode("|", $sDisabledModules);
 			}
 			if ($bEnabled)
 			{
-				if (in_array($this->GetName(), $aDisabledModules))
+				if (\in_array($this->GetName(), $aDisabledModules))
 				{
-					$aDisabledModules = array_diff($aDisabledModules, array($this->GetName()));
+					$aDisabledModules = \array_diff($aDisabledModules, array($this->GetName()));
 				}
 			}
 			else
 			{
-				if (!in_array($this->GetName(), $aDisabledModules))
+				if (!\in_array($this->GetName(), $aDisabledModules))
 				{
 					$aDisabledModules[] = $this->GetName();
 				}				
 			}
-			$oEntity->{'@DisabledModules'} = implode('|', $aDisabledModules);
+			$oEntity->{'@DisabledModules'} = \implode('|', $aDisabledModules);
 			$oEavManager->saveEntity($oEntity);
 		}	
 	}
@@ -1182,12 +1027,12 @@ abstract class AbstractModule
 	{
 		$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
 		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
-		if (substr_count($sDisabledModules, "|") > 0)
+		if (\substr_count($sDisabledModules, "|") > 0)
 		{
-			$aDisabledModules = explode("|", $sDisabledModules);
+			$aDisabledModules = \explode("|", $sDisabledModules);
 		}
 		
-		return !in_array($this->GetName(), $aDisabledModules);
+		return !\in_array($this->GetName(), $aDisabledModules);
 	}
 }
 

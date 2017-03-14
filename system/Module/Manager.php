@@ -87,27 +87,27 @@ class Manager
 			$aModulePath = array(
 				$sModulesPath
 			);
-			if (!empty(trim($sTenant)))
+			if (!empty(\trim($sTenant)))
 			{
 				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
-				array_unshift($aModulePath, $sTenantModulesPath);
+				\array_unshift($aModulePath, $sTenantModulesPath);
 			}
 			$aModulesPath = array();
 			foreach ($aModulePath as $sModulesPath)
 			{
-				if (@is_dir($sModulesPath))
+				if (@\is_dir($sModulesPath))
 				{
-					if (false !== ($rDirHandle = @opendir($sModulesPath)))
+					if (false !== ($rDirHandle = @\opendir($sModulesPath)))
 					{
-						while (false !== ($sFileItem = @readdir($rDirHandle)))
+						while (false !== ($sFileItem = @\readdir($rDirHandle)))
 						{
-							if (0 < strlen($sFileItem) && '.' !== $sFileItem{0} && preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
+							if (0 < \strlen($sFileItem) && '.' !== $sFileItem{0} && \preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
 							{
 								$aModulesPath[$sModulesPath][] = $sFileItem;
 							}
 						}
 
-						@closedir($rDirHandle);
+						@\closedir($rDirHandle);
 					}
 				}
 			}
@@ -126,7 +126,7 @@ class Manager
 					
 					if (!$oModuleSettings->GetConf('Disabled', false) && !$bIsModuleDisabledForUser)
 					{
-						$this->_aAllowedModulesName[strtolower($sModuleName)] = $sModuleName;
+						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
 						$this->loadModule($sModuleName, $sModulesPath);
 					}
 				}
@@ -153,7 +153,7 @@ class Manager
 	 */
 	public function isModuleLoaded($sModuleName)
 	{
-		return array_key_exists(strtolower($sModuleName), $this->_aModules);
+		return \array_key_exists(\strtolower($sModuleName), $this->_aModules);
 	}
 
 	/**
@@ -192,13 +192,13 @@ class Manager
 		);
 		
 		$sModuleFilePath = $sModulePath.$sModuleName.'/Module.php';
-		if (@file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
+		if (@\file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
 		{		
 			$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
 			$oModule = new $sModuleClassName($sModuleName, $sModulePath);
 			if ($oModule instanceof \Aurora\System\Module\AbstractModule)
 			{
-				 $this->_aModules[strtolower($sModuleName)] = $oModule;
+				 $this->_aModules[\strtolower($sModuleName)] = $oModule;
 				 $mResult = $oModule;
 			}
 		}
@@ -249,7 +249,7 @@ class Manager
 			$iPriority++;
 		}
         $this->_aSubscriptions[$sEvent][$iPriority] = $fCallback;
-        ksort($this->_aSubscriptions[$sEvent]);
+        \ksort($this->_aSubscriptions[$sEvent]);
     }	
 	
     /**
@@ -278,7 +278,7 @@ class Manager
 		$sEvent = $sModule . AbstractModule::$Delimiter . $sEvent;
 		if (isset($this->_aSubscriptions[$sEvent])) 
 		{
-			$aSubscriptions = array_merge(
+			$aSubscriptions = \array_merge(
 				$aSubscriptions, 
 				$this->_aSubscriptions[$sEvent]
 			);
@@ -289,7 +289,7 @@ class Manager
 			if (\is_callable($fCallback))
 			{
 				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . \Aurora\System\Module\AbstractModule::$Delimiter . $fCallback[1]);
-				$mCallBackResult = call_user_func_array(
+				$mCallBackResult = \call_user_func_array(
 					$fCallback, 
 					array(
 						&$aArguments,
@@ -343,19 +343,19 @@ class Manager
 	 */
 	public function ParseTemplate($sTemplateID, $sTemplateSource)
 	{
-		if (isset($this->_aTemplates[$sTemplateID]) && is_array($this->_aTemplates[$sTemplateID]))
+		if (isset($this->_aTemplates[$sTemplateID]) && \is_array($this->_aTemplates[$sTemplateID]))
 		{
 			foreach ($this->_aTemplates[$sTemplateID] as $aItem)
 			{
-				if (!empty($aItem[0]) && !empty($aItem[1]) && file_exists($aItem[1]))
+				if (!empty($aItem[0]) && !empty($aItem[1]) && \file_exists($aItem[1]))
 				{
-					$sTemplateHtml = file_get_contents($aItem[1]);
+					$sTemplateHtml = \file_get_contents($aItem[1]);
 					if (!empty($aItem[2]))
 					{
-						$sTemplateHtml = str_replace('%ModuleName%', $aItem[2], $sTemplateHtml);
-						$sTemplateHtml = str_replace('%MODULENAME%', strtoupper($aItem[2]), $sTemplateHtml);
+						$sTemplateHtml = \str_replace('%ModuleName%', $aItem[2], $sTemplateHtml);
+						$sTemplateHtml = \str_replace('%MODULENAME%', \strtoupper($aItem[2]), $sTemplateHtml);
 					}
-					$sTemplateSource = str_replace('{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
+					$sTemplateSource =\ str_replace('{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
 						$sTemplateHtml.'{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}', $sTemplateSource);
 				}
 			}
@@ -442,6 +442,10 @@ class Manager
 		return $this->_aModules;
 	}
 	
+	/**
+	 * @param string $sModuleName
+	 * @return \Aurora\System\Module\Settings
+	 */
 	public function GetModuleSettings($sModuleName)
 	{
 		if (!isset($this->aModulesSettings[strtolower($sModuleName)]))
@@ -474,11 +478,6 @@ class Manager
 		{
 			$sModule = $oHttp->GetPost('Module', null);
 		} 
-		else 
-		{
-			$aPath = \Aurora\System\Application::GetPaths();
-			$sModule = (isset($aPath[1])) ? $aPath[1] : '';
-		}
 		return $this->GetModule($sModule);
 	}
 	
@@ -533,10 +532,20 @@ class Manager
 	public function RunEntry($sEntryName)
 	{
 		$mResult = false;
-		$oModule = $this->GetModuleFromRequest();
-		if ($oModule instanceof \Aurora\System\Module\AbstractModule && $oModule->HasEntry($sEntryName)) 
+		$aModules = $this->GetModulesByEntry($sEntryName);
+		if (count($aModules) > 0)
 		{
-			$mResult = $oModule->RunEntry($sEntryName);
+			foreach ($aModules as $oModule)
+			{
+				if ($oModule instanceof \Aurora\System\Module\AbstractModule) 
+				{
+					$mEntryResult = $oModule->RunEntry($sEntryName);
+					if ($mEntryResult !== 'null')
+					{
+						$mResult .= $mEntryResult;
+					}
+				}
+			}
 		}
 		
 		return $mResult;
@@ -597,11 +606,19 @@ class Manager
 		$this->_aResults[] = $aResult;
 	}
 	
+	/**
+	 * @return array
+	 */	
 	public function GetResults()
 	{
 		return $this->_aResults;
 	}
 	
+	/**
+	 * @param string $sModule
+	 * @param string $sMethod
+	 * @return array
+	 */	
 	public function GetResult($sModule, $sMethod)
 	{
 		foreach($this->_aResults as $aResult)

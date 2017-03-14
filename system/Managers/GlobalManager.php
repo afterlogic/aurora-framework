@@ -96,14 +96,14 @@ class GlobalManager
 			try
 			{
 				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
-				if (!file_exists($sSettingsPath))
+				if (!\file_exists($sSettingsPath))
 				{
-					mkdir(dirname($sSettingsPath), 0777);
+					\mkdir(dirname($sSettingsPath), 0777);
 				}
 				
 				$this->oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
 			}
-			catch (BaseException $oException)
+			catch (\Aurora\System\Exceptions\BaseException $oException)
 			{
 				$this->oSettings = false;
 			}
@@ -167,13 +167,15 @@ class GlobalManager
 	}
 
 	/**
-	 * @param bool $iMailProtocol
-	 * @return CApiImap4MailProtocol
+	 * 
+	 * @param string $sHost
+	 * @param int $iPort
+	 * @param bool $bUseSsl
+	 * @return \Aurora\System\Net\Protocols\Imap4
 	 */
 	public function GetSimpleMailProtocol($sHost, $iPort, $bUseSsl = false)
 	{
-		\Aurora\System\Api::Inc('net.protocols.imap4');
-		return new \CApiImap4MailProtocol($sHost, $iPort, $bUseSsl);
+		return new \Aurora\System\Net\Protocols\Imap4($sHost, $iPort, $bUseSsl);
 	}
 
 	public function &GetCommandCreator(\Aurora\System\Managers\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
