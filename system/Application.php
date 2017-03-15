@@ -71,20 +71,26 @@ class Application
 	public static function Start()
 	{
 		\Aurora\System\Api::Init();
-		self::SingletonInstance()->Handle();
+		
+		self::RedirectToHttps();
+		self::GetVersion();
+
+		self::SingletonInstance()->oModuleManager->RunEntry(
+			\strtolower(self::GetPathItemByIndex(0, ''))
+		);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetVersion()
+	public static function GetVersion()
 	{
 		$sVersion = @\file_get_contents(AURORA_APP_ROOT_PATH.'VERSION');
 		\define('AURORA_APP_VERSION', $sVersion);
 		return $sVersion;
 	}
 	
-	public function RedirectToHttps()
+	public static function RedirectToHttps()
 	{
 		$oSettings =& \Aurora\System\Api::GetSettings();
 		$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
@@ -102,55 +108,48 @@ class Application
 	 */
 	public static function GetPaths()
 	{
-		$aResult = array();
-		$aQuery = array();
-		
-		$oHttp = \MailSo\Base\Http::SingletonInstance();
-		$aPathInfo = \array_filter(\explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/'))));
-		if (0 < \count($aPathInfo)) 
+		static $aResult = null;
+		if ($aResult === null)
 		{
-			$aQuery = $aPathInfo;
-		} 
-		else 
-		{
-			$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
+			$aResult = array();
+			$aQuery = array();
 
-			$iPos = \strpos($sQuery, '&');
-			if (0 < $iPos) 
+			$oHttp = \MailSo\Base\Http::SingletonInstance();
+			$aPathInfo = \array_filter(
+				\explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/')))
+			);
+			if (0 < \count($aPathInfo)) 
 			{
-				$sQuery = \substr($sQuery, 0, $iPos);
+				$aQuery = $aPathInfo;
+			} 
+			else 
+			{
+				$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
+
+				$iPos = \strpos($sQuery, '&');
+				if (0 < $iPos) 
+				{
+					$sQuery = \substr($sQuery, 0, $iPos);
+				}
+				$aQuery = \explode('/', $sQuery);
 			}
-			$aQuery = \explode('/', $sQuery);
-		}
-		foreach ($aQuery as $sQueryItem) 
-		{
-			$iPos = \strpos($sQueryItem, '=');
-			$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
+			foreach ($aQuery as $sQueryItem) 
+			{
+				$iPos = \strpos($sQueryItem, '=');
+				$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
+			}
 		}
 		
 		return $aResult;
 	}
-			
+	
 	/**
-	 * @return void
+	 * 
+	 * @param int $iIndex
 	 */
-	public function Handle()
+	public static function GetPathItemByIndex($iIndex, $mDefaultValue = null)
 	{
-		$mResult = '';
-		
-		$this->RedirectToHttps();
-		$this->GetVersion();
-
-		$aPaths = self::GetPaths();
-
-		if (0 < \count($aPaths) && isset($aPaths[0])) 
-		{
-			$mResult = $this->oModuleManager->RunEntry(\strtolower($aPaths[0]));
-		} 
-
-		if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw')
-		{
-			echo $mResult;
-		}
+		$aPath = self::GetPaths();
+		return isset($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
 	}
 }

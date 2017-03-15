@@ -546,6 +546,10 @@ class Manager
 					}
 				}
 			}
+			if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw')
+			{
+				echo $mResult;
+			}
 		}
 		
 		return $mResult;
