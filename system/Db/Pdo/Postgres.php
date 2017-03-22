@@ -64,8 +64,9 @@ class Postgres extends \Aurora\System\Db\Sql
 		$this->rResultId = null;
 
 		$this->iExecuteCount = 0;
-		$this->bUseExplain =\Aurora\System\Api::GetConf('labs.db.use-explain', false);
-		$this->bUseExplainExtended =\Aurora\System\Api::GetConf('labs.db.use-explain-extended', false);
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$this->bUseExplain = $oSettings->GetConf('DbUseExplain', false);
+		$this->bUseExplainExtended = $oSettings->GetConf('DbUseExplainExtended', false);
 	}
 
 	/**

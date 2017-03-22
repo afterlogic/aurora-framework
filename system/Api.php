@@ -48,11 +48,6 @@ class Api
 	/**
 	 * @var array
 	 */
-	static $aConfig;
-	
-	/**
-	 * @var array
-	 */
 	static $aSecretWords;
 	
 	/**
@@ -107,35 +102,6 @@ class Api
 		self::$sSalt = $sSalt;		
 	}
 	
-	public static function InitConfig()
-	{
-		self::$aConfig = include self::RootPath().'config.php';
-
-		$sSettingsFile = self::DataPath().'/settings/config.php';
-		if (@file_exists($sSettingsFile))
-		{
-			$aAppConfig = include $sSettingsFile;
-			if (is_array($aAppConfig))
-			{
-				self::$aConfig = array_merge(self::$aConfig, $aAppConfig);
-			}
-		}			
-
-		$sHost = \MailSo\Base\Http::SingletonInstance()->GetHost();
-		if (0 < \strlen($sHost))
-		{
-			$sHostConfigFile = self::DataPath().'/settings/'.$sHost.'.config.php';
-			if (@file_exists($sHostConfigFile))
-			{
-				$aHostConfig = include $sHostConfigFile;
-				if (is_array($aHostConfig))
-				{
-					self::$aConfig = array_merge(self::$aConfig, $aHostConfig);
-				}
-			}
-		}		
-	}	
-	
 	/**
 	 * 
 	 * @param type $bGrantAdminPrivileges
@@ -163,7 +129,6 @@ class Api
 			));
 
 			self::InitSalt();
-			self::InitConfig();
 
 			self::$oManager = new \Aurora\System\Managers\GlobalManager();
 			self::$bIsValid = self::validateApi();
@@ -478,26 +443,6 @@ class Api
 	}
 
 	/**
-	 * @param string $sKey
-	 * @param mixed $mDefault = null
-	 * @return mixed
-	 */
-	public static function GetConf($sKey, $mDefault = null)
-	{
-		return (isset(self::$aConfig[$sKey])) ?self::$aConfig[$sKey] : $mDefault;
-	}
-
-	/**
-	 * @param string $sKey
-	 * @param mixed $mValue
-	 * @return void
-	 */
-	public static function SetConf($sKey, $mValue)
-	{
-		self::$aConfig[$sKey] = $mValue;
-	}
-
-	/**
 	 * @return bool
 	 */
 	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
@@ -699,13 +644,15 @@ class Api
 	 */
 	public static function SpecifiedUserLogging($bOn = true)
 	{
-		if ($bOn) 
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$sAppCookiePath = $oSettings->GetConf('AppCookiePath', '/');
+		if ($bOn)
 		{
-			@setcookie('SpecifiedUserLogging', '1', 0,self::GetConf('labs.app-cookie-path', '/'), null, null, true);
-		} 
-		else 
+			@setcookie('SpecifiedUserLogging', '1', 0, $sAppCookiePath, null, null, true);
+		}
+		else
 		{
-			@setcookie('SpecifiedUserLogging', '0', 0,self::GetConf('labs.app-cookie-path', '/'), null, null, true);
+			@setcookie('SpecifiedUserLogging', '0', 0, $sAppCookiePath, null, null, true);
 		}
 	}
 	
@@ -740,7 +687,8 @@ class Api
 		
 		if (null === $iDbBacktraceCount) 
 		{
-			$iDbBacktraceCount = (int)self::GetConf('labs.db-debug-backtrace-limit', 0);
+			$oSettings =& \Aurora\System\Api::GetSettings();
+			$iDbBacktraceCount = (int) $oSettings->GetConf('DbDebugBacktraceLimit', 0);
 			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
 			{
 				$iDbBacktraceCount = 0;
@@ -834,7 +782,7 @@ class Api
 				self::LogOnly(API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
 				if (!empty($sPost)) 
 				{
-					if (self::GetConf('labs.log.post-view', false)) 
+					if ($oSettings->GetConf('LogPostView', false)) 
 					{
 						self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
 					} 
@@ -922,8 +870,9 @@ class Api
 	 */
 	public static function VersionJs()
 	{
+		$oSettings = &self::GetSettings();
 		return preg_replace('/[^0-9a-z]/', '',self::Version().
-			(self::GetConf('labs.cache.static', true) ? '' : '-'.md5(time())));
+			($oSettings && $oSettings->GetConf('CacheStatic', true) ? '' : '-'.md5(time())));
 	}
 
 	/**
@@ -1227,8 +1176,10 @@ class Api
 	 */
 	public static function isIframedMimeTypeSupported($sMimeType, $sFileName = '')
 	{
+		$oSettings = &self::GetSettings();
+		
 		$bResult = /*!$this->oHttp->IsLocalhost() &&*/ // TODO
-			self::GetConf('labs.allow-officeapps-viewer', true) &&
+			$oSettings->GetConf('AllowOfficeAppsViewer', true) &&
 			!!preg_match('/\.(doc|docx|docm|dotm|dotx|xlsx|xlsb|xls|xlsm|pptx|ppsx|ppt|pps|pptm|potm|ppam|potx|ppsm)$/', strtolower(trim($sFileName)));
 
 		return $bResult;
@@ -1246,30 +1197,21 @@ class Api
 		{
 			self::$aI18N = false;
 
-			if ('' !== $sForceCustomInitialisationLang) 
-			{
-				$sLang = $sForceCustomInitialisationLang;
-			}
-			else 
-			{
-				$sLang = self::GetConf('labs.i18n', '');
-			}
-			
 			$sLangFile = '';
-			if (0 < strlen($sLang)) 
+			if (0 < strlen($sForceCustomInitialisationLang))
 			{
-				$sLangFile = self::RootPath().'common/i18n/'.$sLang.'.ini';
+				$sLangFile = self::RootPath().'common/i18n/'.$sForceCustomInitialisationLang.'.ini';
 			}
 
-			if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) 
+			if (0 === strlen($sLangFile) || !@file_exists($sLangFile))
 			{
 				$sLangFile = self::RootPath().'common/i18n/English.ini';
 			}
 
-			if (0 < strlen($sLangFile) && @file_exists($sLangFile)) 
+			if (0 < strlen($sLangFile) && @file_exists($sLangFile))
 			{
 				$aResultLang = self::convertIniToLang($sLangFile);
-				if (is_array($aResultLang)) 
+				if (is_array($aResultLang))
 				{
 					self::$aI18N = $aResultLang;
 				}
@@ -1511,26 +1453,3 @@ class Api
 		return $mResult;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

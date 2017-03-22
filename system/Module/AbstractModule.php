@@ -717,7 +717,8 @@ abstract class AbstractModule
 		$sErrorMessage = null;
 		$sModule = '';
 
-		$bShowError = \Aurora\System\Api::GetConf('labs.webmail.display-server-error-information', false);
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$bShowError = $oSettings->GetConf('DisplayServerErrorInformation', false);
 
 		if ($oException instanceof \Aurora\System\Exceptions\ApiException) 
 		{
@@ -731,7 +732,7 @@ abstract class AbstractModule
 					$sErrorMessage = null;
 				}
 			}
-				$sModule = $this->GetName();
+			$sModule = $this->GetName();
 		}
 		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
 		{

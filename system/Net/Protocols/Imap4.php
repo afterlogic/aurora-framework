@@ -102,7 +102,8 @@ class Imap4 extends \Aurora\System\Net\AbstractProtocol
 	{
 		$bReturn = false;
 
-		$bPlain = ((bool)\Aurora\System\Api::GetConf('login.enable-plain-auth', false)) && $this->IsSupported('AUTH=PLAIN');
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$bPlain = ((bool) $oSettings->GetConf('EnableImap4PlainAuth', false)) && $this->IsSupported('AUTH=PLAIN');
 		if ($bPlain)
 		{
 			$sAuth = base64_encode($sLoginAuthKey."\0".$sLogin."\0".$sPassword);

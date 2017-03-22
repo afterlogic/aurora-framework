@@ -481,7 +481,8 @@ abstract class AbstractContainer
 		$aExclude = \is_array($aExclude) && 0 < \count($aExclude) ? $aExclude : array();
 
 		$sQueryParams = '';
-		$bUseLogQueryParams = (bool)\Aurora\System\Api::GetConf('labs.db.log-query-params', false);
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$bUseLogQueryParams = (bool) $oSettings->GetConf('DbLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 
@@ -599,7 +600,8 @@ abstract class AbstractContainer
 		$aResult = array(false, false);
 
 		$sQueryParams = '';
-		$bUseLogQueryParams = (bool)\Aurora\System\Api::GetConf('labs.db.log-query-params', false);
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$bUseLogQueryParams = (bool) $oSettings->GetConf('DbLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 

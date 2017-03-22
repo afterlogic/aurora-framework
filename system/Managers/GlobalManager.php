@@ -60,16 +60,6 @@ class GlobalManager
 			'db' => 'db',
 			'filecache' => 'file'
 		);
-
-		if (\Aurora\System\Api::GetConf('gcontacts.ldap', false))
-		{
-			$this->aStorageMap['gcontacts'] = 'ldap';
-		}
-
-		if (\Aurora\System\Api::GetConf('contacts.ldap', false))
-		{
-			$this->aStorageMap['contactsmain'] = 'ldap';
-		}
 	}
 	
 	public function GetManagers()

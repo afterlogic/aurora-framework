@@ -43,7 +43,8 @@ class Application
 
 //		\MailSo\Config::$FixIconvByMbstring = false;
 		\MailSo\Config::$SystemLogger = \Aurora\System\Api::MailSoLogger();
-		\MailSo\Config::$PreferStartTlsIfAutoDetect = !!\Aurora\System\Api::GetConf('labs.prefer-starttls', true);
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		\MailSo\Config::$PreferStartTlsIfAutoDetect = !!$oSettings->GetConf('PreferStarttls', true);
 	}
 
 	/**

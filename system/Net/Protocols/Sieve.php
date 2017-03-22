@@ -92,7 +92,8 @@ class Sieve extends \Aurora\System\Net\AbstractProtocol
 			$bResult = true;
 		}
 
-		if (\Aurora\System\Api::GetConf('labs.sieve.use-starttls', false) && $bResult && isset($this->aData['STARTTLS']) && $this->aData['STARTTLS'])
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		if ($oSettings->GetConf('SieveUseStarttls', false) && $bResult && isset($this->aData['STARTTLS']) && $this->aData['STARTTLS'])
 		{
 			$rConnect = $this->GetConnectResource();
 			if (is_resource($rConnect) && function_exists('stream_socket_enable_crypto'))

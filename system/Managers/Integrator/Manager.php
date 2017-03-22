@@ -116,7 +116,8 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		$sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 		
 		$sCacheFileName = '';
-		if (\Aurora\System\Api::GetConf('labs.cache.templates', $this->bCache))
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		if ($oSettings->GetConf('CacheTemplates', $this->bCache))
 		{
 			$sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
 			$sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
@@ -169,7 +170,8 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		}
 
 		$sResult = trim($sResult);
-		if (\Aurora\System\Api::GetConf('labs.cache.templates', $this->bCache))
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		if ($oSettings->GetConf('CacheTemplates', $this->bCache))
 		{
 			if (!is_dir(dirname($sCacheFullFileName)))
 			{
@@ -240,7 +242,8 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		$sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 
 		$sCacheFileName = '';
-		if (\Aurora\System\Api::GetConf('labs.cache.langs', $this->bCache))
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		if ($oSettings->GetConf('CacheLangs', $this->bCache))
 		{
 			$sCacheFileName = 'langs-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
 			$sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
@@ -287,7 +290,8 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 			
 			$sResult .= json_encode($aResult);
 			
-			if (\Aurora\System\Api::GetConf('labs.cache.langs', $this->bCache))
+			$oSettings =& \Aurora\System\Api::GetSettings();
+			if ($oSettings->GetConf('CacheLangs', $this->bCache))
 			{
 				if (!is_dir(dirname($sCacheFullFileName)))
 				{
@@ -309,9 +313,11 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	private function getCookiePath()
 	{
 		static $sPath = false;
-		if (false === $sPath) {
-			
-			$sPath =\Aurora\System\Api::GetConf('labs.app-cookie-path', '/');
+		
+		if (false === $sPath)
+		{
+			$oSettings =& \Aurora\System\Api::GetSettings();
+			$sPath = $oSettings->GetConf('AppCookiePath', '/');
 		}
 
 		return $sPath;
@@ -1306,20 +1312,20 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 //	public function getJsLinks($sModuleHash)
 	public function getJsLinks($aConfig = array())
 	{
+		$oSettings =& \Aurora\System\Api::GetSettings();
 		$sPostfix = '';
 //		if ($sModuleHash !== '')
 //		{
 //			$sPostfix = $sModuleHash;
 //		}
 		
-		if (\Aurora\System\Api::GetConf('labs.use-app-min-js', false))
+		if ($oSettings->GetConf('UseAppMinJs', false))
 		{
 //			$sPostfix = $sPostfix.'.min';
 			$sPostfix .= '.min';
 		}
 		
 		$sTenantName = \Aurora\System\Api::getTenantName();
-		$oSettings =&\Aurora\System\Api::GetSettings();
 		
 		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
 		

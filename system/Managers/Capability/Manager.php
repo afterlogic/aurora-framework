@@ -52,25 +52,9 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	/**
 	 * @return bool
 	 */
-	public function isMailsuite()
-	{
-		return !!\Aurora\System\Api::GetConf('mailsuite', false) && !!\Aurora\System\Api::GetSystemManager('mailsuite');
-	}
-
-	/**
-	 * @return bool
-	 */
 	public function isDavSupported()
 	{
 		return $this->isNotLite() && !!\Aurora\System\Api::GetModuleManager()->ModuleExists('Dav');
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isTenantsSupported()
-	{
-		return $this->isNotLite() && !!\Aurora\System\Api::GetConf('tenant', false);
 	}
 
 	/**
@@ -157,24 +141,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 * @param CAccount $oAccount = null
 	 * @return bool
 	 */
-	public function isSharedContactsSupported($oAccount = null)
-	{
-		$bResult = $this->isContactsSupported() && $this->isCollaborationSupported() &&
-			\Aurora\System\Api::GetConf('labs.contacts-sharing', false);
-		
-		if ($bResult && $oAccount)
-		{
-			$bIsGlobalContactsEnabled = true;
-			$bResult = $this->isContactsSupported($oAccount) && $oAccount->User->getCapa(ECapa::CONTACTS_SHARING) && $bIsGlobalContactsEnabled;
-		}
-
-		return $bResult;
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
 	public function isGlobalSuggestContactsSupported($oAccount = null)
 	{
 		return $this->isGlobalContactsSupported($oAccount, false);
@@ -195,7 +161,8 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 */
 	public function isTwilioSupported($oAccount = null)
 	{
-		$bResult = $this->isCollaborationSupported() && !!\Aurora\System\Api::GetConf('labs.twilio', false);
+		$oTwilioModule = \Aurora\System\Api::GetModule('Twilio'); 
+		$bResult = $this->isCollaborationSupported() && $oTwilioModule && !$oTwilioModule->getConfig('Disabled', true);
 		if ($bResult && $oAccount)
 		{
 			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
@@ -217,33 +184,10 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 * @param CAccount $oAccount = null
 	 * @return bool
 	 */
-	public function isSipSupported($oAccount = null)
-	{
-		$bResult = $this->isCollaborationSupported() && !!\Aurora\System\Api::GetConf('labs.voice', false);
-		if ($bResult && $oAccount)
-		{
-			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
-			if ($oTenant)
-			{
-				$bResult = $oTenant->isSipSupported();
-			}
-
-			if ($bResult)
-			{
-				$bResult = $oAccount->User->getCapa(ECapa::SIP);
-			}
-		}
-
-		return $bResult;
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
 	public function isHelpdeskSupported($oAccount = null)
 	{
-		$bResult = $this->isCollaborationSupported() && !!\Aurora\System\Api::GetConf('helpdesk', false);
+		$oHelpdeskModule = \Aurora\System\Api::GetModule('Helpdesk'); 
+		$bResult = $this->isCollaborationSupported() && $oHelpdeskModule && !$oHelpdeskModule->getConfig('Disabled', true);
 		if ($bResult && $oAccount)
 		{
 			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
@@ -353,11 +297,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 				$aCapa[] = ECapa::HELPDESK;
 			}
 
-			if ($this->isSipSupported())
-			{
-				$aCapa[] = ECapa::SIP;
-			}
-			
 			if ($this->isTwilioSupported())
 			{
 				$aCapa[] = ECapa::TWILIO;
