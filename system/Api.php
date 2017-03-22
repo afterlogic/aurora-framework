@@ -688,7 +688,7 @@ class Api
 		if (null === $iDbBacktraceCount) 
 		{
 			$oSettings =& \Aurora\System\Api::GetSettings();
-			$iDbBacktraceCount = (int) $oSettings->GetConf('DbDebugBacktraceLimit', 0);
+			$iDbBacktraceCount = (int) $oSettings->GetConf('DBDebugBacktraceLimit', 0);
 			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
 			{
 				$iDbBacktraceCount = 0;

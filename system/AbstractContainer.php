@@ -482,7 +482,7 @@ abstract class AbstractContainer
 
 		$sQueryParams = '';
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$bUseLogQueryParams = (bool) $oSettings->GetConf('DbLogQueryParams', false);
+		$bUseLogQueryParams = (bool) $oSettings->GetConf('DBLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 
@@ -601,7 +601,7 @@ abstract class AbstractContainer
 
 		$sQueryParams = '';
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$bUseLogQueryParams = (bool) $oSettings->GetConf('DbLogQueryParams', false);
+		$bUseLogQueryParams = (bool) $oSettings->GetConf('DBLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 

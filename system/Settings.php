@@ -46,32 +46,39 @@ class Settings extends AbstractSettings
 			'DBSlaveName' => new SettingsProperty('DBSlaveName', '', 'string'),
 			'DBSlaveLogin' => new SettingsProperty('DBSlaveLogin', 'root', 'string'),
 			'DBSlavePassword' => new SettingsProperty('DBSlavePassword', '', 'string'),
+			'DBUseExplain' => new SettingsProperty('DBUseExplain', false, 'bool'),
+			'DBUseExplainExtended' => new SettingsProperty('DBUseExplainExtended', false, 'bool'),
+			'DBLogQueryParams' => new SettingsProperty('DBLogQueryParams', false, 'bool'),
+			'DBDebugBacktraceLimit' => new SettingsProperty('DBDebugBacktraceLimit', false, 'bool'),
 
-			'DefaultTimeZone' => new SettingsProperty('DefaultTimeZone', 0, 'int'),
-			'AllowRegistration' => new SettingsProperty('AllowRegistration', false, 'bool'),
-			'RegistrationDomains' => new SettingsProperty('RegistrationDomains', '', 'string'),
-			'RegistrationQuestions' => new SettingsProperty('RegistrationQuestions', '', 'string'),
-			'AllowPasswordReset' => new SettingsProperty('AllowPasswordReset', false, 'bool'),
 			'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
 			'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
 			'LoggingLevel' => new SettingsProperty('LoggingLevel', \ELogLevel::Full, 'spec', 'ELogLevel'),
 			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
 			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
-			'EnableMobileSync' => new SettingsProperty('EnableMobileSync', false, 'bool'),
+			'LogPostView' => new SettingsProperty('LogPostView', '', 'string'),
 			
 			'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
 			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
-
 			'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
 
-			'LoginStyleImage' => new SettingsProperty('LoginStyleImage', '', 'string'),
-			'InvitationEmail' => new SettingsProperty('InvitationEmail', '', 'string'),
-			
-			'DefaultTab' => new SettingsProperty('DefaultTab', '', 'string'),
+			'AllowOfficeAppsViewer' => new SettingsProperty('AllowOfficeAppsViewer', true, 'bool'),
+			'AllowThumbnail' => new SettingsProperty('AllowThumbnail', true, 'bool'),
+			'AppCookiePath' => new SettingsProperty('AppCookiePath', '/', 'string'),
+			'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
+			'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
+			'CacheStatic' => new SettingsProperty('CacheStatic', true, 'bool'),
+			'CacheTemplates' => new SettingsProperty('CacheTemplates', true, 'bool'),
+			'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', true, 'bool'),
+			'EnableImap4PlainAuth' => new SettingsProperty('EnableImap4PlainAuth', false, 'bool'),
+			'PreferStarttls' => new SettingsProperty('PreferStarttls', true, 'bool'),
 			'RedirectToHttps' => new SettingsProperty('RedirectToHttps', false, 'bool'),
-
-			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
-			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool')
+			'SieveUseStarttls' => new SettingsProperty('SieveUseStarttls', false, 'bool'),
+			'SocketConnectTimeoutSeconds' => new SettingsProperty('SocketConnectTimeoutSeconds', 20, 'int'),
+			'SocketGetTimeoutSeconds' => new SettingsProperty('SocketGetTimeoutSeconds', 20, 'int'),
+			'SocketVerifySsl' => new SettingsProperty('SocketVerifySsl', false, 'bool'),
+			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', false, 'bool'),
+			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
 		);		
 	}
 

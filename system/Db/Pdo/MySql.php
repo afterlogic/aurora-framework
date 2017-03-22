@@ -67,8 +67,8 @@ class MySql extends \Aurora\System\Db\Sql
 
 		$this->iExecuteCount = 0;
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$this->bUseExplain = $oSettings->GetConf('DbUseExplain', false);
-		$this->bUseExplainExtended = $oSettings->GetConf('DbUseExplainExtended', false);
+		$this->bUseExplain = $oSettings->GetConf('DBUseExplain', false);
+		$this->bUseExplainExtended = $oSettings->GetConf('DBUseExplainExtended', false);
 	}
 
 	/**
