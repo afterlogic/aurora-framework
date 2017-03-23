@@ -131,6 +131,11 @@ abstract class AbstractModule
 	{
 		return new static($sName, $sPath, $sVersion);
 	}	
+	
+	final public function GetDecorator()
+	{
+		return \Aurora\System\Api::GetModuleDecorator($this->GetName());
+	}
 
 	/**
 	 * 
