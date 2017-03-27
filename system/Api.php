@@ -76,6 +76,11 @@ class Api
 	static $bUseDbLog;
 	
 	/**
+	 * @var string
+	 */
+	public static $sEventLogPrefix = 'event-';
+	
+	/**
 	 * @var array
 	 */
 	protected static $aUserSession = array();
@@ -549,21 +554,19 @@ class Api
 
 	/**
 	 * @param string $sDesc
-	 * @param CAccount|string|null $mAccount
+	 * @param string $sModuleName
 	 */
-	public static function LogEvent($sDesc, $mAccount = null)
+	public static function LogEvent($sDesc, $sModuleName = '')
 	{
 		$oSettings = &self::GetSettings();
 		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) 
 		{
 			$sDate = gmdate('H:i:s');
 			$iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
-			
-			$sAccount = $mAccount instanceof \CAccount ? $mAccount->Email :
-				(is_string($mAccount) ? $mAccount : 'unknown');
+			$sUserId = self::getAuthenticatedUserId();
 
-			self::Log('Event: '.$sAccount.' > '.$sDesc);
-			self::LogOnly('['.$sDate.']['.$iIp.']['.$sAccount.'] > '.$sDesc, self::GetLogFileDir().self::GetLogFileName('event-'));
+			self::Log('Event: '.$sUserId.' > '.$sDesc);
+			self::LogOnly('['.$sDate.']['.$iIp.']['.$sUserId.']['.$sModuleName.'] > '.$sDesc, self::GetLogFileDir().self::GetLogFileName(self::$sEventLogPrefix));
 		}
 	}
 

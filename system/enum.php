@@ -575,18 +575,6 @@ class EAttendeeStatus extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EEvents extends \AbstractEnumeration
-{
-	const LoginSuccess = 'login-success';
-	const LoginFailed = 'login-failed';
-	const Logout = 'logout';
-	const MessageSend = 'message-send';
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
 class EFileStorageLinkType extends \AbstractEnumeration
 {
 	const Unknown = 0;
