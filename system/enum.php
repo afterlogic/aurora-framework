@@ -175,7 +175,6 @@ class ELogLevel extends \AbstractEnumeration
 	const Full = 100;
 	const Warning = 50;
 	const Error = 20;
-	const Spec = 10;
 
 	/**
 	 * @var array
@@ -184,7 +183,6 @@ class ELogLevel extends \AbstractEnumeration
 		'Full' => self::Full,
 		'Warning' => self::Warning,
 		'Error' => self::Error,
-		'Spec' => self::Spec,
 	);
 }
 

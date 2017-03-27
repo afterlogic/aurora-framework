@@ -767,9 +767,9 @@ class Api
 		$oSettings = &self::GetSettings();
 
 		if ($oSettings && $oSettings->GetConf('EnableLogging') &&
-			($iLogLevel <= $oSettings->GetConf('LoggingLevel') ||
+			($iLogLevel <= $oSettings->GetConf('LoggingLevel')/* ||
 			(\ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
-				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging']))) 
+				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging'])*/)) 
 		{
 			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFilePrefix);
 
