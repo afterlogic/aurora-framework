@@ -44,17 +44,17 @@ class BaseException extends Exception
 	{
 		if (\Aurora\System\Exceptions\ErrorCodes::Validation_InvalidPort === $iCode)
 		{
-			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \ELogLevel::Error);
 			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_InvalidPort_OutInfo;
 		}
 		else if (\Aurora\System\Exceptions\ErrorCodes::Validation_InvalidEmail === $iCode)
 		{
-			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \ELogLevel::Error);
 			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_InvalidEmail_OutInfo;
 		}
 		else if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode)
 		{
-			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), ELogLevel::Error);
+			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \ELogLevel::Error);
 			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;
 		}
 
@@ -63,7 +63,7 @@ class BaseException extends Exception
 
 		if ($this->oPrevious)
 		{
-			\Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), ELogLevel::Error);
+			\Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), \ELogLevel::Error);
 		}
 
 		parent::__construct(\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
