@@ -82,7 +82,7 @@ abstract class AbstractSettings
 		$sType = (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Type : gettype($mValue);
 		if (!isset($this->aContainer[$sKey]))
 		{
-			$this->aContainer[$sKey] = new \SettingsProperty($sKey, $mValue, $sType);
+			$this->aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType);
 		}
 		
 		switch ($sType)

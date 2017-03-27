@@ -174,6 +174,36 @@ class Manager
 		
 		return $mResult;
 	}
+	
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @param string $sConfigName
+	 * @param string $sValue
+	 * @return mixed
+	 */
+	public function setModuleConfigValue($sModuleName, $sConfigName, $sValue)
+	{
+		$oModuleConfig = $this->GetModuleSettings($sModuleName);
+		if ($oModuleConfig)
+		{
+			$oModuleConfig->SetConf($sConfigName, $sValue);
+		}
+	}	
+	
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @return mixed
+	 */
+	public function saveModuleConfigValue($sModuleName)
+	{
+		$oModuleConfig = $this->GetModuleSettings($sModuleName);
+		if ($oModuleConfig)
+		{
+			$oModuleConfig->Save();
+		}
+	}	
 
 	/**
 	 * 
