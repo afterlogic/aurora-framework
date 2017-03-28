@@ -643,23 +643,6 @@ class Api
 	}
 
 	/**
-	 * @param bool $bOn = true
-	 */
-	public static function SpecifiedUserLogging($bOn = true)
-	{
-		$oSettings =& \Aurora\System\Api::GetSettings();
-		$sAppCookiePath = $oSettings->GetConf('AppCookiePath', '/');
-		if ($bOn)
-		{
-			@setcookie('SpecifiedUserLogging', '1', 0, $sAppCookiePath, null, null, true);
-		}
-		else
-		{
-			@setcookie('SpecifiedUserLogging', '0', 0, $sAppCookiePath, null, null, true);
-		}
-	}
-	
-	/**
 	 * @return \MailSo\Log\Logger
 	 */
 	public static function MailSoLogger()
@@ -766,12 +749,11 @@ class Api
 
 		$oSettings = &self::GetSettings();
 
-		if ($oSettings && $oSettings->GetConf('EnableLogging') &&
-			($iLogLevel <= $oSettings->GetConf('LoggingLevel')/* ||
-			(\ELogLevel::Spec === $oSettings->GetConf('LoggingLevel') &&
-				isset($_COOKIE['SpecifiedUserLogging']) && '1' === (string) $_COOKIE['SpecifiedUserLogging'])*/)) 
+		if ($oSettings && $oSettings->GetConf('EnableLogging') && $iLogLevel <= $oSettings->GetConf('LoggingLevel')) 
 		{
-			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFilePrefix);
+			$oAuthenticatedUser = self::getAuthenticatedUser();
+			$sFirstPrefix = $oAuthenticatedUser && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
 			$sGuid = \MailSo\Log\Logger::Guid();
 			$aMicro = explode('.', microtime(true));
