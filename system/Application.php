@@ -69,7 +69,7 @@ class Application
 		return $oInstance;
 	}
 	
-	public static function Start($sDefaultEntry = '')
+	public static function Start($sDefaultEntry = 'default')
 	{
 		\Aurora\System\Api::Init();
 		
@@ -151,6 +151,7 @@ class Application
 	public static function GetPathItemByIndex($iIndex, $mDefaultValue = null)
 	{
 		$aPath = self::GetPaths();
-		return isset($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
+		
+		return !empty($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
 	}
 }
