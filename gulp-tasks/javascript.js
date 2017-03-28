@@ -14,7 +14,6 @@ var
     sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
     aModulesNames = argv.getModules(),
     sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
-    sWebPath = sTenantName ? '/tenants/' + sTenantName + '/static/js/' : '/static/js/',
     crlf = '\n'
 ;
 
@@ -172,7 +171,7 @@ gulp.task('js:build1', function () {
 			'path': './static/js1/',
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.js',
-			'publicPath': sWebPath,
+			'publicPath': sPath,
 			'pathinfo': true
 		}
 	}, oWebPackConfig), compileCallback);
@@ -182,7 +181,7 @@ gulp.task('js:build', function () {
 		'output':  {
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.js',
-			'publicPath': sWebPath,
+			'publicPath': sPath,
 			'pathinfo': true
 		},
 		'plugins': [
@@ -199,7 +198,7 @@ gulp.task('js:watch', function () {
 		'output':  {
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.js',
-			'publicPath': sWebPath
+			'publicPath': sPath
 		}
 	}, oWebPackConfig));
 });
@@ -218,7 +217,7 @@ gulp.task('js:min', function () {
 		'output':  {
 			'filename': sOutputName + '.min.js',
 			'chunkFilename': '[name].' + sOutputName + '.min.js',
-			'publicPath': sWebPath
+			'publicPath': sPath
 		}
 	}, oWebPackConfig));
 });
