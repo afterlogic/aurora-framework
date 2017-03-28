@@ -1290,14 +1290,14 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
 		{
 			$sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="/static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="/tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
 		}
 		else
 		{
 			$sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="/static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
+'<link type="text/css" rel="stylesheet" href="/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
 		}
 		
 		return $sS;
@@ -1327,7 +1327,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		
 		$sTenantName = \Aurora\System\Api::getTenantName();
 		
-		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
+		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "/";
 		
 		if (isset($aConfig['modules_list']))
 		{
@@ -1339,7 +1339,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 			$sModulesPath = \Aurora\System\Api::GetModuleManager()->GetModulesPath();
 			foreach ($aModuleNames as $sModuleName)
 			{
-				if (file_exists($sModulesPath . $sModuleName . '/js/manager.js'))
+				if (\file_exists($sModulesPath . $sModuleName . '/js/manager.js') && $sModuleName !== 'AdminPanelWebclient')
 				{
 					$aClientModuleNames[] = $sModuleName;
 				}
@@ -1364,12 +1364,12 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		return
-$this->compileTemplates()."\r\n".
-$this->compileLanguage($sLanguage)."\r\n".
-$this->compileAppData()."\r\n".
-//$this->getJsLinks($sModuleHash).
-$this->getJsLinks($aConfig).
-"\r\n".'<!-- '.\Aurora\System\Api::Version().' -->'
+			$this->compileTemplates()."\r\n".
+			$this->compileLanguage($sLanguage)."\r\n".
+			$this->compileAppData()."\r\n".
+			//$this->getJsLinks($sModuleHash).
+			$this->getJsLinks($aConfig).
+			"\r\n".'<!-- '.\Aurora\System\Api::Version().' -->'
 		;
 	}
 }

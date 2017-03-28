@@ -69,7 +69,7 @@ class Application
 		return $oInstance;
 	}
 	
-	public static function Start()
+	public static function Start($sDefaultEntry = '')
 	{
 		\Aurora\System\Api::Init();
 		
@@ -77,7 +77,7 @@ class Application
 		self::GetVersion();
 
 		self::SingletonInstance()->oModuleManager->RunEntry(
-			\strtolower(self::GetPathItemByIndex(0, ''))
+			\strtolower(self::GetPathItemByIndex(0, $sDefaultEntry))
 		);
 	}
 
