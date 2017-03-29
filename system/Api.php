@@ -139,6 +139,8 @@ class Api
 			self::$bIsValid = self::validateApi();
 			self::GetModuleManager();
 			self::$aModuleDecorators = array();
+			
+			self::removeOldLogs();
 		}
 	}
 
@@ -609,7 +611,7 @@ class Api
 	 *
 	 * @return string
 	 */
-	public static function GetLogFileName($sFilePrefix = '')
+	public static function GetLogFileName($sFilePrefix = '', $iTimestamp = 0)
 	{
 		$oSettings =& self::GetSettings();
 
@@ -617,9 +619,10 @@ class Api
 		
 		if ($oSettings && $oSettings->GetConf('LogFileName'))
 		{
-			$sFileName = preg_replace_callback('/\{([\w|-]*)\}/',  function ($matches) {
-	            return date($matches[1]);
-	        }, $oSettings->GetConf('LogFileName'));
+			$fCallback = ($iTimestamp === 0) 
+					? create_function('$matches', 'return date($matches[1]);') 
+					: create_function('$matches', 'return date($matches[1], ' . $iTimestamp . ');');
+			$sFileName = preg_replace_callback('/\{([\w|-]*)\}/', $fCallback, $oSettings->GetConf('LogFileName'));
 		}
 		
 		return $sFilePrefix.$sFileName;
@@ -785,8 +788,6 @@ class Api
 					}
 				}
 				self::LogOnly('['.$sDate.']['.$sGuid.']', $sLogFile);
-
-//				@register_shutdown_function('self::LogEnd');
 			}
 
 			self::LogOnly('['.$sDate.']['.$sGuid.'] '.(is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
@@ -808,16 +809,46 @@ class Api
 		self::dbDebugBacktrace($sDesc, $sLogFile);
 	}
 
-	public static function LogEnd()
-	{
-		self::Log('# script shutdown');
-	}
-	
 	public static function ClearLog($sFileFullPath)
 	{
 		return (@file_exists($sFileFullPath)) ? @unlink($sFileFullPath) : true;
 	}
 	
+	public static function RemoveSeparateLogs()
+	{
+		$sLogDir = self::GetLogFileDir();
+		$sLogFile = self::GetLogFileName();
+		if (is_dir($sLogDir))
+		{
+			$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
+			foreach($aLogFiles as $sFileName)
+			{
+				if ($sFileName !== $sLogFile && $sFileName !== (self::$sEventLogPrefix . $sLogFile) && strpos($sFileName, $sLogFile) !== false)
+				{
+					unlink($sLogDir.$sFileName);
+				}
+			}
+		}
+	}
+
+	private static function removeOldLogs()
+	{
+		$sLogDir = self::GetLogFileDir();
+		$sLogFile = self::GetLogFileName();
+		
+		if (is_dir($sLogDir) && !file_exists($sLogDir.$sLogFile))
+		{
+			$sYesterdayLogFile = self::GetLogFileName('', time() - 60 * 60 * 24);
+			$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
+			foreach($aLogFiles as $sFileName)
+			{
+				if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false)
+				{
+					unlink($sLogDir.$sFileName);
+				}
+			}
+		}
+	}
 
 	/**
 	 * @return string
