@@ -581,6 +581,10 @@ class Manager
 				echo $mResult;
 			}
 		}
+		else
+		{
+			echo 'Can\'t find \''.$sEntryName.'\' Entry';
+		}
 		
 		return $mResult;
 	}

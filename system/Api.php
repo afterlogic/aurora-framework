@@ -142,6 +142,14 @@ class Api
 		}
 	}
 
+	/**
+	 * 
+	 * @param type $bSkip
+	 */
+	public static function skipCheckUserRole($bSkip)
+	{
+		self::$__SKIP_CHECK_USER_ROLE__ = $bSkip;
+	}
 	
 	/**
 	 * @param string $sWord
