@@ -45,7 +45,8 @@ class ApiException extends Exception
 	{
 		$this->aObjectParams = $aObjectParams;
 		$this->oModule = $oModule;
-		parent::__construct('' === $sMessage ? 'ApiException' : $sMessage, $iCode, $oPrevious);
+		$mCode = is_int($iCode) ? $iCode : 0;
+		parent::__construct('' === $sMessage ? 'ApiException' : $sMessage, $mCode, $oPrevious);
 	}
 	
 	/**
