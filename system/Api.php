@@ -1431,6 +1431,31 @@ class Api
 		return $mResult;
 	}
 	
+	/**
+	 * @param int $iUserId
+	 * @return string
+	 */
+	public static function getAuthenticatedUserUUIDById($iUserId)
+	{
+		$sUUID = '';
+		
+		if (\is_numeric($iUserId))
+		{
+			$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
+			$oEntity = $oManagerApi->getEntity((int) \Aurora\System\Api::getAuthenticatedUserId());
+			if ($oEntity instanceof \Aurora\System\EAV\Entity)
+			{
+				$sUUID = $oEntity->UUID;
+			}
+		}
+		else 
+		{
+			$iUserId = $sUUID;
+		}
+		
+		return $sUUID;
+	}
+	
 	public static function setTenantName($sTenantName)
 	{
 		self::$aUserSession['TenantName'] = $sTenantName;
