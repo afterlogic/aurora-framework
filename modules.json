@@ -2,6 +2,7 @@
 	"repositories": [
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-admin-auth"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-adminpanel"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-logs-viewer"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-calendar"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-calendar"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-change-password"},
@@ -61,6 +62,7 @@
 	"require": {
 			"afterlogic/aurora-module-admin-auth": "dev-master",
 			"afterlogic/aurora-module-webclient-adminpanel": "dev-master",
+			"afterlogic/aurora-module-webclient-logs-viewer": "dev-master",
 			"afterlogic/aurora-module-calendar": "dev-master",
 			"afterlogic/aurora-module-webclient-calendar": "dev-master",
 			"afterlogic/aurora-module-webclient-change-password": "dev-master",
