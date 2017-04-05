@@ -2005,6 +2005,157 @@ class Utils
 		}
 		return $aResult;
 	}	
+	
+	/**
+	 * @param bool $bDownload
+	 * @param string $sContentType
+	 * @param string $sFileName
+	 *
+	 * @return bool
+	 */
+	public static function OutputFileHeaders($bDownload, $sContentType, $sFileName)
+	{
+		if ($bDownload)
+		{
+			\header('Content-Type: '.$sContentType, true);
+		}
+		else
+		{
+			$aParts = \explode('/', $sContentType, 2);
+			if (\in_array(\strtolower($aParts[0]), array('image', 'video', 'audio')) ||
+				\in_array(\strtolower($sContentType), array('application/pdf', 'application/x-pdf', 'text/html')))
+			{
+				\header('Content-Type: '.$sContentType, true);
+			}
+			else
+			{
+				\header('Content-Type: text/plain', true);
+			}
+		}
+
+		\header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline' ).'; '.
+			\trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
+		
+		\header('Accept-Ranges: none', true);
+		\header('Content-Transfer-Encoding: binary');
+	}
+
+	public static function OutputFileResource($sUserUUID, $sContentType, $sFileName, $rResource, $bThumbnail, $bDownload)
+	{
+		self::OutputFileHeaders($bDownload, $sContentType, $sFileName);
+		
+		if (!$bDownload && 'text/html' === $sContentType)
+		{
+			$sHtml = \stream_get_contents($rResource);
+			if ($sHtml)
+			{
+				$sCharset = '';
+				$aMacth = array();
+				if (\preg_match('/charset[\s]?=[\s]?([^\s"\']+)/i', $sHtml, $aMacth) && !empty($aMacth[1]))
+				{
+					$sCharset = $aMacth[1];
+				}
+
+				if ('' !== $sCharset && \MailSo\Base\Enumerations\Charset::UTF_8 !== $sCharset)
+				{
+					$sHtml = \MailSo\Base\Utils::ConvertEncoding($sHtml,
+						\MailSo\Base\Utils::NormalizeCharset($sCharset, true), \MailSo\Base\Enumerations\Charset::UTF_8);
+				}
+
+				$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+				$oCssToInlineStyles->setEncoding('utf-8');
+				$oCssToInlineStyles->setUseInlineStylesBlock(true);
+
+				echo '<html><head></head><body>'.
+					\MailSo\Base\HtmlUtils::ClearHtmlSimple($oCssToInlineStyles->convert(), true, true).
+					'</body></html>';
+			}
+		}
+		else
+		{
+			if ($bThumbnail && !$bDownload)
+			{
+				self::OutputThumbnailResource($sUserUUID, $rResource, $sFileName);
+			}
+			else
+			{
+				\MailSo\Base\Utils::FpassthruWithTimeLimitReset($rResource);
+			}
+		}
+	}	
+	
+	public static function OutputThumbnailResource($sUUID, $rResource, $sFileName)
+	{
+		$sMd5Hash = \md5(\rand(1000, 9999));
+		$oApiFileCache = \Aurora\System\Api::GetSystemManager('filecache');
+				
+		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
+		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))
+		{
+			$sFullFilePath = $oApiFileCache->generateFullFilePath($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
+			$iRotateAngle = 0;
+			if (\function_exists('exif_read_data')) 
+			{ 
+				if ($exif_data = @\exif_read_data($sFullFilePath, 'IFD0')) 
+				{ 
+					switch (@$exif_data['Orientation']) 
+					{ 
+						case 1: 
+							$iRotateAngle = 0; 
+							break; 
+						case 3: 
+							$iRotateAngle = 180; 
+							break; 
+						case 6: 
+							$iRotateAngle = 270; 
+							break; 
+						case 8: 
+							$iRotateAngle = 90; 
+							break; 
+					}
+				}
+			}
+			
+			try
+			{
+				$oThumb = new \PHPThumb\GD(
+					$sFullFilePath
+				);
+				if ($iRotateAngle > 0)
+				{
+					$oThumb->rotateImageNDegrees($iRotateAngle);
+				}
+				
+				$oThumb->adaptiveResize(120, 100)->show();
+			}
+			catch (\Exception $oE) {}
+		}
+
+		$oApiFileCache->clear($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
+	}	
+	
+	
+	/**
+	 * @param string $sFileName
+	 * @param string $sContentType
+	 * @param string $sMimeIndex = ''
+	 *
+	 * @return string
+	 */
+	public static function clearFileName($sFileName, $sContentType, $sMimeIndex = '')
+	{
+		$sFileName = 0 === \strlen($sFileName) ? \preg_replace('/[^a-zA-Z0-9]/', '.', (empty($sMimeIndex) ? '' : $sMimeIndex.'.').$sContentType) : $sFileName;
+		$sClearedFileName = \preg_replace('/[\s]+/', ' ', \preg_replace('/[\.]+/', '.', $sFileName));
+		$sExt = \MailSo\Base\Utils::GetFileExtension($sClearedFileName);
+
+		$iSize = 100;
+		if ($iSize < \strlen($sClearedFileName) - \strlen($sExt))
+		{
+			$sClearedFileName = \substr($sClearedFileName, 0, $iSize).(empty($sExt) ? '' : '.'.$sExt);
+		}
+
+		return \MailSo\Base\Utils::ClearFileName(\MailSo\Base\Utils::Utf8Clear($sClearedFileName));
+	}	
 }
 
 /**

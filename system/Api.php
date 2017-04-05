@@ -1435,14 +1435,14 @@ class Api
 	 * @param int $iUserId
 	 * @return string
 	 */
-	public static function getAuthenticatedUserUUIDById($iUserId)
+	public static function getUserUUIDById($iUserId)
 	{
 		$sUUID = '';
 		
 		if (\is_numeric($iUserId))
 		{
 			$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
-			$oEntity = $oManagerApi->getEntity((int) \Aurora\System\Api::getAuthenticatedUserId());
+			$oEntity = $oManagerApi->getEntity($iUserId);
 			if ($oEntity instanceof \Aurora\System\EAV\Entity)
 			{
 				$sUUID = $oEntity->UUID;
