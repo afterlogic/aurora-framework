@@ -1102,11 +1102,12 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 
 		$aModules = \Aurora\System\Api::GetModules();
 
-		foreach ($aModules as $oModule)
+		foreach ($aModules as $sModuleName => $oModule)
 		{
 			try
 			{
-				$aModuleAppData = $oModule->GetSettings();
+				$oDecorator = \Aurora\System\Api::GetModuleDecorator($sModuleName);
+				$aModuleAppData = $oDecorator->GetSettings();
 			}
 			catch (\Aurora\System\Exceptions\ApiException $oEx)
 			{
@@ -1132,7 +1133,10 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		{
 			\Aurora\System\Api::UserSession()->Delete($sAuthToken);
 		}
-		
+//	echo '<pre>';
+//var_dump($aAppData);
+//	echo '</pre>';
+//exit;
 		return $aAppData;
 	}
 
