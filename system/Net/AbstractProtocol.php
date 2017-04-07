@@ -84,7 +84,7 @@ abstract class AbstractProtocol
 
 		if ($this->IsConnected())
 		{
-			\Aurora\System\Api::Log('already connected['.$sHost.':'.$this->iPort.']: result = false', ELogLevel::Error);
+			\Aurora\System\Api::Log('already connected['.$sHost.':'.$this->iPort.']: result = false', \ELogLevel::Error);
 
 			$this->Disconnect();
 			return false;
@@ -98,7 +98,7 @@ abstract class AbstractProtocol
 
 		if (!$this->IsConnected())
 		{
-			\Aurora\System\Api::Log('connection error['.$sHost.':'.$this->iPort.']: fsockopen = false ('.$iErrorNo.': '.$sErrorStr.')', ELogLevel::Error);
+			\Aurora\System\Api::Log('connection error['.$sHost.':'.$this->iPort.']: fsockopen = false ('.$iErrorNo.': '.$sErrorStr.')', \ELogLevel::Error);
 			return false;
 		}
 		else
@@ -162,11 +162,11 @@ abstract class AbstractProtocol
 		    $aSocketStatus = @socket_get_status($this->rConnect);
 		    if (isset($aSocketStatus['timed_out']) && $aSocketStatus['timed_out'])
 		    {
-				\Aurora\System\Api::Log('NET[Error] < Socket timeout reached during connection.', ELogLevel::Error);
+				\Aurora\System\Api::Log('NET[Error] < Socket timeout reached during connection.', \ELogLevel::Error);
 		    }
 			else
 			{
-				\Aurora\System\Api::Log('NET[Error] < fgets = false', ELogLevel::Error);
+				\Aurora\System\Api::Log('NET[Error] < fgets = false', \ELogLevel::Error);
 			}
 		}
 
@@ -187,7 +187,7 @@ abstract class AbstractProtocol
 
 		if (!@fputs($this->rConnect, $sLine))
 		{
-			\Aurora\System\Api::Log('NET[Error] < Could not send user request', ELogLevel::Error);
+			\Aurora\System\Api::Log('NET[Error] < Could not send user request', \ELogLevel::Error);
 			return false;
 		}
 
