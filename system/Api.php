@@ -1450,7 +1450,7 @@ class Api
 		}
 		else 
 		{
-			$iUserId = $sUUID;
+			$sUUID = $iUserId;
 		}
 		
 		return $sUUID;
