@@ -104,6 +104,12 @@ abstract class AbstractModule
      */	
 	protected $aRequireModules = array();
 	
+    /**
+     *
+     * @var array
+     */	
+	protected $aSkipedEvents = array();
+	
 	/**
 	 * @param string $sVersion
 	 */
@@ -300,12 +306,43 @@ abstract class AbstractModule
 	 */
 	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null)
 	{
-		return \Aurora\System\Api::GetModuleManager()->broadcastEvent(
-			$this->GetName(), 
-			$sEvent, 
-			$aArguments, 
-			$mResult
-		);
+		if (!in_array($sEvent, $this->aSkipedEvents))
+		{
+			return \Aurora\System\Api::GetModuleManager()->broadcastEvent(
+				$this->GetName(), 
+				$sEvent, 
+				$aArguments, 
+				$mResult
+			);
+		}
+		else
+		{
+			$this->removeEventFromSkiped($sEvent);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param string $sEvent
+	 */
+	public function skipEvent($sEvent)
+	{
+		if (!in_array($sEvent, $this->aSkipedEvents))
+		{
+			$this->aSkipedEvents[] = $sEvent;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param string $sEvent
+	 */
+	public function removeEventFromSkiped($sEvent)
+	{
+		$this->aSkipedEvents = array_diff(
+			$this->aSkipedEvents, 
+			array($sEvent)
+		);	
 	}
 	
 	/**
