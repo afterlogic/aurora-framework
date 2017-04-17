@@ -2134,6 +2134,39 @@ class Utils
 		$oApiFileCache->clear($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
 	}	
 	
+	public static function GetClientFileResponse($iUserId, $sFileName, $sTempName, $iSize)
+	{
+		$sMimeType = \MailSo\Base\Utils::MimeContentType($sFileName);
+
+		$sHash = \Aurora\System\Api::EncodeKeyValues(array(
+			'TempFile' => true,
+			'UserId' => $iUserId,
+			'Name' => $sFileName,
+			'TempName' => $sTempName
+		));
+		$aActions = array(
+			'view' => array(
+				'url' => '?file-cache/' . $sHash .'/view'
+			),
+			'download' => array(
+				'url' => '?file-cache/' . $sHash
+			)
+		);
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$iThumbnailLimit = ((int) $oSettings->GetConf('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
+		$bThumb = ($oSettings->GetConf('AllowThumbnail', true) &&
+				$iSize < $iThumbnailLimit && \Aurora\System\Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));
+		return array(
+			'Name' => $sFileName,
+			'FileName' => $sFileName,
+			'TempName' => $sTempName,
+			'MimeType' => $sMimeType,
+			'Size' =>  (int) $iSize,
+			'Hash' => $sHash,
+			'Actions' => $aActions,
+			'ThumbnailUrl' => $bThumb ? '?file-cache/' . $sHash .'/thumb' : '',
+		);
+	}
 	
 	/**
 	 * @param string $sFileName

@@ -1188,16 +1188,6 @@ class Api
 	 * @param string $sFileName = ''
 	 * @return bool
 	 */
-	public static function isExpandMimeTypeSupported($sMimeType, $sFileName = '')
-	{
-		return false;
-	}
-
-	/**
-	 * @param string $sMimeType
-	 * @param string $sFileName = ''
-	 * @return bool
-	 */
 	public static function isIframedMimeTypeSupported($sMimeType, $sFileName = '')
 	{
 		$oSettings = &self::GetSettings();
