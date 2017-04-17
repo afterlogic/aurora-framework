@@ -64,6 +64,7 @@ class Settings extends AbstractSettings
 
 			'AllowOfficeAppsViewer' => new SettingsProperty('AllowOfficeAppsViewer', true, 'bool'),
 			'AllowThumbnail' => new SettingsProperty('AllowThumbnail', true, 'bool'),
+			'ThumbnailMaxFileSizeMb' => new SettingsProperty('ThumbnailMaxFileSizeMb', 5, 'int'),
 			'AppCookiePath' => new SettingsProperty('AppCookiePath', '/', 'string'),
 			'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
 			'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
