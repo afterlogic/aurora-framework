@@ -1984,14 +1984,6 @@ class Utils
 		return $aValue;
 	}
 	
-	/**
-	 * @return int
-	 */
-	public static function iframedTimestamp()
-	{
-		return time() - 60 * 2;
-	}	
-	
 	public static function parseIniString($sIniString) 
 	{
 		$aResult = array(); 

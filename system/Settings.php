@@ -62,7 +62,6 @@ class Settings extends AbstractSettings
 			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
 			'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
 
-			'AllowOfficeAppsViewer' => new SettingsProperty('AllowOfficeAppsViewer', true, 'bool'),
 			'AllowThumbnail' => new SettingsProperty('AllowThumbnail', true, 'bool'),
 			'ThumbnailMaxFileSizeMb' => new SettingsProperty('ThumbnailMaxFileSizeMb', 5, 'int'),
 			'AppCookiePath' => new SettingsProperty('AppCookiePath', '/', 'string'),

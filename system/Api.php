@@ -1184,22 +1184,6 @@ class Api
 	}
 
 	/**
-	 * @param string $sMimeType
-	 * @param string $sFileName = ''
-	 * @return bool
-	 */
-	public static function isIframedMimeTypeSupported($sMimeType, $sFileName = '')
-	{
-		$oSettings = &self::GetSettings();
-		
-		$bResult = /*!$this->oHttp->IsLocalhost() &&*/ // TODO
-			$oSettings->GetConf('AllowOfficeAppsViewer', true) &&
-			!!preg_match('/\.(doc|docx|docm|dotm|dotx|xlsx|xlsb|xls|xlsm|pptx|ppsx|ppt|pps|pptm|potm|ppam|potx|ppsm)$/', strtolower(trim($sFileName)));
-
-		return $bResult;
-	}
-
-	/**
 	 * @param string $sData
 	 * @param array $aParams = null
 	 *
