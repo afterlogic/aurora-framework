@@ -434,6 +434,10 @@ GROUP BY %s #6
 			{
 				if ($oAttribute instanceof \Aurora\System\EAV\Attribute)
 				{
+					if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
+					{
+						$oAttribute->Encrypt();
+					}
 					$mValue = $oAttribute->Value;
 					$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
 					$sSqlValueType = $oAttribute->getValueFormat();
