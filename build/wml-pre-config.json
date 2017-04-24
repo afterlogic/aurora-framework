@@ -1,0 +1,19 @@
+{
+	"CoreWebclient": {
+		"HeaderModulesOrder": ["mail", "contacts"]
+	},
+	"DropboxAuthWebclient": {
+		"Scopes": "auth"
+	},
+	"Mail": {
+		"AllowChangeEmailSettings": false,
+		"AllowFetchers": false,
+		"AllowNewUsersRegister": true
+	},
+	"MailChangePasswordPoppassdPlugin": {
+		"Disabled": true
+	},
+	"OAuthIntegratorWebclient": {
+		"AllowNewUsersRegister": true
+	}
+}

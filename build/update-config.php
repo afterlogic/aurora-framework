@@ -19,29 +19,35 @@
 include_once '../system/autoload.php';
 
 
-$aArguments = getopt("m:n:v:");
+//$aArguments = getopt("m:n:v:");
 
-if (isset($aArguments['m'], $aArguments['n'], $aArguments['v']))
+$sPreConfig = file_get_contents('wml-pre-config.json');
+
+$oPreConfig = json_decode($sPreConfig, true);
+
+if ($oPreConfig)
 {
-	$sModuleName = $aArguments['m'];
-	$sConfigName = $aArguments['n'];
-	$mConfigValue = $aArguments['v'];
-
-	\Aurora\System\Api::Init();
-	$oModuleManager = \Aurora\System\Api::GetModuleManager();
-
-	$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
-	if ($mValue !== null)
+	foreach ($oPreConfig as $sModuleName => $oModuleConfig)
 	{
-		$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
-		$oModuleManager->saveModuleConfigValue($sModuleName);
-	}
-	else
-	{
-		echo 'Invalid \'' . $sConfigName . '\'';
+		foreach ($oModuleConfig as $sConfigName => $mConfigValue)
+		{
+			\Aurora\System\Api::Init();
+			$oModuleManager = \Aurora\System\Api::GetModuleManager();
+
+			$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
+			if ($mValue !== null)
+			{
+				$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, json_encode($mConfigValue));
+				$oModuleManager->saveModuleConfigValue($sModuleName);
+			}
+			else
+			{
+				echo 'Invalid \'' . $sConfigName . '\'';
+			}
+		}
 	}
 }
 else
 {
-	echo 'Invalid input parameters';
+	echo "Invalid config file";
 }
