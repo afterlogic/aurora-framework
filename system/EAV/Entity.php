@@ -370,13 +370,13 @@ class Entity
 	 */
 	public function getMap()
 	{
-		if (!isset($this->aMap))
-		{
+//		if (!isset($this->aMap))
+//		{
 			$this->aMap = array_merge(
 				$this->getStaticMap(), 
 				\Aurora\System\Api::GetModuleManager()->getExtendedObject($this->getName())
 			);
-		}
+//		}
 		return $this->aMap;
 	}
 	
