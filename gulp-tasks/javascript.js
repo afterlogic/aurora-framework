@@ -64,6 +64,14 @@ var
 				{
 					test: /\.less$/,
 					loader: "style-loader!css-loader!less-loader"
+				},
+				{
+					test: /\.css$/,
+					loader: "style-loader!css-loader"
+				},
+				{
+					test: /\.(png|jpe?g|gif)$/,
+					loader: 'file-loader'
 				}
 			]
 		}
