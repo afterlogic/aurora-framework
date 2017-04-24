@@ -172,7 +172,7 @@ abstract class AbstractManagerStorage
 	 */
 	public function executeSqlFile($sFilePath)
 	{
-		$bResult = true;
+		$bResult = false;
 		
 		$sDbPrefix = $this->oCommandCreator->prefix();
 		
@@ -190,10 +190,6 @@ abstract class AbstractManagerStorage
 				}
 				$this->throwDbExceptionIfExist();
 			}
-		}
-		else
-		{
-			$bResult = false;
 		}
 
 		return $bResult;
