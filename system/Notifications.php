@@ -96,6 +96,7 @@ class Notifications
 	const IncorrectFileExtension = 811;
 	const CanNotUploadFileQuota = 812;
 	const FileAlreadyExists = 813;
+	const FileNotFound = 814;
 
 	const MailServerError = 901;
 	const UnknownError = 999;
