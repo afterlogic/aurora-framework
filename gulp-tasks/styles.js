@@ -52,8 +52,15 @@ function BuildThemeCss(sTheme, bMobile)
 {
 	var
 		aModulesFiles = [],
-		sPostfix = bMobile ? '-mobile' : ''
+		aSkinSpecyficFiles = [],
+		sPostfix = bMobile ? '-mobile' : '',
+		iCoreModuleIndex = aModulesNames.indexOf('CoreWebclient')
 	;
+
+	if (iCoreModuleIndex >= 0)
+	{
+		aModulesNames.unshift(aModulesNames.splice(iCoreModuleIndex, 1)[0]);
+	}
 	
 	aModulesNames.forEach(function (sModuleName) {
 		if (fs.existsSync('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
@@ -74,16 +81,29 @@ function BuildThemeCss(sTheme, bMobile)
 		}
 	});
 	
+	aModulesFiles.forEach(function (sFilePath) {
+		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less');
+				
+		if ( fs.existsSync(sThemePath))
+		{
+			aSkinSpecyficFiles.push(sThemePath);
+		}
+	});
+	
+	aModulesFiles = aSkinSpecyficFiles.concat(aModulesFiles);
+
 	gulp.src(aModulesFiles)
 		.pipe(concat('styles' + sPostfix + '.css', {
 			process: function(sSrc, sFilePath) {
-//				console.log(sFilePath);
-				var
-					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less'),
-					sRes = fs.existsSync(sThemePath) ? '@import "' + sThemePath + '";\r\n' : ''
-				;
-				
-				return sRes + '@import "' + sFilePath + '";\r\n'; 
+//				var
+//					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less')
+//				;
+//				
+//				if ( fs.existsSync(sThemePath)) {
+//					aSkinSpecyficFiles.push('@import "' + sThemePath + '";\r\n');
+//				}
+		
+				return '@import "' + sFilePath + '";\r\n'; 
 			}
 		}))
 //		.pipe(concat.header('.' + aModulesNames.join('Screen, .') + 'Screen { \n')) /* wrap styles */
@@ -169,24 +189,19 @@ gulp.task('styles', function () {
 	_.each(aThemes, function (sTheme) {
 		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
-		BuildThemeCss(sTheme, true);
+//		BuildThemeCss(sTheme, true);
 	});
 });
 
 gulp.task('cssonly', function () {
 	_.each(aThemes, function (sTheme) {
 		BuildThemeCss(sTheme, false);
-		BuildThemeCss(sTheme, true);
+//		BuildThemeCss(sTheme, true);
 	});
 });
 
 gulp.task('styles:watch', ['styles'], function () {
 	gulp.watch(aModulesWatchPaths, {interval: 500}, ['cssonly']);
-});
-
-gulp.task('styles:test', function () {
-	console.log('test');
-	return 'ok';
 });
 
 module.exports = {};
