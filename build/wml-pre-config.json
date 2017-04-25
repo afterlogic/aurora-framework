@@ -1,6 +1,7 @@
 {
 	"CoreWebclient": {
-		"HeaderModulesOrder": ["mail", "contacts"]
+		"HeaderModulesOrder": ["mail", "contacts"],
+		"EntryModule": "mail"
 	},
 	"DropboxAuthWebclient": {
 		"Scopes": "auth"
