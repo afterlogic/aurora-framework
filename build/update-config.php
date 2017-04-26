@@ -37,7 +37,7 @@ if ($oPreConfig)
 			$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
 			if ($mValue !== null)
 			{
-				$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, json_encode($mConfigValue));
+				$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
 				$oModuleManager->saveModuleConfigValue($sModuleName);
 			}
 			else
