@@ -42,7 +42,7 @@ if ($oPreConfig)
 			}
 			else
 			{
-				echo 'Invalid \'' . $sConfigName . '\'';
+				echo 'Invalid setting \'' . $sConfigName . '\' in module \''.$sModuleName.'\'';
 			}
 		}
 	}
