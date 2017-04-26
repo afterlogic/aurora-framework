@@ -275,7 +275,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			
 			if ($bCount)
 			{
-				$sGroupByFields = "entity_type";
+				$sGroupByFields .= ", entity_type";
 				$sCount = "COUNT(DISTINCT entities.id) as entities_count,";
 			}			
 			else
