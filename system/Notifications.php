@@ -43,6 +43,7 @@ class Notifications
 	const CanNotMoveMessageQuota = 205;
 	const CanNotCopyMessage = 206;
 	const CanNotCopyMessageQuota = 207;
+	const LibraryNoFound = 208;
 
 	const CanNotSaveMessage = 301;
 	const CanNotSendMessage = 302;
