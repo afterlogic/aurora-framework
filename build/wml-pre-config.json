@@ -11,10 +11,16 @@
 		"AllowFetchers": false,
 		"AllowNewUsersRegister": true
 	},
+	"OAuthIntegratorWebclient": {
+		"AllowNewUsersRegister": false
+	},
 	"MailChangePasswordPoppassdPlugin": {
 		"Disabled": true
 	},
-	"OAuthIntegratorWebclient": {
-		"AllowNewUsersRegister": true
+	"MailSaveMessageAsPdfPlugin": {
+		"Disabled": true
+	},
+	"MailTnefWebclientPlugin": {
+		"Disabled": true
 	}
 }
