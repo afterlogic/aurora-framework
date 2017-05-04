@@ -179,6 +179,11 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				}
 				if (isset($mResultValue))
 				{
+					if (strpos($sKey, '@') !== false)
+					{
+						list(,$sKey) = explode('@', $sKey);
+					}
+					
 					if (!in_array($sKey, $aWhereAttributes))
 					{
 						$aWhereAttributes[] = $sKey;
@@ -414,7 +419,7 @@ GROUP BY %s #6
 			$sResultSort,
 			$sLimit,
 			$sOffset
-		);		
+		);
 		return $sSql;
 	}	
 	
