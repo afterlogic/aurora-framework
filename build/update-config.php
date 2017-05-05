@@ -27,22 +27,39 @@ $oPreConfig = json_decode($sPreConfig, true);
 
 if ($oPreConfig)
 {
-	foreach ($oPreConfig as $sModuleName => $oModuleConfig)
+	\Aurora\System\Api::Init();
+	
+	//system config is not included in the package
+	// if ($oPreConfig['system'])
+	// {
+		// $oSystemSettings = \Aurora\System\Api::GetSettings();
+		
+		// foreach ($oPreConfig['system'] as $sConfigName => $mConfigValue)
+		// {
+			// $oSystemSettings->SetConf($sConfigName, $mConfigValue);
+		// }
+		
+		// $oSystemSettings->Save();
+	// }
+	
+	if ($oPreConfig['modules'])
 	{
-		foreach ($oModuleConfig as $sConfigName => $mConfigValue)
+		foreach ($oPreConfig['modules'] as $sModuleName => $oModuleConfig)
 		{
-			\Aurora\System\Api::Init();
-			$oModuleManager = \Aurora\System\Api::GetModuleManager();
+			foreach ($oModuleConfig as $sConfigName => $mConfigValue)
+			{
+				$oModuleManager = \Aurora\System\Api::GetModuleManager();
 
-			$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
-			if ($mValue !== null)
-			{
-				$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
-				$oModuleManager->saveModuleConfigValue($sModuleName);
-			}
-			else
-			{
-				echo 'Invalid setting \'' . $sConfigName . '\' in module \''.$sModuleName.'\'';
+				$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
+				if ($mValue !== null)
+				{
+					$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
+					$oModuleManager->saveModuleConfigValue($sModuleName);
+				}
+				else
+				{
+					echo 'Invalid setting \'' . $sConfigName . '\' in module \''.$sModuleName.'\'';
+				}
 			}
 		}
 	}
