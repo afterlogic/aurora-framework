@@ -77,7 +77,7 @@ class Settings extends AbstractSettings
 			'SocketConnectTimeoutSeconds' => new SettingsProperty('SocketConnectTimeoutSeconds', 20, 'int'),
 			'SocketGetTimeoutSeconds' => new SettingsProperty('SocketGetTimeoutSeconds', 20, 'int'),
 			'SocketVerifySsl' => new SettingsProperty('SocketVerifySsl', false, 'bool'),
-			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', false, 'bool'),
+			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', true, 'bool'),
 			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
 		);		
 	}
