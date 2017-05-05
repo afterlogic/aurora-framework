@@ -17,6 +17,11 @@ var
     crlf = '\n'
 ;
 
+if (sOutputName === '')
+{
+	sOutputName = 'app';
+}
+
 function GetModuleName(sFilePath) {
     return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
 }

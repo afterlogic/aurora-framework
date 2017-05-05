@@ -27,8 +27,8 @@ done
 
 gulp styles --modules $(IFS=, ; echo "${Modules[*]}") $(echo "$tenant") --themes Default,Funny
 # gulp langs --modules $(IFS=, ; echo "${Modules[*]}") $(echo "$tenant") --langs Arabic,Bulgarian,Chinese-Simplified,Chinese-Traditional,Czech,Danish,Dutch,English,Estonian,Finnish,French,German,Greek,Hebrew,Hungarian,Italian,Japanese,Korean,Latvian,Lithuanian,Norwegian,Persian,Polish,Portuguese-Brazil,Portuguese-Portuguese,Romanian,Russian,Serbian,Slovenian,Spanish,Swedish,Thai,Turkish,Ukrainian,Vietnamese
-gulp js:build --output app $(echo "$tenant") --modules $(IFS=, ; echo "${Modules[*]}")
-gulp js:min --output app $(echo "$tenant") --modules $(IFS=, ; echo "${Modules[*]}")
+gulp js:build $(echo "$tenant") --modules $(IFS=, ; echo "${Modules[*]}")
+gulp js:min $(echo "$tenant") --modules $(IFS=, ; echo "${Modules[*]}")
 
 # if [ "$pubFile" != "" ]; 
 # then
