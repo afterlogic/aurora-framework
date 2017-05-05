@@ -268,7 +268,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sJoinAttrbutes = "";
 		$sResultWhere = "";
 		$sResultSort = "";
-		$sGroupByFields = "entity_id";
+		$sGroupByFields = "entity_id, entity_uuid, entity_type, entity_module";
 		$sLimit = "";
 		$sOffset = "";
 		
@@ -278,12 +278,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			$aResultViewAttributes = array();
 			$aJoinAttributes = array();
 			
-			if ($bCount)
-			{
-				$sGroupByFields .= ", entity_type";
-				$sCount = "COUNT(DISTINCT entities.id) as entities_count,";
-			}			
-			else
+			if (!$bCount)
 			{
 				if ($aViewAttributes === null)
 				{
@@ -390,26 +385,24 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		}		
 		$sSql = sprintf("
 SELECT 
-	%s #1 COUNT
 	entities.id as entity_id, 
 	entities.uuid as entity_uuid, 
 	entities.entity_type, 
 	entities.module_name as entity_module
 	# fields
-	%s #2
+	%s #1
 	# ------
 FROM %seav_entities as entities
 	# fields
-	%s #3
+	%s #2
 	# ------
 
-WHERE entities.entity_type = %s #4 ENTITY TYPE
-	%s #5 WHERE
-GROUP BY %s #6 
-%s #7 SORT
-%s #8 LIMIT
-%s #9 OFFSET", 
-			$sCount,
+WHERE entities.entity_type = %s #3 ENTITY TYPE
+	%s #4 WHERE
+GROUP BY %s #5 
+%s #6 SORT
+%s #7 LIMIT
+%s #8 OFFSET", 
 			$sViewAttributes, 
 			$this->prefix(),
 			$sJoinAttrbutes, 
@@ -420,6 +413,14 @@ GROUP BY %s #6
 			$sLimit,
 			$sOffset
 		);
+		
+		if ($bCount)
+		{
+			$sSql = sprintf("
+SELECT count(entity_id) AS entities_count FROM (
+%s
+) as tmp", $sSql);
+		}
 		return $sSql;
 	}	
 	
