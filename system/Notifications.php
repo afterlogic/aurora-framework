@@ -49,7 +49,8 @@ class Notifications
 	const CanNotSendMessage = 302;
 	const InvalidRecipients = 303;
 	const CannotSaveMessageInSentItems = 304;
-	const MailboxUnavailable = 305;
+	const UnableSendToRecipients = 305;
+	const ExternalRecipientsBlocked = 306;
 
 	const CanNotCreateFolder = 401;
 	const CanNotDeleteFolder = 402;
