@@ -88,7 +88,7 @@ class GlobalManager
 				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
 				if (!\file_exists($sSettingsPath))
 				{
-					\mkdir(dirname($sSettingsPath), 0777);
+					\mkdir($sSettingsPath, 0777);
 				}
 				
 				$this->oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
