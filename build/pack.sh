@@ -2,7 +2,7 @@
 
 cd ../
 
-now=$(date +"%d-%m-%Y")
+now=$(date +"%Y-%m-%d")
 
 echo $now > VERSION
 
