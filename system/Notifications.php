@@ -35,6 +35,7 @@ class Notifications
 	const UnknownEmail = 109;
 	const UserNotAllowed = 110;
 	const UserAlreadyExists = 111;
+	const SystemNotConfigured = 112;
 
 	const CanNotGetMessageList = 201;
 	const CanNotGetMessage = 202;
