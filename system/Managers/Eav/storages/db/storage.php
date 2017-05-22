@@ -45,8 +45,8 @@ class CApiEavDbStorage extends CApiEavStorage
 		$this->oConnection =& $oManager->GetConnection();
 		$this->oCommandCreator =& $oManager->GetCommandCreator(
 			$this, array(
-				EDbType::MySQL => 'CApiEavCommandCreatorMySQL',
-				EDbType::PostgreSQL => 'CApiEavCommandCreatorPostgreSQL'
+				\Aurora\System\Enums\DbType::MySQL => 'CApiEavCommandCreatorMySQL',
+				\Aurora\System\Enums\DbType::PostgreSQL => 'CApiEavCommandCreatorPostgreSQL'
 			)
 		);
 	}

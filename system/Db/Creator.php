@@ -81,10 +81,10 @@ class Creator
 	}
 
 	/**
-	 * @param int $iDbType = EDbType::MySQL
+	 * @param int $iDbType = \Aurora\System\Enums\DbType::MySQL
 	 * @return IDbHelper
 	 */
-	public static function CommandCreatorHelperFabric($iDbType = EDbType::MySQL)
+	public static function CommandCreatorHelperFabric($iDbType = \Aurora\System\Enums\DbType::MySQL)
 	{
 		$oHelper = null;
 		if (\Aurora\System\Enums\DbType::PostgreSQL === $iDbType)

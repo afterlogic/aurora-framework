@@ -21,14 +21,8 @@ define('API_PATH_TO_AURORA', '/../');
 
 define('API_CRLF', "\r\n");
 define('API_TAB', "\t");
-define('API_AURORA', true);
 
 define('API_SESSION_WEBMAIL_NAME', 'PHPWEBMAILSESSID');
-define('API_SESSION_ADMINPANEL_NAME', 'PHPWMADMINSESSID');
-define('API_SESSION_CSRF_TOKEN', 'API_CSRF_TOKEN');
-
-define('API_DEFAULT_SKIN', 'Default');
-define('API_DUMMY', '*******');
 
 define('API_HELPDESK_PUBLIC_NAME', '_helpdesk_');
 
