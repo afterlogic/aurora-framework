@@ -1089,7 +1089,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		$aAppData = array(
 			'User' => array(
 				'Id' => 0,
-				'Role' => \EUserRole::Anonymous,
+				'Role' => \Aurora\System\Enums\UserRole::Anonymous,
 				'Name' => '',
 				'PublicId' => '',
 			)

@@ -107,6 +107,17 @@ class Api
 		self::$sSalt = $sSalt;		
 	}
 	
+	public static function GrantAdminPrivileges()
+	{
+		self::$aUserSession['UserId'] = -1;
+		self::$aUserSession['AuthToken'] = '';
+	}
+	
+	public static function UseDbLogs($bUseDbLogs = false)
+	{
+		self::$bUseDbLog = $bUseDbLogs;
+	}
+	
 	/**
 	 * 
 	 * @param type $bGrantAdminPrivileges
@@ -117,8 +128,7 @@ class Api
 		
 		if ($bGrantAdminPrivileges)
 		{
-			self::$aUserSession['UserId'] = -1;
-			self::$aUserSession['AuthToken'] = '';
+			self::GrantAdminPrivileges();
 		}
 
 		self::$aI18N = null;
@@ -378,7 +388,7 @@ class Api
 		{
 			try
 			{
-				$oPdo = @new \PDO((\EDbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
+				$oPdo = @new \PDO((\Aurora\System\Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
 					(empty($sDbHost) ? '' : ';host='.$sDbHost).
 					(empty($sDbPort) ? '' : ';port='.$sDbPort).
 					(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
@@ -420,41 +430,6 @@ class Api
 		$oApiCapability = self::GetSystemManager('capability');
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function IsHelpdeskModule()
-	{
-		$oHttp = \MailSo\Base\Http::NewInstance();
-		return $oHttp->HasQuery('helpdesk') && 0 < strlen($oHttp->GetQuery('helpdesk'));
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function IsCalendarPubModule()
-	{
-		$oHttp = \MailSo\Base\Http::NewInstance();
-		return $oHttp->HasQuery('calendar-pub') && 0 < strlen($oHttp->GetQuery('calendar-pub'));
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function IsFilesPubModule()
-	{
-		$oHttp = \MailSo\Base\Http::NewInstance();
-		return $oHttp->HasQuery('files-pub') && 0 < strlen($oHttp->GetQuery('files-pub'));
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function IsMainModule()
-	{
-		return !self::IsMobileApplication() && !self::IsHelpdeskModule() && !self::IsCalendarPubModule() && !self::IsFilesPubModule();
 	}
 
 	/**
@@ -656,7 +631,7 @@ class Api
 	/**
 	 * @return \MailSo\Log\Logger
 	 */
-	public static function MailSoLogger()
+	public static function SystemLogger()
 	{
 		static $oLogger = null;
 		if (null === $oLogger) 
@@ -1229,15 +1204,15 @@ class Api
 		if (!self::$__SKIP_CHECK_USER_ROLE__)
 		{
 			$oUser = self::getAuthenticatedUser();
-			$bUserRoleIsAtLeast = empty($oUser) && $iRole === \EUserRole::Anonymous ||
-				!empty($oUser) && $oUser->Role === \EUserRole::Customer && 
-					($iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \EUserRole::NormalUser && 
-					($iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \EUserRole::TenantAdmin && 
-					($iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \EUserRole::SuperAdmin && 
-					($iRole === \EUserRole::SuperAdmin || $iRole === \EUserRole::TenantAdmin || $iRole === \EUserRole::NormalUser || $iRole === \EUserRole::Customer || $iRole === \EUserRole::Anonymous);
+			$bUserRoleIsAtLeast = empty($oUser) && $iRole === \Aurora\System\Enums\UserRole::Anonymous ||
+				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::Customer && 
+					($iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::NormalUser && 
+					($iRole === \Aurora\System\Enums\UserRole::NormalUser || $iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::TenantAdmin && 
+					($iRole === \Aurora\System\Enums\UserRole::TenantAdmin || $iRole === \Aurora\System\Enums\UserRole::NormalUser || $iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::SuperAdmin && 
+					($iRole === \Aurora\System\Enums\UserRole::SuperAdmin || $iRole === \Aurora\System\Enums\UserRole::TenantAdmin || $iRole === \Aurora\System\Enums\UserRole::NormalUser || $iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous);
 			if (!$bUserRoleIsAtLeast)
 			{
 				throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::AccessDenied);

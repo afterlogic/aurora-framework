@@ -66,7 +66,7 @@ class Creator
 
 			if (isset($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']))
 			{
-				if (\EDbType::PostgreSQL === $iDbType)
+				if (\Aurora\System\Enums\DbType::PostgreSQL === $iDbType)
 				{
 					$oConnector = new Pdo\Postgres($aData['DBHost'], $aData['DBLogin'], $aData['DBPassword'], $aData['DBName'], $aData['DBTablePrefix']);
 				}
@@ -87,7 +87,7 @@ class Creator
 	public static function CommandCreatorHelperFabric($iDbType = EDbType::MySQL)
 	{
 		$oHelper = null;
-		if (\EDbType::PostgreSQL === $iDbType)
+		if (\Aurora\System\Enums\DbType::PostgreSQL === $iDbType)
 		{
 			$oHelper = new Pdo\Postgres\Helper();
 		}

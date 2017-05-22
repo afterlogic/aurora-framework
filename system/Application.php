@@ -42,9 +42,7 @@ class Application
 		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
 
 //		\MailSo\Config::$FixIconvByMbstring = false;
-		\MailSo\Config::$SystemLogger = \Aurora\System\Api::MailSoLogger();
-		$oSettings =& \Aurora\System\Api::GetSettings();
-		\MailSo\Config::$PreferStartTlsIfAutoDetect = !!$oSettings->GetConf('PreferStarttls', true);
+		\MailSo\Config::$SystemLogger = \Aurora\System\Api::SystemLogger();
 	}
 
 	/**

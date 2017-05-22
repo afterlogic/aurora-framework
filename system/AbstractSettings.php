@@ -244,7 +244,7 @@ abstract class AbstractSettings
 		$mResult = $sValue;
 		if (null !== $sEnumName)
 		{
-			$mResult = \EnumConvert::ToXml($sValue, $sEnumName);
+			$mResult = Enums\EnumConvert::ToXml($sValue, $sEnumName);
 		}
 
 		return $mResult;
@@ -261,7 +261,7 @@ abstract class AbstractSettings
 		$mResult = null;
 		if (null !== $sEnumName)
 		{
-			$mResult = \EnumConvert::validate($sValue, $sEnumName);
+			$mResult = Enums\EnumConvert::validate($sValue, $sEnumName);
 		}
 		return $mResult;
 	}
@@ -276,7 +276,7 @@ abstract class AbstractSettings
 	{
 		if (null !== $sEnumName)
 		{
-			$mResult = \EnumConvert::FromXml($sValue, $sEnumName);
+			$mResult = Enums\EnumConvert::FromXml($sValue, $sEnumName);
 		}
 
 		return $this->specValidate($mResult, $sEnumName);

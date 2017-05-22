@@ -21,156 +21,7 @@
  * @package Api
  * @subpackage Enum
  */
-abstract class AbstractEnumeration
-{
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array();
-
-	/**
-	 *
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return $this->aConsts;
-	}
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EnumConvert
-{
-	/**
-	 * @staticvar array $aClasses
-	 * @param string $sClassName
-	 * @return array
-	 */
-	protected static function GetInst($sClassName)
-	{
-		static $aClasses = array();
-
-		if (!isset($aClasses[$sClassName]) && class_exists($sClassName))
-		{
-			$aClasses[$sClassName] = new $sClassName;
-		}
-
-		return (isset($aClasses[$sClassName])) ? $aClasses[$sClassName]->getMap() : array();
-	}
-
-	/**
-	 * @param mixed $mValue
-	 * @param string $sClassName
-	 * @return int
-	 */
-	static function validate($mValue, $sClassName)
-	{
-		$aConsts = EnumConvert::GetInst($sClassName);
-
-		$sResult = null;
-		foreach ($aConsts as $mEnumValue)
-		{
-			if ($mValue === $mEnumValue)
-			{
-				$sResult = $mValue;
-				break;
-			}
-		}
-		return $sResult;
-	}
-
-	/**
-	 * @param mixed $sXmlValue
-	 * @param string $sClassName
-	 * @return int
-	 */
-	public static function FromXml($sXmlValue, $sClassName)
-	{
-		$aConsts = EnumConvert::GetInst($sClassName);
-
-		$niResult = null;
-		if (isset($aConsts[$sXmlValue]))
-		{
-			$niResult = $aConsts[$sXmlValue];
-		}
-
-		return EnumConvert::validate($niResult, $sClassName);
-	}
-
-	/**
-	 * @param mixed $sXmlValue
-	 * @param string $sClassName
-	 * @return int
-	 */
-	public static function FromPost($sXmlValue, $sClassName)
-	{
-		return self::FromXml($sXmlValue, $sClassName);
-	}
-
-	/**
-	 * @param mixed $mValue
-	 * @param string $sClassName
-	 * @return string
-	 */
-	public static function ToXml($mValue, $sClassName)
-	{
-		$aConsts = EnumConvert::GetInst($sClassName);
-
-		$sResult = '';
-		foreach ($aConsts as $sKey => $mEnumValue)
-		{
-			if ($mValue === $mEnumValue)
-			{
-				$sResult = $sKey;
-				break;
-			}
-		}
-		return $sResult;
-	}
-
-	/**
-	 * @param mixed $mValue
-	 * @param string $sClassName
-	 * @return string
-	 */
-	public static function ToPost($mValue, $sClassName)
-	{
-		return self::ToXml($mValue, $sClassName);
-	}
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EUserRole extends \AbstractEnumeration
-{
-	const SuperAdmin = 0;
-	const TenantAdmin = 1;
-	const NormalUser = 2;
-	const Customer = 3;
-	const Anonymous = 4;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'SuperAdmin' => self::SuperAdmin,
-		'TenantAdmin' => self::TenantAdmin,
-		'NormalUser' => self::NormalUser,
-		'Customer' => self::Customer,
-		'Anonymous' => self::Anonymous,
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class ELogLevel extends \AbstractEnumeration
+class ELogLevel extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Full = 100;
 	const Warning = 50;
@@ -190,25 +41,7 @@ class ELogLevel extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EDbType extends \AbstractEnumeration
-{
-	const MySQL = "MySql";
-	const PostgreSQL = "PostgreSQL";
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'MySQL' => self::MySQL,
-		'PostgreSQL' => self::PostgreSQL
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EHelpdeskFetcherType extends \AbstractEnumeration
+class EHelpdeskFetcherType extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const NONE = 0;
 	const REPLY = 1;
@@ -228,49 +61,7 @@ class EHelpdeskFetcherType extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ETimeFormat extends \AbstractEnumeration
-{
-	const F12 = 1;
-	const F24 = 0;
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'F12' => self::F12,
-		'F24' => self::F24
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class EDateFormat extends \AbstractEnumeration
-{
-	const DD_MONTH_YYYY = 'DD Month YYYY';
-	const MMDDYYYY = 'MM/DD/YYYY';
-	const DDMMYYYY = 'DD/MM/YYYY';
-	const MMDDYY = 'MM/DD/YY';
-	const DDMMYY = 'DD/MM/YY';
-
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'DD Month YYYY' => self::DD_MONTH_YYYY,
-		'MM/DD/YYYY' => self::MMDDYYYY,
-		'DD/MM/YYYY' => self::DDMMYYYY,
-		'MM/DD/YY' => self::MMDDYY,
-		'DD/MM/YY' => self::DDMMYY
-	);
-}
-
-/**
- * @package Api
- * @subpackage Enum
- */
-class ELoginFormType extends \AbstractEnumeration
+class ELoginFormType extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Email = 0;
 	const Login = 3;
@@ -290,7 +81,7 @@ class ELoginFormType extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ELoginSignMeType extends \AbstractEnumeration
+class ELoginSignMeType extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const DefaultOff = 0;
 	const DefaultOn = 1;
@@ -320,7 +111,7 @@ class ECalendarDefaultWorkDay
  * @package Api
  * @subpackage Enum
  */
-class ECalendarWeekStartOn extends \AbstractEnumeration
+class ECalendarWeekStartOn extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Saturday = 6;
 	const Sunday = 0;
@@ -340,7 +131,7 @@ class ECalendarWeekStartOn extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECalendarDefaultTab extends \AbstractEnumeration
+class ECalendarDefaultTab extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Day = 1;
 	const Week = 2;
@@ -360,7 +151,7 @@ class ECalendarDefaultTab extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESortOrder extends \AbstractEnumeration
+class ESortOrder extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const ASC = 0;
 	const DESC = 1;
@@ -378,7 +169,7 @@ class ESortOrder extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECapa extends \AbstractEnumeration
+class ECapa extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const WEBMAIL = 'WEBMAIL';
 	const CALENDAR = 'CALENDAR';
@@ -402,7 +193,7 @@ class ECapa extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ETenantCapa extends \AbstractEnumeration
+class ETenantCapa extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const SIP = 'SIP';
 	const TWILIO = 'TWILIO';
@@ -414,7 +205,7 @@ class ETenantCapa extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ECalendarPermission extends \AbstractEnumeration
+class ECalendarPermission extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const RemovePermission = -1;
 	const Write = 1;
@@ -435,7 +226,7 @@ class ECalendarPermission extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageType extends \AbstractEnumeration
+class EFileStorageType extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Personal = 0;
 	const Corporate = 1;
@@ -456,7 +247,7 @@ class EFileStorageType extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageTypeStr extends \AbstractEnumeration
+class EFileStorageTypeStr extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Personal = 'personal';
 	const Corporate = 'corporate';
@@ -477,7 +268,7 @@ class EFileStorageTypeStr extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPeriodStr extends \AbstractEnumeration
+class EPeriodStr extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Secondly = 'secondly';
 	const Minutely = 'minutely';
@@ -505,7 +296,7 @@ class EPeriodStr extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EPeriod extends \AbstractEnumeration
+class EPeriod extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Never   = 0;
 	const Daily	   = 1;
@@ -529,7 +320,7 @@ class EPeriod extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ERepeatEnd extends \AbstractEnumeration
+class ERepeatEnd extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Never		= 0;
 	const Count		= 1;
@@ -551,7 +342,7 @@ class ERepeatEnd extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EAttendeeStatus extends \AbstractEnumeration
+class EAttendeeStatus extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Unknown = 0;
 	const Accepted = 1;
@@ -573,7 +364,7 @@ class EAttendeeStatus extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class EFileStorageLinkType extends \AbstractEnumeration
+class EFileStorageLinkType extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Unknown = 0;
 	const GoogleDrive = 1;
@@ -599,7 +390,7 @@ class EFileStorageLinkType extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESocialType extends \AbstractEnumeration
+class ESocialType extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Unknown   = 0;
 	const Google    = 1;
@@ -625,7 +416,7 @@ class ESocialType extends \AbstractEnumeration
  * @package Api
  * @subpackage Enum
  */
-class ESocialTypeStr extends \AbstractEnumeration
+class ESocialTypeStr extends \Aurora\System\Enums\AbstractEnumeration
 {
 	const Unknown   = '';
 	const Google    = 'google';
@@ -650,7 +441,7 @@ class ESocialTypeStr extends \AbstractEnumeration
 /**
  * @subpackage Enum
  */
-class ETwofaType extends \AbstractEnumeration
+class ETwofaType extends \Aurora\System\Enums\AbstractEnumeration
 {
     CONST AUTH_TYPE_AUTHY = 'authy';
     CONST DATA_TYPE_AUTHY_ID = 1;

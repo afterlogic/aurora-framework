@@ -17,46 +17,21 @@
  * 
  */
 
-/**
- * @package Db
- * @subpackage Storages
- */
-class CApiDbCommandCreator extends \Aurora\System\Db\CommandCreator
-{
-}
+namespace Aurora\System\Enums;
 
-/**
- * @package Db
- * @subpackage Storages
- */
-class CApiDbCommandCreatorMySQL extends CApiDbCommandCreator
+abstract class AbstractEnumeration
 {
 	/**
-	 * @param string $sName
-	 *
-	 * @return string
+	 * @var array
 	 */
-	public function createDatabase($sName)
-	{
-		$oSql = 'CREATE DATABASE %s';
-		return sprintf($oSql, $this->escapeColumn($sName));
-	}
-}
+	protected $aConsts = array();
 
-/**
- * @package Db
- * @subpackage Storages
- */
-class CApiDbCommandCreatorPostgreSQL extends CApiDbCommandCreator
-{
 	/**
-	 * @param string $sName
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function createDatabase($sName)
+	public function getMap()
 	{
-		$oSql = 'CREATE DATABASE %s';
-		return sprintf($oSql, $this->escapeColumn($sName));
+		return $this->aConsts;
 	}
 }
