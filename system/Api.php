@@ -1390,11 +1390,10 @@ class Api
 		
 		if (\is_numeric($iUserId))
 		{
-			$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
-			$oEntity = $oManagerApi->getEntity($iUserId);
-			if ($oEntity instanceof \Aurora\System\EAV\Entity)
+			$mUser = $this->getUserById($iUserId);
+			if ($mUser instanceof \Aurora\System\EAV\Entity)
 			{
-				$sUUID = $oEntity->UUID;
+				$sUUID = $mUser->UUID;
 			}
 		}
 		else 
@@ -1403,6 +1402,18 @@ class Api
 		}
 		
 		return $sUUID;
+	}
+	
+	public static function getUserById($iUserId)
+	{
+		$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
+		$mUser = $oManagerApi->getEntity($iUserId);
+		if (!($mUser instanceof \Aurora\System\EAV\Entity))
+		{
+			$mUser = false;
+		}
+		
+		return $mUser;
 	}
 	
 	public static function setTenantName($sTenantName)
