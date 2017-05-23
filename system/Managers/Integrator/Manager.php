@@ -637,23 +637,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	}
 
 	/**
-	 * @param CHelpdeskUser $oUser
-	 * @param bool $bSignMe Default value is **false**.
-	 */
-	public function setHelpdeskUserAsLoggedIn(CHelpdeskUser $oUser, $bSignMe = false)
-	{
-		$aUserHashTable = array(
-			'token' => 'hd_auth',
-			'sign-me' => $bSignMe,
-			'id' => $oUser->IdHelpdeskUser
-		);
-
-		$iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
-		$_COOKIE[self::AUTH_HD_KEY] =\Aurora\System\Api::EncodeKeyValues($aUserHashTable);
-		@setcookie(self::AUTH_HD_KEY,\Aurora\System\Api::EncodeKeyValues($aUserHashTable), $iTime, $this->getCookiePath(), null, null, true);
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function logoutHelpdeskUser()
