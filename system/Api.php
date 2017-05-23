@@ -1390,7 +1390,7 @@ class Api
 		
 		if (\is_numeric($iUserId))
 		{
-			$mUser = $this->getUserById($iUserId);
+			$mUser = self::getUserById($iUserId);
 			if ($mUser instanceof \Aurora\System\EAV\Entity)
 			{
 				$sUUID = $mUser->UUID;
