@@ -788,6 +788,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 			));
 			if ($oAccount instanceof CAccount)
 			{
+				$oApiUsersManager->updateAccountLastLoginAndCount($oAccount->IdUser);
 				$oResult = $oAccount;
 			}
 			else

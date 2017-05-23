@@ -35,6 +35,7 @@ class Notifications
 	const UnknownEmail = 109;
 	const UserNotAllowed = 110;
 	const UserAlreadyExists = 111;
+	const SystemNotConfigured = 112;
 
 	const CanNotGetMessageList = 201;
 	const CanNotGetMessage = 202;
@@ -95,6 +96,8 @@ class Notifications
 	const VoiceNotAllowed = 810;
 	const IncorrectFileExtension = 811;
 	const CanNotUploadFileQuota = 812;
+	const FileAlreadyExists = 813;
+	const FileNotFound = 814;
 
 	const MailServerError = 901;
 	const UnknownError = 999;

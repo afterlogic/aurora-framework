@@ -20,8 +20,10 @@
     "hasher": "~1.2.0",
     "jquery": "~1.11.3",
     "jquery-ui": "~1.10.5",
+    "json-loader": "^0.5.4",
     "knockout": "~3.3.0",
     "moment": "~2.10.6",
+    "moment-timezone": "^0.5.13",
     "owl.carousel": "^2.2.0",
     "underscore": "~1.8.3"
   },

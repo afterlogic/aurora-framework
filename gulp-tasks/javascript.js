@@ -59,6 +59,10 @@ var
 		module: {
 			loaders: [
 				{
+					include: /\.json$/,
+					loaders: ["json-loader"]
+				},
+				{
 					test: /[\\\/]modernizr\.js$/,
 					loader: "imports?this=>window!exports?window.Modernizr"
 				},
