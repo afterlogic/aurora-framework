@@ -65,7 +65,8 @@
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-mail-multi-accounts-plugin"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-mail-change-password-poppassd-plugin"},
 		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-office-document-viewer"},
-		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-file-viewer-plugin"}
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-file-viewer-plugin"},
+		{"type": "git", "url":"https://github.com/afterlogic/aurora-module-webclient-afterlogic-downloads"}
     ],
 	"require": {
 			"afterlogic/aurora-module-admin-auth": "dev-master",
@@ -133,6 +134,7 @@
 			"afterlogic/aurora-module-mail-multi-accounts-plugin": "dev-master",
 			"afterlogic/aurora-module-mail-change-password-poppassd-plugin": "dev-master",
 			"afterlogic/aurora-module-office-document-viewer": "dev-master",
-			"afterlogic/aurora-module-webclient-file-viewer-plugin": "dev-master"
+			"afterlogic/aurora-module-webclient-file-viewer-plugin": "dev-master",
+			"afterlogic/aurora-module-webclient-afterlogic-downloads": "dev-master"
 	}
 }
