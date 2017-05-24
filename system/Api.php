@@ -25,6 +25,30 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 	define('AURORA_APP_START', microtime(true));
 }
 
+define('API_PATH_TO_AURORA', '/../');
+
+define('API_CRLF', "\r\n");
+define('API_TAB', "\t");
+
+define('API_SESSION_WEBMAIL_NAME', 'PHPWEBMAILSESSID');
+
+define('API_HELPDESK_PUBLIC_NAME', '_helpdesk_');
+
+// timezone fix
+$sDefaultTimeZone = function_exists('date_default_timezone_get')
+	? @date_default_timezone_get() : 'US/Pacific';
+
+define('API_SERVER_TIME_ZONE', ($sDefaultTimeZone && 0 < strlen($sDefaultTimeZone))
+	? $sDefaultTimeZone : 'US/Pacific');
+
+if (defined('API_SERVER_TIME_ZONE') && function_exists('date_default_timezone_set'))
+{
+	@date_default_timezone_set(API_SERVER_TIME_ZONE);
+}
+
+unset($sDefaultTimeZone);
+
+
 /**
  * @package Api
  */
@@ -138,11 +162,6 @@ class Api
 
 		if (!is_object(self::$oManager)) 
 		{
-			self::IncArray(array(
-				'constants',
-				'enum',
-			));
-
 			self::InitSalt();
 
 			self::$oManager = new \Aurora\System\Managers\GlobalManager();
@@ -225,7 +244,7 @@ class Api
 			{
 //				$sManagerType = \strtolower($sManagerType);
 				$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType).'\\Manager';
-				$oMan = new $sClassName(self::$oManager, $sForcedStorage);
+				$oMan = new $sClassName($sForcedStorage);
 				$sCurrentStorageName = $oMan->GetStorageName();
 
 				$sManagerKey = empty($sCurrentStorageName) ? $sManagerType : $sManagerType.'/'.$sCurrentStorageName;
@@ -400,14 +419,14 @@ class Api
 			}
 			catch (\Exception $oException)
 			{
-				self::Log($oException->getMessage(), \ELogLevel::Error);
-				self::Log($oException->getTraceAsString(), \ELogLevel::Error);
+				self::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
+				self::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
 				$oPdo = false;
 			}
 		} 
 		else 
 		{
-			self::Log('Class PDO dosn\'t exist', \ELogLevel::Error);
+			self::Log('Class PDO dosn\'t exist', \Aurora\System\Enums\LogLevel::Error);
 		}
 
 		if (false !== $oPdo) 
@@ -557,20 +576,20 @@ class Api
 
 	/**
 	 * @param mixed $mObject
-	 * @param int $iLogLevel = ELogLevel::Full
+	 * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Full
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogObject($mObject, $iLogLevel = \ELogLevel::Full, $sFilePrefix = '')
+	public static function LogObject($mObject, $iLogLevel = \Aurora\System\Enums\LogLevel::Full, $sFilePrefix = '')
 	{
 		self::Log(print_r($mObject, true), $iLogLevel, $sFilePrefix);
 	}
 
 	/**
 	 * @param Exception $mObject
-	 * @param int $iLogLevel = ELogLevel::Error
+	 * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogException($mObject, $iLogLevel = \ELogLevel::Error, $sFilePrefix = '')
+	public static function LogException($mObject, $iLogLevel = \Aurora\System\Enums\LogLevel::Error, $sFilePrefix = '')
 	{
 		$sDesc = (string) $mObject;
 		if (0 < \count(self::$aSecretWords)) 
@@ -725,11 +744,11 @@ class Api
 
 	/**
 	 * @param string $sDesc
-	 * @param int $iLogLevel = ELogLevel::Full
+	 * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Full
 	 * @param string $sFilePrefix = ''
 	 * @param bool $bIdDb = false
 	 */
-	public static function Log($sDesc, $iLogLevel = \ELogLevel::Full, $sFilePrefix = '')
+	public static function Log($sDesc, $iLogLevel = \Aurora\System\Enums\LogLevel::Full, $sFilePrefix = '')
 	{
 		static $bIsFirst = true;
 

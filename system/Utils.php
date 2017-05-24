@@ -274,7 +274,7 @@ class Utils
 				$sResult = @iconv($sFromEncoding, $sToEncoding.'//IGNORE', $sResult);
 				if (false === $sResult)
 				{
-					\Aurora\System\Api::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', ELogLevel::Error);
+					\Aurora\System\Api::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', \Aurora\System\Enums\LogLevel::Error);
 					$sResult = $sString;
 				}
 				break;
@@ -786,7 +786,7 @@ class Utils
 			catch (Exception $oE)
 			{
 				\Aurora\System\Api::Log($sClientTimeZone);
-				\Aurora\System\Api::LogObject($oE, ELogLevel::Warning);
+				\Aurora\System\Api::LogObject($oE, \Aurora\System\Enums\LogLevel::Warning);
 			}
 		}
 

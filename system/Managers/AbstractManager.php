@@ -53,11 +53,11 @@ abstract class AbstractManager
 	 */
 	protected $oSettings;
 
-	public function __construct($sManagerName, GlobalManager &$oManager, \Aurora\System\Module\AbstractModule $oModule = null)
+	public function __construct($sManagerName, \Aurora\System\Module\AbstractModule $oModule = null)
 	{
 		$this->sManagerName = $sManagerName;
-		$this->oSettings =& $oManager->GetSettings();
-		$this->oManager =& $oManager;
+		$this->oManager =& \Aurora\System\Api::$oManager;
+		$this->oSettings =& \Aurora\System\Api::$oManager->GetSettings();
 		$this->oLastException = null;
 		$this->oModule = $oModule;
 	}
@@ -254,7 +254,7 @@ abstract class AbstractManager
 			\Aurora\System\Api::Log('Exception['.$oException->getCode().']: '.$oException->getMessage().
 				API_CRLF.$sFile.' ('.$oException->getLine().')'.
 				API_CRLF.'----------------------------------------------------------------------'.
-				API_CRLF.$oException->getTraceAsString(), \ELogLevel::Error);
+				API_CRLF.$oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
 		}
 	}
 

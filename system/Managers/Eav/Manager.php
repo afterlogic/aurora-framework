@@ -32,9 +32,10 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @param \Aurora\System\Managers\GlobalManager $oManager
 	 * @param string $sForcedStorage
 	 */
-	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = 'db')
+	public function __construct($sForcedStorage = 'db')
 	{
-		parent::__construct('eav', $oManager, $sForcedStorage);
+		parent::__construct('eav', $sForcedStorage);
+		$this->oStorage = new Storages\Db\Storage($this);
 	}
 
 	/**
@@ -227,7 +228,7 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @param array $aIdsOrUUIDs
 	 * @return array
 	 */
-	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
 	{
 		$aEntities = array();
 		try
@@ -335,7 +336,7 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 		try
 		{
 			$bResult = $this->oStorage->executeSqlFile(
-				dirname(__FILE__) . '/storages/db/sql/create.sql'
+				dirname(__FILE__) . '/Storages/Db/Sql/create.sql'
 			);
 		}
 		catch (\Aurora\System\Exceptions\BaseException $oException)

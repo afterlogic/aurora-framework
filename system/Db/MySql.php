@@ -130,7 +130,7 @@ class MySql extends Sql
 		}
 		else
 		{
-			\Aurora\System\Api::Log('DB : connect to '.$this->sUser.'@'.$this->sHost.' failed', ELogLevel::Error);
+			\Aurora\System\Api::Log('DB : connect to '.$this->sUser.'@'.$this->sHost.' failed', \Aurora\System\Enums\LogLevel::Error);
 			$this->_setSqlError();
 			return false;
 		}

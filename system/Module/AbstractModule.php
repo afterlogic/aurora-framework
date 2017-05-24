@@ -476,7 +476,7 @@ abstract class AbstractModule
 			$sClassName = 'CApi'.ucfirst($this->GetName()).ucfirst($sManagerName).'Manager';
 			if (class_exists($sClassName))
 			{
-				$mResult = new $sClassName(\Aurora\System\Api::$oManager, $sForcedStorage, $this);
+				$mResult = new $sClassName($sForcedStorage, $this);
 			}
 		}
 		
@@ -1033,7 +1033,7 @@ abstract class AbstractModule
 	 */
 	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
-		$oEavManager = \Aurora\System\Api::GetSystemManager('Eav');
+		$oEavManager = new \Aurora\System\Managers\Eav\Manager();
 		if ($oEavManager)
 		{
 			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';

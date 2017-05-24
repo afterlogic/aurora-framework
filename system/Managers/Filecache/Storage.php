@@ -21,7 +21,9 @@
  * @package Filecache
  * @subpackage Storages
  */
-class CApiFilecacheStorage extends \Aurora\System\Managers\AbstractManagerStorage
+namespace Aurora\System\Managers\Filecache;
+
+class Storage extends \Aurora\System\Managers\AbstractManagerStorage
 {
 	/**
 	 * @var string

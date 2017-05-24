@@ -94,7 +94,7 @@ class Connector
 	{
 		if (!extension_loaded('ldap'))
 		{
-			\Aurora\System\Api::Log('LDAP: Can\'t load LDAP extension.', ELogLevel::Error);
+			\Aurora\System\Api::Log('LDAP: Can\'t load LDAP extension.', \Aurora\System\Enums\LogLevel::Error);
 			return false;
 		}
 
@@ -182,11 +182,11 @@ class Connector
 		{
 			if ($this->rLink)
 			{
-				\Aurora\System\Api::Log('LDAP: error #'.@ldap_errno($this->rLink).': '.@ldap_error($this->rLink), ELogLevel::Error);
+				\Aurora\System\Api::Log('LDAP: error #'.@ldap_errno($this->rLink).': '.@ldap_error($this->rLink), \Aurora\System\Enums\LogLevel::Error);
 			}
 			else
 			{
-				\Aurora\System\Api::Log('LDAP: unknown ldap error', ELogLevel::Error);
+				\Aurora\System\Api::Log('LDAP: unknown ldap error', \Aurora\System\Enums\LogLevel::Error);
 			}
 		}
 

@@ -54,7 +54,7 @@ abstract class AbstractManagerStorage
 		$this->sManagerName = $sManagerName;
 		$this->sStorageName = $sStorageName;
 		$this->oManager = $oManager;
-		$this->oSettings =& $oManager->GetGlobalManager()->GetSettings();
+		$this->oSettings =& \Aurora\System\Api::GetSettings();
 		$this->oLastException = null;
 	}
 
@@ -155,10 +155,7 @@ abstract class AbstractManagerStorage
 			}
 		}
 
-		if ($bDoExitOnError)
-		{
-			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
-		}
+		exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
 		
 		return false;		
 	}

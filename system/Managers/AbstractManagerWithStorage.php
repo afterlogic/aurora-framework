@@ -32,22 +32,22 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 	/**
 	 * @var \Aurora\System\Managers\AbstractManagerStorage
 	 */
-	protected $oStorage;
+	public $oStorage;
 
 	/**
 	 * @param string $sManagerName
-	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 * @param string $sForcedStorage
 	 * @return \Aurora\System\Managers\AbstractManager
 	 */
-	public function __construct($sManagerName, \Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = '', \Aurora\System\Module\AbstractModule $oModule = null)
+	public function __construct($sManagerName, $sForcedStorage = '', \Aurora\System\Module\AbstractModule $oModule = null)
 	{
-		parent::__construct($sManagerName, $oManager, $oModule);
+		parent::__construct($sManagerName, $oModule);
 
+		$oManager =& \Aurora\System\Api::$oManager;
 		$this->oStorage = null;
 		$this->sStorageName = !empty($sForcedStorage)
 			? strtolower(trim($sForcedStorage)) : strtolower($oManager->GetStorageByType($sManagerName));
-
+/*
 		if (isset($this->oModule))
 		{
 			$this->incDefaultStorage();
@@ -81,6 +81,8 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 				}
 			}
 		}
+ * 
+ */
 	}
 
 	/**

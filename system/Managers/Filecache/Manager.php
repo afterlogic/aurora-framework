@@ -31,9 +31,9 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @param \Aurora\System\Managers\GlobalManager &$oManager
 	 */
-	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager, $sForcedStorage = '')
+	public function __construct($sForcedStorage = '')
 	{
-		parent::__construct('Filecache', $oManager, $sForcedStorage);
+		parent::__construct('Filecache', $sForcedStorage);
 	}
 
 	/**

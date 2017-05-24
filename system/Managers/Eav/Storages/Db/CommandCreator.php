@@ -23,7 +23,10 @@
  * @package EAV
  * @subpackage Storages
  */
-class CApiEavCommandCreator extends \Aurora\System\Db\AbstractCommandCreator
+
+namespace Aurora\System\Managers\Eav\Storages\Db;
+
+class CommandCreator extends \Aurora\System\Db\AbstractCommandCreator
 {
 	/**
 	 * @return string
@@ -224,7 +227,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	
 	public function getEntitiesCount($sType, $aWhere = array(), $aIdsOrUUIDs = array())
 	{
-		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \ESortOrder::ASC, $aIdsOrUUIDs, true);
+		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs, true);
 	}
 
 	/**
@@ -261,7 +264,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	 */	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mSortAttributes = array(), 
-			$iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
+			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
 	{
 		$sCount = "";
 		$sViewAttributes = "";
@@ -312,7 +315,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			$mSortAttributes[] = 'entity_id';
 			
 			$mSortAttributes = array_map(function ($sSortField) use ($iSortOrder) {
-				return $sSortField . ' ' . ($iSortOrder === \ESortOrder::ASC ? "ASC" : "DESC");
+				return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
 			}, $mSortAttributes);
 
 			$sResultSort = " ORDER BY " . implode(',', $mSortAttributes) . "";
@@ -502,23 +505,3 @@ ON DUPLICATE KEY UPDATE
 	}
 }
 
-/**
- * @internal
- * 
- * @subpackage Storages
- */
-class CApiEavCommandCreatorMySQL extends CApiEavCommandCreator
-{
-}
-
-/**
- * @todo make it
- * 
- * @internal
- * 
- * @subpackage Storages
- */
-class CApiEavCommandCreatorPostgreSQL  extends CApiEavCommandCreatorMySQL
-{
-	// TODO
-}

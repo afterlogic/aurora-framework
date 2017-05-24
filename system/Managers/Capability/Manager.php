@@ -27,9 +27,9 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	/**
 	 * @param &$oManager
 	 */
-	public function __construct(\Aurora\System\Managers\GlobalManager &$oManager)
+	public function __construct()
 	{
-		parent::__construct('Сapability', $oManager);
+		parent::__construct('Сapability');
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		if ($bResult && $iUserId)
 		{
 			$bIsGlobalContactsEnabled = true;
-			$bResult = $this->isContactsSupported($iUserId) && $iUserId->User->getCapa(ECapa::GAB) && $bIsGlobalContactsEnabled;
+			$bResult = $this->isContactsSupported($iUserId) && $iUserId->User->getCapa(\Aurora\System\Enums\Capa::GAB) && $bIsGlobalContactsEnabled;
 		}		
 
 		return $bResult;
@@ -173,7 +173,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 			
 			if ($bResult)
 			{
-				$bResult = $oAccount->User->getCapa(ECapa::TWILIO);
+				$bResult = $oAccount->User->getCapa(\Aurora\System\Enums\Capa::TWILIO);
 			}
 		}
 
@@ -218,7 +218,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 			
 		if ($bResult && $oAccount)
 		{
-			$bResult = $oAccount->User->getCapa(ECapa::MOBILE_SYNC) &&
+			$bResult = $oAccount->User->getCapa(\Aurora\System\Enums\Capa::MOBILE_SYNC) &&
 				($this->isContactsSupported($oAccount) || $this->isGlobalContactsSupported($oAccount) ||
 				$this->isCalendarSupported($oAccount) || $this->isHelpdeskSupported($oAccount));
 		}
@@ -235,7 +235,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		$bResult = $this->isNotLite() && $this->isDavSupported() && $this->isCollaborationSupported();
 //		if ($bResult && $oAccount)
 //		{
-//			$bResult = $oAccount->User->GetCapa(ECapa::OUTLOOK_SYNC);
+//			$bResult = $oAccount->User->GetCapa(\Aurora\System\Enums\Capa::OUTLOOK_SYNC);
 //		}
 // TODO
 
@@ -251,56 +251,56 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		static $sCache = null;
 		if (null === $sCache)
 		{
-			$aCapa[] = ECapa::WEBMAIL;
+			$aCapa[] = \Aurora\System\Enums\Capa::WEBMAIL;
 
 			if ($this->isPersonalContactsSupported())
 			{
-				$aCapa[] = ECapa::PAB;
+				$aCapa[] = \Aurora\System\Enums\Capa::PAB;
 			}
 
 			if ($this->isGlobalContactsSupported())
 			{
-				$aCapa[] = ECapa::GAB;
+				$aCapa[] = \Aurora\System\Enums\Capa::GAB;
 			}
 
 			if ($this->isCalendarSupported())
 			{
-				$aCapa[] = ECapa::CALENDAR;
+				$aCapa[] = \Aurora\System\Enums\Capa::CALENDAR;
 			}
 
 			if ($this->isCalendarAppointmentsSupported())
 			{
-				$aCapa[] = ECapa::MEETINGS;
+				$aCapa[] = \Aurora\System\Enums\Capa::MEETINGS;
 			}
 
 			if ($this->isCalendarSharingSupported())
 			{
-				$aCapa[] = ECapa::CAL_SHARING;
+				$aCapa[] = \Aurora\System\Enums\Capa::CAL_SHARING;
 			}
 
 			if ($this->isMobileSyncSupported())
 			{
-				$aCapa[] = ECapa::MOBILE_SYNC;
+				$aCapa[] = \Aurora\System\Enums\Capa::MOBILE_SYNC;
 			}
 
 			if ($this->isOutlookSyncSupported())
 			{
-				$aCapa[] = ECapa::OUTLOOK_SYNC;
+				$aCapa[] = \Aurora\System\Enums\Capa::OUTLOOK_SYNC;
 			}
 
 			if ($this->isFilesSupported())
 			{
-				$aCapa[] = ECapa::FILES;
+				$aCapa[] = \Aurora\System\Enums\Capa::FILES;
 			}
 
 			if ($this->isHelpdeskSupported())
 			{
-				$aCapa[] = ECapa::HELPDESK;
+				$aCapa[] = \Aurora\System\Enums\Capa::HELPDESK;
 			}
 
 			if ($this->isTwilioSupported())
 			{
-				$aCapa[] = ECapa::TWILIO;
+				$aCapa[] = \Aurora\System\Enums\Capa::TWILIO;
 			}
 
 			$sCache = trim(strtoupper(implode(' ', $aCapa)));

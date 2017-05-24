@@ -23,7 +23,10 @@
  * @package EAV
  * @subpackage Storages
  */
-class CApiEavDbStorage extends CApiEavStorage
+
+namespace Aurora\System\Managers\Eav\Storages\Db;
+
+class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 {
 	/**
 	 * @var CDbStorage $oConnection
@@ -43,12 +46,7 @@ class CApiEavDbStorage extends CApiEavStorage
 		parent::__construct('db', $oManager);
 
 		$this->oConnection =& $oManager->GetConnection();
-		$this->oCommandCreator =& $oManager->GetCommandCreator(
-			$this, array(
-				\Aurora\System\Enums\DbType::MySQL => 'CApiEavCommandCreatorMySQL',
-				\Aurora\System\Enums\DbType::PostgreSQL => 'CApiEavCommandCreatorPostgreSQL'
-			)
-		);
+		$this->oCommandCreator = new CommandCreator\MySQL();
 	}
 
 	/**
@@ -205,7 +203,7 @@ class CApiEavDbStorage extends CApiEavStorage
 	 * @param type $aIdsOrUUIDs
 	 * @return \Aurora\System\EAV\Entity
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
 	{
 		$mResult = false;
 		

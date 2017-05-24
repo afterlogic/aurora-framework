@@ -185,14 +185,14 @@ class Postgres extends \Aurora\System\Db\Sql
 			}
 			catch (Exception $oException)
 			{
-				self::Log($oException->getMessage(), ELogLevel::Error);
-				self::Log($oException->getTraceAsString(), ELogLevel::Error);
+				self::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
+				self::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
 				$this->oPDO = false;
 			}
 		}
 		else
 		{
-			self::Log('Class PDO dosn\'t exist', ELogLevel::Error);
+			self::Log('Class PDO dosn\'t exist', \Aurora\System\Enums\LogLevel::Error);
 		}
 
 		return !!$this->oPDO;

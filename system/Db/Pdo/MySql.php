@@ -193,8 +193,8 @@ class MySql extends \Aurora\System\Db\Sql
 			}
 			catch (Exception $oException)
 			{
-				\Aurora\System\Api::Log($oException->getMessage(), ELogLevel::Error);
-				\Aurora\System\Api::Log($oException->getTraceAsString(), ELogLevel::Error);
+				\Aurora\System\Api::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
+				\Aurora\System\Api::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
 				$this->oPDO = false;
 
 				throw new DbException($oException->getMessage(), $oException->getCode(), $oException);
@@ -202,7 +202,7 @@ class MySql extends \Aurora\System\Db\Sql
 		}
 		else
 		{
-			\Aurora\System\Api::Log('Class PDO dosn\'t exist', ELogLevel::Error);
+			\Aurora\System\Api::Log('Class PDO dosn\'t exist', \Aurora\System\Enums\LogLevel::Error);
 		}
 
 		return !!$this->oPDO;

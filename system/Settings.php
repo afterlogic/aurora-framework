@@ -53,7 +53,7 @@ class Settings extends AbstractSettings
 
 			'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
 			'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
-			'LoggingLevel' => new SettingsProperty('LoggingLevel', \ELogLevel::Full, 'spec', 'ELogLevel'),
+			'LoggingLevel' => new SettingsProperty('LoggingLevel', \Aurora\System\Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
 			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
 			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
 			'LogPostView' => new SettingsProperty('LogPostView', '', 'string'),

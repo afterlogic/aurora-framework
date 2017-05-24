@@ -75,6 +75,6 @@ class GeneralSql
 	 */
 	protected function errorLog($sErrorDesc)
 	{
-		\Aurora\System\Api::Log('DB ERROR < '.trim($sErrorDesc), ELogLevel::Error);
+		\Aurora\System\Api::Log('DB ERROR < '.trim($sErrorDesc), \Aurora\System\Enums\LogLevel::Error);
 	}
 }

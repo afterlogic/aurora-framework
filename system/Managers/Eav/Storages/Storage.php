@@ -23,11 +23,11 @@
  * @package EAV
  * @subpackage Storages
  */
-class CApiEavStorage extends \Aurora\System\Managers\AbstractManagerStorage
+
+namespace Aurora\System\Managers\Eav\Storages;
+
+class Storage extends \Aurora\System\Managers\AbstractManagerStorage
 {
-	/**
-	 * @param \Aurora\System\GlobalManager &$oManager
-	 */
 	public function __construct($sStorageName, \Aurora\System\Managers\AbstractManager &$oManager)
 	{
 		parent::__construct('eav', $sStorageName, $oManager);
@@ -94,7 +94,7 @@ class CApiEavStorage extends \Aurora\System\Managers\AbstractManagerStorage
 	 * @param type $aIdsOrUUIDs
 	 * @return \Aurora\System\EAV\Entity
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \ESortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
 	{
 		return false;
 	}	

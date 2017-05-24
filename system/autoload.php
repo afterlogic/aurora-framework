@@ -28,6 +28,9 @@ spl_autoload_register(function ($sClassName) {
 	$aClassesTree = array(
 		'system' => array(
 			'Aurora\\System'
+		),
+		'modules' => array(
+			'Aurora\\Modules'
 		)
 	);
 	foreach ($aClassesTree as $sFolder => $aClasses)

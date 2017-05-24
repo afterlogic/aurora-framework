@@ -39,10 +39,17 @@ abstract class AbstractCommandCreator
 	 * @param IHelper $oHelper
 	 * @param string $sPrefix
 	 */
-	public function __construct($oHelper, $sPrefix)
+	public function __construct($oHelper = '', $sPrefix = '')
 	{
-		$this->oHelper = $oHelper;
-		$this->sPrefix = (string) $sPrefix;
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		
+		$oCommandCreatorHelper =& \Aurora\System\Api::$oManager->GetSqlHelper();
+
+		if ($oSettings)
+		{
+			$this->oHelper = $oCommandCreatorHelper;
+			$this->sPrefix = (string) $oSettings->GetConf('DBPrefix');
+		}
 	}
 
 	public function prefix()
