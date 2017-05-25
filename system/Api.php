@@ -237,20 +237,8 @@ class Api
 		$oResult = null;
 		if (\Aurora\System\Api::IsValid())
 		{
-			$sManagerKey = empty($sForcedStorage) ? $sManagerType : $sManagerType.'/'.$sForcedStorage;
-			
-			$oResult =& self::$oManager->GetManager($sManagerKey);
-			if (!$oResult)
-			{
-//				$sManagerType = \strtolower($sManagerType);
-				$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType).'\\Manager';
-				$oMan = new $sClassName($sForcedStorage);
-				$sCurrentStorageName = $oMan->GetStorageName();
-
-				$sManagerKey = empty($sCurrentStorageName) ? $sManagerType : $sManagerType.'/'.$sCurrentStorageName;
-				self::$oManager->SetManager($sManagerKey, $oMan);
-				$oResult =& self::$oManager->GetManager($sManagerKey);
-			}
+			$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType).'\\Manager';
+			$oResult = new $sClassName($sForcedStorage);
 		}
 
 		return $oResult;		
@@ -443,10 +431,10 @@ class Api
 	public static function IsMobileApplication()
 	{
 		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
-		$oApiIntegrator = self::GetSystemManager('integrator');
+		$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
 
 		/* @var $oApiCapability \Aurora\System\Managers\Capability\Manager */
-		$oApiCapability = self::GetSystemManager('capability');
+		$oApiCapability = new \Aurora\System\Managers\Capability\Manager();
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
 	}
@@ -1317,7 +1305,7 @@ class Api
 			}
 		}
 		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
-		$oApiIntegrator = self::GetSystemManager('integrator');
+		$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
 		if ($oApiIntegrator)
 		{
 			$mResult = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1338,7 +1326,7 @@ class Api
 			else
 			{
 				/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
-				$oApiIntegrator = self::GetSystemManager('integrator');
+				$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
 				if ($oApiIntegrator)
 				{
 					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1378,7 +1366,7 @@ class Api
 				$iUserId = self::$aUserSession['UserId'];
 			}
 
-			$oApiIntegrator = self::GetSystemManager('integrator');
+			$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
 			if ($oApiIntegrator)
 			{
 				$oUser = $oApiIntegrator->getAuthenticatedUserByIdHelper($iUserId);
@@ -1425,7 +1413,7 @@ class Api
 	
 	public static function getUserById($iUserId)
 	{
-		$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
+		$oManagerApi = new \Aurora\System\Managers\EAV\Manager();
 		$mUser = $oManagerApi->getEntity($iUserId);
 		if (!($mUser instanceof \Aurora\System\EAV\Entity))
 		{

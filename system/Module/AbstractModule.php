@@ -452,39 +452,6 @@ abstract class AbstractModule
 	
 	/**
 	 * 
-	 * @param string $sManagerName
-	 * @param string $sForcedStorage
-	 * @return \Aurora\System\Module\AbstractModule
-	 */
-	final public function GetManager($sManagerName = '', $sForcedStorage = 'db')
-	{
-		$mResult = false;
-		$sFileFullPath = '';
-		if (!isset($this->aManagersCache[$sManagerName]))
-		{
-			$sFileFullPath = $this->GetPath().'/managers/'.$sManagerName.'/manager.php';
-			if (@file_exists($sFileFullPath))
-			{
-				if (include_once $sFileFullPath)
-				{
-					$this->aManagersCache[$sManagerName] = true;
-				}
-			}
-		}
-		if (isset($this->aManagersCache[$sManagerName]))
-		{
-			$sClassName = 'CApi'.ucfirst($this->GetName()).ucfirst($sManagerName).'Manager';
-			if (class_exists($sClassName))
-			{
-				$mResult = new $sClassName($sForcedStorage, $this);
-			}
-		}
-		
-		return $mResult;
-	}
-	
-	/**
-	 * 
 	 * @param string $sName
 	 * @param callback $mCallbak
 	 */

@@ -21,8 +21,8 @@ $sRequestUri = empty($_SERVER['REQUEST_URI']) ? '' : \trim($_SERVER['REQUEST_URI
 
 include_once 'system/autoload.php';
 
-\Aurora\System\Api::Init();
 \Aurora\System\Api::GrantAdminPrivileges();
+\Aurora\System\Api::Init();
 
 \set_time_limit(3000);
 \set_error_handler(function ($errno, $errstr, $errfile, $errline) {
