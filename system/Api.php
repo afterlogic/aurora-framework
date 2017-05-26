@@ -429,58 +429,6 @@ class Api
 		
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
 	}
-
-	/**
-	 * @param string $sFileName
-	 * @param bool $bDoExitOnError = true
-	 * @return bool
-	 */
-	public static function Inc($sFileName, $bDoExitOnError = true)
-	{
-		static $aCache = array();
-
-		$sFileFullPath = '';
-		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
-		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName])) 
-		{
-			return true;
-		} 
-		else 
-		{
-			$sFileFullPath = self::RootPath().$sFileName.'.php';
-			if (@file_exists($sFileFullPath)) 
-			{
-				$aCache[$sFileName] = true;
-				include_once $sFileFullPath;
-				return true;
-			}
-		}
-
-		if ($bDoExitOnError) 
-		{
-			//TODO check functionality
-			echo('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__.'<br />');
-		}
-		
-		return false;
-	}
-
-	/**
-	 * @param string $sNewLocation
-	 */
-	/**
-	 * @param string $aFileNames
-	 * @param bool $bDoExitOnError = true
-	 * @return bool
-	 */
-	public static function IncArray($aFileNames, $bDoExitOnError = true)
-	{
-		foreach ($aFileNames as $sFileName) 
-		{
-			self::Inc($sFileName, $bDoExitOnError);
-		}
-	}
 	
 	/**
 	 * @param string $sNewLocation
