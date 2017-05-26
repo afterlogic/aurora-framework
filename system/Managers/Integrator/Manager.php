@@ -348,7 +348,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 */
 	public function getAuthenticatedUserHelper($sAuthToken = '')
 	{
-		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 		$aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
 		$iUserId = $aUserInfo['userId'];
 		$oUser = null;
@@ -370,7 +370,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 */
 	public function getAuthenticatedUserByIdHelper($iUserId)
 	{
-		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 		$oUser = null;
 		if (0 < $iUserId)
 		{

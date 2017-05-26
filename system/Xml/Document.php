@@ -22,10 +22,10 @@ namespace Aurora\System\Xml;
 /**
  * @package Api
  */
-class CXmlDocument
+class Document
 {
 	/**
-	 * @var CXmlDomNode
+	 * @var Node
 	 */
 	public $XmlRoot = null;
 
@@ -35,7 +35,7 @@ class CXmlDocument
 	 */
 	public function CreateElement($sName, $sValue = null)
 	{
-		$this->XmlRoot = new CXmlDomNode($sName, $sValue);
+		$this->XmlRoot = new Node($sName, $sValue);
 	}
 
 	/**
@@ -173,7 +173,7 @@ class CXmlDocument
 	public function _startElement($oParser, $sName, $aAttributes)
 	{
 		$this->_nullFunction($oParser);
-		$oNode = new CXmlDomNode($sName);
+		$oNode = new Node($sName);
 		$oNode->Attributes = $aAttributes;
 		if ($this->XmlRoot == null)
 		{

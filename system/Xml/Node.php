@@ -22,7 +22,7 @@ namespace Aurora\System\Xml;
 /**
  * @package Api
  */
-class CXmlDomNode
+class Node
 {
 	/**
 	 * @var	string

@@ -138,9 +138,11 @@ abstract class AbstractModule
 		return new static($sName, $sPath, $sVersion);
 	}	
 	
-	final public function GetDecorator()
+	public static function Decorator()
 	{
-		return \Aurora\System\Api::GetModuleDecorator($this->GetName());
+		$aClass = explode('\\', get_called_class());
+		$sName = $aClass[count($aClass) - 2];
+		return \Aurora\System\Api::GetModuleDecorator($sName);
 	}
 
 	/**
@@ -953,7 +955,7 @@ abstract class AbstractModule
 	{
 		$oModuleManager = \Aurora\System\Api::GetModuleManager();
 		$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
-		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 		if ($oCoreDecorator && 0 < $iUserId)
 		{
 			$oUser = $oCoreDecorator->GetUser($iUserId);
