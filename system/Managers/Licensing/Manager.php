@@ -29,10 +29,10 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 */
 	public function __construct()
 	{
-		parent::__construct('Licensing');
+		parent::__construct();
 
-		$this->inc('classes.enc');
-		$this->inc('classes.inc', false);
+		include_once \Aurora\System\Api::RootPath() . 'Managers/Licensing/classes/inc.php';
+		include_once \Aurora\System\Api::RootPath() . 'Managers/Licensing/classes/enc.php';
 	}
 
 	/**

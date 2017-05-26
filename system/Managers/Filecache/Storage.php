@@ -38,9 +38,9 @@ class Storage extends \Aurora\System\Managers\AbstractManagerStorage
 	/**
 	 * @param \Aurora\System\Managers\AbstractManager &$oManager
 	 */
-	public function __construct($sStorageName, \Aurora\System\Managers\AbstractManager &$oManager)
+	public function __construct(\Aurora\System\Managers\AbstractManager &$oManager)
 	{
-		parent::__construct('filecache', $sStorageName, $oManager);
+		parent::__construct($oManager);
 
 		$this->sDataPath = rtrim(trim(\Aurora\System\Api::DataPath()), '\\/');
 		$this->sPath = '/temp/.cache/'; 

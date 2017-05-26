@@ -28,11 +28,6 @@ namespace Aurora\System\Managers\Eav\Storages;
 
 class Storage extends \Aurora\System\Managers\AbstractManagerStorage
 {
-	public function __construct($sStorageName, \Aurora\System\Managers\AbstractManager &$oManager)
-	{
-		parent::__construct('eav', $sStorageName, $oManager);
-	}
-
 	/**
 	 * 
 	 * @param type $mIdOrUUID

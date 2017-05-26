@@ -29,13 +29,11 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
 	 * 
-	 * @param \Aurora\System\Managers\GlobalManager $oManager
 	 * @param string $sForcedStorage
 	 */
 	public function __construct($sForcedStorage = 'db')
 	{
-		parent::__construct('eav', $sForcedStorage);
-		$this->oStorage = new Storages\Db\Storage($this);
+		parent::__construct(null, new Storages\Db\Storage($this));
 	}
 
 	/**

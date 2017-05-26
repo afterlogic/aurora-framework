@@ -24,10 +24,6 @@ namespace Aurora\System\Managers;
  */
 abstract class AbstractManagerWithStorage extends AbstractManager
 {
-	/**
-	 * @var string
-	 */
-	protected $sStorageName;
 
 	/**
 	 * @var \Aurora\System\Managers\AbstractManagerStorage
@@ -35,62 +31,14 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 	public $oStorage;
 
 	/**
-	 * @param string $sManagerName
-	 * @param string $sForcedStorage
+	 * @param \Aurora\System\Module\AbstractModule $oModule
+	 * @param \Aurora\System\Managers\AbstractManagerStorage $oStorage
 	 * @return \Aurora\System\Managers\AbstractManager
 	 */
-	public function __construct($sManagerName, $sForcedStorage = '', \Aurora\System\Module\AbstractModule $oModule = null)
+	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null, \Aurora\System\Managers\AbstractManagerStorage $oStorage = null)
 	{
-		parent::__construct($sManagerName, $oModule);
-
-		$oManager =& \Aurora\System\Api::$oManager;
-		$this->oStorage = null;
-		$this->sStorageName = !empty($sForcedStorage)
-			? strtolower(trim($sForcedStorage)) : strtolower($oManager->GetStorageByType($sManagerName));
-/*
-		if (isset($this->oModule))
-		{
-			$this->incDefaultStorage();
-
-			if ($this->incStorage($this->GetStorageName().'.storage', false))
-			{
-				$sClassName = 'CApi'.ucfirst($oModule->GetName()).ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
-				$this->oStorage = new $sClassName($this);
-			}
-			else
-			{
-				$sClassName = 'CApi'.ucfirst($oModule->GetName()).ucfirst($this->GetManagerName()).'Storage';
-				$this->oStorage = new $sClassName($this->sStorageName, $this);
-			}
-		}
-		else
-		{
-			\Aurora\System\Api::Inc('Managers.'.ucfirst($this->GetManagerName()).'.storages.default');
-
-			if (\Aurora\System\Api::Inc('Managers.'.ucfirst($this->GetManagerName()).'.storages.'.$this->GetStorageName().'.storage', false))
-			{
-				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).ucfirst($this->GetStorageName()).'Storage';
-				$this->oStorage = new $sClassName($this);
-			}
-			else
-			{
-				$sClassName = 'CApi'.ucfirst($this->GetManagerName()).'Storage';
-				if (class_exists($sClassName))
-				{
-					$this->oStorage = new $sClassName($this->sStorageName, $this);
-				}
-			}
-		}
- * 
- */
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetStorageName()
-	{
-		return $this->sStorageName;
+		parent::__construct($oModule);
+		$this->oStorage = $oStorage;
 	}
 
 	/**

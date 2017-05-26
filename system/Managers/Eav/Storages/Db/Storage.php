@@ -43,9 +43,9 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 */
 	public function __construct(\Aurora\System\Managers\AbstractManager &$oManager)
 	{
-		parent::__construct('db', $oManager);
+		parent::__construct($oManager);
 
-		$this->oConnection =& $oManager->GetConnection();
+		$this->oConnection =& $this->oManager->GetConnection();
 		$this->oCommandCreator = new CommandCreator\MySQL();
 	}
 

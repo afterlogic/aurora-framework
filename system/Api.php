@@ -220,15 +220,6 @@ class Api
 	/**
 	 * @param string $sManagerType
 	 * @param string $sForcedStorage = ''
-	 */
-	public static function Manager($sManagerType, $sForcedStorage = '')
-	{
-		return self::$oManager->GetByType($sManagerType, $sForcedStorage);
-	}
-
-	/**
-	 * @param string $sManagerType
-	 * @param string $sForcedStorage = ''
 	 * 
 	 * @return \Aurora\System\Managers\AbstractManager
 	 */
@@ -238,7 +229,7 @@ class Api
 		if (\Aurora\System\Api::IsValid())
 		{
 			$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType).'\\Manager';
-			$oResult = new $sClassName($sForcedStorage);
+			$oResult = new $sClassName();
 		}
 
 		return $oResult;		
@@ -439,42 +430,6 @@ class Api
 		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
 	}
 
-	/**
-	 * @return bool
-	 */
-	public static function ManagerInc($sManagerName, $sFileName, $bDoExitOnError = true)
-	{
-		return self::Inc('Managers.'.$sManagerName.'.'.$sFileName, $bDoExitOnError);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function ManagerPath($sManagerName, $sFileName)
-	{
-		return self::IncPath('Managers.'.$sManagerName.'.'.$sFileName);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function StorageInc($sManagerName, $sStorageName, $sFileName)
-	{
-		return self::Inc('Managers.'.$sManagerName.'.storages.'.$sStorageName.'.'.$sFileName);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function IncPath($sFileName)
-	{
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', $sFileName);
-		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
-		$sFileName = str_replace('.', '/', $sFileName);
-
-		return self::RootPath().$sFileName.'.php';
-	}
-	
 	/**
 	 * @param string $sFileName
 	 * @param bool $bDoExitOnError = true

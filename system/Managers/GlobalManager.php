@@ -43,11 +43,6 @@ class GlobalManager
 	/**
 	 * @var array
 	 */
-	protected $aManagers;
-
-	/**
-	 * @var array
-	 */
 	protected $aStorageMap;
 
 	public function __construct()
@@ -55,27 +50,12 @@ class GlobalManager
 		$this->oSettings = null;
 		$this->oConnection = null;
 		$this->oSqlHelper = null;
-		$this->aManagers = array();
 		$this->aStorageMap = array(
 			'db' => 'db',
 			'filecache' => 'file'
 		);
 	}
 	
-	public function GetManagers()
-	{
-		return $this->aManagers;
-	}
-
-	public function &GetManager($sKey)
-	{
-		return $this->aManagers[$sKey];
-	}
-
-	public function SetManager($sKey, $oManager)
-	{
-		$this->aManagers[$sKey] = $oManager;
-	}	
 	/**
 	 * @return \Aurora\System\Settings
 	 */
@@ -108,7 +88,6 @@ class GlobalManager
 	 */
 	public function GetStorageByType($sManagerName)
 	{
-//		$sManagerName = strtolower($sManagerName);
 		return isset($this->aStorageMap[$sManagerName]) ? $this->aStorageMap[$sManagerName] : '';
 	}
 
@@ -154,78 +133,5 @@ class GlobalManager
 		}
 
 		return $this->oSqlHelper;
-	}
-
-	/**
-	 * 
-	 * @param string $sHost
-	 * @param int $iPort
-	 * @param bool $bUseSsl
-	 * @return \Aurora\System\Net\Protocols\Imap4
-	 */
-	public function GetSimpleMailProtocol($sHost, $iPort, $bUseSsl = false)
-	{
-		return new \Aurora\System\Net\Protocols\Imap4($sHost, $iPort, $bUseSsl);
-	}
-
-	public function &GetCommandCreator(\Aurora\System\Managers\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
-	{
-		$oSettings =& $oStorage->GetSettings();
-		$oCommandCreatorHelper =& $this->GetSqlHelper();
-
-		$oCommandCreator = null;
-
-		if ($oSettings)
-		{
-			$sDbType = $oSettings->GetConf('DBType');
-			$sDbPrefix = $oSettings->GetConf('DBPrefix');
-
-			if (isset($aCommandCreatorsNames[$sDbType]))
-			{
-				\Aurora\System\Api::Inc('db.command_creator');
-				\Aurora\System\Api::StorageInc($oStorage->GetManagerName(), $oStorage->GetStorageName(), 'command_creator');
-
-				$oCommandCreator =
-					new $aCommandCreatorsNames[$sDbType]($oCommandCreatorHelper, $sDbPrefix);
-			}
-		}
-
-		return $oCommandCreator;
-	}
-
-	/**
-	 * @param string $sManagerType
-	 * @param string $sForcedStorage = ''
-	 */
-	public function GetByType($sManagerType, $sForcedStorage = '')
-	{
-		$oResult = null;
-		if (\Aurora\System\Api::IsValid())
-		{
-			$sManagerKey = empty($sForcedStorage) ? $sManagerType : $sManagerType.'/'.$sForcedStorage;
-			if (isset($this->aManagers[$sManagerKey]))
-			{
-				$oResult =& $this->aManagers[$sManagerKey];
-			}
-			else
-			{
-				$sClassName = 'CApi'.ucfirst($sManagerType).'Manager';
-				if (!class_exists($sClassName))
-				{
-					\Aurora\System\Api::Inc('Managers.'.$sManagerType.'.manager', false);
-				}
-				if (class_exists($sClassName))
-				{
-					$oMan = new $sClassName($this, $sForcedStorage);
-					$sCurrentStorageName = $oMan->GetStorageName();
-
-					$sManagerKey = empty($sCurrentStorageName) ? $sManagerType : $sManagerType.'/'.$sCurrentStorageName;
-					$this->aManagers[$sManagerKey] = $oMan;
-					$oResult =& $this->aManagers[$sManagerKey];
-				}
-			}
-		}
-
-		return $oResult;
 	}
 }

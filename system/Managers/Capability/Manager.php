@@ -25,14 +25,6 @@ namespace Aurora\System\Managers\Capability;
 class Manager extends \Aurora\System\Managers\AbstractManager
 {
 	/**
-	 * @param &$oManager
-	 */
-	public function __construct()
-	{
-		parent::__construct('Сapability');
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function isNotLite()

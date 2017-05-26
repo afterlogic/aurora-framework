@@ -34,16 +34,6 @@ abstract class AbstractManager
 	protected $oLastException;
 
 	/**
-	 * @var string
-	 */
-	protected $sManagerName;
-
-	/**
-	 * @var \Aurora\System\Managers\GlobalManager
-	 */
-	protected $oManager;
-
-	/**
 	 * @var \Aurora\System\Module\AbstractModule
 	 */
 	protected $oModule;	
@@ -53,29 +43,11 @@ abstract class AbstractManager
 	 */
 	protected $oSettings;
 
-	public function __construct($sManagerName, \Aurora\System\Module\AbstractModule $oModule = null)
+	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null)
 	{
-		$this->sManagerName = $sManagerName;
-		$this->oManager =& \Aurora\System\Api::$oManager;
 		$this->oSettings =& \Aurora\System\Api::$oManager->GetSettings();
 		$this->oLastException = null;
 		$this->oModule = $oModule;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetManagerName()
-	{
-		return $this->sManagerName;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetStorageName()
-	{
-		return '';
 	}
 
 	/**
@@ -85,14 +57,6 @@ abstract class AbstractManager
 	{
 		return $this->oModule;
 	}
-	
-	/**
-	 * @return &\Aurora\System\Settings
-	 */
-	public function GetGlobalManager()
-	{
-		return $this->oManager;
-	}
 
 	/**
 	 * @return &\Aurora\System\Settings
@@ -101,140 +65,10 @@ abstract class AbstractManager
 	{
 		return $this->oSettings;
 	}
-
-	/**
-	 * @param string $sInclude
-	 * @return void
-	 */
-	protected function inc($sInclude, $bDoExitOnError = true)
-	{
-		\Aurora\System\Api::ManagerInc(ucfirst($this->GetManagerName()), $sInclude, $bDoExitOnError);
-	}
-
-	/**
-	 * @param string $sFileName
-	 * @return void
-	 */
-	public function incClass($sFileName, $bDoExitOnError = true)
-	{
-		static $aCache = array();
-
-		$sFileFullPath = '';
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
-		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
-		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName]))
-		{
-			return true;
-		}
-		else
-		{
-			$sFileFullPath = $this->oModule->GetPath().'/managers/'.ucfirst($this->GetManagerName()).'/classes/'.$sFileName.'.php';
-			if (@file_exists($sFileFullPath))
-			{
-				$aCache[$sFileName] = true;
-				include_once $sFileFullPath;
-				return true;
-			}
-		}
-
-		if ($bDoExitOnError)
-		{
-			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
-		}
-		
-		return false;			
-	
-	}
-
-	/**
-	 * @param string $sInclude
-	 * @return bool
-	 */
-	public function incDefaultStorage()
-	{
-		return $this->incStorage('default');
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getPath()
-	{
-		return $this->oModule->GetPath().'/managers/'.ucfirst($this->GetManagerName());
-	}	
-	
-	/**
-	 * @param string $sInclude
-	 * @return bool
-	 */
-	public function incStorage($sFileName, $bDoExitOnError = true)
-	{
-		static $aCache = array();
-
-		$sFileFullPath = '';
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
-		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
-		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName]))
-		{
-			return true;
-		}
-		else
-		{
-			$sFileFullPath = $this->oModule->GetPath().'/managers/'.ucfirst($this->GetManagerName()).'/storages/'.$sFileName.'.php';
-			if (@file_exists($sFileFullPath))
-			{
-				$aCache[$sFileName] = true;
-				include_once $sFileFullPath;
-				return true;
-			}
-		}
-
-		if ($bDoExitOnError)
-		{
-			exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
-		}
-		
-		return false;		
-	}
 	
 	public function &GetConnection()
 	{
-		return $this->oManager->GetConnection();
-	}
-	
-	public function &GetCommandCreator(\Aurora\System\Managers\AbstractManagerStorage &$oStorage, $aCommandCreatorsNames)
-	{
-		$oSettings =& $oStorage->GetSettings();
-		$oCommandCreatorHelper =& $this->oManager->GetSqlHelper();
-
-		$oCommandCreator = null;
-
-		if ($oSettings)
-		{
-			$sDbType = $oSettings->GetConf('DBType');
-			$sDbPrefix = $oSettings->GetConf('DBPrefix');
-
-			if (isset($aCommandCreatorsNames[$sDbType]))
-			{
-				$oStorage->inc('command_creator');
-
-				$oCommandCreator =
-					new $aCommandCreatorsNames[$sDbType]($oCommandCreatorHelper, $sDbPrefix);
-			}
-		}
-
-		return $oCommandCreator;
-	}	
-
-	/**
-	 * @param string $sInclude
-	 * @return string
-	 */
-	public function path($sInclude)
-	{
-		return\Aurora\System\Api::ManagerPath(ucfirst($this->GetManagerName()), $sInclude);
+		return \Aurora\System\Api::$oManager->GetConnection();
 	}
 
 	/**

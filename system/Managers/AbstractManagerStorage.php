@@ -25,16 +25,6 @@ namespace Aurora\System\Managers;
 abstract class AbstractManagerStorage
 {
 	/**
-	 * @var string
-	 */
-	protected $sManagerName;
-
-	/**
-	 * @var string
-	 */
-	protected $sStorageName;
-	
-	/**
 	 * @var \Aurora\System\Managers\AbstractManager
 	 */
 	protected $oManager;
@@ -49,29 +39,11 @@ abstract class AbstractManagerStorage
 	 */
 	protected $oLastException;
 
-	public function __construct($sManagerName, $sStorageName, \Aurora\System\Managers\AbstractManager &$oManager)
+	public function __construct(\Aurora\System\Managers\AbstractManager &$oManager)
 	{
-		$this->sManagerName = $sManagerName;
-		$this->sStorageName = $sStorageName;
 		$this->oManager = $oManager;
 		$this->oSettings =& \Aurora\System\Api::GetSettings();
 		$this->oLastException = null;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetManagerName()
-	{
-		return $this->sManagerName;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetStorageName()
-	{
-		return $this->sStorageName;
 	}
 
 	/**
@@ -112,52 +84,6 @@ abstract class AbstractManagerStorage
 				throw new \Aurora\System\Exceptions\BaseException(\Aurora\System\Exceptions\Errs::Db_ExceptionError, $oException);
 			}
 		}
-	}
-	
-	public function getPath()
-	{
-		return $this->oManager->getPath().'/storages/'.$this->GetStorageName();
-	}
-
-	/**
-	 * @param string $sFileName
-	 * @return void
-	 */
-	public function inc($sFileName)
-	{
-		static $aCache = array();
-		
-		$sFileFullPath = '';
-		$sFileName = preg_replace('/[^a-z0-9\._\-]/', '', strtolower($sFileName));
-		$sFileName = preg_replace('/[\.]+/', '.', $sFileName);
-		$sFileName = str_replace('.', '/', $sFileName);
-		if (isset($aCache[$sFileName]))
-		{
-			return true;
-		}
-		else
-		{
-			$oModule = $this->oManager->GetModule();
-			if (isset($oModule))
-			{
-				$sFileFullPath = $this->getPath().'/'.$sFileName.'.php';
-				if (@file_exists($sFileFullPath))
-				{
-					$aCache[$sFileName] = true;
-					include_once $sFileFullPath;
-					return true;
-				}
-				
-			}
-			else
-			{
-				return\Aurora\System\Api::StorageInc(ucfirst($this->GetManagerName()), $this->GetStorageName(), $sFileName);
-			}
-		}
-
-		exit('FILE NOT EXISTS = '.$sFileFullPath.' File: '.__FILE__.' Line: '.__LINE__.' Method: '.__METHOD__);
-		
-		return false;		
 	}
 	
 	/**

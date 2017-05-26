@@ -79,7 +79,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	public function __construct()
 	{
 		$this->bCache = false;
-		parent::__construct('Integrator');
+		parent::__construct();
 	}
 
 	/**
