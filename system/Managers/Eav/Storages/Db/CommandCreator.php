@@ -386,6 +386,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				$sOffset = sprintf("OFFSET %d", $iOffset);
 			}
 		}		
+		
 		$sSql = sprintf("
 SELECT 
 	entities.id as entity_id, 
@@ -409,7 +410,7 @@ GROUP BY %s #5
 			$sViewAttributes, 
 			$this->prefix(),
 			$sJoinAttrbutes, 
-			$this->escapeString($sEntityType), 
+			$this->escapeString(\Aurora\System\Utils::getShortClassName($sEntityType)), 
 			$sResultWhere,
 			$sGroupByFields,
 			$sResultSort,

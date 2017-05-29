@@ -2170,6 +2170,15 @@ class Utils
 
 		return \MailSo\Base\Utils::ClearFileName(\MailSo\Base\Utils::Utf8Clear($sClearedFileName));
 	}	
+	
+	public static function getShortClassName($sClassName)
+	{
+		if ($mPos = \strrpos($sClassName, '\\')) 
+		{
+			return \substr($sClassName, $mPos + 1);
+		}
+		return $sClassName;
+	}
 }
 
 /**
