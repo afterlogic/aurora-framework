@@ -826,14 +826,13 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 //		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
 //		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
 		$oApiCapabilityManager = /* @var $oApiCapabilityManager \Aurora\System\Managers\Capability\Manager */\Aurora\System\Api::GetSystemManager('capability');
-		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
-			!$oApiCapabilityManager->isHelpdeskSupported())
+		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
 		{
 			return false;
 		}
 
 		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
-		if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount) &&
+		if ($oAccount && $oAccount->IdTenant === $iIdTenant &&
 			$oAccount->IncomingPassword === $sPassword)
 		{
 			$this->setAccountAsLoggedIn($oAccount);
@@ -878,8 +877,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
 //		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
 		$oApiCapabilityManager = /* @var $oApiCapabilityManager \Aurora\System\Managers\Capability\Manager */\Aurora\System\Api::GetSystemManager('capability');
-		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
-			!$oApiCapabilityManager->isHelpdeskSupported())
+		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
 		{
 			return $mResult;
 		}
@@ -888,7 +886,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		if (!$oUser)
 		{
 			$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
-			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
+			if ($oAccount && $oAccount->IdTenant === $iIdTenant)
 			{
 				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 			}
@@ -940,8 +938,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
 //		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
 		$oApiCapabilityManager = /* @var $oApiCapabilityManager \Aurora\System\Managers\Capability\Manager */\Aurora\System\Api::GetSystemManager('capability');
-		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager ||
-			!$oApiCapabilityManager->isHelpdeskSupported())
+		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
 		{
 			return $bResult;
 		}
@@ -950,7 +947,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		if (!$oUser)
 		{
 			$oAccount = $this->getAhdSocialUser($sTenantName, $sSocialId);
-			if ($oAccount && $oAccount->IdTenant === $iIdTenant && $oApiCapabilityManager->isHelpdeskSupported($oAccount))
+			if ($oAccount && $oAccount->IdTenant === $iIdTenant)
 			{
 				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
 			}

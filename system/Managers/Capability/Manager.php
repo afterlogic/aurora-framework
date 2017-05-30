@@ -42,36 +42,11 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	}
 
 	/**
-	 * @return bool
-	 */
-	public function isDavSupported()
-	{
-		return $this->isNotLite() && !!\Aurora\System\Api::GetModuleManager()->ModuleExists('Dav');
-	}
-
-	/**
 	 * @param CAccount $oAccount = null
 	 * 
 	 * @return bool
 	 */
 	public function isCalendarSupported($oAccount = null)
-	{
-		return true; // TODO
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isIosProfileSupported()
-	{
-		return $this->isNotLite();
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
-	public function isCalendarSharingSupported($oAccount = null)
 	{
 		return true; // TODO
 	}
@@ -90,15 +65,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 * @return bool
 	 */
 	public function isContactsSupported($oAccount = null)
-	{
-		return true; // TODO
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
-	public function isPersonalContactsSupported($oAccount = null)
 	{
 		return true; // TODO
 	}
@@ -142,63 +108,9 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 * @param CAccount $oAccount = null
 	 * @return bool
 	 */
-	public function isFilesSupported($oAccount = null)
-	{
-		return true; //TODO: sash
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
-	public function isTwilioSupported($oAccount = null)
-	{
-		$oTwilioModule = \Aurora\System\Api::GetModule('Twilio'); 
-		$bResult = $this->isCollaborationSupported() && $oTwilioModule && !$oTwilioModule->getConfig('Disabled', true);
-		if ($bResult && $oAccount)
-		{
-			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
-			if ($oTenant)
-			{
-				$bResult = $oTenant->isTwilioSupported();
-			}
-			
-			if ($bResult)
-			{
-				$bResult = $oAccount->User->getCapa(\Aurora\System\Enums\Capa::TWILIO);
-			}
-		}
-
-		return $bResult;
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
-	public function isHelpdeskSupported($oAccount = null)
-	{
-		$oHelpdeskModule = \Aurora\System\Api::GetModule('Helpdesk'); 
-		$bResult = $this->isCollaborationSupported() && $oHelpdeskModule && !$oHelpdeskModule->getConfig('Disabled', true);
-		if ($bResult && $oAccount)
-		{
-			$oTenant = $this->_getCachedTenant($oAccount->IdTenant);
-			if ($oTenant)
-			{
-				$bResult = $oTenant->isHelpdeskSupported();
-			}
-		}
-
-		return $bResult;
-	}
-
-	/**
-	 * @param CAccount $oAccount = null
-	 * @return bool
-	 */
 	public function isMobileSyncSupported($oAccount = null)
 	{
-		$bResult = $this->isNotLite() && $this->isDavSupported() &&
+		$bResult = $this->isNotLite() &&
 			($this->isContactsSupported() || $this->isGlobalContactsSupported() ||
 			$this->isCalendarSupported() || $this->isHelpdeskSupported());
 
@@ -212,7 +124,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		{
 			$bResult = $oAccount->User->getCapa(\Aurora\System\Enums\Capa::MOBILE_SYNC) &&
 				($this->isContactsSupported($oAccount) || $this->isGlobalContactsSupported($oAccount) ||
-				$this->isCalendarSupported($oAccount) || $this->isHelpdeskSupported($oAccount));
+				$this->isCalendarSupported($oAccount));
 		}
 
 		return $bResult;
@@ -224,7 +136,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 */
 	public function isOutlookSyncSupported($oAccount = null)
 	{
-		$bResult = $this->isNotLite() && $this->isDavSupported() && $this->isCollaborationSupported();
+		$bResult = $this->isNotLite() && $this->isCollaborationSupported();
 //		if ($bResult && $oAccount)
 //		{
 //			$bResult = $oAccount->User->GetCapa(\Aurora\System\Enums\Capa::OUTLOOK_SYNC);
@@ -232,73 +144,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 // TODO
 
 		return $bResult;
-	}
-
-	/**
-	 * @staticvar $sCache
-	 * @return string
-	 */
-	public function getSystemCapaAsString()
-	{
-		static $sCache = null;
-		if (null === $sCache)
-		{
-			$aCapa[] = \Aurora\System\Enums\Capa::WEBMAIL;
-
-			if ($this->isPersonalContactsSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::PAB;
-			}
-
-			if ($this->isGlobalContactsSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::GAB;
-			}
-
-			if ($this->isCalendarSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::CALENDAR;
-			}
-
-			if ($this->isCalendarAppointmentsSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::MEETINGS;
-			}
-
-			if ($this->isCalendarSharingSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::CAL_SHARING;
-			}
-
-			if ($this->isMobileSyncSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::MOBILE_SYNC;
-			}
-
-			if ($this->isOutlookSyncSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::OUTLOOK_SYNC;
-			}
-
-			if ($this->isFilesSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::FILES;
-			}
-
-			if ($this->isHelpdeskSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::HELPDESK;
-			}
-
-			if ($this->isTwilioSupported())
-			{
-				$aCapa[] = \Aurora\System\Enums\Capa::TWILIO;
-			}
-
-			$sCache = trim(strtoupper(implode(' ', $aCapa)));
-		}
-
-		return $sCache;
 	}
 
 	/**

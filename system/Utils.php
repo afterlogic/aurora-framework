@@ -1928,17 +1928,13 @@ class Utils
 	public static function GetHelpdeskAccount($iTenantID)
 	{
 		$oResult = null;
-		$oApiCapability /* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */ = \Aurora\System\Api::GetSystemManager('capability');
-		if ($oApiCapability->isHelpdeskSupported())
+		$oApiIntegrator /* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */ = \Aurora\System\Api::GetSystemManager('integrator');
+		$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
+		if (0 < $iIdHelpdeskUser)
 		{
-			$oApiIntegrator /* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */ = \Aurora\System\Api::GetSystemManager('integrator');
-			$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
-			if (0 < $iIdHelpdeskUser)
-			{
-				$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = \Aurora\System\Api::Manager('helpdesk');
-				$oHelpdeskUser = $oApiHelpdesk->getUserById($iTenantID, $iIdHelpdeskUser);
-				$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
-			}
+			$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = \Aurora\System\Api::Manager('helpdesk');
+			$oHelpdeskUser = $oApiHelpdesk->getUserById($iTenantID, $iIdHelpdeskUser);
+			$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
 		}
 
 		return $oResult;

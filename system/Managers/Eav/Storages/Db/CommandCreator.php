@@ -207,9 +207,12 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 							$mResultValue
 						);
 						$mResultValue = '(' . implode(', ', $mResultValue)  . ')';
+						$sValueFormat = "%s";
 					}
-					
-					$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
+					else
+					{
+						$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
+					}
 					$aResultOperations[] = sprintf(
 						"`attrs_%s`.`value` %s " . $sValueFormat, 
 						$sKey, 
