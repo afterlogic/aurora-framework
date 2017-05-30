@@ -825,7 +825,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 
 //		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
 //		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager \Aurora\System\Managers\Capability\Manager */\Aurora\System\Api::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
 		{
 			return false;
@@ -876,7 +875,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 
 		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
 //		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager \Aurora\System\Managers\Capability\Manager */\Aurora\System\Api::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
 		{
 			return $mResult;
@@ -937,7 +935,6 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 
 		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
 //		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
-		$oApiCapabilityManager = /* @var $oApiCapabilityManager \Aurora\System\Managers\Capability\Manager */\Aurora\System\Api::GetSystemManager('capability');
 		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
 		{
 			return $bResult;
@@ -1195,10 +1192,7 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 		
 		/*** temporary fix to the problems in mobile version in rtl mode ***/
 		
-		/* @var $oApiCapability \Aurora\System\Managers\Capability\Manager */
-		$oApiCapability = \Aurora\System\Api::GetSystemManager('capability');
-		
-		if (in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian')) && $oApiCapability && $oApiCapability->isNotLite() && 1 === $this->isMobile())
+		if (in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian')) /* && $oApiCapability->isNotLite()*/ && 1 === $this->isMobile()) // todo
 		{
 			$sLanguage = 'English';
 		}

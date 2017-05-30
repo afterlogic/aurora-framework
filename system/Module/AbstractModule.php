@@ -58,11 +58,6 @@ abstract class AbstractModule
 	 * @var array
 	 */
 	protected $aObjects = array();	
-
-	/**
-	 * @var \Aurora\System\Managers\Capability\Manager
-	 */
-	public $oApiCapabilityManager = null;
 	
 	/**
 	 * @var \MailSo\Base\Http
@@ -120,7 +115,6 @@ abstract class AbstractModule
 		$this->sName = $sName;
 		$this->sPath = $sPath.$sName;
 		$this->aParameters = array();
-		$this->oApiCapabilityManager = \Aurora\System\Api::GetSystemManager('capability');
 		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
 		
 		$this->aEntries = array();

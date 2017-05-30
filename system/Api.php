@@ -424,10 +424,7 @@ class Api
 		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
 		$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
 
-		/* @var $oApiCapability \Aurora\System\Managers\Capability\Manager */
-		$oApiCapability = new \Aurora\System\Managers\Capability\Manager();
-		
-		return (bool) $oApiIntegrator && $oApiCapability && $oApiCapability->isNotLite() && 1 === $oApiIntegrator->isMobile();
+		return (bool) $oApiIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oApiIntegrator->isMobile(); // todo
 	}
 	
 	/**
