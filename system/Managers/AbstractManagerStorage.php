@@ -39,7 +39,7 @@ abstract class AbstractManagerStorage
 	 */
 	protected $oLastException;
 
-	public function __construct(\Aurora\System\Managers\AbstractManager &$oManager)
+	public function __construct(AbstractManager &$oManager)
 	{
 		$this->oManager = $oManager;
 		$this->oSettings =& \Aurora\System\Api::GetSettings();

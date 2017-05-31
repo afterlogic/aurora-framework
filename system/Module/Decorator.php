@@ -48,7 +48,7 @@ class Decorator
 	public function __call($sMethodName, $aArguments) 
 	{
 		$mResult = false;
-		if ($this->oModule instanceof \Aurora\System\Module\AbstractModule)
+		if ($this->oModule instanceof AbstractModule)
 		{
 			$mResult = $this->oModule->CallMethod($sMethodName, $aArguments);
 		}

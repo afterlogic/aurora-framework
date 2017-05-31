@@ -49,9 +49,8 @@ class Manager extends \Aurora\System\Managers\AbstractManager
 	 */
 	public function UpdateLicenseKey($sKey)
 	{
-		$this->oSettings->SetConf('Common/LicenseKey', $sKey);
-//		return $this->oSettings->SaveToXml();
-		return true;
+		$this->oSettings->SetConf('LicenseKey', $sKey);
+		return $this->oSettings->Save();
 	}
 
 	/**

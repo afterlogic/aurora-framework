@@ -35,7 +35,7 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 	 * @param \Aurora\System\Managers\AbstractManagerStorage $oStorage
 	 * @return \Aurora\System\Managers\AbstractManager
 	 */
-	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null, \Aurora\System\Managers\AbstractManagerStorage $oStorage = null)
+	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null, AbstractManagerStorage $oStorage = null)
 	{
 		parent::__construct($oModule);
 		$this->oStorage = $oStorage;

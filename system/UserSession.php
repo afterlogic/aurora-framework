@@ -37,12 +37,12 @@ class UserSession
 	
 	public function __construct()
 	{
-		$this->Path = \Aurora\System\Api::DataPath().'/sessions';
+		$this->Path = Api::DataPath().'/sessions';
 		$oSession = \MailSo\Cache\CacheClient::NewInstance();
 		$oSessionDriver = \MailSo\Cache\Drivers\File::NewInstance($this->Path);
 		$oSessionDriver->bRootDir = true;
 		$oSession->SetDriver($oSessionDriver);
-		$oSession->SetCacheIndex(\Aurora\System\Api::Version());
+		$oSession->SetCacheIndex(Api::Version());
 
 		$this->Session = $oSession;
 	}
@@ -59,7 +59,7 @@ class UserSession
 			}
 			
 			$sItemPath = $this->Path . DIRECTORY_SEPARATOR . $sItemName;
-			$aItem = \Aurora\System\Api::DecodeKeyValues(file_get_contents($sItemPath));
+			$aItem = Api::DecodeKeyValues(file_get_contents($sItemPath));
 			if (is_array($aItem) && isset($aItem['token']))
 			{
 				$aResult[$sItemPath] = $aItem;
@@ -76,7 +76,7 @@ class UserSession
 			@mkdir($this->Path, 0777);
 		}
 		$aData['@time'] = $iTime;
-		$sAccountHashTable = \Aurora\System\Api::EncodeKeyValues($aData);
+		$sAccountHashTable = Api::EncodeKeyValues($aData);
 		$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
 		return $this->Session->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
 	}
@@ -91,7 +91,7 @@ class UserSession
 		}
 		if (!empty($sKey) && is_string($sKey)) 
 		{
-			$mResult = \Aurora\System\Api::DecodeKeyValues($sKey);
+			$mResult = Api::DecodeKeyValues($sKey);
 			if (isset($mResult['@time']) && time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)
 			{
 				$this->Delete($sAuthToken);

@@ -17,7 +17,7 @@
  * 
  */
 
-namespace Aurora\System;
+namespace Aurora\System\Utils;
 
 class Crypt {
 

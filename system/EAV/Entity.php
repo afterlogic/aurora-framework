@@ -82,7 +82,7 @@ class Entity
 	 */
 	public static function createInstance($sClassName, $sModuleName = '')
 	{
-		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new \Aurora\System\EAV\Entity($sModuleName);
+		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new Entity($sModuleName);
 	}
 
 	/**
@@ -256,7 +256,7 @@ class Entity
 	 */
 	public function __set($sAttribute, $mValue)
 	{
-		if (!($mValue instanceof \Aurora\System\EAV\Attribute))
+		if (!($mValue instanceof Attribute))
 		{
 			if ($this->issetAttribute($sAttribute))
 			{
@@ -270,7 +270,7 @@ class Entity
 			}
 			else
 			{
-				$mValue = \Aurora\System\EAV\Attribute::createInstance(
+				$mValue = Attribute::createInstance(
 					$sAttribute, 
 					$mValue, 
 					$this->getType($sAttribute), 
@@ -297,7 +297,7 @@ class Entity
 	{
 		$mValue = null;
 		$oAttribute = $this->getAttribute($sName);
-		if ($oAttribute instanceof \Aurora\System\EAV\Attribute)
+		if ($oAttribute instanceof Attribute)
 		{
 			$oAttribute->setType($oAttribute->Type);
 			if ($oAttribute->IsEncrypt)
@@ -312,7 +312,7 @@ class Entity
 			$aMapItem = $this->getMapItem($sName);
 			if (isset($aMapItem))
 			{
-				$oAttribute = \Aurora\System\EAV\Attribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
+				$oAttribute = Attribute::createInstance($sName, $aMapItem[1], $aMapItem[0]);
 				if ($oAttribute->IsEncrypt)
 				{
 					$oAttribute->Decrypt();
@@ -397,9 +397,9 @@ class Entity
 		return isset($this->aAttributes[$sAttributeName]);
 	}	
 
-	public function setAttribute(\Aurora\System\EAV\Attribute $oAttribute)
+	public function setAttribute(Attribute $oAttribute)
 	{
-		if (!in_array(strtolower($oAttribute->Name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
+		if (!in_array(strtolower($oAttribute->Name), Entity::$aReadOnlyAttributes))
 		{
 			$oAttribute->EntityId = $this->EntityId;
 			$this->aAttributes[$oAttribute->Name] = $oAttribute;

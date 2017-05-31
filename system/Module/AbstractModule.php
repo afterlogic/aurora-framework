@@ -847,7 +847,7 @@ abstract class AbstractModule
 				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, $bWebApi);
 
 				$bEventResult = $this->broadcastEvent(
-					$sMethod . \Aurora\System\Module\AbstractModule::$Delimiter . 'before', 
+					$sMethod . AbstractModule::$Delimiter . 'before', 
 					$aArguments, 
 					$mResult
 				);
@@ -897,7 +897,7 @@ abstract class AbstractModule
 				}
 				
 				$this->broadcastEvent(
-					$sMethod . \Aurora\System\Module\AbstractModule::$Delimiter . 'after', 
+					$sMethod . AbstractModule::$Delimiter . 'after', 
 					$aArguments, 
 					$mResult
 				);

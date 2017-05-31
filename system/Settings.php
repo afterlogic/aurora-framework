@@ -34,7 +34,7 @@ class Settings extends AbstractSettings
 			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
 			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
 			
-			'DBType' => new SettingsProperty('DBType', \Aurora\System\Enums\DbType::MySQL, 'spec', 'EDbType'),
+			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', 'EDbType'),
 			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
 			'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
 			'DBName' => new SettingsProperty('DBName', '', 'string'),
@@ -53,7 +53,7 @@ class Settings extends AbstractSettings
 
 			'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
 			'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
-			'LoggingLevel' => new SettingsProperty('LoggingLevel', \Aurora\System\Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
+			'LoggingLevel' => new SettingsProperty('LoggingLevel', Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
 			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
 			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
 			'LogPostView' => new SettingsProperty('LogPostView', '', 'string'),

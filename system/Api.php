@@ -164,7 +164,7 @@ class Api
 		{
 			self::InitSalt();
 
-			self::$oManager = new \Aurora\System\Managers\GlobalManager();
+			self::$oManager = new Managers\GlobalManager();
 			self::$bIsValid = self::validateApi();
 			self::GetModuleManager();
 			self::$aModuleDecorators = array();
@@ -201,8 +201,8 @@ class Api
 	 */
 	public static function EncodeKeyValues(array $aValues, $iSaltLen = 32)
 	{
-		return \Aurora\System\Utils::UrlSafeBase64Encode(
-			\Aurora\System\Crypt::XxteaEncrypt(\serialize($aValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
+		return Utils::UrlSafeBase64Encode(
+			Utils\Crypt::XxteaEncrypt(\serialize($aValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
 	}
 
 	/**
@@ -211,8 +211,8 @@ class Api
 	public static function DecodeKeyValues($sEncodedValues, $iSaltLen = 32)
 	{
 		$aResult = unserialize(
-			\Aurora\System\Crypt::XxteaDecrypt(
-				\Aurora\System\Utils::UrlSafeBase64Decode($sEncodedValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
+			Utils\Crypt::XxteaDecrypt(
+				Utils::UrlSafeBase64Decode($sEncodedValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
 
 		return \is_array($aResult) ? $aResult : array();
 	}
@@ -225,7 +225,7 @@ class Api
 	{
 		if (!isset(self::$oModuleManager))
 		{
-			self::$oModuleManager = \Aurora\System\Module\Manager::createInstance();
+			self::$oModuleManager = Module\Manager::createInstance();
 			self::$oModuleManager->init();
 		}
 		
@@ -279,9 +279,9 @@ class Api
 	 */
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{
-		list($sModuleName, $sMethodName) = explode(\Aurora\System\Module\AbstractModule::$Delimiter, $sMethodName);
+		list($sModuleName, $sMethodName) = explode(Module\AbstractModule::$Delimiter, $sMethodName);
 		$oModule = self::GetModule($sModuleName);
-		if ($oModule instanceof \Aurora\System\Module\AbstractModule)
+		if ($oModule instanceof Module\AbstractModule)
 		{
 			return $oModule->CallMethod($sModuleName, $sMethodName, $aParameters);
 		}
@@ -368,7 +368,7 @@ class Api
 		{
 			try
 			{
-				$oPdo = @new \PDO((\Aurora\System\Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
+				$oPdo = @new \PDO((Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
 					(empty($sDbHost) ? '' : ';host='.$sDbHost).
 					(empty($sDbPort) ? '' : ';port='.$sDbPort).
 					(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
@@ -380,14 +380,14 @@ class Api
 			}
 			catch (\Exception $oException)
 			{
-				self::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
-				self::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
+				self::Log($oException->getMessage(), Enums\LogLevel::Error);
+				self::Log($oException->getTraceAsString(), Enums\LogLevel::Error);
 				$oPdo = false;
 			}
 		} 
 		else 
 		{
-			self::Log('Class PDO dosn\'t exist', \Aurora\System\Enums\LogLevel::Error);
+			self::Log('Class PDO dosn\'t exist', Enums\LogLevel::Error);
 		}
 
 		if (false !== $oPdo) 
@@ -449,7 +449,7 @@ class Api
 	 * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Full
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogObject($mObject, $iLogLevel = \Aurora\System\Enums\LogLevel::Full, $sFilePrefix = '')
+	public static function LogObject($mObject, $iLogLevel = Enums\LogLevel::Full, $sFilePrefix = '')
 	{
 		self::Log(print_r($mObject, true), $iLogLevel, $sFilePrefix);
 	}
@@ -459,7 +459,7 @@ class Api
 	 * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogException($mObject, $iLogLevel = \Aurora\System\Enums\LogLevel::Error, $sFilePrefix = '')
+	public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = '')
 	{
 		$sDesc = (string) $mObject;
 		if (0 < \count(self::$aSecretWords)) 
@@ -548,7 +548,7 @@ class Api
 		
 		if (null === $iDbBacktraceCount) 
 		{
-			$oSettings =& \Aurora\System\Api::GetSettings();
+			$oSettings =& Api::GetSettings();
 			$iDbBacktraceCount = (int) $oSettings->GetConf('DBDebugBacktraceLimit', 0);
 			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
 			{
@@ -618,7 +618,7 @@ class Api
 	 * @param string $sFilePrefix = ''
 	 * @param bool $bIdDb = false
 	 */
-	public static function Log($sDesc, $iLogLevel = \Aurora\System\Enums\LogLevel::Full, $sFilePrefix = '')
+	public static function Log($sDesc, $iLogLevel = Enums\LogLevel::Full, $sFilePrefix = '')
 	{
 		static $bIsFirst = true;
 
@@ -635,7 +635,7 @@ class Api
 			$sDate = gmdate('H:i:s.').str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
 			if ($bIsFirst) 
 			{
-				$sUri = \Aurora\System\Utils::RequestUri();
+				$sUri = Utils::RequestUri();
 				$bIsFirst = false;
 				$sPost = (isset($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
 
@@ -776,7 +776,7 @@ class Api
 
 		if (!defined('API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
 		{
-			define('API_DATA_FOLDER', \Aurora\System\Utils::GetFullPath($dataPath,self::WebMailPath()));
+			define('API_DATA_FOLDER', Utils::GetFullPath($dataPath,self::WebMailPath()));
 		}
 
 		return defined('API_DATA_FOLDER') ? API_DATA_FOLDER : '';
@@ -790,7 +790,7 @@ class Api
 		$iResult = 1;
 
 		$oSettings = &self::GetSettings();
-		$iResult &= $oSettings && ($oSettings instanceof \Aurora\System\AbstractSettings);
+		$iResult &= $oSettings && ($oSettings instanceof AbstractSettings);
 
 		return (bool) $iResult;
 	}
@@ -1093,18 +1093,18 @@ class Api
 		if (!self::$__SKIP_CHECK_USER_ROLE__)
 		{
 			$oUser = self::getAuthenticatedUser();
-			$bUserRoleIsAtLeast = empty($oUser) && $iRole === \Aurora\System\Enums\UserRole::Anonymous ||
-				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::Customer && 
-					($iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::NormalUser && 
-					($iRole === \Aurora\System\Enums\UserRole::NormalUser || $iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::TenantAdmin && 
-					($iRole === \Aurora\System\Enums\UserRole::TenantAdmin || $iRole === \Aurora\System\Enums\UserRole::NormalUser || $iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::SuperAdmin && 
-					($iRole === \Aurora\System\Enums\UserRole::SuperAdmin || $iRole === \Aurora\System\Enums\UserRole::TenantAdmin || $iRole === \Aurora\System\Enums\UserRole::NormalUser || $iRole === \Aurora\System\Enums\UserRole::Customer || $iRole === \Aurora\System\Enums\UserRole::Anonymous);
+			$bUserRoleIsAtLeast = empty($oUser) && $iRole === Enums\UserRole::Anonymous ||
+				!empty($oUser) && $oUser->Role === Enums\UserRole::Customer && 
+					($iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === Enums\UserRole::NormalUser && 
+					($iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === Enums\UserRole::TenantAdmin && 
+					($iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
+				!empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin && 
+					($iRole === Enums\UserRole::SuperAdmin || $iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous);
 			if (!$bUserRoleIsAtLeast)
 			{
-				throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::AccessDenied);
+				throw new Exceptions\ApiException(Notifications::AccessDenied);
 			}
 		}
 	}
@@ -1134,8 +1134,8 @@ class Api
 		$sAuthToken = self::getAuthTokenFromHeaders();
 		if (!$sAuthToken)
 		{
-			$sAuthToken = isset($_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]) ? 
-					$_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY] : '';
+			$sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ? 
+					$_COOKIE[Application::AUTH_TOKEN_KEY] : '';
 		}
 		
 		return $sAuthToken;
@@ -1148,11 +1148,11 @@ class Api
 	public static function validateAuthToken()
 	{
 		$bResult = true;
-		if (isset($_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]))
+		if (isset($_COOKIE[Application::AUTH_TOKEN_KEY]))
 		{
 			$sAuthToken = self::getAuthTokenFromHeaders();
 
-			$bResult = ($sAuthToken === $_COOKIE[\Aurora\System\Application::AUTH_TOKEN_KEY]);
+			$bResult = ($sAuthToken === $_COOKIE[Application::AUTH_TOKEN_KEY]);
 		}
 		
 		return $bResult;
@@ -1280,7 +1280,7 @@ class Api
 		if (\is_numeric($iUserId))
 		{
 			$mUser = self::getUserById($iUserId);
-			if ($mUser instanceof \Aurora\System\EAV\Entity)
+			if ($mUser instanceof EAV\Entity)
 			{
 				$sUUID = $mUser->UUID;
 			}
@@ -1295,9 +1295,9 @@ class Api
 	
 	public static function getUserById($iUserId)
 	{
-		$oManagerApi = new \Aurora\System\Managers\EAV\Manager();
+		$oManagerApi = new Managers\EAV\Manager();
 		$mUser = $oManagerApi->getEntity($iUserId);
-		if (!($mUser instanceof \Aurora\System\EAV\Entity))
+		if (!($mUser instanceof EAV\Entity))
 		{
 			$mUser = false;
 		}

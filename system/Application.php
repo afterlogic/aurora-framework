@@ -39,10 +39,10 @@ class Application
 	 */
 	protected function __construct()
 	{
-		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
+		$this->oModuleManager = Api::GetModuleManager();
 
 //		\MailSo\Config::$FixIconvByMbstring = false;
-		\MailSo\Config::$SystemLogger = \Aurora\System\Api::SystemLogger();
+		\MailSo\Config::$SystemLogger = Api::SystemLogger();
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Application
 	
 	public static function Start($sDefaultEntry = 'default')
 	{
-		\Aurora\System\Api::Init();
+		Api::Init();
 		
 		self::RedirectToHttps();
 		self::GetVersion();
@@ -91,7 +91,7 @@ class Application
 	
 	public static function RedirectToHttps()
 	{
-		$oSettings =& \Aurora\System\Api::GetSettings();
+		$oSettings =& Api::GetSettings();
 		$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
 		
 		$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 

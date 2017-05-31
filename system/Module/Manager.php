@@ -133,7 +133,7 @@ class Manager
 			}
 			foreach ($this->_aModules as $oModule)
 			{
-				if ($oModule instanceof \Aurora\System\Module\AbstractModule)
+				if ($oModule instanceof AbstractModule)
 				{
 					$oModule->initialize();
 				}
@@ -226,7 +226,7 @@ class Manager
 		{		
 			$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
 			$oModule = new $sModuleClassName($sModuleName, $sModulePath);
-			if ($oModule instanceof \Aurora\System\Module\AbstractModule)
+			if ($oModule instanceof AbstractModule)
 			{
 				 $this->_aModules[\strtolower($sModuleName)] = $oModule;
 				 $mResult = $oModule;
@@ -235,7 +235,7 @@ class Manager
 
 		$this->broadcastEvent(
 			$sModuleName, 
-			'loadModule' . \Aurora\System\Module\AbstractModule::$Delimiter . 'after', 
+			'loadModule' . AbstractModule::$Delimiter . 'after', 
 			$aArgs,
 			$mResult
 		);
@@ -318,7 +318,7 @@ class Manager
 		{
 			if (\is_callable($fCallback))
 			{
-				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . \Aurora\System\Module\AbstractModule::$Delimiter . $fCallback[1]);
+				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]);
 				\Aurora\System\Api::Log('Arguments before subscription:');
 				\Aurora\System\Api::LogObject($aArguments);
 				
@@ -413,7 +413,7 @@ class Manager
 	{
 		foreach ($aMap as $sKey => $aValue)
 		{
-			$this->_aObjects[$sType][$sModule . \Aurora\System\Module\AbstractModule::$Delimiter . $sKey] = $aValue;
+			$this->_aObjects[$sType][$sModule . AbstractModule::$Delimiter . $sKey] = $aValue;
 		}
 	}	
 	
@@ -502,7 +502,7 @@ class Manager
 	public function GetModule($sModuleName)
 	{
 		$sModuleName = strtolower($sModuleName);
-		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof \Aurora\System\Module\AbstractModule) ? $this->_aModules[$sModuleName] : false;
+		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof AbstractModule) ? $this->_aModules[$sModuleName] : false;
 	}
 	
 	
@@ -538,7 +538,7 @@ class Manager
 		{
 			foreach ($this->_aModules as $oModule) 
 			{
-				if ($oModule instanceof \Aurora\System\Module\AbstractModule && $oModule->HasEntry($sEntryName)) 
+				if ($oModule instanceof AbstractModule && $oModule->HasEntry($sEntryName)) 
 				{
 					$aModules[] = $oModule;
 				}
@@ -576,7 +576,7 @@ class Manager
 		{
 			foreach ($aModules as $oModule)
 			{
-				if ($oModule instanceof \Aurora\System\Module\AbstractModule) 
+				if ($oModule instanceof AbstractModule) 
 				{
 					$mEntryResult = $oModule->RunEntry($sEntryName);
 					if ($mEntryResult !== 'null')

@@ -144,12 +144,12 @@ abstract class AbstractContainer
 			{
 				if ('password' === $aTypes[0])
 				{
-					$this->{$sKey} = \Aurora\System\Utils::DecryptValue($oRow->{$aTypes[1]});
+					$this->{$sKey} = Utils::DecryptValue($oRow->{$aTypes[1]});
 				}
 				else if ('datetime' === $aTypes[0])
 				{
 					$iDateTime = 0;
-					$aDateTime = \Aurora\System\Utils::DateParse($oRow->{$aTypes[1]});
+					$aDateTime = Utils::DateParse($oRow->{$aTypes[1]});
 					if (\is_array($aDateTime))
 					{
 						$iDateTime = \gmmktime($aDateTime['hour'], $aDateTime['minute'], $aDateTime['second'],
@@ -246,7 +246,7 @@ abstract class AbstractContainer
 	protected function getSessionUniqueKey()
 	{
 		$sUniqueKey = (0 === \strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
-		return \Aurora\System\AbstractContainer::SESSION_CONTAINER_PREFIX.$this->sParentClassName.$sUniqueKey;
+		return AbstractContainer::SESSION_CONTAINER_PREFIX.$this->sParentClassName.$sUniqueKey;
 	}
 
 	/**
@@ -324,7 +324,7 @@ abstract class AbstractContainer
 		}
 		else
 		{
-			throw new \Aurora\System\Exceptions\BaseException(\Aurora\System\Exceptions\Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
+			throw new Exceptions\BaseException(Exceptions\Errs::Container_UndefinedProperty, null, array('{{PropertyName}}' => $sKey));
 		}
 	}
 
@@ -344,7 +344,7 @@ abstract class AbstractContainer
 		}
 		else
 		{
-			throw new \Aurora\System\Exceptions\Exception('Undefined property '.$sKey);
+			throw new Exceptions\Exception('Undefined property '.$sKey);
 		}
 
 		return $mReturn;
@@ -378,7 +378,7 @@ abstract class AbstractContainer
 				if (\is_numeric($iSize) && (int) $iSize < \strlen($mValue))
 				{
 					// $mValue = substr($mValue, 0, (int) $iSize);
-					$mValue = \Aurora\System\Utils::Utf8Truncate($mValue, (int) $iSize);
+					$mValue = Utils::Utf8Truncate($mValue, (int) $iSize);
 				}
 			}
 		}
@@ -481,13 +481,13 @@ abstract class AbstractContainer
 		$aExclude = \is_array($aExclude) && 0 < \count($aExclude) ? $aExclude : array();
 
 		$sQueryParams = '';
-		$oSettings =& \Aurora\System\Api::GetSettings();
+		$oSettings =& Api::GetSettings();
 		$bUseLogQueryParams = (bool) $oSettings->GetConf('DBLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 
 		$aStaticMap = $oObject->getMap();
-		$aMap = \Aurora\System\AbstractContainer::DbWriteKeys($aStaticMap, false);
+		$aMap = AbstractContainer::DbWriteKeys($aStaticMap, false);
 
 		foreach ($aMap as $sDbKey => $sObjectKey)
 		{
@@ -501,7 +501,7 @@ abstract class AbstractContainer
 			{
 				if ('password' === $aStaticMap[$sObjectKey][0])
 				{
-					$mValue = \Aurora\System\Utils::EncryptValue($mValue);
+					$mValue = Utils::EncryptValue($mValue);
 				}
 				else if ('datetime' === $aStaticMap[$sObjectKey][0])
 				{
@@ -526,7 +526,7 @@ abstract class AbstractContainer
 
 		if ($bUseLogQueryParams)
 		{
-			\Aurora\System\Api::Log($sQueryParams);
+			Api::Log($sQueryParams);
 		}
 
 		return $aResult;
@@ -542,7 +542,7 @@ abstract class AbstractContainer
 	 */
 	public static function DbGetObjectSqlString($sWhere, $sTableName, $aStaticMap, $oHelper)
 	{
-		$aMap = \Aurora\System\AbstractContainer::DbReadKeys($aStaticMap);
+		$aMap = AbstractContainer::DbReadKeys($aStaticMap);
 		$aMap = \array_map(array($oHelper, 'EscapeColumn'), $aMap);
 
 		$sSql = 'SELECT %s FROM %s WHERE %s';
@@ -600,13 +600,13 @@ abstract class AbstractContainer
 		$aResult = array(false, false);
 
 		$sQueryParams = '';
-		$oSettings =& \Aurora\System\Api::GetSettings();
+		$oSettings =& Api::GetSettings();
 		$bUseLogQueryParams = (bool) $oSettings->GetConf('DBLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 
 		$aStaticMap = $oObject->getMap();
-		$aMap = \Aurora\System\AbstractContainer::DbWriteKeys($aStaticMap, true);
+		$aMap = AbstractContainer::DbWriteKeys($aStaticMap, true);
 
 		$aDbKeys = \array_keys($aMap);
 		$aResult[0] = \array_map(array(&$oHelper, 'EscapeColumn'), $aDbKeys);
@@ -619,7 +619,7 @@ abstract class AbstractContainer
 			{
 				if ('password' === $aStaticMap[$sKey][0])
 				{
-					$mValue = \Aurora\System\Utils::EncryptValue($mValue);
+					$mValue = Utils::EncryptValue($mValue);
 				}
 				else if ('datetime' === $aStaticMap[$sKey][0])
 				{
@@ -645,7 +645,7 @@ abstract class AbstractContainer
 
 		if ($bUseLogQueryParams)
 		{
-			\Aurora\System\Api::Log($sQueryParams);
+			Api::Log($sQueryParams);
 		}
 
 		return $aResult;

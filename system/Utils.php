@@ -274,7 +274,7 @@ class Utils
 				$sResult = @iconv($sFromEncoding, $sToEncoding.'//IGNORE', $sResult);
 				if (false === $sResult)
 				{
-					\Aurora\System\Api::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', \Aurora\System\Enums\LogLevel::Error);
+					Api::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', Enums\LogLevel::Error);
 					$sResult = $sString;
 				}
 				break;
@@ -558,7 +558,7 @@ class Utils
 	 */
 	public static function EncryptValue($sPassword)
 	{
-		$sPassword = \MailSo\Base\Crypt::XxteaEncrypt($sPassword, md5(\Aurora\System\Api::$sSalt));
+		$sPassword = \MailSo\Base\Crypt::XxteaEncrypt($sPassword, md5(Api::$sSalt));
 		return @trim(base64_encode($sPassword));
 	}
 
@@ -569,7 +569,7 @@ class Utils
 	public static function DecryptValue($sPassword)
 	{
 		$sPassword = @base64_decode(trim($sPassword));
-		return \MailSo\Base\Crypt::XxteaDecrypt($sPassword, md5(\Aurora\System\Api::$sSalt));
+		return \MailSo\Base\Crypt::XxteaDecrypt($sPassword, md5(Api::$sSalt));
 	}
 	
 	/**
@@ -785,8 +785,8 @@ class Utils
 			}
 			catch (Exception $oE)
 			{
-				\Aurora\System\Api::Log($sClientTimeZone);
-				\Aurora\System\Api::LogObject($oE, \Aurora\System\Enums\LogLevel::Warning);
+				Api::Log($sClientTimeZone);
+				Api::LogObject($oE, Enums\LogLevel::Warning);
 			}
 		}
 
@@ -1905,7 +1905,7 @@ class Utils
 		$oResult = null;
 //		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \Aurora\System\Api::GetSystemManager('users');
 		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = new \Aurora\Modules\Core\Managers\Integrator();
-		$iUserId = \Aurora\System\Api::getAuthenticatedUserId();
+		$iUserId = Api::getAuthenticatedUserId();
 		if (0 < $iUserId)
 		{
 			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
@@ -1932,7 +1932,7 @@ class Utils
 		$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
 		if (0 < $iIdHelpdeskUser)
 		{
-			$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = \Aurora\System\Api::Manager('helpdesk');
+			$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = Api::Manager('helpdesk');
 			$oHelpdeskUser = $oApiHelpdesk->getUserById($iTenantID, $iIdHelpdeskUser);
 			$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
 		}
@@ -2064,7 +2064,7 @@ class Utils
 	public static function OutputThumbnailResource($sUUID, $rResource, $sFileName)
 	{
 		$sMd5Hash = \md5(\rand(1000, 9999));
-		$oApiFileCache = new \Aurora\System\Managers\Filecache\Manager();
+		$oApiFileCache = new Managers\Filecache\Manager();
 				
 		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
 		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))
@@ -2115,7 +2115,7 @@ class Utils
 	{
 		$sMimeType = \MailSo\Base\Utils::MimeContentType($sFileName);
 
-		$sHash = \Aurora\System\Api::EncodeKeyValues(array(
+		$sHash = Api::EncodeKeyValues(array(
 			'TempFile' => true,
 			'UserId' => $iUserId,
 			'Name' => $sFileName,
@@ -2129,10 +2129,10 @@ class Utils
 				'url' => '?file-cache/' . $sHash
 			)
 		);
-		$oSettings =& \Aurora\System\Api::GetSettings();
+		$oSettings =& Api::GetSettings();
 		$iThumbnailLimit = ((int) $oSettings->GetConf('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
 		$bThumb = ($oSettings->GetConf('AllowThumbnail', true) &&
-				$iSize < $iThumbnailLimit && \Aurora\System\Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));
+				$iSize < $iThumbnailLimit && Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));
 		return array(
 			'Name' => $sFileName,
 			'FileName' => $sFileName,
