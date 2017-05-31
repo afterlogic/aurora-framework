@@ -1904,7 +1904,7 @@ class Utils
 	{
 		$oResult = null;
 //		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \Aurora\System\Api::GetSystemManager('users');
-		$oApiIntegrator /* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */ = \Aurora\System\Api::GetSystemManager('integrator');
+		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = new \Aurora\Modules\Core\Managers\Integrator();
 		$iUserId = \Aurora\System\Api::getAuthenticatedUserId();
 		if (0 < $iUserId)
 		{
@@ -1928,7 +1928,7 @@ class Utils
 	public static function GetHelpdeskAccount($iTenantID)
 	{
 		$oResult = null;
-		$oApiIntegrator /* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */ = \Aurora\System\Api::GetSystemManager('integrator');
+		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = new \Aurora\Modules\Core\Managers\Integrator();
 		$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
 		if (0 < $iIdHelpdeskUser)
 		{
@@ -2064,7 +2064,7 @@ class Utils
 	public static function OutputThumbnailResource($sUUID, $rResource, $sFileName)
 	{
 		$sMd5Hash = \md5(\rand(1000, 9999));
-		$oApiFileCache = \Aurora\System\Api::GetSystemManager('filecache');
+		$oApiFileCache = new \Aurora\System\Managers\Filecache\Manager();
 				
 		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
 		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))

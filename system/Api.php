@@ -218,24 +218,6 @@ class Api
 	}
 
 	/**
-	 * @param string $sManagerType
-	 * @param string $sForcedStorage = ''
-	 * 
-	 * @return \Aurora\System\Managers\AbstractManager
-	 */
-	public static function GetSystemManager($sManagerType, $sForcedStorage = 'db')
-	{
-		$oResult = null;
-		if (\Aurora\System\Api::IsValid())
-		{
-			$sClassName = '\\Aurora\\System\\Managers\\'.\ucfirst($sManagerType).'\\Manager';
-			$oResult = new $sClassName();
-		}
-
-		return $oResult;		
-	}
-
-	/**
 	 * 
 	 * @return \Aurora\System\Module\Manager
 	 */
@@ -421,8 +403,8 @@ class Api
 	 */
 	public static function IsMobileApplication()
 	{
-		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
-		$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
+		/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
+		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 
 		return (bool) $oApiIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oApiIntegrator->isMobile(); // todo
 	}
@@ -1204,8 +1186,8 @@ class Api
 				$sAuthToken = self::$aUserSession['AuthToken'];
 			}
 		}
-		/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
-		$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
+		/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
+		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 		if ($oApiIntegrator)
 		{
 			$mResult = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1225,8 +1207,8 @@ class Api
 			}
 			else
 			{
-				/* @var $oApiIntegrator \Aurora\System\Managers\Integrator\Manager */
-				$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
+				/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
+				$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 				if ($oApiIntegrator)
 				{
 					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1266,7 +1248,7 @@ class Api
 				$iUserId = self::$aUserSession['UserId'];
 			}
 
-			$oApiIntegrator = new \Aurora\System\Managers\Integrator\Manager();
+			$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 			if ($oApiIntegrator)
 			{
 				$oUser = $oApiIntegrator->getAuthenticatedUserByIdHelper($iUserId);
