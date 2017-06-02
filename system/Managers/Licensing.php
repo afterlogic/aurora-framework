@@ -17,12 +17,12 @@
  * 
  */
 
-namespace Aurora\System\Managers\Licensing;
+namespace Aurora\System\Managers;
 
 /**
  * @package Licensing
  */
-class Manager extends \Aurora\System\Managers\AbstractManager
+class Licensing extends \Aurora\System\Managers\AbstractManager
 {
 	/**
 	 * @param \Aurora\System\Managers\GlobalManager &$oManager

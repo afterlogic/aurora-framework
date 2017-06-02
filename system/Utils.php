@@ -2064,7 +2064,7 @@ class Utils
 	public static function OutputThumbnailResource($sUUID, $rResource, $sFileName)
 	{
 		$sMd5Hash = \md5(\rand(1000, 9999));
-		$oApiFileCache = new Managers\Filecache\Manager();
+		$oApiFileCache = new Managers\Filecache();
 				
 		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
 		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))

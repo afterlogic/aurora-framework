@@ -17,7 +17,7 @@
  * 
  */
 
-namespace Aurora\System\Managers\Eav;
+namespace Aurora\System\Managers;
 
 
 /**
@@ -25,7 +25,7 @@ namespace Aurora\System\Managers\Eav;
  *
  * @package EAV
  */
-class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
+class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
 	 * 
@@ -33,7 +33,7 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 */
 	public function __construct($sForcedStorage = 'db')
 	{
-		parent::__construct(null, new Storages\Db\Storage($this));
+		parent::__construct(null, new Eav\Storages\Db\Storage($this));
 	}
 
 	/**
@@ -334,7 +334,7 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 		try
 		{
 			$bResult = $this->oStorage->executeSqlFile(
-				dirname(__FILE__) . '/Storages/Db/Sql/create.sql'
+				dirname(__FILE__) . '/Eav/Storages/Db/Sql/create.sql'
 			);
 		}
 		catch (\Aurora\System\Exceptions\BaseException $oException)

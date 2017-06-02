@@ -1295,7 +1295,7 @@ class Api
 	
 	public static function getUserById($iUserId)
 	{
-		$oManagerApi = new Managers\EAV\Manager();
+		$oManagerApi = new Managers\Eav();
 		$mUser = $oManagerApi->getEntity($iUserId);
 		if (!($mUser instanceof EAV\Entity))
 		{

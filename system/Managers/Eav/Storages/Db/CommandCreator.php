@@ -445,7 +445,7 @@ SELECT count(entity_id) AS entities_count FROM (
 		{
 			foreach ($aAttributes as $oAttribute)
 			{
-				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !in_array(strtolower($oAttribute->Name), self::$aReadOnlyAttributes))
+				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !in_array(strtolower($oAttribute->Name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
 				{
 					if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
 					{

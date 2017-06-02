@@ -996,7 +996,7 @@ abstract class AbstractModule
 	 */
 	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
-		$oEavManager = new \Aurora\System\Managers\Eav\Manager();
+		$oEavManager = new \Aurora\System\Managers\Eav();
 		if ($oEavManager)
 		{
 			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';

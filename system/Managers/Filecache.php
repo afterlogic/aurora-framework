@@ -17,14 +17,14 @@
  * 
  */
 
-namespace Aurora\System\Managers\Filecache;
+namespace Aurora\System\Managers;
 
 /**
- * \Aurora\System\Managers\Filecache\Manager class summary
+ * \Aurora\System\Managers\Filecache class summary
  *
  * @package Filecache
  */
-class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
+class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
 	 * 
@@ -32,7 +32,7 @@ class Manager extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 */
 	public function __construct()
 	{
-		parent::__construct(null, new Storage($this));
+		parent::__construct(null, new Filecache\Storage($this));
 	}	
 	
 	/**
