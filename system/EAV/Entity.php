@@ -82,7 +82,7 @@ class Entity
 	 */
 	public static function createInstance($sClassName, $sModuleName = '')
 	{
-		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new Entity($sModuleName);
+		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new self($sModuleName);
 	}
 
 	/**
@@ -399,7 +399,7 @@ class Entity
 
 	public function setAttribute(Attribute $oAttribute)
 	{
-		if (!in_array(strtolower($oAttribute->Name), Entity::$aReadOnlyAttributes))
+		if (!in_array(strtolower($oAttribute->Name), self::$aReadOnlyAttributes))
 		{
 			$oAttribute->EntityId = $this->EntityId;
 			$this->aAttributes[$oAttribute->Name] = $oAttribute;
@@ -466,6 +466,8 @@ class Entity
 			'EntityId' => $this->EntityId,
 			'UUID' => $this->UUID
 		);
+		
+		var_dump($aResult);
 		foreach($this->aAttributes as $oAttribute)
 		{
 			$mValue = $oAttribute->Value;
