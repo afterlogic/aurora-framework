@@ -467,7 +467,6 @@ class Entity
 			'UUID' => $this->UUID
 		);
 		
-		var_dump($aResult);
 		foreach($this->aAttributes as $oAttribute)
 		{
 			$mValue = $oAttribute->Value;

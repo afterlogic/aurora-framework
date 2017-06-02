@@ -123,7 +123,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$oEntity->EntityId = (int) $oRow->entity_id;
 					$oEntity->UUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
 
-					if (isset($oRow->attr_name))
+					if (isset($oRow->attr_name) && !in_array(strtolower($oRow->attr_name), self::$aReadOnlyAttributes))
 					{
 						$mValue = $oRow->attr_value;
 						$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
@@ -256,19 +256,23 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 
 				foreach (get_object_vars($oRow) as $sKey => $mValue)
 				{
+					
 					if (strrpos($sKey, 'attr_', -5) !== false)
 					{
 						$sAttrKey = substr($sKey, 5);
-						$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
-						$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-							$sAttrKey, 
-							$mValue, 
-							$oEntity->getType($sAttrKey), 
-							$bIsEncrypted, 
-							$oEntity->EntityId
-						);
-						$oAttribute->Encrypted = $bIsEncrypted;
-						$oEntity->{$sAttrKey} = $oAttribute;
+						if (!in_array(strtolower($sAttrKey), self::$aReadOnlyAttributes))
+						{
+							$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
+							$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
+								$sAttrKey, 
+								$mValue, 
+								$oEntity->getType($sAttrKey), 
+								$bIsEncrypted, 
+								$oEntity->EntityId
+							);
+							$oAttribute->Encrypted = $bIsEncrypted;
+							$oEntity->{$sAttrKey} = $oAttribute;
+						}
 					}
 				}
 				$mResult[] = $oEntity;
