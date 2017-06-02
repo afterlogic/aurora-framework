@@ -69,7 +69,7 @@ class Entity
 	/**
 	 * @var array
 	 */
-	protected static $aReadOnlyAttributes = array(
+	public static $aReadOnlyAttributes = array(
 		'entityid', 
 		'uuid'
 	);
