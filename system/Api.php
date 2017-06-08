@@ -1145,7 +1145,7 @@ class Api
 	 * 
 	 * @return bool
 	 */
-	public static function validateAuthToken()
+	public static function validateCsrfToken()
 	{
 		$bResult = true;
 		if (isset($_COOKIE[Application::AUTH_TOKEN_KEY]))
@@ -1196,6 +1196,19 @@ class Api
 		return $mResult;
 	}
 
+	public static function validateAuthToken()
+	{
+		$bResult = false;
+		/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
+		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		if ($oApiIntegrator)
+		{
+			$bResult = $oApiIntegrator->validateAuthToken(self::getAuthToken());
+		}
+		
+		return $bResult;
+	}
+	
 	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;
