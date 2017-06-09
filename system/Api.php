@@ -199,20 +199,20 @@ class Api
 	/**
 	 * @return string
 	 */
-	public static function EncodeKeyValues(array $aValues, $iSaltLen = 32)
+	public static function EncodeKeyValues(array $aValues)
 	{
 		return Utils::UrlSafeBase64Encode(
-			Utils\Crypt::XxteaEncrypt(\serialize($aValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
+			Utils\Crypt::XxteaEncrypt(@\serialize($aValues), \md5(self::$sSalt)));
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function DecodeKeyValues($sEncodedValues, $iSaltLen = 32)
+	public static function DecodeKeyValues($sEncodedValues)
 	{
-		$aResult = unserialize(
+		$aResult = @\unserialize(
 			Utils\Crypt::XxteaDecrypt(
-				Utils::UrlSafeBase64Decode($sEncodedValues), \substr(\md5(self::$sSalt), 0, $iSaltLen)));
+				Utils::UrlSafeBase64Decode($sEncodedValues), \md5(self::$sSalt)));
 
 		return \is_array($aResult) ? $aResult : array();
 	}

@@ -298,7 +298,7 @@ class Utils
 	 */
 	public static function UrlSafeBase64Decode($sValue)
 	{
-		$sValue = \rtrim(\strtr($sValue, '-_.', '+/='), '=');
+		$sValue = \rtrim(\strtr($sValue, '-_', '+/'), '=');
 		return \MailSo\Base\Utils::Base64Decode(\str_pad($sValue, \strlen($sValue) + (\strlen($sValue) % 4), '=', STR_PAD_RIGHT));
 	}
 
