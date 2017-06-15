@@ -4,26 +4,30 @@
 	"config": {
 		"github-protocols": ["https"]
 	},
-	"repositories": [
-	],
+	"source": {
+		"type": "git",
+		"url": "https://github.com/vasil-sokolov/aurora-framework",
+		"reference": "master"
+	},
+	"dist": {
+		"type": "zip",
+		"url": "https://github.com/vasil-sokolov/aurora-framework/archive/master.zip",
+		"reference": "master"
+	},
+	"autoload": {
+		"psr-4" : {
+			"AuroraPlatform\\": "system/"
+		}
+	},
+	"type": "aurora-framework",
+	"scripts": {
+		"post-update-cmd": [
+			"AuroraPlatform\\Installer::postInstall"
+		]
+	},
 	"require": {
 		"masterexploder/PHPThumb": "^2.1",
 		"symfony/filesystem": "2.8",
-		"afterlogic/mailso": "^1.4",
-				
-		"oomphinc/composer-installers-extender": "^1.1",
-		"wikimedia/composer-merge-plugin": "^1.3"
-	},
-	"extra": {
-		"installer-types": ["aurora-module"],
-		"installer-paths": {
-			"special/package/": ["my/package"],
-			"modules/{$name}/": ["type:aurora-module"]
-		},
-		"merge-plugin": {
-			"include": [
-				"modules.json"
-			]
-		}
+		"afterlogic/mailso": "^1.4"
 	}
 }
