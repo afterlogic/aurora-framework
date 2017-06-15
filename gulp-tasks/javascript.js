@@ -202,7 +202,12 @@ gulp.task('js:build', function () {
 			'pathinfo': true
 		},
 		'plugins': [
-			new webpack.optimize.DedupePlugin()
+			new webpack.optimize.DedupePlugin(),
+			new webpack.ProvidePlugin({
+				$: "jquery",
+				jQuery: "jquery",
+				"window.jQuery": "jquery"
+			})
 		]
 	}, oWebPackConfig));
 });
@@ -216,7 +221,14 @@ gulp.task('js:watch', function () {
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.js',
 			'publicPath': sPath
-		}
+		},
+		'plugins': [
+			new webpack.ProvidePlugin({
+				$: "jquery",
+				jQuery: "jquery",
+				"window.jQuery": "jquery"
+			})
+		]
 	}, oWebPackConfig));
 });
 
@@ -229,6 +241,11 @@ gulp.task('js:min', function () {
 					drop_console: true,
 					unsafe: true
 				}
+			}),
+			new webpack.ProvidePlugin({
+				$: "jquery",
+				jQuery: "jquery",
+				"window.jQuery": "jquery"
 			})
 		],
 		'output':  {
