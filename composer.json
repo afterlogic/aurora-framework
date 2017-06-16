@@ -1,6 +1,8 @@
 {
 	"name": "afterlogic/aurora-framework",
-	"version": "0.4.0",
+	"type": "aurora-framework",
+	"version": "dev-master",
+	"description": "text",
 	"config": {
 		"github-protocols": ["https"]
 	},
@@ -12,22 +14,12 @@
 	"dist": {
 		"type": "zip",
 		"url": "https://github.com/vasil-sokolov/aurora-framework/archive/master.zip",
-		"reference": "master"
-	},
-	"autoload": {
-		"psr-4" : {
-			"AuroraPlatform\\": "system/"
-		}
-	},
-	"type": "aurora-framework",
-	"scripts": {
-		"post-update-cmd": [
-			"AuroraPlatform\\Installer::postInstall"
-		]
+		"reference": null,
+		"shasum": null
 	},
 	"require": {
 		"masterexploder/PHPThumb": "^2.1",
-		"symfony/filesystem": "2.8",
+		"symfony/filesystem": "^2.8",
 		"afterlogic/mailso": "^1.4"
 	}
 }
