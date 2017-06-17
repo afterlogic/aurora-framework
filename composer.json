@@ -1,7 +1,7 @@
 {
 	"name": "afterlogic/aurora-framework",
 	"type": "aurora-framework",
-	"version": "dev-master",
+	"version": "0.4.0",
 	"description": "text",
 	"config": {
 		"github-protocols": ["https"]
