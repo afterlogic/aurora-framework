@@ -23,14 +23,11 @@
     "knockout": "~3.3.0",
     "moment": "~2.10.6",
     "moment-timezone": "^0.5.13",
-    "owl.carousel": "^2.2.0",
     "underscore": "~1.8.3"
   },
   "browser": {
     "underscore": "./node_modules/underscore/underscore-min.js",
-    "knockout": "./node_modules/knockout/build/output/knockout-latest.js",
-    "fullcalendar": "./node_modules/fullcalendar/dist/fullcalendar.min.js",
-    "owl.carousel": "./node_modules/owl.carousel/dist/owl.carousel.js"
+    "knockout": "./node_modules/knockout/build/output/knockout-latest.js"
   },
   "devDependencies": {
     "css-loader": "^0.26.0",
