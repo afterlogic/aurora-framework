@@ -36,6 +36,8 @@ class Notifications
 	const UserNotAllowed = 110;
 	const UserAlreadyExists = 111;
 	const SystemNotConfigured = 112;
+	const ModuleNotFound = 113;
+	const MethodNotFound = 114;
 
 	const CanNotGetMessageList = 201;
 	const CanNotGetMessage = 202;
