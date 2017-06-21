@@ -188,14 +188,14 @@ gulp.task('styles', function () {
 	_.each(aThemes, function (sTheme) {
 		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
-//		BuildThemeCss(sTheme, true);
+		BuildThemeCss(sTheme, true);
 	});
 });
 
 gulp.task('cssonly', function () {
 	_.each(aThemes, function (sTheme) {
 		BuildThemeCss(sTheme, false);
-//		BuildThemeCss(sTheme, true);
+		BuildThemeCss(sTheme, true);
 	});
 });
 
