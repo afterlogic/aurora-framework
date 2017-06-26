@@ -309,7 +309,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 
 			$mSortAttributes = array_map(function($sValue){
 				return $this->escapeColumn(
-					sprintf("attr_%s", $sValue)
+					sprintf("`attr_%s`", $sValue)
 				);
 			}, $mSortAttributes);
 			$mSortAttributes[] = 'entity_id';
@@ -352,7 +352,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 							$sAttribute
 					);
 					$aResultMaxAttributes[$sAttribute] = sprintf(
-							"MAX(attr_%s) as attr_%s
+							"MAX(`attr_%s`) as `attr_%s`
 	", 
 							$sAttribute,
 							$sAttribute
