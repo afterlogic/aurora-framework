@@ -275,7 +275,7 @@ class MySql extends \Aurora\System\Db\Sql
 			$res = $this->oPDO->query($sQuery);
 			return $res;
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			\Aurora\System\Api::Log($sQuery);
 		}
