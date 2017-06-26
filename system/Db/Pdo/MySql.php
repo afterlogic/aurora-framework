@@ -277,6 +277,7 @@ class MySql extends \Aurora\System\Db\Sql
 		}
 		catch (Exception $e)
 		{
+			\Aurora\System\Api::Log($sQuery);
 		}
 
 		return false;
