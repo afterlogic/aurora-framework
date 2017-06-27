@@ -309,7 +309,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 
 			$mSortAttributes = array_map(function($sValue){
 				return $this->escapeColumn(
-					sprintf("`attr_%s`", $sValue)
+					sprintf("attr_%s", $sValue)
 				);
 			}, $mSortAttributes);
 			$mSortAttributes[] = 'entity_id';
@@ -457,6 +457,8 @@ SELECT count(entity_id) AS entities_count FROM (
 %s
 ) as tmp", $sSql);
 		}
+		
+		echo $sSql; exit;
 		
 		return $sSql;
 	}	
