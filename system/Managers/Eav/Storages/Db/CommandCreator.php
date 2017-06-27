@@ -458,8 +458,6 @@ SELECT count(entity_id) AS entities_count FROM (
 ) as tmp", $sSql);
 		}
 		
-		echo $sSql; exit;
-		
 		return $sSql;
 	}	
 	
