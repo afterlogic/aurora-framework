@@ -3,8 +3,7 @@
 update_push () 
 {
 	git add  -A
-	git commit -m '$3';
-	exit;
+	git commit -m $3
 	git pull
 
 	loginWithPassword=$1":"$2"@github.com"
@@ -27,7 +26,7 @@ clear
 
 echo "Aurora Core";
 
-update_push $login $password $commit
+update_push $login $password "'"$commit"'"
 
 echo "";
 
@@ -39,7 +38,7 @@ do
     
 	echo ${dir%/*}
 
-	update_push $login $password $commit
+	update_push $login $password "'"$commit"'"
 
 	echo "";
 
