@@ -3,7 +3,8 @@
 update_push () 
 {
 	git add  -A
-	git commit -m $3;
+	git commit -m '$3';
+	exit;
 	git pull
 
 	loginWithPassword=$1":"$2"@github.com"

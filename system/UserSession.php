@@ -94,6 +94,8 @@ class UserSession
 			$mResult = Api::DecodeKeyValues($sKey);
 			if (isset($mResult['@time']) && time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)
 			{
+				\Aurora\System\Api::Log('User session expired: ');
+				\Aurora\System\Api::LogObject($mResult);
 				$this->Delete($sAuthToken);
 				$mResult = false;
 			}
