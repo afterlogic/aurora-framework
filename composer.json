@@ -1,22 +1,7 @@
 {
 	"name": "afterlogic/aurora-framework",
 	"type": "aurora-framework",
-	"version": "0.4.0",
 	"description": "text",
-	"config": {
-		"github-protocols": ["https"]
-	},
-	"source": {
-		"type": "git",
-		"url": "https://github.com/vasil-sokolov/aurora-framework",
-		"reference": "master"
-	},
-	"dist": {
-		"type": "zip",
-		"url": "https://github.com/vasil-sokolov/aurora-framework/archive/master.zip",
-		"reference": null,
-		"shasum": null
-	},
 	"require": {
 		"masterexploder/PHPThumb": "^2.1",
 		"symfony/filesystem": "^2.8",
