@@ -214,7 +214,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 						$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
 					}
 					$aResultOperations[] = sprintf(
-						"`attrs_%s`.`value` %s " . $sValueFormat, 
+						"`attr_%s` %s " . $sValueFormat, 
 						$sKey, 
 						$mResultOperator, 
 						($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
@@ -269,12 +269,11 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mSortAttributes = array(), 
 			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
 	{
-		$sCount = "";
 		$sViewAttributes = "";
+		$sMaxViewAttributes = "";
 		$sJoinAttrbutes = "";
 		$sResultWhere = "";
 		$sResultSort = "";
-		$sGroupByFields = "entity_id, entity_uuid, entity_type, entity_module";
 		$sLimit = "";
 		$sOffset = "";
 		
@@ -282,18 +281,16 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array();
+			$aResultMaxAttributes = array();
 			$aJoinAttributes = array();
 			
-			if (!$bCount)
+			if ($aViewAttributes === null)
 			{
-				if ($aViewAttributes === null)
-				{
-					$aViewAttributes = array();
-				}
-				if (count($aViewAttributes) === 0)
-				{
-					$aViewAttributes = $oEntity->getAttributesKeys();
-				}
+				$aViewAttributes = array();
+			}
+			if (count($aViewAttributes) === 0)
+			{
+				$aViewAttributes = $oEntity->getAttributesKeys();
 			}
 
 			if (!is_array($mSortAttributes))
@@ -330,38 +327,65 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			}
 			$aViewAttributes = array_unique(array_merge($aViewAttributes, $aWhereAttrs));
 
+			$aViewAttributesByTypes = [];
 			foreach ($aViewAttributes as $sAttribute)
 			{
 				$sType = $oEntity->getType($sAttribute);
-
-				$aResultViewAttributes[$sAttribute] = sprintf(
-						"
-	`attrs_%s`.`value` as `attr_%s`", 
-						$sAttribute, 
-						$sAttribute
-				);
-				if (!$bCount)
+				$aViewAttributesByTypes[$sType][] = $sAttribute;
+			}
+			
+			foreach ($aViewAttributesByTypes as $sType => $aAttributes)
+			{
+				$aJoinAttributesTmp = array();
+				foreach ($aAttributes as $sAttribute)
 				{
-					$sGroupByFields .= ', ' . sprintf("`attr_%s`", $sAttribute);
+					$aResultViewAttributes[$sAttribute] = sprintf(
+							"				
+			CASE WHEN %seav_attributes_%s.name = '%s'
+				THEN %seav_attributes_%s.`value` 
+			END as `attr_%s`", 
+							$this->prefix(),
+							$sType,
+							$sAttribute,
+							$this->prefix(),
+							$sType,
+							$sAttribute
+					);
+					$aResultMaxAttributes[$sAttribute] = sprintf(
+							"MAX(`attr_%s`) as `attr_%s`
+	", 
+							$sAttribute,
+							$sAttribute
+					);
+					
+					$aJoinAttributesTmp[$sAttribute] = sprintf(
+							"%seav_attributes_%s.name = '%s'",
+							$this->prefix(),
+							$sType,
+							$sAttribute
+					);
+					
 				}
-				$aJoinAttributes[$sAttribute] = sprintf(
+				
+				$sJoinAttributesTmp = implode(' OR ', $aJoinAttributesTmp);
+				
+				$aJoinAttributes[$sType] = sprintf(
 						"
-	LEFT JOIN %seav_attributes_%s as `attrs_%s` 
-		ON `attrs_%s`.name = %s AND `attrs_%s`.id_entity = entities.id",
-					$this->prefix(),
-					$sType, 
-					$sAttribute, 
-					$sAttribute, 
-					$this->escapeString($sAttribute), 
-					$sAttribute
+			LEFT JOIN %seav_attributes_%s
+			  ON (%s)
+				AND %seav_attributes_%s.id_entity = entities.id",
+						$this->prefix(),
+						$sType,
+						$sJoinAttributesTmp,
+						$this->prefix(),
+						$sType
 				);
 			}
 			if (0 < count($aViewAttributes))
 			{
-				if (!$bCount)
-				{
-					$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
-				}
+				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
+
+				$sMaxViewAttributes = ', ' . implode(', ', $aResultMaxAttributes);
 				$sJoinAttrbutes = implode(' ', $aJoinAttributes);
 			}
 			if (0 < count($aIdsOrUUIDs))
@@ -391,31 +415,36 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		}		
 		
 		$sSql = sprintf("
-SELECT 
-	entities.id as entity_id, 
-	entities.uuid as entity_uuid, 
-	entities.entity_type, 
-	entities.module_name as entity_module
-	# fields
+SELECT * FROM (SELECT entity_id, entity_uuid, entity_type, entity_module
 	%s #1
-	# ------
-FROM %seav_entities as entities
-	# fields
-	%s #2
-	# ------
+	FROM (SELECT 
+			entities.id as entity_id, 
+			entities.uuid as entity_uuid, 
+			entities.entity_type, 
+			entities.module_name as entity_module
+			# fields
+			%s #2
+			# ------
+		FROM %seav_entities as entities #3
+			# fields
+			%s #4
+			# ------
 
-WHERE entities.entity_type = %s #3 ENTITY TYPE
-	%s #4 WHERE
-GROUP BY %s #5 
-%s #6 SORT
-%s #7 LIMIT
-%s #8 OFFSET", 
+		WHERE entities.entity_type = %s #5 ENTITY TYPE
+		) AS S1
+		GROUP BY entity_id 
+    ) as S2
+    WHERE 			
+		1 = 1 %s #6 WHERE
+	%s #7 SORT
+	%s #8 LIMIT
+	%s #9 OFFSET", 
+			$sMaxViewAttributes,
 			$sViewAttributes, 
 			$this->prefix(),
 			$sJoinAttrbutes, 
 			$this->escapeString(\Aurora\System\Utils::getShortClassName($sEntityType)), 
 			$sResultWhere,
-			$sGroupByFields,
 			$sResultSort,
 			$sLimit,
 			$sOffset
@@ -428,6 +457,7 @@ SELECT count(entity_id) AS entities_count FROM (
 %s
 ) as tmp", $sSql);
 		}
+		
 		return $sSql;
 	}	
 	

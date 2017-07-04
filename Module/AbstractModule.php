@@ -909,6 +909,12 @@ abstract class AbstractModule
 					$mResult
 				);
 			}
+			else
+			{
+				throw new \Aurora\System\Exceptions\ApiException(
+					\Aurora\System\Notifications::MethodNotFound
+				);
+			}
 		}
 		catch (\Exception $oException)
 		{
