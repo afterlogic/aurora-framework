@@ -3,9 +3,7 @@
 	"type": "aurora-framework",
 	"description": "text",
 	"autoload": {
-		"psr-4" : {
-			"Aurora\\": "/"
-		}
+		"classmap": ["/", "Installer.php"]
 	},
 	"require": {
 		"masterexploder/PHPThumb": "^2.1",
