@@ -8,11 +8,18 @@ class Installer
 {
     public static function postUpdate(Event $event)
     {
+		$sConfigFilename = 'pre-config.json';
+	    	$sBaseDir = dirname(__File__);
+	    	$sMessage = "Configuration was updated successfully";
+	    	
+	    	$oExtra = $event->getComposer()->getPackage()->getExtra();
+		if ($oExtra && isset($oExtra['aurora-installer-pre-config']))
+		{
+			$sConfigFilename = $oExtra['aurora-installer-pre-config'];
+		}
 		
-		$sBaseDir = dirname(__File__);
-		$sConfigPath = dirname($sBaseDir) . '/pre-config.json';
-		$sMessage = "Configuration was updated successfully";
-		
+		$sConfigPath = dirname($sBaseDir) . '/' . $sConfigFilename;
+				
 		if (file_exists($sConfigPath))
 		{
 			$sPreConfig = file_get_contents($sConfigPath);
