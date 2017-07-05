@@ -2,6 +2,11 @@
 	"name": "afterlogic/aurora-framework",
 	"type": "aurora-framework",
 	"description": "text",
+	"autoload": {
+		"psr-4" : {
+			"Aurora\\": "/"
+		}
+	},
 	"require": {
 		"masterexploder/PHPThumb": "^2.1",
 		"symfony/filesystem": "^2.8",
