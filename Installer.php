@@ -8,14 +8,17 @@ class Installer
 {
     public static function postUpdate(Event $event)
     {
-	    var_dump($event->getName());
-		var_dump($event->getArguments());
-	    
 		$sConfigFilename = 'pre-config.json';
-	    	$sBaseDir = dirname(__File__);
-	    	$sMessage = "Configuration was updated successfully";
-	    	
-	    	$oExtra = $event->getComposer()->getPackage()->getExtra();
+		$sBaseDir = dirname(__File__);
+		$sMessage = "Configuration was updated successfully";
+	    
+		if (file_exists(dirname($sBaseDir)."/composer.lock"))
+		{
+			return;
+		}
+			
+	    $oExtra = $event->getComposer()->getPackage()->getExtra();
+		
 		if ($oExtra && isset($oExtra['aurora-installer-pre-config']))
 		{
 			$sConfigFilename = $oExtra['aurora-installer-pre-config'];
