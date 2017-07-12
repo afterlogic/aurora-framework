@@ -1737,13 +1737,13 @@ class Utils
 		$files = array();
 
 		// Create recursive dir iterator which skips dot folders
-		$oDirIterator = new RecursiveDirectoryIterator($sPath, 
-				FilesystemIterator::SKIP_DOTS |
-				FilesystemIterator::UNIX_PATHS
+		$oDirIterator = new \RecursiveDirectoryIterator($sPath, 
+				\FilesystemIterator::SKIP_DOTS |
+				\FilesystemIterator::UNIX_PATHS
 		);		
 
-		$oIterators = new RecursiveIteratorIterator($oDirIterator,
-				RecursiveIteratorIterator::SELF_FIRST
+		$oIterators = new \RecursiveIteratorIterator($oDirIterator,
+				\RecursiveIteratorIterator::SELF_FIRST
 		);
 		
 		foreach($oIterators as $oIterator)
