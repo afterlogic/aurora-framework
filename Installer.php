@@ -8,6 +8,9 @@ class Installer
 {
     public static function postUpdate(Event $event)
     {
+	    var_dump($event->getName());
+		var_dump($event->getArguments());
+	    
 		$sConfigFilename = 'pre-config.json';
 	    	$sBaseDir = dirname(__File__);
 	    	$sMessage = "Configuration was updated successfully";
