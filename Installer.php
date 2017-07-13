@@ -12,11 +12,12 @@ class Installer
 		$sBaseDir = dirname(__File__);
 		$sMessage = "Configuration was updated successfully";
 	    
-		if (file_exists(dirname($sBaseDir)."/composer.lock"))
+		//Checking that configuration files already exist
+		if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0)
 		{
 			return;
 		}
-			
+		
 	    $oExtra = $event->getComposer()->getPackage()->getExtra();
 		
 		if ($oExtra && isset($oExtra['aurora-installer-pre-config']))
