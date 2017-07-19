@@ -32,11 +32,6 @@ class Session
 	/**
 	 * @var bool
 	 */
-	static $bIsMagicQuotesOn = false;
-
-	/**
-	 * @var bool
-	 */
 	static $bFirstStarted = false;
 
 	/**
@@ -100,7 +95,7 @@ class Session
 			self::Start();
 		}
 
-		return (isset($_SESSION[$sKey])) ? self::stripSlashesValue($_SESSION[$sKey]) : $nmDefault;
+		return (isset($_SESSION[$sKey])) ? $_SESSION[$sKey] : $nmDefault;
 	}
 
 	/**
@@ -188,39 +183,6 @@ class Session
 			@session_write_close();
 		}
 	}
-
-	/**
-	 * @param mixed $mValue
-	 * @return mixed
-	 */
-	private static function stripSlashesValue($mValue)
-	{
-		if (!self::$bIsMagicQuotesOn)
-		{
-			return $mValue;
-		}
-
-		$sType = gettype($mValue);
-		if ($sType === 'string')
-		{
-			return stripslashes($mValue);
-		}
-		else if ($sType === 'array')
-		{
-			$aReturnValue = array();
-			$mValueKeys = array_keys($mValue);
-			foreach($mValueKeys as $sKey)
-			{
-				$aReturnValue[$sKey] = self::stripSlashesValue($mValue[$sKey]);
-			}
-			return $aReturnValue;
-		}
-		else
-		{
-			return $mValue;
-		}
-	}
 }
 
-self::$bIsMagicQuotesOn = (bool) ini_get('magic_quotes_gpc');
 self::$sSessionName = API_SESSION_WEBMAIL_NAME;

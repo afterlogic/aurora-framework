@@ -83,11 +83,11 @@ class Manager
 			\Aurora\System\Api::authorise();
 			
 			$oCoreModule->initialize();
-			$sTenant = $oCoreModule->GetTenantName();
+			$sTenant = \trim($oCoreModule->GetTenantName());
 			$aModulePath = array(
 				$sModulesPath
 			);
-			if (!empty(\trim($sTenant)))
+			if (!empty($sTenant))
 			{
 				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
 				\array_unshift($aModulePath, $sTenantModulesPath);

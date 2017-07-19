@@ -1005,8 +1005,8 @@ abstract class AbstractModule
 		$oEavManager = new \Aurora\System\Managers\Eav();
 		if ($oEavManager)
 		{
-			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
-			$aDisabledModules =  !empty(\trim($sDisabledModules)) ? array($sDisabledModules) : array();
+			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? \trim($oEntity->{'@DisabledModules'}) : '';
+			$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
 			if($i = \substr_count($sDisabledModules, "|"))
 			{
 				$aDisabledModules = \explode("|", $sDisabledModules);
@@ -1037,8 +1037,8 @@ abstract class AbstractModule
 	 */
 	public function isEnabledForEntity(&$oEntity)
 	{
-		$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? $oEntity->{'@DisabledModules'} : '';
-		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+		$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? \trim($oEntity->{'@DisabledModules'}) : '';
+		$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
 		if (\substr_count($sDisabledModules, "|") > 0)
 		{
 			$aDisabledModules = \explode("|", $sDisabledModules);

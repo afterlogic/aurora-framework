@@ -130,8 +130,8 @@ class Entity
 	
 	public function isModuleDisabled($sModuleName)
 	{
-		$sDisabledModules = isset($this->{'@DisabledModules'}) ? $this->{'@DisabledModules'} : '';
-		$aDisabledModules =  !empty(trim($sDisabledModules)) ? array($sDisabledModules) : array();
+		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
+		$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
 		if (substr_count($sDisabledModules, "|") > 0)
 		{
 			$aDisabledModules = explode("|", $sDisabledModules);
