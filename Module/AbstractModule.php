@@ -948,22 +948,13 @@ abstract class AbstractModule
 	/**
 	 * @param string $sData
 	 * @param array $aParams = null
+	 * @param int $iPluralCount = null
 	 *
 	 * @return string
 	 */
-	public function i18N($sData, $iUserId = null, $aParams = null, $iPluralCount = null)
+	public function i18N($sData, $aParams = null, $iPluralCount = null)
 	{
-		$oModuleManager = \Aurora\System\Api::GetModuleManager();
-		$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
-		$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
-		if ($oCoreDecorator && 0 < $iUserId)
-		{
-			$oUser = $oCoreDecorator->GetUser($iUserId);
-			if ($oUser)
-			{
-				$sLanguage = $oUser->Language;
-			}
-		}
+		$sLanguage = \Aurora\System\Api::GetLanguage();
 		
 		$aLang = null;
 		if (isset(\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage])) 

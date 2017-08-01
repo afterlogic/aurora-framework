@@ -884,6 +884,29 @@ class Api
 		return $sResult;
 	}
 
+	public static function GetLanguage($bWithoutUser = false)
+	{
+		$sLanguage = 'English';
+		$oUser = $bWithoutUser ? null : self::getAuthenticatedUser();
+		if (!$oUser && isset($_COOKIE['aurora-lang-on-login']))
+		{
+			$sLanguage = $_COOKIE['aurora-lang-on-login'];
+		}
+		else if ($oUser && !$bWithoutUser)
+		{
+			$sLanguage = $oUser->Language;
+		}
+		else
+		{
+			$oModuleManager = self::GetModuleManager();
+			if ($oModuleManager)
+			{
+				$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language') || $sLanguage;
+			}
+		}
+		return $sLanguage;
+	}
+	
 	/**
 	 * @param string $sData
 	 * @param CAccount $oAccount
@@ -893,9 +916,7 @@ class Api
 	 */
 	public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
 	{
-		$oUser = self::getAuthenticatedUser();
-		$oModuleManager = self::GetModuleManager();
-		$sLanguage = $oUser ? $oUser->Language : $oModuleManager->getModuleConfigValue('Core', 'Language');
+		$sLanguage = self::GetLanguage();
 		
 		$aLang = null;
 		if (isset(self::$aClientI18N[$sLanguage])) 
