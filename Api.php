@@ -901,10 +901,58 @@ class Api
 			$oModuleManager = self::GetModuleManager();
 			if ($oModuleManager)
 			{
-				$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
+				if ($oModuleManager->getModuleConfigValue('Core', 'AutodetectLanguage', true))
+				{
+					$sLanguage = self::getBrowserLanguage();
+				}
+				else
+				{
+					$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
+				}
 			}
 		}
 		return $sLanguage;
+	}
+	
+	protected static function getBrowserLanguage()
+	{
+		$aLanguages = array(
+			'ar-dz' => 'Arabic', 'ar-bh' => 'Arabic', 'ar-eg' => 'Arabic', 'ar-iq' => 'Arabic', 'ar-jo' => 'Arabic', 'ar-kw' => 'Arabic',
+			'ar-lb' => 'Arabic', 'ar-ly' => 'Arabic', 'ar-ma' => 'Arabic', 'ar-om' => 'Arabic', 'ar-qa' => 'Arabic', 'ar-sa' => 'Arabic',
+			'ar-sy' => 'Arabic', 'ar-tn' => 'Arabic', 'ar-ae' => 'Arabic', 'ar-ye' => 'Arabic', 'ar' => 'Arabic',
+			'bg' => 'Bulgarian',
+			'zh-cn' => 'Chinese-Simplified', 'zh-hk' => 'Chinese-Simplified', 'zh-mo' => 'Chinese-Simplified', 'zh-sg' => 'Chinese-Simplified',
+			'zh-tw' => 'Chinese-Simplified', 'zh' => 'Chinese-Simplified',
+			'cs' => 'Czech',
+			'da' => 'Danish',
+			'nl-be' => 'Dutch', 'nl' => 'Dutch',
+			'en-au' => 'English', 'en-bz' => 'English ', 'en-ca' => 'English', 'en-ie' => 'English', 'en-jm' => 'English',
+			'en-nz' => 'English', 'en-ph' => 'English', 'en-za' => 'English', 'en-tt' => 'English', 'en-gb' => 'English',
+			'en-us' => 'English', 'en-zw' => 'English', 'en' => 'English', 'us' => 'English',
+			'et' => 'Estonian', 'fi' => 'Finnish',
+			'fr-be' => 'French', 'fr-ca' => 'French', 'fr-lu' => 'French', 'fr-mc' => 'French', 'fr-ch' => 'French', 'fr' => 'French',
+			'de-at' => 'German', 'de-li' => 'German', 'de-lu' => 'German', 'de-ch' => 'German', 'de' => 'German',
+			'el' => 'Greek', 'he' => 'Hebrew', 'hu' => 'Hungarian', 'it-ch' => 'Italian', 'it' => 'Italian',
+			'ja' => 'Japanese', 'ko' => 'Korean', 'lv' => 'Latvian', 'lt' => 'Lithuanian',
+			'nb-no' => 'Norwegian', 'nn-no' => 'Norwegian', 'no' => 'Norwegian', 'pl' => 'Polish',
+			'pt-br' => 'Portuguese-Brazil', 'pt' => 'Portuguese-Portuguese', 'pt-pt' => 'Portuguese-Portuguese',
+			'ro-md' => 'Romanian', 'ro' => 'Romanian',
+			'ru-md' => 'Russian', 'ru' => 'Russian', 'sr' => 'Serbian',
+			'es-ar' => 'Spanish', 'es-bo' => 'Spanish', 'es-cl' => 'Spanish', 'es-co' => 'Spanish', 'es-cr' => 'Spanish',
+			'es-do' => 'Spanish', 'es-ec' => 'Spanish', 'es-sv' => 'Spanish', 'es-gt' => 'Spanish', 'es-hn' => 'Spanish)',
+			'es-mx' => 'Spanish', 'es-ni' => 'Spanish', 'es-pa' => 'Spanish', 'es-py' => 'Spanish', 'es-pe' => 'Spanish',
+			'es-pr' => 'Spanish', 'es-us' => 'Spanish ', 'es-uy' => 'Spanish', 'es-ve' => 'Spanish', 'es' => 'Spanish',
+			'sv-fi' => 'Swedish', 'sv' => 'Swedish', 'th' => 'Thai', 'tr' => 'Turkish', 'uk' => 'Ukrainian', 'vi' => 'Vietnamese', 'sl' => 'Slovenian'
+		);
+		
+		$sLanguage = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']) : 'en';
+		$aTempLanguages = preg_split('/[,;]+/', $sLanguage);
+		$sLanguage = !empty($aTempLanguages[0]) ? $aTempLanguages[0] : 'en';
+
+		$sLanguageShort = substr($sLanguage, 0, 2);
+		
+		return \array_key_exists($sLanguage, $aLanguages) ? $aLanguages[$sLanguage] :
+			(\array_key_exists($sLanguageShort, $aLanguages) ? $aLanguages[$sLanguageShort] : '');
 	}
 	
 	/**
