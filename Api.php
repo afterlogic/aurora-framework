@@ -901,7 +901,7 @@ class Api
 			$oModuleManager = self::GetModuleManager();
 			if ($oModuleManager)
 			{
-				$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language') || $sLanguage;
+				$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
 			}
 		}
 		return $sLanguage;
