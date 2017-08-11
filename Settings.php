@@ -33,6 +33,7 @@ class Settings extends AbstractSettings
 			
 			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
 			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
+			'AdminLanguage' => new SettingsProperty('AdminLanguage', 'English', 'string'),
 			
 			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', 'EDbType'),
 			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
