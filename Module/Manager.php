@@ -136,6 +136,10 @@ class Manager
 				if ($oModule instanceof AbstractModule)
 				{
 					$oModule->initialize();
+					if ($oModule instanceof AbstractLicensedModule && !$oModule->Validate())
+					{
+						unset($this->_aAllowedModulesName[\strtolower($oModule->GetName())]);
+					}
 				}
 			}
 		}

@@ -147,7 +147,6 @@ abstract class AbstractModule
 	{
 		return (bool) $this->bInitialized;
 	}
-
 	
 	/**
 	 * 
@@ -158,6 +157,10 @@ abstract class AbstractModule
 		$mResult = true;
 		if (!$this->isInitialized())
 		{
+			if ($this instanceof AbstractLicensedModule)
+			{
+				$this->aRequireModules[] = 'Licensing';
+			}
 			foreach ($this->aRequireModules as $sModule)
 			{
 				$mResult = false;
@@ -182,7 +185,22 @@ abstract class AbstractModule
 			{
 				$this->loadModuleSettings();
 				$this->bInitialized = true;
-				$this->init();
+				if ($this instanceof AbstractLicensedModule)
+				{
+					$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
+					if ($oLicensing && $oLicensing->Validate($this))
+					{
+						$this->init();
+					}
+					else
+					{
+						return $mResult;
+					}
+				}
+				else
+				{
+					$this->init();
+				}
 			}
 		}
 		

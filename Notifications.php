@@ -38,6 +38,7 @@ class Notifications
 	const SystemNotConfigured = 112;
 	const ModuleNotFound = 113;
 	const MethodNotFound = 114;
+	const LicenseLimit = 115;
 
 	const CanNotGetMessageList = 201;
 	const CanNotGetMessage = 202;
