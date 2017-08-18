@@ -401,8 +401,8 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					);
 				}
 				$sResultWhere .= sprintf(
-					' AND entities.%s IN (%s)', 
-					$bUUID ? 'uuid' : 'id',
+					' AND S2.%s IN (%s)', 
+					$bUUID ? 'entity_uuid' : 'entity_id',
 					implode(',', $aIdsOrUUIDs)
 				);
 			}
