@@ -240,7 +240,7 @@ class Api
 	 */
 	public static function GetModuleDecorator($sModuleName, $iUser = null)
 	{
-		if (!isset(self::$aModuleDecorators[$sModuleName]) && $this->GetModule($sModuleName) !== false)
+		if (!isset(self::$aModuleDecorators[$sModuleName]) && self::GetModule($sModuleName) !== false)
 		{
 			self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName, $iUser);
 		}
