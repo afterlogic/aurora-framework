@@ -245,7 +245,7 @@ class Api
 			self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName, $iUser);
 		}
 		
-		return self::$aModuleDecorators[$sModuleName];
+		return isset(self::$aModuleDecorators[$sModuleName]) ? self::$aModuleDecorators[$sModuleName] : false;
 	}
 
 	/**
