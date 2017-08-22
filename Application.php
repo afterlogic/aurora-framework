@@ -69,7 +69,15 @@ class Application
 	
 	public static function Start($sDefaultEntry = 'default')
 	{
-		Api::Init();
+		try
+		{
+			Api::Init();
+		}
+		catch (\Aurora\System\Exceptions\ApiException $oEx)
+		{
+			\Aurora\System\Api::LogException($oEx);
+			echo $oEx->getMessage() . '<br/>';
+		}
 		
 		self::RedirectToHttps();
 		self::GetVersion();

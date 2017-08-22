@@ -117,6 +117,7 @@ class Manager
 				{
 					$oModuleSettings = \Aurora\System\Api::GetModuleManager()->GetModuleSettings($sModuleName);
 					$bIsModuleDisabledForUser = false;
+					
 					$oUser =\Aurora\System\Api::getAuthenticatedUser();
 					if ($oUser instanceof CUser)
 					{
