@@ -626,7 +626,14 @@ class Api
 
 		if ($oSettings && $oSettings->GetConf('EnableLogging') && $iLogLevel <= $oSettings->GetConf('LoggingLevel')) 
 		{
-			$oAuthenticatedUser = self::getAuthenticatedUser();
+			try 
+			{
+				$oAuthenticatedUser = self::getAuthenticatedUser();
+			}
+			catch (\Exception $oEx)
+			{
+				$oAuthenticatedUser = false;
+			}
 			$sFirstPrefix = $oAuthenticatedUser && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
 			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
