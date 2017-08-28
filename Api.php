@@ -123,12 +123,9 @@ class Api
 			$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
 			@file_put_contents($sSaltFile, $sSaltDesc);
 		} 
-		else 
-		{
-			$sSalt = '$2y$07$' . md5(file_get_contents($sSaltFile)) . '$';
-		}
+		$sSalt = '$2y$07$' . md5(@file_get_contents($sSaltFile)) . '$';
 
-		self::$sSalt = $sSalt;		
+		self::$sSalt = $sSalt;
 	}
 	
 	public static function GrantAdminPrivileges()
