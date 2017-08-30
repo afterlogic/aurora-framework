@@ -967,6 +967,7 @@ abstract class AbstractModule
 	 * @param string $sData
 	 * @param array $aParams = null
 	 * @param int $iPluralCount = null
+	 * @param string $sUUID = null
 	 *
 	 * @return string
 	 */
