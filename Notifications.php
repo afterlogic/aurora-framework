@@ -101,6 +101,7 @@ class Notifications
 	const CanNotUploadFileQuota = 812;
 	const FileAlreadyExists = 813;
 	const FileNotFound = 814;
+	const CanNotUploadFileLimit = 815;
 
 	const MailServerError = 901;
 	const UnknownError = 999;
