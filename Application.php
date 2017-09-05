@@ -92,8 +92,8 @@ class Application
 	 */
 	public static function GetVersion()
 	{
-		$sVersion = @\file_get_contents(AURORA_APP_ROOT_PATH.'VERSION');
-		\define('AURORA_APP_VERSION', $sVersion);
+		$sVersion = @\file_get_contents(AU_APP_ROOT_PATH.'VERSION');
+		\define('AU_APP_VERSION', $sVersion);
 		return $sVersion;
 	}
 	

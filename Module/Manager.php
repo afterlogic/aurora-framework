@@ -449,7 +449,7 @@ class Manager
 	 */
 	public function GetModulesPath()
 	{
-		return AURORA_APP_ROOT_PATH.'modules/';
+		return AU_APP_ROOT_PATH.'modules/';
 	}
 
 	/**
@@ -467,7 +467,7 @@ class Manager
 	 */
 	public function GetTenantModulesPath($sTenant)
 	{
-		return AURORA_APP_ROOT_PATH.'tenants/' . $sTenant . '/modules/';
+		return AU_APP_ROOT_PATH.'tenants/' . $sTenant . '/modules/';
 	}
 
 	/**

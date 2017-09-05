@@ -19,31 +19,31 @@
 
 namespace Aurora\System;
 
-if (!defined('AURORA_APP_ROOT_PATH'))
+if (!defined('AU_APP_ROOT_PATH'))
 {
-	define('AURORA_APP_ROOT_PATH', rtrim(realpath(dirname(__DIR__)), '\\/').'/');
-	define('AURORA_APP_START', microtime(true));
+	define('AU_APP_ROOT_PATH', rtrim(realpath(dirname(__DIR__)), '\\/').'/');
+	define('AU_APP_START', microtime(true));
 }
 
-define('API_PATH_TO_AURORA', '/../');
+define('AU_API_PATH_TO_AURORA', '/../');
 
-define('API_CRLF', "\r\n");
-define('API_TAB', "\t");
+define('AU_API_CRLF', "\r\n");
+define('AU_API_TAB', "\t");
 
-define('API_SESSION_WEBMAIL_NAME', 'PHPWEBMAILSESSID');
+define('AU_API_SESSION_WEBMAIL_NAME', 'PHPWEBMAILSESSID');
 
-define('API_HELPDESK_PUBLIC_NAME', '_helpdesk_');
+define('AU_API_HELPDESK_PUBLIC_NAME', '_helpdesk_');
 
 // timezone fix
 $sDefaultTimeZone = function_exists('date_default_timezone_get')
 	? @date_default_timezone_get() : 'US/Pacific';
 
-define('API_SERVER_TIME_ZONE', ($sDefaultTimeZone && 0 < strlen($sDefaultTimeZone))
+define('AU_API_SERVER_TIME_ZONE', ($sDefaultTimeZone && 0 < strlen($sDefaultTimeZone))
 	? $sDefaultTimeZone : 'US/Pacific');
 
-if (defined('API_SERVER_TIME_ZONE') && function_exists('date_default_timezone_set'))
+if (defined('AU_API_SERVER_TIME_ZONE') && function_exists('date_default_timezone_set'))
 {
-	@date_default_timezone_set(API_SERVER_TIME_ZONE);
+	@date_default_timezone_set(AU_API_SERVER_TIME_ZONE);
 }
 
 unset($sDefaultTimeZone);
@@ -602,7 +602,7 @@ class Api
 			{
 				try
 				{
-					@error_log('['.\MailSo\Log\Logger::Guid().'][DB/backtrace]'.API_CRLF.trim($sLogData).API_CRLF, 3, $sLogFile);
+					@error_log('['.\MailSo\Log\Logger::Guid().'][DB/backtrace]'.AU_API_CRLF.trim($sLogData).AU_API_CRLF, 3, $sLogFile);
 				}
 				catch (Exception $oE) {}
 			}
@@ -643,7 +643,7 @@ class Api
 				$bIsFirst = false;
 				$sPost = (isset($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
 
-				self::LogOnly(API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
+				self::LogOnly(AU_API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
 				if (!empty($sPost)) 
 				{
 					if ($oSettings->GetConf('LogPostView', false)) 
@@ -670,7 +670,7 @@ class Api
 	{
 		try
 		{
-			@error_log($sDesc.API_CRLF, 3, $sLogFile);
+			@error_log($sDesc.AU_API_CRLF, 3, $sLogFile);
 		}
 		catch (Exception $oE) {}
 
@@ -723,8 +723,8 @@ class Api
 	 */
 	public static function RootPath()
 	{
-		defined('API_ROOTPATH') || define('API_ROOTPATH', rtrim(dirname(__FILE__), '/\\').'/');
-		return API_ROOTPATH;
+		defined('AU_API_ROOTPATH') || define('AU_API_ROOTPATH', rtrim(dirname(__FILE__), '/\\').'/');
+		return AU_API_ROOTPATH;
 	}
 
 	/**
@@ -732,7 +732,7 @@ class Api
 	 */
 	public static function WebMailPath()
 	{
-		return self::RootPath().ltrim(API_PATH_TO_AURORA, '/');
+		return self::RootPath().ltrim(AU_API_PATH_TO_AURORA, '/');
 	}
 
 	/**
@@ -773,17 +773,17 @@ class Api
 	public static function DataPath()
 	{
 		$dataPath = 'data';
-		if (!defined('API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) 
+		if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) 
 		{
 			include self::WebMailPath().'inc_settings_path.php';
 		}
 
-		if (!defined('API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
+		if (!defined('AU_API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
 		{
-			define('API_DATA_FOLDER', Utils::GetFullPath($dataPath,self::WebMailPath()));
+			define('AU_API_DATA_FOLDER', Utils::GetFullPath($dataPath,self::WebMailPath()));
 		}
 
-		return defined('API_DATA_FOLDER') ? API_DATA_FOLDER : '';
+		return defined('AU_API_DATA_FOLDER') ? AU_API_DATA_FOLDER : '';
 	}
 
 	/**

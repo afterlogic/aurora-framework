@@ -519,7 +519,7 @@ abstract class AbstractContainer
 			if ($bUseLogQueryParams)
 			{
 				$sQueryParams .=
-					API_CRLF.API_TAB.$sDbKey.' = '.(
+					AU_API_CRLF.AU_API_TAB.$sDbKey.' = '.(
 						\is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue);
 			}
 		}
@@ -637,7 +637,7 @@ abstract class AbstractContainer
 			if ($bUseLogQueryParams)
 			{
 				$sDbKey = isset($aDbKeys[$iIndex]) ? $aDbKeys[$iIndex] : '!unknown!';
-				$sQueryParams .= API_CRLF.API_TAB.$sDbKey.' = '.$aDbValues[$iIndex];
+				$sQueryParams .= AU_API_CRLF.AU_API_TAB.$sDbKey.' = '.$aDbValues[$iIndex];
 			}
 		}
 

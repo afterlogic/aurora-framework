@@ -185,4 +185,4 @@ class Session
 	}
 }
 
-self::$sSessionName = API_SESSION_WEBMAIL_NAME;
+self::$sSessionName = AU_API_SESSION_WEBMAIL_NAME;

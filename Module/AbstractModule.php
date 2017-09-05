@@ -651,7 +651,7 @@ abstract class AbstractModule
 	{
 		$aResult = array(
 			'AuthenticatedUserId' => \Aurora\System\Api::getAuthenticatedUserId(),
-			'@Time' => microtime(true) - AURORA_APP_START
+			'@Time' => microtime(true) - AU_APP_START
 		);
 		if (is_array($mResult))
 		{

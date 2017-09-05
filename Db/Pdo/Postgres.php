@@ -292,7 +292,7 @@ class Postgres extends \Aurora\System\Db\Sql
 			{
 				while (false != ($mResult = $rExplainResult->fetch(PDO::FETCH_ASSOC)))
 				{
-					$sExplainLog .= API_CRLF.print_r($mResult, true);
+					$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 				}
 				
 				$rExplainResult->closeCursor();
@@ -305,7 +305,7 @@ class Postgres extends \Aurora\System\Db\Sql
 				{
 					while (false != ($mResult = $rExplainResult->fetch(PDO::FETCH_ASSOC)))
 					{
-						$sExplainLog .= API_CRLF.print_r($mResult, true);
+						$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 					}
 					
 					$rExplainResult->closeCursor();
@@ -317,7 +317,7 @@ class Postgres extends \Aurora\System\Db\Sql
 		$this->log($sQuery, $bIsSlaveExecute);
 		if (!empty($sExplainLog))
 		{
-			$this->log('EXPLAIN:'.API_CRLF.trim($sExplainLog), $bIsSlaveExecute);
+			$this->log('EXPLAIN:'.AU_API_CRLF.trim($sExplainLog), $bIsSlaveExecute);
 		}
 
 		$this->rResultId = $this->SilentQuery($sQuery);

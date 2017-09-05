@@ -230,7 +230,7 @@ class MySql extends Sql
 			$rExplainResult = @mysqli_query($this->_rConectionHandle, $sExplainQuery);
 			while (false != ($mResult = mysqli_fetch_assoc($rExplainResult)))
 			{
-				$sExplainLog .= API_CRLF.print_r($mResult, true);
+				$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 			}
 
 			if ($this->bUseExplainExtended)
@@ -238,7 +238,7 @@ class MySql extends Sql
 				$rExplainResult = @mysqli_query($this->_rConectionHandle, 'SHOW warnings');
 				while (false != ($mResult = mysqli_fetch_assoc($rExplainResult)))
 				{
-					$sExplainLog .= API_CRLF.print_r($mResult, true);
+					$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 				}
 			}
 		}
@@ -247,7 +247,7 @@ class MySql extends Sql
 		$this->log($sQuery, $bIsSlaveExecute);
 		if (!empty($sExplainLog))
 		{
-			$this->log('EXPLAIN:'.API_CRLF.trim($sExplainLog), $bIsSlaveExecute);
+			$this->log('EXPLAIN:'.AU_API_CRLF.trim($sExplainLog), $bIsSlaveExecute);
 		}
 
 		$this->_rResultId = @mysqli_query($this->_rConectionHandle, $sQuery);

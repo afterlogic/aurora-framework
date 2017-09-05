@@ -1418,13 +1418,13 @@ class Utils
 		{
 			return 0;
 		}
-		else if ($iBigInt > API_PHP_INT_MAX)
+		else if ($iBigInt > AU_API_PHP_INT_MAX)
 		{
-			return API_PHP_INT_MAX;
+			return AU_API_PHP_INT_MAX;
 		}
-		else if ($iBigInt < API_PHP_INT_MIN)
+		else if ($iBigInt < AU_API_PHP_INT_MIN)
 		{
-			return API_PHP_INT_MIN;
+			return AU_API_PHP_INT_MIN;
 		}
 
 		return (int) $iBigInt;
@@ -1751,7 +1751,7 @@ class Utils
 			$sName = $oIterator->getFilename();
 			$aMatches = array();
 			$iResult = preg_match("/" . preg_quote($sPattern) . "/ui", $sName, $aMatches);
-			if ($sName !== '.sabredav' && $sName !== API_HELPDESK_PUBLIC_NAME && $iResult === 1)
+			if ($sName !== '.sabredav' && $sName !== AU_API_HELPDESK_PUBLIC_NAME && $iResult === 1)
 			{
 				$files[] = $oIterator->getPathname();		
 			}
@@ -2200,5 +2200,5 @@ class Ints
 
 function fNullCallback() {}
 
-defined('API_PHP_INT_MAX') || define('API_PHP_INT_MAX', (int) Ints::getIntMax());
-defined('API_PHP_INT_MIN') || define('API_PHP_INT_MIN', (int) (API_PHP_INT_MAX + 1));
+defined('AU_API_PHP_INT_MAX') || define('AU_API_PHP_INT_MAX', (int) Ints::getIntMax());
+defined('AU_API_PHP_INT_MIN') || define('AU_API_PHP_INT_MIN', (int) (AU_API_PHP_INT_MAX + 1));

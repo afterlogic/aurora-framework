@@ -86,9 +86,9 @@ abstract class AbstractManager
 				str_replace('\\', '/', strtolower($oException->getFile())));
 
 			\Aurora\System\Api::Log('Exception['.$oException->getCode().']: '.$oException->getMessage().
-				API_CRLF.$sFile.' ('.$oException->getLine().')'.
-				API_CRLF.'----------------------------------------------------------------------'.
-				API_CRLF.$oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
+				AU_API_CRLF.$sFile.' ('.$oException->getLine().')'.
+				AU_API_CRLF.'----------------------------------------------------------------------'.
+				AU_API_CRLF.$oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
 		}
 	}
 
