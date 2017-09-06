@@ -27,10 +27,10 @@ class Response
 	protected static $sMethod = null;
 
 	public static $objectNames = array(
-			'CApiMailMessageCollection' => 'MessageCollection',
-			'CApiMailMessage' => 'Message',
-			'CApiMailFolderCollection' => 'FolderCollection',
-			'CApiMailFolder' => 'Folder'
+			'Aurora\Modules\Mail\Classes\MessageCollection' => 'MessageCollection',
+			'Aurora\Modules\Mail\Classes\Message' => 'Message',
+			'Aurora\Modules\Mail\Classes\FolderCollection' => 'FolderCollection',
+			'Aurora\Modules\Mail\Classes\Folder' => 'Folder'
 	);
 
 	public static function GetMethod()
@@ -63,8 +63,9 @@ class Response
 		$mResult = false;
 		if (\is_object($oData))
 		{
-			$aNames = \explode('\\', \get_class($oData));
-			$sObjectName = end($aNames);
+//			$aNames = \explode('\\', \get_class($oData));
+//			$sObjectName = end($aNames);
+			$sObjectName = \get_class($oData);
 			$mResult = array(
 				'@Object' => self::GetObjectName($sObjectName)
 			);			
@@ -230,8 +231,9 @@ class Response
 		$aResult = array();
 		if ($oCollection instanceof \MailSo\Base\Collection)
 		{
-			$aNames = \explode('\\', \get_class($oCollection));
-			$sObjectName = end($aNames);
+//			$aNames = \explode('\\', \get_class($oCollection));
+//			$sObjectName = end($aNames);
+			$sObjectName = \get_class($oCollection);
 
 			$aResult = array(
 				'@Object' => 'Collection/'. self::GetObjectName($sObjectName),
