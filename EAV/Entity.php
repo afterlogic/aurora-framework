@@ -116,7 +116,8 @@ class Entity
 	 */
 	public function getName()
 	{
-		return \Aurora\System\Utils::getShortClassName(\get_class($this));
+		return \get_class($this);
+//		return \Aurora\System\Utils::getShortClassName(\get_class($this));
 	}
 	
 	/**
