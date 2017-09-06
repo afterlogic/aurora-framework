@@ -607,7 +607,7 @@ abstract class AbstractModule
 		}
 		else
 		{
-			$sFileFullPath = $this->GetPath().'/classes/'.$sFileName.'.php';
+			$sFileFullPath = $this->GetPath().'/Classes/'.$sFileName.'.php';
 			if (@file_exists($sFileFullPath))
 			{
 				$aCache[$sFileName] = true;

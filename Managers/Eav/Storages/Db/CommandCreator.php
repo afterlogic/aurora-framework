@@ -443,7 +443,7 @@ SELECT * FROM (SELECT entity_id, entity_uuid, entity_type, entity_module
 			$sViewAttributes, 
 			$this->prefix(),
 			$sJoinAttrbutes, 
-			$this->escapeString(\Aurora\System\Utils::getShortClassName($sEntityType)), 
+			$this->escapeString($sEntityType), 
 			$sResultWhere,
 			$sResultSort,
 			$sLimit,

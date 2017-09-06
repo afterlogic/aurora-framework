@@ -223,7 +223,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$this->oConnection->FreeResult();
 		}		
 		
-		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); // request for CContact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
+		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); // request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
 		if ($this->oConnection->Execute(
 				$this->oCommandCreator->getEntities(
 					$sType, 
