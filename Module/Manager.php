@@ -119,7 +119,7 @@ class Manager
 					$bIsModuleDisabledForUser = false;
 					
 					$oUser =\Aurora\System\Api::getAuthenticatedUser();
-					if ($oUser instanceof CUser)
+					if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
 					{
 						$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
 					

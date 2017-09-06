@@ -978,7 +978,7 @@ abstract class AbstractModule
 		{
 			$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 			$oUser = $oCoreDecorator ? $oCoreDecorator->GetUserByUUID($sUUID) : null;
-			if ($oUser instanceof \CUser)
+			if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
 			{
 				$sLanguage = $oUser->Language;
 			}
