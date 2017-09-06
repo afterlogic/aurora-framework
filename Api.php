@@ -964,7 +964,7 @@ class Api
 	
 	/**
 	 * @param string $sData
-	 * @param CAccount $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account $oAccount
 	 * @param array $aParams = null
 	 *
 	 * @return string

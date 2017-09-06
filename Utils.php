@@ -1898,7 +1898,7 @@ class Utils
 	}
 	
 	/**
-	 * @return \CAccount | null
+	 * @return \Aurora\Modules\StandardAuth\Classes\Account | null
 	 */
 	public static function GetDefaultAccount()
 	{
@@ -1912,7 +1912,7 @@ class Utils
 			if (0 < $iAccountId)
 			{
 				$oAccount = $oApiUsers->getAccountById($iAccountId);
-				if ($oAccount instanceof \CAccount && !$oAccount->IsDisabled)
+				if ($oAccount instanceof \Aurora\Modules\StandardAuth\Classes\Account && !$oAccount->IsDisabled)
 				{
 					$oResult = $oAccount;
 				}

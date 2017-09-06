@@ -36,7 +36,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}	
 	
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
 	 * @param string $sValue
 	 * @param string $sFileSuffix Default value is empty string.
@@ -59,7 +59,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
 	 * @param resource $rSource
 	 * @param string $sFileSuffix Default value is empty string.
@@ -105,7 +105,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
@@ -127,7 +127,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
@@ -149,7 +149,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 	
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sTempName
 	 * @param string $sMode Default value is empty string.
 	 *
@@ -192,7 +192,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
@@ -214,7 +214,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 
 	/**
-	 * @param CAccount|CHelpdeskUser $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
