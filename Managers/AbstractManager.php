@@ -45,7 +45,7 @@ abstract class AbstractManager
 
 	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null)
 	{
-		$this->oSettings =& \Aurora\System\Api::$oManager->GetSettings();
+		$this->oSettings =& \Aurora\System\Api::GetSettings();
 		$this->oLastException = null;
 		$this->oModule = $oModule;
 	}
@@ -68,7 +68,7 @@ abstract class AbstractManager
 	
 	public function &GetConnection()
 	{
-		return \Aurora\System\Api::$oManager->GetConnection();
+		return \Aurora\System\Api::GetConnection();
 	}
 
 	/**

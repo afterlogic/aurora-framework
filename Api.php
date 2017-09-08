@@ -55,11 +55,6 @@ unset($sDefaultTimeZone);
 class Api
 {
 	/**
-	 * @var \Aurora\System\Managers\GlobalManager
-	 */
-	static $oManager;
-
-	/**
 	 * @var \Aurora\System\Module\Manager
 	 */
 	static $oModuleManager;
@@ -115,11 +110,20 @@ class Api
 	public static $__SKIP_CHECK_USER_ROLE__ = false;
 	
 	/**
-	 *
 	 * @var string 
 	 */
 	protected static $sLanguage = null;
+	
+	/**
+	 * @var \Aurora\System\Settings
+	 */
+	protected static $oSettings;	
 
+	/**
+	 * @var \Aurora\System\Db\Storage
+	 */
+	protected static $oConnection;	
+	
 	/**
 	 * 
 	 */
@@ -169,11 +173,10 @@ class Api
 		self::$aSecretWords = array();
 		self::$bUseDbLog = false;
 
-		if (!is_object(self::$oManager)) 
+		if (!is_object(self::$oModuleManager)) 
 		{
 			self::InitSalt();
 
-			self::$oManager = new Managers\GlobalManager();
 			self::$bIsValid = self::validateApi();
 			self::GetModuleManager();
 			self::$aModuleDecorators = array();
@@ -271,14 +274,6 @@ class Api
 	{
 		return self::GetModuleManager()->GetModules();
 	}	
-	
-	/**
-	 * @return \Aurora\System\Managers\GlobalManager
-	 */
-	public static function GetManager()
-	{
-		return self::$oManager;
-	}
 
 	/**
 	 * 
@@ -331,8 +326,42 @@ class Api
 	 */
 	public static function &GetSettings()
 	{
-		return self::$oManager->GetSettings();
+		if (null === self::$oSettings)
+		{
+			try
+			{
+				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
+				if (!\file_exists($sSettingsPath))
+				{
+					\mkdir($sSettingsPath, 0777);
+				}
+				
+				self::$oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
+			}
+			catch (\Aurora\System\Exceptions\BaseException $oException)
+			{
+				self::$oSettings = false;
+			}
+		}
+		return self::$oSettings;		
 	}
+	
+	public static function &GetConnection()
+	{
+		if (null === self::$oConnection)
+		{
+			$oSettings =& self::GetSettings();
+			if ($oSettings)
+			{
+				self::$oConnection = new \Aurora\System\Db\Storage($oSettings);
+			}
+			else
+			{
+				self::$oConnection = false;
+			}
+		}
+		return self::$oConnection;
+	}	
 
 	/**
 	 * @return PDO|false

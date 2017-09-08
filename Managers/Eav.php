@@ -31,7 +31,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * 
 	 * @param string $sForcedStorage
 	 */
-	public function __construct($sForcedStorage = 'db')
+	public function __construct()
 	{
 		parent::__construct(null, new Eav\Storages\Db\Storage($this));
 	}

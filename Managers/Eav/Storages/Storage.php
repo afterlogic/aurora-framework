@@ -26,7 +26,7 @@
 
 namespace Aurora\System\Managers\Eav\Storages;
 
-class Storage extends \Aurora\System\Managers\AbstractManagerStorage
+class Storage extends \Aurora\System\Managers\AbstractStorage
 {
 	/**
 	 * 

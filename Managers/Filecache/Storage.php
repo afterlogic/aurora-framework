@@ -23,7 +23,7 @@
  */
 namespace Aurora\System\Managers\Filecache;
 
-class Storage extends \Aurora\System\Managers\AbstractManagerStorage
+class Storage extends \Aurora\System\Managers\AbstractStorage
 {
 	/**
 	 * @var string

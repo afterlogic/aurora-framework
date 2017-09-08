@@ -22,7 +22,7 @@ namespace Aurora\System\Managers;
 /**
  * @package Api
  */
-abstract class AbstractManagerStorage
+abstract class AbstractStorage
 {
 	/**
 	 * @var \Aurora\System\Managers\AbstractManager

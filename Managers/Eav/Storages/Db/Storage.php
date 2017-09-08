@@ -39,7 +39,8 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	protected $oCommandCreator;
 
 	/**
-	 * @param \Aurora\System\Managers\GlobalManager &$oManager
+	 * 
+	 * @param \Aurora\System\Managers\AbstractManager $oManager
 	 */
 	public function __construct(\Aurora\System\Managers\AbstractManager &$oManager)
 	{

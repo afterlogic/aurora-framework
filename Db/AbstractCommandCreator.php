@@ -43,7 +43,7 @@ abstract class AbstractCommandCreator
 	{
 		$oSettings =& \Aurora\System\Api::GetSettings();
 		
-		$oCommandCreatorHelper =& \Aurora\System\Api::$oManager->GetSqlHelper();
+		$oCommandCreatorHelper =& $this->GetHelper();
 
 		if ($oSettings)
 		{
@@ -51,6 +51,26 @@ abstract class AbstractCommandCreator
 			$this->sPrefix = (string) $oSettings->GetConf('DBPrefix');
 		}
 	}
+	
+	/**
+	 * @return CDbStorage
+	 */
+	public function &GetHelper()
+	{
+		if (null === $this->oHelper)
+		{
+			$oSettings =& \Aurora\System\Api::GetSettings();
+			if ($oSettings)
+			{
+				$this->oHelper = \Aurora\System\Db\Creator::CreateCommandCreatorHelper($oSettings);
+			}
+			else
+			{
+				$this->oHelper = false;
+			}
+		}
+		return $this->oHelper;
+	}	
 
 	public function prefix()
 	{
