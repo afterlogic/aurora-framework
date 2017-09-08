@@ -1013,7 +1013,7 @@ abstract class AbstractModule
 				}
 			}
 		}
-
+		
 		//return self::processTranslateParams($aLang, $sData, $aParams);
 		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) : 
 			\Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams);

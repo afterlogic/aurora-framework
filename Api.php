@@ -114,6 +114,15 @@ class Api
 	 */
 	public static $__SKIP_CHECK_USER_ROLE__ = false;
 	
+	/**
+	 *
+	 * @var string 
+	 */
+	protected static $sLanguage = null;
+
+	/**
+	 * 
+	 */
 	public static function InitSalt()
 	{
 		$sSalt = '';
@@ -128,6 +137,9 @@ class Api
 		self::$sSalt = $sSalt;
 	}
 	
+	/**
+	 * 
+	 */
 	public static function GrantAdminPrivileges()
 	{
 		self::$aUserSession['UserId'] = -1;
@@ -145,7 +157,7 @@ class Api
 	 */
 	public static function Init($bGrantAdminPrivileges = false)
 	{
-		include_once self::LibrariesPath().'autoload.php';
+		include_once self::GetVendorPath().'autoload.php';
 		
 		if ($bGrantAdminPrivileges)
 		{
@@ -400,10 +412,10 @@ class Api
 	 */
 	public static function IsMobileApplication()
 	{
-		/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
+		$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 
-		return (bool) $oApiIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oApiIntegrator->isMobile(); // todo
+		return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
 	}
 	
 	/**
@@ -738,7 +750,7 @@ class Api
 	/**
 	 * @return string
 	 */
-	public static function LibrariesPath()
+	public static function GetVendorPath()
 	{
 		return self::RootPath().'../vendor/';
 	}
@@ -816,8 +828,7 @@ class Api
 	public static function GenerateSsoToken($sEmail, $sPassword, $sLogin = '')
 	{
 		$sSsoHash = \md5($sEmail.$sPassword.$sLogin.\microtime(true).\rand(10000, 99999));
-		
-		return self::Cacher()->Set('SSO:'.$sSsoHash,self::EncodeKeyValues(array(
+		return self::Cacher()->Set('SSO:'.$sSsoHash, self::EncodeKeyValues(array(
 			'Email' => $sEmail,
 			'Password' => $sPassword,
 			'Login' => $sLogin
@@ -887,38 +898,56 @@ class Api
 
 		return $sResult;
 	}
+	
+	/**
+	 * 
+	 * @param string $sLanguage
+	 */
+	public static function SetLanguage($sLanguage)
+	{
+		self::$sLanguage = $sLanguage;
+	}		
 
+	/**
+	 * 
+	 * @param bool $bForNewUser
+	 * @return string
+	 */
 	public static function GetLanguage($bForNewUser = false)
 	{
-		$iAuthUserId = self::getAuthenticatedUserId();
-		$bSuperAdmin = $iAuthUserId === -1;
-		$oModuleManager = self::GetModuleManager();
-		
-		$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
-		if ($oModuleManager->getModuleConfigValue('Core', 'AutodetectLanguage', true))
+		if (self::$sLanguage === null)
 		{
-			$sLanguage = self::getBrowserLanguage();
-		}
-		
-		if ($bSuperAdmin)
-		{
-			$oSettings = &self::GetSettings();
-			$sLanguage = $oSettings->GetConf('AdminLanguage');
-		}
-		else if (!$bForNewUser)
-		{
-			$oUser = self::getAuthenticatedUser();
-			if ($oUser)
+			$iAuthUserId = self::getAuthenticatedUserId();
+			$bSuperAdmin = $iAuthUserId === -1;
+			$oModuleManager = self::GetModuleManager();
+
+			$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
+			if ($oModuleManager->getModuleConfigValue('Core', 'AutodetectLanguage', true))
 			{
-				$sLanguage = $oUser->Language;
+				$sLanguage = self::getBrowserLanguage();
 			}
-			else if (isset($_COOKIE['aurora-lang-on-login']))
+
+			if ($bSuperAdmin)
 			{
-				$sLanguage = $_COOKIE['aurora-lang-on-login'];
+				$oSettings = &self::GetSettings();
+				$sLanguage = $oSettings->GetConf('AdminLanguage');
 			}
+			else if (!$bForNewUser)
+			{
+				$oUser = self::getAuthenticatedUser();
+				if ($oUser)
+				{
+					$sLanguage = $oUser->Language;
+				}
+				else if (isset($_COOKIE['aurora-lang-on-login']))
+				{
+					$sLanguage = $_COOKIE['aurora-lang-on-login'];
+				}
+			}
+			self::$sLanguage = $sLanguage;
 		}
 			
-		return $sLanguage;
+		return self::$sLanguage;
 	}
 	
 	protected static function getBrowserLanguage()
@@ -1262,11 +1291,11 @@ class Api
 				$sAuthToken = self::$aUserSession['AuthToken'];
 			}
 		}
-		/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
-		if ($oApiIntegrator)
+		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
+		$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		if ($oIntegrator)
 		{
-			$mResult = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
+			$mResult = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
 		}
 		
 		return $mResult;
@@ -1275,11 +1304,11 @@ class Api
 	public static function validateAuthToken()
 	{
 		$bResult = false;
-		/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
-		if ($oApiIntegrator)
+		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
+		$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		if ($oIntegrator)
 		{
-			$bResult = $oApiIntegrator->validateAuthToken(self::getAuthToken());
+			$bResult = $oIntegrator->validateAuthToken(self::getAuthToken());
 		}
 		
 		return $bResult;
@@ -1296,11 +1325,11 @@ class Api
 			}
 			else
 			{
-				/* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */
-				$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
-				if ($oApiIntegrator)
+				/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
+				$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+				if ($oIntegrator)
 				{
-					$aInfo = $oApiIntegrator->getAuthenticatedUserInfo($sAuthToken);
+					$aInfo = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
 					$mResult = $aInfo['userId'];
 					self::$aUserSession['UserId'] = (int) $mResult;
 					self::$aUserSession['AuthToken'] = $sAuthToken;
@@ -1337,10 +1366,10 @@ class Api
 				$iUserId = self::$aUserSession['UserId'];
 			}
 
-			$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
-			if ($oApiIntegrator)
+			$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+			if ($oIntegrator)
 			{
-				$oUser = $oApiIntegrator->getAuthenticatedUserByIdHelper($iUserId);
+				$oUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
 			}
 		}
 		return $oUser;
