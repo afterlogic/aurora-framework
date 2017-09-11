@@ -210,6 +210,14 @@ abstract class AbstractModule
 	/**
 	 * 
 	 */
+	public function getNamespace()
+	{
+		return (new \ReflectionClass($this))->getNamespaceName();
+	}
+	
+	/**
+	 * 
+	 */
 	public function init() {}
 	
 	/**
