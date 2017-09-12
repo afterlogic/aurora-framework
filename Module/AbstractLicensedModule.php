@@ -26,14 +26,8 @@ abstract class AbstractLicensedModule extends AbstractModule
 {
 	public function Validate()
 	{
-		$bResult = false;
-		
 		$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
-		if ($oLicensing)
-		{
-			$bResult = $oLicensing->Validate($this);
-		}
-		return $bResult;
+		return ($oLicensing) ? $oLicensing->Validate($this) : false;
 	}
 }
 

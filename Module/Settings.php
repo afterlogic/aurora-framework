@@ -26,9 +26,10 @@ namespace Aurora\System\Module;
 class Settings extends \Aurora\System\AbstractSettings
 {
 	public $ModuleName;
-	
+
 	/**
-	 * @return void
+	 * 
+	 * @param string $sModuleName
 	 */
 	public function __construct($sModuleName)
 	{

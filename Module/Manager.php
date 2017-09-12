@@ -115,14 +115,13 @@ class Manager
 			{
 				foreach ($aModulePath as $sModuleName)
 				{
-					$oModuleSettings = \Aurora\System\Api::GetModuleManager()->GetModuleSettings($sModuleName);
+					$oModuleSettings = $this->GetModuleSettings($sModuleName);
 					$bIsModuleDisabledForUser = false;
 					
-					$oUser =\Aurora\System\Api::getAuthenticatedUser();
+					$oUser = \Aurora\System\Api::getAuthenticatedUser();
 					if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
 					{
 						$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
-					
 					}
 					
 					if (!$oModuleSettings->GetConf('Disabled', false) && !$bIsModuleDisabledForUser)
@@ -147,7 +146,6 @@ class Manager
 		else
 		{
 			echo 'Can\'t load \'Core\' Module';
-			return '';
 		}
 	}
 	
@@ -226,13 +224,13 @@ class Manager
 			$aArgs
 		);
 		
-		$sModuleFilePath = $sModulePath.$sModuleName.'/Module.php';
-		if (@\file_exists($sModuleFilePath) && !$this->isModuleLoaded($sModuleName))
+		if (@\file_exists($sModulePath.$sModuleName.'/Module.php') && !$this->isModuleLoaded($sModuleName))
 		{		
 			$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
 			$oModule = new $sModuleClassName($sModuleName, $sModulePath);
 			if ($oModule instanceof AbstractModule)
 			{
+				$oModule->SetModuleManager($this);
 				 $this->_aModules[\strtolower($sModuleName)] = $oModule;
 				 $mResult = $oModule;
 			}
@@ -341,7 +339,7 @@ class Manager
 				\Aurora\System\Api::Log('Subscription result:');
 				\Aurora\System\Api::LogObject($mResult);
 
-				\Aurora\System\Api::GetModuleManager()->AddResult(
+				$this->AddResult(
 					$fCallback[0]->GetName(), 
 					$sEvent, 
 					$aArguments,
@@ -597,7 +595,7 @@ class Manager
 		}
 		else
 		{
-			echo 'Can\'t find \''.$sEntryName.'\' Entry';
+			$this->RunEntry('error');
 		}
 		
 		return $mResult;

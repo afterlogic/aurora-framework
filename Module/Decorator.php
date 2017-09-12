@@ -47,11 +47,6 @@ class Decorator
 	 */
 	public function __call($sMethodName, $aArguments) 
 	{
-		$mResult = false;
-		if ($this->oModule instanceof AbstractModule)
-		{
-			$mResult = $this->oModule->CallMethod($sMethodName, $aArguments);
-		}
-		return $mResult;
+		return ($this->oModule instanceof AbstractModule) ? $this->oModule->CallMethod($sMethodName, $aArguments) : false;
 	}
 }

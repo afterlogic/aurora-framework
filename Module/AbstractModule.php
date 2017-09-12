@@ -105,6 +105,12 @@ abstract class AbstractModule
      */	
 	protected $aSkipedEvents = array();
 	
+    /**
+     *
+     * @var Manager
+     */	
+	protected $oModuleManager = null;
+
 	/**
 	 * @param string $sVersion
 	 */
@@ -138,6 +144,25 @@ abstract class AbstractModule
 		$sName = $aClass[count($aClass) - 2];
 		return \Aurora\System\Api::GetModuleDecorator($sName);
 	}
+	
+	/**
+	 * 
+	 * @param \Aurora\System\Module\Manager $oModuleManager
+	 * @return type
+	 */
+	public function SetModuleManager(Manager $oModuleManager)
+	{
+		return $this->oModuleManager = $oModuleManager;
+	}
+	
+	/**
+	 * 
+	 * @return \Aurora\System\Module\Manager
+	 */
+	public function GetModuleManager()
+	{
+		return $this->oModuleManager;
+	}
 
 	/**
 	 * 
@@ -165,7 +190,7 @@ abstract class AbstractModule
 			{
 				$mResult = false;
 				$oModule = \Aurora\System\Api::GetModule($sModule);
-				if ($oModule)
+				if ($oModule instanceof AbstractModule)
 				{
 					if (!$oModule->isInitialized())
 					{
@@ -225,7 +250,7 @@ abstract class AbstractModule
 	 */
 	public function loadModuleSettings()
 	{
-		$this->oModuleSettings = \Aurora\System\Api::GetModuleManager()->GetModuleSettings($this->sName);
+		$this->oModuleSettings = $this->GetModuleManager()->GetModuleSettings($this->sName);
 	}	
 
 	/**
@@ -295,7 +320,7 @@ abstract class AbstractModule
 	protected function getEventsCallbacks()
 	{
 		$aEventsValues = array();
-		$aEvents = \Aurora\System\Api::GetModuleManager()->getEvents();
+		$aEvents = $this->GetModuleManager()->getEvents();
 		foreach(array_values($aEvents) as $aEvent)
 		{
 			foreach ($aEvent as $aEv)
@@ -318,7 +343,7 @@ abstract class AbstractModule
 	 */
 	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
-		\Aurora\System\Api::GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
+		$this->GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
 	}
 
 	/**
@@ -330,7 +355,7 @@ abstract class AbstractModule
 	{
 		if (!in_array($sEvent, $this->aSkipedEvents))
 		{
-			return \Aurora\System\Api::GetModuleManager()->broadcastEvent(
+			return $this->GetModuleManager()->broadcastEvent(
 				$this->GetName(), 
 				$sEvent, 
 				$aArguments, 
@@ -377,7 +402,7 @@ abstract class AbstractModule
 	{
 		if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName))
 		{
-			\Aurora\System\Api::GetModuleManager()->includeTemplate(
+			$this->GetModuleManager()->includeTemplate(
 				$sParsedTemplateID, 
 				$sParsedPlace, 
 				$this->GetPath().'/'.$sTemplateFileName, 
@@ -393,7 +418,7 @@ abstract class AbstractModule
 	 */
 	public function extendObject($sType, $aMap)
 	{
-		\Aurora\System\Api::GetModuleManager()->extendObject($this->GetName(), $sType, $aMap);
+		$this->GetModuleManager()->extendObject($this->GetName(), $sType, $aMap);
 	}	
 	
 	/**
@@ -403,7 +428,7 @@ abstract class AbstractModule
 	 */
 	public function getExtendedObject($sType)
 	{
-		return \Aurora\System\Api::GetModuleManager()->getExtendedObject($sType);
+		return $this->GetModuleManager()->getExtendedObject($sType);
 	}
 	
 	/**
@@ -413,7 +438,7 @@ abstract class AbstractModule
 	 */
 	public function issetObject($sType)
 	{
-		return \Aurora\System\Api::GetModuleManager()->issetObject($sType);
+		return $this->GetModuleManager()->issetObject($sType);
 	}
 
 	/**
@@ -812,7 +837,7 @@ abstract class AbstractModule
 					} 
 					catch (\Exception $oException) 
 					{
-						\Aurora\System\Api::GetModuleManager()->AddResult(
+						$this->GetModuleManager()->AddResult(
 							$this->GetName(), 
 							$sMethod, 
 							$aArguments,
@@ -840,7 +865,7 @@ abstract class AbstractModule
 					$mResult
 				);
 				
-				\Aurora\System\Api::GetModuleManager()->AddResult(
+				$this->GetModuleManager()->AddResult(
 					$this->GetName(), 
 					$sMethod, 
 					$aArguments,

@@ -178,7 +178,7 @@ class Api
 			self::InitSalt();
 
 			self::$bIsValid = self::validateApi();
-			self::GetModuleManager();
+			self::GetModuleManager()->init();
 			self::$aModuleDecorators = array();
 			
 			self::removeOldLogs();
@@ -238,7 +238,6 @@ class Api
 		if (!isset(self::$oModuleManager))
 		{
 			self::$oModuleManager = Module\Manager::createInstance();
-			self::$oModuleManager->init();
 		}
 		
 		return self::$oModuleManager;
