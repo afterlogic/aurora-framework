@@ -944,39 +944,43 @@ class Api
 	 */
 	public static function GetLanguage($bForNewUser = false)
 	{
-		if (self::$sLanguage === null)
+		$sResult = null;
+		if (isset(self::$sLanguage))
+		{
+			$sResult = self::$sLanguage;
+		}
+		else
 		{
 			$iAuthUserId = self::getAuthenticatedUserId();
 			$bSuperAdmin = $iAuthUserId === -1;
 			$oModuleManager = self::GetModuleManager();
 
-			$sLanguage = $oModuleManager->getModuleConfigValue('Core', 'Language');
+			$sResult = $oModuleManager->getModuleConfigValue('Core', 'Language');
 			if ($oModuleManager->getModuleConfigValue('Core', 'AutodetectLanguage', true))
 			{
-				$sLanguage = self::getBrowserLanguage();
+				$sResult = self::getBrowserLanguage();
 			}
 
 			if ($bSuperAdmin)
 			{
 				$oSettings = &self::GetSettings();
-				$sLanguage = $oSettings->GetConf('AdminLanguage');
+				$sResult = $oSettings->GetConf('AdminLanguage');
 			}
 			else if (!$bForNewUser)
 			{
 				$oUser = self::getAuthenticatedUser();
 				if ($oUser)
 				{
-					$sLanguage = $oUser->Language;
+					$sResult = $oUser->Language;
 				}
 				else if (isset($_COOKIE['aurora-lang-on-login']))
 				{
-					$sLanguage = $_COOKIE['aurora-lang-on-login'];
+					$sResult = $_COOKIE['aurora-lang-on-login'];
 				}
 			}
-			self::$sLanguage = $sLanguage;
 		}
-			
-		return self::$sLanguage;
+		
+		return $sResult;
 	}
 	
 	protected static function getBrowserLanguage()
