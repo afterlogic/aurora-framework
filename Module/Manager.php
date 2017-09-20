@@ -323,6 +323,7 @@ class Manager
 			{
 				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]);
 				\Aurora\System\Api::Log('Arguments before subscription:');
+				
 				\Aurora\System\Api::LogObject($aArguments);
 				
 				$mCallBackResult = \call_user_func_array(
@@ -334,6 +335,7 @@ class Manager
 				);
 				
 				\Aurora\System\Api::Log('Arguments after subscription:');
+				
 				\Aurora\System\Api::LogObject($aArguments);
 
 				\Aurora\System\Api::Log('Subscription result:');
@@ -639,8 +641,13 @@ class Manager
 	 * @param string $sMethod
 	 * @param mixed $mResult
 	 */
-	public function AddResult($sModule, $sMethod, $aParameters, &$mResult, $iErrorCode = 0)
+	public function AddResult($sModule, $sMethod, $aParameters, $mResult, $iErrorCode = 0)
 	{
+		if (is_string($mResult))
+		{
+			$mResult = \str_replace(\Aurora\System\Api::$aSecretWords, '*******', $mResult);
+		}
+			
 		$aResult = array(
 			'Module' => $sModule,
 			'Method' => $sMethod,

@@ -67,6 +67,11 @@ class Application
 		return $oInstance;
 	}
 	
+	public static function DebugMode($bDebug)
+	{
+		Api::$bDebug = $bDebug;
+	}
+	
 	public static function Start($sDefaultEntry = 'default')
 	{
 		try

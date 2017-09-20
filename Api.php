@@ -95,6 +95,12 @@ class Api
 	static $bUseDbLog;
 	
 	/**
+	 * @var bool
+	 */
+	static $bDebug = false;
+		
+	
+	/**
 	 * @var string
 	 */
 	public static $sEventLogPrefix = 'event-';

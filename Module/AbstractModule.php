@@ -613,7 +613,7 @@ abstract class AbstractModule
 				{
 					$aResult = array_merge($aResult, $aResponseResult);
 				}
-				else
+				else if (\Aurora\System\Api::$bDebug)
 				{
 					$aResult['Stack'][] =  $aResponseResult;
 				}
