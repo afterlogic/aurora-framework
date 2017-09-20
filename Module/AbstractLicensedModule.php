@@ -24,10 +24,17 @@ namespace Aurora\System\Module;
  */
 abstract class AbstractLicensedModule extends AbstractModule 
 {
+	protected $isValid = null;
+	
 	public function Validate()
 	{
-		$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
-		return ($oLicensing) ? $oLicensing->Validate($this) : false;
+		if (!isset($this->isValid))
+		{
+			$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
+			$this->isValid = ($oLicensing) ? $oLicensing->Validate($this) : false;
+		}
+		
+		return $this->isValid;
 	}
 }
 

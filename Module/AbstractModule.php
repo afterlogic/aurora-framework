@@ -212,8 +212,7 @@ abstract class AbstractModule
 				$this->bInitialized = true;
 				if ($this instanceof AbstractLicensedModule)
 				{
-					$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
-					if ($oLicensing && $oLicensing->Validate($this))
+					if ($this->Validate())
 					{
 						$this->init();
 					}
