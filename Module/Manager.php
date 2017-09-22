@@ -648,10 +648,19 @@ class Manager
 			$mResult = \str_replace(\Aurora\System\Api::$aSecretWords, '*******', $mResult);
 		}
 			
+		$aMapParameters = array();
+		foreach ($aParameters as $sKey => $mParameter)
+		{
+			if (!is_resource($mParameter) && gettype($mParameter) !== 'unknown type')
+			{
+				$aMapParameters[$sKey] = $mParameter;
+			}
+		}
+		
 		$aResult = array(
 			'Module' => $sModule,
 			'Method' => $sMethod,
-			'Parameters' => $aParameters,
+			'Parameters' => $aMapParameters,
 			'Result' => $mResult
 		);
 		
