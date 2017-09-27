@@ -122,6 +122,7 @@ abstract class AbstractModule
 		$this->sPath = $sPath.$sName;
 		$this->aParameters = array();
 		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
+		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
 		
 		$this->aEntries = array();
 	}
@@ -163,6 +164,24 @@ abstract class AbstractModule
 	{
 		return $this->oModuleManager;
 	}
+	
+	/**
+	 * 
+	 * @return array
+	 */
+	public function GetRequireModules()
+	{
+		return $this->aRequireModules;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function isValid()
+	{
+		return true;
+	}	
 
 	/**
 	 * 
@@ -182,49 +201,16 @@ abstract class AbstractModule
 		$mResult = true;
 		if (!$this->isInitialized())
 		{
-			if ($this instanceof AbstractLicensedModule)
+			$this->bInitialized = true;
+			$this->loadModuleSettings();
+			if ($this->isValid())
 			{
-				$this->aRequireModules[] = 'Licensing';
+				$this->init();
+				$mResult = true;
 			}
-			foreach ($this->aRequireModules as $sModule)
+			else
 			{
 				$mResult = false;
-				$oModule = \Aurora\System\Api::GetModule($sModule);
-				if ($oModule instanceof AbstractModule)
-				{
-					if (!$oModule->isInitialized())
-					{
-						$mResult = $oModule->initialize();
-					}
-					else 
-					{
-						$mResult = true;
-					}
-				}
-				if (!$mResult)
-				{
-					break;
-				}
-			}
-			if ($mResult)
-			{
-				$this->loadModuleSettings();
-				$this->bInitialized = true;
-				if ($this instanceof AbstractLicensedModule)
-				{
-					if ($this->Validate())
-					{
-						$this->init();
-					}
-					else
-					{
-						return $mResult;
-					}
-				}
-				else
-				{
-					$this->init();
-				}
 			}
 		}
 		

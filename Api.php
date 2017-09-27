@@ -1303,7 +1303,7 @@ class Api
 
 	/**
 	 * 
-	 * @return int
+	 * @return \Aurora\Modules\Core\Classes\User
 	 */
 	public static function authorise()
 	{
@@ -1316,7 +1316,7 @@ class Api
 		{
 			$mUserId = self::getAuthenticatedUserId(self::getAuthToken());
 		}
-		return $mUserId;
+		return self::getUserById($mUserId);
 	}	
 	
 	public static function getAuthenticatedUserInfo($sAuthToken = '')

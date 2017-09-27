@@ -32,6 +32,13 @@ class Manager
 	protected $_aModules = array();
 	
     /**
+     * This array contains a list of modules paths
+     *
+     * @var array
+     */
+	protected $_aModulesPaths = null;
+
+	/**
      * This array contains a list of modules
      *
      * @var array
@@ -75,70 +82,25 @@ class Manager
 	 */
 	public function init()
 	{
-		$sModulesPath = $this->GetModulesPath();
-		
-		$oCoreModule = $this->loadModule('Core', $sModulesPath);
-		if ($oCoreModule !== false)
+		$oCoreModule = $this->GetModule('Core');
+		if ($oCoreModule instanceof AbstractModule)
 		{
-			\Aurora\System\Api::authorise();
-			
-			$oCoreModule->initialize();
-			$sTenant = \trim($oCoreModule->GetTenantName());
-			$aModulePath = array(
-				$sModulesPath
-			);
-			if (!empty($sTenant))
-			{
-				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
-				\array_unshift($aModulePath, $sTenantModulesPath);
-			}
-			$aModulesPath = array();
-			foreach ($aModulePath as $sModulesPath)
-			{
-				if (@\is_dir($sModulesPath))
-				{
-					if (false !== ($rDirHandle = @\opendir($sModulesPath)))
-					{
-						while (false !== ($sFileItem = @\readdir($rDirHandle)))
-						{
-							if (0 < \strlen($sFileItem) && '.' !== $sFileItem{0} && \preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
-							{
-								$aModulesPath[$sModulesPath][] = $sFileItem;
-							}
-						}
+			$oUser = \Aurora\System\Api::authorise();
 
-						@\closedir($rDirHandle);
-					}
-				}
-			}
-			foreach ($aModulesPath as $aModulePath)
+			$aModulesPath = $this->GetModulesPaths();
+			foreach ($aModulesPath as $sModuleName => $sModulePath)
 			{
-				foreach ($aModulePath as $sModuleName)
+				$bIsModuleDisabledForUser = false;
+
+				if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
 				{
-					$oModuleSettings = $this->GetModuleSettings($sModuleName);
-					$bIsModuleDisabledForUser = false;
-					
-					$oUser = \Aurora\System\Api::getAuthenticatedUser();
-					if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
-					{
-						$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
-					}
-					
-					if (!$oModuleSettings->GetConf('Disabled', false) && !$bIsModuleDisabledForUser)
+					$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
+				}
+				if (!$this->getModuleConfigValue($sModuleName, 'Disabled', false) && !$bIsModuleDisabledForUser)
+				{
+					if ($this->loadModule($sModuleName, $sModulePath) || $this->isClientModule($sModuleName))
 					{
 						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
-						$this->loadModule($sModuleName, $sModulesPath);
-					}
-				}
-			}
-			foreach ($this->_aModules as $oModule)
-			{
-				if ($oModule instanceof AbstractModule)
-				{
-					$oModule->initialize();
-					if ($oModule instanceof AbstractLicensedModule && !$oModule->Validate())
-					{
-						unset($this->_aAllowedModulesName[\strtolower($oModule->GetName())]);
 					}
 				}
 			}
@@ -148,6 +110,13 @@ class Manager
 			echo 'Can\'t load \'Core\' Module';
 		}
 	}
+	
+	protected function isClientModule($sModuleName)
+	{
+		$sModulePath = $this->GetModulePath($sModuleName);
+		return (\file_exists($sModulePath . $sModuleName . '/js/manager.js'));
+	}
+	
 	
 	/**
 	 * 
@@ -211,38 +180,62 @@ class Manager
 	/**
 	 * 
 	 * @param string $sModuleName
-	 * @param string $sModulePath
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
-	public function loadModule($sModuleName, $sModulePath)
+	public function loadModule($sModuleName, $sModulePath = null)
 	{
 		$mResult = false;
-		$aArgs = array($sModuleName, $sModulePath);
-		$this->broadcastEvent(
-			$sModuleName, 
-			'loadModule' . AbstractModule::$Delimiter . 'before', 
-			$aArgs
-		);
 		
-		if (@\file_exists($sModulePath.$sModuleName.'/Module.php') && !$this->isModuleLoaded($sModuleName))
-		{		
-			$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
-			$oModule = new $sModuleClassName($sModuleName, $sModulePath);
-			if ($oModule instanceof AbstractModule)
-			{
-				$oModule->SetModuleManager($this);
-				 $this->_aModules[\strtolower($sModuleName)] = $oModule;
-				 $mResult = $oModule;
-			}
+		if (!isset($sModulePath))
+		{
+			$sModulePath = $this->GetModulePath($sModuleName);
 		}
-
-		$this->broadcastEvent(
-			$sModuleName, 
-			'loadModule' . AbstractModule::$Delimiter . 'after', 
-			$aArgs,
-			$mResult
-		);
 		
+		if ($sModulePath)
+		{
+			$aArgs = array($sModuleName, $sModulePath);
+			$this->broadcastEvent(
+				$sModuleName, 
+				'loadModule' . AbstractModule::$Delimiter . 'before', 
+				$aArgs
+			);
+
+			if (!$this->isModuleLoaded($sModuleName))
+			{
+				if (@\file_exists($sModulePath.$sModuleName.'/Module.php') && !$this->isModuleLoaded($sModuleName))
+				{		
+					$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
+					$oModule = new $sModuleClassName($sModuleName, $sModulePath);
+					if ($oModule instanceof AbstractModule)
+					{
+						foreach ($oModule->GetRequireModules() as $sModule)
+						{
+							$oSubModule = \Aurora\System\Api::GetModule($sModule);
+							if (!$oSubModule)
+							{
+								break;
+							}
+						}
+						if ($oModule->initialize())
+						{
+							$this->_aModules[\strtolower($sModuleName)] = $oModule;
+							$mResult = $oModule;
+						}
+					}
+				}
+			}
+			else
+			{
+				$mResult = $this->GetModule($sModuleName);
+			}
+
+			$this->broadcastEvent(
+				$sModuleName, 
+				'loadModule' . AbstractModule::$Delimiter . 'after', 
+				$aArgs,
+				$mResult
+			);
+		}		
 		return $mResult;
 	}
 
@@ -451,6 +444,61 @@ class Manager
 	{
 		return AU_APP_ROOT_PATH.'modules/';
 	}
+	
+	/**
+	 * @todo return correct path according to curent tenant 
+	 * 
+	 * @return array
+	 */
+	public function GetModulesPaths()
+	{
+		if (!isset($this->_aModulesPaths))
+		{
+			$sModulesPath = $this->GetModulesPath();
+			$aModulePath = array(
+				$sModulesPath
+			);
+			$oCoreModule = $this->loadModule('Core', $sModulesPath);
+			$sTenant = \trim($oCoreModule->GetTenantName());
+			if (!empty($sTenant))
+			{
+				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
+				\array_unshift($aModulePath, $sTenantModulesPath);
+			}
+			$this->_aModulesPaths = array();
+			foreach ($aModulePath as $sModulesPath)
+			{
+				if (@\is_dir($sModulesPath))
+				{
+					if (false !== ($rDirHandle = @\opendir($sModulesPath)))
+					{
+						while (false !== ($sFileItem = @\readdir($rDirHandle)))
+						{
+							if (0 < \strlen($sFileItem) && '.' !== $sFileItem{0} && \preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
+							{
+								$this->_aModulesPaths[$sFileItem] = $sModulesPath;
+							}
+						}
+
+						@\closedir($rDirHandle);
+					}
+				}
+			}	
+		}
+		
+		return $this->_aModulesPaths;
+	}
+
+	/**
+	 * @todo return correct path according to curent tenant 
+	 * 
+	 * @return string
+	 */
+	public function GetModulePath($sModuleName)
+	{
+		$aModulesPaths = $this->GetModulesPaths();
+		return isset($aModulesPaths[$sModuleName]) ? $aModulesPaths[$sModuleName] : false;
+	}	
 
 	/**
 	 * @todo return correct path according to curent tenant 
@@ -506,8 +554,16 @@ class Manager
 	 */
 	public function GetModule($sModuleName)
 	{
-		$sModuleName = strtolower($sModuleName);
-		return (isset($this->_aModules[$sModuleName]) &&  $this->_aModules[$sModuleName] instanceof AbstractModule) ? $this->_aModules[$sModuleName] : false;
+		$sModuleNameLower = strtolower($sModuleName);
+		if ($this->isModuleLoaded($sModuleName))
+		{
+			$mResult = $this->_aModules[$sModuleNameLower];
+		}
+		else
+		{
+			$mResult = $this->loadModule($sModuleName);
+		}
+		return $mResult;
 	}
 	
 	

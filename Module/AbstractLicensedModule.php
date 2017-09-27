@@ -26,7 +26,13 @@ abstract class AbstractLicensedModule extends AbstractModule
 {
 	protected $isValid = null;
 	
-	public function Validate()
+	public function __construct($sName, $sPath, $sVersion = '1.0')
+	{
+		parent::__construct($sName, $sPath, $sVersion);
+		$this->aRequireModules[] = 'Licensing';
+	}	
+	
+	public function isValid()
 	{
 		if (!isset($this->isValid))
 		{
