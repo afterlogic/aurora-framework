@@ -40,27 +40,6 @@ class Notifications
 	const MethodNotFound = 114;
 	const LicenseLimit = 115;
 
-	const CanNotGetMessageList = 201;
-	const CanNotGetMessage = 202;
-	const CanNotDeleteMessage = 203;
-	const CanNotMoveMessage = 204;
-	const CanNotMoveMessageQuota = 205;
-	const CanNotCopyMessage = 206;
-	const CanNotCopyMessageQuota = 207;
-	const LibraryNoFound = 208;
-
-	const CanNotSaveMessage = 301;
-	const CanNotSendMessage = 302;
-	const InvalidRecipients = 303;
-	const CannotSaveMessageInSentItems = 304;
-	const UnableSendToRecipients = 305;
-	const ExternalRecipientsBlocked = 306;
-
-	const CanNotCreateFolder = 401;
-	const CanNotDeleteFolder = 402;
-	const CanNotSubscribeFolder = 403;
-	const CanNotUnsubscribeFolder = 404;
-
 	const CanNotSaveSettings = 501;
 	const CanNotChangePassword = 502;
 	const AccountOldPasswordNotCorrect = 503;
