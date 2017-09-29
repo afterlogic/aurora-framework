@@ -159,31 +159,46 @@ class Response
 	
 	public static function GetThumbResource($oAccount, $rResource, $sFileName, $bShow = true)
 	{
-		$sMd5Hash = \md5(\rand(1000, 9999));
+		$sHash = (string) \Aurora\System\Application::GetPathItemByIndex(1, '');
+		if (empty($sHash))
+		{
+			$sHash = \rand(1000, 9999);
+		}
+		$sMd5Hash = \md5($sHash);
 
 		$oApiFileCache = new Filecache();
-		$oApiFileCache->putFile($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
-		if ($oApiFileCache->isFileExists($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))
+		
+		$sThumb = null;
+		if (!$oApiFileCache->isFileExists($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName))
 		{
-			try
+			$oApiFileCache->putFile($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, $rResource, '_'.$sFileName);
+			if ($oApiFileCache->isFileExists($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName))
 			{
-				$oThumb = new \PHPThumb\GD(
-					$oApiFileCache->generateFullFilePath($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName)
-				);
+				try
+				{
+					$oThumb = new \PHPThumb\GD(
+						$oApiFileCache->generateFullFilePath($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName)
+					);
 
-				if ($bShow)
-				{
-					$oThumb->adaptiveResize(120, 100)->show();
+					$sThumb = $oThumb->adaptiveResize(120, 100)->getImageAsString();
+					$oApiFileCache->put($oAccount, 'Raw/Thumb/'.$sMd5Hash, $sThumb, '_'.$sFileName);
 				}
-				else 
-				{
-					return $oThumb->adaptiveResize(120, 100)->getImageAsString();
-				}
+				catch (\Exception $oE) {}
 			}
-			catch (\Exception $oE) {}
+			$oApiFileCache->clear($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName);
 		}
-
-		$oApiFileCache->clear($oAccount, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
+		if (!isset($sThumb))
+		{
+			$sThumb = $oApiFileCache->get($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName);
+		}
+		if ($bShow)
+		{
+			echo $sThumb; exit();
+		}
+		else 
+		{
+			return $sThumb;
+		}
 	}	
 	
 	/**
