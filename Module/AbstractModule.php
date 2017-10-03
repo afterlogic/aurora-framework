@@ -203,15 +203,7 @@ abstract class AbstractModule
 		{
 			$this->bInitialized = true;
 			$this->loadModuleSettings();
-			if ($this->isValid())
-			{
-				$this->init();
-				$mResult = true;
-			}
-			else
-			{
-				$mResult = false;
-			}
+			$this->init();
 		}
 		
 		return $mResult;

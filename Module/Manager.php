@@ -104,6 +104,20 @@ class Manager
 					}
 				}
 			}
+			foreach ($this->_aModules as $oModule)
+			{
+				if ($oModule instanceof AbstractModule && !$oModule->isValid())
+				{
+					if (isset($this->_aModules[\strtolower($oModule->GetName())]))
+					{
+						unset($this->_aModules[\strtolower($oModule->GetName())]);
+					}
+					if (isset($this->_aAllowedModulesName[\strtolower($oModule->GetName())]))
+					{
+						unset($this->_aAllowedModulesName[\strtolower($oModule->GetName())]);
+					}
+				}
+			}
 		}
 		else
 		{
