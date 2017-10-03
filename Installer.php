@@ -18,15 +18,17 @@ class Installer
 		
 		\Aurora\System\Api::Init();
 		
-		$aModules = \Aurora\System\Api::GetModules();
+		\Aurora\System\Api::GetModuleManager()->SyncModulesConfigs();
 		
-		if (is_array($aModules))
-		{
-			foreach ($aModules as $oModule)
-			{
-				$oModule->saveModuleConfig();
-			}
-		}
+		// $aModules = \Aurora\System\Api::GetModules();
+		
+		// if (is_array($aModules))
+		// {
+			// foreach ($aModules as $oModule)
+			// {
+				// $oModule->saveModuleConfig();
+			// }
+		// }
 
 		echo $sMessage;
 	}
