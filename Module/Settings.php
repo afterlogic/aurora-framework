@@ -25,6 +25,7 @@ namespace Aurora\System\Module;
  */
 class Settings extends \Aurora\System\AbstractSettings
 {
+	public $DefaultConfigFilePath;
 	public $ModuleName;
 
 	/**
@@ -38,17 +39,25 @@ class Settings extends \Aurora\System\AbstractSettings
 		$sConfigFilePath = $sModulesSettingsPath . $sModuleName . '.config.json';
 		if (!\file_exists($sConfigFilePath))
 		{
-			$sDefaultConfigFilePath = \Aurora\System\Api::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
-			if (\file_exists($sDefaultConfigFilePath))
+			$this->DefaultConfigFilePath = \Aurora\System\Api::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
+			if (\file_exists($this->DefaultConfigFilePath))
 			{
 				if (!\file_exists($sModulesSettingsPath))
 				{
 					\mkdir($sModulesSettingsPath, 0777);
 				}
-				\copy($sDefaultConfigFilePath, $sConfigFilePath);
+				\copy($this->DefaultConfigFilePath, $sConfigFilePath);
 			}
 		}
 
 		parent::__construct($sConfigFilePath);
+	}
+	
+	/*
+	 * 
+	 */
+	public function GetDefaultConfigValues()
+	{
+		return (new DefaultSettings($this->DefaultConfigFilePath))->GetConfigValues();
 	}
 }

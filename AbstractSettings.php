@@ -60,6 +60,22 @@ abstract class AbstractSettings
 	}
 	
 	/**
+	 * @return array
+	 */
+	public function GetConfigValues()
+	{
+		return $this->aContainer;
+	}
+
+	/**
+	 * @param array $aValues
+	 */
+	public function SetConfigValues($aValues)
+	{
+		$this->aContainer = $aValues;
+	}
+
+	/**
 	 * @param string $sKey
 	 *
 	 * @return mixed

@@ -176,6 +176,29 @@ class Manager
 			$oModuleConfig->Save();
 		}
 	}	
+	
+	/**
+	 * 
+	 */
+	public function SyncModulesConfigs()
+	{
+		foreach ($this->_aModules as $oModule)
+		{
+			if ($oModule instanceof AbstractModule)
+			{
+				$oSettings = $oModule->loadModuleSettings();
+				if ($oSettings instanceof Settings)
+				{
+					$aValues = array_merge(
+						$oSettings->GetDefaultConfigValues(), 
+						$oSettings->GetConfigValues()
+					);
+					$oSettings->SetConfigValues($aValues);
+					$oSettings->Save();
+				}
+			}
+		}
+	}
 
 	/**
 	 * 

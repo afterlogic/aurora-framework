@@ -71,7 +71,7 @@ abstract class AbstractModule
 	
     /**
      *
-     * @var \Aurora\System\Settings
+     * @var \Aurora\System\Module\Settings
      */
 	protected $oModuleSettings = null;	
 	
@@ -235,7 +235,11 @@ abstract class AbstractModule
 	 */
 	public function loadModuleSettings()
 	{
-		$this->oModuleSettings = $this->GetModuleManager()->GetModuleSettings($this->sName);
+		if (!isset($this->oModuleSettings))
+		{
+			$this->oModuleSettings = $this->GetModuleManager()->GetModuleSettings($this->sName);
+		}
+		return $this->oModuleSettings;
 	}	
 
 	/**
