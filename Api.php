@@ -1307,6 +1307,7 @@ class Api
 	 */
 	public static function authorise()
 	{
+		$oUser = null;
 		$mUserId = false;
 		if (isset(self::$aUserSession['UserId']))
 		{
@@ -1316,7 +1317,12 @@ class Api
 		{
 			$mUserId = self::getAuthenticatedUserId(self::getAuthToken());
 		}
-		return self::getUserById($mUserId);
+		try
+		{
+			$oUser = self::getUserById($mUserId);
+		}
+		catch (\Exception $oException) {}
+		return $oUser;
 	}	
 	
 	public static function getAuthenticatedUserInfo($sAuthToken = '')

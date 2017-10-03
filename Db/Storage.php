@@ -100,16 +100,7 @@ class Storage
 	 */
 	public function IsConnected()
 	{
-		try
-		{
-			return $this->oConnector->IsConnected();
-		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-
-		return false;
+		return $this->oConnector->IsConnected();
 	}
 
 	/**
@@ -117,28 +108,19 @@ class Storage
 	 */
 	public function Connect()
 	{
-		try
+		if ($this->oConnector->IsConnected())
 		{
-			if ($this->oConnector->IsConnected())
-			{
-				return true;
-			}
-
-			$this->oConnector->ReInitIfNotConnected(
-				$this->oSettings->GetConf('DBHost'),
-				$this->oSettings->GetConf('DBLogin'),
-				$this->oSettings->GetConf('DBPassword'),
-				$this->oSettings->GetConf('DBName')
-			);
-
-			return $this->oConnector->Connect();
-		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
+			return true;
 		}
 
-		return false;
+		$this->oConnector->ReInitIfNotConnected(
+			$this->oSettings->GetConf('DBHost'),
+			$this->oSettings->GetConf('DBLogin'),
+			$this->oSettings->GetConf('DBPassword'),
+			$this->oSettings->GetConf('DBName')
+		);
+
+		return $this->oConnector->Connect();
 	}
 
 	/**
@@ -146,28 +128,19 @@ class Storage
 	 */
 	public function ConnectSlave()
 	{
-		try
+		if ($this->oSlaveConnector->IsConnected())
 		{
-			if ($this->oSlaveConnector->IsConnected())
-			{
-				return true;
-			}
-
-			$this->oSlaveConnector->ReInitIfNotConnected(
-				$this->oSettings->GetConf('DBHost'),
-				$this->oSettings->GetConf('DBLogin'),
-				$this->oSettings->GetConf('DBPassword'),
-				$this->oSettings->GetConf('DBName')
-			);
-
-			return $this->oSlaveConnector->Connect(true, true);
-		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
+			return true;
 		}
 
-		return false;
+		$this->oSlaveConnector->ReInitIfNotConnected(
+			$this->oSettings->GetConf('DBHost'),
+			$this->oSettings->GetConf('DBLogin'),
+			$this->oSettings->GetConf('DBPassword'),
+			$this->oSettings->GetConf('DBName')
+		);
+
+		return $this->oSlaveConnector->Connect(true, true);
 	}
 
 	/**
@@ -175,20 +148,11 @@ class Storage
 	 */
 	public function ConnectNoSelect()
 	{
-		try
+		if ($this->oConnector->IsConnected())
 		{
-			if ($this->oConnector->IsConnected())
-			{
-				return true;
-			}
-			return $this->oConnector->ConnectNoSelect();
+			return true;
 		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-
-		return false;
+		return $this->oConnector->ConnectNoSelect();
 	}
 
 	/**
@@ -196,21 +160,12 @@ class Storage
 	 */
 	public function Disconnect()
 	{
-		try
+		$this->oConnector->Disconnect();
+		if ($this->oSlaveConnector)
 		{
-			$this->oConnector->Disconnect();
-			if ($this->oSlaveConnector)
-			{
-				$this->oSlaveConnector->Disconnect();
-			}
-			return true;
+			$this->oSlaveConnector->Disconnect();
 		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-
-		return false;
+		return true;
 	}
 
 	/**
@@ -218,16 +173,7 @@ class Storage
 	 */
 	public function Select()
 	{
-		try
-		{
-			return $this->oConnector->Select();
-		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-
-		return false;
+		return $this->oConnector->Select();
 	}
 
 	/**
@@ -236,29 +182,22 @@ class Storage
 	public function Execute($sSql)
 	{
 		$bResult = false;
-		try
+		if (!empty($sSql))
 		{
-			if (!empty($sSql))
+			if ($this->oSlaveConnector && $this->isSlaveSql($sSql))
 			{
-				if ($this->oSlaveConnector && $this->isSlaveSql($sSql))
+				if ($this->ConnectSlave())
 				{
-					if ($this->ConnectSlave())
-					{
-						$bResult = $this->oSlaveConnector->Execute($sSql, true);
-					}
-				}
-				else
-				{
-					if ($this->Connect())
-					{
-						$bResult = $this->oConnector->Execute($sSql);
-					}
+					$bResult = $this->oSlaveConnector->Execute($sSql, true);
 				}
 			}
-		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
+			else
+			{
+				if ($this->Connect())
+				{
+					$bResult = $this->oConnector->Execute($sSql);
+				}
+			}
 		}
 
 		return $bResult;
@@ -270,19 +209,11 @@ class Storage
 	 */
 	public function GetNextArrayRecord($bAutoFree = true)
 	{
-		try
+		if ($this->oSlaveConnector)
 		{
-			if ($this->oSlaveConnector)
-			{
-				return $this->oSlaveConnector->GetNextArrayRecord($bAutoFree);
-			}
-			return $this->oConnector->GetNextArrayRecord($bAutoFree);
+			return $this->oSlaveConnector->GetNextArrayRecord($bAutoFree);
 		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-		return false;
+		return $this->oConnector->GetNextArrayRecord($bAutoFree);
 	}
 
 	/**
@@ -291,20 +222,12 @@ class Storage
 	 */
 	public function GetNextRecord($bAutoFree = true)
 	{
-		try
+		if ($this->oSlaveConnector)
 		{
-			if ($this->oSlaveConnector)
-			{
-				return $this->oSlaveConnector->GetNextRecord($bAutoFree);
-			}
-			
-			return $this->oConnector->GetNextRecord($bAutoFree);
+			return $this->oSlaveConnector->GetNextRecord($bAutoFree);
 		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-		return false;
+
+		return $this->oConnector->GetNextRecord($bAutoFree);
 	}
 
 	/**
@@ -312,20 +235,12 @@ class Storage
 	 */
 	public function FreeResult()
 	{
-		try
+		if ($this->oSlaveConnector)
 		{
-			if ($this->oSlaveConnector)
-			{
-				return $this->oSlaveConnector->FreeResult();
-			}
-			
-			return $this->oConnector->FreeResult();
+			return $this->oSlaveConnector->FreeResult();
 		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-		return false;
+
+		return $this->oConnector->FreeResult();
 	}
 
 	/**
@@ -361,16 +276,7 @@ class Storage
 	 */
 	public function GetLastInsertId($sTableName = null, $sFieldName = null)
 	{
-		try
-		{
-			return $this->oConnector->GetLastInsertId($sTableName, $sFieldName);
-		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-		
-		return false;
+		return $this->oConnector->GetLastInsertId($sTableName, $sFieldName);
 	}
 
 	/**
@@ -378,19 +284,11 @@ class Storage
 	 */
 	public function ResultCount()
 	{
-		try
+		if ($this->oSlaveConnector)
 		{
-			if ($this->oSlaveConnector)
-			{
-				return $this->oSlaveConnector->ResultCount();
-			}
-			return $this->oConnector->ResultCount();
+			return $this->oSlaveConnector->ResultCount();
 		}
-		catch (\Aurora\System\Exceptions\DbException $oException)
-		{
-			$this->SetException($oException);
-		}
-		return false;
+		return $this->oConnector->ResultCount();
 	}
 
 	/**
@@ -401,14 +299,7 @@ class Storage
 		$aResult = false;
 		if ($this->Connect())
 		{
-			try
-			{
-				$aResult = $this->oConnector->GetTableNames();
-			}
-			catch (\Aurora\System\Exceptions\DbException $oException)
-			{
-				$this->SetException($oException);
-			}
+			$aResult = $this->oConnector->GetTableNames();
 		}
 		return $aResult;
 	}
@@ -422,14 +313,7 @@ class Storage
 		$aResult = false;
 		if ($this->Connect())
 		{
-			try
-			{
-				$aResult = $this->oConnector->GetTableFields($sTableName);
-			}
-			catch (\Aurora\System\Exceptions\DbException $oException)
-			{
-				$this->SetException($oException);
-			}
+			$aResult = $this->oConnector->GetTableFields($sTableName);
 		}
 		return $aResult;
 	}
@@ -443,14 +327,7 @@ class Storage
 		$aResult = false;
 		if ($this->Connect())
 		{
-			try
-			{
-				$aResult = $this->oConnector->GetTableIndexes($sTableName);
-			}
-			catch (\Aurora\System\Exceptions\DbException $oException)
-			{
-				$this->SetException($oException);
-			}
+			$aResult = $this->oConnector->GetTableIndexes($sTableName);
 		}
 		return $aResult;
 	}

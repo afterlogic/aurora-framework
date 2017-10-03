@@ -48,7 +48,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->isEntityExists($mIdOrUUID);
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$bResult = false;
 			$this->setLastException($oException);
@@ -122,7 +122,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 				);
 				$mResult = true;
 			}
-			catch (Exception $ex)
+			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
 				$mResult = false;
 				throw \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
@@ -144,7 +144,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			$bResult = $this->oStorage->deleteEntity($mIdOrUUID);
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -167,7 +167,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 			{
 				$bResult = $this->oStorage->deleteEntities($aIdsOrUUIDs);
 			}
-			catch (\Aurora\System\Exceptions\BaseException $oException)
+			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
 				$this->setLastException($oException);
 			}
@@ -187,7 +187,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			$aTypes = $this->oStorage->getTypes();
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -207,7 +207,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			$iCount = $this->oStorage->getEntitiesCount($sType, $aWhere, $aIdsOrUUIDs);
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -242,7 +242,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 				$aIdsOrUUIDs
 			);
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->setLastException($oException);
 		}
@@ -261,9 +261,9 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			$oEntity = $this->oStorage->getEntity($mIdOrUUID);
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
-			$this->setLastException($oException);
+			throw new \Aurora\System\Exceptions\ApiException(0, $oException);
 		}
 		return $oEntity;
 	}
@@ -303,7 +303,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 				}
 			}
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$bResult = false;
 			$this->setLastException($oException);
@@ -337,7 +337,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 				dirname(__FILE__) . '/Eav/Storages/Db/Sql/create.sql'
 			);
 		}
-		catch (\Aurora\System\Exceptions\BaseException $oException)
+		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
 			$this->setLastException($oException);
 		}
