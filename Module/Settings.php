@@ -35,11 +35,11 @@ class Settings extends \Aurora\System\AbstractSettings
 	public function __construct($sModuleName)
 	{
 		$this->ModuleName = $sModuleName;
+		$this->DefaultConfigFilePath = \Aurora\System\Api::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
 		$sModulesSettingsPath = \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath();
 		$sConfigFilePath = $sModulesSettingsPath . $sModuleName . '.config.json';
 		if (!\file_exists($sConfigFilePath))
 		{
-			$this->DefaultConfigFilePath = \Aurora\System\Api::GetModuleManager()->GetModulesPath() . '/' . $sModuleName . '/config.json';
 			if (\file_exists($this->DefaultConfigFilePath))
 			{
 				if (!\file_exists($sModulesSettingsPath))

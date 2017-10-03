@@ -189,6 +189,8 @@ class Manager
 				$oSettings = $oModule->loadModuleSettings();
 				if ($oSettings instanceof Settings)
 				{
+					$v1 = $oSettings->GetDefaultConfigValues();
+					$v2 = $oSettings->GetConfigValues();
 					$aValues = array_merge(
 						$oSettings->GetDefaultConfigValues(), 
 						$oSettings->GetConfigValues()

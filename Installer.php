@@ -6,18 +6,64 @@ use Composer\Script\Event;
 
 class Installer
 {
-    public static function postUpdate(Event $event)
+	/**
+	* This method should be run from composer.
+	*/
+    public static function updateConfigs()
+	{
+		$sBaseDir = dirname(__File__);
+		$sMessage = "Configuration was updated successfully";
+	    
+		include_once $sBaseDir . '/autoload.php';
+		
+		\Aurora\System\Api::Init();
+		
+		$aModules = \Aurora\System\Api::GetModules();
+		
+		if (is_array($aModules))
+		{
+			foreach ($aModules as $oModule)
+			{
+				$oModule->saveModuleConfig();
+			}
+		}
+
+		echo $sMessage;
+	}
+	
+	/**
+	* This method should be run from composer.
+	*/
+    public static function preConfigForce(Event $event)
+	{
+		self::preConfig($event);
+	}
+	
+	/**
+	* This method should be run from composer.
+	*/
+    public static function preConfigSafe(Event $event)
+	{
+		$sBaseDir = dirname(__File__);
+		
+		//Checking that configuration files already exist
+		if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0)
+		{
+			echo "The config files are already exist";
+			return;
+		}
+		else
+		{
+			self::preConfig($event);
+		}
+	}
+	
+    private static function preConfig(Event $event)
     {
 		$sConfigFilename = 'pre-config.json';
 		$sBaseDir = dirname(__File__);
 		$sMessage = "Configuration was updated successfully";
 	    
-		//Checking that configuration files already exist
-		if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0)
-		{
-			return;
-		}
-		
 	    $oExtra = $event->getComposer()->getPackage()->getExtra();
 		
 		if ($oExtra && isset($oExtra['aurora-installer-pre-config']))
@@ -41,13 +87,14 @@ class Installer
 				
 				if ($oPreConfig['modules'])
 				{
+					$oModuleManager = \Aurora\System\Api::GetModuleManager();
+					
 					foreach ($oPreConfig['modules'] as $sModuleName => $oModuleConfig)
 					{
 						foreach ($oModuleConfig as $sConfigName => $mConfigValue)
 						{
-							$oModuleManager = \Aurora\System\Api::GetModuleManager();
-
 							$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
+							
 							if ($mValue !== null)
 							{
 								$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
