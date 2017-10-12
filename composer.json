@@ -1,7 +1,7 @@
 {
 	"name": "afterlogic/aurora-framework",
 	"type": "aurora-framework",
-	"description": "text",
+	"description": "",
 	"autoload": {
 		"classmap": ["/", "Installer.php"]
 	},
