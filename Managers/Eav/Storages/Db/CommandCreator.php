@@ -221,7 +221,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	
 	public function getEntitiesCount($sType, $aWhere = array(), $aIdsOrUUIDs = array())
 	{
-		return $this->getEntities($sType, array(), 0, 0, $aWhere, "", \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs, true);
+		return $this->getEntities($sType, array('UUID'), 0, 0, $aWhere, "", \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs, true);
 	}
 
 	/**
