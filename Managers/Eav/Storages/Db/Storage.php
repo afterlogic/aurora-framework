@@ -186,6 +186,39 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	/**
 	 * 
 	 * @param type $sType
+	 * @param type $iOffset
+	 * @param type $iLimit
+	 * @param type $aSearchAttrs
+	 * @return array
+	 */
+	protected function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array())
+	{
+		$aUids = array();
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->getEntities(
+					$sType, 
+					array(), 
+					$iOffset, 
+					$iLimit, 
+					$aSearchAttrs
+				)
+			)
+		)
+		{
+			$oRow = null;
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+			{
+				$aUids[] = $oRow->entity_uuid;
+			}
+		}
+		$this->oConnection->FreeResult();
+		
+		return $aUids; 
+	}
+	
+	/**
+	 * 
+	 * @param type $sType
 	 * @param type $aViewAttrs
 	 * @param type $iOffset
 	 * @param type $iLimit
@@ -199,30 +232,34 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	{
 		$mResult = false;
 		
-		if ($aViewAttrs === null)
-		{
+		$aIdsOrUUIDs = array_merge(
+			$aIdsOrUUIDs, 
+			$this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs)
+		);
+		
+		if ($aViewAttrs === null) {
 			$aViewAttrs = array();
 		}
-		else if (count($aViewAttrs) === 0)
-		{
+		else if (count($aViewAttrs) === 0) {
 			$this->oConnection->Execute(
 				$this->oCommandCreator->getAttributesNamesByEntityType($sType)
 			);
-			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
-			{
+			while (false !== ($oRow = $this->oConnection->GetNextRecord())) {
 				$aViewAttrs[] = $oRow->name;
 			}
 			$this->oConnection->FreeResult();
 		}		
 		
-		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); // request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
+		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
+		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); 
+		
 		if ($this->oConnection->Execute(
 				$this->oCommandCreator->getEntities(
 					$sType, 
 					$aViewAttrs, 
 					$iOffset, 
 					$iLimit, 
-					$aSearchAttrs, 
+					array(), 
 					$mOrderBy, 
 					$iSortOrder, 
 					$aIdsOrUUIDs
@@ -234,21 +271,13 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$mResult = array();
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				if (class_exists($sType))
-				{
-					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
-				}
-				else
-				{
-					$oEntity = new \Aurora\System\EAV\Entity($sType);
-				}
+				$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
 				$oEntity->EntityId = (int) $oRow->entity_id;
 				$oEntity->UUID = $oRow->entity_uuid;
 				$oEntity->setModule($oRow->entity_module);
 
 				foreach (get_object_vars($oRow) as $sKey => $mValue)
 				{
-					
 					if (strrpos($sKey, 'attr_', -5) !== false)
 					{
 						$sAttrKey = substr($sKey, 5);
