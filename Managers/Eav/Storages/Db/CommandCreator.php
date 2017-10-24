@@ -204,12 +204,23 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					{
 						$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
 					}
-					$aResultOperations[] = sprintf(
+					$sResultOperation = sprintf(
 						"`attr_%s` %s " . $sValueFormat, 
 						$sKey, 
 						$mResultOperator, 
 						($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
 					);
+/*
+					if ($oEntity->isDefaultValue($sKey, $mResultValue))
+					{
+						$sResultOperation .= sprintf(
+						" OR `attr_%s` IS NULL", 
+						$sKey, 
+						$mResultOperator);
+					}
+ * 
+ */
+					$aResultOperations[] = $sResultOperation;
 				}
 			}
 		}
@@ -454,34 +465,50 @@ SELECT count(entity_id) AS entities_count FROM (
 	}	
 	
 	/**
-	 * @param array $aEntityIds
+	 * @param array $aEntities
 	 * @param array $aAttributes
 	 *
 	 * @return string
 	 */
-	public function setAttributes($aEntityIds, $aAttributes, $sType)
+	public function setAttributes($aEntities, $aAttributes, $sType)
 	{
 		$sSql = '';
+		$aSql = array();
+		$aSqlDelete = array();
 		$aValues = array();
-		foreach ($aEntityIds as $iEntityId)
+		foreach ($aEntities as $oEntity)
 		{
+			$iEntityId = $oEntity->EntityId;
 			foreach ($aAttributes as $oAttribute)
 			{
-				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !in_array(strtolower($oAttribute->Name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
+				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && 
+					!in_array(strtolower($oAttribute->Name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes)
+				)
 				{
-					if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
+					if (!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) || ($oEntity->isOverridedAttribute($oAttribute->Name)))
 					{
-						$oAttribute->Encrypt();
+						if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
+						{
+							$oAttribute->Encrypt();
+						}
+						$mValue = $oAttribute->Value;
+						$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
+						$sSqlValueType = $oAttribute->getValueFormat();
+
+						$aValues[] = sprintf('	(%d, %s, ' . $sSqlValueType . ')',
+							$iEntityId,
+							$this->escapeString($oAttribute->Name),
+							$sSqlValue
+						);
 					}
-					$mValue = $oAttribute->Value;
-					$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
-					$sSqlValueType = $oAttribute->getValueFormat();
-					
-					$aValues[] = sprintf('	(%d, %s, ' . $sSqlValueType . ')',
-						$iEntityId,
-						$this->escapeString($oAttribute->Name),
-						$sSqlValue
-					);
+					else
+					{
+						$aSqlDelete[] = sprintf(
+							'id_entity = %d AND name = %s',
+							$iEntityId,
+							$this->escapeString($oAttribute->Name)
+						);
+					}
 				}
 			}
 		}
@@ -489,7 +516,7 @@ SELECT count(entity_id) AS entities_count FROM (
 		{
 			$sValues = implode(",\r\n", $aValues);
 
-			$sSql = $sSql . sprintf('
+			$aSql[] = $sSql . sprintf('
 INSERT INTO %seav_attributes_%s 
 	(%s, %s, %s)
 VALUES 
@@ -510,8 +537,23 @@ ON DUPLICATE KEY UPDATE
 				$this->escapeColumn('value'), $this->escapeColumn('value')
 			);
 		}
-		return $sSql;
+		if (count($aSqlDelete) > 0)
+		{
+			array_unshift($aSql, sprintf(
+				'DELETE FROM %seav_attributes_%s WHERE ' . implode(" OR ", $aSqlDelete) . ";",
+				$this->prefix(), 
+				$sType
+			));
+		}
+		return $aSql;
 	}	
+	
+	public function deleteAttribute($sType, $iEntityId, $sAttribute)
+	{
+		return sprintf(
+			'DELETE FROM %seav_attributes_%s WHERE id_entity = %d AND name = %s', 
+			$this->prefix(), $sType, $iEntityId, $this->escapeString($sAttribute));		
+	}
 	
 	public function getAttributesNamesByEntityType($sEntityType)
 	{

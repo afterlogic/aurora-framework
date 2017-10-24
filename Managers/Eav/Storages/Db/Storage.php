@@ -230,7 +230,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 */
 	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
 	{
-		$mResult = false;
+		$mResult = array();
 		
 		$aIdsOrUUIDs = array_merge(
 			$aIdsOrUUIDs, 
@@ -253,54 +253,57 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
 		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); 
 		
-		if ($this->oConnection->Execute(
-				$this->oCommandCreator->getEntities(
-					$sType, 
-					$aViewAttrs, 
-					$iOffset, 
-					$iLimit, 
-					array(), 
-					$mOrderBy, 
-					$iSortOrder, 
-					$aIdsOrUUIDs
+		if (count($aIdsOrUUIDs) > 0)
+		{
+			if ($this->oConnection->Execute(
+					$this->oCommandCreator->getEntities(
+						$sType, 
+						$aViewAttrs, 
+						$iOffset, 
+						$iLimit, 
+						array(), 
+						$mOrderBy, 
+						$iSortOrder, 
+						$aIdsOrUUIDs
+					)
 				)
 			)
-		)
-		{
-			$oRow = null;
-			$mResult = array();
-			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
-				$oEntity->EntityId = (int) $oRow->entity_id;
-				$oEntity->UUID = $oRow->entity_uuid;
-				$oEntity->setModule($oRow->entity_module);
-
-				foreach (get_object_vars($oRow) as $sKey => $mValue)
+				$oRow = null;
+				$mResult = array();
+				while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 				{
-					if (strrpos($sKey, 'attr_', -5) !== false)
+					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
+					$oEntity->EntityId = (int) $oRow->entity_id;
+					$oEntity->UUID = $oRow->entity_uuid;
+					$oEntity->setModule($oRow->entity_module);
+
+					foreach (get_object_vars($oRow) as $sKey => $mValue)
 					{
-						$sAttrKey = substr($sKey, 5);
-						if (!in_array(strtolower($sAttrKey), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
+						if (strrpos($sKey, 'attr_', -5) !== false)
 						{
-							$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
-							$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-								$sAttrKey, 
-								$mValue, 
-								$oEntity->getType($sAttrKey), 
-								$bIsEncrypted, 
-								$oEntity->EntityId
-							);
-							$oAttribute->Encrypted = $bIsEncrypted;
-							$oEntity->{$sAttrKey} = $oAttribute;
+							$sAttrKey = substr($sKey, 5);
+							if (!in_array(strtolower($sAttrKey), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
+							{
+								$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
+								$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
+									$sAttrKey, 
+									$mValue, 
+									$oEntity->getType($sAttrKey), 
+									$bIsEncrypted, 
+									$oEntity->EntityId
+								);
+								$oAttribute->Encrypted = $bIsEncrypted;
+								$oEntity->{$sAttrKey} = $oAttribute;
+							}
 						}
 					}
+					$mResult[] = $oEntity;
 				}
-				$mResult[] = $oEntity;
+				$this->oConnection->FreeResult();
 			}
-			$this->oConnection->FreeResult();
+			$this->throwDbExceptionIfExist();
 		}
-		$this->throwDbExceptionIfExist();
 		return $mResult;
 	}	
 
@@ -330,7 +333,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 
 	/**
 	 */
-	public function setAttributes($aEntitiesIds, $aAttributes)
+	public function setAttributes($aEntities, $aAttributes)
 	{
 		$aAttributesByTypes = array();
 		foreach ($aAttributes as $oAttribute)
@@ -340,9 +343,18 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		
 		foreach ($aAttributesByTypes as $sType => $aAttributes)
 		{
-			$this->oConnection->Execute(
-				$this->oCommandCreator->setAttributes($aEntitiesIds, $aAttributes, $sType)
-			);
+			$mSql = $this->oCommandCreator->setAttributes($aEntities, $aAttributes, $sType);
+			if (!is_array($mSql))
+			{
+				$mSql = array($mSql);
+			}
+			foreach ($mSql as $sSql)
+			{
+				$this->oConnection->Execute(
+					$sSql
+				);
+			}
+			
 		}
 		$this->throwDbExceptionIfExist();
 		return true;

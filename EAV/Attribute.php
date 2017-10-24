@@ -59,6 +59,12 @@ class Attribute
 	 * @var bool $ReadOnly
 	 */
 	public $ReadOnly;	
+	
+	/**
+	 *
+	 * @var bool $Override
+	 */
+	public $Override;
 
 	/**
 	 * @param string $sName
@@ -77,6 +83,7 @@ class Attribute
 		$this->IsEncrypt = $bIsEncrypt;
 		$this->Encrypted = false;
 		$this->ReadOnly = $bReadOnly;
+		$this->Override = false;
 
 		$this->setType($sType);
 	}

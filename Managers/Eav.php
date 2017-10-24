@@ -83,7 +83,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 			$oEntity->EntityId = $mResult;
 			if (0 < $oEntity->countAttributes())
 			{
-				$this->setAttributes($mResult, $oEntity->getAttributes());
+				$this->setAttributes($oEntity, $oEntity->getAttributes());
 			}
 		}
 		else
@@ -108,7 +108,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 			try
 			{
 				$this->setAttributes(
-					$oEntity->EntityId, 
+					$oEntity, 
 					$oEntity->getAttributes()
 				);
 				$mResult = true;
@@ -260,16 +260,16 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	}
 
 	/**
-	 * @param int|array $mEntityId
+	 * @param \Aurora\System\EAV\Entity |array $mEntity
 	 * @param array $aAttributes
 	 */
-	public function setAttributes($mEntityId, $aAttributes)
+	public function setAttributes($mEntity, $aAttributes)
 	{
-		if (!is_array($mEntityId))
+		if (!is_array($mEntity))
 		{
-			$mEntityId = array($mEntityId);
+			$mEntity = array($mEntity);
 		}
-		if (!$this->oStorage->setAttributes($mEntityId, $aAttributes))
+		if (!$this->oStorage->setAttributes($mEntity, $aAttributes))
 		{
 			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
 		}
@@ -277,18 +277,19 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 
 	/**
 	 * 
+	 * @param \Aurora\System\EAV\Entity |array $mEntity
 	 * @param \Aurora\System\EAV\Attribute $oAttribute
 	 * @return boolean
 	 * @throws \Aurora\System\Exceptions\ManagerException
 	 */
-	public function setAttribute(\Aurora\System\EAV\Attribute $oAttribute)
+	public function setAttribute($mEntity, \Aurora\System\EAV\Attribute $oAttribute)
 	{
 		$bResult = false;
 		try
 		{
 			if ($oAttribute->validate())
 			{
-				if (!$this->oStorage->setAttributes(array($oAttribute->EntityId), array($oAttribute)))
+				if (!$this->oStorage->setAttributes(array($mEntity), array($oAttribute)))
 				{
 					throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
 				}

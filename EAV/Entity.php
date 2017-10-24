@@ -349,6 +349,30 @@ class Entity
 		return $mType;
 	}
 	
+	public function isDefaultValue($sAttribute, $mValue)
+	{
+		$bResult = false;
+		$aMap = $this->getMap();
+		if (isset($aMap[$sAttribute]))
+		{
+			$bResult = ($mValue === $aMap[$sAttribute][1]);
+		}
+		
+		return $bResult;
+	}
+	
+	public function isOverridedAttribute($sAttribute)
+	{
+		$bOverride = false;
+		$oAttribute = $this->getAttribute($sAttribute);
+		if ($oAttribute instanceof Attribute)
+		{
+			$bOverride = $oAttribute->Override;
+		}
+		$aMap = $this->getMap();
+		return ((isset($aMap[$sAttribute]) && isset($aMap[$sAttribute][2]) && $aMap[$sAttribute][2] === true) || $bOverride);
+	}	
+
 	/**
 	 * @return bool
 	 */
@@ -395,6 +419,22 @@ class Entity
 		{
 			$oAttribute->EntityId = $this->EntityId;
 			$this->aAttributes[$oAttribute->Name] = $oAttribute;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param array $aAttributes
+	 */
+	public function setOverridedAttributes($aAttributes)
+	{
+		foreach($aAttributes as $sAttribute)
+		{
+			$oAttribute = $this->getAttribute($sAttribute);
+			if ($oAttribute instanceof Attribute)
+			{
+				$oAttribute->Override = true;
+			}
 		}
 	}
 	
