@@ -191,7 +191,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $aSearchAttrs
 	 * @return array
 	 */
-	protected function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array())
+	protected function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mSortAttributes = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
 	{
 		$aUids = array();
 		if ($this->oConnection->Execute(
@@ -200,7 +200,9 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					array(), 
 					$iOffset, 
 					$iLimit, 
-					$aSearchAttrs
+					$aSearchAttrs,
+					$mSortAttributes,
+					$iSortOrder
 				)
 			)
 		)
@@ -234,7 +236,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		
 		$aIdsOrUUIDs = array_merge(
 			$aIdsOrUUIDs, 
-			$this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs)
+			$this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder)
 		);
 		
 		if ($aViewAttrs === null) {
@@ -259,11 +261,11 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$this->oCommandCreator->getEntities(
 						$sType, 
 						$aViewAttrs, 
-						$iOffset, 
-						$iLimit, 
+						0, 
+						0, 
 						array(), 
-						$mOrderBy, 
-						$iSortOrder, 
+						array(), 
+						\Aurora\System\Enums\SortOrder::ASC, 
 						$aIdsOrUUIDs
 					)
 				)
