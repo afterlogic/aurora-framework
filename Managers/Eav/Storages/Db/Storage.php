@@ -280,7 +280,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 
 					foreach (get_object_vars($oRow) as $sKey => $mValue)
 					{
-						if (strrpos($sKey, 'attr_', -5) !== false)
+						if (strrpos($sKey, 'attr_', -5) !== false && isset($mValue))
 						{
 							$sAttrKey = substr($sKey, 5);
 							if (!in_array(strtolower($sAttrKey), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
