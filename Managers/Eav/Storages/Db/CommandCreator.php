@@ -393,21 +393,38 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			}
 			if (0 < count($aIdsOrUUIDs))
 			{
-				$bUUID = !is_numeric($aIdsOrUUIDs[0]);
-				if ($bUUID)
+				$aIds = array();
+				$aUUIDs = array();
+				foreach ($aIdsOrUUIDs as $mIdOrUUID)
 				{
-					$aIdsOrUUIDs = array_map(
-						function ($mValue) use ($bUUID) {
-							return $bUUID ? $this->escapeString($mValue) : $mValue;
-						}, 
-						$aIdsOrUUIDs
+					$bUUID = !is_numeric($mIdOrUUID);
+					if ($bUUID)
+					{
+						$aUUIDs[] = $this->escapeString($mIdOrUUID);
+					}
+					else
+					{
+						$aIds[] = $mIdOrUUID;
+					}
+				}
+				
+				$bHasUUIDs = false;
+				if (count($aUUIDs) > 0)
+				{
+					$bHasUUIDs = true;
+					$sResultWhere .= sprintf(
+						' AND S2.entity_uuid IN (%s)', 
+						implode(',', $aUUIDs)
 					);
 				}
-				$sResultWhere .= sprintf(
-					' AND S2.%s IN (%s)', 
-					$bUUID ? 'entity_uuid' : 'entity_id',
-					implode(',', $aIdsOrUUIDs)
-				);
+				if (count($aIds) > 0)
+				{
+					$sResultWhere .= sprintf(
+						' %s S2.entity_id IN (%s)', 
+						$bHasUUIDs ? 'OR' : 'AND',
+						implode(',', $aIds)
+					);
+				}
 			}
 			
 			if ($iLimit > 0)
