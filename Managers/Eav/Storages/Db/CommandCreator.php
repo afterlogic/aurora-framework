@@ -230,9 +230,26 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		);
 	}
 	
+	/**
+	 * 
+	 * @param type $sType
+	 * @param type $aWhere
+	 * @param type $aIdsOrUUIDs
+	 * @return type
+	 */
 	public function getEntitiesCount($sType, $aWhere = array(), $aIdsOrUUIDs = array())
 	{
-		return $this->getEntities($sType, array('UUID'), 0, 0, $aWhere, "", \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs, true);
+		return $this->getEntities(
+			$sType, 
+			array('UUID'), 
+			0, 
+			0, 
+			$aWhere, 
+			null, 
+			\Aurora\System\Enums\SortOrder::ASC, 
+			$aIdsOrUUIDs, 
+			true
+		);
 	}
 
 	/**
@@ -302,39 +319,45 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				{
 					$mSortAttributes = array($mSortAttributes);
 				}
-				else 
-				{
-					$mSortAttributes = array();
-				}
 			}
 			
-			$aViewAttributes = array_merge($aViewAttributes, $mSortAttributes);
+			if (is_array($mSortAttributes))
+			{
+				$aViewAttributes = array_merge($aViewAttributes, $mSortAttributes);
+				$mSortAttributes = array_map(function($sValue){
+					return $this->escapeColumn(
+						sprintf("attr_%s", $sValue)
+					);
+				}, $mSortAttributes);
+				$mSortAttributes[] = 'attr_EntityId';
 
-			$mSortAttributes = array_map(function($sValue){
-				return $this->escapeColumn(
-					sprintf("attr_%s", $sValue)
-				);
-			}, $mSortAttributes);
-			$mSortAttributes[] = 'entity_id';
-			
-			$mSortAttributes = array_map(function ($sSortField) use ($iSortOrder) {
-				return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
-			}, $mSortAttributes);
+				$mSortAttributes = array_map(function ($sSortField) use ($iSortOrder) {
+					return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
+				}, $mSortAttributes);
 
-			$sResultSort = " ORDER BY " . implode(',', $mSortAttributes) . "";
+				$sResultSort = " ORDER BY " . implode(', ', $mSortAttributes) . "";
+			}
 			
 			$aWhereAttrs = array();
 			if (0 < count($aWhere))
 			{
 				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttrs);
 			}
-			$aViewAttributes = array_unique(array_merge($aViewAttributes, $aWhereAttrs));
+			$aViewAttributes = array_unique(
+				array_merge(
+					$aViewAttributes, 
+					$aWhereAttrs
+				)
+			);
 
 			$aViewAttributesByTypes = [];
 			foreach ($aViewAttributes as $sAttribute)
 			{
-				$sType = $oEntity->getType($sAttribute);
-				$aViewAttributesByTypes[$sType][] = $sAttribute;
+				if (!$oEntity->isSystemAttribute($sAttribute))
+				{
+					$sType = $oEntity->getType($sAttribute);
+					$aViewAttributesByTypes[$sType][] = $sAttribute;
+				}
 			}
 			
 			foreach ($aViewAttributesByTypes as $sType => $aAttributes)
@@ -384,7 +407,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 						$sType
 				);
 			}
-			if (0 < count($aViewAttributes))
+			if (0 < count($aResultViewAttributes))
 			{
 				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
 
@@ -397,8 +420,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				$aUUIDs = array();
 				foreach ($aIdsOrUUIDs as $mIdOrUUID)
 				{
-					$bUUID = !is_numeric($mIdOrUUID);
-					if ($bUUID)
+					if (!is_numeric($mIdOrUUID))
 					{
 						$aUUIDs[] = $this->escapeString($mIdOrUUID);
 					}
@@ -413,14 +435,14 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				{
 					$bHasUUIDs = true;
 					$sResultWhere .= sprintf(
-						' AND S2.entity_uuid IN (%s)', 
+						' AND S2.attr_UUID IN (%s)', 
 						implode(',', $aUUIDs)
 					);
 				}
 				if (count($aIds) > 0)
 				{
 					$sResultWhere .= sprintf(
-						' %s S2.entity_id IN (%s)', 
+						' %s S2.attr_EntityId IN (%s)', 
 						$bHasUUIDs ? 'OR' : 'AND',
 						implode(',', $aIds)
 					);
@@ -435,13 +457,13 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		}		
 		
 		$sSql = sprintf("
-SELECT * FROM (SELECT entity_id, entity_uuid, entity_type, entity_module
+SELECT * FROM (SELECT attr_EntityId, attr_UUID, attr_ModuleName
 	%s #1
 	FROM (SELECT 
-			entities.id as entity_id, 
-			entities.uuid as entity_uuid, 
+			entities.id as attr_EntityId, 
+			entities.uuid as attr_UUID, 
 			entities.entity_type, 
-			entities.module_name as entity_module
+			entities.module_name as attr_ModuleName
 			# fields
 			%s #2
 			# ------
@@ -452,7 +474,7 @@ SELECT * FROM (SELECT entity_id, entity_uuid, entity_type, entity_module
 
 		WHERE entities.entity_type = %s #5 ENTITY TYPE
 		) AS S1
-		GROUP BY entity_id 
+		GROUP BY attr_EntityId 
     ) as S2
     WHERE 			
 		1 = 1 %s #6 WHERE
@@ -473,7 +495,7 @@ SELECT * FROM (SELECT entity_id, entity_uuid, entity_type, entity_module
 		if ($bCount)
 		{
 			$sSql = sprintf("
-SELECT count(entity_id) AS entities_count FROM (
+SELECT count(attr_EntityId) AS entities_count FROM (
 %s
 ) as tmp", $sSql);
 		}
@@ -498,9 +520,7 @@ SELECT count(entity_id) AS entities_count FROM (
 			$iEntityId = $oEntity->EntityId;
 			foreach ($aAttributes as $oAttribute)
 			{
-				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && 
-					!in_array(strtolower($oAttribute->Name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes)
-				)
+				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !$oEntity->isSystemAttribute($oAttribute->Name))
 				{
 					if (!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) || ($oEntity->isOverridedAttribute($oAttribute->Name)))
 					{

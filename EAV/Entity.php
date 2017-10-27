@@ -29,7 +29,7 @@ class Entity
 	/**
 	 * @var string
 	 */
-	protected $sModuleName;
+	public $ModuleName;
 
 	/**
 	 * @var array
@@ -60,9 +60,10 @@ class Entity
 	/**
 	 * @var array
 	 */
-	public static $aReadOnlyAttributes = array(
+	public static $aSystemAttributes = array(
 		'entityid', 
-		'uuid'
+		'uuid',
+		'modulename'
 	);
 	
 	/**
@@ -84,7 +85,7 @@ class Entity
 		$this->EntityId = 0;
 		$this->UUID = self::generateUUID();
 		
-		$this->sModuleName = $sModuleName;
+		$this->ModuleName = $sModuleName;
 
 		$this->aAttributes = array();
 		
@@ -98,7 +99,7 @@ class Entity
 	 */
 	public function setModule($sModuleName)
 	{
-		return $this->sModuleName = $sModuleName;
+		return $this->ModuleName = $sModuleName;
 	}
 
 	/**
@@ -117,7 +118,7 @@ class Entity
 	 */
 	public function getModule()
 	{
-		return $this->sModuleName;
+		return $this->ModuleName;
 	}
 	
 	public function isModuleDisabled($sModuleName)
@@ -215,6 +216,11 @@ class Entity
 			)
 		);
 	}		
+	
+	public function isSystemAttribute($sAttribute)
+	{
+		return in_array(strtolower($sAttribute), self::$aSystemAttributes);
+	}
 	
 	/**
 	 * @param string $sPropertyName
@@ -415,7 +421,7 @@ class Entity
 
 	public function setAttribute(Attribute $oAttribute)
 	{
-		if (!in_array(strtolower($oAttribute->Name), self::$aReadOnlyAttributes))
+		if (!$this->isSystemAttribute($oAttribute->Name))
 		{
 			$oAttribute->EntityId = $this->EntityId;
 			$this->aAttributes[$oAttribute->Name] = $oAttribute;
@@ -496,7 +502,8 @@ class Entity
 	{
 		$aResult = array(
 			'EntityId' => $this->EntityId,
-			'UUID' => $this->UUID
+			'UUID' => $this->UUID,
+			'ModuleName' => $this->ModuleName
 		);
 		
 		foreach($this->aAttributes as $oAttribute)

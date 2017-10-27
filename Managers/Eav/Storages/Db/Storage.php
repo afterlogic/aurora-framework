@@ -115,7 +115,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$oEntity->EntityId = (int) $oRow->entity_id;
 					$oEntity->UUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
 
-					if (isset($oRow->attr_name) && !in_array(strtolower($oRow->attr_name), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
+					if (isset($oRow->attr_name) && !$oEntity->isSystemAttribute($oRow->attr_name))
 					{
 						$mValue = $oRow->attr_value;
 						$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
@@ -197,7 +197,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		if ($this->oConnection->Execute(
 				$this->oCommandCreator->getEntities(
 					$sType, 
-					array(), 
+					array('UUID'), 
 					$iOffset, 
 					$iLimit, 
 					$aSearchAttrs,
@@ -210,7 +210,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$oRow = null;
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$aUids[] = $oRow->entity_uuid;
+				$aUids[] = $oRow->attr_UUID;
 			}
 		}
 		$this->oConnection->FreeResult();
@@ -264,8 +264,8 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 						0, 
 						0, 
 						array(), 
-						array(), 
-						\Aurora\System\Enums\SortOrder::ASC, 
+						null, 
+						$iSortOrder, 
 						$aIdsOrUUIDs
 					)
 				)
@@ -276,16 +276,13 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 				{
 					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
-					$oEntity->EntityId = (int) $oRow->entity_id;
-					$oEntity->UUID = $oRow->entity_uuid;
-					$oEntity->setModule($oRow->entity_module);
 
 					foreach (get_object_vars($oRow) as $sKey => $mValue)
 					{
 						if (strrpos($sKey, 'attr_', -5) !== false && isset($mValue))
 						{
 							$sAttrKey = substr($sKey, 5);
-							if (!in_array(strtolower($sAttrKey), \Aurora\System\EAV\Entity::$aReadOnlyAttributes))
+							if (!$oEntity->isSystemAttribute($sAttrKey))
 							{
 								$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
 								$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
@@ -297,6 +294,10 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 								);
 								$oAttribute->Encrypted = $bIsEncrypted;
 								$oEntity->{$sAttrKey} = $oAttribute;
+							}
+							else
+							{
+								$oEntity->{$sAttrKey} = $mValue;
 							}
 						}
 					}
