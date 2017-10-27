@@ -258,6 +258,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		if (count($aIdsOrUUIDs) > 0)
 		{
 			if ($this->oConnection->Execute(
+					
 					$this->oCommandCreator->getEntities(
 						$sType, 
 						$aViewAttrs, 

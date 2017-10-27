@@ -296,6 +296,8 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sLimit = "";
 		$sOffset = "";
 		
+		$sIdsOrUUIDsWhere = "";
+		
 		$oEntity = \Aurora\System\EAV\Entity::createInstance($sEntityType);
 		if ($oEntity instanceof $sEntityType)
 		{
@@ -434,15 +436,15 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				if (count($aUUIDs) > 0)
 				{
 					$bHasUUIDs = true;
-					$sResultWhere .= sprintf(
-						' AND S2.attr_UUID IN (%s)', 
+					$sIdsOrUUIDsWhere .= sprintf(
+						' AND entities.uuid IN (%s)', 
 						implode(',', $aUUIDs)
 					);
 				}
 				if (count($aIds) > 0)
 				{
-					$sResultWhere .= sprintf(
-						' %s S2.attr_EntityId IN (%s)', 
+					$sIdsOrUUIDsWhere .= sprintf(
+						' %s entities.id IN (%s)', 
 						$bHasUUIDs ? 'OR' : 'AND',
 						implode(',', $aIds)
 					);
@@ -473,19 +475,20 @@ SELECT * FROM (SELECT attr_EntityId, attr_UUID, attr_ModuleName
 			# ------
 
 		WHERE entities.entity_type = %s #5 ENTITY TYPE
+		%s #6 WHERE
 		) AS S1
 		GROUP BY attr_EntityId 
     ) as S2
-    WHERE 			
-		1 = 1 %s #6 WHERE
-	%s #7 SORT
-	%s #8 LIMIT
-	%s #9 OFFSET", 
+	WHERE 1=1 %s #7 WHERE
+	%s #8 SORT
+	%s #9 LIMIT
+	%s #10 OFFSET", 
 			$sMaxViewAttributes,
 			$sViewAttributes, 
 			$this->prefix(),
 			$sJoinAttrbutes, 
 			$this->escapeString($sEntityType), 
+			$sIdsOrUUIDsWhere,
 			$sResultWhere,
 			$sResultSort,
 			$sLimit,
