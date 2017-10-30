@@ -309,18 +309,9 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			{
 				$aViewAttributes = array();
 			}
-/*
-			if (count($aViewAttributes) === 0 && !$bCount)
+			if (!is_array($mSortAttributes) && !empty($mSortAttributes))
 			{
-				$aViewAttributes = $oEntity->getAttributesKeys();
-			}
-*/
-			if (!is_array($mSortAttributes))
-			{
-				if (!empty($mSortAttributes))
-				{
-					$mSortAttributes = array($mSortAttributes);
-				}
+				$mSortAttributes = array($mSortAttributes);
 			}
 			
 			if (is_array($mSortAttributes))

@@ -83,7 +83,15 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 			$oEntity->EntityId = $mResult;
 			if (0 < $oEntity->countAttributes())
 			{
-				$this->setAttributes($oEntity, $oEntity->getAttributes());
+				try 
+				{
+					$this->setAttributes($oEntity, $oEntity->getAttributes());
+				}
+				catch (\Exception $oEx)
+				{
+					$this->oStorage->deleteEntity($mResult);
+					throw $oEx;
+				}
 			}
 		}
 		else

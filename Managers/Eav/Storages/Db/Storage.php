@@ -85,7 +85,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$bResult = $this->oConnection->GetLastInsertId();
 		}
 
-		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 	
