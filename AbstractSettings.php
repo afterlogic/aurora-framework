@@ -50,6 +50,25 @@ abstract class AbstractSettings
 	}
 	
 	/**
+	 * 
+	 * @param type $sName
+	 * @param type $mValue
+	 */
+	public function __set($sName, $mValue) 
+	{
+		$this->SetConf($sName, $mValue);
+	}
+
+	/**
+	 * 
+	 * @param type $sName
+	 */
+	public function __get($sName) 
+	{
+		$this->GetConf($sName);
+	}
+
+	/**
 	 * @return array
 	 */
 	public function GetConfigValues()
@@ -182,10 +201,10 @@ abstract class AbstractSettings
 	{
 		$bResult = false;
 		
-		if (file_exists($sJsonFile))
+		if (\file_exists($sJsonFile))
 		{
-			$sJsonData = file_get_contents($sJsonFile);
-			$aData = json_decode($sJsonData, true);
+			$sJsonData = \file_get_contents($sJsonFile);
+			$aData = \json_decode($sJsonData, true);
 			$bResult = $this->Populate($aData);
 		}
 		

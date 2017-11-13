@@ -65,6 +65,12 @@ class Attribute
 	 * @var bool $Override
 	 */
 	public $Override;
+	
+	/**
+	 *
+	 * @var bool $Inherited
+	 */
+	public $Inherited;
 
 	/**
 	 * @param string $sName
@@ -84,6 +90,7 @@ class Attribute
 		$this->Encrypted = false;
 		$this->ReadOnly = $bReadOnly;
 		$this->Override = false;
+		$this->Inherited = false;
 
 		$this->setType($sType);
 	}

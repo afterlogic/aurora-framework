@@ -36,7 +36,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	 * @param type $sUUID
 	 * @return type
 	 */
-	public function createEntity($sModule, $sType, $sUUID)
+	public function createEntity($sModule, $sType, $sUUID, $sParentUUID)
 	{
 		return false;
 	}
@@ -104,6 +104,14 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	/**
 	 */
 	public function setAttributes($aEntitiesIds, $aAttributes)
+	{
+		return true;
+	}	
+	
+	/**
+	 * @return bool
+	 */
+	public function deleteAttribute($sType, $iEntityId, $sAttribute)
 	{
 		return true;
 	}	

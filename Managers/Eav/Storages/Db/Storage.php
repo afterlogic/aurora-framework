@@ -63,7 +63,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 
 			$this->oConnection->FreeResult();
 		}
-		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}	
 	
@@ -72,13 +71,14 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $sModule
 	 * @param type $sType
 	 * @param type $sUUID
+	 * @param type $sParentUUID
 	 * @return type
 	 */
-	public function createEntity($sModule, $sType, $sUUID)
+	public function createEntity($sModule, $sType, $sUUID, $sParentUUID)
 	{
 		$bResult = false;
 		if ($this->oConnection->Execute(
-				$this->oCommandCreator->createEntity($sModule, $sType, $sUUID)
+				$this->oCommandCreator->createEntity($sModule, $sType, $sUUID, $sParentUUID)
 			)
 		)
 		{
@@ -113,6 +113,8 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				{
 					$oEntity->EntityId = (int) $oRow->entity_id;
 					$oEntity->UUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
+					$oEntity->ParentUUID = isset($oRow->parent_uuid) ? $oRow->parent_uuid : '';
+					$oEntity->ModuleName = isset($oRow->entity_module) ? $oRow->entity_module : '';
 
 					if (isset($oRow->attr_name) && !$oEntity->isSystemAttribute($oRow->attr_name))
 					{
@@ -133,7 +135,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$this->oConnection->FreeResult();
 		}
 
-		$this->throwDbExceptionIfExist();
 		return $oEntity;
 	}	
 
@@ -152,7 +153,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				$mResult[] = $oRow->entity_type;
 			}
 		}
-		$this->throwDbExceptionIfExist();
 		return $mResult;
 	}	
 	
@@ -178,7 +178,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$this->oConnection->FreeResult();
 		}
 
-		$this->throwDbExceptionIfExist();
 		return $mResult;
 	}
 	
@@ -242,13 +241,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$aViewAttrs = array();
 		}
 		else if (count($aViewAttrs) === 0) {
-			$this->oConnection->Execute(
-				$this->oCommandCreator->getAttributesNamesByEntityType($sType)
-			);
-			while (false !== ($oRow = $this->oConnection->GetNextRecord())) {
-				$aViewAttrs[] = $oRow->name;
-			}
-			$this->oConnection->FreeResult();
+			$aViewAttrs = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
 		}		
 		
 		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
@@ -276,7 +269,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 				{
 					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
-
 					foreach (get_object_vars($oRow) as $sKey => $mValue)
 					{
 						if (strrpos($sKey, 'attr_', -5) !== false && isset($mValue))
@@ -305,7 +297,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				}
 				$this->oConnection->FreeResult();
 			}
-			$this->throwDbExceptionIfExist();
 		}
 		return $mResult;
 	}	
@@ -318,7 +309,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		$bResult = $this->oConnection->Execute(
 			$this->oCommandCreator->deleteEntity($mIdOrUUID)
 		);
-		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
@@ -330,7 +320,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		$bResult = $this->oConnection->Execute(
 			$this->oCommandCreator->deleteEntities($aIdsOrUUIDs)
 		);
-		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 
@@ -359,9 +348,20 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 			
 		}
-		$this->throwDbExceptionIfExist();
 		return true;
 	}	
+	
+	/**
+	 * @return bool
+	 */
+	public function deleteAttribute($sType, $iEntityId, $sAttribute)
+	{
+		$bResult = $this->oConnection->Execute(
+			$this->oCommandCreator->deleteAttribute($sType, $iEntityId, $sAttribute)
+		);
+		return $bResult;
+	}
+	
 	
 	/**
 	 * @return bool
@@ -369,7 +369,6 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	public function getAttributesNamesByEntityType($sEntityTypes)
 	{
 		$bResult = $this->oConnection->Execute($this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes));
-		$this->throwDbExceptionIfExist();
 		return $bResult;
 	}
 

@@ -38,18 +38,20 @@ class CommandCreator extends \Aurora\System\Db\AbstractCommandCreator
 	/**
 	 * @return string
 	 */
-	public function createEntity($sModule, $sType, $sUUID = '')
+	public function createEntity($sModule, $sType, $sUUID = '', $sParentUUID = '')
 	{
 		return sprintf(
-			'INSERT INTO %seav_entities ( %s, %s, %s ) '
-			. 'VALUES ( %s, %s, %s )', 
+			'INSERT INTO %seav_entities ( %s, %s, %s, %s ) '
+			. 'VALUES ( %s, %s, %s, %s )', 
 			$this->prefix(),
 			$this->escapeColumn('uuid'), 
 			$this->escapeColumn('module_name'), 
 			$this->escapeColumn('entity_type'), 
+			$this->escapeColumn('parent_uuid'), 
 			empty($sUUID) ? 'UUID()' : $this->escapeString($sUUID), 
 			$this->escapeString($sModule),
-			$this->escapeString($sType)
+			$this->escapeString($sType),
+			$this->escapeString($sParentUUID)
 		);
 	}
 	
@@ -114,6 +116,7 @@ class CommandCreator extends \Aurora\System\Db\AbstractCommandCreator
 (SELECT 	   
 	entities.id as entity_id, 
 	entities.uuid as entity_uuid, 
+	entities.parent_uuid as parent_uuid, 
 	entities.entity_type, 
 	entities.module_name as entity_module,
 	attrs.name as attr_name,
@@ -450,11 +453,12 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		}		
 		
 		$sSql = sprintf("
-SELECT * FROM (SELECT attr_EntityId, attr_UUID, attr_ModuleName
+SELECT * FROM (SELECT attr_EntityId, attr_UUID, attr_ModuleName, attr_ParentUUID
 	%s #1
 	FROM (SELECT 
 			entities.id as attr_EntityId, 
 			entities.uuid as attr_UUID, 
+			entities.parent_uuid as attr_ParentUUID, 
 			entities.entity_type, 
 			entities.module_name as attr_ModuleName
 			# fields
@@ -516,7 +520,7 @@ SELECT count(attr_EntityId) AS entities_count FROM (
 			{
 				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !$oEntity->isSystemAttribute($oAttribute->Name))
 				{
-					if (!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) || ($oEntity->isOverridedAttribute($oAttribute->Name)))
+					if (!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) || ($oEntity->isOverridedAttribute($oAttribute->Name)) || (!$oAttribute->Inherited))
 					{
 						if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
 						{

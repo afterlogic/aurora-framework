@@ -81,7 +81,7 @@ class Settings extends AbstractSettings
 	public function Load($sJsonFile)
 	{
 		$this->initDefaults();
-		if (!file_exists($sJsonFile))
+		if (!\file_exists($sJsonFile))
 		{
 			$this->Save();
 		}
