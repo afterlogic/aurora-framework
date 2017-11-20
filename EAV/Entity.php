@@ -73,10 +73,10 @@ class Entity
 	 * @var array
 	 */
 	public static $aSystemAttributes = array(
-		'entityid', 
-		'uuid',
-		'modulename',
-		'parentuuid'
+		'entityid' => 'int', 
+		'uuid' => 'string',
+		'modulename' => 'string',
+		'parentuuid' => 'string'
 	);
 	
 	/**
@@ -231,7 +231,7 @@ class Entity
 	
 	public function isSystemAttribute($sAttribute)
 	{
-		return in_array(strtolower($sAttribute), self::$aSystemAttributes);
+		return in_array(strtolower($sAttribute), array_keys(self::$aSystemAttributes));
 	}
 	
 	/**
@@ -413,7 +413,10 @@ class Entity
 		
 		if ($this->isSystemAttribute($sAttribute))
 		{
-			$mType = gettype($sAttribute);
+			if (isset(self::$aSystemAttributes[\strtolower($sAttribute)]))
+			{
+				$mType = self::$aSystemAttributes[\strtolower($sAttribute)];
+			}
 		}
 		else
 		{
