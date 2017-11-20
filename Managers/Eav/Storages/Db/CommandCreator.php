@@ -498,6 +498,8 @@ SELECT count(attr_EntityId) AS entities_count FROM (
 ) as tmp", $sSql);
 		}
 		
+		\Aurora\System\Api::Log($sSql, \Aurora\System\Enums\LogLevel::Full, "sql-");
+		
 		return $sSql;
 	}	
 	

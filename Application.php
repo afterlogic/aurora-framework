@@ -63,6 +63,11 @@ class Application
 		Api::$bDebug = $bDebug;
 	}
 	
+	public static function UseDbLogs()
+	{
+		Api::$bUseDbLog = true;
+	}
+	
 	public static function Start($sDefaultEntry = 'default')
 	{
 		try

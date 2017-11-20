@@ -506,6 +506,27 @@ abstract class AbstractModule
 	
 	/**
 	 * 
+	 * @param string $sName
+	 */
+	final public function RemoveEntry($sName)
+	{
+		unset($this->aEntries[$sName]);
+	}	
+	
+	/**
+	 * 
+	 * @param array $aEntries
+	 */
+	final public function RemoveEntries($aEntries)
+	{
+		foreach ($aEntries as $sName)
+		{
+			$this->RemoveEntry($sName);
+		}
+	}	
+	
+	/**
+	 * 
 	 * @param callback $mCallbak
 	 * @return boolean
 	 */
