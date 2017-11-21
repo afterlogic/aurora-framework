@@ -289,6 +289,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 							}
 							else
 							{
+								settype($mValue, $oEntity->getType($sAttrKey));
 								$oEntity->{$sAttrKey} = $mValue;
 							}
 						}
