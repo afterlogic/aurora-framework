@@ -203,6 +203,11 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 						$mResultValue = '(' . implode(', ', $mResultValue)  . ')';
 						$sValueFormat = "%s";
 					}
+					else if (strtolower($mResultOperator) === 'is' || strtolower($mResultOperator) === 'is not'  )
+					{
+						$bIsInOperator = true;
+						$sValueFormat = "%s";
+					}
 					else
 					{
 						$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
