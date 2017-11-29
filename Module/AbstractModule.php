@@ -174,6 +174,13 @@ abstract class AbstractModule
 		return true;
 	}	
 
+	
+	public function isAllowedModule()
+	{
+		return $this->oModuleManager->IsAllowedModule($this->GetName());
+	}
+	
+	
 	/**
 	 * 
 	 * @return boolean

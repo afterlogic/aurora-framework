@@ -555,6 +555,15 @@ class Manager
 	}
 
 	/**
+	 * @param string $sModuleName
+	 * @return array
+	 */
+	public function IsAllowedModule($sModuleName)
+	{
+		return isset($this->_aAllowedModulesName[\strtolower($sModuleName)]);
+	}
+
+	/**
 	 * @return array
 	 */
 	public function GetModules()
@@ -582,6 +591,8 @@ class Manager
 	 */
 	public function GetModule($sModuleName)
 	{
+		$mResult = false;
+		
 		$sModuleNameLower = strtolower($sModuleName);
 		if ($this->isModuleLoaded($sModuleName))
 		{
@@ -591,6 +602,7 @@ class Manager
 		{
 			$mResult = $this->loadModule($sModuleName);
 		}
+		
 		return $mResult;
 	}
 	
