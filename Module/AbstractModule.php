@@ -322,7 +322,10 @@ abstract class AbstractModule
 	 */
 	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
-		$this->GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
+		if ($this->isAllowedModule())
+		{
+			$this->GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
+		}
 	}
 
 	/**
@@ -572,7 +575,7 @@ abstract class AbstractModule
 		
 		$mMethod = $this->GetEntryCallback($sName);
 		
-		if ($mMethod) 
+		if ($mMethod && $this->isAllowedModule())
 		{
 			$mResult = call_user_func_array(
 				array($this, $mMethod), 
@@ -799,7 +802,7 @@ abstract class AbstractModule
 		$mResult = false;
 		try 
 		{
-			if (method_exists($this, $sMethod) &&  !($bWebApi && $this->isCallbackMethod($sMethod)))
+			if (method_exists($this, $sMethod) &&  !($bWebApi && $this->isCallbackMethod($sMethod)) && $this->isAllowedModule())
 			{
 				if ($bWebApi && !isset($aArguments['UserId']))
 				{

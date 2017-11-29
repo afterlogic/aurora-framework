@@ -560,7 +560,7 @@ class Manager
 	 */
 	public function IsAllowedModule($sModuleName)
 	{
-		return isset($this->_aAllowedModulesName[\strtolower($sModuleName)]);
+		return array_key_exists(\strtolower($sModuleName), $this->_aAllowedModulesName);
 	}
 
 	/**
