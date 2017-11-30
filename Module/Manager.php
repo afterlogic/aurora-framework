@@ -34,7 +34,9 @@ class Manager
      *
      * @var array
      */
-	protected $_aAllowedModulesName = array();
+	protected $_aAllowedModulesName = array(
+		'core' => 'Core'
+	);
 
 	/**
      * This array contains a list of callbacks we should call when certain events are triggered
