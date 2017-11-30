@@ -340,7 +340,7 @@ class Manager
 		
 		foreach($aSubscriptions as $fCallback) 
 		{
-			if (\is_callable($fCallback))
+			if (\is_callable($fCallback) && $this->IsAllowedModule($fCallback[0]->GetName()))
 			{
 				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]);
 				\Aurora\System\Api::Log('Arguments before subscription:');

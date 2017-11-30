@@ -322,10 +322,7 @@ abstract class AbstractModule
 	 */
 	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
-		if ($this->isAllowedModule())
-		{
-			$this->GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
-		}
+		$this->GetModuleManager()->subscribeEvent($sEvent, $fCallback, $iPriority);
 	}
 
 	/**
