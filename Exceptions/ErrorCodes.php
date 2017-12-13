@@ -124,8 +124,6 @@ class ErrorCodes
 	const Rest_AccountListGetFailed = 7017;
 	const Rest_TenantFindFailed = 7030;*/
 
-	//Sales
-	const DataIntegrity = 8001;
 	/**
 	 * @param int $iCode
 	 * @param array $aParams = array()
