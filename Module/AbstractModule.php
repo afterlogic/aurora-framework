@@ -95,7 +95,12 @@ abstract class AbstractModule
      * @var array
      */	
 	protected $aSkipedEvents = array();
-	
+
+    /**
+     *
+     * @var array
+     */
+	public $aErrors = array();
     /**
      *
      * @var Manager
@@ -1013,6 +1018,24 @@ abstract class AbstractModule
 		}
 		
 		return !\in_array($this->GetName(), $aDisabledModules);
+	}
+
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetErrors()
+	{
+		return is_array($this->aErrors) ? $this->aErrors : [];
+	}
+
+	/**
+	 * @param int
+	 * @return string
+	 */
+	public function GetErrorMessageByCode($iErrorCode)
+	{
+		return is_array($this->aErrors) && isset($this->aErrors[(int) $iErrorCode]) ? $this->aErrors[(int) $iErrorCode] : '';
 	}
 }
 
