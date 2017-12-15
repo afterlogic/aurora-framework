@@ -257,7 +257,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 						0, 
 						0, 
 						array(), 
-						null, 
+						$mOrderBy, 
 						$iSortOrder, 
 						$aIdsOrUUIDs
 					)
