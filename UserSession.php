@@ -66,6 +66,7 @@ class UserSession
 		{
 			@mkdir($this->Path, 0777);
 		}
+		
 		$aData['@time'] = $iTime;
 		$sAccountHashTable = Api::EncodeKeyValues($aData);
 		$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
@@ -94,6 +95,23 @@ class UserSession
 		
 		return $mResult;
 	}
+	
+	public function GetById($iId)
+	{
+		$mResult = false;
+		$aList = $this->getList();
+		foreach ($aList as $sKey => $aItem)
+		{
+			if (isset($aItem['id']) && (int)$aItem['id'] === $iId)
+			{
+				$mResult = $aItem;
+				break;
+			}
+		}
+		
+		return $mResult;
+	}
+	
 	
 	public function Delete($sAuthToken)
 	{

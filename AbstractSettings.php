@@ -75,6 +75,15 @@ abstract class AbstractSettings
 	{
 		return $this->aContainer;
 	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function GetConfigPath()
+	{
+		return $this->sPath;
+	}
 
 	/**
 	 * @param array $aValues

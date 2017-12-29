@@ -1296,7 +1296,7 @@ class Api
 	 * 
 	 * @return \Aurora\Modules\Core\Classes\User
 	 */
-	public static function authorise()
+	public static function authorise($sAuthToken = '')
 	{
 		$oUser = null;
 		$mUserId = false;
@@ -1306,7 +1306,8 @@ class Api
 		}
 		else
 		{
-			$mUserId = self::getAuthenticatedUserId(self::getAuthToken());
+			$sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
+			$mUserId = self::getAuthenticatedUserId($sAuthToken);
 		}
 		try
 		{
