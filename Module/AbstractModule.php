@@ -106,6 +106,8 @@ abstract class AbstractModule
      * @var Manager
      */	
 	protected $oModuleManager = null;
+	
+	protected $aDeniedMethodsByWebApi = array();
 
 	/**
 	 * @param string $sVersion
@@ -285,7 +287,25 @@ abstract class AbstractModule
 		}
 		
 		return $bResult;
-	}	
+	}
+	
+	public function denyMethodCallByWebApi($sMethodName)
+	{
+		if(!in_array($sMethodName, $this->aDeniedMethodsByWebApi))
+		{
+			$this->aDeniedMethodsByWebApi[] = $sMethodName;
+		}
+	}
+		
+	/**
+	 * 
+	 * @param callback $mCallbak
+	 * @return boolean
+	 */
+	protected function isDeniedMethodByWebApi($sMethodName)
+	{
+		return in_array($sMethodName, array_values($this->aDeniedMethodsByWebApi));
+	}
 	
 	/**
 	 * 
@@ -804,7 +824,7 @@ abstract class AbstractModule
 		$mResult = false;
 		try 
 		{
-			if (method_exists($this, $sMethod) &&  !($bWebApi && $this->isCallbackMethod($sMethod)) && $this->isAllowedModule())
+			if (method_exists($this, $sMethod) &&  !($bWebApi && ($this->isCallbackMethod($sMethod) || $this->isDeniedMethodByWebApi($sMethod))) && $this->isAllowedModule())
 			{
 				if ($bWebApi && !isset($aArguments['UserId']))
 				{
