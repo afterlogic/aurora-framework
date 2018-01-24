@@ -66,7 +66,8 @@ class Entity
 		'string', 
 		'text', 
 		'bool', 
-		'datetime'		
+		'datetime',
+		'mediumblob'
 	);
 	
 	/**
@@ -224,7 +225,8 @@ class Entity
 			array(
 				'string', 
 				'text', 
-				'datetime'
+				'datetime',
+				'mediumblob'
 			)
 		);
 	}		

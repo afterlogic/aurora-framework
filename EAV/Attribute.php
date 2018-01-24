@@ -128,6 +128,7 @@ class Attribute
 		$bResult = false;
 		switch ($this->Type)
 		{
+			case "mediumblob":
 			case "string" :
 				$bResult = true;
 				break;
@@ -163,7 +164,7 @@ class Attribute
 		{
 			$this->Value = (bool) $this->Value;
 		}
-		else if (in_array($sType, array('encoded', 'datetime')))
+		else if (in_array($sType, array('encoded', 'datetime', 'mediumblob')))
 		{
 			settype($this->Value, 'string');
 		}
