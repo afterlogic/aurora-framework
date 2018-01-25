@@ -123,7 +123,7 @@ class CommandCreator extends \Aurora\System\Db\AbstractCommandCreator
     attrs.value as attr_value,
 	%s as attr_type
 FROM %seav_entities as entities
-	  INNER JOIN %seav_attributes_%s as attrs ON entities.id = attrs.id_entity
+	  LEFT JOIN %seav_attributes_%s as attrs ON entities.id = attrs.id_entity
 WHERE %s)
 ";
 		
