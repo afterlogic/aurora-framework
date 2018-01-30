@@ -25,7 +25,7 @@ class Settings extends AbstractSettings
 			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
 			'AdminLanguage' => new SettingsProperty('AdminLanguage', 'English', 'string'),
 			
-			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', 'EDbType'),
+			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', '\Aurora\System\Enums\DbType'),
 			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
 			'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
 			'DBName' => new SettingsProperty('DBName', '', 'string'),

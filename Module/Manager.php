@@ -45,7 +45,12 @@ class Manager
      */
     protected $_aSubscriptions = array();
 	
-    /**
+	/**
+     * @var array
+     */
+    protected $_aEntries = array();
+	
+	/**
      * @var array
      */    
 	protected $_aObjects = array();
@@ -693,7 +698,7 @@ class Manager
 				echo $mResult;
 			}
 		}
-		else
+		else if (strtolower($sEntryName) !== 'error')
 		{
 			$this->RunEntry('error');
 		}

@@ -168,9 +168,6 @@ abstract class AbstractSettings
 
 				switch ($sType)
 				{
-					default:
-						$mValue = null;
-						break;
 					case 'string':
 						$mValue =(string) $mValue;
 						break;
@@ -188,6 +185,9 @@ abstract class AbstractSettings
 						$mValue = $this->specConver($mValue, $sSpecType);
 						break;
 					case 'array':
+						break;
+					default:
+						$mValue = null;
 						break;
 				}
 				if (null !== $mValue)

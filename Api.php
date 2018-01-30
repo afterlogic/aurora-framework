@@ -741,7 +741,7 @@ class Api
 		$sLogDir = self::GetLogFileDir();
 		$sLogFile = self::GetLogFileName();
 		
-		if (is_dir($sLogDir) && !file_exists($sLogDir.$sLogFile))
+		if (is_dir($sLogDir)/* && !file_exists($sLogDir.$sLogFile)*/)
 		{
 			$sYesterdayLogFile = self::GetLogFileName('', time() - 60 * 60 * 24);
 			$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
