@@ -212,12 +212,31 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					{
 						$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
 					}
-					$sResultOperation = sprintf(
-						"`attr_%s`.`value` %s " . $sValueFormat, 
-						$sKey, 
-						$mResultOperator, 
-						($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
-					);
+					if ($sKey === 'UUID')
+					{
+						$sResultOperation = sprintf(
+							"entities.uuid %s " . $sValueFormat, 
+							$mResultOperator, 
+							($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
+						);
+					}
+					else if ($sKey === 'EntityId')
+					{
+						$sResultOperation = sprintf(
+							"entities.id %s " . $sValueFormat, 
+							$mResultOperator, 
+							($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
+						);
+					}
+					else
+					{
+						$sResultOperation = sprintf(
+							"`attr_%s`.`value` %s " . $sValueFormat, 
+							$sKey, 
+							$mResultOperator, 
+							($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
+						);
+					}
 /*
 					if ($oEntity->isDefaultValue($sKey, $mResultValue))
 					{
