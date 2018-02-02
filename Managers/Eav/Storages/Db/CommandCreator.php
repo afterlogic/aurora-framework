@@ -131,7 +131,7 @@ WHERE %s)
 		{
 			$aSql[] = sprintf($sSubSql, $this->escapeString($sSqlType), $this->prefix(), $this->prefix(), $sSqlType, $sWhere);
 		}
-		$sSql = implode("UNION
+		$sSql = implode("UNION ALL
 ", $aSql);
 
 		return $sSql;
@@ -238,6 +238,36 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		);
 	}
 	
+	public function getSelectSubquery($sAttributeName, $sAttributeType)
+	{
+		return sprintf("(
+	SELECT attributes.`value` as `attr_%s`
+	FROM %seav_attributes_%s as attributes
+    WHERE attributes.id_entity = entities.id
+		AND attributes.`name` = %s
+) as `attr_%s`", 
+		$sAttributeName,
+		$this->prefix(),
+		$sAttributeType,
+		$this->escapeString($sAttributeName),
+		$sAttributeName
+		);
+	}
+	
+	public function getJoinSubquery($sAttributeName, $sAttributeType)
+	{
+		return sprintf('
+	INNER JOIN %seav_attributes_%s as `attr_%s`
+	ON `attr_%s`.id_entity = entities.id AND `attr_%s`.`name` = %s',
+		$this->prefix(),
+		$sAttributeType,
+		$sAttributeName,
+		$sAttributeName,
+		$sAttributeName,
+		$this->escapeString($sAttributeName)
+		);
+	}
+	
 	/**
 	 * 
 	 * @param type $sType
@@ -297,8 +327,8 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
 	{
 		$sViewAttributes = "";
-		$sMaxViewAttributes = "";
-		$sJoinAttrbutes = "";
+		$sJoinAttributes = "";
+		$aJoinAttributesWhere = [];
 		$sResultWhere = "";
 		$sResultSort = "";
 		$sLimit = "";
@@ -310,7 +340,6 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array();
-			$aResultMaxAttributes = array();
 			$aJoinAttributes = array();
 			
 			if ($aViewAttributes === null)
@@ -322,7 +351,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				$mSortAttributes = array($mSortAttributes);
 			}
 			
-			if (is_array($mSortAttributes))
+			if (is_array($mSortAttributes) && count($mSortAttributes) > 0)
 			{
 				$aViewAttributes = array_merge($aViewAttributes, $mSortAttributes);
 				$mSortAttributes = array_map(function($sValue){
@@ -336,7 +365,10 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
 				}, $mSortAttributes);
 
-				$sResultSort = " ORDER BY " . implode(', ', $mSortAttributes) . "";
+				if (count($mSortAttributes > 0))
+				{
+					$sResultSort = " ORDER BY " . implode(', ', $mSortAttributes) . "";
+				}
 			}
 			
 			$aWhereAttrs = array();
@@ -344,12 +376,12 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			{
 				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttrs);
 			}
-			$aViewAttributes = array_unique(
-				array_merge(
-					$aViewAttributes, 
-					$aWhereAttrs
-				)
-			);
+//			$aViewAttributes = array_unique(
+//				array_merge(
+//					$aViewAttributes, 
+//					$aWhereAttrs
+//				)
+//			);
 
 			$aViewAttributesByTypes = [];
 			foreach ($aViewAttributes as $sAttribute)
@@ -360,60 +392,36 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					$aViewAttributesByTypes[$sType][] = $sAttribute;
 				}
 			}
-			
+			foreach ($aWhereAttrs as $sAttribute)
+			{
+				if (!$oEntity->isSystemAttribute($sAttribute))
+				{
+					$sType = $oEntity->getType($sAttribute);
+					$aJoinAttributesWhere[$sType][] = $sAttribute;
+				}
+			}
 			foreach ($aViewAttributesByTypes as $sType => $aAttributes)
 			{
-				$aJoinAttributesTmp = array();
 				foreach ($aAttributes as $sAttribute)
 				{
-					$aResultViewAttributes[$sAttribute] = sprintf(
-							"				
-			CASE WHEN %seav_attributes_%s.name = '%s'
-				THEN %seav_attributes_%s.`value` 
-			END as `attr_%s`", 
-							$this->prefix(),
-							$sType,
-							$sAttribute,
-							$this->prefix(),
-							$sType,
-							$sAttribute
-					);
-					$aResultMaxAttributes[$sAttribute] = sprintf(
-							"MAX(`attr_%s`) as `attr_%s`
-	", 
-							$sAttribute,
-							$sAttribute
-					);
-					
-					$aJoinAttributesTmp[$sAttribute] = sprintf(
-							"%seav_attributes_%s.name = '%s'",
-							$this->prefix(),
-							$sType,
-							$sAttribute
-					);
-					
+					$aResultViewAttributes[$sAttribute] = $this->getSelectSubquery($sAttribute, $sType);
 				}
-				
-				$sJoinAttributesTmp = implode(' OR ', $aJoinAttributesTmp);
-				
-				$aJoinAttributes[$sType] = sprintf(
-						"
-			LEFT JOIN %seav_attributes_%s
-			  ON (%s)
-				AND %seav_attributes_%s.id_entity = entities.id",
-						$this->prefix(),
-						$sType,
-						$sJoinAttributesTmp,
-						$this->prefix(),
-						$sType
-				);
+			}
+			foreach ($aJoinAttributesWhere as $sType => $aAttributes)
+			{
+				foreach ($aAttributes as $sAttribute)
+				{
+					$aJoinAttributes[$sAttribute] = $this->getJoinSubquery($sAttribute, $sType);
+					$aResultViewAttributes[$sAttribute] = sprintf('`attr_%s`.`value` as `attr_%s`', $sAttribute, $sAttribute);
+				}
+			}
+			if (0 < count($aJoinAttributes))
+			{
+				$sJoinAttributes = implode(' ', $aJoinAttributes);
 			}
 			if (0 < count($aResultViewAttributes))
 			{
 				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
-
-				$sMaxViewAttributes = ', ' . implode(', ', $aResultMaxAttributes);
-				$sJoinAttrbutes = implode(' ', $aJoinAttributes);
 			}
 			if (0 < count($aIdsOrUUIDs))
 			{
@@ -458,35 +466,30 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		}		
 		
 		$sSql = sprintf("
-SELECT * FROM (SELECT attr_EntityId, attr_UUID, attr_ModuleName, attr_ParentUUID
-	%s #1
-	FROM (SELECT 
-			entities.id as attr_EntityId, 
-			entities.uuid as attr_UUID, 
-			entities.parent_uuid as attr_ParentUUID, 
-			entities.entity_type, 
-			entities.module_name as attr_ModuleName
-			# fields
-			%s #2
-			# ------
-		FROM %seav_entities as entities #3
-			# fields
-			%s #4
-			# ------
-
-		WHERE entities.entity_type = %s #5 ENTITY TYPE
-		%s #6 WHERE
-		) AS S1
-		GROUP BY attr_EntityId 
-    ) as S2
-	WHERE 1=1 %s #7 WHERE
-	%s #8 SORT
-	%s #9 LIMIT
-	%s #10 OFFSET", 
-			$sMaxViewAttributes,
+SELECT * FROM 
+	(SELECT 
+		entities.id as attr_EntityId, 
+		entities.uuid as attr_UUID, 
+		entities.parent_uuid as attr_ParentUUID, 
+		entities.entity_type, 
+		entities.module_name as attr_ModuleName
+		# fields
+		%s #1
+		# ------
+	FROM %seav_entities as entities #2
+		# fields
+		%s #3
+		# ------
+	WHERE entities.entity_type = %s  #4 ENTITY TYPE
+		%s #5
+	) AS S1
+	WHERE 1=1 %s #6 WHERE
+	%s #7 SORT
+	%s #8 LIMIT
+	%s #9 OFFSET", 
 			$sViewAttributes, 
 			$this->prefix(),
-			$sJoinAttrbutes, 
+			$sJoinAttributes, 
 			$this->escapeString($sEntityType), 
 			$sIdsOrUUIDsWhere,
 			$sResultWhere,
