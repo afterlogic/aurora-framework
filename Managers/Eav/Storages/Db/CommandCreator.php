@@ -258,7 +258,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	{
 		return sprintf('
 	INNER JOIN %seav_attributes_%s as `attr_%s`
-	ON `attr_%s`.id_entity = entities.id AND `attr_%s`.`name` = %s',
+		ON `attr_%s`.id_entity = entities.id AND `attr_%s`.`name` = %s',
 		$this->prefix(),
 		$sAttributeType,
 		$sAttributeName,
@@ -266,6 +266,46 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sAttributeName,
 		$this->escapeString($sAttributeName)
 		);
+	}
+	
+	public function getIdsOrUUIDsWhere($aIdsOrUUIDs)
+	{
+		$sIdsOrUUIDsWhere = '';
+		if (0 < count($aIdsOrUUIDs))
+		{
+			$aIds = array();
+			$aUUIDs = array();
+			foreach ($aIdsOrUUIDs as $mIdOrUUID)
+			{
+				if (!is_numeric($mIdOrUUID))
+				{
+					$aUUIDs[] = $this->escapeString($mIdOrUUID);
+				}
+				else
+				{
+					$aIds[] = $mIdOrUUID;
+				}
+			}
+
+			$bHasUUIDs = false;
+			if (count($aUUIDs) > 0)
+			{
+				$bHasUUIDs = true;
+				$sIdsOrUUIDsWhere .= sprintf(
+					' AND entities.uuid IN (%s)', 
+					implode(',', $aUUIDs)
+				);
+			}
+			if (count($aIds) > 0)
+			{
+				$sIdsOrUUIDsWhere .= sprintf(
+					' %s entities.id IN (%s)', 
+					$bHasUUIDs ? 'OR' : 'AND',
+					implode(',', $aIds)
+				);
+			}
+		}
+		return $sIdsOrUUIDsWhere;
 	}
 	
 	/**
@@ -297,7 +337,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	 * @param type $iOffset
 	 * @param type $iLimit
 	 * @param type $aWhere
-	 * @param string|array $mSortAttributes
+	 * @param string|array $mOrderAttributes
 	 * @param type $iSortOrder
 	 * @param type $aIdsOrUUIDs
 	 * @param type $bCount
@@ -323,141 +363,85 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	   ];
 	 */	
 	public function getEntities($sEntityType, $aViewAttributes = array(), 
-			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mSortAttributes = array(), 
+			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderAttributes = array(), 
 			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
 	{
 		$sViewAttributes = "";
-		$sJoinAttributes = "";
-		$aJoinAttributesWhere = [];
+		$sWhereAttributes = "";
+		
 		$sResultWhere = "";
 		$sResultSort = "";
+		
 		$sLimit = "";
 		$sOffset = "";
-		
-		$sIdsOrUUIDsWhere = "";
 		
 		$oEntity = \Aurora\System\EAV\Entity::createInstance($sEntityType);
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array();
-			$aJoinAttributes = array();
+			$aResultWhereAttributes = array();
 			
 			if ($aViewAttributes === null)
 			{
 				$aViewAttributes = array();
 			}
-			if (!is_array($mSortAttributes) && !empty($mSortAttributes))
+			if (!is_array($mOrderAttributes) && !empty($mOrderAttributes))
 			{
-				$mSortAttributes = array($mSortAttributes);
+				$mOrderAttributes = array($mOrderAttributes);
 			}
 			
-			if (is_array($mSortAttributes) && count($mSortAttributes) > 0)
+			$aWhereAttributes = array();
+			if (is_array($mOrderAttributes) && count($mOrderAttributes) > 0)
 			{
-				$aViewAttributes = array_merge($aViewAttributes, $mSortAttributes);
-				$mSortAttributes = array_map(function($sValue){
+				$aWhereAttributes = array_merge($aWhereAttributes, $mOrderAttributes);
+				$mOrderAttributes = array_map(function($sValue){
 					return $this->escapeColumn(
 						sprintf("attr_%s", $sValue)
 					);
-				}, $mSortAttributes);
-				$mSortAttributes[] = 'attr_EntityId';
+				}, $mOrderAttributes);
+				$mOrderAttributes[] = 'attr_EntityId';
 
-				$mSortAttributes = array_map(function ($sSortField) use ($iSortOrder) {
+				$mOrderAttributes = array_map(function ($sSortField) use ($iSortOrder) {
 					return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
-				}, $mSortAttributes);
+				}, $mOrderAttributes);
 
-				if (count($mSortAttributes > 0))
+				if (count($mOrderAttributes > 0))
 				{
-					$sResultSort = " ORDER BY " . implode(', ', $mSortAttributes) . "";
+					$sResultSort = " ORDER BY " . implode(', ', $mOrderAttributes) . "";
 				}
 			}
 			
-			$aWhereAttrs = array();
 			if (0 < count($aWhere))
 			{
-				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttrs);
+				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttributes);
 			}
-//			$aViewAttributes = array_unique(
-//				array_merge(
-//					$aViewAttributes, 
-//					$aWhereAttrs
-//				)
-//			);
 
-			$aViewAttributesByTypes = [];
 			foreach ($aViewAttributes as $sAttribute)
 			{
 				if (!$oEntity->isSystemAttribute($sAttribute))
 				{
 					$sType = $oEntity->getType($sAttribute);
-					$aViewAttributesByTypes[$sType][] = $sAttribute;
+					$aResultViewAttributes[$sAttribute] = $this->getSelectSubquery($sAttribute, $sType);
 				}
 			}
-			foreach ($aWhereAttrs as $sAttribute)
+			foreach ($aWhereAttributes as $sAttribute)
 			{
 				if (!$oEntity->isSystemAttribute($sAttribute))
 				{
 					$sType = $oEntity->getType($sAttribute);
-					$aJoinAttributesWhere[$sType][] = $sAttribute;
-				}
-			}
-			foreach ($aViewAttributesByTypes as $sType => $aAttributes)
-			{
-				foreach ($aAttributes as $sAttribute)
-				{
-					$aResultViewAttributes[$sAttribute] = $this->getSelectSubquery($sAttribute, $sType);
-				}
-			}
-			foreach ($aJoinAttributesWhere as $sType => $aAttributes)
-			{
-				foreach ($aAttributes as $sAttribute)
-				{
-					$aJoinAttributes[$sAttribute] = $this->getJoinSubquery($sAttribute, $sType);
+					$aResultWhereAttributes[$sAttribute] = $this->getJoinSubquery($sAttribute, $sType);
 					$aResultViewAttributes[$sAttribute] = sprintf('`attr_%s`.`value` as `attr_%s`', $sAttribute, $sAttribute);
 				}
 			}
-			if (0 < count($aJoinAttributes))
+			if (0 < count($aResultWhereAttributes))
 			{
-				$sJoinAttributes = implode(' ', $aJoinAttributes);
+				$sWhereAttributes = implode(' ', $aResultWhereAttributes);
 			}
 			if (0 < count($aResultViewAttributes))
 			{
 				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
 			}
-			if (0 < count($aIdsOrUUIDs))
-			{
-				$aIds = array();
-				$aUUIDs = array();
-				foreach ($aIdsOrUUIDs as $mIdOrUUID)
-				{
-					if (!is_numeric($mIdOrUUID))
-					{
-						$aUUIDs[] = $this->escapeString($mIdOrUUID);
-					}
-					else
-					{
-						$aIds[] = $mIdOrUUID;
-					}
-				}
-				
-				$bHasUUIDs = false;
-				if (count($aUUIDs) > 0)
-				{
-					$bHasUUIDs = true;
-					$sIdsOrUUIDsWhere .= sprintf(
-						' AND entities.uuid IN (%s)', 
-						implode(',', $aUUIDs)
-					);
-				}
-				if (count($aIds) > 0)
-				{
-					$sIdsOrUUIDsWhere .= sprintf(
-						' %s entities.id IN (%s)', 
-						$bHasUUIDs ? 'OR' : 'AND',
-						implode(',', $aIds)
-					);
-				}
-			}
-			
+
 			if ($iLimit > 0)
 			{
 				$sLimit = sprintf("LIMIT %d", $iLimit);
@@ -466,7 +450,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		}		
 		
 		$sSql = sprintf("
-SELECT * FROM 
+SELECT %s FROM 
 	(SELECT 
 		entities.id as attr_EntityId, 
 		entities.uuid as attr_UUID, 
@@ -487,24 +471,17 @@ SELECT * FROM
 	%s #7 SORT
 	%s #8 LIMIT
 	%s #9 OFFSET", 
+			$bCount ? 'count(attr_EntityId) AS entities_count' : '*',
 			$sViewAttributes, 
 			$this->prefix(),
-			$sJoinAttributes, 
+			$sWhereAttributes, 
 			$this->escapeString($sEntityType), 
-			$sIdsOrUUIDsWhere,
+			$this->getIdsOrUUIDsWhere($aIdsOrUUIDs),
 			$sResultWhere,
 			$sResultSort,
 			$sLimit,
 			$sOffset
 		);
-		
-		if ($bCount)
-		{
-			$sSql = sprintf("
-SELECT count(attr_EntityId) AS entities_count FROM (
-%s
-) as tmp", $sSql);
-		}
 		
 		\Aurora\System\Api::Log($sSql, \Aurora\System\Enums\LogLevel::Full, "sql-");
 		
