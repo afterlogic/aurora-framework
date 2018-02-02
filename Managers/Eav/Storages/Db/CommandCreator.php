@@ -213,7 +213,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 						$sValueFormat = $oEntity->isStringAttribute($sKey) ? "%s" : "%d";
 					}
 					$sResultOperation = sprintf(
-						"`attr_%s` %s " . $sValueFormat, 
+						"`attr_%s`.`value` %s " . $sValueFormat, 
 						$sKey, 
 						$mResultOperator, 
 						($oEntity->isStringAttribute($sKey) && !$bIsInOperator) ? $this->escapeString($mResultValue) : $mResultValue
@@ -240,12 +240,10 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	
 	public function getSelectSubquery($sAttributeName, $sAttributeType)
 	{
-		return sprintf("(
-	SELECT attributes.`value` as `attr_%s`
+		return sprintf("
+	(SELECT attributes.`value` as `attr_%s`
 	FROM %seav_attributes_%s as attributes
-    WHERE attributes.id_entity = entities.id
-		AND attributes.`name` = %s
-) as `attr_%s`", 
+		WHERE attributes.id_entity = entities.id AND attributes.`name` = %s) as `attr_%s`", 
 		$sAttributeName,
 		$this->prefix(),
 		$sAttributeType,
@@ -257,8 +255,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	public function getJoinSubquery($sAttributeName, $sAttributeType)
 	{
 		return sprintf('
-	INNER JOIN %seav_attributes_%s as `attr_%s`
-		ON `attr_%s`.id_entity = entities.id AND `attr_%s`.`name` = %s',
+	INNER JOIN %seav_attributes_%s as `attr_%s` ON `attr_%s`.id_entity = entities.id AND `attr_%s`.`name` = %s',
 		$this->prefix(),
 		$sAttributeType,
 		$sAttributeName,
@@ -430,7 +427,8 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				{
 					$sType = $oEntity->getType($sAttribute);
 					$aResultWhereAttributes[$sAttribute] = $this->getJoinSubquery($sAttribute, $sType);
-					$aResultViewAttributes[$sAttribute] = sprintf('`attr_%s`.`value` as `attr_%s`', $sAttribute, $sAttribute);
+					$aResultViewAttributes[$sAttribute] = sprintf('
+	`attr_%s`.`value` as `attr_%s`', $sAttribute, $sAttribute);
 				}
 			}
 			if (0 < count($aResultWhereAttributes))
@@ -466,11 +464,12 @@ SELECT %s FROM
 		# ------
 	WHERE entities.entity_type = %s  #4 ENTITY TYPE
 		%s #5
-	) AS S1
-	WHERE 1=1 %s #6 WHERE
+		%s #6 WHERE
 	%s #7 SORT
 	%s #8 LIMIT
-	%s #9 OFFSET", 
+	%s #9 OFFSET
+	) AS S1
+", 
 			$bCount ? 'count(attr_EntityId) AS entities_count' : '*',
 			$sViewAttributes, 
 			$this->prefix(),
