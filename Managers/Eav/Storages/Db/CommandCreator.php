@@ -425,23 +425,28 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					$aWhereAttributes, 
 					$mOrderAttributes
 				);
+				$mOrderWhere = array_map(function ($sValue) {
+					return sprintf("`tbl_%s`.`value`", $sValue) . ' IS NOT NULL';
+				}, $mOrderAttributes);
 				$mOrderAttributes = array_map(function($sValue){
-					return sprintf("`tbl_%s`.`value`", $sValue);
+					return sprintf("`attr_%s`", $sValue);
 				}, $mOrderAttributes);
 
+				
 				$mOrderAttributes = array_map(function ($sSortField) use ($iSortOrder) {
 					return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
 				}, $mOrderAttributes);
 
 				if (count($mOrderAttributes > 0))
 				{
-					$sResultSort = " ORDER BY " . implode(', ', $mOrderAttributes) . "";
+					$sResultSort = ' ORDER BY ' . implode(', ', $mOrderAttributes);
+					$sResultWhere .= ' AND ' . implode(' AND ', $mOrderWhere);
 				}
 			}
 			
 			if (0 < count($aWhere))
 			{
-				$sResultWhere = ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttributes);
+				$sResultWhere .= ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttributes);
 			}
 
 			foreach ($aViewAttributes as $sAttribute)
@@ -500,10 +505,10 @@ SELECT %s FROM
 	WHERE entities.entity_type = %s  #4 ENTITY TYPE
 		%s #5
 		%s #6 WHERE
+	) AS S1
 	%s #7 SORT
 	%s #8 LIMIT
 	%s #9 OFFSET
-	) AS S1
 ", 
 			$bCount ? 'count(attr_EntityId) AS entities_count' : '*',
 			$sViewAttributes, 
