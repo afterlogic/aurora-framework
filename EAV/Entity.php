@@ -563,13 +563,37 @@ class Entity
 	}	
 	
 	/**
+	 * @param bool 
 	 * @return array
 	 */
-	public function getAttributes()
+	public function getAttributes($bOnlyOverrided = false)
 	{
-		return $this->aAttributes;
+		$aAttributes = array();
+		if ($bOnlyOverrided)
+		{
+			$aAttributes = $this->getOverridedAttributes();
+		}
+		else
+		{
+			$aAttributes = $this->aAttributes;
+		}
+		
+		return $aAttributes;
 	}	
 	
+	/**
+	 * @param bool 
+	 * @return array
+	 */
+	public function getOverridedAttributes()
+	{
+		$self = $this;
+		return array_filter($this->aAttributes, function ($oAttribute) use ($self) {
+				return $self->isOverridedAttribute($oAttribute->Name);
+			}
+		);
+	}	
+
 	/**
 	 * @return array
 	 */

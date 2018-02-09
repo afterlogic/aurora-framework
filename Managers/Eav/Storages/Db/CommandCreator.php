@@ -439,7 +439,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 
 				if (count($mOrderAttributes > 0))
 				{
-					$sResultSort = ' ORDER BY ' . implode(', ', $mOrderAttributes);
+					$sResultSort = 'ORDER BY ' . implode(', ', $mOrderAttributes);
 					$sResultWhere .= ' AND ' . implode(' AND ', $mOrderWhere);
 				}
 			}
@@ -507,8 +507,7 @@ SELECT %s FROM
 		%s #6 WHERE
 	) AS S1
 	%s #7 SORT
-	%s #8 LIMIT
-	%s #9 OFFSET
+	%s /*8 LIMIT */ %s /*9 OFFSET*/
 ", 
 			$bCount ? 'count(attr_EntityId) AS entities_count' : '*',
 			$sViewAttributes, 

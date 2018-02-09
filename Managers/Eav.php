@@ -108,7 +108,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @return boolean
 	 * @throws type
 	 */
-	protected function updateEntity(\Aurora\System\EAV\Entity $oEntity)
+	protected function updateEntity(\Aurora\System\EAV\Entity $oEntity, $bOnlyOverrided = false)
 	{
 		$mResult = false;
 		if (0 < $oEntity->countAttributes())
@@ -117,7 +117,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 			{
 				$this->setAttributes(
 					$oEntity, 
-					$oEntity->getAttributes()
+					$oEntity->getAttributes($bOnlyOverrided)
 				);
 				$mResult = true;
 			}
@@ -319,6 +319,43 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	{
 		return $this->oStorage->deleteAttribute($sType, $iEntityId, $sAttribute);
 	}	
+	
+	public function resetOverridedAttributes()
+	{
+		$iPageSize = 20;
+		$aTypes = $this->getTypes();
+		foreach ($aTypes as $sType)
+		{
+			$iPage = 0;
+			$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
+			if ($oEntity instanceof \Aurora\System\EAV\Entity)
+			{
+				$aAttributes = array_map(function ($oAttribute) {
+						return $oAttribute->Name;
+					},
+					$oEntity->getOverridedAttributes()
+				);
+				$iCount = $this->getEntitiesCount($sType);
+				$iNumPages = ceil($iCount/$iPageSize);
+				while ($iPage <= $iNumPages)
+				{
+					$aEntities = $this->getEntities(
+						$sType, 
+						$aAttributes,
+						abs($iPage * $iPageSize),
+						$iPageSize
+					);
+					foreach($aEntities as $oRealEntity)
+					{
+						$this->updateEntity($oRealEntity, true);
+					}
+					$iPage++;
+				}
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Tests if there is connection to storage with current settings values.
