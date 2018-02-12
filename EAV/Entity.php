@@ -277,6 +277,7 @@ class Entity
 					$oAttribute->Encrypted = false;
 				}
 				$oAttribute->Value = $mValue;
+				$oAttribute->setType($oAttribute->Type);
 				$mValue = $oAttribute;
 			}
 			else
