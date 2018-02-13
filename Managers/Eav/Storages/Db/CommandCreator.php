@@ -406,7 +406,13 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$oEntity = \Aurora\System\EAV\Entity::createInstance($sEntityType);
 		if ($oEntity instanceof $sEntityType)
 		{
-			$aResultViewAttributes = array();
+			$aResultViewAttributes = array(
+				'EntityId' => 'entities.id as attr_EntityId', 
+				'UUID' => 'entities.uuid as attr_UUID', 
+				'ParentUUID' => 'entities.parent_uuid as attr_ParentUUID', 
+				'EntityType' => 'entities.entity_type as attr_EntityType', 
+				'ModuleName' => 'entities.module_name as attr_ModuleName'				
+			);
 			$aResultWhereAttributes = array();
 			
 			if ($aViewAttributes === null)
@@ -477,7 +483,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 			}
 			if (0 < count($aResultViewAttributes))
 			{
-				$sViewAttributes = ', ' . implode(', ', $aResultViewAttributes);
+				$sViewAttributes = implode(', ', $aResultViewAttributes);
 			}
 
 			if ($iLimit > 0)
@@ -485,16 +491,10 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 				$sLimit = sprintf("LIMIT %d", $iLimit);
 				$sOffset = sprintf("OFFSET %d", $iOffset);
 			}
-		}		
+		}	
 		
 		$sSql = sprintf("
-SELECT %s FROM 
-	(SELECT 
-		entities.id as attr_EntityId, 
-		entities.uuid as attr_UUID, 
-		entities.parent_uuid as attr_ParentUUID, 
-		entities.entity_type, 
-		entities.module_name as attr_ModuleName
+	SELECT 
 		# fields
 		%s #1
 		# ------
@@ -505,21 +505,29 @@ SELECT %s FROM
 	WHERE entities.entity_type = %s  #4 ENTITY TYPE
 		%s #5
 		%s #6 WHERE
-	) AS S1
-	%s #7 SORT
-	%s /*8 LIMIT */ %s /*9 OFFSET*/
 ", 
-			$bCount ? 'count(attr_EntityId) AS entities_count' : '*',
-			$sViewAttributes, 
+			$bCount ? 'count(*) as entities_count' : $sViewAttributes, 
 			$this->prefix(),
 			$sWhereAttributes, 
 			$this->escapeString($sEntityType), 
 			$this->getIdsOrUUIDsWhere($aIdsOrUUIDs),
-			$sResultWhere,
+			$sResultWhere
+		);
+		
+		if (!$bCount)
+		{
+			$sSql = sprintf("
+SELECT * FROM 
+	(%s) AS S1
+	%s #7 SORT
+	%s /*8 LIMIT*/ %s /*9 OFFSET*/
+", 
+			$sSql,
 			$sResultSort,
 			$sLimit,
 			$sOffset
-		);
+			);
+		}
 		
 		\Aurora\System\Api::Log($sSql, \Aurora\System\Enums\LogLevel::Full, "sql-");
 		

@@ -173,7 +173,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		{
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$mResult = $oRow->entities_count;
+				$mResult = (int) $oRow->entities_count;
 			}			
 			$this->oConnection->FreeResult();
 		}
