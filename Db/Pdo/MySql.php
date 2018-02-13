@@ -39,6 +39,11 @@ class MySql extends \Aurora\System\Db\Sql
 	protected $rResultId;
 
 	/**
+	 * @var bool
+	 */
+	public static $bUseReconnect = false;
+
+	/**
 	 * @param string $sHost
 	 * @param string $sUser
 	 * @param string $sPassword
@@ -283,7 +288,10 @@ class MySql extends \Aurora\System\Db\Sql
 	{
 		$sExplainLog = '';
 		$sQuery = trim($sQuery);
-		
+		if (self::$bUseReconnect)
+		{
+			$this->Reconnect();
+		}
 		if (($this->bUseExplain || $this->bUseExplainExtended) && 0 === strpos($sQuery, 'SELECT'))
 		{
 			$sExplainQuery = 'EXPLAIN ';
@@ -526,5 +534,17 @@ class MySql extends \Aurora\System\Db\Sql
 			$this->errorLog($this->ErrorDesc);
 			throw new \Aurora\System\Exceptions\DbException($this->ErrorDesc, $this->ErrorCode);
 		}
+	}
+
+	private function Reconnect()
+	{
+		try
+		{
+            $this->oPDO->query('SELECT 1');
+        }
+		catch (\PDOException $e)
+		{
+            $this->Connect();
+        }
 	}
 }
