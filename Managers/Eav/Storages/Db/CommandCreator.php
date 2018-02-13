@@ -499,8 +499,8 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		%s #1
 		# ------
 	FROM %seav_entities as entities #2
-		# fields
-		%s #3
+		#3 fields
+		%s
 		# ------
 	WHERE entities.entity_type = %s  #4 ENTITY TYPE
 		%s #5
