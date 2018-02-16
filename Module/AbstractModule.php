@@ -847,6 +847,13 @@ abstract class AbstractModule
 				{
 					try
 					{
+						$oReflector = new \ReflectionMethod($this, $sMethod);
+						if (!$oReflector->isPublic())
+						{
+							throw new \Aurora\System\Exceptions\ApiException(
+								\Aurora\System\Notifications::MethodNotFound
+							);
+						}
 						$mMethodResult = call_user_func_array(
 							array($this, $sMethod), 
 							$aMethodArgs

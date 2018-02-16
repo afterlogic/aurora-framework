@@ -22,22 +22,25 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * 
 	 * @param string $sForcedStorage
 	 */
-	public function __construct()
+	public function __construct($sForcedStorage = 'Db')
 	{
-		parent::__construct(null, new Eav\Storages\Db\Storage($this));
+		$oForcedStorage = __NAMESPACE__ . '\\Eav\\Storages\\' . $sForcedStorage . '\\Storage';
+		
+		parent::__construct(null, new $oForcedStorage($this));
 	}
 
 	/**
 	 * 
 	 * @param int|string $mIdOrUUID
+	 * @param string $sType
 	 * @return boolean
 	 */
-	public function isEntityExists($mIdOrUUID)
+	public function isEntityExists($mIdOrUUID, $sType = null)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->isEntityExists($mIdOrUUID);
+			$bResult = $this->oStorage->isEntityExists($mIdOrUUID, $sType);
 		}
 		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
@@ -56,8 +59,8 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	public function saveEntity(\Aurora\System\EAV\Entity &$oEntity)
 	{
 		$mResult = false;
-		if (isset($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId) ||
-			isset($oEntity->UUID) && $this->isEntityExists($oEntity->UUID))
+		if (isset($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId, $oEntity->getName()) ||
+			isset($oEntity->UUID) && $this->isEntityExists($oEntity->UUID, $oEntity->getName()))
 		{
 			$mResult = $this->updateEntity($oEntity);
 		}
@@ -75,31 +78,9 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @return type
 	 * @throws \Aurora\System\Exceptions\ManagerException
 	 */
-	private function createEntity(\Aurora\System\EAV\Entity &$oEntity)
+	public function createEntity(\Aurora\System\EAV\Entity &$oEntity)
 	{
-		$mResult = $this->oStorage->createEntity($oEntity->getModule(), $oEntity->getName(), $oEntity->UUID, $oEntity->ParentUUID);
-		if ($mResult !== false)
-		{
-			$oEntity->EntityId = $mResult;
-			if (0 < $oEntity->countAttributes())
-			{
-				try 
-				{
-					$this->setAttributes($oEntity, $oEntity->getAttributes());
-				}
-				catch (\Exception $oEx)
-				{
-					$this->oStorage->deleteEntity($mResult);
-					throw $oEx;
-				}
-			}
-		}
-		else
-		{
-			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
-		}
-
-		return $mResult;
+		return $this->oStorage->createEntity($oEntity);
 	}
 	
 	/**
@@ -108,27 +89,9 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @return boolean
 	 * @throws type
 	 */
-	protected function updateEntity(\Aurora\System\EAV\Entity $oEntity, $bOnlyOverrided = false)
+	public function updateEntity(\Aurora\System\EAV\Entity $oEntity, $bOnlyOverrided = false)
 	{
-		$mResult = false;
-		if (0 < $oEntity->countAttributes())
-		{
-			try
-			{
-				$this->setAttributes(
-					$oEntity, 
-					$oEntity->getAttributes($bOnlyOverrided)
-				);
-				$mResult = true;
-			}
-			catch (\Aurora\System\Exceptions\DbException $oException)
-			{
-				$mResult = false;
-				throw \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
-			}
-		}
-
-		return $mResult;
+		return $this->oStorage->updateEntity($oEntity, $bOnlyOverrided);
 	}
 
 	/**
@@ -136,12 +99,12 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @param int|string $mIdOrUUID
 	 * @return bool
 	 */
-	public function deleteEntity($mIdOrUUID)
+	public function deleteEntity($mIdOrUUID, $sType = null)
 	{
 		$bResult = false;
 		try
 		{
-			$bResult = $this->oStorage->deleteEntity($mIdOrUUID);
+			$bResult = $this->oStorage->deleteEntity($mIdOrUUID, $sType);
 		}
 		catch (\Aurora\System\Exceptions\DbException $oException)
 		{
@@ -156,7 +119,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @param array $aIdsOrUUIDs
 	 * @return bool
 	 */
-	public function deleteEntities($aIdsOrUUIDs)
+	public function deleteEntities($aIdsOrUUIDs, $sType = null)
 	{
 		$bResult = false;
 		
@@ -164,7 +127,7 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 		{
 			try
 			{
-				$bResult = $this->oStorage->deleteEntities($aIdsOrUUIDs);
+				$bResult = $this->oStorage->deleteEntities($aIdsOrUUIDs, $sType);
 			}
 			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
@@ -253,12 +216,12 @@ class Eav extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 * @param int|string $mIdOrUUID
 	 * @return \Aurora\System\EAV\Entity
 	 */
-	public function getEntity($mIdOrUUID)
+	public function getEntity($mIdOrUUID, $sType = null)
 	{
 		$oEntity = null;
 		try
 		{
-			$oEntity = $this->oStorage->getEntity($mIdOrUUID);
+			$oEntity = $this->oStorage->getEntity($mIdOrUUID, $sType);
 		}
 		catch (\Aurora\System\Exceptions\DbException $oException)
 		{

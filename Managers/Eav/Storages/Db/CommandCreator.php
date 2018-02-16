@@ -634,7 +634,7 @@ ON DUPLICATE KEY UPDATE
 		{
 			$aSql[] = sprintf($sSubSql, $this->prefix(), $sSqlType, $this->prefix(), $this->escapeString($sEntityType));
 		}
-		$sSql = implode("UNION
+		$sSql = implode("UNION ALL
 ", $aSql);
 
 		return $sSql;

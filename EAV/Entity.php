@@ -502,9 +502,11 @@ class Entity
 	 */
 	public function getMap()
 	{
+		$aStaticMap = $this->getStaticMap();
+		$aExtendedObject = \Aurora\System\Api::GetModuleManager()->getExtendedObject($this->getName());
 		$this->aMap = array_merge(
-			$this->getStaticMap(), 
-			\Aurora\System\Api::GetModuleManager()->getExtendedObject($this->getName())
+			$aStaticMap, 
+			$aExtendedObject
 		);
 		return $this->aMap;
 	}

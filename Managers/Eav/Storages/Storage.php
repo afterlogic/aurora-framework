@@ -22,31 +22,41 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	/**
 	 * 
 	 * @param type $mIdOrUUID
+	 * @param type $sType
 	 * @return type
 	 */
-	public function isEntityExists($mIdOrUUID)
+	public function isEntityExists($mIdOrUUID, $sType)
 	{
 		return false;
 	}	
 	
 	/**
 	 * 
-	 * @param type $sModule
-	 * @param type $sType
-	 * @param type $sUUID
-	 * @return type
+	 * @param \Aurora\System\EAV\Entity $oEntity
+	 * @return bool
 	 */
-	public function createEntity($sModule, $sType, $sUUID, $sParentUUID)
+	public function createEntity($oEntity)
 	{
 		return false;
 	}
 	
 	/**
 	 * 
-	 * @param type $mIdOrUUID
+	 * @param \Aurora\System\EAV\Entity $oEntity
+	 * @return bool
+	 */
+	public function updateEntity($oEntity)
+	{
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param mixed $mIdOrUUID
+	 * @param string $sType
 	 * @return type
 	 */
-	public function getEntity($mIdOrUUID)
+	public function getEntity($mIdOrUUID, $sType)
 	{
 		return null;
 	}	
@@ -86,22 +96,30 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	}	
 
 	/**
+	 * @param mixed $mIdOrUUID
+	 * @param string $sType
 	 * @return bool
 	 */
-	public function deleteEntity($mIdOrUUID)
+	public function deleteEntity($mIdOrUUID, $sType)
 	{
 		return false;
 	}
 
 	/**
+	 * @param mixed $aIdsOrUUIDs
+	 * @param string $sType
 	 * @return bool
 	 */
-	public function deleteEntities($aIdsOrUUIDs)
+	public function deleteEntities($aIdsOrUUIDs, $sType)
 	{
 		return false;
 	}
 
 	/**
+	 * 
+	 * @param type $aEntitiesIds
+	 * @param type $aAttributes
+	 * @return boolean
 	 */
 	public function setAttributes($aEntitiesIds, $aAttributes)
 	{
@@ -109,7 +127,11 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	}	
 	
 	/**
-	 * @return bool
+	 * 
+	 * @param type $sType
+	 * @param type $iEntityId
+	 * @param type $sAttribute
+	 * @return boolean
 	 */
 	public function deleteAttribute($sType, $iEntityId, $sAttribute)
 	{
@@ -117,13 +139,19 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	}	
 	
 	/**
-	 * @return bool
+	 * 
+	 * @param type $sEntityTypes
+	 * @return boolean
 	 */
 	public function getAttributesNamesByEntityType($sEntityTypes)
 	{
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public function testConnection()
 	{
 		return false;

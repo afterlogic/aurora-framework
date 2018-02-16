@@ -46,7 +46,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
-	public function isEntityExists($mIdOrUUID)
+	public function isEntityExists($mIdOrUUID, $sType = null)
 	{
 		$bResult = false;
 		
@@ -68,24 +68,70 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	
 	/**
 	 * 
-	 * @param type $sModule
-	 * @param type $sType
-	 * @param type $sUUID
-	 * @param type $sParentUUID
+	 * @param type $oEntity
 	 * @return type
 	 */
-	public function createEntity($sModule, $sType, $sUUID, $sParentUUID)
+	public function createEntity($oEntity)
 	{
 		$bResult = false;
 		if ($this->oConnection->Execute(
-				$this->oCommandCreator->createEntity($sModule, $sType, $sUUID, $sParentUUID)
+				$this->oCommandCreator->createEntity($oEntity->getModule(), $oEntity->getName(), $oEntity->UUID, $oEntity->ParentUUID)
 			)
 		)
 		{
 			$bResult = $this->oConnection->GetLastInsertId();
 		}
+		if ($bResult !== false)
+		{
+			$oEntity->EntityId = $bResult;
+			if (0 < $oEntity->countAttributes())
+			{
+				try 
+				{
+					$this->setAttributes(array($oEntity), $oEntity->getAttributes());
+				}
+				catch (\Exception $oEx)
+				{
+					$this->deleteEntity($bResult);
+					throw $oEx;
+				}
+			}
+		}
+		else
+		{
+			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
+		}		
 
 		return $bResult;
+	}
+	
+	/**
+	 * 
+	 * @param type $oEntity
+	 * @param bool $bOnlyOverrided
+	 * @return type
+	 */
+	public function updateEntity($oEntity, $bOnlyOverrided = false) 
+	{
+		$mResult = false;
+		if (0 < $oEntity->countAttributes())
+		{
+			try
+			{
+				$this->setAttributes(
+					array($oEntity), 
+					$oEntity->getAttributes($bOnlyOverrided)
+				);
+				$mResult = true;
+			}
+			catch (\Aurora\System\Exceptions\DbException $oException)
+			{
+				$mResult = false;
+				throw \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
+			}
+		}
+
+		return $mResult;		
 	}
 	
 	/**
@@ -93,7 +139,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
-	public function getEntity($mIdOrUUID)
+	public function getEntity($mIdOrUUID, $sType = null)
 	{
 		$oEntity = null;
 		if ($this->oConnection->Execute(
@@ -305,7 +351,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	/**
 	 * @return bool
 	 */
-	public function deleteEntity($mIdOrUUID)
+	public function deleteEntity($mIdOrUUID, $sType = null)
 	{
 		$bResult = $this->oConnection->Execute(
 			$this->oCommandCreator->deleteEntity($mIdOrUUID)
@@ -316,7 +362,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	/**
 	 * @return bool
 	 */
-	public function deleteEntities($aIdsOrUUIDs)
+	public function deleteEntities($aIdsOrUUIDs, $sType = null)
 	{
 		$bResult = $this->oConnection->Execute(
 			$this->oCommandCreator->deleteEntities($aIdsOrUUIDs)
