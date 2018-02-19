@@ -148,7 +148,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		)
 		{
 			$oRow = $this->oConnection->GetNextRecord();
-			if ($oRow->entity_type === $sType || $sType === null)
+			if ($oRow && ($oRow->entity_type === $sType || $sType === null))
 			{
 				$oEntity = \Aurora\System\EAV\Entity::createInstance(
 					$oRow->entity_type, 

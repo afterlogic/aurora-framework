@@ -107,7 +107,7 @@ abstract class AbstractModule
      */	
 	protected $oModuleManager = null;
 	
-	protected $aDeniedMethodsByWebApi = array();
+	protected $aDeniedMethodsByWebApi = array('init');
 
 	/**
 	 * @param string $sVersion
