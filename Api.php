@@ -104,7 +104,7 @@ class Api
 	/**
 	 * @var bool
 	 */
-	public static $__SKIP_CHECK_USER_ROLE__ = false;
+	protected static $__SKIP_CHECK_USER_ROLE__ = false;
 	
 	/**
 	 * @var string 
@@ -185,10 +185,13 @@ class Api
 	/**
 	 * 
 	 * @param type $bSkip
+	 * @return bool Previous state
 	 */
 	public static function skipCheckUserRole($bSkip)
 	{
+		$bReult = self::$__SKIP_CHECK_USER_ROLE__;
 		self::$__SKIP_CHECK_USER_ROLE__ = $bSkip;
+		return $bReult;
 	}
 	
 	/**
