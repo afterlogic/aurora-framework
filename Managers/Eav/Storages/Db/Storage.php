@@ -147,41 +147,43 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			)
 		)
 		{
-			$oRow = $this->oConnection->GetNextRecord();
-			if ($oRow && ($oRow->entity_type === $sType || $sType === null))
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$oEntity = \Aurora\System\EAV\Entity::createInstance(
-					$oRow->entity_type, 
-					$oRow->entity_module
-				);
-			}
-
-			if (isset($oEntity))
-			{
-				$oEntity->EntityId = (int) $oRow->entity_id;
-				$oEntity->UUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
-				$oEntity->ParentUUID = isset($oRow->parent_uuid) ? $oRow->parent_uuid : '';
-				$oEntity->ModuleName = isset($oRow->entity_module) ? $oRow->entity_module : '';
-
-				if (isset($oRow->attr_name) && !$oEntity->isSystemAttribute($oRow->attr_name))
+				if (!isset($oEntity))
 				{
-					$mValue = $oRow->attr_value;
-					$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
-					$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-						$oRow->attr_name, 
-						$mValue, 
-						$oRow->attr_type, 
-						$bEncrypt, 
-						$oEntity->EntityId
+					$oEntity = \Aurora\System\EAV\Entity::createInstance(
+						$oRow->entity_type, 
+						$oRow->entity_module
 					);
-					$oAttribute->Encrypted = $bEncrypt;
-					$oEntity->{$oRow->attr_name} = $oAttribute;
 				}
-			}
+
+				if (isset($oEntity))
+				{
+					$oEntity->EntityId = (int) $oRow->entity_id;
+					$oEntity->UUID = isset($oRow->entity_uuid) ? $oRow->entity_uuid : '';
+					$oEntity->ParentUUID = isset($oRow->parent_uuid) ? $oRow->parent_uuid : '';
+					$oEntity->ModuleName = isset($oRow->entity_module) ? $oRow->entity_module : '';
+
+					if (isset($oRow->attr_name) && !$oEntity->isSystemAttribute($oRow->attr_name))
+					{
+						$mValue = $oRow->attr_value;
+						$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
+						$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
+							$oRow->attr_name, 
+							$mValue, 
+							$oRow->attr_type, 
+							$bEncrypt, 
+							$oEntity->EntityId
+						);
+						$oAttribute->Encrypted = $bEncrypt;
+						$oEntity->{$oRow->attr_name} = $oAttribute;
+					}
+				}
+			}			
 			$this->oConnection->FreeResult();
 		}
 
-		return $oEntity;
+		return isset($oEntity) && get_class($oEntity) ===  $sType ? $oEntity : null;
 	}	
 
 	public function getTypes()
