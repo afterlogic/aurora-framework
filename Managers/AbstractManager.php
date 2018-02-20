@@ -34,7 +34,7 @@ abstract class AbstractManager
 	 */
 	protected $oSettings;
 
-	public function __construct(\Aurora\System\Module\AbstractModule $oModule)
+	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null)
 	{
 		$this->oSettings =& \Aurora\System\Api::GetSettings();
 		$this->oLastException = null;
