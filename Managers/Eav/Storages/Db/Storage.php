@@ -139,7 +139,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
-	public function getEntity($mIdOrUUID, $sType = null)
+	public function getEntity($mIdOrUUID, $sType)
 	{
 		$oEntity = null;
 		if ($this->oConnection->Execute(
