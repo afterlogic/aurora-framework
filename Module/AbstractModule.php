@@ -289,6 +289,14 @@ abstract class AbstractModule
 		return $bResult;
 	}
 	
+	public function denyMethodsCallByWebApi($aMethods)
+	{
+		foreach ($aMethods as $sMethodName)
+		{
+			$this->denyMethodCallByWebApi($sMethodName);
+		}
+	}
+	
 	public function denyMethodCallByWebApi($sMethodName)
 	{
 		if(!in_array($sMethodName, $this->aDeniedMethodsByWebApi))
