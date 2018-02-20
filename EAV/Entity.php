@@ -67,7 +67,8 @@ class Entity
 		'text', 
 		'bool', 
 		'datetime',
-		'mediumblob'
+		'mediumblob',
+		'double'
 	);
 	
 	/**

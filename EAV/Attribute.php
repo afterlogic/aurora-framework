@@ -156,7 +156,7 @@ class Attribute
 		$this->Type = $sType;
 		
 		$sType = strtolower($sType);
-		if (in_array($sType, array('string', 'int', 'array')))
+		if (in_array($sType, array('string', 'int', 'array', 'double')))
 		{
 			settype($this->Value, $sType);
 		}

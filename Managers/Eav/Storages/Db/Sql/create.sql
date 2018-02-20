@@ -119,3 +119,20 @@ CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_mediumblob` (
   ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8;
+
+CREATE TABLE IF NOT EXISTS `%PREFIX%eav_attributes_double` (
+  `id`        BIGINT(64) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_entity` BIGINT(64) UNSIGNED          DEFAULT NULL,
+  `name`      VARCHAR(255)                 DEFAULT NULL,
+  `value`     DOUBLE,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_unique` (`id_entity`, `name`),
+  KEY `idx_name` (`name`),
+  KEY `fk_id_entity_idx` (`id_entity`),
+  CONSTRAINT `%PREFIX%fk_eav_attributes_double_id_entity` FOREIGN KEY (`id_entity`) REFERENCES `%PREFIX%eav_entities` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8;
