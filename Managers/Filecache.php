@@ -23,7 +23,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 */
 	public function __construct()
 	{
-		parent::__construct(null, new Filecache\Storage($this));
+		parent::__construct(\Aurora\System\Api::GetModule('Core'), new Filecache\Storage($this));
 	}	
 	
 	/**

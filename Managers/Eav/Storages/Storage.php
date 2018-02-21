@@ -17,8 +17,15 @@
 
 namespace Aurora\System\Managers\Eav\Storages;
 
-class Storage extends \Aurora\System\Managers\AbstractStorage
+class Storage
 {
+	protected $oManager = null;
+	
+	public function __construct(\Aurora\System\Managers\Eav &$oManager)
+	{
+		$this->oManager = $oManager;
+	}	
+	
 	/**
 	 * 
 	 * @param type $mIdOrUUID
