@@ -51,7 +51,7 @@ abstract class AbstractManager
 		return self::$_instance[$oModule->GetName()];
 	}
 
-	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null)
+	public function __construct(\Aurora\System\Module\AbstractModule $oModule)
 	{
 		$this->oSettings =& \Aurora\System\Api::GetSettings();
 		$this->oLastException = null;
