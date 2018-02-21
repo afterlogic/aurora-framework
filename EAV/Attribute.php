@@ -156,13 +156,9 @@ class Attribute
 		$this->Type = $sType;
 		
 		$sType = strtolower($sType);
-		if (in_array($sType, array('string', 'int', 'array', 'double')))
+		if (in_array($sType, array('string', 'int', 'array', 'double', 'bool')))
 		{
 			settype($this->Value, $sType);
-		}
-		else if (in_array($sType, array('bool')))
-		{
-			$this->Value = (bool) $this->Value;
 		}
 		else if (in_array($sType, array('encoded', 'datetime', 'mediumblob')))
 		{
