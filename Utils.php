@@ -1895,7 +1895,7 @@ class Utils
 	{
 		$oResult = null;
 //		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \Aurora\System\Api::GetSystemManager('users');
-		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = new \Aurora\Modules\Core\Managers\Integrator();
+		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		$iUserId = Api::getAuthenticatedUserId();
 		if (0 < $iUserId)
 		{
@@ -1919,7 +1919,7 @@ class Utils
 	public static function GetHelpdeskAccount($iTenantID)
 	{
 		$oResult = null;
-		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = new \Aurora\Modules\Core\Managers\Integrator();
+		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
 		if (0 < $iIdHelpdeskUser)
 		{
