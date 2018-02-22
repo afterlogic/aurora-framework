@@ -441,7 +441,7 @@ class Api
 	public static function IsMobileApplication()
 	{
 		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 
 		return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
 	}
@@ -1331,7 +1331,7 @@ class Api
 			}
 		}
 		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		if ($oIntegrator)
 		{
 			$mResult = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1344,7 +1344,7 @@ class Api
 	{
 		$bResult = false;
 		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		if ($oIntegrator)
 		{
 			$bResult = $oIntegrator->validateAuthToken(self::getAuthToken());
@@ -1365,7 +1365,7 @@ class Api
 			else
 			{
 				/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-				$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+				$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 				if ($oIntegrator)
 				{
 					$aInfo = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1405,7 +1405,7 @@ class Api
 				$iUserId = self::$aUserSession['UserId'];
 			}
 
-			$oIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+			$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 			if ($oIntegrator)
 			{
 				$oUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
