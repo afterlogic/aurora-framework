@@ -23,6 +23,8 @@ require_once \dirname(__FILE__).'/../autoload.php';
 \Aurora\System\Api::Init(true);
 
 
+//http_response_code(401); exit;
+
 \set_time_limit(3000);
 \set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 	throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);

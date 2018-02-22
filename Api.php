@@ -1450,6 +1450,30 @@ class Api
 		return $sUUID;
 	}
 	
+	/**
+	 * @param int $iUserId
+	 * @return string
+	 */
+	public static function getUserPublicIdById($iUserId)
+	{
+		$sPublicId = '';
+		
+		if (\is_numeric($iUserId))
+		{
+			$mUser = self::getUserById($iUserId);
+			if ($mUser instanceof EAV\Entity)
+			{
+				$sPublicId = $mUser->PublicId;
+			}
+		}
+		else 
+		{
+			$sPublicId = $iUserId;
+		}
+		
+		return $sPublicId;
+	}	
+	
 	public static function getUserById($iUserId)
 	{
 		$oManagerApi = new Managers\Eav();
