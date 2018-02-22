@@ -1303,17 +1303,17 @@ class Api
 	{
 		$oUser = null;
 		$mUserId = false;
-		if (isset(self::$aUserSession['UserId']))
-		{
-			$mUserId = self::$aUserSession['UserId'];
-		}
-		else
-		{
-			$sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
-			$mUserId = self::getAuthenticatedUserId($sAuthToken);
-		}
 		try
 		{
+			if (isset(self::$aUserSession['UserId']))
+			{
+				$mUserId = self::$aUserSession['UserId'];
+			}
+			else
+			{
+				$sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
+				$mUserId = self::getAuthenticatedUserId($sAuthToken);
+			}
 			$oUser = self::getUserById($mUserId);
 		}
 		catch (\Exception $oException) {}

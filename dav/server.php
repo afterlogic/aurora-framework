@@ -18,7 +18,7 @@ if (\strlen($sRequestUri) >= $iLen && 'dav/'.$sCurrentFile === \substr($sRequest
 	exit();
 }
 
-require_once \dirname(__FILE__).'/../system/autoload.php';
+require_once \dirname(__FILE__).'/../autoload.php';
 
 \Aurora\System\Api::Init(true);
 

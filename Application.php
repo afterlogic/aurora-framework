@@ -77,7 +77,7 @@ class Application
 		catch (\Aurora\System\Exceptions\ApiException $oEx)
 		{
 			\Aurora\System\Api::LogException($oEx);
-			echo $oEx->getMessage() . '<br/>';
+//			echo $oEx->getMessage() . '<br/>';
 		}
 		
 		self::RedirectToHttps();
