@@ -21,7 +21,7 @@ class Db extends AbstractManagerWithStorage
 	
 	public static function createInstance()
 	{
-		return new self(\Aurora\System\Api::GetModule('Core'));
+		return new self();
 	}
 	
 	public static function getInstance()
