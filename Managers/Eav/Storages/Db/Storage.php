@@ -183,7 +183,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$this->oConnection->FreeResult();
 		}
 
-		return ((isset($oEntity) && get_class($oEntity) ===  $sType) || ($sType === null)) ? $oEntity : null;
+		return ((isset($oEntity) && get_class($oEntity) ===  ltrim($sType, '\\')) || ($sType === null)) ? $oEntity : null;
 	}	
 
 	public function getTypes()

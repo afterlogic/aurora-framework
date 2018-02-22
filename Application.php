@@ -120,29 +120,17 @@ class Application
 		if ($aResult === null)
 		{
 			$aResult = array();
-			$aQuery = array();
 
 			$oHttp = \MailSo\Base\Http::SingletonInstance();
 			
-			//temporary remove code below, need to remove it late if everything works fine
-			// $aPathInfo = \array_filter(
-				// \explode('/', \trim(\trim($oHttp->GetServer('PATH_INFO', ''), '/')))
-			// );
-			// if (0 < \count($aPathInfo)) 
-			// {
-				// $aQuery = $aPathInfo;
-			// } 
-			// else 
-			// {
-				$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
+			$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
 
-				$iPos = \strpos($sQuery, '&');
-				if (0 < $iPos) 
-				{
-					$sQuery = \substr($sQuery, 0, $iPos);
-				}
-				$aQuery = \explode('/', $sQuery);
-			// }
+			$iPos = \strpos($sQuery, '&');
+			if (0 < $iPos) 
+			{
+				$sQuery = \substr($sQuery, 0, $iPos);
+			}
+			$aQuery = \explode('/', $sQuery);
 			foreach ($aQuery as $sQueryItem) 
 			{
 				$iPos = \strpos($sQueryItem, '=');
