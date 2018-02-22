@@ -24,9 +24,9 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 
 	/**
 	 * 
-	 * @param \Aurora\System\Managers\AbstractManager $oManager
+	 * @param \Aurora\System\Managers\Db $oManager
 	 */
-	public function __construct(\Aurora\System\Managers\AbstractManager &$oManager)
+	public function __construct(\Aurora\System\Managers\Db &$oManager)
 	{
 		parent::__construct($oManager);
 

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Aurora\Modules\Dav\Storages\Db\CommandCreator;
+namespace Aurora\System\Managers\Db\CommandCreator;
 
 class MySQL extends \Aurora\System\Db\AbstractCommandCreator
 {

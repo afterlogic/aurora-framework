@@ -15,34 +15,17 @@ namespace Aurora\System\Managers;
  */
 abstract class AbstractManagerWithStorage extends AbstractManager
 {
-
 	/**
 	 * @var \Aurora\System\Managers\AbstractStorage
 	 */
 	public $oStorage;
-
-	private static $_instance = [];
-
-	public static function createInstance($oModule)
-	{
-		return new self($oModule);
-	}
 	
-	public static function getInstance($oModule)
-	{
-		if(is_null(self::$_instance[$oModule->GetName()]))
-		{
-			self::$_instance[$oModule->GetName()] = new self($oModule);		
-		}
-		
-		return self::$_instance[$oModule->GetName()];
-	}
 	/**
 	 * @param \Aurora\System\Module\AbstractModule $oModule
 	 * @param \Aurora\System\Managers\AbstractStorage $oStorage
 	 * @return \Aurora\System\Managers\AbstractManager
 	 */
-	public function __construct(\Aurora\System\Module\AbstractModule $oModule = null, AbstractStorage $oStorage = null)
+	public function __construct(\Aurora\System\Module\AbstractModule $oModule, AbstractStorage $oStorage)
 	{
 		parent::__construct($oModule);
 		$this->oStorage = $oStorage;

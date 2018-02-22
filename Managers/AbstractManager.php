@@ -34,27 +34,12 @@ abstract class AbstractManager
 	 */
 	protected $oSettings;
 
-	private static $_instance = [];
-
-	public static function createInstance($oModule)
-	{
-		return new self($oModule);
-	}
-	
-	public static function getInstance($oModule)
-	{
-		if(is_null(self::$_instance[$oModule->GetName()]))
-		{
-			self::$_instance[$oModule->GetName()] = new self($oModule);		
-		}
-		
-		return self::$_instance[$oModule->GetName()];
-	}
-
+	/**
+	 * 
+	 * @param \Aurora\System\Module\AbstractModule $oModule
+	 */
 	public function __construct(\Aurora\System\Module\AbstractModule $oModule)
 	{
-		$this->oSettings =& \Aurora\System\Api::GetSettings();
-		$this->oLastException = null;
 		$this->oModule = $oModule;
 	}
 

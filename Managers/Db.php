@@ -15,13 +15,13 @@ namespace Aurora\System\Managers;
  *
  * @package Db
  */
-class Db extends \Aurora\System\Managers\AbstractManagerWithStorage
+class Db extends AbstractManagerWithStorage
 {
 	private static $_instance = null;
-
+	
 	public static function createInstance()
 	{
-		return new self();
+		return new self(\Aurora\System\Api::GetModule('Core'));
 	}
 	
 	public static function getInstance()
@@ -34,9 +34,8 @@ class Db extends \Aurora\System\Managers\AbstractManagerWithStorage
 		return self::$_instance;
 	}	
 	
-	/**
+	/*
 	 * 
-	 * @param string $sForcedStorage
 	 */
 	public function __construct()
 	{
