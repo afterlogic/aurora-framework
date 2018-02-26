@@ -78,7 +78,8 @@ class Entity
 		'entityid' => 'int', 
 		'uuid' => 'string',
 		'modulename' => 'string',
-		'parentuuid' => 'string'
+		'parentuuid' => 'string',
+		'entitytype' => 'string'
 	);
 	
 	/**

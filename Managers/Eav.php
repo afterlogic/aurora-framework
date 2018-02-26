@@ -160,6 +160,12 @@ class Eav
 		}
 		return $aTypes;
 	}
+	
+	
+	public function getAttributesNamesByEntityType($sType)
+	{
+		return $this->oStorage->getAttributesNamesByEntityType($sType);
+	}
 
 	/**
 	 * 
@@ -198,6 +204,11 @@ class Eav
 		$aEntities = array();
 		try
 		{
+			if (is_array($aViewAttributes) && count($aViewAttributes) === 0)
+			{
+				$aViewAttributes = $this->oStorage->getAttributesNamesByEntityType($sType);
+			}
+			
 			$aEntities = $this->oStorage->getEntities(
 				$sType, 
 				$aViewAttributes, 

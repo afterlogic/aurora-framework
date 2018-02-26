@@ -443,7 +443,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
 				}, $mOrderAttributes);
 
-				if (is_array($mOrderAttributes) && count($mOrderAttributes > 0))
+				if (count($mOrderAttributes) > 0)
 				{
 					$sResultSort = 'ORDER BY ' . implode(', ', $mOrderAttributes);
 					$sResultWhere .= ' AND ' . implode(' AND ', $mOrderWhere);

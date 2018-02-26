@@ -413,12 +413,22 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	
 	
 	/**
-	 * @return bool
+	 * @return array
 	 */
 	public function getAttributesNamesByEntityType($sEntityTypes)
 	{
-		$bResult = $this->oConnection->Execute($this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes));
-		return $bResult;
+		$aResult = [];
+		if ($this->oConnection->Execute(
+			$this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes)))
+		{
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+			{
+				$aResult[] = $oRow->name;
+			}
+
+		}
+		
+		return $aResult;
 	}
 
 	public function testConnection()
