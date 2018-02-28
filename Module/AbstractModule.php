@@ -107,7 +107,14 @@ abstract class AbstractModule
      */	
 	protected $oModuleManager = null;
 	
-	protected $aDeniedMethodsByWebApi = array('init');
+	protected $aDeniedMethodsByWebApi =  [
+		'init',
+		'initialize',
+		'loadModuleSettings',
+		'saveModuleConfig',
+		'getConfig',
+		'CallMethod'
+	];
 
 	/**
 	 * @param string $sVersion
@@ -149,7 +156,7 @@ abstract class AbstractModule
 	 * @param \Aurora\System\Module\Manager $oModuleManager
 	 * @return type
 	 */
-	public function SetModuleManager(Manager $oModuleManager)
+	protected function SetModuleManager(Manager $oModuleManager)
 	{
 		return $this->oModuleManager = $oModuleManager;
 	}
@@ -158,7 +165,7 @@ abstract class AbstractModule
 	 * 
 	 * @return \Aurora\System\Module\Manager
 	 */
-	public function GetModuleManager()
+	protected function GetModuleManager()
 	{
 		return $this->oModuleManager;
 	}
@@ -182,7 +189,7 @@ abstract class AbstractModule
 	}	
 
 	
-	public function isAllowedModule()
+	protected function isAllowedModule()
 	{
 		return $this->oModuleManager->IsAllowedModule($this->GetName());
 	}
@@ -192,7 +199,7 @@ abstract class AbstractModule
 	 * 
 	 * @return boolean
 	 */
-	public function isInitialized()
+	protected function isInitialized()
 	{
 		return (bool) $this->bInitialized;
 	}
@@ -472,7 +479,7 @@ abstract class AbstractModule
 	/**
 	 * @return string
 	 */
-	public function GetHash()
+	final public function GetHash()
 	{
 		return '';
 	}
@@ -480,7 +487,7 @@ abstract class AbstractModule
 	/**
 	 * @return string
 	 */
-	public function GetName()
+	final public function GetName()
 	{
 		return $this->sName;
 	}
@@ -488,7 +495,7 @@ abstract class AbstractModule
 	/**
 	 * @return string
 	 */
-	public function GetPath()
+	final public function GetPath()
 	{
 		return $this->sPath;
 	}
@@ -504,7 +511,7 @@ abstract class AbstractModule
 	/**
 	 * @return string
 	 */
-	public function GetFullName()
+	final public function GetFullName()
 	{
 		return $this->sName.'-'.$this->sVersion;
 	}
@@ -625,7 +632,7 @@ abstract class AbstractModule
 	 *
 	 * @return array
 	 */
-	public function DefaultResponse($sMethod, $mResult = false)
+	final public function DefaultResponse($sMethod, $mResult = false)
 	{
 		$aResult = array(
 			'AuthenticatedUserId' => \Aurora\System\Api::getAuthenticatedUserId(),
@@ -662,7 +669,7 @@ abstract class AbstractModule
 	 *
 	 * @return array
 	 */
-	public function TrueResponse($sMethod)
+	final public function TrueResponse($sMethod)
 	{
 		return $this->DefaultResponse($sMethod, true);
 	}
@@ -675,7 +682,7 @@ abstract class AbstractModule
 	 *
 	 * @return array
 	 */
-	public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null, $sModule = null)
+	final public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null, $sModule = null)
 	{
 		$aResponseItem = $this->DefaultResponse($sMethod, false);
 
@@ -712,7 +719,7 @@ abstract class AbstractModule
 	 *
 	 * @return array
 	 */
-	public function ExceptionResponse($sActionName, $oException, $aAdditionalParams = null)
+	final public function ExceptionResponse($sActionName, $oException, $aAdditionalParams = null)
 	{
 		$iErrorCode = null;
 		$sErrorMessage = null;
@@ -1008,7 +1015,7 @@ abstract class AbstractModule
 	 * 
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 */
-	public function updateEnabledForEntity(&$oEntity, $bEnabled = true)
+	protected function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
 		$oEavManager = new \Aurora\System\Managers\Eav();
 		if ($oEavManager)
@@ -1043,7 +1050,7 @@ abstract class AbstractModule
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return bool
 	 */
-	public function isEnabledForEntity(&$oEntity)
+	protected function isEnabledForEntity(&$oEntity)
 	{
 		$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? \trim($oEntity->{'@DisabledModules'}) : '';
 		$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();

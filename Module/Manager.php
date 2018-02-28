@@ -217,7 +217,7 @@ class Manager
 	 * @param string $sModuleName
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
-	public function loadModule($sModuleName, $sModulePath = null)
+	protected function loadModule($sModuleName, $sModulePath = null)
 	{
 		$mResult = false;
 		
