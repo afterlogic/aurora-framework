@@ -521,8 +521,8 @@ class Api
 		if ($oSettings && $oSettings->GetConf('LogFileName'))
 		{
 			$fCallback = ($iTimestamp === 0) 
-					? create_function('$matches', 'return date($matches[1]);') 
-					: create_function('$matches', 'return date($matches[1], ' . $iTimestamp . ');');
+					? function ($matches) {return date($matches[1]);} 
+					: function ($matches) use ($iTimestamp) {return date($matches[1], $iTimestamp);};
 			$sFileName = preg_replace_callback('/\{([\w|-]*)\}/', $fCallback, $oSettings->GetConf('LogFileName'));
 		}
 		
