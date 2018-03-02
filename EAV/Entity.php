@@ -100,12 +100,19 @@ class Entity
 	{
 		$this->EntityId = 0;
 		$this->UUID = self::generateUUID();
-		
 		$this->ModuleName = $sModuleName;
-
 		$this->aAttributes = array();
-		
 		$this->setStaticMap();
+		$this->initDefaults();
+	}
+	
+	protected function initDefaults()
+	{
+		$aMap = $this->getMap();
+		foreach ($aMap as $sKey => $mValue)
+		{
+			$this->{$sKey} = $mValue[1];
+		}
 	}
 	
 	/**
