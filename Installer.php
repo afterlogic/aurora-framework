@@ -112,7 +112,7 @@ class Installer
 							}
 							else
 							{
-								echo 'Invalid setting \'' . $sConfigName . '\' in module \''.$sModuleName.'\'';
+								echo "\r\nInvalid setting '" . $sConfigName . "' in module '" . $sModuleName . "'";
 							}
 						}
 					}
