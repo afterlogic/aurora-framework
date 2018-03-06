@@ -299,10 +299,19 @@ class Eav
 		return $this->oStorage->deleteAttribute($sType, $iEntityId, $sAttribute);
 	}	
 	
-	public function resetOverridedAttributes()
+	public function resetOverridedAttributes($sType = null)
 	{
 		$iPageSize = 20;
-		$aTypes = $this->getTypes();
+		
+		$aTypes = [];
+		if (empty($sType))
+		{
+			$aTypes = $this->getTypes();
+		}
+		else
+		{
+			$aTypes = [$sType];
+		}
 		foreach ($aTypes as $sType)
 		{
 			$iPage = 0;
