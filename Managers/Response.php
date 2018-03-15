@@ -160,27 +160,27 @@ class Response
 		$oApiFileCache = new Filecache();
 		
 		$sThumb = null;
-		if (!$oApiFileCache->isFileExists($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName))
+		if (!$oApiFileCache->isFileExists($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System'))
 		{
-			$oApiFileCache->putFile($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, $rResource, '_'.$sFileName);
-			if ($oApiFileCache->isFileExists($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName))
+			$oApiFileCache->putFile($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, $rResource, '_'.$sFileName, 'System');
+			if ($oApiFileCache->isFileExists($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System'))
 			{
 				try
 				{
 					$oThumb = new \PHPThumb\GD(
-						$oApiFileCache->generateFullFilePath($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName)
+						$oApiFileCache->generateFullFilePath($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System')
 					);
 
 					$sThumb = $oThumb->adaptiveResize(120, 100)->getImageAsString();
-					$oApiFileCache->put($oAccount, 'Raw/Thumb/'.$sMd5Hash, $sThumb, '_'.$sFileName);
+					$oApiFileCache->put($oAccount, 'Raw/Thumb/'.$sMd5Hash, $sThumb, '_'.$sFileName, 'System');
 				}
 				catch (\Exception $oE) {}
 			}
-			$oApiFileCache->clear($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName);
+			$oApiFileCache->clear($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System');
 		}
 		if (!isset($sThumb))
 		{
-			$sThumb = $oApiFileCache->get($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName);
+			$sThumb = $oApiFileCache->get($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System');
 		}
 		if ($bShow)
 		{

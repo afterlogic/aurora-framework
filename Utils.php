@@ -2057,10 +2057,10 @@ class Utils
 		$sMd5Hash = \md5(\rand(1000, 9999));
 		$oApiFileCache = new Managers\Filecache();
 				
-		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName);
-		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName))
+		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName, 'System');
+		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName, 'System'))
 		{
-			$sFullFilePath = $oApiFileCache->generateFullFilePath($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
+			$sFullFilePath = $oApiFileCache->generateFullFilePath($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName, 'System');
 			$iRotateAngle = 0;
 			if (\function_exists('exif_read_data')) 
 			{ 
@@ -2099,14 +2099,15 @@ class Utils
 			catch (\Exception $oE) {}
 		}
 
-		$oApiFileCache->clear($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName);
+		$oApiFileCache->clear($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName, 'System');
 	}	
 	
-	public static function GetClientFileResponse($iUserId, $sFileName, $sTempName, $iSize)
+	public static function GetClientFileResponse($sModule, $iUserId, $sFileName, $sTempName, $iSize)
 	{
 		$sMimeType = \MailSo\Base\Utils::MimeContentType($sFileName);
 
 		$sHash = Api::EncodeKeyValues(array(
+			'Module' => $sModule,
 			'TempFile' => true,
 			'UserId' => $iUserId,
 			'Name' => $sFileName,

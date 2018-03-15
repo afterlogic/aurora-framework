@@ -207,9 +207,9 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 		$sKeyPath = substr($sKeyPath, 0, 2).'/'.$sKeyPath;
 		if (!empty($sFolder))
 		{
-			$sKeyPath = $sFolder . '/' . $sKeyPath;
+			$sFolder = $sFolder . '/';
 		}
-		$sFilePath = $this->sDataPath.$this->sPath.substr($sEmailMd5, 0, 2).'/'.$sEmailMd5.'/'.$sKeyPath.$sFileSuffix;
+		$sFilePath = $this->sDataPath.$this->sPath.$sFolder.substr($sEmailMd5, 0, 2).'/'.$sEmailMd5.'/'.$sKeyPath.$sFileSuffix;
 		if ($bMkDir && !@is_dir(dirname($sFilePath)))
 		{
 			if (!@mkdir(dirname($sFilePath), 0777, true))
