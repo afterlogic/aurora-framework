@@ -239,6 +239,8 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	 */
 	public function gc()
 	{
-		return \MailSo\Base\Utils::RecTimeDirRemove($this->sDataPath.$this->sPath, 60 * 60 * 6, time());
+		return \MailSo\Base\Utils::RecTimeDirRemove(
+			$this->sDataPath. $this->sPath, 60 * 60 * 6, time()
+		);
 	}
 }
