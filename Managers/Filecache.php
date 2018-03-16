@@ -35,7 +35,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function put($oAccount, $sKey, $sValue, $sFileSuffix = '', $sFolder = '')
+	public function put($oAccount, $sKey, $sValue, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$bResult = false;
 		try
@@ -58,7 +58,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function putFile($oAccount, $sKey, $rSource, $sFileSuffix = '', $sFolder = '')
+	public function putFile($oAccount, $sKey, $rSource, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$bResult = false;
 		try
@@ -81,7 +81,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix = '', $sFolder = '')
+	public function moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$bResult = false;
 		try
@@ -103,7 +103,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return string|bool
 	 */
-	public function get($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function get($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$mResult = false;
 		try
@@ -125,7 +125,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return resource|bool
 	 */
-	public function getFile($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function getFile($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$mResult = false;
 		try
@@ -146,7 +146,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return resource|bool
 	 */
-	public function getTempFile($oAccount, $sTempName, $sMode = '')
+	public function getTempFile($oAccount, $sTempName, $sMode = 'System')
 	{
 		$mResult = false;
 		try
@@ -168,7 +168,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function clear($sUUID, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function clear($sUUID, $sKey, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$bResult = false;
 		try
@@ -190,7 +190,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return int|bool
 	 */
-	public function fileSize($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function fileSize($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$mResult = false;
 		try
@@ -212,7 +212,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return bool
 	 */
-	public function isFileExists($oAccount, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function isFileExists($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$bResult = false;
 		try
@@ -234,7 +234,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 	 *
 	 * @return bool|string
 	 */
-	public function generateFullFilePath($sUUID, $sKey, $sFileSuffix = '', $sFolder = '')
+	public function generateFullFilePath($sUUID, $sKey, $sFileSuffix = '', $sFolder = 'System')
 	{
 		$mResult = false;
 		try

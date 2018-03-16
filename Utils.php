@@ -1755,7 +1755,8 @@ class Utils
 	{
 		$aResult = array(
 			'size' => 0,
-			'content-type' => ''
+			'content-type' => '',
+			'code' => 0
 		);
 
 		$oCurl = \curl_init();
@@ -1781,6 +1782,7 @@ class Utils
 				$sContentType = isset($aContentType[0]) ? $aContentType[0] : '';
 			}
 			
+			$aResult['code'] = $aInfo['http_code'];
 			$aResult['content-type'] = $sContentType;
 		}
 
@@ -2105,6 +2107,7 @@ class Utils
 	public static function GetClientFileResponse($sModule, $iUserId, $sFileName, $sTempName, $iSize)
 	{
 		$sMimeType = \MailSo\Base\Utils::MimeContentType($sFileName);
+		$sModule = !empty($sModule) ? $sModule : 'System';
 
 		$sHash = Api::EncodeKeyValues(array(
 			'Module' => $sModule,
