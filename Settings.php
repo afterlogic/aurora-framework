@@ -58,7 +58,6 @@ class Settings extends AbstractSettings
 			'AppCookiePath' => new SettingsProperty('AppCookiePath', '/', 'string'),
 			'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
 			'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
-			'CacheStatic' => new SettingsProperty('CacheStatic', true, 'bool'),
 			'CacheTemplates' => new SettingsProperty('CacheTemplates', true, 'bool'),
 			'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', true, 'bool'),
 			'EnableImap4PlainAuth' => new SettingsProperty('EnableImap4PlainAuth', false, 'bool'),

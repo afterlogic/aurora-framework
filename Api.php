@@ -798,8 +798,14 @@ class Api
 		static $sVersion = null;
 		if (null === $sVersion) 
 		{
-			$sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
-			$sVersion = (false === $sAppVersion) ? '0.0.0' : $sAppVersion;
+			preg_match('/[\d\.]+/', @file_get_contents(self::WebMailPath().'VERSION'), $matches);
+
+			if (isset($matches[0]))
+			{
+				$sAppVersion = preg_replace('/[^0-9]/', '', $matches[0]);
+			}
+
+			$sVersion = (empty($sAppVersion)) ? '0.0.0' : $sAppVersion;
 		}
 		return $sVersion;
 	}
@@ -810,8 +816,10 @@ class Api
 	public static function VersionJs()
 	{
 		$oSettings = &self::GetSettings();
-		return preg_replace('/[^0-9a-z]/', '',self::Version().
-			($oSettings && $oSettings->GetConf('CacheStatic', true) ? '' : '-'.md5(time())));
+		$sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
+		$sAppVersion = empty($sAppVersion) ? '0.0.0' : $sAppVersion;
+		
+		return preg_replace('/[^0-9]/', '',$sAppVersion);
 	}
 
 	/**
