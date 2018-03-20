@@ -751,7 +751,7 @@ class Api
 		$sLogDir = self::GetLogFileDir();
 		$sLogFile = self::GetLogFileName();
 		$oSettings = &self::GetSettings();
-		$bRemoveOldLogs = $oSettings->GetConf('RemoveOldLogs', false);
+		$bRemoveOldLogs = $oSettings->GetConf('RemoveOldLogs', true);
 		
 		if (is_dir($sLogDir) && $bRemoveOldLogs/* && !file_exists($sLogDir.$sLogFile)*/)
 		{
