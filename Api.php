@@ -750,8 +750,10 @@ class Api
 	{
 		$sLogDir = self::GetLogFileDir();
 		$sLogFile = self::GetLogFileName();
+		$oSettings = &self::GetSettings();
+		$bRemoveOldLogs = $oSettings->GetConf('RemoveOldLogs', false);
 		
-		if (is_dir($sLogDir)/* && !file_exists($sLogDir.$sLogFile)*/)
+		if (is_dir($sLogDir) && $bRemoveOldLogs/* && !file_exists($sLogDir.$sLogFile)*/)
 		{
 			$sYesterdayLogFile = self::GetLogFileName('', time() - 60 * 60 * 24);
 			$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));

@@ -67,6 +67,7 @@ class Settings extends AbstractSettings
 			'SocketVerifySsl' => new SettingsProperty('SocketVerifySsl', false, 'bool'),
 			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', true, 'bool'),
 			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
+			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', false, 'bool')
 		);		
 	}
 
