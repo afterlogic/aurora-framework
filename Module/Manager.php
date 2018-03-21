@@ -350,9 +350,9 @@ class Manager
 			if (\is_callable($fCallback) && $this->IsAllowedModule($fCallback[0]->GetName()))
 			{
 				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]);
-				\Aurora\System\Api::Log('Arguments before subscription:');
+//				\Aurora\System\Api::Log('Arguments before subscription:');
 				
-				\Aurora\System\Api::LogObject($aArguments);
+//				\Aurora\System\Api::LogObject($aArguments);
 				
 				$mCallBackResult = \call_user_func_array(
 					$fCallback, 
@@ -362,12 +362,12 @@ class Manager
 					)
 				);
 				
-				\Aurora\System\Api::Log('Arguments after subscription:');
+//				\Aurora\System\Api::Log('Arguments after subscription:');
 				
-				\Aurora\System\Api::LogObject($aArguments);
+//				\Aurora\System\Api::LogObject($aArguments);
 
-				\Aurora\System\Api::Log('Subscription result:');
-				\Aurora\System\Api::LogObject($mResult);
+//				\Aurora\System\Api::Log('Subscription result:');
+//				\Aurora\System\Api::Log($mResult);
 
 				$this->AddResult(
 					$fCallback[0]->GetName(), 
