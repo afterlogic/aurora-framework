@@ -1375,7 +1375,7 @@ class Api
 		$mResult = false;
 		if (!empty($sAuthToken))
 		{
-			if (isset(self::$aUserSession['UserId']))
+			if (isset(self::$aUserSession['UserId']) && self::getAuthenticatedUserAuthToken() === $sAuthToken)
 			{
 				$mResult = (int) self::$aUserSession['UserId'];
 			}
@@ -1410,7 +1410,8 @@ class Api
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
 		static $oUser = null;
-		if ($oUser === null)
+		$sStoredAuthToken = self::getAuthenticatedUserAuthToken();
+		if ($oUser === null || (!empty($sAuthToken) && $sAuthToken !== $sStoredAuthToken))
 		{
 			$iUserId = 0;
 			if (!empty($sAuthToken))

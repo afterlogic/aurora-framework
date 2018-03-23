@@ -44,7 +44,7 @@ class UserSession
 		$aItems = scandir($this->Path);
 		foreach ($aItems as $sItemName)
 		{
-			if ($sItemName === '.' or $sItemName === '..')
+			if ($sItemName === '.' || $sItemName === '..')
 			{
 				continue;
 			}
@@ -68,8 +68,11 @@ class UserSession
 		}
 		
 		$aData['@time'] = $iTime;
-		$sAccountHashTable = Api::EncodeKeyValues($aData);
 		$sAuthToken = \md5(\microtime(true).\rand(10000, 99999));
+		$aData['auth-token'] = $sAuthToken;
+		$sAccountHashTable = Api::EncodeKeyValues(
+			$aData
+		);
 		return $this->Session->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
 	}
 	
@@ -100,7 +103,7 @@ class UserSession
 	{
 		$mResult = false;
 		$aList = $this->getList();
-		foreach ($aList as $sKey => $aItem)
+		foreach ($aList as $aItem)
 		{
 			if (isset($aItem['id']) && (int)$aItem['id'] === $iId)
 			{
@@ -127,6 +130,14 @@ class UserSession
 			{
 				@unlink($sKey);
 			}
+		}
+	}
+	
+	public function GC($iTimeToClearInHours = 0)
+	{
+		if ($iTimeToClearInHours > 0)
+		{
+			$this->Session->gc($iTimeToClearInHours);
 		}
 	}
 }
