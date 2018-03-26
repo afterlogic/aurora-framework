@@ -90,7 +90,7 @@ class Response
 			if (\method_exists($mResponse, 'toResponseArray'))	
 			{
 				$aArgs = [$mResponse, $aParameters];
-				$this->broadcastEvent(
+				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
 					'System', 
 					'toResponseArray' . AbstractModule::$Delimiter . 'before', 
 					$aArgs
@@ -98,7 +98,7 @@ class Response
 
 				$mResult = \array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
 
-				$this->broadcastEvent(
+				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
 					'System', 
 					'toResponseArray' . AbstractModule::$Delimiter . 'after', 
 					$aArgs,
