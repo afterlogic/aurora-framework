@@ -89,7 +89,21 @@ class Response
 		{
 			if (\method_exists($mResponse, 'toResponseArray'))	
 			{
+				$aArgs = [$mResponse, $aParameters];
+				$this->broadcastEvent(
+					'System', 
+					'toResponseArray' . AbstractModule::$Delimiter . 'before', 
+					$aArgs
+				);
+
 				$mResult = \array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
+
+				$this->broadcastEvent(
+					'System', 
+					'toResponseArray' . AbstractModule::$Delimiter . 'after', 
+					$aArgs,
+					$mResult
+				);			
 			}
 			else
 			{
