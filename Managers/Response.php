@@ -92,7 +92,7 @@ class Response
 				$aArgs = [$mResponse, $aParameters];
 				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
 					'System', 
-					'toResponseArray' . AbstractModule::$Delimiter . 'before', 
+					'toResponseArray' . \Aurora\System\Module\AbstractModule::$Delimiter . 'before', 
 					$aArgs
 				);
 
@@ -100,7 +100,7 @@ class Response
 
 				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
 					'System', 
-					'toResponseArray' . AbstractModule::$Delimiter . 'after', 
+					'toResponseArray' . \Aurora\System\Module\AbstractModule::$Delimiter . 'after', 
 					$aArgs,
 					$mResult
 				);			
