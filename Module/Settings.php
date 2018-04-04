@@ -34,7 +34,13 @@ class Settings extends \Aurora\System\AbstractSettings
 			{
 				if (!\file_exists($sModulesSettingsPath))
 				{
+					set_error_handler(function() {});					
 					\mkdir($sModulesSettingsPath, 0777);
+					restore_error_handler();
+					if (!file_exists($sModulesSettingsPath))
+					{
+						return;
+					}
 				}
 				\copy($this->DefaultConfigFilePath, $sConfigFilePath);
 			}

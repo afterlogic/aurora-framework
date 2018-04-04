@@ -253,7 +253,13 @@ abstract class AbstractSettings
 			}
 			if (!file_exists(dirname($sJsonFile)))
 			{
+				set_error_handler(function() {});					
 				mkdir(dirname($sJsonFile), 0777);
+				restore_error_handler();
+				if (!file_exists(dirname($sJsonFile)))
+				{
+					return false;
+				}
 			}
 			$bResult = (bool) file_put_contents(
 				$sJsonFile, 

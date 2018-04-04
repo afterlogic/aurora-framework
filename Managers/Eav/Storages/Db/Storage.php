@@ -142,7 +142,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	public function getEntity($mIdOrUUID, $sType)
 	{
 		$oEntity = null;
-		if ($this->oConnection->Execute(
+		if ($this->oConnection && $this->oConnection->Execute(
 				$this->oCommandCreator->getEntity($mIdOrUUID)
 			)
 		)

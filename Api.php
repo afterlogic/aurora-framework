@@ -339,7 +339,14 @@ class Api
 				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
 				if (!\file_exists($sSettingsPath))
 				{
-					\mkdir($sSettingsPath, 0777);
+					set_error_handler(function() {});					
+					mkdir($sSettingsPath, 0777);
+					restore_error_handler();
+					if (!file_exists($sSettingsPath))
+					{
+						self::$oSettings = false;
+						return self::$oSettings;
+					}
 				}
 				
 				self::$oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
@@ -380,58 +387,60 @@ class Api
 			return $oPdoCache;
 		}
 
+		$oPdo = false;
 		$oSettings = &self::GetSettings();
-
-		$sDbPort = '';
-		$sUnixSocket = '';
-
-		$iDbType = $oSettings->GetConf('DBType');
-		$sDbHost = $oSettings->GetConf('DBHost');
-		$sDbName = $oSettings->GetConf('DBName');
-		$sDbLogin = $oSettings->GetConf('DBLogin');
-		$sDbPassword = $oSettings->GetConf('DBPassword');
-
-		$iPos = strpos($sDbHost, ':');
-		if (false !== $iPos && 0 < $iPos) 
+		if ($oSettings)
 		{
-			$sAfter = substr($sDbHost, $iPos + 1);
-			$sDbHost = substr($sDbHost, 0, $iPos);
+			$sDbPort = '';
+			$sUnixSocket = '';
 
-			if (is_numeric($sAfter)) 
+			$iDbType = $oSettings->GetConf('DBType');
+			$sDbHost = $oSettings->GetConf('DBHost');
+			$sDbName = $oSettings->GetConf('DBName');
+			$sDbLogin = $oSettings->GetConf('DBLogin');
+			$sDbPassword = $oSettings->GetConf('DBPassword');
+
+			$iPos = strpos($sDbHost, ':');
+			if (false !== $iPos && 0 < $iPos) 
 			{
-				$sDbPort = $sAfter;
+				$sAfter = substr($sDbHost, $iPos + 1);
+				$sDbHost = substr($sDbHost, 0, $iPos);
+
+				if (is_numeric($sAfter)) 
+				{
+					$sDbPort = $sAfter;
+				} 
+				else 
+				{
+					$sUnixSocket = $sAfter;
+				}
+			}
+
+			if (class_exists('PDO')) 
+			{
+				try
+				{
+					$oPdo = @new \PDO((Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
+						(empty($sDbHost) ? '' : ';host='.$sDbHost).
+						(empty($sDbPort) ? '' : ';port='.$sDbPort).
+						(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
+
+					if ($oPdo) 
+					{
+						$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+					}
+				}
+				catch (\Exception $oException)
+				{
+					self::Log($oException->getMessage(), Enums\LogLevel::Error);
+					self::Log($oException->getTraceAsString(), Enums\LogLevel::Error);
+					$oPdo = false;
+				}
 			} 
 			else 
 			{
-				$sUnixSocket = $sAfter;
+				self::Log('Class PDO dosn\'t exist', Enums\LogLevel::Error);
 			}
-		}
-
-		$oPdo = false;
-		if (class_exists('PDO')) 
-		{
-			try
-			{
-				$oPdo = @new \PDO((Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
-					(empty($sDbHost) ? '' : ';host='.$sDbHost).
-					(empty($sDbPort) ? '' : ';port='.$sDbPort).
-					(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
-
-				if ($oPdo) 
-				{
-					$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-				}
-			}
-			catch (\Exception $oException)
-			{
-				self::Log($oException->getMessage(), Enums\LogLevel::Error);
-				self::Log($oException->getTraceAsString(), Enums\LogLevel::Error);
-				$oPdo = false;
-			}
-		} 
-		else 
-		{
-			self::Log('Class PDO dosn\'t exist', Enums\LogLevel::Error);
 		}
 
 		if (false !== $oPdo) 
@@ -544,9 +553,11 @@ class Api
 		if (null === $sLogDir) 
 		{
 			$oSettings =& self::GetSettings();
-
-			$sS = $oSettings->GetConf('LogCustomFullPath', '');
-			$sLogDir = empty($sS) ?self::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
+			if ($oSettings)
+			{
+				$sS = $oSettings->GetConf('LogCustomFullPath', '');
+				$sLogDir = empty($sS) ?self::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
+			}
 		}
 		
 		if (null === $bDir) 
@@ -751,17 +762,21 @@ class Api
 		$sLogDir = self::GetLogFileDir();
 		$sLogFile = self::GetLogFileName();
 		$oSettings = &self::GetSettings();
-		$bRemoveOldLogs = $oSettings->GetConf('RemoveOldLogs', true);
 		
-		if (is_dir($sLogDir) && $bRemoveOldLogs/* && !file_exists($sLogDir.$sLogFile)*/)
+		if ($oSettings)
 		{
-			$sYesterdayLogFile = self::GetLogFileName('', time() - 60 * 60 * 24);
-			$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
-			foreach($aLogFiles as $sFileName)
+			$bRemoveOldLogs = $oSettings->GetConf('RemoveOldLogs', true);
+
+			if (is_dir($sLogDir) && $bRemoveOldLogs/* && !file_exists($sLogDir.$sLogFile)*/)
 			{
-				if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false)
+				$sYesterdayLogFile = self::GetLogFileName('', time() - 60 * 60 * 24);
+				$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
+				foreach($aLogFiles as $sFileName)
 				{
-					unlink($sLogDir.$sFileName);
+					if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false)
+					{
+						unlink($sLogDir.$sFileName);
+					}
 				}
 			}
 		}
@@ -847,13 +862,19 @@ class Api
 		{
 			include self::WebMailPath().'inc_settings_path.php';
 		}
-
 		if (!defined('AU_API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
 		{
 			define('AU_API_DATA_FOLDER', Utils::GetFullPath($dataPath,self::WebMailPath()));
 		}
+		$sDataFullPath = defined('AU_API_DATA_FOLDER') ? AU_API_DATA_FOLDER : '';
 
-		return defined('AU_API_DATA_FOLDER') ? AU_API_DATA_FOLDER : '';
+/*
+		if (!\file_exists($sDataFullPath))
+		{
+			\mkdir($sDataFullPath, 0777);
+		}
+*/
+		return $sDataFullPath;
 	}
 
 	/**

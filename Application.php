@@ -101,13 +101,16 @@ class Application
 	public static function RedirectToHttps()
 	{
 		$oSettings =& Api::GetSettings();
-		$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
-		
-		$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
-				(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));
-		if ($bRedirectToHttps && !$bHttps) 
+		if ($oSettings)
 		{
-			\header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+			$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
+
+			$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
+					(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));
+			if ($bRedirectToHttps && !$bHttps) 
+			{
+				\header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+			}
 		}
 	}
 	
