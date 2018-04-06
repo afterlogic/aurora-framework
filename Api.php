@@ -795,6 +795,19 @@ class Api
 	/**
 	 * @return string
 	 */
+	public static function VersionFull()
+	{
+		static $sVersion = null;
+		$sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
+
+		$sVersion = (empty($sAppVersion)) ? '0.0.0' : $sAppVersion;
+
+		return $sVersion;
+	}
+
+	/**
+	 * @return string
+	 */
 	public static function Version()
 	{
 		static $sVersion = null;
