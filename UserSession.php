@@ -17,54 +17,20 @@ namespace Aurora\System;
 class UserSession
 {
 	/**
-     * @var \MailSo\Cache\CacheClient
-     */
-    protected $Session = null;
-	
-	/**
-     * @var \MailSo\Cache\CacheClient
+     * @var string
      */
 	protected $Path = '';
 	
 	public function __construct()
 	{
-		$this->Path = Api::DataPath().'/sessions';
-		$oSession = \MailSo\Cache\CacheClient::NewInstance();
-		$oSessionDriver = \MailSo\Cache\Drivers\File::NewInstance($this->Path);
-		$oSessionDriver->bRootDir = true;
-		$oSession->SetDriver($oSessionDriver);
-		$oSession->SetCacheIndex(Api::Version());
-
-		$this->Session = $oSession;
-	}
-	
-	protected function getList()
-	{
-		$aResult = array();
-		$aItems = scandir($this->Path);
-		foreach ($aItems as $sItemName)
-		{
-			if ($sItemName === '.' || $sItemName === '..')
-			{
-				continue;
-			}
-			
-			$sItemPath = $this->Path . DIRECTORY_SEPARATOR . $sItemName;
-			$aItem = Api::DecodeKeyValues(file_get_contents($sItemPath));
-			if (is_array($aItem) && isset($aItem['token']))
-			{
-				$aResult[$sItemPath] = $aItem;
-			}
-		}
-		
-		return $aResult;
+		$this->Path = Api::DataPath().'/sessions/';
 	}
 
 	public function Set($aData, $iTime = 0)
 	{
-		if (!file_exists($this->Path))
+		if (!\file_exists($this->Path))
 		{
-			@mkdir($this->Path, 0777);
+			@\mkdir($this->Path, 0777);
 		}
 		
 		$aData['@time'] = $iTime;
@@ -73,21 +39,30 @@ class UserSession
 		$sAccountHashTable = Api::EncodeKeyValues(
 			$aData
 		);
-		return $this->Session->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
+		$sPath = $this->generateFileName($sAuthToken, $aData['id']);
+		return (false !== \file_put_contents($sPath, $sAccountHashTable)) ? $sAuthToken : '';
 	}
 	
 	public function Get($sAuthToken)
 	{
 		$mResult = false;
 		
+		$sKey = '';
 		if (strlen($sAuthToken) !== 0) 
 		{
-			$sKey = $this->Session->get('AUTHTOKEN:'.$sAuthToken);
+			$sPath = $this->generateFileName($sAuthToken);
+			$aFiles = \glob($sPath . '*');
+			if (\is_array($aFiles) && \count($aFiles) > 0)
+			{
+				$sKey = \file_get_contents($aFiles[0]);
+			}
+
+			$sKey = \is_string($sKey) ? $sKey : '';
 		}
-		if (!empty($sKey) && is_string($sKey)) 
+		if (!empty($sKey) && \is_string($sKey)) 
 		{
 			$mResult = Api::DecodeKeyValues($sKey);
-			if (isset($mResult['@time']) && time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)
+			if (isset($mResult['@time']) && \time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)
 			{
 				\Aurora\System\Api::Log('User session expired: ');
 				\Aurora\System\Api::LogObject($mResult);
@@ -102,42 +77,81 @@ class UserSession
 	public function GetById($iId)
 	{
 		$mResult = false;
-		$aList = $this->getList();
-		foreach ($aList as $aItem)
+		
+		$aFiles = \glob($this->Path . '*.' . $iId);
+		if (\is_array($aFiles) && \count($aFiles) > 0)
 		{
-			if (isset($aItem['id']) && (int)$aItem['id'] === $iId)
+			$sKey = $aFiles[0];
+			$aItem = Api::DecodeKeyValues(\file_get_contents($sKey));
+			if (\is_array($aItem) && isset($aItem['token']))
 			{
-				$mResult = $aItem;
-				break;
+				if (isset($aItem['id']) && isset($aItem['auth-token']) && (int)$aItem['id'] === $iId)
+				{
+					if (\basename($sKey) === \basename($this->generateFileName($aItem['auth-token'], $iId)))
+					{
+						$mResult = $aItem;
+					}
+					else
+					{
+						@\unlink($sKey);
+					}
+				}
 			}
-		}
+		}		
 		
 		return $mResult;
 	}
 	
-	
 	public function Delete($sAuthToken)
 	{
-		$this->Session->Delete('AUTHTOKEN:'.$sAuthToken);
+		$sPath = $this->generateFileName($sAuthToken);
+		$aFiles = \glob($sPath . '*');
+		if (\is_array($aFiles) && \count($aFiles) > 0)
+		{
+			\unlink($aFiles[0]);
+		}
 	}
 	
 	public function DeleteById($iId)
 	{
-		$aList = $this->getList();
-		foreach ($aList as $sKey => $aItem)
+		$aFiles = \glob($this->Path.'*.' . $iId);
+		if (\is_array($aFiles) && \count($aFiles) > 0)
 		{
-			if (isset($aItem['id']) && (int)$aItem['id'] === $iId)
-			{
-				@unlink($sKey);
-			}
+			@\unlink($aFiles[0]);
 		}
 	}
 	
 	public function GC($iTimeToClearInHours = 0)
 	{
-		if ($iTimeToClearInHours > 0)
+		if (0 < $iTimeToClearInHours)
 		{
-			$this->Session->gc($iTimeToClearInHours);
+			\MailSo\Base\Utils::RecTimeDirRemove($this->Path, 60 * 60 * $iTimeToClearInHours, \time());
+			return true;
 		}
+		
+		return false;
 	}
+	
+	/**
+	 * @param string $sKey
+	 * @param int UserId
+	 *
+	 * @return string
+	 */
+	private function generateFileName($sKey, $iUserId = 0)
+	{
+		$sFilePath = '';
+		if (3 < \strlen($sKey))
+		{
+			$sKeyPath = \sha1('AUTHTOKEN:' . $sKey . Api::$sSalt);
+			if ($iUserId !== 0)
+			{
+				$sKeyPath = $sKeyPath . '.' . $iUserId;
+			}
+
+			$sFilePath = $this->Path.$sKeyPath;
+		}
+
+		return $sFilePath;
+	}	
 }
