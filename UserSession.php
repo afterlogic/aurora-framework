@@ -39,6 +39,7 @@ class UserSession
 		$sAccountHashTable = Api::EncodeKeyValues(
 			$aData
 		);
+		
 		$sPath = $this->generateFileName($sAuthToken, $aData['id']);
 		return (false !== \file_put_contents($sPath, $sAccountHashTable)) ? $sAuthToken : '';
 	}
