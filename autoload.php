@@ -18,10 +18,10 @@
 spl_autoload_register(function ($sClassName) {
 	
 	$aClassesTree = array(
-		'system' => array(
-			'Aurora\\System'
+		'system' . DIRECTORY_SEPARATOR => array(
+			'Aurora\\System',
 		),
-		'modules' => array(
+		'modules' . DIRECTORY_SEPARATOR => array(
 			'Aurora\\Modules'
 		)
 	);
@@ -31,7 +31,7 @@ spl_autoload_register(function ($sClassName) {
 		{
 			if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\'))
 			{
-				$sFileName = dirname(__DIR__) . '/' .$sFolder.'/'.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
+				$sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR .$sFolder.str_replace('\\', DIRECTORY_SEPARATOR, substr($sClassName, strlen($sClass) + 1)).'.php';
 				if (file_exists($sFileName))
 				{
 					include_once $sFileName;
@@ -44,7 +44,7 @@ spl_autoload_register(function ($sClassName) {
 	{
 		$sModuleClassName = substr($sClassName, strlen('Aurora\\Modules\\'));
 		$sModuleName = substr($sModuleClassName, 0, -7);
-		$sFileName = dirname(__DIR__) . '/modules/'.$sModuleName.'/Module.php';
+		$sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $sModuleName . DIRECTORY_SEPARATOR . 'Module.php';
 		if (file_exists($sFileName))
 		{
 			include_once $sFileName;
