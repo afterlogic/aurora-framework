@@ -84,7 +84,7 @@ class Application
 		self::RedirectToHttps();
 		self::GetVersion();
 
-		self::SingletonInstance()->oModuleManager->RunEntry(
+		return self::SingletonInstance()->oModuleManager->RunEntry(
 			\strtolower(self::GetPathItemByIndex(0, $sDefaultEntry))
 		);
 	}
