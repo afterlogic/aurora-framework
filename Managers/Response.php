@@ -163,7 +163,17 @@ class Response
 		\header('Accept-Ranges: none', true);
 	}
 	
-	public static function GetThumbResource($oAccount, $rResource, $sFileName, $bShow = true)
+	public static function RemoveThumbFromCache($iUserId, $sHash, $sFileName)
+	{
+		$sMd5Hash = \md5($sHash);
+		$oApiFileCache = new Filecache();
+		if ($oApiFileCache->isFileExists($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System'))
+		{
+			$oApiFileCache->clear($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System');
+		}
+	}
+	
+	public static function GetThumbResource($iUserId, $rResource, $sFileName, $bShow = true)
 	{
 		$sHash = (string) \Aurora\System\Application::GetPathItemByIndex(1, '');
 		if (empty($sHash))
@@ -175,27 +185,27 @@ class Response
 		$oApiFileCache = new Filecache();
 		
 		$sThumb = null;
-		if (!$oApiFileCache->isFileExists($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System'))
+		if (!$oApiFileCache->isFileExists($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System'))
 		{
-			$oApiFileCache->putFile($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, $rResource, '_'.$sFileName, 'System');
-			if ($oApiFileCache->isFileExists($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System'))
+			$oApiFileCache->putFile($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, $rResource, '_'.$sFileName, 'System');
+			if ($oApiFileCache->isFileExists($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System'))
 			{
 				try
 				{
 					$oThumb = new \PHPThumb\GD(
-						$oApiFileCache->generateFullFilePath($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System')
+						$oApiFileCache->generateFullFilePath($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System')
 					);
 
 					$sThumb = $oThumb->adaptiveResize(120, 100)->getImageAsString();
-					$oApiFileCache->put($oAccount, 'Raw/Thumb/'.$sMd5Hash, $sThumb, '_'.$sFileName, 'System');
+					$oApiFileCache->put($iUserId, 'Raw/Thumb/'.$sMd5Hash, $sThumb, '_'.$sFileName, 'System');
 				}
 				catch (\Exception $oE) {}
 			}
-			$oApiFileCache->clear($oAccount, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System');
+			$oApiFileCache->clear($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System');
 		}
 		if (!isset($sThumb))
 		{
-			$sThumb = $oApiFileCache->get($oAccount, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System');
+			$sThumb = $oApiFileCache->get($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System');
 		}
 		if ($bShow)
 		{
