@@ -127,7 +127,7 @@ class Application
 
 			$oHttp = \MailSo\Base\Http::SingletonInstance();
 			
-			$sQuery = \trim(\trim($oHttp->GetQueryString()), ' /');
+			$sQuery = \trim(\trim(urldecode($oHttp->GetQueryString())), ' /');
 
 			$iPos = \strpos($sQuery, '&');
 			if (0 < $iPos) 
