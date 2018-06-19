@@ -1997,6 +1997,11 @@ class Utils
 			{
 				\header('Content-Type: '.$sContentType, true);
 			}
+			elseif (\strtolower($sContentType) === 'application/octet-stream')
+			{
+				$sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
+				\header('Content-Type: '.$sContentType, true);
+			}
 			else
 			{
 				\header('Content-Type: text/plain', true);
