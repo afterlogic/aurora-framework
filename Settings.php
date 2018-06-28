@@ -48,7 +48,7 @@ class Settings extends AbstractSettings
 			'LoggingLevel' => new SettingsProperty('LoggingLevel', Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
 			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
 			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
-			'LogPostView' => new SettingsProperty('LogPostView', '', 'bool'),
+			'LogPostView' => new SettingsProperty('LogPostView', false, 'bool'),
 			
 			'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
 			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
