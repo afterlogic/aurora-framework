@@ -67,6 +67,12 @@ class Manager
 	private $_aResults;
 	
 	/**
+	 *
+	 * @var \Sabre\Event\EventEmitter 
+	 */
+	private $oEventEmitter = null;
+	
+	/**
 	 * 
 	 * @return \self
 	 */
@@ -75,7 +81,11 @@ class Manager
 		return new self();
 	}
 	
-	/**
+	public function __construct() {
+		$this->oEventEmitter = new \Sabre\Event\EventEmitter();
+	}
+
+		/**
 	 * 
 	 * @return string
 	 */
@@ -302,16 +312,7 @@ class Manager
      */
     public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
 	{
-        if (!isset($this->_aSubscriptions[$sEvent])) 
-		{
-            $this->_aSubscriptions[$sEvent] = array();
-        }
-        while(isset($this->_aSubscriptions[$sEvent][$iPriority]))	
-		{
-			$iPriority++;
-		}
-        $this->_aSubscriptions[$sEvent][$iPriority] = $fCallback;
-        \ksort($this->_aSubscriptions[$sEvent]);
+		$this->oEventEmitter->on($sEvent, $fCallback, $iPriority);
     }	
 	
     /**
@@ -326,66 +327,9 @@ class Manager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null) 
 	{
-		$bResult = false;
-		$aSubscriptions = array();
-		if (isset($this->_aSubscriptions[$sEvent])) 
-		{
-			$aSubscriptions = array_merge(
-				$aSubscriptions, 
-				$this->_aSubscriptions[$sEvent]
-			);
-        }
-		$sEvent = $sModule . AbstractModule::$Delimiter . $sEvent;
-		if (isset($this->_aSubscriptions[$sEvent])) 
-		{
-			$aSubscriptions = \array_merge(
-				$aSubscriptions, 
-				$this->_aSubscriptions[$sEvent]
-			);
-		}
-		
-		foreach($aSubscriptions as $fCallback) 
-		{
-			if (\is_callable($fCallback) && $this->IsAllowedModule($fCallback[0]->GetName()))
-			{
-				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]);
-//				\Aurora\System\Api::Log('Arguments before subscription:');
-				
-//				\Aurora\System\Api::LogObject($aArguments);
-				
-				$mCallBackResult = \call_user_func_array(
-					$fCallback, 
-					array(
-						&$aArguments,
-						&$mResult
-					)
-				);
-				
-//				\Aurora\System\Api::Log('Arguments after subscription:');
-				
-//				\Aurora\System\Api::LogObject($aArguments);
-
-//				\Aurora\System\Api::Log('Subscription result:');
-//				\Aurora\System\Api::Log($mResult);
-
-				$this->AddResult(
-					$fCallback[0]->GetName(), 
-					$sEvent, 
-					$aArguments,
-					$mCallBackResult
-				);
-
-				if ($mCallBackResult) 
-				{
-					$bResult = $mCallBackResult;
-					break;
-				}
-			}
-		}
-
-        return $bResult;
+		return $this->oEventEmitter->emit($sModule . AbstractModule::$Delimiter . $sEvent, [&$aArguments, &$mResult]);
     }	
 	
 	/**

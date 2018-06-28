@@ -859,7 +859,7 @@ abstract class AbstractModule
 				// prepare arguments for main action after event
 				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, true);
 
-				if (!$bEventResult)
+				if ($bEventResult)
 				{
 					try
 					{
