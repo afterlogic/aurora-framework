@@ -91,10 +91,6 @@ class ErrorCodes
 	const Db_ExceptionError = 3001;
 	const Db_PdoExceptionError = 3002;
 
-	// fetcher
-	const Fetcher_ConnectToMailServerFailed = 4101;
-	const Fetcher_AuthError = 4102;
-
 	// Sabre
 	const Sabre_Exception = 5001;
 	const Sabre_PreconditionFailed = 5002;
@@ -201,9 +197,6 @@ class ErrorCodes
 
 				self::Db_ExceptionError =>\Aurora\System\Api::I18N('API/DB_EXCEPTION_ERROR'),
 				self::Db_PdoExceptionError =>\Aurora\System\Api::I18N('API/DB_PDO_EXCEPTION_ERROR'),
-
-				self::Fetcher_ConnectToMailServerFailed =>\Aurora\System\Api::I18N('API/FETCHER_CONNECT_TO_MAIL_SERVER_FAILED'),
-				self::Fetcher_AuthError =>\Aurora\System\Api::I18N('API/FETCHER_AUTH_ERROR'),
 
 				self::Sabre_Exception =>\Aurora\System\Api::I18N('API/SABRE_EXCEPTION'),
 				self::Sabre_PreconditionFailed =>\Aurora\System\Api::I18N('API/SABRE_PRECONDITION_FAILED')

@@ -44,8 +44,6 @@ class Notifications
 	const CanNotGetContact = 607;
 
 	const CanNotCreateAccount = 701;
-	const FetcherConnectError = 702;
-	const FetcherAuthError = 703;
     const AccountExists = 704;
 
 	// Rest
