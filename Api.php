@@ -516,13 +516,24 @@ class Api
 	 */
 	public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = '')
 	{
-		$sDesc = (string) $mObject;
+		$sMessage = '';
+
+		$oSettings =& self::GetSettings();
+		if ($oSettings && $oSettings->GetConf('LogStackTrace', false))
+		{
+			$sMessage = (string) $mObject;
+		}
+		else
+		{
+			$sMessage = $mObject->getMessage();
+		}		
+		
 		if (0 < \count(self::$aSecretWords)) 
 		{
-			$sDesc = \str_replace(self::$aSecretWords, '*******', $sDesc);
+			$sMessage = \str_replace(self::$aSecretWords, '*******', $sMessage);
 		}
 		
-		self::Log($sDesc, $iLogLevel, $sFilePrefix);
+		self::Log($sMessage, $iLogLevel, $sFilePrefix);
 	}
 
 	/**
