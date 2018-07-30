@@ -741,7 +741,11 @@ abstract class AbstractModule
 					$sErrorMessage = null;
 				}
 			}
-			$sModule = $this->GetName();
+			$oModule = $oException->GetModule();
+			if ($oModule)
+			{
+				$sModule = $oModule->GetName();
+			}
 		}
 		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
 		{
