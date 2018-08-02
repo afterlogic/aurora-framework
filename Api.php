@@ -217,9 +217,10 @@ class Api
 	{
 		return Utils::UrlSafeBase64Encode(
 			Utils\Crypt::XxteaEncrypt(
-				gzdeflate(
+//				gzdeflate(
 					@\serialize($aValues)
-				), 
+//				)
+				, 
 				\md5(self::$sSalt)
 			)
 		);
@@ -231,9 +232,11 @@ class Api
 	public static function DecodeKeyValues($sEncodedValues)
 	{
 		$aResult = @\unserialize(
-			gzinflate(
+//			gzinflate(
 				Utils\Crypt::XxteaDecrypt(
-					Utils::UrlSafeBase64Decode($sEncodedValues), \md5(self::$sSalt))));
+					Utils::UrlSafeBase64Decode($sEncodedValues), \md5(self::$sSalt)))
+//			)
+		;
 
 		return \is_array($aResult) ? $aResult : array();
 	}
