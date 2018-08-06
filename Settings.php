@@ -60,7 +60,7 @@ class Settings extends AbstractSettings
 			'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
 			'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
 			'CacheTemplates' => new SettingsProperty('CacheTemplates', true, 'bool'),
-			'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', true, 'bool'),
+			'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', false, 'bool'),
 			'EnableImap4PlainAuth' => new SettingsProperty('EnableImap4PlainAuth', false, 'bool'),
 			'RedirectToHttps' => new SettingsProperty('RedirectToHttps', false, 'bool'),
 			'SocketConnectTimeoutSeconds' => new SettingsProperty('SocketConnectTimeoutSeconds', 20, 'int'),
