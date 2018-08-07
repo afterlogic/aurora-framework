@@ -193,7 +193,7 @@ class Response
 				try
 				{
 					$oThumb = new \Aurora\System\Utils\ImageThumb(
-						$oApiFileCacPHPThumbhe->generateFullFilePath($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System')
+						$oApiFileCache->generateFullFilePath($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System')
 					);
 
 					$sThumb = $oThumb->adaptiveResize(120, 100)->getImageAsString();
