@@ -2093,7 +2093,7 @@ class Utils
 			
 			try
 			{
-				$oThumb = new \PHPThumb\GD(
+				$oThumb = new \Aurora\System\Utils\ImageThumb(
 					$sFullFilePath
 				);
 				if ($iRotateAngle > 0)
