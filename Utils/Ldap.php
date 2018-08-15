@@ -95,7 +95,7 @@ class Ldap
 		{
 			\Aurora\System\Api::Log('LDAP: connect to '.$sHost.':'.$iPort);
 			
-			$rLink = @ldap_connect($sHost, $iPort);
+			$rLink = ldap_connect($sHost, $iPort);
 			if ($rLink)
 			{
 				@ldap_set_option($rLink, LDAP_OPT_PROTOCOL_VERSION, 3);

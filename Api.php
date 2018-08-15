@@ -129,15 +129,26 @@ class Api
 	public static function InitSalt()
 	{
 		$sSalt = '';
+		$sSalt8File = self::DataPath().'/salt8.php';
 		$sSaltFile = self::DataPath().'/salt.php';
-		if (!@file_exists($sSaltFile)) 
-		{
-			$sSaltDesc = '<?php #'.md5(microtime(true).rand(1000, 9999)).md5(microtime(true).rand(1000, 9999));
-			@file_put_contents($sSaltFile, $sSaltDesc);
-		} 
-		$sSalt = '$2y$07$' . md5(@file_get_contents($sSaltFile)) . '$';
 
-		self::$sSalt = $sSalt;
+		if (!@file_exists($sSalt8File)) 
+		{
+			if (@file_exists($sSaltFile))
+			{
+				$sSalt = md5(@file_get_contents($sSaltFile));
+				@unlink($sSaltFile);
+			}
+			else
+			{
+				$sSalt = base64_encode(microtime(true).rand(1000, 9999).microtime(true).rand(1000, 9999));
+			}
+			$sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "'. $sSalt . '";';
+			@file_put_contents($sSalt8File, $sSalt);
+		}
+		
+		include_once $sSalt8File;
+		self::$sSalt = '$2y$07$' . self::$sSalt . '$';
 	}
 	
 	/**
