@@ -125,11 +125,20 @@ class Api
 	
 	/**
 	 * 
+	 * @return string
+	 */
+	public static function GetSaltPath()
+	{
+		return self::DataPath().'/salt8.php';
+	}
+	
+	/**
+	 * 
 	 */
 	public static function InitSalt()
 	{
 		$sSalt = '';
-		$sSalt8File = self::DataPath().'/salt8.php';
+		$sSalt8File = self::GetSaltPath();
 		$sSaltFile = self::DataPath().'/salt.php';
 
 		if (!@file_exists($sSalt8File)) 
