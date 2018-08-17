@@ -33,6 +33,16 @@ class Eav
 		
 		$this->oStorage = new $oForcedStorage($this);
 	}
+	
+	public static function getInstance($sForcedStorage = 'Db')
+	{
+		static $oInstance = null;
+		if(is_null($oInstance)) 
+		{ 
+			$oInstance = new self($sForcedStorage); 
+		} 
+		return $oInstance; 
+	}
 
 	/**
 	 * 

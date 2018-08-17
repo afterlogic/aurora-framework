@@ -404,6 +404,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		$sOffset = "";
 		
 		$oEntity = \Aurora\System\EAV\Entity::createInstance($sEntityType);
+		
 		if ($oEntity instanceof $sEntityType)
 		{
 			$aResultViewAttributes = array(
