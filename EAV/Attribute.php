@@ -157,6 +157,10 @@ class Attribute
 		{
 			settype($this->Value, $sType);
 		}
+		else if ($sType === 'bigint')
+		{
+			settype($this->Value, 'int');
+		}
 		else if (in_array($sType, array('encoded', 'datetime', 'mediumblob')))
 		{
 			settype($this->Value, 'string');
