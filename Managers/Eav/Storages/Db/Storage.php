@@ -127,7 +127,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
 				$mResult = false;
-				throw \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
+				throw new \Aurora\System\Exceptions\ManagerException(\Aurora\System\Exceptions\Errs::Main_UnknownError);
 			}
 		}
 
