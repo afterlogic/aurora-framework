@@ -661,6 +661,7 @@ abstract class AbstractModule
 				}
 			}
 		}
+		$aResult['SubscriptionsResult'] = \Aurora\System\Api::GetModuleManager()->GetSubscriptionsResult();
 		
 		return $aResult;
 	}	

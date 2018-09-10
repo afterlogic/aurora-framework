@@ -67,6 +67,11 @@ class Manager
 	private $_aResults;
 	
 	/**
+	 * @var array
+	 */
+	private $_aSubscriptionsResult;
+
+	/**
 	 * 
 	 * @return \self
 	 */
@@ -81,6 +86,7 @@ class Manager
 	 */
 	public function init()
 	{
+		$this->_aSubscriptionsResult = [];
 		$oCoreModule = $this->GetModule('Core');
 		if ($oCoreModule instanceof AbstractModule)
 		{
@@ -330,6 +336,8 @@ class Manager
 	{
 		$bResult = false;
 		$aSubscriptions = array();
+		$mSubscriptionsResult = null;
+		
 		if (isset($this->_aSubscriptions[$sEvent])) 
 		{
 			$aSubscriptions = array_merge(
@@ -359,9 +367,15 @@ class Manager
 					$fCallback, 
 					array(
 						&$aArguments,
-						&$mResult
+						&$mResult,
+						&$mSubscriptionsResult
 					)
 				);
+
+				if (isset($mSubscriptionsResult))
+				{
+					$this->_aSubscriptionsResult[$fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]] = $mSubscriptionsResult;
+				}
 				
 //				\Aurora\System\Api::Log('Arguments after subscription:');
 				
@@ -784,6 +798,14 @@ class Manager
 		return $this->_aResults;
 	}
 	
+	/**
+	 * @return array
+	 */
+	public function GetSubscriptionsResult()
+	{
+		return $this->_aSubscriptionsResult;
+	}
+
 	/**
 	 * @param string $sModule
 	 * @param string $sMethod
