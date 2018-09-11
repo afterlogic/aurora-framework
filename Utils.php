@@ -549,8 +549,8 @@ class Utils
 	 */
 	public static function EncryptValue($sPassword)
 	{
-		$sPassword = \MailSo\Base\Crypt::XxteaEncrypt($sPassword, md5(Api::$sSalt));
-		return @trim(base64_encode($sPassword));
+		$sPassword = \MailSo\Base\Crypt::XxteaEncrypt($sPassword, Api::$sSalt);
+		return @trim(self::UrlSafeBase64Encode($sPassword));
 	}
 
 	/**
@@ -559,8 +559,8 @@ class Utils
 	 */
 	public static function DecryptValue($sPassword)
 	{
-		$sPassword = @base64_decode(trim($sPassword));
-		return \MailSo\Base\Crypt::XxteaDecrypt($sPassword, md5(Api::$sSalt));
+		$sPassword = self::UrlSafeBase64Decode(trim($sPassword));
+		return \MailSo\Base\Crypt::XxteaDecrypt($sPassword, Api::$sSalt);
 	}
 	
 	/**

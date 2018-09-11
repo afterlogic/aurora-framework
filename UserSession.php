@@ -16,6 +16,8 @@ namespace Aurora\System;
  */
 class UserSession
 {
+	const TOKEN_VERSION = '2';
+	
 	public function __construct()
 	{
 	}
@@ -23,6 +25,7 @@ class UserSession
 	public function Set($aData, $iTime = 0)
 	{
 		$aData['@time'] = $iTime;
+		$aData['ver'] = self::TOKEN_VERSION;
 		$sAuthToken = Api::EncodeKeyValues(
 			$aData
 		);
@@ -37,7 +40,8 @@ class UserSession
 		if (strlen($sAuthToken) !== 0) 
 		{
 			$mResult = Api::DecodeKeyValues($sAuthToken);
-			if (isset($mResult['@time']) && \time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)
+			if ((isset($mResult['@time']) && \time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)  || 
+					(isset($mResult['ver']) && $mResult['ver'] !== self::TOKEN_VERSION) || !isset($mResult['ver']))
 			{
 				\Aurora\System\Api::Log('User session expired: ');
 				\Aurora\System\Api::LogObject($mResult);
