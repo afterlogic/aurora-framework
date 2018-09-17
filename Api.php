@@ -1435,6 +1435,27 @@ class Api
 		return $bResult;
 	}
 	
+	public static function getCookiePath()
+	{
+		static $sPath = false;
+		
+		if (false === $sPath)
+		{
+			$sScriptName = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+			$iPos = strripos($sScriptName, '/');
+			if ($iPos !== false)
+			{
+				$sPath = substr($sScriptName, 0, $iPos + 1);
+			}
+			if (false === $sPath)
+			{
+				$sPath = '/';
+			}
+		}
+
+		return $sPath;
+	}
+	
 	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;
