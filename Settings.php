@@ -68,7 +68,8 @@ class Settings extends AbstractSettings
 			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', true, 'bool'),
 			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
 			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
-			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool')
+			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
+			'ExpireUserSessionsBefore' => new SettingsProperty('ExpireUserSessionsBefore', 0, 'int')
 		);		
 	}
 

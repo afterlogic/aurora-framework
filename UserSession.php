@@ -16,21 +16,15 @@ namespace Aurora\System;
  */
 class UserSession
 {
-	const TOKEN_VERSION = '2';
-	
-	public function __construct()
-	{
-	}
+	const TOKEN_VERSION = '2.1';
 
 	public function Set($aData, $iTime = 0)
 	{
 		$aData['@time'] = $iTime;
-		$aData['ver'] = self::TOKEN_VERSION;
-		$sAuthToken = Api::EncodeKeyValues(
+		$aData['@ver'] = self::TOKEN_VERSION;
+		return Api::EncodeKeyValues(
 			$aData
 		);
-		
-		return $sAuthToken;
 	}
 	
 	public function Get($sAuthToken)
@@ -40,12 +34,26 @@ class UserSession
 		if (strlen($sAuthToken) !== 0) 
 		{
 			$mResult = Api::DecodeKeyValues($sAuthToken);
-			if ((isset($mResult['@time']) && \time() > (int)$mResult['@time'] && (int)$mResult['@time'] > 0)  || 
-					(isset($mResult['ver']) && $mResult['ver'] !== self::TOKEN_VERSION) || !isset($mResult['ver']))
+			
+			$iExpireUserSessionsBefore = Api::GetSettings()->GetConf("ExpireUserSessionsBefore", 0);
+			
+			if ((isset($mResult['@ver']) && $mResult['@ver'] !== self::TOKEN_VERSION) || !isset($mResult['@ver']))
 			{
-				\Aurora\System\Api::Log('User session expired: ');
-				\Aurora\System\Api::LogObject($mResult);
 				$mResult = false;
+			}
+			else if ((isset($mResult['sign-me']) && !((bool) $mResult['sign-me'])) || (!isset($mResult['sign-me'])))
+			{
+				$iTime = 0;
+				if (isset($mResult['@time']))
+				{
+					$iTime = (int) $mResult['@time'];
+				}
+				if ($iExpireUserSessionsBefore > $iTime && $iTime > 0)
+				{
+					\Aurora\System\Api::Log('User session expired: ');
+					\Aurora\System\Api::LogObject($mResult);
+					$mResult = false;
+				}
 			}
 		}
 		
