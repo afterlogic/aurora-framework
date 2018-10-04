@@ -69,7 +69,10 @@ class Settings extends AbstractSettings
 			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
 			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
 			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
-			'ExpireUserSessionsBefore' => new SettingsProperty('ExpireUserSessionsBefore', 0, 'int')
+			'ExpireUserSessionsBefore' => new SettingsProperty('ExpireUserSessionsBefore', 0, 'int'),
+			
+			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
+			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool')
 		);		
 	}
 

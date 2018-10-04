@@ -66,4 +66,28 @@ class Validate
 		}
 		return $bResult;
 	}
+	
+	/**
+	 * @param mixed $mValue
+	 * @return bool
+	 */
+	public static function IsValidPassword($mValue)
+	{
+		$bResult = true;
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		$iPasswordMinLength = $oSettings->GetConf('PasswordMinLength');
+		$bPasswordMustBeComplex = $oSettings->GetConf('PasswordMustBeComplex');
+		
+		if (strlen($mValue) < $iPasswordMinLength) 
+		{ 
+			$bResult = false;
+			
+		}
+		else if ($bPasswordMustBeComplex && (!preg_match('([0-9])', $mValue) || !preg_match('([!,%,&,@,#,$,^,*,?,_,~])', $mValue)))
+		{
+			$bResult = false;
+		}
+		
+		return $bResult;
+	}	
 }
