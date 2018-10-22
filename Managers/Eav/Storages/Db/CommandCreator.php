@@ -561,6 +561,7 @@ SELECT * FROM
 							$oAttribute->Encrypt();
 						}
 						$mValue = $oAttribute->Value;
+						$mValue = is_null($mValue) ? 'null' : $mValue;
 						$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
 						$sSqlValueType = $oAttribute->getValueFormat();
 

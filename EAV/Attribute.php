@@ -133,7 +133,14 @@ class Attribute
 				$bResult = true;
 				break;
 			case "datetime" :
-				$bResult = true;
+				if (!empty($this->Value))
+				{
+					$bResult = true;
+				}
+				else
+				{
+					$bResult = false;
+				}
 				break;
 		}	
 		
@@ -161,7 +168,7 @@ class Attribute
 		{
 			settype($this->Value, 'int');
 		}
-		else if (in_array($sType, array('encoded', 'datetime', 'mediumblob')))
+		else if (in_array($sType, array('encoded', 'datetime', 'mediumblob')) && !is_null($this->Value))
 		{
 			settype($this->Value, 'string');
 		}
