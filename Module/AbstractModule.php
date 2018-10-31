@@ -934,18 +934,13 @@ abstract class AbstractModule
 		}
 		catch (\Exception $oException)
 		{
-			if (!($oException instanceof \Aurora\System\Exceptions\ApiException))
-			{
-				throw new \Aurora\System\Exceptions\ApiException(
-					$oException->getCode(), 
-					$oException, 
-					$oException->getMessage()
-				);
-			}
-			else
-			{
-				throw $oException;
-			}
+			throw new \Aurora\System\Exceptions\ApiException(
+				$oException->getCode(), 
+				$oException, 
+				$oException->getMessage(),
+				[],
+				$this
+			);
 		}
 				
 		return $mResult;
