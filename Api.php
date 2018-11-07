@@ -1461,7 +1461,7 @@ class Api
 		$mResult = false;
 		if (!empty($sAuthToken))
 		{
-			if (isset(self::$aUserSession['UserId']) && self::getAuthenticatedUserAuthToken() === $sAuthToken)
+			if (!empty(self::$aUserSession['UserId']) && self::getAuthenticatedUserAuthToken() === $sAuthToken)
 			{
 				$mResult = (int) self::$aUserSession['UserId'];
 			}
