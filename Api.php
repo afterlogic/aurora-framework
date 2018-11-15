@@ -1537,13 +1537,22 @@ class Api
 	public static function getUserUUIDById($iUserId)
 	{
 		$sUUID = '';
+		static $aUUIDs = []; // cache
 		
 		if (\is_numeric($iUserId))
 		{
-			$mUser = self::getUserById($iUserId);
-			if ($mUser instanceof EAV\Entity)
+			if (isset($aUUIDs[$iUserId]))
 			{
-				$sUUID = $mUser->UUID;
+				$sUUID = $aUUIDs[$iUserId];
+			}
+			else
+			{
+				$mUser = self::getUserById($iUserId);
+				if ($mUser instanceof EAV\Entity)
+				{
+					$sUUID = $mUser->UUID;
+					$aUUIDs[$iUserId] = $sUUID;
+				}
 			}
 		}
 		else 

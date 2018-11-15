@@ -254,10 +254,14 @@ abstract class AbstractModule
 	 */
 	public function saveModuleConfig()
 	{
+		$bResult = false;
+
 		if (isset($this->oModuleSettings))
 		{
-			return $this->oModuleSettings->Save();
+			$bResult = $this->oModuleSettings->Save();
 		}
+
+		return $bResult;
 	}	
 	
 	/**
@@ -956,6 +960,23 @@ abstract class AbstractModule
 		return null;
 	}
 	
+	protected function getLangsData($sLang)
+	{
+		$mResult = false;
+		$sLangFile = $this->GetPath().'/i18n/' . $sLang . '.ini';
+		$sLangFile = @\file_exists($sLangFile) ? $sLangFile : '';
+
+		if (0 < \strlen($sLangFile)) 
+		{
+			$aLang = \Aurora\System\Api::convertIniToLang($sLangFile);
+			if (\is_array($aLang)) 
+			{
+				$mResult = $aLang;
+			}
+		}
+		return $mResult;
+	}
+
 	/**
 	 * @param string $sData
 	 * @param array $aParams = null
@@ -990,24 +1011,22 @@ abstract class AbstractModule
 		{
 			\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = false;
 				
-			$sLangFile = $this->GetPath().'/i18n/'.$sLanguage.'.ini';
-			if (!@\file_exists($sLangFile)) 
+			$aLang = $this->getLangsData($sLanguage);
+			if (!$aLang)
 			{
-				$sLangFile = $this->GetPath().'/i18n/English.ini';
-				$sLangFile = @\file_exists($sLangFile) ? $sLangFile : '';
+				$aLang = $this->getLangsData('English');
 			}
-
-			if (0 < \strlen($sLangFile)) 
+			
+			if (\is_array($aLang)) 
 			{
-				$aLang = \Aurora\System\Api::convertIniToLang($sLangFile);
-				if (\is_array($aLang)) 
-				{
-					\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
-				}
+				\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
 			}
 		}
+		if (!isset($aLang[$sData])) 
+		{
+			$aLang = $this->getLangsData('English');
+		}
 		
-		//return self::processTranslateParams($aLang, $sData, $aParams);
 		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) : 
 			\Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams);
 	}

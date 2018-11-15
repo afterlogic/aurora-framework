@@ -227,7 +227,7 @@ abstract class AbstractSettings
 	 */
 	public function Save()
 	{
-		$bResult = true;
+		$bResult = false;
 		$aConvertedContainer = array();
 		foreach ($this->aContainer as $sKey => $mValue)
 		{
@@ -263,15 +263,22 @@ abstract class AbstractSettings
 					return false;
 				}
 			}
-			$bResult = (bool) file_put_contents(
+			if ((bool) file_put_contents(
 				$sJsonFile, 
 				json_encode(
 					$aConvertedContainer, 
 					JSON_PRETTY_PRINT | JSON_OBJECT_AS_ARRAY
 				)
-			);
+			))
+			{
+				$bResult = true;
+			}
+			else
+			{
+				throw new \Aurora\System\Exceptions\SettingsException('Can\'t write settings to the configuration file: ' . $sJsonFile);
+			}
 		}
-		
+
 		return $bResult;
 	}
 	

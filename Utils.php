@@ -2050,63 +2050,13 @@ class Utils
 		{
 			if ($bThumbnail && !$bDownload)
 			{
-				self::OutputThumbnailResource($sUserUUID, $rResource, $sFileName);
+				Managers\Response::GetThumbResource($sUserUUID, $rResource, $sFileName, true);
 			}
 			else
 			{
 				\MailSo\Base\Utils::FpassthruWithTimeLimitReset($rResource);
 			}
 		}
-	}	
-	
-	public static function OutputThumbnailResource($sUUID, $rResource, $sFileName)
-	{
-		$sMd5Hash = \md5(\rand(1000, 9999));
-		$oApiFileCache = new Managers\Filecache();
-				
-		$oApiFileCache->putFile($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, $rResource, '_'.$sFileName, 'System');
-		if ($oApiFileCache->isFileExists($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName, 'System'))
-		{
-			$sFullFilePath = $oApiFileCache->generateFullFilePath($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName, 'System');
-			$iRotateAngle = 0;
-			if (\function_exists('exif_read_data')) 
-			{ 
-				if ($exif_data = @\exif_read_data($sFullFilePath, 'IFD0')) 
-				{ 
-					switch (@$exif_data['Orientation']) 
-					{ 
-						case 1: 
-							$iRotateAngle = 0; 
-							break; 
-						case 3: 
-							$iRotateAngle = 180; 
-							break; 
-						case 6: 
-							$iRotateAngle = 270; 
-							break; 
-						case 8: 
-							$iRotateAngle = 90; 
-							break; 
-					}
-				}
-			}
-			
-			try
-			{
-				$oThumb = new \Aurora\System\Utils\ImageThumb(
-					$sFullFilePath
-				);
-				if ($iRotateAngle > 0)
-				{
-					$oThumb->rotateImageNDegrees($iRotateAngle);
-				}
-				
-				$oThumb->adaptiveResize(120, 100)->show();
-			}
-			catch (\Exception $oE) {}
-		}
-
-		$oApiFileCache->clear($sUUID, 'Raw/Thumbnail/'.$sMd5Hash, '_'.$sFileName, 'System');
 	}	
 	
 	public static function GetClientFileResponse($sModule, $iUserId, $sFileName, $sTempName, $iSize)

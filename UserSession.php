@@ -16,7 +16,7 @@ namespace Aurora\System;
  */
 class UserSession
 {
-	const TOKEN_VERSION = '2.1';
+	const TOKEN_VERSION = '2.2';
 
 	public function Set($aData, $iTime = 0)
 	{
@@ -26,6 +26,12 @@ class UserSession
 			$aData
 		);
 	}
+
+	public function UpdateTimestamp($sAuthToken, $iTime = 0)
+	{
+		$aData = $this->Get($sAuthToken);
+		return $this->Set($aData, $iTime);
+	}
 	
 	public function Get($sAuthToken)
 	{
@@ -34,26 +40,35 @@ class UserSession
 		if (strlen($sAuthToken) !== 0) 
 		{
 			$mResult = Api::DecodeKeyValues($sAuthToken);
-			
-			$iExpireUserSessionsBefore = Api::GetSettings()->GetConf("ExpireUserSessionsBefore", 0);
-			
-			if ((isset($mResult['@ver']) && $mResult['@ver'] !== self::TOKEN_VERSION) || !isset($mResult['@ver']))
+
+			if ($mResult !== false)
 			{
-				$mResult = false;
-			}
-			else if ((isset($mResult['sign-me']) && !((bool) $mResult['sign-me'])) || (!isset($mResult['sign-me'])))
-			{
-				$iTime = 0;
-				if (isset($mResult['@time']))
+				$oUser = \Aurora\Modules\Core\Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mResult['id']);
+
+				if ($oUser && (int) $oUser->TokensValidFromTimestamp > (int) $mResult['@time'])
 				{
-					$iTime = (int) $mResult['@time'];
-				}
-				if ($iExpireUserSessionsBefore > $iTime && $iTime > 0)
-				{
-					\Aurora\System\Api::Log('User session expired: ');
-					\Aurora\System\Api::LogObject($mResult);
 					$mResult = false;
 				}
+				else if ((isset($mResult['@ver']) && $mResult['@ver'] !== self::TOKEN_VERSION) || !isset($mResult['@ver']))
+				{
+					$mResult = false;
+				}
+				else if ((isset($mResult['sign-me']) && !((bool) $mResult['sign-me'])) || (!isset($mResult['sign-me'])))
+				{
+					$iTime = 0;
+					if (isset($mResult['@time']))
+					{
+						$iTime = (int) $mResult['@time'];
+					}
+					$iExpireUserSessionsBefore = Api::GetSettings()->GetConf("ExpireUserSessionsBefore", 0);
+					if ($iExpireUserSessionsBefore > $iTime && $iTime > 0)
+					{
+						\Aurora\System\Api::Log('User session expired: ');
+						\Aurora\System\Api::LogObject($mResult);
+						$mResult = false;
+					}
+				}
+	
 			}
 		}
 		

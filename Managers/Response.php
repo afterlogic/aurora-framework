@@ -165,11 +165,11 @@ class Response
 	
 	public static function RemoveThumbFromCache($iUserId, $sHash, $sFileName)
 	{
-		$sMd5Hash = \md5($sHash);
-		$oApiFileCache = new Filecache();
-		if ($oApiFileCache->isFileExists($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System'))
+		$oCacheManager = Cache::getManager('thumbs/'.\Aurora\System\Api::getUserUUIDById($iUserId));
+		$sMd5Hash = \md5('Raw/Thumb/'.\md5($sHash).'/'.$sFileName);
+		if ($oCacheManager->has($sMd5Hash))
 		{
-			$oApiFileCache->clear($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System');
+			$oCacheManager->delete($sMd5Hash);
 		}
 	}
 	
@@ -180,32 +180,50 @@ class Response
 		{
 			$sHash = \rand(1000, 9999);
 		}
-		$sMd5Hash = \md5($sHash);
+		$sCacheFileName = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
 
-		$oApiFileCache = new Filecache();
+		$oCacheManager = Cache::getManager('thumbs/'.\Aurora\System\Api::getUserUUIDById($iUserId));
 		
-		$sThumb = null;
-		if (!$oApiFileCache->isFileExists($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System'))
-		{
-			$oApiFileCache->putFile($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, $rResource, '_'.$sFileName, 'System');
-			if ($oApiFileCache->isFileExists($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System'))
-			{
-				try
-				{
-					$oThumb = new \Aurora\System\Utils\ImageThumb(
-						$oApiFileCache->generateFullFilePath($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System')
-					);
+		$sThumb = $oCacheManager->get($sCacheFileName);
 
-					$sThumb = $oThumb->adaptiveResize(120, 100)->getImageAsString();
-					$oApiFileCache->put($iUserId, 'Raw/Thumb/'.$sMd5Hash, $sThumb, '_'.$sFileName, 'System');
-				}
-				catch (\Exception $oE) {}
-			}
-			$oApiFileCache->clear($iUserId, 'Raw/ThumbOrig/'.$sMd5Hash, '_'.$sFileName, 'System');
-		}
-		if (!isset($sThumb))
+		if ($sThumb === null)
 		{
-			$sThumb = $oApiFileCache->get($iUserId, 'Raw/Thumb/'.$sMd5Hash, '_'.$sFileName, 'System');
+			$iRotateAngle = 0;
+			if (\function_exists('exif_read_data')) 
+			{ 
+				if ($exif_data = @\exif_read_data($rResource, 'IFD0')) 
+				{ 
+					switch (@$exif_data['Orientation']) 
+					{ 
+						case 1: 
+							$iRotateAngle = 0; 
+							break; 
+						case 3: 
+							$iRotateAngle = 180; 
+							break; 
+						case 6: 
+							$iRotateAngle = 270; 
+							break; 
+						case 8: 
+							$iRotateAngle = 90; 
+							break; 
+					}
+				}
+			}
+
+			try
+			{
+				$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'GD']);
+				$oThumb = $oImageManager->make($rResource);
+				if ($iRotateAngle > 0)
+				{
+					$oThumb = $oThumb->rotate($iRotateAngle);
+				}
+				$sThumb = $oThumb->resize(120, 100)->response();
+
+				$oCacheManager->set($sCacheFileName, $sThumb);
+			}
+			catch (\Exception $oE) {}
 		}
 		if ($bShow)
 		{
