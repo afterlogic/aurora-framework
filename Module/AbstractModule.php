@@ -19,11 +19,6 @@ abstract class AbstractModule
 	/**
 	 * @var string
 	 */
-	protected $sName;
-
-	/**
-	 * @var string
-	 */
 	protected $sPath;
 
 	/**
@@ -120,18 +115,19 @@ abstract class AbstractModule
 	/**
 	 * @param string $sVersion
 	 */
-	public function __construct($sName, $sPath, $sVersion = '1.0')
+	public function __construct($sPath, $sVersion = '1.0')
 	{
 		$this->sVersion = (string) $sVersion;
 
-		$this->sName = $sName;
-		$this->sPath = $sPath.$sName;
-		$this->aParameters = array();
+		$this->sPath = $sPath . self::GetName();
+		$this->aParameters = [];
 		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
 		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
 		
 		$this->aEntries = array();
 	}
+
+	abstract public function init();
 	
 	/**
 	 * 
@@ -140,9 +136,9 @@ abstract class AbstractModule
 	 * @param string $sVersion
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
-	final public static function createInstance($sName, $sPath, $sVersion = '1.0')
+	final public static function createInstance($sPath, $sVersion = '1.0')
 	{
-		return new static($sName, $sPath, $sVersion);
+		return new static($sPath, $sVersion);
 	}	
 	
 	public static function Decorator()
@@ -192,7 +188,7 @@ abstract class AbstractModule
 	
 	protected function isAllowedModule()
 	{
-		return $this->oModuleManager->IsAllowedModule($this->GetName());
+		return $this->oModuleManager->IsAllowedModule(self::GetName());
 	}
 	
 	
@@ -225,15 +221,10 @@ abstract class AbstractModule
 	/**
 	 * 
 	 */
-	public function getNamespace()
+	final public static function getNamespace()
 	{
-		return (new \ReflectionClass($this))->getNamespaceName();
+		return (new \ReflectionClass(get_called_class()))->getNamespaceName();
 	}
-	
-	/**
-	 * 
-	 */
-	public function init() {}
 	
 	/**
 	 * 
@@ -242,7 +233,7 @@ abstract class AbstractModule
 	{
 		if (!isset($this->oModuleSettings))
 		{
-			$this->oModuleSettings = $this->GetModuleManager()->GetModuleSettings($this->sName);
+			$this->oModuleSettings = $this->GetModuleManager()->GetModuleSettings(self::GetName());
 		}
 		return $this->oModuleSettings;
 	}	
@@ -349,7 +340,7 @@ abstract class AbstractModule
 		{
 			foreach ($aEvent as $aEv)
 			{
-				if ($aEv[0]->GetName() === $this->GetName())
+				if ($aEv[0]::GetName() === self::GetName())
 				{
 					$aEventsValues[] = $aEv[1];
 				}
@@ -380,7 +371,7 @@ abstract class AbstractModule
 		if (!in_array($sEvent, $this->aSkipedEvents))
 		{
 			return $this->GetModuleManager()->broadcastEvent(
-				$this->GetName(), 
+				self::GetName(), 
 				$sEvent, 
 				$aArguments, 
 				$mResult
@@ -442,7 +433,7 @@ abstract class AbstractModule
 	 */
 	public function extendObject($sType, $aMap)
 	{
-		$this->GetModuleManager()->extendObject($this->GetName(), $sType, $aMap);
+		$this->GetModuleManager()->extendObject(self::GetName(), $sType, $aMap);
 	}	
 	
 	/**
@@ -466,14 +457,6 @@ abstract class AbstractModule
 	}
 
 	/**
-	 * @param string $sName
-	 */
-	final public function SetName($sName)
-	{
-		$this->sName = $sName;
-	}
-
-	/**
 	 * @param string $sPath
 	 */
 	final public function SetPath($sPath)
@@ -492,9 +475,9 @@ abstract class AbstractModule
 	/**
 	 * @return string
 	 */
-	final public function GetName()
+	final public static function GetName()
 	{
-		return $this->sName;
+		return basename(static::getNamespace());
 	}
 
 	/**
@@ -518,7 +501,7 @@ abstract class AbstractModule
 	 */
 	final public function GetFullName()
 	{
-		return $this->sName.'-'.$this->sVersion;
+		return self::GetName().'-'.$this->sVersion;
 	}
 	
 	/**
@@ -528,10 +511,17 @@ abstract class AbstractModule
 	 */
 	final public function AddEntry($sName, $mCallbak)
 	{
+		\Aurora\System\Router::getInstance()->register(
+			self::GetName(),
+			$sName,
+			[$this, $mCallbak]
+		);
+/*
 		if (!isset($this->aEntries[$sName]))
 		{
 			$this->aEntries[$sName] = $mCallbak;
 		}
+*/		
 	}
 	
 	/**
@@ -553,7 +543,8 @@ abstract class AbstractModule
 	 */
 	final public function HasEntry($sName)
 	{
-		return isset($this->aEntries[$sName]);
+		return \Aurora\System\Router::getInstance()->hasRoute($sName);
+//		return isset($this->aEntries[$sName]);
 	}
 	
 	/**
@@ -562,7 +553,8 @@ abstract class AbstractModule
 	 */
 	final public function RemoveEntry($sName)
 	{
-		unset($this->aEntries[$sName]);
+		return \Aurora\System\Router::getInstance()->removeRoute($sName);
+//		unset($this->aEntries[$sName]);
 	}	
 	
 	/**
@@ -584,7 +576,8 @@ abstract class AbstractModule
 	 */
 	protected function isEntryCallback($mCallbak)
 	{
-		return in_array($mCallbak, array_values($this->aEntries));
+		return \Aurora\System\Router::getInstance()->hasCallback($mCallbak);
+//		return in_array($mCallbak, array_values($this->aEntries));
 	}
 
 	/**
@@ -602,34 +595,6 @@ abstract class AbstractModule
 		
 		return $mResult;
 	}	
-	
-	/**
-	 * 
-	 * @param string $sName
-	 * @return mixed
-	 */
-	final public function RunEntry($sName)
-	{
-		$mResult = false;
-		
-		$aArguments = array();
-		$this->broadcastEvent($sName.'-entry' . self::$Delimiter . 'before', $aArguments, $mResult);
-		
-		$mMethod = $this->GetEntryCallback($sName);
-		
-		if ($mMethod && $this->isAllowedModule())
-		{
-			$mResult = call_user_func_array(
-				array($this, $mMethod), 
-				array()
-			);
-			
-		}			
-		
-		$this->broadcastEvent($sName.'-entry' . self::$Delimiter . 'after', $aArguments, $mResult);
-		
-		return $mResult;
-	}
 
 	/**
 	 * @param string $sMethod
@@ -655,7 +620,7 @@ abstract class AbstractModule
 						'Parameters' => $aValue['Parameters']
 					)
 				);
-				if ($aValue['Module'] === $this->GetName() && $aValue['Method'] === $sMethod)
+				if ($aValue['Module'] === self::GetName() && $aValue['Method'] === $sMethod)
 				{
 					$aResult = array_merge($aResult, $aResponseResult);
 				}
@@ -749,7 +714,7 @@ abstract class AbstractModule
 			$oModule = $oException->GetModule();
 			if ($oModule)
 			{
-				$sModule = $oModule->GetName();
+				$sModule = $oModule::GetName();
 			}
 		}
 		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
@@ -836,6 +801,11 @@ abstract class AbstractModule
 	{
 		return ($this->isEntryCallback($sMethod) || $this->isEventCallback($sMethod));
 	}
+
+	protected function canCallMethod($sMethod, $bWebApi)
+	{
+		return !($bWebApi && ($this->isCallbackMethod($sMethod) || $this->isDeniedMethodByWebApi($sMethod))) && $this->isAllowedModule();
+	}
 	
 	/**
 	 * 
@@ -849,7 +819,7 @@ abstract class AbstractModule
 		$mResult = false;
 		try 
 		{
-			if (method_exists($this, $sMethod) &&  !($bWebApi && ($this->isCallbackMethod($sMethod) || $this->isDeniedMethodByWebApi($sMethod))) && $this->isAllowedModule())
+			if (method_exists($this, $sMethod) &&  $this->canCallMethod($sMethod, $bWebApi))
 			{
 				if ($bWebApi && !isset($aArguments['UserId']))
 				{
@@ -895,7 +865,7 @@ abstract class AbstractModule
 					catch (\Exception $oException) 
 					{
 						$this->GetModuleManager()->AddResult(
-							$this->GetName(), 
+							self::GetName(), 
 							$sMethod, 
 							$aArguments,
 							$mResult,
@@ -923,7 +893,7 @@ abstract class AbstractModule
 				);
 				
 				$this->GetModuleManager()->AddResult(
-					$this->GetName(), 
+					self::GetName(), 
 					$sMethod, 
 					$aArguments,
 					$mResult
@@ -1003,13 +973,13 @@ abstract class AbstractModule
 		}
 		
 		$aLang = null;
-		if (isset(\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage])) 
+		if (isset(\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage])) 
 		{
-			$aLang = \Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage];
+			$aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
 		} 
 		else 
 		{
-			\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = false;
+			\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = false;
 				
 			$aLang = $this->getLangsData($sLanguage);
 			if (!$aLang)
@@ -1019,7 +989,7 @@ abstract class AbstractModule
 			
 			if (\is_array($aLang)) 
 			{
-				\Aurora\System\Api::$aClientI18N[$this->GetName()][$sLanguage] = $aLang;
+				\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = $aLang;
 			}
 		}
 		if (!isset($aLang[$sData])) 
@@ -1048,16 +1018,16 @@ abstract class AbstractModule
 			}
 			if ($bEnabled)
 			{
-				if (\in_array($this->GetName(), $aDisabledModules))
+				if (\in_array(self::GetName(), $aDisabledModules))
 				{
-					$aDisabledModules = \array_diff($aDisabledModules, array($this->GetName()));
+					$aDisabledModules = \array_diff($aDisabledModules, array(self::GetName()));
 				}
 			}
 			else
 			{
-				if (!\in_array($this->GetName(), $aDisabledModules))
+				if (!\in_array(self::GetName(), $aDisabledModules))
 				{
-					$aDisabledModules[] = $this->GetName();
+					$aDisabledModules[] = self::GetName();
 				}				
 			}
 			$oEntity->{'@DisabledModules'} = \implode('|', $aDisabledModules);
@@ -1079,7 +1049,7 @@ abstract class AbstractModule
 			$aDisabledModules = \explode("|", $sDisabledModules);
 		}
 		
-		return !\in_array($this->GetName(), $aDisabledModules);
+		return !\in_array(self::GetName(), $aDisabledModules);
 	}
 
 	/**

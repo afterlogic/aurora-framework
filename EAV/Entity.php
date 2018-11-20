@@ -670,4 +670,9 @@ class Entity
 	{
 		return $this->toArray();
 	}
+
+	public static function extend($sModuleName, $aMap)
+	{
+		\Aurora\System\Api::GetModuleManager()->extendObject($sModuleName, static::class, $aMap);
+	}
 }

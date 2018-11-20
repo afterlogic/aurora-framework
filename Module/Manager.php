@@ -38,23 +38,6 @@ class Manager
 	protected $_aAllowedModulesName = array(
 		'core' => 'Core'
 	);
-
-	/**
-     * This array contains a list of callbacks we should call when certain events are triggered
-     *
-     * @var array
-     */
-    protected $_aSubscriptions = array();
-	
-	/**
-     * @var array
-     */
-    protected $_aEntries = array();
-	
-	/**
-     * @var array
-     */    
-	protected $_aObjects = array();
 	
 	/**
 	 * @var array
@@ -65,11 +48,25 @@ class Manager
 	 * @var array
 	 */
 	private $_aResults;
+
+	/**
+	 * @var \Aurora\System\EventEmitter
+	 */
+	private $oEventEmitter;
+
+	/**
+	 * @var \Aurora\System\ObjectExtender
+	 */
+	private $oObjectExtender;
 	
 	/**
-	 * @var array
+	 * 
 	 */
-	private $_aSubscriptionsResult;
+	public function __construct()
+	{
+		$this->oEventEmitter = \Aurora\System\EventEmitter::createInstance();
+		$this->oObjectExtender = \Aurora\System\ObjectExtender::createInstance();
+	}
 
 	/**
 	 * 
@@ -86,24 +83,20 @@ class Manager
 	 */
 	public function init()
 	{
-		$this->_aSubscriptionsResult = [];
 		$oCoreModule = $this->GetModule('Core');
+
 		if ($oCoreModule instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
 
 			$aModulesPath = $this->GetModulesPaths();
-			foreach ($aModulesPath as $sModuleName => $sModulePath)
+			foreach (\array_keys($aModulesPath) as $sModuleName)
 			{
-				$bIsModuleDisabledForUser = false;
+				$bIsModuleDisabledForUser = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? $oUser->isModuleDisabled($sModuleName) : false;
 
-				if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
-				{
-					$bIsModuleDisabledForUser = $oUser->isModuleDisabled($sModuleName);
-				}
 				if (!$this->getModuleConfigValue($sModuleName, 'Disabled', false) && !$bIsModuleDisabledForUser)
 				{
-					if ($this->loadModule($sModuleName, $sModulePath) || $this->isClientModule($sModuleName))
+					if ($this->GetModule($sModuleName) || $this->isClientModule($sModuleName))
 					{
 						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
 					}
@@ -113,13 +106,13 @@ class Manager
 			{
 				if ($oModule instanceof AbstractModule && !$oModule->isValid())
 				{
-					if (isset($this->_aModules[\strtolower($oModule->GetName())]))
+					if (isset($this->_aModules[\strtolower($oModule::GetName())]))
 					{
-						unset($this->_aModules[\strtolower($oModule->GetName())]);
+						unset($this->_aModules[\strtolower($oModule::GetName())]);
 					}
-					if (isset($this->_aAllowedModulesName[\strtolower($oModule->GetName())]))
+					if (isset($this->_aAllowedModulesName[\strtolower($oModule::GetName())]))
 					{
-						unset($this->_aAllowedModulesName[\strtolower($oModule->GetName())]);
+						unset($this->_aAllowedModulesName[\strtolower($oModule::GetName())]);
 					}
 				}
 			}
@@ -235,24 +228,25 @@ class Manager
 		
 		if ($sModulePath)
 		{
-			$aArgs = array($sModuleName, $sModulePath);
-			$this->broadcastEvent(
-				$sModuleName, 
-				'loadModule' . AbstractModule::$Delimiter . 'before', 
-				$aArgs
-			);
-
 			if (!$this->isModuleLoaded($sModuleName))
 			{
+				$aArgs = array($sModuleName, $sModulePath);
+
+				$this->broadcastEvent(
+					$sModuleName, 
+					'loadModule' . AbstractModule::$Delimiter . 'before', 
+					$aArgs
+				);
+
 				if (@\file_exists($sModulePath.$sModuleName.'/Module.php') && !$this->isModuleLoaded($sModuleName))
 				{		
 					$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
-					$oModule = new $sModuleClassName($sModuleName, $sModulePath);
+					$oModule = new $sModuleClassName($sModulePath);
 					if ($oModule instanceof AbstractModule)
 					{
 						foreach ($oModule->GetRequireModules() as $sModule)
 						{
-							$oSubModule = \Aurora\System\Api::GetModule($sModule);
+							$oSubModule = $this->loadModule($sModule, $sModulePath);
 							if (!$oSubModule)
 							{
 								break;
@@ -265,143 +259,22 @@ class Manager
 						}
 					}
 				}
+
+				$this->broadcastEvent(
+					$sModuleName, 
+					'loadModule' . AbstractModule::$Delimiter . 'after', 
+					$aArgs,
+					$mResult
+				);
 			}
 			else
 			{
 				$mResult = $this->GetModule($sModuleName);
 			}
-
-			$this->broadcastEvent(
-				$sModuleName, 
-				'loadModule' . AbstractModule::$Delimiter . 'after', 
-				$aArgs,
-				$mResult
-			);
 		}		
 		return $mResult;
 	}
 
-    /**
-	 * 
-	 * @return array
-	 */
-	public function getEvents() 
-	{
-		return $this->_aSubscriptions;
-	}	
-	
-    /**
-     * Subscribe to an event.
-     *
-     * When the event is triggered, we'll call all the specified callbacks.
-     * It is possible to control the order of the callbacks through the
-     * priority argument.
-     *
-     * This is for example used to make sure that the authentication plugin
-     * is triggered before anything else. If it's not needed to change this
-     * number, it is recommended to ommit.
-     *
-     * @param string $sEvent
-     * @param callback $fCallback
-     * @param int $iPriority
-     * @return void
-     */
-    public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
-	{
-        if (!isset($this->_aSubscriptions[$sEvent])) 
-		{
-            $this->_aSubscriptions[$sEvent] = array();
-        }
-        while(isset($this->_aSubscriptions[$sEvent][$iPriority]))	
-		{
-			$iPriority++;
-		}
-        $this->_aSubscriptions[$sEvent][$iPriority] = $fCallback;
-        \ksort($this->_aSubscriptions[$sEvent]);
-    }	
-	
-    /**
-     * Broadcasts an event
-     *
-     * This method will call all subscribers. If one of the subscribers returns false, the process stops.
-     *
-     * The arguments parameter will be sent to all subscribers
-     *
-     * @param string $sEvent
-     * @param array $aArguments
-     * @param mixed $mResult
-     * @return boolean
-     */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
-	{
-		$bResult = false;
-		$aSubscriptions = array();
-		$mSubscriptionsResult = null;
-		
-		if (isset($this->_aSubscriptions[$sEvent])) 
-		{
-			$aSubscriptions = array_merge(
-				$aSubscriptions, 
-				$this->_aSubscriptions[$sEvent]
-			);
-        }
-		$sEvent = $sModule . AbstractModule::$Delimiter . $sEvent;
-		if (isset($this->_aSubscriptions[$sEvent])) 
-		{
-			$aSubscriptions = \array_merge(
-				$aSubscriptions, 
-				$this->_aSubscriptions[$sEvent]
-			);
-		}
-		
-		foreach($aSubscriptions as $fCallback) 
-		{
-			if (\is_callable($fCallback) && $this->IsAllowedModule($fCallback[0]->GetName()))
-			{
-				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]);
-//				\Aurora\System\Api::Log('Arguments before subscription:');
-				
-//				\Aurora\System\Api::LogObject($aArguments);
-				
-				$mCallBackResult = \call_user_func_array(
-					$fCallback, 
-					array(
-						&$aArguments,
-						&$mResult,
-						&$mSubscriptionsResult
-					)
-				);
-
-				if (isset($mSubscriptionsResult))
-				{
-					$this->_aSubscriptionsResult[$fCallback[0]->GetName() . AbstractModule::$Delimiter . $fCallback[1]] = $mSubscriptionsResult;
-				}
-				
-//				\Aurora\System\Api::Log('Arguments after subscription:');
-				
-//				\Aurora\System\Api::LogObject($aArguments);
-
-//				\Aurora\System\Api::Log('Subscription result:');
-//				\Aurora\System\Api::Log($mResult);
-
-				$this->AddResult(
-					$fCallback[0]->GetName(), 
-					$sEvent, 
-					$aArguments,
-					$mCallBackResult
-				);
-
-				if ($mCallBackResult) 
-				{
-					$bResult = $mCallBackResult;
-					break;
-				}
-			}
-		}
-
-        return $bResult;
-    }	
-	
 	/**
 	 * @param string $sParsedTemplateID
 	 * @param string $sParsedPlace
@@ -459,10 +332,7 @@ class Manager
 	 */
 	public function extendObject($sModule, $sType, $aMap)
 	{
-		foreach ($aMap as $sKey => $aValue)
-		{
-			$this->_aObjects[$sType][$sModule . AbstractModule::$Delimiter . $sKey] = $aValue;
-		}
+		$this->oObjectExtender->extend($sModule, $sType, $aMap);
 	}	
 	
 	/**
@@ -472,7 +342,7 @@ class Manager
 	 */
 	public function getExtendedObject($sType)
 	{
-		return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : array();
+		return $this->oObjectExtender->getObject($sType);
 	}
 	
 	/**
@@ -482,7 +352,7 @@ class Manager
 	 */
 	public function issetObject($sType)
 	{
-		return isset($this->_aObjects[$sType]);
+		return $this->oObjectExtender->issetObject($sType);
 	}
 
 	/**
@@ -693,31 +563,15 @@ class Manager
 	 */
 	public function RunEntry($sEntryName)
 	{
-		$mResult = false;
-		$aModules = $this->GetModulesByEntry($sEntryName);
-		if (count($aModules) > 0)
-		{
-			foreach ($aModules as $oModule)
-			{
-				if ($oModule instanceof AbstractModule) 
-				{
-					$mEntryResult = $oModule->RunEntry($sEntryName);
-					if ($mEntryResult !== 'null')
-					{
-						$mResult .= $mEntryResult;
-					}
-				}
-			}
-			if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw')
-			{
-				echo $mResult;
-			}
-		}
-		else if (strtolower($sEntryName) !== 'error')
-		{
-			$this->RunEntry('error');
-		}
-		
+		$aArguments = [];
+		$this->broadcastEvent('System', $sEntryName.'-entry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
+
+		$mResult = \Aurora\System\Router::getInstance()->route(
+			$sEntryName
+		);
+
+		$this->broadcastEvent('System', $sEntryName.'-entry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
+
 		return $mResult;
 	}
 
@@ -799,14 +653,6 @@ class Manager
 	}
 	
 	/**
-	 * @return array
-	 */
-	public function GetSubscriptionsResult()
-	{
-		return $this->_aSubscriptionsResult;
-	}
-
-	/**
 	 * @param string $sModule
 	 * @param string $sMethod
 	 * @return array
@@ -821,4 +667,52 @@ class Manager
 			}
 		}
 	}	
+
+    /**
+     * Broadcasts an event
+     *
+     * This method will call all subscribers. If one of the subscribers returns false, the process stops.
+     *
+     * The arguments parameter will be sent to all subscribers
+     *
+     * @param string $sEvent
+     * @param array $aArguments
+     * @param mixed $mResult
+     * @return boolean
+     */
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
+	{
+		return $this->oEventEmitter->emit($sModule, $sEvent, $aArguments, $mResult, $bCountinue);
+	}
+
+    /**
+     * Subscribe to an event.
+     *
+     * When the event is triggered, we'll call all the specified callbacks.
+     * It is possible to control the order of the callbacks through the
+     * priority argument.
+     *
+     * This is for example used to make sure that the authentication plugin
+     * is triggered before anything else. If it's not needed to change this
+     * number, it is recommended to ommit.
+     *
+     * @param string $sEvent
+     * @param callback $fCallback
+     * @param int $iPriority
+     * @return void
+     */
+	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
+	{
+		return $this->oEventEmitter->on($sEvent, $fCallback, $iPriority);
+	}
+
+	public function getEvents()
+	{
+		return $this->oEventEmitter->getListeners();	
+	}
+
+	public function GetSubscriptionsResult()
+	{
+		return $this->oEventEmitter->getListenersResult();
+	}
 }

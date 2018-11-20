@@ -78,15 +78,22 @@ class Application
 		catch (\Aurora\System\Exceptions\ApiException $oEx)
 		{
 			\Aurora\System\Api::LogException($oEx);
-//			echo $oEx->getMessage() . '<br/>';
 		}
 		
 		self::RedirectToHttps();
 		self::GetVersion();
 
-		return self::SingletonInstance()->oModuleManager->RunEntry(
+		$mResult = self::SingletonInstance()->oModuleManager->RunEntry(
 			\strtolower(self::GetPathItemByIndex(0, $sDefaultEntry))
 		);
+		if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw')
+		{
+			echo $mResult;
+		}
+		else
+		{
+			return $mResult;
+		}
 	}
 
 	/**

@@ -18,9 +18,9 @@ class Decorator
 {
     /**
 	 *
-	 * @var \Aurora\System\Module\AbstractModule
+	 * @var string
 	 */
-	protected $oModule;
+	protected $sModuleName;
 
     /**
 	 * 
@@ -28,7 +28,7 @@ class Decorator
 	 */
 	public function __construct($sModuleName) 
 	{
-		$this->oModule = \Aurora\System\Api::GetModule($sModuleName);
+		$this->sModuleName = $sModuleName;
     }	
 	
 	/**
@@ -39,6 +39,13 @@ class Decorator
 	 */
 	public function __call($sMethodName, $aArguments) 
 	{
-		return ($this->oModule instanceof AbstractModule) ? $this->oModule->CallMethod($sMethodName, $aArguments) : false;
+		$mResult = false;
+		$oModule = \Aurora\System\Api::GetModule($this->sModuleName);
+		if ($oModule instanceof AbstractModule)
+		{
+			$mResult = $oModule->CallMethod($sMethodName, $aArguments);
+		}
+
+		return $mResult;
 	}
 }

@@ -18,9 +18,9 @@ abstract class AbstractLicensedModule extends AbstractModule
 {
 	protected $isValid = null;
 	
-	public function __construct($sName, $sPath, $sVersion = '1.0')
+	public function __construct($sPath, $sVersion = '1.0')
 	{
-		parent::__construct($sName, $sPath, $sVersion);
+		parent::__construct($sPath, $sVersion);
 		$this->aRequireModules[] = 'Licensing';
 	}	
 	
@@ -29,7 +29,7 @@ abstract class AbstractLicensedModule extends AbstractModule
 		if (!isset($this->isValid))
 		{
 			$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
-			$this->isValid = ($oLicensing) ? $oLicensing->Validate($this) && $oLicensing->ValidatePeriod($this->GetName())  : false;
+			$this->isValid = ($oLicensing) ? $oLicensing->Validate($this) && $oLicensing->ValidatePeriod(self::GetName())  : false;
 		}
 		
 		return $this->isValid;
