@@ -9,6 +9,7 @@
 		"intervention/image": "^2.4",
 		"symfony/filesystem": "^2.8",
 		"afterlogic/mailso": "^1.4",
-		"phpixie/cache": "^3.0"
+		"phpixie/cache": "^3.0",
+		"phpixie/filesystem": "^3.0"
 	}
 }
