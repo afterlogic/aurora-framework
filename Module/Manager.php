@@ -76,19 +76,16 @@ class Manager
 	{
 		return new self();
 	}
-	
+
 	/**
 	 * 
 	 * @return string
 	 */
 	public function init()
 	{
-		$oCoreModule = $this->GetModule('Core');
-
-		if ($oCoreModule instanceof AbstractModule)
+		if ($this->GetModule('Core') instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
-
 			$aModulesPath = $this->GetModulesPaths();
 			foreach (\array_keys($aModulesPath) as $sModuleName)
 			{
@@ -119,9 +116,9 @@ class Manager
 		}
 		else
 		{
-			echo 'Can\'t load \'Core\' Module';
+			echo "Can't load 'Core' Module";
 		}
-	}
+}
 	
 	protected function isClientModule($sModuleName)
 	{
