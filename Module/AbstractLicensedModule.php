@@ -17,19 +17,21 @@ namespace Aurora\System\Module;
 abstract class AbstractLicensedModule extends AbstractModule 
 {
 	protected $isValid = null;
+
+	protected $oLicensingDecorator;
 	
 	public function __construct($sPath, $sVersion = '1.0')
 	{
 		parent::__construct($sPath, $sVersion);
 		$this->aRequireModules[] = 'Licensing';
+		$this->oLicensingDecorator = \Aurora\System\Api::GetModuleDecorator('Licensing');
 	}	
 	
 	public function isValid()
 	{
 		if (!isset($this->isValid))
 		{
-			$oLicensing = \Aurora\System\Api::GetModuleDecorator('Licensing');
-			$this->isValid = ($oLicensing) ? $oLicensing->Validate($this) && $oLicensing->ValidatePeriod(self::GetName())  : false;
+			$this->isValid = ($this->oLicensingDecorator) ? $this->oLicensingDecorator->Validate(self::GetName()) && $this->oLicensingDecorator->ValidatePeriod(self::GetName())  : false;
 		}
 		
 		return $this->isValid;

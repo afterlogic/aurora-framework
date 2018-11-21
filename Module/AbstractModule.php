@@ -25,16 +25,11 @@ abstract class AbstractModule
 	 * @var string
 	 */
 	protected $sVersion;
-	
-	/**
-	 * @var array
-	 */
-	protected $aManagersCache = array();	
 
 	/**
 	 * @var array
 	 */
-	protected $aEntries = array();	
+	protected $aManagersCache = array();	
 
 	/**
 	 * @var array
@@ -123,8 +118,6 @@ abstract class AbstractModule
 		$this->aParameters = [];
 		$this->oHttp = \MailSo\Base\Http::SingletonInstance();
 		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
-		
-		$this->aEntries = array();
 	}
 
 	abstract public function init();
@@ -143,9 +136,7 @@ abstract class AbstractModule
 	
 	public static function Decorator()
 	{
-		$aClass = explode('\\', get_called_class());
-		$sName = $aClass[count($aClass) - 2];
-		return \Aurora\System\Api::GetModuleDecorator($sName);
+		return \Aurora\System\Api::GetModuleDecorator(self::GetName());
 	}
 	
 	/**
@@ -477,7 +468,7 @@ abstract class AbstractModule
 	 */
 	final public static function GetName()
 	{
-		return basename(static::getNamespace());
+		return \basename(self::getNamespace());
 	}
 
 	/**
@@ -516,12 +507,6 @@ abstract class AbstractModule
 			$sName,
 			[$this, $mCallbak]
 		);
-/*
-		if (!isset($this->aEntries[$sName]))
-		{
-			$this->aEntries[$sName] = $mCallbak;
-		}
-*/		
 	}
 	
 	/**
@@ -544,7 +529,6 @@ abstract class AbstractModule
 	final public function HasEntry($sName)
 	{
 		return \Aurora\System\Router::getInstance()->hasRoute($sName);
-//		return isset($this->aEntries[$sName]);
 	}
 	
 	/**
@@ -554,7 +538,6 @@ abstract class AbstractModule
 	final public function RemoveEntry($sName)
 	{
 		return \Aurora\System\Router::getInstance()->removeRoute($sName);
-//		unset($this->aEntries[$sName]);
 	}	
 	
 	/**
@@ -577,7 +560,6 @@ abstract class AbstractModule
 	protected function isEntryCallback($mCallbak)
 	{
 		return \Aurora\System\Router::getInstance()->hasCallback($mCallbak);
-//		return in_array($mCallbak, array_values($this->aEntries));
 	}
 
 	/**
@@ -587,13 +569,7 @@ abstract class AbstractModule
 	 */
 	final public function GetEntryCallback($sName)
 	{
-		$mResult = false;
-		if (isset($this->aEntries[$sName])) 
-		{
-			$mResult = $this->aEntries[$sName];
-		}
-		
-		return $mResult;
+		return \Aurora\System\Router::getInstance()->getCallback($sName);
 	}	
 
 	/**
