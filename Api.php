@@ -1442,15 +1442,13 @@ class Api
 		if (false === $sPath)
 		{
 			$sScriptName = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
-			$iPos = strripos($sScriptName, '/');
-			if ($iPos !== false)
+			$aPath = explode('/', $sScriptName);
+			$sLastPathItem = count($aPath) > 0 ? $aPath[count($aPath) - 1] : '';
+			if (count($aPath) > 0 && ($sLastPathItem !== '' || tolowercase(substr($sLastPathItem, -1)) === '.php'))
 			{
-				$sPath = substr($sScriptName, 0, $iPos + 1);
+				array_pop($aPath);
 			}
-			if (false === $sPath)
-			{
-				$sPath = '/';
-			}
+			$sPath = implode('/', $aPath) . '/';
 		}
 
 		return $sPath;
