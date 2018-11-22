@@ -18,33 +18,66 @@ namespace Aurora\System\Managers;
  */
 class Cache
 {
-	protected static $cacheManager = null;
+    protected $cacheManager = null;
     
+    public function __construct($sStorage, $sPath)
+    {
+        if (!file_exists(self::getPath()))
+        {
+            @mkdir(self::getPath(), 0777, true);
+        }
+        $sStoragePath = self::getPath() . '/' . $sStorage;
+        if (!file_exists($sStoragePath))
+        {
+            @mkdir($sStoragePath, 0777, true);
+        }
+
+        if ($this->cacheManager === null)
+        {
+            $slice = new \PHPixie\Slice();
+            $filesystem = new \PHPixie\Filesystem();		
+    
+            $this->cacheManager = new \PHPixie\Cache(
+                $slice->arrayData([
+                    'default' => [
+                         'driver' => 'phpfile',
+                         'path' => !empty(trim($sPath)) ? $sPath : ''
+                    ]
+                ]), 
+                $filesystem->root(
+                    $sStoragePath
+                )
+            );
+        }
+    }
+
+    public function getInstance($sStorage, $sPath)
+    {
+        return new self($sStorage, $sPath);
+    }
+
     public static function getPath()
     {
         return rtrim(trim(\Aurora\System\Api::DataPath()), '\\/') . '/temp/.cache/';
     }
 
-    public static function getManager($sStorage = '')
+    public function set($key, $value)
     {
-        if (self::$cacheManager === null)
-        {
-            $slice = new \PHPixie\Slice();
-            $config = $slice->arrayData([
-                'default' => [
-                     'driver' => 'phpfile',
-                     'path' => !empty(trim($sStorage)) ? $sStorage : ''
-                ]
-            ]);
-    
-            $filesystem = new \PHPixie\Filesystem();		
-            $root = $filesystem->root(
-                self::getPath()
-            );
-    
-            self::$cacheManager = new \PHPixie\Cache($config, $root);
-        }
+        $this->cacheManager->set($key, $value);
+    }
 
-        return self::$cacheManager;
+    public function get($key)
+    {
+        return $this->cacheManager->get($key);
+    }
+
+    public function has($key)
+    {
+        return $this->cacheManager->has($key);
+    }
+
+    public function delete($key)
+    {
+        return $this->cacheManager->delete($key);
     }
 }

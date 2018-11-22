@@ -165,11 +165,11 @@ class Response
 	
 	public static function RemoveThumbFromCache($iUserId, $sHash, $sFileName)
 	{
-		$oCacheManager = Cache::getManager('thumbs/'.\Aurora\System\Api::getUserUUIDById($iUserId));
-		$sMd5Hash = \md5('Raw/Thumb/'.\md5($sHash).'/'.$sFileName);
-		if ($oCacheManager->has($sMd5Hash))
+		$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+		$sMd5Hash = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+		if ($oCache->has($sMd5Hash))
 		{
-			$oCacheManager->delete($sMd5Hash);
+			$oCache->delete($sMd5Hash);
 		}
 	}
 	
@@ -180,11 +180,11 @@ class Response
 		{
 			$sHash = \rand(1000, 9999);
 		}
+		$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+
 		$sCacheFileName = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
 
-		$oCacheManager = Cache::getManager('thumbs/'.\Aurora\System\Api::getUserUUIDById($iUserId));
-		
-		$sThumb = $oCacheManager->get($sCacheFileName);
+		$sThumb = $oCache->get($sCacheFileName);
 
 		if ($sThumb === null)
 		{
@@ -221,7 +221,7 @@ class Response
 				}
 				$sThumb = $oThumb->resize(120, 100)->response();
 
-				$oCacheManager->set($sCacheFileName, $sThumb);
+				$oCache->set($sCacheFileName, $sThumb);
 			}
 			catch (\Exception $oE) {}
 		}
