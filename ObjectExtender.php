@@ -22,13 +22,28 @@ class ObjectExtender
     protected $_aObjects = [];
 
     /**
+     *
+     */
+    protected static $self = null;
+
+    /**
 	 * 
 	 * @return \self
 	 */
 	public static function createInstance()
 	{
 		return new self();
-    }        
+	}
+
+	public static function getInstance()
+	{
+		if (is_null(self::$self))
+		{
+			self::$self = new self();
+		}
+
+		return self::$self;
+	}
     
 	/**
 	 * 

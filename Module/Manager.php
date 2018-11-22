@@ -64,8 +64,8 @@ class Manager
 	 */
 	public function __construct()
 	{
-		$this->oEventEmitter = \Aurora\System\EventEmitter::createInstance();
-		$this->oObjectExtender = \Aurora\System\ObjectExtender::createInstance();
+		$this->oEventEmitter = \Aurora\System\EventEmitter::getInstance();
+		$this->oObjectExtender = \Aurora\System\ObjectExtender::getInstance();
 	}
 
 	/**
