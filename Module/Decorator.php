@@ -29,7 +29,12 @@ class Decorator
 	public function __construct($sModuleName) 
 	{
 		$this->sModuleName = $sModuleName;
-    }	
+	}	
+	
+	public static function __callStatic($sMethodName, $aArguments)
+	{
+		return new self($sMethodName);
+	}
 	
 	/**
 	 * 

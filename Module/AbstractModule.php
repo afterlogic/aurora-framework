@@ -138,6 +138,11 @@ abstract class AbstractModule
 	{
 		return \Aurora\System\Api::GetModuleDecorator(self::GetName());
 	}
+
+	public function __invoke()
+	{
+		return \Aurora\System\Api::GetModuleDecorator(self::GetName());
+	}
 	
 	/**
 	 * 

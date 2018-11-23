@@ -126,6 +126,7 @@ class Response
 		}
 
 		unset($mResponse);
+
 		return $mResult;
 	}	
 	
@@ -173,6 +174,34 @@ class Response
 		}
 	}
 	
+	public static function getImageAngle($rResource)
+	{
+		$iRotateAngle = 0;
+		if (\function_exists('exif_read_data')) 
+		{ 
+			if ($exif_data = @\exif_read_data($rResource, 'IFD0')) 
+			{ 
+				switch (@$exif_data['Orientation']) 
+				{ 
+					case 1: 
+						$iRotateAngle = 0; 
+						break; 
+					case 3: 
+						$iRotateAngle = 180; 
+						break; 
+					case 6: 
+						$iRotateAngle = 270; 
+						break; 
+					case 8: 
+						$iRotateAngle = 90; 
+						break; 
+				}
+			}
+		}
+
+		return $iRotateAngle;
+	}
+
 	public static function GetThumbResource($iUserId, $rResource, $sFileName, $bShow = true)
 	{
 		$sHash = (string) \Aurora\System\Application::GetPathItemByIndex(1, '');
@@ -188,29 +217,7 @@ class Response
 
 		if ($sThumb === null)
 		{
-			$iRotateAngle = 0;
-			if (\function_exists('exif_read_data')) 
-			{ 
-				if ($exif_data = @\exif_read_data($rResource, 'IFD0')) 
-				{ 
-					switch (@$exif_data['Orientation']) 
-					{ 
-						case 1: 
-							$iRotateAngle = 0; 
-							break; 
-						case 3: 
-							$iRotateAngle = 180; 
-							break; 
-						case 6: 
-							$iRotateAngle = 270; 
-							break; 
-						case 8: 
-							$iRotateAngle = 90; 
-							break; 
-					}
-				}
-			}
-
+			$iRotateAngle = self::getImageAngle($rResource);
 			try
 			{
 				$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'GD']);
