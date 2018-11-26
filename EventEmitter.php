@@ -9,13 +9,6 @@ namespace Aurora\System;
 
 class EventEmitter
 {
-	/**
-     * This array contains a list of callbacks we should call when certain events are triggered
-     *
-     * @var array
-     */
-    protected $aListeners = array();
-
     /**
      * 
      */
@@ -63,6 +56,33 @@ class EventEmitter
     }	
 
     /**
+	 * 
+	 * @return array
+	 */
+	public function getListenersByEvent($sModule, $sEvent) 
+	{
+		$aListeners = [];
+
+        if (isset($this->aListeners[$sEvent])) 
+		{
+			$aListeners = array_merge(
+				$aListeners, 
+				$this->aListeners[$sEvent]
+			);
+        }
+		$sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
+		if (isset($this->aListeners[$sEvent])) 
+		{
+			$aListeners = \array_merge(
+				$aListeners, 
+				$this->aListeners[$sEvent]
+			);
+        }
+        
+        return $aListeners;
+    }
+
+    /**
      * Subscribe to an event.
      *
      * When the event is triggered, we'll call all the specified callbacks.
@@ -82,7 +102,7 @@ class EventEmitter
 	{
         if (!isset($this->aListeners[$sEvent])) 
 		{
-            $this->aListeners[$sEvent] = array();
+            $this->aListeners[$sEvent] = [];
         }
         while(isset($this->aListeners[$sEvent][$iPriority]))	
 		{
@@ -94,21 +114,17 @@ class EventEmitter
 
     public function onArray($aListeners)
     {
-        foreach ($aListeners as $sEvent => $mListener)
+        foreach ($aListeners as $sKey => $mListener)
         {
-            if (is_callable($mListener))
+            if (is_array($mListener) && is_callable($mListener[1]))
             {
-                $this->on($sEvent, $mListener);   
-            }
-            elseif (is_array($mListener) && is_callable($mListener[0]))
-            {
-                if (isset($mListener[1]))
+                if (isset($mListener[2]))
                 {
-                    $this->on($sEvent, $mListener[0], $mListener[1]);   
+                    $this->on($mListener[0], $mListener[1], $mListener[2]);   
                 }
                 else
                 {
-                    $this->on($sEvent, $mListener[0]);   
+                    $this->on($mListener[0], $mListener[1]);   
                 }
             }
         }
@@ -124,29 +140,15 @@ class EventEmitter
      * @param string $sEvent
      * @param array $aArguments
      * @param mixed $mResult
+     * @param callback $mCountinueCallback
      * @return boolean
      */
-    public function emit($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
+    public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null) 
 	{
 		$bResult = false;
-		$aListeners = array();
 		$mListenersResult = null;
 		
-		if (isset($this->aListeners[$sEvent])) 
-		{
-			$aListeners = array_merge(
-				$aListeners, 
-				$this->aListeners[$sEvent]
-			);
-        }
-		$sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
-		if (isset($this->aListeners[$sEvent])) 
-		{
-			$aListeners = \array_merge(
-				$aListeners, 
-				$this->aListeners[$sEvent]
-			);
-		}
+		$aListeners = $this->getListenersByEvent($sModule, $sEvent);
 		
 		foreach($aListeners as $fCallback) 
 		{
@@ -156,28 +158,31 @@ class EventEmitter
 				
 				$mCallBackResult = \call_user_func_array(
 					$fCallback, 
-					array(
+					[
 						&$aArguments,
 						&$mResult,
 						&$mListenersResult
-					)
-				);
+                    ]
+                );
+                
+                if (\is_callable($mCountinueCallback))
+                {
+                    $mCountinueCallback(
+                        $fCallback[0]::GetName(),
+                        $aArguments,
+                        $mCallBackResult
+                    );
+                }
 
 				if (isset($mListenersResult))
 				{
 					$this->aListenersResult[$fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]] = $mListenersResult;
 				}
 				
-				Api::GetModuleManager()->AddResult(
-					$fCallback[0]::GetName(), 
-					$sEvent, 
-					$aArguments,
-					$mCallBackResult
-				);
-
 				if ($mCallBackResult) 
 				{
-					$bResult = $mCallBackResult;
+                    $bResult = $mCallBackResult;
+                    
 					break;
 				}
 			}

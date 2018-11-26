@@ -54,3 +54,8 @@ class Decorator
 		return $mResult;
 	}
 }
+
+function Decorator()
+{
+	echo 'Decorator';
+}

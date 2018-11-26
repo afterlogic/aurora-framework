@@ -83,6 +83,7 @@ class Manager
 	 */
 	public function init()
 	{
+		$t = microtime(true);
 		if ($this->GetModule('Core') instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
@@ -118,7 +119,11 @@ class Manager
 		{
 			echo "Can't load 'Core' Module";
 		}
-}
+//		$t = microtime(true) - $t;
+//		var_dump($t);
+
+//		exit;
+	}
 	
 	protected function isClientModule($sModuleName)
 	{
@@ -489,7 +494,14 @@ class Manager
 		}
 		else
 		{
+//			$t = microtime(true);
 			$mResult = $this->loadModule($sModuleName);
+//			$t = microtime(true) - $t;
+//			if ($t > 0.01)
+//			{
+//				var_dump($sModuleName);
+//				var_dump($t);
+//			}
 		}
 		
 		return $mResult;
@@ -677,9 +689,17 @@ class Manager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null, &$bCountinue = true) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null) 
 	{
-		return $this->oEventEmitter->emit($sModule, $sEvent, $aArguments, $mResult, $bCountinue);
+		return $this->oEventEmitter->emit(
+			$sModule, 
+			$sEvent, 
+			$aArguments, 
+			$mResult, 
+			function($sModule, $aArguments, $mResult) use ($sEvent) {
+				$this->AddResult($sModule, $sEvent, $aArguments, $mResult);
+			}
+		);
 	}
 
     /**

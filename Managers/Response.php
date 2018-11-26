@@ -55,8 +55,6 @@ class Response
 		$mResult = false;
 		if (\is_object($oData))
 		{
-//			$aNames = \explode('\\', \get_class($oData));
-//			$sObjectName = end($aNames);
 			$sObjectName = \get_class($oData);
 			$mResult = array(
 				'@Object' => self::GetObjectName($sObjectName)
@@ -287,8 +285,6 @@ class Response
 		$aResult = array();
 		if ($oCollection instanceof \MailSo\Base\Collection)
 		{
-//			$aNames = \explode('\\', \get_class($oCollection));
-//			$sObjectName = end($aNames);
 			$sObjectName = \get_class($oCollection);
 
 			$aResult = array(

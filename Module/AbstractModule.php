@@ -1051,4 +1051,3 @@ abstract class AbstractModule
 		return is_array($this->aErrors) && isset($this->aErrors[(int) $iErrorCode]) ? $this->aErrors[(int) $iErrorCode] : '';
 	}
 }
-
