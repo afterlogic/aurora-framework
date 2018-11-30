@@ -219,7 +219,7 @@ abstract class AbstractModule
 	 */
 	final public static function getNamespace()
 	{
-		return (new \ReflectionClass(get_called_class()))->getNamespaceName();
+		return \dirname(static::class);
 	}
 	
 	/**

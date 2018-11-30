@@ -83,18 +83,20 @@ class Manager
 	 */
 	public function init()
 	{
-		$t = microtime(true);
-		if ($this->GetModule('Core') instanceof AbstractModule)
+		$oCoreModule = $this->loadModule('Core');
+		
+		if ($oCoreModule instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
 			$aModulesPath = $this->GetModulesPaths();
-			foreach (\array_keys($aModulesPath) as $sModuleName)
+
+			foreach ($aModulesPath as $sModuleName => $sModulePath)
 			{
 				$bIsModuleDisabledForUser = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? $oUser->isModuleDisabled($sModuleName) : false;
 
 				if (!$this->getModuleConfigValue($sModuleName, 'Disabled', false) && !$bIsModuleDisabledForUser)
 				{
-					if ($this->GetModule($sModuleName) || $this->isClientModule($sModuleName))
+					if ($this->loadmodule($sModuleName, $sModulePath) || $this->isClientModule($sModuleName))
 					{
 						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
 					}
@@ -119,10 +121,6 @@ class Manager
 		{
 			echo "Can't load 'Core' Module";
 		}
-//		$t = microtime(true) - $t;
-//		var_dump($t);
-
-//		exit;
 	}
 	
 	protected function isClientModule($sModuleName)
@@ -362,7 +360,7 @@ class Manager
 	 * 
 	 * @return string
 	 */
-	public function GetModulesPath()
+	public function GetModulesRootPath()
 	{
 		return AU_APP_ROOT_PATH.'modules/';
 	}
@@ -376,10 +374,10 @@ class Manager
 	{
 		if (!isset($this->_aModulesPaths))
 		{
-			$sModulesPath = $this->GetModulesPath();
-			$aModulePath = array(
+			$sModulesPath = $this->GetModulesRootPath();
+			$aModulePath = [
 				$sModulesPath
-			);
+			];
 			$oCoreModule = $this->loadModule('Core', $sModulesPath);
 			$sTenant = \trim($oCoreModule->GetTenantName());
 			if (!empty($sTenant))
@@ -387,7 +385,7 @@ class Manager
 				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
 				\array_unshift($aModulePath, $sTenantModulesPath);
 			}
-			$this->_aModulesPaths = array();
+			$this->_aModulesPaths = [];
 			foreach ($aModulePath as $sModulesPath)
 			{
 				if (@\is_dir($sModulesPath))
@@ -491,17 +489,6 @@ class Manager
 		if ($this->isModuleLoaded($sModuleName))
 		{
 			$mResult = $this->_aModules[$sModuleNameLower];
-		}
-		else
-		{
-//			$t = microtime(true);
-			$mResult = $this->loadModule($sModuleName);
-//			$t = microtime(true) - $t;
-//			if ($t > 0.01)
-//			{
-//				var_dump($sModuleName);
-//				var_dump($t);
-//			}
 		}
 		
 		return $mResult;
@@ -610,7 +597,7 @@ class Manager
 		$sResult = '';
 		$sTenantName = \Aurora\System\Api::getTenantName();
 
-		$sResult .= $sTenantName !== 'Default' ? $this->GetModulesPath() : $this->GetTenantModulesPath($sTenantName);
+		$sResult .= $sTenantName !== 'Default' ? $this->GetModulesRootPath() : $this->GetTenantModulesPath($sTenantName);
 		$sResult .= $sModuleName;
 
 		return md5($sResult);
