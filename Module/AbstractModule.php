@@ -219,7 +219,8 @@ abstract class AbstractModule
 	 */
 	final public static function getNamespace()
 	{
-		return \dirname(static::class);
+		return (new \ReflectionClass(static::class))->getNamespaceName();
+//		return \dirname(static::class);
 	}
 	
 	/**
@@ -473,7 +474,7 @@ abstract class AbstractModule
 	 */
 	final public static function GetName()
 	{
-		return \basename(self::getNamespace());
+		return substr(strrchr(static::getNamespace(), "\\"), 1);
 	}
 
 	/**
