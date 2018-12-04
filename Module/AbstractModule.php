@@ -162,6 +162,17 @@ abstract class AbstractModule
 	{
 		return $this->oModuleManager;
 	}
+
+	/**
+	 * 
+	 */
+	public function Require($sModule)
+	{
+		if (!in_array($sModule, $this->aRequireModules))
+		{
+			$this->aRequireModules[] = $sModule;
+		}
+	}
 	
 	/**
 	 * 

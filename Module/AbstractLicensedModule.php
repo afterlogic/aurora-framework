@@ -18,23 +18,20 @@ abstract class AbstractLicensedModule extends AbstractModule
 {
 	protected $isValid = null;
 
-	protected $oLicensingDecorator;
-	
 	public function __construct($sPath, $sVersion = '1.0')
 	{
 		parent::__construct($sPath, $sVersion);
-		$this->aRequireModules[] = 'Licensing';
-		$this->oLicensingDecorator = \Aurora\System\Api::GetModuleDecorator('Licensing');
+		$this->Require('Licensing');
 	}	
-	
+
 	public function isValid()
 	{
 		if (!isset($this->isValid))
 		{
-			$this->isValid = ($this->oLicensingDecorator) ? $this->oLicensingDecorator->Validate(self::GetName()) && $this->oLicensingDecorator->ValidatePeriod(self::GetName())  : false;
+			$oLicensingDecorator = \Aurora\Modules\Licensing\Module::Decorator();
+			$this->isValid = ($oLicensingDecorator->Validate(self::GetName()) && $oLicensingDecorator->ValidatePeriod(self::GetName()));
 		}
 		
 		return $this->isValid;
 	}
 }
-
