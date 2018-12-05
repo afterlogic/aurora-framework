@@ -166,7 +166,7 @@ abstract class AbstractModule
 	/**
 	 * 
 	 */
-	public function Require($sModule)
+	public function RequireModule($sModule)
 	{
 		if (!in_array($sModule, $this->aRequireModules))
 		{

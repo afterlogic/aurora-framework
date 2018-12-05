@@ -41,7 +41,7 @@ class UserSession
 		{
 			$mResult = Api::DecodeKeyValues($sAuthToken);
 
-			if ($mResult !== false)
+			if ($mResult !== false && isset($mResult['id']))
 			{
 				$oUser = \Aurora\Modules\Core\Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mResult['id']);
 
