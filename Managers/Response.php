@@ -218,7 +218,7 @@ class Response
 			$iRotateAngle = self::getImageAngle($rResource);
 			try
 			{
-				$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'GD']);
+				$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
 				$oThumb = $oImageManager->make($rResource);
 				if ($iRotateAngle > 0)
 				{
