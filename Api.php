@@ -1588,7 +1588,7 @@ class Api
 	public static function getUserById($iUserId)
 	{
 		$oManagerApi = new Managers\Eav();
-		$mUser = $oManagerApi->getEntity($iUserId, '\Aurora\Modules\Core\Classes\User');
+		$mUser = $oManagerApi->getEntity($iUserId, \Aurora\Modules\Core\Classes\User::class);
 		if (!($mUser instanceof EAV\Entity))
 		{
 			$mUser = false;
