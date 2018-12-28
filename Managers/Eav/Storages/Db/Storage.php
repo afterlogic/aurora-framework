@@ -237,7 +237,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $aSearchAttrs
 	 * @return array
 	 */
-	protected function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mSortAttributes = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
+	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mSortAttributes = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
 	{
 		$aUids = array();
 		if ($this->oConnection->Execute(
