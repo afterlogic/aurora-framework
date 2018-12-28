@@ -237,6 +237,11 @@ class Eav
 		return $aEntities;
 	}
 
+	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mSortAttributes = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
+	{
+		return  $this->oStorage->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mSortAttributes, $iSortOrder);
+	}
+
 	/**
 	 * 
 	 * @param int|string $mIdOrUUID
