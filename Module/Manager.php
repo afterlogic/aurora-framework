@@ -58,6 +58,11 @@ class Manager
 	 * @var \Aurora\System\ObjectExtender
 	 */
 	private $oObjectExtender;
+
+	/**
+	 * @var \Aurora\System\Exceptions\Exception
+	 */
+	private $oLastException;
 	
 	/**
 	 * 
@@ -601,6 +606,22 @@ class Manager
 		$sResult .= $sModuleName;
 
 		return md5($sResult);
+	}
+
+	/**
+	 * @param string $oExcetpion
+	 */
+	public function SetLastException($oExcetpion)
+	{
+		$this->oLastException = $oExcetpion;
+	}
+
+	/**
+	 * 
+	 */
+	public function GetLastException()
+	{
+		return $this->oLastException;
 	}
 	
 	/**
