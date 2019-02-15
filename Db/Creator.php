@@ -100,23 +100,23 @@ class Creator
 		if (!is_object(self::$oDbConnector))
 		{
 			Creator::$oDbConnector = Creator::ConnectorFabric(array(
-				'Type' => $oSettings->GetConf('DBType'),
-				'DBHost' => $oSettings->GetConf('DBHost'),
-				'DBLogin' => $oSettings->GetConf('DBLogin'),
-				'DBPassword' => $oSettings->GetConf('DBPassword'),
-				'DBName' => $oSettings->GetConf('DBName'),
-				'DBTablePrefix' => $oSettings->GetConf('DBPrefix')
+				'Type' => $oSettings->DBType,
+				'DBHost' => $oSettings->DBHost,
+				'DBLogin' => $oSettings->DBLogin,
+				'DBPassword' => $oSettings->DBPassword,
+				'DBName' => $oSettings->DBName,
+				'DBTablePrefix' => $oSettings->DBPrefix
 			));
 
-			if ($oSettings->GetConf('UseSlaveConnection'))
+			if ($oSettings->UseSlaveConnection)
 			{
 				Creator::$oSlaveDbConnector = Creator::ConnectorFabric(array(
-					'Type' => $oSettings->GetConf('DBType'),
-					'DBHost' => $oSettings->GetConf('DBSlaveHost'),
-					'DBLogin' => $oSettings->GetConf('DBSlaveLogin'),
-					'DBPassword' => $oSettings->GetConf('DBSlavePassword'),
-					'DBName' => $oSettings->GetConf('DBSlaveName'),
-					'DBTablePrefix' => $oSettings->GetConf('DBPrefix')
+					'Type' => $oSettings->DBType,
+					'DBHost' => $oSettings->DBSlaveHost,
+					'DBLogin' => $oSettings->DBSlaveLogin,
+					'DBPassword' => $oSettings->DBSlavePassword,
+					'DBName' => $oSettings->DBSlaveName,
+					'DBTablePrefix' => $oSettings->DBPrefix
 				));
 			}
 		}
@@ -137,7 +137,7 @@ class Creator
 		}
 
 		Creator::$oCommandCreatorHelper = Creator::CommandCreatorHelperFabric(
-			$oSettings->GetConf('DBType'));
+			$oSettings->DBType);
 
 		return Creator::$oCommandCreatorHelper;
 	}

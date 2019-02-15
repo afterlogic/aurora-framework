@@ -274,7 +274,7 @@ abstract class AbstractModule
 		$mResult = $mDefaultValue;
 		if (isset($this->oModuleSettings))
 		{
-			$mResult = $this->oModuleSettings->GetConf($sName, $mDefaultValue);
+			$mResult = $this->oModuleSettings->GetValue($sName, $mDefaultValue);
 		}
 		
 		return $mResult;
@@ -294,7 +294,7 @@ abstract class AbstractModule
 		
 		if (isset($this->oModuleSettings))
 		{
-			$bResult = $this->oModuleSettings->SetConf($sName, $sValue);
+			$bResult = $this->oModuleSettings->SetValue($sName, $sValue);
 		}
 		
 		return $bResult;
@@ -690,7 +690,7 @@ abstract class AbstractModule
 		$sModule = '';
 
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$bShowError = $oSettings->GetConf('DisplayServerErrorInformation', false);
+		$bShowError = $oSettings->GetValue('DisplayServerErrorInformation', false);
 
 		if ($oException instanceof \Aurora\System\Exceptions\ApiException) 
 		{

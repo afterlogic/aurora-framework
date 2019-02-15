@@ -345,7 +345,7 @@ class Entity
 				{
 					if($this->ParentType === 'Aurora\System\Settings')
 					{
-						$mValue = \Aurora\System\Api::GetSettings()->GetConf($sName);
+						$mValue = \Aurora\System\Api::GetSettings()->GetValue($sName);
 						$oAttribute->Inherited = true;
 					}
 					if($this->ParentType === 'Aurora\System\Module\Settings')
@@ -353,7 +353,7 @@ class Entity
 						$oModule = \Aurora\System\Api::GetModule($this->ModuleName);
 						if ($oModule instanceof \Aurora\System\Module\AbstractModule)
 						{
-							$mValue = $oModule->GetSettings()->GetConf($sName);
+							$mValue = $oModule->GetSettings()->GetValue($sName);
 							$oAttribute->Inherited = true;
 						}
 					}

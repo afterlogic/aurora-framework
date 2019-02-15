@@ -2080,8 +2080,8 @@ class Utils
 			)
 		);
 		$oSettings =& Api::GetSettings();
-		$iThumbnailLimit = ((int) $oSettings->GetConf('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
-		$bThumb = ($oSettings->GetConf('AllowThumbnail', true) &&
+		$iThumbnailLimit = ((int) $oSettings->GetValue('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
+		$bThumb = ($oSettings->GetValue('AllowThumbnail', true) &&
 				$iSize < $iThumbnailLimit && Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));
 		return array(
 			'Name' => $sFileName,

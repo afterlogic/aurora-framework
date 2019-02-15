@@ -33,6 +33,11 @@ class SettingsProperty
 	 * @var string
 	 */
 	public $SpecType;
+
+	/**
+	 * @var bool
+	 */
+	public $Changed;	
 	
 	/**
 	 * 
@@ -47,5 +52,6 @@ class SettingsProperty
 		$this->Value = $mValue;
 		$this->Type = $sType;
 		$this->SpecType = $sSpecType;
+		$this->Changed = false;
 	}
 }

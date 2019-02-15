@@ -111,7 +111,7 @@ class Application
 		$oSettings =& Api::GetSettings();
 		if ($oSettings)
 		{
-			$bRedirectToHttps = $oSettings->GetConf('RedirectToHttps');
+			$bRedirectToHttps = $oSettings->RedirectToHttps;
 
 			$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
 					(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));

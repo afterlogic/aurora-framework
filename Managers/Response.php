@@ -224,7 +224,7 @@ class Response
 				{
 					$oThumb = $oThumb->rotate($iRotateAngle);
 				}
-				$sThumb = $oThumb->resize(120, 100)->response();
+				$sThumb = $oThumb->heighten(100)->widen(100)->response();
 
 				$oCache->set($sCacheFileName, $sThumb);
 			}

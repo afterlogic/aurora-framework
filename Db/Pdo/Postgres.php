@@ -57,8 +57,8 @@ class Postgres extends \Aurora\System\Db\Sql
 
 		$this->iExecuteCount = 0;
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$this->bUseExplain = $oSettings->GetConf('DBUseExplain', false);
-		$this->bUseExplainExtended = $oSettings->GetConf('DBUseExplainExtended', false);
+		$this->bUseExplain = $oSettings->GetValue('DBUseExplain', false);
+		$this->bUseExplainExtended = $oSettings->GetValue('DBUseExplainExtended', false);
 	}
 
 	/**

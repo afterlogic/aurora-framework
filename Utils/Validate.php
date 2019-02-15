@@ -75,8 +75,8 @@ class Validate
 	{
 		$bResult = true;
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$iPasswordMinLength = $oSettings->GetConf('PasswordMinLength');
-		$bPasswordMustBeComplex = $oSettings->GetConf('PasswordMustBeComplex');
+		$iPasswordMinLength = $oSettings->PasswordMinLength;
+		$bPasswordMustBeComplex = $oSettings->PasswordMustBeComplex;
 		
 		if (strlen($mValue) < $iPasswordMinLength) 
 		{ 

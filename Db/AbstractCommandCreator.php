@@ -40,7 +40,7 @@ abstract class AbstractCommandCreator
 		if ($oSettings)
 		{
 			$this->oHelper = $oCommandCreatorHelper;
-			$this->sPrefix = (string) $oSettings->GetConf('DBPrefix');
+			$this->sPrefix = (string) $oSettings->DBPrefix;
 		}
 	}
 	

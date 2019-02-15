@@ -414,11 +414,11 @@ class Api
 			$sDbPort = '';
 			$sUnixSocket = '';
 
-			$iDbType = $oSettings->GetConf('DBType');
-			$sDbHost = $oSettings->GetConf('DBHost');
-			$sDbName = $oSettings->GetConf('DBName');
-			$sDbLogin = $oSettings->GetConf('DBLogin');
-			$sDbPassword = $oSettings->GetConf('DBPassword');
+			$iDbType = $oSettings->DBType;
+			$sDbHost = $oSettings->DBHost;
+			$sDbName = $oSettings->DBName;
+			$sDbLogin = $oSettings->DBLogin;
+			$sDbPassword = $oSettings->DBPassword;
 
 			$iPos = strpos($sDbHost, ':');
 			if (false !== $iPos && 0 < $iPos) 
@@ -506,7 +506,7 @@ class Api
 	public static function LogEvent($sDesc, $sModuleName = '')
 	{
 		$oSettings = &self::GetSettings();
-		if ($oSettings && $oSettings->GetConf('EnableEventLogging')) 
+		if ($oSettings && $oSettings->EnableEventLogging) 
 		{
 			$sDate = gmdate('H:i:s');
 			$iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
@@ -537,7 +537,7 @@ class Api
 		$sMessage = '';
 
 		$oSettings =& self::GetSettings();
-		if ($oSettings && $oSettings->GetConf('LogStackTrace', false))
+		if ($oSettings && $oSettings->GetValue('LogStackTrace', false))
 		{
 			$sMessage = (string) $mObject;
 		}
@@ -565,12 +565,12 @@ class Api
 
 		$sFileName = "log.txt";
 		
-		if ($oSettings && $oSettings->GetConf('LogFileName'))
+		if ($oSettings && $oSettings->LogFileName)
 		{
 			$fCallback = ($iTimestamp === 0) 
 					? function ($matches) {return date($matches[1]);} 
 					: function ($matches) use ($iTimestamp) {return date($matches[1], $iTimestamp);};
-			$sFileName = preg_replace_callback('/\{([\w|-]*)\}/', $fCallback, $oSettings->GetConf('LogFileName'));
+			$sFileName = preg_replace_callback('/\{([\w|-]*)\}/', $fCallback, $oSettings->LogFileName);
 		}
 		
 		return $sFilePrefix.$sFileName;
@@ -586,7 +586,7 @@ class Api
 			$oSettings =& self::GetSettings();
 			if ($oSettings)
 			{
-				$sS = $oSettings->GetConf('LogCustomFullPath', '');
+				$sS = $oSettings->GetValue('LogCustomFullPath', '');
 				$sLogDir = empty($sS) ?self::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
 			}
 		}
@@ -635,7 +635,7 @@ class Api
 		if (null === $iDbBacktraceCount) 
 		{
 			$oSettings =& Api::GetSettings();
-			$iDbBacktraceCount = (int) $oSettings->GetConf('DBDebugBacktraceLimit', 0);
+			$iDbBacktraceCount = (int) $oSettings->GetValue('DBDebugBacktraceLimit', 0);
 			if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) 
 			{
 				$iDbBacktraceCount = 0;
@@ -710,7 +710,7 @@ class Api
 
 		$oSettings = &self::GetSettings();
 
-		if ($oSettings && $oSettings->GetConf('EnableLogging') && $iLogLevel <= $oSettings->GetConf('LoggingLevel')) 
+		if ($oSettings && $oSettings->EnableLogging && $iLogLevel <= $oSettings->LoggingLevel) 
 		{
 			try 
 			{
@@ -735,7 +735,7 @@ class Api
 				self::LogOnly(AU_API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
 				if (!empty($sPost)) 
 				{
-					if ($oSettings->GetConf('LogPostView', false)) 
+					if ($oSettings->GetValue('LogPostView', false)) 
 					{
 						self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
 					} 
@@ -796,7 +796,7 @@ class Api
 		
 		if ($oSettings)
 		{
-			$bRemoveOldLogs = $oSettings->GetConf('RemoveOldLogs', true);
+			$bRemoveOldLogs = $oSettings->GetValue('RemoveOldLogs', true);
 
 			if (is_dir($sLogDir) && $bRemoveOldLogs/* && !file_exists($sLogDir.$sLogFile)*/)
 			{
@@ -1045,7 +1045,7 @@ class Api
 			if ($bSuperAdmin)
 			{
 				$oSettings = &self::GetSettings();
-				$sResult = $oSettings->GetConf('AdminLanguage');
+				$sResult = $oSettings->AdminLanguage;
 			}
 			else if (!$bForNewUser)
 			{

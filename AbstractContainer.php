@@ -474,7 +474,7 @@ abstract class AbstractContainer
 
 		$sQueryParams = '';
 		$oSettings =& Api::GetSettings();
-		$bUseLogQueryParams = (bool) $oSettings->GetConf('DBLogQueryParams', false);
+		$bUseLogQueryParams = (bool) $oSettings->GetValue('DBLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 
@@ -593,7 +593,7 @@ abstract class AbstractContainer
 
 		$sQueryParams = '';
 		$oSettings =& Api::GetSettings();
-		$bUseLogQueryParams = (bool) $oSettings->GetConf('DBLogQueryParams', false);
+		$bUseLogQueryParams = (bool) $oSettings->GetValue('DBLogQueryParams', false);
 
 		$oObject->initBeforeChange();
 

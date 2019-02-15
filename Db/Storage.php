@@ -50,7 +50,7 @@ class Storage
 		$aConnections =& Creator::CreateConnector($oSettings);
 
 		$this->oSettings = $oSettings;
-		$this->sPrefix = $this->oSettings->GetConf('DBPrefix');
+		$this->sPrefix = $this->oSettings->DBPrefix;
 		$this->oConnector = null;
 		$this->oSlaveConnector = null;
 		$this->oLastException = null;
@@ -100,10 +100,10 @@ class Storage
 		}
 
 		$this->oConnector->ReInitIfNotConnected(
-			$this->oSettings->GetConf('DBHost'),
-			$this->oSettings->GetConf('DBLogin'),
-			$this->oSettings->GetConf('DBPassword'),
-			$this->oSettings->GetConf('DBName')
+			$this->oSettings->DBHost,
+			$this->oSettings->DBLogin,
+			$this->oSettings->DBPassword,
+			$this->oSettings->DBName
 		);
 
 		return $this->oConnector->Connect();
@@ -120,10 +120,10 @@ class Storage
 		}
 
 		$this->oSlaveConnector->ReInitIfNotConnected(
-			$this->oSettings->GetConf('DBHost'),
-			$this->oSettings->GetConf('DBLogin'),
-			$this->oSettings->GetConf('DBPassword'),
-			$this->oSettings->GetConf('DBName')
+			$this->oSettings->DBHost,
+			$this->oSettings->DBLogin,
+			$this->oSettings->DBPassword,
+			$this->oSettings->DBName
 		);
 
 		return $this->oSlaveConnector->Connect(true, true);

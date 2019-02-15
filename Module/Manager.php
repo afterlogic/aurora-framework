@@ -158,7 +158,7 @@ class Manager
 		$oModuleConfig = $this->GetModuleSettings($sModuleName);
 		if ($oModuleConfig)
 		{
-			$mResult = $oModuleConfig->GetConf($sConfigName, $sDefaultValue);
+			$mResult = $oModuleConfig->GetValue($sConfigName, $sDefaultValue);
 		}
 		
 		return $mResult;
@@ -176,7 +176,7 @@ class Manager
 		$oModuleConfig = $this->GetModuleSettings($sModuleName);
 		if ($oModuleConfig)
 		{
-			$oModuleConfig->SetConf($sConfigName, $sValue);
+			$oModuleConfig->SetValue($sConfigName, $sValue);
 		}
 	}	
 	

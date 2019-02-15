@@ -57,8 +57,8 @@ abstract class AbstractProtocol
 	public function __construct($sHost, $iPort, $bUseSsl = false, $iConnectTimeOut = null, $iSocketTimeOut = null)
 	{
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$iConnectTimeOut = (null === $iConnectTimeOut) ? $oSettings->GetConf('SocketConnectTimeoutSeconds', 5) : $iConnectTimeOut;
-		$iSocketTimeOut = (null === $iSocketTimeOut) ? $oSettings->GetConf('SocketGetTimeoutSeconds', 5) : $iSocketTimeOut;
+		$iConnectTimeOut = (null === $iConnectTimeOut) ? $oSettings->GetValue('SocketConnectTimeoutSeconds', 5) : $iConnectTimeOut;
+		$iSocketTimeOut = (null === $iSocketTimeOut) ? $oSettings->GetValue('SocketGetTimeoutSeconds', 5) : $iSocketTimeOut;
 
 		$this->sHost = $sHost;
 		$this->iPort = $iPort;
