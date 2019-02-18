@@ -209,6 +209,7 @@ abstract class AbstractSettings
 
 	public function SaveDataToConfigFile($aData)
 	{
+		$sJsonFile = $this->sPath;
 		return (bool) \file_put_contents(
 			$sJsonFile, 
 			\json_encode(
