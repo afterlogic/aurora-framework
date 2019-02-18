@@ -138,7 +138,6 @@ abstract class AbstractSettings
 			$this->aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType);
 		}
 
-		$mValue = null;
 		switch ($sType)
 		{
 			case 'string':
