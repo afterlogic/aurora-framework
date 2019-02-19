@@ -155,7 +155,22 @@ class Entity
 		
 		return in_array($sModuleName, $aDisabledModules);
 	}
-	
+
+	public function disableModule($sModuleName)
+	{
+		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
+		$aDisabledModules = explode("|", $sDisabledModules);
+		if (!in_array($sModuleName, $aDisabledModules))
+		{
+			$aDisabledModules[] = $sModuleName;
+			// clear array from empty values
+			$aDisabledModules = array_filter($aDisabledModules, function ($var) {
+				return !empty($var);
+			});
+			$this->{'@DisabledModules'} = implode("|", $aDisabledModules);
+		}
+	}
+
     /**
      * Returns a pseudo-random v4 UUID
      *
