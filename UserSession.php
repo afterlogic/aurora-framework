@@ -43,7 +43,7 @@ class UserSession
 
 			if ($mResult !== false && isset($mResult['id']))
 			{
-				$oUser = \Aurora\Modules\Core\Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mResult['id']);
+				$oUser = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mResult['id']);
 				$iResTime = (int) $mResult['@time']; // 0 means that signMe was true when user logged in, so there is no need to check it in that case
 				if ($oUser && $iResTime !== 0 && (int) $oUser->TokensValidFromTimestamp > $iResTime)
 				{

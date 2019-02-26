@@ -86,40 +86,24 @@ class Manager
 	 * 
 	 * @return string
 	 */
-	public function init()
+	public function loadModules()
 	{
 		$oCoreModule = $this->loadModule('Core');
 		
 		if ($oCoreModule instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
-			$aModulesPath = $this->GetModulesPaths();
-
-			foreach ($aModulesPath as $sModuleName => $sModulePath)
+			foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath)
 			{
 				$bIsModuleDisabledForUser = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? $oUser->isModuleDisabled($sModuleName) : false;
-
-				if (!$this->getModuleConfigValue($sModuleName, 'Disabled', false) && !$bIsModuleDisabledForUser)
+				if (!$bIsModuleDisabledForUser && !$this->getModuleConfigValue($sModuleName, 'Disabled', false))
 				{
-					if ($this->loadmodule($sModuleName, $sModulePath) || $this->isClientModule($sModuleName))
+					if ($this->loadModule($sModuleName, $sModulePath) || $this->isClientModule($sModuleName))
 					{
 						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
 					}
 				}
-			}
-			foreach ($this->_aModules as $oModule)
-			{
-				if ($oModule instanceof AbstractModule && !$oModule->isValid())
-				{
-					if (isset($this->_aModules[\strtolower($oModule::GetName())]))
-					{
-						unset($this->_aModules[\strtolower($oModule::GetName())]);
-					}
-					if (isset($this->_aAllowedModulesName[\strtolower($oModule::GetName())]))
-					{
-						unset($this->_aAllowedModulesName[\strtolower($oModule::GetName())]);
-					}
-				}
+				
 			}
 		}
 		else
@@ -156,6 +140,7 @@ class Manager
 	{
 		$mResult = $sDefaultValue;
 		$oModuleConfig = $this->GetModuleSettings($sModuleName);
+
 		if ($oModuleConfig)
 		{
 			$mResult = $oModuleConfig->GetValue($sConfigName, $sDefaultValue);
@@ -225,7 +210,6 @@ class Manager
 	protected function loadModule($sModuleName, $sModulePath = null)
 	{
 		$mResult = false;
-		
 		if (!isset($sModulePath))
 		{
 			$sModulePath = $this->GetModulePath($sModuleName);
@@ -243,7 +227,7 @@ class Manager
 					$aArgs
 				);
 
-				if (@\file_exists($sModulePath.$sModuleName.'/Module.php') && !$this->isModuleLoaded($sModuleName))
+				if (@\file_exists($sModulePath.$sModuleName.'/Module.php'))
 				{		
 					$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
 					$oModule = new $sModuleClassName($sModulePath);
@@ -251,13 +235,13 @@ class Manager
 					{
 						foreach ($oModule->GetRequireModules() as $sModule)
 						{
-							$oSubModule = $this->loadModule($sModule, $sModulePath);
-							if (!$oSubModule)
+							if (!$this->loadModule($sModule, $sModulePath))
 							{
 								break;
 							}
 						}
-						if ($oModule->initialize())
+
+						if ($oModule->initialize() && $oModule->isValid())
 						{
 							$this->_aModules[\strtolower($sModuleName)] = $oModule;
 							$mResult = $oModule;
@@ -565,6 +549,7 @@ class Manager
 	public function RunEntry($sEntryName)
 	{
 		$aArguments = [];
+		$mResult = false;
 		$this->broadcastEvent('System', $sEntryName.'-entry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
 
 		$mResult = \Aurora\System\Router::getInstance()->route(
@@ -697,7 +682,7 @@ class Manager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = array(), &$mResult = null) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = [], &$mResult = null) 
 	{
 		return $this->oEventEmitter->emit(
 			$sModule, 

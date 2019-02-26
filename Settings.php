@@ -77,18 +77,16 @@ class Settings extends AbstractSettings
 	}
 
 	/**
-	 * @param string $sJsonFile
-	 *
 	 * @return bool
 	 */
-	public function Load($sJsonFile)
+	public function Load()
 	{
 		$this->initDefaults();
-		if (!\file_exists($sJsonFile))
+		if (!\file_exists($this->sPath))
 		{
 			$this->Save();
 		}
 		
-		return parent::Load($sJsonFile);
+		return parent::Load();
 	}
 }

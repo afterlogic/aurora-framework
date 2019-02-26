@@ -197,8 +197,8 @@ class Api
 			self::InitSalt();
 
 			self::$bIsValid = self::validateApi();
-			self::GetModuleManager()->init();
-			self::$aModuleDecorators = array();
+			self::GetModuleManager()->loadModules();
+			self::$aModuleDecorators = [];
 			
 			self::removeOldLogs();
 		}
@@ -384,6 +384,7 @@ class Api
 		if (null === self::$oConnection)
 		{
 			$oSettings =& self::GetSettings();
+
 			if ($oSettings)
 			{
 				self::$oConnection = new \Aurora\System\Db\Storage($oSettings);
@@ -476,8 +477,8 @@ class Api
 	 */
 	public static function IsMobileApplication()
 	{
-		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
+		/* @var $oIntegrator \Aurora\System\Managers\Integrator */
+		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 
 		return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
 	}
@@ -1396,7 +1397,7 @@ class Api
 				$sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
 				$mUserId = self::getAuthenticatedUserId($sAuthToken);
 			}
-			$oUser = self::getUserById($mUserId);
+			$oUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mUserId);
 		}
 		catch (\Exception $oException) {}
 		return $oUser;
@@ -1412,8 +1413,8 @@ class Api
 				$sAuthToken = self::$aUserSession['AuthToken'];
 			}
 		}
-		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
+		/* @var $oIntegrator \Aurora\System\Managers\Integrator */
+		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 		if ($oIntegrator)
 		{
 			$mResult = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
@@ -1425,8 +1426,8 @@ class Api
 	public static function validateAuthToken()
 	{
 		$bResult = false;
-		/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-		$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
+		/* @var $oIntegrator \Aurora\System\Managers\Integrator */
+		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 		if ($oIntegrator)
 		{
 			$bResult = $oIntegrator->validateAuthToken(self::getAuthToken());
@@ -1465,15 +1466,10 @@ class Api
 			}
 			else
 			{
-				/* @var $oIntegrator \Aurora\Modules\Core\Managers\Integrator */
-				$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
-				if ($oIntegrator)
-				{
-					$aInfo = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
-					$mResult = $aInfo['userId'];
-					self::$aUserSession['UserId'] = (int) $mResult;
-					self::$aUserSession['AuthToken'] = $sAuthToken;
-				}
+				$aInfo = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserInfo($sAuthToken);
+				$mResult = $aInfo['userId'];
+				self::$aUserSession['UserId'] = (int) $mResult;
+				self::$aUserSession['AuthToken'] = $sAuthToken;
 			}
 		}
 		else 
@@ -1507,7 +1503,7 @@ class Api
 				$iUserId = self::$aUserSession['UserId'];
 			}
 
-			$oIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
+			$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 			if ($oIntegrator)
 			{
 				$oUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
@@ -1587,9 +1583,17 @@ class Api
 	
 	public static function getUserById($iUserId)
 	{
-		$oManagerApi = new Managers\Eav();
-		$mUser = $oManagerApi->getEntity($iUserId, \Aurora\Modules\Core\Classes\User::class);
-		if (!($mUser instanceof EAV\Entity))
+		$mUser = false;
+
+		try
+		{
+			$mUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+			if (!($mUser instanceof \Aurora\Modules\Core\Classes\User))
+			{
+				$mUser = false;
+			}
+		}
+		catch (\Exception $oEx)
 		{
 			$mUser = false;
 		}
@@ -1597,6 +1601,17 @@ class Api
 		return $mUser;
 	}
 	
+	public static function getTenantById($iUserId)
+	{
+		$mUser = Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\Tenant::class);
+		if (!($mUser instanceof \Aurora\Modules\Core\Classes\Tenant))
+		{
+			$mUser = false;
+		}
+		
+		return $mUser;
+	}	
+
 	public static function setTenantName($sTenantName)
 	{
 		self::$aUserSession['TenantName'] = $sTenantName;
@@ -1620,24 +1635,53 @@ class Api
 	{
 		$mResult = false;
 
-		if (is_array(self::$aUserSession) && isset(self::$aUserSession['TenantName']))
+		if (is_array(self::$aUserSession) && !empty(self::$aUserSession['TenantName']))
 		{
 			$mResult = self::$aUserSession['TenantName'];
 		}
 		else
 		{
+			try
+			{
+				$iUserId = self::getAuthenticatedUserId(self::getAuthToken());
+
+				if ($iUserId)
+				{
+					$oUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+
+					if ($oUser && !$oUser->isAdmin())
+					{
+						$oTenant = self::getTenantById($oUser->IdTenant);
+						if ($oTenant)
+						{
+							$mResult = $oTenant->Name;
+						}
+					}
+				}
+			}
+			catch (\Exception $oEx)
+			{
+				$mResult = false;				
+			}
+
+/*			
 			$mEventResult = null;
-			self::GetModuleManager()->broadcastEvent('System', 'DetectTenant', array(
-				array (
-					'URL' => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
-				),
-				&$mEventResult
-			));
+			$mEventArgs = [
+				'URL' => $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
+			];
+			
+			self::GetModuleManager()->broadcastEvent(
+				'System', 
+				'DetectTenant', 
+				$mEventArgs,
+				$mEventResult
+			);
 			
 			if ($mEventResult)
 			{
 				$mResult = $mEventResult;
 			}
+*/			
 		}
 		
 		return $mResult;

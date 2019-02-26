@@ -1896,7 +1896,6 @@ class Utils
 	public static function GetDefaultAccount()
 	{
 		$oResult = null;
-//		$oApiUsers = /* @var $oApiUsers \CApiUsersManager */ \Aurora\System\Api::GetSystemManager('users');
 		$oApiIntegrator /* @var $oApiIntegrator \Aurora\Modules\Core\Managers\Integrator */ = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		$iUserId = Api::getAuthenticatedUserId();
 		if (0 < $iUserId)

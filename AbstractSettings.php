@@ -42,18 +42,21 @@ abstract class AbstractSettings
 	{
 		$this->aContainer = [];
 		$this->sPath = $sSettingsPath;
+		$this->bIsLoaded = false;
+	}
 
-		if (!$this->Load($this->sPath))
+	/**
+	 * 
+	 * @param type $sName
+	 */
+	public function __isset($sName)
+	{
+		if (!$this->bIsLoaded)
 		{
-			if ($this->Load($this->sPath.'.bak'))
-			{
-				\copy($this->sPath.'.bak', $this->sPath);
-			}
-			else
-			{
-				$this->Save();
-			}
+			$this->Load();
 		}
+
+		return isset($this->aContainer[$sName]);
 	}
 	
 	/**
@@ -107,6 +110,11 @@ abstract class AbstractSettings
 	 */
 	public function GetValue($sKey, $mDefault = null)
 	{
+		if (!$this->bIsLoaded)
+		{
+			$this->Load();
+		}
+
 		return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Value : $mDefault;
 	}
 
@@ -178,6 +186,11 @@ abstract class AbstractSettings
 	public function SetConf($sKey, $mValue)
 	{
 		return $this->SetValue($sKey, $mValue);
+	}
+
+	public function IsExists()
+	{
+		return \file_exists($this->sPath);
 	}
 
 	public function BackupConfigFile()
@@ -295,18 +308,32 @@ abstract class AbstractSettings
 	 *
 	 * @return bool
 	 */
-	public function Load($sJsonFile)
+	public function Load()
 	{
 		$bResult = false;
 		
-		$mData = $this->LoadDataFromFile($sJsonFile);
+		$mData = $this->LoadDataFromFile($this->sPath);
+
+		if (!$mData)
+		{
+			$mData = $this->LoadDataFromFile($this->sPath.'.bak');
+			if ($mData)
+			{
+				\copy($this->sPath.'.bak', $this->sPath);
+			}
+			else
+			{
+				$this->Save();
+			}
+		}
+
 		if ($mData !== false)
 		{
 			$this->aContainer = $this->ParseData($mData);
 			$this->bIsLoaded = true;
 			$bResult = true;
 		}
-		
+
 		return $bResult;
 	}
 

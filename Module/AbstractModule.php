@@ -92,11 +92,18 @@ abstract class AbstractModule
      * @var array
      */
 	public $aErrors = array();
+
     /**
      *
      * @var Manager
      */	
 	protected $oModuleManager = null;
+
+    /**
+     *
+     * @var boolean
+     */	
+	protected $bIsPermanent = false;
 	
 	protected $aDeniedMethodsByWebApi =  [
 		'init',
@@ -165,6 +172,15 @@ abstract class AbstractModule
 
 	/**
 	 * 
+	 * @return \Aurora\System\Module\Settings
+	 */
+	protected function GetModuleSettings()
+	{
+		return $this->oModuleSettings;
+	}	
+
+	/**
+	 * 
 	 */
 	public function RequireModule($sModule)
 	{
@@ -187,6 +203,15 @@ abstract class AbstractModule
 	 * 
 	 * @return boolean
 	 */
+	public function isPermanent()
+	{
+		return $this->bIsPermanent;
+	}	
+
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public function isValid()
 	{
 		return true;
@@ -195,7 +220,7 @@ abstract class AbstractModule
 	
 	protected function isAllowedModule()
 	{
-		return $this->oModuleManager->IsAllowedModule(self::GetName());
+		return $this->isPermanent() || $this->oModuleManager->IsAllowedModule(self::GetName());
 	}
 	
 	
@@ -374,7 +399,7 @@ abstract class AbstractModule
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
-	public function broadcastEvent($sEvent, &$aArguments = array(), &$mResult = null)
+	public function broadcastEvent($sEvent, &$aArguments = [], &$mResult = null)
 	{
 		if (!in_array($sEvent, $this->aSkipedEvents))
 		{
