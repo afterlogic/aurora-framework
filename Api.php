@@ -1627,6 +1627,16 @@ class Api
 		self::$aUserSession['AuthToken'] = $sAuthToken;
 	}
 
+	public static function getTenantByWebDomain()
+	{
+		$oTenant = null;
+		$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
+		if (is_array($aTenants) && count($aTenants) > 0)
+		{
+			$oTenant = $aTenants[0];
+		}
+		return $oTenant;
+	}
 	/**
 	 * 
 	 * @return string
@@ -1643,6 +1653,7 @@ class Api
 		{
 			try
 			{
+				$oUser = null;
 				$iUserId = self::getAuthenticatedUserId(self::getAuthToken());
 
 				if ($iUserId)
@@ -1656,6 +1667,15 @@ class Api
 						{
 							$mResult = $oTenant->Name;
 						}
+					}
+				}
+				
+				if (!$oUser && !$mResult)
+				{
+					$oTenant = self::getTenantByWebDomain();
+					if ($oTenant)
+					{
+						$mResult = $oTenant->Name;
 					}
 				}
 			}
