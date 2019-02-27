@@ -1093,21 +1093,23 @@ class Integrator extends AbstractManager
 	{
 		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
-		$sTenantName = \Aurora\System\Api::getTenantName();
-		$oSettings =&\Aurora\System\Api::GetSettings();
+//		$sTenantName = \Aurora\System\Api::getTenantName();
+//		$oSettings =&\Aurora\System\Api::GetSettings();
 		
-		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
-		{
-			$sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
-		}
-		else
-		{
+//		We don't have ability to have different modules set for different tenants for now.
+//		So we don't use tenants folder for static files.
+//		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
+//		{
+//			$sS =
+//'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
+//'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
+//		}
+//		else
+//		{
 			$sS =
 '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
 '<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
-		}
+//		}
 		
 		return $sS;
 	}
@@ -1156,9 +1158,12 @@ class Integrator extends AbstractManager
 			$sPostfix .= '.min';
 		}
 		
-		$sTenantName = \Aurora\System\Api::getTenantName();
+//		We don't have ability to have different modules set for different tenants for now.
+//		So we don't use tenants folder for static files.
+//		$sTenantName = \Aurora\System\Api::getTenantName();
+//		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
 		
-		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
+		$sJsScriptPath = "./";
 		
 		$aClientModuleNames = [];
 		if (isset($aConfig['modules_list']))
