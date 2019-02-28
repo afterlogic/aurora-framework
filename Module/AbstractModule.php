@@ -95,6 +95,12 @@ abstract class AbstractModule
 
     /**
      *
+     * @var array
+     */
+	public $aAdditionalEntityFieldsToEdit = array();
+
+    /**
+     *
      * @var Manager
      */	
 	protected $oModuleManager = null;
@@ -1086,5 +1092,14 @@ abstract class AbstractModule
 	public function GetErrorMessageByCode($iErrorCode)
 	{
 		return is_array($this->aErrors) && isset($this->aErrors[(int) $iErrorCode]) ? $this->aErrors[(int) $iErrorCode] : '';
+	}
+	
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetAdditionalEntityFieldsToEdit()
+	{
+		return is_array($this->aAdditionalEntityFieldsToEdit) ? $this->aAdditionalEntityFieldsToEdit : [];
 	}
 }

@@ -958,6 +958,7 @@ class Integrator extends AbstractManager
 		}
 		catch (\Exception $oEx)	{}
 
+		$aAppData['additional_entity_fields_to_edit'] = [];
 		$aModules = \Aurora\System\Api::GetModules();
 		foreach ($aModules as $sModuleName => $oModule)
 		{
@@ -966,18 +967,26 @@ class Integrator extends AbstractManager
 				$oDecorator = \Aurora\System\Api::GetModuleDecorator($sModuleName);
 					
 				$aModuleAppData = $oDecorator->GetSettings();
+				if (is_array($aModuleAppData))
+				{
+					$aAppData[$oModule::GetName()] = $aModuleAppData;
+				}
+				
 				$aModuleErrors = $oDecorator->GetErrors();
+				if (is_array($aModuleErrors))
+				{
+					$aAppData['module_errors'][$oModule::GetName()] = $aModuleErrors;
+				}
+				
+				$aAdditionalEntityFieldsToEdit = $oDecorator->GetAdditionalEntityFieldsToEdit();
+				if (is_array($aAdditionalEntityFieldsToEdit) && !empty($aAdditionalEntityFieldsToEdit))
+				{
+					$aAppData['additional_entity_fields_to_edit'] = array_merge($aAppData['additional_entity_fields_to_edit'], $aAdditionalEntityFieldsToEdit);
+				}
 			}
 			catch (\Aurora\System\Exceptions\ApiException $oEx)
 			{
-				$aModuleAppData = null;
 			}
-			
-			if (is_array($aModuleAppData))
-			{
-				$aAppData[$oModule::GetName()] = $aModuleAppData;
-			}
-			$aAppData['module_errors'][$oModule::GetName()] = $aModuleErrors;
 		}
 		
 		if ($oUser)
