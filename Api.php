@@ -1627,6 +1627,24 @@ class Api
 		self::$aUserSession['AuthToken'] = $sAuthToken;
 	}
 
+	public static function getCurrentTenant()
+	{
+		$oTenant = null;
+		$oUser = self::getAuthenticatedUser();
+
+		if ($oUser && !$oUser->isAdmin())
+		{
+			$oTenant = self::getTenantById($oUser->IdTenant);
+		}
+
+		if (!$oUser && !$oTenant)
+		{
+			$oTenant = self::getTenantByWebDomain();
+		}
+		
+		return $oTenant;
+	}
+
 	public static function getTenantByWebDomain()
 	{
 		$oTenant = null;
@@ -1637,6 +1655,7 @@ class Api
 		}
 		return $oTenant;
 	}
+	
 	/**
 	 * 
 	 * @return string
@@ -1653,30 +1672,10 @@ class Api
 		{
 			try
 			{
-				$oUser = null;
-				$iUserId = self::getAuthenticatedUserId(self::getAuthToken());
-
-				if ($iUserId)
+				$oTenant = self::getCurrentTenant();
+				if ($oTenant)
 				{
-					$oUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
-
-					if ($oUser && !$oUser->isAdmin())
-					{
-						$oTenant = self::getTenantById($oUser->IdTenant);
-						if ($oTenant)
-						{
-							$mResult = $oTenant->Name;
-						}
-					}
-				}
-				
-				if (!$oUser && !$mResult)
-				{
-					$oTenant = self::getTenantByWebDomain();
-					if ($oTenant)
-					{
-						$mResult = $oTenant->Name;
-					}
+					$mResult = $oTenant->Name;
 				}
 			}
 			catch (\Exception $oEx)
