@@ -381,7 +381,7 @@ abstract class AbstractSettings
 				}
 				else
 				{
-					throw new \Aurora\System\Exceptions\SettingsException('Can\'t write settings to the configuration file: ' . $sJsonFile);
+					throw new \Aurora\System\Exceptions\SettingsException('Can\'t write settings to the configuration file');
 				}
 			}
 		}
