@@ -21,8 +21,14 @@ class TenantSettings extends \Aurora\System\AbstractSettings
     public function __construct($sModuleName, $sTenantName)
     {
         $this->sTenantName = $sTenantName;
+        $sTenantsPath = $sPath = \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath() . 'tenants';
 
-        $sPath = \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath() . 'tenants/' . $sTenantName . '/' .  $sModuleName . '.config.json'; 
+        if (!file_exists($sTenantsPath))
+        {
+            @\mkdir($sTenantsPath);
+        }
+
+        $sPath = $sTenantsPath . '/' . $sTenantName . '/' .  $sModuleName . '.config.json'; 
         parent::__construct($sPath);
     }
 
