@@ -152,9 +152,9 @@ class Settings extends \Aurora\System\AbstractSettings
 
 			if (isset($oTenantSettings))
 			{
-				if (!isset($oTenantSettings->{$sName}))
+				if (!isset($oTenantSettings->{$sName}) && isset($this->aContainer[$sName]))
 				{
-					$oTenantSettings->SetProperty($this->aContainer[$sName]);
+                    $oTenantSettings->SetProperty($this->aContainer[$sName]);
 				}
 				$oTenantSettings->SetValue($sName, $sValue);
 				$this->aTenantSettings[$sTenantName] = $oTenantSettings;
