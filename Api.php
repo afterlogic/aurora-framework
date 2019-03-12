@@ -1629,25 +1629,30 @@ class Api
 
 	public static function getCurrentTenant()
 	{
-		$oTenant = null;
-		$oUser = self::getAuthenticatedUser();
-
-		if ($oUser && !$oUser->isAdmin())
+		if (!isset(self::$aUserSession['Tenant']))
 		{
-			$oTenant = self::getTenantById($oUser->IdTenant);
-		}
+			$oUser = self::getAuthenticatedUser();
+			
+			$oTenant = null;
+			if ($oUser && !$oUser->isAdmin())
+			{
+				$oTenant = self::getTenantById($oUser->IdTenant);
+			}
 
-		if (!$oUser && !$oTenant)
-		{
-			$oTenant = self::getTenantByWebDomain();
+			if (!$oUser && !$oTenant)
+			{
+				$oTenant = self::getTenantByWebDomain();
+			}
+
+			self::$aUserSession['Tenant'] = $oTenant;
 		}
 		
-		return $oTenant;
+		return self::$aUserSession['Tenant'];
 	}
 
 	public static function getTenantByWebDomain()
 	{
-		$oTenant = null;
+		static $oTenant = null;
 		$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
 		if (is_array($aTenants) && count($aTenants) > 0)
 		{
