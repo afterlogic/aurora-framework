@@ -623,11 +623,14 @@ class Manager
 		}
 			
 		$aMapParameters = array();
-		foreach ($aParameters as $sKey => $mParameter)
+		if (is_array($aParameters))
 		{
-			if (!is_resource($mParameter) && gettype($mParameter) !== 'unknown type')
+			foreach ($aParameters as $sKey => $mParameter)
 			{
-				$aMapParameters[$sKey] = $mParameter;
+				if (!is_resource($mParameter) && gettype($mParameter) !== 'unknown type')
+				{
+					$aMapParameters[$sKey] = $mParameter;
+				}
 			}
 		}
 		
