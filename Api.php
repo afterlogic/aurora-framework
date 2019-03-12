@@ -1629,11 +1629,13 @@ class Api
 
 	public static function getCurrentTenant()
 	{
-		if (!isset(self::$aUserSession['Tenant']))
+		static $bTenantInitialized = false;
+		static $oTenant = null;
+		
+		if (!$bTenantInitialized)
 		{
 			$oUser = self::getAuthenticatedUser();
 			
-			$oTenant = null;
 			if ($oUser && !$oUser->isAdmin())
 			{
 				$oTenant = self::getTenantById($oUser->IdTenant);
@@ -1644,20 +1646,27 @@ class Api
 				$oTenant = self::getTenantByWebDomain();
 			}
 
-			self::$aUserSession['Tenant'] = $oTenant;
+			$bTenantInitialized = true;
 		}
 		
-		return self::$aUserSession['Tenant'];
+		return $oTenant;
 	}
 
 	public static function getTenantByWebDomain()
 	{
+		static $bTenantInitialized = false;
 		static $oTenant = null;
-		$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
-		if (is_array($aTenants) && count($aTenants) > 0)
+		
+		if (!$bTenantInitialized)
 		{
-			$oTenant = $aTenants[0];
+			$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
+			if (is_array($aTenants) && count($aTenants) > 0)
+			{
+				$oTenant = $aTenants[0];
+			}
+			$bTenantInitialized = true;
 		}
+		
 		return $oTenant;
 	}
 	
@@ -1667,45 +1676,31 @@ class Api
 	 */
 	public static function getTenantName()
 	{
-		$mResult = false;
+		static $bTenantInitialized = false;
+		static $mResult = false;
 
-		if (is_array(self::$aUserSession) && !empty(self::$aUserSession['TenantName']))
+		if (!$bTenantInitialized)
 		{
-			$mResult = self::$aUserSession['TenantName'];
-		}
-		else
-		{
-			try
+			if (is_array(self::$aUserSession) && !empty(self::$aUserSession['TenantName']))
 			{
-				$oTenant = self::getCurrentTenant();
-				if ($oTenant)
+				$mResult = self::$aUserSession['TenantName'];
+			}
+			else
+			{
+				try
 				{
-					$mResult = $oTenant->Name;
+					$oTenant = self::getCurrentTenant();
+					if ($oTenant)
+					{
+						$mResult = $oTenant->Name;
+					}
+				}
+				catch (\Exception $oEx)
+				{
+					$mResult = false;				
 				}
 			}
-			catch (\Exception $oEx)
-			{
-				$mResult = false;				
-			}
-
-/*			
-			$mEventResult = null;
-			$mEventArgs = [
-				'URL' => $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
-			];
-			
-			self::GetModuleManager()->broadcastEvent(
-				'System', 
-				'DetectTenant', 
-				$mEventArgs,
-				$mEventResult
-			);
-			
-			if ($mEventResult)
-			{
-				$mResult = $mEventResult;
-			}
-*/			
+			$bTenantInitialized = true;
 		}
 		
 		return $mResult;
