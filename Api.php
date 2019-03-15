@@ -1646,7 +1646,7 @@ class Api
 				$oTenant = self::getTenantByWebDomain();
 			}
 
-			$bTenantInitialized = true;
+//			$bTenantInitialized = true;
 		}
 		
 		return $oTenant;
@@ -1700,7 +1700,7 @@ class Api
 					$mResult = false;				
 				}
 			}
-			$bTenantInitialized = true;
+//			$bTenantInitialized = true;
 		}
 		
 		return $mResult;
