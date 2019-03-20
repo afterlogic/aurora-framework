@@ -171,6 +171,18 @@ class Entity
 		}
 	}
 
+	public function enableModule($sModuleName)
+	{
+		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
+		$aDisabledModules = explode("|", $sDisabledModules);
+		
+		if (($iKey = array_search($sModuleName, $aDisabledModules)) !== false)
+		{
+			unset($aDisabledModules[$iKey]);
+			$this->{'@DisabledModules'} = implode("|", $aDisabledModules);
+		}
+	}
+	
     /**
      * Returns a pseudo-random v4 UUID
      *
