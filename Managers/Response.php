@@ -200,36 +200,52 @@ class Response
 		return $iRotateAngle;
 	}
 
-	public static function GetThumbResource($iUserId, $rResource, $sFileName, $bShow = true)
+	public static function GetThumbHash()
 	{
 		$sHash = (string) \Aurora\System\Application::GetPathItemByIndex(1, '');
 		if (empty($sHash))
 		{
 			$sHash = \rand(1000, 9999);
 		}
+
+		return $sHash;
+	}
+
+	public static function GetThumbCacheFilename($sHash, $sFileName)
+	{
+		return \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+	}
+
+	public static function GetThumbResourceCache($iUserId, $sFileName)
+	{
 		$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
 
-		$sCacheFileName = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+		return $oCache->get(
+			self::GetThumbCacheFilename(self::GetThumbHash(), $sFileName)
+		);		
+	}
 
-		$sThumb = $oCache->get($sCacheFileName);
+	public static function GetThumbResource($iUserId, $rResource, $sFileName, $bShow = true)
+	{
+		$sThumb = null;
 
-		if ($sThumb === null)
+		$iRotateAngle = self::getImageAngle($rResource);
+		try
 		{
-			$iRotateAngle = self::getImageAngle($rResource);
-			try
+			$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
+			$oThumb = $oImageManager->make($rResource);
+			if ($iRotateAngle > 0)
 			{
-				$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
-				$oThumb = $oImageManager->make($rResource);
-				if ($iRotateAngle > 0)
-				{
-					$oThumb = $oThumb->rotate($iRotateAngle);
-				}
-				$sThumb = $oThumb->heighten(100)->widen(100)->response();
-
-				$oCache->set($sCacheFileName, $sThumb);
+				$oThumb = $oThumb->rotate($iRotateAngle);
 			}
-			catch (\Exception $oE) {}
+			$sThumb = $oThumb->heighten(100)->widen(100)->response();
+
+			$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+			$sHash = self::GetThumbHash();
+			$oCache->set(self::GetThumbCacheFilename($sHash, $sFileName), $sThumb);
 		}
+		catch (\Exception $oE) {}
+
 		if ($bShow)
 		{
 			echo $sThumb; exit();
