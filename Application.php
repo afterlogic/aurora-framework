@@ -127,29 +127,7 @@ class Application
 	 */
 	public static function GetPaths()
 	{
-		static $aResult = null;
-		if ($aResult === null)
-		{
-			$aResult = array();
-
-			$oHttp = \MailSo\Base\Http::SingletonInstance();
-			
-			$sQuery = \trim(\trim(urldecode($oHttp->GetQueryString())), ' /');
-
-			$iPos = \strpos($sQuery, '&');
-			if (0 < $iPos) 
-			{
-				$sQuery = \substr($sQuery, 0, $iPos);
-			}
-			$aQuery = \explode('/', $sQuery);
-			foreach ($aQuery as $sQueryItem) 
-			{
-				$iPos = \strpos($sQueryItem, '=');
-				$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
-			}
-		}
-		
-		return $aResult;
+		return Router::getItems();
 	}
 	
 	/**
@@ -158,8 +136,6 @@ class Application
 	 */
 	public static function GetPathItemByIndex($iIndex, $mDefaultValue = null)
 	{
-		$aPath = self::GetPaths();
-		
-		return !empty($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
+		return Router::getItemByIndex($iIndex, $mDefaultValue);
 	}
 }
