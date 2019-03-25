@@ -1046,27 +1046,16 @@ class Integrator extends AbstractManager
 	{
 		static $sLanguage = false;
 		static $sTheme = false;
-		static $sSiteName = false;
 
-		if (false === $sLanguage && false === $sTheme && false === $sSiteName)
+		if (false === $sLanguage && false === $sTheme)
 		{
-			$oSettings =&\Aurora\System\Api::GetSettings();
 			$oUser = \Aurora\System\Api::getAuthenticatedUser();
 			$oModuleManager = \Aurora\System\Api::GetModuleManager();
 			
-			$sSiteName = $oSettings->GetConf('SiteName');
 			$sLanguage = \Aurora\System\Api::GetLanguage();
-			$sTheme = $oUser ? $oUser->{'CoreWebclient::Theme'} : $oModuleManager->getModuleConfigValue('CoreWebclient', 'Theme');
-			
-			if ($oUser)
-			{
-				$sSiteName = '';
-			}
-			else
-			{
-			}
-
 			$sLanguage = $this->validatedLanguageValue($sLanguage);
+			
+			$sTheme = $oUser ? $oUser->{'CoreWebclient::Theme'} : $oModuleManager->getModuleConfigValue('CoreWebclient', 'Theme');
 			$sTheme = $this->validatedThemeValue($sTheme);
 		}
 		
@@ -1079,7 +1068,7 @@ class Integrator extends AbstractManager
 		
 		/*** end of temporary fix to the problems in mobile version in rtl mode ***/
 
-		return array($sLanguage, $sTheme, $sSiteName);
+		return array($sLanguage, $sTheme);
 	}
 
 	/**
@@ -1089,7 +1078,7 @@ class Integrator extends AbstractManager
 	 */
 	public function IsRtl()
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
+		list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
 		return \in_array($sLanguage, array('Arabic', 'Hebrew', 'Persian'));
 	}
 	
@@ -1100,7 +1089,7 @@ class Integrator extends AbstractManager
 	 */
 	public function buildHeadersLink()
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
+		list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
 		$sMobileSuffix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
 //		$sTenantName = \Aurora\System\Api::getTenantName();
 //		$oSettings =&\Aurora\System\Api::GetSettings();
@@ -1244,7 +1233,7 @@ class Integrator extends AbstractManager
 	 */
 	public function buildBody($aConfig = array())
 	{
-		list($sLanguage, $sTheme, $sSiteName) = $this->getThemeAndLanguage();
+		list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
 		return
 			$this->compileTemplates()."\r\n".
 			$this->compileLanguage($sLanguage)."\r\n".

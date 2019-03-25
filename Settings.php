@@ -19,7 +19,6 @@ class Settings extends AbstractSettings
 	protected function initDefaults()
 	{
 		$this->aContainer = array(
-			'SiteName' => new SettingsProperty('SiteName', 'AfterLogic', 'string'),
 			'LicenseKey' => new SettingsProperty('LicenseKey', '', 'string'),
 			
 			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
