@@ -2124,6 +2124,11 @@ class Utils
 		}
 		return $sClassName;
 	}
+
+	public static function getSanitizedFilename($sFileName)
+	{
+		return preg_replace("/[\/\*\?\[^\]<>\|:]/i", "", strtolower($sFileName));		
+	}
 }
 
 /**
