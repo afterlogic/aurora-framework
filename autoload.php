@@ -53,7 +53,8 @@ spl_autoload_register(function ($sClassName) {
 
 	if ($sClassName === 'Aurora\\Api')
 	{
-		$sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Api.php';
+		$sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'ApiAlias.php';
+
 		if (file_exists($sFileName))
 		{
 			include_once $sFileName;
