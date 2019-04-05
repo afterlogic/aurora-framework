@@ -1659,10 +1659,13 @@ class Api
 		
 		if (!$bTenantInitialized)
 		{
-			$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
-			if (is_array($aTenants) && count($aTenants) > 0)
+			if (!empty($_SERVER['SERVER_NAME']))
 			{
-				$oTenant = $aTenants[0];
+				$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
+				if (is_array($aTenants) && count($aTenants) > 0)
+				{
+					$oTenant = $aTenants[0];
+				}
 			}
 			$bTenantInitialized = true;
 		}
