@@ -211,9 +211,14 @@ class Api
 	 */
 	public static function skipCheckUserRole($bSkip)
 	{
-		$bReult = self::$__SKIP_CHECK_USER_ROLE__;
+		$bResult = self::$__SKIP_CHECK_USER_ROLE__;
 		self::$__SKIP_CHECK_USER_ROLE__ = $bSkip;
-		return $bReult;
+		return $bResult;
+	}
+	
+	public static function accessCheckIsSkipped()
+	{
+		return self::$__SKIP_CHECK_USER_ROLE__;
 	}
 	
 	/**
