@@ -1637,21 +1637,6 @@ class Utils
 	}
 
 	/**
-	 * @param string $sFolder
-	 * @param int $iMessageCount
-	 * @param int $iMessageUnseenCount
-	 * @param string $sUidNext
-	 * @return string
-	 */
-	public static function GenerateFolderHash($sFolder, $iMessageCount, $iMessageUnseenCount, $sUidNext)
-	{
-		$iMessageUnseenCount  =0;
-
-		$sD = "\x0";
-		return md5($sFolder.$sD.$iMessageCount.$sD.$iMessageUnseenCount.$sD.$sUidNext);
-	}
-
-	/**
 	 * @param string $sMimeType
 	 * @param string $sFileName = ''
 	 * @return bool
