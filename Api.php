@@ -196,9 +196,8 @@ class Api
 		{
 			self::InitSalt();
 
-			self::$bIsValid = self::validateApi();
+			self::validateApi();
 			self::GetModuleManager()->loadModules();
-			self::$aModuleDecorators = [];
 			
 			self::removeOldLogs();
 		}
@@ -270,6 +269,7 @@ class Api
 		if (!isset(self::$oModuleManager))
 		{
 			self::$oModuleManager = Module\Manager::createInstance();
+			self::$aModuleDecorators = [];
 		}
 		
 		return self::$oModuleManager;
@@ -924,7 +924,7 @@ class Api
 		$oSettings = &self::GetSettings();
 		$iResult &= $oSettings && ($oSettings instanceof AbstractSettings);
 
-		return (bool) $iResult;
+		self::$bIsValid = (bool) $iResult;
 	}
 
 	/**
