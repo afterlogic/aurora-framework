@@ -192,10 +192,10 @@ class Manager
 				if ($oSettings instanceof Settings)
 				{
 					$aValues = array_merge(
-						$oSettings->GetDefaultConfigValues(), 
-						$oSettings->GetConfigValues()
+						$oSettings->GetDefaultConfigValues(),
+						$oSettings->GetValues()
 					);
-					$oSettings->SetConfigValues($aValues);
+					$oSettings->SetValues($aValues);
 					$oSettings->Save();
 				}
 			}

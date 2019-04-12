@@ -40,7 +40,7 @@ class Settings extends \Aurora\System\AbstractSettings
 
 	public function GetDefaultConfigFilePath()
 	{
-		return \Aurora\System\Api::GetModuleManager()->GetModulesRootPath() . '/' . $this->ModuleName . '/config.json';
+		return \Aurora\System\Api::GetModuleManager()->GetModulesRootPath() . $this->ModuleName . '/config.json';
 	}
 	
 	public function InitDefaultConfiguration()
@@ -188,7 +188,9 @@ class Settings extends \Aurora\System\AbstractSettings
 	 */
 	public function GetDefaultConfigValues()
 	{
-		return (new DefaultSettings($this->DefaultConfigFilePath))->GetConfigValues();
+		$oDefaultSettings = new DefaultSettings($this->GetDefaultConfigFilePath());
+		$oDefaultSettings->Load();
+		return $oDefaultSettings->GetValues();
 	}
 
 	public function IsTenantSettingsExists($sTenantName)
