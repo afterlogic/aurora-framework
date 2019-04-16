@@ -321,10 +321,6 @@ abstract class AbstractSettings
 			{
 				\copy($this->sPath.'.bak', $this->sPath);
 			}
-			else
-			{
-				$this->Save();
-			}
 		}
 
 		if ($mData !== false)

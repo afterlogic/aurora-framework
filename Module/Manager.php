@@ -184,6 +184,22 @@ class Manager
 	 */
 	public function SyncModulesConfigs()
 	{
+		$sConfigFilename = 'pre-config.json';
+		$sConfigPath = AU_APP_ROOT_PATH . $sConfigFilename;
+		$aModulesPreconfig = [];
+		//getting modules pre-configuration data
+		if (file_exists($sConfigPath))
+		{
+			$sPreConfig = file_get_contents($sConfigPath);
+
+			$aPreConfig = json_decode($sPreConfig, true);
+
+			if (is_array($aPreConfig) && isset($aPreConfig['modules']))
+			{
+				$aModulesPreconfig = $aPreConfig['modules'];
+			}
+		}
+
 		foreach ($this->_aModules as $oModule)
 		{
 			if ($oModule instanceof AbstractModule)
@@ -191,9 +207,28 @@ class Manager
 				$oSettings = $oModule->loadModuleSettings();
 				if ($oSettings instanceof Settings)
 				{
+					$aModuleDefaultSettings = $oSettings->GetDefaultConfigValues();
+					//overriding modules default configuration with pre-configuration data
+					if (isset($aModulesPreconfig[$oModule->GetName()]))
+					{
+						$aModulePreconfig = $aModulesPreconfig[$oModule->GetName()];
+						foreach ($aModuleDefaultSettings as $key => $oSetting)
+						{
+							if (array_key_exists($key, $aModulePreconfig))
+							{
+								$oSetting->Value = $aModulePreconfig[$key];
+							}
+						}
+					}
+					$aModuleSetting = [];
+					if (@\file_exists($oSettings->GetPath()))
+					{
+						$aModuleSettings = $oSettings->GetValues();
+					}
+					//compiling default configuration and pre-configuration data into modules configuration
 					$aValues = array_merge(
-						$oSettings->GetDefaultConfigValues(),
-						$oSettings->GetValues()
+						$aModuleDefaultSettings,
+						$aModuleSettings
 					);
 					$oSettings->SetValues($aValues);
 					$oSettings->Save();

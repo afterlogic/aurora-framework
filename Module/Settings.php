@@ -64,12 +64,37 @@ class Settings extends \Aurora\System\AbstractSettings
 
 	public function Load()
 	{
+		$bResult = false;
 		if (!\file_exists($this->sPath))
 		{
-			$this->InitDefaultConfiguration();
+			$mData = $this->LoadDataFromFile($this->GetDefaultConfigFilePath());
+		}
+		else
+		{
+			$mData = $this->LoadDataFromFile($this->sPath);
 		}
 
-		parent::Load();
+		if (!$mData)
+		{
+			$mData = $this->LoadDataFromFile($this->sPath.'.bak');
+			if ($mData)
+			{
+				\copy($this->sPath.'.bak', $this->sPath);
+			}
+			else
+			{
+				$this->Save();
+			}
+		}
+
+		if ($mData !== false)
+		{
+			$this->aContainer = $this->ParseData($mData);
+			$this->bIsLoaded = true;
+			$bResult = true;
+		}
+
+		return $bResult;
 	}
 
 	/**
@@ -197,5 +222,4 @@ class Settings extends \Aurora\System\AbstractSettings
 	{
 		return \file_exists(\Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath() . 'tenants/' . $sTenantName . '/' .  $this->ModuleName . '.config.json'); 
 	}
-
 }
