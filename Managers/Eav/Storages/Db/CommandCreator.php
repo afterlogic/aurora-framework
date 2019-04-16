@@ -449,6 +449,14 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 					$sResultSort = 'ORDER BY ' . implode(', ', $mOrderAttributes);
 					$sResultWhere .= ' AND ' . implode(' AND ', $mOrderWhere);
 				}
+				else
+				{
+					$sResultSort = 'ORDER BY ' . implode(', ', $mOrderAttributes);
+				}
+			}
+			else
+			{
+				$sResultSort = 'ORDER BY attr_EntityId';
 			}
 			
 			if (0 < count($aWhere))
