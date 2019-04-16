@@ -11,7 +11,7 @@ use Composer\Script\Event;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
- * @license https://afterlogic.com/products/common-licensing AfterLogic Software License
+ * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2018, Afterlogic Corp.
  */
 class Installer
