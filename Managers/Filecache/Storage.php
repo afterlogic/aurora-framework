@@ -196,7 +196,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	 * @param string $sFileSuffix Default value is empty string.
 	 * @param string $sFolder Default value is empty string.
 	 *
-	 * @throws \System\Exceptions\Exception
+	 * @throws \Aurora\System\Exceptions\Exception
 	 *
 	 * @return string
 	 */
@@ -215,7 +215,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 		{
 			if (!@mkdir(dirname($sFilePath), 0777, true))
 			{
-				throw new \System\Exceptions\Exception('Can\'t make storage directory "'.$sFilePath.'"');
+				throw new \Aurora\System\Exceptions\Exception('Can\'t make storage directory "' . $sFilePath . '"');
 			}
 		}
 
