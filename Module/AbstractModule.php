@@ -270,8 +270,7 @@ abstract class AbstractModule
 	 */
 	final public static function getNamespace()
 	{
-		return (new \ReflectionClass(static::class))->getNamespaceName();
-//		return \dirname(static::class);
+		return \substr_replace(static::class, '', -7);
 	}
 	
 	/**

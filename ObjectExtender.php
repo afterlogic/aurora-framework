@@ -35,6 +35,10 @@ class ObjectExtender
 		return new self();
 	}
 
+	/**
+	 *
+	 * @return ObjectExtender
+	 */
 	public static function getInstance()
 	{
 		if (is_null(self::$self))

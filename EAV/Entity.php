@@ -540,7 +540,7 @@ class Entity
 	public function getMap()
 	{
 		$aStaticMap = $this->getStaticMap();
-		$aExtendedObject = \Aurora\System\Api::GetModuleManager()->getExtendedObject($this->getName());
+		$aExtendedObject = \Aurora\System\ObjectExtender::getInstance()->getObject($this->getName());
 		$this->aMap = array_merge(
 			$aStaticMap, 
 			$aExtendedObject
@@ -700,6 +700,6 @@ class Entity
 
 	public static function extend($sModuleName, $aMap)
 	{
-		\Aurora\System\Api::GetModuleManager()->extendObject($sModuleName, static::class, $aMap);
+		\Aurora\System\ObjectExtender::getInstance()->extend($sModuleName, static::class, $aMap);
 	}
 }
