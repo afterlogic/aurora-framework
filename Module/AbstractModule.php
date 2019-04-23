@@ -989,44 +989,51 @@ abstract class AbstractModule
 	 */
 	public function i18N($sData, $aParams = null, $iPluralCount = null, $sUUID = null)
 	{
-		$sLanguage = '';
-		if ($sUUID)
+		static $sLanguage = null;
+		if (is_null($sLanguage))
 		{
-			$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
-			$oUser = $oCoreDecorator ? $oCoreDecorator->GetUserByUUID($sUUID) : null;
-			if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
+			if ($sUUID)
 			{
-				$sLanguage = $oUser->Language;
+				$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
+				$oUser = $oCoreDecorator ? $oCoreDecorator->GetUserByUUID($sUUID) : null;
+				if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
+				{
+					$sLanguage = $oUser->Language;
+				}
+			}
+			if (empty($sLanguage))
+			{
+				$sLanguage = \Aurora\System\Api::GetLanguage();
 			}
 		}
-		if (empty($sLanguage))
-		{
-			$sLanguage = \Aurora\System\Api::GetLanguage();
-		}
 		
-		$aLang = null;
-		if (isset(\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage])) 
+		static $aLang = null;
+
+		if (is_null($aLang))
 		{
-			$aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
-		} 
-		else 
-		{
-			\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = false;
-				
-			$aLang = $this->getLangsData($sLanguage);
-			if (!$aLang)
+			if (isset(\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage]))
+			{
+				$aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
+			}
+			else
+			{
+				\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = false;
+
+				$aLang = $this->getLangsData($sLanguage);
+				if (!$aLang)
+				{
+					$aLang = $this->getLangsData('English');
+				}
+
+				if (\is_array($aLang))
+				{
+					\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = $aLang;
+				}
+			}
+			if (!isset($aLang[$sData]))
 			{
 				$aLang = $this->getLangsData('English');
 			}
-			
-			if (\is_array($aLang)) 
-			{
-				\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = $aLang;
-			}
-		}
-		if (!isset($aLang[$sData])) 
-		{
-			$aLang = $this->getLangsData('English');
 		}
 		
 		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) : 
