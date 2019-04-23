@@ -1684,10 +1684,9 @@ class Api
 	 */
 	public static function getTenantName()
 	{
-		static $bTenantInitialized = false;
-		static $mResult = false;
+		static $mResult = null;
 
-		if (!$bTenantInitialized)
+		if (!isset($mResult))
 		{
 			if (is_array(self::$aUserSession) && !empty(self::$aUserSession['TenantName']))
 			{
@@ -1705,7 +1704,7 @@ class Api
 				}
 				catch (\Exception $oEx)
 				{
-					$mResult = false;				
+					$mResult = false;
 				}
 			}
 //			$bTenantInitialized = true;
