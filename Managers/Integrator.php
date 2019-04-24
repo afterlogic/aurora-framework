@@ -910,28 +910,30 @@ class Integrator extends AbstractManager
 	 */
 	public function getThemeList()
 	{
-		static $sList = null;
-		if (null === $sList)
+		static $aList = null;
+		if (null === $aList)
 		{
-			$sList = array();
+			$aList = array();
 
 			$oModuleManager = \Aurora\System\Api::GetModuleManager();
-			$aThemes = $oModuleManager->getModuleConfigValue('CoreWebclient', 'ThemeList');
+			$sCoreWebclientModule = \Aurora\System\Api::IsMobileApplication() ? 'CoreMobileWebclient' : 'CoreWebclient';
+			$aThemes = $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'ThemeList');
 			$sDir =\Aurora\System\Api::WebMailPath().'static/styles/themes/';
 
 			if (is_array($aThemes))
 			{
+				$sPostfix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
 				foreach ($aThemes as $sTheme)
 				{
-					if (file_exists($sDir.'/'.$sTheme.'/styles.css'))
+					if (file_exists($sDir . '/' . $sTheme . '/styles' . $sPostfix . '.css'))
 					{
-						$sList[] = $sTheme;
+						$aList[] = $sTheme;
 					}
 				}
 			}
 		}
 
-		return $sList;
+		return $aList;
 	}
 
 	/**
@@ -1055,7 +1057,8 @@ class Integrator extends AbstractManager
 			$sLanguage = \Aurora\System\Api::GetLanguage();
 			$sLanguage = $this->validatedLanguageValue($sLanguage);
 			
-			$sTheme = $oUser ? $oUser->{'CoreWebclient::Theme'} : $oModuleManager->getModuleConfigValue('CoreWebclient', 'Theme');
+			$sCoreWebclientModule = \Aurora\System\Api::IsMobileApplication() ? 'CoreMobileWebclient' : 'CoreWebclient';
+			$sTheme = $oUser ? $oUser->{$sCoreWebclientModule . '::Theme'} : $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'Theme');
 			$sTheme = $this->validatedThemeValue($sTheme);
 		}
 		
