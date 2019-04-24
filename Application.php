@@ -71,6 +71,11 @@ class Application
 	
 	public static function Start($sDefaultEntry = 'default')
 	{
+		if (!defined('AU_APP_START'))
+		{
+			define('AU_APP_START', microtime(true));
+		}		
+
 		try
 		{
 			Api::Init();
