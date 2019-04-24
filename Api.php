@@ -15,7 +15,6 @@ namespace Aurora\System;
 if (!defined('AU_APP_ROOT_PATH'))
 {
 	define('AU_APP_ROOT_PATH', rtrim(realpath(dirname(__DIR__)), '\\/').'/');
-	define('AU_APP_START', microtime(true));
 }
 
 define('AU_API_PATH_TO_AURORA', '/../');
@@ -180,6 +179,8 @@ class Api
 	 */
 	public static function Init($bGrantAdminPrivileges = false)
 	{
+		$apiInitTimeStart = \microtime(true);
+
 		include_once self::GetVendorPath().'autoload.php';
 		
 		if ($bGrantAdminPrivileges)
@@ -201,6 +202,11 @@ class Api
 			
 			self::removeOldLogs();
 		}
+
+		if (!defined('AU_API_INIT'))
+		{
+			define('AU_API_INIT', microtime(true) - $apiInitTimeStart);
+		}		
 	}
 
 	/**

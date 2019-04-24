@@ -636,21 +636,21 @@ abstract class AbstractModule
 	 */
 	final public function DefaultResponse($sMethod, $mResult = false)
 	{
-		$aResult = array(
+		$aResult = [
 			'AuthenticatedUserId' => \Aurora\System\Api::getAuthenticatedUserId(),
-			'@Time' => microtime(true) - AU_APP_START
-		);
+			'@Time' => 0
+		];
 		if (is_array($mResult))
 		{
 			foreach ($mResult as $aValue)
 			{
 				$aResponseResult = \Aurora\System\Managers\Response::GetResponseObject(
 					$aValue, 
-					array(
+					[
 						'Module' => $aValue['Module'],
 						'Method' => $aValue['Method'],
 						'Parameters' => $aValue['Parameters']
-					)
+					]
 				);
 				if ($aValue['Module'] === self::GetName() && $aValue['Method'] === $sMethod)
 				{
@@ -663,6 +663,8 @@ abstract class AbstractModule
 			}
 		}
 		$aResult['SubscriptionsResult'] = \Aurora\System\Api::GetModuleManager()->GetSubscriptionsResult();
+		$aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4) + 0;
+		$aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4) + 0;
 		
 		return $aResult;
 	}	
