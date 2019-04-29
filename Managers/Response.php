@@ -202,7 +202,7 @@ class Response
 
 	public static function GetThumbHash()
 	{
-		$sHash = (string) \Aurora\System\Application::GetPathItemByIndex(1, '');
+		$sHash = (string) \Aurora\System\Router::getItemByIndex(1, '');
 		if (empty($sHash))
 		{
 			$sHash = \rand(1000, 9999);

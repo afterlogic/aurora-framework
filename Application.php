@@ -31,8 +31,6 @@ class Application
 	 */
 	protected function __construct()
 	{
-		$this->oModuleManager = Api::GetModuleManager();
-
 //		\MailSo\Config::$FixIconvByMbstring = false;
 		\MailSo\Config::$SystemLogger = Api::SystemLogger();
 	}
@@ -85,19 +83,16 @@ class Application
 			\Aurora\System\Api::LogException($oEx);
 		}
 		
-		self::RedirectToHttps();
 		self::GetVersion();
 
-		$mResult = self::SingletonInstance()->oModuleManager->RunEntry(
-			\strtolower(self::GetPathItemByIndex(0, $sDefaultEntry))
+		$mResult = self::SingletonInstance()->Route(
+			\strtolower(
+				Router::getItemByIndex(0, $sDefaultEntry)
+			)
 		);
 		if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw')
 		{
 			echo $mResult;
-		}
-		else
-		{
-			return $mResult;
 		}
 	}
 
@@ -111,22 +106,6 @@ class Application
 		return $sVersion;
 	}
 	
-	public static function RedirectToHttps()
-	{
-		$oSettings =& Api::GetSettings();
-		if ($oSettings)
-		{
-			$bRedirectToHttps = $oSettings->RedirectToHttps;
-
-			$bHttps = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off") || 
-					(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == "443"));
-			if ($bRedirectToHttps && !$bHttps) 
-			{
-				\header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-			}
-		}
-	}
-	
 	/**
 	 * @return array
 	 */
@@ -135,12 +114,8 @@ class Application
 		return Router::getItems();
 	}
 	
-	/**
-	 * 
-	 * @param int $iIndex
-	 */
-	public static function GetPathItemByIndex($iIndex, $mDefaultValue = null)
+	public function Route($sRoute)
 	{
-		return Router::getItemByIndex($iIndex, $mDefaultValue);
+		return Api::GetModuleManager()->RunEntry($sRoute);
 	}
 }

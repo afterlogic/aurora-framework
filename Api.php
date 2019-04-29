@@ -121,6 +121,11 @@ class Api
 	 * @var \Aurora\System\Db\Storage
 	 */
 	protected static $oConnection;	
+
+	/**
+	 * @var boolean
+	 */
+	protected static $bInitialized = false;
 	
 	/**
 	 * 
@@ -180,9 +185,8 @@ class Api
 	public static function Init($bGrantAdminPrivileges = false)
 	{
 		$apiInitTimeStart = \microtime(true);
-
 		include_once self::GetVendorPath().'autoload.php';
-		
+
 		if ($bGrantAdminPrivileges)
 		{
 			self::GrantAdminPrivileges();
@@ -193,16 +197,10 @@ class Api
 		self::$aSecretWords = array();
 		self::$bUseDbLog = false;
 
-		if (!is_object(self::$oModuleManager)) 
-		{
-			self::InitSalt();
-
-			self::validateApi();
-			self::GetModuleManager()->loadModules();
-			
-			self::removeOldLogs();
-		}
-
+		self::InitSalt();
+		self::validateApi();
+		self::GetModuleManager()->loadModules();
+		
 		if (!defined('AU_API_INIT'))
 		{
 			define('AU_API_INIT', microtime(true) - $apiInitTimeStart);
@@ -800,7 +798,7 @@ class Api
 		}
 	}
 
-	private static function removeOldLogs()
+	public static function removeOldLogs()
 	{
 		$sLogDir = self::GetLogFileDir();
 		$sLogFile = self::GetLogFileName();
