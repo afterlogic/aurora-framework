@@ -583,15 +583,17 @@ class Manager
 	 */
 	public function RunEntry($sEntryName)
 	{
-		$aArguments = [];
+		$aArguments = [
+			'EntryName' => $sEntryName
+		];
 		$mResult = false;
-		$this->broadcastEvent('System', $sEntryName.'-entry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
+		$this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
 
 		$mResult = \Aurora\System\Router::getInstance()->route(
 			$sEntryName
 		);
 
-		$this->broadcastEvent('System', $sEntryName.'-entry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
+		$this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
 
 		return $mResult;
 	}
