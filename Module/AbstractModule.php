@@ -666,6 +666,10 @@ abstract class AbstractModule
 		$aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4) + 0;
 		$aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4) + 0;
 		
+		if (version_compare(phpversion(), '7.1', '>=')) {
+		    ini_set( 'serialize_precision', -1 );
+		}
+		
 		return $aResult;
 	}	
 	
