@@ -823,6 +823,18 @@ class Api
 		}
 	}
 
+	public static function GetLoggerGuid()
+	{
+		$oSettings = &self::GetSettings();
+
+		if ($oSettings && $oSettings->EnableLogging) 
+		{
+			return \MailSo\Log\Logger::Guid();
+		}
+		
+		return '';
+	}
+	
 	/**
 	 * @return string
 	 */

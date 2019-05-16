@@ -351,6 +351,14 @@ class Response
 		$aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4) + 0;
 		$aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4) + 0;
 		
+		\Aurora\System\Api::Log('@Time: ' . $aResult['@Time']);
+		\Aurora\System\Api::Log('@TimeApiInit: ' . $aResult['@TimeApiInit']);
+		$sLoggerGuid = \Aurora\System\Api::GetLoggerGuid();
+		if (!empty($sLoggerGuid))
+		{
+			$aResult['@LoggerGuid'] = \MailSo\Log\Logger::Guid();
+		}
+		
 		if (version_compare(phpversion(), '7.1', '>=')) {
 		    ini_set( 'serialize_precision', -1 );
 		}
