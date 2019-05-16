@@ -636,41 +636,7 @@ abstract class AbstractModule
 	 */
 	final public function DefaultResponse($sMethod, $mResult = false)
 	{
-		$aResult = [
-			'AuthenticatedUserId' => \Aurora\System\Api::getAuthenticatedUserId(),
-			'@Time' => 0
-		];
-		if (is_array($mResult))
-		{
-			foreach ($mResult as $aValue)
-			{
-				$aResponseResult = \Aurora\System\Managers\Response::GetResponseObject(
-					$aValue, 
-					[
-						'Module' => $aValue['Module'],
-						'Method' => $aValue['Method'],
-						'Parameters' => $aValue['Parameters']
-					]
-				);
-				if ($aValue['Module'] === self::GetName() && $aValue['Method'] === $sMethod)
-				{
-					$aResult = array_merge($aResult, $aResponseResult);
-				}
-				else if (\Aurora\System\Api::$bDebug)
-				{
-					$aResult['Stack'][] =  $aResponseResult;
-				}
-			}
-		}
-		$aResult['SubscriptionsResult'] = \Aurora\System\Api::GetModuleManager()->GetSubscriptionsResult();
-		$aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4) + 0;
-		$aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4) + 0;
-		
-		if (version_compare(phpversion(), '7.1', '>=')) {
-		    ini_set( 'serialize_precision', -1 );
-		}
-		
-		return $aResult;
+		return \Aurora\System\Managers\Response::DefaultResponse(self::GetName(), $sMethod, $mResult);
 	}	
 	
 	/**
@@ -693,32 +659,7 @@ abstract class AbstractModule
 	 */
 	final public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null, $sModule = null)
 	{
-		$aResponseItem = $this->DefaultResponse($sMethod, false);
-
-		if (null !== $iErrorCode) 
-		{
-			$aResponseItem['ErrorCode'] = (int) $iErrorCode;
-			if (null !== $sErrorMessage) 
-			{
-				
-				$aResponseItem['ErrorMessage'] = null === $sErrorMessage ? '' : (string) $sErrorMessage;
-			}
-		}
-
-		if (null !== $sModule) 
-		{
-			$aResponseItem['Module'] = $sModule;
-		}
-
-		if (is_array($aAdditionalParams)) 
-		{			
-			foreach ($aAdditionalParams as $sKey => $mValue) 
-			{
-				$aResponseItem[$sKey] = $mValue;
-			}
-		}
-
-		return $aResponseItem;
+		return \Aurora\System\Managers\Response::FalseResponse($sMethod, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
 	}	
 	
 	/**
@@ -730,49 +671,7 @@ abstract class AbstractModule
 	 */
 	final public function ExceptionResponse($sActionName, $oException, $aAdditionalParams = null)
 	{
-		$iErrorCode = null;
-		$sErrorMessage = null;
-		$sModule = '';
-
-		$oSettings =& \Aurora\System\Api::GetSettings();
-		$bShowError = $oSettings->GetValue('DisplayServerErrorInformation', false);
-
-		if ($oException instanceof \Aurora\System\Exceptions\ApiException) 
-		{
-			$iErrorCode = $oException->getCode();
-			$sErrorMessage = null;
-			if ($bShowError) 
-			{
-				$sErrorMessage = $oException->getMessage();
-				if (empty($sErrorMessage) || 'ApiException' === $sErrorMessage) 
-				{
-					$sErrorMessage = null;
-				}
-			}
-			$oModule = $oException->GetModule();
-			if ($oModule)
-			{
-				$sModule = $oModule::GetName();
-			}
-		}
-		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
-		{
-			$iErrorCode = \Aurora\System\Notifications::MailServerError;
-			
-			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
-			if ($oResponse instanceof \MailSo\Imap\Response) 
-			{
-				$sErrorMessage = $oResponse instanceof \MailSo\Imap\Response ?
-					$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : null;
-			}
-		} 
-		else 
-		{
-			$iErrorCode = \Aurora\System\Notifications::UnknownError;
-//			$sErrorMessage = $oException->getCode().' - '.$oException->getMessage();
-		}
-
-		return $this->FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
+		return \Aurora\System\Managers\Response::ExceptionResponse($sActionName, $oException, $aAdditionalParams);
 	}	
 	
 	/**

@@ -587,11 +587,14 @@ class Manager
 			'EntryName' => $sEntryName
 		];
 		$mResult = false;
-		$this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
+		$bEventResult = $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
 
-		$mResult = \Aurora\System\Router::getInstance()->route(
-			$sEntryName
-		);
+		if ($bEventResult !== true)
+		{
+			$mResult = \Aurora\System\Router::getInstance()->route(
+				$sEntryName
+			);
+		}
 
 		$this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
 

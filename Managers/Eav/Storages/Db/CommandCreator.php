@@ -106,7 +106,7 @@ class CommandCreator extends \Aurora\System\Db\AbstractCommandCreator
 	 * @param int|string $mIdOrUUID
 	 * @return string
 	 */
-	public function getEntity($mIdOrUUID)
+	public function getEntity($mIdOrUUID, $sType)
 	{
 		$sWhere = is_int($mIdOrUUID) ? 
 				sprintf('entities.id = %d', $mIdOrUUID) : 

@@ -620,6 +620,11 @@ class Entity
 		
 		return $aAttributes;
 	}	
+
+	public function getAttributesType()
+	{
+		$this->getMap();
+	}
 	
 	/**
 	 * @param bool 
