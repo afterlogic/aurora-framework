@@ -96,14 +96,24 @@ class Manager
 			foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath)
 			{
 				$bIsModuleDisabledForUser = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? $oUser->isModuleDisabled($sModuleName) : false;
-				if (!$bIsModuleDisabledForUser && !$this->getModuleConfigValue($sModuleName, 'Disabled', false))
+				$bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
+				if (!$bIsModuleDisabledForUser && !$bModuleIsDisabled)
 				{
-					if ($this->loadModule($sModuleName, $sModulePath) || $this->isClientModule($sModuleName))
+					$bModuleLoaded = $this->loadModule($sModuleName, $sModulePath);
+					$bClientModule = $this->isClientModule($sModuleName);
+					if ($bModuleLoaded || $bClientModule)
 					{
 						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
 					}
+					else
+					{
+//						\Aurora\System\Api::Log('Module ' . $sModuleName . ' is not allowed. $bModuleLoaded = ' . $bModuleLoaded . '. $bClientModule = ' . $bClientModule . '.');
+					}
 				}
-				
+				else
+				{
+//					\Aurora\System\Api::Log('Module ' . $sModuleName . ' is not allowed. $bIsModuleDisabledForUser = ' . $bIsModuleDisabledForUser . '. $bModuleIsDisabled = ' . $bModuleIsDisabled . '.');
+				}
 			}
 		}
 		else
