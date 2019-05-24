@@ -245,6 +245,25 @@ class Eav
 	/**
 	 * 
 	 * @param int|string $mIdOrUUID
+	 * @return string
+	 */
+	public function getEntityType($mIdOrUUID)
+	{
+		$sEntityType = null;
+		try
+		{
+			$sEntityType = $this->oStorage->getEntityType($mIdOrUUID);
+		}
+		catch (\Aurora\System\Exceptions\DbException $oException)
+		{
+			throw new \Aurora\System\Exceptions\ApiException(0, $oException);
+		}
+		return $sEntityType;
+	}
+
+	/**
+	 * 
+	 * @param int|string $mIdOrUUID
 	 * @return \Aurora\System\EAV\Entity
 	 */
 	public function getEntity($mIdOrUUID, $sType)

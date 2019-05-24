@@ -724,13 +724,13 @@ class Api
 		{
 			try 
 			{
-				$oAuthenticatedUser = self::getAuthenticatedUser();
+//				$oAuthenticatedUser = self::getAuthenticatedUser();
 			}
 			catch (\Exception $oEx)
 			{
 				$oAuthenticatedUser = false;
 			}
-			$sFirstPrefix = $oAuthenticatedUser && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+			$sFirstPrefix = '';//$oAuthenticatedUser && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
 			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
 			$sGuid = \MailSo\Log\Logger::Guid();

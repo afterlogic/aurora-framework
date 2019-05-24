@@ -139,6 +139,29 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
+	public function getEntityType($mIdOrUUID)
+	{
+		$sEntityType = null;
+		if ($this->oConnection && $this->oConnection->Execute(
+				$this->oCommandCreator->getEntityType($mIdOrUUID)
+			)
+		)
+		{
+			if ($oRow = $this->oConnection->GetNextRecord())
+			{
+				$sEntityType = $oRow->entity_type;
+			}			
+			$this->oConnection->FreeResult();
+		}
+
+		return $sEntityType;
+	}	
+
+	/**
+	 * 
+	 * @param type $mIdOrUUID
+	 * @return type
+	 */
 	public function getEntity($mIdOrUUID, $sType)
 	{
 		$oEntity = null;
@@ -280,10 +303,13 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	{
 		$mResult = array();
 		
-		$aIdsOrUUIDs = array_merge(
-			$aIdsOrUUIDs, 
-			$this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder)
-		);
+		if (count($aIdsOrUUIDs) === 0)
+		{
+			$aIdsOrUUIDs = array_merge(
+				$aIdsOrUUIDs, 
+				$this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder)
+			);
+		}
 		
 		if ($aViewAttrs === null) {
 			$aViewAttrs = array();

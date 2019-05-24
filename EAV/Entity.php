@@ -363,7 +363,7 @@ class Entity
 					$oEntity = Entity::createInstance($this->ParentType, $this->ModuleName);
 					if (isset($this->ParentUUID))
 					{
-						$oEntity = (new \Aurora\System\Managers\Eav())->getEntity($this->ParentUUID);
+						$oEntity = \Aurora\System\Managers\Eav::getInstance()->getEntity($this->ParentUUID);
 						$mValue = $oEntity->{$sName};
 						$oAttribute->Inherited = true;
 					}
@@ -432,7 +432,7 @@ class Entity
 	
 	public function resetToDefault($sAttribute)
 	{
-		$mResult = (new \Aurora\System\Managers\Eav())->deleteAttribute(
+		$mResult = \Aurora\System\Managers\Eav::getInstance()->deleteAttribute(
 			$this->getType($sAttribute),
 			$this->EntityId,
 			$sAttribute
@@ -706,5 +706,10 @@ class Entity
 	public static function extend($sModuleName, $aMap)
 	{
 		\Aurora\System\ObjectExtender::getInstance()->extend($sModuleName, static::class, $aMap);
+	}
+
+	public function save()
+	{
+		return \Aurora\System\Managers\Eav::getInstance()->saveEntity($this);
 	}
 }

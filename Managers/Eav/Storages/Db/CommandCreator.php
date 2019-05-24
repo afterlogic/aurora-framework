@@ -100,6 +100,26 @@ class CommandCreator extends \Aurora\System\Db\AbstractCommandCreator
 		
 		return $sResult;
 	}	
+
+		/**
+	 * 
+	 * @param int|string $mIdOrUUID
+	 * @return string
+	 */
+	public function getEntityType($mIdOrUUID)
+	{
+		$sWhere = is_int($mIdOrUUID) ? 
+				sprintf('entities.id = %d', $mIdOrUUID) : 
+					sprintf('entities.uuid = %s', $this->escapeString($mIdOrUUID));
+		
+		$sSql = "
+SELECT 	   
+	entities.entity_type
+FROM %seav_entities as entities
+WHERE %s;
+";
+		return sprintf($sSql, $this->prefix(), $sWhere);
+	}
 	
 	/**
 	 * 
@@ -133,6 +153,8 @@ WHERE %s)
 		}
 		$sSql = implode("UNION ALL
 ", $aSql);
+
+		\Aurora\System\Api::Log($sSql, \Aurora\System\Enums\LogLevel::Full, "sql-");
 
 		return $sSql;
 	}
@@ -391,9 +413,9 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 		   ]
 	   ];
 	 */	
-	public function getEntities($sEntityType, $aViewAttributes = array(), 
-			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderAttributes = array(), 
-			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array(), $bCount = false)
+	public function getEntities($sEntityType, $aViewAttributes = [], 
+			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderAttributes = [], 
+			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $bCount = false)
 	{
 		$sViewAttributes = "";
 		$sWhereAttributes = "";
