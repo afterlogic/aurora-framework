@@ -222,4 +222,9 @@ class Attribute
 			$this->Encrypted = false;
 		}
 	}	
+
+	public function save($oEntity)
+	{
+		return \Aurora\System\Managers\Eav::getInstance()->setAttribute($oEntity, $this);
+	}
 }

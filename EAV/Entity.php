@@ -712,4 +712,13 @@ class Entity
 	{
 		return \Aurora\System\Managers\Eav::getInstance()->saveEntity($this);
 	}
+
+	public function saveAttribute($sName)
+	{
+		$oAttribute = $this->getAttribute($sName);
+		if ($oAttribute instanceof Attribute)
+		{
+			return $oAttribute->save($this);
+		}
+	}
 }
