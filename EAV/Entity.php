@@ -721,4 +721,23 @@ class Entity
 			return $oAttribute->save($this);
 		}
 	}
+
+	public function saveAttributes($aAttributes)
+	{
+		$bResult = false;
+		
+		$aAttributeOjects = [];
+		foreach ($aAttributes as $sName)
+		{
+			$aAttributeOjects[$sName] = $this->getAttribute($sName);
+		}
+
+		if (count($aAttributeOjects) > 0)
+		{
+			$bResult = \Aurora\System\Managers\Eav::getInstance()->setAttributes($this, $aAttributeOjects);
+		}
+
+		return $bResult;
+	}
+
 }
