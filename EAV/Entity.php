@@ -146,20 +146,32 @@ class Entity
 	
 	public function isModuleDisabled($sModuleName)
 	{
+		$aDisabledModules = $this->getDisabledModules();
+		
+		return in_array($sModuleName, $aDisabledModules);
+	}
+
+	public function getDisabledModules()
+	{
 		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
 		$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
 		if (substr_count($sDisabledModules, "|") > 0)
 		{
 			$aDisabledModules = explode("|", $sDisabledModules);
 		}
-		
-		return in_array($sModuleName, $aDisabledModules);
+
+		return $aDisabledModules;
+	}
+
+	public function clearDisabledModules()
+	{
+		$this->{'@DisabledModules'} = '';
+		$this->saveAttribute('@DisabledModules');
 	}
 
 	public function disableModule($sModuleName)
 	{
-		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
-		$aDisabledModules = explode("|", $sDisabledModules);
+		$aDisabledModules = $this->getDisabledModules();
 		if (!in_array($sModuleName, $aDisabledModules))
 		{
 			$aDisabledModules[] = $sModuleName;
@@ -168,22 +180,56 @@ class Entity
 				return !empty($var);
 			});
 			$this->{'@DisabledModules'} = implode("|", $aDisabledModules);
+			$this->saveAttribute('@DisabledModules');
 		}
+	}
+
+	public function disableModules($aModules)
+	{
+		$aDisabledModules = $this->getDisabledModules();
+		foreach ($aModules as $sModuleName)
+		{
+			if (!in_array($sModuleName, $aDisabledModules))
+			{
+				$aDisabledModules[] = $sModuleName;
+				// clear array from empty values
+				$aDisabledModules = array_filter($aDisabledModules, function ($var) {
+					return !empty($var);
+				});
+				$this->{'@DisabledModules'} = implode("|", $aDisabledModules);
+			}
+		}
+		$this->saveAttribute('@DisabledModules');
 	}
 
 	public function enableModule($sModuleName)
 	{
-		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
-		$aDisabledModules = explode("|", $sDisabledModules);
+		$aDisabledModules = $this->getDisabledModules();
 		
 		if (($iKey = array_search($sModuleName, $aDisabledModules)) !== false)
 		{
 			unset($aDisabledModules[$iKey]);
 			$this->{'@DisabledModules'} = implode("|", $aDisabledModules);
+			$this->saveAttribute('@DisabledModules');
 		}
 	}
 	
-    /**
+	public function enableModules($aModules)
+	{
+		$aDisabledModules = $this->getDisabledModules();
+		
+		foreach ($aModules as $sModuleName)
+		{
+			if (($iKey = array_search($sModuleName, $aDisabledModules)) !== false)
+			{
+				unset($aDisabledModules[$iKey]);
+				$this->{'@DisabledModules'} = implode("|", $aDisabledModules);
+			}
+		}
+		$this->saveAttribute('@DisabledModules');
+	}
+
+	/**
      * Returns a pseudo-random v4 UUID
      *
      * This function is based on a comment by Andrew Moore on php.net

@@ -93,11 +93,13 @@ class Manager
 		if ($oCoreModule instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
+			$oTenant = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? \Aurora\Modules\Core\Module::getInstance()->GetTenantById($oUser->IdTenant) : null;
 			foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath)
 			{
+				$bIsModuleDisabledForTenant = ($oTenant instanceof \Aurora\Modules\Core\Classes\Tenant) ? $oTenant->isModuleDisabled($sModuleName) : false;
 				$bIsModuleDisabledForUser = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? $oUser->isModuleDisabled($sModuleName) : false;
 				$bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
-				if (!$bIsModuleDisabledForUser && !$bModuleIsDisabled)
+				if (!($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled)
 				{
 					$bModuleLoaded = $this->loadModule($sModuleName, $sModulePath);
 					$bClientModule = $this->isClientModule($sModuleName);
