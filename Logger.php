@@ -70,7 +70,7 @@ class Logger
 			$sMessage = $mObject->getMessage();
 		}		
 		
-		if (0 < \count(Aoi::$aSecretWords)) 
+		if (0 < \count(Api::$aSecretWords)) 
 		{
 			$sMessage = \str_replace(Api::$aSecretWords, '*******', $sMessage);
 		}
