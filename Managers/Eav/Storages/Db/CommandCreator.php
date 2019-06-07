@@ -154,7 +154,7 @@ WHERE %s)
 		$sSql = implode("UNION ALL
 ", $aSql);
 
-		\Aurora\System\Api::Log($sSql, \Aurora\System\Enums\LogLevel::Full, "sql-");
+		\Aurora\System\Logger::LogSql($sSql);
 
 		return $sSql;
 	}
@@ -559,7 +559,7 @@ SELECT * FROM
 			);
 		}
 		
-		\Aurora\System\Api::Log($sSql, \Aurora\System\Enums\LogLevel::Full, "sql-");
+		\Aurora\System\Logger::LogSql($sSql);
 		
 		return $sSql;
 	}	
