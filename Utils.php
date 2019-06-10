@@ -2026,7 +2026,7 @@ class Utils
 				$oCssToInlineStyles->setUseInlineStylesBlock(true);
 
 				echo '<html><head></head><body>'.
-					\MailSo\Base\HtmlUtils::ClearHtmlSimple($oCssToInlineStyles->convert(), true, true).
+					\MailSo\Base\HtmlUtils::ClearHtmlSimple($oCssToInlineStyles->convert(), true).
 					'</body></html>';
 			}
 		}
