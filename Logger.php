@@ -7,8 +7,6 @@
 
 namespace Aurora\System;
 
-use Aurora\Api;
-
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
