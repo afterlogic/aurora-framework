@@ -236,7 +236,7 @@ class Manager
 							}
 						}
 					}
-					$aModuleSetting = [];
+					$aModuleSettings = [];
 					if (@\file_exists($oSettings->GetPath()))
 					{
 						$aModuleSettings = $oSettings->GetValues();
