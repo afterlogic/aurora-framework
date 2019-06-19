@@ -59,6 +59,7 @@ class ObjectExtender
 	{
 		foreach ($aMap as $sKey => $aValue)
 		{
+			$aValue['@Extended'] = true;
 			$this->_aObjects[$sType][$sModule . Module\AbstractModule::$Delimiter . $sKey] = $aValue;
 		}
     }	

@@ -77,7 +77,7 @@ class Attribute
 	 * @param int $iEntityId
 	 * @param bool $bReadOnly
 	 */
-	public function __construct($sName, $mValue = null, $sType = 'string', $bIsEncrypt = false, $iEntityId = 0, $bReadOnly = false)
+	public function __construct($sName, $mValue = null, $sType = 'string', $bIsEncrypt = false, $iEntityId = 0, $bReadOnly = false, $bExtended = false)
 	{
 		$this->Id = 0;
 		$this->EntityId = $iEntityId;
@@ -88,6 +88,7 @@ class Attribute
 		$this->ReadOnly = $bReadOnly;
 		$this->Override = false;
 		$this->Inherited = false;
+		$this->bExtended = $bExtended;
 
 		$this->setType($sType);
 	}
@@ -102,9 +103,9 @@ class Attribute
 	 * 
 	 * @return \Aurora\System\EAV\Attribute
 	 */
-	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0, $bReadOnly = false)
+	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0, $bReadOnly = false, $bExtended = false)
 	{
-		return new self($sName, $sValue, $sType, $bEncrypt, $iEntityId, $bReadOnly);
+		return new self($sName, $sValue, $sType, $bEncrypt, $iEntityId, $bReadOnly, $bExtended);
 	}
 
 	/**

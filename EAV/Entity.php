@@ -341,6 +341,21 @@ class Entity
 	}		
 
 	/**
+	 * @param string $sPropertyName
+	 * @return bool
+	 */
+	public function isExtendedAttribute($sPropertyName)
+	{
+		$bResult = false;
+		$aMapItem = $this->getMapItem($sPropertyName);
+		if ($aMapItem !== null && is_array($aMapItem)) {
+			$bResult = (isset($aMapItem['@Extended']) && $aMapItem['@Extended'] === true) ;
+		}
+		
+		return $bResult;
+	}		
+
+	/**
 	 * @param string $sName
 	 * @return bool
 	 */
@@ -376,7 +391,9 @@ class Entity
 					$mValue, 
 					$this->getType($sAttribute), 
 					$this->isEncryptedAttribute($sAttribute), 
-					$this->EntityId
+					$this->EntityId,
+					false,
+					$this->isExtendedAttribute($sAttribute)
 				);
 			}
 		}
@@ -429,9 +446,10 @@ class Entity
 					}
 					if($this->ParentType === 'Aurora\System\Module\Settings')
 					{
-						if (iseet($this->ParentModuleName))
+						if ($oAttribute->isExtendedAttribute())
 						{
-							$sModuleName = $this->ParentModuleName;
+							list($sModuleName, ) = \explode('::', $sName);
+
 						}
 						else
 						{
@@ -605,6 +623,7 @@ class Entity
 			$aStaticMap, 
 			$aExtendedObject
 		);
+
 		return $this->aMap;
 	}
 	
