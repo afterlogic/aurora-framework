@@ -446,10 +446,9 @@ class Entity
 					}
 					if($this->ParentType === 'Aurora\System\Module\Settings')
 					{
-						if ($oAttribute->isExtendedAttribute())
+						if ($this->isExtendedAttribute($sName))
 						{
-							list($sModuleName, ) = \explode('::', $sName);
-
+							list($sModuleName, $sName) = \explode('::', $sName);
 						}
 						else
 						{
@@ -458,7 +457,7 @@ class Entity
 						$oModule = \Aurora\System\Api::GetModule($sModuleName);
 						if ($oModule instanceof \Aurora\System\Module\AbstractModule)
 						{
-							$mValue = $oModule->GetSettings()->GetValue($sName);
+							$mValue = $oModule->getConfig($sName);
 							$oAttribute->Inherited = true;
 						}
 					}
