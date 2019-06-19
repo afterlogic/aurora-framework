@@ -39,6 +39,12 @@ class Entity
 	
 	/**
 	 *
+	 * @var string 
+	 */
+	public $ParentModuleName = null;
+
+	/**
+	 *
 	 * @var string
 	 */
 	public $ParentUUID = null;
@@ -423,7 +429,15 @@ class Entity
 					}
 					if($this->ParentType === 'Aurora\System\Module\Settings')
 					{
-						$oModule = \Aurora\System\Api::GetModule($this->ModuleName);
+						if (iseet($this->ParentModuleName))
+						{
+							$sModuleName = $this->ParentModuleName;
+						}
+						else
+						{
+							$sModuleName = $this->ModuleName;
+						}
+						$oModule = \Aurora\System\Api::GetModule($sModuleName);
 						if ($oModule instanceof \Aurora\System\Module\AbstractModule)
 						{
 							$mValue = $oModule->GetSettings()->GetValue($sName);
