@@ -22,9 +22,16 @@ class UserSession
 	{
 		$aData['@time'] = $iTime;
 		$aData['@ver'] = self::TOKEN_VERSION;
-		return Api::EncodeKeyValues(
+		$sAuthToken = Api::EncodeKeyValues(
 			$aData
 		);
+
+		if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false))
+		{
+			$this->SetToDB($sAuthToken);
+		}
+
+		return $sAuthToken;
 	}
 
 	public function UpdateTimestamp($sAuthToken, $iTime = 0)
@@ -39,6 +46,12 @@ class UserSession
 		
 		if (strlen($sAuthToken) !== 0) 
 		{
+
+			if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false) && !$this->GetFromDB($sAuthToken))
+			{
+				return false;
+			}
+
 			$mResult = Api::DecodeKeyValues($sAuthToken);
 
 			if ($mResult !== false && isset($mResult['id']))
@@ -74,4 +87,87 @@ class UserSession
 		
 		return $mResult;
 	}
+
+	public function Delete($sAuthToken)
+	{
+		if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false))
+		{
+			try
+			{
+				$this->DeleteFromDB($sAuthToken);
+			}
+			catch (\PDOException $oEx)
+			{
+				// DB is not configured
+			}
+		}
+	}
+
+	public function SetToDB($sAuthToken)
+	{
+		$oAuthToken = new \Aurora\System\Classes\AuthToken('System');
+		$oAuthToken->Token = $sAuthToken;
+		$oAuthToken->LastUsageDateTime = time();
+		try
+		{
+			\Aurora\System\Managers\Eav::getInstance()->saveEntity($oAuthToken);
+		}
+		catch (\PDOException $oEx)
+		{
+			// DB is not configured
+		}
+	}
+
+	public function GetFromDB($sAuthToken)
+	{
+		$mResult = false;
+
+		try
+		{
+			$aEntities = \Aurora\System\Managers\Eav::getInstance()->getEntities(
+				\Aurora\System\Classes\AuthToken::class, 
+				[], 
+				0, 
+				1, 
+				['Token' => $sAuthToken]
+			);
+
+			if (is_array($aEntities) && count ($aEntities) === 1)
+			{
+				$mResult = $aEntities[0];
+				$mResult->LastUsageDateTime = time();
+				\Aurora\System\Managers\Eav::getInstance()->saveEntity($mResult);
+			}
+		}
+		catch (\PDOException $oEx)
+		{
+			$mResult = true;
+		}
+
+		return $mResult;
+	}
+
+	public function DeleteFromDB($sAuthToken)
+	{
+		$oAuthToken = $this->GetFromDB($sAuthToken);
+		if ($oAuthToken instanceof \Aurora\System\Classes\AuthToken)
+		{
+			\Aurora\System\Managers\Eav::getInstance()->deleteEntity($oAuthToken->EntityId);
+		}
+	}
+
+	public function GetExpiredAuthTokens($iDays)
+	{
+		$oDateTime = new \DateTime('-'.$iDays.' days');
+		$iTime = $oDateTime->getTimestamp();
+
+		return \Aurora\System\Managers\Eav::getInstance()->getEntities(
+			\Aurora\System\Classes\AuthToken::class, 
+			[], 
+			0, 
+			1, 
+			['LastUsageDateTime' => [$iTime , '<']]
+		);
+	}
+
 }

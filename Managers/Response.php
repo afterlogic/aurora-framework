@@ -95,7 +95,10 @@ class Response
 					$aArgs
 				);
 
-				$mResult = \array_merge(self::objectWrapper($mResponse, $aParameters), $mResponse->toResponseArray($aParameters));
+				$mResult = \array_merge(
+					self::objectWrapper($mResponse, $aParameters), 
+					$mResponse->toResponseArray($aParameters)
+				);
 
 				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
 					'System', 
@@ -106,7 +109,10 @@ class Response
 			}
 			else
 			{
-				$mResult = \array_merge(self::objectWrapper($mResponse, $aParameters), self::CollectionToResponseArray($mResponse, $aParameters));
+				$mResult = \array_merge(
+					self::objectWrapper($mResponse, $aParameters), 
+					self::CollectionToResponseArray($mResponse, $aParameters)
+				);
 			}
 		}
 		else if (\is_array($mResponse))
@@ -329,21 +335,29 @@ class Response
 		{
 			foreach ($mResult as $aValue)
 			{
-				$aResponseResult = self::GetResponseObject(
-					$aValue, 
-					[
-						'Module' => $aValue['Module'],
-						'Method' => $aValue['Method'],
-						'Parameters' => $aValue['Parameters']
-					]
-				);
 				if ($aValue['Module'] === $sModuleName && $aValue['Method'] === $sMethod)
 				{
-					$aResult = array_merge($aResult, $aResponseResult);
+					$aResult['Module'] = $sModuleName;
+					$aResult['Method'] = $sMethod;
+					$aResult['Result'] = self::GetResponseObject(
+						$aValue['Result'], 
+						[
+							'Module' => $aValue['Module'],
+							'Method' => $aValue['Method'],
+							'Parameters' => $aValue['Parameters']
+						]
+					);
 				}
 				else if (\Aurora\System\Api::$bDebug)
 				{
-					$aResult['Stack'][] =  $aResponseResult;
+					$aResult['Stack'][] =  self::GetResponseObject(
+						$aValue['Result'], 
+						[
+							'Module' => $aValue['Module'],
+							'Method' => $aValue['Method'],
+							'Parameters' => $aValue['Parameters']
+						]
+					);
 				}
 			}
 		}
