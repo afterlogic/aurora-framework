@@ -71,7 +71,9 @@ class Settings extends AbstractSettings
 			'ExpireUserSessionsBefore' => new SettingsProperty('ExpireUserSessionsBefore', 0, 'int'),
 			
 			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
-			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool')
+			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
+
+			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool')
 		);		
 	}
 
