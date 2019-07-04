@@ -188,7 +188,7 @@ class MySql extends \Aurora\System\Db\Sql
 					@register_shutdown_function(array(&$this, 'Disconnect'));
 				}
 			}
-			catch (Exception $oException)
+			catch (\Exception $oException)
 			{
 				\Aurora\System\Api::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
 				\Aurora\System\Api::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);

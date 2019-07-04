@@ -96,7 +96,7 @@ class UserSession
 			{
 				$this->DeleteFromDB($sAuthToken);
 			}
-			catch (\PDOException $oEx)
+			catch (\Aurora\System\Exceptions\DbException $oEx)
 			{
 				// DB is not configured
 			}
@@ -112,7 +112,7 @@ class UserSession
 		{
 			\Aurora\System\Managers\Eav::getInstance()->saveEntity($oAuthToken);
 		}
-		catch (\PDOException $oEx)
+		catch (\Aurora\System\Exceptions\DbException $oEx)
 		{
 			// DB is not configured
 		}
@@ -139,7 +139,7 @@ class UserSession
 				\Aurora\System\Managers\Eav::getInstance()->saveEntity($mResult);
 			}
 		}
-		catch (\PDOException $oEx)
+		catch (\Aurora\System\Exceptions\DbException $oEx)
 		{
 			$mResult = true;
 		}
