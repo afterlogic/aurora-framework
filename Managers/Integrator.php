@@ -1240,7 +1240,7 @@ class Integrator extends AbstractManager
 			$this->compileLanguage($sLanguage)."\r\n".
 			$this->compileAppData()."\r\n".
 			$this->compileJS($aConfig).
-			"\r\n".'<!-- '.\Aurora\System\Api::Version().' -->'
+			"\r\n".'<!-- '.\Aurora\System\Api::VersionFull().' -->'
 		;
 	}
 	
