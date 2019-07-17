@@ -1237,6 +1237,11 @@ class Api
 		return $sPath;
 	}
 	
+	public static function getCookieSecure()
+	{
+		return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+	}
+	
 	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;
