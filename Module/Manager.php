@@ -96,7 +96,7 @@ class Manager
 			$oTenant = null;
 			if ($oUser instanceof \Aurora\Modules\Core\Classes\User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin)
 			{
-				$oTenant = \Aurora\Modules\Core\Module::getInstance()->GetTenantById($oUser->IdTenant);
+				$oTenant = \Aurora\Modules\Core\Module::Decorator()->GetTenantUnchecked($oUser->IdTenant);
 			}
 			foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath)
 			{
