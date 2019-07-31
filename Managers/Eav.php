@@ -216,7 +216,9 @@ class Eav
 		{
 			if (is_array($aViewAttributes) && count($aViewAttributes) === 0)
 			{
-				$aViewAttributes = $this->oStorage->getAttributesNamesByEntityType($sType);
+				$aViewAttributes = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
+
+//				$aViewAttributes = $this->oStorage->getAttributesNamesByEntityType($sType);
 			}
 			
 			$aEntities = $this->oStorage->getEntities(
