@@ -766,7 +766,15 @@ class Entity
 		
 		foreach($this->aAttributes as $oAttribute)
 		{
-			$aResult[$oAttribute->Name] = $this->{$oAttribute->Name};
+			if ($oAttribute->Encrypted && !empty($this->{$oAttribute->Name}))
+			{
+				// Dummy encrypted attribute could be passed to client side by toResponseArray method. 				
+				$aResult[$oAttribute->Name] = '*****';
+			}
+			else
+			{
+				$aResult[$oAttribute->Name] = $this->{$oAttribute->Name};
+			}
 		}
 		return $aResult;
 	}
