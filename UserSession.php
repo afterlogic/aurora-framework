@@ -18,6 +18,18 @@ class UserSession
 {
 	const TOKEN_VERSION = '2.2';
 
+	public static function getTokenData($oAccount, $bSignMe = true)
+	{
+		return [
+			'token' => 'auth',
+			'sign-me' => $bSignMe,
+			'id' => $oAccount->IdUser,
+			'account' => $oAccount->EntityId,
+			'account_type' => $oAccount->getName()
+		];
+	}
+
+
 	public function Set($aData, $iTime = 0)
 	{
 		$aData['@time'] = $iTime;
