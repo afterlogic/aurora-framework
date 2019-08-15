@@ -126,7 +126,7 @@ WHERE %s;
 	 * @param int|string $mIdOrUUID
 	 * @return string
 	 */
-	public function getEntity($mIdOrUUID, $sType)
+	public function getEntity($mIdOrUUID)
 	{
 		$sWhere = is_int($mIdOrUUID) ? 
 				sprintf('entities.id = %d', $mIdOrUUID) : 

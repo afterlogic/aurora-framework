@@ -268,7 +268,7 @@ class Eav
 	 * @param int|string $mIdOrUUID
 	 * @return \Aurora\System\EAV\Entity
 	 */
-	public function getEntity($mIdOrUUID, $sType)
+	public function getEntity($mIdOrUUID, $sType = null)
 	{
 		$oEntity = null;
 		try

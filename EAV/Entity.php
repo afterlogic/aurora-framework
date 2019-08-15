@@ -457,7 +457,7 @@ class Entity
 						$oModule = \Aurora\System\Api::GetModule($sModuleName);
 						if ($oModule instanceof \Aurora\System\Module\AbstractModule)
 						{
-							$mValue = $oModule->getConfig($sName);
+							$mValue = $oModule->getConfig($sName, $mValue);
 							$oAttribute->Inherited = true;
 						}
 					}
@@ -466,7 +466,6 @@ class Entity
 		}
 		else
 		{
-			
 			$aMapItem = $this->getMapItem($sName);
 			if (isset($aMapItem))
 			{
