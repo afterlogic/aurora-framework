@@ -100,7 +100,6 @@ class Ldap
 			{
 				@ldap_set_option($rLink, LDAP_OPT_PROTOCOL_VERSION, 3);
 				@ldap_set_option($rLink, LDAP_OPT_REFERRALS, 0);
-				@ldap_set_option($rLink, LDAP_SCOPE_SUBTREE, 0);
 				
 				\Aurora\System\Api::Log('LDAP: bind = "'.$sBindDb.'" / "'.$sBindPassword.'"');
 				if (0 < strlen($sBindDb) && 0 < strlen($sBindPassword) ?
