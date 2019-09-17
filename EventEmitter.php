@@ -70,18 +70,12 @@ class EventEmitter
 
         if (isset($this->aListeners[$sEvent])) 
 		{
-			$aListeners = array_merge(
-				$aListeners, 
-				$this->aListeners[$sEvent]
-			);
+			$aListeners = $this->aListeners[$sEvent];
         }
 		$sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
 		if (isset($this->aListeners[$sEvent])) 
 		{
-			$aListeners = \array_merge(
-				$aListeners, 
-				$this->aListeners[$sEvent]
-			);
+			$aListeners = $aListeners + $this->aListeners[$sEvent];
         }
         
         return $aListeners;
@@ -153,45 +147,50 @@ class EventEmitter
 		$bResult = false;
 		$mListenersResult = null;
 		
-		$aListeners = $this->getListenersByEvent($sModule, $sEvent);
-		
-		foreach($aListeners as $fCallback) 
-		{
-			if (\is_callable($fCallback) && Api::GetModuleManager()->IsAllowedModule($fCallback[0]::GetName()))
-			{
-				\Aurora\System\Api::Log('Execute subscription: '. $fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]);
-				
-				$mCallBackResult = \call_user_func_array(
-					$fCallback, 
-					[
-						&$aArguments,
-						&$mResult,
-						&$mListenersResult
-                    ]
-                );
-                
-                if (\is_callable($mCountinueCallback))
+        $aListeners = $this->getListenersByEvent($sModule, $sEvent);
+        if (count($aListeners) > 0)
+        {
+            \Aurora\System\Api::Log(" ===== Emit $sModule::$sEvent", Enums\LogLevel::Full, 'subscriptions-');
+            \Aurora\System\Api::Log(' ========== START Execute subscriptions', Enums\LogLevel::Full, 'subscriptions-');
+            foreach($aListeners as $fCallback) 
+            {
+                if (\is_callable($fCallback) && Api::GetModuleManager()->IsAllowedModule($fCallback[0]::GetName()))
                 {
-                    $mCountinueCallback(
-                        $fCallback[0]::GetName(),
-                        $aArguments,
-                        $mCallBackResult
-                    );
-                }
-
-				if (isset($mListenersResult))
-				{
-					$this->aListenersResult[$fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]] = $mListenersResult;
-				}
-				
-				if ($mCallBackResult) 
-				{
-                    $bResult = $mCallBackResult;
+                    \Aurora\System\Api::Log(" =============== " . $fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], Enums\LogLevel::Full, 'subscriptions-');
                     
-					break;
-				}
-			}
-		}
+                    $mCallBackResult = \call_user_func_array(
+                        $fCallback, 
+                        [
+                            &$aArguments,
+                            &$mResult,
+                            &$mListenersResult
+                        ]
+                    );
+                    
+                    if (\is_callable($mCountinueCallback))
+                    {
+                        $mCountinueCallback(
+                            $fCallback[0]::GetName(),
+                            $aArguments,
+                            $mCallBackResult
+                        );
+                    }
+
+                    if (isset($mListenersResult))
+                    {
+                        $this->aListenersResult[$fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]] = $mListenersResult;
+                    }
+                    
+                    if ($mCallBackResult) 
+                    {
+                        $bResult = $mCallBackResult;
+                        
+                        break;
+                    }
+                }
+            }
+            \Aurora\System\Api::Log(" ========== END Execute subscriptions\n", Enums\LogLevel::Full, 'subscriptions-');
+        }
 
         return $bResult;
     }	

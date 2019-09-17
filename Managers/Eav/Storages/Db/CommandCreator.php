@@ -414,7 +414,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	   ];
 	 */	
 	public function getEntities($sEntityType, $aViewAttributes = [], 
-			$iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderAttributes = [], 
+			$iOffset = 0, $iLimit = 0, $aWhere = [], $mOrderAttributes = [], 
 			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $bCount = false)
 	{
 		$sViewAttributes = "";
