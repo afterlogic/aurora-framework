@@ -62,14 +62,14 @@ class Query
         return $this;
     }
 
-    public function offset($iLimit)
+    public function limit($iLimit)
     {
         $this->iLimit = $iLimit;
 
         return $this;
     }
 
-    public function limit($iOffset)
+    public function offset($iOffset)
     {
         $this->iOffset = $iOffset;
 
