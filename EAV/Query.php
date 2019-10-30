@@ -34,6 +34,8 @@ class Query
 
     protected $bCount = false;
 
+    protected $bOnlyUUIDs = false;
+
     public function select($aViewAttributes = [])
     {
         $this->aViewAttributes = $aViewAttributes;
@@ -111,20 +113,41 @@ class Query
         return $this;
     }
 
+    public function onlyUUIDs()
+    {
+        $this->bOnlyUUIDs = true;
+
+        return $this;
+    }
+
     public function exec()
     {
         if (!$this->bCount)
         {
-            return \Aurora\System\Managers\Eav::getInstance()->getEntities(
-                $this->sType, 
-                $this->aViewAttributes,
-                $this->iOffset, 
-                $this->iLimit, 
-                $this->aWhere,
-                $this->mOrderAttributes, 
-                $this->iSortOrder,
-                $this->aIdOrUuids
-            );
+            if ($this->bOnlyUUIDs)
+            {
+                return \Aurora\System\Managers\Eav::getInstance()->getEntitiesUids(
+                    $this->sType, 
+                    $this->iOffset, 
+                    $this->iLimit, 
+                    $this->aWhere,
+                    $this->mOrderAttributes, 
+                    $this->iSortOrder
+                );
+            }
+            else
+            {
+                return \Aurora\System\Managers\Eav::getInstance()->getEntities(
+                    $this->sType, 
+                    $this->aViewAttributes,
+                    $this->iOffset, 
+                    $this->iLimit, 
+                    $this->aWhere,
+                    $this->mOrderAttributes, 
+                    $this->iSortOrder,
+                    $this->aIdOrUuids
+                );
+            }
         }
         else
         {

@@ -301,7 +301,7 @@ class MySql extends \Aurora\System\Db\Sql
 			$rExplainResult = $this->SilentQuery($sExplainQuery);
 			if ($rExplainResult != false)
 			{
-				while (false != ($mResult = $rExplainResult->fetch(PDO::FETCH_ASSOC)))
+				while (false != ($mResult = $rExplainResult->fetch(\PDO::FETCH_ASSOC)))
 				{
 					$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 				}
@@ -314,7 +314,7 @@ class MySql extends \Aurora\System\Db\Sql
 				$rExplainResult = $this->SilentQuery('SHOW warnings');
 				if ($rExplainResult != false)
 				{
-					while (false != ($mResult = $rExplainResult->fetch(PDO::FETCH_ASSOC)))
+					while (false != ($mResult = $rExplainResult->fetch(\PDO::FETCH_ASSOC)))
 					{
 						$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 					}
@@ -372,7 +372,7 @@ class MySql extends \Aurora\System\Db\Sql
 	{
 		if ($this->rResultId)
 		{
-			$mResult = $this->rResultId->fetch(PDO::FETCH_ASSOC);
+			$mResult = $this->rResultId->fetch(\PDO::FETCH_ASSOC);
 			if (!$mResult && $bAutoFree)
 			{
 				$this->FreeResult();
