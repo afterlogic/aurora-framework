@@ -199,6 +199,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 							$oEntity->EntityId
 						);
 						$oAttribute->Encrypted = $bEncrypt;
+						$oAttribute->CanInherit = $oEntity->canInheridAttribute($oRow->attr_name);
 						$oEntity->{$oRow->attr_name} = $oAttribute;
 					}
 				}
@@ -359,6 +360,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 									$oEntity->EntityId
 								);
 								$oAttribute->Encrypted = $bIsEncrypted;
+								$oAttribute->CanInherit = $oEntity->canInheridAttribute($sAttrKey);
 								$oEntity->{$sAttrKey} = $oAttribute;
 							}
 							else

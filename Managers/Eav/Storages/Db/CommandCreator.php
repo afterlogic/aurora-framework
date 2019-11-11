@@ -144,7 +144,7 @@ WHERE %s;
 	%s as attr_type
 FROM %seav_entities as entities
 	  LEFT JOIN %seav_attributes_%s as attrs ON entities.id = attrs.id_entity
-WHERE %s)
+WHERE %s AND attrs.name IS NOT NULL)
 ";
 		
 		foreach (\Aurora\System\EAV\Entity::getTypes() as $sSqlType)
@@ -212,9 +212,14 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 						$mResultValue = \Aurora\System\Utils::EncryptValue($mResultValue);
 					}
 					$bIsInOperator = false;
-					if (strtolower($mResultOperator) === 'in' || strtolower($mResultOperator) === 'not in'  
+					if ((strtolower($mResultOperator) === 'in' || strtolower($mResultOperator) === 'not in')  
 						&& is_array($mResultValue))
 					{
+						if (count($mResultValue) === 0)
+						{
+							$mResultValue = [null];
+						}
+
 						$bIsInOperator = true;
 						$mResultValue = array_map(
 							function ($mValue) use ($oEntity, $sKey) {
@@ -583,7 +588,7 @@ SELECT * FROM
 			{
 				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !$oEntity->isSystemAttribute($oAttribute->Name))
 				{
-					if ((!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) || ($oEntity->isOverridedAttribute($oAttribute->Name))) && (!$oAttribute->Inherited))
+					if ((!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) /*|| ($oEntity->isOverridedAttribute($oAttribute->Name))*/) && (!$oAttribute->Inherited))
 					{
 						if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
 						{

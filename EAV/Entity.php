@@ -110,7 +110,7 @@ class Entity
 		$this->ModuleName = $sModuleName;
 		$this->aAttributes = array();
 		$this->setStaticMap();
-		$this->initDefaults();
+//		$this->initDefaults();
 	}
 	
 	protected function initDefaults()
@@ -356,6 +356,21 @@ class Entity
 	}		
 
 	/**
+	 * @param string $sPropertyName
+	 * @return bool
+	 */
+	public function canInheridAttribute($sPropertyName)
+	{
+		$bResult = false;
+		$aMapItem = $this->getMapItem($sPropertyName);
+		if ($aMapItem !== null && is_array($aMapItem)) {
+			$bResult = (isset($aMapItem[3]) && $aMapItem[3] === true) ;
+		}
+		
+		return $bResult;
+	}		
+
+	/**
 	 * @param string $sName
 	 * @return bool
 	 */
@@ -371,38 +386,9 @@ class Entity
 	 */
 	public function __set($sAttribute, $mValue)
 	{
-		if (!($mValue instanceof Attribute))
-		{
-			if ($this->issetAttribute($sAttribute))
-			{
-				$oAttribute = $this->getAttribute($sAttribute);
-				if ($oAttribute->Encrypted)
-				{
-					$oAttribute->Encrypted = false;
-				}
-				$oAttribute->Value = $mValue;
-				$oAttribute->setType($oAttribute->Type);
-				$mValue = $oAttribute;
-			}
-			else
-			{
-				$mValue = Attribute::createInstance(
-					$sAttribute, 
-					$mValue, 
-					$this->getType($sAttribute), 
-					$this->isEncryptedAttribute($sAttribute), 
-					$this->EntityId,
-					false,
-					$this->isExtendedAttribute($sAttribute)
-				);
-			}
-		}
-		if ($mValue->IsEncrypt)
-		{
-			$mValue->Encrypt();
-		}
-		$mValue->Inherited = false;
-		$this->setAttribute($mValue);
+		$oAttribute = $this->initAttribute($sAttribute, $mValue);
+		$oAttribute->IsDefault = false;
+		$this->setAttribute($oAttribute);
 	}
 
 	/**
@@ -429,12 +415,14 @@ class Entity
 			{
 				if (is_subclass_of($this->ParentType, 'Aurora\System\EAV\Entity'))
 				{
-					$oEntity = Entity::createInstance($this->ParentType, $this->ModuleName);
 					if (isset($this->ParentUUID))
 					{
 						$oEntity = \Aurora\System\Managers\Eav::getInstance()->getEntity($this->ParentUUID);
-						$mValue = $oEntity->{$sName};
-						$oAttribute->Inherited = true;
+						if (isset($oEntity) && $oEntity->canInheridAttribute($sName))
+						{
+							$mValue = $oEntity->{$sName};
+							$oAttribute->Inherited = true;
+						}
 					}
 				}
 				else if(is_subclass_of($this->ParentType, 'Aurora\System\AbstractSettings'))
@@ -559,13 +547,16 @@ class Entity
 	public function isDefaultValue($sAttribute, $mValue)
 	{
 		$bResult = false;
-		$aMap = $this->getMap();
+/*		$aMap = $this->getMap();
 		if (isset($aMap[$sAttribute]))
 		{
 			$bResult = ($mValue === $aMap[$sAttribute][1]);
 		}
 		
 		return $bResult;
+*/
+		$oAttribute = $this->getAttribute($sAttribute);
+		return ($oAttribute && $oAttribute->IsDefault);
 	}
 	
 	/**
@@ -633,6 +624,48 @@ class Entity
 		$aMap = $this->getMap();
 		return isset($aMap[$sName]) ? $aMap[$sName] : null;
 	}	
+
+	/**
+	 * @param string $sAttribute
+	 * @param mixed $mValue
+	 * @return Attribute
+	 */	
+	public function initAttribute($sAttribute, $mValue)
+	{
+		if (!($mValue instanceof Attribute))
+		{
+			if ($this->issetAttribute($sAttribute))
+			{
+				$oAttribute = $this->getAttribute($sAttribute);
+				if ($oAttribute->Encrypted)
+				{
+					$oAttribute->Encrypted = false;
+				}
+				$oAttribute->Value = $mValue;
+				$oAttribute->setType($oAttribute->Type);
+				$mValue = $oAttribute;
+			}
+			else
+			{
+				$mValue = Attribute::createInstance(
+					$sAttribute, 
+					$mValue, 
+					$this->getType($sAttribute), 
+					$this->isEncryptedAttribute($sAttribute), 
+					$this->EntityId,
+					false,
+					$this->isExtendedAttribute($sAttribute)
+				);
+			}
+		}
+		if ($mValue->IsEncrypt)
+		{
+			$mValue->Encrypt();
+		}
+		$mValue->Inherited = false;
+
+		return $mValue;
+	}
 	
 	/**
 	 * @return bool
@@ -739,7 +772,11 @@ class Entity
 	{
 		foreach ($this->getMap() as $sKey => $aMap)
 		{
-			$this->{$sKey} = $aMap[1];
+			$oAttribute = $this->initAttribute($sKey, $aMap[1]);
+			if ($oAttribute)
+			{
+				$this->setAttribute($oAttribute);
+			}
 		}
 	}
 

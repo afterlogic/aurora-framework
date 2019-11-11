@@ -63,6 +63,13 @@ class Attribute
 	 */
 	public $Override;
 	
+
+	/**
+	 *
+	 * @var bool $CanInherit
+	 */
+	public $CanInherit;
+
 	/**
 	 *
 	 * @var bool $Inherited
@@ -88,6 +95,8 @@ class Attribute
 		$this->ReadOnly = $bReadOnly;
 		$this->Override = false;
 		$this->Inherited = false;
+		$this->CanInherit = false;
+		$this->IsDefault = true;
 		$this->bExtended = $bExtended;
 
 		$this->setType($sType);
