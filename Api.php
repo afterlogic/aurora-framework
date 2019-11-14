@@ -162,6 +162,22 @@ class Api
 	/**
 	 * 
 	 */
+	public static function GetUserSession()
+	{
+		return self::$aUserSession;
+	}
+
+	/**
+	 * 
+	 */
+	public static function SetUserSession($aUserSession)
+	{
+		return self::$aUserSession = $aUserSession;
+	}
+
+	/**
+	 * 
+	 */
 	public static function GrantAdminPrivileges()
 	{
 		self::$aUserSession['UserId'] = -1;
