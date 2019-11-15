@@ -110,7 +110,7 @@ class Entity
 		$this->ModuleName = $sModuleName;
 		$this->aAttributes = array();
 		$this->setStaticMap();
-//		$this->initDefaults();
+		$this->initDefaults();
 	}
 	
 	protected function initDefaults()
