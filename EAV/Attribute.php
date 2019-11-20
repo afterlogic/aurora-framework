@@ -96,7 +96,7 @@ class Attribute
 		$this->Override = false;
 		$this->Inherited = false;
 		$this->CanInherit = false;
-		$this->IsDefault = true;
+		$this->IsDefault = false;
 		$this->bExtended = $bExtended;
 
 		$this->setType($sType);

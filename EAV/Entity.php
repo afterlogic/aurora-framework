@@ -19,10 +19,10 @@ class Entity
 	/**
 	 * @var int
 	 */
-	public $EntityId;
+	public $EntityId = 0;
 
 	/**
-	 * @var int
+	 * @var string
 	 */
 	public $UUID;
 
@@ -52,12 +52,12 @@ class Entity
 	/**
 	 * @var array
 	 */
-	protected $aAttributes;
+	protected $aAttributes = [];
 	
 	/**
 	 * @var array
 	 */
-	protected $aStaticMap;
+	protected $aStaticMap = [];
 	
 	/**
 	 * @var array
@@ -67,7 +67,7 @@ class Entity
 	/**
 	 * @var array
 	 */
-	protected static $aTypes = array(
+	protected static $aTypes = [
 		'int', 
 		'string', 
 		'text', 
@@ -76,18 +76,18 @@ class Entity
 		'mediumblob',
 		'double',
 		'bigint'
-	);
+	];
 	
 	/**
 	 * @var array
 	 */
-	public static $aSystemAttributes = array(
-		'entityid' => 'int', 
-		'uuid' => 'string',
-		'modulename' => 'string',
-		'parentuuid' => 'string',
-		'entitytype' => 'string'
-	);
+	public static $aSystemAttributes = [
+		'entityid'		=> 'int', 
+		'uuid' 			=> 'string',
+		'modulename'	=> 'string',
+		'parentuuid'	=> 'string',
+		'entitytype'	=> 'string'
+	];
 	
 	/**
 	 * 
@@ -105,20 +105,27 @@ class Entity
 	 */
 	public function __construct($sModuleName = '')
 	{
-		$this->EntityId = 0;
-		$this->UUID = self::generateUUID();
 		$this->ModuleName = $sModuleName;
-		$this->aAttributes = array();
-		$this->setStaticMap();
+		$this->UUID = self::generateUUID();
+
 		$this->initDefaults();
 	}
 	
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
 	protected function initDefaults()
 	{
-		$aMap = $this->getMap();
-		foreach ($aMap as $sKey => $mValue)
+		foreach ($this->getMap() as $sKey => $aMap)
 		{
-			$this->{$sKey} = $mValue[1];
+			$oAttribute = $this->initAttribute($sKey, $aMap[1]);
+			if ($oAttribute)
+			{
+				$oAttribute->isDefault = true;
+				$this->setAttribute($oAttribute);
+			}
 		}
 	}
 	
@@ -160,7 +167,7 @@ class Entity
 	public function getDisabledModules()
 	{
 		$sDisabledModules = isset($this->{'@DisabledModules'}) ? \trim($this->{'@DisabledModules'}) : '';
-		$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
+		$aDisabledModules =  !empty($sDisabledModules) ? [$sDisabledModules] : [];
 		if (substr_count($sDisabledModules, "|") > 0)
 		{
 			$aDisabledModules = explode("|", $sDisabledModules);
@@ -311,12 +318,12 @@ class Entity
 	{
 		return in_array(
 			$this->getType($sPropertyName), 
-			array(
+			[
 				'string', 
 				'text', 
 				'datetime',
 				'mediumblob'
-			)
+			]
 		);
 	}		
 	
@@ -413,7 +420,7 @@ class Entity
 
 			if ($this->isDefaultValue($sName, $mValue) && isset($this->ParentType))
 			{
-				if (is_subclass_of($this->ParentType, 'Aurora\System\EAV\Entity'))
+				if (is_subclass_of($this->ParentType, \Aurora\System\EAV\Entity::class))
 				{
 					if (isset($this->ParentUUID))
 					{
@@ -425,14 +432,14 @@ class Entity
 						}
 					}
 				}
-				else if(is_subclass_of($this->ParentType, 'Aurora\System\AbstractSettings'))
+				else if(is_subclass_of($this->ParentType, Aurora\System\AbstractSettings::class))
 				{
-					if($this->ParentType === 'Aurora\System\Settings')
+					if($this->ParentType === Aurora\System\Settings::class)
 					{
 						$mValue = \Aurora\System\Api::GetSettings()->GetValue($sName);
 						$oAttribute->Inherited = true;
 					}
-					if($this->ParentType === 'Aurora\System\Module\Settings')
+					if($this->ParentType === Aurora\System\Module\Settings::class)
 					{
 						if ($this->isExtendedAttribute($sName))
 						{
@@ -707,7 +714,7 @@ class Entity
 	/**
 	 * @return \Aurora\System\EAV\Attribute
 	 */
-	private function getAttribute($sAttributeName)
+	public function getAttribute($sAttributeName)
 	{
 		return isset($this->aAttributes[$sAttributeName]) ? $this->aAttributes[$sAttributeName] : false;
 	}	
@@ -793,12 +800,12 @@ class Entity
 	 */	
 	public function toArray()
 	{
-		$aResult = array(
+		$aResult = [
 			'EntityId' => $this->EntityId,
 			'UUID' => $this->UUID,
 			'ParentUUID' => $this->ParentUUID,
 			'ModuleName' => $this->ModuleName
-		);
+		];
 		
 		foreach($this->aAttributes as $oAttribute)
 		{

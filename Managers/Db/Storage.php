@@ -35,6 +35,31 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 		$this->oConnection =& $oManager->GetConnection();
 		$this->oCommandCreator = new CommandCreator\MySQL();
 	}
+
+	/**
+	 * Executes queries from sql string.
+	 * 
+	 * @param string $sSql - sql string.
+	 * 
+	 * @return boolean
+	 */
+	public function executeSql($sSql)
+	{
+		$bResult = false;
+		
+		$sDbPrefix = $this->oCommandCreator->prefix();
+		if (!empty($sSql) && $this->oConnection)
+		{
+			$sPrepSql = trim(str_replace('%PREFIX%', $sDbPrefix, $sSql));
+			if (!empty($sPrepSql))
+			{
+				$bResult = $this->oConnection->Execute($sPrepSql);
+			}
+			$this->throwDbExceptionIfExist();
+		}
+
+		return $bResult;
+	}	
 	
 	/**
 	 * Executes queries from sql file.
@@ -66,5 +91,29 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 		}
 
 		return $bResult;
-	}	
+	}
+	
+	public function columnExists($sTable, $sColumn)
+	{
+		$bResult = false;
+
+		$sDbPrefix = $this->oCommandCreator->prefix();
+		if ($this->oConnection)
+		{
+			$sSql = $this->oCommandCreator->columnExists($sTable, $sColumn);
+
+			if ($this->oConnection->Execute($sSql))
+			{
+				$oRow = $this->oConnection->GetNextRecord();
+				if ($oRow !== false)
+				{
+					if ((int) $oRow->cnt > 0)
+					{
+						$bResult = true;
+					}
+				}
+			}
+		}
+		return $bResult;
+	}
 }

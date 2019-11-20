@@ -38,8 +38,19 @@ class Db extends AbstractManagerWithStorage
 		parent::__construct(\Aurora\System\Api::GetModule('Core'), new Db\Storage($this));
 	}	
 	
+	public function executeSql($sSql)
+	{
+		return $this->oStorage->executeSql($sSql);
+	}
+
 	public function executeSqlFile($sFilePath)
 	{
 		return $this->oStorage->executeSqlFile($sFilePath);
 	}
+
+	public function columnExists($sTable, $sColumn)
+	{
+		return $this->oStorage->columnExists($sTable, $sColumn);
+	}
+	
 }

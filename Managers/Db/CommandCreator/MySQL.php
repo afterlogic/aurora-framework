@@ -14,5 +14,13 @@ namespace Aurora\System\Managers\Db\CommandCreator;
  */
 class MySQL extends \Aurora\System\Db\AbstractCommandCreator
 {
+    public function columnExists($sTable, $sColumn) 
+    {
+        $sTable = $this->prefix() . $sTable;
+        return sprintf("SELECT count(*) as cnt
+        FROM information_schema.columns 
+        WHERE table_schema = database()
+            AND COLUMN_NAME = %s AND table_name = %s", $this->escapeString($sColumn), $this->escapeString($sTable));
+    }
 	
 }
