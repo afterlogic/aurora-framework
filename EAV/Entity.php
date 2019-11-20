@@ -123,7 +123,7 @@ class Entity
 			$oAttribute = $this->initAttribute($sKey, $aMap[1]);
 			if ($oAttribute)
 			{
-				$oAttribute->isDefault = true;
+				$oAttribute->IsDefault = true;
 				$this->setAttribute($oAttribute);
 			}
 		}
@@ -393,6 +393,11 @@ class Entity
 	 */
 	public function __set($sAttribute, $mValue)
 	{
+		if ($sAttribute === 'Files::UserSpaceLimitMb')
+		{
+			$mValue = $mValue;
+		}
+
 		$oAttribute = $this->initAttribute($sAttribute, $mValue);
 		$oAttribute->IsDefault = false;
 		$this->setAttribute($oAttribute);
