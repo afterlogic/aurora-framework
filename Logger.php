@@ -141,6 +141,9 @@ class Logger
 				)
 				->AddForbiddenType(\MailSo\Log\Enumerations\Type::TIME)
 			;
+
+			$oSettings =& Api::GetSettings();
+			$oLogger->bLogStackTrace = ($oSettings && $oSettings->GetValue('LogStackTrace', false));
 		}
 
 		return $oLogger;
