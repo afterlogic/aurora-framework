@@ -340,7 +340,8 @@ class Entity
 	{
 		$bResult = false;
 		$aMapItem = $this->getMapItem($sPropertyName);
-		if ($aMapItem !== null && is_array($aMapItem)) {
+		if ($aMapItem !== null && is_array($aMapItem)) 
+		{
 			$bResult = ($aMapItem[0] === 'encrypted');
 		}
 		
@@ -355,7 +356,8 @@ class Entity
 	{
 		$bResult = false;
 		$aMapItem = $this->getMapItem($sPropertyName);
-		if ($aMapItem !== null && is_array($aMapItem)) {
+		if ($aMapItem !== null && is_array($aMapItem)) 
+		{
 			$bResult = (isset($aMapItem['@Extended']) && $aMapItem['@Extended'] === true) ;
 		}
 		
@@ -370,7 +372,8 @@ class Entity
 	{
 		$bResult = false;
 		$aMapItem = $this->getMapItem($sPropertyName);
-		if ($aMapItem !== null && is_array($aMapItem)) {
+		if ($aMapItem !== null && is_array($aMapItem)) 
+		{
 			$bResult = (isset($aMapItem[3]) && $aMapItem[3] === true) ;
 		}
 		
@@ -393,11 +396,6 @@ class Entity
 	 */
 	public function __set($sAttribute, $mValue)
 	{
-		if ($sAttribute === 'Files::UserSpaceLimitMb')
-		{
-			$mValue = $mValue;
-		}
-
 		$oAttribute = $this->initAttribute($sAttribute, $mValue);
 		$oAttribute->IsDefault = false;
 		$this->setAttribute($oAttribute);
@@ -558,15 +556,6 @@ class Entity
 	 */
 	public function isDefaultValue($sAttribute, $mValue)
 	{
-		$bResult = false;
-/*		$aMap = $this->getMap();
-		if (isset($aMap[$sAttribute]))
-		{
-			$bResult = ($mValue === $aMap[$sAttribute][1]);
-		}
-		
-		return $bResult;
-*/
 		$oAttribute = $this->getAttribute($sAttribute);
 		return ($oAttribute && $oAttribute->IsDefault);
 	}

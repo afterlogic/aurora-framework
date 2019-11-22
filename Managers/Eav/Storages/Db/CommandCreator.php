@@ -588,7 +588,7 @@ SELECT * FROM
 			{
 				if ($oAttribute instanceof \Aurora\System\EAV\Attribute && !$oEntity->isSystemAttribute($oAttribute->Name))
 				{
-					if ((!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) /*|| ($oEntity->isOverridedAttribute($oAttribute->Name))*/) && (!$oAttribute->Inherited))
+					if ((!$oEntity->isDefaultValue($oAttribute->Name, $oAttribute->Value) || ($oEntity->isOverridedAttribute($oAttribute->Name))) && (!$oAttribute->Inherited))
 					{
 						if ($oAttribute->IsEncrypt && !$oAttribute->Encrypted)
 						{

@@ -63,7 +63,6 @@ class Attribute
 	 */
 	public $Override;
 	
-
 	/**
 	 *
 	 * @var bool $CanInherit
@@ -143,21 +142,13 @@ class Attribute
 				$bResult = true;
 				break;
 			case "datetime" :
-				if (!empty($this->Value))
-				{
-					$bResult = true;
-				}
-				else
-				{
-					$bResult = false;
-				}
+				$bResult = !empty($this->Value);
 				break;
 		}	
 		
 		return $bResult;
 	}
-	
-	
+		
 	/**
 	 * @param string $sType
 	 */
@@ -170,7 +161,7 @@ class Attribute
 		$this->Type = $sType;
 		
 		$sType = strtolower($sType);
-		if (in_array($sType, array('string', 'int', 'array', 'double', 'bool')))
+		if (in_array($sType, ['string', 'int', 'array', 'double', 'bool']))
 		{
 			settype($this->Value, $sType);
 		}
@@ -178,7 +169,7 @@ class Attribute
 		{
 			settype($this->Value, 'int');
 		}
-		else if (in_array($sType, array('encoded', 'datetime', 'mediumblob')) && !is_null($this->Value))
+		else if (in_array($sType, ['encoded', 'datetime', 'mediumblob']) && !is_null($this->Value))
 		{
 			settype($this->Value, 'string');
 		}
