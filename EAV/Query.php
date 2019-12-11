@@ -36,6 +36,8 @@ class Query
 
     protected $bOnlyUUIDs = false;
 
+    protected $bOne = false;
+
     public function select($aViewAttributes = [])
     {
         $this->aViewAttributes = $aViewAttributes;
@@ -120,13 +122,22 @@ class Query
         return $this;
     }
 
+    public function one()
+    {
+        $this->bOne = true;
+
+        return $this;
+    }
+
     public function exec()
     {
+        $mResult = false;
+
         if (!$this->bCount)
         {
             if ($this->bOnlyUUIDs)
             {
-                return \Aurora\System\Managers\Eav::getInstance()->getEntitiesUids(
+                $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesUids(
                     $this->sType, 
                     $this->iOffset, 
                     $this->iLimit, 
@@ -137,7 +148,7 @@ class Query
             }
             else
             {
-                return \Aurora\System\Managers\Eav::getInstance()->getEntities(
+                $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntities(
                     $this->sType, 
                     $this->aViewAttributes,
                     $this->iOffset, 
@@ -148,15 +159,22 @@ class Query
                     $this->aIdOrUuids
                 );
             }
+
+            if ($this->bOne && is_array($mResult) && count($mResult) > 0)
+            {
+                $mResult = $mResult[0];
+            }
         }
         else
         {
-            return \Aurora\System\Managers\Eav::getInstance()->getEntitiesCount(
+            $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesCount(
                 $this->sType, 
                 $this->aWhere,
                 $this->aIdOrUuids
             );
         }
+
+        return $mResult;
     }
 
 }
