@@ -111,7 +111,7 @@ class EventEmitter
         \ksort($this->aListeners[$sEvent]);
     }	
 
-    public function onArray($aListeners)
+    public function onAny($aListeners)
     {
         foreach ($aListeners as $sKey => $mListener)
         {
