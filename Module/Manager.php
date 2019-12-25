@@ -216,18 +216,18 @@ class Manager
 			}
 		}
 
-		foreach ($this->_aModules as $oModule)
+		foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath)
 		{
-			if ($oModule instanceof AbstractModule)
+			if (!empty($sModuleName))
 			{
-				$oSettings = $oModule->loadModuleSettings();
+				$oSettings = $this->GetModuleSettings($sModuleName);
 				if ($oSettings instanceof Settings)
 				{
 					$aModuleDefaultSettings = $oSettings->GetDefaultConfigValues();
 					//overriding modules default configuration with pre-configuration data
-					if (isset($aModulesPreconfig[$oModule->GetName()]))
+					if (isset($aModulesPreconfig[$sModuleName]))
 					{
-						$aModulePreconfig = $aModulesPreconfig[$oModule->GetName()];
+						$aModulePreconfig = $aModulesPreconfig[$sModuleName];
 						foreach ($aModuleDefaultSettings as $key => $oSetting)
 						{
 							if (array_key_exists($key, $aModulePreconfig))
