@@ -293,8 +293,8 @@ class Logger
     
     public static function LogSql($sDesc, $iLogLevel = Enums\LogLevel::Full )
     {
-//        if (Api::$bUseDbLog)
-//        {
+        if (Api::$bUseDbLog)
+        {
             $oSettings = &Api::GetSettings();
 
             if ($oSettings && $oSettings->EnableLogging && $iLogLevel <= $oSettings->LoggingLevel) 
@@ -307,7 +307,7 @@ class Logger
 
                 self::LogOnly('['.$sDate.']['.$sGuid.'] '.  $sDesc, $sLogFile);
             }
-//        }
+        }
     }
 
 	public static function ClearLog($sFileFullPath)
