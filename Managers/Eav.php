@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Managers;
 
+use Aurora\System\Exceptions\Exception;
+
 /**
  * Eav Manager
  *
@@ -74,6 +76,7 @@ class Eav
 	public function saveEntity(\Aurora\System\EAV\Entity &$oEntity)
 	{
 		$mResult = false;
+
 		if (isset($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId, $oEntity->getName()) ||
 			isset($oEntity->UUID) && $this->isEntityExists($oEntity->UUID, $oEntity->getName()))
 		{
