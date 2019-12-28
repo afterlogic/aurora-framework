@@ -33,6 +33,24 @@ class Application
 	{
 //		\MailSo\Config::$FixIconvByMbstring = false;
 		\MailSo\Config::$SystemLogger = Api::SystemLogger();
+		\register_shutdown_function([$this, '__ApplicationShutdown']);
+	}
+
+	public function __ApplicationShutdown()
+	{
+		$aStatistic = \MailSo\Base\Loader::Statistic();
+		if (\is_array($aStatistic))
+		{
+			if (isset($aStatistic['php']['memory_get_peak_usage']))
+			{
+				\Aurora\Api::Log('INFO[MEMORY]: Memory peak usage: '.$aStatistic['php']['memory_get_peak_usage']);
+			}
+		
+			if (isset($aStatistic['time']))
+			{
+				\Aurora\Api::Log('INFO[TIME]: Time delta: '.$aStatistic['time']);
+			}
+		}
 	}
 
 	/**

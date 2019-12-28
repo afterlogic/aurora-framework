@@ -97,7 +97,7 @@ class Storage
 	 * @param type $aIdsOrUUIDs
 	 * @return \Aurora\System\EAV\Entity
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array(), $sCustomViewSql = '')
 	{
 		return false;
 	}	

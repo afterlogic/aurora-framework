@@ -18,6 +18,8 @@ class UserSession
 {
 	const TOKEN_VERSION = '2.2';
 
+	static public $aTokensCache = [];
+
 	public static function getTokenData($oAccount, $bSignMe = true)
 	{
 		return [
@@ -132,31 +134,32 @@ class UserSession
 
 	public function GetFromDB($sAuthToken)
 	{
-		$mResult = false;
-
-		try
+		if (!isset(self::$aTokensCache[$sAuthToken]))
 		{
-			$aEntities = \Aurora\System\Managers\Eav::getInstance()->getEntities(
-				\Aurora\System\Classes\AuthToken::class, 
-				[], 
-				0, 
-				1, 
-				['Token' => $sAuthToken]
-			);
-
-			if (is_array($aEntities) && count ($aEntities) === 1)
+			try
 			{
-				$mResult = $aEntities[0];
-				$mResult->LastUsageDateTime = time();
-				\Aurora\System\Managers\Eav::getInstance()->saveEntity($mResult);
+				$aEntities = \Aurora\System\Managers\Eav::getInstance()->getEntities(
+					\Aurora\System\Classes\AuthToken::class, 
+					[], 
+					0, 
+					1, 
+					['Token' => $sAuthToken]
+				);
+
+				if (is_array($aEntities) && count($aEntities) === 1)
+				{
+					$oAuthToken = $aEntities[0];
+					$oAuthToken->LastUsageDateTime = time();
+					$oAuthToken->saveAttributes(['LastUsageDateTime']);
+					self::$aTokensCache[$sAuthToken] = $oAuthToken;
+				}
+			}
+			catch (\Aurora\System\Exceptions\DbException $oEx)
+			{
+				\Aurora\Api::LogException($oEx);
 			}
 		}
-		catch (\Aurora\System\Exceptions\DbException $oEx)
-		{
-			$mResult = true;
-		}
-
-		return $mResult;
+		return isset(self::$aTokensCache[$sAuthToken]) ? self::$aTokensCache[$sAuthToken] : false;
 	}
 
 	public function DeleteFromDB($sAuthToken)

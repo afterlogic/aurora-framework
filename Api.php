@@ -40,7 +40,6 @@ if (defined('AU_API_SERVER_TIME_ZONE') && function_exists('date_default_timezone
 
 unset($sDefaultTimeZone);
 
-
 /**
  * @package Api
  */
@@ -59,7 +58,7 @@ class Api
 	/**
 	 * @var array
 	 */
-	static $aSecretWords;
+	static $aSecretWords = [];
 	
 	/**
 	 * @var bool
@@ -74,17 +73,17 @@ class Api
 	/**
 	 * @var array
 	 */
-	static $aI18N;
+	static $aI18N = null;
 
 	/**
 	 * @var array
 	 */
-	static $aClientI18N;
+	static $aClientI18N = [];
 
 	/**
 	 * @var bool
 	 */
-	static $bUseDbLog;
+	static $bUseDbLog = false;
 	
 	/**
 	 * @var bool
@@ -95,7 +94,7 @@ class Api
 	/**
 	 * @var array
 	 */
-	protected static $aUserSession = array();
+	protected static $aUserSession = [];
 	
 	/**
 	 * @var bool
@@ -191,7 +190,7 @@ class Api
 	
 	/**
 	 * 
-	 * @param type $bGrantAdminPrivileges
+	 * @param bool $bGrantAdminPrivileges
 	 */
 	public static function Init($bGrantAdminPrivileges = false)
 	{
@@ -202,11 +201,6 @@ class Api
 		{
 			self::GrantAdminPrivileges();
 		}
-
-		self::$aI18N = null;
-		self::$aClientI18N = array();
-		self::$aSecretWords = array();
-		self::$bUseDbLog = false;
 
 		self::InitSalt();
 		self::validateApi();
@@ -220,7 +214,7 @@ class Api
 
 	/**
 	 * 
-	 * @param type $bSkip
+	 * @param bool $bSkip
 	 * @return bool Previous state
 	 */
 	public static function skipCheckUserRole($bSkip)
@@ -230,6 +224,10 @@ class Api
 		return $bResult;
 	}
 	
+	/**
+	 *
+	 * @return bool
+	 */	
 	public static function accessCheckIsSkipped()
 	{
 		return self::$__SKIP_CHECK_USER_ROLE__;
@@ -294,7 +292,7 @@ class Api
 	 * 
 	 * @param string $sModuleName
 	 * @param int $iUser
-	 * @return type
+	 * @return \Aurora\System\Module\Decorator
 	 */
 	public static function GetModuleDecorator($sModuleName, $iUser = null)
 	{
@@ -308,14 +306,18 @@ class Api
 
 	/**
 	 * 
-	 * @param type $sModuleName
-	 * @return type
+	 * @param string $sModuleName
+	 * @return \Aurora\System\Module\AbstractModule
 	 */
 	public static function GetModule($sModuleName)
 	{
 		return self::GetModuleManager()->GetModule($sModuleName);
 	}
 	
+	/**
+	 * 
+	 * @return array
+	 */
 	public static function GetModules()
 	{
 		return self::GetModuleManager()->GetModules();

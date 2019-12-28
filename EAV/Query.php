@@ -20,6 +20,8 @@ class Query
 
     protected $aViewAttributes = [];
 
+    protected $sCustomViewSql = '';
+
     protected $aWhere = [];
 
     protected $aIdOrUuids = [];
@@ -38,12 +40,25 @@ class Query
 
     protected $bOne = false;
 
+    public function __construct($sType = null)
+    {
+        $this->sType = $sType;
+    }
+
     public function select($aViewAttributes = [])
     {
         $this->aViewAttributes = $aViewAttributes;
 
         return $this;
     }
+
+    public function customSelect($sSql)
+    {
+        $this->sCustomViewSql = $sSql;
+
+        return $this;
+    }
+
 
     public function whereType($sType)
     {
@@ -143,7 +158,8 @@ class Query
                     $this->iLimit, 
                     $this->aWhere,
                     $this->mOrderAttributes, 
-                    $this->iSortOrder
+                    $this->iSortOrder,
+                    $this->sCustomViewSql
                 );
             }
             else
@@ -156,7 +172,8 @@ class Query
                     $this->aWhere,
                     $this->mOrderAttributes, 
                     $this->iSortOrder,
-                    $this->aIdOrUuids
+                    $this->aIdOrUuids,
+                    $this->sCustomViewSql
                 );
             }
 

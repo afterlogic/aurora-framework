@@ -31,6 +31,10 @@ class Decorator
 		$this->sModuleName = $sModuleName;
 	}	
 	
+	/**
+	 * 
+	 * @return Decorator
+	 */	
 	public static function __callStatic($sMethodName, $aArguments)
 	{
 		return new self($sMethodName);

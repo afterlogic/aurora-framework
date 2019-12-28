@@ -84,7 +84,7 @@ class Manager
 
 	/**
 	 * 
-	 * @return string
+	 * @return void
 	 */
 	public function loadModules()
 	{
@@ -128,12 +128,16 @@ class Manager
 		}
 	}
 	
+	/**
+	 * 
+	 * @param string $sModuleName
+	 * @return boolean
+	 */	
 	protected function isClientModule($sModuleName)
 	{
 		$sModulePath = $this->GetModulePath($sModuleName);
 		return (\file_exists($sModulePath . $sModuleName . '/js/manager.js'));
 	}
-	
 	
 	/**
 	 * 

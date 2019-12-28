@@ -75,7 +75,8 @@ class Entity
 		'datetime',
 		'mediumblob',
 		'double',
-		'bigint'
+		'bigint',
+		'nodb'
 	];
 	
 	/**
@@ -435,14 +436,14 @@ class Entity
 						}
 					}
 				}
-				else if(is_subclass_of($this->ParentType, Aurora\System\AbstractSettings::class))
+				else if(is_subclass_of($this->ParentType, \Aurora\System\AbstractSettings::class))
 				{
-					if($this->ParentType === Aurora\System\Settings::class)
+					if($this->ParentType === \Aurora\System\Settings::class)
 					{
 						$mValue = \Aurora\System\Api::GetSettings()->GetValue($sName);
 						$oAttribute->Inherited = true;
 					}
-					if($this->ParentType === Aurora\System\Module\Settings::class)
+					if($this->ParentType === \Aurora\System\Module\Settings::class)
 					{
 						if ($this->isExtendedAttribute($sName))
 						{
@@ -786,7 +787,7 @@ class Entity
 	 */
 	public function getStaticMap()
 	{
-		return is_array($this->aStaticMap) ? $this->aStaticMap : array();
+		return is_array($this->aStaticMap) ? $this->aStaticMap : [];
 	}	
 	
 	/**
@@ -863,4 +864,8 @@ class Entity
 		return $bResult;
 	}
 
+	public function isNodbAttribute($sAttributeName)
+	{
+		return $this->getType($sAttributeName) === 'nodb';
+	}
 }

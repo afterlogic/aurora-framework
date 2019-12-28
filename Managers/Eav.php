@@ -209,7 +209,8 @@ class Eav
 	 * @param array $aIdsOrUUIDs
 	 * @return array
 	 */
-	public function getEntities($sType, $aViewAttributes = array(), $iOffset = 0, $iLimit = 0, $aWhere = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttributes = [], $iOffset = 0, $iLimit = 0, $aWhere = [], $mOrderBy = [], 
+		$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
 	{
 		$aEntities = array();
 		try
@@ -217,8 +218,6 @@ class Eav
 			if (is_array($aViewAttributes) && count($aViewAttributes) === 0)
 			{
 				$aViewAttributes = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
-
-//				$aViewAttributes = $this->oStorage->getAttributesNamesByEntityType($sType);
 			}
 			
 			$aEntities = $this->oStorage->getEntities(
@@ -229,7 +228,8 @@ class Eav
 				$aWhere, 
 				$mOrderBy, 
 				$iSortOrder, 
-				$aIdsOrUUIDs
+				$aIdsOrUUIDs,
+				$sCustomViewSql
 			);
 		}
 		catch (\Aurora\System\Exceptions\DbException $oException)
@@ -239,9 +239,10 @@ class Eav
 		return $aEntities;
 	}
 
-	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mSortAttributes = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
+	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mSortAttributes = [], 
+		$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $sCustomViewSql = '')
 	{
-		return  $this->oStorage->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mSortAttributes, $iSortOrder);
+		return  $this->oStorage->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mSortAttributes, $iSortOrder, $sCustomViewSql);
 	}
 
 	/**
@@ -294,7 +295,7 @@ class Eav
 		}
 		if (!$this->oStorage->setAttributes($mEntity, $aAttributes))
 		{
-			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
+			throw new \Aurora\System\Exceptions\ManagerException(\Aurora\System\Exceptions\Errs::Main_UnknownError);
 		}
 	}
 
@@ -312,9 +313,9 @@ class Eav
 		{
 			if ($oAttribute->validate())
 			{
-				if (!$this->oStorage->setAttributes(array($mEntity), array($oAttribute)))
+				if (!$this->oStorage->setAttributes([$mEntity], [$oAttribute]))
 				{
-					throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
+					throw new \Aurora\System\Exceptions\ManagerException(\Aurora\System\Exceptions\Errs::Main_UnknownError);
 				}
 			}
 		}

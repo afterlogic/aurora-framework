@@ -219,7 +219,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		)
 		{
 			$oRow = null;
-			$mResult = array();
+			$mResult = [];
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
 				$mResult[] = $oRow->entity_type;
@@ -261,18 +261,21 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $aSearchAttrs
 	 * @return array
 	 */
-	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mSortAttributes = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
+	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mSortAttributes = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $sCustomViewSql = '')
 	{
-		$aUids = array();
+		$aUids = [];
 		if ($this->oConnection->Execute(
 				$this->oCommandCreator->getEntities(
 					$sType, 
-					array('UUID'), 
+					['UUID'], 
 					$iOffset, 
 					$iLimit, 
 					$aSearchAttrs,
 					$mSortAttributes,
-					$iSortOrder
+					$iSortOrder,
+					[], 
+					false,
+					$sCustomViewSql
 				)
 			)
 		)
@@ -300,26 +303,26 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 * @param type $aIdsOrUUIDs
 	 * @return \Aurora\System\EAV\Entity
 	 */
-	public function getEntities($sType, $aViewAttrs = array(), $iOffset = 0, $iLimit = 20, $aSearchAttrs = array(), $mOrderBy = array(), $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = array())
+	public function getEntities($sType, $aViewAttrs = [], $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mOrderBy = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
 	{
-		$mResult = array();
+		$mResult = [];
 		
 		if (count($aIdsOrUUIDs) === 0)
 		{
-			$aIdsOrUUIDs = array_merge(
-				$aIdsOrUUIDs, 
-				$this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder)
-			);
+			$aIdsOrUUIDs = $this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder, $sCustomViewSql);
 		}
 		
-		if ($aViewAttrs === null) {
-			$aViewAttrs = array();
+		if ($aViewAttrs === null) 
+		{
+			$aViewAttrs = [];
 		}
-		else if (count($aViewAttrs) === 0) {
+		else if (count($aViewAttrs) === 0) 
+		{
 			$aViewAttrs = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
 		}		
 		
-		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
+		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with 
+		// "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
 		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); 
 		
 		if (count($aIdsOrUUIDs) > 0)
@@ -331,16 +334,17 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 						$aViewAttrs, 
 						0, 
 						0, 
-						array(), 
+						[], 
 						$mOrderBy, 
 						$iSortOrder, 
-						$aIdsOrUUIDs
+						$aIdsOrUUIDs,
+						false,
+						$sCustomViewSql
 					)
 				)
 			)
 			{
 				$oRow = null;
-				$mResult = array();
 				while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 				{
 					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
@@ -383,10 +387,9 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 */
 	public function deleteEntity($mIdOrUUID, $sType = null)
 	{
-		$bResult = $this->oConnection->Execute(
+		return $this->oConnection->Execute(
 			$this->oCommandCreator->deleteEntity($mIdOrUUID)
 		);
-		return $bResult;
 	}
 
 	/**
@@ -394,17 +397,16 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 */
 	public function deleteEntities($aIdsOrUUIDs, $sType = null)
 	{
-		$bResult = $this->oConnection->Execute(
+		return $this->oConnection->Execute(
 			$this->oCommandCreator->deleteEntities($aIdsOrUUIDs)
 		);
-		return $bResult;
 	}
 
 	/**
 	 */
 	public function setAttributes($aEntities, $aAttributes)
 	{
-		$aAttributesByTypes = array();
+		$aAttributesByTypes = [];
 		foreach ($aAttributes as $oAttribute)
 		{
 			$aAttributesByTypes[$oAttribute->Type][] = $oAttribute;
@@ -433,10 +435,9 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 */
 	public function deleteAttribute($sType, $iEntityId, $sAttribute)
 	{
-		$bResult = $this->oConnection->Execute(
+		return $this->oConnection->Execute(
 			$this->oCommandCreator->deleteAttribute($sType, $iEntityId, $sAttribute)
 		);
-		return $bResult;
 	}
 	
 	
