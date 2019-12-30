@@ -11,6 +11,6 @@
 		"afterlogic/mailso": "^1.4",
 		"phpixie/cache": "^3.0",
 		"phpixie/filesystem": "^3.0",
-		"rakit/validation": "^1.2"
+		"rakit/validation": "^0.22.3"
 	}
 }
