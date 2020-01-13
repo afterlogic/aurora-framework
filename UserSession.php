@@ -119,9 +119,19 @@ class UserSession
 
 	public function SetToDB($sAuthToken)
 	{
-		$oAuthToken = new \Aurora\System\Classes\AuthToken('System');
+		$oAuthToken = (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
+			->where(
+				['Token' => $sAuthToken]
+			)
+			->one()
+			->exec();
+		if (!$oAuthToken)
+		{
+			$oAuthToken = new \Aurora\System\Classes\AuthToken('System');
+		}
 		$oAuthToken->Token = $sAuthToken;
 		$oAuthToken->LastUsageDateTime = time();
+
 		try
 		{
 			\Aurora\System\Managers\Eav::getInstance()->saveEntity($oAuthToken);
