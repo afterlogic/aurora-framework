@@ -485,7 +485,7 @@ abstract class AbstractContainer
 		{
 			if (\in_array($sDbKey, $aExclude))
 			{
-				continue;
+				continue 2;
 			}
 
 			$mValue = $oObject->{$sObjectKey};

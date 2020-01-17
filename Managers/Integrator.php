@@ -295,7 +295,7 @@ class Integrator extends AbstractManager
 				}
 				else
 				{
-					continue;
+					continue 2;
 				}
 
 				if ($aLangContent)
