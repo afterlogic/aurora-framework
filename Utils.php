@@ -332,7 +332,7 @@ class Utils
 				if ($strlen && $char == '-')
 				{
 					$result .= '&';
-					continue 2;
+					continue;
 				}
 
 				$ch = 0;
