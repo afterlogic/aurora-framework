@@ -75,7 +75,7 @@ class EventEmitter
 		$sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
 		if (isset($this->aListeners[$sEvent])) 
 		{
-			$aListeners = $aListeners + $this->aListeners[$sEvent];
+			$aListeners = array_merge($aListeners, $this->aListeners[$sEvent]);
         }
         
         return $aListeners;
