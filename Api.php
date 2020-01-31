@@ -1135,12 +1135,13 @@ class Api
 		$sAuthHeader =  \MailSo\Base\Http::SingletonInstance()->GetHeader('Authorization');
 		if (!empty($sAuthHeader))
 		{
-			list($sAuthTypeFromHeader, $sAuthTokenFromHeader) = explode(' ', $sAuthHeader);
-			if (strtolower($sAuthTypeFromHeader) === 'bearer' && !empty($sAuthTokenFromHeader))
+			$authHeaderData = explode(' ', $sAuthHeader);
+			
+			if (isset($authHeaderData[0]) && strtolower($authHeaderData[0]) === 'bearer' && isset($authHeaderData[1]) && !empty($authHeaderData[1]))
 			{
-				$sResult = $sAuthTokenFromHeader;
+				$sResult = $authHeaderData[1];
 			}
-		}	
+		}
 		
 		return $sResult;
 	}
