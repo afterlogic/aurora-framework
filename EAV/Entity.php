@@ -56,6 +56,17 @@ class Entity
 	
 	/**
 	 * @var array
+	 * 
+	 * [
+	 * 	'AttributeName'	=> 	// name of attribute
+	 * 	[
+	 * 		'string', 		// type of attribute
+	 * 		'', 			// default value for attribute 
+	 * 		false,			// is overrided attribute
+	 * 		false			// is restricted attribute
+	 * 	],
+	 * ]
+	 * 
 	 */
 	protected $aStaticMap = [];
 	
@@ -65,7 +76,7 @@ class Entity
 	protected $aMap = null;
 	
 	/**
-	 * @var array
+	 * @var string[]
 	 */
 	protected static $aTypes = [
 		'int', 
@@ -804,14 +815,17 @@ class Entity
 		
 		foreach($this->aAttributes as $oAttribute)
 		{
-			if ($oAttribute->Encrypted && !empty($this->{$oAttribute->Name}))
+			if (!$this->isRestrictedAttribute($oAttribute->Name))
 			{
-				// Dummy encrypted attribute could be passed to client side by toResponseArray method. 				
-				$aResult[$oAttribute->Name] = '*****';
-			}
-			else
-			{
-				$aResult[$oAttribute->Name] = $this->{$oAttribute->Name};
+				if ($oAttribute->Encrypted && !empty($this->{$oAttribute->Name}))
+				{
+					// Dummy encrypted attribute could be passed to client side by toResponseArray method. 				
+					$aResult[$oAttribute->Name] = '*****';
+				}
+				else
+				{
+					$aResult[$oAttribute->Name] = $this->{$oAttribute->Name};
+				}
 			}
 		}
 		return $aResult;
@@ -868,4 +882,10 @@ class Entity
 	{
 		return $this->getType($sAttributeName) === 'nodb';
 	}
+
+	public function isRestrictedAttribute($sAttributeName)
+	{
+		$aMap = $this->getMap();
+		return ((isset($aMap[$sAttributeName]) && isset($aMap[$sAttributeName][3]) && $aMap[$sAttributeName][3] === true));
+	}	
 }
