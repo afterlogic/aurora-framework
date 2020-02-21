@@ -611,6 +611,11 @@ class Manager
 
 		if ($bEventResult !== true)
 		{
+			if (!\Aurora\System\Router::getInstance()->hasRoute($sEntryName))
+			{
+				$sEntryName = 'default';
+			}
+
 			$mResult = \Aurora\System\Router::getInstance()->route(
 				$sEntryName
 			);
