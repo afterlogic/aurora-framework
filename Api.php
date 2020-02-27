@@ -1246,7 +1246,7 @@ class Api
 			$sScriptName = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
 			$aPath = explode('/', $sScriptName);
 			$sLastPathItem = count($aPath) > 0 ? $aPath[count($aPath) - 1] : '';
-			if (count($aPath) > 0 && ($sLastPathItem !== '' || tolowercase(substr($sLastPathItem, -1)) === '.php'))
+			if (count($aPath) > 0 && ($sLastPathItem !== '' || strtolower(substr($sLastPathItem, -1)) === '.php'))
 			{
 				array_pop($aPath);
 			}
