@@ -173,7 +173,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	 */
 	public function fileSize($iUserId, $sKey, $sFileSuffix = '', $sFolder = '')
 	{
-		return @filesize($this->generateFileName($iUserId, $sKey, false, $sFileSuffix));
+		return @filesize($this->generateFileName($iUserId, $sKey, false, $sFileSuffix, $sFolder));
 	}
 
 	/**
