@@ -94,6 +94,11 @@ class Storage
 	 */
 	public function Connect()
 	{
+		if (!isset($this->oConnector))
+		{
+			return false;
+		}
+
 		if ($this->oConnector->IsConnected())
 		{
 			return true;
@@ -226,7 +231,10 @@ class Storage
 			return $this->oSlaveConnector->FreeResult();
 		}
 
-		return $this->oConnector->FreeResult();
+		if ($this->oConnector)
+		{
+			return $this->oConnector->FreeResult();
+		}
 	}
 
 	/**
