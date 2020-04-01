@@ -51,11 +51,11 @@ class GeneralSql
 		{
 			if ($bIsSlaveExecute)
 			{
-				\Aurora\System\Api::Log('DB-Slave['.$this->iExecuteCount.'] > '.trim($sLogDesc));
+				\Aurora\System\Logger::LogSql('DB-Slave['.$this->iExecuteCount.'] > '.trim($sLogDesc));
 			}
 			else
 			{
-				\Aurora\System\Api::Log('DB['.$this->iExecuteCount.'] > '.trim($sLogDesc));
+				\Aurora\System\Logger::LogSql('DB['.$this->iExecuteCount.'] > '.trim($sLogDesc));
 			}
 		}
 	}
@@ -66,6 +66,6 @@ class GeneralSql
 	 */
 	protected function errorLog($sErrorDesc)
 	{
-		\Aurora\System\Api::Log('DB ERROR < '.trim($sErrorDesc), \Aurora\System\Enums\LogLevel::Error);
+		\Aurora\System\Logger::LogSql('DB ERROR < '.trim($sErrorDesc), \Aurora\System\Enums\LogLevel::Error);
 	}
 }

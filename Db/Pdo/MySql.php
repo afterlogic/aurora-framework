@@ -109,7 +109,7 @@ class MySql extends \Aurora\System\Db\Sql
 
 		if (\Aurora\System\Api::$bUseDbLog)
 		{
-			\Aurora\System\Api::Log('DB(PDO/mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
+			\Aurora\System\Logger::LogSql('DB(PDO/mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 
 		$aPDOAttr = array(\PDO::ATTR_TIMEOUT => 5, \PDO::ATTR_EMULATE_PREPARES => false, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);
@@ -174,13 +174,13 @@ class MySql extends \Aurora\System\Db\Sql
 				$sPdoString = 'mysql:'.implode(';', $aParts);
 				if (\Aurora\System\Api::$bUseDbLog)
 				{
-					\Aurora\System\Api::Log('DB : PDO('.$sPdoString.')');
+					\Aurora\System\Logger::LogSql('DB : PDO('.$sPdoString.')');
 				}
 
 				$this->oPDO = @new \PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
 				if (\Aurora\System\Api::$bUseDbLog)
 				{
-					\Aurora\System\Api::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
+					\Aurora\System\Logger::LogSql('DB : connected to '.$this->sUser.'@'.$this->sHost);
 				}
 
 				if ($this->oPDO)
@@ -190,8 +190,8 @@ class MySql extends \Aurora\System\Db\Sql
 			}
 			catch (\Exception $oException)
 			{
-				\Aurora\System\Api::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
-				\Aurora\System\Api::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
+				\Aurora\System\Logger::LogSql($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
+				\Aurora\System\Logger::LogSql($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
 				$this->oPDO = false;
 
 				throw new DbException($oException->getMessage(), $oException->getCode(), $oException);
@@ -199,7 +199,7 @@ class MySql extends \Aurora\System\Db\Sql
 		}
 		else
 		{
-			\Aurora\System\Api::Log('Class PDO dosn\'t exist', \Aurora\System\Enums\LogLevel::Error);
+			\Aurora\System\Logger::LogSql('Class PDO dosn\'t exist', \Aurora\System\Enums\LogLevel::Error);
 		}
 
 		return !!$this->oPDO;
@@ -238,7 +238,7 @@ class MySql extends \Aurora\System\Db\Sql
 
 			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				\Aurora\System\Api::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Logger::LogSql('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
 			}
 
 			unset($this->oPDO);
@@ -274,7 +274,7 @@ class MySql extends \Aurora\System\Db\Sql
 		}
 		catch (\Exception $e)
 		{
-			\Aurora\System\Api::Log($sQuery);
+			\Aurora\System\Logger::LogSql($sQuery);
 		}
 
 		return false;

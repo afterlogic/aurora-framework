@@ -106,7 +106,7 @@ class MySql extends Sql
 
 		if (\Aurora\System\Api::$bUseDbLog)
 		{
-			\Aurora\System\Api::Log('DB(mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
+			\Aurora\System\Logger::LogSql('DB(mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 		
 		$this->_rConectionHandle = @mysqli_connect($this->sHost, $this->sUser, $this->sPassword, (bool) $bNewLink);
@@ -114,7 +114,7 @@ class MySql extends Sql
 		{
 			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				\Aurora\System\Api::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Logger::LogSql('DB : connected to '.$this->sUser.'@'.$this->sHost);
 			}
 			
 			@register_shutdown_function(array(&$this, 'Disconnect'));
@@ -122,7 +122,7 @@ class MySql extends Sql
 		}
 		else
 		{
-			\Aurora\System\Api::Log('DB : connect to '.$this->sUser.'@'.$this->sHost.' failed', \Aurora\System\Enums\LogLevel::Error);
+			\Aurora\System\Logger::LogSql('DB : connect to '.$this->sUser.'@'.$this->sHost.' failed', \Aurora\System\Enums\LogLevel::Error);
 			$this->_setSqlError();
 			return false;
 		}
@@ -192,7 +192,7 @@ class MySql extends Sql
 
 			if (\Aurora\System\Api::$bUseDbLog)
 			{
-				\Aurora\System\Api::Log('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
+				\Aurora\System\Logger::LogSql('DB : disconnect from '.$this->sUser.'@'.$this->sHost);
 			}
 
 			$result = @mysqli_close($this->_rConectionHandle);
