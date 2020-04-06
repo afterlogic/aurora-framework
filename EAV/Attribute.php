@@ -132,20 +132,23 @@ class Attribute
 	public function needToEscape()
 	{
 		$bResult = false;
-		switch ($this->Type)
+		if (!is_null($this->Value))
 		{
-			case "mediumblob":
-			case "string" :
-				$bResult = true;
-				break;
-			case "text" :
-				$bResult = true;
-				break;
-			case "datetime" :
-				$bResult = !empty($this->Value);
-				break;
-		}	
-		
+			switch ($this->Type)
+			{
+				case "mediumblob":
+				case "string" :
+					$bResult = true;
+					break;
+				case "text" :
+					$bResult = true;
+					break;
+				case "datetime" :
+					$bResult = !empty($this->Value);
+					break;
+			}	
+		}
+				
 		return $bResult;
 	}
 		
