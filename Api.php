@@ -59,7 +59,7 @@ class Api
 	 * @var array
 	 */
 	static $aSecretWords = [];
-	
+
 	/**
 	 * @var bool
 	 */
@@ -84,54 +84,54 @@ class Api
 	 * @var bool
 	 */
 	static $bUseDbLog = false;
-	
+
 	/**
 	 * @var bool
 	 */
 	static $bDebug = false;
-		
-	
+
+
 	/**
 	 * @var array
 	 */
 	protected static $aUserSession = [];
-	
+
 	/**
 	 * @var bool
 	 */
 	protected static $__SKIP_CHECK_USER_ROLE__ = false;
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected static $sLanguage = null;
-	
+
 	/**
 	 * @var \Aurora\System\Settings
 	 */
-	protected static $oSettings;	
+	protected static $oSettings;
 
 	/**
 	 * @var \Aurora\System\Db\Storage
 	 */
-	protected static $oConnection;	
+	protected static $oConnection;
 
 	/**
 	 * @var boolean
 	 */
 	protected static $bInitialized = false;
-	
+
 	/**
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function GetSaltPath()
 	{
 		return self::DataPath().'/salt8.php';
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static function InitSalt()
 	{
@@ -139,7 +139,7 @@ class Api
 		$sSalt8File = self::GetSaltPath();
 		$sSaltFile = self::DataPath().'/salt.php';
 
-		if (!@file_exists($sSalt8File)) 
+		if (!@file_exists($sSalt8File))
 		{
 			if (@file_exists($sSaltFile))
 			{
@@ -153,13 +153,13 @@ class Api
 			$sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "'. $sSalt . '";';
 			@file_put_contents($sSalt8File, $sSalt);
 		}
-		
+
 		include_once $sSalt8File;
 		self::$sSalt = '$2y$07$' . self::$sSalt . '$';
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public static function GetUserSession()
 	{
@@ -167,7 +167,7 @@ class Api
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function SetUserSession($aUserSession)
 	{
@@ -175,21 +175,21 @@ class Api
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function GrantAdminPrivileges()
 	{
 		self::$aUserSession['UserId'] = -1;
 		self::$aUserSession['AuthToken'] = '';
 	}
-	
+
 	public static function UseDbLogs($bUseDbLogs = false)
 	{
 		self::$bUseDbLog = $bUseDbLogs;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param bool $bGrantAdminPrivileges
 	 */
 	public static function Init($bGrantAdminPrivileges = false)
@@ -205,15 +205,15 @@ class Api
 		self::InitSalt();
 		self::validateApi();
 		self::GetModuleManager()->loadModules();
-		
+
 		if (!defined('AU_API_INIT'))
 		{
 			define('AU_API_INIT', microtime(true) - $apiInitTimeStart);
-		}		
+		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @param bool $bSkip
 	 * @return bool Previous state
 	 */
@@ -223,16 +223,16 @@ class Api
 		self::$__SKIP_CHECK_USER_ROLE__ = $bSkip;
 		return $bResult;
 	}
-	
+
 	/**
 	 *
 	 * @return bool
-	 */	
+	 */
 	public static function accessCheckIsSkipped()
 	{
 		return self::$__SKIP_CHECK_USER_ROLE__;
 	}
-	
+
 	/**
 	 * @param string $sWord
 	 *
@@ -240,13 +240,13 @@ class Api
 	 */
 	public static function AddSecret($sWord)
 	{
-		if (0 < \strlen(\trim($sWord))) 
+		if (0 < \strlen(\trim($sWord)))
 		{
 			self::$aSecretWords[] = $sWord;
 			self::$aSecretWords = \array_unique(self::$aSecretWords);
 		}
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -254,7 +254,7 @@ class Api
 	{
 		return Utils::UrlSafeBase64Encode(
 			Utils\Crypt::XxteaEncrypt(
-				@\serialize($aValues), 
+				@\serialize($aValues),
 				\md5(self::$sSalt)
 			)
 		);
@@ -274,7 +274,7 @@ class Api
 	}
 
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\Manager
 	 */
 	public static function GetModuleManager()
@@ -284,12 +284,12 @@ class Api
 			self::$oModuleManager = Module\Manager::createInstance();
 			self::$aModuleDecorators = [];
 		}
-		
+
 		return self::$oModuleManager;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @param int $iUser
 	 * @return \Aurora\System\Module\Decorator
@@ -300,12 +300,12 @@ class Api
 		{
 			self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName, $iUser);
 		}
-		
+
 		return isset(self::$aModuleDecorators[$sModuleName]) ? self::$aModuleDecorators[$sModuleName] : false;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
@@ -313,18 +313,18 @@ class Api
 	{
 		return self::GetModuleManager()->GetModule($sModuleName);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function GetModules()
 	{
 		return self::GetModuleManager()->GetModules();
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @param type $sMethodName
 	 * @param type $aParameters
 	 * @return type
@@ -354,7 +354,7 @@ class Api
 
 		return $oCacher;
 	}
-	
+
 	/**
 	 * @return \MailSo\Cache\CacheClient
 	 */
@@ -367,7 +367,7 @@ class Api
 		}
 
 		return $oSession;
-	}	
+	}
 
 	/**
 	 * @return \Aurora\System\Settings
@@ -381,7 +381,7 @@ class Api
 				$sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
 				if (!\file_exists($sSettingsPath))
 				{
-					set_error_handler(function() {});					
+					set_error_handler(function() {});
 					mkdir($sSettingsPath, 0777);
 					restore_error_handler();
 					if (!file_exists($sSettingsPath))
@@ -390,7 +390,7 @@ class Api
 						return self::$oSettings;
 					}
 				}
-				
+
 				self::$oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
 			}
 			catch (\Aurora\System\Exceptions\BaseException $oException)
@@ -398,9 +398,9 @@ class Api
 				self::$oSettings = false;
 			}
 		}
-		return self::$oSettings;		
+		return self::$oSettings;
 	}
-	
+
 	public static function &GetConnection()
 	{
 		if (null === self::$oConnection)
@@ -417,7 +417,7 @@ class Api
 			}
 		}
 		return self::$oConnection;
-	}	
+	}
 
 	/**
 	 * @return PDO|false
@@ -444,22 +444,22 @@ class Api
 			$sDbPassword = $oSettings->DBPassword;
 
 			$iPos = strpos($sDbHost, ':');
-			if (false !== $iPos && 0 < $iPos) 
+			if (false !== $iPos && 0 < $iPos)
 			{
 				$sAfter = substr($sDbHost, $iPos + 1);
 				$sDbHost = substr($sDbHost, 0, $iPos);
 
-				if (is_numeric($sAfter)) 
+				if (is_numeric($sAfter))
 				{
 					$sDbPort = $sAfter;
-				} 
-				else 
+				}
+				else
 				{
 					$sUnixSocket = $sAfter;
 				}
 			}
 
-			if (class_exists('PDO')) 
+			if (class_exists('PDO'))
 			{
 				try
 				{
@@ -468,7 +468,7 @@ class Api
 						(empty($sDbPort) ? '' : ';port='.$sDbPort).
 						(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
 
-					if ($oPdo) 
+					if ($oPdo)
 					{
 						$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 					}
@@ -479,14 +479,14 @@ class Api
 					self::Log($oException->getTraceAsString(), Enums\LogLevel::Error);
 					$oPdo = false;
 				}
-			} 
-			else 
+			}
+			else
 			{
 				self::Log('Class PDO dosn\'t exist', Enums\LogLevel::Error);
 			}
 		}
 
-		if (false !== $oPdo) 
+		if (false !== $oPdo)
 		{
 			$oPdoCache = $oPdo;
 		}
@@ -504,7 +504,7 @@ class Api
 
 		return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
 	}
-	
+
 	/**
 	 * @param string $sNewLocation
 	 */
@@ -513,13 +513,13 @@ class Api
 		self::Log('Location: '.$sNewLocation);
 		@header('Location: '.$sNewLocation);
 	}
-	
+
 	/**
 	 * @param string $sNewLocation
 	 */
 	public static function Location2($sNewLocation)
 	{
-		exit('<META HTTP-EQUIV="refresh" CONTENT="0; url='.$sNewLocation.'">');		
+		exit('<META HTTP-EQUIV="refresh" CONTENT="0; url='.$sNewLocation.'">');
 	}
 
 	/**
@@ -560,7 +560,7 @@ class Api
 	{
 		return Logger::GetLogFileName($sFilePrefix, $iTimestamp);
 	}
-	
+
 	public static function GetLogFileDir()
 	{
 		return Logger::GetLogFileDir();
@@ -598,7 +598,7 @@ class Api
 	{
 		return Logger::ClearLog($sFileFullPath);
 	}
-	
+
 	public static function RemoveSeparateLogs()
 	{
 		Logger::RemoveSeparateLogs();
@@ -613,7 +613,7 @@ class Api
 	{
 		return Logger::GetLoggerGuid();
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -658,7 +658,7 @@ class Api
 	public static function Version()
 	{
 		static $sVersion = null;
-		if (null === $sVersion) 
+		if (null === $sVersion)
 		{
 			preg_match('/[\d\.]+/', @file_get_contents(self::WebMailPath().'VERSION'), $matches);
 
@@ -680,7 +680,7 @@ class Api
 		$oSettings = &self::GetSettings();
 		$sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
 		$sAppVersion = empty($sAppVersion) ? '0.0.0' : $sAppVersion;
-		
+
 		return preg_replace('/[^0-9]/', '',$sAppVersion);
 	}
 
@@ -690,11 +690,11 @@ class Api
 	public static function DataPath()
 	{
 		$dataPath = 'data';
-		if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) 
+		if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php'))
 		{
 			include self::WebMailPath().'inc_settings_path.php';
 		}
-		if (!defined('AU_API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) 
+		if (!defined('AU_API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath)
 		{
 			define('AU_API_DATA_FOLDER', Utils::GetFullPath($dataPath,self::WebMailPath()));
 		}
@@ -755,19 +755,19 @@ class Api
 		$aResultLang = false;
 
 		$aLang = @\parse_ini_string(file_get_contents($sLangFile), true);
-		if (is_array($aLang)) 
+		if (is_array($aLang))
 		{
 			$aResultLang = array();
-			foreach ($aLang as $sKey => $mValue) 
+			foreach ($aLang as $sKey => $mValue)
 			{
-				if (\is_array($mValue)) 
+				if (\is_array($mValue))
 				{
-					foreach ($mValue as $sSecKey => $mSecValue) 
+					foreach ($mValue as $sSecKey => $mSecValue)
 					{
 						$aResultLang[$sKey.'/'.$sSecKey] = $mSecValue;
 					}
-				} 
-				else 
+				}
+				else
 				{
 					$aResultLang[$sKey] = $mValue;
 				}
@@ -786,12 +786,12 @@ class Api
 	public static function processTranslateParams($mLang, $sData, $aParams = null, $iPlural = null)
 	{
 		$sResult = $sData;
-		if ($mLang && isset($mLang[$sData])) 
+		if ($mLang && isset($mLang[$sData]))
 		{
 			$sResult = $mLang[$sData];
 		}
 
-		if (isset($iPlural)) 
+		if (isset($iPlural))
 		{
 			$aPluralParts = explode('|', $sResult);
 
@@ -799,9 +799,9 @@ class Api
 			$aPluralParts && $aPluralParts[0] ? $aPluralParts[0] : $sResult);
 		}
 
-		if (null !== $aParams && is_array($aParams)) 
+		if (null !== $aParams && is_array($aParams))
 		{
-			foreach ($aParams as $sKey => $sValue) 
+			foreach ($aParams as $sKey => $sValue)
 			{
 				$sResult = str_replace('%'.$sKey.'%', $sValue, $sResult);
 			}
@@ -809,18 +809,18 @@ class Api
 
 		return $sResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sLanguage
 	 */
 	public static function SetLanguage($sLanguage)
 	{
 		self::$sLanguage = $sLanguage;
-	}		
+	}
 
 	/**
-	 * 
+	 *
 	 * @param bool $bForNewUser
 	 * @return string
 	 */
@@ -861,10 +861,10 @@ class Api
 				}
 			}
 		}
-		
+
 		return $sResult;
 	}
-	
+
 	protected static function getBrowserLanguage()
 	{
 		$aLanguages = array(
@@ -895,17 +895,17 @@ class Api
 			'es-pr' => 'Spanish', 'es-us' => 'Spanish ', 'es-uy' => 'Spanish', 'es-ve' => 'Spanish', 'es' => 'Spanish',
 			'sv-fi' => 'Swedish', 'sv' => 'Swedish', 'th' => 'Thai', 'tr' => 'Turkish', 'uk' => 'Ukrainian', 'vi' => 'Vietnamese', 'sl' => 'Slovenian'
 		);
-		
+
 		$sLanguage = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']) : 'en';
 		$aTempLanguages = preg_split('/[,;]+/', $sLanguage);
 		$sLanguage = !empty($aTempLanguages[0]) ? $aTempLanguages[0] : 'en';
 
 		$sLanguageShort = substr($sLanguage, 0, 2);
-		
+
 		return \array_key_exists($sLanguage, $aLanguages) ? $aLanguages[$sLanguage] :
 			(\array_key_exists($sLanguageShort, $aLanguages) ? $aLanguages[$sLanguageShort] : '');
 	}
-	
+
 	/**
 	 * @param string $sData
 	 * @param \Aurora\Modules\StandardAuth\Classes\Account $oAccount
@@ -916,27 +916,27 @@ class Api
 	public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
 	{
 		$sLanguage = self::GetLanguage();
-		
+
 		$aLang = null;
-		if (isset(self::$aClientI18N[$sLanguage])) 
+		if (isset(self::$aClientI18N[$sLanguage]))
 		{
 			$aLang = self::$aClientI18N[$sLanguage];
-		} 
-		else 
+		}
+		else
 		{
 			self::$aClientI18N[$sLanguage] = false;
-				
+
 			$sLangFile = self::WebMailPath().'i18n/'.$sLanguage.'.ini';
-			if (!@file_exists($sLangFile)) 
+			if (!@file_exists($sLangFile))
 			{
 				$sLangFile = self::WebMailPath().'i18n/English.ini';
 				$sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
 			}
 
-			if (0 < strlen($sLangFile)) 
+			if (0 < strlen($sLangFile))
 			{
 				$aLang = self::convertIniToLang($sLangFile);
-				if (is_array($aLang)) 
+				if (is_array($aLang))
 				{
 					self::$aClientI18N[$sLanguage] = $aLang;
 				}
@@ -1075,7 +1075,7 @@ class Api
 	 */
 	public static function I18N($sData, $aParams = null, $sForceCustomInitialisationLang = '')
 	{
-		if (null === self::$aI18N) 
+		if (null === self::$aI18N)
 		{
 			self::$aI18N = false;
 
@@ -1102,7 +1102,7 @@ class Api
 
 		return self::processTranslateParams(self::$aI18N, $sData, $aParams);
 	}
-	
+
 	/**
 	 * Checks if authenticated user has at least specified role.
 	 * @param int $iRole
@@ -1114,13 +1114,13 @@ class Api
 		{
 			$oUser = self::getAuthenticatedUser();
 			$bUserRoleIsAtLeast = empty($oUser) && $iRole === Enums\UserRole::Anonymous ||
-				!empty($oUser) && $oUser->Role === Enums\UserRole::Customer && 
+				!empty($oUser) && $oUser->Role === Enums\UserRole::Customer &&
 					($iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === Enums\UserRole::NormalUser && 
+				!empty($oUser) && $oUser->Role === Enums\UserRole::NormalUser &&
 					($iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === Enums\UserRole::TenantAdmin && 
+				!empty($oUser) && $oUser->Role === Enums\UserRole::TenantAdmin &&
 					($iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-				!empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin && 
+				!empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin &&
 					($iRole === Enums\UserRole::SuperAdmin || $iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous);
 			if (!$bUserRoleIsAtLeast)
 			{
@@ -1128,7 +1128,7 @@ class Api
 			}
 		}
 	}
-	
+
 	public static function getAuthTokenFromHeaders()
 	{
 		$sResult = false;
@@ -1136,18 +1136,18 @@ class Api
 		if (!empty($sAuthHeader))
 		{
 			$authHeaderData = explode(' ', $sAuthHeader);
-			
+
 			if (isset($authHeaderData[0]) && strtolower($authHeaderData[0]) === 'bearer' && isset($authHeaderData[1]) && !empty($authHeaderData[1]))
 			{
 				$sResult = $authHeaderData[1];
 			}
 		}
-		
+
 		return $sResult;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function getAuthToken()
@@ -1155,15 +1155,15 @@ class Api
 		$sAuthToken = self::getAuthTokenFromHeaders();
 		if (!$sAuthToken)
 		{
-			$sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ? 
+			$sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ?
 					$_COOKIE[Application::AUTH_TOKEN_KEY] : '';
 		}
-		
+
 		return $sAuthToken;
-	}		
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @return bool
 	 */
 	public static function validateCsrfToken()
@@ -1175,12 +1175,12 @@ class Api
 
 			$bResult = ($sAuthToken === $_COOKIE[Application::AUTH_TOKEN_KEY]);
 		}
-		
+
 		return $bResult;
-	}		
+	}
 
 	/**
-	 * 
+	 *
 	 * @return \Aurora\Modules\Core\Classes\User
 	 */
 	public static function authorise($sAuthToken = '')
@@ -1202,8 +1202,8 @@ class Api
 		}
 		catch (\Exception $oException) {}
 		return $oUser;
-	}	
-	
+	}
+
 	public static function getAuthenticatedUserInfo($sAuthToken = '')
 	{
 		$mResult = false;
@@ -1220,7 +1220,7 @@ class Api
 		{
 			$mResult = $oIntegrator->getAuthenticatedUserInfo($sAuthToken);
 		}
-		
+
 		return $mResult;
 	}
 
@@ -1233,14 +1233,14 @@ class Api
 		{
 			$bResult = $oIntegrator->validateAuthToken(self::getAuthToken());
 		}
-		
+
 		return $bResult;
 	}
-	
+
 	public static function getCookiePath()
 	{
 		static $sPath = false;
-		
+
 		if (false === $sPath)
 		{
 			$sScriptName = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
@@ -1255,12 +1255,12 @@ class Api
 
 		return $sPath;
 	}
-	
+
 	public static function getCookieSecure()
 	{
 		return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 	}
-	
+
 	public static function getAuthenticatedUserId($sAuthToken = '')
 	{
 		$mResult = false;
@@ -1278,7 +1278,7 @@ class Api
 				self::$aUserSession['AuthToken'] = $sAuthToken;
 			}
 		}
-		else 
+		else
 		{
 			if (is_array(self::$aUserSession) && isset(self::$aUserSession['UserId']))
 			{
@@ -1289,10 +1289,10 @@ class Api
 				$mResult = 0;
 			}
 		}
-		
+
 		return $mResult;
 	}
-	
+
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
 		static $oUser = null;
@@ -1317,19 +1317,19 @@ class Api
 		}
 		return $oUser;
 	}
-	
+
 	public static function getAuthenticatedUserAuthToken()
 	{
 		$mResult = false;
-		
+
 		if (is_array(self::$aUserSession) && isset(self::$aUserSession['AuthToken']))
 		{
 			$mResult = self::$aUserSession['AuthToken'];
 		}
-		
+
 		return $mResult;
 	}
-	
+
 	/**
 	 * @param int $iUserId
 	 * @return string
@@ -1338,7 +1338,7 @@ class Api
 	{
 		$sUUID = '';
 		static $aUUIDs = []; // cache
-		
+
 		if (\is_numeric($iUserId))
 		{
 			if (isset($aUUIDs[$iUserId]))
@@ -1355,14 +1355,14 @@ class Api
 				}
 			}
 		}
-		else 
+		else
 		{
 			$sUUID = $iUserId;
 		}
-		
+
 		return $sUUID;
 	}
-	
+
 	/**
 	 * @param int $iUserId
 	 * @return string
@@ -1370,7 +1370,7 @@ class Api
 	public static function getUserPublicIdById($iUserId)
 	{
 		$sPublicId = '';
-		
+
 		if (\is_numeric($iUserId))
 		{
 			$mUser = self::getUserById($iUserId);
@@ -1379,14 +1379,14 @@ class Api
 				$sPublicId = $mUser->PublicId;
 			}
 		}
-		else 
+		else
 		{
 			$sPublicId = $iUserId;
 		}
-		
+
 		return $sPublicId;
-	}	
-	
+	}
+
 	public static function getUserById($iUserId)
 	{
 		$mUser = false;
@@ -1403,10 +1403,10 @@ class Api
 		{
 			$mUser = false;
 		}
-		
+
 		return $mUser;
 	}
-	
+
 	public static function getTenantById($iUserId)
 	{
 		$mUser = Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\Tenant::class);
@@ -1414,9 +1414,9 @@ class Api
 		{
 			$mUser = false;
 		}
-		
+
 		return $mUser;
-	}	
+	}
 
 	public static function setTenantName($sTenantName)
 	{
@@ -1427,7 +1427,7 @@ class Api
 	{
 		self::$aUserSession['UserId'] = (int) $iUserId;
 	}
-	
+
 	public static function setAuthToken($sAuthToken)
 	{
 		self::$aUserSession['AuthToken'] = $sAuthToken;
@@ -1437,11 +1437,11 @@ class Api
 	{
 		static $bTenantInitialized = false;
 		static $oTenant = null;
-		
+
 		if (!$bTenantInitialized)
 		{
 			$oUser = self::getAuthenticatedUser();
-			
+
 			if ($oUser && !$oUser->isAdmin())
 			{
 				$oTenant = self::getTenantById($oUser->IdTenant);
@@ -1454,7 +1454,7 @@ class Api
 
 //			$bTenantInitialized = true;
 		}
-		
+
 		return $oTenant;
 	}
 
@@ -1462,7 +1462,7 @@ class Api
 	{
 		static $bTenantInitialized = false;
 		static $oTenant = null;
-		
+
 		if (!$bTenantInitialized)
 		{
 			if (!empty($_SERVER['SERVER_NAME']))
@@ -1475,12 +1475,12 @@ class Api
 			}
 			$bTenantInitialized = true;
 		}
-		
+
 		return $oTenant;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function getTenantName()
@@ -1510,7 +1510,7 @@ class Api
 			}
 //			$bTenantInitialized = true;
 		}
-		
+
 		return $mResult;
 	}
 }
