@@ -15,7 +15,7 @@ namespace Aurora\System;
 class EventEmitter
 {
     /**
-     * 
+     *
      */
     protected static $self = null;
 
@@ -33,51 +33,51 @@ class EventEmitter
 
         return self::$self;
     }
-    
+
     /**
-	 * 
+	 *
 	 * @return \self
 	 */
 	public static function createInstance()
 	{
 		return new self();
-    }    
-    
+    }
+
     /**
-	 * 
+	 *
 	 * @return array
 	 */
-	public function getListeners() 
+	public function getListeners()
 	{
 		return $this->aListeners;
     }
-    	
+
 	/**
 	 * @return array
 	 */
 	public function getListenersResult()
 	{
 		return $this->aListenersResult;
-    }	
+    }
 
     /**
-	 * 
+	 *
 	 * @return array
 	 */
-	public function getListenersByEvent($sModule, $sEvent) 
+	public function getListenersByEvent($sModule, $sEvent)
 	{
 		$aListeners = [];
 
-        if (isset($this->aListeners[$sEvent])) 
+        if (isset($this->aListeners[$sEvent]))
 		{
 			$aListeners = $this->aListeners[$sEvent];
         }
 		$sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
-		if (isset($this->aListeners[$sEvent])) 
+		if (isset($this->aListeners[$sEvent]))
 		{
 			$aListeners = array_merge($aListeners, $this->aListeners[$sEvent]);
         }
-        
+
         return $aListeners;
     }
 
@@ -97,19 +97,19 @@ class EventEmitter
      * @param int $iPriority
      * @return void
      */
-    public function on($sEvent, $fCallback, $iPriority = 100) 
+    public function on($sEvent, $fCallback, $iPriority = 100)
 	{
-        if (!isset($this->aListeners[$sEvent])) 
+        if (!isset($this->aListeners[$sEvent]))
 		{
             $this->aListeners[$sEvent] = [];
         }
-        while(isset($this->aListeners[$sEvent][$iPriority]))	
+        while(isset($this->aListeners[$sEvent][$iPriority]))
 		{
 			$iPriority++;
 		}
         $this->aListeners[$sEvent][$iPriority] = $fCallback;
         \ksort($this->aListeners[$sEvent]);
-    }	
+    }
 
     public function onAny($aListeners)
     {
@@ -119,16 +119,16 @@ class EventEmitter
             {
                 if (isset($mListener[2]))
                 {
-                    $this->on($mListener[0], $mListener[1], $mListener[2]);   
+                    $this->on($mListener[0], $mListener[1], $mListener[2]);
                 }
                 else
                 {
-                    $this->on($mListener[0], $mListener[1]);   
+                    $this->on($mListener[0], $mListener[1]);
                 }
             }
         }
     }
-	
+
     /**
      * Broadcasts an event
      *
@@ -142,17 +142,17 @@ class EventEmitter
      * @param callback $mCountinueCallback
      * @return boolean
      */
-    public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null, $bSkipIsAllowedModuleCheck = false) 
+    public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null, $bSkipIsAllowedModuleCheck = false)
 	{
 		$bResult = false;
 		$mListenersResult = null;
-		
+
         $aListeners = $this->getListenersByEvent($sModule, $sEvent);
         if (count($aListeners) > 0)
         {
             \Aurora\System\Api::Log(" ===== Emit $sModule::$sEvent", Enums\LogLevel::Full, 'subscriptions-');
             \Aurora\System\Api::Log(' ========== START Execute subscriptions', Enums\LogLevel::Full, 'subscriptions-');
-            foreach($aListeners as $fCallback) 
+            foreach($aListeners as $fCallback)
             {
                 $bIsAllowedModule = true;
                 if (!$bSkipIsAllowedModuleCheck)
@@ -162,16 +162,16 @@ class EventEmitter
                 if (\is_callable($fCallback) && $bIsAllowedModule)
                 {
                     \Aurora\System\Api::Log(" =============== " . $fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], Enums\LogLevel::Full, 'subscriptions-');
-                    
+
                     $mCallBackResult = \call_user_func_array(
-                        $fCallback, 
+                        $fCallback,
                         [
                             &$aArguments,
                             &$mResult,
                             &$mListenersResult
                         ]
                     );
-                    
+
                     if (\is_callable($mCountinueCallback))
                     {
                         $mCountinueCallback(
@@ -185,11 +185,11 @@ class EventEmitter
                     {
                         $this->aListenersResult[$fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]] = $mListenersResult;
                     }
-                    
-                    if ($mCallBackResult) 
+
+                    if ($mCallBackResult)
                     {
                         $bResult = $mCallBackResult;
-                        
+
                         break;
                     }
                 }
@@ -198,5 +198,5 @@ class EventEmitter
         }
 
         return $bResult;
-    }	
+    }
 }

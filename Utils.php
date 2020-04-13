@@ -137,7 +137,7 @@ class Utils
 	{
 		if (strlen($sPpath) > 0)
 		{
-			return (($sPpath{0} == '/' || $sPpath{0} == '\\') || (strlen($sPpath) > 1 && self::IsWin() && $sPpath{1} == ':'));
+			return (($sPpath[0] == '/' || $sPpath[0] == '\\') || (strlen($sPpath) > 1 && self::IsWin() && $sPpath[1] == ':'));
 		}
 		return false;
 	}
@@ -317,13 +317,13 @@ class Utils
 
 		for ($i = 0; $strlen > 0; $i++, $strlen--)
 		{
-			$char = $str{$i};
+			$char = $str[$i];
 			if ($char == '&')
 			{
 				$i++;
 				$strlen--;
 
-				$char = isset($str{$i}) ? $str{$i} : null;
+				$char = isset($str[$i]) ? $str[$i] : null;
 				if ($char === null)
 				{
 					break;
@@ -339,7 +339,7 @@ class Utils
 				$k = 10;
 				for (; $strlen > 0; $i++, $strlen--)
 				{
-					$char = $str{$i};
+					$char = $str[$i];
 
 					$b = $array[ord($char)];
 					if ((ord($char) & 0x80) || $b == -1)
@@ -383,7 +383,7 @@ class Utils
 
 				if (($ch || $k < 6) ||
 					(!$strlen || $char != '-') ||
-					($strlen > 2 && '&' === $str{$i+1} && '-' !==  $str{$i+2}))
+					($strlen > 2 && '&' === $str[$i+1] && '-' !==  $str[$i+2]))
 				{
 					return $error;
 				}
@@ -418,7 +418,7 @@ class Utils
 
 		while ($strlen)
 		{
-			$c = ord($str{$i});
+			$c = ord($str[$i]);
 			if ($c < 0x80)
 			{
 				$ch = $c;
@@ -468,7 +468,7 @@ class Utils
 
 			for ($j=0; $j < $n; $j++)
 			{
-				$o = ord($str{$i+$j});
+				$o = ord($str[$i+$j]);
 				if (($o & 0xc0) != 0x80)
 				{
 					return $error;
@@ -744,7 +744,7 @@ class Utils
 		$sTimeOffset = trim($sTimeOffset);
 		if (0 < strlen($sTimeOffset))
 		{
-			$sSign = $sTimeOffset{0};
+			$sSign = $sTimeOffset[0];
 			$sTimeOffset = substr($sTimeOffset, 1);
 			$nOffset = (is_numeric($sTimeOffset)) ? (int) $sTimeOffset : 0;
 

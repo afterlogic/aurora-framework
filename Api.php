@@ -955,7 +955,7 @@ class Api
 		switch ($sLang)
 		{
 			case 'Arabic':
-				$iResult = ($iNumber === 0 ? 0 : $iNumber === 1 ? 1 : ($iNumber === 2 ? 2 : ($iNumber % 100 >= 3 && $iNumber % 100 <= 10 ? 3 : ($iNumber % 100 >= 11 ? 4 : 5))));
+				$iResult = ($iNumber === 0 ? 0 : ($iNumber === 1 ? 1 : ($iNumber === 2 ? 2 : ($iNumber % 100 >= 3 && $iNumber % 100 <= 10 ? 3 : ($iNumber % 100 >= 11 ? 4 : 5)))));
 				break;
 			case 'Bulgarian':
 				$iResult = ($iNumber === 1 ? 0 : 1);

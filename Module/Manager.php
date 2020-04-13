@@ -22,7 +22,7 @@ class Manager
      * @var array
      */
 	protected $_aModules = array();
-	
+
     /**
      * This array contains a list of modules paths
      *
@@ -38,12 +38,12 @@ class Manager
 	protected $_aAllowedModulesName = array(
 		'core' => 'Core'
 	);
-	
+
 	/**
 	 * @var array
 	 */
 	private $_aTemplates;
-	
+
 	/**
 	 * @var array
 	 */
@@ -63,9 +63,9 @@ class Manager
 	 * @var \Aurora\System\Exceptions\Exception
 	 */
 	private $oLastException;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public function __construct()
 	{
@@ -74,7 +74,7 @@ class Manager
 	}
 
 	/**
-	 * 
+	 *
 	 * @return \self
 	 */
 	public static function createInstance()
@@ -83,13 +83,13 @@ class Manager
 	}
 
 	/**
-	 * 
+	 *
 	 * @return void
 	 */
 	public function loadModules()
 	{
 		$oCoreModule = $this->loadModule('Core');
-		
+
 		if ($oCoreModule instanceof AbstractModule)
 		{
 			$oUser = \Aurora\System\Api::authorise();
@@ -127,20 +127,20 @@ class Manager
 			echo "Can't load 'Core' Module";
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @return boolean
-	 */	
+	 */
 	protected function isClientModule($sModuleName)
 	{
 		$sModulePath = $this->GetModulePath($sModuleName);
 		return (\file_exists($sModulePath . $sModuleName . '/js/manager.js'));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @return boolean
 	 */
@@ -150,7 +150,7 @@ class Manager
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @param string $sConfigName
 	 * @param string $sDefaultValue
@@ -165,12 +165,12 @@ class Manager
 		{
 			$mResult = $oModuleConfig->GetValue($sConfigName, $sDefaultValue);
 		}
-		
+
 		return $mResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @param string $sConfigName
 	 * @param string $sValue
@@ -183,10 +183,10 @@ class Manager
 		{
 			$oModuleConfig->SetValue($sConfigName, $sValue);
 		}
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @return mixed
 	 */
@@ -197,10 +197,10 @@ class Manager
 		{
 			$oModuleConfig->Save();
 		}
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 */
 	public function SyncModulesConfigs()
 	{
@@ -258,7 +258,7 @@ class Manager
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
@@ -269,7 +269,7 @@ class Manager
 		{
 			$sModulePath = $this->GetModulePath($sModuleName);
 		}
-		
+
 		if ($sModulePath)
 		{
 			if (!$this->isModuleLoaded($sModuleName))
@@ -277,13 +277,13 @@ class Manager
 				$aArgs = array($sModuleName, $sModulePath);
 
 				$this->broadcastEvent(
-					$sModuleName, 
-					'loadModule' . AbstractModule::$Delimiter . 'before', 
+					$sModuleName,
+					'loadModule' . AbstractModule::$Delimiter . 'before',
 					$aArgs
 				);
 
 				if (@\file_exists($sModulePath.$sModuleName.'/Module.php'))
-				{		
+				{
 					$sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
 					$oModule = new $sModuleClassName($sModulePath);
 					if ($oModule instanceof AbstractModule)
@@ -305,8 +305,8 @@ class Manager
 				}
 
 				$this->broadcastEvent(
-					$sModuleName, 
-					'loadModule' . AbstractModule::$Delimiter . 'after', 
+					$sModuleName,
+					'loadModule' . AbstractModule::$Delimiter . 'after',
 					$aArgs,
 					$mResult
 				);
@@ -315,7 +315,7 @@ class Manager
 			{
 				$mResult = $this->GetModule($sModuleName);
 			}
-		}		
+		}
 		return $mResult;
 	}
 
@@ -333,14 +333,14 @@ class Manager
 		}
 
 		$this->_aTemplates[$sParsedTemplateID][] = array(
-			$sParsedPlace, 
-			$sTemplateFileName, 
+			$sParsedPlace,
+			$sTemplateFileName,
 			$sModuleName
 		);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sTemplateID
 	 * @param string $sTemplateSource
 	 * @return string
@@ -366,10 +366,10 @@ class Manager
 		}
 
 		return $sTemplateSource;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sModule
 	 * @param string $sType
 	 * @param array $aMap
@@ -377,10 +377,10 @@ class Manager
 	public function extendObject($sModule, $sType, $aMap)
 	{
 		$this->oObjectExtender->extend($sModule, $sType, $aMap);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @return array
 	 */
@@ -388,9 +388,9 @@ class Manager
 	{
 		return $this->oObjectExtender->getObject($sType);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @return boolean
 	 */
@@ -400,18 +400,18 @@ class Manager
 	}
 
 	/**
-	 * @todo return correct path according to curent tenant 
-	 * 
+	 * @todo return correct path according to curent tenant
+	 *
 	 * @return string
 	 */
 	public function GetModulesRootPath()
 	{
 		return AU_APP_ROOT_PATH.'modules/';
 	}
-	
+
 	/**
-	 * @todo return correct path according to curent tenant 
-	 * 
+	 * @todo return correct path according to curent tenant
+	 *
 	 * @return array
 	 */
 	public function GetModulesPaths()
@@ -438,7 +438,7 @@ class Manager
 					{
 						while (false !== ($sFileItem = @\readdir($rDirHandle)))
 						{
-							if (0 < \strlen($sFileItem) && '.' !== $sFileItem{0} && \preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
+							if (0 < \strlen($sFileItem) && '.' !== $sFileItem[0] && \preg_match('/^[a-zA-Z0-9\-]+$/', $sFileItem))
 							{
 								$this->_aModulesPaths[$sFileItem] = $sModulesPath;
 							}
@@ -447,33 +447,33 @@ class Manager
 						@\closedir($rDirHandle);
 					}
 				}
-			}	
+			}
 		}
-		
+
 		return $this->_aModulesPaths;
 	}
 
 	/**
-	 * @todo return correct path according to curent tenant 
-	 * 
+	 * @todo return correct path according to curent tenant
+	 *
 	 * @return string
 	 */
 	public function GetModulePath($sModuleName)
 	{
 		$aModulesPaths = $this->GetModulesPaths();
 		return isset($aModulesPaths[$sModuleName]) ? $aModulesPaths[$sModuleName] : false;
-	}	
+	}
 
 	/**
-	 * @todo return correct path according to curent tenant 
-	 * 
+	 * @todo return correct path according to curent tenant
+	 *
 	 * @return string
 	 */
 	public function GetModulesSettingsPath()
 	{
 		return \Aurora\System\Api::DataPath() . '/settings/modules/';
-	}	
-	
+	}
+
 	/**
 	 * @return string
 	 */
@@ -518,7 +518,7 @@ class Manager
 	{
 		return $this->_aModules;
 	}
-	
+
 	/**
 	 * @param string $sModuleName
 	 * @return \Aurora\System\Module\Settings
@@ -529,10 +529,10 @@ class Manager
 		{
 			$this->aModulesSettings[strtolower($sModuleName)] = new Settings($sModuleName);
 		}
-		
+
 		return $this->aModulesSettings[strtolower($sModuleName)];
 	}
-	
+
 	/**
 	 * @param string $sModuleName
 	 * @return \Aurora\System\Module\AbstractModule
@@ -540,17 +540,17 @@ class Manager
 	public function GetModule($sModuleName)
 	{
 		$mResult = false;
-		
+
 		$sModuleNameLower = strtolower($sModuleName);
 		if ($this->isModuleLoaded($sModuleName))
 		{
 			$mResult = $this->_aModules[$sModuleNameLower];
 		}
-		
+
 		return $mResult;
 	}
-	
-	
+
+
 	/**
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
@@ -558,15 +558,15 @@ class Manager
 	{
 		$sModule = '';
 		$oHttp = \MailSo\Base\Http::SingletonInstance();
-		if ($oHttp->IsPost()) 
+		if ($oHttp->IsPost())
 		{
 			$sModule = $oHttp->GetPost('Module', null);
-		} 
+		}
 		return $this->GetModule($sModule);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sEntryName
 	 * @return array
 	 */
@@ -574,16 +574,16 @@ class Manager
 	{
 		$aModules = array();
 		$oResult = $this->GetModuleFromRequest();
-		
-		if ($oResult && !$oResult->HasEntry($sEntryName)) 
+
+		if ($oResult && !$oResult->HasEntry($sEntryName))
 		{
 			$oResult = false;
 		}
-		if ($oResult === false) 
+		if ($oResult === false)
 		{
-			foreach ($this->_aModules as $oModule) 
+			foreach ($this->_aModules as $oModule)
 			{
-				if ($oModule instanceof AbstractModule && $oModule->HasEntry($sEntryName)) 
+				if ($oModule instanceof AbstractModule && $oModule->HasEntry($sEntryName))
 				{
 					$aModules[] = $oModule;
 				}
@@ -595,10 +595,10 @@ class Manager
 				$oResult
 			);
 		}
-		
+
 		return $aModules;
 	}
-	
+
 	/**
 	 * @param string $sModuleName
 	 * @return bool
@@ -607,9 +607,9 @@ class Manager
 	{
 		return ($this->GetModule($sModuleName)) ? true  : false;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sEntryName
 	 * @return mixed
 	 */
@@ -644,7 +644,7 @@ class Manager
 	public function GetModulesHash()
 	{
 		$sResult = md5(\Aurora\System\Api::Version());
-		$aModuleNames = $this->GetAllowedModulesName(); 
+		$aModuleNames = $this->GetAllowedModulesName();
 		foreach ($aModuleNames as $sModuleName)
 		{
 			$sResult = md5($sResult.$this->GetModuleHashByName($sModuleName));
@@ -652,11 +652,11 @@ class Manager
 
 		return $sResult;
 	}
-	
+
 	/**
 	 * @toto need to add module version to information string
 	 * @param string $sModuleName
-	 * 
+	 *
 	 * @return string
 	 */
 	public function GetModuleHashByName($sModuleName)
@@ -679,15 +679,15 @@ class Manager
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function GetLastException()
 	{
 		return $this->oLastException;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sModule
 	 * @param string $sMethod
 	 * @param mixed $mResult
@@ -698,7 +698,7 @@ class Manager
 		{
 			$mResult = \str_replace(\Aurora\System\Api::$aSecretWords, '*******', $mResult);
 		}
-			
+
 		$aMapParameters = array();
 		if (is_array($aParameters))
 		{
@@ -710,35 +710,35 @@ class Manager
 				}
 			}
 		}
-		
+
 		$aResult = array(
 			'Module' => $sModule,
 			'Method' => $sMethod,
 			'Parameters' => $aMapParameters,
 			'Result' => $mResult
 		);
-		
+
 		if ($iErrorCode > 0)
 		{
 			$aResult['ErrorCode'] = $iErrorCode;
 		}
-		
+
 		$this->_aResults[] = $aResult;
 	}
-	
+
 	/**
 	 * @return array
-	 */	
+	 */
 	public function GetResults()
 	{
 		return $this->_aResults;
 	}
-	
+
 	/**
 	 * @param string $sModule
 	 * @param string $sMethod
 	 * @return array
-	 */	
+	 */
 	public function GetResult($sModule, $sMethod)
 	{
 		foreach($this->_aResults as $aResult)
@@ -748,7 +748,7 @@ class Manager
 				return array($aResult);
 			}
 		}
-	}	
+	}
 
     /**
      * Broadcasts an event
@@ -762,16 +762,16 @@ class Manager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = [], &$mResult = null, $bSkipIsAllowedModuleCheck = false) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = [], &$mResult = null, $bSkipIsAllowedModuleCheck = false)
 	{
 		return $this->oEventEmitter->emit(
-			$sModule, 
-			$sEvent, 
-			$aArguments, 
-			$mResult, 
+			$sModule,
+			$sEvent,
+			$aArguments,
+			$mResult,
 			function($sModule, $aArguments, $mResult) use ($sEvent) {
 				$this->AddResult($sModule, $sEvent, $aArguments, $mResult);
-			}, 
+			},
 			$bSkipIsAllowedModuleCheck
 		);
 	}
@@ -792,14 +792,14 @@ class Manager
      * @param int $iPriority
      * @return void
      */
-	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100) 
+	public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
 	{
 		return $this->oEventEmitter->on($sEvent, $fCallback, $iPriority);
 	}
 
 	public function getEvents()
 	{
-		return $this->oEventEmitter->getListeners();	
+		return $this->oEventEmitter->getListeners();
 	}
 
 	public function GetSubscriptionsResult()
