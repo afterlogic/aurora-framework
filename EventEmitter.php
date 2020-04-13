@@ -142,7 +142,7 @@ class EventEmitter
      * @param callback $mCountinueCallback
      * @return boolean
      */
-    public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null) 
+    public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null, $bSkipIsAllowedModuleCheck = false) 
 	{
 		$bResult = false;
 		$mListenersResult = null;
@@ -154,7 +154,12 @@ class EventEmitter
             \Aurora\System\Api::Log(' ========== START Execute subscriptions', Enums\LogLevel::Full, 'subscriptions-');
             foreach($aListeners as $fCallback) 
             {
-                if (\is_callable($fCallback) && Api::GetModuleManager()->IsAllowedModule($fCallback[0]::GetName()))
+                $bIsAllowedModule = true;
+                if (!$bSkipIsAllowedModuleCheck)
+                {
+                    $bIsAllowedModule =  Api::GetModuleManager()->IsAllowedModule($fCallback[0]::GetName());
+                }
+                if (\is_callable($fCallback) && $bIsAllowedModule)
                 {
                     \Aurora\System\Api::Log(" =============== " . $fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], Enums\LogLevel::Full, 'subscriptions-');
                     

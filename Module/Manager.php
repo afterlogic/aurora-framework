@@ -100,20 +100,20 @@ class Manager
 			}
 			foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath)
 			{
-				$bIsModuleDisabledForTenant = ($oTenant instanceof \Aurora\Modules\Core\Classes\Tenant) ? $oTenant->isModuleDisabled($sModuleName) : false;
-				$bIsModuleDisabledForUser = ($oUser instanceof \Aurora\Modules\Core\Classes\User) ? $oUser->isModuleDisabled($sModuleName) : false;
+				$bIsModuleDisabledForTenant = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oTenant, $sModuleName);
+				$bIsModuleDisabledForUser = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oUser, $sModuleName);
 				$bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
 				if (!($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled)
 				{
-					$bModuleLoaded = $this->loadModule($sModuleName, $sModulePath);
+					$oLoadedModule = $this->loadModule($sModuleName, $sModulePath);
 					$bClientModule = $this->isClientModule($sModuleName);
-					if ($bModuleLoaded || $bClientModule)
+					if ($oLoadedModule instanceof AbstractModule || $bClientModule)
 					{
 						$this->_aAllowedModulesName[\strtolower($sModuleName)] = $sModuleName;
 					}
 					else
 					{
-//						\Aurora\System\Api::Log('Module ' . $sModuleName . ' is not allowed. $bModuleLoaded = ' . $bModuleLoaded . '. $bClientModule = ' . $bClientModule . '.');
+//						\Aurora\System\Api::Log('Module ' . $sModuleName . ' is not allowed. $bModuleLoaded = ' . $oLoadedModule . '. $bClientModule = ' . $bClientModule . '.');
 					}
 				}
 				else
@@ -487,7 +487,12 @@ class Manager
 	 */
 	public function GetAllowedModulesName()
 	{
-		return $this->_aAllowedModulesName;
+		$aArgs = [];
+		$mResult = $this->_aAllowedModulesName;
+
+		$this->broadcastEvent('System', 'GetAllowedModulesName', $aArgs, $mResult, true);
+
+		return $mResult;
 	}
 
 	/**
@@ -496,7 +501,14 @@ class Manager
 	 */
 	public function IsAllowedModule($sModuleName)
 	{
-		return array_key_exists(\strtolower($sModuleName), $this->_aAllowedModulesName);
+		$aArgs = [
+			'ModuleName' => $sModuleName
+		];
+		$mResult = array_key_exists(\strtolower($sModuleName), $this->_aAllowedModulesName);
+
+		$this->broadcastEvent('System', 'IsAllowedModule', $aArgs, $mResult, true);
+
+		return $mResult;
 	}
 
 	/**
@@ -750,7 +762,7 @@ class Manager
      * @param mixed $mResult
      * @return boolean
      */
-    public function broadcastEvent($sModule, $sEvent, &$aArguments = [], &$mResult = null) 
+    public function broadcastEvent($sModule, $sEvent, &$aArguments = [], &$mResult = null, $bSkipIsAllowedModuleCheck = false) 
 	{
 		return $this->oEventEmitter->emit(
 			$sModule, 
@@ -759,7 +771,8 @@ class Manager
 			$mResult, 
 			function($sModule, $aArguments, $mResult) use ($sEvent) {
 				$this->AddResult($sModule, $sEvent, $aArguments, $mResult);
-			}
+			}, 
+			$bSkipIsAllowedModuleCheck
 		);
 	}
 
