@@ -178,32 +178,52 @@ class Response
 		}
 	}
 
-	public static function getImageAngle($rResource)
+	public static function GetOrientation($rResource)
 	{
-		$iRotateAngle = 0;
+		$iOrientation = 0;
 		if (\function_exists('exif_read_data'))
 		{
 			if ($exif_data = @\exif_read_data($rResource, 'IFD0'))
 			{
-				switch (@$exif_data['Orientation'])
-				{
-					case 1:
-						$iRotateAngle = 0;
-						break;
-					case 3:
-						$iRotateAngle = 180;
-						break;
-					case 6:
-						$iRotateAngle = 270;
-						break;
-					case 8:
-						$iRotateAngle = 90;
-						break;
-				}
+				$iOrientation = @$exif_data['Orientation'];
 			}
 		}
 
-		return $iRotateAngle;
+		return $iOrientation;
+	}
+
+	public static function OrientateImage($image, $iOrientation)
+	{
+		switch ($iOrientation)
+		{
+			case 2:
+				$image->flip();
+				break;
+
+			case 3:
+				$image->rotate(180);
+				break;
+
+			case 4:
+				$image->rotate(180)->flip();
+				break;
+
+			case 5:
+				$image->rotate(270)->flip();
+				break;
+
+			case 6:
+				$image->rotate(270);
+				break;
+
+			case 7:
+				$image->rotate(90)->flip();
+				break;
+
+			case 8:
+				$image->rotate(90);
+				break;
+		}
 	}
 
 	public static function GetThumbHash()
@@ -235,15 +255,12 @@ class Response
 	{
 		$sThumb = null;
 
-		$iRotateAngle = self::getImageAngle($rResource);
 		try
 		{
+			$iOrientation = self::GetOrientation($rResource);
 			$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
 			$oThumb = $oImageManager->make($rResource);
-			if ($iRotateAngle > 0)
-			{
-				$oThumb = $oThumb->rotate($iRotateAngle);
-			}
+			self::OrientateImage($oThumb, $iOrientation);
 			$sThumb = $oThumb->heighten(100)->widen(100)->response();
 
 			$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
