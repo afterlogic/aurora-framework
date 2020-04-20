@@ -619,21 +619,32 @@ class Manager
 			'EntryName' => $sEntryName
 		];
 		$mResult = false;
-		$bEventResult = $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
-
-		if ($bEventResult !== true)
+		try
 		{
-			if (!\Aurora\System\Router::getInstance()->hasRoute($sEntryName))
+			$bEventResult = $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
+
+			if ($bEventResult !== true)
 			{
-				$sEntryName = 'default';
+				if (!\Aurora\System\Router::getInstance()->hasRoute($sEntryName))
+				{
+					$sEntryName = 'default';
+				}
+
+				$mResult = \Aurora\System\Router::getInstance()->route(
+					$sEntryName
+				);
 			}
 
-			$mResult = \Aurora\System\Router::getInstance()->route(
-				$sEntryName
-			);
+			$this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
 		}
-
-		$this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
+		catch(\Exception $oException)
+		{
+			$mResult = \Aurora\System\Managers\Response::GetJsonFromObject(
+				"Json",
+				\Aurora\System\Managers\Response::ExceptionResponse("System", $oException)
+			);
+			\Aurora\System\Api::LogException($oException);
+		}
 
 		return $mResult;
 	}

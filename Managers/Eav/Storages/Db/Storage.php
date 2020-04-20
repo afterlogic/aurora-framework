@@ -264,29 +264,32 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mSortAttributes = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $sCustomViewSql = '')
 	{
 		$aUids = [];
-		if ($this->oConnection->Execute(
-				$this->oCommandCreator->getEntities(
-					$sType,
-					['UUID'],
-					$iOffset,
-					$iLimit,
-					$aSearchAttrs,
-					$mSortAttributes,
-					$iSortOrder,
-					[],
-					false,
-					$sCustomViewSql
+		if ($this->oConnection)
+		{
+			if ($this->oConnection->Execute(
+					$this->oCommandCreator->getEntities(
+						$sType,
+						['UUID'],
+						$iOffset,
+						$iLimit,
+						$aSearchAttrs,
+						$mSortAttributes,
+						$iSortOrder,
+						[],
+						false,
+						$sCustomViewSql
+					)
 				)
 			)
-		)
-		{
-			$oRow = null;
-			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
-				$aUids[] = $oRow->attr_UUID;
+				$oRow = null;
+				while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+				{
+					$aUids[] = $oRow->attr_UUID;
+				}
 			}
+			$this->oConnection->FreeResult();
 		}
-		$this->oConnection->FreeResult();
 
 		return $aUids;
 	}
@@ -320,65 +323,68 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		{
 			$aViewAttrs = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
 		}
-
-		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with
-		// "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
-		$this->oConnection->Execute("set sort_buffer_size=1024*1024");
-
-		if (count($aIdsOrUUIDs) > 0)
+		if ($this->oConnection)
 		{
-			if ($this->oConnection->Execute(
+			// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with
+			// "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
+			$this->oConnection->Execute("set sort_buffer_size=1024*1024");
 
-					$this->oCommandCreator->getEntities(
-						$sType,
-						$aViewAttrs,
-						0,
-						0,
-						[],
-						$mOrderBy,
-						$iSortOrder,
-						$aIdsOrUUIDs,
-						false,
-						$sCustomViewSql
+			if (count($aIdsOrUUIDs) > 0)
+			{
+				if ($this->oConnection->Execute(
+
+						$this->oCommandCreator->getEntities(
+							$sType,
+							$aViewAttrs,
+							0,
+							0,
+							[],
+							$mOrderBy,
+							$iSortOrder,
+							$aIdsOrUUIDs,
+							false,
+							$sCustomViewSql
+						)
 					)
 				)
-			)
-			{
-				$oRow = null;
-				while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 				{
-					$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
-					foreach (get_object_vars($oRow) as $sKey => $mValue)
+					$oRow = null;
+					while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 					{
-						if (strrpos($sKey, 'attr_', -5) !== false && isset($mValue))
+						$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
+						foreach (get_object_vars($oRow) as $sKey => $mValue)
 						{
-							$sAttrKey = substr($sKey, 5);
-							if (!$oEntity->isSystemAttribute($sAttrKey))
+							if (strrpos($sKey, 'attr_', -5) !== false && isset($mValue))
 							{
-								$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
-								$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-									$sAttrKey,
-									$mValue,
-									$oEntity->getType($sAttrKey),
-									$bIsEncrypted,
-									$oEntity->EntityId
-								);
-								$oAttribute->Encrypted = $bIsEncrypted;
-								$oAttribute->CanInherit = $oEntity->canInheridAttribute($sAttrKey);
-								$oEntity->{$sAttrKey} = $oAttribute;
-							}
-							else
-							{
-								settype($mValue, $oEntity->getType($sAttrKey));
-								$oEntity->{$sAttrKey} = $mValue;
+								$sAttrKey = substr($sKey, 5);
+								if (!$oEntity->isSystemAttribute($sAttrKey))
+								{
+									$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
+									$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
+										$sAttrKey,
+										$mValue,
+										$oEntity->getType($sAttrKey),
+										$bIsEncrypted,
+										$oEntity->EntityId
+									);
+									$oAttribute->Encrypted = $bIsEncrypted;
+									$oAttribute->CanInherit = $oEntity->canInheridAttribute($sAttrKey);
+									$oEntity->{$sAttrKey} = $oAttribute;
+								}
+								else
+								{
+									settype($mValue, $oEntity->getType($sAttrKey));
+									$oEntity->{$sAttrKey} = $mValue;
+								}
 							}
 						}
+						$mResult[] = $oEntity;
 					}
-					$mResult[] = $oEntity;
+					$this->oConnection->FreeResult();
 				}
-				$this->oConnection->FreeResult();
 			}
 		}
+
 		return $mResult;
 	}
 

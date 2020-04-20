@@ -119,7 +119,7 @@ class Integrator extends AbstractManager
 
 		$sCacheFileName = '';
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if ($oSettings->GetConf('CacheTemplates', $this->bCache))
+		if ($oSettings && $oSettings->GetConf('CacheTemplates', $this->bCache))
 		{
 			$sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
 			$sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
@@ -173,7 +173,7 @@ class Integrator extends AbstractManager
 
 		$sResult = trim($sResult);
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if ($oSettings->GetConf('CacheTemplates', $this->bCache))
+		if ($oSettings && $oSettings->GetConf('CacheTemplates', $this->bCache))
 		{
 			if (!is_dir(dirname($sCacheFullFileName)))
 			{
@@ -262,7 +262,7 @@ class Integrator extends AbstractManager
 
 		$sCacheFileName = '';
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if ($oSettings->GetConf('CacheLangs', $this->bCache))
+		if ($oSettings && $oSettings->GetConf('CacheLangs', $this->bCache))
 		{
 			$sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version().$sHash) . '.cache';
 			$sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
@@ -310,7 +310,7 @@ class Integrator extends AbstractManager
 			$sResult .= json_encode($aResult);
 
 			$oSettings =& \Aurora\System\Api::GetSettings();
-			if ($oSettings->GetConf('CacheLangs', $this->bCache))
+			if ($oSettings && $oSettings->GetConf('CacheLangs', $this->bCache))
 			{
 				if (!is_dir(dirname($sCacheFullFileName)))
 				{
@@ -1164,7 +1164,7 @@ class Integrator extends AbstractManager
 		$oSettings =& \Aurora\System\Api::GetSettings();
 		$sPostfix = '';
 
-		if ($oSettings->GetConf('UseAppMinJs', false))
+		if ($oSettings && $oSettings->GetConf('UseAppMinJs', false))
 		{
 			$sPostfix .= '.min';
 		}

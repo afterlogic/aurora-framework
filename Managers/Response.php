@@ -431,7 +431,7 @@ class Response
 		$sModule = '';
 
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		$bShowError = $oSettings->GetValue('DisplayServerErrorInformation', false);
+		$bShowError = $oSettings && $oSettings->GetValue('DisplayServerErrorInformation', false);
 
 		if ($oException instanceof \Aurora\System\Exceptions\ApiException)
 		{

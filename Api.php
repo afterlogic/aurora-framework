@@ -154,7 +154,11 @@ class Api
 			@file_put_contents($sSalt8File, $sSalt);
 		}
 
-		include_once $sSalt8File;
+		if (is_writable($sSalt8File)) 
+		{
+			include_once $sSalt8File;
+		}
+
 		self::$sSalt = '$2y$07$' . self::$sSalt . '$';
 	}
 
