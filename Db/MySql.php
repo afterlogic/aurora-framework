@@ -108,7 +108,7 @@ class MySql extends Sql
 		{
 			\Aurora\System\Logger::LogSql('DB(mysql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
-		
+
 		$this->_rConectionHandle = @mysqli_connect($this->sHost, $this->sUser, $this->sPassword, (bool) $bNewLink);
 		if ($this->_rConectionHandle)
 		{
@@ -116,7 +116,7 @@ class MySql extends Sql
 			{
 				\Aurora\System\Logger::LogSql('DB : connected to '.$this->sUser.'@'.$this->sHost);
 			}
-			
+
 			@register_shutdown_function(array(&$this, 'Disconnect'));
 			return ($bWithSelect) ? $this->Select() : true;
 		}

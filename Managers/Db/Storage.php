@@ -25,7 +25,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	protected $oCommandCreator;
 
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\Managers\Db $oManager
 	 */
 	public function __construct(\Aurora\System\Managers\Db &$oManager)
@@ -38,15 +38,15 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 
 	/**
 	 * Executes queries from sql string.
-	 * 
+	 *
 	 * @param string $sSql - sql string.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function executeSql($sSql)
 	{
 		$bResult = false;
-		
+
 		$sDbPrefix = $this->oCommandCreator->prefix();
 		if (!empty($sSql) && $this->oConnection)
 		{
@@ -59,21 +59,21 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 		}
 
 		return $bResult;
-	}	
-	
+	}
+
 	/**
 	 * Executes queries from sql file.
-	 * 
+	 *
 	 * @param string $sFilePath Path to sql file.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function executeSqlFile($sFilePath)
 	{
 		$bResult = false;
-		
+
 		$sDbPrefix = $this->oCommandCreator->prefix();
-		
+
 		$mFileContent = file_exists($sFilePath) ? file_get_contents($sFilePath) : false;
 
 		if ($mFileContent && $this->oConnection)
@@ -92,7 +92,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 
 		return $bResult;
 	}
-	
+
 	public function columnExists($sTable, $sColumn)
 	{
 		$bResult = false;

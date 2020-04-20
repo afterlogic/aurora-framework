@@ -22,12 +22,12 @@ class ApiException extends Exception
 	 */
 	protected $aObjectParams;
 
-	
+
 	/**
 	 * @var \Aurora\System\Module\AbstractModule
 	 */
 	protected $oModule;
-	
+
 	/**
 	 * @param type $iCode
 	 * @param type $oPrevious
@@ -40,20 +40,20 @@ class ApiException extends Exception
 		$mCode = is_int($iCode) ? $iCode : 0;
 		parent::__construct('' === $sMessage ? 'ApiException' : $sMessage, $mCode, $oPrevious);
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function GetObjectParams()
 	{
 		return $this->aObjectParams;
-	}	
-	
+	}
+
 	/**
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
 	public function GetModule()
 	{
 		return $this->oModule;
-	}	
+	}
 }

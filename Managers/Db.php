@@ -17,27 +17,27 @@ namespace Aurora\System\Managers;
 class Db extends AbstractManagerWithStorage
 {
 	private static $_instance = null;
-	
+
 	public static function createInstance()
 	{
 		return new self();
 	}
-	
+
 	public static function getInstance()
 	{
 		if(is_null(self::$_instance))
 		{
-			self::$_instance = new self();		
+			self::$_instance = new self();
 		}
-		
+
 		return self::$_instance;
-	}	
-	
+	}
+
 	public function __construct()
 	{
 		parent::__construct(\Aurora\System\Api::GetModule('Core'), new Db\Storage($this));
-	}	
-	
+	}
+
 	public function executeSql($sSql)
 	{
 		return $this->oStorage->executeSql($sSql);
@@ -52,5 +52,5 @@ class Db extends AbstractManagerWithStorage
 	{
 		return $this->oStorage->columnExists($sTable, $sColumn);
 	}
-	
+
 }

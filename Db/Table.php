@@ -147,7 +147,7 @@ class Table
 		unset($aFieldLines);
 
 		$aAdditionalRequests = array();
-		
+
 		$aKeyLines = array();
 		foreach ($this->aKeys as /* @var $oKey Key */ $oKey)
 		{
@@ -174,7 +174,7 @@ class Table
 			$sResult .= ','.Table::CRLF.Table::TAB.
 				implode(','.Table::CRLF.Table::TAB, $aKeyLines);
 		}
-		
+
 		unset($aKeyLines);
 
 		return trim($sResult.Table::CRLF.') '.$oHelper->CreateTableLastLine()).

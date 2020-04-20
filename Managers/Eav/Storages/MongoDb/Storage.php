@@ -13,14 +13,14 @@ namespace Aurora\System\Managers\Eav\Storages\MongoDb;
  * @copyright Copyright (c) 2019, Afterlogic Corp.
  *
  * @internal
- * 
+ *
  * @package EAV
  * @subpackage Storages
  */
 class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 {
 	/**
-	 * 
+	 *
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
@@ -30,12 +30,12 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		$oObject = $oCollection->findOne(
 			['_id' => new \MongoDB\BSON\ObjectId($mIdOrUUID)]
 		);
-		
+
 		return isset($oObject);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return array
 	 */
@@ -61,13 +61,13 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$aEntity[$oAttribute->Name] = $mValue;
 				}
 			}
-		}	
-		
+		}
+
 		return $aEntity;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function parseEntity($oObject, $sType)
@@ -76,7 +76,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		if (isset($oObject))
 		{
 			$oEntity = \Aurora\System\EAV\Entity::createInstance($sType, 'Sales');
-	
+
 			$aAttributes = $oEntity->getAttributes();
 			foreach ($aAttributes as $oAttribute)
 			{
@@ -85,7 +85,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$mValue = $oObject[$oAttribute->Name];
 					if ($oAttribute->Type === 'datetime')
 					{
-						$mValue = $oObject[$oAttribute->Name]->toDateTime()->format('r'); 
+						$mValue = $oObject[$oAttribute->Name]->toDateTime()->format('r');
 					}
 					$oEntity->{$oAttribute->Name} = $mValue;
 				}
@@ -93,63 +93,63 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$oEntity->UUID = (string) $oObject['_id'];
 			$oEntity->EntityId = $oEntity->UUID;
 		}
-		
+
 		return $oEntity;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return bool
 	 */
 	public function createEntity($oEntity)
 	{
 		$aEntity = $this->prepareEntity($oEntity);
-		
+
 		$sEntityType = str_replace('\\', '.', $oEntity->getName());
 		$oCollection = (new \MongoDB\Client())->sales->{$sEntityType};
-		$oCollection->insertOne($aEntity);	
+		$oCollection->insertOne($aEntity);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return bool
 	 */
 	public function updateEntity($oEntity)
 	{
 		$aEntity = $this->prepareEntity($oEntity);
-		
+
 		$sEntityType = str_replace('\\', '.', $oEntity->getName());
 		$oCollection = (new \MongoDB\Client())->sales->{$sEntityType};
 		$oCollection->updateOne(
 			['_id' => \MongoDB\BSON\ObjectId($oEntity->UUID)],
 			['$set' => $aEntity]
-		);	
+		);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
 	public function getEntity($mIdOrUUID, $sType)
 	{
 		$oEntity = null;
-				
+
 		$oCollection = (new \MongoDB\Client())->sales->{\str_replace('\\', '.', $sType)};
 		$oObject = $oCollection->findOne(
 			['_id' => new \MongoDB\BSON\ObjectId($mIdOrUUID)]
 		);
-		
+
 		return $this->parseEntity($oObject, $sType);
-	}	
+	}
 
 	public function getTypes()
 	{
 		return false;
-	}	
-	
+	}
+
 	protected function getOperator($sOperator)
 	{
 		$sResult = '$eq';
@@ -185,10 +185,10 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				}
 				break;
 		}
-		
+
 		return $sResult;
 	}
-	
+
 	protected function prepareFilter($aWhere, $oEntity, &$aFilter)
 	{
 		foreach ($aWhere as $sKey => $mValue)
@@ -234,27 +234,27 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 						$mResultValue = array_map(
 							function ($mValue) use ($oEntity, $sKey) {
 								return $oEntity->isStringAttribute($sKey) ? "'".$mValue."'" : $mValue;
-							}, 
+							},
 							$mResultValue
 						);
 					}
-					
+
 					$sType =$oEntity->getType($sKey);
 					if ($sType === 'datetime')
 					{
 						$mResultValue = (new \MongoDB\BSON\UTCDateTime(new \DateTime($mResultValue)));
 					}
-					
-					$aFilter[] = ["'".$sKey."'" => 
+
+					$aFilter[] = ["'".$sKey."'" =>
 							[$mResultOperator => $mResultValue]
 					];
 				}
 			}
 		}
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param type $sType
 	 * @param type $aWhere
 	 * @param type $aIds
@@ -269,9 +269,9 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$aOptions
 		);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type $sType
 	 * @param type $aViewAttrs
 	 * @param type $iOffset
@@ -302,26 +302,26 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				$aOptions['projection'][$sAttribute] = 1;
 			}
 		}
-		
+
 		$aFilter = [];
 		$oEntity = \Aurora\System\EAV\Entity::createInstance($sType, 'Sales');
-		
+
 		if (count($aIdsOrUUIDs) > 0)
 		{
 			$aIdsOrUUIDs = array_map(
 				function ($mIdOrUUID) {
 					return \MongoDB\BSON\ObjectId($mIdOrUUID);
-				}, 
+				},
 				$aIdsOrUUIDs
 			);
-			
+
 			$aFilter['_id'] = [
 				'$in' => $aIdsOrUUIDs
 			];
 		}
-		
+
 		$this->prepareFilter($aSearchAttrs, $oEntity, $aFilter['$and']);
-		
+
 		print_r($aFilter); exit;
 
 		$oCollection = (new \MongoDB\Client())->sales->{\str_replace('\\', '.', $sType)};
@@ -334,7 +334,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$aEntities[] = $this->parseEntity($oObject, $sType);
 		}
 		return $aEntities;
-	}	
+	}
 
 	/**
 	 * @return bool
@@ -344,7 +344,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		$oCollection = (new \MongoDB\Client())->sales->{$sType};
 		$oCollection->deleteOne(
 			['_id' => \MongoDB\BSON\ObjectId($mIdOrUUID)]
-		);	
+		);
 	}
 
 	/**
@@ -360,16 +360,16 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	public function setAttributes($aEntitiesIds, $aAttributes)
 	{
 		return true;
-	}	
-	
+	}
+
 	/**
 	 * @return bool
 	 */
 	public function deleteAttribute($sType, $iEntityId, $sAttribute)
 	{
 		return true;
-	}	
-	
+	}
+
 	/**
 	 * @return bool
 	 */

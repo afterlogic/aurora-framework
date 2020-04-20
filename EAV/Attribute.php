@@ -46,23 +46,23 @@ class Attribute
 	 * @var bool $IsEncrypt
 	 */
 	public $IsEncrypt;
-	
+
 	/**
 	 * @var bool $Encrypted
 	 */
-	public $Encrypted;	
-	
+	public $Encrypted;
+
 	/**
 	 * @var bool $ReadOnly
 	 */
-	public $ReadOnly;	
-	
+	public $ReadOnly;
+
 	/**
 	 *
 	 * @var bool $Override
 	 */
 	public $Override;
-	
+
 	/**
 	 *
 	 * @var bool $CanInherit
@@ -100,7 +100,7 @@ class Attribute
 
 		$this->setType($sType);
 	}
-	
+
 	/**
 	 * @param string $sName
 	 * @param mixed $sValue
@@ -108,7 +108,7 @@ class Attribute
 	 * @param bool $bEncrypt
 	 * @param int $iEntityId
 	 * @param bool $bReadOnly
-	 * 
+	 *
 	 * @return \Aurora\System\EAV\Attribute
 	 */
 	public static function createInstance($sName, $sValue = null, $sType = null, $bEncrypt = false, $iEntityId = 0, $bReadOnly = false, $bExtended = false)
@@ -125,7 +125,7 @@ class Attribute
 	{
 		return true;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -146,12 +146,12 @@ class Attribute
 				case "datetime" :
 					$bResult = !empty($this->Value);
 					break;
-			}	
+			}
 		}
-				
+
 		return $bResult;
 	}
-		
+
 	/**
 	 * @param string $sType
 	 */
@@ -162,7 +162,7 @@ class Attribute
 			$sType = gettype($this->Value);
 		}
 		$this->Type = $sType;
-		
+
 		$sType = strtolower($sType);
 		if (in_array($sType, ['string', 'int', 'array', 'double', 'bool']))
 		{
@@ -188,8 +188,8 @@ class Attribute
 				}
 			}
 		}
-	}	
-	
+	}
+
 	/**
 	 * @return bool
 	 */
@@ -204,11 +204,11 @@ class Attribute
 			case "bool" :
 				$sResult = '%d';
 				break;
-		}	
-		
-		return $sResult;	
+		}
+
+		return $sResult;
 	}
-	
+
 	public function Encrypt()
 	{
 		if (!empty($this->Value) && !$this->Encrypted)
@@ -217,7 +217,7 @@ class Attribute
 			$this->Encrypted = true;
 		}
 	}
-	
+
 	public function Decrypt()
 	{
 		if ($this->Encrypted)
@@ -225,7 +225,7 @@ class Attribute
 			$this->Value = \Aurora\System\Utils::DecryptValue($this->Value);
 			$this->Encrypted = false;
 		}
-	}	
+	}
 
 	public function save($oEntity)
 	{

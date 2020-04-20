@@ -21,7 +21,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 	 * @var string
 	 */
 	protected $sDataPath;
-	
+
 	/**
 	 * @var string
 	 */
@@ -35,9 +35,9 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
 		parent::__construct($oManager);
 
 		$this->sDataPath = rtrim(trim(\Aurora\System\Api::DataPath()), '\\/');
-		$this->sPath = '/temp/.cache/'; 
+		$this->sPath = '/temp/.cache/';
 	}
-	
+
 	/**
 	 * @param string $sPath
 	 */

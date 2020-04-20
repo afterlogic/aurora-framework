@@ -28,7 +28,7 @@ class SettingsProperty
 	 * @var string
 	 */
 	public $Type;
-	
+
 	/**
 	 * @var string
 	 */
@@ -37,16 +37,16 @@ class SettingsProperty
 	/**
 	 * @var bool
 	 */
-	public $Changed;	
-	
+	public $Changed;
+
 	/**
-	 * 
+	 *
 	 * @param string $sName
 	 * @param mixed $mValue
 	 * @param string $sType
 	 * @param string $sSpecType
 	 */
-	public function __construct($sName, $mValue, $sType, $sSpecType = null) 
+	public function __construct($sName, $mValue, $sType, $sSpecType = null)
 	{
 		$this->Name = $sName;
 		$this->Value = $mValue;

@@ -100,14 +100,14 @@ class Query
         $this->mOrderAttributes = $mOrderAttributes;
 
         return $this;
-    }    
+    }
 
     public function sortOrder($iSortOrder)
     {
         $this->iSortOrder = $iSortOrder;
 
         return $this;
-    }    
+    }
 
     public function asc()
     {
@@ -153,11 +153,11 @@ class Query
             if ($this->bOnlyUUIDs)
             {
                 $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesUids(
-                    $this->sType, 
-                    $this->iOffset, 
-                    $this->iLimit, 
+                    $this->sType,
+                    $this->iOffset,
+                    $this->iLimit,
                     $this->aWhere,
-                    $this->mOrderAttributes, 
+                    $this->mOrderAttributes,
                     $this->iSortOrder,
                     $this->sCustomViewSql
                 );
@@ -165,12 +165,12 @@ class Query
             else
             {
                 $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntities(
-                    $this->sType, 
+                    $this->sType,
                     $this->aViewAttributes,
-                    $this->iOffset, 
-                    $this->iLimit, 
+                    $this->iOffset,
+                    $this->iLimit,
                     $this->aWhere,
-                    $this->mOrderAttributes, 
+                    $this->mOrderAttributes,
                     $this->iSortOrder,
                     $this->aIdOrUuids,
                     $this->sCustomViewSql
@@ -185,7 +185,7 @@ class Query
         else
         {
             $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesCount(
-                $this->sType, 
+                $this->sType,
                 $this->aWhere,
                 $this->aIdOrUuids
             );

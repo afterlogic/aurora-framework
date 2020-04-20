@@ -43,7 +43,7 @@ class Router
         if (!isset($this->aRoutes[$sName][$sModule]))
         {
             $this->aRoutes[$sName][$sModule] = $mCallbak;
-        }        
+        }
     }
 
     public function registerArray($sModule, $aRoutes)
@@ -55,21 +55,21 @@ class Router
     }
 
     /**
-	 * 
+	 *
 	 * @param stranig $sName
 	 * @return mixed
 	 */
 	public function getCallback($sName)
 	{
 		$mResult = false;
-		if (isset($this->aRoutes[$sName])) 
+		if (isset($this->aRoutes[$sName]))
 		{
 			$mResult = $this->aRoutes[$sName];
 		}
-		
+
 		return $mResult;
-    }	
-    
+    }
+
 	public function hasCallback($mCallbak)
 	{
         $aCallbacks = [];
@@ -85,8 +85,8 @@ class Router
         }
 
         return in_array($mCallbak, $aCallbacks);
-    }    
-    
+    }
+
     public function hasRoute($sName)
     {
 		return isset($this->aRoutes[$sName]);
@@ -104,12 +104,12 @@ class Router
                 if (\Aurora\System\Api::GetModuleManager()->IsAllowedModule($sModule))
                 {
                     $mResult .= call_user_func_array(
-                        $mCallbak, 
+                        $mCallbak,
                         []
                     );
                 }
             }
-		}			
+		}
 
         return $mResult;
     }
@@ -130,33 +130,33 @@ class Router
 			$aResult = array();
 
 			$oHttp = \MailSo\Base\Http::SingletonInstance();
-			
+
 			$sQuery = \trim(\trim(urldecode($oHttp->GetQueryString())), ' /');
 
 			$iPos = \strpos($sQuery, '&');
-			if (0 < $iPos) 
+			if (0 < $iPos)
 			{
 				$sQuery = \substr($sQuery, 0, $iPos);
 			}
 			$aQuery = \explode('/', $sQuery);
-			foreach ($aQuery as $sQueryItem) 
+			foreach ($aQuery as $sQueryItem)
 			{
 				$iPos = \strpos($sQueryItem, '=');
 				$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
 			}
 		}
-		
+
 		return $aResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param int $iIndex
 	 */
 	public static function getItemByIndex($iIndex, $mDefaultValue = null)
 	{
 		$aPath = self::getItems();
-		
+
 		return !empty($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
-	}    
+	}
 }

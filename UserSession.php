@@ -53,12 +53,12 @@ class UserSession
 		$aData = $this->Get($sAuthToken);
 		return $this->Set($aData, $iTime);
 	}
-	
+
 	public function Get($sAuthToken)
 	{
 		$mResult = false;
-		
-		if (strlen($sAuthToken) !== 0) 
+
+		if (strlen($sAuthToken) !== 0)
 		{
 
 			if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false) && !$this->GetFromDB($sAuthToken))
@@ -95,10 +95,10 @@ class UserSession
 						$mResult = false;
 					}
 				}
-	
+
 			}
 		}
-		
+
 		return $mResult;
 	}
 
@@ -149,10 +149,10 @@ class UserSession
 			try
 			{
 				$aEntities = \Aurora\System\Managers\Eav::getInstance()->getEntities(
-					\Aurora\System\Classes\AuthToken::class, 
-					[], 
-					0, 
-					1, 
+					\Aurora\System\Classes\AuthToken::class,
+					[],
+					0,
+					1,
 					['Token' => $sAuthToken]
 				);
 
@@ -187,10 +187,10 @@ class UserSession
 		$iTime = $oDateTime->getTimestamp();
 
 		return \Aurora\System\Managers\Eav::getInstance()->getEntities(
-			\Aurora\System\Classes\AuthToken::class, 
-			[], 
-			0, 
-			1, 
+			\Aurora\System\Classes\AuthToken::class,
+			[],
+			0,
+			1,
 			['LastUsageDateTime' => [$iTime , '<']]
 		);
 	}

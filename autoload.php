@@ -16,7 +16,7 @@
  */
 
 spl_autoload_register(function ($sClassName) {
-	
+
 	$aClassesTree = array(
 		'system' . DIRECTORY_SEPARATOR => array(
 			'Aurora\\System',

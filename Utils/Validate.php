@@ -66,7 +66,7 @@ class Validate
 		}
 		return $bResult;
 	}
-	
+
 	/**
 	 * @param mixed $mValue
 	 * @return bool
@@ -77,17 +77,17 @@ class Validate
 		$oSettings =& \Aurora\System\Api::GetSettings();
 		$iPasswordMinLength = $oSettings->PasswordMinLength;
 		$bPasswordMustBeComplex = $oSettings->PasswordMustBeComplex;
-		
-		if (strlen($mValue) < $iPasswordMinLength) 
-		{ 
+
+		if (strlen($mValue) < $iPasswordMinLength)
+		{
 			$bResult = false;
-			
+
 		}
 		else if ($bPasswordMustBeComplex && (!preg_match('([0-9])', $mValue) || !preg_match('([!,%,&,@,#,$,^,*,?,_,~])', $mValue)))
 		{
 			$bResult = false;
 		}
-		
+
 		return $bResult;
-	}	
+	}
 }

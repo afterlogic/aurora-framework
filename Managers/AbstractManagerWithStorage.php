@@ -20,7 +20,7 @@ abstract class AbstractManagerWithStorage extends AbstractManager
 	 * @var \Aurora\System\Managers\AbstractStorage
 	 */
 	public $oStorage;
-	
+
 	/**
 	 * @param \Aurora\System\Module\AbstractModule $oModule
 	 * @param \Aurora\System\Managers\AbstractStorage $oStorage

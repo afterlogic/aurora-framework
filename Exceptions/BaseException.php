@@ -78,7 +78,7 @@ class BaseException extends Exception
 		if ($this->oPrevious instanceof \MailSo\Imap\Exceptions\NegativeResponseException)
 		{
 			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $this->oPrevious->GetLastResponse();
-			
+
 			$sMessage = $oResponse instanceof \MailSo\Imap\Response ?
 				$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '';
 		}

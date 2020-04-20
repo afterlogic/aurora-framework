@@ -17,5 +17,5 @@ use PHPThumb\GD;
 
 class ImageThumb extends GD
 {
-	protected $options = [];	
+	protected $options = [];
 }

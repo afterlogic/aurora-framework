@@ -17,14 +17,14 @@ namespace Aurora\System\Managers;
 class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
-	 * 
+	 *
 	 * @param string $sForcedStorage
 	 */
 	public function __construct()
 	{
 		parent::__construct(\Aurora\System\Api::GetModule('Core'), new Filecache\Storage($this));
-	}	
-	
+	}
+
 	/**
 	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sKey
@@ -137,7 +137,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 		}
 		return $mResult;
 	}
-	
+
 	/**
 	 * @param \Aurora\Modules\StandardAuth\Classes\Account|CHelpdeskUser $oAccount
 	 * @param string $sTempName
@@ -157,7 +157,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 			$this->setLastException($oException);
 		}
 		return $mResult;
-	}	
+	}
 
 	/**
 	 * @param string $sUUID

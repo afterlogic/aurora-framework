@@ -34,9 +34,9 @@ class ErrorCodes
 	const UserManager_CalUserCreateFailed = 1030;
 	const UserManager_CalUserUpdateFailed = 1031;
 	const UserManager_CalUserAlreadyExists = 1032;
-	
+
 	const UserManager_SocialAccountAlreadyExists = 1033;
-	
+
 	// validation
 	const Validation_InvalidPort = 1101;
 	const Validation_FieldIsEmpty = 1102;

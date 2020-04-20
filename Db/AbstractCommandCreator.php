@@ -34,7 +34,7 @@ abstract class AbstractCommandCreator
 	public function __construct($oHelper = '', $sPrefix = '')
 	{
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		
+
 		$oCommandCreatorHelper =& $this->GetHelper();
 
 		if ($oSettings)
@@ -43,7 +43,7 @@ abstract class AbstractCommandCreator
 			$this->sPrefix = (string) $oSettings->DBPrefix;
 		}
 	}
-	
+
 	/**
 	 * @return CDbStorage
 	 */
@@ -62,7 +62,7 @@ abstract class AbstractCommandCreator
 			}
 		}
 		return $this->oHelper;
-	}	
+	}
 
 	public function prefix()
 	{

@@ -29,7 +29,7 @@ abstract class AbstractModule
 	/**
 	 * @var array
 	 */
-	protected $aManagersCache = [];	
+	protected $aManagersCache = [];
 
 	/**
 	 * @var array
@@ -39,52 +39,52 @@ abstract class AbstractModule
 	/**
 	 * @var array
 	 */
-	protected $aObjects = [];	
-	
+	protected $aObjects = [];
+
 	/**
 	 * @var \MailSo\Base\Http
 	 */
-	public $oHttp;	
-	
+	public $oHttp;
+
 	/**
 	 * @var array
 	 */
 	protected $aConfig;
-	
+
     /**
      *
      * @var \Aurora\System\Module\Settings
      */
-	protected $oModuleSettings = null;	
-	
+	protected $oModuleSettings = null;
+
     /**
      *
      * @var array
      */
-	protected $aSettingsMap = [];		
-	
+	protected $aSettingsMap = [];
+
     /**
      *
      * @var string
      */
 	public static $Delimiter = '::';
-	
+
     /**
      *
      * @var bool
      */
 	protected $bInitialized = false;
-	
+
     /**
      *
      * @var array
-     */	
+     */
 	protected $aRequireModules = [];
-	
+
     /**
      *
      * @var array
-     */	
+     */
 	protected $aSkipedEvents = [];
 
     /**
@@ -102,15 +102,15 @@ abstract class AbstractModule
     /**
      *
      * @var Manager
-     */	
+     */
 	protected $oModuleManager = null;
 
     /**
      *
      * @var boolean
-     */	
+     */
 	protected $bIsPermanent = false;
-	
+
 	protected $aDeniedMethodsByWebApi =  [
 		'init',
 		'initialize',
@@ -134,9 +134,9 @@ abstract class AbstractModule
 	}
 
 	abstract public function init();
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sName
 	 * @param string $sPath
 	 * @param string $sVersion
@@ -145,19 +145,19 @@ abstract class AbstractModule
 	final public static function createInstance($sPath, $sVersion = '1.0')
 	{
 		return new static($sPath, $sVersion);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
 	final public static function getInstance()
 	{
 		return \Aurora\System\Api::GetModule(self::GetName());
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\Decorator
 	 */
 	public static function Decorator()
@@ -166,16 +166,16 @@ abstract class AbstractModule
 	}
 
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\Decorator
 	 */
 	public function __invoke()
 	{
 		return \Aurora\System\Api::GetModuleDecorator(self::GetName());
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\Module\Manager $oModuleManager
 	 * @return  \Aurora\System\Module\Manager
 	 */
@@ -183,9 +183,9 @@ abstract class AbstractModule
 	{
 		return $this->oModuleManager = $oModuleManager;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\Manager
 	 */
 	protected function GetModuleManager()
@@ -194,16 +194,16 @@ abstract class AbstractModule
 	}
 
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\Settings
 	 */
 	protected function GetModuleSettings()
 	{
 		return $this->oModuleSettings;
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @param string $sModule
 	 */
 	public function RequireModule($sModule)
@@ -213,56 +213,56 @@ abstract class AbstractModule
 			$this->aRequireModules[] = $sModule;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return array
 	 */
 	public function GetRequireModules()
 	{
 		return $this->aRequireModules;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isPermanent()
 	{
 		return $this->bIsPermanent;
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isValid()
 	{
 		return true;
-	}	
+	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function isAllowedModule()
 	{
 		return $this->isPermanent() || $this->oModuleManager->IsAllowedModule(self::GetName());
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected function isInitialized()
 	{
 		return (bool) $this->bInitialized;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function initialize()
@@ -274,21 +274,21 @@ abstract class AbstractModule
 			$this->loadModuleSettings();
 			$this->init();
 		}
-		
+
 		return $mResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return string
 	 */
 	final public static function getNamespace()
 	{
 		return \substr_replace(static::class, '', -7);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return \Aurora\System\Module\Settings
 	 */
 	public function loadModuleSettings()
@@ -298,11 +298,11 @@ abstract class AbstractModule
 			$this->oModuleSettings = $this->GetModuleManager()->GetModuleSettings(self::GetName());
 		}
 		return $this->oModuleSettings;
-	}	
+	}
 
 	/**
 	 * Saves module settings to config.json file.
-	 * 
+	 *
 	 * returns bool
 	 */
 	public function saveModuleConfig()
@@ -315,10 +315,10 @@ abstract class AbstractModule
 		}
 
 		return $bResult;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sName
 	 * @param mixed $mDefaultValue
 	 * @return mixed
@@ -330,35 +330,35 @@ abstract class AbstractModule
 		{
 			$mResult = $this->oModuleSettings->GetValue($sName, $mDefaultValue);
 		}
-		
+
 		return $mResult;
 	}
-	
+
 	/**
 	 * Sets new value of module setting.
-	 * 
+	 *
 	 * @param string $sName Name of module setting.
 	 * @param string $sValue New value of module setting.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function setConfig($sName, $sValue = null)
 	{
 		$bResult = false;
-		
+
 		if (isset($this->oModuleSettings))
 		{
 			$bResult = $this->oModuleSettings->SetValue($sName, $sValue);
 		}
-		
+
 		return $bResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param array $aMethods
-	 * 
-	 */	
+	 *
+	 */
 	public function denyMethodsCallByWebApi($aMethods)
 	{
 		foreach ($aMethods as $sMethodName)
@@ -366,12 +366,12 @@ abstract class AbstractModule
 			$this->denyMethodCallByWebApi($sMethodName);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sMethodName
-	 * 
-	 */	
+	 *
+	 */
 	public function denyMethodCallByWebApi($sMethodName)
 	{
 		if(!in_array($sMethodName, $this->aDeniedMethodsByWebApi))
@@ -379,9 +379,9 @@ abstract class AbstractModule
 			$this->aDeniedMethodsByWebApi[] = $sMethodName;
 		}
 	}
-		
+
 	/**
-	 * 
+	 *
 	 * @param callback $mCallbak
 	 * @return boolean
 	 */
@@ -389,9 +389,9 @@ abstract class AbstractModule
 	{
 		return in_array($sMethodName, array_values($this->aDeniedMethodsByWebApi));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sMethod
 	 * @return boolean
 	 */
@@ -399,9 +399,9 @@ abstract class AbstractModule
 	{
 		return in_array($sMethod, $this->getEventsCallbacks());
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getEventsCallbacks()
@@ -418,12 +418,12 @@ abstract class AbstractModule
 				}
 			}
 		}
-		
+
 		return $aEventsValues;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $sEvent
 	 * @param callback $fCallback
 	 * @param int $iPriority
@@ -434,7 +434,7 @@ abstract class AbstractModule
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $sEvent
 	 * @param array $aArguments
 	 */
@@ -443,9 +443,9 @@ abstract class AbstractModule
 		if (!in_array($sEvent, $this->aSkipedEvents))
 		{
 			return $this->GetModuleManager()->broadcastEvent(
-				self::GetName(), 
-				$sEvent, 
-				$aArguments, 
+				self::GetName(),
+				$sEvent,
+				$aArguments,
 				$mResult
 			);
 		}
@@ -454,9 +454,9 @@ abstract class AbstractModule
 			$this->removeEventFromSkiped($sEvent);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sEvent
 	 */
 	public function skipEvent($sEvent)
@@ -466,19 +466,19 @@ abstract class AbstractModule
 			$this->aSkipedEvents[] = $sEvent;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sEvent
 	 */
 	public function removeEventFromSkiped($sEvent)
 	{
 		$this->aSkipedEvents = array_diff(
-			$this->aSkipedEvents, 
+			$this->aSkipedEvents,
 			array($sEvent)
-		);	
+		);
 	}
-	
+
 	/**
 	 * @param string $sParsedTemplateID
 	 * @param string $sParsedPlace
@@ -490,26 +490,26 @@ abstract class AbstractModule
 		if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName))
 		{
 			$this->GetModuleManager()->includeTemplate(
-				$sParsedTemplateID, 
-				$sParsedPlace, 
-				$this->GetPath().'/'.$sTemplateFileName, 
+				$sParsedTemplateID,
+				$sParsedPlace,
+				$this->GetPath().'/'.$sTemplateFileName,
 				$sModuleName
 			);
 		}
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @param array $aMap
 	 */
 	public function extendObject($sType, $aMap)
 	{
 		$this->GetModuleManager()->extendObject(self::GetName(), $sType, $aMap);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @return array
 	 */
@@ -517,9 +517,9 @@ abstract class AbstractModule
 	{
 		return $this->GetModuleManager()->getExtendedObject($sType);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @return boolean
 	 */
@@ -575,9 +575,9 @@ abstract class AbstractModule
 	{
 		return self::GetName().'-'.$this->sVersion;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sName
 	 * @param callback $mCallbak
 	 */
@@ -589,9 +589,9 @@ abstract class AbstractModule
 			[$this, $mCallbak]
 		);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param array $aEntries
 	 */
 	final public function AddEntries($aEntries)
@@ -601,9 +601,9 @@ abstract class AbstractModule
 			$this->AddEntry($sName, $mCallbak);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sName
 	 * @return boolean
 	 */
@@ -611,18 +611,18 @@ abstract class AbstractModule
 	{
 		return \Aurora\System\Router::getInstance()->hasRoute($sName);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sName
 	 */
 	final public function RemoveEntry($sName)
 	{
 		return \Aurora\System\Router::getInstance()->removeRoute($sName);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param array $aEntries
 	 */
 	final public function RemoveEntries($aEntries)
@@ -631,10 +631,10 @@ abstract class AbstractModule
 		{
 			$this->RemoveEntry($sName);
 		}
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param callback $mCallbak
 	 * @return boolean
 	 */
@@ -644,14 +644,14 @@ abstract class AbstractModule
 	}
 
 	/**
-	 * 
+	 *
 	 * @param stranig $sName
 	 * @return mixed
 	 */
 	final public function GetEntryCallback($sName)
 	{
 		return \Aurora\System\Router::getInstance()->getCallback($sName);
-	}	
+	}
 
 	/**
 	 * @param string $sMethod
@@ -662,8 +662,8 @@ abstract class AbstractModule
 	final public function DefaultResponse($sMethod, $mResult = false)
 	{
 		return \Aurora\System\Managers\Response::DefaultResponse(self::GetName(), $sMethod, $mResult);
-	}	
-	
+	}
+
 	/**
 	 * @param string $sMethod
 	 *
@@ -685,8 +685,8 @@ abstract class AbstractModule
 	final public function FalseResponse($sMethod, $iErrorCode = null, $sErrorMessage = null, $aAdditionalParams = null, $sModule = null)
 	{
 		return \Aurora\System\Managers\Response::FalseResponse($sMethod, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
-	}	
-	
+	}
+
 	/**
 	 * @param string $sActionName
 	 * @param \Exception $oException
@@ -697,10 +697,10 @@ abstract class AbstractModule
 	final public function ExceptionResponse($sActionName, $oException, $aAdditionalParams = null)
 	{
 		return \Aurora\System\Managers\Response::ExceptionResponse($sActionName, $oException, $aAdditionalParams);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param string $sMethodName
 	 * @param array $aArguments
 	 * @param boolean $bWebApi
@@ -713,27 +713,27 @@ abstract class AbstractModule
 		$aReflectionParameters = $oReflector->getParameters();
 		if ($bWebApi)
 		{
-			foreach ($aReflectionParameters as $oParam) 
+			foreach ($aReflectionParameters as $oParam)
 			{
 				$sParamName = $oParam->getName();
 				$iParamPosition = $oParam->getPosition();
 				$bIsArgumentGiven = array_key_exists($sParamName, $aArguments);
-				if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable()) 
+				if (!$bIsArgumentGiven && !$oParam->isDefaultValueAvailable())
 				{
 					$aMethodArgs[$iParamPosition] = null;
 				}
 				else
 				{
-					$aMethodArgs[$iParamPosition] = $bIsArgumentGiven ? 
+					$aMethodArgs[$iParamPosition] = $bIsArgumentGiven ?
 						$aArguments[$sParamName] : $oParam->getDefaultValue();
-				}		
+				}
 			}
 		}
 		else
 		{
 			$aTempArguments = array();
 			$aMethodArgs = $aArguments;
-			foreach ($aReflectionParameters as $oParam) 
+			foreach ($aReflectionParameters as $oParam)
 			{
 				$sParamName = $oParam->getName();
 				$iParamPosition = $oParam->getPosition();
@@ -750,12 +750,12 @@ abstract class AbstractModule
 			}
 			$aArguments = $aTempArguments;
 		}
-		
+
 		return $aMethodArgs;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sMethod
 	 * @return boolean
 	 */
@@ -768,9 +768,9 @@ abstract class AbstractModule
 	{
 		return !($bWebApi && ($this->isCallbackMethod($sMethod) || $this->isDeniedMethodByWebApi($sMethod))) && $this->isAllowedModule();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sMethod
 	 * @param array $aArguments
 	 * @param boolean $bWebApi
@@ -779,7 +779,7 @@ abstract class AbstractModule
 	final public function CallMethod($sMethod, $aArguments = array(), $bWebApi = false)
 	{
 		$mResult = false;
-		try 
+		try
 		{
 			if (method_exists($this, $sMethod) &&  $this->canCallMethod($sMethod, $bWebApi))
 			{
@@ -792,11 +792,11 @@ abstract class AbstractModule
 				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, $bWebApi);
 
 				$bEventResult = $this->broadcastEvent(
-					$sMethod . AbstractModule::$Delimiter . 'before', 
-					$aArguments, 
+					$sMethod . AbstractModule::$Delimiter . 'before',
+					$aArguments,
 					$mResult
 				);
-				
+
 				// prepare arguments for main action after event
 				$aMethodArgs = $this->prepareMethodArguments($sMethod, $aArguments, true);
 
@@ -812,7 +812,7 @@ abstract class AbstractModule
 							);
 						}
 						$mMethodResult = call_user_func_array(
-							array($this, $sMethod), 
+							array($this, $sMethod),
 							$aMethodArgs
 						);
 						if (is_array($mMethodResult) && is_array($mResult))
@@ -823,12 +823,12 @@ abstract class AbstractModule
 						{
 							$mResult = $mMethodResult;
 						}
-					} 
-					catch (\Exception $oException) 
+					}
+					catch (\Exception $oException)
 					{
 						$this->GetModuleManager()->AddResult(
-							self::GetName(), 
-							$sMethod, 
+							self::GetName(),
+							$sMethod,
 							$aArguments,
 							$mResult,
 							$oException->getCode()
@@ -836,8 +836,8 @@ abstract class AbstractModule
 						if (!($oException instanceof \Aurora\System\Exceptions\ApiException))
 						{
 							throw new \Aurora\System\Exceptions\ApiException(
-								$oException->getCode(), 
-								$oException, 
+								$oException->getCode(),
+								$oException,
 								$oException->getMessage()
 							);
 						}
@@ -847,16 +847,16 @@ abstract class AbstractModule
 						}
 					}
 				}
-				
+
 				$this->broadcastEvent(
-					$sMethod . AbstractModule::$Delimiter . 'after', 
-					$aArguments, 
+					$sMethod . AbstractModule::$Delimiter . 'after',
+					$aArguments,
 					$mResult
 				);
-				
+
 				$this->GetModuleManager()->AddResult(
-					self::GetName(), 
-					$sMethod, 
+					self::GetName(),
+					$sMethod,
 					$aArguments,
 					$mResult
 				);
@@ -871,37 +871,37 @@ abstract class AbstractModule
 		catch (\Exception $oException)
 		{
 			throw new \Aurora\System\Exceptions\ApiException(
-				$oException->getCode(), 
-				$oException, 
+				$oException->getCode(),
+				$oException,
 				$oException->getMessage(),
 				[],
 				$this
 			);
 		}
-				
+
 		return $mResult;
 	}
-	
+
 	/**
 	 * Obtains list of module settings for authenticated user.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function GetSettings()
 	{
 		return null;
 	}
-	
+
 	protected function getLangsData($sLang)
 	{
 		$mResult = false;
 		$sLangFile = $this->GetPath().'/i18n/' . $sLang . '.ini';
 		$sLangFile = @\file_exists($sLangFile) ? $sLangFile : '';
 
-		if (0 < \strlen($sLangFile)) 
+		if (0 < \strlen($sLangFile))
 		{
 			$aLang = \Aurora\System\Api::convertIniToLang($sLangFile);
-			if (\is_array($aLang)) 
+			if (\is_array($aLang))
 			{
 				$mResult = $aLang;
 			}
@@ -936,7 +936,7 @@ abstract class AbstractModule
 				$sLanguage = \Aurora\System\Api::GetLanguage();
 			}
 		}
-		
+
 		static $aLang = null;
 
 		if (is_null($aLang))
@@ -965,13 +965,13 @@ abstract class AbstractModule
 				$aLang = $this->getLangsData('English');
 			}
 		}
-		
-		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) : 
+
+		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) :
 			\Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 */
 	protected function updateEnabledForEntity(&$oEntity, $bEnabled = true)
@@ -997,15 +997,15 @@ abstract class AbstractModule
 				if (!\in_array(self::GetName(), $aDisabledModules))
 				{
 					$aDisabledModules[] = self::GetName();
-				}				
+				}
 			}
 			$oEntity->{'@DisabledModules'} = \implode('|', $aDisabledModules);
 			$oEavManager->saveEntity($oEntity);
-		}	
+		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\EAV\Entity $oEntity
 	 * @return bool
 	 */
@@ -1017,7 +1017,7 @@ abstract class AbstractModule
 		{
 			$aDisabledModules = \explode("|", $sDisabledModules);
 		}
-		
+
 		return !\in_array(self::GetName(), $aDisabledModules);
 	}
 
@@ -1038,7 +1038,7 @@ abstract class AbstractModule
 	{
 		return is_array($this->aErrors) && isset($this->aErrors[(int) $iErrorCode]) ? $this->aErrors[(int) $iErrorCode] : '';
 	}
-	
+
 	/**
 	 *
 	 * @return array

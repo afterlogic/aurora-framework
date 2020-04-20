@@ -24,15 +24,15 @@ abstract class AbstractManager
 	/**
 	 * @var \Aurora\System\Module\AbstractModule
 	 */
-	protected $oModule;	
-	
+	protected $oModule;
+
 	/**
 	 * @var \Aurora\System\Settings
 	 */
 	protected $oSettings;
 
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\Module\AbstractModule $oModule
 	 */
 	public function __construct(\Aurora\System\Module\AbstractModule $oModule)
@@ -55,7 +55,7 @@ abstract class AbstractManager
 	{
 		return $this->oSettings;
 	}
-	
+
 	public function &GetConnection()
 	{
 		return \Aurora\System\Api::GetConnection();

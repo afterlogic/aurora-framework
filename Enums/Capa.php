@@ -28,6 +28,6 @@ class Capa extends \Aurora\System\Enums\AbstractEnumeration
 	const HELPDESK = 'HELPDESK';
 	const MOBILE_SYNC = 'MOBILE_SYNC';
 	const OUTLOOK_SYNC = 'OUTLOOK_SYNC';
-	
+
 	const NO = 'NO';
 }

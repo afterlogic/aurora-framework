@@ -4,7 +4,7 @@
  * if commercial version of the product was purchased.
  * For full statements of the licenses see LICENSE-AFTERLOGIC and LICENSE-AGPL3 files.
  */
- 
+
 namespace Aurora\System;
 
 /**
@@ -20,11 +20,11 @@ class Settings extends AbstractSettings
 	{
 		$this->aContainer = array(
 			'LicenseKey' => new SettingsProperty('LicenseKey', '', 'string'),
-			
+
 			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
 			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
 			'AdminLanguage' => new SettingsProperty('AdminLanguage', 'English', 'string'),
-			
+
 			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', '\Aurora\System\Enums\DbType'),
 			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
 			'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
@@ -48,7 +48,7 @@ class Settings extends AbstractSettings
 			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
 			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
 			'LogPostView' => new SettingsProperty('LogPostView', false, 'bool'),
-			
+
 			'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
 			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
 			'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
@@ -69,12 +69,12 @@ class Settings extends AbstractSettings
 			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
 			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
 			'ExpireUserSessionsBefore' => new SettingsProperty('ExpireUserSessionsBefore', 0, 'int'),
-			
+
 			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
 			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
 
 			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool')
-		);		
+		);
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Settings extends AbstractSettings
 		{
 			$this->Save();
 		}
-		
+
 		return parent::Load();
 	}
 }

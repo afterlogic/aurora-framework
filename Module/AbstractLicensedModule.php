@@ -14,7 +14,7 @@ namespace Aurora\System\Module;
  *
  * @package Api
  */
-abstract class AbstractLicensedModule extends AbstractModule 
+abstract class AbstractLicensedModule extends AbstractModule
 {
 	protected $isValid = null;
 
@@ -22,7 +22,7 @@ abstract class AbstractLicensedModule extends AbstractModule
 	{
 		parent::__construct($sPath, $sVersion);
 		$this->RequireModule('Licensing');
-	}	
+	}
 
 	public function isValid()
 	{
@@ -31,7 +31,7 @@ abstract class AbstractLicensedModule extends AbstractModule
 			$oLicensing = \Aurora\System\Api::GetModule('Licensing');
 			$this->isValid = ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName()));
 		}
-		
+
 		return $this->isValid;
 	}
 }

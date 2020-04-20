@@ -19,5 +19,5 @@ class AuthToken extends \Aurora\System\EAV\Entity
 	protected $aStaticMap = [
 		'Token'				=> ['text', '', true],
         'LastUsageDateTime'		=> ['int', 0, true]
-	];    
+	];
 }

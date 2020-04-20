@@ -17,7 +17,7 @@ namespace Aurora\System\Managers;
 class Cache
 {
     protected $cacheManager = null;
-    
+
     public function __construct($sStorage, $sPath)
     {
         if (!file_exists(self::getPath()))
@@ -33,15 +33,15 @@ class Cache
         if ($this->cacheManager === null)
         {
             $slice = new \PHPixie\Slice();
-            $filesystem = new \PHPixie\Filesystem();		
-    
+            $filesystem = new \PHPixie\Filesystem();
+
             $this->cacheManager = new \PHPixie\Cache(
                 $slice->arrayData([
                     'default' => [
                          'driver' => 'phpfile',
                          'path' => !empty(trim($sPath)) ? $sPath : ''
                     ]
-                ]), 
+                ]),
                 $filesystem->root(
                     $sStoragePath
                 )

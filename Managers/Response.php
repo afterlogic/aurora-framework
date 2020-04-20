@@ -29,7 +29,7 @@ class Response
 	{
 		return  self::$sMethod;
 	}
-	
+
 	public static function SetMethod($sMethod)
 	{
 		self::$sMethod = $sMethod;
@@ -44,7 +44,7 @@ class Response
 	{
 		return !empty(self::$objectNames[$sObjectName]) ? self::$objectNames[$sObjectName] : $sObjectName;
 	}
-	
+
 	/**
 	 * @param object $oData
 	 *
@@ -58,7 +58,7 @@ class Response
 			$sObjectName = \get_class($oData);
 			$mResult = array(
 				'@Object' => self::GetObjectName($sObjectName)
-			);			
+			);
 
 			if ($oData instanceof \MailSo\Base\Collection)
 			{
@@ -74,7 +74,7 @@ class Response
 
 		return $mResult;
 	}
-	
+
 	/**
 	 * @param mixed $mResponse
 	 *
@@ -86,31 +86,31 @@ class Response
 
 		if (\is_object($mResponse))
 		{
-			if (\method_exists($mResponse, 'toResponseArray'))	
+			if (\method_exists($mResponse, 'toResponseArray'))
 			{
 				$aArgs = [$mResponse, $aParameters];
 				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
-					'System', 
-					'toResponseArray' . \Aurora\System\Module\AbstractModule::$Delimiter . 'before', 
+					'System',
+					'toResponseArray' . \Aurora\System\Module\AbstractModule::$Delimiter . 'before',
 					$aArgs
 				);
 
 				$mResult = \array_merge(
-					self::objectWrapper($mResponse, $aParameters), 
+					self::objectWrapper($mResponse, $aParameters),
 					$mResponse->toResponseArray($aParameters)
 				);
 
 				\Aurora\System\Api::GetModuleManager()->broadcastEvent(
-					'System', 
-					'toResponseArray' . \Aurora\System\Module\AbstractModule::$Delimiter . 'after', 
+					'System',
+					'toResponseArray' . \Aurora\System\Module\AbstractModule::$Delimiter . 'after',
 					$aArgs,
 					$mResult
-				);			
+				);
 			}
 			else
 			{
 				$mResult = \array_merge(
-					self::objectWrapper($mResponse, $aParameters), 
+					self::objectWrapper($mResponse, $aParameters),
 					self::CollectionToResponseArray($mResponse, $aParameters)
 				);
 			}
@@ -132,8 +132,8 @@ class Response
 		unset($mResponse);
 
 		return $mResult;
-	}	
-	
+	}
+
 	/**
 	 * @param bool $bDownload
 	 * @param string $sContentType
@@ -143,7 +143,7 @@ class Response
 	 */
 	public static function OutputHeaders($bDownload, $sContentType, $sFileName)
 	{
-	
+
 		if ($bDownload)
 		{
 			\header('Content-Type: '.$sContentType, true);
@@ -164,10 +164,10 @@ class Response
 
 		\header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline' ).'; '.
 			\trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
-		
+
 		\header('Accept-Ranges: none', true);
 	}
-	
+
 	public static function RemoveThumbFromCache($iUserId, $sHash, $sFileName)
 	{
 		$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
@@ -177,28 +177,28 @@ class Response
 			$oCache->delete($sMd5Hash);
 		}
 	}
-	
+
 	public static function getImageAngle($rResource)
 	{
 		$iRotateAngle = 0;
-		if (\function_exists('exif_read_data')) 
-		{ 
-			if ($exif_data = @\exif_read_data($rResource, 'IFD0')) 
-			{ 
-				switch (@$exif_data['Orientation']) 
-				{ 
-					case 1: 
-						$iRotateAngle = 0; 
-						break; 
-					case 3: 
-						$iRotateAngle = 180; 
-						break; 
-					case 6: 
-						$iRotateAngle = 270; 
-						break; 
-					case 8: 
-						$iRotateAngle = 90; 
-						break; 
+		if (\function_exists('exif_read_data'))
+		{
+			if ($exif_data = @\exif_read_data($rResource, 'IFD0'))
+			{
+				switch (@$exif_data['Orientation'])
+				{
+					case 1:
+						$iRotateAngle = 0;
+						break;
+					case 3:
+						$iRotateAngle = 180;
+						break;
+					case 6:
+						$iRotateAngle = 270;
+						break;
+					case 8:
+						$iRotateAngle = 90;
+						break;
 				}
 			}
 		}
@@ -228,7 +228,7 @@ class Response
 
 		return $oCache->get(
 			self::GetThumbCacheFilename(self::GetThumbHash(), $sFileName)
-		);		
+		);
 	}
 
 	public static function GetThumbResource($iUserId, $rResource, $sFileName, $bShow = true)
@@ -256,12 +256,12 @@ class Response
 		{
 			echo $sThumb; exit();
 		}
-		else 
+		else
 		{
 			return $sThumb;
 		}
-	}	
-	
+	}
+
 	/**
 	 * @param string $sKey
 	 *
@@ -300,8 +300,8 @@ class Response
 				exit();
 			}
 		}
-	}	
-	
+	}
+
 	public static function CollectionToResponseArray($oCollection, $aParameters = array())
 	{
 		$aResult = array();
@@ -315,7 +315,7 @@ class Response
 				'@Collection' => self::GetResponseObject($oCollection->CloneAsArray(), $aParameters)
 			);
 		}
-		
+
 		return $aResult;
 	}
 
@@ -340,7 +340,7 @@ class Response
 					$aResult['Module'] = $sModuleName;
 					$aResult['Method'] = $sMethod;
 					$aResult['Result'] = self::GetResponseObject(
-						$aValue['Result'], 
+						$aValue['Result'],
 						[
 							'Module' => $aValue['Module'],
 							'Method' => $aValue['Method'],
@@ -351,7 +351,7 @@ class Response
 				else if (\Aurora\System\Api::$bDebug)
 				{
 					$aResult['Stack'][] =  self::GetResponseObject(
-						$aValue['Result'], 
+						$aValue['Result'],
 						[
 							'Module' => $aValue['Module'],
 							'Method' => $aValue['Method'],
@@ -364,7 +364,7 @@ class Response
 		$aResult['SubscriptionsResult'] = \Aurora\System\Api::GetModuleManager()->GetSubscriptionsResult();
 		$aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4) + 0;
 		$aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4) + 0;
-		
+
 		\Aurora\System\Api::Log('@Time: ' . $aResult['@Time']);
 		\Aurora\System\Api::Log('@TimeApiInit: ' . $aResult['@TimeApiInit']);
 		$sLoggerGuid = \Aurora\System\Api::GetLoggerGuid();
@@ -372,13 +372,13 @@ class Response
 		{
 			$aResult['@LoggerGuid'] = \MailSo\Log\Logger::Guid();
 		}
-		
+
 		if (version_compare(phpversion(), '7.1', '>=')) {
 		    ini_set( 'serialize_precision', -1 );
 		}
-		
+
 		return $aResult;
-	}		
+	}
 
 	/**
 	 * @param string $sMethod
@@ -392,30 +392,30 @@ class Response
 	{
 		$aResponseItem = self::DefaultResponse($sModule, $sMethod, false);
 
-		if (null !== $iErrorCode) 
+		if (null !== $iErrorCode)
 		{
 			$aResponseItem['ErrorCode'] = (int) $iErrorCode;
-			if (null !== $sErrorMessage) 
+			if (null !== $sErrorMessage)
 			{
 				$aResponseItem['ErrorMessage'] = null === $sErrorMessage ? '' : (string) $sErrorMessage;
 			}
 		}
 
-		if (null !== $sModule) 
+		if (null !== $sModule)
 		{
 			$aResponseItem['Module'] = $sModule;
 		}
 
-		if (is_array($aAdditionalParams)) 
-		{			
-			foreach ($aAdditionalParams as $sKey => $mValue) 
+		if (is_array($aAdditionalParams))
+		{
+			foreach ($aAdditionalParams as $sKey => $mValue)
 			{
 				$aResponseItem[$sKey] = $mValue;
 			}
 		}
 
 		return $aResponseItem;
-	}		
+	}
 
 	/**
 	 * @param string $sActionName
@@ -433,14 +433,14 @@ class Response
 		$oSettings =& \Aurora\System\Api::GetSettings();
 		$bShowError = $oSettings->GetValue('DisplayServerErrorInformation', false);
 
-		if ($oException instanceof \Aurora\System\Exceptions\ApiException) 
+		if ($oException instanceof \Aurora\System\Exceptions\ApiException)
 		{
 			$iErrorCode = $oException->getCode();
 			$sErrorMessage = null;
-			if ($bShowError) 
+			if ($bShowError)
 			{
 				$sErrorMessage = $oException->getMessage();
-				if (empty($sErrorMessage) || 'ApiException' === $sErrorMessage) 
+				if (empty($sErrorMessage) || 'ApiException' === $sErrorMessage)
 				{
 					$sErrorMessage = null;
 				}
@@ -451,25 +451,25 @@ class Response
 				$sModule = $oModule::GetName();
 			}
 		}
-		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException) 
+		else if ($bShowError && $oException instanceof \MailSo\Imap\Exceptions\ResponseException)
 		{
 			$iErrorCode = \Aurora\System\Notifications::MailServerError;
-			
+
 			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
-			if ($oResponse instanceof \MailSo\Imap\Response) 
+			if ($oResponse instanceof \MailSo\Imap\Response)
 			{
 				$sErrorMessage = $oResponse instanceof \MailSo\Imap\Response ?
 					$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : null;
 			}
-		} 
-		else 
+		}
+		else
 		{
 			$iErrorCode = \Aurora\System\Notifications::UnknownError;
 //			$sErrorMessage = $oException->getCode().' - '.$oException->getMessage();
 		}
 
 		return self::FalseResponse($sActionName, $iErrorCode, $sErrorMessage, $aAdditionalParams, $sModule);
-	}		
+	}
 
 	public static function GetJsonFromObject($sFormat, $aResponseItem)
 	{
@@ -477,6 +477,6 @@ class Response
 		{
 			@header('Content-Type: application/json; charset=utf-8');
 		}
-		return \MailSo\Base\Utils::Php2js($aResponseItem, \Aurora\System\Api::SystemLogger());		
+		return \MailSo\Base\Utils::Php2js($aResponseItem, \Aurora\System\Api::SystemLogger());
 	}
 }

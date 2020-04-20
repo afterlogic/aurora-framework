@@ -18,7 +18,7 @@ class ObjectExtender
 {
 	/**
      * @var array
-     */    
+     */
     protected $_aObjects = [];
 
     /**
@@ -27,7 +27,7 @@ class ObjectExtender
     protected static $self = null;
 
     /**
-	 * 
+	 *
 	 * @return \self
 	 */
 	public static function createInstance()
@@ -48,9 +48,9 @@ class ObjectExtender
 
 		return self::$self;
 	}
-    
+
 	/**
-	 * 
+	 *
 	 * @param string $sModule
 	 * @param string $sType
 	 * @param array $aMap
@@ -62,10 +62,10 @@ class ObjectExtender
 			$aValue['@Extended'] = true;
 			$this->_aObjects[$sType][$sModule . Module\AbstractModule::$Delimiter . $sKey] = $aValue;
 		}
-    }	
-    
+    }
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @return array
 	 */
@@ -73,14 +73,14 @@ class ObjectExtender
 	{
 		return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : [];
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sType
 	 * @return boolean
 	 */
 	public function issetObject($sType)
 	{
 		return isset($this->_aObjects[$sType]);
-	}    
+	}
 }

@@ -20,7 +20,7 @@ class Application
 	 * @type string
 	 */
 	const AUTH_TOKEN_KEY = 'AuthToken';
-	
+
 	/**
 	 * @var \Aurora\System\Module\Manager
 	 */
@@ -45,7 +45,7 @@ class Application
 			{
 				\Aurora\Api::Log('INFO[MEMORY]: Memory peak usage: '.$aStatistic['php']['memory_get_peak_usage']);
 			}
-		
+
 			if (isset($aStatistic['time']))
 			{
 				\Aurora\Api::Log('INFO[TIME]: Time delta: '.$aStatistic['time']);
@@ -60,7 +60,7 @@ class Application
 	{
 		return new self();
 	}
-	
+
 	/**
 	 * @return \Aurora\System\Application
 	 */
@@ -74,23 +74,23 @@ class Application
 
 		return $oInstance;
 	}
-	
+
 	public static function DebugMode($bDebug)
 	{
 		Api::$bDebug = $bDebug;
 	}
-	
+
 	public static function UseDbLogs()
 	{
 		Api::$bUseDbLog = true;
 	}
-	
+
 	public static function Start($sDefaultEntry = 'default')
 	{
 		if (!defined('AU_APP_START'))
 		{
 			define('AU_APP_START', microtime(true));
-		}		
+		}
 
 		try
 		{
@@ -100,7 +100,7 @@ class Application
 		{
 			\Aurora\System\Api::LogException($oEx);
 		}
-		
+
 		self::GetVersion();
 
 		$mResult = self::SingletonInstance()->Route(
@@ -123,7 +123,7 @@ class Application
 		\define('AU_APP_VERSION', $sVersion);
 		return $sVersion;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -131,7 +131,7 @@ class Application
 	{
 		return Router::getItems();
 	}
-	
+
 	public function Route($sRoute)
 	{
 		return Api::GetModuleManager()->RunEntry($sRoute);

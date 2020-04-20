@@ -4,7 +4,7 @@
  * if commercial version of the product was purchased.
  * For full statements of the licenses see LICENSE-AFTERLOGIC and LICENSE-AGPL3 files.
  */
- 
+
 namespace Aurora\System\Managers\Eav\Storages\Db\CommandCreator;
 
 /**

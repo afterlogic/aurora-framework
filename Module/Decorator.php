@@ -23,30 +23,30 @@ class Decorator
 	protected $sModuleName;
 
     /**
-	 * 
+	 *
 	 * @param string $sModuleName
 	 */
-	public function __construct($sModuleName) 
+	public function __construct($sModuleName)
 	{
 		$this->sModuleName = $sModuleName;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @return Decorator
-	 */	
+	 */
 	public static function __callStatic($sMethodName, $aArguments)
 	{
 		return new self($sMethodName);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param string $sMethodName
 	 * @param array $aArguments
 	 * @return mixed
 	 */
-	public function __call($sMethodName, $aArguments) 
+	public function __call($sMethodName, $aArguments)
 	{
 		$mResult = false;
 		$oModule = \Aurora\System\Api::GetModule($this->sModuleName);

@@ -13,7 +13,7 @@ namespace Aurora\System\Managers\Eav\Storages\Db;
  * @copyright Copyright (c) 2019, Afterlogic Corp.
  *
  * @internal
- * 
+ *
  * @package EAV
  * @subpackage Storages
  */
@@ -30,7 +30,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	protected $oCommandCreator;
 
 	/**
-	 * 
+	 *
 	 * @param \Aurora\System\Managers\AbstractManager $oManager
 	 */
 	public function __construct(\Aurora\System\Managers\Eav &$oManager)
@@ -42,14 +42,14 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
 	public function isEntityExists($mIdOrUUID, $sType = null)
 	{
 		$bResult = false;
-		
+
 		if ($this->oConnection->Execute(
 				$this->oCommandCreator->isEntityExists($mIdOrUUID)
 			)
@@ -64,10 +64,10 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$this->oConnection->FreeResult();
 		}
 		return $bResult;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param type $oEntity
 	 * @return type
 	 */
@@ -86,7 +86,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$oEntity->EntityId = $bResult;
 			if (0 < $oEntity->countAttributes())
 			{
-				try 
+				try
 				{
 					$this->setAttributes(array($oEntity), $oEntity->getAttributes());
 				}
@@ -100,18 +100,18 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		else
 		{
 			throw new \Aurora\System\Exceptions\ManagerException(Errs::Main_UnknownError);
-		}		
+		}
 
 		return $bResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type $oEntity
 	 * @param bool $bOnlyOverrided
 	 * @return type
 	 */
-	public function updateEntity($oEntity, $bOnlyOverrided = false) 
+	public function updateEntity($oEntity, $bOnlyOverrided = false)
 	{
 		$mResult = false;
 		if (0 < $oEntity->countAttributes())
@@ -119,7 +119,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			try
 			{
 				$this->setAttributes(
-					array($oEntity), 
+					array($oEntity),
 					$oEntity->getAttributes($bOnlyOverrided)
 				);
 				$mResult = true;
@@ -131,11 +131,11 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 		}
 
-		return $mResult;		
+		return $mResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
@@ -150,15 +150,15 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			if ($oRow = $this->oConnection->GetNextRecord())
 			{
 				$sEntityType = $oRow->entity_type;
-			}			
+			}
 			$this->oConnection->FreeResult();
 		}
 
 		return $sEntityType;
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @param type $mIdOrUUID
 	 * @return type
 	 */
@@ -175,7 +175,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 				if (!isset($oEntity))
 				{
 					$oEntity = \Aurora\System\EAV\Entity::createInstance(
-						$oRow->entity_type, 
+						$oRow->entity_type,
 						$oRow->entity_module
 					);
 				}
@@ -192,10 +192,10 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 						$mValue = $oRow->attr_value;
 						$bEncrypt = $oEntity->isEncryptedAttribute($oRow->attr_name);
 						$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-							$oRow->attr_name, 
-							$mValue, 
-							$oRow->attr_type, 
-							$bEncrypt, 
+							$oRow->attr_name,
+							$mValue,
+							$oRow->attr_type,
+							$bEncrypt,
 							$oEntity->EntityId
 						);
 						$oAttribute->Encrypted = $bEncrypt;
@@ -203,12 +203,12 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 						$oEntity->{$oRow->attr_name} = $oAttribute;
 					}
 				}
-			}			
+			}
 			$this->oConnection->FreeResult();
 		}
 
 		return ((isset($oEntity) && get_class($oEntity) ===  ltrim($sType, '\\')) || ($sType === null)) ? $oEntity : null;
-	}	
+	}
 
 	public function getTypes()
 	{
@@ -226,10 +226,10 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 		}
 		return $mResult;
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @param type $sType
 	 * @param type $aWhere
 	 * @param type $aIds
@@ -246,15 +246,15 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 			{
 				$mResult = (int) $oRow->entities_count;
-			}			
+			}
 			$this->oConnection->FreeResult();
 		}
 
 		return $mResult;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type $sType
 	 * @param type $iOffset
 	 * @param type $iLimit
@@ -266,14 +266,14 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		$aUids = [];
 		if ($this->oConnection->Execute(
 				$this->oCommandCreator->getEntities(
-					$sType, 
-					['UUID'], 
-					$iOffset, 
-					$iLimit, 
+					$sType,
+					['UUID'],
+					$iOffset,
+					$iLimit,
 					$aSearchAttrs,
 					$mSortAttributes,
 					$iSortOrder,
-					[], 
+					[],
 					false,
 					$sCustomViewSql
 				)
@@ -287,12 +287,12 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 		}
 		$this->oConnection->FreeResult();
-		
-		return $aUids; 
+
+		return $aUids;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type $sType
 	 * @param type $aViewAttrs
 	 * @param type $iOffset
@@ -306,37 +306,37 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	public function getEntities($sType, $aViewAttrs = [], $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mOrderBy = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
 	{
 		$mResult = [];
-		
+
 		if (count($aIdsOrUUIDs) === 0)
 		{
 			$aIdsOrUUIDs = $this->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder, $sCustomViewSql);
 		}
-		
-		if ($aViewAttrs === null) 
+
+		if ($aViewAttrs === null)
 		{
 			$aViewAttrs = [];
 		}
-		else if (count($aViewAttrs) === 0) 
+		else if (count($aViewAttrs) === 0)
 		{
 			$aViewAttrs = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
-		}		
-		
-		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with 
+		}
+
+		// request for \Aurora\Modules\Contacts\Classes\Contact objects were failed with
 		// "Memory allocation error: 1038 Out of sort memory, consider increasing server sort buffer size"
-		$this->oConnection->Execute("set sort_buffer_size=1024*1024"); 
-		
+		$this->oConnection->Execute("set sort_buffer_size=1024*1024");
+
 		if (count($aIdsOrUUIDs) > 0)
 		{
 			if ($this->oConnection->Execute(
-					
+
 					$this->oCommandCreator->getEntities(
-						$sType, 
-						$aViewAttrs, 
-						0, 
-						0, 
-						[], 
-						$mOrderBy, 
-						$iSortOrder, 
+						$sType,
+						$aViewAttrs,
+						0,
+						0,
+						[],
+						$mOrderBy,
+						$iSortOrder,
 						$aIdsOrUUIDs,
 						false,
 						$sCustomViewSql
@@ -357,10 +357,10 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 							{
 								$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
 								$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-									$sAttrKey, 
-									$mValue, 
-									$oEntity->getType($sAttrKey), 
-									$bIsEncrypted, 
+									$sAttrKey,
+									$mValue,
+									$oEntity->getType($sAttrKey),
+									$bIsEncrypted,
 									$oEntity->EntityId
 								);
 								$oAttribute->Encrypted = $bIsEncrypted;
@@ -380,7 +380,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 		}
 		return $mResult;
-	}	
+	}
 
 	/**
 	 * @return bool
@@ -411,7 +411,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		{
 			$aAttributesByTypes[$oAttribute->Type][] = $oAttribute;
 		}
-		
+
 		foreach ($aAttributesByTypes as $sType => $aAttributes)
 		{
 			$mSql = $this->oCommandCreator->setAttributes($aEntities, $aAttributes, $sType);
@@ -425,11 +425,11 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$sSql
 				);
 			}
-			
+
 		}
 		return true;
-	}	
-	
+	}
+
 	/**
 	 * @return bool
 	 */
@@ -439,8 +439,8 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			$this->oCommandCreator->deleteAttribute($sType, $iEntityId, $sAttribute)
 		);
 	}
-	
-	
+
+
 	/**
 	 * @return array
 	 */
@@ -456,7 +456,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 
 		}
-		
+
 		return $aResult;
 	}
 

@@ -18,8 +18,8 @@ class Validator
 {
     public static function validate(array $aInputs, array $aRules, $aMessages = [])
     {
-		$validation = (new \Rakit\Validation\Validator())->validate($aInputs, $aRules, $aMessages);		
-		if ($validation->fails()) 
+		$validation = (new \Rakit\Validation\Validator())->validate($aInputs, $aRules, $aMessages);
+		if ($validation->fails())
 		{
 			$errors = $validation->errors();
 			throw new \Aurora\System\Exceptions\ValidationException(implode("; ", $errors->all()), \Aurora\System\Notifications::InvalidInputParameter);

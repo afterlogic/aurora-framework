@@ -14,7 +14,7 @@ namespace Aurora\System\Module;
  *
  * @package Api
  */
-class TenantSettings extends \Aurora\System\AbstractSettings 
+class TenantSettings extends \Aurora\System\AbstractSettings
 {
     protected $sTenantName;
 
@@ -28,7 +28,7 @@ class TenantSettings extends \Aurora\System\AbstractSettings
             @\mkdir($sTenantsPath);
         }
 
-        $sPath = $sTenantsPath . '/' . $sTenantName . '/' .  $sModuleName . '.config.json'; 
+        $sPath = $sTenantsPath . '/' . $sTenantName . '/' .  $sModuleName . '.config.json';
         parent::__construct($sPath);
     }
 

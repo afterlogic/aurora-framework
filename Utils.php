@@ -65,6 +65,15 @@ class Utils
 	}
 
 	/**
+	 * @param array $aArray
+	 * @return bool
+	 */
+	public static function IsAssocArray($aArray)
+	{
+		return in_array(false, array_map('is_int', array_keys($aArray)));
+	}
+
+	/**
 	 * @param string $sValue
 	 * @return string
 	 */
@@ -562,7 +571,7 @@ class Utils
 		$sPassword = self::UrlSafeBase64Decode(trim($sPassword));
 		return \MailSo\Base\Crypt::XxteaDecrypt($sPassword, Api::$sSalt);
 	}
-	
+
 	/**
 	 * @param string $sEmail
 	 * @return string
@@ -1157,7 +1166,7 @@ class Utils
 		{
 			$sResult .= substr($sChars, rand(0, $iCharLen), 1);
 		}
-		
+
 		return $sResult;
 	}
 
@@ -1322,7 +1331,7 @@ class Utils
 
 		);
         }
-        
+
         /**
 	 * @param string $sFileName
 	 * @return string
@@ -1350,7 +1359,7 @@ class Utils
 		$aMimeTypes = self::GetMimeContentTypes();
                 return array_search($sMimeContentType, $aMimeTypes);
         }
-        
+
 	/**
 	 * @param string $sLanguage
 	 * @return string
@@ -1617,7 +1626,7 @@ class Utils
 		return preg_replace('/^0000000000/', '+', preg_replace('/[^\d]+/', '',
 			preg_replace('/^[+]/', '0000000000', trim($sPhone))));
 	}
-	
+
 	/**
 	 * @param string $sSearch
 	 * @return string
@@ -1694,7 +1703,7 @@ class Utils
 					}
 				}
 			}
-			
+
 			if (is_resource($handle))
 			{
 				closedir($handle);
@@ -1707,21 +1716,21 @@ class Utils
 		  'directories' => $directories
 		);
 	}
-	
+
 	public static function SearchFiles($sPath, $sPattern)
 	{
 		$files = array();
 
 		// Create recursive dir iterator which skips dot folders
-		$oDirIterator = new \RecursiveDirectoryIterator($sPath, 
+		$oDirIterator = new \RecursiveDirectoryIterator($sPath,
 				\FilesystemIterator::SKIP_DOTS |
 				\FilesystemIterator::UNIX_PATHS
-		);		
+		);
 
 		$oIterators = new \RecursiveIteratorIterator($oDirIterator,
 				\RecursiveIteratorIterator::SELF_FIRST
 		);
-		
+
 		foreach($oIterators as $oIterator)
 		{
 			$sName = $oIterator->getFilename();
@@ -1729,13 +1738,13 @@ class Utils
 			$iResult = preg_match("/" . preg_quote($sPattern) . "/ui", $sName, $aMatches);
 			if ($sName !== '.sabredav' && $sName !== AU_API_HELPDESK_PUBLIC_NAME && $iResult === 1)
 			{
-				$files[] = $oIterator->getPathname();		
+				$files[] = $oIterator->getPathname();
 			}
 		}
-		
+
 		return $files;
 	}
-	
+
 	public static function GetRemoteFileInfo($sUrl)
 	{
 		$aResult = array(
@@ -1752,7 +1761,7 @@ class Utils
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_NOBODY => true
 		));
-		
+
 		\curl_exec($oCurl);
 		$aInfo = \curl_getinfo($oCurl);
 
@@ -1760,13 +1769,13 @@ class Utils
 		{
 			$sContentType = '';
 			$aResult['size'] = isset($aInfo['download_content_length']) ? (int) $aInfo['download_content_length'] : 0;
-			
+
 			if (isset($aInfo['content_type']))
 			{
 				$aContentType = explode(';', $aInfo['content_type']);
 				$sContentType = isset($aContentType[0]) ? $aContentType[0] : '';
 			}
-			
+
 			$aResult['code'] = $aInfo['http_code'];
 			$aResult['content-type'] = $sContentType;
 		}
@@ -1775,7 +1784,7 @@ class Utils
 		{
 			\curl_close($oCurl);
 		}
-		
+
 		return $aResult;
 	}
 
@@ -1864,17 +1873,17 @@ class Utils
 					$oFileInfo->title = $oFileInfo->title . '.pdf';
 					break;*/
 			}
-/*			
+/*
 			if (!isset($oFileInfo->fileSize))
 			{
 				$aRemoteFileInfo = \Aurora\System\Utils::GetRemoteFileInfo($oFileInfo->downloadUrl);
 				$oFileInfo->fileSize = $aRemoteFileInfo['size'];
 			}
- * 
+ *
  */
 		}
 	}
-	
+
 	/**
 	 * @return \Aurora\Modules\StandardAuth\Classes\Account | null
 	 */
@@ -1898,7 +1907,7 @@ class Utils
 
 		return $oResult;
 	}
-	
+
 	/**
 	 * @return \CHelpdeskUser|null
 	 */
@@ -1916,7 +1925,7 @@ class Utils
 
 		return $oResult;
 	}
-	
+
 	public static function GetAppUrl()
 	{
 		$aUrlParts = parse_url($_SERVER['HTTP_REFERER']);
@@ -1925,10 +1934,10 @@ class Utils
 		$sHost = !empty($aUrlParts['host']) ? $aUrlParts['host'] : 'localhost';
 		$sPath = !empty($aUrlParts['path']) ? str_replace('index.php', '', $aUrlParts['path']) : '';
 		$sPort = !empty($aUrlParts['port']) ? ':'.$aUrlParts['port'] : '';
-		
+
 		return $sProtocol.'://'.$sHost.$sPath.$sPort;
 	}
-	
+
 	/**
 	 * @param string $sValue
 	 * @return array
@@ -1945,11 +1954,11 @@ class Utils
 
 		return $aValue;
 	}
-	
-	public static function parseIniString($sIniString) 
+
+	public static function parseIniString($sIniString)
 	{
-		$aResult = array(); 
-		foreach (explode("\n", $sIniString) as $sLine) 
+		$aResult = array();
+		foreach (explode("\n", $sIniString) as $sLine)
 		{
 			$aValues = explode("=", $sLine, 2);
 			if (isset($aValues[0], $aValues[1]))
@@ -1958,8 +1967,8 @@ class Utils
 			}
 		}
 		return $aResult;
-	}	
-	
+	}
+
 	/**
 	 * @param bool $bDownload
 	 * @param string $sContentType
@@ -1994,7 +2003,7 @@ class Utils
 
 		\header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline' ).'; '.
 			\trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
-		
+
 		\header('Accept-Ranges: none', true);
 		\header('Content-Transfer-Encoding: binary');
 	}
@@ -2002,7 +2011,7 @@ class Utils
 	public static function OutputFileResource($sUserUUID, $sContentType, $sFileName, $rResource, $bThumbnail, $bDownload)
 	{
 		self::OutputFileHeaders($bDownload, $sContentType, $sFileName);
-		
+
 		if (!$bDownload && 'text/html' === $sContentType)
 		{
 			$sHtml = \stream_get_contents($rResource);
@@ -2041,8 +2050,8 @@ class Utils
 				\MailSo\Base\Utils::FpassthruWithTimeLimitReset($rResource);
 			}
 		}
-	}	
-	
+	}
+
 	public static function GetClientFileResponse($sModule, $iUserId, $sFileName, $sTempName, $iSize)
 	{
 		$sMimeType = \MailSo\Base\Utils::MimeContentType($sFileName);
@@ -2078,7 +2087,7 @@ class Utils
 			'ThumbnailUrl' => $bThumb ? '?file-cache/' . $sHash .'/thumb' : '',
 		);
 	}
-	
+
 	/**
 	 * @param string $sFileName
 	 * @param string $sContentType
@@ -2099,11 +2108,11 @@ class Utils
 		}
 
 		return \MailSo\Base\Utils::ClearFileName(\MailSo\Base\Utils::Utf8Clear($sClearedFileName));
-	}	
-	
+	}
+
 	public static function getShortClassName($sClassName)
 	{
-		if ($mPos = \strrpos($sClassName, '\\')) 
+		if ($mPos = \strrpos($sClassName, '\\'))
 		{
 			return \substr($sClassName, $mPos + 1);
 		}
@@ -2112,7 +2121,7 @@ class Utils
 
 	public static function getSanitizedFilename($sFileName)
 	{
-		return preg_replace("/[\/\*\?\[^\]<>\|:]/i", "", $sFileName);		
+		return preg_replace("/[\/\*\?\[^\]<>\|:]/i", "", $sFileName);
 	}
 
 	public static function getClientIp()
@@ -2143,9 +2152,9 @@ class Utils
 		{
 			$ipaddress = $_SERVER['REMOTE_ADDR'];
 		}
-		
+
 		return $ipaddress;
-	}		
+	}
 }
 
 /**
