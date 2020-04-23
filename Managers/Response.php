@@ -257,15 +257,25 @@ class Response
 
 		try
 		{
-			$iOrientation = self::GetOrientation($rResource);
+			$sCacheFilename = self::GetThumbCacheFilename(self::GetThumbHash(), $sFileName);
+			$sCacheFilePathTmp = Cache::getPath() . $sCacheFilename . '-' . $sFileName;
+			$rFile = \fopen($sCacheFilePathTmp, 'w+');
+			\fwrite($rFile, \stream_get_contents($rResource));
+
+			$iOrientation = self::GetOrientation($rFile);
 			$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
-			$oThumb = $oImageManager->make($rResource);
+			$oThumb = $oImageManager->make($rFile);
 			self::OrientateImage($oThumb, $iOrientation);
+
 			$sThumb = $oThumb->heighten(100)->widen(100)->response();
 
+			\unlink($sCacheFilePathTmp);
+
 			$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
-			$sHash = self::GetThumbHash();
-			$oCache->set(self::GetThumbCacheFilename($sHash, $sFileName), $sThumb);
+			$oCache->set(
+				$sCacheFilename,
+				$sThumb
+			);
 		}
 		catch (\Exception $oE) {}
 

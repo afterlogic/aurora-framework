@@ -18,7 +18,7 @@ class Cache
 {
     protected $cacheManager = null;
 
-    public function __construct($sStorage, $sPath)
+    public function __construct($sStorage, $sPath, $sDriver = 'phpfile')
     {
         if (!file_exists(self::getPath()))
         {
@@ -38,7 +38,7 @@ class Cache
             $this->cacheManager = new \PHPixie\Cache(
                 $slice->arrayData([
                     'default' => [
-                         'driver' => 'phpfile',
+                         'driver' => $sDriver,
                          'path' => !empty(trim($sPath)) ? $sPath : ''
                     ]
                 ]),

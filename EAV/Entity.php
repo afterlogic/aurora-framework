@@ -393,20 +393,11 @@ class Entity
 	}
 
 	/**
-	 * @param string $sName
-	 * @return bool
-	 */
-	public function __isset($sName)
-	{
-		return ($this->getMapItem($sName) !== null) || isset($this->aAttributes[$sName]);
-	}
-
-	/**
 	 * @param string $sAttribute
 	 * @param mixed $mValue
 	 * @return void
 	 */
-	public function __set($sAttribute, $mValue)
+	public function setAttributeValue($sAttribute, $mValue)
 	{
 		$oAttribute = $this->initAttribute($sAttribute, $mValue);
 		$oAttribute->IsDefault = false;
@@ -420,7 +411,7 @@ class Entity
 	 *
 	 * @return mixed
 	 */
-	public function __get($sName)
+	public function getAttributeValue($sName)
 	{
 		$mValue = null;
 		$oAttribute = $this->getAttribute($sName);
@@ -493,6 +484,37 @@ class Entity
 	}
 
 	/**
+	 * @param string $sName
+	 * @return bool
+	 */
+	public function __isset($sName)
+	{
+		return ($this->getMapItem($sName) !== null) || isset($this->aAttributes[$sName]);
+	}
+
+	/**
+	 * @param string $sAttribute
+	 * @param mixed $mValue
+	 * @return void
+	 */
+	public function __set($sAttribute, $mValue)
+	{
+		$this->setAttributeValue($sAttribute, $mValue);
+	}
+
+	/**
+	 * @param string $sName
+	 *
+	 * @throws Exception
+	 *
+	 * @return mixed
+	 */
+	public function __get($sName)
+	{
+		return $this->getAttributeValue($sName);
+	}
+
+	/**
 	 *
 	 * @param type $aProperties
 	 */
@@ -503,7 +525,7 @@ class Entity
 		{
 			if (isset($aMap[$sKey]))
 			{
-				$this->{$sKey} = $mValue;
+				$this->setAttributeValue($sKey, $mValue);
 			}
 		}
 	}
@@ -512,7 +534,7 @@ class Entity
 	{
 		foreach ($this->aAttributes as $oAttrinbute)
 		{
-			$this->{$oAttrinbute->Name} = $this->getDefaultValue($oAttrinbute->Name);
+			$this->setAttributeValue($oAttrinbute->Name, $this->getDefaultValue($oAttrinbute->Name));
 		}
 	}
 

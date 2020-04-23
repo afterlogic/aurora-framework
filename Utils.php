@@ -2008,7 +2008,7 @@ class Utils
 		\header('Content-Transfer-Encoding: binary');
 	}
 
-	public static function OutputFileResource($sUserUUID, $sContentType, $sFileName, $rResource, $bThumbnail, $bDownload)
+	public static function OutputFileResource($iUserId, $sContentType, $sFileName, $rResource, $bThumbnail, $bDownload)
 	{
 		self::OutputFileHeaders($bDownload, $sContentType, $sFileName);
 
@@ -2043,7 +2043,7 @@ class Utils
 		{
 			if ($bThumbnail && !$bDownload)
 			{
-				Managers\Response::GetThumbResource($sUserUUID, $rResource, $sFileName, true);
+				Managers\Response::GetThumbResource($iUserId, $rResource, $sFileName, true);
 			}
 			else
 			{
