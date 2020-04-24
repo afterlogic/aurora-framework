@@ -30,7 +30,7 @@ class Eav
 	 * @param string $sForcedStorage
 	 */
 	public function __construct($sForcedStorage = 'Db')
-	{
+{
 		$oForcedStorage = __NAMESPACE__ . '\\Eav\\Storages\\' . $sForcedStorage . '\\Storage';
 
 		$this->oStorage = new $oForcedStorage($this);
@@ -77,7 +77,7 @@ class Eav
 	{
 		$mResult = false;
 
-		if (isset($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId, $oEntity->getName()) ||
+		if (!empty($oEntity->EntityId) && $this->isEntityExists($oEntity->EntityId, $oEntity->getName()) ||
 			isset($oEntity->UUID) && $this->isEntityExists($oEntity->UUID, $oEntity->getName()))
 		{
 			$mResult = $this->updateEntity($oEntity);

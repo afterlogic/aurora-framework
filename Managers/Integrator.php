@@ -432,34 +432,6 @@ class Integrator extends AbstractManager
 	}
 
 	/**
-	 * @return \Aurora\Modules\StandardAuth\Classes\Account|null
-	 */
-	public function getAuthenticatedDefaultAccount($sAuthToken = '')
-	{
-		$oResult = null;
-		$iUserId = \Aurora\System\Api::getAuthenticatedUserId($sAuthToken);
-		if (0 < $iUserId)
-		{
-//			$oApiUsers =\Aurora\System\Api::GetSystemManager('users');
-			if ($oApiUsers)
-			{
-				$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
-				if (0 < $iAccountId)
-				{
-					$oAccount = $oApiUsers->getAccountById($iAccountId);
-					$oResult = $oAccount instanceof \Aurora\Modules\StandardAuth\Classes\Account ? $oAccount : null;
-				}
-			}
-		}
-		else
-		{
-			$this->logoutAccount();
-		}
-
-		return $oResult;
-	}
-
-	/**
 	 * @param int $iCode
 	 */
 	public function setLastErrorCode($iCode)
