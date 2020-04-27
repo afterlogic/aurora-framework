@@ -25,26 +25,29 @@ class Eav
 	 */
 	public $oStorage;
 
-	/**
-	 *
-	 * @param string $sForcedStorage
-	 */
-	public function __construct($sForcedStorage = 'Db')
-{
+	public function __construct()
+	{
+		$sForcedStorage = 'Db';
+		$oSettings = \Aurora\Api::getSettings();
+		if($oSettings)
+		{
+			$sForcedStorage = $oSettings->getConf('EavStorageType', 'Db');
+		}
 		$oForcedStorage = __NAMESPACE__ . '\\Eav\\Storages\\' . $sForcedStorage . '\\Storage';
 
 		$this->oStorage = new $oForcedStorage($this);
 	}
 
-	public static function getInstance($sForcedStorage = 'Db')
+	public static function getInstance()
 	{
 		static $oInstance = null;
 		if(is_null($oInstance))
 		{
-			$oInstance = new self($sForcedStorage);
+			$oInstance = new self();
 		}
 		return $oInstance;
 	}
+
 
 	/**
 	 *
