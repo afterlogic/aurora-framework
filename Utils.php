@@ -2043,7 +2043,7 @@ class Utils
 		{
 			if ($bThumbnail && !$bDownload)
 			{
-				Managers\Response::GetThumbResource($iUserId, $rResource, $sFileName, true);
+				Managers\Thumb::GetResource($iUserId, $rResource, $sFileName, true);
 			}
 			else
 			{
