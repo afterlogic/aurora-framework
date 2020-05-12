@@ -323,6 +323,10 @@ class Eav
 				{
 					throw new \Aurora\System\Exceptions\ManagerException(\Aurora\System\Exceptions\Errs::Main_UnknownError);
 				}
+				else
+				{
+					$bResult = true;
+				}
 			}
 		}
 		catch (\Aurora\System\Exceptions\DbException $oException)
