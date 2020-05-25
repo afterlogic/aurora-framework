@@ -16,7 +16,7 @@ namespace Aurora\System;
  */
 class UserSession
 {
-	const TOKEN_VERSION = '2.2';
+	const TOKEN_VERSION = '2.3';
 
 	static public $aTokensCache = [];
 
@@ -32,10 +32,15 @@ class UserSession
 	}
 
 
-	public function Set($aData, $iTime = 0)
+	public function Set($aData, $iTime = 0, $iExpire = 0)
 	{
 		$aData['@time'] = $iTime;
+		$aData['@expire'] = $iExpire;
 		$aData['@ver'] = self::TOKEN_VERSION;
+		if ($iExpire > 0)
+		{
+			$aData['@expire'] = $iExpire;
+		}
 		$sAuthToken = Api::EncodeKeyValues(
 			$aData
 		);
@@ -60,8 +65,8 @@ class UserSession
 
 		if (strlen($sAuthToken) !== 0)
 		{
-
-			if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false) && !$this->GetFromDB($sAuthToken))
+			$bStoreAuthTokenInDB = \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false);
+			if ($bStoreAuthTokenInDB && !$this->GetFromDB($sAuthToken))
 			{
 				return false;
 			}
@@ -70,32 +75,46 @@ class UserSession
 
 			if ($mResult !== false && isset($mResult['id']))
 			{
-				$oUser = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mResult['id']);
-				$iResTime = (int) $mResult['@time']; // 0 means that signMe was true when user logged in, so there is no need to check it in that case
-				if ($oUser && $iResTime !== 0 && (int) $oUser->TokensValidFromTimestamp > $iResTime)
+				if ((isset($mResult['@ver']) && $mResult['@ver'] !== self::TOKEN_VERSION) || !isset($mResult['@ver']))
 				{
 					$mResult = false;
 				}
-				else if ((isset($mResult['@ver']) && $mResult['@ver'] !== self::TOKEN_VERSION) || !isset($mResult['@ver']))
+				else
 				{
-					$mResult = false;
-				}
-				else if ((isset($mResult['sign-me']) && !((bool) $mResult['sign-me'])) || (!isset($mResult['sign-me'])))
-				{
-					$iTime = 0;
-					if (isset($mResult['@time']))
+					$iExpireTime = (int) isset($mResult['@expire']) ? $mResult['@expire'] : 0;
+					if ($iExpireTime > 0 && $iExpireTime < time())
 					{
-						$iTime = (int) $mResult['@time'];
-					}
-					$iExpireUserSessionsBefore = Api::GetSettings()->GetValue("ExpireUserSessionsBefore", 0);
-					if ($iExpireUserSessionsBefore > $iTime && $iTime > 0)
-					{
-						\Aurora\System\Api::Log('User session expired: ');
-						\Aurora\System\Api::LogObject($mResult);
 						$mResult = false;
 					}
+					else
+					{
+						$oUser = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mResult['id']);
+						$iTime = (int) $mResult['@time']; // 0 means that signMe was true when user logged in, so there is no need to check it in that case
+						if ($oUser && $iTime !== 0 && (int) $oUser->TokensValidFromTimestamp > $iTime)
+						{
+							$mResult = false;
+						}
+						else if ((isset($mResult['sign-me']) && !((bool) $mResult['sign-me'])) || (!isset($mResult['sign-me'])))
+						{
+							$iTime = 0;
+							if (isset($mResult['@time']))
+							{
+								$iTime = (int) $mResult['@time'];
+							}
+							$iExpireUserSessionsBefore = Api::GetSettings()->GetValue("ExpireUserSessionsBefore", 0);
+							if ($iExpireUserSessionsBefore > $iTime && $iTime > 0)
+							{
+								\Aurora\System\Api::Log('User session expired: ');
+								\Aurora\System\Api::LogObject($mResult);
+								$mResult = false;
+							}
+						}
+					}
 				}
-
+			}
+			if ($mResult === false)
+			{
+				$this->Delete($sAuthToken);
 			}
 		}
 
