@@ -125,10 +125,10 @@ class Storage
 		}
 
 		$this->oSlaveConnector->ReInitIfNotConnected(
-			$this->oSettings->DBHost,
-			$this->oSettings->DBLogin,
-			$this->oSettings->DBPassword,
-			$this->oSettings->DBName
+			$this->oSettings->DBSlaveHost,
+			$this->oSettings->DBSlaveLogin,
+			$this->oSettings->DBSlavePassword,
+			$this->oSettings->DBSlaveName
 		);
 
 		return $this->oSlaveConnector->Connect(true, true);
@@ -364,6 +364,6 @@ class Storage
 	 */
 	protected function isSlaveSql($sSql)
 	{
-		return in_array(strtoupper(substr(trim($sSql), 0, 6)), array('SELECT'));
+		return in_array(strtoupper(substr(trim($sSql), 0, 6)), array('SELECT')) || in_array(strtoupper(substr(trim($sSql), 0, 7)), array('(SELECT'));
 	}
 }
