@@ -1731,11 +1731,21 @@ class Utils
 				\RecursiveIteratorIterator::SELF_FIRST
 		);
 
+		if ($sPattern === "*")
+		{
+			$sPattern = "\w+";
+		}
+		else
+		{
+			$sPattern = preg_quote($sPattern);
+		}
+
 		foreach($oIterators as $oIterator)
 		{
 			$sName = $oIterator->getFilename();
 			$aMatches = array();
-			$iResult = preg_match("/" . preg_quote($sPattern) . "/ui", $sName, $aMatches);
+
+			$iResult = preg_match("/" . $sPattern . "/ui", $sName, $aMatches);
 			if ($sName !== '.sabredav' && $sName !== AU_API_HELPDESK_PUBLIC_NAME && $iResult === 1)
 			{
 				$files[] = $oIterator->getPathname();
