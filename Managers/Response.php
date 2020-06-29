@@ -117,6 +117,11 @@ class Response
 		}
 		else if (\is_array($mResponse))
 		{
+			if (!\Aurora\System\Utils::IsAssocArray($mResponse))
+			{
+				// rebuild array indexes
+				$mResponse = array_values($mResponse);
+			}
 			foreach ($mResponse as $iKey => $oItem)
 			{
 				$mResponse[$iKey] = self::GetResponseObject($oItem, $aParameters);
