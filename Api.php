@@ -1299,25 +1299,21 @@ class Api
 
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
-		static $oUser = null;
-		$sStoredAuthToken = self::getAuthenticatedUserAuthToken();
-		if ($oUser === null || (!empty($sAuthToken) && $sAuthToken !== $sStoredAuthToken))
+		$oUser = null;
+		$iUserId = 0;
+		if (!empty($sAuthToken))
 		{
-			$iUserId = 0;
-			if (!empty($sAuthToken))
-			{
-				$iUserId = self::getAuthenticatedUserId($sAuthToken); // called for saving in session
-			}
-			else if (!empty(self::$aUserSession['UserId']))
-			{
-				$iUserId = self::$aUserSession['UserId'];
-			}
+			$iUserId = self::getAuthenticatedUserId($sAuthToken); // called for saving in session
+		}
+		else if (!empty(self::$aUserSession['UserId']))
+		{
+			$iUserId = self::$aUserSession['UserId'];
+		}
 
-			$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-			if ($oIntegrator)
-			{
-				$oUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
-			}
+		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
+		if ($oIntegrator)
+		{
+			$oUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
 		}
 		return $oUser;
 	}
