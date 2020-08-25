@@ -840,6 +840,7 @@ class Integrator extends AbstractManager
 		if (null === $aList)
 		{
 			$aList = array();
+			$sEnglishLang = null;
 			$sPath =\Aurora\System\Api::WebMailPath().'modules';
 
 			$aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
@@ -862,7 +863,7 @@ class Integrator extends AbstractManager
 								{
 									if ('english' === strtolower($sLanguage))
 									{
-										array_unshift($aList, $sLanguage);
+										$sEnglishLang = $sLanguage;
 									}
 									else
 									{
@@ -874,6 +875,12 @@ class Integrator extends AbstractManager
 						@closedir($rDirH);
 					}
 				}
+			}
+			
+			sort($aList);
+			if ($sEnglishLang !== null)
+			{
+				array_unshift($aList, $sEnglishLang);
 			}
 		}
 
