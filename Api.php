@@ -1268,7 +1268,13 @@ class Api
 
 	public static function getCookieSecure()
 	{
-		return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+		return self::isHttps();
+	}
+	
+	public static function isHttps()
+	{
+		return	(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+				(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443');
 	}
 
 	public static function getAuthenticatedUserId($sAuthToken = '')
