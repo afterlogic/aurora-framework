@@ -194,4 +194,48 @@ class Query
         return $mResult;
     }
 
+    public static function prepareWhere($aRawWhere)
+    {
+        $aWhere = [];
+
+        if (is_array($aRawWhere) && count($aRawWhere) > 0)
+        {
+            $iAndIndex = 1;
+            $iOrIndex = 1;
+            foreach ($aRawWhere as $aSubWhere)
+            {
+                if (is_array($aSubWhere))
+                {
+                    foreach ($aSubWhere as $sKey => $a2ndSubWhere)
+                    {
+                        if (is_array($a2ndSubWhere))
+                        {
+                            $sNewKey = $sKey;
+                            if ($sKey === '$AND')
+                            {
+                                $sNewKey = $iAndIndex.'$AND';
+                                $iAndIndex++;
+                            }
+                            if ($sKey === '$OR')
+                            {
+                                $sNewKey = $iOrIndex.'$OR';
+                                $iOrIndex++;
+                            }
+                            $aWhere[$sNewKey] = $a2ndSubWhere;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            // It's forbidden to request contacts without any filters because in that case all contacts of all users will be returned.
+            // If filters are empty, there is no subscribers from modules that describe behaviour of contacts storages.
+            throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::InvalidInputParameter);
+        }
+
+        return $aWhere;
+    }
+
+
 }

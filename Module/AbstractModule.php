@@ -781,7 +781,19 @@ abstract class AbstractModule
 		$mResult = false;
 		try
 		{
-			if (method_exists($this, $sMethod) &&  $this->canCallMethod($sMethod, $bWebApi))
+			if (!method_exists($this, $sMethod))
+			{
+				throw new \Aurora\System\Exceptions\ApiException(
+					\Aurora\System\Notifications::MethodNotFound
+				);
+			}
+			else if (!$this->canCallMethod($sMethod, $bWebApi))
+			{
+				throw new \Aurora\System\Exceptions\ApiException(
+					\Aurora\System\Notifications::MethodAccessDenied
+				);
+			}
+			else
 			{
 				if ($bWebApi && !isset($aArguments['UserId']))
 				{
@@ -859,12 +871,6 @@ abstract class AbstractModule
 					$sMethod,
 					$aArguments,
 					$mResult
-				);
-			}
-			else
-			{
-				throw new \Aurora\System\Exceptions\ApiException(
-					\Aurora\System\Notifications::MethodNotFound
 				);
 			}
 		}

@@ -31,6 +31,7 @@ class Notifications
 	const ModuleNotFound = 113;
 	const MethodNotFound = 114;
 	const LicenseLimit = 115;
+	const MethodAccessDenied= 116;
 
 	const CanNotSaveSettings = 501;
 	const CanNotChangePassword = 502;
