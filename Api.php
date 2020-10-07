@@ -744,15 +744,17 @@ class Api
 	 * @param string $sEmail
 	 * @param string $sPassword
 	 * @param string $sLogin = ''
+	 * @param string $sLanguage = ''
 	 * @return string
 	 */
-	public static function GenerateSsoToken($sEmail, $sPassword, $sLogin = '')
+	public static function GenerateSsoToken($sEmail, $sPassword, $sLogin = '', $sLanguage = '')
 	{
 		$sSsoHash = \md5($sEmail.$sPassword.$sLogin.\microtime(true).\rand(10000, 99999));
 		return self::Cacher()->Set('SSO:'.$sSsoHash, self::EncodeKeyValues(array(
 			'Email' => $sEmail,
 			'Password' => $sPassword,
-			'Login' => $sLogin
+			'Login' => $sLogin,
+			'Language' => $sLanguage
 		))) ? $sSsoHash : '';
 	}
 
