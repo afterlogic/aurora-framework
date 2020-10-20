@@ -91,4 +91,17 @@ class Settings extends AbstractSettings
 
 		return parent::Load();
 	}
+
+	public function SyncConfigs()
+	{
+		$this->initDefaults();
+		$aContainer = $this->aContainer;
+		if (!\file_exists($this->sPath))
+		{
+			$this->Save();
+		}
+		parent::Load();
+		$this->aContainer = \array_merge($aContainer, $this->aContainer);
+		$this->Save();
+	}
 }
