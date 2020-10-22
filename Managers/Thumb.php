@@ -125,7 +125,9 @@ class Thumb
 				$sThumb
 			);
 		}
-		catch (\Exception $oE) {}
+		catch (\Exception $oE) {
+			\Aurora\System\Api::LogException($oE, \Aurora\System\Enums\LogLevel::Full);
+		}
 
 		if ($bShow)
 		{
