@@ -16,7 +16,7 @@ namespace Aurora\System;
  */
 class UserSession
 {
-	const TOKEN_VERSION = '2.3';
+	const TOKEN_VERSION = '2.4';
 
 	static public $aTokensCache = [];
 
@@ -47,7 +47,7 @@ class UserSession
 
 		if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false))
 		{
-			$this->SetToDB($sAuthToken);
+			$this->SetToDB($aData['id'], $sAuthToken);
 		}
 
 		return $sAuthToken;
@@ -136,11 +136,32 @@ class UserSession
 		}
 	}
 
-	public function SetToDB($sAuthToken)
+	public function DeleteAllUserSessions($iUserId)
+	{
+		$aAuthTokens = (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
+		->where(
+			[
+				'UserId' => $iUserId
+			]
+		)
+		->exec();
+		if (\is_array($aAuthTokens) && count($aAuthTokens) > 0)
+		{
+			foreach ($aAuthTokens as $oAuthToken)
+			{
+				$oAuthToken->delete();
+			}
+		}
+	}
+
+	public function SetToDB($iUserId, $sAuthToken)
 	{
 		$oAuthToken = (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
 			->where(
-				['Token' => $sAuthToken]
+				[
+					'UserId' => $iUserId,
+					'Token' => $sAuthToken
+				]
 			)
 			->one()
 			->exec();
@@ -148,6 +169,7 @@ class UserSession
 		{
 			$oAuthToken = new \Aurora\System\Classes\AuthToken('System');
 		}
+		$oAuthToken->UserId = $iUserId;
 		$oAuthToken->Token = $sAuthToken;
 		$oAuthToken->LastUsageDateTime = time();
 
