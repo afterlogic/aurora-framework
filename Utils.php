@@ -264,7 +264,10 @@ class Utils
 				}
 				break;
 			case ($sFromEncoding === 'utf-8' && $sToEncoding === 'utf7-imap'):
-				$sResult = self::Utf8ToUtf7Modified($sResult);
+				if (!self::IsUtf7($sResult))
+				{
+					$sResult = self::Utf8ToUtf7Modified($sResult);
+				}
 				if (false === $sResult)
 				{
 					$sResult = $sString;
