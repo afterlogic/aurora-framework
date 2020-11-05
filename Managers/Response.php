@@ -143,7 +143,7 @@ class Response
 	{
 		@\header('Content-Type: text/html; charset=utf-8', true);
 		$sContentSecurityPolicy = \Aurora\Api::GetSettings()->GetValue('ContentSecurityPolicy', '');
-		if ($sContentSecurityPolicy)
+		if (!empty($sContentSecurityPolicy))
 		{
 			@\header('Content-Security-Policy: ' . $sContentSecurityPolicy, true);
 		}
