@@ -706,4 +706,46 @@ ON DUPLICATE KEY UPDATE
 
 		return $sSql;
 	}
+
+	public function getEntityAttributeCount($sTypeName, $sAttributeName, $sEntityType)
+	{
+		return sprintf("SELECT count(id_entity) as c FROM %seav_attributes_%s
+			INNER JOIN %seav_entities AS e ON id_entity = e.id
+			WHERE `name` = %s AND e.entity_type = %s",
+			$this->prefix(),
+			$sEntityType,
+			$this->prefix(),
+			$this->escapeString($sAttributeName),
+			$this->escapeString($sTypeName)
+		);
+	}
+
+	public function updateEntityAttributeType($sTypeName, $sAttributeName, $sFromEntityType, $sToEntityType)
+	{
+		return sprintf("INSERT INTO %seav_attributes_%s (`id_entity`, `name`, `value`)
+			SELECT id_entity, name, value FROM %seav_attributes_%s
+			INNER JOIN %seav_entities AS e ON id_entity = e.id
+			WHERE `name` = %s AND e.entity_type = %s",
+			$this->prefix(),
+			$sToEntityType,
+			$this->prefix(),
+			$sFromEntityType,
+			$this->prefix(),
+			$this->escapeString($sAttributeName),
+			$this->escapeString($sTypeName)
+		);
+	}
+
+	public function deleteEntityAttributeType($sTypeName, $sAttributeName, $sFromEntityType)
+	{
+		return sprintf("DELETE a FROM %seav_attributes_%s as a
+			INNER JOIN %seav_entities AS e ON a.id_entity = e.id
+			WHERE a.`name` = %s AND e.entity_type = %s;",
+			$this->prefix(),
+			$sFromEntityType,
+			$this->prefix(),
+			$this->escapeString($sAttributeName),
+			$this->escapeString($sTypeName)
+		);
+	}
 }

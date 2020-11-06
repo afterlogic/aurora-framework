@@ -424,4 +424,9 @@ class Eav
 
 		return $bResult;
 	}
+
+	public function updateAttributeType($sTypeName, $sAttributeName, $sFromEntityType, $sToEntityType)
+	{
+		$this->oStorage->updateAttributeType($sTypeName, $sAttributeName, $sFromEntityType, $sToEntityType);
+	}
 }

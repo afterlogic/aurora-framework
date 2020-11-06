@@ -470,4 +470,31 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	{
 		return $this->oConnection->Connect();
 	}
+
+	public function updateAttributeType($sTypeName, $sAttributeName, $sFromEntityType, $sToEntityType)
+	{
+		$iCount = 0;
+		if ($this->oConnection->Execute(
+				$this->oCommandCreator->getEntityAttributeCount($sTypeName, $sAttributeName, $sFromEntityType)
+			)
+		)
+		{
+			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
+			{
+				$iCount = (int) $oRow->c;
+			}
+			$this->oConnection->FreeResult();
+		}
+
+		if ($iCount > 0)
+		{
+			$this->oConnection->Execute(
+				$this->oCommandCreator->updateEntityAttributeType($sTypeName, $sAttributeName, $sFromEntityType, $sToEntityType)
+			);
+
+			$this->oConnection->Execute(
+				$this->oCommandCreator->deleteEntityAttributeType($sTypeName, $sAttributeName, $sFromEntityType)
+			);
+		}
+	}
 }
