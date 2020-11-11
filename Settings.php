@@ -69,7 +69,7 @@ class Settings extends AbstractSettings
 			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
 			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
 			'ExpireUserSessionsBefore' => new SettingsProperty('ExpireUserSessionsBefore', 0, 'int'),
-			'ContentSecurityPolicy' => new SettingsProperty('ContentSecurityPolicy', 'default-src \'self\' \'unsafe-inline\' \'unsafe-eval\' blob:; img-src * data:; frame-src *', 'string'),
+			'ContentSecurityPolicy' => new SettingsProperty('ContentSecurityPolicy', 'default-src \'self\' \'unsafe-inline\' \'unsafe-eval\' blob:; img-src * data: blob:; frame-src *', 'string'),
 
 			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
 			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
