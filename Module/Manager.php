@@ -359,7 +359,7 @@ class Manager
 						$sTemplateHtml = \str_replace('%ModuleName%', $aItem[2], $sTemplateHtml);
 						$sTemplateHtml = \str_replace('%MODULENAME%', \strtoupper($aItem[2]), $sTemplateHtml);
 					}
-					$sTemplateSource =\ str_replace('{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
+					$sTemplateSource = \str_replace('{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
 						$sTemplateHtml.'{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}', $sTemplateSource);
 				}
 			}
