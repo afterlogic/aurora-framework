@@ -84,7 +84,7 @@ class Response
 	{
 		$mResult = null;
 
-		if (\is_object($mResponse))
+		if (\is_object($mResponse) && !($mResponse instanceof \stdClass))
 		{
 			if (\method_exists($mResponse, 'toResponseArray'))
 			{
@@ -114,6 +114,17 @@ class Response
 					self::CollectionToResponseArray($mResponse, $aParameters)
 				);
 			}
+		}
+		else if ($mResponse instanceof \stdClass)
+		{
+			$mResponse = (array) $mResponse;
+
+			foreach ($mResponse as $iKey => $oItem)
+			{
+				$mResponse[$iKey] = self::GetResponseObject($oItem, $aParameters);
+			}
+
+			$mResult = $mResponse;
 		}
 		else if (\is_array($mResponse))
 		{

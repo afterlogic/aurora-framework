@@ -1033,7 +1033,7 @@ abstract class AbstractModule
 	 */
 	public function GetErrors()
 	{
-		return is_array($this->aErrors) ? $this->aErrors : [];
+		return is_array($this->aErrors) ? (object) $this->aErrors : [];
 	}
 
 	/**

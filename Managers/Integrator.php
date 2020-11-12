@@ -963,11 +963,7 @@ class Integrator extends AbstractManager
 					$aAppData[$oModule::GetName()] = $aModuleAppData;
 				}
 
-				$aModuleErrors = $oDecorator->GetErrors();
-				if (is_array($aModuleErrors))
-				{
-					$aAppData['module_errors'][$oModule::GetName()] = $aModuleErrors;
-				}
+				$aAppData['module_errors'][$oModule::GetName()] =  $oDecorator->GetErrors();
 
 				$aAdditionalEntityFieldsToEdit = $oDecorator->GetAdditionalEntityFieldsToEdit();
 				if (is_array($aAdditionalEntityFieldsToEdit) && !empty($aAdditionalEntityFieldsToEdit))
