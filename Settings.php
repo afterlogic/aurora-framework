@@ -74,7 +74,8 @@ class Settings extends AbstractSettings
 			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
 			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
 
-			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool')
+			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool'),
+			'AuthTokenExpirationLifetime' => new SettingsProperty('ExpirationLifetime', 0, 'int'),
 		);
 	}
 

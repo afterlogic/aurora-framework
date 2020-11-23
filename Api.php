@@ -366,7 +366,7 @@ class Api
 	}
 
 	/**
-	 * @return \MailSo\Cache\CacheClient
+	 * @return UserSession
 	 */
 	public static function UserSession()
 	{
@@ -1151,6 +1151,18 @@ class Api
 			{
 				$sResult = $authHeaderData[1];
 			}
+		}
+
+		return $sResult;
+	}
+
+	public static function getDeviceIdFromHeaders()
+	{
+		$sResult = false;
+		$sDeviceIdHeader =  \MailSo\Base\Http::SingletonInstance()->GetHeader('X-DeviceId');
+		if (!empty($sDeviceIdHeader))
+		{
+			$sResult = $sDeviceIdHeader;
 		}
 
 		return $sResult;

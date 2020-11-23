@@ -880,11 +880,15 @@ class Entity
 
 	public function saveAttribute($sName)
 	{
+		$bResult = false;
+
 		$oAttribute = $this->getAttribute($sName);
 		if ($oAttribute instanceof Attribute)
 		{
-			return $oAttribute->save($this);
+			$bResult = $oAttribute->save($this);
 		}
+
+		return $bResult;
 	}
 
 	public function saveAttributes($aAttributes)

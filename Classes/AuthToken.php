@@ -17,8 +17,8 @@ namespace Aurora\System\Classes;
 class AuthToken extends \Aurora\System\EAV\Entity
 {
 	protected $aStaticMap = [
-		'UserId'			=> ['bigint', 0, true],
-		'Token'				=> ['text', '', true],
-        'LastUsageDateTime'	=> ['int', 0, true]
+		'UserId'				=> ['bigint', 0, true],
+		'Token'					=> ['text', '', true],
+		'LastUsageDateTime'		=> ['int', 0, true]
 	];
 }

@@ -101,7 +101,7 @@ class UserSession
 							{
 								$iTime = (int) $mResult['@time'];
 							}
-							$iExpireUserSessionsBefore = Api::GetSettings()->GetValue("ExpireUserSessionsBefore", 0);
+							$iExpireUserSessionsBefore = \Aurora\System\Api::GetSettings()->GetConf("ExpireUserSessionsBefore", 0);
 							if ($iExpireUserSessionsBefore > $iTime && $iTime > 0)
 							{
 								\Aurora\System\Api::Log('User session expired: ');
@@ -234,6 +234,17 @@ class UserSession
 			1,
 			['LastUsageDateTime' => [$iTime , '<']]
 		);
+	}
+
+	public function GetUserSessionsFromDB($iUserId)
+	{
+		return (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
+			->where(
+				[
+					'UserId' => $iUserId
+				]
+			)
+			->exec();
 	}
 
 }
