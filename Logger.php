@@ -65,7 +65,7 @@ class Logger
 		}
 		else
 		{
-			$sMessage = $mObject->getMessage();
+			$sMessage = 'Exception: ' . $mObject->getMessage();
 		}
 
 		if (0 < \count(Api::$aSecretWords))
