@@ -40,6 +40,8 @@ class Query
 
     protected $bOne = false;
 
+    protected $bAsArray = false;
+
     public function __construct($sType = null)
     {
         $this->sType = $sType;
@@ -144,6 +146,13 @@ class Query
         return $this;
     }
 
+    public function asArray()
+    {
+        $this->bAsArray = true;
+
+        return $this;
+    }
+
     public function exec()
     {
         $mResult = false;
@@ -164,17 +173,34 @@ class Query
             }
             else
             {
-                $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntities(
-                    $this->sType,
-                    $this->aViewAttributes,
-                    $this->iOffset,
-                    $this->iLimit,
-                    $this->aWhere,
-                    $this->mOrderAttributes,
-                    $this->iSortOrder,
-                    $this->aIdOrUuids,
-                    $this->sCustomViewSql
-                );
+                if (!$this->bAsArray)
+                {
+                    $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntities(
+                        $this->sType,
+                        $this->aViewAttributes,
+                        $this->iOffset,
+                        $this->iLimit,
+                        $this->aWhere,
+                        $this->mOrderAttributes,
+                        $this->iSortOrder,
+                        $this->aIdOrUuids,
+                        $this->sCustomViewSql
+                    );
+                }
+                else
+                {
+                    $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesAsArray(
+                        $this->sType,
+                        $this->aViewAttributes,
+                        $this->iOffset,
+                        $this->iLimit,
+                        $this->aWhere,
+                        $this->mOrderAttributes,
+                        $this->iSortOrder,
+                        $this->aIdOrUuids,
+                        $this->sCustomViewSql
+                    );
+                }
             }
 
             if ($this->bOne && is_array($mResult) && count($mResult) > 0)

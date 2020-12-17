@@ -215,6 +215,34 @@ class Eav
 	 * @param array $aIdsOrUUIDs
 	 * @return array
 	 */
+	public function getEntitiesAsArray($sType, $aViewAttributes = [], $iOffset = 0, $iLimit = 0, $aWhere = [], $mOrderBy = [],
+		$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
+	{
+		return $this->oStorage->getEntitiesAsArray(
+			$sType,
+			$aViewAttributes,
+			$iOffset,
+			$iLimit,
+			$aWhere,
+			$mOrderBy,
+			$iSortOrder,
+			$aIdsOrUUIDs,
+			$sCustomViewSql
+		);
+	}
+
+	/**
+	 *
+	 * @param string $sType
+	 * @param array $aViewAttributes
+	 * @param int $iOffset
+	 * @param int $iLimit
+	 * @param array $aWhere
+	 * @param string|array $mOrderBy
+	 * @param int $iSortOrder
+	 * @param array $aIdsOrUUIDs
+	 * @return array
+	 */
 	public function getEntities($sType, $aViewAttributes = [], $iOffset = 0, $iLimit = 0, $aWhere = [], $mOrderBy = [],
 		$iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
 	{

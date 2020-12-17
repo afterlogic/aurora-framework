@@ -789,6 +789,7 @@ class Entity
 	 */
 	public function getAttributesKeys()
 	{
+		$this->aAttributes['@DisabledModules'] = '';
 		return array_keys($this->aAttributes);
 	}
 
@@ -918,5 +919,31 @@ class Entity
 	{
 		$aMap = $this->getMap();
 		return ((isset($aMap[$sAttributeName]) && isset($aMap[$sAttributeName][3]) && $aMap[$sAttributeName][3] === true));
+	}
+
+	public function populateFromDB($aEntity)
+	{
+		foreach ($aEntity as $sAttrKey => $mValue)
+		{
+			if (!$this->isSystemAttribute($sAttrKey))
+			{
+				$bIsEncrypted = $this->isEncryptedAttribute($sAttrKey);
+				$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
+					$sAttrKey,
+					$mValue,
+					$this->getType($sAttrKey),
+					$bIsEncrypted,
+					$this->EntityId
+				);
+				$oAttribute->Encrypted = $bIsEncrypted;
+				$oAttribute->CanInherit = $this->canInheridAttribute($sAttrKey);
+				$this->{$sAttrKey} = $oAttribute;
+			}
+			else
+			{
+				settype($mValue, $this->getType($sAttrKey));
+				$this->{$sAttrKey} = $mValue;
+			}
+		}
 	}
 }

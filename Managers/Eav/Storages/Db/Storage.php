@@ -294,19 +294,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		return $aUids;
 	}
 
-	/**
-	 *
-	 * @param type $sType
-	 * @param type $aViewAttrs
-	 * @param type $iOffset
-	 * @param type $iLimit
-	 * @param type $aSearchAttrs
-	 * @param type $mOrderBy
-	 * @param type $iSortOrder
-	 * @param type $aIdsOrUUIDs
-	 * @return \Aurora\System\EAV\Entity
-	 */
-	public function getEntities($sType, $aViewAttrs = [], $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mOrderBy = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
+	public function getEntitiesAsArray($sType, $aViewAttrs = [], $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mOrderBy = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
 	{
 		$mResult = [];
 
@@ -351,40 +339,48 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 					$oRow = null;
 					while (false !== ($oRow = $this->oConnection->GetNextRecord()))
 					{
-						$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
+						$aEntity = [];
 						foreach (get_object_vars($oRow) as $sKey => $mValue)
 						{
 							if (strrpos($sKey, 'attr_', -5) !== false && isset($mValue))
 							{
 								$sAttrKey = substr($sKey, 5);
-								if (!$oEntity->isSystemAttribute($sAttrKey))
-								{
-									$bIsEncrypted = $oEntity->isEncryptedAttribute($sAttrKey);
-									$oAttribute = \Aurora\System\EAV\Attribute::createInstance(
-										$sAttrKey,
-										$mValue,
-										$oEntity->getType($sAttrKey),
-										$bIsEncrypted,
-										$oEntity->EntityId
-									);
-									$oAttribute->Encrypted = $bIsEncrypted;
-									$oAttribute->CanInherit = $oEntity->canInheridAttribute($sAttrKey);
-									$oEntity->{$sAttrKey} = $oAttribute;
-								}
-								else
-								{
-									settype($mValue, $oEntity->getType($sAttrKey));
-									$oEntity->{$sAttrKey} = $mValue;
-								}
+								$aEntity[$sAttrKey] = $mValue;
 							}
 						}
-						$mResult[] = $oEntity;
+						$mResult[] = $aEntity;
 					}
 					$this->oConnection->FreeResult();
 				}
 			}
 		}
 
+		return $mResult;
+	}
+
+	/**
+	 *
+	 * @param type $sType
+	 * @param type $aViewAttrs
+	 * @param type $iOffset
+	 * @param type $iLimit
+	 * @param type $aSearchAttrs
+	 * @param type $mOrderBy
+	 * @param type $iSortOrder
+	 * @param type $aIdsOrUUIDs
+	 * @return \Aurora\System\EAV\Entity
+	 */
+	public function getEntities($sType, $aViewAttrs = [], $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mOrderBy = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
+	{
+		$mResult = [];
+
+		$aEntities = $this->getEntitiesAsArray($sType, $aViewAttrs, $iOffset, $iLimit, $aSearchAttrs, $mOrderBy, $iSortOrder, $aIdsOrUUIDs, $sCustomViewSql);
+		foreach ($aEntities as $aEntity)
+		{
+			$oEntity = \Aurora\System\EAV\Entity::createInstance($sType);
+			$oEntity->populateFromDB($aEntity);
+			$mResult[] = $oEntity;
+		}
 		return $mResult;
 	}
 

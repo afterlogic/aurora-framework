@@ -1321,6 +1321,12 @@ class Api
 		return $mResult;
 	}
 
+	public static function getAuthenticatedUserPublicId($sAuthToken = '')
+	{
+		$iUserId = self::getAuthenticatedUserId($sAuthToken);
+		return self::getUserPublicIdById($iUserId);
+	}
+
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
 		$iUserId = 0;
@@ -1373,10 +1379,16 @@ class Api
 			}
 			else
 			{
-				$mUser = self::getUserById($iUserId);
-				if ($mUser instanceof EAV\Entity)
+				$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
+					->select(['UUID'])
+					->where(['EntityId' => $iUserId])
+					->one()
+					->asArray()
+					->exec();
+
+				if (isset($aResult['UUID']))
 				{
-					$sUUID = $mUser->UUID;
+					$sUUID = $aResult['UUID'];
 					$aUUIDs[$iUserId] = $sUUID;
 				}
 			}
@@ -1399,10 +1411,16 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			$mUser = self::getUserById($iUserId);
-			if ($mUser instanceof EAV\Entity)
+			$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
+				->select(['PublicId'])
+				->where(['EntityId' => $iUserId])
+				->one()
+				->asArray()
+				->exec();
+
+			if (isset($aResult['PublicId']))
 			{
-				$sPublicId = $mUser->PublicId;
+				$sPublicId = $aResult['PublicId'];
 			}
 		}
 		else
