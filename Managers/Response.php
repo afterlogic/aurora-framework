@@ -150,16 +150,6 @@ class Response
 		return $mResult;
 	}
 
-	public static function HtmlOutputHeaders()
-	{
-		@\header('Content-Type: text/html; charset=utf-8', true);
-		$sContentSecurityPolicy = \Aurora\Api::GetSettings()->GetValue('ContentSecurityPolicy', '');
-		if (!empty($sContentSecurityPolicy))
-		{
-			@\header('Content-Security-Policy: ' . $sContentSecurityPolicy, true);
-		}
-	}
-	
 	/**
 	 * @param bool $bDownload
 	 * @param string $sContentType
