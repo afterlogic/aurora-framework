@@ -523,7 +523,7 @@ class Manager
 	 * @param string $sModuleName
 	 * @return \Aurora\System\Module\Settings
 	 */
-	public function GetModuleSettings($sModuleName)
+	public function &GetModuleSettings($sModuleName)
 	{
 		if (!isset($this->aModulesSettings[strtolower($sModuleName)]))
 		{
