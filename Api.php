@@ -159,7 +159,7 @@ class Api
 			@file_put_contents($sSalt8File, $sSalt);
 		}
 
-		if (is_writable($sSalt8File)) 
+		if (is_writable($sSalt8File))
 		{
 			include_once $sSalt8File;
 		}
@@ -1156,6 +1156,34 @@ class Api
 		return $sResult;
 	}
 
+	public static function requireAdminAuth()
+	{
+		$mResult = false;
+		$response = new \Sabre\HTTP\Response();
+		$basicAuth = new \Sabre\HTTP\Auth\Basic("Locked down area", \Sabre\HTTP\Sapi::getRequest(), $response);
+		if (!$userPass = $basicAuth->getCredentials())
+		{
+			$basicAuth->requireLogin();
+			\Sabre\HTTP\Sapi::sendResponse($response);
+		}
+		elseif (!\Aurora\Modules\AdminAuth\Module::getInstance()->Login($userPass[0], $userPass[1]))
+		{
+			$basicAuth->requireLogin();
+			\Sabre\HTTP\Sapi::sendResponse($response);
+		}
+		else
+		{
+			$mResult = true;
+		}
+
+		if (!$mResult)
+		{
+			$response->setBody('Unauthorized');
+			\Sabre\HTTP\Sapi::sendResponse($response);
+			exit;
+		}
+	}
+
 	public static function getDeviceIdFromHeaders()
 	{
 		$sResult = false;
@@ -1282,7 +1310,7 @@ class Api
 	{
 		return self::isHttps();
 	}
-	
+
 	public static function isHttps()
 	{
 		return	(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||

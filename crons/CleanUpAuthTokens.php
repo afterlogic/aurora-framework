@@ -4,6 +4,11 @@ include_once '../autoload.php';
 
 \Aurora\System\Api::Init();
 
+if (PHP_SAPI !== 'cli')
+{
+	\Aurora\System\Api::requireAdminAuth();
+}
+
 $aAuthIds = [];
 $iAuthTokenExpiryPeriodDays = 30;
 $aTokens = \Aurora\System\Api::UserSession()->GetExpiredAuthTokens($iAuthTokenExpiryPeriodDays);
