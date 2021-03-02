@@ -29,9 +29,14 @@ class ApiException extends Exception
 	protected $oModule;
 
 	/**
-	 * @param type $iCode
-	 * @param type $oPrevious
-	 * @param type $sMessage
+	 * ApiException constructor.
+	 *
+	 * @param null|int $iCode
+	 * @param null|\Throwable $oPrevious
+	 * @param null|string $sMessage
+	 * @param null|array $aObjectParams
+	 * @psalm-param null|array<string, string|int|mixed> $aObjectParams
+	 * @param null|\Aurora\System\Module\AbstractModule $oModule
 	 */
 	public function __construct($iCode, $oPrevious = null, $sMessage = '', $aObjectParams = array(), $oModule = null)
 	{
