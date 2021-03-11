@@ -231,7 +231,7 @@ class UserSession
 			\Aurora\System\Classes\AuthToken::class,
 			[],
 			0,
-			1,
+			0,
 			['LastUsageDateTime' => [$iTime , '<']]
 		);
 	}
