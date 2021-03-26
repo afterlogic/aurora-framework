@@ -43,7 +43,7 @@ spl_autoload_register(function ($sClassName) {
 	if (strpos($sClassName, 'Aurora\\Modules') !== false)
 	{
 		$sModuleClassName = substr($sClassName, strlen('Aurora\\Modules\\'));
-		$sModuleName = substr($sModuleClassName, 0, -7);
+		$sModuleName = substr($sModuleClassName, 0, strpos($sModuleClassName, '\\'));
 		$sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $sModuleName . DIRECTORY_SEPARATOR . 'Module.php';
 		if (file_exists($sFileName))
 		{
