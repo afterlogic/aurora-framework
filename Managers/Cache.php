@@ -37,7 +37,7 @@ class Cache
             $app = new Container();
             Container::setInstance($app);
             $app->singleton('files', function(){
-                return new Illuminate\Filesystem\Filesystem();
+                return new \Illuminate\Filesystem\Filesystem();
             });
 
             $app->singleton('config', function() use ($sStoragePath) {
@@ -77,7 +77,8 @@ class Cache
 
     public function has($key)
     {
-        return isset($this->cacheManager->get($key));
+        $result = $this->cacheManager->get($key);
+        return $result !== null;
     }
 
     public function delete($key)
