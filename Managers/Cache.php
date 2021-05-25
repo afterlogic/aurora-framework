@@ -7,8 +7,6 @@
 
 namespace Aurora\System\Managers;
 
-use Illuminate\Container\Container;
-use Illuminate\Cache\CacheManager;
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -34,24 +32,20 @@ class Cache
 
         if ($this->cacheManager === null)
         {
-            $app = new Container();
-            Container::setInstance($app);
-            $app->singleton('files', function(){
-                return new Illuminate\Filesystem\Filesystem();
-            });
+            $slice = new \PHPixie\Slice();
+            $filesystem = new \PHPixie\Filesystem();
 
-            $app->singleton('config', function() use ($sStoragePath) {
-                return [
-                    'cache.default' => 'file',
-                    'cache.stores.file' => [
-                        'driver' => 'file',
-                        'path' => $sStoragePath
+            $this->cacheManager = new \PHPixie\Cache(
+                $slice->arrayData([
+                    'default' => [
+                         'driver' => $sDriver,
+                         'path' => !empty(trim($sPath)) ? $sPath : ''
                     ]
-                ];
-            });
-
-            $cacheManager = new CacheManager($app);
-            $this->cacheManager = $cacheManager->driver();
+                ]),
+                $filesystem->root(
+                    $sStoragePath
+                )
+            );
         }
     }
 
@@ -67,7 +61,7 @@ class Cache
 
     public function set($key, $value)
     {
-        $this->cacheManager->put($key, $value);
+        $this->cacheManager->set($key, $value);
     }
 
     public function get($key)
@@ -77,11 +71,11 @@ class Cache
 
     public function has($key)
     {
-        return isset($this->cacheManager->get($key));
+        return $this->cacheManager->has($key);
     }
 
     public function delete($key)
     {
-        return $this->cacheManager->forget($key);
+        return $this->cacheManager->delete($key);
     }
 }
