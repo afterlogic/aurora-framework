@@ -12,6 +12,7 @@
         "illuminate/container": "^7.30",
         "illuminate/cache": "^7.30",
         "illuminate/filesystem": "^7.30",
+        "illuminate/database": "^7.30",
 		"rakit/validation": "^0.22.3"
 	}
 }
