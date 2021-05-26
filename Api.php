@@ -206,6 +206,7 @@ class Api
 	{
 		$apiInitTimeStart = \microtime(true);
 		include_once self::GetVendorPath().'autoload.php';
+		require_once 'bootstrap.php';
 
 		if ($bGrantAdminPrivileges)
 		{
