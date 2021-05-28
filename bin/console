@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../bootstrap.php';
+
+use Aurora\System\Database\Commands\InstallCommand;
+use Aurora\System\Database\Commands\MigrateCommand;
+use Symfony\Component\Console\Application;
+
+$container['migration-table'] = 'migration';
+
+$container['filesytem'] = function ($c) {
+    return new \Illuminate\Filesystem\Filesystem;
+};
+
+$container['connection'] = function ($c) {
+    $manager = new \Illuminate\Database\Capsule\Manager();
+    $manager->addConnection($c['db-config']);
+    $manager->setAsGlobal();
+    $manager->bootEloquent();
+    return $manager->getConnection('default');
+};
+
+$container['resolver'] = function ($c) {
+    $r = new \Illuminate\Database\ConnectionResolver(['default' => $c['connection']]);
+    $r->setDefaultConnection('default');
+    return $r;
+};
+
+$container['migration-repo'] = function ($c) {
+    return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($c['resolver'], $c['migration-table']);
+};
+
+$container['migrator'] = function ($c) {
+    return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesytem']);
+};
+
+$app = new Application();
+
+$app->add(new InstallCommand($container['migration-repo']));
+$app->add(new MigrateCommand($container['migrator']));
+
+$app->run();

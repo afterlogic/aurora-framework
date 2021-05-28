@@ -4,6 +4,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 use \Aurora\System\Api;
 
+use Pimple\Container;
 use \Illuminate\Database\Capsule\Manager as Capsule;
 use \Aurora\System\Enums\DbType;
 
@@ -19,7 +20,9 @@ if ($oSettings)
     $sDbPassword = $oSettings->DBPassword;
     $sDbPrefix = $oSettings->DBPrefix;
 
-    $capsule->addConnection([
+    $container = new Container();
+
+    $container['db-config'] = [
         'driver'    => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
         'host'      => $sDbHost,
         'database'  => $sDbName,
@@ -28,7 +31,8 @@ if ($oSettings)
         // 'charset'   => 'utf8',
         // 'collation' => 'utf8_unicode_ci',
         'prefix'    => $sDbPrefix,
-    ]);
+    ];
+    $capsule->addConnection($container['db-config']);
 
     //Make this Capsule instance available globally.
     $capsule->setAsGlobal();
