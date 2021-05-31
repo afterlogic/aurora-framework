@@ -3,7 +3,7 @@
 	"type": "aurora-framework",
 	"description": "",
 	"autoload": {
-		"classmap": ["./", "Installer.php"]
+		"classmap": ["/", "Installer.php"]
 	},
 	"require": {
 		"intervention/image": "^2.4",

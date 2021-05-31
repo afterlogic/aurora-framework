@@ -20,7 +20,7 @@ if ($oSettings)
     $sDbPassword = $oSettings->DBPassword;
     $sDbPrefix = $oSettings->DBPrefix;
 
-    $container = new Container();
+//    $container = new Container();
 
     $container['db-config'] = [
         'driver'    => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
