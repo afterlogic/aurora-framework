@@ -15,19 +15,20 @@ class Model extends Eloquent
 
     protected $parentInheritedAttributes = [];
 
+    public function isInheritedAttribute($key)
+    {
+        return (in_array($key, $this->parentInheritedAttributes));
+    }
+
     public function __get($key)
     {
-        if (in_array($key, $this->parentInheritedAttributes)) {
-            $value = parent::__get($key);
+        $value = parent::__get($key);
 
-            if ($value === null && isset($this->parent)) {
-                $value = $this->parent->$key;
-            }
-
-            return $value;
+        if ($value === null && $this->isInheritedAttribute($key) && isset($this->parent)) {
+            $value = $this->parent->$key;
         }
 
-        return parent::__get($key);
+        return $value;
     }
 
     public function getExtendedProp($sName)
