@@ -2,28 +2,17 @@
 
 namespace Aurora\System\Database\Commands;
 
+use Aurora\System\Database\BaseCommand;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Migrations\Migrator;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class RollbackCommand extends BaseCommand
 {
-    use ConfirmableTrait;
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'migrate:rollback';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Rollback the last database migration';
-
     /**
      * The migrator instance.
      *
@@ -44,48 +33,41 @@ class RollbackCommand extends BaseCommand
         $this->migrator = $migrator;
     }
 
+    protected function configure(): void
+    {
+        $this->setName('migrate:rollback')
+            ->setDescription('Rollback the last database migration')
+            ->addOption('database', null,InputOption::VALUE_OPTIONAL, 'The database connection to use')
+            ->addOption('force', null,InputOption::VALUE_NONE, 'Force the operation to run when in production')
+            ->addOption('path', null,InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The path(s) to the migrations files to be executed')
+            ->addOption('realpath', null,InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths')
+            ->addOption('pretend', null,InputOption::VALUE_NONE, 'Dump the SQL queries that would be run')
+            ->addOption('step', null,InputOption::VALUE_OPTIONAL, 'The number of migrations to be reverted');
+    }
+
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (! $this->confirmToProceed()) {
-            return 1;
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('Do you really wish to run this command?', false);
+        if (!$helper->ask($input, $output, $question)) {
+            return Command::SUCCESS;
         }
 
-        $this->migrator->usingConnection($this->option('database'), function () {
-            $this->migrator->setOutput($this->output)->rollback(
-                $this->getMigrationPaths(), [
-                    'pretend' => $this->option('pretend'),
-                    'step' => (int) $this->option('step'),
+        $this->migrator->usingConnection($input->getOption('database'), function () use ($input, $output) {
+            $this->migrator->setOutput($output)->rollback(
+                $this->getMigrationPaths($input), [
+                    'pretend' => $input->getOption('pretend'),
+                    'step' => (int) $input->getOption('step'),
                 ]
             );
         });
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use'],
-
-            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production'],
-
-            ['path', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The path(s) to the migrations files to be executed'],
-
-            ['realpath', null, InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths'],
-
-            ['pretend', null, InputOption::VALUE_NONE, 'Dump the SQL queries that would be run'],
-
-            ['step', null, InputOption::VALUE_OPTIONAL, 'The number of migrations to be reverted'],
-        ];
-    }
 }

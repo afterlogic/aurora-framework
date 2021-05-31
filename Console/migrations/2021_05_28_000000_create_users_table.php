@@ -69,6 +69,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Capsule::schema()::dropIfExists('users');
+        Capsule::schema()->dropIfExists('users');
     }
 }

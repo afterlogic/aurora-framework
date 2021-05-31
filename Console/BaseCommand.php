@@ -18,8 +18,8 @@ class BaseCommand extends Command
         // migrations may be run for any customized path from within the application.
         if ($input->getOption('path')) {
             return collect($input->getOption('path'))->map(function ($path) use ($input) {
-                return ! $input->usingRealPath()
-                    ? $this->laravel->basePath().'/'.$path
+                return !$input->usingRealPath()
+                    ? \Aurora\Api::RootPath() . $path
                     : $path;
             })->all();
         }
@@ -46,6 +46,6 @@ class BaseCommand extends Command
      */
     protected function getMigrationPath()
     {
-        return __DIR__ . DIRECTORY_SEPARATOR .  'migrations';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'migrations';
     }
 }

@@ -5,6 +5,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Aurora\System\Database\Commands\InstallCommand;
 use Aurora\System\Database\Commands\MigrateCommand;
+use \Aurora\System\Database\Commands\RollbackCommand;
 use Symfony\Component\Console\Application;
 
 $container['migration-table'] = 'migration';
@@ -39,5 +40,6 @@ $app = new Application();
 
 $app->add(new InstallCommand($container['migration-repo']));
 $app->add(new MigrateCommand($container['migrator']));
+$app->add(new RollbackCommand($container['migrator']));
 
 $app->run();

@@ -15,7 +15,6 @@
         "illuminate/database": "^7.30",
 		"illuminate/console": "^7.30",
 		"rakit/validation": "^0.22.3",
-		"pimple/pimple": "^3.0",
-		"illuminate/foundation": "^1.1"
+		"pimple/pimple": "^3.0"
 	}
 }
