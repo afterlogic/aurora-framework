@@ -35,7 +35,7 @@ $container['migrator'] = function ($c) {
 };
 
 $container['migration-creator'] = function ($c) {
-    return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], '..' . DIRECTORY_SEPARATOR . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
+    return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
 };
 
 $container['composer'] = function ($c) {
