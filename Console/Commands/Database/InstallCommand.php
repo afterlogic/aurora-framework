@@ -10,7 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallCommand extends Command
 {
-
     /**
      * The repository instance.
      *
@@ -30,8 +29,6 @@ class InstallCommand extends Command
 
         $this->repository = $repository;
     }
-
-    protected static $defaultName = 'migrate:install';
 
     protected function configure(): void
     {

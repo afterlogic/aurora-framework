@@ -3,7 +3,6 @@
 namespace Aurora\System\Database\Commands;
 
 use Aurora\System\Database\BaseCommand;
-use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Migrations\Migrator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,14 +52,14 @@ class RollbackCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion('Do you really wish to run this command?', false);
+        $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
         if (!$helper->ask($input, $output, $question)) {
             return Command::SUCCESS;
         }
 
         $this->migrator->usingConnection($input->getOption('database'), function () use ($input, $output) {
             $this->migrator->setOutput($output)->rollback(
-                $this->getMigrationPaths($input), [
+                $this->getMigrationPaths($input, $output), [
                     'pretend' => $input->getOption('pretend'),
                     'step' => (int) $input->getOption('step'),
                 ]

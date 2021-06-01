@@ -4,7 +4,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 use \Aurora\System\Api;
 
-use Pimple\Container;
+use \Pimple\Container;
 use \Illuminate\Database\Capsule\Manager as Capsule;
 use \Aurora\System\Enums\DbType;
 
@@ -20,7 +20,7 @@ if ($oSettings)
     $sDbPassword = $oSettings->DBPassword;
     $sDbPrefix = $oSettings->DBPrefix;
 
-//    $container = new Container();
+    $container = new Container();
 
     $container['db-config'] = [
         'driver'    => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
@@ -39,4 +39,8 @@ if ($oSettings)
 
     // Setup the Eloquent ORM.
     $capsule->bootEloquent();
+
+    $container['connection'] = function ($c) {
+        return $c->getConnection('default');
+    };
 }

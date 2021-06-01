@@ -3,9 +3,9 @@
 namespace Aurora\System\Database\Commands;
 
 use Aurora\System\Database\BaseCommand;
-use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Migrations\Migrator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,8 +13,6 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class MigrateCommand extends BaseCommand
 {
-    use ConfirmableTrait;
-
     /**
      * The migrator instance.
      *
@@ -25,7 +23,7 @@ class MigrateCommand extends BaseCommand
     /**
      * Create a new migration command instance.
      *
-     * @param  \Illuminate\Database\Migrations\Migrator  $migrator
+     * @param \Illuminate\Database\Migrations\Migrator $migrator
      * @return void
      */
     public function __construct(Migrator $migrator)
@@ -39,12 +37,12 @@ class MigrateCommand extends BaseCommand
     {
         $this->setName('migrate')
             ->setDescription('Run the database migrations')
-            ->addOption('force', null,InputOption::VALUE_OPTIONAL, 'Force the operation to run when in production')
-            ->addOption('path', null,InputOption::VALUE_OPTIONAL, 'The path(s) to the migrations files to be executed')
-            ->addOption('realpath', null,InputOption::VALUE_OPTIONAL, 'Indicate any provided migration file paths are pre-resolved absolute paths')
-            ->addOption('pretend', null,InputOption::VALUE_OPTIONAL, 'Dump the SQL queries that would be run')
-            ->addOption('seed', null,InputOption::VALUE_OPTIONAL, 'Indicates if the seed task should be re-run')
-            ->addOption('step', null,InputOption::VALUE_OPTIONAL, 'Force the migrations to be run so they can be rolled back individually')
+            ->addOption('force', null, InputOption::VALUE_OPTIONAL, 'Force the operation to run when in production')
+            ->addOption('path', null, InputOption::VALUE_OPTIONAL, 'The path(s) to the migrations files to be executed')
+            ->addOption('realpath', null, InputOption::VALUE_OPTIONAL, 'Indicate any provided migration file paths are pre-resolved absolute paths')
+            ->addOption('pretend', null, InputOption::VALUE_OPTIONAL, 'Dump the SQL queries that would be run')
+            ->addOption('seed', null, InputOption::VALUE_OPTIONAL, 'Indicates if the seed task should be re-run')
+            ->addOption('step', null, InputOption::VALUE_OPTIONAL, 'Force the migrations to be run so they can be rolled back individually')
             ->addOption('database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use');
     }
 
@@ -56,13 +54,13 @@ class MigrateCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion('Do you really wish to run this command?', false);
+        $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
         if (!$helper->ask($input, $output, $question)) {
             return Command::SUCCESS;
         }
 
         $this->migrator->usingConnection($input->getOption('database'), function () use ($input, $output) {
-            $this->prepareDatabase($input);
+            $this->prepareDatabase($input, $output);
 
             // Next, we will check to see if a path option has been defined. If it has
             // we will use the path relative to the root of this installation folder
@@ -77,12 +75,12 @@ class MigrateCommand extends BaseCommand
             // Finally, if the "seed" option has been given, we will re-run the database
             // seed task to re-populate the database, which is convenient when adding
             // a migration and a seed at the same time, as it is only this command.
-           /*
-           TODO implement database seeding
-           if ($input->getOption('seed') && ! $input->getOption('pretend')) {
-                $this->call('db:seed', ['--force' => true]);
-            }
-           */
+            /*
+            TODO implement database seeding
+            if ($input->getOption('seed') && ! $input->getOption('pretend')) {
+                 $this->call('db:seed', ['--force' => true]);
+             }
+            */
         });
 
         return Command::SUCCESS;
@@ -93,12 +91,13 @@ class MigrateCommand extends BaseCommand
      *
      * @return void
      */
-    protected function prepareDatabase($input)
+    protected function prepareDatabase($input, $output)
     {
-        if (! $this->migrator->repositoryExists()) {
-            $this->call('migrate:install', array_filter([
+        if (!$this->migrator->repositoryExists()) {
+            $greetInput = new ArrayInput([
                 '--database' => $input->getOption('database'),
-            ]));
+            ]);
+            $this->getApplication()->find('migrate:install')->run($greetInput, $output);
         }
     }
 }

@@ -1,16 +1,14 @@
 #!/usr/bin/env php
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+
 require_once __DIR__ . '/../bootstrap.php';
 
-use Aurora\System\Database\Commands\InstallCommand;
-use Aurora\System\Database\Commands\MigrateCommand;
-use \Aurora\System\Database\Commands\RollbackCommand;
+use Aurora\System\Database\Commands;
 use Symfony\Component\Console\Application;
 
 $container['migration-table'] = 'migration';
 
-$container['filesytem'] = function ($c) {
+$container['filesystem'] = function ($c) {
     return new \Illuminate\Filesystem\Filesystem;
 };
 
@@ -33,13 +31,22 @@ $container['migration-repo'] = function ($c) {
 };
 
 $container['migrator'] = function ($c) {
-    return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesytem']);
+    return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
+};
+
+$container['migration-creator'] = function ($c) {
+    return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], '..' . DIRECTORY_SEPARATOR . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
+};
+
+$container['composer'] = function ($c) {
+    return new \Illuminate\Support\Composer($c['filesystem']);
 };
 
 $app = new Application();
 
-$app->add(new InstallCommand($container['migration-repo']));
-$app->add(new MigrateCommand($container['migrator']));
-$app->add(new RollbackCommand($container['migrator']));
+$app->add(new Commands\InstallCommand($container['migration-repo']));
+$app->add(new Commands\MigrateCommand($container['migrator']));
+$app->add(new Commands\RollbackCommand($container['migrator']));
+$app->add(new Commands\MigrateMakeCommand($container['migration-creator'], $container['composer']));
 
 $app->run();
