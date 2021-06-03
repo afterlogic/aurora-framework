@@ -12,6 +12,11 @@ use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Model extends Eloquent
 {
+    /**
+     * The module name of the model.
+     *
+     * @var string
+     */
     protected $moduleName = null;
 
     /**
@@ -35,9 +40,45 @@ class Model extends Eloquent
      */
     protected $parentInheritedAttributes = [];
 
+    /**
+     * @param  string  $key
+     * @return bool
+     */
     public function isInheritedAttribute($key)
     {
         return (in_array($key, $this->parentInheritedAttributes));
+    }
+
+    /**
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getInheritedValue($key)
+    {
+        $value = null;
+        $parent = $this->parent();
+        if ($parent instanceof BelongsTo && isset($this->parent)) {
+            $value = $this->parent->$key;
+        }
+        if ($value === null && is_subclass_of($this->parentType, \Aurora\System\AbstractSettings::class)) {
+            if($this->parentType === \Aurora\System\Settings::class) {
+                $value = \Aurora\System\Api::GetSettings()->GetValue($key);
+            }
+            if($this->parentType === \Aurora\System\Module\Settings::class) {
+                if (strpos($key, '::') !== false) {
+                    list($moduleName, $key) = \explode('::', $key);
+                }
+                else {
+                    $moduleName = $this->moduleName;
+                }
+                $oModule = \Aurora\System\Api::GetModule($moduleName);
+                if ($oModule instanceof \Aurora\System\Module\AbstractModule) {
+                    $value = $oModule->getConfig($key, $value);
+                }
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -53,49 +94,32 @@ class Model extends Eloquent
             $value = $this->Properties[$key];
         }
         if ($value === null && $this->isInheritedAttribute($key)) {
-            $parent = $this->parent();
-            if ($parent instanceof BelongsTo && isset($this->parent)) {
-                $value = $this->parent->$key;
-            }
-            if ($value === null && is_subclass_of($this->parentType, \Aurora\System\AbstractSettings::class)) {
-                if($this->parentType === \Aurora\System\Settings::class) {
-                    $value = \Aurora\System\Api::GetSettings()->GetValue($key);
-                }
-                if($this->parentType === \Aurora\System\Module\Settings::class) {
-                    if (strpos($key, '::') !== false) {
-                        list($moduleName, $key) = \explode('::', $key);
-                    }
-                    else {
-                        $moduleName = $this->moduleName;
-                    }
-                    $oModule = \Aurora\System\Api::GetModule($moduleName);
-                    if ($oModule instanceof \Aurora\System\Module\AbstractModule) {
-                        $value = $oModule->getConfig($key, $value);
-                    }
-                }
-            }
+            $value = $this->getInheritedValue($key);
         }
 
         return $value;
     }
 
-    public function getExtendedProp($sName)
+    public function getExtendedProp($key)
     {
         $mResult = null;
-        if (isset($this->Properties[$sName])) {
-            $mResult = $this->Properties[$sName];
+        if (isset($this->Properties[$key])) {
+            $mResult = $this->Properties[$key];
         }
 
         return $mResult;
     }
 
-    public function setExtendedProp($sName, $sValue)
+    public function setExtendedProp($key, $value)
     {
         $properties = $this->Properties;
-        $properties[$sName] = $sValue;
+        $properties[$key] = $value;
         $this->Properties = $properties;
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function parent()
     {
         $result = null;
@@ -104,5 +128,35 @@ class Model extends Eloquent
         }
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function toResponseArray()
+    {
+        $array = $this->toArray();
+
+        if (count($this->parentInheritedAttributes) > 0) {
+            foreach ($this->parentInheritedAttributes as $attribute) {
+                $value = null;
+                if (isset($array[$attribute])) {
+                    $value = $array[$attribute];
+                }
+                if ($value === null) {
+                    $array[$attribute] = $this->getInheritedValue($attribute);
+                }
+            }
+        }
+        if (isset($array['Properties'])) {
+            foreach ($array['Properties'] as $key => $value) {
+                if ($value !== null) {
+                    $array[$key] = $value;
+                }
+            }
+            unset($array['Properties']);
+        }
+
+        return $array;
     }
 }
