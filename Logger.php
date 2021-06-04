@@ -348,7 +348,7 @@ class Logger
 				$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
 				foreach($aLogFiles as $sFileName)
 				{
-					if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false)
+					if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false && file_exists($sLogDir.$sFileName))
 					{
 						unlink($sLogDir.$sFileName);
 					}

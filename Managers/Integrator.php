@@ -224,9 +224,9 @@ class Integrator extends AbstractManager
 	public function GetUser($iUserId)
 	{
 		$mResult = false;
-		$oUser = \Aurora\System\Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\User::class);
+		$oUser = \Aurora\Modules\Core\Models\User::find($iUserId);
 
-		if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
+		if ($oUser instanceof \Aurora\Modules\Core\Models\User)
 		{
 			$mResult = $oUser;
 		}
@@ -239,7 +239,8 @@ class Integrator extends AbstractManager
 	 */
 	public function GetAdminUser()
 	{
-		$oUser = new \Aurora\Modules\Core\Classes\User(\Aurora\Modules\Core\Module::class);
+		$oUser = new \Aurora\Modules\Core\Models\User();
+
 		$oUser->EntityId = -1;
 		$oUser->Role = \Aurora\System\Enums\UserRole::SuperAdmin;
 		$oUser->PublicId = 'Administrator';

@@ -20,6 +20,13 @@ class Model extends Eloquent
     protected $moduleName = null;
 
     /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'Id';
+
+    /**
      * The parent type for the model.
      *
      * @var string
@@ -40,13 +47,24 @@ class Model extends Eloquent
      */
     protected $parentInheritedAttributes = [];
 
+    public function getInheritedAttributes()
+    {
+        $aArgs = [];
+        $aResult = [];
+
+        \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $aResult);
+        if (is_array($aResult)) {
+            return array_merge($this->parentInheritedAttributes, $aResult);
+        }
+    }
+
     /**
      * @param  string  $key
      * @return bool
      */
     public function isInheritedAttribute($key)
     {
-        return (in_array($key, $this->parentInheritedAttributes));
+        return (in_array($key, $this->getInheritedAttributes()));
     }
 
     /**
@@ -117,6 +135,12 @@ class Model extends Eloquent
         $this->Properties = $properties;
     }
 
+    public function setExtendedProps($props)
+    {
+        $properties = $this->Properties;
+        $this->Properties = array_merge($properties, $props);
+    }
+
     /**
      * @return BelongsTo
      */
@@ -137,8 +161,9 @@ class Model extends Eloquent
     {
         $array = $this->toArray();
 
-        if (count($this->parentInheritedAttributes) > 0) {
-            foreach ($this->parentInheritedAttributes as $attribute) {
+        $parentInheritedAttributes = $this->getInheritedAttributes();
+        if (count($parentInheritedAttributes) > 0) {
+            foreach ($parentInheritedAttributes as $attribute) {
                 $value = null;
                 if (isset($array[$attribute])) {
                     $value = $array[$attribute];
@@ -158,5 +183,10 @@ class Model extends Eloquent
         }
 
         return $array;
+    }
+
+    public function validate()
+    {
+        return true;
     }
 }

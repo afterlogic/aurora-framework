@@ -7,6 +7,9 @@
 
 namespace Aurora\System;
 
+use \Aurora\Modules\Core\Models\User;
+use \Aurora\Modules\Core\Models\Tenant;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -1440,16 +1443,10 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
-				->select(['PublicId'])
-				->where(['EntityId' => $iUserId])
-				->one()
-				->asArray()
-				->exec();
-
-			if (isset($aResult['PublicId']))
+			$oUser = User::select('PublicId')->firstWhere('Id', $iUserId);
+			if ($oUser)
 			{
-				$sPublicId = $aResult['PublicId'];
+				return $oUser->PublicId;
 			}
 		}
 		else
@@ -1467,10 +1464,6 @@ class Api
 		try
 		{
 			$mUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
-			if (!($mUser instanceof \Aurora\Modules\Core\Classes\User))
-			{
-				$mUser = false;
-			}
 		}
 		catch (\Exception $oEx)
 		{
@@ -1480,15 +1473,9 @@ class Api
 		return $mUser;
 	}
 
-	public static function getTenantById($iUserId)
+	public static function getTenantById($iTenantId)
 	{
-		$mUser = Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\Tenant::class);
-		if (!($mUser instanceof \Aurora\Modules\Core\Classes\Tenant))
-		{
-			$mUser = false;
-		}
-
-		return $mUser;
+		return Tenant::find($iTenantId);
 	}
 
 	public static function setTenantName($sTenantName)
@@ -1540,11 +1527,7 @@ class Api
 		{
 			if (!empty($_SERVER['SERVER_NAME']))
 			{
-				$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
-				if (is_array($aTenants) && count($aTenants) > 0)
-				{
-					$oTenant = $aTenants[0];
-				}
+				$oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
 			}
 			$bTenantInitialized = true;
 		}
