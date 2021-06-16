@@ -245,7 +245,11 @@ class Logger
 			{
 				$oAuthenticatedUser = false;
 			}
-			$sFirstPrefix = $oAuthenticatedUser && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+			$sFirstPrefix = "";
+			if (isset($oAuthenticatedUser))
+			{
+				$sFirstPrefix = isset($oAuthenticatedUser->WriteSeparateLog) && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+			}
 			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
 			$sGuid = \MailSo\Log\Logger::Guid();

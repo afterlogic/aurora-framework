@@ -26,8 +26,8 @@ class UserSession
 			'token' => 'auth',
 			'sign-me' => $bSignMe,
 			'id' => $oAccount->IdUser,
-			'account' => $oAccount->EntityId,
-			'account_type' => $oAccount->getName()
+			'account' => $oAccount->Id,
+			'account_type' => get_class($oAccount)
 		];
 	}
 
