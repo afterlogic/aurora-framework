@@ -922,7 +922,7 @@ class Api
 
 	/**
 	 * @param string $sData
-	 * @param \Aurora\Modules\StandardAuth\Classes\Account $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
 	 * @param array $aParams = null
 	 *
 	 * @return string
@@ -1235,7 +1235,7 @@ class Api
 
 	/**
 	 *
-	 * @return \Aurora\Modules\Core\Classes\User
+	 * @return \Aurora\Modules\Core\Models\User
 	 */
 	public static function authorise($sAuthToken = '')
 	{
@@ -1359,6 +1359,9 @@ class Api
 		return self::getUserPublicIdById($iUserId);
 	}
 
+	/**
+	 * @return \Aurora\Modules\Core\Models\User
+	 */
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
 		$iUserId = 0;
