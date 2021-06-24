@@ -115,6 +115,11 @@ class Model extends Eloquent
         }
     }
 
+    public function getEntityIdAttribute()
+    {
+        return $this->Id;
+    }
+
     /**
      * Dynamically retrieve attributes on the model.
      *
