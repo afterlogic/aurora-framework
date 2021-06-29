@@ -9,6 +9,9 @@ namespace Aurora\System;
 
 use \Aurora\Modules\Core\Models\User;
 use \Aurora\Modules\Core\Models\Tenant;
+use \Aurora\System\Enums\DbType;
+use \Pimple\Container;
+use \Aurora\System\Console\Commands;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -128,6 +131,11 @@ class Api
 	 *
 	 */
 	protected static $oAuthenticatedUser = null;
+
+    /**
+     * @var \Pimple\Container
+     */
+	public static $oContainer = null;
 
 	/**
 	 *
@@ -1572,4 +1580,97 @@ class Api
 
 		return $mResult;
 	}
+
+	private static function CreateContainer()
+    {
+        $container = new Container();
+
+        $oSettings = &Api::GetSettings();
+        if ($oSettings) {
+            $iDbType = $oSettings->DBType;
+            $sDbHost = $oSettings->DBHost;
+            $sDbName = $oSettings->DBName;
+            $sDbLogin = $oSettings->DBLogin;
+            $sDbPassword = $oSettings->DBPassword;
+            $sDbPrefix = $oSettings->DBPrefix;
+            $container['db-config'] = [
+                'driver' => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
+                'host' => $sDbHost,
+                'database' => $sDbName,
+                'username' => $sDbLogin,
+                'password' => $sDbPassword,
+                // 'charset'   => 'utf8',
+                // 'collation' => 'utf8_unicode_ci',
+                'prefix' => $sDbPrefix,
+            ];
+
+            $capsule = new \Illuminate\Database\Capsule\Manager();
+            $capsule->addConnection($container['db-config']);
+
+            //Make this Capsule instance available globally.
+            $capsule->setAsGlobal();
+
+            // Setup the Eloquent ORM.
+            $capsule->bootEloquent();
+
+            $container['connection'] = function ($c) use ($capsule) {
+                return $capsule->getConnection('default');
+            };
+
+            $container['migration-table'] = 'migration';
+
+            $container['filesystem'] = function ($c) {
+                return new \Illuminate\Filesystem\Filesystem;
+            };
+
+            $container['resolver'] = function ($c) {
+                $r = new \Illuminate\Database\ConnectionResolver(['default' => $c['connection']]);
+                $r->setDefaultConnection('default');
+                return $r;
+            };
+
+            $container['migration-repo'] = function ($c) {
+                return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($c['resolver'], $c['migration-table']);
+            };
+
+            $container['migrator'] = function ($c) {
+                return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
+            };
+
+            $container['migration-creator'] = function ($c) {
+                return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
+            };
+
+            $container['composer'] = function ($c) {
+                return new \Illuminate\Support\Composer($c['filesystem']);
+            };
+
+            $container['console'] = function ($c) {
+                $app = new \Symfony\Component\Console\Application();
+
+                $app->add(new Commands\Migrations\InstallCommand($c['migration-repo']));
+                $app->add(new Commands\Migrations\MigrateCommand($c['migrator']));
+                $app->add(new Commands\Migrations\RollbackCommand($c['migrator']));
+                $app->add(new Commands\Migrations\MigrateMakeCommand($c['migration-creator'], $c['composer']));
+
+                $app->add(new Commands\Seeds\SeedCommand($c['resolver']));
+                $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
+
+                return $app;
+            };
+
+            self::$oContainer = $container;
+        }
+    }
+
+    /**
+     * @return Container
+     */
+    public static function GetContainer() {
+	    if (self::$oContainer === null) {
+            self::CreateContainer();
+        }
+	    return self::$oContainer;
+    }
+
 }

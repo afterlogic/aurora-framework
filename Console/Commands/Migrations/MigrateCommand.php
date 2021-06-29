@@ -1,8 +1,8 @@
 <?php
 
-namespace Aurora\System\Database\Commands;
+namespace Aurora\System\Console\Commands\Migrations;
 
-use Aurora\System\Database\BaseCommand;
+use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Migrations\Migrator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -53,10 +53,12 @@ class MigrateCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
-        if (!$helper->ask($input, $output, $question)) {
-            return Command::SUCCESS;
+        if (!$input->getOption('force')) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
+            }
         }
 
         $this->migrator->usingConnection($input->getOption('database'), function () use ($input, $output) {
@@ -75,12 +77,12 @@ class MigrateCommand extends BaseCommand
             // Finally, if the "seed" option has been given, we will re-run the database
             // seed task to re-populate the database, which is convenient when adding
             // a migration and a seed at the same time, as it is only this command.
-            /*
-            TODO implement database seeding
             if ($input->getOption('seed') && ! $input->getOption('pretend')) {
-                 $this->call('db:seed', ['--force' => true]);
+                $seedInput = new ArrayInput([
+                    '--force'  => true,
+                ]);
+                $this->getApplication()->find('db:seed')->run($seedInput, $output);
              }
-            */
         });
 
         return Command::SUCCESS;

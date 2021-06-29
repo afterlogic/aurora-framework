@@ -1,6 +1,6 @@
 <?php
 
-namespace Aurora\System\Database\Commands;
+namespace Aurora\System\Console\Commands\Migrations;
 
 use Illuminate\Database\Migrations\MigrationRepositoryInterface;
 use Symfony\Component\Console\Command\Command;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Aurora\System\Database\Commands;
+namespace Aurora\System\Console\Commands\Migrations;
 
-use Aurora\System\Database\BaseCommand;
+use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Migrations\Migrator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

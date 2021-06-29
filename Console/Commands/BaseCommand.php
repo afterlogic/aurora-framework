@@ -1,8 +1,7 @@
 <?php
 
-namespace Aurora\System\Database;
+namespace Aurora\System\Console\Commands;
 
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Command\Command;
 
 class BaseCommand extends Command
@@ -26,7 +25,7 @@ class BaseCommand extends Command
         }
 
         return array_merge(
-            $this->migrator->paths(), $this->getMigrationPath()
+            [$this->getSystemMigrationsPath()], $this->migrator->paths(), $this->getMigrationPath()
         );
     }
 
@@ -44,15 +43,22 @@ class BaseCommand extends Command
      * Get the path to the migration directory.
      *
      * @param null $sRequiredModule
-     * @return string[]
+     * @return string[]|string
      */
     protected function getMigrationPath($sRequiredModule = null)
     {
         if ($sRequiredModule) {
-            $sPath = \Aurora\Api::GetModuleManager()->GetModulePath($sRequiredModule) . $sRequiredModule . DIRECTORY_SEPARATOR . 'Migrations';
+
+            if ($sRequiredModule === 'system') {
+                $sPath = $this->getSystemMigrationsPath();
+            } else {
+                $sPath = \Aurora\Api::GetModuleManager()->GetModulePath($sRequiredModule) . $sRequiredModule . DIRECTORY_SEPARATOR . 'Migrations';
+            }
+
             if (!file_exists($sPath)) {
                 mkdir($sPath, 0755, true);
             }
+
             return $sPath;
         } else {
             $aModules = \Aurora\Api::GetModuleManager()->GetModulesPaths();
@@ -60,5 +66,12 @@ class BaseCommand extends Command
                 return $sPath . $sModule . DIRECTORY_SEPARATOR . 'Migrations';
             }, array_keys($aModules), $aModules);
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getSystemMigrationsPath() {
+        return \Aurora\Api::RootPath() . DIRECTORY_SEPARATOR . 'Migrations';
     }
 }

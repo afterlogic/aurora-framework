@@ -1,8 +1,9 @@
 <?php
 
-namespace Aurora\System\Database\Commands;
+namespace Aurora\System\Console\Commands\Migrations;
 
-use Aurora\System\Database\BaseCommand;
+
+use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Console\Migrations\TableGuesser;
 use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Support\Composer;

@@ -1,52 +1,6 @@
 #!/usr/bin/env php
 <?php
-
 require_once __DIR__ . '/../bootstrap.php';
 
-use Aurora\System\Database\Commands;
-use Symfony\Component\Console\Application;
-
-$container['migration-table'] = 'migration';
-
-$container['filesystem'] = function ($c) {
-    return new \Illuminate\Filesystem\Filesystem;
-};
-
-$container['connection'] = function ($c) {
-    $manager = new \Illuminate\Database\Capsule\Manager();
-    $manager->addConnection($c['db-config']);
-    $manager->setAsGlobal();
-    $manager->bootEloquent();
-    return $manager->getConnection('default');
-};
-
-$container['resolver'] = function ($c) {
-    $r = new \Illuminate\Database\ConnectionResolver(['default' => $c['connection']]);
-    $r->setDefaultConnection('default');
-    return $r;
-};
-
-$container['migration-repo'] = function ($c) {
-    return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($c['resolver'], $c['migration-table']);
-};
-
-$container['migrator'] = function ($c) {
-    return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
-};
-
-$container['migration-creator'] = function ($c) {
-    return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
-};
-
-$container['composer'] = function ($c) {
-    return new \Illuminate\Support\Composer($c['filesystem']);
-};
-
-$app = new Application();
-
-$app->add(new Commands\InstallCommand($container['migration-repo']));
-$app->add(new Commands\MigrateCommand($container['migrator']));
-$app->add(new Commands\RollbackCommand($container['migrator']));
-$app->add(new Commands\MigrateMakeCommand($container['migration-creator'], $container['composer']));
-
-$app->run();
+$container = \Aurora\Api::GetContainer();
+$container['console']->run();
