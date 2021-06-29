@@ -12,6 +12,8 @@ use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Model extends Eloquent
 {
+    use DisabledModulesTrait;
+
     /**
      * The module name of the model.
      *
