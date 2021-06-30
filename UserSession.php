@@ -7,6 +7,8 @@
 
 namespace Aurora\System;
 
+use Aurora\System\Models\AuthToken;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -138,36 +140,16 @@ class UserSession
 
 	public function DeleteAllUserSessions($iUserId)
 	{
-		$aAuthTokens = (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
-		->where(
-			[
-				'UserId' => $iUserId
-			]
-		)
-		->exec();
-		if (\is_array($aAuthTokens) && count($aAuthTokens) > 0)
-		{
-			foreach ($aAuthTokens as $oAuthToken)
-			{
-				$oAuthToken->delete();
-			}
-		}
+		return AuthToken::where('UserId', $iUserId)->delete();
 	}
 
 	public function SetToDB($iUserId, $sAuthToken)
 	{
-		$oAuthToken = (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
-			->where(
-				[
-					'UserId' => $iUserId,
-					'Token' => $sAuthToken
-				]
-			)
-			->one()
-			->exec();
+		$oAuthToken = AuthToken::where('UserId', $iUserId)->where('Token', $sAuthToken)->first();
+
 		if (!$oAuthToken)
 		{
-			$oAuthToken = new \Aurora\System\Classes\AuthToken('System');
+			$oAuthToken = new AuthToken();
 		}
 		$oAuthToken->UserId = $iUserId;
 		$oAuthToken->Token = $sAuthToken;
@@ -175,7 +157,7 @@ class UserSession
 
 		try
 		{
-			\Aurora\System\Managers\Eav::getInstance()->saveEntity($oAuthToken);
+			$oAuthToken->save();
 		}
 		catch (\Aurora\System\Exceptions\DbException $oEx)
 		{
@@ -189,19 +171,10 @@ class UserSession
 		{
 			try
 			{
-				$aEntities = \Aurora\System\Managers\Eav::getInstance()->getEntities(
-					\Aurora\System\Classes\AuthToken::class,
-					[],
-					0,
-					1,
-					['Token' => $sAuthToken]
-				);
-
-				if (is_array($aEntities) && count($aEntities) === 1)
-				{
-					$oAuthToken = $aEntities[0];
+				$oAuthToken = AuthToken::firstWhere('Token', $sAuthToken);
+				if ($oAuthToken) {
 					$oAuthToken->LastUsageDateTime = time();
-					$oAuthToken->saveAttributes(['LastUsageDateTime']);
+					$oAuthToken->save();
 					self::$aTokensCache[$sAuthToken] = $oAuthToken;
 				}
 			}
@@ -215,36 +188,20 @@ class UserSession
 
 	public function DeleteFromDB($sAuthToken)
 	{
-		$oAuthToken = $this->GetFromDB($sAuthToken);
-		if ($oAuthToken instanceof \Aurora\System\Classes\AuthToken)
-		{
-			\Aurora\System\Managers\Eav::getInstance()->deleteEntity($oAuthToken->EntityId);
-		}
+		AuthToken::where('Token', $sAuthToken)->delete();
 	}
 
 	public function GetExpiredAuthTokens($iDays)
 	{
 		$oDateTime = new \DateTime('-'.$iDays.' days');
 		$iTime = $oDateTime->getTimestamp();
-
-		return \Aurora\System\Managers\Eav::getInstance()->getEntities(
-			\Aurora\System\Classes\AuthToken::class,
-			[],
-			0,
-			0,
-			['LastUsageDateTime' => [$iTime , '<']]
-		);
+		return AuthToken::where('LastUsageDateTime', '>', $iTime)->get();
 	}
 
 	public function GetUserSessionsFromDB($iUserId)
 	{
-		return (new \Aurora\System\EAV\Query(\Aurora\System\Classes\AuthToken::class))
-			->where(
-				[
-					'UserId' => $iUserId
-				]
-			)
-			->exec();
+		return AuthToken::where('UserId', $iUserId)->get();
+
 	}
 
 }
