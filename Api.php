@@ -7,6 +7,12 @@
 
 namespace Aurora\System;
 
+use \Aurora\Modules\Core\Models\User;
+use \Aurora\Modules\Core\Models\Tenant;
+use \Aurora\System\Enums\DbType;
+use \Pimple\Container;
+use \Aurora\System\Console\Commands;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -126,6 +132,11 @@ class Api
 	 */
 	protected static $oAuthenticatedUser = null;
 
+    /**
+     * @var \Pimple\Container
+     */
+	public static $oContainer = null;
+
 	/**
 	 *
 	 * @return string
@@ -206,6 +217,7 @@ class Api
 	{
 		$apiInitTimeStart = \microtime(true);
 		include_once self::GetVendorPath().'autoload.php';
+		require_once 'bootstrap.php';
 
 		if ($bGrantAdminPrivileges)
 		{
@@ -918,7 +930,7 @@ class Api
 
 	/**
 	 * @param string $sData
-	 * @param \Aurora\Modules\StandardAuth\Classes\Account $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
 	 * @param array $aParams = null
 	 *
 	 * @return string
@@ -1231,7 +1243,7 @@ class Api
 
 	/**
 	 *
-	 * @return \Aurora\Modules\Core\Classes\User
+	 * @return \Aurora\Modules\Core\Models\User
 	 */
 	public static function authorise($sAuthToken = '')
 	{
@@ -1355,6 +1367,9 @@ class Api
 		return self::getUserPublicIdById($iUserId);
 	}
 
+	/**
+	 * @return \Aurora\Modules\Core\Models\User
+	 */
 	public static function getAuthenticatedUser($sAuthToken = '')
 	{
 		$iUserId = 0;
@@ -1407,17 +1422,9 @@ class Api
 			}
 			else
 			{
-				$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
-					->select(['UUID'])
-					->where(['EntityId' => $iUserId])
-					->one()
-					->asArray()
-					->exec();
-
-				if (isset($aResult['UUID']))
-				{
-					$sUUID = $aResult['UUID'];
-					$aUUIDs[$iUserId] = $sUUID;
+				$oUser = User::find($iUserId);
+				if ($oUser) {
+					$aUUIDs[$iUserId] = $oUser->UUID;
 				}
 			}
 		}
@@ -1439,16 +1446,10 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
-				->select(['PublicId'])
-				->where(['EntityId' => $iUserId])
-				->one()
-				->asArray()
-				->exec();
-
-			if (isset($aResult['PublicId']))
+			$oUser = User::select('PublicId')->firstWhere('Id', $iUserId);
+			if ($oUser)
 			{
-				$sPublicId = $aResult['PublicId'];
+				return $oUser->PublicId;
 			}
 		}
 		else
@@ -1466,10 +1467,6 @@ class Api
 		try
 		{
 			$mUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
-			if (!($mUser instanceof \Aurora\Modules\Core\Classes\User))
-			{
-				$mUser = false;
-			}
 		}
 		catch (\Exception $oEx)
 		{
@@ -1479,15 +1476,9 @@ class Api
 		return $mUser;
 	}
 
-	public static function getTenantById($iUserId)
+	public static function getTenantById($iTenantId)
 	{
-		$mUser = Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\Tenant::class);
-		if (!($mUser instanceof \Aurora\Modules\Core\Classes\Tenant))
-		{
-			$mUser = false;
-		}
-
-		return $mUser;
+		return Tenant::find($iTenantId);
 	}
 
 	public static function setTenantName($sTenantName)
@@ -1539,11 +1530,7 @@ class Api
 		{
 			if (!empty($_SERVER['SERVER_NAME']))
 			{
-				$aTenants = Managers\Eav::getInstance()->getEntities(\Aurora\Modules\Core\Classes\Tenant::class, array(), 0, 0, array('WebDomain' => $_SERVER['SERVER_NAME']));
-				if (is_array($aTenants) && count($aTenants) > 0)
-				{
-					$oTenant = $aTenants[0];
-				}
+				$oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
 			}
 			$bTenantInitialized = true;
 		}
@@ -1585,4 +1572,97 @@ class Api
 
 		return $mResult;
 	}
+
+	private static function CreateContainer()
+    {
+        $container = new Container();
+
+        $oSettings = &Api::GetSettings();
+        if ($oSettings) {
+            $iDbType = $oSettings->DBType;
+            $sDbHost = $oSettings->DBHost;
+            $sDbName = $oSettings->DBName;
+            $sDbLogin = $oSettings->DBLogin;
+            $sDbPassword = $oSettings->DBPassword;
+            $sDbPrefix = $oSettings->DBPrefix;
+            $container['db-config'] = [
+                'driver' => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
+                'host' => $sDbHost,
+                'database' => $sDbName,
+                'username' => $sDbLogin,
+                'password' => $sDbPassword,
+                // 'charset'   => 'utf8',
+                // 'collation' => 'utf8_unicode_ci',
+                'prefix' => $sDbPrefix,
+            ];
+
+            $capsule = new \Illuminate\Database\Capsule\Manager();
+            $capsule->addConnection($container['db-config']);
+
+            //Make this Capsule instance available globally.
+            $capsule->setAsGlobal();
+
+            // Setup the Eloquent ORM.
+            $capsule->bootEloquent();
+
+            $container['connection'] = function ($c) use ($capsule) {
+                return $capsule->getConnection('default');
+            };
+
+            $container['migration-table'] = 'migration';
+
+            $container['filesystem'] = function ($c) {
+                return new \Illuminate\Filesystem\Filesystem;
+            };
+
+            $container['resolver'] = function ($c) {
+                $r = new \Illuminate\Database\ConnectionResolver(['default' => $c['connection']]);
+                $r->setDefaultConnection('default');
+                return $r;
+            };
+
+            $container['migration-repo'] = function ($c) {
+                return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($c['resolver'], $c['migration-table']);
+            };
+
+            $container['migrator'] = function ($c) {
+                return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
+            };
+
+            $container['migration-creator'] = function ($c) {
+                return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
+            };
+
+            $container['composer'] = function ($c) {
+                return new \Illuminate\Support\Composer($c['filesystem']);
+            };
+
+            $container['console'] = function ($c) {
+                $app = new \Symfony\Component\Console\Application();
+
+                $app->add(new Commands\Migrations\InstallCommand($c['migration-repo']));
+                $app->add(new Commands\Migrations\MigrateCommand($c['migrator']));
+                $app->add(new Commands\Migrations\RollbackCommand($c['migrator']));
+                $app->add(new Commands\Migrations\MigrateMakeCommand($c['migration-creator'], $c['composer']));
+
+                $app->add(new Commands\Seeds\SeedCommand($c['resolver']));
+                $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
+
+                return $app;
+            };
+
+            self::$oContainer = $container;
+        }
+    }
+
+    /**
+     * @return Container
+     */
+    public static function GetContainer() {
+	    if (self::$oContainer === null) {
+            self::CreateContainer();
+        }
+	    return self::$oContainer;
+    }
+
 }

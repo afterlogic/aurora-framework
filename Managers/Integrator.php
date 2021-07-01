@@ -224,9 +224,9 @@ class Integrator extends AbstractManager
 	public function GetUser($iUserId)
 	{
 		$mResult = false;
-		$oUser = \Aurora\System\Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\User::class);
+		$oUser = \Aurora\Modules\Core\Models\User::find($iUserId);
 
-		if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
+		if ($oUser instanceof \Aurora\Modules\Core\Models\User)
 		{
 			$mResult = $oUser;
 		}
@@ -239,8 +239,9 @@ class Integrator extends AbstractManager
 	 */
 	public function GetAdminUser()
 	{
-		$oUser = new \Aurora\Modules\Core\Classes\User(\Aurora\Modules\Core\Module::class);
-		$oUser->EntityId = -1;
+		$oUser = new \Aurora\Modules\Core\Models\User();
+
+		$oUser->Id = -1;
 		$oUser->Role = \Aurora\System\Enums\UserRole::SuperAdmin;
 		$oUser->PublicId = 'Administrator';
 
@@ -328,7 +329,7 @@ class Integrator extends AbstractManager
 	/**
 	 * @param string $sAuthToken Default value is empty string.
 	 *
-	 * @return \Aurora\Modules\Core\Classes\User
+	 * @return \Aurora\Modules\Core\Models\User
 	 */
 	public function getAuthenticatedUserHelper($sAuthToken = '')
 	{
@@ -349,7 +350,7 @@ class Integrator extends AbstractManager
 	/**
 	 * @param int $iUserId Default value is empty string.
 	 *
-	 * @return \Aurora\Modules\Core\Classes\User
+	 * @return \Aurora\Modules\Core\Models\User
 	 */
 	public function getAuthenticatedUserByIdHelper($iUserId)
 	{
@@ -389,7 +390,7 @@ class Integrator extends AbstractManager
 			'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
 
 			$oUser = $this->GetUser((int) $aAccountHashTable['id']);
-			if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
+			if ($oUser instanceof \Aurora\Modules\Core\Models\User)
 			{
 				$aInfo = array(
 					'isAdmin' => false,
@@ -584,12 +585,12 @@ class Integrator extends AbstractManager
 	}
 
 	/**
-	 * @param \Aurora\Modules\StandardAuth\Classes\Account $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
 	 * @param bool $bSignMe Default value is **false**.
 	 *
 	 * @return string
 	 */
-	public function setAccountAsLoggedIn(\Aurora\Modules\StandardAuth\Classes\Account $oAccount, $bSignMe = false)
+	public function setAccountAsLoggedIn(\Aurora\Modules\StandardAuth\Models\Account $oAccount, $bSignMe = false)
 	{
 		$aAccountHashTable = array(
 			'token' => 'auth',
@@ -979,7 +980,7 @@ class Integrator extends AbstractManager
 		if ($oUser)
 		{
 			$aAppData['User'] = array(
-				'Id' => $oUser->EntityId,
+				'Id' => $oUser->Id,
 				'Role' => $oUser->Role,
 				'Name' => $oUser->Name,
 				'PublicId' => $oUser->PublicId,

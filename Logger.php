@@ -245,7 +245,11 @@ class Logger
 			{
 				$oAuthenticatedUser = false;
 			}
-			$sFirstPrefix = $oAuthenticatedUser && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+			$sFirstPrefix = "";
+			if (isset($oAuthenticatedUser))
+			{
+				$sFirstPrefix = isset($oAuthenticatedUser->WriteSeparateLog) && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+			}
 			$sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
 			$sGuid = \MailSo\Log\Logger::Guid();
@@ -348,7 +352,7 @@ class Logger
 				$aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
 				foreach($aLogFiles as $sFileName)
 				{
-					if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false)
+					if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false && file_exists($sLogDir.$sFileName))
 					{
 						unlink($sLogDir.$sFileName);
 					}
