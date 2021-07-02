@@ -1585,7 +1585,11 @@ class Api
             $sDbLogin = $oSettings->DBLogin;
             $sDbPassword = $oSettings->DBPassword;
             $sDbPrefix = $oSettings->DBPrefix;
-            $container['db-config'] = [
+			$aDbHost = \explode(':', $sDbHost);
+			if (isset($aDbHost[0])) {
+				$sDbHost = $aDbHost[0];
+			}
+			$aDbConfig = [
                 'driver' => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
                 'host' => $sDbHost,
                 'database' => $sDbName,
@@ -1595,6 +1599,10 @@ class Api
                 // 'collation' => 'utf8_unicode_ci',
                 'prefix' => $sDbPrefix,
             ];
+			if (isset($aDbHost[1])) {
+				$aDbConfig['port'] = $aDbHost[1];
+			}
+            $container['db-config'] = $aDbConfig;
 
             $capsule = new \Illuminate\Database\Capsule\Manager();
             $capsule->addConnection($container['db-config']);
