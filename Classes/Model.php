@@ -65,13 +65,11 @@ class Model extends Eloquent
 
     public function getInheritedAttributes()
     {
-        $aArgs = [];
+        $aArgs = ['ClassName' => get_class($this)];
         $aResult = [];
 
         \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $aResult);
-        if (is_array($aResult)) {
-            return array_merge($this->parentInheritedAttributes, $aResult);
-        }
+        return $aResult;
     }
 
     /**
@@ -80,7 +78,8 @@ class Model extends Eloquent
      */
     public function isInheritedAttribute($key)
     {
-        return (in_array($key, $this->getInheritedAttributes()));
+        $aInheritedAttributes = $this->getInheritedAttributes();
+        return in_array($key, $aInheritedAttributes);
     }
 
     /**
@@ -145,13 +144,14 @@ class Model extends Eloquent
     public function __get($key)
     {
         $value = parent::__get($key);
-        if (isset($this->Properties[$key])) {
-            $value = $this->Properties[$key];
+        if ($key !== 'Properties') {
+            if (isset($this->Properties[$key])) {
+                $value = $this->Properties[$key];
+            }
+            if ($value === null && $this->isInheritedAttribute($key)) {
+                $value = $this->getInheritedValue($key);
+            }
         }
-        if ($value === null && $this->isInheritedAttribute($key)) {
-            $value = $this->getInheritedValue($key);
-        }
-
         return $value;
     }
 

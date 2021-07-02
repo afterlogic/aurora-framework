@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Module;
 
+use Aurora\Modules\Core\Models\User;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -94,7 +96,7 @@ class Manager
 		{
 			$oUser = \Aurora\System\Api::authorise();
 			$oTenant = null;
-			if ($oUser instanceof \Aurora\Modules\Core\Classes\User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin)
+			if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin)
 			{
 				$oTenant = \Aurora\Modules\Core\Module::Decorator()->GetTenantUnchecked($oUser->IdTenant);
 			}
