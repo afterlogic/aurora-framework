@@ -119,9 +119,11 @@ class Application
 	 */
 	public static function GetVersion()
 	{
-		$sVersion = @\file_get_contents(AU_APP_ROOT_PATH.'VERSION');
-		\define('AU_APP_VERSION', $sVersion);
-		return $sVersion;
+		if (!defined('AU_APP_VERSION')) {
+			$sVersion = @\file_get_contents(AU_APP_ROOT_PATH.'VERSION');
+			\define('AU_APP_VERSION', $sVersion);
+		}
+		return AU_APP_VERSION;
 	}
 
 	/**
