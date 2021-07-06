@@ -177,7 +177,7 @@ class Integrator extends AbstractManager
 		{
 			if (!is_dir(dirname($sCacheFullFileName)))
 			{
-				mkdir(dirname($sCacheFullFileName), 0777, true);
+				@mkdir(dirname($sCacheFullFileName), 0777, true);
 			}
 
 			$sResult = '<!-- '.$sCacheFileName.' -->'.$sResult;
