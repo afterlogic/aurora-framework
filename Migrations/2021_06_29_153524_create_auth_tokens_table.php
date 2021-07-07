@@ -18,7 +18,8 @@ class CreateAuthTokensTable extends Migration
             $table->integer('UserId')->default(0);
             $table->text('Toket');
             $table->integer('LastUsageDateTime')->default(0);
-            $table->timestamps();
+            $table->timestamp(\Aurora\System\Classes\Model::CREATED_AT)->nullable();
+            $table->timestamp(\Aurora\System\Classes\Model::UPDATED_AT)->nullable();
         });
     }
 

@@ -49,19 +49,19 @@ class Model extends Eloquent
      */
     protected $parentInheritedAttributes = [];
 
-    // /**
-    //  * The name of the "created at" column.
-    //  *
-    //  * @var string|null
-    //  */
-    // const CREATED_AT = 'CreatedAt';
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string|null
+     */
+    const CREATED_AT = 'CreatedAt';
 
-    // /**
-    //  * The name of the "updated at" column.
-    //  *
-    //  * @var string|null
-    //  */
-    // const UPDATED_AT = 'UpdatedAt';
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string|null
+     */
+    const UPDATED_AT = 'UpdatedAt';
 
     public function getInheritedAttributes()
     {
