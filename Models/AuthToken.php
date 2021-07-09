@@ -8,7 +8,6 @@ class AuthToken extends Model
 {
     protected $fillable = [
         'UserId',
-        'Toket',
-        'LastUsageDateTime'
+        'Token'
     ];
 }

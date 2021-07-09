@@ -217,7 +217,7 @@ class Api
 	{
 		$apiInitTimeStart = \microtime(true);
 		include_once self::GetVendorPath().'autoload.php';
-		require_once 'bootstrap.php';
+        include_once 'bootstrap.php';
 
 		if ($bGrantAdminPrivileges)
 		{
@@ -930,7 +930,7 @@ class Api
 
 	/**
 	 * @param string $sData
-	 * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
+	 * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount $oAccount
 	 * @param array $aParams = null
 	 *
 	 * @return string
@@ -1585,11 +1585,7 @@ class Api
             $sDbLogin = $oSettings->DBLogin;
             $sDbPassword = $oSettings->DBPassword;
             $sDbPrefix = $oSettings->DBPrefix;
-			$aDbHost = \explode(':', $sDbHost);
-			if (isset($aDbHost[0])) {
-				$sDbHost = $aDbHost[0];
-			}
-			$aDbConfig = [
+            $container['db-config'] = [
                 'driver' => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
                 'host' => $sDbHost,
                 'database' => $sDbName,
@@ -1599,10 +1595,6 @@ class Api
                 // 'collation' => 'utf8_unicode_ci',
                 'prefix' => $sDbPrefix,
             ];
-			if (isset($aDbHost[1])) {
-				$aDbConfig['port'] = $aDbHost[1];
-			}
-            $container['db-config'] = $aDbConfig;
 
             $capsule = new \Illuminate\Database\Capsule\Manager();
             $capsule->addConnection($container['db-config']);
@@ -1617,7 +1609,7 @@ class Api
                 return $capsule->getConnection('default');
             };
 
-            $container['migration-table'] = 'migration';
+            $container['migration-table'] = 'migrations';
 
             $container['filesystem'] = function ($c) {
                 return new \Illuminate\Filesystem\Filesystem;
@@ -1655,6 +1647,8 @@ class Api
 
                 $app->add(new Commands\Seeds\SeedCommand($c['resolver']));
                 $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
+
+                $app->add(new Commands\Migrations\EavToSqlCommand());
 
                 return $app;
             };

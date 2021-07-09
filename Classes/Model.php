@@ -49,27 +49,29 @@ class Model extends Eloquent
      */
     protected $parentInheritedAttributes = [];
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string|null
-     */
-    const CREATED_AT = 'CreatedAt';
+    // /**
+    //  * The name of the "created at" column.
+    //  *
+    //  * @var string|null
+    //  */
+    // const CREATED_AT = 'CreatedAt';
 
-    /**
-     * The name of the "updated at" column.
-     *
-     * @var string|null
-     */
-    const UPDATED_AT = 'UpdatedAt';
+    // /**
+    //  * The name of the "updated at" column.
+    //  *
+    //  * @var string|null
+    //  */
+    // const UPDATED_AT = 'UpdatedAt';
 
     public function getInheritedAttributes()
     {
-        $aArgs = ['ClassName' => get_class($this)];
+        $aArgs = [];
         $aResult = [];
 
         \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $aResult);
-        return $aResult;
+        if (is_array($aResult)) {
+            return array_merge($this->parentInheritedAttributes, $aResult);
+        }
     }
 
     /**
@@ -78,8 +80,7 @@ class Model extends Eloquent
      */
     public function isInheritedAttribute($key)
     {
-        $aInheritedAttributes = $this->getInheritedAttributes();
-        return in_array($key, $aInheritedAttributes);
+        return (in_array($key, $this->getInheritedAttributes()));
     }
 
     /**
@@ -144,14 +145,13 @@ class Model extends Eloquent
     public function __get($key)
     {
         $value = parent::__get($key);
-        if ($key !== 'Properties') {
-            if (isset($this->Properties[$key])) {
-                $value = $this->Properties[$key];
-            }
-            if ($value === null && $this->isInheritedAttribute($key)) {
-                $value = $this->getInheritedValue($key);
-            }
+        if (isset($this->Properties[$key])) {
+            $value = $this->Properties[$key];
         }
+        if ($value === null && $this->isInheritedAttribute($key)) {
+            $value = $this->getInheritedValue($key);
+        }
+
         return $value;
     }
 

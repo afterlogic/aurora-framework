@@ -16,10 +16,9 @@ class CreateAuthTokensTable extends Migration
         Capsule::schema()->create('auth_tokens', function (Blueprint $table) {
             $table->id('Id');
             $table->integer('UserId')->default(0);
-            $table->text('Toket');
+            $table->text('Token');
             $table->integer('LastUsageDateTime')->default(0);
-            $table->timestamp(\Aurora\System\Classes\Model::CREATED_AT)->nullable();
-            $table->timestamp(\Aurora\System\Classes\Model::UPDATED_AT)->nullable();
+            $table->timestamps();
         });
     }
 
