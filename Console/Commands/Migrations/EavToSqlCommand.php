@@ -58,10 +58,10 @@ use Aurora\Modules\TwoFactorAuth\Classes\WebAuthnKey as EavWebAuthnKey;
 
 class EavToSqlCommand extends Command
 {
-    private string $sFilePrefix = 'eav-to-sql-';
+    private $sFilePrefix = 'eav-to-sql-';
 
-    private int $iOffset = 0;
-    private int $iLimit = 1000;
+    private $iOffset = 0;
+    private $iLimit = 1000;
 
     /**
      * @return void
