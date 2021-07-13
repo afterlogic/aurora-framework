@@ -185,11 +185,13 @@ class Model extends Eloquent
         }
     }
 
-    public function getExtendedProp($key)
+    public function getExtendedProp($key, $default = null)
     {
         $mResult = null;
         if (isset($this->Properties[$key])) {
             $mResult = $this->Properties[$key];
+        } else {
+            $mResult = $default;
         }
 
         return $mResult;
