@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Module;
 
+use Aurora\Api;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -838,6 +840,24 @@ abstract class AbstractModule
 					}
 					catch (\Exception $oException)
 					{
+						if ($oException instanceof \Illuminate\Database\QueryException) {
+							// throw new \Aurora\System\Exceptions\ApiException(
+							// 	$oException->getCode(),
+							// 	$oException,
+							// 	'Database is not configured'
+							// );
+							Api::LogException($oException);
+							$mResult = false;
+						} else if (!($oException instanceof \Aurora\System\Exceptions\ApiException)) {
+							throw new \Aurora\System\Exceptions\ApiException(
+								$oException->getCode(),
+								$oException,
+								$oException->getMessage()
+							);
+						} else {
+							throw $oException;
+						}
+
 						$this->GetModuleManager()->AddResult(
 							self::GetName(),
 							$sMethod,
@@ -845,18 +865,6 @@ abstract class AbstractModule
 							$mResult,
 							$oException->getCode()
 						);
-						if (!($oException instanceof \Aurora\System\Exceptions\ApiException))
-						{
-							throw new \Aurora\System\Exceptions\ApiException(
-								$oException->getCode(),
-								$oException,
-								$oException->getMessage()
-							);
-						}
-						else
-						{
-							throw $oException;
-						}
 					}
 				}
 
