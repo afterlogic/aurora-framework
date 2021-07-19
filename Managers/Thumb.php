@@ -26,12 +26,12 @@ class Thumb
 		}
 	}
 
-	public static function GetOrientation($rResource)
+	public static function GetOrientation($sFilePath)
 	{
 		$iOrientation = 0;
 		if (\function_exists('exif_read_data'))
 		{
-			if ($exif_data = @\exif_read_data($rResource, 'IFD0'))
+			if ($exif_data = @\exif_read_data($sFilePath, 'IFD0'))
 			{
 				$iOrientation = @$exif_data['Orientation'];
 			}
@@ -110,7 +110,7 @@ class Thumb
 			$rFile = \fopen($sCacheFilePathTmp, 'w+');
 			\fwrite($rFile, \stream_get_contents($rResource));
 
-			$iOrientation = self::GetOrientation($rFile);
+			$iOrientation = self::GetOrientation($sCacheFilePathTmp);
 			$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
 			$oThumb = $oImageManager->make($rFile);
 			self::OrientateImage($oThumb, $iOrientation);
