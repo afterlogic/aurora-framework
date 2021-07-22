@@ -19,7 +19,7 @@ use Aurora\Modules\Mail\Models\SystemFolder;
 use Aurora\Modules\MailDomains\Models\Domain;
 use Aurora\Modules\MtaConnector\Models\Fetcher;
 use Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount;
-use Aurora\Modules\StandardAuth\Models\StandardAuthAccount;
+use Aurora\Modules\StandardAuth\Models\Account as StandardAuthAccount;
 use Aurora\Modules\TwoFactorAuth\Models\UsedDevice;
 use Aurora\Modules\TwoFactorAuth\Models\WebAuthnKey;
 use Aurora\System\Api;
@@ -79,6 +79,14 @@ class EavToSqlCommand extends Command
             ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database');
     }
 
+    protected function truncateIfExist($model)
+    {   
+        if(class_exists($model)){
+            $model::truncate();
+        }
+        return true;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
@@ -91,30 +99,28 @@ class EavToSqlCommand extends Command
         if ($wipe) {
             Api::Log('Going to wipe existing records', LogLevel::Full, $this->sFilePrefix);
             Capsule::connection()->statement("SET foreign_key_checks=0");
-            Tenant::truncate();
-            Channel::truncate();
-            User::truncate();
-            StandardAuthAccount::truncate();
-            Server::truncate();
-            MailAccount::truncate();
-            Identity::truncate();
-            Group::truncate();
-            Contact::truncate();
-            Ctag::truncate();
-            Sender::truncate();
-            SystemFolder::truncate();
-            RefreshFolder::truncate();
-            Alias::truncate();
-            Fetcher::truncate();
-            OauthAccount::truncate();
-            UsedDevice::truncate();
-            WebAuthnKey::truncate();
-            UserBlock::truncate();
+            $this->truncateIfExist(Tenant::class);
+            $this->truncateIfExist(Channel::class);
+            $this->truncateIfExist(User::class);
+            $this->truncateIfExist(StandardAuthAccount::class);
+            $this->truncateIfExist(Server::class);
+            $this->truncateIfExist(MailAccount::class);
+            $this->truncateIfExist(Identity::class);
+            $this->truncateIfExist(Group::class);
+            $this->truncateIfExist(Contact::class);
+            $this->truncateIfExist(Ctag::class);
+            $this->truncateIfExist(Sender::class);
+            $this->truncateIfExist(SystemFolder::class);
+            $this->truncateIfExist(RefreshFolder::class);
+            $this->truncateIfExist(Alias::class);
+            $this->truncateIfExist(Fetcher::class);
+            $this->truncateIfExist(OauthAccount::class);
+            $this->truncateIfExist(UsedDevice::class);
+            $this->truncateIfExist(WebAuthnKey::class);
+            $this->truncateIfExist(UserBlock::class);
             Capsule::connection()->statement("SET foreign_key_checks=1");
         }
-
         $eavDomains = $this->getObjects(EavDomain::class);
-
         $totalUsers = (new \Aurora\System\EAV\Query(EavUser::class))
             ->offset($this->iOffset)
             ->limit($this->iLimit)
@@ -147,6 +153,9 @@ class EavToSqlCommand extends Command
      */
     private function getObjects($sObjectType, $sSearchField = '', $sSearchText = '')
     {
+        if(!class_exists($sObjectType)){
+            return collect([]);
+        }
         $writeln = "Select {$sObjectType}";
         if ($sSearchField && $sSearchText) {
             $writeln .= " by {$sSearchField} = {$sSearchText}";
@@ -202,6 +211,7 @@ class EavToSqlCommand extends Command
                 ->except(['EntityId', 'IdTenant', 'IdChannel'])
                 ->toArray()
             );
+            $tenant->Id = $eavTenant['EntityId'];
             $tenant->IsDisabled = !!$eavTenant->get('IsDisabled', false);
             $tenant->IsDefault = !!$eavTenant->get('IsDefault', false);
             $tenant->IsTrial = !!$eavTenant->get('IsTrial', false);
@@ -252,7 +262,12 @@ class EavToSqlCommand extends Command
                     ->only((new StandardAuthAccount())->getFillable())
                     ->toArray()
                 );
+                $oldStandardAccount = array_pop($eavStandardAccount
+                ->except(['EntityId'])
+                ->toArray());
                 $standardAccount->IdUser = $user->Id;
+                $standardAccount->Login = $oldStandardAccount['Login'];
+                $standardAccount->Password = $oldStandardAccount['Password'];
                 $standardAccount->save();
                 Api::Log("Related StandardAccount {$eavStandardAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
 
@@ -292,7 +307,6 @@ class EavToSqlCommand extends Command
                     $contact->save();
                     Api::Log("Related Identity {$eavIdentity->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                 }
-
                 foreach ($this->getObjects(EavGroup::class, 'IdUser', $eavUser->get('EntityId')) as $eavGroup) {
                     $contact = new Group($eavGroup
                         ->except(['EntityId', 'IdUser'])
@@ -325,8 +339,8 @@ class EavToSqlCommand extends Command
                 }
 
                 foreach ($this->getObjects(EavGroupContact::class) as $eavGroupContactEntity) {
-
-                    $eavGroupUser = $this->getObjects(EavUser::class, 'EntityId', $eavGroupContactEntity->get('IdUser'))->first();
+                    $eavContact = $this->getObjects(EavContact::class, 'UUID', $eavGroupContactEntity->get('ContactUUID'))->first();
+                    $eavGroupUser = $this->getObjects(EavUser::class, 'EntityId', $eavContact->get('IdUser'))->first();
                     if ($eavGroupUser) {
                         $eavGroupEntity = $this->getObjects(EavGroup::class, 'UUID', $eavGroupContactEntity->get('GroupUUID'))->first();
                         if ($eavGroupEntity) {
