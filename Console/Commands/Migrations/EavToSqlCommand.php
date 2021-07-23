@@ -346,6 +346,7 @@ class EavToSqlCommand extends Command
 
                 foreach ($this->getObjects(EavGroupContact::class) as $eavGroupContactEntity) {
                     $eavContact = $this->getObjects(EavContact::class, 'UUID', $eavGroupContactEntity->get('ContactUUID'))->first();
+                    if($eavContact->get('IdTenant') === $eavTenant->get('EntityId')){
                     $eavGroupUser = $this->getObjects(EavUser::class, 'EntityId', $eavContact->get('IdUser'))->first();
                     if ($eavGroupUser) {
                         $eavGroupEntity = $this->getObjects(EavGroup::class, 'UUID', $eavGroupContactEntity->get('GroupUUID'))->first();
@@ -367,7 +368,6 @@ class EavToSqlCommand extends Command
                                     ])
                                     ->toArray()
                                 );
-                                $contactGroup->save();
 
                                 $groupEntity = Group::firstOrCreate($eavGroupEntity
                                     ->only((new Group())->getFillable())
@@ -382,6 +382,7 @@ class EavToSqlCommand extends Command
                             }
                         }
                     }
+                }
 
                 }
 
