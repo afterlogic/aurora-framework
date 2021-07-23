@@ -200,18 +200,28 @@ class EavToSqlCommand extends Command
 
     private function migrate($progressBar, $eavDomain = null)
     {
+        //migrate global mail servers
+        $eavServers = $this->getObjects(EavServer::class, 'TenantId', 0);//get global mailservers
+        foreach($eavServers as $globalEavServer){
+            $server = Server::firstOrCreate($globalEavServer
+                ->only((new Server())->getFillable())
+                ->merge([
+                    'TenantId' => 0
+                ])
+                ->toArray()
+            );
+            $server->save();
+        }
         if ($eavDomain) {
             $eavTenants = $this->getObjects(EavTenant::class, 'EntityId', $eavDomain->get('TenantId'));
         } else {
             $eavTenants = $this->getObjects(EavTenant::class);
         }
-
         foreach ($eavTenants as $eavTenant) {
             $tenant = new Tenant($eavTenant
                 ->except(['EntityId', 'IdTenant', 'IdChannel'])
                 ->toArray()
             );
-            $tenant->Id = $eavTenant['EntityId'];
             $tenant->IsDisabled = !!$eavTenant->get('IsDisabled', false);
             $tenant->IsDefault = !!$eavTenant->get('IsDefault', false);
             $tenant->IsTrial = !!$eavTenant->get('IsTrial', false);
@@ -254,22 +264,24 @@ class EavToSqlCommand extends Command
                     ->except(['EntityId'])
                     ->toArray()
                 );
+                $user->IdTenant = $tenant->Id;
                 $user->save();
                 Api::Log("Related user {$eavUser->get('EntityId')} with Tenant {$eavTenant->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
-
-                $eavStandardAccount = $this->getObjects(EavStandardAuthAccount::class, 'IdUser', $eavUser->get('EntityId'));
-                $standardAccount = new StandardAuthAccount($eavStandardAccount
+                if(class_exists(StandardAuthAccount::class)){
+                    $eavStandardAccount = $this->getObjects(EavStandardAuthAccount::class, 'IdUser', $eavUser->get('EntityId'));
+                    $standardAccount = new StandardAuthAccount($eavStandardAccount
                     ->only((new StandardAuthAccount())->getFillable())
                     ->toArray()
-                );
-                $oldStandardAccount = array_pop($eavStandardAccount
-                ->except(['EntityId'])
-                ->toArray());
-                $standardAccount->IdUser = $user->Id;
-                $standardAccount->Login = $oldStandardAccount['Login'];
-                $standardAccount->Password = $oldStandardAccount['Password'];
-                $standardAccount->save();
-                Api::Log("Related StandardAccount {$eavStandardAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
+                    );
+                    $oldStandardAccount = array_pop($eavStandardAccount
+                    ->except(['EntityId'])
+                    ->toArray());
+                    $standardAccount->IdUser = $user->Id;
+                    $standardAccount->Login = $oldStandardAccount['Login'];
+                    $standardAccount->Password = $oldStandardAccount['Password'];
+                    $standardAccount->save();
+                    Api::Log("Related StandardAccount {$eavStandardAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
+                }
 
                 $account = null;
                 foreach ($this->getObjects(EavAccount::class, 'IdUser', $eavUser->get('EntityId')) as $eavAccount) {
@@ -346,11 +358,12 @@ class EavToSqlCommand extends Command
                         if ($eavGroupEntity) {
                             $eavGroupContact = $this->getObjects(EavContact::class, 'UUID', $eavGroupContactEntity->get('ContactUUID'))->first();
                             if ($eavGroupContact) {
-                                $contactUser = User::firstOrCreate($eavGroupUser
-                                    ->only((new User())->getFillable())
-                                    ->toArray()
-                                );
-                                $contactUser->save();
+                                $prepareGroupUser = $eavGroupUser
+                                ->only((new User())->getFillable())
+                                ->toArray();
+                                $prepareGroupUser['IdTenant'] = $tenant->Id;
+
+                                $contactUser = User::firstOrCreate($prepareGroupUser);
 
                                 $contactGroup = Contact::firstOrCreate($eavGroupContact
                                     ->only((new Contact())->getFillable())
