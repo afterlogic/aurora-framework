@@ -210,7 +210,6 @@ class EavToSqlCommand extends Command
                 ])
                 ->toArray()
             );
-            $server->save();
         }
         if ($eavDomain) {
             $eavTenants = $this->getObjects(EavTenant::class, 'EntityId', $eavDomain->get('TenantId'));
@@ -287,16 +286,11 @@ class EavToSqlCommand extends Command
                 foreach ($this->getObjects(EavAccount::class, 'IdUser', $eavUser->get('EntityId')) as $eavAccount) {
 
                     $eavServer = $this->getObjects(EavServer::class, 'EntityId', $eavAccount->get('ServerId'))->first();
-
                     if ($eavServer) {
                         $server = Server::firstOrCreate($eavServer
-                            ->only((new Server())->getFillable())
-                            ->merge([
-                                'TenantId' => $tenant->Id
-                            ])
-                            ->toArray()
+                        ->only((new Server())->getFillable())
+                        ->toArray()
                         );
-                        $server->save();
                         Api::Log("Related server {$eavServer->get('EntityId')} with Account {$eavAccount->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                     }
 
