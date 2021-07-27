@@ -83,4 +83,9 @@ class ObjectExtender
 	{
 		return isset($this->_aObjects[$sType]);
 	}
+
+	public function getExtendedProps($sType)
+	{
+		return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : [];
+    }
 }
