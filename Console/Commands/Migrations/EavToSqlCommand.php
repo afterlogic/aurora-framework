@@ -219,8 +219,10 @@ class EavToSqlCommand extends Command
     {
         $eavTenants = $this->getObjects(EavTenant::class);
         foreach ($eavTenants as $eavTenant) {
-            if ($eavTenant->get('EntityId') !== $eavDomain->get('TenantId')) {
-                continue;
+            if($eavDomain){
+                if ($eavTenant->get('EntityId') !== $eavDomain->get('TenantId')) {
+                    continue;
+                }
             }
             $tenant = Tenant::where('Name', $eavTenant->get('Name'))->first();
             if (!$tenant) {
@@ -290,8 +292,10 @@ class EavToSqlCommand extends Command
             }
 
             foreach ($this->getObjects(EavUser::class, 'IdTenant', $eavTenant->get('EntityId')) as $eavUser) {
-                if ($eavUser->get('MailDomains::DomainId') !== $eavDomain->get('EntityId')) {
-                    continue;
+                if($eavDomain){
+                    if ($eavUser->get('MailDomains::DomainId') !== $eavDomain->get('EntityId')) {
+                        continue;
+                    }
                 }
                 
                 $user = User::firstOrCreate(
