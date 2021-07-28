@@ -90,6 +90,17 @@ class EavToSqlCommand extends Command
         return true;
     }
 
+    protected function getProperties($class, $object){
+        $extendedPropsUser = \Aurora\System\ObjectExtender::getInstance()->getExtendedProps($class);
+        $extendedProps = [];
+        foreach(array_keys($extendedPropsUser) as $extendedProp){
+            if($object->get($extendedProp)){
+                $extendedProps[$extendedProp] = $object->get($extendedProp);
+            }
+        }
+        return $extendedProps;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
@@ -199,7 +210,6 @@ class EavToSqlCommand extends Command
         );
 
         Api::Log("Found {$aItems->count()} records", LogLevel::Full, $this->sFilePrefix);
-
         return $aItems->map(function ($item) {
             return collect($item);
         });
@@ -207,18 +217,6 @@ class EavToSqlCommand extends Command
 
     private function migrate($progressBar, $eavDomain = null)
     {
-        //migrate global mail servers
-        $eavServers = $this->getObjects(EavServer::class, 'TenantId', 0); //get global mailservers
-        foreach ($eavServers as $globalEavServer) {
-            $server = Server::firstOrCreate(
-                $globalEavServer
-                    ->only((new Server())->getFillable())
-                    ->merge([
-                        'TenantId' => 0
-                    ])
-                    ->toArray()
-            );
-        }
         $eavTenants = $this->getObjects(EavTenant::class);
         foreach ($eavTenants as $eavTenant) {
             if ($eavTenant->get('EntityId') !== $eavDomain->get('TenantId')) {
@@ -231,6 +229,7 @@ class EavToSqlCommand extends Command
                         ->except(['EntityId', 'IdTenant', 'IdChannel'])
                         ->toArray()
                 );
+                $tenant->Properties = $this->getProperties(EavTenant::class, $eavTenant);
                 $tenant->IsDisabled = !!$eavTenant->get('IsDisabled', false);
                 $tenant->IsDefault = !!$eavTenant->get('IsDefault', false);
                 $tenant->IsTrial = !!$eavTenant->get('IsTrial', false);
@@ -290,7 +289,6 @@ class EavToSqlCommand extends Command
                 }
             }
 
-            $extendedPropsUser = \Aurora\System\ObjectExtender::getInstance()->getExtendedProps(\Aurora\Modules\Core\Classes\User::class);
             foreach ($this->getObjects(EavUser::class, 'IdTenant', $eavTenant->get('EntityId')) as $eavUser) {
                 if ($eavUser->get('MailDomains::DomainId') !== $eavDomain->get('EntityId')) {
                     continue;
@@ -302,11 +300,7 @@ class EavToSqlCommand extends Command
                         ->except(['EntityId','IdTenant'])
                         ->toArray()
                 );
-                $extendedProps = [];
-                foreach(array_keys($extendedPropsUser) as $extendedProp){
-                    $extendedProps[$extendedProp] = $eavUser->get($extendedProp);
-                }
-                $user->Properties = $extendedProps;
+                $user->Properties = $this->getProperties(EavUser::class, $eavUser);
                 $user->IdTenant = $tenant->Id;
                 $user->save();
                 Api::Log("Related user {$eavUser->get('EntityId')} with Tenant {$eavTenant->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
