@@ -384,13 +384,17 @@ class EavToSqlCommand extends Command
                     Api::Log("Related contact {$eavContact->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                 }
 
-                foreach ($this->getObjects(EavCTag::class, 'IdUser', $eavUser->get('EntityId')) as $eavCTag) {
-                    $cTag = new Ctag(
+                $eavCTags = $this->getObjects(EavCTag::class, 'UserId', $eavUser->get('EntityId'));
+                if(!$eavCTags[0]){
+                    $eavCTags = $this->getObjects(EavCTag::class, 'UserId', $eavTenant->get('EntityId'));
+                }
+                foreach ($eavCTags as $eavCTag) {
+                    $cTag = Ctag::firstOrNew(
                         $eavCTag
                             ->only((new Ctag())->getFillable())
                             ->toArray()
                     );
-                    $cTag->IdUser = $user->Id;
+                    $cTag->UserId = $user->Id;
                     $cTag->save();
                     Api::Log("Related CTag {$eavCTag->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                 }
