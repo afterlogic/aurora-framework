@@ -4,7 +4,7 @@ include_once '../autoload.php';
 
 \Aurora\System\Api::Init();
 
-if (PHP_SAPI !== 'cli')
+if (!\Aurora\System\Utils::is_cli())
 {
 	\Aurora\System\Api::requireAdminAuth();
 }
