@@ -512,7 +512,7 @@ class EavToSqlCommand extends Command
                         Api::Log("Related OauthAccount {$eavOauthAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                     }
 
-                    foreach ($this->getObjects(EavUsedDevice::class, 'IdUser', $eavUser->get('EntityId')) as $eavUsedDevice) {
+                    foreach ($this->getObjects(EavUsedDevice::class, 'UserId', $eavUser->get('EntityId')) as $eavUsedDevice) {
                         $sender = new UsedDevice(
                             $eavUsedDevice
                                 ->only((new UsedDevice())->getFillable())
@@ -525,7 +525,7 @@ class EavToSqlCommand extends Command
                         Api::Log("Related UsedDevice {$eavUsedDevice->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                     }
 
-                    foreach ($this->getObjects(EavWebAuthnKey::class, 'IdUser', $eavUser->get('EntityId')) as $eavWebAuthnKey) {
+                    foreach ($this->getObjects(EavWebAuthnKey::class, 'UserId', $eavUser->get('EntityId')) as $eavWebAuthnKey) {
                         $sender = new WebAuthnKey(
                             $eavWebAuthnKey
                                 ->only((new WebAuthnKey())->getFillable())
