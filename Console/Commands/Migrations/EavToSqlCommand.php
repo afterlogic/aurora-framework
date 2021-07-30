@@ -95,7 +95,17 @@ class EavToSqlCommand extends Command
         $extendedProps = [];
         foreach(array_keys($extendedPropsUser) as $extendedProp){
             if($object->get($extendedProp)){
-                $extendedProps[$extendedProp] = $object->get($extendedProp);
+                switch ($extendedProp) {
+                    case 'MailDomains::DomainId':
+                        $eavDomainId = $object->get($extendedProp);
+                        $eavDomain = $this->getObjects(EavDomain::class, 'EntityId', $eavDomainId)->first();
+                        $newDomain = Domain::where('Name', $eavDomain->get('Name'))->first();
+                        $extendedProps[$extendedProp] = $newDomain->Id;
+                        break;
+                    default:
+                        $extendedProps[$extendedProp] = $object->get($extendedProp);
+                        break;
+                }
             }
         }
         return $extendedProps;
