@@ -284,7 +284,7 @@ class EavToSqlCommand extends Command
                         $domain = Domain::firstOrCreate([
                             'Name' => $serverEavDomain->get('Name'),
                             'TenantId' => $tenant->Id,
-                            'MailServerId' => $serverEavDomain->get('MailServerId')
+                            'MailServerId' => $server->Id
                         ]);
                     }
                     Api::Log("Domain {$serverEavDomain->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
@@ -343,8 +343,14 @@ class EavToSqlCommand extends Command
                             ->only((new MailAccount())->getFillable())
                             ->toArray()
                     );
+
+                    $eavAccountObject = array_pop((new \Aurora\System\EAV\Query(EavAccount::class))
+                    ->where(['EntityId' => [$eavAccount->get('EntityId'), '=']])
+                    ->exec());
+
                     $account->IdUser = $user->Id;
                     $account->ServerId = $server->Id;
+                    $account->IncomingPassword = $eavAccountObject->getPassword();
                     $account->save();
                     Api::Log("Related MailAccount {$eavAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                 }
