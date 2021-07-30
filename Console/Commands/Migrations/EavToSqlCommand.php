@@ -355,7 +355,9 @@ class EavToSqlCommand extends Command
                             ->only((new Identity())->getFillable())
                             ->toArray()
                     );
-                    $contact->IdAccount = $account->Id;
+                    $eavIdentityAccount = $this->getObjects(EavAccount::class, 'EntityId', $eavIdentity->get('IdAccount'))->first();
+                    $identityAccount = MailAccount::where('IncomingLogin', $eavIdentityAccount->get('IncomingLogin'))->first();
+                    $contact->IdAccount = $identityAccount->Id;
                     $contact->IdUser = $user->Id;
                     $contact->save();
                     Api::Log("Related Identity {$eavIdentity->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
