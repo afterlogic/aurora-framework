@@ -64,6 +64,7 @@ class EavToSqlCommand extends Command
 
     private $iOffset = 0;
     private $iLimit = 1000;
+    private $oP8Settings = false;
 
     /**
      * @return void
@@ -90,11 +91,12 @@ class EavToSqlCommand extends Command
         return true;
     }
 
-    protected function getProperties($class, $object){
+    protected function getProperties($class, $object)
+    {
         $extendedPropsUser = \Aurora\System\ObjectExtender::getInstance()->getExtendedProps($class);
         $extendedProps = [];
-        foreach(array_keys($extendedPropsUser) as $extendedProp){
-            if($object->get($extendedProp)){
+        foreach (array_keys($extendedPropsUser) as $extendedProp) {
+            if ($object->get($extendedProp)) {
                 switch ($extendedProp) {
                     case 'MailDomains::DomainId':
                         $eavDomainId = $object->get($extendedProp);
@@ -113,6 +115,7 @@ class EavToSqlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->oP8Settings = \Aurora\System\Api::GetSettings();
         $helper = $this->getHelper('question');
         $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
         if (!$helper->ask($input, $output, $question)) {
@@ -155,7 +158,6 @@ class EavToSqlCommand extends Command
 
         $progressBar = new ProgressBar($output, $totalUsers);
         $progressBar->start();
-
         if ($eavDomains->isEmpty()) {
             //            Capsule::connection()->transaction(function () {
             $this->migrate($progressBar);
@@ -169,6 +171,8 @@ class EavToSqlCommand extends Command
             };
             // $this->migrate($progressBar);
         }
+
+        $this->migrateAwm();
 
         return Command::SUCCESS;
     }
@@ -196,16 +200,16 @@ class EavToSqlCommand extends Command
         if (!empty($sSearchField)) {
             switch ($oEntity->getType($sSearchField)) {
                 case 'string':
-                    $aFilters = [$sSearchField => ['%' . (string)$sSearchText . '%', 'LIKE']];
+                    $aFilters = [$sSearchField => ['%' . (string) $sSearchText . '%', 'LIKE']];
                     break;
                 case 'int':
-                    $aFilters = [$sSearchField => [(int)$sSearchText, '=']];
+                    $aFilters = [$sSearchField => [(int) $sSearchText, '=']];
                     break;
                 case 'bigint':
                     $aFilters = [$sSearchField => [$sSearchText, '=']];
                     break;
                 case 'bool':
-                    $aFilters = [$sSearchField => [(bool)$sSearchText, '=']];
+                    $aFilters = [$sSearchField => [(bool) $sSearchText, '=']];
                     break;
             }
         }
@@ -225,11 +229,117 @@ class EavToSqlCommand extends Command
         });
     }
 
+    private function migrateAwmDomains($oConnection)
+    {
+        $oConnection->execute('
+            ALTER TABLE awm_domains
+                ADD COLUMN IF NOT EXISTS id_domain_p8  INT(11) AFTER id_domain,
+                ADD COLUMN IF NOT EXISTS id_domain_p9  INT(11) AFTER id_domain,
+                ADD COLUMN IF NOT EXISTS id_tenant_p8  INT(11) AFTER id_tenant,
+                ADD COLUMN IF NOT EXISTS id_tenant_p9  INT(11) AFTER id_tenant;
+             ');
+
+        $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain_p8 = `awm_domains`.id_domain;');
+
+        $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant_p8 = `awm_domains`.id_tenant');
+
+        $oConnection->execute('
+             UPDATE `awm_domains` awmd SET awmd.id_domain_p9 = (
+                SELECT d.Id
+                FROM `awm_domains` ad
+                INNER JOIN `'.$this->oP8Settings->DBPrefix.'domains` d
+                ON ad.name = d.Name
+                WHERE awmd.name = d.Name
+                );');
+
+        $oConnection->execute('
+            UPDATE `awm_domains` awmd SET awmd.id_tenant_p9 = (
+                SELECT d.TenantId
+                FROM `awm_domains` ad
+                INNER JOIN `'.$this->oP8Settings->DBPrefix.'domains` d
+                ON ad.name = d.Name
+                WHERE awmd.name = d.Name
+                );');
+
+        $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain = `awm_domains`.id_domain_p9');
+        $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant = `awm_domains`.id_tenant_p9');
+    }
+
+    private function migrateAwmAccounts($oConnection)
+    {
+        $oConnection->execute('
+            UPDATE `awm_accounts` awmc SET awmc.id_user = IFNULL((
+                SELECT u.Id
+                FROM `awm_accounts` ac
+                INNER JOIN `'.$this->oP8Settings->DBPrefix.'users` u
+                ON ac.email = u.PublicId
+                WHERE awmc.email = u.PublicId
+                ),0);
+        ');
+
+        $oConnection->execute('
+            UPDATE `awm_accounts` awmc SET awmc.id_domain = (
+                SELECT ad.id_domain 
+                FROM `awm_accounts` ac
+                INNER JOIN `awm_domains` ad
+                ON ac.id_domain = ad.id_domain_p8
+                WHERE awmc.id_acct = ac.id_acct
+                );'
+        );
+    }
+
+    private function migrateOtherTables($oConnection)
+    {
+        // migrate history activity table
+        $historyEvents = $oConnection->execute('Select * From `activity_history` GROUP BY UserId');
+        $aEavUsersIds= [];
+        while (false !== ($oRow = $oConnection->GetNextRecord()))
+        {
+            $aEavUsersIds[] = $oRow->UserId;
+        }
+        $oConnection->FreeResult();
+
+        foreach($aEavUsersIds as $iEavUserId){
+            $eavUser = $this->getObjects(EavUser::class, 'EntityId', $iEavUserId)->first();
+            if($eavUser){
+                $user = User::where('PublicId', $eavUser->get('PublicId'))->first();
+                $oConnection->execute('UPDATE `activity_history` SET UserId ='.$user->Id.' WHERE UserId = '.$iEavUserId.';');
+            }
+        }
+
+        // migrate min hashes table
+        $minHashes = $oConnection->execute('Select * From `min_hashes` GROUP BY user_id');
+        $aEavUsersIds= [];
+
+        while (false !== ($oRow = $oConnection->GetNextRecord()))
+        {
+            $aEavUsersIds[] = $oRow->user_id;
+        }
+        $oConnection->FreeResult();
+
+        foreach($aEavUsersIds as $iEavUserId){
+            $eavUser = $this->getObjects(EavUser::class, 'EntityId', $iEavUserId)->first();
+            if($eavUser){
+                $user = User::where('PublicId', $eavUser->get('PublicId'))->first();
+                $oConnection->execute('UPDATE `min_hashes` SET user_id ='.$user->Id.' WHERE user_id = '.$iEavUserId.';');
+            }
+        }
+    }
+
+    private function migrateAwm()
+    {
+        $oConnection = \Aurora\System\Api::GetConnection();
+        $this->migrateAwmDomains($oConnection);
+        $this->migrateAwmAccounts($oConnection);
+        $this->migrateOtherTables($oConnection);
+    }
+
     private function migrate($progressBar, $eavDomain = null)
     {
+
         $eavTenants = $this->getObjects(EavTenant::class);
         foreach ($eavTenants as $eavTenant) {
-            if($eavDomain){
+            if ($eavDomain) {
                 if ($eavTenant->get('EntityId') !== $eavDomain->get('TenantId')) {
                     continue;
                 }
@@ -263,19 +373,17 @@ class EavToSqlCommand extends Command
 
             Api::Log("Tenant {$eavTenant->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
 
-
             $eavServersWithGlobalTenants = [];
             $globalServers = $this->getObjects(EavServer::class, 'TenantId', 0);
             $localServers = $this->getObjects(EavServer::class, 'TenantId', $eavTenant->get('EntityId'));
 
-            foreach($globalServers as $globalServer){
+            foreach ($globalServers as $globalServer) {
                 $eavServersWithGlobalTenants[] = $globalServer;
             }
 
-            foreach($localServers as $localTenant){
+            foreach ($localServers as $localTenant) {
                 $eavServersWithGlobalTenants[] = $localTenant;
             }
-
 
             foreach ($eavServersWithGlobalTenants as $eavServer) {
                 $tenantForServer = $this->getObjects(EavTenant::class, 'EntityId', $eavServer->get('TenantId'))->first();
@@ -284,7 +392,7 @@ class EavToSqlCommand extends Command
                     $eavServer
                         ->only((new Server())->getFillable())
                         ->merge([
-                            'TenantId' => $tenantId
+                            'TenantId' => $tenantId,
                         ])
                         ->toArray()
                 );
@@ -294,7 +402,7 @@ class EavToSqlCommand extends Command
                         $domain = Domain::firstOrCreate([
                             'Name' => $serverEavDomain->get('Name'),
                             'TenantId' => $tenant->Id,
-                            'MailServerId' => $server->Id
+                            'MailServerId' => $server->Id,
                         ]);
                     }
                     Api::Log("Domain {$serverEavDomain->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
@@ -302,16 +410,16 @@ class EavToSqlCommand extends Command
             }
 
             foreach ($this->getObjects(EavUser::class, 'IdTenant', $eavTenant->get('EntityId')) as $eavUser) {
-                if($eavDomain){
+                if ($eavDomain) {
                     if ($eavUser->get('MailDomains::DomainId') !== $eavDomain->get('EntityId')) {
                         continue;
                     }
                 }
-                
+
                 $user = User::firstOrCreate(
                     $eavUser
                         ->only((new User())->getFillable())
-                        ->except(['EntityId','IdTenant'])
+                        ->except(['EntityId', 'IdTenant'])
                         ->toArray()
                 );
                 $user->Properties = $this->getProperties(EavUser::class, $eavUser);
@@ -326,8 +434,8 @@ class EavToSqlCommand extends Command
                             ->toArray()
                     );
                     $oldStandardAccount = array_pop($eavStandardAccount
-                        ->except(['EntityId'])
-                        ->toArray());
+                            ->except(['EntityId'])
+                            ->toArray());
                     $standardAccount->IdUser = $user->Id;
                     $standardAccount->Login = $oldStandardAccount['Login'];
                     $standardAccount->Password = $oldStandardAccount['Password'];
@@ -355,8 +463,8 @@ class EavToSqlCommand extends Command
                     );
 
                     $eavAccountObject = array_pop((new \Aurora\System\EAV\Query(EavAccount::class))
-                    ->where(['EntityId' => [$eavAccount->get('EntityId'), '=']])
-                    ->exec());
+                            ->where(['EntityId' => [$eavAccount->get('EntityId'), '=']])
+                            ->exec());
 
                     $account->IdUser = $user->Id;
                     $account->ServerId = $server->Id;
@@ -403,7 +511,7 @@ class EavToSqlCommand extends Command
                 }
 
                 $eavCTags = $this->getObjects(EavCTag::class, 'UserId', $eavUser->get('EntityId'));
-                if(!$eavCTags[0]){
+                if (!$eavCTags[0]) {
                     $eavCTags = $this->getObjects(EavCTag::class, 'UserId', $eavTenant->get('EntityId'));
                 }
                 foreach ($eavCTags as $eavCTag) {
@@ -436,7 +544,7 @@ class EavToSqlCommand extends Command
                                             ->only((new Contact())->getFillable())
                                             ->merge([
                                                 'IdTenant' => $tenant->Id,
-                                                'IdUser' => $contactUser->Id
+                                                'IdUser' => $contactUser->Id,
                                             ])
                                             ->toArray()
                                     );
@@ -445,7 +553,7 @@ class EavToSqlCommand extends Command
                                         $eavGroupEntity
                                             ->only((new Group())->getFillable())
                                             ->except([
-                                                'IdUser'
+                                                'IdUser',
                                             ])
                                             ->toArray()
                                     );
@@ -462,7 +570,7 @@ class EavToSqlCommand extends Command
                         $eavSender
                             ->only((new Sender())->getFillable())
                             ->merge([
-                                'IdUser' => $user->Id
+                                'IdUser' => $user->Id,
                             ])
                             ->toArray()
                     );
@@ -476,7 +584,7 @@ class EavToSqlCommand extends Command
                             $eavSystemFolder
                                 ->only((new SystemFolder())->getFillable())
                                 ->merge([
-                                    'IdAccount' => $account->Id
+                                    'IdAccount' => $account->Id,
                                 ])
                                 ->toArray()
                         );
@@ -489,7 +597,7 @@ class EavToSqlCommand extends Command
                             $eavRefreshFolder
                                 ->only((new RefreshFolder())->getFillable())
                                 ->merge([
-                                    'IdAccount' => $account->Id
+                                    'IdAccount' => $account->Id,
                                 ])
                                 ->toArray()
                         );
@@ -503,7 +611,7 @@ class EavToSqlCommand extends Command
                                 ->only((new Alias())->getFillable())
                                 ->merge([
                                     'IdAccount' => $account->Id,
-                                    'IdUser' => $user->Id
+                                    'IdUser' => $user->Id,
                                 ])
                                 ->toArray()
                         );
@@ -517,7 +625,7 @@ class EavToSqlCommand extends Command
                                 ->only((new Fetcher())->getFillable())
                                 ->merge([
                                     'IdAccount' => $account->Id,
-                                    'IdUser' => $user->Id
+                                    'IdUser' => $user->Id,
                                 ])
                                 ->toArray()
                         );
@@ -531,7 +639,7 @@ class EavToSqlCommand extends Command
                                 ->only((new OauthAccount())->getFillable())
                                 ->merge([
                                     'IdAccount' => $account->Id,
-                                    'IdUser' => $user->Id
+                                    'IdUser' => $user->Id,
                                 ])
                                 ->toArray()
                         );
@@ -544,7 +652,7 @@ class EavToSqlCommand extends Command
                             $eavUsedDevice
                                 ->only((new UsedDevice())->getFillable())
                                 ->merge([
-                                    'UserId' => $user->Id
+                                    'UserId' => $user->Id,
                                 ])
                                 ->toArray()
                         );
@@ -557,7 +665,7 @@ class EavToSqlCommand extends Command
                             $eavWebAuthnKey
                                 ->only((new WebAuthnKey())->getFillable())
                                 ->merge([
-                                    'UserId' => $user->Id
+                                    'UserId' => $user->Id,
                                 ])
                                 ->toArray()
                         );
