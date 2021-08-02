@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
 
         Tenant::firstOrCreate([
             'IdChannel' => $channel->Id,
-            'Name' => 'Default'
+            'Name' => 'Default',
+            'IsDefault' => true
         ]);
 
         Model::reguard();
