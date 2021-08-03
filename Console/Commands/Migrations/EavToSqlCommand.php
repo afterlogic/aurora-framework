@@ -57,6 +57,7 @@ use Aurora\Modules\OAuthIntegratorWebclient\Classes\Account as EavOauthAccount;
 use Aurora\Modules\TwoFactorAuth\Classes\UsedDevice as EavUsedDevice;
 use Aurora\Modules\TwoFactorAuth\Classes\WebAuthnKey as EavWebAuthnKey;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class EavToSqlCommand extends Command
 {
@@ -65,6 +66,7 @@ class EavToSqlCommand extends Command
     private $iOffset = 0;
     private $iLimit = 1000;
     private $oP8Settings = false;
+    private $logger = false;
 
     /**
      * @return void
@@ -80,7 +82,8 @@ class EavToSqlCommand extends Command
         $this->setName('migrate:eav-to-sql')
             ->setDescription('Migrate EAV data structure to SQL')
             ->addOption('database', null, InputOption::VALUE_REQUIRED, 'The EAV database connection to use')
-            ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database');
+            ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database')
+            ->addOption('revert', null, InputOption::VALUE_OPTIONAL, 'Revert general tables');
     }
 
     protected function truncateIfExist($model)
@@ -115,8 +118,30 @@ class EavToSqlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $verbosityLevelMap = array(
+            'notice' => OutputInterface::VERBOSITY_NORMAL,
+            'info'   => OutputInterface::VERBOSITY_NORMAL,
+        );
+        $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
         $this->oP8Settings = \Aurora\System\Api::GetSettings();
         $helper = $this->getHelper('question');
+        $revert = $input->getOption('revert');
+        if($revert){
+            $question = new ConfirmationQuestion('Do you really wish to revert all general tables? (Y/N)', false);
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
+            }
+            Api::Log('Going to revert general tables', LogLevel::Full, $this->sFilePrefix);
+            $oConnection = \Aurora\System\Api::GetConnection();
+            $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain = `awm_domains`.id_domain_p8;');
+            $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant = `awm_domains`.id_tenant_p8');
+
+            $oConnection->execute('UPDATE `awm_accounts` SET `awm_accounts`.id_user = `awm_accounts`.id_user_p8');
+            $oConnection->execute('UPDATE `activity_history` SET `activity_history`.UserId = `activity_history`.UserId_p8');
+            $oConnection->execute('UPDATE `min_hashes` SET `min_hashes`.user_id = `min_hashes`.user_id_p8');
+            dd('completed successfully');
+        }
+
         $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
         if (!$helper->ask($input, $output, $question)) {
             return Command::SUCCESS;
@@ -229,8 +254,21 @@ class EavToSqlCommand extends Command
         });
     }
 
+    private function checkExistTable($oConnection, $sTableName){
+        $this->logger->info("migrating ".$sTableName." table...");
+        $oConnection->execute("SHOW TABLES LIKE '".$sTableName."';");
+        $result = !!$oConnection->GetNextRecord();
+        if(!$result){
+            $this->logger->warning($sTableName." table does not exist");
+        }
+        return $result;
+    }
+
     private function migrateAwmDomains($oConnection)
     {
+        if(!$this->checkExistTable($oConnection,'awm_domains')){
+            return false;
+        }
         $oConnection->execute('
             ALTER TABLE awm_domains
                 ADD COLUMN IF NOT EXISTS id_domain_p8  INT(11) AFTER id_domain,
@@ -238,7 +276,6 @@ class EavToSqlCommand extends Command
                 ADD COLUMN IF NOT EXISTS id_tenant_p8  INT(11) AFTER id_tenant,
                 ADD COLUMN IF NOT EXISTS id_tenant_p9  INT(11) AFTER id_tenant;
              ');
-
         $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain_p8 = `awm_domains`.id_domain;');
 
         $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant_p8 = `awm_domains`.id_tenant');
@@ -263,10 +300,21 @@ class EavToSqlCommand extends Command
 
         $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain = `awm_domains`.id_domain_p9');
         $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant = `awm_domains`.id_tenant_p9');
+
+        $this->logger->info("awm_domains table migrated");
     }
 
     private function migrateAwmAccounts($oConnection)
     {
+        if(!$this->checkExistTable($oConnection,'awm_accounts')){
+            return false;
+        }
+        $oConnection->execute('
+        ALTER TABLE awm_accounts
+            ADD COLUMN IF NOT EXISTS id_user_p8  INT(11) AFTER id_user,
+            ADD COLUMN IF NOT EXISTS id_user_p9  INT(11) AFTER id_user;
+         ');
+        $oConnection->execute('UPDATE `awm_accounts` awma SET id_user_p8 = awma.id_user;');
         $oConnection->execute('
             UPDATE `awm_accounts` awmc SET awmc.id_user = IFNULL((
                 SELECT u.Id
@@ -277,6 +325,8 @@ class EavToSqlCommand extends Command
                 ),0);
         ');
 
+        $oConnection->execute('UPDATE `awm_accounts` awma SET id_user_p9 = awma.id_user;');
+
         $oConnection->execute('
             UPDATE `awm_accounts` awmc SET awmc.id_domain = (
                 SELECT ad.id_domain 
@@ -286,12 +336,22 @@ class EavToSqlCommand extends Command
                 WHERE awmc.id_acct = ac.id_acct
                 );'
         );
+        $this->logger->info("awm_accounts table migrated");
     }
 
     private function migrateOtherTables($oConnection)
     {
         // migrate history activity table
-        $historyEvents = $oConnection->execute('Select * From `activity_history` GROUP BY UserId');
+        if(!$this->checkExistTable($oConnection,'activity_history')){
+            return false;
+        }
+        $oConnection->execute('
+        ALTER TABLE '.$this->oP8Settings->DBPrefix.'activity_history
+            ADD COLUMN IF NOT EXISTS UserId_p8  INT(11) AFTER UserId,
+            ADD COLUMN IF NOT EXISTS UserId_p9  INT(11) AFTER UserId;
+         ');
+        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'activity_history` ah SET UserId_p8 = ah.UserId;');
+        $historyEvents = $oConnection->execute('Select * From `'.$this->oP8Settings->DBPrefix.'activity_history` GROUP BY UserId');
         $aEavUsersIds= [];
         while (false !== ($oRow = $oConnection->GetNextRecord()))
         {
@@ -303,12 +363,24 @@ class EavToSqlCommand extends Command
             $eavUser = $this->getObjects(EavUser::class, 'EntityId', $iEavUserId)->first();
             if($eavUser){
                 $user = User::where('PublicId', $eavUser->get('PublicId'))->first();
-                $oConnection->execute('UPDATE `activity_history` SET UserId ='.$user->Id.' WHERE UserId = '.$iEavUserId.';');
+                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'activity_history` SET UserId ='.$user->Id.' WHERE UserId = '.$iEavUserId.';');
             }
         }
 
+        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'activity_history` ah SET UserId_p9 = ah.UserId;');
+        $this->logger->info("activity_history table migrated");
         // migrate min hashes table
-        $minHashes = $oConnection->execute('Select * From `min_hashes` GROUP BY user_id');
+        if(!$this->checkExistTable($oConnection,'min_hashes')){
+            return false;
+        }
+        $oConnection->execute('
+        ALTER TABLE '.$this->oP8Settings->DBPrefix.'min_hashes
+            ADD COLUMN IF NOT EXISTS user_id_p8  INT(11) AFTER user_id,
+            ADD COLUMN IF NOT EXISTS user_id_p9  INT(11) AFTER user_id;
+         ');
+        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET user_id_p8 = mh.user_id;');
+
+        $minHashes = $oConnection->execute('Select * From `'.$this->oP8Settings->DBPrefix.'min_hashes` GROUP BY user_id');
         $aEavUsersIds= [];
 
         while (false !== ($oRow = $oConnection->GetNextRecord()))
@@ -321,9 +393,11 @@ class EavToSqlCommand extends Command
             $eavUser = $this->getObjects(EavUser::class, 'EntityId', $iEavUserId)->first();
             if($eavUser){
                 $user = User::where('PublicId', $eavUser->get('PublicId'))->first();
-                $oConnection->execute('UPDATE `min_hashes` SET user_id ='.$user->Id.' WHERE user_id = '.$iEavUserId.';');
+                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` SET user_id ='.$user->Id.' WHERE user_id = '.$iEavUserId.';');
             }
         }
+        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET user_id_p9 = mh.user_id;');
+        $this->logger->info("min_hashes table migrated");
     }
 
     private function migrateAwm()
