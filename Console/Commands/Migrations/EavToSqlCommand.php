@@ -133,12 +133,23 @@ class EavToSqlCommand extends Command
             }
             Api::Log('Going to revert general tables', LogLevel::Full, $this->sFilePrefix);
             $oConnection = \Aurora\System\Api::GetConnection();
-            $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain = `awm_domains`.id_domain_p8;');
-            $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant = `awm_domains`.id_tenant_p8');
+            if($this->checkExistTable($oConnection,'awm_domains')){
+                $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain = `awm_domains`.id_domain_p8;');
+                $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant = `awm_domains`.id_tenant_p8');
+            }
 
-            $oConnection->execute('UPDATE `awm_accounts` SET `awm_accounts`.id_user = `awm_accounts`.id_user_p8');
-            $oConnection->execute('UPDATE `activity_history` SET `activity_history`.UserId = `activity_history`.UserId_p8');
-            $oConnection->execute('UPDATE `min_hashes` SET `min_hashes`.user_id = `min_hashes`.user_id_p8');
+            if($this->checkExistTable($oConnection,'awm_accounts')){
+                $oConnection->execute('UPDATE `awm_accounts` SET `awm_accounts`.id_user = `awm_accounts`.id_user_p8');
+            }
+
+            if($this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'activity_history')){
+                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'activity_history` ah SET ah.UserId = ah.UserId_p8');
+            }
+
+            if($this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'min_hashes')){
+                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET mh.user_id = mh.user_id_p8');
+            }
+
             dd('completed successfully');
         }
 
