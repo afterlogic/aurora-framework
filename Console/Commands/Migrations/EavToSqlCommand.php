@@ -436,7 +436,14 @@ class EavToSqlCommand extends Command
                         ->except(['EntityId', 'IdTenant', 'IdChannel'])
                         ->toArray()
                 );
-                $tenant->Properties = $this->getProperties(EavTenant::class, $eavTenant);
+                $eavTenantObject = array_pop((new \Aurora\System\EAV\Query(EavTenant::class))
+                            ->where(['EntityId' => [$eavTenant->get('EntityId'), '=']])
+                            ->exec());
+                $tenantProperties = $this->getProperties(EavTenant::class, $eavTenant);
+                if($eavTenantObject->getDisabledModules()){
+                    $tenantProperties['DisabledModules'] = implode('|', $eavTenantObject->getDisabledModules());
+                }
+                $tenant->Properties = $tenantProperties;
                 $tenant->IsDisabled = !!$eavTenant->get('IsDisabled', false);
                 $tenant->IsDefault = !!$eavTenant->get('IsDefault', false);
                 $tenant->IsTrial = !!$eavTenant->get('IsTrial', false);
@@ -507,7 +514,14 @@ class EavToSqlCommand extends Command
                         ->except(['EntityId', 'IdTenant'])
                         ->toArray()
                 );
-                $user->Properties = $this->getProperties(EavUser::class, $eavUser);
+                $eavUserObject = array_pop((new \Aurora\System\EAV\Query(EavUser::class))
+                            ->where(['EntityId' => [$eavUser->get('EntityId'), '=']])
+                            ->exec());
+                $userProperties = $this->getProperties(EavUser::class, $eavUser);
+                if($eavUserObject->getDisabledModules()){
+                    $userProperties['DisabledModules'] = implode('|', $eavUserObject->getDisabledModules());
+                }
+                $user->Properties = $userProperties;
                 $user->IdTenant = $tenant->Id;
                 $user->save();
                 Api::Log("Related user {$eavUser->get('EntityId')} with Tenant {$eavTenant->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
