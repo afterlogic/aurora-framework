@@ -342,7 +342,7 @@ class EavToSqlCommand extends Command
     private function migrateOtherTables($oConnection)
     {
         // migrate history activity table
-        if(!$this->checkExistTable($oConnection,'activity_history')){
+        if(!$this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'activity_history')){
             return false;
         }
         $oConnection->execute('
@@ -370,7 +370,7 @@ class EavToSqlCommand extends Command
         $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'activity_history` ah SET UserId_p9 = ah.UserId;');
         $this->logger->info("activity_history table migrated");
         // migrate min hashes table
-        if(!$this->checkExistTable($oConnection,'min_hashes')){
+        if(!$this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'min_hashes')){
             return false;
         }
         $oConnection->execute('
