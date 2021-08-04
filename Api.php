@@ -1414,22 +1414,16 @@ class Api
 		$sUUID = '';
 		static $aUUIDs = []; // cache
 
-		if (\is_numeric($iUserId))
-		{
-			if (isset($aUUIDs[$iUserId]))
-			{
+		if (\is_numeric($iUserId)) {
+			if (isset($aUUIDs[$iUserId])) {
 				$sUUID = $aUUIDs[$iUserId];
-			}
-			else
-			{
+			} else {
 				$oUser = User::find($iUserId);
 				if ($oUser) {
-					$aUUIDs[$iUserId] = $oUser->UUID;
+					$aUUIDs[$iUserId] = $sUUID = $oUser->UUID;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$sUUID = $iUserId;
 		}
 

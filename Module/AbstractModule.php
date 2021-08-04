@@ -986,36 +986,27 @@ abstract class AbstractModule
 
 	/**
 	 *
-	 * @param \Aurora\System\EAV\Entity $oEntity
+	 * @param \Aurora\System\Classes\Model $oEntity
 	 */
 	protected function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
-		$oEavManager = new \Aurora\System\Managers\Eav();
-		if ($oEavManager)
+		$aDisabledModules =  $oEntity->getDisabledModules();
+
+		if ($bEnabled)
 		{
-			$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? \trim($oEntity->{'@DisabledModules'}) : '';
-			$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
-			if($i = \substr_count($sDisabledModules, "|"))
+			if (\in_array(self::GetName(), $aDisabledModules))
 			{
-				$aDisabledModules = \explode("|", $sDisabledModules);
+				$aDisabledModules = \array_diff($aDisabledModules, array(self::GetName()));
 			}
-			if ($bEnabled)
-			{
-				if (\in_array(self::GetName(), $aDisabledModules))
-				{
-					$aDisabledModules = \array_diff($aDisabledModules, array(self::GetName()));
-				}
-			}
-			else
-			{
-				if (!\in_array(self::GetName(), $aDisabledModules))
-				{
-					$aDisabledModules[] = self::GetName();
-				}
-			}
-			$oEntity->{'@DisabledModules'} = \implode('|', $aDisabledModules);
-			$oEavManager->saveEntity($oEntity);
 		}
+		else
+		{
+			if (!\in_array(self::GetName(), $aDisabledModules))
+			{
+				$aDisabledModules[] = self::GetName();
+			}
+		}
+		$oEntity->disableModules(\implode('|', $aDisabledModules));
 	}
 
 	/**
@@ -1025,12 +1016,7 @@ abstract class AbstractModule
 	 */
 	protected function isEnabledForEntity(&$oEntity)
 	{
-		$sDisabledModules = isset($oEntity->{'@DisabledModules'}) ? \trim($oEntity->{'@DisabledModules'}) : '';
-		$aDisabledModules =  !empty($sDisabledModules) ? array($sDisabledModules) : array();
-		if (\substr_count($sDisabledModules, "|") > 0)
-		{
-			$aDisabledModules = \explode("|", $sDisabledModules);
-		}
+		$aDisabledModules =  $oEntity->getDisabledModules();
 
 		return !\in_array(self::GetName(), $aDisabledModules);
 	}
