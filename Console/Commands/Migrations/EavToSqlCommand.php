@@ -83,6 +83,7 @@ class EavToSqlCommand extends Command
             ->setDescription('Migrate EAV data structure to SQL')
             ->addOption('database', null, InputOption::VALUE_REQUIRED, 'The EAV database connection to use')
             ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database')
+            ->addOption('without-mutual-tables', null, InputOption::VALUE_OPTIONAL, 'Didnt migrate mutual tables (awm tables, min_hashes, activity_history)')
             ->addOption('revert', null, InputOption::VALUE_OPTIONAL, 'Revert general tables');
     }
 
@@ -207,8 +208,10 @@ class EavToSqlCommand extends Command
             };
             // $this->migrate($progressBar);
         }
-
-        $this->migrateAwm();
+        $whitoutMutualTables = $input->getOption('without-mutual-tables');
+        if (!$whitoutMutualTables) {
+            $this->migrateAwm();
+        }
 
         return Command::SUCCESS;
     }
