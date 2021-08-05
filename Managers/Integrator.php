@@ -1044,7 +1044,7 @@ class Integrator extends AbstractManager
 			$sLanguage = $this->validatedLanguageValue($sLanguage);
 
 			$sCoreWebclientModule = \Aurora\System\Api::IsMobileApplication() ? 'CoreMobileWebclient' : 'CoreWebclient';
-			$sTheme = $oUser ? $oUser->{$sCoreWebclientModule . '::Theme'} : $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'Theme');
+			$sTheme = $oUser && isset($oUser->{$sCoreWebclientModule . '::Theme'}) ? $oUser->{$sCoreWebclientModule . '::Theme'} : $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'Theme');
 			$sTheme = $this->validatedThemeValue($sTheme);
 		}
 
