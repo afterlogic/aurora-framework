@@ -148,7 +148,7 @@ class EavToSqlCommand extends Command
             }
 
             if($this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'min_hashes')){
-                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET mh.user_id = mh.user_id_p8');
+                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET mh.UserId = mh.UserId_p8');
             }
 
             dd('completed successfully');
@@ -200,7 +200,6 @@ class EavToSqlCommand extends Command
             $this->migrate($progressBar);
             //            });
         } else {
-            // dd($this->getObjects(EavDomain::class));
             foreach ($this->getObjects(EavDomain::class) as $eavDomain) {
                 //                Capsule::connection()->transaction(function () use ($eavDomain) {
                 $this->migrate($progressBar, $eavDomain);
@@ -283,13 +282,23 @@ class EavToSqlCommand extends Command
         if(!$this->checkExistTable($oConnection,'awm_domains')){
             return false;
         }
-        $oConnection->execute('
-            ALTER TABLE awm_domains
-                ADD COLUMN IF NOT EXISTS id_domain_p8  INT(11) AFTER id_domain,
-                ADD COLUMN IF NOT EXISTS id_domain_p9  INT(11) AFTER id_domain,
-                ADD COLUMN IF NOT EXISTS id_tenant_p8  INT(11) AFTER id_tenant,
-                ADD COLUMN IF NOT EXISTS id_tenant_p9  INT(11) AFTER id_tenant;
-             ');
+
+        $columnP8DomainExists = Capsule::schema()->hasColumn('awm_domains', 'id_domain_p8');
+        $columnP9DomainExists = Capsule::schema()->hasColumn('awm_domains', 'id_domain_p9');
+        $columnP8TenantExists = Capsule::schema()->hasColumn('awm_domains', 'id_tenant_p8');
+        $columnP9TenantExists = Capsule::schema()->hasColumn('awm_domains', 'id_tenant_p9');
+
+        if($columnP8DomainExists && $columnP9DomainExists && $columnP8TenantExists && $columnP9TenantExists){
+            $this->logger->info("already migrated");
+            return false;
+        }
+        Capsule::schema()->table('min_hashes', function($table){
+            $table->bigInteger('id_domain_p8')->nullable()->after('id_domain');
+            $table->bigInteger('id_domain_p9')->nullable()->after('id_domain');
+            $table->bigInteger('id_tenant_p8')->nullable()->after('id_tenant');
+            $table->bigInteger('id_tenant_p9')->nullable()->after('id_tenant');
+        });
+
         $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_domain_p8 = `awm_domains`.id_domain;');
 
         $oConnection->execute('UPDATE `awm_domains` SET `awm_domains`.id_tenant_p8 = `awm_domains`.id_tenant');
@@ -323,11 +332,20 @@ class EavToSqlCommand extends Command
         if(!$this->checkExistTable($oConnection,'awm_accounts')){
             return false;
         }
-        $oConnection->execute('
-        ALTER TABLE awm_accounts
-            ADD COLUMN IF NOT EXISTS id_user_p8  INT(11) AFTER id_user,
-            ADD COLUMN IF NOT EXISTS id_user_p9  INT(11) AFTER id_user;
-         ');
+
+        $columnP8Exists = Capsule::schema()->hasColumn('awm_accounts', 'id_user_p8');
+        $columnP9Exists = Capsule::schema()->hasColumn('awm_accounts', 'id_user_p9');
+
+        if($columnP8Exists && $columnP9Exists){
+            $this->logger->info("already migrated");
+            return false;
+        }
+
+        Capsule::schema()->table('min_hashes', function($table){
+            $table->bigInteger('id_user_p8')->nullable()->after('id_user');
+            $table->bigInteger('id_user_p9')->nullable()->after('id_user');
+        });
+
         $oConnection->execute('UPDATE `awm_accounts` awma SET id_user_p8 = awma.id_user;');
         $oConnection->execute('
             UPDATE `awm_accounts` awmc SET awmc.id_user = IFNULL((
@@ -359,13 +377,19 @@ class EavToSqlCommand extends Command
         if(!$this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'activity_history')){
             return false;
         }
-        $oConnection->execute('
-        ALTER TABLE '.$this->oP8Settings->DBPrefix.'activity_history
-            ADD COLUMN IF NOT EXISTS UserId_p8  INT(11) AFTER UserId,
-            ADD COLUMN IF NOT EXISTS UserId_p9  INT(11) AFTER UserId;
-         ');
+
+        $columnP8Exists = Capsule::schema()->hasColumn('activity_history', 'UserId_p8');
+        $columnP9Exists = Capsule::schema()->hasColumn('activity_history', 'UserId_p9');
+        if($columnP8Exists && $columnP9Exists){
+            $this->logger->info("already migrated");
+            return false;
+        }
+        Capsule::schema()->table('activity_history', function($table){
+            $table->bigInteger('UserId_p8')->nullable()->after('UserId');
+            $table->bigInteger('UserId_p9')->nullable()->after('UserId');
+        });
         $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'activity_history` ah SET UserId_p8 = ah.UserId;');
-        $historyEvents = $oConnection->execute('Select * From `'.$this->oP8Settings->DBPrefix.'activity_history` GROUP BY UserId');
+        $historyEvents = $oConnection->execute('Select UserId From `'.$this->oP8Settings->DBPrefix.'activity_history` GROUP BY UserId');
         $aEavUsersIds= [];
         while (false !== ($oRow = $oConnection->GetNextRecord()))
         {
@@ -387,19 +411,25 @@ class EavToSqlCommand extends Command
         if(!$this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'min_hashes')){
             return false;
         }
-        $oConnection->execute('
-        ALTER TABLE '.$this->oP8Settings->DBPrefix.'min_hashes
-            ADD COLUMN IF NOT EXISTS user_id_p8  INT(11) AFTER user_id,
-            ADD COLUMN IF NOT EXISTS user_id_p9  INT(11) AFTER user_id;
-         ');
-        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET user_id_p8 = mh.user_id;');
 
-        $minHashes = $oConnection->execute('Select * From `'.$this->oP8Settings->DBPrefix.'min_hashes` GROUP BY user_id');
+        $columnP8Exists = Capsule::schema()->hasColumn('min_hashes', 'UserId_p8');
+        $columnP9Exists = Capsule::schema()->hasColumn('min_hashes', 'UserId_p9');
+        if($columnP8Exists && $columnP9Exists){
+            $this->logger->info("already migrated");
+            return false;
+        }
+        Capsule::schema()->table('min_hashes', function($table){
+            $table->bigInteger('UserId_p8')->nullable()->after('UserId');
+            $table->bigInteger('UserId_p9')->nullable()->after('UserId');
+        });
+        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET UserId_p8 = mh.UserId;');
+
+        $minHashes = $oConnection->execute('Select UserId From `'.$this->oP8Settings->DBPrefix.'min_hashes` GROUP BY UserId');
         $aEavUsersIds= [];
 
         while (false !== ($oRow = $oConnection->GetNextRecord()))
         {
-            $aEavUsersIds[] = $oRow->user_id;
+            $aEavUsersIds[] = $oRow->UserId;
         }
         $oConnection->FreeResult();
 
@@ -407,10 +437,10 @@ class EavToSqlCommand extends Command
             $eavUser = $this->getObjects(EavUser::class, 'EntityId', $iEavUserId)->first();
             if($eavUser){
                 $user = User::where('PublicId', $eavUser->get('PublicId'))->first();
-                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` SET user_id ='.$user->Id.' WHERE user_id = '.$iEavUserId.';');
+                $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` SET UserId ='.$user->Id.' WHERE UserId = '.$iEavUserId.';');
             }
         }
-        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET user_id_p9 = mh.user_id;');
+        $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET UserId_p9 = mh.UserId;');
         $this->logger->info("min_hashes table migrated");
     }
 
@@ -529,20 +559,22 @@ class EavToSqlCommand extends Command
                 $user->save();
                 Api::Log("Related user {$eavUser->get('EntityId')} with Tenant {$eavTenant->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
                 if (class_exists(StandardAuthAccount::class)) {
-                    $eavStandardAccount = $this->getObjects(EavStandardAuthAccount::class, 'IdUser', $eavUser->get('EntityId'));
-                    $standardAccount = new StandardAuthAccount(
-                        $eavStandardAccount
-                            ->only((new StandardAuthAccount())->getFillable())
-                            ->toArray()
-                    );
-                    $oldStandardAccount = array_pop($eavStandardAccount
-                            ->except(['EntityId'])
-                            ->toArray());
-                    $standardAccount->IdUser = $user->Id;
-                    $standardAccount->Login = $oldStandardAccount['Login'];
-                    $standardAccount->Password = $oldStandardAccount['Password'];
-                    $standardAccount->save();
-                    Api::Log("Related StandardAccount {$eavStandardAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
+                    $eavStandardAccount = $this->getObjects(EavStandardAuthAccount::class, 'IdUser', $eavUser->get('EntityId'))->first();
+                    if($eavStandardAccount->get('Login')){
+                        $standardAccount = new StandardAuthAccount(
+                            $eavStandardAccount
+                                ->only((new StandardAuthAccount())->getFillable())
+                                ->toArray()
+                        );
+                        $oldStandardAccount = $eavStandardAccount
+                                ->except(['EntityId'])
+                                ->toArray();
+                        $standardAccount->IdUser = $user->Id;
+                        $standardAccount->Login = $oldStandardAccount['Login'];
+                        $standardAccount->Password = $oldStandardAccount['Password'];
+                        $standardAccount->save();
+                        Api::Log("Related StandardAccount {$eavStandardAccount->get('EntityId')} with User {$eavUser->get('EntityId')} successfully migrated", LogLevel::Full, $this->sFilePrefix);
+                    }
                 }
 
                 $account = null;
