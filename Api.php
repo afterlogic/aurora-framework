@@ -1664,9 +1664,9 @@ class Api
      * @return Container
      */
     public static function GetContainer() {
-	    if (self::$oContainer === null) {
+//	    if (self::$oContainer === null) {
             self::CreateContainer();
-        }
+//        }
 	    return self::$oContainer;
     }
 

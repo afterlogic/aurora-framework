@@ -40,7 +40,7 @@ class Installer
 			// }
 		// }
 
-		echo $sMessage;
+		echo $sMessage."\r\n";
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Installer
 		//Checking that configuration files already exist
 		if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0)
 		{
-			echo "The config files are already exist";
+			echo "The config files are already exist \r\n";
 			return;
 		}
 		else
@@ -139,7 +139,6 @@ class Installer
 			$sMessage = "Config file didn't found";
 		}
 
-		echo $sMessage;
+		echo $sMessage."\r\n";
     }
-
 }
