@@ -74,7 +74,7 @@ class EavToSqlCommand extends Command
     public function __construct()
     {
         parent::__construct();
-        \Aurora\Api::Init();
+        // \Aurora\Api::Init();
     }
 
     protected function configure(): void
@@ -150,8 +150,6 @@ class EavToSqlCommand extends Command
             if($this->checkExistTable($oConnection,$this->oP8Settings->DBPrefix.'min_hashes')){
                 $oConnection->execute('UPDATE `'.$this->oP8Settings->DBPrefix.'min_hashes` mh SET mh.UserId = mh.UserId_p8');
             }
-
-            dd('completed successfully');
         }
 
         $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
