@@ -13,7 +13,7 @@ class CreateAuthTokensTable extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('auth_tokens', function (Blueprint $table) {
+        Capsule::schema()->create('core_auth_tokens', function (Blueprint $table) {
             $table->id('Id');
             $table->integer('UserId')->default(0);
             $table->text('Token');
@@ -30,6 +30,6 @@ class CreateAuthTokensTable extends Migration
      */
     public function down()
     {
-        Capsule::schema()->dropIfExists('auth_tokens');
+        Capsule::schema()->dropIfExists('core_auth_tokens');
     }
 }
