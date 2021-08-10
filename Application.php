@@ -26,6 +26,8 @@ class Application
 	 */
 	protected $oModuleManager;
 
+	protected static $sBaseUrl = '';
+
 	/**
 	 * @return void
 	 */
@@ -137,5 +139,19 @@ class Application
 	public function Route($sRoute)
 	{
 		return Api::GetModuleManager()->RunEntry($sRoute);
+	}
+
+	public static function setBaseUrl($sBaseUrl = '')
+	{
+		self::$sBaseUrl = $sBaseUrl;
+	} 
+
+	public static function getBaseUrl()
+	{
+		if (empty(self::$sBaseUrl))
+		{
+			self::$sBaseUrl = \MailSo\Base\Http::SingletonInstance()->GetFullUrl();
+		}
+		return self::$sBaseUrl;
 	}
 }

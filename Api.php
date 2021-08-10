@@ -215,21 +215,22 @@ class Api
 	 */
 	public static function Init($bGrantAdminPrivileges = false)
 	{
-		$apiInitTimeStart = \microtime(true);
-		include_once self::GetVendorPath().'autoload.php';
-        include_once 'bootstrap.php';
-
-		if ($bGrantAdminPrivileges)
-		{
-			self::GrantAdminPrivileges();
-		}
-
-		self::InitSalt();
-		self::validateApi();
-		self::GetModuleManager()->loadModules();
-
 		if (!defined('AU_API_INIT'))
 		{
+			$apiInitTimeStart = \microtime(true);
+
+			include_once self::GetVendorPath().'autoload.php';
+			include_once 'bootstrap.php';
+
+			if ($bGrantAdminPrivileges)
+			{
+				self::GrantAdminPrivileges();
+			}
+
+			self::InitSalt();
+			self::validateApi();
+			self::GetModuleManager()->loadModules();
+
 			define('AU_API_INIT', microtime(true) - $apiInitTimeStart);
 		}
 	}
