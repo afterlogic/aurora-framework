@@ -3,7 +3,7 @@
 namespace Aurora\System\Console\Commands\Migrations;
 
 use Aurora\Modules\Contacts\Models\Contact;
-use Aurora\Modules\Contacts\Models\Ctag;
+use Aurora\Modules\Contacts\Models\CTag;
 use Aurora\Modules\Contacts\Models\Group;
 use Aurora\Modules\Core\Models\Channel;
 use Aurora\Modules\Core\Models\Tenant;
@@ -170,7 +170,7 @@ class EavToSqlCommand extends Command
             $this->truncateIfExist(Identity::class);
             $this->truncateIfExist(Group::class);
             $this->truncateIfExist(Contact::class);
-            $this->truncateIfExist(Ctag::class);
+            $this->truncateIfExist(CTag::class);
             $this->truncateIfExist(Sender::class);
             $this->truncateIfExist(SystemFolder::class);
             $this->truncateIfExist(RefreshFolder::class);
@@ -647,9 +647,9 @@ class EavToSqlCommand extends Command
                     $eavCTags = $this->getObjects(EavCTag::class, 'UserId', $eavTenant->get('EntityId'));
                 }
                 foreach ($eavCTags as $eavCTag) {
-                    $cTag = Ctag::firstOrNew(
+                    $cTag = CTag::firstOrNew(
                         $eavCTag
-                            ->only((new Ctag())->getFillable())
+                            ->only((new CTag())->getFillable())
                             ->toArray()
                     );
                     $cTag->UserId = $user->Id;

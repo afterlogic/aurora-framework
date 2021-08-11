@@ -3,7 +3,7 @@
 namespace Aurora\System\Console\Commands\Migrations;
 
 use Aurora\Modules\Contacts\Models\Contact;
-use Aurora\Modules\Contacts\Models\Ctag;
+use Aurora\Modules\Contacts\Models\CTag;
 use Aurora\Modules\Contacts\Models\Group;
 use Aurora\Modules\Contacts\Models\GroupContact;
 use Aurora\Modules\Core\Models\Channel;
@@ -94,6 +94,7 @@ class EavToSqlCommandV2 extends Command
         $migrateEntitiesList = [];
         $offset = 0;
         $time = time();
+        $intProgress = 0;
 
         $filename = "Console/Commands/Migrations/logs/migration-" . $time . ".txt";
         $progressFilename = "Console/Commands/Migrations/logs/migration-progress.txt";
@@ -136,7 +137,7 @@ class EavToSqlCommandV2 extends Command
             $this->truncateIfExist(Identity::class);
             $this->truncateIfExist(Group::class);
             $this->truncateIfExist(Contact::class);
-            $this->truncateIfExist(Ctag::class);
+            $this->truncateIfExist(CTag::class);
             $this->truncateIfExist(Sender::class);
             $this->truncateIfExist(SystemFolder::class);
             $this->truncateIfExist(RefreshFolder::class);
@@ -231,13 +232,13 @@ class EavToSqlCommandV2 extends Command
     {
         $missedEntities = [];
         $missedIds = [];
-        $contactsСache = [];
-        $groupsСache = [];
+        $contactsCache = [];
+        $groupsCache = [];
         $migrateArray = [];
 
         $modelsMap = [
             'Aurora\Modules\Mail\Classes\Account' => 'Aurora\Modules\Mail\Models\MailAccount',
-            'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account' => 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount',
+            'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account' => 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount'
         ];
 
         foreach ($entities as $i => $entity) {
@@ -267,7 +268,7 @@ class EavToSqlCommandV2 extends Command
             }
 
             if ($entity->entity_type === 'Aurora\Modules\Contacts\Classes\GroupContact') {
-                if ($contactsCache[$aItem['ContactUUID']]) {
+                if (isset($contactsCache[$aItem['ContactUUID']])) {
                     $migrateArray['ContactId'] = $contactsCache[$aItem['ContactUUID']];
                 } else {
                     $contact = collect(
@@ -281,7 +282,7 @@ class EavToSqlCommandV2 extends Command
                     $migrateArray['ContactId'] = $contact['EntityId'];
                 }
 
-                if ($groupsCache[$aItem['GroupUUID']]) {
+                if (isset($groupsCache[$aItem['GroupUUID']])) {
                     $migrateArray['GroupId'] = $groupsCache[$aItem['GroupUUID']];
                 } else {
                     $group = collect(
