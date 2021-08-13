@@ -2,29 +2,8 @@
 
 namespace Aurora\System\Console\Commands\Migrations;
 
-use Aurora\Modules\Contacts\Models\Contact;
-use Aurora\Modules\Contacts\Models\CTag;
-use Aurora\Modules\Contacts\Models\Group;
-use Aurora\Modules\Contacts\Models\GroupContact;
-use Aurora\Modules\Core\Models\Channel;
-use Aurora\Modules\Core\Models\Tenant;
-use Aurora\Modules\Core\Models\User;
-use Aurora\Modules\Core\Models\UserBlock;
-use Aurora\Modules\CpanelIntegrator\Models\Alias;
-use Aurora\Modules\MailDomains\Models\Domain;
-use Aurora\Modules\Mail\Models\Identity;
-use Aurora\Modules\Mail\Models\MailAccount;
-use Aurora\Modules\Mail\Models\RefreshFolder;
-use Aurora\Modules\Mail\Models\Sender;
-use Aurora\Modules\Mail\Models\Server;
-use Aurora\Modules\Mail\Models\SystemFolder;
-use Aurora\Modules\MtaConnector\Models\Fetcher;
-use Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount;
-use Aurora\Modules\StandardAuth\Models\Account as StandardAuthAccount;
-use Aurora\Modules\TwoFactorAuth\Models\UsedDevice;
-use Aurora\Modules\TwoFactorAuth\Models\WebAuthnKey;
 use Aurora\System\Api;
-use Aurora\System\Enums\LogLevel;
+use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Capsule\Manager as DB;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -33,9 +12,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use \Illuminate\Database\Capsule\Manager as Capsule;
 
-class EavToSqlCommandV2 extends Command
+class EavToSqlCommandV2 extends BaseCommand
 {
     private $sFilePrefix = 'eav-to-sql-';
 
@@ -59,15 +37,32 @@ class EavToSqlCommandV2 extends Command
             ->setDescription('Migrate EAV data structure to SQL')
             ->addOption('database', null, InputOption::VALUE_REQUIRED, 'The EAV database connection to use')
             ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database')
+            ->addOption('force', null, InputOption::VALUE_OPTIONAL, 'Skip entities with class but without laravel model')
             ->addOption('migrate-file', null, InputOption::VALUE_OPTIONAL, 'Migrate entites from file');
+    }
+
+    public function getMigrationFiles($paths)
+    {
+        return Collection::make($paths)->flatMap(function ($path) {
+            return Str::endsWith($path, '.php') ? [$path] : $this->files->glob($path . '/*_*.php');
+        })->filter()->values()->keyBy(function ($file) {
+            return $this->getMigrationName($file);
+        })->sortBy(function ($file, $key) {
+            return $key;
+        })->all();
     }
 
     protected function truncateIfExist($model)
     {
-        if (class_exists($model)) {
-            $model::truncate();
+        try {
+            $this->logger->info('wiping ' . $model::query()->getQuery()->from);
+            if (class_exists($model)) {
+                $model::truncate();
+            }
+            return true;
+        } catch (\Illuminate\Database\QueryException $e) {
+            $this->logger->warning('table doesnt exist');
         }
-        return true;
     }
 
     protected function getProperties($class, $object)
@@ -89,8 +84,46 @@ class EavToSqlCommandV2 extends Command
         fwrite($fd, $str);
     }
 
+    protected function migrateMinHashes($oConnection)
+    {
+        $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_min_hashes`;";
+        $oConnection->execute($sql);
+        $sql = "INSERT INTO " . $this->oP8Settings->DBPrefix . "core_min_hashes (`HashId`, `UserId`,`Hash`, `Data`, `ExpireDate`)
+        SELECT *
+        FROM " . $this->oP8Settings->DBPrefix . "min_hashes;";
+        $oConnection->execute($sql);
+    }
+
+    protected function migrateActivityHistory($oConnection)
+    {
+        $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_activity_history`;";
+        $oConnection->execute($sql);
+        $sql = "INSERT INTO " . $this->oP8Settings->DBPrefix . "core_activity_history (`Id`, `UserId`, `ResourceType`,`ResourceId`, `IpAddress`, `Action`, `Timestamp`, `GuestPublicId`)
+        SELECT *
+        FROM " . $this->oP8Settings->DBPrefix . "activity_history;";
+        $oConnection->execute($sql);
+    }
+
+    protected function wipeP9Tables()
+    {
+        $aModels = $this->getAllModels();
+        foreach ($aModels as $modelName => $modelPath) {
+            $className = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
+            $className = explode(DIRECTORY_SEPARATOR, $className);
+            $modelClass = [];
+            while ($className[0] !== 'modules') {
+                array_shift($className);
+            }
+            $className[0] = 'Modules';
+            array_unshift($className, "Aurora");
+            $className = implode(DIRECTORY_SEPARATOR, $className);
+            $this->truncateIfExist($className);
+        }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $migrateEntitiesList = [];
         $offset = 0;
         $time = time();
@@ -118,6 +151,7 @@ class EavToSqlCommandV2 extends Command
         $helper = $this->getHelper('question');
 
         $wipe = $input->getOption('wipe');
+        $force = $input->getOption('force');
         $migrateFile = $input->getOption('migrate-file');
 
         if ($wipe) {
@@ -126,31 +160,7 @@ class EavToSqlCommandV2 extends Command
             if (!$helper->ask($input, $output, $question)) {
                 return Command::SUCCESS;
             }
-            Api::Log('Going to wipe existing records', LogLevel::Full, $this->sFilePrefix);
-            Capsule::connection()->statement("SET foreign_key_checks=0");
-            $this->truncateIfExist(Tenant::class);
-            $this->truncateIfExist(Channel::class);
-            $this->truncateIfExist(User::class);
-            $this->truncateIfExist(StandardAuthAccount::class);
-            $this->truncateIfExist(Server::class);
-            $this->truncateIfExist(MailAccount::class);
-            $this->truncateIfExist(Identity::class);
-            $this->truncateIfExist(Group::class);
-            $this->truncateIfExist(Contact::class);
-            $this->truncateIfExist(CTag::class);
-            $this->truncateIfExist(Sender::class);
-            $this->truncateIfExist(SystemFolder::class);
-            $this->truncateIfExist(RefreshFolder::class);
-            $this->truncateIfExist(Alias::class);
-            $this->truncateIfExist(Fetcher::class);
-            $this->truncateIfExist(OauthAccount::class);
-            $this->truncateIfExist(UsedDevice::class);
-            $this->truncateIfExist(WebAuthnKey::class);
-            $this->truncateIfExist(UserBlock::class);
-            $this->truncateIfExist(Domain::class);
-            $this->truncateIfExist(GroupContact::class);
-            Capsule::connection()->statement("SET foreign_key_checks=1");
-        } else if ($migrateFile) {
+            $this->wipeP9Tables();} else if ($migrateFile) {
             $fdListEntities = fopen($entitiesListFilename, 'a+') or die("cant create file");
 
             while (!feof($fdListEntities)) {
@@ -191,7 +201,7 @@ class EavToSqlCommandV2 extends Command
         $fdErrors = fopen($filename, 'w+') or die("cant create file");
         $fdMissedIds = fopen($missedEntitiesFilename, 'w+') or die("cant create file");
 
-        $sql = "SELECT * FROM `" . $this->oP8Settings->DBPrefix . "eav_entities` GROUP BY id";
+        $sql = "SELECT id, entity_type FROM `" . $this->oP8Settings->DBPrefix . "eav_entities` GROUP BY id, entity_type";
         $sqlIn = "";
         foreach ($migrateEntitiesList as $entityId) {
             $sqlIn .= $entityId . ',';
@@ -199,10 +209,9 @@ class EavToSqlCommandV2 extends Command
         $sqlIn = substr($sqlIn, 0, -1);
 
         if ($migrateEntitiesList) {
-            $sql = "SELECT * FROM `" . $this->oP8Settings->DBPrefix . "eav_entities` WHERE id IN ($sqlIn) GROUP BY id;";
+            $sql = "SELECT id, entity_type FROM `" . $this->oP8Settings->DBPrefix . "eav_entities` WHERE id IN ($sqlIn) GROUP BY id, entity_type;";
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $oConnection = \Aurora\System\Api::GetConnection();
         $oConnection->execute($sql);
 
@@ -217,7 +226,9 @@ class EavToSqlCommandV2 extends Command
         $progressBar = new ProgressBar($output, count($entities));
         $progressBar->start();
 
-        $result = $this->migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds);
+        $this->migrateActivityHistory($oConnection);
+        $this->migrateMinHashes($oConnection);
+        $result = $this->migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe, $force);
 
         $this->rewriteFile($fdErrors, $result['MissedEntities']);
         $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $result['MissedIds']));
@@ -228,22 +239,22 @@ class EavToSqlCommandV2 extends Command
         return Command::SUCCESS;
     }
 
-    private function migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds)
+    private function migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe, $force)
     {
         $missedEntities = [];
         $missedIds = [];
         $contactsCache = [];
         $groupsCache = [];
         $migrateArray = [];
+        $truncatedTables = [];
 
         $modelsMap = [
             'Aurora\Modules\Mail\Classes\Account' => 'Aurora\Modules\Mail\Models\MailAccount',
-            'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account' => 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount'
+            'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account' => 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount',
         ];
 
         foreach ($entities as $i => $entity) {
             $migrateArray = ['Id' => $entity->id];
-
             if (!class_exists($entity->entity_type)) {
                 $missedEntities[$entity->entity_type][] = $entity->id;
                 $missedIds[] = $entity->id;
@@ -313,16 +324,30 @@ class EavToSqlCommandV2 extends Command
             }
 
             // if (!$laravelModel::where('Id', $entity->id)->first()) {
+            if ($wipe && !in_array($laravelModel, $truncatedTables)) {
+                // $this->truncateIfExist($laravelModel);
+                // $truncatedTables[] = $laravelModel;
+            }
+
+            if ($force) {
+                if (!class_exists($laravelModel)) {
+                    $missedEntities[$entity->entity_type][] = $entity->id;
+                    $missedIds[] = $entity->id;
+                    $this->logger->warning("Entity with id " . $entity->id . " missed");
+                    $progressBar->advance();
+                    continue;
+                }
+            }
             $newRow = $laravelModel::create(array_merge($aItem, $migrateArray));
             // }
 
             $this->rewriteFile($fdProgress, $entity->id);
-            $this->rewriteFile($fdErrors, json_encode($missedEntities));
+            $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
             $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
             $progressBar->advance();
         }
         $this->logger->info('Migration Completed!');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        return ['MissedEntities' => json_encode($missedEntities), 'MissedIds' => $missedIds];
+        return ['MissedEntities' => json_encode($missedEntities, JSON_PRETTY_PRINT), 'MissedIds' => $missedIds];
     }
 }

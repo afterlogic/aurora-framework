@@ -3,6 +3,9 @@
 namespace Aurora\System\Console\Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class BaseCommand extends Command
 {
@@ -66,6 +69,35 @@ class BaseCommand extends Command
                 return $sPath . $sModule . DIRECTORY_SEPARATOR . 'Migrations';
             }, array_keys($aModules), $aModules);
         }
+    }
+
+    public function getAllModels() {
+        $finder = Finder::create();
+        $aModules = \Aurora\Api::GetModuleManager()->GetModulesPaths();
+        $aModulesModelsPaths = array_map(function ($sModule, $sPath) {
+            return $sPath . $sModule . DIRECTORY_SEPARATOR . 'Models';
+        }, array_keys($aModules), $aModules); 
+
+        $aDirModels = [];
+        foreach($aModulesModelsPaths as $sModuleModel){
+            if(is_dir($sModuleModel)){
+                $finder
+                ->in($sModuleModel)
+                ->depth(0);
+                $aDirModels = array_keys(\iterator_to_array($finder));
+            }
+        }
+
+        $aFormatedDirModels = [];
+        foreach($aDirModels as $sDirModel){
+            $fileWithoutExtenstion = explode('.', $sDirModel);
+            array_pop($fileWithoutExtenstion);
+            $fileWithoutExtenstion = implode('.',$fileWithoutExtenstion);
+            $sModelName = explode(DIRECTORY_SEPARATOR, $fileWithoutExtenstion);
+            $sModelName = array_pop($sModelName);
+            $aFormatedDirModels[$sModelName] = $fileWithoutExtenstion;
+        }
+        return $aFormatedDirModels;
     }
 
     /**
