@@ -37,7 +37,6 @@ class EavToSqlCommandV2 extends BaseCommand
             ->setDescription('Migrate EAV data structure to SQL')
             ->addOption('database', null, InputOption::VALUE_REQUIRED, 'The EAV database connection to use')
             ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database')
-            ->addOption('force', null, InputOption::VALUE_OPTIONAL, 'Skip entities with class but without laravel model')
             ->addOption('migrate-file', null, InputOption::VALUE_OPTIONAL, 'Migrate entites from file');
     }
 
@@ -126,13 +125,14 @@ class EavToSqlCommandV2 extends BaseCommand
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $migrateEntitiesList = [];
         $offset = 0;
-        $time = time();
+        $time = new \DateTime();
+        $time = $time->format('YmdHis');
         $intProgress = 0;
-
-        $filename = "Console/Commands/Migrations/logs/migration-" . $time . ".txt";
-        $progressFilename = "Console/Commands/Migrations/logs/migration-progress.txt";
-        $entitiesListFilename = "Console/Commands/Migrations/logs/migration-list.txt";
-        $missedEntitiesFilename = "Console/Commands/Migrations/logs/migration-" . $time . "-missed-entities.txt";
+        $dirName = \Aurora\System\Api::DataPath() . "/migration-eav-to-sql-logs";
+        $filename = $dirName . "/migration-" . $time . ".txt";
+        $progressFilename = $dirName . "/migration-progress.txt";
+        $entitiesListFilename = $dirName . "/migration-list.txt";
+        $missedEntitiesFilename = $dirName . "/migration-" . $time . "-missed-entities.txt";
 
         $dirname = dirname($filename);
         if (!is_dir($dirname)) {
@@ -151,7 +151,6 @@ class EavToSqlCommandV2 extends BaseCommand
         $helper = $this->getHelper('question');
 
         $wipe = $input->getOption('wipe');
-        $force = $input->getOption('force');
         $migrateFile = $input->getOption('migrate-file');
 
         if ($wipe) {
@@ -160,7 +159,8 @@ class EavToSqlCommandV2 extends BaseCommand
             if (!$helper->ask($input, $output, $question)) {
                 return Command::SUCCESS;
             }
-            $this->wipeP9Tables();} else if ($migrateFile) {
+            $this->wipeP9Tables();
+        } else if ($migrateFile) {
             $fdListEntities = fopen($entitiesListFilename, 'a+') or die("cant create file");
 
             while (!feof($fdListEntities)) {
@@ -170,14 +170,14 @@ class EavToSqlCommandV2 extends BaseCommand
                 }
             }
             fclose($fdListEntities);
-
-            $question = new ConfirmationQuestion("Do you really wish migrate " . $migrateEntitiesList[0] . ", " . $migrateEntitiesList[1] . ", ... , " . end($migrateEntitiesList) . " entities? (Y/N)", false);
-            if (!$helper->ask($input, $output, $question)) {
-                return Command::SUCCESS;
-            }
             if (count($migrateEntitiesList) === 0) {
                 $this->logger->error('Entities list is empty!');
                 return false;
+            } else {
+                $question = new ConfirmationQuestion("Do you really wish migrate " . count($migrateEntitiesList) . " entities? (Y/N)", false);
+                if (!$helper->ask($input, $output, $question)) {
+                    return Command::SUCCESS;
+                }
             }
         } else {
             $progress = htmlentities(file_get_contents($progressFilename));
@@ -216,19 +216,25 @@ class EavToSqlCommandV2 extends BaseCommand
         $oConnection->execute($sql);
 
         $entities = [];
+        $passedEntities = 0;
         while (false !== ($oRow = $oConnection->GetNextRecord())) {
             if ($oRow->id <= $intProgress) {
+                $passedEntities++;
                 continue;
             }
             $entities[] = $oRow;
         }
 
-        $progressBar = new ProgressBar($output, count($entities));
+        $progressBar = new ProgressBar($output, $passedEntities + count($entities));
         $progressBar->start();
+        while ($passedEntities > 0) {
+            $progressBar->advance();
+            $passedEntities -= 1;
+        }
 
         $this->migrateActivityHistory($oConnection);
         $this->migrateMinHashes($oConnection);
-        $result = $this->migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe, $force);
+        $result = $this->migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe);
 
         $this->rewriteFile($fdErrors, $result['MissedEntities']);
         $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $result['MissedIds']));
@@ -239,7 +245,7 @@ class EavToSqlCommandV2 extends BaseCommand
         return Command::SUCCESS;
     }
 
-    private function migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe, $force)
+    private function migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe)
     {
         $missedEntities = [];
         $missedIds = [];
@@ -254,97 +260,99 @@ class EavToSqlCommandV2 extends BaseCommand
         ];
 
         foreach ($entities as $i => $entity) {
-            $migrateArray = ['Id' => $entity->id];
-            if (!class_exists($entity->entity_type)) {
-                $missedEntities[$entity->entity_type][] = $entity->id;
-                $missedIds[] = $entity->id;
-                $this->logger->warning("Entity with id " . $entity->id . " missed");
-                $progressBar->advance();
-                continue;
-            }
-
-            $aItem = collect(
-                (new \Aurora\System\EAV\Query($entity->entity_type))
-                    ->where(['EntityId' => $entity->id])
-                    ->asArray()
-                    ->exec()
-            )->first();
-            $laravelModel = $modelsMap[$entity->entity_type] ?? str_replace('Classes', 'Models', $entity->entity_type);
-
-            if ($entity->entity_type === 'Aurora\Modules\Mail\Classes\Account') {
-                $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
-                        ->where(['EntityId' => [$entity->id, '=']])
-                        ->exec())->first();
-                $migrateArray['Password'] = $oItem->getPassword();
-            }
-
-            if ($entity->entity_type === 'Aurora\Modules\Contacts\Classes\GroupContact') {
-                if (isset($contactsCache[$aItem['ContactUUID']])) {
-                    $migrateArray['ContactId'] = $contactsCache[$aItem['ContactUUID']];
-                } else {
-                    $contact = collect(
-                        (new \Aurora\System\EAV\Query('Aurora\Modules\Contacts\Classes\Contact'))
-                            ->where(['UUID' => $aItem['ContactUUID']])
-                            ->asArray()
-                            ->exec()
-                    )->first();
-
-                    $contactsCache[$aItem['ContactUUID']] = $contact['EntityId'];
-                    $migrateArray['ContactId'] = $contact['EntityId'];
-                }
-
-                if (isset($groupsCache[$aItem['GroupUUID']])) {
-                    $migrateArray['GroupId'] = $groupsCache[$aItem['GroupUUID']];
-                } else {
-                    $group = collect(
-                        (new \Aurora\System\EAV\Query('Aurora\Modules\Contacts\Classes\Group'))
-                            ->where(['UUID' => $aItem['GroupUUID']])
-                            ->asArray()
-                            ->exec()
-                    )->first();
-                    $groupsCache[$aItem['GroupUUID']] = $group['EntityId'];
-                    $migrateArray['GroupId'] = $group['EntityId'];
-                }
-            }
-
-            $properties = $this->getProperties($entity->entity_type, collect($aItem));
-            if ($properties) {
-                $migrateArray['Properties'] = $properties;
-            }
-
-            if ($entity->entity_type === 'Aurora\Modules\Core\Classes\User' || $entity->entity_type === 'Aurora\Modules\Core\Classes\Tenant') {
-                $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
-                        ->where(['EntityId' => [$entity->id, '=']])
-                        ->exec()
-                )->first();
-                $disabledModules = $oItem->getDisabledModules();
-                if ($disabledModules) {
-                    $migrateArray['Properties']['DisabledModules'] = implode('|', $disabledModules);
-                }
-            }
-
-            // if (!$laravelModel::where('Id', $entity->id)->first()) {
-            if ($wipe && !in_array($laravelModel, $truncatedTables)) {
-                // $this->truncateIfExist($laravelModel);
-                // $truncatedTables[] = $laravelModel;
-            }
-
-            if ($force) {
-                if (!class_exists($laravelModel)) {
+            try {
+                $migrateArray = ['Id' => $entity->id];
+                if (!class_exists($entity->entity_type)) {
                     $missedEntities[$entity->entity_type][] = $entity->id;
                     $missedIds[] = $entity->id;
                     $this->logger->warning("Entity with id " . $entity->id . " missed");
                     $progressBar->advance();
                     continue;
                 }
-            }
-            $newRow = $laravelModel::create(array_merge($aItem, $migrateArray));
-            // }
 
-            $this->rewriteFile($fdProgress, $entity->id);
-            $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
-            $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
-            $progressBar->advance();
+                $aItem = collect(
+                    (new \Aurora\System\EAV\Query($entity->entity_type))
+                        ->where(['EntityId' => $entity->id])
+                        ->asArray()
+                        ->exec()
+                )->first();
+                $laravelModel = $modelsMap[$entity->entity_type] ?? str_replace('Classes', 'Models', $entity->entity_type);
+
+                if ($entity->entity_type === 'Aurora\Modules\Mail\Classes\Account') {
+                    $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
+                            ->where(['EntityId' => [$entity->id, '=']])
+                            ->exec())->first();
+                    $migrateArray['Password'] = $oItem->getPassword();
+                }
+
+                if ($entity->entity_type === 'Aurora\Modules\Contacts\Classes\GroupContact') {
+                    if (isset($contactsCache[$aItem['ContactUUID']])) {
+                        $migrateArray['ContactId'] = $contactsCache[$aItem['ContactUUID']];
+                    } else {
+                        $contact = collect(
+                            (new \Aurora\System\EAV\Query('Aurora\Modules\Contacts\Classes\Contact'))
+                                ->where(['UUID' => $aItem['ContactUUID']])
+                                ->asArray()
+                                ->exec()
+                        )->first();
+
+                        $contactsCache[$aItem['ContactUUID']] = $contact['EntityId'];
+                        $migrateArray['ContactId'] = $contact['EntityId'];
+                    }
+
+                    if (isset($groupsCache[$aItem['GroupUUID']])) {
+                        $migrateArray['GroupId'] = $groupsCache[$aItem['GroupUUID']];
+                    } else {
+                        $group = collect(
+                            (new \Aurora\System\EAV\Query('Aurora\Modules\Contacts\Classes\Group'))
+                                ->where(['UUID' => $aItem['GroupUUID']])
+                                ->asArray()
+                                ->exec()
+                        )->first();
+                        $groupsCache[$aItem['GroupUUID']] = $group['EntityId'];
+                        $migrateArray['GroupId'] = $group['EntityId'];
+                    }
+                }
+
+                $properties = $this->getProperties($entity->entity_type, collect($aItem));
+                if ($properties) {
+                    $migrateArray['Properties'] = $properties;
+                }
+
+                if ($entity->entity_type === 'Aurora\Modules\Core\Classes\User' || $entity->entity_type === 'Aurora\Modules\Core\Classes\Tenant') {
+                    $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
+                            ->where(['EntityId' => [$entity->id, '=']])
+                            ->exec()
+                    )->first();
+                    $disabledModules = $oItem->getDisabledModules();
+                    if ($disabledModules) {
+                        $migrateArray['Properties']['DisabledModules'] = implode('|', $disabledModules);
+                    }
+                }
+                $newRow = $laravelModel::create(array_merge($aItem, $migrateArray));
+
+                $this->rewriteFile($fdProgress, $entity->id);
+                $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
+                $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
+                $progressBar->advance();
+            } catch (\Illuminate\Database\QueryException $e) {
+                $errorCode = $e->getCode();
+                $errorMessage = $e->getMessage();
+                $shortErrorMessage = $e->errorInfo[2];
+                $missedEntities[$entity->entity_type][] = $entity->id;
+                $missedIds[] = $entity->id;
+                $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
+                $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
+                $progressBar->advance();
+                switch ($errorCode) {
+                    case 23000:
+                        $this->logger->error("Found duplicate for entity with id $entity->id");
+                        break;
+                    default:
+                        $this->logger->error($shortErrorMessage);
+                        break;
+                }
+            }
         }
         $this->logger->info('Migration Completed!');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
