@@ -54,8 +54,8 @@ class EavToSqlCommand extends BaseCommand
     protected function truncateIfExist($model)
     {
         try {
-            $this->logger->info('wiping ' . $model::query()->getQuery()->from);
             if (class_exists($model)) {
+                $this->logger->info('wiping ' . $model::query()->getQuery()->from);
                 $model::truncate();
             }
             return true;
