@@ -1568,36 +1568,44 @@ class Api
 		return $mResult;
 	}
 
+	public static function GetDbConfig($DbType, $DbHost, $DbName, $DbPrefix, $DbLogin, $DbPassword)
+	{
+		$aDbHost = \explode(':', $DbHost);
+		if (isset($aDbHost[0])) {
+			$DbHost = $aDbHost[0];
+		}
+		$aDbConfig = [
+			'driver' => DbType::PostgreSQL === $DbType ? 'pgsql' : 'mysql',
+			'host' => $DbHost,
+			'database' => $DbName,
+			'username' => $DbLogin,
+			'password' => $DbPassword,
+			// 'charset'   => 'utf8',
+			// 'collation' => 'utf8_unicode_ci',
+			'prefix' => $DbPrefix,
+//				'options' => [\PDO::ATTR_EMULATE_PREPARES => true]
+		];
+		if (isset($aDbHost[1])) {
+			$aDbConfig['port'] = $aDbHost[1];
+		}
+
+		return $aDbConfig;
+	}
+
 	private static function CreateContainer()
     {
         $container = new Container();
 
         $oSettings = &Api::GetSettings();
         if ($oSettings) {
-            $iDbType = $oSettings->DBType;
-            $sDbHost = $oSettings->DBHost;
-            $sDbName = $oSettings->DBName;
-            $sDbLogin = $oSettings->DBLogin;
-            $sDbPassword = $oSettings->DBPassword;
-            $sDbPrefix = $oSettings->DBPrefix;
-			$aDbHost = \explode(':', $sDbHost);
-			if (isset($aDbHost[0])) {
-				$sDbHost = $aDbHost[0];
-			}
-			$aDbConfig = [
-                'driver' => DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql',
-                'host' => $sDbHost,
-                'database' => $sDbName,
-                'username' => $sDbLogin,
-                'password' => $sDbPassword,
-                // 'charset'   => 'utf8',
-                // 'collation' => 'utf8_unicode_ci',
-                'prefix' => $sDbPrefix,
-            ];
-			if (isset($aDbHost[1])) {
-				$aDbConfig['port'] = $aDbHost[1];
-			}
-            $container['db-config'] = $aDbConfig;
+            $container['db-config'] = self::GetDbConfig(
+				$oSettings->DBType, 
+				$oSettings->DBHost,
+				$oSettings->DBName,
+				$oSettings->DBPrefix,
+				$oSettings->DBLogin,
+				$oSettings->DBPassword
+			);
 
             $capsule = new \Illuminate\Database\Capsule\Manager();
             $capsule->addConnection($container['db-config']);
@@ -1651,8 +1659,8 @@ class Api
                 $app->add(new Commands\Seeds\SeedCommand($c['resolver']));
                 $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
 
-                $app->add(new Commands\Migrations\EavToSqlCommandV1());
-				$app->add(new Commands\Migrations\EavToSqlCommand());
+                $app->add(new Commands\Migrations\EavToSqlCommand());
+				$app->add(new Commands\Migrations\EavToSqlCommandV2());
 
                 return $app;
             };
