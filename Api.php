@@ -1651,8 +1651,8 @@ class Api
                 $app->add(new Commands\Seeds\SeedCommand($c['resolver']));
                 $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
 
-                $app->add(new Commands\Migrations\EavToSqlCommand());
-				$app->add(new Commands\Migrations\EavToSqlCommandV2());
+                $app->add(new Commands\Migrations\EavToSqlCommandV1());
+				$app->add(new Commands\Migrations\EavToSqlCommand());
 
                 return $app;
             };
