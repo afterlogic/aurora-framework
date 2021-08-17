@@ -51,19 +51,6 @@ class EavToSqlCommand extends BaseCommand
         })->all();
     }
 
-    protected function truncateIfExist($model)
-    {
-        try {
-            $this->logger->info('wiping ' . $model::query()->getQuery()->from);
-            if (class_exists($model)) {
-                $model::truncate();
-            }
-            return true;
-        } catch (\Illuminate\Database\QueryException $e) {
-            $this->logger->warning('table doesnt exist');
-        }
-    }
-
     protected function getProperties($class, $object)
     {
         $extendedPropsUser = \Aurora\System\ObjectExtender::getInstance()->getExtendedProps($class);
@@ -107,16 +94,19 @@ class EavToSqlCommand extends BaseCommand
     {
         $aModels = $this->getAllModels();
         foreach ($aModels as $modelName => $modelPath) {
-            $className = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
-            $className = explode(DIRECTORY_SEPARATOR, $className);
+            $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
+            $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
+            $model = explode(DIRECTORY_SEPARATOR, $model);
             $modelClass = [];
-            while ($className[0] !== 'modules') {
-                array_shift($className);
+
+            while ($model[0] !== 'modules') {
+                array_shift($model);
             }
-            $className[0] = 'Modules';
-            array_unshift($className, "Aurora");
-            $className = implode(DIRECTORY_SEPARATOR, $className);
-            $this->truncateIfExist($className);
+            $model[0] = 'Modules';
+            array_unshift($model, "Aurora");
+            $model = implode('\\', $model);
+            $this->logger->info('wiping ' . $model::query()->getQuery()->from);
+            $model::truncate();
         }
     }
 
@@ -279,6 +269,13 @@ class EavToSqlCommand extends BaseCommand
                 $laravelModel = $modelsMap[$entity->entity_type] ?? str_replace('Classes', 'Models', $entity->entity_type);
 
                 switch ($entity->entity_type) {
+                    case 'Aurora\Modules\StandardAuth\Classes\Account':
+                        $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
+                                ->where(['EntityId' => [$entity->id, '=']])
+                                ->exec())->first();
+                        $password = str_replace($oItem->Login, '', $oItem->Password);
+                        $migrateArray['Password'] = $password;
+                        break;
                     case 'Aurora\Modules\Mail\Classes\Account':
                         $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
                                 ->where(['EntityId' => [$entity->id, '=']])
