@@ -280,7 +280,7 @@ class EavToSqlCommand extends BaseCommand
                         $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
                                 ->where(['EntityId' => [$entity->id, '=']])
                                 ->exec())->first();
-                        $migrateArray['Password'] = $oItem->getPassword();
+                        $migrateArray['IncomingPassword'] = $oItem->getPassword();
                         break;
                     case 'Aurora\Modules\Contacts\Classes\GroupContact':
                         if (isset($contactsCache[$aItem['ContactUUID']])) {
