@@ -65,35 +65,42 @@ class Settings extends \Aurora\System\AbstractSettings
 	public function Load()
 	{
 		$bResult = false;
-		if (!\file_exists($this->sPath))
+		if ($this->bIsLoaded)
 		{
-			$mData = $this->LoadDataFromFile($this->GetDefaultConfigFilePath());
+			$bResult = true;
 		}
 		else
 		{
-			$mData = $this->LoadDataFromFile($this->sPath);
-		}
-
-		if (!$mData)
-		{
-			$mData = $this->LoadDataFromFile($this->sPath.'.bak');
-			if ($mData)
+			if (!\file_exists($this->sPath))
 			{
-				\copy($this->sPath.'.bak', $this->sPath);
+				$mData = $this->LoadDataFromFile($this->GetDefaultConfigFilePath());
 			}
 			else
 			{
-				$this->Save();
+				$mData = $this->LoadDataFromFile($this->sPath);
+			}
+
+			if (!$mData)
+			{
+				$mData = $this->LoadDataFromFile($this->sPath.'.bak');
+				if ($mData)
+				{
+					\copy($this->sPath.'.bak', $this->sPath);
+				}
+				else
+				{
+					$this->Save();
+				}
+			}
+
+			if ($mData !== false)
+			{
+				$this->aContainer = $this->ParseData($mData);
+				$this->bIsLoaded = true;
+				$bResult = true;
 			}
 		}
-
-		if ($mData !== false)
-		{
-			$this->aContainer = $this->ParseData($mData);
-			$this->bIsLoaded = true;
-			$bResult = true;
-		}
-
+		
 		return $bResult;
 	}
 

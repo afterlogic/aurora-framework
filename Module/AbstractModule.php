@@ -298,6 +298,7 @@ abstract class AbstractModule
 		if (!isset($this->oModuleSettings))
 		{
 			$this->oModuleSettings =& $this->GetModuleManager()->GetModuleSettings(self::GetName());
+			$this->oModuleSettings->Load();
 		}
 		return $this->oModuleSettings;
 	}

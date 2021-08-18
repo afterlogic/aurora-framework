@@ -315,25 +315,30 @@ abstract class AbstractSettings
 	public function Load()
 	{
 		$bResult = false;
-
-		$mData = $this->LoadDataFromFile($this->sPath);
-
-		if (!$mData)
+		if ($this->bIsLoaded)
 		{
-			$mData = $this->LoadDataFromFile($this->sPath.'.bak');
-			if ($mData)
-			{
-				\copy($this->sPath.'.bak', $this->sPath);
-			}
-		}
-
-		if ($mData !== false)
-		{
-			$this->aContainer = $this->ParseData($mData);
-			$this->bIsLoaded = true;
 			$bResult = true;
 		}
+		else
+		{
+			$mData = $this->LoadDataFromFile($this->sPath);
 
+			if (!$mData)
+			{
+				$mData = $this->LoadDataFromFile($this->sPath.'.bak');
+				if ($mData)
+				{
+					\copy($this->sPath.'.bak', $this->sPath);
+				}
+			}
+
+			if ($mData !== false)
+			{
+				$this->aContainer = $this->ParseData($mData);
+				$this->bIsLoaded = true;
+				$bResult = true;
+			}
+		}
 		return $bResult;
 	}
 

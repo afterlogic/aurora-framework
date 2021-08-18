@@ -8,6 +8,8 @@
 namespace Aurora\System\Module;
 
 use Aurora\Modules\Core\Models\User;
+use Aurora\System\Exceptions\ApiException;
+use Aurora\System\Managers\Response;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -127,6 +129,7 @@ class Manager
 		else
 		{
 			echo "Can't load 'Core' Module";
+			exit;
 		}
 	}
 
