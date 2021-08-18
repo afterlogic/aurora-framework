@@ -35,20 +35,8 @@ class EavToSqlCommand extends BaseCommand
     {
         $this->setName('migrate:eav-to-sql')
             ->setDescription('Migrate EAV data structure to SQL')
-            ->addOption('database', null, InputOption::VALUE_REQUIRED, 'The EAV database connection to use')
             ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database')
             ->addOption('migrate-file', null, InputOption::VALUE_OPTIONAL, 'Migrate entites from file');
-    }
-
-    public function getMigrationFiles($paths)
-    {
-        return Collection::make($paths)->flatMap(function ($path) {
-            return Str::endsWith($path, '.php') ? [$path] : $this->files->glob($path . '/*_*.php');
-        })->filter()->values()->keyBy(function ($file) {
-            return $this->getMigrationName($file);
-        })->sortBy(function ($file, $key) {
-            return $key;
-        })->all();
     }
 
     protected function getProperties($class, $object)
@@ -118,7 +106,7 @@ class EavToSqlCommand extends BaseCommand
         $time = new \DateTime();
         $time = $time->format('YmdHis');
         $intProgress = 0;
-        $dirName = \Aurora\System\Api::DataPath() . "/migration-eav-to-sql-logs";
+        $dirName = \Aurora\System\Api::DataPath() . "/migration-eav-to-sql";
         $filename = $dirName . "/migration-" . $time . ".txt";
         $progressFilename = $dirName . "/migration-progress.txt";
         $entitiesListFilename = $dirName . "/migration-list.txt";
@@ -134,8 +122,7 @@ class EavToSqlCommand extends BaseCommand
             'info' => OutputInterface::VERBOSITY_NORMAL,
         );
 
-        $fdProgress = fopen($progressFilename, 'a+') or die("cant create file");
-
+        $fdProgress = file_exists($progressFilename) ? fopen($progressFilename, 'r+') : false;
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
         $this->oP8Settings = \Aurora\System\Api::GetSettings();
         $helper = $this->getHelper('question');
@@ -151,7 +138,7 @@ class EavToSqlCommand extends BaseCommand
             }
             $this->wipeP9Tables();
         } else if ($migrateFile) {
-            $fdListEntities = fopen($entitiesListFilename, 'a+') or die("cant create file");
+            $fdListEntities = fopen($entitiesListFilename, 'a+') or die("cant create migration-list.txt file");
 
             while (!feof($fdListEntities)) {
                 $entityId = intval(htmlentities(fgets($fdListEntities)));
@@ -161,35 +148,37 @@ class EavToSqlCommand extends BaseCommand
             }
             fclose($fdListEntities);
             if (count($migrateEntitiesList) === 0) {
-                $this->logger->error('Entities list is empty!');
+                $this->logger->error('Entities list is empty!');
                 return false;
             } else {
-                $question = new ConfirmationQuestion("Do you really wish migrate " . count($migrateEntitiesList) . " entities? (Y/N)", false);
+                $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", false);
                 if (!$helper->ask($input, $output, $question)) {
                     return Command::SUCCESS;
                 }
             }
         } else {
-            $progress = htmlentities(file_get_contents($progressFilename));
-            $intProgress = intval($progress);
-
-            if ($intProgress) {
-                $question = new ConfirmationQuestion("Do you really wish to run this command from $intProgress entity? (Y/N)", false);
-                if (!$helper->ask($input, $output, $question)) {
-                    return Command::SUCCESS;
-                }
-                $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
-                $offset = count($cItems);
-            } else {
-                $question = new ConfirmationQuestion("File ./logs/migration-progress.txt wrong or empty. Do you wish migrate all entities? (Y/N)", false);
-                if (!$helper->ask($input, $output, $question)) {
-                    return Command::SUCCESS;
+            if($fdProgress){
+                $progress = htmlentities(file_get_contents($progressFilename));
+                $intProgress = intval($progress);
+                if ($intProgress) {
+                    $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", false);
+                    if (!$helper->ask($input, $output, $question)) {
+                        return Command::SUCCESS;
+                    }
+                    $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
+                    $offset = count($cItems);
+                } else {
+                    $question = new ConfirmationQuestion("File $progressFilename wrong or empty. Do you wish migrate all entities? (Y/N)", false);
+                    if (!$helper->ask($input, $output, $question)) {
+                        return Command::SUCCESS;
+                    }
                 }
             }
         }
 
-        $fdErrors = fopen($filename, 'w+') or die("cant create file");
-        $fdMissedIds = fopen($missedEntitiesFilename, 'w+') or die("cant create file");
+        $fdProgress = fopen($progressFilename, 'a+') or die("Can't create migration-progress.txt file");
+        $fdErrors = fopen($filename, 'w+') or die("Can't create migration-" . $time . ".txt file");
+        $fdMissedIds = fopen($missedEntitiesFilename, 'w+') or die("Can't create migration-" . $time . "-missed-entities.txt file");
 
         $sql = "SELECT id, entity_type FROM `" . $this->oP8Settings->DBPrefix . "eav_entities` GROUP BY id, entity_type";
         $sqlIn = "";
@@ -346,7 +335,7 @@ class EavToSqlCommand extends BaseCommand
                 $progressBar->advance();
                 switch ($errorCode) {
                     case 23000:
-                        $this->logger->error("Found duplicate for entity with id $entity->id");
+                        $this->logger->error("Found duplicate for entity with id $entity->id, skipping.");
                         break;
                     default:
                         $this->logger->error($shortErrorMessage);
