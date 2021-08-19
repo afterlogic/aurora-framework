@@ -7,6 +7,7 @@
 
 namespace Aurora\System\Classes;
 
+use Illuminate\Database\Capsule\Manager as DB;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -94,14 +95,13 @@ class Model extends Eloquent
             $value = $this->parent->$key;
         }
         if ($value === null && is_subclass_of($this->parentType, \Aurora\System\AbstractSettings::class)) {
-            if($this->parentType === \Aurora\System\Settings::class) {
+            if ($this->parentType === \Aurora\System\Settings::class) {
                 $value = \Aurora\System\Api::GetSettings()->GetValue($key);
             }
-            if($this->parentType === \Aurora\System\Module\Settings::class) {
+            if ($this->parentType === \Aurora\System\Module\Settings::class) {
                 if (strpos($key, '::') !== false) {
                     list($moduleName, $key) = \explode('::', $key);
-                }
-                else {
+                } else {
                     $moduleName = $this->moduleName;
                 }
                 $oModule = \Aurora\System\Api::GetModule($moduleName);
@@ -112,6 +112,27 @@ class Model extends Eloquent
         }
 
         return $value;
+    }
+
+    public function getOrphanIds()
+    {
+        if (!$this->foreignModel || !$this->foreignModelIdColumn) {
+            return ['status' => -1, 'message' => 'Foreign fields doesnt exist'];
+        }
+        $tableName = $this->getTable();
+        $foreignObject = new $this->foreignModel;
+        $foreignTable = $foreignObject->getTable();
+        $foreignPK = $foreignObject->primaryKey;
+
+        $allIds = DB::Table($this->table)->select('*')->from("$tableName")->pluck($this->primaryKey)->toArray();
+        $fullIds = DB::Table($this->table)->select("$tableName.$this->primaryKey")->from("$tableName")->leftJoin("$foreignTable", "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck($this->primaryKey)->toArray();
+        $orphanIds = array_diff($allIds, $fullIds);
+
+        $message = $orphanIds ? "$tableName has orphans." : "Orphans didnt found.";
+
+        $oResult = ['status' => $orphanIds ? 1 : 0, 'message' => $message];
+
+        return $oResult;
     }
 
     /**
@@ -155,7 +176,7 @@ class Model extends Eloquent
         return $value;
     }
 
-        /**
+    /**
      * Determine if an attribute or relation exists on the model.
      *
      * @param  string  $key
@@ -259,7 +280,7 @@ class Model extends Eloquent
         return true;
     }
 
-    	/**
+    /**
      * Returns a pseudo-random v4 UUID
      *
      * This function is based on a comment by Andrew Moore on php.net
@@ -268,28 +289,28 @@ class Model extends Eloquent
      * @return string
      */
     public function generateUUID()
-	{
+    {
         return sprintf(
 
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
             // 32 bits for "time_low"
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
 
             // 16 bits for "time_mid"
-            mt_rand( 0, 0xffff ),
+            mt_rand(0, 0xffff),
 
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 4
-            mt_rand( 0, 0x0fff ) | 0x4000,
+            mt_rand(0, 0x0fff) | 0x4000,
 
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand( 0, 0x3fff ) | 0x8000,
+            mt_rand(0, 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
 
@@ -300,23 +321,23 @@ class Model extends Eloquent
      * @return bool
      */
     public function validateUUID($uuid)
-	{
+    {
         return preg_match(
             '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i',
             $uuid
         ) == true;
     }
 
-    	/**
-	 *
-	 * @param type $aProperties
-	 */
-	public function populate($aProperties)
-	{
+    /**
+     *
+     * @param type $aProperties
+     */
+    public function populate($aProperties)
+    {
         foreach ($aProperties as $key => $value) {
             if (in_array($key, $this->fillable) || strpos($key, '::') !== false) {
                 $this->$key = $value;
             }
         }
-	}
+    }
 }
