@@ -221,7 +221,7 @@ class Integrator extends AbstractManager
 	/**
 	 *
 	 */
-	public function GetUser($iUserId)
+	public static function GetUser($iUserId)
 	{
 		$mResult = false;
 		$oUser = \Aurora\Modules\Core\Models\User::find($iUserId);
@@ -237,7 +237,7 @@ class Integrator extends AbstractManager
 	/**
 	 *
 	 */
-	public function GetAdminUser()
+	public static function GetAdminUser()
 	{
 		$oUser = new \Aurora\Modules\Core\Models\User();
 
@@ -338,11 +338,11 @@ class Integrator extends AbstractManager
 		$oUser = null;
 		if (0 < $iUserId)
 		{
-			$oUser = $this->GetUser($iUserId);
+			$oUser = self::GetUser($iUserId);
 		}
 		elseif ($aUserInfo['isAdmin'])
 		{
-			$oUser = $this->GetAdminUser();
+			$oUser = self::GetAdminUser();
 		}
 		return $oUser;
 	}
@@ -358,11 +358,11 @@ class Integrator extends AbstractManager
 		$oUser = null;
 		if (0 < $iUserId)
 		{
-			$oUser = $this->GetUser($iUserId);
+			$oUser = static::GetUser($iUserId);
 		}
 		elseif ($iUserId === -1)
 		{
-			$oUser = $this->GetAdminUser();
+			$oUser = self::GetAdminUser();
 		}
 		return $oUser;
 	}
@@ -389,7 +389,7 @@ class Integrator extends AbstractManager
 		if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
 			'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
 
-			$oUser = $this->GetUser((int) $aAccountHashTable['id']);
+			$oUser = static::GetUser((int) $aAccountHashTable['id']);
 			if ($oUser instanceof \Aurora\Modules\Core\Models\User)
 			{
 				$aInfo = array(
