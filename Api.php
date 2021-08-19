@@ -1580,10 +1580,9 @@ class Api
 			'database' => $DbName,
 			'username' => $DbLogin,
 			'password' => $DbPassword,
-			// 'charset'   => 'utf8',
-			// 'collation' => 'utf8_unicode_ci',
+			'charset'   => 'utf8',
+			'collation' => 'utf8_general_ci',
 			'prefix' => $DbPrefix,
-//				'options' => [\PDO::ATTR_EMULATE_PREPARES => true]
 		];
 		if (isset($aDbHost[1])) {
 			$aDbConfig['port'] = $aDbHost[1];
