@@ -43,6 +43,10 @@ class Model extends Eloquent
      */
     protected $parentKey = null;
 
+    protected $foreignModel = '';
+
+    protected $foreignModelIdColumn  = '';
+
     /**
      * Inherited attributes.
      *
@@ -124,9 +128,9 @@ class Model extends Eloquent
         $foreignTable = $foreignObject->getTable();
         $foreignPK = $foreignObject->primaryKey;
 
-        $allIds = DB::Table($this->table)->select('*')->from("$tableName")->pluck($this->primaryKey)->toArray();
-        $fullIds = DB::Table($this->table)->select("$tableName.$this->primaryKey")->from("$tableName")->leftJoin("$foreignTable", "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck($this->primaryKey)->toArray();
-        $orphanIds = array_diff($allIds, $fullIds);
+        $orphanIds = self::pluck($this->primaryKey)->diff(
+            self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
+        )->all();
 
         $message = $orphanIds ? "$tableName has orphans." : "Orphans didnt found.";
 

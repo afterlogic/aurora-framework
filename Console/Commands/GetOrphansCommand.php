@@ -26,7 +26,7 @@ class GetOrphansCommand extends BaseCommand
             ->setDescription('Get orphans');
     }
 
-    protected function wipeP9Tables()
+    protected function checkOrphans()
     {
         $aModels = $this->getAllModels();
         foreach ($aModels as $modelName => $modelPath) {
@@ -69,7 +69,7 @@ class GetOrphansCommand extends BaseCommand
         );
 
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
-        $this->wipeP9Tables();
+        $this->checkOrphans();
         return Command::SUCCESS;
     }
 }
