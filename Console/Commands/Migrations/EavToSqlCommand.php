@@ -7,6 +7,7 @@ use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Capsule\Manager as DB;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -35,8 +36,13 @@ class EavToSqlCommand extends BaseCommand
     {
         $this->setName('migrate:eav-to-sql')
             ->setDescription('Migrate EAV data structure to SQL')
-            ->addOption('wipe', null, InputOption::VALUE_OPTIONAL, 'Wipe current database')
-            ->addOption('migrate-file', null, InputOption::VALUE_OPTIONAL, 'Migrate entites from file');
+            ->setDefinition(
+                new InputDefinition([
+                    new InputOption('wipe', 'w'),
+                    new InputOption('silent', 's'),
+                    new InputOption('migrate-file', 'mf'),
+                ])
+            );
     }
 
     protected function getProperties($class, $object)
@@ -129,12 +135,15 @@ class EavToSqlCommand extends BaseCommand
 
         $wipe = $input->getOption('wipe');
         $migrateFile = $input->getOption('migrate-file');
+        $silent = $input->getOption('silent');
 
         if ($wipe) {
-            $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
+            if (!$silent) {
+                $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
 
-            if (!$helper->ask($input, $output, $question)) {
-                return Command::SUCCESS;
+                if (!$helper->ask($input, $output, $question)) {
+                    return Command::SUCCESS;
+                }
             }
             $this->wipeP9Tables();
         } else if ($migrateFile) {
@@ -151,26 +160,32 @@ class EavToSqlCommand extends BaseCommand
                 $this->logger->error('Entities list is empty!');
                 return false;
             } else {
-                $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", false);
-                if (!$helper->ask($input, $output, $question)) {
-                    return Command::SUCCESS;
+                if (!$silent) {
+                    $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", false);
+                    if (!$helper->ask($input, $output, $question)) {
+                        return Command::SUCCESS;
+                    }
                 }
             }
         } else {
-            if($fdProgress){
+            if ($fdProgress) {
                 $progress = htmlentities(file_get_contents($progressFilename));
                 $intProgress = intval($progress);
                 if ($intProgress) {
-                    $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", false);
-                    if (!$helper->ask($input, $output, $question)) {
-                        return Command::SUCCESS;
+                    if (!$silent) {
+                        $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", false);
+                        if (!$helper->ask($input, $output, $question)) {
+                            return Command::SUCCESS;
+                        }
                     }
                     $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
                     $offset = count($cItems);
                 } else {
-                    $question = new ConfirmationQuestion("File $progressFilename wrong or empty. Do you wish migrate all entities? (Y/N)", false);
-                    if (!$helper->ask($input, $output, $question)) {
-                        return Command::SUCCESS;
+                    if (!$silent) {
+                        $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", false);
+                        if (!$helper->ask($input, $output, $question)) {
+                            return Command::SUCCESS;
+                        }
                     }
                 }
             }
@@ -258,6 +273,7 @@ class EavToSqlCommand extends BaseCommand
                 $laravelModel = $modelsMap[$entity->entity_type] ?? str_replace('Classes', 'Models', $entity->entity_type);
 
                 switch ($entity->entity_type) {
+
                     case 'Aurora\Modules\StandardAuth\Classes\Account':
                         $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
                                 ->where(['EntityId' => [$entity->id, '=']])
@@ -265,12 +281,14 @@ class EavToSqlCommand extends BaseCommand
                         $password = str_replace($oItem->Login, '', $oItem->Password);
                         $migrateArray['Password'] = $password;
                         break;
+
                     case 'Aurora\Modules\Mail\Classes\Account':
                         $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
                                 ->where(['EntityId' => [$entity->id, '=']])
                                 ->exec())->first();
                         $migrateArray['IncomingPassword'] = $oItem->getPassword();
                         break;
+
                     case 'Aurora\Modules\Contacts\Classes\GroupContact':
                         if (isset($contactsCache[$aItem['ContactUUID']])) {
                             $migrateArray['ContactId'] = $contactsCache[$aItem['ContactUUID']];
@@ -299,6 +317,7 @@ class EavToSqlCommand extends BaseCommand
                             $migrateArray['GroupId'] = $group['EntityId'];
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -324,6 +343,7 @@ class EavToSqlCommand extends BaseCommand
                 $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
                 $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
                 $progressBar->advance();
+
             } catch (\Illuminate\Database\QueryException $e) {
                 $errorCode = $e->getCode();
                 $errorMessage = $e->getMessage();
@@ -337,6 +357,7 @@ class EavToSqlCommand extends BaseCommand
                     case 23000:
                         $this->logger->error("Found duplicate for entity with id $entity->id, skipping.");
                         break;
+
                     default:
                         $this->logger->error($shortErrorMessage);
                         break;
