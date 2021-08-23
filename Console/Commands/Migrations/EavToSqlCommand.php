@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use \Illuminate\Database\Capsule\Manager as Capsule;
 
 class EavToSqlCommand extends BaseCommand
 {
@@ -66,22 +67,41 @@ class EavToSqlCommand extends BaseCommand
 
     protected function migrateMinHashes($oConnection)
     {
+        if(!Capsule::schema()->hasTable('core_min_hashes')){
+            $this->logger->error($this->oP8Settings->DBPrefix."core_min_hashes doesn't exist!");
+            return false;
+        }
+        if(!Capsule::schema()->hasTable('min_hashes')){
+            $this->logger->error($this->oP8Settings->DBPrefix."min_hashes doesn't exist!");
+            return false;
+        }
+
         $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_min_hashes`;";
         $oConnection->execute($sql);
         $sql = "INSERT INTO " . $this->oP8Settings->DBPrefix . "core_min_hashes (`HashId`, `UserId`,`Hash`, `Data`, `ExpireDate`)
         SELECT *
         FROM " . $this->oP8Settings->DBPrefix . "min_hashes;";
         $oConnection->execute($sql);
+        return true;
     }
 
     protected function migrateActivityHistory($oConnection)
     {
+        if(!Capsule::schema()->hasTable('core_activity_history')){
+            $this->logger->error($this->oP8Settings->DBPrefix."core_activity_history doesnt exist!");
+            return false;
+        }
+        if(!Capsule::schema()->hasTable('activity_history')){
+            $this->logger->error($this->oP8Settings->DBPrefix."activity_history doesnt exist!");
+            return false;
+        }
         $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_activity_history`;";
         $oConnection->execute($sql);
         $sql = "INSERT INTO " . $this->oP8Settings->DBPrefix . "core_activity_history (`Id`, `UserId`, `ResourceType`,`ResourceId`, `IpAddress`, `Action`, `Timestamp`, `GuestPublicId`)
         SELECT *
         FROM " . $this->oP8Settings->DBPrefix . "activity_history;";
         $oConnection->execute($sql);
+        return true;
     }
 
     protected function wipeP9Tables()
