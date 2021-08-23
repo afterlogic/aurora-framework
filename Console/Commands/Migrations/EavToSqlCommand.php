@@ -40,8 +40,9 @@ class EavToSqlCommand extends BaseCommand
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('wipe', 'w'),
+                    new InputOption('format-errors', 'e'),
                     new InputOption('silent', 's'),
-                    new InputOption('migrate-file', 'mf'),
+                    new InputOption('migrate-file', 'f'),
                 ])
             );
     }
@@ -67,12 +68,12 @@ class EavToSqlCommand extends BaseCommand
 
     protected function migrateMinHashes($oConnection)
     {
-        if(!Capsule::schema()->hasTable('core_min_hashes')){
-            $this->logger->error($this->oP8Settings->DBPrefix."core_min_hashes doesn't exist!");
+        if (!Capsule::schema()->hasTable('core_min_hashes')) {
+            $this->logger->error($this->oP8Settings->DBPrefix . "core_min_hashes doesn't exist!");
             return false;
         }
-        if(!Capsule::schema()->hasTable('min_hashes')){
-            $this->logger->error($this->oP8Settings->DBPrefix."min_hashes doesn't exist!");
+        if (!Capsule::schema()->hasTable('min_hashes')) {
+            $this->logger->error($this->oP8Settings->DBPrefix . "min_hashes doesn't exist!");
             return false;
         }
 
@@ -87,12 +88,12 @@ class EavToSqlCommand extends BaseCommand
 
     protected function migrateActivityHistory($oConnection)
     {
-        if(!Capsule::schema()->hasTable('core_activity_history')){
-            $this->logger->error($this->oP8Settings->DBPrefix."core_activity_history doesnt exist!");
+        if (!Capsule::schema()->hasTable('core_activity_history')) {
+            $this->logger->error($this->oP8Settings->DBPrefix . "core_activity_history doesnt exist!");
             return false;
         }
-        if(!Capsule::schema()->hasTable('activity_history')){
-            $this->logger->error($this->oP8Settings->DBPrefix."activity_history doesnt exist!");
+        if (!Capsule::schema()->hasTable('activity_history')) {
+            $this->logger->error($this->oP8Settings->DBPrefix . "activity_history doesnt exist!");
             return false;
         }
         $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_activity_history`;";
@@ -122,6 +123,38 @@ class EavToSqlCommand extends BaseCommand
             $this->logger->info('wiping ' . $model::query()->getQuery()->from);
             $model::truncate();
         }
+    }
+
+    protected function jsonPretify($sJsonStr)
+    {
+        $disableLineBreak = false;
+        $lineBreakArray = [];
+        $tabsArray = [];
+        str_replace(PHP_EOL, '', $sJsonStr);
+        $aJsonStr = str_split($sJsonStr, 1);
+        array_splice($aJsonStr, 1, 0, PHP_EOL . '    ');
+        array_splice($aJsonStr, count($aJsonStr) - 1, 0, PHP_EOL);
+        foreach ($aJsonStr as $i => $elem) {
+            if ($elem == ',' && $disableLineBreak == false) {
+                $lineBreakArray[] = $i + 1;
+            }
+            if ($elem == '[') {
+                $lineBreakArray[] = $i + 1;
+                $tabsArray[] = $i + 1;
+                $disableLineBreak = true;
+            }
+            if ($elem == ']') {
+                $lineBreakArray[] = $i;
+                $disableLineBreak = false;
+            }
+        }
+        foreach ($lineBreakArray as $i => $pos) {
+            $tabSize = in_array($pos, $tabsArray) ? '        ' : '    ';
+            array_splice($aJsonStr, $pos + $i, 0, PHP_EOL . $tabSize);
+        }
+
+        $sResult = implode('', $aJsonStr);
+        return $sResult;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -156,6 +189,7 @@ class EavToSqlCommand extends BaseCommand
         $wipe = $input->getOption('wipe');
         $migrateFile = $input->getOption('migrate-file');
         $silent = $input->getOption('silent');
+        $this->formatErrorsMode = $input->getOption('format-errors');
 
         if ($wipe) {
             if (!$silent) {
@@ -167,24 +201,17 @@ class EavToSqlCommand extends BaseCommand
             }
             $this->wipeP9Tables();
         } else if ($migrateFile) {
-            $fdListEntities = fopen($entitiesListFilename, 'a+') or die("cant create migration-list.txt file");
-
-            while (!feof($fdListEntities)) {
-                $entityId = intval(htmlentities(fgets($fdListEntities)));
-                if ($entityId) {
-                    $migrateEntitiesList[] = $entityId;
-                }
-            }
-            fclose($fdListEntities);
-            if (count($migrateEntitiesList) === 0) {
+            $sEntitiesList = @file_get_contents($entitiesListFilename, true);
+            if (!$sEntitiesList) {
                 $this->logger->error('Entities list is empty!');
                 return false;
-            } else {
-                if (!$silent) {
-                    $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", false);
-                    if (!$helper->ask($input, $output, $question)) {
-                        return Command::SUCCESS;
-                    }
+            }
+
+            $migrateEntitiesList = explode(',', $sEntitiesList);
+            if (!$silent) {
+                $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", false);
+                if (!$helper->ask($input, $output, $question)) {
+                    return Command::SUCCESS;
                 }
             }
         } else {
@@ -251,7 +278,7 @@ class EavToSqlCommand extends BaseCommand
         $result = $this->migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe);
 
         $this->rewriteFile($fdErrors, $result['MissedEntities']);
-        $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $result['MissedIds']));
+        $this->rewriteFile($fdMissedIds, implode(',', $result['MissedIds']));
 
         fclose($fdMissedIds);
         fclose($fdErrors);
@@ -360,8 +387,12 @@ class EavToSqlCommand extends BaseCommand
                 $newRow = $laravelModel::create(array_merge($aItem, $migrateArray));
 
                 $this->rewriteFile($fdProgress, $entity->id);
-                $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
-                $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
+                if($this->formatErrorsMode){
+                    $this->rewriteFile($fdErrors, $this->jsonPretify(json_encode($missedEntities)));
+                } else{
+                    $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
+                }
+                $this->rewriteFile($fdMissedIds, implode(',', $missedIds));
                 $progressBar->advance();
 
             } catch (\Illuminate\Database\QueryException $e) {
@@ -370,8 +401,12 @@ class EavToSqlCommand extends BaseCommand
                 $shortErrorMessage = $e->errorInfo[2];
                 $missedEntities[$entity->entity_type][] = $entity->id;
                 $missedIds[] = $entity->id;
-                $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
-                $this->rewriteFile($fdMissedIds, implode(PHP_EOL, $missedIds));
+                if($this->formatErrorsMode){
+                $this->rewriteFile($fdErrors, $this->jsonPretify(json_encode($missedEntities)));
+                }else{
+                    $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
+                }
+                $this->rewriteFile($fdMissedIds, implode(',', $missedIds));
                 $progressBar->advance();
                 switch ($errorCode) {
                     case 23000:
@@ -386,6 +421,12 @@ class EavToSqlCommand extends BaseCommand
         }
         $this->logger->info('Migration Completed!');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        return ['MissedEntities' => json_encode($missedEntities, JSON_PRETTY_PRINT), 'MissedIds' => $missedIds];
+        $missedEntities = [];
+        if($this->formatErrorsMode){
+            $missedEntities = $this->jsonPretify(json_encode($missedEntities));
+        } else{
+            $missedEntities = json_encode($missedEntities, JSON_PRETTY_PRINT);
+        }
+        return ['MissedEntities' => $missedEntities, 'MissedIds' => $missedIds];
     }
 }
