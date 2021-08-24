@@ -40,8 +40,6 @@ class EavToSqlCommand extends BaseCommand
             ->setDefinition(
                 new InputDefinition([
                     new InputOption('wipe', 'w'),
-                    new InputOption('format-errors', 'e'),
-                    new InputOption('silent', 's'),
                     new InputOption('migrate-file', 'f'),
                 ])
             );
@@ -127,34 +125,22 @@ class EavToSqlCommand extends BaseCommand
 
     protected function jsonPretify($sJsonStr)
     {
-        $disableLineBreak = false;
-        $lineBreakArray = [];
-        $tabsArray = [];
-        str_replace(PHP_EOL, '', $sJsonStr);
-        $aJsonStr = str_split($sJsonStr, 1);
-        array_splice($aJsonStr, 1, 0, PHP_EOL . '    ');
-        array_splice($aJsonStr, count($aJsonStr) - 1, 0, PHP_EOL);
-        foreach ($aJsonStr as $i => $elem) {
-            if ($elem == ',' && $disableLineBreak == false) {
-                $lineBreakArray[] = $i + 1;
+        $sOutput = '{';
+        $bFirstElement = true;
+        foreach ($sJsonStr as $key => $value) {
+            if (!$bFirstElement) {
+                $sOutput .= ",";
             }
-            if ($elem == '[') {
-                $lineBreakArray[] = $i + 1;
-                $tabsArray[] = $i + 1;
-                $disableLineBreak = true;
-            }
-            if ($elem == ']') {
-                $lineBreakArray[] = $i;
-                $disableLineBreak = false;
-            }
-        }
-        foreach ($lineBreakArray as $i => $pos) {
-            $tabSize = in_array($pos, $tabsArray) ? '        ' : '    ';
-            array_splice($aJsonStr, $pos + $i, 0, PHP_EOL . $tabSize);
-        }
+            $bFirstElement = false;
 
-        $sResult = implode('', $aJsonStr);
-        return $sResult;
+            $sOutput .= PHP_EOL . "\t\"" . $key . "\": [";
+            $sOutput .= PHP_EOL . "\t\t" . implode(',', $value);
+            $sOutput .= PHP_EOL . "\t]";
+        }
+        $sOutput .= PHP_EOL . '}';
+        $sOutput = str_replace('\\', '\\\\', $sOutput);
+
+        return $sOutput;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -188,16 +174,12 @@ class EavToSqlCommand extends BaseCommand
 
         $wipe = $input->getOption('wipe');
         $migrateFile = $input->getOption('migrate-file');
-        $silent = $input->getOption('silent');
-        $this->formatErrorsMode = $input->getOption('format-errors');
-
+        $defaultAnswer = $input->getOption('no-interaction');
         if ($wipe) {
-            if (!$silent) {
-                $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
+            $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', $defaultAnswer);
 
-                if (!$helper->ask($input, $output, $question)) {
-                    return Command::SUCCESS;
-                }
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
             }
             $this->wipeP9Tables();
         } else if ($migrateFile) {
@@ -208,31 +190,25 @@ class EavToSqlCommand extends BaseCommand
             }
 
             $migrateEntitiesList = explode(',', $sEntitiesList);
-            if (!$silent) {
-                $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", false);
-                if (!$helper->ask($input, $output, $question)) {
-                    return Command::SUCCESS;
-                }
+            $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", $defaultAnswer);
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
             }
         } else {
             if ($fdProgress) {
                 $progress = htmlentities(file_get_contents($progressFilename));
                 $intProgress = intval($progress);
                 if ($intProgress) {
-                    if (!$silent) {
-                        $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", false);
-                        if (!$helper->ask($input, $output, $question)) {
-                            return Command::SUCCESS;
-                        }
+                    $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", $defaultAnswer);
+                    if (!$helper->ask($input, $output, $question)) {
+                        return Command::SUCCESS;
                     }
                     $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
                     $offset = count($cItems);
                 } else {
-                    if (!$silent) {
-                        $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", false);
-                        if (!$helper->ask($input, $output, $question)) {
-                            return Command::SUCCESS;
-                        }
+                    $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", $defaultAnswer);
+                    if (!$helper->ask($input, $output, $question)) {
+                        return Command::SUCCESS;
                     }
                 }
             }
@@ -306,7 +282,8 @@ class EavToSqlCommand extends BaseCommand
                 if (!class_exists($entity->entity_type)) {
                     $missedEntities[$entity->entity_type][] = $entity->id;
                     $missedIds[] = $entity->id;
-                    $this->logger->warning("Entity with id " . $entity->id . " missed");
+                    $this->logger->warning("Didn't find EAV class for entity with id $entity->id, skipping.");
+
                     $progressBar->advance();
                     continue;
                 }
@@ -387,12 +364,6 @@ class EavToSqlCommand extends BaseCommand
                 $newRow = $laravelModel::create(array_merge($aItem, $migrateArray));
 
                 $this->rewriteFile($fdProgress, $entity->id);
-                if($this->formatErrorsMode){
-                    $this->rewriteFile($fdErrors, $this->jsonPretify(json_encode($missedEntities)));
-                } else{
-                    $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
-                }
-                $this->rewriteFile($fdMissedIds, implode(',', $missedIds));
                 $progressBar->advance();
 
             } catch (\Illuminate\Database\QueryException $e) {
@@ -401,12 +372,6 @@ class EavToSqlCommand extends BaseCommand
                 $shortErrorMessage = $e->errorInfo[2];
                 $missedEntities[$entity->entity_type][] = $entity->id;
                 $missedIds[] = $entity->id;
-                if($this->formatErrorsMode){
-                $this->rewriteFile($fdErrors, $this->jsonPretify(json_encode($missedEntities)));
-                }else{
-                    $this->rewriteFile($fdErrors, json_encode($missedEntities, JSON_PRETTY_PRINT));
-                }
-                $this->rewriteFile($fdMissedIds, implode(',', $missedIds));
                 $progressBar->advance();
                 switch ($errorCode) {
                     case 23000:
@@ -417,16 +382,15 @@ class EavToSqlCommand extends BaseCommand
                         $this->logger->error($shortErrorMessage);
                         break;
                 }
+            } finally {
+                $this->rewriteFile($fdErrors, $this->jsonPretify($missedEntities));
+                $this->rewriteFile($fdMissedIds, implode(',', $missedIds));
             }
         }
         $this->logger->info('Migration Completed!');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $missedEntities = [];
-        if($this->formatErrorsMode){
-            $missedEntities = $this->jsonPretify(json_encode($missedEntities));
-        } else{
-            $missedEntities = json_encode($missedEntities, JSON_PRETTY_PRINT);
-        }
+        $missedEntities = $this->jsonPretify($missedEntities);
         return ['MissedEntities' => $missedEntities, 'MissedIds' => $missedIds];
     }
 }
