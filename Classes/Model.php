@@ -132,9 +132,8 @@ class Model extends Eloquent
             self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 
-        $message = $orphanIds ? "$tableName has orphans." : "Orphans didnt found.";
-
-        $oResult = ['status' => $orphanIds ? 1 : 0, 'message' => $message];
+        $message = $orphanIds ? "$tableName table has orphans." : "Orphans didnt found.";
+        $oResult = ['status' => $orphanIds ? 1 : 0, 'message' => $message, 'orphansIds' => $orphanIds];
 
         return $oResult;
     }

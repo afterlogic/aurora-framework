@@ -26,8 +26,36 @@ class GetOrphansCommand extends BaseCommand
             ->setDescription('Get orphans');
     }
 
-    protected function checkOrphans()
+    protected function rewriteFile($fd, $str)
     {
+        ftruncate($fd, 0);
+        fseek($fd, 0, SEEK_END);
+        fwrite($fd, $str);
+    }
+
+    protected function jsonPretify($sJsonStr)
+    {
+        $sOutput = '{';
+        $bFirstElement = true;
+        foreach ($sJsonStr as $key => $value) {
+            if (!$bFirstElement) {
+                $sOutput .= ",";
+            }
+            $bFirstElement = false;
+
+            $sOutput .= PHP_EOL . "\t\"" . $key . "\": [";
+            $sOutput .= PHP_EOL . "\t\t" . implode(',', $value);
+            $sOutput .= PHP_EOL . "\t]";
+        }
+        $sOutput .= PHP_EOL . '}';
+        $sOutput = str_replace('\\', '\\\\', $sOutput);
+
+        return $sOutput;
+    }
+
+    protected function checkOrphans($fdEntities)
+    {
+        $aOrphansEntities = [];
         $aModels = $this->getAllModels();
         foreach ($aModels as $modelName => $modelPath) {
             $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
@@ -46,11 +74,12 @@ class GetOrphansCommand extends BaseCommand
 
             $modelObject = new $model;
             $checkOrphan = $modelObject->getOrphanIds();
-                switch($checkOrphan['status']){
-                    case 0:
-                        $this->logger->info($checkOrphan['message']);
-                        break;
+            switch($checkOrphan['status']){
+                case 0:
+                    $this->logger->info($checkOrphan['message']);
+                    break;
                     case 1:
+                        $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
                         $this->logger->error($checkOrphan['message']);
                         break;
                     default:
@@ -59,6 +88,7 @@ class GetOrphansCommand extends BaseCommand
                 }
                 echo PHP_EOL;
         }
+        $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -67,9 +97,18 @@ class GetOrphansCommand extends BaseCommand
             'notice' => OutputInterface::VERBOSITY_NORMAL,
             'info' => OutputInterface::VERBOSITY_NORMAL
         );
+        $dirName = \Aurora\System\Api::DataPath() . "/get-orphans-logs";
+        $entitiesFileName = $dirName . "/entries.txt";
+        
+        $dirname = dirname($entitiesFileName);
+        if (!is_dir($dirname)) {
+            mkdir($dirname, 0755, true);
+        }
+
+        $fdEntities = fopen($entitiesFileName, 'a+') or die("Can't create migration-progress.txt file");
 
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
-        $this->checkOrphans();
+        $this->checkOrphans($fdEntities);
         return Command::SUCCESS;
     }
 }
