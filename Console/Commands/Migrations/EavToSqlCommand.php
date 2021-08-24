@@ -252,8 +252,7 @@ class EavToSqlCommand extends BaseCommand
         $this->migrateActivityHistory($oConnection);
         $this->migrateMinHashes($oConnection);
         $result = $this->migrate($fdProgress, $fdErrors, $migrateEntitiesList, $entities, $progressBar, $fdMissedIds, $wipe);
-
-        $this->rewriteFile($fdErrors, $result['MissedEntities']);
+        $this->rewriteFile($fdErrors, $this->jsonPretify($result['MissedEntities']));
         $this->rewriteFile($fdMissedIds, implode(',', $result['MissedIds']));
 
         fclose($fdMissedIds);
@@ -389,8 +388,6 @@ class EavToSqlCommand extends BaseCommand
         }
         $this->logger->info('Migration Completed!');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $missedEntities = [];
-        $missedEntities = $this->jsonPretify($missedEntities);
         return ['MissedEntities' => $missedEntities, 'MissedIds' => $missedIds];
     }
 }
