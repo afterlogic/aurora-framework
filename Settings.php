@@ -81,7 +81,7 @@ class Settings extends AbstractSettings
 	/**
 	 * @return bool
 	 */
-	public function Load()
+	public function Load($bForceLoad = false)
 	{
 		$this->initDefaults();
 		if (!\file_exists($this->sPath))
@@ -89,7 +89,7 @@ class Settings extends AbstractSettings
 			$this->Save();
 		}
 
-		return parent::Load();
+		return parent::Load($bForceLoad);
 	}
 
 	public function SyncConfigs()
@@ -100,7 +100,7 @@ class Settings extends AbstractSettings
 		{
 			$this->Save();
 		}
-		parent::Load();
+		parent::Load(true);
 		$this->aContainer = \array_merge($aContainer, $this->aContainer);
 		$this->Save();
 	}

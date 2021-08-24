@@ -62,10 +62,10 @@ class Settings extends \Aurora\System\AbstractSettings
 		}
 	}
 
-	public function Load()
+	public function Load($bForceLoad = false)
 	{
 		$bResult = false;
-		if ($this->bIsLoaded)
+		if ($this->bIsLoaded && !$bForceLoad)
 		{
 			$bResult = true;
 		}
