@@ -176,7 +176,7 @@ class EavToSqlCommand extends BaseCommand
         $migrateFile = $input->getOption('migrate-file');
         $defaultAnswer = $input->getOption('no-interaction');
         if ($wipe) {
-            $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', $defaultAnswer);
+            $question = new ConfirmationQuestion('Do you really wish to wipe all data in target tables? (Y/N)', $defaultAnswer);
 
             if (!$helper->ask($input, $output, $question)) {
                 return Command::SUCCESS;
