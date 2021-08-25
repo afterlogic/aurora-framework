@@ -67,11 +67,9 @@ class EavToSqlCommand extends BaseCommand
     protected function migrateMinHashes($oConnection)
     {
         if (!Capsule::schema()->hasTable('core_min_hashes')) {
-            $this->logger->error($this->oP8Settings->DBPrefix . "core_min_hashes doesn't exist!");
             return false;
         }
         if (!Capsule::schema()->hasTable('min_hashes')) {
-            $this->logger->error($this->oP8Settings->DBPrefix . "min_hashes doesn't exist!");
             return false;
         }
 
@@ -87,11 +85,9 @@ class EavToSqlCommand extends BaseCommand
     protected function migrateActivityHistory($oConnection)
     {
         if (!Capsule::schema()->hasTable('core_activity_history')) {
-            $this->logger->error($this->oP8Settings->DBPrefix . "core_activity_history doesnt exist!");
             return false;
         }
         if (!Capsule::schema()->hasTable('activity_history')) {
-            $this->logger->error($this->oP8Settings->DBPrefix . "activity_history doesnt exist!");
             return false;
         }
         $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_activity_history`;";
@@ -243,11 +239,9 @@ class EavToSqlCommand extends BaseCommand
         }
 
         $progressBar = new ProgressBar($output, $passedEntities + count($entities));
+        $progressBar->setFormat('%current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:6s% %memory:6s%');
         $progressBar->start();
-        while ($passedEntities > 0) {
-            $progressBar->advance();
-            $passedEntities -= 1;
-        }
+        $progressBar->advance($passedEntities);
 
         $this->migrateActivityHistory($oConnection);
         $this->migrateMinHashes($oConnection);
