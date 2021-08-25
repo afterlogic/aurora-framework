@@ -53,9 +53,10 @@ class MigrateCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $defaultAnswer = $input->getOption('no-interaction');
         if (!$input->getOption('force')) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', false);
+            $question = new ConfirmationQuestion('Do you really wish to run this command? (Y/N)', $defaultAnswer);
             if (!$helper->ask($input, $output, $question)) {
                 return Command::SUCCESS;
             }
