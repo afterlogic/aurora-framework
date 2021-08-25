@@ -98,7 +98,7 @@ class GetOrphansCommand extends BaseCommand
             'info' => OutputInterface::VERBOSITY_NORMAL
         );
         $dirName = \Aurora\System\Api::DataPath() . "/get-orphans-logs";
-        $entitiesFileName = $dirName . "/entries.txt";
+        $entitiesFileName = $dirName . "/entries-".time().".txt";
         
         $dirname = dirname($entitiesFileName);
         if (!is_dir($dirname)) {
