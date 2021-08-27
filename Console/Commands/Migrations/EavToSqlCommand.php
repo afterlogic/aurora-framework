@@ -172,10 +172,12 @@ class EavToSqlCommand extends BaseCommand
         $migrateFile = $input->getOption('migrate-file');
         $defaultAnswer = $input->getOption('no-interaction');
         if ($wipe) {
-            $question = new ConfirmationQuestion('Do you really wish to wipe all data in target tables? (Y/N)', $defaultAnswer);
-
-            if (!$helper->ask($input, $output, $question)) {
-                return Command::SUCCESS;
+            if(!$defaultAnswer){
+                $question = new ConfirmationQuestion('Do you really wish to wipe all data in target tables? (Y/N)', $defaultAnswer);
+    
+                if (!$helper->ask($input, $output, $question)) {
+                    return Command::SUCCESS;
+                }
             }
             $this->wipeP9Tables();
         } else if ($migrateFile) {
@@ -186,26 +188,32 @@ class EavToSqlCommand extends BaseCommand
             }
 
             $migrateEntitiesList = explode(',', $sEntitiesList);
+            if(!$defaultAnswer){
             $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", $defaultAnswer);
             if (!$helper->ask($input, $output, $question)) {
                 return Command::SUCCESS;
             }
+        }
         } else {
             if ($fdProgress) {
                 $progress = htmlentities(file_get_contents($progressFilename));
                 $intProgress = intval($progress);
                 if ($intProgress) {
+                    if(!$defaultAnswer){
                     $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", $defaultAnswer);
                     if (!$helper->ask($input, $output, $question)) {
                         return Command::SUCCESS;
                     }
+                }
                     $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
                     $offset = count($cItems);
                 } else {
+                    if(!$defaultAnswer){
                     $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", $defaultAnswer);
                     if (!$helper->ask($input, $output, $question)) {
                         return Command::SUCCESS;
                     }
+                }
                 }
             }
         }
