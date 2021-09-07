@@ -254,6 +254,10 @@ class Model extends Eloquent
     {
         $array = $this->toArray();
 
+        $array['UUID'] = '';
+        $array['ParentUUID'] = '';
+        $array['ModuleName'] = $this->moduleName;
+
         $parentInheritedAttributes = $this->getInheritedAttributes();
         if (count($parentInheritedAttributes) > 0) {
             foreach ($parentInheritedAttributes as $attribute) {
