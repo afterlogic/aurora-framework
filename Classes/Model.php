@@ -254,7 +254,9 @@ class Model extends Eloquent
     {
         $array = $this->toArray();
 
-        $array['UUID'] = '';
+        if (!isset($array['UUID'])) {
+            $array['UUID'] = '';
+        }
         $array['ParentUUID'] = '';
         $array['ModuleName'] = $this->moduleName;
 
