@@ -20,7 +20,7 @@ class Model extends Eloquent
      *
      * @var string
      */
-    protected $moduleName = null;
+    protected $moduleName = '';
 
     /**
      * The primary key for the model.
