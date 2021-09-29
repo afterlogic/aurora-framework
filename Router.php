@@ -28,6 +28,9 @@ class Router
         $this->aRoutes = [];
     }
 
+    /**
+     * @return Aurora\System\Router
+     */
     public static function getInstance()
     {
         if (is_null(self::$self))

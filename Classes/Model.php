@@ -349,4 +349,13 @@ class Model extends Eloquent
             }
         }
     }
+
+    	/**
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return \get_class($this);
+	}
 }
