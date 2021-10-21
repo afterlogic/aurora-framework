@@ -275,6 +275,7 @@ class EavToSqlCommand extends BaseCommand
         $modelsMap = [
             'Aurora\Modules\Mail\Classes\Account' => 'Aurora\Modules\Mail\Models\MailAccount',
             'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account' => 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount',
+            'Aurora\Modules\Mail\Classes\Sender' => 'Aurora\Modules\Mail\Models\TrustedSender'
         ];
 
         foreach ($entities as $i => $entity) {
