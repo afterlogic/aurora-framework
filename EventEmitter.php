@@ -24,6 +24,8 @@ class EventEmitter
 	 */
     private $aListenersResult;
 
+    private $iEventLevel = 0;
+
     public static function getInstance()
     {
         if (is_null(self::$self))
@@ -58,6 +60,11 @@ class EventEmitter
 	public function getListenersResult()
 	{
 		return $this->aListenersResult;
+    }
+
+    public function strPad($sText, $iCount, $sPadText, $iPadType = STR_PAD_LEFT)
+    {
+        return str_pad($sText, strlen($sText) + $iCount, $sPadText, $iPadType);
     }
 
     /**
@@ -150,8 +157,9 @@ class EventEmitter
         $aListeners = $this->getListenersByEvent($sModule, $sEvent);
         if (count($aListeners) > 0)
         {
-            \Aurora\System\Api::Log(" ===== Emit $sModule::$sEvent", Enums\LogLevel::Full, 'subscriptions-');
-            \Aurora\System\Api::Log(' ========== START Execute subscriptions', Enums\LogLevel::Full, 'subscriptions-');
+            $this->iEventLevel = $this->iEventLevel + 4;
+            \Aurora\System\Api::Log($this->strPad("Emit $sModule::$sEvent", $this->iEventLevel, "-"), Enums\LogLevel::Full, 'subscriptions-');
+            \Aurora\System\Api::Log($this->strPad("START Execute subscriptions", $this->iEventLevel, "-"), Enums\LogLevel::Full, 'subscriptions-');
             foreach($aListeners as $fCallback)
             {
                 $bIsAllowedModule = true;
@@ -161,7 +169,7 @@ class EventEmitter
                 }
                 if (\is_callable($fCallback) && $bIsAllowedModule)
                 {
-                    \Aurora\System\Api::Log(" =============== " . $fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], Enums\LogLevel::Full, 'subscriptions-');
+                    \Aurora\System\Api::Log($this->strPad($fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], $this->iEventLevel + 2, "-"), Enums\LogLevel::Full, 'subscriptions-');
 
                     $mCallBackResult = \call_user_func_array(
                         $fCallback,
@@ -194,7 +202,9 @@ class EventEmitter
                     }
                 }
             }
-            \Aurora\System\Api::Log(" ========== END Execute subscriptions\n", Enums\LogLevel::Full, 'subscriptions-');
+            \Aurora\System\Api::Log($this->strPad('END Execute subscriptions', $this->iEventLevel, "-"), Enums\LogLevel::Full, 'subscriptions-');
+
+            $this->iEventLevel = $this->iEventLevel - 4;
         }
 
         return $bResult;
