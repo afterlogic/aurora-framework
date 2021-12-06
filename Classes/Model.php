@@ -67,6 +67,31 @@ class Model extends Eloquent
      * @var string|null
      */
     const UPDATED_AT = 'UpdatedAt';
+    
+    protected function castAttribute($key, $value)
+    {
+        if (is_null($value))
+        {
+            switch ($this->getCastType($key))
+            {
+                case 'array':
+                    $value = [];
+                    break;
+                
+                case 'string':
+                    $value = '';
+                    break;
+                    
+                case 'boolean':
+                    $value = false;
+                    break;
+            }
+            
+            return $value;
+        }
+        
+        return parent::castAttribute($key, $value);
+    }
 
     public function getInheritedAttributes()
     {
@@ -350,12 +375,12 @@ class Model extends Eloquent
         }
     }
 
-    	/**
-	 *
-	 * @return string
-	 */
-	public function getName()
-	{
-		return \get_class($this);
-	}
+    /**
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return \get_class($this);
+    }
 }
