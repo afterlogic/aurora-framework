@@ -1335,13 +1335,13 @@ class Api
 		$mResult = false;
 		if (!empty($sAuthToken))
 		{
-			if (!empty(self::$aUserSession['UserId']) && self::getAuthenticatedUserAuthToken() === $sAuthToken)
+			$aInfo = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserInfo($sAuthToken);
+			if (!empty(self::$aUserSession['UserId']) && (int) $aInfo['userId'] === (int) self::$aUserSession['UserId'])
 			{
 				$mResult = (int) self::$aUserSession['UserId'];
 			}
 			else
 			{
-				$aInfo = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserInfo($sAuthToken);
 				$mResult = $aInfo['userId'];
 				self::$aUserSession['UserId'] = (int) $mResult;
 				self::$aUserSession['AuthToken'] = $sAuthToken;
@@ -1453,6 +1453,22 @@ class Api
 		}
 
 		return $sPublicId;
+	}
+
+		/**
+	 * @param string $sPublicId
+	 * @return int
+	 */
+	public static function getUserIdByPublicId($sPublicId)
+	{
+		$iUserId = false;
+
+		$oUser = User::select('Id')->firstWhere('PublicId', $sPublicId);
+		if ($oUser) {
+			return $oUser->Id;
+		}
+
+		return $iUserId;
 	}
 
 	public static function getUserById($iUserId)
