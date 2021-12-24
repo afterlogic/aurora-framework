@@ -489,11 +489,12 @@ class Api
 					$oPdo = @new \PDO((Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
 						(empty($sDbHost) ? '' : ';host='.$sDbHost).
 						(empty($sDbPort) ? '' : ';port='.$sDbPort).
-						(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket), $sDbLogin, $sDbPassword);
+						(empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket) . ';charset=utf8', $sDbLogin, $sDbPassword);
 
 					if ($oPdo)
 					{
 						$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+						$oPdo->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES utf8");
 					}
 				}
 				catch (\Exception $oException)
