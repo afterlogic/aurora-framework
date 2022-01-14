@@ -115,7 +115,7 @@ class Thumb
 			$oThumb = $oImageManager->make($rFile);
 			self::OrientateImage($oThumb, $iOrientation);
 
-			$sThumb = $oThumb->heighten(100)->widen(100)->response();
+			$sThumb = $oThumb->heighten(94)->widen(118)->response();
 
 			\unlink($sCacheFilePathTmp);
 
