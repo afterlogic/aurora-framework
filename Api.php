@@ -1696,4 +1696,61 @@ class Api
 	    return self::$oContainer;
     }
 
+	public static function CheckAccess(&$UserId)
+	{
+		if (self::accessCheckIsSkipped()) {
+			return;
+		}
+		$bAccessDenied = true;
+
+		$oAuthenticatedUser = self::getAuthenticatedUser();
+
+		if ($UserId === null)
+		{
+			$iUserId = $oAuthenticatedUser->Id;
+		}
+		else
+		{
+			$iUserId = (int) $UserId;
+
+			$iUserRole = $oAuthenticatedUser instanceof \Aurora\Modules\Core\Models\User ? $oAuthenticatedUser->Role : \Aurora\System\Enums\UserRole::Anonymous;
+			switch ($iUserRole)
+			{
+				case (\Aurora\System\Enums\UserRole::SuperAdmin):
+					// everything is allowed for SuperAdmin
+					$UserId = $iUserId;
+					$bAccessDenied = false;
+					break;
+				case (\Aurora\System\Enums\UserRole::TenantAdmin):
+					// everything is allowed for TenantAdmin
+					$oUser = \Aurora\Modules\Core\Module::getInstance()->GetUser($iUserId);
+					if ($oUser instanceof \Aurora\Modules\Core\Models\User)
+					{
+						if ($oAuthenticatedUser->IdTenant === $oUser->IdTenant)
+						{
+							$UserId = $iUserId;
+							$bAccessDenied = false;
+						}
+					}
+					break;
+				case (\Aurora\System\Enums\UserRole::NormalUser):
+					// User identifier shoud be checked
+					if ($iUserId === $oAuthenticatedUser->Id)
+					{
+						$UserId = $iUserId;
+						$bAccessDenied = false;
+					}
+					break;
+				case (\Aurora\System\Enums\UserRole::Customer):
+				case (\Aurora\System\Enums\UserRole::Anonymous):
+					// everything is forbidden for Customer and Anonymous users
+					break;
+			}
+			if ($bAccessDenied)
+			{
+				throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::AccessDenied);
+			}
+		}
+	}
+
 }
