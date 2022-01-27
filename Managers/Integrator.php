@@ -635,6 +635,12 @@ class Integrator extends AbstractManager
 			return 0;
 		}
 
+        $sMobileApp =  \MailSo\Base\Http::SingletonInstance()->GetHeader('X-MobileApp');
+        if (!empty($sMobileApp))
+        {
+            return 1;
+        }
+
 		return isset($_COOKIE[self::MOBILE_KEY]) ? ('1' === (string) $_COOKIE[self::MOBILE_KEY] ? 1 : 0) : -1;
 	}
 
