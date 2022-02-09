@@ -876,7 +876,7 @@ abstract class AbstractModule
 		}
 		catch (\Exception $oException)
 		{
-			if ($oException instanceof \Aurora\System\Exceptions\ApiException)
+			if ($oException instanceof \Aurora\System\Exceptions\ApiException && $oException->GetModule() !== null)
 			{
 				throw $oException;
 			}
