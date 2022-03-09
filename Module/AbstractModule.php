@@ -1011,7 +1011,7 @@ abstract class AbstractModule
 				$aDisabledModules[] = self::GetName();
 			}
 		}
-		$oEntity->disableModules(\implode('|', $aDisabledModules));
+		$oEntity->disableModules($aDisabledModules);
 	}
 
 	/**
