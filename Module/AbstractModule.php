@@ -995,35 +995,24 @@ abstract class AbstractModule
 	 */
 	protected function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
-		$aDisabledModules =  $oEntity->getDisabledModules();
-
 		if ($bEnabled)
 		{
-			if (\in_array(self::GetName(), $aDisabledModules))
-			{
-				$aDisabledModules = \array_diff($aDisabledModules, array(self::GetName()));
-			}
+			$oEntity->enableModule(self::GetName());
 		}
 		else
 		{
-			if (!\in_array(self::GetName(), $aDisabledModules))
-			{
-				$aDisabledModules[] = self::GetName();
-			}
+			$oEntity->disableModule(self::GetName());
 		}
-		$oEntity->disableModules($aDisabledModules);
 	}
 
 	/**
 	 *
-	 * @param \Aurora\System\EAV\Entity $oEntity
+	 * @param \Aurora\System\Classes\Model $oEntity
 	 * @return bool
 	 */
 	protected function isEnabledForEntity(&$oEntity)
 	{
-		$aDisabledModules =  $oEntity->getDisabledModules();
-
-		return !\in_array(self::GetName(), $aDisabledModules);
+		return $oEntity->isModuleDisabled(self::GetName());
 	}
 
 	/**

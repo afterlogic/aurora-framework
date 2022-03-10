@@ -13,7 +13,8 @@ trait DisabledModulesTrait
 
 	public function getDisabledModules()
 	{
-		$sDisabledModules = isset($this->DisabledModules) ? \trim($this->DisabledModules) : '';
+		$sDisabledModules = $this->getExtendedProp('DisabledModules');
+		$sDisabledModules = isset($sDisabledModules) ? \trim($sDisabledModules) : '';
 		$aDisabledModules =  !empty($sDisabledModules) ? [$sDisabledModules] : [];
 		if (substr_count($sDisabledModules, "|") > 0)
 		{
