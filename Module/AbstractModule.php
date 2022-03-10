@@ -1012,7 +1012,7 @@ abstract class AbstractModule
 	 */
 	protected function isEnabledForEntity(&$oEntity)
 	{
-		return $oEntity->isModuleDisabled(self::GetName());
+		return !$oEntity->isModuleDisabled(self::GetName());
 	}
 
 	/**
