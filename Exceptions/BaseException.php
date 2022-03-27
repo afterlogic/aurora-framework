@@ -10,7 +10,7 @@ namespace Aurora\System\Exceptions;
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
- * @copyright Copyright (c) 2019, Afterlogic Corp.
+ * @copyright Copyright (c) 2022, Afterlogic Corp.
  *
  * @package Api
  */
@@ -34,17 +34,7 @@ class BaseException extends Exception
 	 */
 	public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
 	{
-		if (\Aurora\System\Exceptions\ErrorCodes::Validation_InvalidPort === $iCode)
-		{
-			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
-			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_InvalidPort_OutInfo;
-		}
-		else if (\Aurora\System\Exceptions\ErrorCodes::Validation_InvalidEmail === $iCode)
-		{
-			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
-			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_InvalidEmail_OutInfo;
-		}
-		else if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode)
+		if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode)
 		{
 			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
 			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;

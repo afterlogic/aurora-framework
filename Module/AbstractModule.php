@@ -123,6 +123,12 @@ abstract class AbstractModule
 	];
 
 	/**
+     *
+     * @var array
+     */
+	protected $aLang;
+
+	/**
 	 * @param string $sVersion
 	 */
 	public function __construct($sPath, $sVersion = '1.0')
@@ -941,7 +947,7 @@ abstract class AbstractModule
 			{
 				$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 				$oUser = $oCoreDecorator ? $oCoreDecorator->GetUserByUUID($sUUID) : null;
-				if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
+				if ($oUser instanceof \Aurora\Modules\Core\Models\User)
 				{
 					$sLanguage = $oUser->Language;
 				}
@@ -952,9 +958,7 @@ abstract class AbstractModule
 			}
 		}
 
-		static $aLang = null;
-
-		if (is_null($aLang))
+		if (is_null($this->aLang))
 		{
 			if (isset(\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage]))
 			{
@@ -964,25 +968,25 @@ abstract class AbstractModule
 			{
 				\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = false;
 
-				$aLang = $this->getLangsData($sLanguage);
-				if (!$aLang)
+				$this->aLang = $this->getLangsData($sLanguage);
+				if (!$this->aLang)
 				{
-					$aLang = $this->getLangsData('English');
+					$this->aLang = $this->getLangsData('English');
 				}
 
-				if (\is_array($aLang))
+				if (\is_array($this->aLang))
 				{
-					\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = $aLang;
+					\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = $this->aLang;
 				}
 			}
-			if (!isset($aLang[$sData]))
+			if (!isset($this->aLang[$sData]))
 			{
-				$aLang = $this->getLangsData('English');
+				$this->aLang = $this->getLangsData('English');
 			}
 		}
 
-		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) :
-			\Aurora\System\Api::processTranslateParams($aLang, $sData, $aParams);
+		return isset($iPluralCount) ? \Aurora\System\Api::processTranslateParams($this->aLang, $sData, $aParams, \Aurora\System\Api::getPlural($sLanguage, $iPluralCount)) :
+			\Aurora\System\Api::processTranslateParams($this->aLang, $sData, $aParams);
 	}
 
 	/**
@@ -991,35 +995,24 @@ abstract class AbstractModule
 	 */
 	protected function updateEnabledForEntity(&$oEntity, $bEnabled = true)
 	{
-		$aDisabledModules =  $oEntity->getDisabledModules();
-
 		if ($bEnabled)
 		{
-			if (\in_array(self::GetName(), $aDisabledModules))
-			{
-				$aDisabledModules = \array_diff($aDisabledModules, array(self::GetName()));
-			}
+			$oEntity->enableModule(self::GetName());
 		}
 		else
 		{
-			if (!\in_array(self::GetName(), $aDisabledModules))
-			{
-				$aDisabledModules[] = self::GetName();
-			}
+			$oEntity->disableModule(self::GetName());
 		}
-		$oEntity->disableModules(\implode('|', $aDisabledModules));
 	}
 
 	/**
 	 *
-	 * @param \Aurora\System\EAV\Entity $oEntity
+	 * @param \Aurora\System\Classes\Model $oEntity
 	 * @return bool
 	 */
 	protected function isEnabledForEntity(&$oEntity)
 	{
-		$aDisabledModules =  $oEntity->getDisabledModules();
-
-		return !\in_array(self::GetName(), $aDisabledModules);
+		return !$oEntity->isModuleDisabled(self::GetName());
 	}
 
 	/**
