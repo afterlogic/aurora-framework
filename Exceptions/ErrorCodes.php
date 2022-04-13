@@ -26,6 +26,7 @@ class ErrorCodes
 	const UserManager_IdentityCreateFailed = 1009;
 	const UserManager_IdentityUpdateFailed = 1010;
 	const UserManager_AccountConnectToMailServerFailed = 1011;
+	const UsersManager_UserCreateFailed = 1012;
 
 	const UserManager_AccountOldPasswordNotCorrect = 1020;
 	const UserManager_AccountNewPasswordUpdateError = 1021;
