@@ -7,7 +7,7 @@
 
 namespace Aurora\System\Classes;
 
-use Illuminate\Database\Capsule\Manager as DB;
+use Aurora\System\Validator;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -43,8 +43,16 @@ class Model extends Eloquent
      */
     protected $parentKey = null;
 
+    /**
+     *
+     * @var string
+     */
     protected $foreignModel = '';
 
+    /**
+     *
+     * @var string
+     */
     protected $foreignModelIdColumn  = '';
 
     /**
@@ -53,6 +61,11 @@ class Model extends Eloquent
      * @var array
      */
     protected $parentInheritedAttributes = [];
+
+    /**
+     * @var array
+     */
+    protected $validationRules = [];
 
     /**
      * The name of the "created at" column.
@@ -311,6 +324,8 @@ class Model extends Eloquent
 
     public function validate()
     {
+        Validator::validate($this->getAttributes(), $this->validationRules);
+
         return true;
     }
 
@@ -382,5 +397,18 @@ class Model extends Eloquent
     public function getName()
     {
         return \get_class($this);
+    }
+
+    /**
+     * Save the model to the database.
+     *
+     * @param  array  $options
+     * @return bool
+     */
+    public function save(array $options = []) 
+    {
+        if ($this->validate()) {
+            return parent::save($options);
+        }
     }
 }
