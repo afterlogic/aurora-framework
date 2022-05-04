@@ -266,6 +266,13 @@ class Model extends Eloquent
         $this->Properties = $properties;
     }
 
+    public function unsetExtendedProp($key)
+    {
+       if (isset($properties[$key])) {
+           unset($properties[$key]);
+       }
+    }
+
     public function setExtendedProps($props)
     {
         $properties = is_array($this->Properties) ? $this->Properties : [];
