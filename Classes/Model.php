@@ -7,6 +7,7 @@
 
 namespace Aurora\System\Classes;
 
+use Aurora\System\EventEmitter;
 use Aurora\System\Validator;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -322,6 +323,8 @@ class Model extends Eloquent
         if (isset($array['Properties'])) {
             foreach ($array['Properties'] as $key => $value) {
                 if ($value !== null) {
+                    $aArgs = ['Model' => $this, 'PropertyName'  => $key];
+                    EventEmitter::getInstance()->emit('System', 'CastExtendedProp', $aArgs, $value);
                     $array[$key] = $value;
                 }
             }
