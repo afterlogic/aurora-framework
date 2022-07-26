@@ -48,7 +48,7 @@ class GetOrphansCommand extends BaseCommand
             $bFirstElement = false;
 
             $sOutput .= PHP_EOL . "\t\"" . $key . "\": [";
-            $sOutput .= PHP_EOL . "\t\t" . implode(',', $value);
+            $sOutput .= PHP_EOL . "\t\t\"" . implode('","', $value) . "\"";
             $sOutput .= PHP_EOL . "\t]";
         }
         $sOutput .= PHP_EOL . '}';
@@ -77,7 +77,7 @@ class GetOrphansCommand extends BaseCommand
             array_unshift($model, "Aurora");
             $model = implode('\\', $model);
 
-            $this->logger->info('checking ' . $model::query()->getQuery()->from);
+            $this->logger->info('Checking ' . $model::query()->getQuery()->from . ' table.');
 
             $modelObject = new $model;
             $checkOrphan = $modelObject->getOrphanIds();
@@ -110,6 +110,53 @@ class GetOrphansCommand extends BaseCommand
         $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
     }
 
+    protected function checkFileOrphans($fdEntities, $input, $output)
+    {
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('Remove files of the orphan users? [yes]', true);   
+        
+        $dirFiles = \Aurora\System\Api::DataPath() . "/files";
+        $dirPersonalFiles = $dirFiles . "/private";
+        $dirOrphanFiles = $dirFiles . "/orphan_user_files";
+        $aOrphansEntities = [];
+
+        if (is_dir($dirPersonalFiles)) {
+            $this->logger->info("Checking Personal files.");
+
+            $dirs = array_diff(scandir($dirPersonalFiles), array('..', '.'));
+
+            $users = new \Aurora\Modules\Core\Models\User;
+            $orphanUUIDs = array_values(array_diff($dirs, $users::pluck('UUID')->toArray()));
+          
+            $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;
+            $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
+                        
+            if (!empty($orphanUUIDs)) {
+                $this->logger->error("Personal files orphans were found: " . count($orphanUUIDs));
+
+                if ($input->getOption('remove') && !empty($orphanUUIDs)) {
+                    $bRemove = $helper->ask($input, $output, $question);
+    
+                    if ($bRemove) {
+                        if (!is_dir($dirOrphanFiles)) {
+                            mkdir($dirOrphanFiles); 
+                        }
+    
+                        foreach ($orphanUUIDs as $orphanUUID) {
+                            rename( $dirPersonalFiles."/".$orphanUUID, $dirOrphanFiles."/".$orphanUUID);
+                        }
+    
+                        $this->logger->warning('Orphan user files were moved to ' . $dirOrphanFiles . '.');
+                    } else {
+                        $this->logger->warning('Orphan user files removing was skipped.');
+                    }
+                }
+            } else {
+                $this->logger->info("Personal files orphans were not found.");
+            }
+        }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $verbosityLevelMap = array(
@@ -128,6 +175,7 @@ class GetOrphansCommand extends BaseCommand
 
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
         $this->checkOrphans($fdEntities, $input, $output);
+        $this->checkFileOrphans($fdEntities, $input, $output);
         return Command::SUCCESS;
     }
 }

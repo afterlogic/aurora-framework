@@ -160,7 +160,7 @@ class Model extends Eloquent
     public function getOrphanIds()
     {
         if (!$this->foreignModel || !$this->foreignModelIdColumn) {
-            return ['status' => -1, 'message' => 'Foreign fields doesnt exist'];
+            return ['status' => -1, 'message' => 'Foreign field doesn\'t exist'];
         }
         $tableName = $this->getTable();
         $foreignObject = new $this->foreignModel;
@@ -171,7 +171,7 @@ class Model extends Eloquent
             self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 
-        $message = $orphanIds ? "$tableName table has orphans." : "Orphans didnt found.";
+        $message = $orphanIds ? "$tableName table has orphans: " . count($orphanIds) . "." : "Orphans were not found.";
         $oResult = ['status' => $orphanIds ? 1 : 0, 'message' => $message, 'orphansIds' => $orphanIds];
 
         return $oResult;
