@@ -443,7 +443,7 @@ class Api
 	}
 
 	/**
-	 * @return PDO|false
+	 * @return \PDO|false
 	 */
 	public static function GetPDO()
 	{
