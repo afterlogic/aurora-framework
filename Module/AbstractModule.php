@@ -8,6 +8,7 @@
 namespace Aurora\System\Module;
 
 use Aurora\Api;
+use Illuminate\Support\Str;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -180,6 +181,15 @@ abstract class AbstractModule
 	public function __invoke()
 	{
 		return \Aurora\System\Api::GetModuleDecorator(self::GetName());
+	}
+
+	public static function __callStatic($name, $arguments)
+	{
+		if (Str::startsWith($name, '_')) {
+			$moduleInstance = self::Decorator();
+			$name = substr($name, 1);
+			return call_user_func_array([$moduleInstance, $name], $arguments);	
+		}
 	}
 
 	/**
