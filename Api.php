@@ -12,6 +12,7 @@ use \Aurora\Modules\Core\Models\Tenant;
 use \Aurora\System\Enums\DbType;
 use \Pimple\Container;
 use \Aurora\System\Console\Commands;
+use Aurora\System\Exceptions\ApiException;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -254,6 +255,25 @@ class Api
 	public static function accessCheckIsSkipped()
 	{
 		return self::$__SKIP_CHECK_USER_ROLE__;
+	}
+
+	public static function checkUserAccess($oUser)
+	{
+		if ($oUser) {
+			$oAuthUser = Api::getAuthenticatedUser();
+			switch ($oAuthUser->Role) {
+				case \Aurora\System\Enums\UserRole::TenantAdmin:
+					if ($oUser->IdTenant !== $oAuthUser->IdTenant) {
+						throw new ApiException(Notifications::AccessDenied);
+					}
+					break;
+				case \Aurora\System\Enums\UserRole::NormalUser:
+					if ($oUser->Id !== $oAuthUser->Id) {
+						throw new ApiException(Notifications::AccessDenied);
+					}
+					break;
+			}
+		}
 	}
 
 	/**
