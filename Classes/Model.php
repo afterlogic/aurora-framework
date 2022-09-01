@@ -295,6 +295,17 @@ class Model extends Eloquent
         return $result;
     }
 
+    protected function isEncryptAttribute($attributeName)
+    {
+        $result = false;
+        $casts = $this->getCasts();
+        if (isset($casts[$attributeName]) && $casts[$attributeName] === \Aurora\System\Casts\Encrypt::class) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
     /**
      * @return array
      */
@@ -329,6 +340,12 @@ class Model extends Eloquent
                 }
             }
             unset($array['Properties']);
+        }
+
+        foreach ($array as $key => $value) {
+            if ($this->isEncryptAttribute($key)) {
+                $array[$key] = '*****';
+            }
         }
 
         return $array;
