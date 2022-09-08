@@ -17,7 +17,38 @@ use Composer\Script\Event;
 class Installer
 {
 	/**
-	* This method should be run from composer.
+	* NOTE! This method should be run from composer.
+	*/
+	public static function checkConfigs()
+	{
+		$RED = "\033[1;31m";
+		$YELLOW = "\033[1;33m";
+		$GREEN = "\033[1;32m";
+		$NC = "\033[0m";
+		
+		$sBaseDir = dirname(dirname(__File__));
+		$sModulesDir = $sBaseDir."/modules/";
+		$aModuleDirs = glob($sModulesDir . '*' , GLOB_ONLYDIR);
+
+		foreach ($aModuleDirs as $sModuleDir) {
+			$sModuleName = str_replace($sModulesDir, "", $sModuleDir);
+			
+			$sConfigFile = $sModuleDir."/config.json";
+			if (file_exists($sConfigFile)) {
+				if (json_decode(file_get_contents($sConfigFile))) {
+					echo "Config ".$GREEN."OR".$NC;
+				} else {
+					echo "Config ".$RED."ERROR".$NC;
+				}
+			} else {
+				echo $RED."Config not found".$NC;
+			}
+			echo " ".$sModuleName."\r\n";
+		}
+	}
+	
+	/**
+	* NOTE! This method should be run from composer.
 	*/
     public static function updateConfigs()
 	{
@@ -44,7 +75,7 @@ class Installer
 	}
 
 	/**
-	* This method should be run from composer.
+	* NOTE! This method should be run from composer.
 	*/
     public static function preConfigForce(Event $event)
 	{
@@ -52,7 +83,7 @@ class Installer
 	}
 
 	/**
-	* This method should be run from composer.
+	* NOTE! This method should be run from composer.
 	*/
     public static function preConfigSafe(Event $event)
 	{
@@ -69,7 +100,10 @@ class Installer
 			self::preConfig($event);
 		}
 	}
-
+	
+	/**
+	* NOTE! This method should be run from composer.
+	*/
     private static function preConfig(Event $event)
     {
 		$sConfigFilename = 'pre-config.json';
