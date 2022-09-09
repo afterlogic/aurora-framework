@@ -1484,6 +1484,10 @@ class Api
 	{
 		$iUserId = false;
 
+		if (Api::GetSettings()->GetValue('AdminLogin') === $sPublicId) { // superadmin user
+			return -1;
+		}
+
 		$oUser = User::select('Id')->firstWhere('PublicId', $sPublicId);
 		if ($oUser) {
 			return $oUser->Id;
