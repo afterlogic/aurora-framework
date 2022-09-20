@@ -30,20 +30,42 @@ class Installer
 		$sModulesDir = $sBaseDir."/modules/";
 		$aModuleDirs = glob($sModulesDir . '*' , GLOB_ONLYDIR);
 
+		$aModulesOk = [];
+		$aModulesHasError = [];
+		$aModulesNoConfig = [];
+
 		foreach ($aModuleDirs as $sModuleDir) {
 			$sModuleName = str_replace($sModulesDir, "", $sModuleDir);
 			
 			$sConfigFile = $sModuleDir."/config.json";
 			if (file_exists($sConfigFile)) {
 				if (json_decode(file_get_contents($sConfigFile))) {
-					echo "Config ".$GREEN."OR".$NC;
+					$aModulesOk[] = $sModuleName;
 				} else {
-					echo "Config ".$RED."ERROR".$NC;
+					$aModulesHasError[] = $sModuleName;
 				}
 			} else {
-				echo $RED."Config not found".$NC;
+				$aModulesNoConfig[] = $sModuleName;
 			}
-			echo " ".$sModuleName."\r\n";
+		}
+
+		echo $GREEN.count($aModuleDirs)." modules were processed".$NC."\r\n\r\n";
+
+		if (count($aModulesHasError) > 0) {
+			echo $YELLOW."The following modules have syntax problems in the config file (".count($aModulesHasError)."):".$NC."\r\n";
+			echo $RED.implode("\r\n", $aModulesHasError).$NC;
+			echo "\r\n\r\n";
+		}
+
+		if (count($aModulesNoConfig) > 0) {
+			echo $YELLOW."The following modules have no config files (".count($aModulesNoConfig)."):".$NC."\r\n";
+			echo $RED.implode("\r\n", $aModulesNoConfig).$NC;
+			echo "\r\n\r\n";
+		}
+
+		if (count($aModulesOk) > 0) {
+			echo $GREEN.count($aModulesOk)." modules have no problem with config files".$NC;
+			echo "\r\n";
 		}
 	}
 	
