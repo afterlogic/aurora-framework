@@ -7,7 +7,8 @@
 
 namespace Aurora\System\Classes;
 
-use Illuminate\Database\Capsule\Manager as DB;
+use Aurora\System\EventEmitter;
+use Aurora\System\Validator;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -43,8 +44,16 @@ class Model extends Eloquent
      */
     protected $parentKey = null;
 
+    /**
+     *
+     * @var string
+     */
     protected $foreignModel = '';
 
+    /**
+     *
+     * @var string
+     */
     protected $foreignModelIdColumn  = '';
 
     /**
@@ -53,6 +62,11 @@ class Model extends Eloquent
      * @var array
      */
     protected $parentInheritedAttributes = [];
+
+    /**
+     * @var array
+     */
+    protected $validationRules = [];
 
     /**
      * The name of the "created at" column.
@@ -146,7 +160,7 @@ class Model extends Eloquent
     public function getOrphanIds()
     {
         if (!$this->foreignModel || !$this->foreignModelIdColumn) {
-            return ['status' => -1, 'message' => 'Foreign fields doesnt exist'];
+            return ['status' => -1, 'message' => 'Foreign field doesn\'t exist'];
         }
         $tableName = $this->getTable();
         $foreignObject = new $this->foreignModel;
@@ -157,7 +171,7 @@ class Model extends Eloquent
             self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 
-        $message = $orphanIds ? "$tableName table has orphans." : "Orphans didnt found.";
+        $message = $orphanIds ? "$tableName table has orphans: " . count($orphanIds) . "." : "Orphans were not found.";
         $oResult = ['status' => $orphanIds ? 1 : 0, 'message' => $message, 'orphansIds' => $orphanIds];
 
         return $oResult;
@@ -253,6 +267,15 @@ class Model extends Eloquent
         $this->Properties = $properties;
     }
 
+    public function unsetExtendedProp($key)
+    {
+        $properties = $this->Properties;
+        if (isset($properties[$key])) {
+            unset($properties[$key]);
+        }
+        $this->Properties = $properties;
+    }
+
     public function setExtendedProps($props)
     {
         $properties = is_array($this->Properties) ? $this->Properties : [];
@@ -267,6 +290,17 @@ class Model extends Eloquent
         $result = null;
         if (isset($this->parentType) && is_subclass_of($this->parentType, \Aurora\System\Classes\Model::class)) {
             $result = $this->belongsTo($this->parentType, $this->parentKey, $this->primaryKey);
+        }
+
+        return $result;
+    }
+
+    protected function isEncryptAttribute($attributeName)
+    {
+        $result = false;
+        $casts = $this->getCasts();
+        if (isset($casts[$attributeName]) && $casts[$attributeName] === \Aurora\System\Casts\Encrypt::class) {
+            $result = true;
         }
 
         return $result;
@@ -300,10 +334,18 @@ class Model extends Eloquent
         if (isset($array['Properties'])) {
             foreach ($array['Properties'] as $key => $value) {
                 if ($value !== null) {
+                    $aArgs = ['Model' => $this, 'PropertyName'  => $key];
+                    EventEmitter::getInstance()->emit('System', 'CastExtendedProp', $aArgs, $value);
                     $array[$key] = $value;
                 }
             }
             unset($array['Properties']);
+        }
+
+        foreach ($array as $key => $value) {
+            if ($this->isEncryptAttribute($key)) {
+                $array[$key] = '*****';
+            }
         }
 
         return $array;
@@ -311,6 +353,8 @@ class Model extends Eloquent
 
     public function validate()
     {
+        Validator::validate($this->getAttributes(), $this->validationRules);
+
         return true;
     }
 
@@ -382,5 +426,18 @@ class Model extends Eloquent
     public function getName()
     {
         return \get_class($this);
+    }
+
+    /**
+     * Save the model to the database.
+     *
+     * @param  array  $options
+     * @return bool
+     */
+    public function save(array $options = []) 
+    {
+        if ($this->validate()) {
+            return parent::save($options);
+        }
     }
 }

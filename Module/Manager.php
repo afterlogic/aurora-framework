@@ -141,7 +141,7 @@ class Manager
 	protected function isClientModule($sModuleName)
 	{
 		$sModulePath = $this->GetModulePath($sModuleName);
-		return \file_exists($sModulePath . $sModuleName . '/js/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue-mobile/manager.js');
+		return \file_exists($sModulePath . $sModuleName . '/js/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue-mobile/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue/manager.js');
 	}
 
 	/**

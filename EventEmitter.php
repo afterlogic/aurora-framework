@@ -26,6 +26,10 @@ class EventEmitter
 
     private $iEventLevel = 0;
 
+    /**
+	 *
+	 * @return \self
+	 */
     public static function getInstance()
     {
         if (is_null(self::$self))

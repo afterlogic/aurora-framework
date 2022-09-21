@@ -91,7 +91,7 @@ class Ldap
 			return false;
 		}
 
-		if (!is_resource($this->rLink))
+		if (!(is_resource($this->rLink) || is_object($this->rLink)))
 		{
 			\Aurora\System\Api::Log('LDAP: connect to '.$sHost.':'.$iPort);
 
@@ -146,7 +146,7 @@ class Ldap
 	 */
 	public function ReBind($sBindDb, $sBindPassword)
 	{
-		if (is_resource($this->rLink))
+		if (is_resource($this->rLink) || is_object($this->rLink))
 		{
 			\Aurora\System\Api::Log('LDAP: rebind '.$sBindDb);
 
@@ -196,7 +196,7 @@ class Ldap
 			\Aurora\System\Api::Log('LDAP: search repeat = "'.$this->sSearchDN.'" / '.$sObjectFilter);
 
 			$this->validateLdapErrorOnFalse($this->rSearch);
-			return is_resource($this->rSearch);
+			return is_resource($this->rSearch) || is_object($this->rSearch);
 		}
 		else
 		{
@@ -206,7 +206,7 @@ class Ldap
 			$this->validateLdapErrorOnFalse($this->rSearch);
 
 			$this->sLastRequest = $this->sSearchDN.$sObjectFilter;
-			return is_resource($this->rSearch);
+			return is_resource($this->rSearch) || is_object($this->rSearch);
 		}
 
 		return false;
@@ -343,7 +343,7 @@ class Ldap
 			$rEntry = ldap_next_entry($this->rLink, $rEntry);
 			$iCurrent++;
 		}
-		while ($iCurrent < $iEnd && is_resource($rEntry));
+		while ($iCurrent < $iEnd && (is_resource($rEntry) || is_object($rEntry)));
 
 		return $bAsc ? $aList : array_reverse($aList);
 	}

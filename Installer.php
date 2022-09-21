@@ -17,7 +17,60 @@ use Composer\Script\Event;
 class Installer
 {
 	/**
-	* This method should be run from composer.
+	* NOTE! This method should be run from composer.
+	*/
+	public static function checkConfigs()
+	{
+		$RED = "\033[1;31m";
+		$YELLOW = "\033[1;33m";
+		$GREEN = "\033[1;32m";
+		$NC = "\033[0m";
+		
+		$sBaseDir = dirname(dirname(__File__));
+		$sModulesDir = $sBaseDir."/modules/";
+		$aModuleDirs = glob($sModulesDir . '*' , GLOB_ONLYDIR);
+
+		$aModulesOk = [];
+		$aModulesHasError = [];
+		$aModulesNoConfig = [];
+
+		foreach ($aModuleDirs as $sModuleDir) {
+			$sModuleName = str_replace($sModulesDir, "", $sModuleDir);
+			
+			$sConfigFile = $sModuleDir."/config.json";
+			if (file_exists($sConfigFile)) {
+				if (json_decode(file_get_contents($sConfigFile))) {
+					$aModulesOk[] = $sModuleName;
+				} else {
+					$aModulesHasError[] = $sModuleName;
+				}
+			} else {
+				$aModulesNoConfig[] = $sModuleName;
+			}
+		}
+
+		echo $GREEN.count($aModuleDirs)." modules were processed".$NC."\r\n\r\n";
+
+		if (count($aModulesHasError) > 0) {
+			echo $YELLOW."The following modules have syntax problems in the config file (".count($aModulesHasError)."):".$NC."\r\n";
+			echo $RED.implode("\r\n", $aModulesHasError).$NC;
+			echo "\r\n\r\n";
+		}
+
+		if (count($aModulesNoConfig) > 0) {
+			echo $YELLOW."The following modules have no config files (".count($aModulesNoConfig)."):".$NC."\r\n";
+			echo $RED.implode("\r\n", $aModulesNoConfig).$NC;
+			echo "\r\n\r\n";
+		}
+
+		if (count($aModulesOk) > 0) {
+			echo $GREEN.count($aModulesOk)." modules have no problem with config files".$NC;
+			echo "\r\n";
+		}
+	}
+	
+	/**
+	* NOTE! This method should be run from composer.
 	*/
     public static function updateConfigs()
 	{
@@ -44,7 +97,7 @@ class Installer
 	}
 
 	/**
-	* This method should be run from composer.
+	* NOTE! This method should be run from composer.
 	*/
     public static function preConfigForce(Event $event)
 	{
@@ -52,7 +105,7 @@ class Installer
 	}
 
 	/**
-	* This method should be run from composer.
+	* NOTE! This method should be run from composer.
 	*/
     public static function preConfigSafe(Event $event)
 	{
@@ -69,7 +122,10 @@ class Installer
 			self::preConfig($event);
 		}
 	}
-
+	
+	/**
+	* NOTE! This method should be run from composer.
+	*/
     private static function preConfig(Event $event)
     {
 		$sConfigFilename = 'pre-config.json';

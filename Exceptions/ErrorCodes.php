@@ -17,6 +17,7 @@ class ErrorCodes
 	// users
 	const UserManager_AccountCreateFailed = 1002;
 	const UserManager_AccountUpdateFailed = 1003;
+	const UsersManager_UserCreateFailed = 1012;
 
 	const UserManager_AccountOldPasswordNotCorrect = 1020;
 	const UserManager_AccountNewPasswordUpdateError = 1021;

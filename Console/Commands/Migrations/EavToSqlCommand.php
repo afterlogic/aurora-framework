@@ -75,10 +75,14 @@ class EavToSqlCommand extends BaseCommand
 
         $sql = "TRUNCATE `" . $this->oP8Settings->DBPrefix . "core_min_hashes`;";
         $oConnection->execute($sql);
-        $sql = "INSERT INTO " . $this->oP8Settings->DBPrefix . "core_min_hashes (`HashId`, `UserId`,`Hash`, `Data`, `ExpireDate`)
-        SELECT *
-        FROM " . $this->oP8Settings->DBPrefix . "min_hashes;";
+        $sql = "SELECT * FROM " . $this->oP8Settings->DBPrefix . "min_hashes;";
         $oConnection->execute($sql);
+        if ($oConnection->ResultCount() > 0) {
+            $sql = "INSERT INTO " . $this->oP8Settings->DBPrefix . "core_min_hashes (`HashId`, `UserId`,`Hash`, `Data`, `ExpireDate`)
+            SELECT *
+            FROM " . $this->oP8Settings->DBPrefix . "min_hashes;";
+            $oConnection->execute($sql);
+        }
         return true;
     }
 

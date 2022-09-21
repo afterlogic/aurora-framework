@@ -12,6 +12,7 @@ use \Aurora\Modules\Core\Models\Tenant;
 use \Aurora\System\Enums\DbType;
 use \Pimple\Container;
 use \Aurora\System\Console\Commands;
+use Aurora\System\Exceptions\ApiException;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -256,6 +257,25 @@ class Api
 		return self::$__SKIP_CHECK_USER_ROLE__;
 	}
 
+	public static function checkUserAccess($oUser)
+	{
+		if ($oUser) {
+			$oAuthUser = Api::getAuthenticatedUser();
+			switch ($oAuthUser->Role) {
+				case \Aurora\System\Enums\UserRole::TenantAdmin:
+					if ($oUser->IdTenant !== $oAuthUser->IdTenant) {
+						throw new ApiException(Notifications::AccessDenied);
+					}
+					break;
+				case \Aurora\System\Enums\UserRole::NormalUser:
+					if ($oUser->Id !== $oAuthUser->Id) {
+						throw new ApiException(Notifications::AccessDenied);
+					}
+					break;
+			}
+		}
+	}
+
 	/**
 	 * @param string $sWord
 	 *
@@ -443,7 +463,7 @@ class Api
 	}
 
 	/**
-	 * @return PDO|false
+	 * @return \PDO|false
 	 */
 	public static function GetPDO()
 	{
@@ -1463,6 +1483,10 @@ class Api
 	public static function getUserIdByPublicId($sPublicId)
 	{
 		$iUserId = false;
+
+		if (Api::GetSettings()->GetValue('AdminLogin') === $sPublicId) { // superadmin user
+			return -1;
+		}
 
 		$oUser = User::select('Id')->firstWhere('PublicId', $sPublicId);
 		if ($oUser) {
