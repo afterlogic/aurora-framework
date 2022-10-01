@@ -27,4 +27,12 @@ abstract class AbstractEnumeration
 	{
 		return $this->aConsts;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public static function validateValue($value)
+	{
+		return in_array($value, array_values((new static())->getMap()));
+	}
 }
