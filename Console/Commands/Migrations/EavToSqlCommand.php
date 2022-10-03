@@ -2,7 +2,6 @@
 
 namespace Aurora\System\Console\Commands\Migrations;
 
-use Aurora\System\Api;
 use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Capsule\Manager as DB;
 use Symfony\Component\Console\Command\Command;
@@ -14,15 +13,35 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use \Illuminate\Database\Capsule\Manager as Capsule;
+use \Aurora\System\EAV\Query as EavQuery;
+use Aurora\System\Managers\Eav;
 
 class EavToSqlCommand extends BaseCommand
 {
-    private $sFilePrefix = 'eav-to-sql-';
-
-    private $iOffset = 0;
-    private $iLimit = 1000;
+    /**
+     * @var \Aurora\System\Settings
+     */
     private $oP8Settings = false;
+
+    /**
+     * @var ConsoleLogger
+     */
     private $logger = false;
+
+    const MailAccountClass = 'Aurora\Modules\Mail\Classes\Account';
+    const OAuthAccountClass = 'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account';
+    const MailSenderClass = 'Aurora\Modules\Mail\Classes\Sender';
+    const StandardAccountClass = 'Aurora\Modules\StandardAuth\Classes\Account';
+    const GroupContactClass = 'Aurora\Modules\Contacts\Classes\GroupContact';
+    const ContactClass = 'Aurora\Modules\Contacts\Classes\Contact';
+    const GroupClass = 'Aurora\Modules\Contacts\Classes\Group';
+    const UserClass = 'Aurora\Modules\Core\Classes\User';
+    const TenantClass = 'Aurora\Modules\Core\Classes\Tenant';
+
+    const MailAccountModel = 'Aurora\Modules\Mail\Models\MailAccount';
+    const OAuthAccountModel = 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount';
+    const MailSenderModel = 'Aurora\Modules\Mail\Models\TrustedSender';
+
 
     /**
      * @return void
@@ -45,16 +64,19 @@ class EavToSqlCommand extends BaseCommand
             );
     }
 
-    protected function getProperties($class, $object)
+    protected function getProperties($sEntityType, $props)
     {
-        $extendedPropsUser = \Aurora\System\ObjectExtender::getInstance()->getExtendedProps($class);
-        $extendedProps = [];
-        foreach (array_keys($extendedPropsUser) as $extendedProp) {
-            if ($object->get($extendedProp)) {
-                $extendedProps[$extendedProp] = $object->get($extendedProp);
+        $result = [];
+
+        foreach ($props as $key => $val) {
+            if (strpos($key, '::') !== false) {
+                settype($val, Eav::getInstance()->getAttributeType($sEntityType, $key));
+                $result[$key] = $val;
             }
         }
-        return $extendedProps;
+
+        return $result;
+
     }
 
     protected function rewriteFile($fd, $str)
@@ -110,7 +132,6 @@ class EavToSqlCommand extends BaseCommand
             $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
             $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
             $model = explode(DIRECTORY_SEPARATOR, $model);
-            $modelClass = [];
 
             while ($model[0] !== 'modules') {
                 array_shift($model);
@@ -147,7 +168,6 @@ class EavToSqlCommand extends BaseCommand
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $migrateEntitiesList = [];
-        $offset = 0;
         $time = new \DateTime();
         $time = $time->format('YmdHis');
         $intProgress = 0;
@@ -210,7 +230,6 @@ class EavToSqlCommand extends BaseCommand
                     }
                 }
                     $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
-                    $offset = count($cItems);
                 } else {
                     if(!$defaultAnswer){
                     $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", $defaultAnswer);
@@ -274,28 +293,27 @@ class EavToSqlCommand extends BaseCommand
         $contactsCache = [];
         $groupsCache = [];
         $migrateArray = [];
-        $truncatedTables = [];
 
         $modelsMap = [
-            'Aurora\Modules\Mail\Classes\Account' => 'Aurora\Modules\Mail\Models\MailAccount',
-            'Aurora\Modules\OAuthIntegratorWebclient\Classes\Account' => 'Aurora\Modules\OAuthIntegratorWebclient\Models\OauthAccount',
-            'Aurora\Modules\Mail\Classes\Sender' => 'Aurora\Modules\Mail\Models\TrustedSender'
+            self::MailAccountClass => self::MailAccountModel,
+            self::OAuthAccountClass => self::OAuthAccountModel,
+            self::MailSenderClass => self::MailSenderModel
         ];
 
-        foreach ($entities as $i => $entity) {
+        foreach ($entities as $entity) {
             try {
                 $migrateArray = ['Id' => $entity->id];
-                if (!class_exists($entity->entity_type)) {
-                    $missedEntities[$entity->entity_type][] = $entity->id;
-                    $missedIds[] = $entity->id;
-                    $this->logger->warning("Didn't find EAV class for entity with id $entity->id, skipping.");
+                // if (!class_exists($entity->entity_type)) {
+                //     $missedEntities[$entity->entity_type][] = $entity->id;
+                //     $missedIds[] = $entity->id;
+                //     $this->logger->warning("Didn't find EAV class for entity with id $entity->id, skipping.");
 
-                    $progressBar->advance();
-                    continue;
-                }
+                //     $progressBar->advance();
+                //     continue;
+                // }
 
                 $aItem = collect(
-                    (new \Aurora\System\EAV\Query($entity->entity_type))
+                    (new EavQuery($entity->entity_type))
                         ->where(['EntityId' => $entity->id])
                         ->asArray()
                         ->exec()
@@ -304,27 +322,32 @@ class EavToSqlCommand extends BaseCommand
 
                 switch ($entity->entity_type) {
 
-                    case 'Aurora\Modules\StandardAuth\Classes\Account':
-                        $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
-                                ->where(['EntityId' => [$entity->id, '=']])
+                    case self::StandardAccountClass:
+                        $aSubItem = collect((new EavQuery($entity->entity_type))
+                                ->select(['Login', 'Password'])
+                                ->where(['EntityId' => $entity->id])
+                                ->asArray()
                                 ->exec())->first();
-                        $password = str_replace($oItem->Login, '', $oItem->Password);
-                        $migrateArray['Password'] = $password;
+                        $migrateArray['Password'] = str_replace($aSubItem['Login'], '', $aSubItem['Password']);
                         break;
 
-                    case 'Aurora\Modules\Mail\Classes\Account':
-                        $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
-                                ->where(['EntityId' => [$entity->id, '=']])
+                    case self::MailAccountClass:
+                        $aSubItem = collect((new EavQuery($entity->entity_type))
+                                ->select(['IncomingLogin', 'IncomingPassword'])
+                                ->where(['EntityId' => $entity->id])
+                                ->asArray()
                                 ->exec())->first();
-                        $migrateArray['IncomingPassword'] = $oItem->getPassword();
+                        
+                        $migrateArray['IncomingPassword'] = substr($aSubItem['IncomingPassword'], strlen($aSubItem['IncomingLogin']) + 1);
                         break;
 
-                    case 'Aurora\Modules\Contacts\Classes\GroupContact':
+                    case self::GroupContactClass:
                         if (isset($contactsCache[$aItem['ContactUUID']])) {
                             $migrateArray['ContactId'] = $contactsCache[$aItem['ContactUUID']];
                         } else {
                             $contact = collect(
-                                (new \Aurora\System\EAV\Query('Aurora\Modules\Contacts\Classes\Contact'))
+                                (new EavQuery(self::ContactClass))
+                                    ->select(['EntityId'])
                                     ->where(['UUID' => $aItem['ContactUUID']])
                                     ->asArray()
                                     ->exec()
@@ -338,7 +361,8 @@ class EavToSqlCommand extends BaseCommand
                             $migrateArray['GroupId'] = $groupsCache[$aItem['GroupUUID']];
                         } else {
                             $group = collect(
-                                (new \Aurora\System\EAV\Query('Aurora\Modules\Contacts\Classes\Group'))
+                                (new EavQuery(self::GroupClass))
+                                    ->select(['EntityId'])
                                     ->where(['UUID' => $aItem['GroupUUID']])
                                     ->asArray()
                                     ->exec()
@@ -352,14 +376,14 @@ class EavToSqlCommand extends BaseCommand
                         break;
                 }
 
-                $properties = $this->getProperties($entity->entity_type, collect($aItem));
+                $properties = $this->getProperties($entity->entity_type, $aItem);
                 if ($properties) {
                     $migrateArray['Properties'] = $properties;
                 }
 
-                if ($entity->entity_type === 'Aurora\Modules\Core\Classes\User' || $entity->entity_type === 'Aurora\Modules\Core\Classes\Tenant') {
-                    $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
-                            ->where(['EntityId' => [$entity->id, '=']])
+                if ($entity->entity_type === self::UserClass || $entity->entity_type === self::TenantClass) {
+                    $oItem = collect((new EavQuery($entity->entity_type))
+                            ->where(['EntityId' => $entity->id])
                             ->exec()
                     )->first();
                     $disabledModules = $oItem->getDisabledModules();
@@ -367,14 +391,14 @@ class EavToSqlCommand extends BaseCommand
                         $migrateArray['Properties']['DisabledModules'] = implode('|', $disabledModules);
                     }
                 }
-                $newRow = $laravelModel::create(array_merge($aItem, $migrateArray));
+                $aItem = array_merge($aItem, $migrateArray);
+                $newRow = $laravelModel::create($aItem);
 
                 $this->rewriteFile($fdProgress, $entity->id);
                 $progressBar->advance();
 
             } catch (\Illuminate\Database\QueryException $e) {
                 $errorCode = $e->getCode();
-                $errorMessage = $e->getMessage();
                 $shortErrorMessage = $e->errorInfo[2];
                 $missedEntities[$entity->entity_type][] = $entity->id;
                 $missedIds[] = $entity->id;

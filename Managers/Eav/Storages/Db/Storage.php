@@ -309,7 +309,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 		}
 		else if (count($aViewAttrs) === 0)
 		{
-			$aViewAttrs = \Aurora\System\EAV\Entity::createInstance($sType)->getAttributesKeys();
+			$aViewAttrs = array_keys($this->getAttributesNamesByEntityType($sType));
 		}
 		if ($this->oConnection)
 		{
@@ -449,17 +449,23 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	public function getAttributesNamesByEntityType($sEntityTypes)
 	{
 		$aResult = [];
-		if ($this->oConnection->Execute(
-			$this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes)))
-		{
-			while (false !== ($oRow = $this->oConnection->GetNextRecord()))
-			{
-				$aResult[] = $oRow->name;
+
+		if (!isset(\Aurora\System\EAV\Entity::$aStaticMapCache[$sEntityTypes])) {
+			foreach (\Aurora\System\EAV\Entity::getTypes() as $sSqlType) {
+				if ($sSqlType !== 'nodb') {
+					if ($this->oConnection->Execute(
+						$this->oCommandCreator->getAttributesNamesByEntityType($sEntityTypes, $sSqlType))) {
+						while (false !== ($oRow = $this->oConnection->GetNextRecord())) {
+							$aResult[$oRow->name] = [$sSqlType];
+						}
+					}
+				}
 			}
 
+			\Aurora\System\EAV\Entity::$aStaticMapCache[$sEntityTypes] = $aResult;
 		}
 
-		return $aResult;
+		return \Aurora\System\EAV\Entity::$aStaticMapCache[$sEntityTypes];
 	}
 
 	public function testConnection()

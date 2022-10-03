@@ -451,110 +451,107 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 
 		$oEntity = \Aurora\System\EAV\Entity::createInstance($sEntityType);
 
-		if ($oEntity instanceof $sEntityType)
+		$aResultViewAttributes = [
+			'EntityId' => 'entities.id as attr_EntityId',
+			'UUID' => 'entities.uuid as attr_UUID',
+			'ParentUUID' => 'entities.parent_uuid as attr_ParentUUID',
+			'EntityType' => 'entities.entity_type as attr_EntityType',
+			'ModuleName' => 'entities.module_name as attr_ModuleName'
+		];
+		$aResultWhereAttributes = [];
+
+		if ($aViewAttributes === null)
 		{
-			$aResultViewAttributes = [
-				'EntityId' => 'entities.id as attr_EntityId',
-				'UUID' => 'entities.uuid as attr_UUID',
-				'ParentUUID' => 'entities.parent_uuid as attr_ParentUUID',
-				'EntityType' => 'entities.entity_type as attr_EntityType',
-				'ModuleName' => 'entities.module_name as attr_ModuleName'
-			];
-			$aResultWhereAttributes = [];
+			$aViewAttributes = [];
+		} 
+		if (!is_array($mOrderAttributes) && !empty($mOrderAttributes))
+		{
+			$mOrderAttributes = [$mOrderAttributes];
+		}
 
-			if ($aViewAttributes === null)
+		$aWhereAttributes = [];
+		$aOrderWhere = [];
+		$aOrderAttributes = [];
+		if (is_array($mOrderAttributes) && count($mOrderAttributes) > 0)
+		{
+			foreach ($mOrderAttributes as $sOrderAttribute)
 			{
-				$aViewAttributes = [];
-			}
-			if (!is_array($mOrderAttributes) && !empty($mOrderAttributes))
-			{
-				$mOrderAttributes = [$mOrderAttributes];
-			}
-
-			$aWhereAttributes = [];
-			$aOrderWhere = [];
-			$aOrderAttributes = [];
-			if (is_array($mOrderAttributes) && count($mOrderAttributes) > 0)
-			{
-				foreach ($mOrderAttributes as $sOrderAttribute)
+				if (!$oEntity->isNodbAttribute($sOrderAttribute))
 				{
-					if (!$oEntity->isNodbAttribute($sOrderAttribute))
+					if (!in_array($sOrderAttribute, $aWhereAttributes))
 					{
-						if (!in_array($sOrderAttribute, $aWhereAttributes))
-						{
-							$aWhereAttributes[] = $sOrderAttribute;
-						}
-						$aOrderWhere[] = sprintf("`tbl_%s`.`value`", $sOrderAttribute) . ' IS NOT NULL';
+						$aWhereAttributes[] = $sOrderAttribute;
 					}
-					$aOrderAttributes[] = sprintf("`attr_%s`", $sOrderAttribute);
+					$aOrderWhere[] = sprintf("`tbl_%s`.`value`", $sOrderAttribute) . ' IS NOT NULL';
 				}
+				$aOrderAttributes[] = sprintf("`attr_%s`", $sOrderAttribute);
+			}
 
-				$aOrderAttributes = array_map(function ($sSortField) use ($iSortOrder) {
-					return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
-				}, $aOrderAttributes);
+			$aOrderAttributes = array_map(function ($sSortField) use ($iSortOrder) {
+				return $sSortField . ' ' . ($iSortOrder === \Aurora\System\Enums\SortOrder::ASC ? "ASC" : "DESC");
+			}, $aOrderAttributes);
 
-				if (count($aOrderAttributes) > 0)
+			if (count($aOrderAttributes) > 0)
+			{
+				$sResultSort = 'ORDER BY ' . implode(', ', $aOrderAttributes);
+				if (count($aOrderWhere) > 0)
 				{
-					$sResultSort = 'ORDER BY ' . implode(', ', $aOrderAttributes);
-					if (count($aOrderWhere) > 0)
-					{
-						$sResultWhere .= ' AND ' . implode(' AND ', $aOrderWhere);
-					}
-				}
-				else
-				{
-					$sResultSort = 'ORDER BY ' . implode(', ', $aOrderAttributes);
+					$sResultWhere .= ' AND ' . implode(' AND ', $aOrderWhere);
 				}
 			}
 			else
 			{
-				$sResultSort = 'ORDER BY attr_EntityId';
+				$sResultSort = 'ORDER BY ' . implode(', ', $aOrderAttributes);
 			}
+		}
+		else
+		{
+			$sResultSort = 'ORDER BY attr_EntityId';
+		}
 
-			if (0 < count($aWhere))
-			{
-				$sResultWhere .= ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttributes);
-			}
+		if (0 < count($aWhere))
+		{
+			$sResultWhere .= ' AND ' . $this->prepareWhere($aWhere, $oEntity, $aWhereAttributes);
+		}
 
-			foreach ($aViewAttributes as $sAttribute)
+		foreach ($aViewAttributes as $sAttribute)
+		{
+			if (!$oEntity->isSystemAttribute($sAttribute))
 			{
-				if (!$oEntity->isSystemAttribute($sAttribute))
+				if (!$oEntity->isNodbAttribute($sAttribute))
 				{
-					if (!$oEntity->isNodbAttribute($sAttribute))
-					{
-						$aResultViewAttributes[$sAttribute] = $this->getSelectSubquery(
-							$sAttribute,
-							$oEntity->getType($sAttribute)
-						);
-					}
-				}
-			}
-			foreach ($aWhereAttributes as $sAttribute)
-			{
-				if (!$oEntity->isSystemAttribute($sAttribute))
-				{
-					$aResultWhereAttributes[$sAttribute] = $this->getJoinSubquery(
+					$aResultViewAttributes[$sAttribute] = $this->getSelectSubquery(
 						$sAttribute,
 						$oEntity->getType($sAttribute)
 					);
-					$aResultViewAttributes[$sAttribute] = sprintf('
-	`tbl_%s`.`value` as `attr_%s`', $sAttribute, $sAttribute);
 				}
 			}
-			if (0 < count($aResultWhereAttributes))
+		}
+		foreach ($aWhereAttributes as $sAttribute)
+		{
+			if (!$oEntity->isSystemAttribute($sAttribute))
 			{
-				$sWhereAttributes = implode(' ', $aResultWhereAttributes);
+				$aResultWhereAttributes[$sAttribute] = $this->getJoinSubquery(
+					$sAttribute,
+					$oEntity->getType($sAttribute)
+				);
+				$aResultViewAttributes[$sAttribute] = sprintf('
+`tbl_%s`.`value` as `attr_%s`', $sAttribute, $sAttribute);
 			}
-			if (0 < count($aResultViewAttributes))
-			{
-				$sViewAttributes = implode(', ', $aResultViewAttributes);
-			}
+		}
+		if (0 < count($aResultWhereAttributes))
+		{
+			$sWhereAttributes = implode(' ', $aResultWhereAttributes);
+		}
+		if (0 < count($aResultViewAttributes))
+		{
+			$sViewAttributes = implode(', ', $aResultViewAttributes);
+		}
 
-			if ($iLimit > 0)
-			{
-				$sLimit = sprintf("LIMIT %d", $iLimit);
-				$sOffset = sprintf("OFFSET %d", $iOffset);
-			}
+		if ($iLimit > 0)
+		{
+			$sLimit = sprintf("LIMIT %d", $iLimit);
+			$sOffset = sprintf("OFFSET %d", $iOffset);
 		}
 
 		$sSql = sprintf("
@@ -690,21 +687,13 @@ ON DUPLICATE KEY UPDATE
 			$this->prefix(), $sType, $iEntityId, $this->escapeString($sAttribute));
 	}
 
-	public function getAttributesNamesByEntityType($sEntityType)
+	public function getAttributesNamesByEntityType($sEntityType, $sSqlType)
 	{
 		$sSubSql = "
 (SELECT DISTINCT name FROM %seav_attributes_%s as attrs, %seav_entities as entities
 	WHERE entity_type = %s AND entities.id = attrs.id_entity)
 ";
-
-		foreach (\Aurora\System\EAV\Entity::getTypes() as $sSqlType)
-		{
-			$aSql[] = sprintf($sSubSql, $this->prefix(), $sSqlType, $this->prefix(), $this->escapeString($sEntityType));
-		}
-		$sSql = implode("UNION ALL
-", $aSql);
-
-		return $sSql;
+		return sprintf($sSubSql, $this->prefix(), $sSqlType, $this->prefix(), $this->escapeString($sEntityType));
 	}
 
 	public function getEntityAttributeCount($sTypeName, $sAttributeName, $sEntityType)
