@@ -170,7 +170,7 @@ class Installer
 							}
 							else
 							{
-								echo "\r\nInvalid setting '" . $sConfigName . "' in module '" . $sModuleName . "'";
+								echo "\r\nInvalid setting '" . $sConfigName . "' in module '" . $sModuleName . "'\r\n";
 							}
 						}
 					}
