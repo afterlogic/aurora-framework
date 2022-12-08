@@ -103,35 +103,22 @@ class Entity
 
 	/**
 	 *
-	 * @var string
-	 */
-	public $sClassName = null;
-
-	public static $aStaticMapCache = [];
-
-	/**
-	 *
 	 * @param string $sClassName
 	 * @param string $sModuleName
 	 * @return \Aurora\System\EAV\Entity
 	 */
 	public static function createInstance($sClassName, $sModuleName = '')
 	{
-		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new self($sModuleName, $sClassName);
+		return class_exists($sClassName) ? (new $sClassName($sModuleName)) : new self($sModuleName);
 	}
 
 	/**
 	 * @param string $sModuleName = ''
 	 */
-	public function __construct($sModuleName = '', $sClassName = '')
+	public function __construct($sModuleName = '')
 	{
 		$this->ModuleName = $sModuleName;
 		$this->UUID = self::generateUUID();
-
-		if (empty($sClassName)) {
-			$sClassName = self::class;
-		}
-		$this->sClassName = $sClassName;
 
 		$this->initDefaults();
 	}
@@ -145,13 +132,11 @@ class Entity
 	{
 		foreach ($this->getMap() as $sKey => $aMap)
 		{
-			if (isset($aMap[1])) {
-				$oAttribute = $this->initAttribute($sKey, $aMap[1]);
-				if ($oAttribute)
-				{
-					$oAttribute->IsDefault = true;
-					$this->setAttribute($oAttribute);
-				}
+			$oAttribute = $this->initAttribute($sKey, $aMap[1]);
+			if ($oAttribute)
+			{
+				$oAttribute->IsDefault = true;
+				$this->setAttribute($oAttribute);
 			}
 		}
 	}
@@ -836,13 +821,7 @@ class Entity
 	 */
 	public function getStaticMap()
 	{
-		$aStaticMap = is_array($this->aStaticMap) ? $this->aStaticMap : [];
-
-		if (count($aStaticMap) === 0) {
-			$this->aStaticMap = \Aurora\System\Managers\Eav::getInstance()->getAttributesNamesByEntityType($this->sClassName);
-		}
-
-		return $this->aStaticMap;
+		return is_array($this->aStaticMap) ? $this->aStaticMap : [];
 	}
 
 	/**

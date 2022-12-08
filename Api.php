@@ -590,7 +590,7 @@ class Api
 	 * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
 	 * @param string $sFilePrefix = ''
 	 */
-	public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = '')
+	public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = 'error-')
 	{
 		Logger::LogException($mObject, $iLogLevel, $sFilePrefix);
 	}
@@ -1700,7 +1700,7 @@ class Api
                 $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
 
                 $app->add(new Commands\Migrations\EavToSqlCommand());
-//				$app->add(new Commands\Migrations\EavToSqlCommandV1());
+				$app->add(new Commands\Migrations\EavToSqlCommandV1());
 				$app->add(new Commands\GetOrphansCommand());
 
                 return $app;

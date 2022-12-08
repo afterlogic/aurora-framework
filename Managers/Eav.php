@@ -177,19 +177,10 @@ class Eav
 		return $aTypes;
 	}
 
+
 	public function getAttributesNamesByEntityType($sType)
 	{
 		return $this->oStorage->getAttributesNamesByEntityType($sType);
-	}
-
-	public function getAttributeType($sEntityType, $sAttribute)
-	{
-		$aAttributes = $this->getAttributesNamesByEntityType($sEntityType);
-		if (isset($aAttributes[$sAttribute])) {
-			return $aAttributes[$sAttribute][0];
-		} else {
-			return 'string';
-		}
 	}
 
 	/**
