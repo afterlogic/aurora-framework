@@ -122,6 +122,7 @@ class Manager
 				}
 				else
 				{
+					$this->FlushModuleSettings($sModuleName);
 //					\Aurora\System\Api::Log('Module ' . $sModuleName . ' is not allowed. $bIsModuleDisabledForUser = ' . $bIsModuleDisabledForUser . '. $bModuleIsDisabled = ' . $bModuleIsDisabled . '.');
 				}
 			}
@@ -536,6 +537,17 @@ class Manager
 		}
 
 		return $this->aModulesSettings[strtolower($sModuleName)];
+	}
+
+	/**
+	 * @param string $sModuleName
+	 * @return void
+	 */
+	public function FlushModuleSettings($sModuleName)
+	{
+		if (isset($this->aModulesSettings[strtolower($sModuleName)])) {
+			unset($this->aModulesSettings[strtolower($sModuleName)]);
+		}
 	}
 
 	/**

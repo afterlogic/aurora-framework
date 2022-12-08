@@ -1,39 +1,30 @@
 <?php
-/**
- * This code is licensed under AGPLv3 license or Afterlogic Software License
- * if commercial version of the product was purchased.
- * For full statements of the licenses see LICENSE-AFTERLOGIC and LICENSE-AGPL3 files.
+/*
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
+ * @license AGPL-3.0
  *
- * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
- * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
- * @copyright Copyright (c) 2019, Afterlogic Corp.
+ * This code is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License, version 3,
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-$sCurrentFile = \basename(__FILE__);
-$sRequestUri = empty($_SERVER['REQUEST_URI']) ? '' : \trim($_SERVER['REQUEST_URI']);
-
-$iLen = 4 + \strlen($sCurrentFile);
-if (\strlen($sRequestUri) >= $iLen && 'dav/'.$sCurrentFile === \substr($sRequestUri, -$iLen))
-{
-	\header('Location: ./server.php/');
-	exit();
-}
-
-require_once \dirname(__FILE__).'/../autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 \Aurora\System\Api::Init();
 
+use Illuminate\Support\Str;
 
-//http_response_code(401); exit;
+if (Str::endsWith($_SERVER['REQUEST_URI'], basename($_SERVER['SCRIPT_FILENAME']))) {
+    \header('Location: ' . $_SERVER['REQUEST_URI'] . '/');
+    exit;
+}
 
-\set_time_limit(3000);
-\set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-	throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-});
-
-// CApi::$bUseDbLog = false;
-
-$sBaseUri = false === \strpos($sRequestUri, 'dav/'.$sCurrentFile) ? '/' :
-	\substr($sRequestUri, 0, \strpos($sRequestUri,'/'.$sCurrentFile)).'/'.$sCurrentFile.'/';
-
-\Afterlogic\DAV\Server::getInstance($sBaseUri)->exec();
+\Afterlogic\DAV\Server::getInstance()->exec();
