@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Managers\Eav\Storages\Db;
 
+use Aurora\System\Exceptions\Errs;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -31,7 +33,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 
 	/**
 	 *
-	 * @param \Aurora\System\Managers\AbstractManager $oManager
+	 * @param \Aurora\System\Managers\Eav $oManager
 	 */
 	public function __construct(\Aurora\System\Managers\Eav &$oManager)
 	{
@@ -136,8 +138,8 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 
 	/**
 	 *
-	 * @param type $mIdOrUUID
-	 * @return type
+	 * @param mixed $mIdOrUUID
+	 * @return string
 	 */
 	public function getEntityType($mIdOrUUID)
 	{

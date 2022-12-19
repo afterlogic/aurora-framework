@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Module;
 
+use Aurora\Modules\Licensing\Module as LicensingModule;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -29,7 +31,7 @@ abstract class AbstractLicensedModule extends AbstractModule
 		if (!isset($this->isValid))
 		{
 			$oLicensing = \Aurora\System\Api::GetModule('Licensing');
-			$this->isValid = $oLicensing ? ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName())) : false;
+			$this->isValid = $oLicensing instanceof LicensingModule ? ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName())) : false;
 		}
 
 		return $this->isValid;

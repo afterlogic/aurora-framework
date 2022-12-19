@@ -368,9 +368,9 @@ class Api
 
 	/**
 	 *
-	 * @param type $sMethodName
-	 * @param type $aParameters
-	 * @return type
+	 * @param string $sMethodName
+	 * @param array $aParameters
+	 * @return mixed
 	 */
 	public static function ExecuteMethod($sMethodName, $aParameters = array())
 	{

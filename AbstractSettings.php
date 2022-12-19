@@ -71,7 +71,7 @@ abstract class AbstractSettings
 
 	/**
 	 *
-	 * @param type $sName
+	 * @param mixed $sName
 	 */
 	public function __get($sName)
 	{

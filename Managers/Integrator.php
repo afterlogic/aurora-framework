@@ -119,7 +119,7 @@ class Integrator extends AbstractManager
 
 		$sCacheFileName = '';
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if ($oSettings && $oSettings->GetConf('CacheTemplates', $this->bCache))
+		if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache))
 		{
 			$sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
 			$sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
@@ -173,7 +173,7 @@ class Integrator extends AbstractManager
 
 		$sResult = trim($sResult);
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if ($oSettings && $oSettings->GetConf('CacheTemplates', $this->bCache))
+		if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache))
 		{
 			if (!is_dir(dirname($sCacheFullFileName)))
 			{
@@ -263,7 +263,7 @@ class Integrator extends AbstractManager
 
 		$sCacheFileName = '';
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if ($oSettings && $oSettings->GetConf('CacheLangs', $this->bCache))
+		if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache))
 		{
 			$sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version().$sHash) . '.cache';
 			$sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
@@ -311,7 +311,7 @@ class Integrator extends AbstractManager
 			$sResult .= json_encode($aResult);
 
 			$oSettings =& \Aurora\System\Api::GetSettings();
-			if ($oSettings && $oSettings->GetConf('CacheLangs', $this->bCache))
+			if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache))
 			{
 				if (!is_dir(dirname($sCacheFullFileName)))
 				{
@@ -665,173 +665,6 @@ class Integrator extends AbstractManager
 	}
 
 	/**
-	 * @param int $iIdTenant
-	 * @param string $sEmail
-	 * @param string $sPassword
-	 *
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountSystemAuthentication) 6008
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UnactivatedUser) 6010
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountAuthentication) 6004
-	 *
-	 * @return CHelpdeskUser|null|bool
-	 */
-	public function loginToHelpdeskAccount($iIdTenant, $sEmail, $sPassword)
-	{
-		$oResult = null;
-
-//		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
-//		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
-		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
-		{
-			return false;
-		}
-
-		$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
-		if ($oAccount && $oAccount->IdTenant === $iIdTenant &&
-			$oAccount->IncomingPassword === $sPassword)
-		{
-			$this->setAccountAsLoggedIn($oAccount);
-			$this->setThreadIdFromRequest(0);
-			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountSystemAuthentication);
-		}
-
-		$oUser = /* @var $oUser CHelpdeskUser */ $oApiHelpdeskManager->getUserByEmail($iIdTenant, $sEmail);
-		if ($oUser instanceof CHelpdeskUser && $oUser->validatePassword($sPassword) && $iIdTenant === $oUser->IdTenant)
-		{
-			if (!$oUser->Activated)
-			{
-				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UnactivatedUser);
-			}
-
-			$oResult = $oUser;
-		}
-		else
-		{
-			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_AccountAuthentication);
-		}
-
-		return $oResult;
-	}
-
-	/**
-	 * @param int $iIdTenant
-	 * @param string $sEmail
-	 * @param string $sName
-	 * @param string $sPassword
-	 * @param bool $bCreateFromFetcher Default value is **false**.
-	 *
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists) 6001
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed) 6002
-	 *
-	 * @return CHelpdeskUser|bool
-	 */
-	public function registerHelpdeskAccount($iIdTenant, $sEmail, $sName, $sPassword, $bCreateFromFetcher = false)
-	{
-		$mResult = false;
-
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
-//		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
-		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
-		{
-			return $mResult;
-		}
-
-		$oUser = /* @var $oUser CHelpdeskUser */ $oApiHelpdeskManager->getUserByEmail($iIdTenant, $sEmail);
-		if (!$oUser)
-		{
-			$oAccount = $oApiUsersManager->getAccountByEmail($sEmail);
-			if ($oAccount && $oAccount->IdTenant === $iIdTenant)
-			{
-				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
-			}
-
-			$oUser = new CHelpdeskUser();
-			$oUser->Activated = false;
-			$oUser->Email = $sEmail;
-			$oUser->Name = $sName;
-			$oUser->IdTenant = $iIdTenant;
-			$oUser->IsAgent = false;
-
-			$oUser->setPassword($sPassword, $bCreateFromFetcher);
-
-			$oApiHelpdeskManager->createUser($oUser, $bCreateFromFetcher);
-			if (!$oUser || 0 === $oUser->IdHelpdeskUser)
-			{
-				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed);
-			}
-			else
-			{
-				$mResult = $oUser;
-			}
-		}
-		else
-		{
-			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
-		}
-
-		return $mResult;
-	}
-
-	/**
-	 * @param int $iIdTenant
-	 * @param string $sTenantName
-	 * @param string $sNotificationEmail
-	 * @param string $sSocialId
-	 * @param string $sSocialType
-	 * @param string $sSocialName
-	 *
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists) 6001
-	 * @throws \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed) 6002
-	 *
-	 * @return bool
-	 */
-	public function registerSocialAccount($iIdTenant, $sTenantName, $sNotificationEmail, $sSocialId, $sSocialType, $sSocialName)
-	{
-		$bResult = false;
-
-		$oApiHelpdeskManager = /* @var $oApiHelpdeskManager CApiHelpdeskManager */\Aurora\System\Api::Manager('helpdesk');
-//		$oApiUsersManager = /* @var $oApiUsersManager CApiUsersManager */\Aurora\System\Api::GetSystemManager('users');
-		if (!$oApiHelpdeskManager || !$oApiUsersManager || !$oApiCapabilityManager)
-		{
-			return $bResult;
-		}
-
-		$oUser = /* @var $oUser CHelpdeskUser */ $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sSocialId);
-		if (!$oUser)
-		{
-			$oAccount = $this->getAhdSocialUser($sTenantName, $sSocialId);
-			if ($oAccount && $oAccount->IdTenant === $iIdTenant)
-			{
-				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
-			}
-
-			$oUser = new CHelpdeskUser();
-			$oUser->Activated = true;
-			$oUser->Name = $sSocialName;
-			$oUser->NotificationEmail = $sNotificationEmail;
-			$oUser->SocialId = $sSocialId;
-			$oUser->SocialType = $sSocialType;
-			$oUser->IdTenant = $iIdTenant;
-			$oUser->IsAgent = false;
-			$oApiHelpdeskManager->createUser($oUser);
-			if (!$oUser || 0 === $oUser->IdHelpdeskUser)
-			{
-				throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserCreateFailed);
-			}
-			else
-			{
-				$bResult = true;
-			}
-		}
-		else
-		{
-			throw new \Aurora\System\Exceptions\ManagerException(Errs::HelpdeskManager_UserAlreadyExists);
-		}
-
-		return $bResult;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function getLanguageList()
@@ -1140,7 +973,7 @@ class Integrator extends AbstractManager
 		$oSettings =& \Aurora\System\Api::GetSettings();
 		$sPostfix = '';
 
-		if ($oSettings && $oSettings->GetConf('UseAppMinJs', false))
+		if ($oSettings && $oSettings->GetValue('UseAppMinJs', false))
 		{
 			$sPostfix .= '.min';
 		}

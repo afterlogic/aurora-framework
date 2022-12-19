@@ -26,53 +26,9 @@ class Thumb
 		}
 	}
 
-	public static function GetOrientation($rResource)
-	{
-		$iOrientation = 0;
-		if (\function_exists('exif_read_data'))
-		{
-			if ($exif_data = @\exif_read_data($rResource, 'IFD0'))
-			{
-				$iOrientation = @$exif_data['Orientation'];
-			}
-		}
-
-		return $iOrientation;
-	}
-
-	public static function OrientateImage($image, $iOrientation)
-	{
-		switch ($iOrientation)
-		{
-			case 2:
-				$image->flip();
-				break;
-
-			case 3:
-				$image->rotate(180);
-				break;
-
-			case 4:
-				$image->rotate(180)->flip();
-				break;
-
-			case 5:
-				$image->rotate(270)->flip();
-				break;
-
-			case 6:
-				$image->rotate(270);
-				break;
-
-			case 7:
-				$image->rotate(90)->flip();
-				break;
-
-			case 8:
-				$image->rotate(90);
-				break;
-		}
-	}
+	/**
+	 * @param \Intervention\Image\Image $image
+	 */
 
 	public static function GetHash()
 	{
@@ -110,10 +66,8 @@ class Thumb
 			$rFile = \fopen($sCacheFilePathTmp, 'w+');
 			\fwrite($rFile, \stream_get_contents($rResource));
 
-			$iOrientation = self::GetOrientation($rFile);
 			$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
-			$oThumb = $oImageManager->make($rFile);
-			self::OrientateImage($oThumb, $iOrientation);
+			$oThumb = $oImageManager->make($rFile)->orientate();
 
 			$sThumb = $oThumb->heighten(94)->widen(118)->response();
 

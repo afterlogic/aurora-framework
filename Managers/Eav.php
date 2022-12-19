@@ -21,7 +21,7 @@ use Aurora\System\Exceptions\Exception;
 class Eav
 {
 	/**
-	 * @var \Aurora\System\Managers\AbstractStorage
+	 * @var Eav\Storages\Storage
 	 */
 	public $oStorage;
 
@@ -31,7 +31,7 @@ class Eav
 		$oSettings = \Aurora\Api::getSettings();
 		if($oSettings)
 		{
-			$sForcedStorage = $oSettings->getConf('EavStorageType', 'Db');
+			$sForcedStorage = $oSettings->GetValue('EavStorageType', 'Db');
 		}
 		$oForcedStorage = __NAMESPACE__ . '\\Eav\\Storages\\' . $sForcedStorage . '\\Storage';
 

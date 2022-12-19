@@ -163,4 +163,23 @@ class Storage
 	{
 		return false;
 	}
+
+	public function getEntitiesAsArray($sType, $aViewAttrs = [], $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mOrderBy = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $aIdsOrUUIDs = [], $sCustomViewSql = '')
+	{
+		return [];
+	}
+
+	public function getEntitiesUids($sType, $iOffset = 0, $iLimit = 20, $aSearchAttrs = [], $mSortAttributes = [], $iSortOrder = \Aurora\System\Enums\SortOrder::ASC, $sCustomViewSql = '')
+	{
+		return [];
+	}
+
+	public function getEntityType($mIdOrUUID)
+	{
+		return '';
+	}
+
+	public function updateAttributeType($sTypeName, $sAttributeName, $sFromEntityType, $sToEntityType)
+	{
+	}
 }

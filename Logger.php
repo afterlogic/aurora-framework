@@ -218,7 +218,7 @@ class Logger
 				{
 					@error_log('['.\MailSo\Log\Logger::Guid().'][DB/backtrace]'.AU_API_CRLF.trim($sLogData).AU_API_CRLF, 3, $sLogFile);
 				}
-				catch (Exception $oE) {}
+				catch (\Exception $oE) {}
 			}
 		}
 	}
@@ -290,7 +290,7 @@ class Logger
 		{
 			@error_log($sDesc.AU_API_CRLF, 3, $sLogFile);
 		}
-		catch (Exception $oE) {}
+		catch (\Exception $oE) {}
 
 		self::dbDebugBacktrace($sDesc, $sLogFile);
     }

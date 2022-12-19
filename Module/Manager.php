@@ -429,11 +429,13 @@ class Manager
 				$sModulesPath
 			];
 			$oCoreModule = $this->loadModule('Core', $sModulesPath);
-			$sTenant = \trim($oCoreModule->GetTenantName());
-			if (!empty($sTenant))
-			{
-				$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
-				\array_unshift($aModulePath, $sTenantModulesPath);
+			if ($oCoreModule instanceof \Aurora\Modules\Core\Module) {
+				$sTenant = \trim($oCoreModule->GetTenantName());
+				if (!empty($sTenant))
+				{
+					$sTenantModulesPath = $this->GetTenantModulesPath($sTenant);
+					\array_unshift($aModulePath, $sTenantModulesPath);
+				}
 			}
 			$this->_aModulesPaths = [];
 			foreach ($aModulePath as $sModulesPath)

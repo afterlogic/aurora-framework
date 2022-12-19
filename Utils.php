@@ -775,7 +775,7 @@ class Utils
 	/**
 	 * @param int $iDefaultTimeZone
 	 * @param string $sClientTimeZone = ''
-	 * @return short
+	 * @return int
 	 */
 	public static function GetTimeOffset($iDefaultTimeZone, $sClientTimeZone = '')
 	{
@@ -783,10 +783,10 @@ class Utils
 		{
 			try {
 
-				$oDateTimeZone = new DateTimeZone($sClientTimeZone);
-				return $oDateTimeZone->getOffset(new DateTime('now')) / 60;
+				$oDateTimeZone = new \DateTimeZone($sClientTimeZone);
+				return $oDateTimeZone->getOffset(new \DateTime('now')) / 60;
 			}
-			catch (Exception $oE)
+			catch (\Exception $oE)
 			{
 				Api::Log($sClientTimeZone);
 				Api::LogObject($oE, Enums\LogLevel::Warning);
@@ -1895,48 +1895,6 @@ class Utils
  *
  */
 		}
-	}
-
-	/**
-	 * @return \Aurora\Modules\StandardAuth\Classes\Account | null
-	 */
-	public static function GetDefaultAccount()
-	{
-		$oResult = null;
-		$oApiIntegrator /* @var $oApiIntegrator \Aurora\System\Managers\Integrator */ = \Aurora\System\Managers\Integrator::getInstance();
-		$iUserId = Api::getAuthenticatedUserId();
-		if (0 < $iUserId)
-		{
-			$iAccountId = $oApiUsers->getDefaultAccountId($iUserId);
-			if (0 < $iAccountId)
-			{
-				$oAccount = $oApiUsers->getAccountById($iAccountId);
-				if ($oAccount instanceof \Aurora\Modules\StandardAuth\Classes\Account && !$oAccount->IsDisabled)
-				{
-					$oResult = $oAccount;
-				}
-			}
-		}
-
-		return $oResult;
-	}
-
-	/**
-	 * @return \CHelpdeskUser|null
-	 */
-	public static function GetHelpdeskAccount($iTenantID)
-	{
-		$oResult = null;
-		$oApiIntegrator /* @var $oApiIntegrator \Aurora\System\Managers\Integrator */ = \Aurora\System\Managers\Integrator::getInstance();
-		$iIdHelpdeskUser = $oApiIntegrator->getAuthenticatedHelpdeskUserId();
-		if (0 < $iIdHelpdeskUser)
-		{
-			$oApiHelpdesk /* @var $oApiHelpdesk \CApiHelpdeskManager */ = Api::Manager('helpdesk');
-			$oHelpdeskUser = $oApiHelpdesk->getUserById($iTenantID, $iIdHelpdeskUser);
-			$oResult = $oHelpdeskUser instanceof \CHelpdeskUser ? $oHelpdeskUser : null;
-		}
-
-		return $oResult;
 	}
 
 	public static function GetAppUrl()

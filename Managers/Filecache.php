@@ -17,6 +17,11 @@ namespace Aurora\System\Managers;
 class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
 {
 	/**
+	 * @var Filecache\Storage
+	 */
+	public $oStorage;
+
+	/**
 	 *
 	 * @param string $sForcedStorage
 	 */

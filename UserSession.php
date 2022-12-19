@@ -103,7 +103,7 @@ class UserSession
 							{
 								$iTime = (int) $mResult['@time'];
 							}
-							$iExpireUserSessionsBeforeTimestamp = \Aurora\System\Api::GetSettings()->GetConf("ExpireUserSessionsBeforeTimestamp", 0);
+							$iExpireUserSessionsBeforeTimestamp = \Aurora\System\Api::GetSettings()->GetValue("ExpireUserSessionsBeforeTimestamp", 0);
 							if ($iExpireUserSessionsBeforeTimestamp > $iTime && $iTime > 0)
 							{
 								\Aurora\System\Api::Log('User session expired: ');

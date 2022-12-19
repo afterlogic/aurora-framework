@@ -39,7 +39,7 @@ class Session
 	 */
 	public static function Has($sKey)
 	{
-		if (!CSession::$bFirstStarted)
+		if (!self::$bFirstStarted)
 		{
 			self::Start();
 		}

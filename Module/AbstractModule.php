@@ -160,7 +160,7 @@ abstract class AbstractModule
 	 *
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
-	final public static function getInstance()
+	public static function getInstance()
 	{
 		return \Aurora\System\Api::GetModule(self::GetName());
 	}

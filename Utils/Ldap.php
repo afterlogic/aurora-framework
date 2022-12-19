@@ -15,12 +15,12 @@ namespace Aurora\System\Utils;
 class Ldap
 {
 	/**
-	 * @var resource
+	 * @var \LDAP\Connection
 	 */
 	private $rLink;
 
 	/**
-	 * @var resource
+	 * @var \LDAP\Result
 	 */
 	private $rSearch;
 
@@ -328,7 +328,9 @@ class Ldap
 
 		if (0 < strlen($sSortField))
 		{
-			@ldap_sort($this->rLink, $this->rSearch, $sSortField);
+			if (function_exists('ldap_sort')) {
+				@\ldap_sort($this->rLink, $this->rSearch, $sSortField);
+			}
 		}
 
 		$aList = array();
