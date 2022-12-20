@@ -286,6 +286,11 @@ class Logger
 	 */
 	public static function LogOnly($sDesc, $sLogFile)
 	{
+		if (0 < \count(Api::$aSecretWords))
+		{
+			$sDesc = \str_replace(Api::$aSecretWords, '*******', $sDesc);
+		}
+		
 		try
 		{
 			@error_log($sDesc.AU_API_CRLF, 3, $sLogFile);
