@@ -59,14 +59,14 @@ class Logger
 		$sMessage = '';
 
 		$oSettings =& Api::GetSettings();
-		if ($oSettings && $oSettings->GetValue('LogStackTrace', false))
-		{
-			$sMessage = (string) $mObject;
-		}
-		else
-		{
-			$sMessage = 'Exception: ' . $mObject->getMessage();
-		}
+		// if ($oSettings && $oSettings->GetValue('LogStackTrace', false))
+		// {
+		// 	$sMessage = (string) $mObject;
+		// }
+		// else
+		// {
+			$sMessage = 'Exception: ' . (string) $mObject . ', Code: ' . $mObject->getCode() . ', Message: ' . $mObject->getMessage();
+		// }
 
 		if (0 < \count(Api::$aSecretWords))
 		{
