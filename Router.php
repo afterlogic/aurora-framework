@@ -98,6 +98,7 @@ class Router
     public function route($sName)
     {
         $mResult = false;
+        $oHttp = \MailSo\Base\Http::SingletonInstance();
 
         $mMethod = $this->getCallback($sName);
         if ($mMethod)
@@ -106,6 +107,9 @@ class Router
             {
                 if (\Aurora\System\Api::GetModuleManager()->IsAllowedModule($sModule))
                 {
+                    \Aurora\System\Api::Log(" ");
+                    \Aurora\System\Api::Log(" ===== ENTRY: " . $sModule . '::' . $sName);
+                    \Aurora\System\Api::Log(" URL: " . $oHttp->GetUrl());
                     $mResult .= call_user_func_array(
                         $mCallbak,
                         []
