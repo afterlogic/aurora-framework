@@ -26,7 +26,7 @@ if (!defined('AU_APP_ROOT_PATH'))
 
 define('AU_API_PATH_TO_AURORA', '/../');
 
-define('AU_API_CRLF', "\r\n");
+define('AU_API_CRLF', PHP_EOL);
 define('AU_API_TAB', "\t");
 
 define('AU_API_SESSION_WEBMAIL_NAME', 'PHPWEBMAILSESSID');
@@ -1700,7 +1700,6 @@ class Api
                 $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
 
                 $app->add(new Commands\Migrations\EavToSqlCommand());
-//				$app->add(new Commands\Migrations\EavToSqlCommandV1());
 				$app->add(new Commands\GetOrphansCommand());
 
                 return $app;
