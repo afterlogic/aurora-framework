@@ -69,6 +69,11 @@ class Manager
 	private $oLastException;
 
 	/**
+	 * @var array
+	 */
+	private $aModulesSettings;
+
+	/**
 	 *
 	 */
 	public function __construct()
@@ -775,9 +780,11 @@ class Manager
 		{
 			if ($aResult['Module'] === $sModule && $aResult['Method'] === $sMethod)
 			{
-				return array($aResult);
+				return [$aResult];
 			}
 		}
+
+		return [];
 	}
 
     /**

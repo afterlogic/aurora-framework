@@ -22,6 +22,11 @@ class Document
 	public $XmlRoot = null;
 
 	/**
+	 * @var array
+	 */
+	protected $_stack = null;
+
+	/**
 	 * @param string $sName
 	 * @param string $sValue
 	 */

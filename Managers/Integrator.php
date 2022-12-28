@@ -846,6 +846,8 @@ class Integrator extends AbstractManager
 //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
 //
 //		return $oUser;
+
+		return false;
 	}
 
 	/**

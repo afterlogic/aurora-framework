@@ -107,7 +107,7 @@ class MigrateMakeCommand extends BaseCommand
      * @param string $name
      * @param string $table
      * @param bool $create
-     * @return string
+     * @return void
      */
     protected function writeMigration($name, $table, $create, $input, $output)
     {

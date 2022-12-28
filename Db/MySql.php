@@ -18,12 +18,12 @@ namespace Aurora\System\Db;
 class MySql extends Sql
 {
 	/**
-	 * @var	resource
+	 * @var	\mysqli
 	 */
 	protected $_rConectionHandle;
 
 	/**
-	 * @var	resource
+	 * @var	\mysqli_result
 	 */
 	protected $_rResultId;
 
@@ -188,7 +188,7 @@ class MySql extends Sql
 			{
 				mysqli_free_result($this->_rResultId);
 			}
-			$this->_resultId = null;
+			$this->_rResultId= null;
 
 			if (\Aurora\System\Api::$bUseDbLog)
 			{

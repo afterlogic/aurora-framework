@@ -7,7 +7,7 @@
 
 namespace Aurora\System;
 
-use \Aurora\Modules\Core\Models\User;
+use Aurora\Modules\Core\Models\User;
 use \Aurora\Modules\Core\Models\Tenant;
 use \Aurora\System\Enums\DbType;
 use \Pimple\Container;
@@ -279,7 +279,7 @@ class Api
 	/**
 	 * @param string $sWord
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public static function AddSecret($sWord)
 	{
@@ -764,6 +764,8 @@ class Api
 		$iResult &= $oSettings && ($oSettings instanceof AbstractSettings);
 
 		self::$bIsValid = (bool) $iResult;
+
+		return self::$bIsValid;
 	}
 
 	/**

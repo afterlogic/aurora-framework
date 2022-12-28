@@ -29,6 +29,11 @@ class Ldap
 	 */
 	private $sSearchDN;
 
+	/**
+	 * @var string
+	 */
+	private $sLastRequest;
+
 	public function __construct($sSearchDN = '')
 	{
 		$this->rLink = null;

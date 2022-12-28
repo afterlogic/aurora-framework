@@ -439,5 +439,7 @@ class Model extends Eloquent
         if ($this->validate()) {
             return parent::save($options);
         }
+
+        return false;
     }
 }

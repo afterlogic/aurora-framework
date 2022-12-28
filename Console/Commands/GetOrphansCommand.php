@@ -12,6 +12,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class GetOrphansCommand extends BaseCommand
 {
+    /**
+     * @var ConsoleLogger
+     */
     private $logger = false;
 
     /**

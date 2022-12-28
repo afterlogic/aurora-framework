@@ -1207,7 +1207,7 @@ class Utils
 			'p7c'	=> 'application/pkcs7-mime',
 			'p7m'	=> 'application/pkcs7-mime',
 			'p7s'	=> 'application/pkcs7-signature',
-			'ttf'	=> 'application/x-ttf',
+//			'ttf'	=> 'application/x-ttf',
 			'torrent'	=> 'application/x-bittorrent',
 
 			// scripts
@@ -1288,7 +1288,7 @@ class Utils
 			'flv'	=> 'video/x-flv',
 			'qt'	=> 'video/quicktime',
 			'mov'	=> 'video/quicktime',
-			'wmv'	=> 'video/windows-media',
+//			'wmv'	=> 'video/windows-media',
 			'avi'	=> 'video/x-msvideo',
 			'mpg'	=> 'video/mpeg',
 			'mpeg'	=> 'video/mpeg',
@@ -1945,7 +1945,7 @@ class Utils
 	 * @param string $sContentType
 	 * @param string $sFileName
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public static function OutputFileHeaders($bDownload, $sContentType, $sFileName)
 	{

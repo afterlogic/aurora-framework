@@ -155,7 +155,7 @@ class Response
 	 * @param string $sContentType
 	 * @param string $sFileName
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public static function OutputHeaders($bDownload, $sContentType, $sFileName)
 	{

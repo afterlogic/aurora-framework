@@ -123,7 +123,7 @@ class Session
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 */
 	public static function DestroySessionById($sId)
 	{
