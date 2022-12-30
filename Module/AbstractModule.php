@@ -132,7 +132,7 @@ abstract class AbstractModule
 	/**
 	 * @param string $sVersion
 	 */
-	public function __construct($sPath, $sVersion = '1.0')
+	final public function __construct($sPath, $sVersion = '1.0')
 	{
 		$this->sVersion = (string) $sVersion;
 
@@ -142,6 +142,10 @@ abstract class AbstractModule
 		$this->oModuleManager = \Aurora\System\Api::GetModuleManager();
 	}
 
+	/**
+	 *
+	 * @return void
+	 */
 	abstract public function init();
 
 	/**
@@ -151,7 +155,7 @@ abstract class AbstractModule
 	 * @param string $sVersion
 	 * @return \Aurora\System\Module\AbstractModule
 	 */
-	final public static function createInstance($sPath, $sVersion = '1.0')
+	public static function createInstance($sPath, $sVersion = '1.0')
 	{
 		return new static($sPath, $sVersion);
 	}
