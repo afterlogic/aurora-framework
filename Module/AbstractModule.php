@@ -132,7 +132,7 @@ abstract class AbstractModule
 	/**
 	 * @param string $sVersion
 	 */
-	final public function __construct($sPath, $sVersion = '1.0')
+	public function __construct($sPath, $sVersion = '1.0')
 	{
 		$this->sVersion = (string) $sVersion;
 
