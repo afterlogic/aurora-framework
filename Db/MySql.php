@@ -387,15 +387,7 @@ class MySql extends Sql
 	{
 		if ($this->_rResultId)
 		{
-			if (!@mysqli_free_result($this->_rResultId))
-			{
-				$this->_setSqlError();
-				return false;
-			}
-			else
-			{
-				$this->_rResultId = null;
-			}
+			@mysqli_free_result($this->_rResultId);
 		}
 		return true;
 	}
@@ -417,11 +409,6 @@ class MySql extends Sql
 		{
 			$this->ErrorDesc = @mysqli_error($this->_rConectionHandle);
 			$this->ErrorCode = @mysqli_errno($this->_rConectionHandle);
-		}
-		else
-		{
-			$this->ErrorDesc = @mysqli_error();
-			$this->ErrorCode = @mysqli_errno();
 		}
 
 		if (0 < strlen($this->ErrorDesc))

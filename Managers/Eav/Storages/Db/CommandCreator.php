@@ -374,7 +374,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
 	public function getEntitiesByUUID($sEntityType, $iOffset = 0, $iLimit = 0, $aWhere = [], $mOrderAttributes = [],
 			$iSortOrder = \Aurora\System\Enums\SortOrder::ASC)
 	{
-		$this->oCommandCreator->getEntities(
+		$this->getEntities(
 			$sEntityType,
 			['UUID'],
 			$iOffset,
@@ -630,6 +630,7 @@ SELECT *%s FROM
 						$sSqlValue = $oAttribute->needToEscape() ? $this->escapeString($mValue) : $mValue;
 						$sSqlValueType = $oAttribute->getValueFormat();
 
+						/* @phpstan-ignore-next-line */
 						$aValues[] = sprintf('	(%d, %s, ' . $sSqlValueType . ')',
 							$iEntityId,
 							$this->escapeString($oAttribute->Name),

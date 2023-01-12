@@ -398,7 +398,7 @@ class MySql extends \Aurora\System\Db\Sql
 		{
 			return (int) $this->oPDO->lastInsertId();
 		}
-		catch( Exception $e)
+		catch(\Exception $e)
 		{
 			\Aurora\System\Api::LogException($e);
 		}

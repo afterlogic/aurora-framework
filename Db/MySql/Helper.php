@@ -16,8 +16,13 @@ use Aurora\System\Db;
  * @package Api
  * @subpackage Db
  */
-class Helper implements \Aurora\System\Db\IDbHelper
+class Helper implements \Aurora\System\Db\IHelper
 {
+	/**
+	 * @var bool
+	 */
+	protected $bNotNullWithOutDefault;
+
 	/**
 	 * @param string $sValue
 	 * @param bool $bWithOutQuote = false

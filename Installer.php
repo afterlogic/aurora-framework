@@ -99,7 +99,7 @@ class Installer
 	/**
 	* NOTE! This method should be run from composer.
 	*/
-    public static function preConfigForce(Event $event)
+    public static function preConfigForce($event)
 	{
 		self::preConfig($event);
 	}
@@ -107,7 +107,7 @@ class Installer
 	/**
 	* NOTE! This method should be run from composer.
 	*/
-    public static function preConfigSafe(Event $event)
+    public static function preConfigSafe($event)
 	{
 		$sBaseDir = dirname(__File__);
 
@@ -126,7 +126,7 @@ class Installer
 	/**
 	* NOTE! This method should be run from composer.
 	*/
-    private static function preConfig(Event $event)
+    private static function preConfig($event)
     {
 		$sConfigFilename = 'pre-config.json';
 		$sBaseDir = dirname(__File__);

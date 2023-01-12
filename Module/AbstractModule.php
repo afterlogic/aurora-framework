@@ -157,6 +157,7 @@ abstract class AbstractModule
 	 */
 	public static function createInstance($sPath, $sVersion = '1.0')
 	{
+		/* @phpstan-ignore-next-line */
 		return new static($sPath, $sVersion);
 	}
 

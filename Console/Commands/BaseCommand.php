@@ -21,13 +21,14 @@ class BaseCommand extends Command
         // migrations may be run for any customized path from within the application.
         if ($input->getOption('path')) {
             return collect($input->getOption('path'))->map(function ($path) use ($input) {
-                return !$input->usingRealPath()
+                return !$this->usingRealPath($input)
                     ? \Aurora\Api::RootPath() . $path
                     : $path;
             })->all();
         }
 
         return array_merge(
+            /* @phpstan-ignore-next-line */
             [$this->getSystemMigrationsPath()], $this->migrator->paths(), $this->getMigrationPath()
         );
     }
@@ -37,9 +38,9 @@ class BaseCommand extends Command
      *
      * @return bool
      */
-    protected function usingRealPath()
+    protected function usingRealPath($input)
     {
-        return $this->hasOption('realpath') && $this->getOption('realpath');
+        return $input->hasOption('realpath') && $input->getOption('realpath');
     }
 
     /**

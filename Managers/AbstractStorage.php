@@ -21,6 +21,8 @@ abstract class AbstractStorage
 	 */
 	protected $oManager;
 
+	protected $oConnection;
+
 	/**
 	 * @var \Aurora\System\Settings
 	 */

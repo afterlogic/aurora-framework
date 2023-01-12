@@ -24,7 +24,15 @@ class EventEmitter
 	 */
     private $aListenersResult;
 
+    /**
+     * @var int
+     */
     private $iEventLevel = 0;
+
+    /**
+     * @var array
+     */
+    private $aListeners;
 
     /**
 	 *

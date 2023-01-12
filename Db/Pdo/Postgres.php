@@ -89,7 +89,7 @@ class Postgres extends \Aurora\System\Db\Sql
 			throw new \Aurora\System\Exceptions\DbException('Can\'t load PDO extension.', 0);
 		}
 
-		$mPdoDrivers = PDO::getAvailableDrivers();
+		$mPdoDrivers = \PDO::getAvailableDrivers();
 		if (!is_array($mPdoDrivers) || !in_array('pgsql', $mPdoDrivers))
 		{
 			throw new \Aurora\System\Exceptions\DbException('Can\'t load PDO postgresql driver.', 0);
@@ -105,10 +105,10 @@ class Postgres extends \Aurora\System\Db\Sql
 			\Aurora\System\Api::Log('DB(PDO/postgresql) : start connect to '.$this->sUser.'@'.$this->sHost);
 		}
 
-		$aPDOAttr = array(PDO::ATTR_TIMEOUT => 5, PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+		$aPDOAttr = array(\PDO::ATTR_TIMEOUT => 5, \PDO::ATTR_EMULATE_PREPARES => false, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);
 		if (defined('PDO::MYSQL_ATTR_MAX_BUFFER_SIZE' ))
 		{
-			$aPDOAttr[PDO::MYSQL_ATTR_MAX_BUFFER_SIZE] = 1024*1024*50;
+			$aPDOAttr[\PDO::MYSQL_ATTR_MAX_BUFFER_SIZE] = 1024*1024*50;
 		}
 
 		$sDbPort = '';
@@ -164,7 +164,7 @@ class Postgres extends \Aurora\System\Db\Sql
 					\Aurora\System\Api::Log('DB : PDO('.$sPdoString.')');
 				}
 				
-				$this->oPDO = @new PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
+				$this->oPDO = @new \PDO($sPdoString, $sDbLogin, $sDbPassword, $aPDOAttr);
 				if (\Aurora\System\Api::$bUseDbLog)
 				{
 					\Aurora\System\Api::Log('DB : connected to '.$this->sUser.'@'.$this->sHost);
@@ -175,7 +175,7 @@ class Postgres extends \Aurora\System\Db\Sql
 					@register_shutdown_function(array(&$this, 'Disconnect'));
 				}
 			}
-			catch (Exception $oException)
+			catch (\Exception $oException)
 			{
 				self::Log($oException->getMessage(), \Aurora\System\Enums\LogLevel::Error);
 				self::Log($oException->getTraceAsString(), \Aurora\System\Enums\LogLevel::Error);
@@ -257,7 +257,7 @@ class Postgres extends \Aurora\System\Db\Sql
 		{
 			$res = $this->oPDO->query($sQuery);
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			$res = false;
 		}
@@ -282,7 +282,7 @@ class Postgres extends \Aurora\System\Db\Sql
 			$rExplainResult = $this->SilentQuery($sExplainQuery);
 			if ($rExplainResult != false)
 			{
-				while (false != ($mResult = $rExplainResult->fetch(PDO::FETCH_ASSOC)))
+				while (false != ($mResult = $rExplainResult->fetch(\PDO::FETCH_ASSOC)))
 				{
 					$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 				}
@@ -295,7 +295,7 @@ class Postgres extends \Aurora\System\Db\Sql
 				$rExplainResult = $this->SilentQuery('SHOW warnings');
 				if ($rExplainResult != false)
 				{
-					while (false != ($mResult = $rExplainResult->fetch(PDO::FETCH_ASSOC)))
+					while (false != ($mResult = $rExplainResult->fetch(\PDO::FETCH_ASSOC)))
 					{
 						$sExplainLog .= AU_API_CRLF.print_r($mResult, true);
 					}
@@ -329,7 +329,7 @@ class Postgres extends \Aurora\System\Db\Sql
 	{
 		if ($this->rResultId)
 		{
-			$mResult = $this->rResultId->fetch(PDO::FETCH_OBJ);
+			$mResult = $this->rResultId->fetch(\PDO::FETCH_OBJ);
 			if (!$mResult && $bAutoFree)
 			{
 				$this->FreeResult();
@@ -353,7 +353,7 @@ class Postgres extends \Aurora\System\Db\Sql
 	{
 		if ($this->rResultId)
 		{
-			$mResult = $this->rResultId->fetch(PDO::FETCH_ASSOC);
+			$mResult = $this->rResultId->fetch(\PDO::FETCH_ASSOC);
 			if (!$mResult && $bAutoFree)
 			{
 				$this->FreeResult();
@@ -385,7 +385,7 @@ class Postgres extends \Aurora\System\Db\Sql
 
 			return (int) ($sName ? $this->oPDO->lastInsertId($sName) : $this->oPDO->lastInsertId());
 		}
-		catch( Exception $e)
+		catch(\Exception $e)
 		{
 			\Aurora\System\Api::LogException($e);
 		}

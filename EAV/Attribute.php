@@ -76,6 +76,18 @@ class Attribute
 	public $Inherited;
 
 	/**
+	 *
+	 * @var bool $Inherited
+	 */
+	public $IsDefault;
+
+	/**
+	 *
+	 * @var bool $Inherited
+	 */
+	public $bExtended;
+
+	/**
 	 * @param string $sName
 	 * @param mixed $mValue
 	 * @param string $sType

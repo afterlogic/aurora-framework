@@ -33,6 +33,7 @@ abstract class AbstractEnumeration
 	 */
 	public static function validateValue($value)
 	{
+		/* @phpstan-ignore-next-line */
 		return in_array($value, array_values((new static())->getMap()));
 	}
 }

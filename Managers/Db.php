@@ -18,11 +18,6 @@ class Db extends AbstractManagerWithStorage
 {
 	private static $_instance = null;
 
-	/** 
-	 * @var Db\Storage
-	*/
-	protected $oStorage;
-
 	public static function createInstance()
 	{
 		return new self();
