@@ -198,6 +198,13 @@ class UserSession
 		return AuthToken::where('LastUsageDateTime', '>', $iTime)->get();
 	}
 
+	public function DeleteExpiredAuthTokens($iDays)
+	{
+		$oDateTime = new \DateTime('-'.$iDays.' days');
+		$iTime = $oDateTime->getTimestamp();
+		return AuthToken::where('LastUsageDateTime', '>', $iTime)->delete();
+	}
+
 	public function GetUserSessionsFromDB($iUserId)
 	{
 		return AuthToken::where('UserId', $iUserId)->get();
