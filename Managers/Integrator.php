@@ -585,12 +585,12 @@ class Integrator extends AbstractManager
 	}
 
 	/**
-	 * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
+	 * @param object $oAccount
 	 * @param bool $bSignMe Default value is **false**.
 	 *
 	 * @return string
 	 */
-	public function setAccountAsLoggedIn(\Aurora\Modules\StandardAuth\Models\Account $oAccount, $bSignMe = false)
+	public function setAccountAsLoggedIn($oAccount, $bSignMe = false)
 	{
 		$aAccountHashTable = array(
 			'token' => 'auth',
