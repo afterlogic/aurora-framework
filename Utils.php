@@ -1941,6 +1941,28 @@ class Utils
 	}
 
 	/**
+	 * This function converst block CSS styles to inline styles in provided HTML.
+	 * 
+	 * @param string $sHtml 
+	 * @param string $sEncoding Optional. Defines the charset encoding. Default value is utf-8
+	 *
+	 * @return string
+	 */
+	public static function ConvertCssToInlineStyles($sHtml, $sEncoding = 'utf-8')
+	{
+		$sResult = '';
+
+		if (is_string($sHtml)) {
+			$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+			$oCssToInlineStyles->setEncoding($sEncoding);
+			$oCssToInlineStyles->setUseInlineStylesBlock(true);		
+			$sResult = $oCssToInlineStyles->convert();
+		}
+
+		return $sResult;
+	}
+
+	/**
 	 * @param bool $bDownload
 	 * @param string $sContentType
 	 * @param string $sFileName
@@ -2001,12 +2023,8 @@ class Utils
 						\MailSo\Base\Utils::NormalizeCharset($sCharset, true), \MailSo\Base\Enumerations\Charset::UTF_8);
 				}
 
-				$oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
-				$oCssToInlineStyles->setEncoding('utf-8');
-				$oCssToInlineStyles->setUseInlineStylesBlock(true);
-
 				echo '<html><head></head><body>'.
-					\MailSo\Base\HtmlUtils::ClearHtmlSimple($oCssToInlineStyles->convert(), true).
+					\MailSo\Base\HtmlUtils::ClearHtmlSimple(self::ConvertCssToInlineStyles($sHtml), true).
 					'</body></html>';
 			}
 		}
