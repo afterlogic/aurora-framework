@@ -8,7 +8,7 @@ if (PHP_SAPI !== 'cli') {
 	\Aurora\System\Api::requireAdminAuth();
 }
 
-$iAuthTokenExpiryPeriodDays = 30;
+$iAuthTokenExpiryPeriodDays = \Aurora\Api::GetSettings()->GetValue('AuthTokenExpirationLifetimeDays', 0);
 $tokens = \Aurora\System\Api::UserSession()->GetExpiredAuthTokens($iAuthTokenExpiryPeriodDays);
 if ($tokens->count() > 0) {
     echo 'Number of found outdated auth tokens: ' . $tokens->count() . '<br />';
