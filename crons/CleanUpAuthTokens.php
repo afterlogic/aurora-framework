@@ -9,11 +9,13 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $iAuthTokenExpiryPeriodDays = \Aurora\Api::GetSettings()->GetValue('AuthTokenExpirationLifetimeDays', 0);
-$tokens = \Aurora\System\Api::UserSession()->GetExpiredAuthTokens($iAuthTokenExpiryPeriodDays);
-if ($tokens->count() > 0) {
-    echo 'Number of found outdated auth tokens: ' . $tokens->count() . '<br />';
-    echo 'Remove outdated auth tokens: <br />';
-    \Aurora\System\Api::UserSession()->DeleteExpiredAuthTokens($iAuthTokenExpiryPeriodDays);
-} else {
-    echo 'Outdated tokens not found<br />';
+if ($iAuthTokenExpiryPeriodDays > 0) {
+    $tokens = \Aurora\System\Api::UserSession()->GetExpiredAuthTokens($iAuthTokenExpiryPeriodDays);
+    if ($tokens->count() > 0) {
+        echo 'Number of found outdated auth tokens: ' . $tokens->count() . '<br />';
+        echo 'Remove outdated auth tokens: <br />';
+        \Aurora\System\Api::UserSession()->DeleteExpiredAuthTokens($iAuthTokenExpiryPeriodDays);
+    } else {
+        echo 'Outdated tokens not found<br />';
+    }
 }

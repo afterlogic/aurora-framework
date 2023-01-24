@@ -74,7 +74,7 @@ class Settings extends AbstractSettings
 			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
 
 			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool'),
-			'AuthTokenExpirationLifetimeDays' => new SettingsProperty('ExpirationLifetimeDays', 0, 'int'),
+			'AuthTokenExpirationLifetimeDays' => new SettingsProperty('AuthTokenExpirationLifetimeDays', 0, 'int'),
 		);
 	}
 

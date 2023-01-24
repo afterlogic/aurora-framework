@@ -193,22 +193,19 @@ class UserSession
 
 	public function GetExpiredAuthTokens($iDays)
 	{
-		$oDateTime = new \DateTime('-'.$iDays.' days');
-		$iTime = $oDateTime->getTimestamp();
-		return AuthToken::where('LastUsageDateTime', '>', $iTime)->get();
+		$iTime = $iDays * 86400;
+		return AuthToken::whereRaw('(LastUsageDateTime + ' . $iTime . ') < UNIX_TIMESTAMP()')->get();
 	}
 
 	public function DeleteExpiredAuthTokens($iDays)
 	{
-		$oDateTime = new \DateTime('-'.$iDays.' days');
-		$iTime = $oDateTime->getTimestamp();
-		return AuthToken::where('LastUsageDateTime', '>', $iTime)->delete();
+		$iTime = $iDays * 86400;
+		return AuthToken::whereRaw('(LastUsageDateTime + ' . $iTime . ') < UNIX_TIMESTAMP()')->delete();
 	}
 
 	public function GetUserSessionsFromDB($iUserId)
 	{
 		return AuthToken::where('UserId', $iUserId)->get();
-
 	}
 
 }
