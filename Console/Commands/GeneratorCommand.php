@@ -345,5 +345,4 @@ abstract class GeneratorCommand extends Command
 
         return in_array($name, $this->reservedNames);
     }
-
 }

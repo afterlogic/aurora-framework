@@ -14,17 +14,17 @@ namespace Aurora\System\Enums;
  */
 class FileStorageType extends \Aurora\System\Enums\AbstractEnumeration
 {
-	const Personal = 'personal';
-	const Corporate = 'corporate';
-	const Shared = 'shared';
+    public const Personal = 'personal';
+    public const Corporate = 'corporate';
+    public const Shared = 'shared';
 
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Personal' => self::Personal,
-		'Corporate' => self::Corporate,
-		'Shared' => self::Shared
+    /**
+     * @var array
+     */
+    protected $aConsts = array(
+        'Personal' => self::Personal,
+        'Corporate' => self::Corporate,
+        'Shared' => self::Shared
 
-	);
+    );
 }

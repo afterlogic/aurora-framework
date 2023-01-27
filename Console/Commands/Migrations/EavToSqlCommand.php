@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use \Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class EavToSqlCommand extends BaseCommand
 {
@@ -176,15 +176,15 @@ class EavToSqlCommand extends BaseCommand
         $migrateFile = $input->getOption('migrate-file');
         $defaultAnswer = $input->getOption('no-interaction');
         if ($wipe) {
-            if(!$defaultAnswer){
+            if (!$defaultAnswer) {
                 $question = new ConfirmationQuestion('Do you really wish to wipe all data in target tables? (Y/N)', $defaultAnswer);
-    
+
                 if (!$helper->ask($input, $output, $question)) {
                     return Command::SUCCESS;
                 }
             }
             $this->wipeP9Tables();
-        } else if ($migrateFile) {
+        } elseif ($migrateFile) {
             $sEntitiesList = @file_get_contents($entitiesListFilename, true);
             if (!$sEntitiesList) {
                 $this->logger->error('Entities list is empty!');
@@ -192,32 +192,32 @@ class EavToSqlCommand extends BaseCommand
             }
 
             $migrateEntitiesList = explode(',', $sEntitiesList);
-            if(!$defaultAnswer){
-            $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", $defaultAnswer);
-            if (!$helper->ask($input, $output, $question)) {
-                return Command::SUCCESS;
+            if (!$defaultAnswer) {
+                $question = new ConfirmationQuestion("Proceed with migrating " . count($migrateEntitiesList) . " entities? (Y/N)", $defaultAnswer);
+                if (!$helper->ask($input, $output, $question)) {
+                    return Command::SUCCESS;
+                }
             }
-        }
         } else {
             if ($fdProgress) {
                 $progress = htmlentities(file_get_contents($progressFilename));
                 $intProgress = intval($progress);
                 if ($intProgress) {
-                    if(!$defaultAnswer){
-                    $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", $defaultAnswer);
-                    if (!$helper->ask($input, $output, $question)) {
-                        return Command::SUCCESS;
+                    if (!$defaultAnswer) {
+                        $question = new ConfirmationQuestion("Resume from entity with ID $intProgress (last successfully migrated)? (Y/N)", $defaultAnswer);
+                        if (!$helper->ask($input, $output, $question)) {
+                            return Command::SUCCESS;
+                        }
                     }
-                }
                     $cItems = DB::Table('eav_entities')->select('id')->where('id', '<=', $intProgress)->get();
                     $offset = count($cItems);
                 } else {
-                    if(!$defaultAnswer){
-                    $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", $defaultAnswer);
-                    if (!$helper->ask($input, $output, $question)) {
-                        return Command::SUCCESS;
+                    if (!$defaultAnswer) {
+                        $question = new ConfirmationQuestion("File $progressFilename is invalid. Do you wish migrate all entities? (Y/N)", $defaultAnswer);
+                        if (!$helper->ask($input, $output, $question)) {
+                            return Command::SUCCESS;
+                        }
                     }
-                }
                 }
             }
         }
@@ -303,7 +303,6 @@ class EavToSqlCommand extends BaseCommand
                 $laravelModel = $modelsMap[$entity->entity_type] ?? str_replace('Classes', 'Models', $entity->entity_type);
 
                 switch ($entity->entity_type) {
-
                     case 'Aurora\Modules\StandardAuth\Classes\Account':
                         $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
                                 ->where(['EntityId' => [$entity->id, '=']])
@@ -358,7 +357,8 @@ class EavToSqlCommand extends BaseCommand
                 }
 
                 if ($entity->entity_type === 'Aurora\Modules\Core\Classes\User' || $entity->entity_type === 'Aurora\Modules\Core\Classes\Tenant') {
-                    $oItem = collect((new \Aurora\System\EAV\Query($entity->entity_type))
+                    $oItem = collect(
+                        (new \Aurora\System\EAV\Query($entity->entity_type))
                             ->where(['EntityId' => [$entity->id, '=']])
                             ->exec()
                     )->first();
@@ -371,7 +371,6 @@ class EavToSqlCommand extends BaseCommand
 
                 $this->rewriteFile($fdProgress, $entity->id);
                 $progressBar->advance();
-
             } catch (\Illuminate\Database\QueryException $e) {
                 $errorCode = $e->getCode();
                 $errorMessage = $e->getMessage();

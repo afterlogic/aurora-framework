@@ -47,5 +47,4 @@ class InstallCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }

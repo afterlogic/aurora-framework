@@ -16,92 +16,90 @@ namespace Aurora\System;
  */
 class Settings extends AbstractSettings
 {
-	protected function initDefaults()
-	{
-		$this->aContainer = array(
-			'LicenseKey' => new SettingsProperty('LicenseKey', '', 'string'),
+    protected function initDefaults()
+    {
+        $this->aContainer = array(
+            'LicenseKey' => new SettingsProperty('LicenseKey', '', 'string'),
 
-			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
-			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
-			'AdminLanguage' => new SettingsProperty('AdminLanguage', 'English', 'string'),
+            'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
+            'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
+            'AdminLanguage' => new SettingsProperty('AdminLanguage', 'English', 'string'),
 
-			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', '\Aurora\System\Enums\DbType'),
-			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
-			'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
-			'DBName' => new SettingsProperty('DBName', '', 'string'),
-			'DBLogin' => new SettingsProperty('DBLogin', 'root', 'string'),
-			'DBPassword' => new SettingsProperty('DBPassword', '', 'string'),
+            'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', '\Aurora\System\Enums\DbType'),
+            'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
+            'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
+            'DBName' => new SettingsProperty('DBName', '', 'string'),
+            'DBLogin' => new SettingsProperty('DBLogin', 'root', 'string'),
+            'DBPassword' => new SettingsProperty('DBPassword', '', 'string'),
 
-			'UseSlaveConnection' => new SettingsProperty('UseSlaveConnection', false, 'bool'),
-			'DBSlaveHost' => new SettingsProperty('DBSlaveHost', '127.0.0.1', 'string'),
-			'DBSlaveName' => new SettingsProperty('DBSlaveName', '', 'string'),
-			'DBSlaveLogin' => new SettingsProperty('DBSlaveLogin', 'root', 'string'),
-			'DBSlavePassword' => new SettingsProperty('DBSlavePassword', '', 'string'),
-			'DBUseExplain' => new SettingsProperty('DBUseExplain', false, 'bool'),
-			'DBUseExplainExtended' => new SettingsProperty('DBUseExplainExtended', false, 'bool'),
-			'DBLogQueryParams' => new SettingsProperty('DBLogQueryParams', false, 'bool'),
-			'DBDebugBacktraceLimit' => new SettingsProperty('DBDebugBacktraceLimit', false, 'bool'),
+            'UseSlaveConnection' => new SettingsProperty('UseSlaveConnection', false, 'bool'),
+            'DBSlaveHost' => new SettingsProperty('DBSlaveHost', '127.0.0.1', 'string'),
+            'DBSlaveName' => new SettingsProperty('DBSlaveName', '', 'string'),
+            'DBSlaveLogin' => new SettingsProperty('DBSlaveLogin', 'root', 'string'),
+            'DBSlavePassword' => new SettingsProperty('DBSlavePassword', '', 'string'),
+            'DBUseExplain' => new SettingsProperty('DBUseExplain', false, 'bool'),
+            'DBUseExplainExtended' => new SettingsProperty('DBUseExplainExtended', false, 'bool'),
+            'DBLogQueryParams' => new SettingsProperty('DBLogQueryParams', false, 'bool'),
+            'DBDebugBacktraceLimit' => new SettingsProperty('DBDebugBacktraceLimit', false, 'bool'),
 
-			'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
-			'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
-			'LoggingLevel' => new SettingsProperty('LoggingLevel', Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
-			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
-			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
-			'LogPostView' => new SettingsProperty('LogPostView', false, 'bool'),
+            'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
+            'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
+            'LoggingLevel' => new SettingsProperty('LoggingLevel', Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
+            'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
+            'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
+            'LogPostView' => new SettingsProperty('LogPostView', false, 'bool'),
 
-			'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
-			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
-			'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
+            'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
+            'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
+            'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
 
-			'AllowThumbnail' => new SettingsProperty('AllowThumbnail', true, 'bool'),
-			'ThumbnailMaxFileSizeMb' => new SettingsProperty('ThumbnailMaxFileSizeMb', 5, 'int'),
-			'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
-			'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
-			'CacheTemplates' => new SettingsProperty('CacheTemplates', true, 'bool'),
-			'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', true, 'bool'),
-			'EnableImap4PlainAuth' => new SettingsProperty('EnableImap4PlainAuth', false, 'bool'),
-			'RedirectToHttps' => new SettingsProperty('RedirectToHttps', false, 'bool'),
-			'SocketConnectTimeoutSeconds' => new SettingsProperty('SocketConnectTimeoutSeconds', 20, 'int'),
-			'SocketGetTimeoutSeconds' => new SettingsProperty('SocketGetTimeoutSeconds', 20, 'int'),
-			'SocketVerifySsl' => new SettingsProperty('SocketVerifySsl', false, 'bool'),
-			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', true, 'bool'),
-			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
-			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
-			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
-			'ExpireUserSessionsBeforeTimestamp' => new SettingsProperty('ExpireUserSessionsBeforeTimestamp', 0, 'int'),
+            'AllowThumbnail' => new SettingsProperty('AllowThumbnail', true, 'bool'),
+            'ThumbnailMaxFileSizeMb' => new SettingsProperty('ThumbnailMaxFileSizeMb', 5, 'int'),
+            'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
+            'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
+            'CacheTemplates' => new SettingsProperty('CacheTemplates', true, 'bool'),
+            'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', true, 'bool'),
+            'EnableImap4PlainAuth' => new SettingsProperty('EnableImap4PlainAuth', false, 'bool'),
+            'RedirectToHttps' => new SettingsProperty('RedirectToHttps', false, 'bool'),
+            'SocketConnectTimeoutSeconds' => new SettingsProperty('SocketConnectTimeoutSeconds', 20, 'int'),
+            'SocketGetTimeoutSeconds' => new SettingsProperty('SocketGetTimeoutSeconds', 20, 'int'),
+            'SocketVerifySsl' => new SettingsProperty('SocketVerifySsl', false, 'bool'),
+            'UseAppMinJs' => new SettingsProperty('UseAppMinJs', true, 'bool'),
+            'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
+            'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
+            'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
+            'ExpireUserSessionsBeforeTimestamp' => new SettingsProperty('ExpireUserSessionsBeforeTimestamp', 0, 'int'),
 
-			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
-			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
+            'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
+            'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
 
-			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool'),
-			'AuthTokenExpirationLifetimeDays' => new SettingsProperty('AuthTokenExpirationLifetimeDays', 0, 'int'),
-		);
-	}
+            'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool'),
+            'AuthTokenExpirationLifetimeDays' => new SettingsProperty('AuthTokenExpirationLifetimeDays', 0, 'int'),
+        );
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function Load($bForceLoad = false)
-	{
-		$this->initDefaults();
-		if (!\file_exists($this->sPath))
-		{
-			$this->Save();
-		}
+    /**
+     * @return bool
+     */
+    public function Load($bForceLoad = false)
+    {
+        $this->initDefaults();
+        if (!\file_exists($this->sPath)) {
+            $this->Save();
+        }
 
-		return parent::Load($bForceLoad);
-	}
+        return parent::Load($bForceLoad);
+    }
 
-	public function SyncConfigs()
-	{
-		$this->initDefaults();
-		$aContainer = $this->aContainer;
-		if (!\file_exists($this->sPath))
-		{
-			$this->Save();
-		}
-		parent::Load(true);
-		$this->aContainer = \array_merge($aContainer, $this->aContainer);
-		$this->Save();
-	}
+    public function SyncConfigs()
+    {
+        $this->initDefaults();
+        $aContainer = $this->aContainer;
+        if (!\file_exists($this->sPath)) {
+            $this->Save();
+        }
+        parent::Load(true);
+        $this->aContainer = \array_merge($aContainer, $this->aContainer);
+        $this->Save();
+    }
 }

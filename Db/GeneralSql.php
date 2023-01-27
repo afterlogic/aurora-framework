@@ -17,55 +17,51 @@ namespace Aurora\System\Db;
  */
 class GeneralSql
 {
-	/**
-	 * @var	int
-	 */
-	protected $iExecuteCount;
+    /**
+     * @var	int
+     */
+    protected $iExecuteCount;
 
-	/**
-	 * @var	int
-	 */
-	public $ErrorCode;
+    /**
+     * @var	int
+     */
+    public $ErrorCode;
 
-	/**
-	 * @var	string
-	 */
-	public $ErrorDesc;
+    /**
+     * @var	string
+     */
+    public $ErrorDesc;
 
-	/**
-	 * @return bool
-	 */
-	function IsConnected()
-	{
-		return false;
-	}
+    /**
+     * @return bool
+     */
+    public function IsConnected()
+    {
+        return false;
+    }
 
-	/**
-	 * @param string $sLogDesc
-	 * @param string $bIsSlaveExecute = false
-	 * @return void
-	 */
-	protected function log($sLogDesc, $bIsSlaveExecute = false)
-	{
-		if (\Aurora\System\Api::$bUseDbLog)
-		{
-			if ($bIsSlaveExecute)
-			{
-				\Aurora\System\Logger::LogSql('DB-Slave['.$this->iExecuteCount.'] > '.trim($sLogDesc));
-			}
-			else
-			{
-				\Aurora\System\Logger::LogSql('DB['.$this->iExecuteCount.'] > '.trim($sLogDesc));
-			}
-		}
-	}
+    /**
+     * @param string $sLogDesc
+     * @param string $bIsSlaveExecute = false
+     * @return void
+     */
+    protected function log($sLogDesc, $bIsSlaveExecute = false)
+    {
+        if (\Aurora\System\Api::$bUseDbLog) {
+            if ($bIsSlaveExecute) {
+                \Aurora\System\Logger::LogSql('DB-Slave['.$this->iExecuteCount.'] > '.trim($sLogDesc));
+            } else {
+                \Aurora\System\Logger::LogSql('DB['.$this->iExecuteCount.'] > '.trim($sLogDesc));
+            }
+        }
+    }
 
-	/**
-	 * @param string $sErrorDesc
-	 * @return void
-	 */
-	protected function errorLog($sErrorDesc)
-	{
-		\Aurora\System\Logger::LogSql('DB ERROR < '.trim($sErrorDesc), \Aurora\System\Enums\LogLevel::Error);
-	}
+    /**
+     * @param string $sErrorDesc
+     * @return void
+     */
+    protected function errorLog($sErrorDesc)
+    {
+        \Aurora\System\Logger::LogSql('DB ERROR < '.trim($sErrorDesc), \Aurora\System\Enums\LogLevel::Error);
+    }
 }

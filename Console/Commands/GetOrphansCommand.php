@@ -29,7 +29,7 @@ class GetOrphansCommand extends BaseCommand
     {
         $this->setName('get-orphans')
             ->setDescription('Collect orphan entries')
-            ->addOption('remove', 'r',  InputOption::VALUE_NONE, 'Remove orphan entries from DB.')
+            ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove orphan entries from DB.')
         ;
     }
 
@@ -82,33 +82,33 @@ class GetOrphansCommand extends BaseCommand
 
             $this->logger->info('Checking ' . $model::query()->getQuery()->from . ' table.');
 
-            $modelObject = new $model;
+            $modelObject = new $model();
             $checkOrphan = $modelObject->getOrphanIds();
-            switch($checkOrphan['status']){
+            switch($checkOrphan['status']) {
                 case 0:
                     $this->logger->info($checkOrphan['message']);
                     break;
-                    case 1:
-                        $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
-                        if ($input->getOption('remove') && !empty($aOrphansEntities[$model])) {
-                            $this->logger->error($checkOrphan['message']);
-                            $bRemove = $helper->ask($input, $output, $question);
+                case 1:
+                    $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
+                    if ($input->getOption('remove') && !empty($aOrphansEntities[$model])) {
+                        $this->logger->error($checkOrphan['message']);
+                        $bRemove = $helper->ask($input, $output, $question);
 
-                            if ($bRemove) {
-                                $modelObject::whereIn('id', $aOrphansEntities[$model])->delete();
-                                $this->logger->warning('Orphan entries was removed.');
-                            } else {
-                                $this->logger->warning('Orphan entries removing was skipped.');
-                            }
+                        if ($bRemove) {
+                            $modelObject::whereIn('id', $aOrphansEntities[$model])->delete();
+                            $this->logger->warning('Orphan entries was removed.');
                         } else {
-                            $this->logger->error($checkOrphan['message']);
+                            $this->logger->warning('Orphan entries removing was skipped.');
                         }
-                        break;
-                    default:
-                        $this->logger->info($checkOrphan['message']);
-                        break;
-                }
-                echo PHP_EOL;
+                    } else {
+                        $this->logger->error($checkOrphan['message']);
+                    }
+                    break;
+                default:
+                    $this->logger->info($checkOrphan['message']);
+                    break;
+            }
+            echo PHP_EOL;
         }
         $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
     }
@@ -116,8 +116,8 @@ class GetOrphansCommand extends BaseCommand
     protected function checkFileOrphans($fdEntities, $input, $output)
     {
         $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion('Remove files of the orphan users? [yes]', true);   
-        
+        $question = new ConfirmationQuestion('Remove files of the orphan users? [yes]', true);
+
         $dirFiles = \Aurora\System\Api::DataPath() . "/files";
         $dirPersonalFiles = $dirFiles . "/private";
         $dirOrphanFiles = $dirFiles . "/orphan_user_files";
@@ -128,27 +128,27 @@ class GetOrphansCommand extends BaseCommand
 
             $dirs = array_diff(scandir($dirPersonalFiles), array('..', '.'));
 
-            $users = new \Aurora\Modules\Core\Models\User;
+            $users = new \Aurora\Modules\Core\Models\User();
             $orphanUUIDs = array_values(array_diff($dirs, $users::pluck('UUID')->toArray()));
-          
+
             $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;
             $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
-                        
+
             if (!empty($orphanUUIDs)) {
                 $this->logger->error("Personal files orphans were found: " . count($orphanUUIDs));
 
                 if ($input->getOption('remove') && !empty($orphanUUIDs)) {
                     $bRemove = $helper->ask($input, $output, $question);
-    
+
                     if ($bRemove) {
                         if (!is_dir($dirOrphanFiles)) {
-                            mkdir($dirOrphanFiles); 
+                            mkdir($dirOrphanFiles);
                         }
-    
+
                         foreach ($orphanUUIDs as $orphanUUID) {
-                            rename( $dirPersonalFiles."/".$orphanUUID, $dirOrphanFiles."/".$orphanUUID);
+                            rename($dirPersonalFiles."/".$orphanUUID, $dirOrphanFiles."/".$orphanUUID);
                         }
-    
+
                         $this->logger->warning('Orphan user files were moved to ' . $dirOrphanFiles . '.');
                     } else {
                         $this->logger->warning('Orphan user files removing was skipped.');
@@ -168,7 +168,7 @@ class GetOrphansCommand extends BaseCommand
         );
         $dirName = \Aurora\System\Api::DataPath() . "/get-orphans-logs";
         $entitiesFileName = $dirName . "/orphans_".date('Y-m-d_H-i-s').".json";
-        
+
         $dirname = dirname($entitiesFileName);
         if (!is_dir($dirname)) {
             mkdir($dirname, 0755, true);

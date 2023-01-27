@@ -14,4 +14,6 @@ namespace Aurora\System\Module;
  *
  * @package Api
  */
-class DefaultSettings extends \Aurora\System\AbstractSettings {}
+class DefaultSettings extends \Aurora\System\AbstractSettings
+{
+}

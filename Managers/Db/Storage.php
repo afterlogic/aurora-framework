@@ -14,106 +14,97 @@ namespace Aurora\System\Managers\Db;
  */
 class Storage extends \Aurora\System\Managers\AbstractStorage
 {
-	/**
-	 * @var CDbStorage $oConnection
-	 */
-	protected $oConnection;
+    /**
+     * @var CDbStorage $oConnection
+     */
+    protected $oConnection;
 
-	/**
-	 * @var CApiDavCommandCreatorMySQL
-	 */
-	protected $oCommandCreator;
+    /**
+     * @var CApiDavCommandCreatorMySQL
+     */
+    protected $oCommandCreator;
 
-	/**
-	 *
-	 * @param \Aurora\System\Managers\Db $oManager
-	 */
-	public function __construct(\Aurora\System\Managers\Db &$oManager)
-	{
-		parent::__construct($oManager);
+    /**
+     *
+     * @param \Aurora\System\Managers\Db $oManager
+     */
+    public function __construct(\Aurora\System\Managers\Db &$oManager)
+    {
+        parent::__construct($oManager);
 
-		$this->oConnection =& $oManager->GetConnection();
-		$this->oCommandCreator = new CommandCreator\MySQL();
-	}
+        $this->oConnection =& $oManager->GetConnection();
+        $this->oCommandCreator = new CommandCreator\MySQL();
+    }
 
-	/**
-	 * Executes queries from sql string.
-	 *
-	 * @param string $sSql - sql string.
-	 *
-	 * @return boolean
-	 */
-	public function executeSql($sSql)
-	{
-		$bResult = false;
+    /**
+     * Executes queries from sql string.
+     *
+     * @param string $sSql - sql string.
+     *
+     * @return boolean
+     */
+    public function executeSql($sSql)
+    {
+        $bResult = false;
 
-		$sDbPrefix = $this->oCommandCreator->prefix();
-		if (!empty($sSql) && $this->oConnection)
-		{
-			$sPrepSql = trim(str_replace('%PREFIX%', $sDbPrefix, $sSql));
-			if (!empty($sPrepSql))
-			{
-				$bResult = $this->oConnection->Execute($sPrepSql);
-			}
-			$this->throwDbExceptionIfExist();
-		}
+        $sDbPrefix = $this->oCommandCreator->prefix();
+        if (!empty($sSql) && $this->oConnection) {
+            $sPrepSql = trim(str_replace('%PREFIX%', $sDbPrefix, $sSql));
+            if (!empty($sPrepSql)) {
+                $bResult = $this->oConnection->Execute($sPrepSql);
+            }
+            $this->throwDbExceptionIfExist();
+        }
 
-		return $bResult;
-	}
+        return $bResult;
+    }
 
-	/**
-	 * Executes queries from sql file.
-	 *
-	 * @param string $sFilePath Path to sql file.
-	 *
-	 * @return boolean
-	 */
-	public function executeSqlFile($sFilePath)
-	{
-		$bResult = false;
+    /**
+     * Executes queries from sql file.
+     *
+     * @param string $sFilePath Path to sql file.
+     *
+     * @return boolean
+     */
+    public function executeSqlFile($sFilePath)
+    {
+        $bResult = false;
 
-		$sDbPrefix = $this->oCommandCreator->prefix();
+        $sDbPrefix = $this->oCommandCreator->prefix();
 
-		$mFileContent = file_exists($sFilePath) ? file_get_contents($sFilePath) : false;
+        $mFileContent = file_exists($sFilePath) ? file_get_contents($sFilePath) : false;
 
-		if ($mFileContent && $this->oConnection)
-		{
-			$aSqlStrings = explode(';', $mFileContent);
-			foreach ($aSqlStrings as $sSql)
-			{
-				$sPrepSql = trim(str_replace('%PREFIX%', $sDbPrefix, $sSql));
-				if (!empty($sPrepSql))
-				{
-					$bResult = $this->oConnection->Execute($sPrepSql);
-				}
-				$this->throwDbExceptionIfExist();
-			}
-		}
+        if ($mFileContent && $this->oConnection) {
+            $aSqlStrings = explode(';', $mFileContent);
+            foreach ($aSqlStrings as $sSql) {
+                $sPrepSql = trim(str_replace('%PREFIX%', $sDbPrefix, $sSql));
+                if (!empty($sPrepSql)) {
+                    $bResult = $this->oConnection->Execute($sPrepSql);
+                }
+                $this->throwDbExceptionIfExist();
+            }
+        }
 
-		return $bResult;
-	}
+        return $bResult;
+    }
 
-	public function columnExists($sTable, $sColumn)
-	{
-		$bResult = false;
+    public function columnExists($sTable, $sColumn)
+    {
+        $bResult = false;
 
-		$sDbPrefix = $this->oCommandCreator->prefix();
-		if ($this->oConnection)
-		{
-			$sSql = $this->oCommandCreator->columnExists($sTable, $sColumn);
+        $sDbPrefix = $this->oCommandCreator->prefix();
+        if ($this->oConnection) {
+            $sSql = $this->oCommandCreator->columnExists($sTable, $sColumn);
 
-			if ($this->oConnection->Execute($sSql))
-			{
-				$oRow = $this->oConnection->GetNextRecord();
-				if ($oRow !== false)
-				{
-					if ((int) $oRow->cnt > 0)
-					{
-						$bResult = true;
-					}
-				}
-			}
-		}
-		return $bResult;
-	}
+            if ($this->oConnection->Execute($sSql)) {
+                $oRow = $this->oConnection->GetNextRecord();
+                if ($oRow !== false) {
+                    if ((int) $oRow->cnt > 0) {
+                        $bResult = true;
+                    }
+                }
+            }
+        }
+        return $bResult;
+    }
 }

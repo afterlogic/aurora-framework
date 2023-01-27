@@ -16,39 +16,37 @@ namespace Aurora\System\Managers;
  */
 abstract class AbstractManagerWithStorage extends AbstractManager
 {
-	/**
-	 * @var \Aurora\System\Managers\AbstractStorage
-	 */
-	public $oStorage;
+    /**
+     * @var \Aurora\System\Managers\AbstractStorage
+     */
+    public $oStorage;
 
-	/**
-	 * @param \Aurora\System\Module\AbstractModule $oModule
-	 * @param \Aurora\System\Managers\AbstractStorage $oStorage
-	 * @return \Aurora\System\Managers\AbstractManager
-	 */
-	public function __construct(\Aurora\System\Module\AbstractModule $oModule, AbstractStorage $oStorage)
-	{
-		parent::__construct($oModule);
-		$this->oStorage = $oStorage;
-	}
+    /**
+     * @param \Aurora\System\Module\AbstractModule $oModule
+     * @param \Aurora\System\Managers\AbstractStorage $oStorage
+     * @return \Aurora\System\Managers\AbstractManager
+     */
+    public function __construct(\Aurora\System\Module\AbstractModule $oModule, AbstractStorage $oStorage)
+    {
+        parent::__construct($oModule);
+        $this->oStorage = $oStorage;
+    }
 
-	/**
-	 * @return \Aurora\System\Managers\AbstractStorage
-	 */
-	public function &GetStorage()
-	{
-		return $this->oStorage;
-	}
+    /**
+     * @return \Aurora\System\Managers\AbstractStorage
+     */
+    public function &GetStorage()
+    {
+        return $this->oStorage;
+    }
 
-	public function moveStorageExceptionToManager()
-	{
-		if ($this->oStorage)
-		{
-			$oException = $this->oStorage->GetStorageException();
-			if ($oException)
-			{
-				$this->oLastException = $oException;
-			}
-		}
-	}
+    public function moveStorageExceptionToManager()
+    {
+        if ($this->oStorage) {
+            $oException = $this->oStorage->GetStorageException();
+            if ($oException) {
+                $this->oLastException = $oException;
+            }
+        }
+    }
 }

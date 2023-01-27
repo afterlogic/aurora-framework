@@ -14,80 +14,73 @@ namespace Aurora\System\Utils;
  */
 class Validate
 {
-	/**
-	 * @param string $sFuncName
-	 * @return string
-	 */
-	public static function GetError($sFuncName)
-	{
-		switch ($sFuncName)
-		{
-			case 'Port':
-				return 'Required valid port.';
-			case 'IsEmpty':
-				return 'Required fields cannot be empty.';
-		}
+    /**
+     * @param string $sFuncName
+     * @return string
+     */
+    public static function GetError($sFuncName)
+    {
+        switch ($sFuncName) {
+            case 'Port':
+                return 'Required valid port.';
+            case 'IsEmpty':
+                return 'Required fields cannot be empty.';
+        }
 
-		return 'Error';
-	}
+        return 'Error';
+    }
 
-	/**
-	 * @param mixed $mValue
-	 * @return bool
-	 */
-	public static function IsValidLogin($mValue)
-	{
-		return preg_match('/^[a-zA-Z0-9@\-_\.]+$/', $mValue);
-	}
+    /**
+     * @param mixed $mValue
+     * @return bool
+     */
+    public static function IsValidLogin($mValue)
+    {
+        return preg_match('/^[a-zA-Z0-9@\-_\.]+$/', $mValue);
+    }
 
-	/**
-	 * @param mixed $mValue
-	 * @return bool
-	 */
-	public static function IsEmpty($mValue)
-	{
-		return !is_string($mValue) || 0 === strlen($mValue);
-	}
+    /**
+     * @param mixed $mValue
+     * @return bool
+     */
+    public static function IsEmpty($mValue)
+    {
+        return !is_string($mValue) || 0 === strlen($mValue);
+    }
 
-	/**
-	 * @param mixed $mValue
-	 * @return bool
-	 */
-	public static function Port($mValue)
-	{
-		$bResult = false;
-		if (0 < strlen((string) $mValue) && is_numeric($mValue))
-		{
-			$iPort = (int) $mValue;
-			if (0 < $iPort && $iPort < 65355)
-			{
-				$bResult = true;
-			}
-		}
-		return $bResult;
-	}
+    /**
+     * @param mixed $mValue
+     * @return bool
+     */
+    public static function Port($mValue)
+    {
+        $bResult = false;
+        if (0 < strlen((string) $mValue) && is_numeric($mValue)) {
+            $iPort = (int) $mValue;
+            if (0 < $iPort && $iPort < 65355) {
+                $bResult = true;
+            }
+        }
+        return $bResult;
+    }
 
-	/**
-	 * @param mixed $mValue
-	 * @return bool
-	 */
-	public static function IsValidPassword($mValue)
-	{
-		$bResult = true;
-		$oSettings =& \Aurora\System\Api::GetSettings();
-		$iPasswordMinLength = $oSettings->PasswordMinLength;
-		$bPasswordMustBeComplex = $oSettings->PasswordMustBeComplex;
+    /**
+     * @param mixed $mValue
+     * @return bool
+     */
+    public static function IsValidPassword($mValue)
+    {
+        $bResult = true;
+        $oSettings =& \Aurora\System\Api::GetSettings();
+        $iPasswordMinLength = $oSettings->PasswordMinLength;
+        $bPasswordMustBeComplex = $oSettings->PasswordMustBeComplex;
 
-		if (strlen($mValue) < $iPasswordMinLength)
-		{
-			$bResult = false;
+        if (strlen($mValue) < $iPasswordMinLength) {
+            $bResult = false;
+        } elseif ($bPasswordMustBeComplex && (!preg_match('([0-9])', $mValue) || !preg_match('([!,%,&,@,#,$,^,*,?,_,~])', $mValue))) {
+            $bResult = false;
+        }
 
-		}
-		else if ($bPasswordMustBeComplex && (!preg_match('([0-9])', $mValue) || !preg_match('([!,%,&,@,#,$,^,*,?,_,~])', $mValue)))
-		{
-			$bResult = false;
-		}
-
-		return $bResult;
-	}
+        return $bResult;
+    }
 }

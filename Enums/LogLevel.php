@@ -14,16 +14,16 @@ namespace Aurora\System\Enums;
  */
 class LogLevel extends \Aurora\System\Enums\AbstractEnumeration
 {
-	const Full = 100;
-	const Warning = 50;
-	const Error = 20;
+    public const Full = 100;
+    public const Warning = 50;
+    public const Error = 20;
 
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'Full' => self::Full,
-		'Warning' => self::Warning,
-		'Error' => self::Error,
-	);
+    /**
+     * @var array
+     */
+    protected $aConsts = array(
+        'Full' => self::Full,
+        'Warning' => self::Warning,
+        'Error' => self::Error,
+    );
 }

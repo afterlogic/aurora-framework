@@ -2,7 +2,6 @@
 
 namespace Aurora\System\Console\Commands\Migrations;
 
-
 use Aurora\System\Console\Commands\BaseCommand;
 use Illuminate\Database\Console\Migrations\TableGuesser;
 use Illuminate\Database\Migrations\MigrationCreator;
@@ -16,7 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrateMakeCommand extends BaseCommand
 {
-
     /**
      * The migration creator instance.
      *
@@ -50,8 +48,8 @@ class MigrateMakeCommand extends BaseCommand
     {
         $this->setName('make:migration')
             ->setDescription('Create the migration repository')
-            ->addArgument('name',InputArgument::REQUIRED, 'The name of the migration')
-            ->addArgument('module',InputArgument::REQUIRED, 'The module for the migration')
+            ->addArgument('name', InputArgument::REQUIRED, 'The name of the migration')
+            ->addArgument('module', InputArgument::REQUIRED, 'The module for the migration')
             ->addOption('create', null, InputOption::VALUE_OPTIONAL, 'The table to be created')
             ->addOption('table', null, InputOption::VALUE_OPTIONAL, 'The table to migrate')
             ->addOption('path', null, InputOption::VALUE_OPTIONAL, 'The location where the migration file should be created')
@@ -112,7 +110,10 @@ class MigrateMakeCommand extends BaseCommand
     protected function writeMigration($name, $table, $create, $input, $output)
     {
         $file = $this->creator->create(
-            $name, $this->getMigrationPath($input->getArgument('module')), $table, $create
+            $name,
+            $this->getMigrationPath($input->getArgument('module')),
+            $table,
+            $create
         );
 
         if (!$input->getOption('fullpath')) {
@@ -121,5 +122,4 @@ class MigrateMakeCommand extends BaseCommand
 
         $output->writeln("<info>Created Migration:</info> {$file}");
     }
-
 }

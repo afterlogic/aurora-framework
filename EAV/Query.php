@@ -157,10 +157,8 @@ class Query
     {
         $mResult = false;
 
-        if (!$this->bCount)
-        {
-            if ($this->bOnlyUUIDs)
-            {
+        if (!$this->bCount) {
+            if ($this->bOnlyUUIDs) {
                 $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesUids(
                     $this->sType,
                     $this->iOffset,
@@ -170,11 +168,8 @@ class Query
                     $this->iSortOrder,
                     $this->sCustomViewSql
                 );
-            }
-            else
-            {
-                if (!$this->bAsArray)
-                {
+            } else {
+                if (!$this->bAsArray) {
                     $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntities(
                         $this->sType,
                         $this->aViewAttributes,
@@ -186,9 +181,7 @@ class Query
                         $this->aIdOrUuids,
                         $this->sCustomViewSql
                     );
-                }
-                else
-                {
+                } else {
                     $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesAsArray(
                         $this->sType,
                         $this->aViewAttributes,
@@ -203,13 +196,10 @@ class Query
                 }
             }
 
-            if ($this->bOne && is_array($mResult) && count($mResult) > 0)
-            {
+            if ($this->bOne && is_array($mResult) && count($mResult) > 0) {
                 $mResult = $mResult[0];
             }
-        }
-        else
-        {
+        } else {
             $mResult = \Aurora\System\Managers\Eav::getInstance()->getEntitiesCount(
                 $this->sType,
                 $this->aWhere,
@@ -224,26 +214,19 @@ class Query
     {
         $aWhere = [];
 
-        if (is_array($aRawWhere) && count($aRawWhere) > 0)
-        {
+        if (is_array($aRawWhere) && count($aRawWhere) > 0) {
             $iAndIndex = 1;
             $iOrIndex = 1;
-            foreach ($aRawWhere as $aSubWhere)
-            {
-                if (is_array($aSubWhere))
-                {
-                    foreach ($aSubWhere as $sKey => $a2ndSubWhere)
-                    {
-                        if (is_array($a2ndSubWhere))
-                        {
+            foreach ($aRawWhere as $aSubWhere) {
+                if (is_array($aSubWhere)) {
+                    foreach ($aSubWhere as $sKey => $a2ndSubWhere) {
+                        if (is_array($a2ndSubWhere)) {
                             $sNewKey = $sKey;
-                            if ($sKey === '$AND')
-                            {
+                            if ($sKey === '$AND') {
                                 $sNewKey = $iAndIndex.'$AND';
                                 $iAndIndex++;
                             }
-                            if ($sKey === '$OR')
-                            {
+                            if ($sKey === '$OR') {
                                 $sNewKey = $iOrIndex.'$OR';
                                 $iOrIndex++;
                             }
@@ -252,9 +235,7 @@ class Query
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             // It's forbidden to request contacts without any filters because in that case all contacts of all users will be returned.
             // If filters are empty, there is no subscribers from modules that describe behaviour of contacts storages.
             throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::InvalidInputParameter);
@@ -262,6 +243,4 @@ class Query
 
         return $aWhere;
     }
-
-
 }

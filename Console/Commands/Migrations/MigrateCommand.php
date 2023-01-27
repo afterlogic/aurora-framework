@@ -83,7 +83,7 @@ class MigrateCommand extends BaseCommand
                     '--force'  => true,
                 ]);
                 $this->getApplication()->find('db:seed')->run($seedInput, $output);
-             }
+            }
         });
 
         return Command::SUCCESS;

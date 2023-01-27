@@ -5,7 +5,7 @@ include_once __DIR__ . '/../autoload.php';
 \Aurora\System\Api::Init();
 
 if (PHP_SAPI !== 'cli') {
-	\Aurora\System\Api::requireAdminAuth();
+    \Aurora\System\Api::requireAdminAuth();
 }
 
 $iAuthTokenExpiryPeriodDays = \Aurora\Api::GetSettings()->GetValue('AuthTokenExpirationLifetimeDays', 0);

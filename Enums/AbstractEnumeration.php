@@ -14,26 +14,26 @@ namespace Aurora\System\Enums;
  */
 abstract class AbstractEnumeration
 {
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array();
+    /**
+     * @var array
+     */
+    protected $aConsts = array();
 
-	/**
-	 *
-	 * @return array
-	 */
-	public function getMap()
-	{
-		return $this->aConsts;
-	}
+    /**
+     *
+     * @return array
+     */
+    public function getMap()
+    {
+        return $this->aConsts;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public static function validateValue($value)
-	{
-		/* @phpstan-ignore-next-line */
-		return in_array($value, array_values((new static())->getMap()));
-	}
+    /**
+     * @return bool
+     */
+    public static function validateValue($value)
+    {
+        /* @phpstan-ignore-next-line */
+        return in_array($value, array_values((new static())->getMap()));
+    }
 }

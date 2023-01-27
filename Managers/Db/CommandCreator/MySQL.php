@@ -22,5 +22,4 @@ class MySQL extends \Aurora\System\Db\AbstractCommandCreator
         WHERE table_schema = database()
             AND COLUMN_NAME = %s AND table_name = %s", $this->escapeString($sColumn), $this->escapeString($sTable));
     }
-
 }

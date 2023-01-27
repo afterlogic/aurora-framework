@@ -17,49 +17,48 @@ namespace Aurora\System\Module;
 class Decorator
 {
     /**
-	 *
-	 * @var string
-	 */
-	protected $sModuleName;
+     *
+     * @var string
+     */
+    protected $sModuleName;
 
     /**
-	 *
-	 * @param string $sModuleName
-	 */
-	public function __construct($sModuleName)
-	{
-		$this->sModuleName = $sModuleName;
-	}
+     *
+     * @param string $sModuleName
+     */
+    public function __construct($sModuleName)
+    {
+        $this->sModuleName = $sModuleName;
+    }
 
-	/**
-	 *
-	 * @return Decorator
-	 */
-	public static function __callStatic($sMethodName, $aArguments)
-	{
-		return new self($sMethodName);
-	}
+    /**
+     *
+     * @return Decorator
+     */
+    public static function __callStatic($sMethodName, $aArguments)
+    {
+        return new self($sMethodName);
+    }
 
-	/**
-	 *
-	 * @param string $sMethodName
-	 * @param array $aArguments
-	 * @return mixed
-	 */
-	public function __call($sMethodName, $aArguments)
-	{
-		$mResult = false;
-		$oModule = \Aurora\System\Api::GetModule($this->sModuleName);
-		if ($oModule instanceof AbstractModule)
-		{
-			$mResult = $oModule->CallMethod($sMethodName, $aArguments);
-		}
+    /**
+     *
+     * @param string $sMethodName
+     * @param array $aArguments
+     * @return mixed
+     */
+    public function __call($sMethodName, $aArguments)
+    {
+        $mResult = false;
+        $oModule = \Aurora\System\Api::GetModule($this->sModuleName);
+        if ($oModule instanceof AbstractModule) {
+            $mResult = $oModule->CallMethod($sMethodName, $aArguments);
+        }
 
-		return $mResult;
-	}
+        return $mResult;
+    }
 }
 
 function Decorator()
 {
-	echo 'Decorator';
+    echo 'Decorator';
 }

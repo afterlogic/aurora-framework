@@ -16,80 +16,74 @@ namespace Aurora\System\Managers;
  */
 class Thumb
 {
-	public static function RemoveFromCache($iUserId, $sHash, $sFileName)
-	{
-		$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
-		$sMd5Hash = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
-		if ($oCache->has($sMd5Hash))
-		{
-			$oCache->delete($sMd5Hash);
-		}
-	}
+    public static function RemoveFromCache($iUserId, $sHash, $sFileName)
+    {
+        $oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+        $sMd5Hash = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+        if ($oCache->has($sMd5Hash)) {
+            $oCache->delete($sMd5Hash);
+        }
+    }
 
-	/**
-	 * @param \Intervention\Image\Image $image
-	 */
+    /**
+     * @param \Intervention\Image\Image $image
+     */
 
-	public static function GetHash()
-	{
-		$sHash = (string) \Aurora\System\Router::getItemByIndex(1, '');
-		if (empty($sHash))
-		{
-			$sHash = \rand(1000, 9999);
-		}
+    public static function GetHash()
+    {
+        $sHash = (string) \Aurora\System\Router::getItemByIndex(1, '');
+        if (empty($sHash)) {
+            $sHash = \rand(1000, 9999);
+        }
 
-		return $sHash;
-	}
+        return $sHash;
+    }
 
-	public static function GetCacheFilename($sHash, $sFileName)
-	{
-		return \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
-	}
+    public static function GetCacheFilename($sHash, $sFileName)
+    {
+        return \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+    }
 
-	public static function GetResourceCache($iUserId, $sFileName)
-	{
-		$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+    public static function GetResourceCache($iUserId, $sFileName)
+    {
+        $oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
 
-		return $oCache->get(
-			self::GetCacheFilename(self::GetHash(), $sFileName)
-		);
-	}
+        return $oCache->get(
+            self::GetCacheFilename(self::GetHash(), $sFileName)
+        );
+    }
 
-	public static function GetResource($iUserId, $rResource, $sFileName, $bShow = true)
-	{
-		$sThumb = null;
+    public static function GetResource($iUserId, $rResource, $sFileName, $bShow = true)
+    {
+        $sThumb = null;
 
-		try
-		{
-			$sCacheFilename = self::GetCacheFilename(self::GetHash(), $sFileName);
-			$sCacheFilePathTmp = Cache::getPath() . $sCacheFilename . '-' . $sFileName;
-			$rFile = \fopen($sCacheFilePathTmp, 'w+');
-			\fwrite($rFile, \stream_get_contents($rResource));
+        try {
+            $sCacheFilename = self::GetCacheFilename(self::GetHash(), $sFileName);
+            $sCacheFilePathTmp = Cache::getPath() . $sCacheFilename . '-' . $sFileName;
+            $rFile = \fopen($sCacheFilePathTmp, 'w+');
+            \fwrite($rFile, \stream_get_contents($rResource));
 
-			$oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
-			$oThumb = $oImageManager->make($rFile)->orientate();
+            $oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
+            $oThumb = $oImageManager->make($rFile)->orientate();
 
-			$sThumb = $oThumb->heighten(94)->widen(118)->response();
+            $sThumb = $oThumb->heighten(94)->widen(118)->response();
 
-			\unlink($sCacheFilePathTmp);
+            \unlink($sCacheFilePathTmp);
 
-			$oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
-			$oCache->set(
-				$sCacheFilename,
-				$sThumb
-			);
-		}
-		catch (\Exception $oE) {
-			\Aurora\System\Api::LogException($oE, \Aurora\System\Enums\LogLevel::Full);
-		}
+            $oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+            $oCache->set(
+                $sCacheFilename,
+                $sThumb
+            );
+        } catch (\Exception $oE) {
+            \Aurora\System\Api::LogException($oE, \Aurora\System\Enums\LogLevel::Full);
+        }
 
-		if ($bShow)
-		{
-			echo $sThumb; exit();
-		}
-		else
-		{
-			return $sThumb;
-		}
-	}
+        if ($bShow) {
+            echo $sThumb;
+            exit();
+        } else {
+            return $sThumb;
+        }
+    }
 }

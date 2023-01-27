@@ -16,64 +16,64 @@ namespace Aurora\System;
  */
 class Notifications
 {
-	const InvalidToken = 101;
-	const AuthError = 102;
-	const InvalidInputParameter = 103;
-	const DataBaseError = 104;
-	const LicenseProblem = 105;
-	const DemoAccount = 106;
-	const CaptchaError = 107;
-	const AccessDenied = 108;
-	const UnknownEmail = 109;
-	const HttpsApiAccess = 110;
-	const UserAlreadyExists = 111;
-	const SystemNotConfigured = 112;
-	const ModuleNotFound = 113;
-	const MethodNotFound = 114;
-	const LicenseLimit = 115;
-	const MethodAccessDenied= 116;
+    public const InvalidToken = 101;
+    public const AuthError = 102;
+    public const InvalidInputParameter = 103;
+    public const DataBaseError = 104;
+    public const LicenseProblem = 105;
+    public const DemoAccount = 106;
+    public const CaptchaError = 107;
+    public const AccessDenied = 108;
+    public const UnknownEmail = 109;
+    public const HttpsApiAccess = 110;
+    public const UserAlreadyExists = 111;
+    public const SystemNotConfigured = 112;
+    public const ModuleNotFound = 113;
+    public const MethodNotFound = 114;
+    public const LicenseLimit = 115;
+    public const MethodAccessDenied= 116;
 
-	const CanNotSaveSettings = 501;
-	const CanNotChangePassword = 502;
-	const AccountOldPasswordNotCorrect = 503;
+    public const CanNotSaveSettings = 501;
+    public const CanNotChangePassword = 502;
+    public const AccountOldPasswordNotCorrect = 503;
 
-	const CanNotCreateContact = 601;
-	const CanNotCreateGroup = 602;
-	const CanNotUpdateContact = 603;
-	const CanNotUpdateGroup = 604;
-	const ContactDataHasBeenModifiedByAnotherApplication = 605;
-	const CanNotGetContact = 607;
+    public const CanNotCreateContact = 601;
+    public const CanNotCreateGroup = 602;
+    public const CanNotUpdateContact = 603;
+    public const CanNotUpdateGroup = 604;
+    public const ContactDataHasBeenModifiedByAnotherApplication = 605;
+    public const CanNotGetContact = 607;
 
-	const CanNotCreateAccount = 701;
-    const AccountExists = 704;
+    public const CanNotCreateAccount = 701;
+    public const AccountExists = 704;
 
-	// Rest
-	const RestOtherError = 710;
-	const RestApiDisabled = 711;
-	const RestUnknownMethod = 712;
-	const RestInvalidParameters = 713;
-	const RestInvalidCredentials = 714;
-	const RestInvalidToken = 715;
-	const RestTokenExpired = 716;
-	const RestAccountFindFailed = 717;
-	const RestTenantFindFailed = 719;
+    // Rest
+    public const RestOtherError = 710;
+    public const RestApiDisabled = 711;
+    public const RestUnknownMethod = 712;
+    public const RestInvalidParameters = 713;
+    public const RestInvalidCredentials = 714;
+    public const RestInvalidToken = 715;
+    public const RestTokenExpired = 716;
+    public const RestAccountFindFailed = 717;
+    public const RestTenantFindFailed = 719;
 
-	const CalendarsNotAllowed = 801;
-	const FilesNotAllowed = 802;
-	const ContactsNotAllowed = 803;
-	const HelpdeskUserAlreadyExists = 804;
-	const HelpdeskSystemUserExists = 805;
-	const CanNotCreateHelpdeskUser = 806;
-	const HelpdeskUnknownUser = 807;
-	const HelpdeskUnactivatedUser = 808;
-	const VoiceNotAllowed = 810;
-	const IncorrectFileExtension = 811;
-	const CanNotUploadFileQuota = 812;
-	const FileAlreadyExists = 813;
-	const FileNotFound = 814;
-	const CanNotUploadFileLimit = 815;
-	const CanNotUploadFileErrorData = 816;
+    public const CalendarsNotAllowed = 801;
+    public const FilesNotAllowed = 802;
+    public const ContactsNotAllowed = 803;
+    public const HelpdeskUserAlreadyExists = 804;
+    public const HelpdeskSystemUserExists = 805;
+    public const CanNotCreateHelpdeskUser = 806;
+    public const HelpdeskUnknownUser = 807;
+    public const HelpdeskUnactivatedUser = 808;
+    public const VoiceNotAllowed = 810;
+    public const IncorrectFileExtension = 811;
+    public const CanNotUploadFileQuota = 812;
+    public const FileAlreadyExists = 813;
+    public const FileNotFound = 814;
+    public const CanNotUploadFileLimit = 815;
+    public const CanNotUploadFileErrorData = 816;
 
-	const MailServerError = 901;
-	const UnknownError = 999;
+    public const MailServerError = 901;
+    public const UnknownError = 999;
 }

@@ -9,8 +9,8 @@ namespace Aurora\System\Classes;
 
 use Aurora\System\EventEmitter;
 use Aurora\System\Validator;
-use \Illuminate\Database\Eloquent\Model as Eloquent;
-use \Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Model extends Eloquent
 {
@@ -73,37 +73,35 @@ class Model extends Eloquent
      *
      * @var string|null
      */
-    const CREATED_AT = 'CreatedAt';
+    public const CREATED_AT = 'CreatedAt';
 
     /**
      * The name of the "updated at" column.
      *
      * @var string|null
      */
-    const UPDATED_AT = 'UpdatedAt';
-    
+    public const UPDATED_AT = 'UpdatedAt';
+
     protected function castAttribute($key, $value)
     {
-        if (is_null($value))
-        {
-            switch ($this->getCastType($key))
-            {
+        if (is_null($value)) {
+            switch ($this->getCastType($key)) {
                 case 'array':
                     $value = [];
                     break;
-                
+
                 case 'string':
                     $value = '';
                     break;
-                    
+
                 case 'boolean':
                     $value = false;
                     break;
             }
-            
+
             return $value;
         }
-        
+
         return parent::castAttribute($key, $value);
     }
 
@@ -163,7 +161,7 @@ class Model extends Eloquent
             return ['status' => -1, 'message' => 'Foreign field doesn\'t exist'];
         }
         $tableName = $this->getTable();
-        $foreignObject = new $this->foreignModel;
+        $foreignObject = new $this->foreignModel();
         $foreignTable = $foreignObject->getTable();
         $foreignPK = $foreignObject->primaryKey;
 
@@ -369,11 +367,11 @@ class Model extends Eloquent
     public function generateUUID()
     {
         return sprintf(
-
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
             // 32 bits for "time_low"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
 
             // 16 bits for "time_mid"
             mt_rand(0, 0xffff),
@@ -388,7 +386,9 @@ class Model extends Eloquent
             mt_rand(0, 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
         );
     }
 
@@ -434,7 +434,7 @@ class Model extends Eloquent
      * @param  array  $options
      * @return bool
      */
-    public function save(array $options = []) 
+    public function save(array $options = [])
     {
         if ($this->validate()) {
             return parent::save($options);

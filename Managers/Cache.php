@@ -9,6 +9,7 @@ namespace Aurora\System\Managers;
 
 use Illuminate\Container\Container;
 use Illuminate\Cache\CacheManager;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -22,25 +23,22 @@ class Cache
 
     public function __construct($sStorage, $sPath, $sDriver = 'phpfile')
     {
-        if (!file_exists(self::getPath()))
-        {
+        if (!file_exists(self::getPath())) {
             @mkdir(self::getPath(), 0777, true);
         }
         $sStoragePath = self::getPath() . '/' . $sStorage;
-        if (!file_exists($sStoragePath))
-        {
+        if (!file_exists($sStoragePath)) {
             @mkdir($sStoragePath, 0777, true);
         }
 
-        if ($this->cacheManager === null)
-        {
+        if ($this->cacheManager === null) {
             $app = new Container();
             Container::setInstance($app);
-            $app->singleton('files', function(){
+            $app->singleton('files', function () {
                 return new \Illuminate\Filesystem\Filesystem();
             });
 
-            $app->singleton('config', function() use ($sStoragePath) {
+            $app->singleton('config', function () use ($sStoragePath) {
                 return [
                     'cache.default' => 'file',
                     'cache.stores.file' => [

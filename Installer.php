@@ -16,185 +16,167 @@ use Composer\Script\Event;
  */
 class Installer
 {
-	/**
-	* NOTE! This method should be run from composer.
-	*/
-	public static function checkConfigs()
-	{
-		$RED = "\033[1;31m";
-		$YELLOW = "\033[1;33m";
-		$GREEN = "\033[1;32m";
-		$NC = "\033[0m";
-		
-		$sBaseDir = dirname(dirname(__File__));
-		$sModulesDir = $sBaseDir."/modules/";
-		$aModuleDirs = glob($sModulesDir . '*' , GLOB_ONLYDIR);
+    /**
+    * NOTE! This method should be run from composer.
+    */
+    public static function checkConfigs()
+    {
+        $RED = "\033[1;31m";
+        $YELLOW = "\033[1;33m";
+        $GREEN = "\033[1;32m";
+        $NC = "\033[0m";
 
-		$aModulesOk = [];
-		$aModulesHasError = [];
-		$aModulesNoConfig = [];
+        $sBaseDir = dirname(dirname(__File__));
+        $sModulesDir = $sBaseDir."/modules/";
+        $aModuleDirs = glob($sModulesDir . '*', GLOB_ONLYDIR);
 
-		foreach ($aModuleDirs as $sModuleDir) {
-			$sModuleName = str_replace($sModulesDir, "", $sModuleDir);
-			
-			$sConfigFile = $sModuleDir."/config.json";
-			if (file_exists($sConfigFile)) {
-				if (json_decode(file_get_contents($sConfigFile))) {
-					$aModulesOk[] = $sModuleName;
-				} else {
-					$aModulesHasError[] = $sModuleName;
-				}
-			} else {
-				$aModulesNoConfig[] = $sModuleName;
-			}
-		}
+        $aModulesOk = [];
+        $aModulesHasError = [];
+        $aModulesNoConfig = [];
 
-		echo $GREEN.count($aModuleDirs)." modules were processed".$NC."\r\n\r\n";
+        foreach ($aModuleDirs as $sModuleDir) {
+            $sModuleName = str_replace($sModulesDir, "", $sModuleDir);
 
-		if (count($aModulesHasError) > 0) {
-			echo $YELLOW."The following modules have syntax problems in the config file (".count($aModulesHasError)."):".$NC."\r\n";
-			echo $RED.implode("\r\n", $aModulesHasError).$NC;
-			echo "\r\n\r\n";
-		}
+            $sConfigFile = $sModuleDir."/config.json";
+            if (file_exists($sConfigFile)) {
+                if (json_decode(file_get_contents($sConfigFile))) {
+                    $aModulesOk[] = $sModuleName;
+                } else {
+                    $aModulesHasError[] = $sModuleName;
+                }
+            } else {
+                $aModulesNoConfig[] = $sModuleName;
+            }
+        }
 
-		if (count($aModulesNoConfig) > 0) {
-			echo $YELLOW."The following modules have no config files (".count($aModulesNoConfig)."):".$NC."\r\n";
-			echo $RED.implode("\r\n", $aModulesNoConfig).$NC;
-			echo "\r\n\r\n";
-		}
+        echo $GREEN.count($aModuleDirs)." modules were processed".$NC."\r\n\r\n";
 
-		if (count($aModulesOk) > 0) {
-			echo $GREEN.count($aModulesOk)." modules have no problem with config files".$NC;
-			echo "\r\n";
-		}
-	}
-	
-	/**
-	* NOTE! This method should be run from composer.
-	*/
+        if (count($aModulesHasError) > 0) {
+            echo $YELLOW."The following modules have syntax problems in the config file (".count($aModulesHasError)."):".$NC."\r\n";
+            echo $RED.implode("\r\n", $aModulesHasError).$NC;
+            echo "\r\n\r\n";
+        }
+
+        if (count($aModulesNoConfig) > 0) {
+            echo $YELLOW."The following modules have no config files (".count($aModulesNoConfig)."):".$NC."\r\n";
+            echo $RED.implode("\r\n", $aModulesNoConfig).$NC;
+            echo "\r\n\r\n";
+        }
+
+        if (count($aModulesOk) > 0) {
+            echo $GREEN.count($aModulesOk)." modules have no problem with config files".$NC;
+            echo "\r\n";
+        }
+    }
+
+    /**
+    * NOTE! This method should be run from composer.
+    */
     public static function updateConfigs()
-	{
-		$sBaseDir = dirname(__File__);
-		$sMessage = "Configuration was updated successfully";
+    {
+        $sBaseDir = dirname(__File__);
+        $sMessage = "Configuration was updated successfully";
 
-		include_once $sBaseDir . '/autoload.php';
+        include_once $sBaseDir . '/autoload.php';
 
-		\Aurora\System\Api::Init();
+        \Aurora\System\Api::Init();
 
-		\Aurora\System\Api::GetModuleManager()->SyncModulesConfigs();
+        \Aurora\System\Api::GetModuleManager()->SyncModulesConfigs();
 
-		// $aModules = \Aurora\System\Api::GetModules();
+        // $aModules = \Aurora\System\Api::GetModules();
 
-		// if (is_array($aModules))
-		// {
-			// foreach ($aModules as $oModule)
-			// {
-				// $oModule->saveModuleConfig();
-			// }
-		// }
+        // if (is_array($aModules))
+        // {
+        // foreach ($aModules as $oModule)
+        // {
+        // $oModule->saveModuleConfig();
+        // }
+        // }
 
-		echo $sMessage."\r\n";
-	}
+        echo $sMessage."\r\n";
+    }
 
-	/**
-	* NOTE! This method should be run from composer.
-	*/
+    /**
+    * NOTE! This method should be run from composer.
+    */
     public static function preConfigForce($event)
-	{
-		self::preConfig($event);
-	}
+    {
+        self::preConfig($event);
+    }
 
-	/**
-	* NOTE! This method should be run from composer.
-	*/
+    /**
+    * NOTE! This method should be run from composer.
+    */
     public static function preConfigSafe($event)
-	{
-		$sBaseDir = dirname(__File__);
+    {
+        $sBaseDir = dirname(__File__);
 
-		//Checking that configuration files already exist
-		if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0)
-		{
-			echo "The config files are already exist \r\n";
-			return;
-		}
-		else
-		{
-			self::preConfig($event);
-		}
-	}
-	
-	/**
-	* NOTE! This method should be run from composer.
-	*/
+        //Checking that configuration files already exist
+        if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0) {
+            echo "The config files are already exist \r\n";
+            return;
+        } else {
+            self::preConfig($event);
+        }
+    }
+
+    /**
+    * NOTE! This method should be run from composer.
+    */
     private static function preConfig($event)
     {
-		$sConfigFilename = 'pre-config.json';
-		$sBaseDir = dirname(__File__);
-		$sMessage = "Configuration was updated successfully";
+        $sConfigFilename = 'pre-config.json';
+        $sBaseDir = dirname(__File__);
+        $sMessage = "Configuration was updated successfully";
 
-	    $oExtra = $event->getComposer()->getPackage()->getExtra();
+        $oExtra = $event->getComposer()->getPackage()->getExtra();
 
-		if ($oExtra && isset($oExtra['aurora-installer-pre-config']))
-		{
-			$sConfigFilename = $oExtra['aurora-installer-pre-config'];
-		}
+        if ($oExtra && isset($oExtra['aurora-installer-pre-config'])) {
+            $sConfigFilename = $oExtra['aurora-installer-pre-config'];
+        }
 
-		$sConfigPath = dirname($sBaseDir) . '/' . $sConfigFilename;
+        $sConfigPath = dirname($sBaseDir) . '/' . $sConfigFilename;
 
-		if (file_exists($sConfigPath))
-		{
-			$sPreConfig = file_get_contents($sConfigPath);
+        if (file_exists($sConfigPath)) {
+            $sPreConfig = file_get_contents($sConfigPath);
 
-			$oPreConfig = json_decode($sPreConfig, true);
+            $oPreConfig = json_decode($sPreConfig, true);
 
-			if ($oPreConfig)
-			{
-				include_once $sBaseDir . '/autoload.php';
+            if ($oPreConfig) {
+                include_once $sBaseDir . '/autoload.php';
 
-				\Aurora\System\Api::Init();
+                \Aurora\System\Api::Init();
 
-				if ($oPreConfig['modules'])
-				{
-					$oModuleManager = \Aurora\System\Api::GetModuleManager();
+                if ($oPreConfig['modules']) {
+                    $oModuleManager = \Aurora\System\Api::GetModuleManager();
 
-					foreach ($oPreConfig['modules'] as $sModuleName => $oModuleConfig)
-					{
-						foreach ($oModuleConfig as $sConfigName => $mConfigValue)
-						{
-							$mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
+                    foreach ($oPreConfig['modules'] as $sModuleName => $oModuleConfig) {
+                        foreach ($oModuleConfig as $sConfigName => $mConfigValue) {
+                            $mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
 
-							if ($mValue !== null)
-							{
-								$oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
-								$oModuleManager->saveModuleConfigValue($sModuleName);
-							}
-							else
-							{
-								echo "\r\nInvalid setting '" . $sConfigName . "' in module '" . $sModuleName . "'";
-							}
-						}
-					}
-				}
-				if ($oPreConfig['system'])
-				{
-					$oSettings =&\Aurora\System\Api::GetSettings();
-					foreach ($oPreConfig['system'] as $mKey => $mSett)
-					{
-						$oSettings->{$mKey} = $mSett;
-					}
-					$oSettings->Save();
-				}
-			}
-			else
-			{
-				$sMessage = "Invalid config file";
-			}
-		}
-		else
-		{
-			$sMessage = "Config file didn't found";
-		}
+                            if ($mValue !== null) {
+                                $oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
+                                $oModuleManager->saveModuleConfigValue($sModuleName);
+                            } else {
+                                echo "\r\nInvalid setting '" . $sConfigName . "' in module '" . $sModuleName . "'";
+                            }
+                        }
+                    }
+                }
+                if ($oPreConfig['system']) {
+                    $oSettings =&\Aurora\System\Api::GetSettings();
+                    foreach ($oPreConfig['system'] as $mKey => $mSett) {
+                        $oSettings->{$mKey} = $mSett;
+                    }
+                    $oSettings->Save();
+                }
+            } else {
+                $sMessage = "Invalid config file";
+            }
+        } else {
+            $sMessage = "Config file didn't found";
+        }
 
-		echo $sMessage."\r\n";
+        echo $sMessage."\r\n";
     }
 }

@@ -15,4 +15,6 @@ namespace Aurora\System\Exceptions;
  * @category Core
  * @package Exceptions
  */
-class SettingsException extends \Exception {}
+class SettingsException extends \Exception
+{
+}
