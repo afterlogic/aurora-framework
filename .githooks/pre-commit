@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT=`php -r "echo dirname(dirname(dirname(realpath('$0'))));"`
+PROJECT=`php -r "echo dirname(dirname(realpath('$0')));"`
 STAGED_FILES_CMD=`git diff --name-only --diff-filter=ACMR HEAD | grep "\.php$"`
 
 # Determine if a file list is passed
@@ -26,9 +26,6 @@ do
     fi
     FILES="$FILES $PROJECT/$FILE"
 done
-
-# if [ "$FILES" != "" ]
-# then
 
 PHPSTAN="../../vendor/bin/phpstan"
 
