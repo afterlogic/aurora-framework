@@ -14,30 +14,45 @@ then
 fi
 SFILES=${SFILES:-$STAGED_FILES_CMD}
 
-echo "Checking PHP Lint..."
+echo "Checking PHP files..."
 
 for FILE in $SFILES
 do
     php -l -d display_errors=0 $PROJECT/$FILE
     if [ $? != 0 ]
     then
-        echo "Fix the error before commit."
+        printf "Fix syntax errors before commit."
         exit 1
     fi
     FILES="$FILES $PROJECT/$FILE"
 done
 
-PHPSTAN="../../vendor/bin/phpstan"
+PHPSTAN="../vendor/bin/phpstan"
 
 if [ -f "$PHPSTAN" ]; then
-    echo "Running PhpStan..."
-    # ../../vendor/bin/phpstan analyze --no-progress-bar --no-error-table $FILES
+    echo ""
+    printf "Running PhpStan..."
 	eval "$PHPSTAN analyze --level 0 --no-progress ./"
     if [ $? != 0 ]
     then
-        echo "Fix the error before commit."
-        # echo "Run: './vendor/bin/ecs check $FILES --fix'"
+        echo "Fix PhpStan errors before commit."
         echo "Run: '$PHPSTAN analyze'"
+        exit 1
+    fi
+fi
+
+CSFIXER="../php-cs-fixer.phar"
+
+if [ -f "$CSFIXER" ]; then
+    echo ""
+    echo "Running CS Fixer..."
+
+    eval "php $CSFIXER fix ./ --rules=@PER --dry-run --using-cache=no"
+
+    if [ $? != 0 ]
+    then
+        echo "Fix formatting issues before commit."
+        echo "Run: 'php $CSFIXER fix ./ --rules=@PER --using-cache=no'"
         exit 1
     fi
 fi
