@@ -246,8 +246,8 @@ class Utils
                 $sResult = utf8_encode($sResult);
                 break;
             case ($sFromEncoding === 'utf-8' && $sToEncoding === 'iso-8859-1' && function_exists('utf8_decode')):
-            $sResult = utf8_decode($sResult);
-            break;
+                $sResult = utf8_decode($sResult);
+                break;
             case ($sFromEncoding === 'utf7-imap' && $sToEncoding === 'utf-8'):
                 $sResult = self::Utf7ModifiedToUtf8($sResult);
                 if (false === $sResult) {

@@ -204,8 +204,7 @@ class Eav
         $iSortOrder = \Aurora\System\Enums\SortOrder::ASC,
         $aIdsOrUUIDs = [],
         $sCustomViewSql = ''
-    )
-    {
+    ) {
         return $this->oStorage->getEntitiesAsArray(
             $sType,
             $aViewAttributes,
@@ -241,8 +240,7 @@ class Eav
         $iSortOrder = \Aurora\System\Enums\SortOrder::ASC,
         $aIdsOrUUIDs = [],
         $sCustomViewSql = ''
-    )
-    {
+    ) {
         $aEntities = array();
         try {
             if (is_array($aViewAttributes) && count($aViewAttributes) === 0) {
@@ -274,8 +272,7 @@ class Eav
         $mSortAttributes = [],
         $iSortOrder = \Aurora\System\Enums\SortOrder::ASC,
         $sCustomViewSql = ''
-    )
-    {
+    ) {
         return  $this->oStorage->getEntitiesUids($sType, $iOffset, $iLimit, $aSearchAttrs, $mSortAttributes, $iSortOrder, $sCustomViewSql);
     }
 
@@ -375,8 +372,8 @@ class Eav
             if ($oEntity instanceof \Aurora\System\EAV\Entity) {
                 $aAttributes = array_map(
                     function ($oAttribute) {
-                    return $oAttribute->Name;
-                },
+                        return $oAttribute->Name;
+                    },
                     $oEntity->getOverridedAttributes()
                 );
                 $iCount = $this->getEntitiesCount($sType);

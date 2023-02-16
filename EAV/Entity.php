@@ -728,8 +728,8 @@ class Entity
         return array_filter(
             $this->aAttributes,
             function ($oAttribute) use ($self) {
-            return $self->isOverridedAttribute($oAttribute->Name);
-        }
+                return $self->isOverridedAttribute($oAttribute->Name);
+            }
         );
     }
 

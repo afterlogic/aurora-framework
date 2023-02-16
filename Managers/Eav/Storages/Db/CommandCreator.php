@@ -351,8 +351,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
         $aWhere = [],
         $mOrderAttributes = [],
         $iSortOrder = \Aurora\System\Enums\SortOrder::ASC
-    )
-    {
+    ) {
         $this->getEntities(
             $sEntityType,
             ['UUID'],
@@ -429,8 +428,7 @@ SELECT DISTINCT entity_type FROM %seav_entities',
         $aIdsOrUUIDs = [],
         $bCount = false,
         $sCustomViewSql = ''
-    )
-    {
+    ) {
         $sViewAttributes = "";
         $sWhereAttributes = "";
         $sResultWhere = "";
