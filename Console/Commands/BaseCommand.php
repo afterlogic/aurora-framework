@@ -28,10 +28,9 @@ class BaseCommand extends Command
         }
 
         return array_merge(
-            /* @phpstan-ignore-next-line */
-            [$this->getSystemMigrationsPath()],
-            $this->migrator->paths(),
-            $this->getMigrationPath()
+            [$this->getSystemMigrationsPath()], // @phpstan-ignore-line
+            $this->migrator->paths(), // @phpstan-ignore-line
+            $this->getMigrationPath() //  @phpstan-ignore-line
         );
     }
 
