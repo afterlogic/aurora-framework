@@ -7,6 +7,10 @@
 
 namespace Aurora\System;
 
+use Illuminate\Validation;
+use Illuminate\Filesystem;
+use Illuminate\Translation;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -18,9 +22,15 @@ class Validator
 {
     public static function validate(array $aInputs, array $aRules, $aMessages = [])
     {
-        $validation = (new \Rakit\Validation\Validator())->validate($aInputs, $aRules, $aMessages);
-        if ($validation->fails()) {
-            $errors = $validation->errors();
+        $filesystem = new Filesystem\Filesystem();
+        $fileLoader = new Translation\FileLoader($filesystem, '');
+        $translator = new Translation\Translator($fileLoader, 'en_US');
+        $factory = new Validation\Factory($translator);
+        
+        $validator = $factory->make($aInputs, $aRules, $aMessages);
+        
+        if($validator->fails()){
+            $errors = $validator->errors();
             throw new \Aurora\System\Exceptions\ValidationException(implode("; ", $errors->all()), \Aurora\System\Notifications::InvalidInputParameter);
         }
     }
