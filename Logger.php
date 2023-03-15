@@ -7,6 +7,9 @@
 
 namespace Aurora\System;
 
+use DateTime;
+use DateTimeImmutable;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -97,6 +100,19 @@ class Logger
         }
 
         return $sFilePrefix.$sFileName;
+    }
+
+    public static function getLogFileDateFormat()
+    {
+        $result = '';
+        $oSettings =& Api::GetSettings();
+        if ($oSettings && $oSettings->LogFileName) {
+            preg_match('/\{([\w|-]*)\}/', $oSettings->LogFileName, $matches);
+            if (isset($matches[1])) {
+                $result = $matches[1];
+            }
+        }
+        return $result;
     }
 
     public static function GetLogFileDir()
@@ -308,18 +324,24 @@ class Logger
 
     public static function removeOldLogs()
     {
-        $sLogDir = self::GetLogFileDir();
-        $sLogFile = self::GetLogFileName();
         $oSettings = &Api::GetSettings();
 
         if ($oSettings) {
             $bRemoveOldLogs = $oSettings->GetValue('RemoveOldLogs', true);
+            $iRemoveOldLogsDays = (int) $oSettings->GetValue('RemoveOldLogsDays', 2);
 
-            if (is_dir($sLogDir) && $bRemoveOldLogs/* && !file_exists($sLogDir.$sLogFile)*/) {
-                $sYesterdayLogFile = self::GetLogFileName('', time() - 60 * 60 * 24);
+            $sLogDir = self::GetLogFileDir();
+            if (is_dir($sLogDir) && $bRemoveOldLogs) {
                 $aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
                 foreach ($aLogFiles as $sFileName) {
-                    if (strpos($sFileName, $sLogFile) === false && strpos($sFileName, $sYesterdayLogFile) === false && file_exists($sLogDir.$sFileName)) {
+                    $aPathInfo = pathinfo($sFileName);
+                    $nowDateTime = new \DateTimeImmutable(date(self::getLogFileDateFormat()));
+                    $format = $nowDateTime->format(self::getLogFileDateFormat());
+                    $fileDate = substr($aPathInfo['filename'], -strlen($format));
+                    $fileDateTime = new \DateTimeImmutable($fileDate);
+                    
+                    $dateTimeToRemove = $nowDateTime->sub(new \DateInterval(sprintf('P%dD', $iRemoveOldLogsDays)));
+                    if ($fileDateTime <= $dateTimeToRemove) {
                         unlink($sLogDir.$sFileName);
                     }
                 }
