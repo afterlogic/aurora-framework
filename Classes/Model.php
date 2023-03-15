@@ -82,6 +82,8 @@ class Model extends Eloquent
      */
     public const UPDATED_AT = 'UpdatedAt';
 
+    public static $inheritedAttributesCache = [];
+
     protected function castAttribute($key, $value)
     {
         if (is_null($value)) {
@@ -107,10 +109,16 @@ class Model extends Eloquent
 
     public function getInheritedAttributes()
     {
+        $className = get_class($this);
         $aArgs = ['ClassName' => get_class($this)];
         $aResult = [];
+        if (!isset(self::$inheritedAttributesCache[$className])) {
+            $inheritedAttributes = [];
+            \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $inheritedAttributes);
+            self::$inheritedAttributesCache[$className] = $inheritedAttributes;
+        }
+        $aResult = self::$inheritedAttributesCache[$className];
 
-        \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $aResult);
         return $aResult;
     }
 
