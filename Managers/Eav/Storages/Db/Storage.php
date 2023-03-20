@@ -113,6 +113,7 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 	 */
 	public function updateEntity($oEntity, $bOnlyOverrided = false)
 	{
+		static $attempt_count = 0;
 		$mResult = false;
 		if (0 < $oEntity->countAttributes())
 		{
@@ -126,8 +127,15 @@ class Storage extends \Aurora\System\Managers\Eav\Storages\Storage
 			}
 			catch (\Aurora\System\Exceptions\DbException $oException)
 			{
-				$mResult = false;
-				throw new \Aurora\System\Exceptions\ManagerException(\Aurora\System\Exceptions\Errs::Main_UnknownError, $oException);
+				$sExceptionMessage = $oException->getMessage();
+				if (strpos($sExceptionMessage, '40001') && $attempt_count <= 3) {
+					$attempt_count++;
+					$mResult = $this->updateEntity($oEntity, $bOnlyOverrided);
+				} else {
+					$attempt_count = 0;
+					$mResult = false;
+					throw new \Aurora\System\Exceptions\ManagerException(\Aurora\System\Exceptions\Errs::Main_UnknownError, $oException);	
+				}
 			}
 		}
 
