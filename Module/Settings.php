@@ -36,6 +36,13 @@ class Settings extends \Aurora\System\AbstractSettings
         parent::__construct(
             \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath() . $sModuleName . '.config.json'
         );
+
+        $this->initDefaults(); 
+    }
+
+    protected function initDefaults()
+    {
+        $this->aContainer = [];
     }
 
     public function GetDefaultConfigFilePath()
@@ -46,17 +53,20 @@ class Settings extends \Aurora\System\AbstractSettings
     public function InitDefaultConfiguration()
     {
         if (\file_exists($this->GetDefaultConfigFilePath())) {
-            $sModulesSettingsPath = \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath();
-            if (!\file_exists($sModulesSettingsPath)) {
-                \set_error_handler(function () {
-                });
-                \mkdir($sModulesSettingsPath, 0777);
-                \restore_error_handler();
+            if (count($this->aContainer) > 0) {
+                $this->Save();
+            } else {
+                $sModulesSettingsPath = \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath();
                 if (!\file_exists($sModulesSettingsPath)) {
-                    return;
+                    \set_error_handler(function () {});
+                    \mkdir($sModulesSettingsPath, 0777);
+                    \restore_error_handler();
+                    if (!\file_exists($sModulesSettingsPath)) {
+                        return;
+                    }
                 }
+                \copy($this->GetDefaultConfigFilePath(), $this->sPath);    
             }
-            \copy($this->GetDefaultConfigFilePath(), $this->sPath);
         }
     }
 
@@ -67,7 +77,14 @@ class Settings extends \Aurora\System\AbstractSettings
             $bResult = true;
         } else {
             if (!\file_exists($this->sPath)) {
-                $mData = $this->LoadDataFromFile($this->GetDefaultConfigFilePath());
+                if (count($this->aContainer) > 0) {
+                    if ($this->Save()) {
+                        $this->bIsLoaded = true;
+                        return true;
+                    }
+                } else {
+                    $mData = $this->LoadDataFromFile($this->GetDefaultConfigFilePath());
+                }
             } else {
                 $mData = $this->LoadDataFromFile($this->sPath);
             }
@@ -163,7 +180,7 @@ class Settings extends \Aurora\System\AbstractSettings
 
             if (isset($oTenantSettings)) {
                 if (!isset($oTenantSettings->{$sName}) && isset($this->aContainer[$sName])) {
-                    $oTenantSettings->SetProperty($this->aContainer[$sName]);
+                    $oTenantSettings->SetProperty($sName, $this->aContainer[$sName]);
                 }
                 $oTenantSettings->SetValue($sName, $sValue);
                 $this->aTenantSettings[$sTenantName] = $oTenantSettings;
