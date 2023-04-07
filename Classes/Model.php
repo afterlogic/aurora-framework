@@ -12,6 +12,18 @@ use Aurora\System\Validator;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Aurora\System\Classes\Model
+ *
+ * @property-read mixed $entity_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\Aurora\System\Classes\Model firstWhere(Closure|string|array|\Illuminate\Database\Query\Expression $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Model newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Model query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Aurora\System\Classes\Model where(Closure|string|array|\Illuminate\Database\Query\Expression $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|\Aurora\System\Classes\Model whereIn(string $column, mixed $values, string $boolean = 'and', bool $not = false)
+ * @mixin \Eloquent
+ */
 class Model extends Eloquent
 {
     use DisabledModulesTrait;
@@ -416,7 +428,7 @@ class Model extends Eloquent
 
     /**
      *
-     * @param type $aProperties
+     * @param array $aProperties
      */
     public function populate($aProperties)
     {

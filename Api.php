@@ -7,12 +7,18 @@
 
 namespace Aurora\System;
 
+use ArrayAccess;
 use Aurora\Modules\Core\Models\User;
 use Aurora\Modules\Core\Models\Tenant;
 use Aurora\System\Enums\DbType;
 use Pimple\Container;
 use Aurora\System\Console\Commands;
 use Aurora\System\Exceptions\ApiException;
+use Aurora\System\Models\Hook;
+use Barryvdh\LaravelIdeHelper\Console\ModelsCommand;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use RuntimeException;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -1507,11 +1513,19 @@ class Api
 
     private static function CreateContainer()
     {
-        $container = new Container();
+        // Instantiate the app container
+        $appContainer = \Illuminate\Container\Container::getInstance();
+
+        // Tell facade about the application instance
+        \Illuminate\Support\Facades\Facade::setFacadeApplication($appContainer);
+
+        $appContainer['app'] = $appContainer;
+
+        $appContainer['config'] = new \Illuminate\Config\Repository();
 
         $oSettings = &Api::GetSettings();
         if ($oSettings) {
-            $container['db-config'] = self::GetDbConfig(
+            $appContainer['db-config'] = self::GetDbConfig(
                 $oSettings->DBType,
                 $oSettings->DBHost,
                 $oSettings->DBName,
@@ -1521,7 +1535,7 @@ class Api
             );
 
             $capsule = new \Illuminate\Database\Capsule\Manager();
-            $capsule->addConnection($container['db-config']);
+            $capsule->addConnection($appContainer['db-config']);
 
             //Make this Capsule instance available globally.
             $capsule->setAsGlobal();
@@ -1529,56 +1543,63 @@ class Api
             // Setup the Eloquent ORM.
             $capsule->bootEloquent();
 
-            $container['connection'] = function ($c) use ($capsule) {
+            $appContainer['connection'] = function ($ac) use ($capsule) {
                 return $capsule->getConnection('default');
             };
 
-            $container['migration-table'] = 'migrations';
+            $appContainer['migration-table'] = 'migrations';
 
-            $container['filesystem'] = function ($c) {
+            $appContainer['filesystem'] = function ($ac) {
                 return new \Illuminate\Filesystem\Filesystem();
             };
 
-            $container['resolver'] = function ($c) {
-                $r = new \Illuminate\Database\ConnectionResolver(['default' => $c['connection']]);
+            $appContainer['resolver'] = function ($ac) {
+                $r = new \Illuminate\Database\ConnectionResolver(['default' => $ac['connection']]);
                 $r->setDefaultConnection('default');
                 return $r;
             };
 
-            $container['migration-repo'] = function ($c) {
-                return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($c['resolver'], $c['migration-table']);
+            $appContainer['migration-repo'] = function ($ac) {
+                return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($ac['resolver'], $ac['migration-table']);
             };
 
-            $container['migrator'] = function ($c) {
-                return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
+            $appContainer['migrator'] = function ($ac) {
+                return new \Illuminate\Database\Migrations\Migrator($ac['migration-repo'], $ac['resolver'], $ac['filesystem']);
             };
 
-            $container['migration-creator'] = function ($c) {
-                return new \Illuminate\Database\Migrations\MigrationCreator($c['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
+            $appContainer['migration-creator'] = function ($ac) {
+                return new \Illuminate\Database\Migrations\MigrationCreator($ac['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
             };
 
-            $container['composer'] = function ($c) {
-                return new \Illuminate\Support\Composer($c['filesystem']);
+            $appContainer['composer'] = function ($ac) {
+                return new \Illuminate\Support\Composer($ac['filesystem']);
             };
 
-            $container['console'] = function ($c) {
-                $app = new \Symfony\Component\Console\Application();
+            $appContainer['console'] = function ($ac) {
+                $consoleaApp = new \Symfony\Component\Console\Application();
 
-                $app->add(new Commands\Migrations\InstallCommand($c['migration-repo']));
-                $app->add(new Commands\Migrations\MigrateCommand($c['migrator']));
-                $app->add(new Commands\Migrations\RollbackCommand($c['migrator']));
-                $app->add(new Commands\Migrations\MigrateMakeCommand($c['migration-creator'], $c['composer']));
+                $events = new \Illuminate\Events\Dispatcher($ac);
 
-                $app->add(new Commands\Seeds\SeedCommand($c['resolver']));
-                $app->add(new Commands\Seeds\SeederMakeCommand($c['filesystem'], $c['composer']));
+                $consoleaApp = new \Illuminate\Console\Application($ac, $events, 'Version 1.0');
+                $consoleaApp->setName('Aurora console app');
 
-                $app->add(new Commands\Migrations\EavToSqlCommand());
-                $app->add(new Commands\GetOrphansCommand());
+                $consoleaApp->add(new Commands\Migrations\InstallCommand($ac['migration-repo']));
+                $consoleaApp->add(new Commands\Migrations\MigrateCommand($ac['migrator']));
+                $consoleaApp->add(new Commands\Migrations\RollbackCommand($ac['migrator']));
+                $consoleaApp->add(new Commands\Migrations\MigrateMakeCommand($ac['migration-creator'], $ac['composer']));
 
-                return $app;
+                $consoleaApp->add(new Commands\Seeds\SeedCommand($ac['resolver']));
+                $consoleaApp->add(new Commands\Seeds\SeederMakeCommand($ac['filesystem'], $ac['composer']));
+
+                $consoleaApp->add(new Commands\Migrations\EavToSqlCommand());
+                $consoleaApp->add(new Commands\GetOrphansCommand());
+
+                $consoleaApp->add(new Commands\ModelsCommand($ac));
+
+                return $consoleaApp;
             };
 
-            self::$oContainer = $container;
+            self::$oContainer = $appContainer;
         }
     }
 
@@ -1587,9 +1608,8 @@ class Api
      */
     public static function GetContainer()
     {
-        //	    if (self::$oContainer === null) {
         self::CreateContainer();
-//        }
+
         return self::$oContainer;
     }
 

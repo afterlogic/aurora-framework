@@ -317,7 +317,7 @@ class Integrator extends AbstractManager
     /**
      * @param int $iUserId Default value is empty string.
      *
-     * @return \Aurora\Modules\Core\Models\User
+     * @return \Aurora\Modules\Core\Models\User|null
      */
     public function getAuthenticatedUserByIdHelper($iUserId)
     {

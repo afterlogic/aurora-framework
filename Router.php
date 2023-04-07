@@ -29,7 +29,7 @@ class Router
     }
 
     /**
-     * @return Aurora\System\Router
+     * @return \Aurora\System\Router
      */
     public static function getInstance()
     {

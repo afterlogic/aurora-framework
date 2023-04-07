@@ -36,7 +36,7 @@ class EventEmitter
 
     /**
      *
-     * @return \self
+     * @return EventEmitter
      */
     public static function getInstance()
     {
@@ -49,7 +49,7 @@ class EventEmitter
 
     /**
      *
-     * @return \self
+     * @return EventEmitter
      */
     public static function createInstance()
     {
