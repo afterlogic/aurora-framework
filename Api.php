@@ -138,7 +138,7 @@ class Api
     protected static $oAuthenticatedUser = null;
 
     /**
-     * @var \Pimple\Container
+     * @var \Illuminate\Container\Container
      */
     public static $oContainer = null;
 
