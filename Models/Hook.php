@@ -15,13 +15,19 @@ class Hook implements ModelHookInterface
             return;
         }
 
+        $modelClass = '\\' . \Illuminate\Database\Eloquent\Builder::class . '|\\' . get_class($model);
         $whereParams = ['Closure|string|array|\Illuminate\Database\Query\Expression $column', 'mixed $operator = null', 'mixed $value = null', 'string $boolean = \'and\''];
-        $command->setMethod('where', '\\' . \Illuminate\Database\Eloquent\Builder::class . '|\\' . get_class($model), $whereParams);
-        $command->setMethod('firstWhere', '\\' . \Illuminate\Database\Eloquent\Builder::class . '|\\' . get_class($model), $whereParams);
+        $command->setMethod('where', $modelClass, $whereParams);
+        $command->setMethod('firstWhere', $modelClass, $whereParams);
 
         $whereInParams = ['string $column', 'mixed $values', 'string $boolean = \'and\'', 'bool $not = false'];
-        $command->setMethod('whereIn', '\\' . \Illuminate\Database\Eloquent\Builder::class . '|\\' . get_class($model), $whereInParams);
+        $command->setMethod('whereIn', $modelClass, $whereInParams);
 
-        $command->setMethod('find', '\\' . \Illuminate\Database\Eloquent\Builder::class . '|\\' . get_class($model), ['int|string $id', 'array|string $columns = [\'*\']']);
+        $command->setMethod('find', $modelClass, ['int|string $id', 'array|string $columns = [\'*\']']);
+        $command->setMethod('findOrFail', $modelClass, ['int|string $id', 'mixed $id', 'Closure|array|string $columns = [\'*\']', 'Closure $callback = null']);
+
+        $command->setMethod('first', $modelClass, ['array|string $columns = [\'*\']']);
+
+        $command->setMethod('count', 'int', ['string $columns = \'*\'']);
     }
 }
