@@ -15,11 +15,6 @@ namespace Aurora\System;
 class SettingsProperty
 {
     /**
-     * @var string
-     */
-    public $Name;
-
-    /**
      * @var mixed
      */
     public $Value;
@@ -40,18 +35,22 @@ class SettingsProperty
     public $Changed;
 
     /**
+     * @var string
+     */
+    public $Description;
+
+    /**
      *
-     * @param string $sName
      * @param mixed $mValue
      * @param string $sType
      * @param string $sSpecType
      */
-    public function __construct($sName, $mValue, $sType, $sSpecType = null)
+    public function __construct($mValue, $sType, $sSpecType = null, $sDescription = '')
     {
-        $this->Name = $sName;
         $this->Value = $mValue;
         $this->Type = $sType;
         $this->SpecType = $sSpecType;
+        $this->Description = $sDescription;
         $this->Changed = false;
     }
 }

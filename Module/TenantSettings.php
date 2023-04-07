@@ -32,11 +32,12 @@ class TenantSettings extends \Aurora\System\AbstractSettings
     }
 
     /**
+     * @var string
      * @var \Aurora\System\SettingsProperty
      */
-    public function SetProperty($oProperty)
+    public function SetProperty($sName, $oProperty)
     {
-        $this->aContainer[$oProperty->Name] = $oProperty;
+        $this->aContainer[$sName] = $oProperty;
     }
 
     /**

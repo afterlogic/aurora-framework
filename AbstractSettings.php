@@ -140,7 +140,7 @@ abstract class AbstractSettings
 
         $sType = (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Type : \gettype($mValue);
         if (!isset($this->aContainer[$sKey])) {
-            $this->aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType);
+            $this->aContainer[$sKey] = new SettingsProperty($mValue, $sType);
         }
 
         switch ($sType) {
@@ -235,40 +235,48 @@ abstract class AbstractSettings
 
         if (\is_array($aData)) {
             foreach ($aData as $sKey => $mValue) {
-                $sSpecType = null;
-                if (\is_array($mValue)) {
-                    $sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? \gettype($mValue[0]) : "string");
-                    $sSpecType = isset($mValue[2]) ? $mValue[2] : null;
-                    $mValue = isset($mValue[0]) ? $mValue[0] : "";
-                } else {
-                    $sType = \gettype($mValue);
-                }
+                if (isset($aData[$sKey])) {
+                    $sSpecType = null;
+                    $sDescription = '';
+                    if (\is_array($mValue)) {
+                        $sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? \gettype($mValue[0]) : "string");
+                        $sSpecType = isset($mValue[2]) ? $mValue[2] : null;
+                        $mValue = isset($mValue[0]) ? $mValue[0] : '';
+                        $sDescription = isset($mValue[3]) ? $mValue[3] : '';
+                        if (isset($aData[$sKey.'_Description'])) {
+                            $sDescription = isset($aData[$sKey.'_Description'][0]) ? $aData[$sKey.'_Description'][0] : '';
+                            unset($aData[$sKey.'_Description']);
+                        }
+                    } else {
+                        $sType = \gettype($mValue);
+                    }
 
-                switch ($sType) {
-                    case 'string':
-                        $mValue =(string) $mValue;
-                        break;
-                    case 'int':
-                    case 'integer':
-                        $sType = 'int';
-                        $mValue = (int) $mValue;
-                        break;
-                    case 'bool':
-                    case 'boolean':
-                        $sType = 'bool';
-                        $mValue = (bool) $mValue;
-                        break;
-                    case 'spec':
-                        $mValue = $this->specConver($mValue, $sSpecType);
-                        break;
-                    case 'array':
-                        break;
-                    default:
-                        $mValue = null;
-                        break;
-                }
-                if (null !== $mValue) {
-                    $aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType, $sSpecType);
+                    switch ($sType) {
+                        case 'string':
+                            $mValue = (string) $mValue;
+                            break;
+                        case 'int':
+                        case 'integer':
+                            $sType = 'int';
+                            $mValue = (int) $mValue;
+                            break;
+                        case 'bool':
+                        case 'boolean':
+                            $sType = 'bool';
+                            $mValue = (bool) $mValue;
+                            break;
+                        case 'spec':
+                            $mValue = $this->specConver($mValue, $sSpecType);
+                            break;
+                        case 'array':
+                            break;
+                        default:
+                            $mValue = null;
+                            break;
+                    }
+                    if (null !== $mValue) {
+                        $aContainer[$sKey] = new SettingsProperty($mValue, $sType, $sSpecType, $sDescription);
+                    }
                 }
             }
         }
@@ -333,12 +341,15 @@ abstract class AbstractSettings
             if ($mValue->Type === 'spec') {
                 $mValue->Value = $this->specBackConver($mValue->Value, $mValue->SpecType);
                 $aValue[] = $mValue->SpecType;
+            } else {
+                $aValue[] = null;
             }
             \array_unshift(
                 $aValue,
                 $mValue->Value,
                 $mValue->Type
             );
+            $aValue[] = $mValue->Description;
 
             $aResult[$sKey] = $aValue;
         }
@@ -406,6 +417,7 @@ abstract class AbstractSettings
      */
     protected function specConver($sValue, $sEnumName)
     {
+        $mResult = null;
         if (null !== $sEnumName) {
             $mResult = Enums\EnumConvert::FromXml($sValue, $sEnumName);
         }

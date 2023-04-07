@@ -355,6 +355,16 @@ class Api
 
     /**
      *
+     * @param string $sModuleName
+     * @return bool
+     */
+    public static function IsModuleLoaded($sModuleName)
+    {
+        return self::GetModuleManager()->isModuleLoaded($sModuleName);
+    }
+
+    /**
+     *
      * @return array
      */
     public static function GetModules()

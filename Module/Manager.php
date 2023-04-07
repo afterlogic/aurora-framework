@@ -497,7 +497,12 @@ class Manager
     public function &GetModuleSettings($sModuleName)
     {
         if (!isset($this->aModulesSettings[strtolower($sModuleName)])) {
-            $this->aModulesSettings[strtolower($sModuleName)] = new Settings($sModuleName);
+            $sSettingsClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Settings';
+            if (class_exists($sSettingsClassName)) {
+                $this->aModulesSettings[strtolower($sModuleName)] = new $sSettingsClassName($sModuleName);
+            } else {
+                $this->aModulesSettings[strtolower($sModuleName)] = new Settings($sModuleName);
+            }
         }
 
         return $this->aModulesSettings[strtolower($sModuleName)];
