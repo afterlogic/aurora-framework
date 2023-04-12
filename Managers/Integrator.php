@@ -62,7 +62,7 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * @return Aurora\System\Managers\Integrator
+     * @return \Aurora\System\Managers\Integrator
      */
     public static function getInstance()
     {
