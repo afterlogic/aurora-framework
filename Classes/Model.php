@@ -80,6 +80,11 @@ class Model extends Eloquent
      */
     protected $validationRules = [];
 
+    /** 
+     * @var array 
+     */
+    protected $validationMessages = [];
+
     /**
      * The name of the "created at" column.
      *
@@ -371,7 +376,7 @@ class Model extends Eloquent
 
     public function validate()
     {
-        Validator::validate($this->getAttributes(), $this->validationRules);
+        Validator::validate($this->getAttributes(), $this->validationRules, $this->validationMessages);
 
         return true;
     }
