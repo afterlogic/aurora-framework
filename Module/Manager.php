@@ -219,26 +219,13 @@ class Manager
             if (!empty($sModuleName)) {
                 $oSettings = $this->getModuleSettings($sModuleName);
                 if ($oSettings instanceof Settings) {
-                    $aModuleDefaultSettings = $oSettings->GetDefaultConfigValues();
                     //overriding modules default configuration with pre-configuration data
                     if (isset($aModulesPreconfig[$sModuleName])) {
                         $aModulePreconfig = $aModulesPreconfig[$sModuleName];
-                        foreach ($aModuleDefaultSettings as $key => $oSetting) {
-                            if (array_key_exists($key, $aModulePreconfig)) {
-                                $oSetting->Value = $aModulePreconfig[$key];
-                            }
+                        foreach ($aModulePreconfig as $key => $val) {
+                            $oSettings->{$key} = $val;
                         }
                     }
-                    $aModuleSettings = [];
-                    if (@\file_exists($oSettings->GetPath())) {
-                        $aModuleSettings = $oSettings->GetValues();
-                    }
-                    //compiling default configuration and pre-configuration data into modules configuration
-                    $aValues = array_merge(
-                        $aModuleDefaultSettings,
-                        $aModuleSettings
-                    );
-                    $oSettings->SetValues($aValues);
                     $oSettings->Save();
                 }
             }

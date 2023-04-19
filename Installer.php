@@ -137,7 +137,6 @@ class Installer
 
         if (file_exists($sConfigPath)) {
             $sPreConfig = file_get_contents($sConfigPath);
-
             $oPreConfig = json_decode($sPreConfig, true);
 
             if ($oPreConfig) {
