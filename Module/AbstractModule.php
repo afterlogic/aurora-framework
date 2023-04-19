@@ -220,7 +220,7 @@ abstract class AbstractModule
      *
      * @return \Aurora\System\Module\Settings
      */
-    protected function GetModuleSettings()
+    protected function getModuleSettings()
     {
         return $this->oModuleSettings;
     }
@@ -315,7 +315,7 @@ abstract class AbstractModule
     public function loadModuleSettings()
     {
         if (!isset($this->oModuleSettings)) {
-            $this->oModuleSettings =& $this->GetModuleManager()->GetModuleSettings(self::GetName());
+            $this->oModuleSettings =& $this->GetModuleManager()->getModuleSettings(self::GetName());
             $this->oModuleSettings->Load();
         }
         return $this->oModuleSettings;

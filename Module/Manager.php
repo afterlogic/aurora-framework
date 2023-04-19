@@ -159,7 +159,7 @@ class Manager
     public function getModuleConfigValue($sModuleName, $sConfigName, $sDefaultValue = null)
     {
         $mResult = $sDefaultValue;
-        $oModuleConfig = $this->GetModuleSettings($sModuleName);
+        $oModuleConfig = $this->getModuleSettings($sModuleName);
 
         if ($oModuleConfig) {
             $mResult = $oModuleConfig->GetValue($sConfigName, $sDefaultValue);
@@ -177,7 +177,7 @@ class Manager
      */
     public function setModuleConfigValue($sModuleName, $sConfigName, $sValue)
     {
-        $oModuleConfig = $this->GetModuleSettings($sModuleName);
+        $oModuleConfig = $this->getModuleSettings($sModuleName);
         if ($oModuleConfig) {
             $oModuleConfig->SetValue($sConfigName, $sValue);
         }
@@ -190,7 +190,7 @@ class Manager
      */
     public function saveModuleConfigValue($sModuleName)
     {
-        $oModuleConfig = $this->GetModuleSettings($sModuleName);
+        $oModuleConfig = $this->getModuleSettings($sModuleName);
         if ($oModuleConfig) {
             $oModuleConfig->Save();
         }
@@ -217,7 +217,7 @@ class Manager
 
         foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath) {
             if (!empty($sModuleName)) {
-                $oSettings = $this->GetModuleSettings($sModuleName);
+                $oSettings = $this->getModuleSettings($sModuleName);
                 if ($oSettings instanceof Settings) {
                     $aModuleDefaultSettings = $oSettings->GetDefaultConfigValues();
                     //overriding modules default configuration with pre-configuration data
@@ -494,7 +494,7 @@ class Manager
      * @param string $sModuleName
      * @return \Aurora\System\Module\Settings
      */
-    public function &GetModuleSettings($sModuleName)
+    public function &getModuleSettings($sModuleName)
     {
         if (!isset($this->aModulesSettings[strtolower($sModuleName)])) {
             $sSettingsClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Settings';
