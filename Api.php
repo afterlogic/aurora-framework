@@ -1305,12 +1305,23 @@ class Api
     }
 
     /**
+     * @return void
+     */
+    public static function unsetAuthenticatedUser()
+    {
+        unset(self::$oAuthenticatedUser);
+    }
+
+    /**
+     * @param string $sAuthToken
+     * @param bool $bForce
+     * 
      * @return \Aurora\Modules\Core\Models\User
      */
-    public static function getAuthenticatedUser($sAuthToken = '')
+    public static function getAuthenticatedUser($sAuthToken = '', $bForce = false)
     {
         $iUserId = 0;
-        if (null === self::$oAuthenticatedUser) {
+        if (null === self::$oAuthenticatedUser || $bForce) {
             if (!empty($sAuthToken)) {
                 $iUserId = self::getAuthenticatedUserId($sAuthToken); // called for saving in session
             } elseif (!empty(self::$aUserSession['UserId'])) {
