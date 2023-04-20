@@ -339,7 +339,7 @@ class Logger
                     $format = $nowDateTime->format(self::getLogFileDateFormat());
                     $fileDate = substr($aPathInfo['filename'], -strlen($format));
                     $fileDateTime = new \DateTimeImmutable($fileDate);
-                    
+
                     $dateTimeToRemove = $nowDateTime->sub(new \DateInterval(sprintf('P%dD', $iRemoveOldLogsDays)));
                     if ($fileDateTime <= $dateTimeToRemove) {
                         unlink($sLogDir.$sFileName);

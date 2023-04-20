@@ -48,7 +48,7 @@ abstract class AbstractSettings
     /**
      *
      * @param string $sName
-     * 
+     *
      * @return bool
      */
     public function __isset($sName)
@@ -73,7 +73,7 @@ abstract class AbstractSettings
     /**
      *
      * @param string $sName
-     * 
+     *
      * @return mixed
      */
     public function __get($sName)

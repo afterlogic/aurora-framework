@@ -1315,7 +1315,7 @@ class Api
     /**
      * @param string $sAuthToken
      * @param bool $bForce
-     * 
+     *
      * @return \Aurora\Modules\Core\Models\User
      */
     public static function getAuthenticatedUser($sAuthToken = '', $bForce = false)

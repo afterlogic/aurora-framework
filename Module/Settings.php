@@ -39,7 +39,7 @@ class Settings extends \Aurora\System\AbstractSettings
             Api::GetModuleManager()->GetModulesSettingsPath() . $sModuleName . '.config.json'
         );
 
-        $this->initDefaults(); 
+        $this->initDefaults();
     }
 
     protected function initDefaults()
@@ -140,7 +140,7 @@ class Settings extends \Aurora\System\AbstractSettings
                 $oTenantSettings->SetProperty($key, $this->aContainer[$key]);
             }
             $oTenantSettings->SetValue($key, $value);
-        }   
+        }
         if (isset($oTenantSettings)) {
             $mResult = $oTenantSettings->Save();
         }

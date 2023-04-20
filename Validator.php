@@ -26,10 +26,10 @@ class Validator
         $fileLoader = new Translation\FileLoader($filesystem, '');
         $translator = new Translation\Translator($fileLoader, 'en_US');
         $factory = new Validation\Factory($translator);
-        
+
         $validator = $factory->make($aInputs, $aRules, $aMessages);
-        
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             $errors = $validator->errors();
             throw new \Aurora\System\Exceptions\ValidationException(implode("; ", $errors->all()), \Aurora\System\Notifications::InvalidInputParameter);
         }

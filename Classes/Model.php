@@ -80,8 +80,8 @@ class Model extends Eloquent
      */
     protected $validationRules = [];
 
-    /** 
-     * @var array 
+    /**
+     * @var array
      */
     protected $validationMessages = [];
 

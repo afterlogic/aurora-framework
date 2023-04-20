@@ -15,64 +15,64 @@ namespace Aurora\System;
  * @package Api
  */
 
- /**
- * @property string $LicenseKey
- * @property string $AdminLogin
- * @property string $AdminPassword
- * @property string $AdminLanguage
- * 
- * @property \Aurora\System\Enums\DbType $DBType
- * @property string $DBPrefix
- * @property string $DBHost
- * @property string $DBName
- * @property string $DBLogin
- * @property string $DBPassword
+/**
+* @property string $LicenseKey
+* @property string $AdminLogin
+* @property string $AdminPassword
+* @property string $AdminLanguage
+*
+* @property \Aurora\System\Enums\DbType $DBType
+* @property string $DBPrefix
+* @property string $DBHost
+* @property string $DBName
+* @property string $DBLogin
+* @property string $DBPassword
 
- * @property bool $UseSlaveConnection
- * @property string $DBSlaveHost
- * @property string $DBSlaveName
- * @property string $DBSlaveLogin
- * @property string $DBSlavePassword
- * @property bool $DBUseExplain
- * @property bool $DBUseExplainExtended
- * @property bool $DBLogQueryParams
- * @property bool $DBDebugBacktraceLimit
+* @property bool $UseSlaveConnection
+* @property string $DBSlaveHost
+* @property string $DBSlaveName
+* @property string $DBSlaveLogin
+* @property string $DBSlavePassword
+* @property bool $DBUseExplain
+* @property bool $DBUseExplainExtended
+* @property bool $DBLogQueryParams
+* @property bool $DBDebugBacktraceLimit
 
- * @property bool $EnableLogging false, 'bool'),
- * @property bool $EnableEventLogging false, 'bool'),
- * @property \Aurora\System\Enums\LogLevel $LoggingLevel
- * @property string $LogFileName 
- * @property string $LogCustomFullPath
- * @property bool $LogPostView
+* @property bool $EnableLogging false, 'bool'),
+* @property bool $EnableEventLogging false, 'bool'),
+* @property \Aurora\System\Enums\LogLevel $LoggingLevel
+* @property string $LogFileName
+* @property string $LogCustomFullPath
+* @property bool $LogPostView
 
- * @property bool $EnableMultiChannel
- * @property bool $EnableMultiTenant
- * @property string $TenantGlobalCapa
+* @property bool $EnableMultiChannel
+* @property bool $EnableMultiTenant
+* @property string $TenantGlobalCapa
 
- * @property bool $AllowThumbnail
- * @property int $ThumbnailMaxFileSizeMb
- * @property bool $CacheCtrl
- * @property bool $CacheLangs
- * @property bool $CacheTemplates
- * @property bool $DisplayServerErrorInformation
- * @property bool $EnableImap4PlainAuth
- * @property bool $RedirectToHttps
- * @property int $SocketConnectTimeoutSeconds
- * @property int $SocketGetTimeoutSeconds
- * @property bool $SocketVerifySsl
- * @property bool $UseAppMinJs
- * @property string $XFrameOptions
- * @property bool $RemoveOldLogs
- * @property int $RemoveOldLogsDays
- * @property bool $LogStackTrace
- * @property int $ExpireUserSessionsBeforeTimestamp
+* @property bool $AllowThumbnail
+* @property int $ThumbnailMaxFileSizeMb
+* @property bool $CacheCtrl
+* @property bool $CacheLangs
+* @property bool $CacheTemplates
+* @property bool $DisplayServerErrorInformation
+* @property bool $EnableImap4PlainAuth
+* @property bool $RedirectToHttps
+* @property int $SocketConnectTimeoutSeconds
+* @property int $SocketGetTimeoutSeconds
+* @property bool $SocketVerifySsl
+* @property bool $UseAppMinJs
+* @property string $XFrameOptions
+* @property bool $RemoveOldLogs
+* @property int $RemoveOldLogsDays
+* @property bool $LogStackTrace
+* @property int $ExpireUserSessionsBeforeTimestamp
 
- * @property int $PasswordMinLength
- * @property bool $PasswordMustBeComplex
+* @property int $PasswordMinLength
+* @property bool $PasswordMustBeComplex
 
- * @property bool $StoreAuthTokenInDB
- * @property int $AuthTokenExpirationLifetimeDays
- */
+* @property bool $StoreAuthTokenInDB
+* @property int $AuthTokenExpirationLifetimeDays
+*/
 
 class Settings extends AbstractSettings
 {
