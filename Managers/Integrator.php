@@ -916,7 +916,7 @@ class Integrator extends AbstractManager
 
         //		We don't have ability to have different modules set for different tenants for now.
         //		So we don't use tenants folder for static files.
-        //		if ($oSettings->GetConf('EnableMultiTenant') && $sTenantName)
+        //		if ($oSettings->GetValue('EnableMultiTenant') && $sTenantName)
         //		{
         //			$sS =
         //'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
@@ -975,7 +975,7 @@ class Integrator extends AbstractManager
         //		We don't have ability to have different modules set for different tenants for now.
         //		So we don't use tenants folder for static files.
         //		$sTenantName = \Aurora\System\Api::getTenantName();
-        //		$sJsScriptPath = $oSettings->GetConf('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
+        //		$sJsScriptPath = $oSettings->GetValue('EnableMultiTenant') && $sTenantName ? "./tenants/".$sTenantName."/" : "./";
 
         $sJsScriptPath = "./";
 
