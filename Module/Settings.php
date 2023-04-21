@@ -53,6 +53,8 @@ class Settings extends \Aurora\System\AbstractSettings
         if ($this->bIsLoaded && !$bForceLoad) {
             $bResult = true;
         } else {
+            $mData = false;
+
             if (!\file_exists($this->sPath)) {
                 if (count($this->aContainer) > 0) {
                     if ($this->Save()) {
