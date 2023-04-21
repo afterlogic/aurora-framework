@@ -580,8 +580,13 @@ class Manager
      */
     public function RunEntry($sEntryName)
     {
+        $oHttp = \MailSo\Base\Http::SingletonInstance();
+
         $aArguments = [
-            'EntryName' => $sEntryName
+            'EntryName' => $sEntryName,
+            'Module' => $oHttp->GetPost('Module', null),
+            'Method' => $oHttp->GetPost('Method', null),
+            'Parameters' => \json_decode($oHttp->GetPost('Parameters', ''), true)
         ];
         $mResult = false;
         try {
