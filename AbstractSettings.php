@@ -204,6 +204,11 @@ abstract class AbstractSettings
         }
     }
 
+    public function LoadDataFromBackup()
+    {
+        return $this->LoadDataFromFile($this->sPath.'.bak');
+    }
+
     public function CheckConfigFile()
     {
         $bResult = true;
@@ -211,8 +216,7 @@ abstract class AbstractSettings
         // backup previous configuration
         $sJsonFile = $this->sPath;
         if (!\file_exists(\dirname($sJsonFile))) {
-            \set_error_handler(function () {
-            });
+            \set_error_handler(function () {});
             \mkdir(\dirname($sJsonFile), 0777);
             \restore_error_handler();
             $bResult = \file_exists(\dirname($sJsonFile));
@@ -245,8 +249,8 @@ abstract class AbstractSettings
                     if (\is_array($mValue)) {
                         $sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? \gettype($mValue[0]) : "string");
                         $sSpecType = isset($mValue[2]) ? $mValue[2] : null;
-                        $mValue = isset($mValue[0]) ? $mValue[0] : '';
                         $sDescription = isset($mValue[3]) ? $mValue[3] : '';
+                        $mValue = isset($mValue[0]) ? $mValue[0] : '';
                         if (isset($aData[$sKey.'_Description'])) {
                             $sDescription = isset($aData[$sKey.'_Description'][0]) ? $aData[$sKey.'_Description'][0] : '';
                             unset($aData[$sKey.'_Description']);
@@ -306,7 +310,7 @@ abstract class AbstractSettings
     }
 
     /**
-     * @param string $sJsonFile
+     * @param bool $bForceLoad
      *
      * @return bool
      */
@@ -316,21 +320,29 @@ abstract class AbstractSettings
         if ($this->bIsLoaded && !$bForceLoad) {
             $bResult = true;
         } else {
-            $mData = $this->LoadDataFromFile($this->sPath);
+            $mData = false;
+
+            if (\file_exists($this->sPath)) {
+                $mData = $this->LoadDataFromFile($this->sPath);
+            } 
 
             if (!$mData) {
-                $mData = $this->LoadDataFromFile($this->sPath.'.bak');
-                if ($mData) {
-                    \copy($this->sPath.'.bak', $this->sPath);
-                }
+                $mData = $this->LoadDataFromBackup();
             }
 
-            if ($mData !== false) {
-                $this->aContainer = $this->ParseData($mData);
-                $this->bIsLoaded = true;
+            if ($mData) {
+                $aParsedData = $this->ParseData($mData);
+                foreach ($aParsedData as $key => $val) {
+                    $this->aContainer[$key] = $val;
+                }
                 $bResult = true;
+            } else {
+                $bResult = $this->Save();
             }
+
+            $this->bIsLoaded = true;
         }
+
         return $bResult;
     }
 
@@ -342,15 +354,16 @@ abstract class AbstractSettings
         $aResult = [];
         foreach ($this->aContainer as $sKey => $mValue) {
             $aValue = [];
+            $value = $mValue->Value;
             if ($mValue->Type === 'spec') {
-                $mValue->Value = $this->specBackConver($mValue->Value, $mValue->SpecType);
+                $value = $this->specBackConver($mValue->Value, $mValue->SpecType);
                 $aValue[] = $mValue->SpecType;
             } else {
                 $aValue[] = null;
             }
             \array_unshift(
                 $aValue,
-                $mValue->Value,
+                $value,
                 $mValue->Type
             );
             $aValue[] = $mValue->Description;
@@ -362,15 +375,19 @@ abstract class AbstractSettings
     }
 
     /**
+     * @param bool $bBackupConfigFile
+     * 
      * @return bool
      */
-    public function Save()
+    public function Save($bBackupConfigFile = true)
     {
         $bResult = false;
         $aData = $this->GetData();
         if (count($aData) > 0) {
             if ($this->CheckConfigFile()) {
-                $this->BackupConfigFile();
+                if ($bBackupConfigFile) {
+                    $this->BackupConfigFile();
+                }
                 if ($this->SaveDataToConfigFile($aData)) {
                     $bResult = true;
                 } else {

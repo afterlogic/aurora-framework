@@ -47,44 +47,6 @@ class Settings extends \Aurora\System\AbstractSettings
         $this->aContainer = [];
     }
 
-    public function Load($bForceLoad = false)
-    {
-        $bResult = false;
-        if ($this->bIsLoaded && !$bForceLoad) {
-            $bResult = true;
-        } else {
-            $mData = false;
-
-            if (!\file_exists($this->sPath)) {
-                if (count($this->aContainer) > 0) {
-                    if ($this->Save()) {
-                        $this->bIsLoaded = true;
-                        return true;
-                    }
-                }
-            } else {
-                $mData = $this->LoadDataFromFile($this->sPath);
-            }
-
-            if (!$mData) {
-                $mData = $this->LoadDataFromFile($this->sPath.'.bak');
-                if ($mData) {
-                    \copy($this->sPath.'.bak', $this->sPath);
-                } else {
-                    $this->Save();
-                }
-            }
-
-            if ($mData !== false) {
-                $this->aContainer = $this->ParseData($mData);
-                $this->bIsLoaded = true;
-                $bResult = true;
-            }
-        }
-
-        return $bResult;
-    }
-
     /**
      * @param string $sTenantName
      *

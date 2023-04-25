@@ -44,6 +44,7 @@ class SettingsProperty
      * @param mixed $mValue
      * @param string $sType
      * @param string $sSpecType
+     * @param string $sDescription
      */
     public function __construct($mValue, $sType, $sSpecType = null, $sDescription = '')
     {

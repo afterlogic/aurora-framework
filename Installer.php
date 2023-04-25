@@ -83,14 +83,6 @@ class Installer
 
         \Aurora\System\Api::GetModuleManager()->SyncModulesConfigs();
 
-        $aModules = \Aurora\System\Api::GetModules();
-
-        if (is_array($aModules)) {
-            foreach ($aModules as $oModule) {
-                $oModule->saveModuleConfig();
-            }
-        }
-
         echo $sMessage."\r\n";
     }
 

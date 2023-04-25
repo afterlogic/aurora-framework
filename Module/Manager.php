@@ -219,6 +219,7 @@ class Manager
             if (!empty($sModuleName)) {
                 $oSettings = $this->getModuleSettings($sModuleName);
                 if ($oSettings instanceof Settings) {
+                    $oSettings->Load();
                     //overriding modules default configuration with pre-configuration data
                     if (isset($aModulesPreconfig[$sModuleName])) {
                         $aModulePreconfig = $aModulesPreconfig[$sModuleName];
