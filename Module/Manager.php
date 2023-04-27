@@ -224,7 +224,13 @@ class Manager
                     if (isset($aModulesPreconfig[$sModuleName])) {
                         $aModulePreconfig = $aModulesPreconfig[$sModuleName];
                         foreach ($aModulePreconfig as $key => $val) {
-                            $oSettings->{$key} = $val;
+                            $oProp = $oSettings->GetSettingsProperty($key);
+                            if ($oProp) {
+                                if (!empty($oProp->SpecType)) {
+                                    $val = \Aurora\System\Enums\EnumConvert::FromXml($val, $oProp->SpecType);
+                                }
+                                $oSettings->SetValue($key, $val);
+                            }
                         }
                     }
                     $oSettings->Save();

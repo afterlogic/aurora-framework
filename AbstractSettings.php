@@ -121,6 +121,21 @@ abstract class AbstractSettings
     }
 
     /**
+     * @param string $sKey
+     *
+     * @return SettingsProperty
+     */
+    public function GetSettingsProperty($sKey)
+    {
+        if (!$this->bIsLoaded) {
+            $this->Load();
+        }
+
+        return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey] : null;
+    }
+
+
+    /**
      * @deprecated
      *
      * @param string $sKey

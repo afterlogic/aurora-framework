@@ -7,6 +7,7 @@
 
 namespace Aurora;
 
+use Aurora\System\Module\Settings;
 use Composer\Script\Event;
 
 /**
@@ -140,14 +141,21 @@ class Installer
                     $oModuleManager = \Aurora\System\Api::GetModuleManager();
 
                     foreach ($oPreConfig['modules'] as $sModuleName => $oModuleConfig) {
-                        foreach ($oModuleConfig as $sConfigName => $mConfigValue) {
-                            $mValue = $oModuleManager->getModuleConfigValue($sModuleName, $sConfigName, null);
-
-                            if ($mValue !== null) {
-                                $oModuleManager->setModuleConfigValue($sModuleName, $sConfigName, $mConfigValue);
-                                $oModuleManager->saveModuleConfigValue($sModuleName);
-                            } else {
-                                echo "\r\nInvalid setting '" . $sConfigName . "' in module '" . $sModuleName . "'";
+                        if (!empty($sModuleName)) {
+                            $oSettings = $oModuleManager->getModuleSettings($sModuleName);
+                            if ($oSettings instanceof Settings) {
+                                $oSettings->Load();
+                                foreach ($oModuleConfig as $sConfigName => $mConfigValue) {
+                                    //overriding modules default configuration with pre-configuration data
+                                    $oProp = $oSettings->GetSettingsProperty($sConfigName);
+                                    if ($oProp) {
+                                        if (!empty($oProp->SpecType)) {
+                                            $mConfigValue = \Aurora\System\Enums\EnumConvert::FromXml($mConfigValue, $oProp->SpecType);
+                                        }
+                                        $oSettings->SetValue($sConfigName, $mConfigValue);
+                                    }
+                                }
+                                $oSettings->Save();
                             }
                         }
                     }
