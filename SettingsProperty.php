@@ -40,6 +40,11 @@ class SettingsProperty
     public $Description;
 
     /**
+     * @var bool
+     */
+    public $IsDefault;
+
+    /**
      *
      * @param mixed $mValue
      * @param string $sType
@@ -53,5 +58,6 @@ class SettingsProperty
         $this->SpecType = $sSpecType;
         $this->Description = $sDescription;
         $this->Changed = false;
+        $this->IsDefault = true;
     }
 }

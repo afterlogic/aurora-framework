@@ -225,7 +225,7 @@ class Manager
                         $aModulePreconfig = $aModulesPreconfig[$sModuleName];
                         foreach ($aModulePreconfig as $key => $val) {
                             $oProp = $oSettings->GetSettingsProperty($key);
-                            if ($oProp) {
+                            if ($oProp && $oProp->IsDefault) {
                                 if (!empty($oProp->SpecType)) {
                                     $val = \Aurora\System\Enums\EnumConvert::FromXml($val, $oProp->SpecType);
                                 }

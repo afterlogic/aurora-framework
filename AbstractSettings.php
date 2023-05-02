@@ -348,6 +348,7 @@ abstract class AbstractSettings
             if ($mData) {
                 $aParsedData = $this->ParseData($mData);
                 foreach ($aParsedData as $key => $val) {
+                    $val->IsDefault = false;
                     $this->aContainer[$key] = $val;
                 }
                 $bResult = true;
