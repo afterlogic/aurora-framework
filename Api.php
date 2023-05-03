@@ -442,6 +442,23 @@ class Api
         return self::$oSettings;
     }
 
+    /**
+     * @return bool
+     */
+    public static function UpdateSettings()
+    {
+        $bResult = true;
+        try {
+            Api::Init();
+            Api::GetModuleManager()->SyncModulesConfigs();
+            Api::GetSettings()->SyncConfigs();
+        } catch (\Exception $e) {
+            $bResult = false;
+        }
+
+        return $bResult;
+    }
+
     public static function &GetConnection()
     {
         if (null === self::$oConnection) {

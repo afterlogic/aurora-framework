@@ -231,7 +231,8 @@ abstract class AbstractSettings
         // backup previous configuration
         $sJsonFile = $this->sPath;
         if (!\file_exists(\dirname($sJsonFile))) {
-            \set_error_handler(function () {});
+            \set_error_handler(function () {
+            });
             \mkdir(\dirname($sJsonFile), 0777);
             \restore_error_handler();
             $bResult = \file_exists(\dirname($sJsonFile));
@@ -339,7 +340,7 @@ abstract class AbstractSettings
 
             if (\file_exists($this->sPath)) {
                 $mData = $this->LoadDataFromFile($this->sPath);
-            } 
+            }
 
             if (!$mData) {
                 $mData = $this->LoadDataFromBackup();
@@ -349,7 +350,10 @@ abstract class AbstractSettings
                 $aParsedData = $this->ParseData($mData);
                 foreach ($aParsedData as $key => $val) {
                     $val->IsDefault = false;
-                    $this->aContainer[$key] = $val;
+                    if (isset($this->aContainer[$key])) {
+                        $val->Description = $this->aContainer[$key]->Description;
+                        $this->aContainer[$key] = $val;
+                    }
                 }
                 $bResult = true;
             } else {
@@ -392,7 +396,7 @@ abstract class AbstractSettings
 
     /**
      * @param bool $bBackupConfigFile
-     * 
+     *
      * @return bool
      */
     public function Save($bBackupConfigFile = true)

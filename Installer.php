@@ -76,13 +76,13 @@ class Installer
     public static function updateConfigs()
     {
         $sBaseDir = dirname(__File__);
-        $sMessage = "Configuration was updated successfully";
 
         include_once $sBaseDir . '/autoload.php';
 
-        \Aurora\System\Api::Init();
-
-        \Aurora\System\Api::GetModuleManager()->SyncModulesConfigs();
+        $sMessage = "Configuration was updated successfully";
+        if (!\Aurora\System\Api::UpdateSettings()) {
+            $sMessage = "An error occurred while updating the configuration";
+        }
 
         echo $sMessage."\r\n";
     }
