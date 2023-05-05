@@ -335,7 +335,7 @@ class Settings extends AbstractSettings
                 true,
                 'bool',
                 null,
-                '	If enabled, logs older than RemoveOldLogsDays days are automatically removed'
+                'If enabled, logs older than RemoveOldLogsDays days are automatically removed'
             ),
             'RemoveOldLogsDays' => new SettingsProperty(
                 2,
