@@ -16,7 +16,6 @@ abstract class AbstractSettings
 {
     public const JSON_FILE_NAME = 'config.json';
 
-    #<editor-fold defaultstate="collapsed" desc="protected">
     /**
      * @var array
      */
@@ -31,7 +30,6 @@ abstract class AbstractSettings
      * @var bool
      */
     protected $bIsLoaded;
-    #</editor-fold>
 
     /**
      * @param string $sSettingsPath
