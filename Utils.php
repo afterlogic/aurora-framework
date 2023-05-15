@@ -493,23 +493,27 @@ class Utils
     }
 
     /**
-     * @param string $sPassword
+     * @param string $sValue
      * @return string
      */
-    public static function EncryptValue($sPassword)
+    public static function EncryptValue($sValue)
     {
-        $sPassword = \MailSo\Base\Crypt::XxteaEncrypt($sPassword, Api::$sSalt);
-        return @trim(self::UrlSafeBase64Encode($sPassword));
+        $sEncryptedValue = \Aurora\System\Utils\Crypt::XxteaEncrypt($sValue, @hex2bin(Api::$sSalt));
+        return @trim(self::UrlSafeBase64Encode($sEncryptedValue));
     }
 
     /**
-     * @param string $sPassword
+     * @param string $sEncryptedValue
      * @return string
      */
-    public static function DecryptValue($sPassword)
+    public static function DecryptValue($sEncryptedValue)
     {
-        $sPassword = self::UrlSafeBase64Decode(trim($sPassword));
-        return \MailSo\Base\Crypt::XxteaDecrypt($sPassword, Api::$sSalt);
+        $sEncryptedValue = self::UrlSafeBase64Decode(trim($sEncryptedValue));
+        $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, @hex2bin(Api::$sSalt));
+        if ($sValue === false) {
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, Api::GetHashSalt());
+        }
+        return $sValue;
     }
 
     /**

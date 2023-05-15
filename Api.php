@@ -152,21 +152,25 @@ class Api
     }
 
     /**
+     * @return string
+     */
+    public static function GetHashSalt()
+    {
+        return '$2y$07$' . self::$sSalt . '$';
+    }
+
+    /**
      *
      */
     public static function InitSalt()
     {
         $sSalt = '';
         $sSalt8File = self::GetSaltPath();
-        $sSaltFile = self::DataPath().'/salt.php';
 
         if (!@file_exists($sSalt8File)) {
-            if (@file_exists($sSaltFile)) {
-                $sSalt = md5(@file_get_contents($sSaltFile));
-                @unlink($sSaltFile);
-            } else {
-                $sSalt = base64_encode(microtime(true).rand(1000, 9999).microtime(true).rand(1000, 9999));
-            }
+            $sSalt = base64_encode(microtime(true).rand(1000, 9999).microtime(true).rand(1000, 9999));
+            $sSalt = bin2hex(random_bytes(16));
+
             $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "'. $sSalt . '";';
             @file_put_contents($sSalt8File, $sSalt);
         }
@@ -174,8 +178,6 @@ class Api
         if (is_writable($sSalt8File)) {
             include_once $sSalt8File;
         }
-
-        self::$sSalt = '$2y$07$' . self::$sSalt . '$';
     }
 
     /**
@@ -287,29 +289,34 @@ class Api
     }
 
     /**
+     * @param array $aValues
+     *
      * @return string
      */
     public static function EncodeKeyValues(array $aValues)
     {
         return Utils::UrlSafeBase64Encode(
-            Utils\Crypt::XxteaEncrypt(
-                @\serialize($aValues),
-                \md5(self::$sSalt)
-            )
+            Utils::EncryptValue(@\serialize($aValues))
         );
     }
 
     /**
+     * Decrypts a string that is encrypted serialized array data
+     *
+     * @param string $sEncryptedValues
+     *
      * @return array
      */
-    public static function DecodeKeyValues($sEncodedValues)
+    public static function DecodeKeyValues(string $sEncryptedValues)
     {
-        $aResult = @\unserialize(
-            Utils\Crypt::XxteaDecrypt(
-                Utils::UrlSafeBase64Decode($sEncodedValues),
-                \md5(self::$sSalt)
-            )
-        );
+        $sEncryptedValues = Utils::UrlSafeBase64Decode(trim($sEncryptedValues));
+
+        $sValue = Utils::DecryptValue($sEncryptedValues);
+        if ($sValue === false) {
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, \md5(Api::GetHashSalt()));
+        }
+
+        $aResult = @\unserialize($sValue);
 
         return \is_array($aResult) ? $aResult : array();
     }
