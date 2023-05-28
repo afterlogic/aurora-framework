@@ -498,7 +498,8 @@ class Utils
      */
     public static function EncryptValue($sValue)
     {
-        $sEncryptedValue = \Aurora\System\Utils\Crypt::XxteaEncrypt($sValue, @hex2bin(Api::$sSalt));
+        $mKey = ctype_xdigit(Api::$sSalt) ? hex2bin(Api::$sSalt) : Api::$sSalt;
+        $sEncryptedValue = \Aurora\System\Utils\Crypt::XxteaEncrypt($sValue, $mKey);
         return @trim(self::UrlSafeBase64Encode($sEncryptedValue));
     }
 
@@ -508,8 +509,9 @@ class Utils
      */
     public static function DecryptValue($sEncryptedValue)
     {
+        $mKey = ctype_xdigit(Api::$sSalt) ? hex2bin(Api::$sSalt) : Api::$sSalt;
         $sEncryptedValue = self::UrlSafeBase64Decode(trim($sEncryptedValue));
-        $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, @hex2bin(Api::$sSalt));
+        $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
         if ($sValue === false) {
             $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, Api::GetHashSalt());
         }
