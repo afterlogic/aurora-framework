@@ -519,6 +519,16 @@ class Utils
     }
 
     /**
+     * @param string $sEncryptedValue
+     * @return string
+     */
+    public static function IsEncryptedValue($sEncryptedValue)
+    {
+        $sValue = \Aurora\System\Utils::DecryptValue($sEncryptedValue);
+        return $sValue === false ? false : true;
+    }
+
+    /**
      * @param string $sEmail
      * @return string
      */
