@@ -55,10 +55,12 @@ class Settings extends \Aurora\System\AbstractSettings
     public function GetTenantSetttings($sTenantName)
     {
         if (!isset($this->aTenantSettings[$sTenantName])) {
-            $this->aTenantSettings[$sTenantName] = new TenantSettings(
+            $oTenantSettings = new TenantSettings(
                 $this->ModuleName,
                 $sTenantName
             );
+            $oTenantSettings->Load();
+            $this->aTenantSettings[$sTenantName] = $oTenantSettings;
         }
 
         return isset($this->aTenantSettings[$sTenantName]) ? $this->aTenantSettings[$sTenantName] : null;

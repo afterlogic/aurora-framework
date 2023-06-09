@@ -350,8 +350,8 @@ abstract class AbstractSettings
                     $val->IsDefault = false;
                     if (isset($this->aContainer[$key])) {
                         $val->Description = $this->aContainer[$key]->Description;
-                        $this->aContainer[$key] = $val;
                     }
+                    $this->aContainer[$key] = $val;
                 }
                 $bResult = true;
             } else {
