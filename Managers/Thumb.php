@@ -66,7 +66,7 @@ class Thumb
             $oImageManager = new \Intervention\Image\ImageManager(['driver' => 'Gd']);
             $oThumb = $oImageManager->make($rFile)->orientate();
 
-            $sThumb = $oThumb->heighten(94)->widen(118)->response()->getContent();
+            $sThumb = (string) $oThumb->heighten(94)->widen(118)->stream();
 
             \unlink($sCacheFilePathTmp);
 
