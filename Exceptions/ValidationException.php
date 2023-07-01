@@ -14,4 +14,6 @@ namespace Aurora\System\Exceptions;
  *
  * @package Api
  */
-class ValidationException extends Exception {}
+class ValidationException extends Exception
+{
+}

@@ -14,444 +14,464 @@ namespace Aurora\System;
  */
 abstract class AbstractSettings
 {
-	const JSON_FILE_NAME = 'config.json';
+    public const JSON_FILE_NAME = 'config.json';
 
-	#<editor-fold defaultstate="collapsed" desc="protected">
-	/**
-	 * @var array
-	 */
-	protected $aContainer;
+    /**
+     * @var array
+     */
+    protected $aContainer;
 
-	/**
-	 * @var string
-	 */
-	protected $sPath;
+    /**
+     * @var string
+     */
+    protected $sPath;
 
-	/**
-	 * @var bool
-	 */
-	protected $bIsLoaded;
-	#</editor-fold>
+    /**
+     * @var bool
+     */
+    protected $bIsLoaded;
 
-	/**
-	 * @param string $sSettingsPath
-	 *
-	 * @return AbstractSettings
-	 */
-	public function __construct($sSettingsPath)
-	{
-		$this->aContainer = [];
-		$this->sPath = $sSettingsPath;
-		$this->bIsLoaded = false;
-	}
+    /**
+     * @param string $sSettingsPath
+     *
+     * @return AbstractSettings
+     */
+    public function __construct($sSettingsPath)
+    {
+        $this->aContainer = [];
+        $this->sPath = $sSettingsPath;
+        $this->bIsLoaded = false;
+    }
 
-	/**
-	 *
-	 * @param type $sName
-	 */
-	public function __isset($sName)
-	{
-		if (!$this->bIsLoaded)
-		{
-			$this->Load();
-		}
+    /**
+     *
+     * @param string $sName
+     *
+     * @return bool
+     */
+    public function __isset($sName)
+    {
+        if (!$this->bIsLoaded) {
+            $this->Load();
+        }
 
-		return isset($this->aContainer[$sName]);
-	}
+        return isset($this->aContainer[$sName]);
+    }
 
-	/**
-	 *
-	 * @param type $sName
-	 * @param type $mValue
-	 */
-	public function __set($sName, $mValue)
-	{
-		$this->SetValue($sName, $mValue);
-	}
+    /**
+     *
+     * @param string $sName
+     * @param mixed $mValue
+     */
+    public function __set($sName, $mValue)
+    {
+        $this->SetValue($sName, $mValue);
+    }
 
-	/**
-	 *
-	 * @param type $sName
-	 */
-	public function __get($sName)
-	{
-		return $this->GetValue($sName);
-	}
+    /**
+     *
+     * @param string $sName
+     *
+     * @return mixed
+     */
+    public function __get($sName)
+    {
+        return $this->GetValue($sName);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function GetValues()
-	{
-		return $this->aContainer;
-	}
+    /**
+     * @return array
+     */
+    public function GetValues()
+    {
+        return $this->aContainer;
+    }
 
-	/**
-	 *
-	 * @return string
-	 */
-	public function GetPath()
-	{
-		return $this->sPath;
-	}
+    /**
+     *
+     * @return string
+     */
+    public function GetPath()
+    {
+        return $this->sPath;
+    }
 
-	/**
-	 * @param array $aValues
-	 */
-	public function SetValues($aValues)
-	{
-		$this->aContainer = $aValues;
-	}
+    /**
+     * @param array $aValues
+     */
+    public function SetValues($aValues)
+    {
+        $this->aContainer = $aValues;
+    }
 
-	/**
-	 * @param string $sKey
-	 *
-	 * @return mixed
-	 */
-	public function GetValue($sKey, $mDefault = null)
-	{
-		if (!$this->bIsLoaded)
-		{
-			$this->Load();
-		}
+    /**
+     * @param string $sKey
+     *
+     * @return mixed
+     */
+    public function GetValue($sKey, $mDefault = null)
+    {
+        if (!$this->bIsLoaded) {
+            $this->Load();
+        }
 
-		return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Value : $mDefault;
-	}
+        return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Value : $mDefault;
+    }
 
-	/**
-	 * @deprecated
-	 *
-	 * @param string $sKey
-	 *
-	 * @return mixed
-	 */
-	public function GetConf($sKey, $mDefault = null)
-	{
-		return $this->GetValue($sKey, $mDefault);
-	}
+    /**
+     * @param string $sKey
+     *
+     * @return SettingsProperty
+     */
+    public function GetSettingsProperty($sKey)
+    {
+        if (!$this->bIsLoaded) {
+            $this->Load();
+        }
 
-	/**
-	 * @param string $sKey
-	 * @param mixed $mValue = null
-	 *
-	 * @return bool
-	 */
-	public function SetValue($sKey, $mValue)
-	{
-		$bResult = false;
+        return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey] : null;
+    }
 
-		$sType = (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Type : \gettype($mValue);
-		if (!isset($this->aContainer[$sKey]))
-		{
-			$this->aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType);
-		}
 
-		switch ($sType)
-		{
-			case 'string':
-				$mValue = (string) $mValue;
-				break;
-			case 'int':
-			case 'integer':
-				$mValue = (int) $mValue;
-				break;
-			case 'bool':
-			case 'boolean':
-				$mValue = (bool) $mValue;
-				break;
-			case 'spec':
-				$mValue = $this->specValidate($mValue, $this->aContainer[$sKey]->SpecType);
-				break;
-			case 'array':
-				if (!Utils::IsAssocArray($mValue))
-				{
-					// rebuild array indexes
-					$mValue = array_values($mValue);
-				}
-				break;
-			default:
-				$mValue = null;
-				break;
-		}
-		$this->aContainer[$sKey]->Value = $mValue;
-		$this->aContainer[$sKey]->Changed = true;
+    /**
+     * @deprecated
+     *
+     * @param string $sKey
+     *
+     * @return mixed
+     */
+    public function GetConf($sKey, $mDefault = null)
+    {
+        return $this->GetValue($sKey, $mDefault);
+    }
 
-		return $bResult;
-	}
+    /**
+     * @param string $sKey
+     * @param mixed $mValue = null
+     *
+     * @return bool
+     */
+    public function SetValue($sKey, $mValue)
+    {
+        $bResult = false;
 
-	/**
-	 * @deprecated
-	 *
-	 * @param string $sKey
-	 * @param mixed $mValue = null
-	 *
-	 * @return bool
-	 */
-	public function SetConf($sKey, $mValue)
-	{
-		return $this->SetValue($sKey, $mValue);
-	}
+        $sType = (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Type : \gettype($mValue);
+        if (!isset($this->aContainer[$sKey])) {
+            $this->aContainer[$sKey] = new SettingsProperty($mValue, $sType);
+        }
 
-	public function IsExists()
-	{
-		return \file_exists($this->sPath);
-	}
+        switch ($sType) {
+            case 'string':
+                $mValue = (string) $mValue;
+                break;
+            case 'int':
+            case 'integer':
+                $mValue = (int) $mValue;
+                break;
+            case 'bool':
+            case 'boolean':
+                $mValue = (bool) $mValue;
+                break;
+            case 'spec':
+                $mValue = $this->specValidate($mValue, $this->aContainer[$sKey]->SpecType);
+                break;
+            case 'array':
+                if (!Utils::IsAssocArray($mValue)) {
+                    // rebuild array indexes
+                    $mValue = array_values($mValue);
+                }
+                break;
+            default:
+                $mValue = null;
+                break;
+        }
+        $this->aContainer[$sKey]->Value = $mValue;
+        $this->aContainer[$sKey]->Changed = true;
 
-	public function BackupConfigFile()
-	{
-		$sJsonFile = $this->sPath;
-		if (\file_exists($sJsonFile))
-		{
-			\copy($sJsonFile, $sJsonFile.'.bak');
-		}
-	}
+        return $bResult;
+    }
 
-	public function CheckConfigFile()
-	{
-		$bResult = true;
+    /**
+     * @deprecated
+     *
+     * @param string $sKey
+     * @param mixed $mValue = null
+     *
+     * @return bool
+     */
+    public function SetConf($sKey, $mValue)
+    {
+        return $this->SetValue($sKey, $mValue);
+    }
 
-		// backup previous configuration
-		$sJsonFile = $this->sPath;
-		if (!\file_exists(\dirname($sJsonFile)))
-		{
-			\set_error_handler(function() {});
-			\mkdir(\dirname($sJsonFile), 0777);
-			\restore_error_handler();
-			$bResult = \file_exists(\dirname($sJsonFile));
-		}
+    public function IsExists()
+    {
+        return \file_exists($this->sPath);
+    }
 
-		return $bResult;
-	}
+    public function BackupConfigFile()
+    {
+        $sJsonFile = $this->sPath;
+        if (\file_exists($sJsonFile)) {
+            \copy($sJsonFile, $sJsonFile.'.bak');
+        }
+    }
 
-	public function SaveDataToConfigFile($aData)
-	{
-		$sJsonFile = $this->sPath;
-		return (bool) \file_put_contents(
-			$sJsonFile,
-			\json_encode(
-				$aData,
-				JSON_PRETTY_PRINT | JSON_OBJECT_AS_ARRAY
-			)
-		);
-	}
+    public function LoadDataFromBackup()
+    {
+        return $this->LoadDataFromFile($this->sPath.'.bak');
+    }
 
-	public function ParseData($aData)
-	{
-		$aContainer = [];
+    public function CheckConfigFile()
+    {
+        $bResult = true;
 
-		if (\is_array($aData))
-		{
-			foreach ($aData as $sKey => $mValue)
-			{
-				$sSpecType = null;
-				if (\is_array($mValue))
-				{
-					$sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? \gettype($mValue[0]) : "string");
-					$sSpecType = isset($mValue[2]) ? $mValue[2] : null;
-					$mValue = isset($mValue[0]) ? $mValue[0] : "";
-				}
-				else
-				{
-					$sType = \gettype($mValue);
-				}
+        // backup previous configuration
+        $sJsonFile = $this->sPath;
+        if (!\file_exists(\dirname($sJsonFile))) {
+            \set_error_handler(function () {
+            });
+            \mkdir(\dirname($sJsonFile), 0777);
+            \restore_error_handler();
+            $bResult = \file_exists(\dirname($sJsonFile));
+        }
 
-				switch ($sType)
-				{
-					case 'string':
-						$mValue =(string) $mValue;
-						break;
-					case 'int':
-					case 'integer':
-						$sType = 'int';
-						$mValue = (int) $mValue;
-						break;
-					case 'bool':
-					case 'boolean':
-						$sType = 'bool';
-						$mValue = (bool) $mValue;
-						break;
-					case 'spec':
-						$mValue = $this->specConver($mValue, $sSpecType);
-						break;
-					case 'array':
-						break;
-					default:
-						$mValue = null;
-						break;
-				}
-				if (null !== $mValue)
-				{
-					$aContainer[$sKey] = new SettingsProperty($sKey, $mValue, $sType, $sSpecType);
-				}
-			}
-		}
+        return $bResult;
+    }
 
-		return $aContainer;
-	}
+    public function SaveDataToConfigFile($aData)
+    {
+        $sJsonFile = $this->sPath;
+        return (bool) \file_put_contents(
+            $sJsonFile,
+            \json_encode(
+                $aData,
+                JSON_PRETTY_PRINT | JSON_OBJECT_AS_ARRAY
+            )
+        );
+    }
 
-	/**
-	 * @param string $sJsonFile
-	 *
-	 * @return bool
-	 */
-	public function LoadDataFromFile($sJsonFile)
-	{
-		$mResult = false;
+    public function ParseData($aData)
+    {
+        $aContainer = [];
 
-		if (\file_exists($sJsonFile))
-		{
-			$sJsonData = \file_get_contents($sJsonFile);
-			$mResult = \json_decode($sJsonData, true);
-		}
+        if (\is_array($aData)) {
+            foreach ($aData as $sKey => $mValue) {
+                if (isset($aData[$sKey])) {
+                    $sSpecType = null;
+                    $sDescription = '';
+                    if (\is_array($mValue)) {
+                        $sType = isset($mValue[1]) ? $mValue[1] : (isset($mValue[0]) ? \gettype($mValue[0]) : "string");
+                        $sSpecType = isset($mValue[2]) ? $mValue[2] : null;
+                        $sDescription = isset($mValue[3]) ? $mValue[3] : '';
+                        $mValue = isset($mValue[0]) ? $mValue[0] : '';
+                        if (isset($aData[$sKey.'_Description'])) {
+                            $sDescription = isset($aData[$sKey.'_Description'][0]) ? $aData[$sKey.'_Description'][0] : '';
+                            unset($aData[$sKey.'_Description']);
+                        }
+                    } else {
+                        $sType = \gettype($mValue);
+                    }
 
-		return $mResult;
-	}
+                    switch ($sType) {
+                        case 'string':
+                            $mValue = (string) $mValue;
+                            break;
+                        case 'int':
+                        case 'integer':
+                            $sType = 'int';
+                            $mValue = (int) $mValue;
+                            break;
+                        case 'bool':
+                        case 'boolean':
+                            $sType = 'bool';
+                            $mValue = (bool) $mValue;
+                            break;
+                        case 'spec':
+                            $mValue = $this->specConver($mValue, $sSpecType);
+                            break;
+                        case 'array':
+                            break;
+                        default:
+                            $mValue = null;
+                            break;
+                    }
+                    if (null !== $mValue) {
+                        $aContainer[$sKey] = new SettingsProperty($mValue, $sType, $sSpecType, $sDescription);
+                    }
+                }
+            }
+        }
 
-	/**
-	 * @param string $sJsonFile
-	 *
-	 * @return bool
-	 */
-	public function Load($bForceLoad = false)
-	{
-		$bResult = false;
-		if ($this->bIsLoaded && !$bForceLoad)
-		{
-			$bResult = true;
-		}
-		else
-		{
-			$mData = $this->LoadDataFromFile($this->sPath);
+        return $aContainer;
+    }
 
-			if (!$mData)
-			{
-				$mData = $this->LoadDataFromFile($this->sPath.'.bak');
-				if ($mData)
-				{
-					\copy($this->sPath.'.bak', $this->sPath);
-				}
-			}
+    /**
+     * @param string $sJsonFile
+     *
+     * @return bool
+     */
+    public function LoadDataFromFile($sJsonFile)
+    {
+        $mResult = false;
 
-			if ($mData !== false)
-			{
-				$this->aContainer = $this->ParseData($mData);
-				$this->bIsLoaded = true;
-				$bResult = true;
-			}
-		}
-		return $bResult;
-	}
+        if (\file_exists($sJsonFile)) {
+            $sJsonData = \file_get_contents($sJsonFile);
+            $mResult = \json_decode($sJsonData, true);
+        }
 
-	/**
-	 * @return array
-	 */
-	public function GetData()
-	{
-		$aResult = [];
-		foreach ($this->aContainer as $sKey => $mValue)
-		{
-			$aValue = [];
-			if ($mValue->Type === 'spec')
-			{
-				$mValue->Value = $this->specBackConver($mValue->Value, $mValue->SpecType);
-				$aValue[] = $mValue->SpecType;
-			}
-			\array_unshift(
-				$aValue,
-				$mValue->Value,
-				$mValue->Type
-			);
+        return $mResult;
+    }
 
-			$aResult[$sKey] = $aValue;
-		}
+    /**
+     * @param bool $bForceLoad
+     *
+     * @return bool
+     */
+    public function Load($bForceLoad = false)
+    {
+        $bResult = false;
+        if ($this->bIsLoaded && !$bForceLoad) {
+            $bResult = true;
+        } else {
+            $mData = false;
 
-		return $aResult;
-	}
+            if (\file_exists($this->sPath)) {
+                $mData = $this->LoadDataFromFile($this->sPath);
+            }
 
-	/**
-	 * @return bool
-	 */
-	public function Save()
-	{
-		$bResult = false;
-		$aData = $this->GetData();
-		if (count($aData) > 0)
-		{
-			if ($this->CheckConfigFile())
-			{
-				$this->BackupConfigFile();
-				if ($this->SaveDataToConfigFile($aData))
-				{
-					$bResult = true;
-				}
-				else
-				{
-					throw new \Aurora\System\Exceptions\SettingsException('Can\'t write settings to the configuration file');
-				}
-			}
-		}
+            if (!$mData) {
+                $mData = $this->LoadDataFromBackup();
+            }
 
-		return $bResult;
-	}
+            if ($mData) {
+                $aParsedData = $this->ParseData($mData);
+                foreach ($aParsedData as $key => $val) {
+                    $val->IsDefault = false;
+                    if (isset($this->aContainer[$key])) {
+                        $val->Description = $this->aContainer[$key]->Description;
+                    }
+                    $this->aContainer[$key] = $val;
+                }
+                $bResult = true;
+            } else {
+                $bResult = $this->Save();
+            }
 
-	/**
-	 * @param string $sValue
-	 * @param string $sEnumName
-	 *
-	 * @return string
-	 */
-	protected function specBackConver($sValue, $sEnumName)
-	{
-		$mResult = $sValue;
-		if (null !== $sEnumName)
-		{
-			$mResult = Enums\EnumConvert::ToXml($sValue, $sEnumName);
-		}
+            $this->bIsLoaded = true;
+        }
 
-		return $mResult;
-	}
+        return $bResult;
+    }
 
-	/**
-	 * @param string $sValue
-	 * @param string $sEnumName
-	 *
-	 * @return string
-	 */
-	protected function specValidate($sValue, $sEnumName)
-	{
-		$mResult = null;
-		if (null !== $sEnumName)
-		{
-			$mResult = Enums\EnumConvert::validate($sValue, $sEnumName);
-		}
-		return $mResult;
-	}
+    /**
+     * @return array
+     */
+    public function GetData()
+    {
+        $aResult = [];
+        foreach ($this->aContainer as $sKey => $mValue) {
+            $aValue = [];
+            $value = $mValue->Value;
+            if ($mValue->Type === 'spec') {
+                $value = $this->specBackConver($mValue->Value, $mValue->SpecType);
+                $aValue[] = $mValue->SpecType;
+            } else {
+                $aValue[] = null;
+            }
+            \array_unshift(
+                $aValue,
+                $value,
+                $mValue->Type
+            );
+            $aValue[] = $mValue->Description;
 
-	/**
-	 * @param string $sValue
-	 * @param string $sEnumName
-	 *
-	 * @return string
-	 */
-	protected function specConver($sValue, $sEnumName)
-	{
-		if (null !== $sEnumName)
-		{
-			$mResult = Enums\EnumConvert::FromXml($sValue, $sEnumName);
-		}
+            $aResult[$sKey] = $aValue;
+        }
 
-		return $this->specValidate($mResult, $sEnumName);
-	}
+        return $aResult;
+    }
 
-	/**
-	 * @return void
-	 */
-	protected function init()
-	{
-		foreach ($this->aMap as $sKey => $aField)
-		{
-			$this->aLowerMap[strtolower($sKey)] = $aField;
-			$this->SetValue($sKey, $aField[0]);
-		}
-	}
+    /**
+     * @param bool $bBackupConfigFile
+     *
+     * @return bool
+     */
+    public function Save($bBackupConfigFile = true)
+    {
+        $bResult = false;
+        $aData = $this->GetData();
+        if (count($aData) > 0) {
+            if ($this->CheckConfigFile()) {
+                if ($bBackupConfigFile) {
+                    $this->BackupConfigFile();
+                }
+                if ($this->SaveDataToConfigFile($aData)) {
+                    $bResult = true;
+                } else {
+                    throw new \Aurora\System\Exceptions\SettingsException('Can\'t write settings to the configuration file');
+                }
+            }
+        }
+
+        return $bResult;
+    }
+
+    /**
+     * @param string $sValue
+     * @param string $sEnumName
+     *
+     * @return string
+     */
+    protected function specBackConver($sValue, $sEnumName)
+    {
+        $mResult = $sValue;
+        if (null !== $sEnumName) {
+            $mResult = Enums\EnumConvert::ToXml($sValue, $sEnumName);
+        }
+
+        return $mResult;
+    }
+
+    /**
+     * @param string $sValue
+     * @param string $sEnumName
+     *
+     * @return string
+     */
+    protected function specValidate($sValue, $sEnumName)
+    {
+        $mResult = null;
+        if (null !== $sEnumName) {
+            $mResult = Enums\EnumConvert::validate($sValue, $sEnumName);
+        }
+        return $mResult;
+    }
+
+    /**
+     * @param string $sValue
+     * @param string $sEnumName
+     *
+     * @return string
+     */
+    protected function specConver($sValue, $sEnumName)
+    {
+        $mResult = null;
+        if (null !== $sEnumName) {
+            $mResult = Enums\EnumConvert::FromXml($sValue, $sEnumName);
+        }
+
+        return $this->specValidate($mResult, $sEnumName);
+    }
+
+    /**
+     * @return void
+     */
+    protected function init()
+    {
+        foreach ($this->aMap as $sKey => $aField) {
+            $this->aLowerMap[strtolower($sKey)] = $aField;
+            $this->SetValue($sKey, $aField[0]);
+        }
+    }
 }

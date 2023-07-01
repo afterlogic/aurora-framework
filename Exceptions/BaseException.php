@@ -16,83 +16,76 @@ namespace Aurora\System\Exceptions;
  */
 class BaseException extends Exception
 {
-	/**
-	 * @var array
-	 */
-	protected $aObjectParams;
+    /**
+     * @var array
+     */
+    protected $aObjectParams;
 
-	/**
-	 * @var Exception
-	 */
-	protected $oPrevious;
+    /**
+     * @var Exception
+     */
+    protected $oPrevious;
 
-	/**
-	 * @param int $iCode
-	 * @param Exception $oPrevious = null
-	 * @param array $aParams = array()
-	 * @param array $aObjectParams = array()
-	 */
-	public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
-	{
-		if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode)
-		{
-			\Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
-			$iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;
-		}
+    /**
+     * @param int $iCode
+     * @param Exception $oPrevious = null
+     * @param array $aParams = array()
+     * @param array $aObjectParams = array()
+     */
+    public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
+    {
+        if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode) {
+            \Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
+            $iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;
+        }
 
-		$this->aObjectParams = $aObjectParams;
-		$this->oPrevious = $oPrevious ? $oPrevious : null;
+        $this->aObjectParams = $aObjectParams;
+        $this->oPrevious = $oPrevious ? $oPrevious : null;
 
-		if ($this->oPrevious)
-		{
-			\Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), \Aurora\System\Enums\LogLevel::Error);
-		}
+        if ($this->oPrevious) {
+            \Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), \Aurora\System\Enums\LogLevel::Error);
+        }
 
-		parent::__construct(\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
-	}
+        parent::__construct(\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function GetObjectParams()
-	{
-		return $this->aObjectParams;
-	}
+    /**
+     * @return array
+     */
+    public function GetObjectParams()
+    {
+        return $this->aObjectParams;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function GetPreviousMessage()
-	{
-		$sMessage = '';
-		if ($this->oPrevious instanceof \MailSo\Imap\Exceptions\NegativeResponseException)
-		{
-			$oResponse = /* @var $oResponse \MailSo\Imap\Response */ $this->oPrevious->GetLastResponse();
+    /**
+     * @return string
+     */
+    public function GetPreviousMessage()
+    {
+        $sMessage = '';
+        if ($this->oPrevious instanceof \MailSo\Imap\Exceptions\NegativeResponseException) {
+            $oResponse = /* @var $oResponse \MailSo\Imap\Response */ $this->oPrevious->GetLastResponse();
 
-			$sMessage = $oResponse instanceof \MailSo\Imap\Response ?
-				$oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '';
-		}
-		else if ($this->oPrevious instanceof \MailSo\Smtp\Exceptions\NegativeResponseException)
-		{
-			$sMessage = $this->oPrevious->getMessage();
-//			$oSub = $this->oPrevious->getPrevious();
-//			$oSub = $oSub instanceof \MailSo\Smtp\Exceptions\NegativeResponseException ? $oSub : null;
+            $sMessage = $oResponse instanceof \MailSo\Imap\Response ?
+                $oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '';
+        } elseif ($this->oPrevious instanceof \MailSo\Smtp\Exceptions\NegativeResponseException) {
+            $sMessage = $this->oPrevious->getMessage();
+        //			$oSub = $this->oPrevious->getPrevious();
+        //			$oSub = $oSub instanceof \MailSo\Smtp\Exceptions\NegativeResponseException ? $oSub : null;
 //
-//			$sMessage = $oSub ? $oSub->getMessage() : $this->oPrevious->getMessage();
-		}
-		else if ($this->oPrevious instanceof \Exception)
-		{
-			$sMessage = $this->oPrevious->getMessage();
-		}
+        //			$sMessage = $oSub ? $oSub->getMessage() : $this->oPrevious->getMessage();
+        } elseif ($this->oPrevious instanceof \Exception) {
+            $sMessage = $this->oPrevious->getMessage();
+        }
 
-		return $sMessage;
-	}
+        return $sMessage;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function GetPreviousException()
-	{
-		return $this->oPrevious;
-	}
+    /**
+     * @return string
+     */
+    public function GetPreviousException()
+    {
+        return $this->oPrevious;
+    }
 }

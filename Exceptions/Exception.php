@@ -15,4 +15,6 @@ namespace Aurora\System\Exceptions;
  * @category Core
  * @package Exceptions
  */
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+}

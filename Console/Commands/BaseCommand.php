@@ -21,14 +21,16 @@ class BaseCommand extends Command
         // migrations may be run for any customized path from within the application.
         if ($input->getOption('path')) {
             return collect($input->getOption('path'))->map(function ($path) use ($input) {
-                return !$input->usingRealPath()
+                return !$this->usingRealPath($input)
                     ? \Aurora\Api::RootPath() . $path
                     : $path;
             })->all();
         }
 
         return array_merge(
-            [$this->getSystemMigrationsPath()], $this->migrator->paths(), $this->getMigrationPath()
+            [$this->getSystemMigrationsPath()],
+            $this->migrator->paths(), // @phpstan-ignore-line
+            $this->getMigrationPath()
         );
     }
 
@@ -37,9 +39,9 @@ class BaseCommand extends Command
      *
      * @return bool
      */
-    protected function usingRealPath()
+    protected function usingRealPath($input)
     {
-        return $this->hasOption('realpath') && $this->getOption('realpath');
+        return $input->hasOption('realpath') && $input->getOption('realpath');
     }
 
     /**
@@ -51,7 +53,6 @@ class BaseCommand extends Command
     protected function getMigrationPath($sRequiredModule = null)
     {
         if ($sRequiredModule) {
-
             if ($sRequiredModule === 'system') {
                 $sPath = $this->getSystemMigrationsPath();
             } else {
@@ -71,16 +72,17 @@ class BaseCommand extends Command
         }
     }
 
-    public function getAllModels() {
+    public function getAllModels()
+    {
         $finder = Finder::create();
         $aModules = \Aurora\Api::GetModuleManager()->GetModulesPaths();
         $aModulesModelsPaths = array_map(function ($sModule, $sPath) {
             return $sPath . $sModule . DIRECTORY_SEPARATOR . 'Models';
-        }, array_keys($aModules), $aModules); 
+        }, array_keys($aModules), $aModules);
 
         $aDirModels = [];
-        foreach($aModulesModelsPaths as $sModuleModel){
-            if(is_dir($sModuleModel)){
+        foreach ($aModulesModelsPaths as $sModuleModel) {
+            if (is_dir($sModuleModel)) {
                 $finder
                 ->in($sModuleModel)
                 ->depth(0);
@@ -89,10 +91,10 @@ class BaseCommand extends Command
         }
 
         $aFormatedDirModels = [];
-        foreach($aDirModels as $sDirModel){
+        foreach ($aDirModels as $sDirModel) {
             $fileWithoutExtenstion = explode('.', $sDirModel);
             array_pop($fileWithoutExtenstion);
-            $fileWithoutExtenstion = implode('.',$fileWithoutExtenstion);
+            $fileWithoutExtenstion = implode('.', $fileWithoutExtenstion);
             $sModelName = explode(DIRECTORY_SEPARATOR, $fileWithoutExtenstion);
             $sModelName = array_pop($sModelName);
             $aFormatedDirModels[$sModelName] = $fileWithoutExtenstion;
@@ -103,7 +105,8 @@ class BaseCommand extends Command
     /**
      * @return string
      */
-    private function getSystemMigrationsPath() {
+    private function getSystemMigrationsPath()
+    {
         return \Aurora\Api::RootPath() . DIRECTORY_SEPARATOR . 'Migrations';
     }
 }

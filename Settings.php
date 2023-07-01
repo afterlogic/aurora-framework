@@ -14,94 +14,401 @@ namespace Aurora\System;
  *
  * @package Api
  */
+
+/**
+* @property string $LicenseKey
+* @property string $AdminLogin
+* @property string $AdminPassword
+* @property string $AdminLanguage
+*
+* @property \Aurora\System\Enums\DbType $DBType
+* @property string $DBPrefix
+* @property string $DBHost
+* @property string $DBName
+* @property string $DBLogin
+* @property string $DBPassword
+
+* @property bool $UseSlaveConnection
+* @property string $DBSlaveHost
+* @property string $DBSlaveName
+* @property string $DBSlaveLogin
+* @property string $DBSlavePassword
+* @property bool $DBUseExplain
+* @property bool $DBUseExplainExtended
+* @property bool $DBLogQueryParams
+* @property bool $DBDebugBacktraceLimit
+
+* @property bool $EnableLogging
+* @property bool $EnableEventLogging
+* @property \Aurora\System\Enums\LogLevel $LoggingLevel
+* @property string $LogFileName
+* @property string $LogCustomFullPath
+* @property bool $LogPostView
+
+* @property bool $EnableMultiChannel
+* @property bool $EnableMultiTenant
+* @property string $TenantGlobalCapa
+
+* @property bool $AllowThumbnail
+* @property int $ThumbnailMaxFileSizeMb
+* @property bool $CacheCtrl
+* @property bool $CacheLangs
+* @property bool $CacheTemplates
+* @property bool $DisplayServerErrorInformation
+* @property bool $EnableImap4PlainAuth
+* @property bool $RedirectToHttps
+* @property int $SocketConnectTimeoutSeconds
+* @property int $SocketGetTimeoutSeconds
+* @property bool $SocketVerifySsl
+* @property bool $UseAppMinJs
+* @property string $XFrameOptions
+* @property bool $RemoveOldLogs
+* @property int $RemoveOldLogsDays
+* @property bool $LogStackTrace
+* @property int $ExpireUserSessionsBeforeTimestamp
+
+* @property int $PasswordMinLength
+* @property bool $PasswordMustBeComplex
+
+* @property bool $StoreAuthTokenInDB
+* @property int $AuthTokenExpirationLifetimeDays
+*/
+
 class Settings extends AbstractSettings
 {
-	protected function initDefaults()
-	{
-		$this->aContainer = array(
-			'LicenseKey' => new SettingsProperty('LicenseKey', '', 'string'),
+    protected function initDefaults()
+    {
+        $this->aContainer = [
+            'LicenseKey' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'License key is supplied here'
+            ),
 
-			'AdminLogin' =>  new SettingsProperty('AdminLogin', 'superadmin', 'string'),
-			'AdminPassword' => new SettingsProperty('AdminPassword', '', 'string'),
-			'AdminLanguage' => new SettingsProperty('AdminLanguage', 'English', 'string'),
+            'AdminLogin' =>  new SettingsProperty(
+                'superadmin',
+                'string',
+                null,
+                'Administrative login'
+            ),
+            'AdminPassword' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Administrative password (empty by default)'
+            ),
+            'AdminLanguage' => new SettingsProperty(
+                'English',
+                'string',
+                null,
+                'Admin interface language'
+            ),
 
-			'DBType' => new SettingsProperty('DBType', Enums\DbType::MySQL, 'spec', '\Aurora\System\Enums\DbType'),
-			'DBPrefix' => new SettingsProperty('DBPrefix', 'au_', 'string'),
-			'DBHost' => new SettingsProperty('DBHost', '127.0.0.1', 'string'),
-			'DBName' => new SettingsProperty('DBName', '', 'string'),
-			'DBLogin' => new SettingsProperty('DBLogin', 'root', 'string'),
-			'DBPassword' => new SettingsProperty('DBPassword', '', 'string'),
+            'DBType' => new SettingsProperty(
+                Enums\DbType::MySQL,
+                'spec',
+                Enums\DbType::class,
+                'Database engine used. Currently, only MySQL is supported'
+            ),
+            'DBPrefix' => new SettingsProperty(
+                'au_',
+                'string',
+                null,
+                'Prefix used for database tables names'
+            ),
+            'DBHost' => new SettingsProperty(
+                '127.0.0.1',
+                'string',
+                null,
+                'Denotes hostname or socket path used for connecting to SQL database'
+            ),
+            'DBName' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'The name of database in SQL server used'
+            ),
+            'DBLogin' => new SettingsProperty(
+                'root',
+                'string',
+                null,
+                'Login for SQL user'
+            ),
+            'DBPassword' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Password to access SQL database'
+            ),
 
-			'UseSlaveConnection' => new SettingsProperty('UseSlaveConnection', false, 'bool'),
-			'DBSlaveHost' => new SettingsProperty('DBSlaveHost', '127.0.0.1', 'string'),
-			'DBSlaveName' => new SettingsProperty('DBSlaveName', '', 'string'),
-			'DBSlaveLogin' => new SettingsProperty('DBSlaveLogin', 'root', 'string'),
-			'DBSlavePassword' => new SettingsProperty('DBSlavePassword', '', 'string'),
-			'DBUseExplain' => new SettingsProperty('DBUseExplain', false, 'bool'),
-			'DBUseExplainExtended' => new SettingsProperty('DBUseExplainExtended', false, 'bool'),
-			'DBLogQueryParams' => new SettingsProperty('DBLogQueryParams', false, 'bool'),
-			'DBDebugBacktraceLimit' => new SettingsProperty('DBDebugBacktraceLimit', false, 'bool'),
+            'UseSlaveConnection' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Set of parameters for separate read/write access to the database. If set to true, the first set of credentials will be used to write to the database while Slave credentials - to read from it'
+            ),
+            'DBSlaveHost' => new SettingsProperty(
+                '127.0.0.1',
+                'string',
+                null,
+                'Slave database hostname or socket path'
+            ),
+            'DBSlaveName' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Slave database name'
+            ),
+            'DBSlaveLogin' => new SettingsProperty(
+                'root',
+                'string',
+                null,
+                'Slave database login'
+            ),
+            'DBSlavePassword' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Slave database password'
+            ),
+            'DBUseExplain' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Use EXPLAIN in SQL queries'
+            ),
+            'DBUseExplainExtended' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Use Extended EXPLAIN'
+            ),
+            'DBLogQueryParams' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'If enabled, parameters values will be recorded in the logs'
+            ),
+            'DBDebugBacktraceLimit' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'This parameter can be used to limit the number of stack frames returned'
+            ),
 
-			'EnableLogging' => new SettingsProperty('EnableLogging', false, 'bool'),
-			'EnableEventLogging' => new SettingsProperty('EnableEventLogging', false, 'bool'),
-			'LoggingLevel' => new SettingsProperty('LoggingLevel', Enums\LogLevel::Full, 'spec', '\Aurora\System\Enums\LogLevel'),
-			'LogFileName' => new SettingsProperty('LogFileName', 'log-{Y-m-d}.txt', 'string'),
-			'LogCustomFullPath' => new SettingsProperty('LogCustomFullPath', '', 'string'),
-			'LogPostView' => new SettingsProperty('LogPostView', false, 'bool'),
+            'EnableLogging' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Activates debug logging'
+            ),
+            'EnableEventLogging' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Activates user activity logging'
+            ),
+            'LoggingLevel' => new SettingsProperty(
+                Enums\LogLevel::Full,
+                'spec',
+                Enums\LogLevel::class,
+                'For debug logs, verbosity level can be set to Full, Warning or Error'
+            ),
+            'LogFileName' => new SettingsProperty(
+                'log-{Y-m-d}.txt',
+                'string',
+                null,
+                'Denotes log filename pattern'
+            ),
+            'LogCustomFullPath' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Allows for overriding log files location'
+            ),
+            'LogPostView' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Determines whether to log full POST data or just key names'
+            ),
 
-			'EnableMultiChannel' => new SettingsProperty('EnableMultiChannel', false, 'bool'),
-			'EnableMultiTenant' => new SettingsProperty('EnableMultiTenant', false, 'bool'),
-			'TenantGlobalCapa' => new SettingsProperty('TenantGlobalCapa', '', 'string'),
+            'EnableMultiChannel' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Reserved for future use'
+            ),
+            'EnableMultiTenant' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Enables multi tenant support'
+            ),
+            'TenantGlobalCapa' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Reserved for future use'
+            ),
 
-			'AllowThumbnail' => new SettingsProperty('AllowThumbnail', true, 'bool'),
-			'ThumbnailMaxFileSizeMb' => new SettingsProperty('ThumbnailMaxFileSizeMb', 5, 'int'),
-			'CacheCtrl' => new SettingsProperty('CacheCtrl', true, 'bool'),
-			'CacheLangs' => new SettingsProperty('CacheLangs', true, 'bool'),
-			'CacheTemplates' => new SettingsProperty('CacheTemplates', true, 'bool'),
-			'DisplayServerErrorInformation' => new SettingsProperty('DisplayServerErrorInformation', true, 'bool'),
-			'EnableImap4PlainAuth' => new SettingsProperty('EnableImap4PlainAuth', false, 'bool'),
-			'RedirectToHttps' => new SettingsProperty('RedirectToHttps', false, 'bool'),
-			'SocketConnectTimeoutSeconds' => new SettingsProperty('SocketConnectTimeoutSeconds', 20, 'int'),
-			'SocketGetTimeoutSeconds' => new SettingsProperty('SocketGetTimeoutSeconds', 20, 'int'),
-			'SocketVerifySsl' => new SettingsProperty('SocketVerifySsl', false, 'bool'),
-			'UseAppMinJs' => new SettingsProperty('UseAppMinJs', true, 'bool'),
-			'XFrameOptions' => new SettingsProperty('XFrameOptions', '', 'string'),
-			'RemoveOldLogs' => new SettingsProperty('RemoveOldLogs', true, 'bool'),
-			'LogStackTrace' => new SettingsProperty('LogStackTrace', false, 'bool'),
-			'ExpireUserSessionsBeforeTimestamp' => new SettingsProperty('ExpireUserSessionsBeforeTimestamp', 0, 'int'),
+            'AllowThumbnail' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'If disabled, image thumbnails will not be generated'
+            ),
+            'ThumbnailMaxFileSizeMb' => new SettingsProperty(
+                5,
+                'int',
+                null,
+                'Denotes a max filesize of images thumbnails are generated for, in Mbytes'
+            ),
+            'CacheCtrl' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'If true, content of mail message opened in a new browser tab will be retrieved from cache'
+            ),
+            'CacheLangs' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'Enables caching language files'
+            ),
+            'CacheTemplates' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'Enables caching template files'
+            ),
+            'DisplayServerErrorInformation' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'If enabled, error messages will include texts returned from the server'
+            ),
+            'EnableImap4PlainAuth' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Reserved for future use'
+            ),
+            'RedirectToHttps' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'If enabled, users will automatically be redirected from HTTP to HTTPS'
+            ),
+            'SocketConnectTimeoutSeconds' => new SettingsProperty(
+                20,
+                'int',
+                null,
+                'Socket connection timeout limit, in seconds'
+            ),
+            'SocketGetTimeoutSeconds' => new SettingsProperty(
+                20,
+                'int',
+                null,
+                'Socket stream access timeout, in seconds'
+            ),
+            'SocketVerifySsl' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Enables SSL certificate checks'
+            ),
+            'UseAppMinJs' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'Enables loading minified JS files (default behavior)'
+            ),
+            'XFrameOptions' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'If set to SAMEORIGIN, disallows embedding product interface into IFrame to prevent from clickjacking attacks'
+            ),
+            'RemoveOldLogs' => new SettingsProperty(
+                true,
+                'bool',
+                null,
+                'If enabled, logs older than RemoveOldLogsDays days are automatically removed'
+            ),
+            'RemoveOldLogsDays' => new SettingsProperty(
+                2,
+                'int',
+                null,
+                'Value for use with RemoveOldLogs setting'
+            ),
+            'LogStackTrace' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'If enabled, logs will contain full stack trace of exceptions; disabled by default to prevent logs from containing sensitive data'
+            ),
+            'ExpireUserSessionsBeforeTimestamp' => new SettingsProperty(
+                0,
+                'int',
+                null,
+                'If set, all user sessions prior to this timestamp will be considered expired'
+            ),
 
-			'PasswordMinLength' => new SettingsProperty('PasswordMinLength', 0, 'int'),
-			'PasswordMustBeComplex' => new SettingsProperty('PasswordMustBeComplex', false, 'bool'),
+            'PasswordMinLength' => new SettingsProperty(
+                0,
+                'int',
+                null,
+                'Used by password change modules, if set to non-zero, denotes minimal length of new password'
+            ),
+            'PasswordMustBeComplex' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'Used by password change modules, if set to true, new password has to include at least one digit and at least one non-alphanumeric character'
+            ),
 
-			'StoreAuthTokenInDB' => new SettingsProperty('StoreAuthTokenInDB', false, 'bool'),
-			'AuthTokenExpirationLifetimeDays' => new SettingsProperty('ExpirationLifetimeDays', 0, 'int'),
-		);
-	}
+            'StoreAuthTokenInDB' => new SettingsProperty(
+                false,
+                'bool',
+                null,
+                'If enabled, authentication tokens will be stored in the database and can be revoked'
+            ),
+            'AuthTokenExpirationLifetimeDays' => new SettingsProperty(
+                0,
+                'int',
+                null,
+                'If set to non-zero value, means auth tokens will expire after this number of days. 0 means the feature is disabled.'
+            ),
+        ];
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function Load($bForceLoad = false)
-	{
-		$this->initDefaults();
-		if (!\file_exists($this->sPath))
-		{
-			$this->Save();
-		}
+    /**
+     * @return bool
+     */
+    public function Load($bForceLoad = false)
+    {
+        $this->initDefaults();
+        if (!\file_exists($this->sPath)) {
+            $this->Save();
+        }
 
-		return parent::Load($bForceLoad);
-	}
+        return parent::Load($bForceLoad);
+    }
 
-	public function SyncConfigs()
-	{
-		$this->initDefaults();
-		$aContainer = $this->aContainer;
-		if (!\file_exists($this->sPath))
-		{
-			$this->Save();
-		}
-		parent::Load(true);
-		$this->aContainer = \array_merge($aContainer, $this->aContainer);
-		$this->Save();
-	}
+    public function SyncConfigs()
+    {
+        $this->initDefaults();
+        $aContainer = $this->aContainer;
+        if (!\file_exists($this->sPath)) {
+            $this->Save();
+        }
+        parent::Load(true);
+        $this->aContainer = \array_merge(
+            $aContainer,
+            $this->aContainer
+        );
+        $this->Save();
+    }
 }

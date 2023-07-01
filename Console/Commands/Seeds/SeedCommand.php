@@ -82,7 +82,7 @@ class SeedCommand extends Command
     {
         $class = $input->getOption('class') ?? \DatabaseSeeder::class;
 
-        return new $class;
+        return new $class();
     }
 
     /**
@@ -96,5 +96,4 @@ class SeedCommand extends Command
 
         return $database ?: $this->resolver->getDefaultConnection();
     }
-
 }

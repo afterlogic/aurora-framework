@@ -14,8 +14,9 @@ namespace Aurora\System\Module;
  *
  * @package Api
  */
-abstract class AbstractWebclientModule extends AbstractModule {
-
-    public function init() {}
-
+abstract class AbstractWebclientModule extends AbstractModule
+{
+    public function init()
+    {
+    }
 }

@@ -16,7 +16,7 @@ namespace Aurora\System;
  */
 class ObjectExtender
 {
-	/**
+    /**
      * @var array
      */
     protected $_aObjects = [];
@@ -27,65 +27,63 @@ class ObjectExtender
     protected static $self = null;
 
     /**
-	 *
-	 * @return \self
-	 */
-	public static function createInstance()
-	{
-		return new self();
-	}
-
-	/**
-	 *
-	 * @return ObjectExtender
-	 */
-	public static function getInstance()
-	{
-		if (is_null(self::$self))
-		{
-			self::$self = new self();
-		}
-
-		return self::$self;
-	}
-
-	/**
-	 *
-	 * @param string $sModule
-	 * @param string $sType
-	 * @param array $aMap
-	 */
-	public function extend($sModule, $sType, $aMap)
-	{
-		foreach ($aMap as $sKey => $aValue)
-		{
-			$aValue['@Extended'] = true;
-			$this->_aObjects[$sType][$sModule . Module\AbstractModule::$Delimiter . $sKey] = $aValue;
-		}
+     *
+     * @return \self
+     */
+    public static function createInstance()
+    {
+        return new self();
     }
 
-	/**
-	 *
-	 * @param string $sType
-	 * @return array
-	 */
-	public function getObject($sType)
-	{
-		return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : [];
-	}
+    /**
+     *
+     * @return ObjectExtender
+     */
+    public static function getInstance()
+    {
+        if (is_null(self::$self)) {
+            self::$self = new self();
+        }
 
-	/**
-	 *
-	 * @param string $sType
-	 * @return boolean
-	 */
-	public function issetObject($sType)
-	{
-		return isset($this->_aObjects[$sType]);
-	}
+        return self::$self;
+    }
 
-	public function getExtendedProps($sType)
-	{
-		return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : [];
+    /**
+     *
+     * @param string $sModule
+     * @param string $sType
+     * @param array $aMap
+     */
+    public function extend($sModule, $sType, $aMap)
+    {
+        foreach ($aMap as $sKey => $aValue) {
+            $aValue['@Extended'] = true;
+            $this->_aObjects[$sType][$sModule . Module\AbstractModule::$Delimiter . $sKey] = $aValue;
+        }
+    }
+
+    /**
+     *
+     * @param string $sType
+     * @return array
+     */
+    public function getObject($sType)
+    {
+        return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : [];
+    }
+
+    /**
+     *
+     * @param string $sType
+     * @return boolean
+     */
+    public function issetObject($sType)
+    {
+        return isset($this->_aObjects[$sType]);
+    }
+
+    public function getExtendedProps($sType)
+    {
+        return isset($this->_aObjects[$sType]) ? $this->_aObjects[$sType] : [];
     }
 }

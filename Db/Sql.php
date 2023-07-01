@@ -17,28 +17,28 @@ namespace Aurora\System\Db;
  */
 class Sql extends GeneralSql
 {
-	/**
-	 * @var	string
-	 */
-	protected $sHost;
+    /**
+     * @var	string
+     */
+    protected $sHost;
 
-	/**
-	 * @var	string
-	 */
-	protected $sUser;
+    /**
+     * @var	string
+     */
+    protected $sUser;
 
-	/**
-	 * @var	string
-	 */
-	protected $sPassword;
+    /**
+     * @var	string
+     */
+    protected $sPassword;
 
-	/**
-	 * @var	string
-	 */
-	protected $sDbName;
+    /**
+     * @var	string
+     */
+    protected $sDbName;
 
-	/**
-	 * @var	string
-	 */
-	protected $sDbTablePrefix;
+    /**
+     * @var	string
+     */
+    protected $sDbTablePrefix;
 }

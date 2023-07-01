@@ -14,14 +14,14 @@ namespace Aurora\System\Enums;
  */
 class TimeFormat extends AbstractEnumeration
 {
-	const F12 = 1;
-	const F24 = 0;
+    public const F12 = 1;
+    public const F24 = 0;
 
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'F12' => self::F12,
-		'F24' => self::F24
-	);
+    /**
+     * @var array
+     */
+    protected $aConsts = array(
+        'F12' => self::F12,
+        'F24' => self::F24
+    );
 }

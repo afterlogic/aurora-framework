@@ -17,48 +17,48 @@ namespace Aurora\System\Exceptions;
  */
 class ApiException extends Exception
 {
-	/**
-	 * @var array
-	 */
-	protected $aObjectParams;
+    /**
+     * @var array
+     */
+    protected $aObjectParams;
 
 
-	/**
-	 * @var \Aurora\System\Module\AbstractModule
-	 */
-	protected $oModule;
+    /**
+     * @var \Aurora\System\Module\AbstractModule
+     */
+    protected $oModule;
 
-	/**
-	 * ApiException constructor.
-	 *
-	 * @param null|int $iCode
-	 * @param null|\Throwable $oPrevious
-	 * @param null|string $sMessage
-	 * @param null|array $aObjectParams
-	 * @psalm-param null|array<string, string|int|mixed> $aObjectParams
-	 * @param null|\Aurora\System\Module\AbstractModule $oModule
-	 */
-	public function __construct($iCode, $oPrevious = null, $sMessage = '', $aObjectParams = array(), $oModule = null)
-	{
-		$this->aObjectParams = $aObjectParams;
-		$this->oModule = $oModule;
-		$mCode = is_int($iCode) ? $iCode : 0;
-		parent::__construct('' === $sMessage ? 'ApiException' : $sMessage, $mCode, $oPrevious);
-	}
+    /**
+     * ApiException constructor.
+     *
+     * @param null|int $iCode
+     * @param null|\Throwable $oPrevious
+     * @param null|string $sMessage
+     * @param null|array $aObjectParams
+     * @psalm-param null|array<string, string|int|mixed> $aObjectParams
+     * @param null|\Aurora\System\Module\AbstractModule $oModule
+     */
+    public function __construct($iCode, $oPrevious = null, $sMessage = '', $aObjectParams = array(), $oModule = null)
+    {
+        $this->aObjectParams = $aObjectParams;
+        $this->oModule = $oModule;
+        $mCode = is_int($iCode) ? $iCode : 0;
+        parent::__construct('' === $sMessage ? 'ApiException' : $sMessage, $mCode, $oPrevious);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function GetObjectParams()
-	{
-		return $this->aObjectParams;
-	}
+    /**
+     * @return array
+     */
+    public function GetObjectParams()
+    {
+        return $this->aObjectParams;
+    }
 
-	/**
-	 * @return \Aurora\System\Module\AbstractModule
-	 */
-	public function GetModule()
-	{
-		return $this->oModule;
-	}
+    /**
+     * @return \Aurora\System\Module\AbstractModule
+     */
+    public function GetModule()
+    {
+        return $this->oModule;
+    }
 }

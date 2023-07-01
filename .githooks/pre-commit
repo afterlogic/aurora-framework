@@ -1,0 +1,60 @@
+#!/bin/bash
+
+PROJECT=`php -r "echo dirname(dirname(realpath('$0')));"`
+STAGED_FILES_CMD=`git diff --name-only --diff-filter=ACMR HEAD | grep "\.php$"`
+
+# Determine if a file list is passed
+if [ "$#" -eq 1 ]
+then
+    oIFS=$IFS
+    IFS='
+    '
+    SFILES="$1"
+    IFS=$oIFS
+fi
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+echo "Checking PHP files..."
+
+for FILE in $SFILES
+do
+    php -l -d display_errors=0 $PROJECT/$FILE
+    if [ $? != 0 ]
+    then
+        printf "Fix syntax errors before commit."
+        exit 1
+    fi
+    FILES="$FILES $PROJECT/$FILE"
+done
+
+PHPSTAN="../vendor/bin/phpstan"
+
+if [ -f "$PHPSTAN" ]; then
+    echo ""
+    printf "Running PhpStan..."
+	eval "$PHPSTAN analyze --level 0 --no-progress ./"
+    if [ $? != 0 ]
+    then
+        echo "Fix PhpStan errors before commit."
+        echo "Run: '$PHPSTAN analyze'"
+        exit 1
+    fi
+fi
+
+CSFIXER="../php-cs-fixer.phar"
+
+if [ -f "$CSFIXER" ]; then
+    echo ""
+    echo "Running CS Fixer..."
+
+    eval "php $CSFIXER fix ./ --rules=@PER --dry-run --using-cache=no"
+
+    if [ $? != 0 ]
+    then
+        echo "Fix formatting issues before commit."
+        echo "Run: 'php $CSFIXER fix ./ --rules=@PER --using-cache=no'"
+        exit 1
+    fi
+fi
+
+exit $?

@@ -162,6 +162,8 @@ abstract class GeneratorCommand extends Command
         $this->files->put($path, $this->sortImports($this->buildClass($name)));
 
         $output->writeln('Seed created successfully.');
+
+        return true;
     }
 
     /**
@@ -343,5 +345,4 @@ abstract class GeneratorCommand extends Command
 
         return in_array($name, $this->reservedNames);
     }
-
 }

@@ -14,44 +14,50 @@ namespace Aurora\System;
  */
 class SettingsProperty
 {
-	/**
-	 * @var string
-	 */
-	public $Name;
+    /**
+     * @var mixed
+     */
+    public $Value;
 
-	/**
-	 * @var mixed
-	 */
-	public $Value;
+    /**
+     * @var string
+     */
+    public $Type;
 
-	/**
-	 * @var string
-	 */
-	public $Type;
+    /**
+     * @var string
+     */
+    public $SpecType;
 
-	/**
-	 * @var string
-	 */
-	public $SpecType;
+    /**
+     * @var bool
+     */
+    public $Changed;
 
-	/**
-	 * @var bool
-	 */
-	public $Changed;
+    /**
+     * @var string
+     */
+    public $Description;
 
-	/**
-	 *
-	 * @param string $sName
-	 * @param mixed $mValue
-	 * @param string $sType
-	 * @param string $sSpecType
-	 */
-	public function __construct($sName, $mValue, $sType, $sSpecType = null)
-	{
-		$this->Name = $sName;
-		$this->Value = $mValue;
-		$this->Type = $sType;
-		$this->SpecType = $sSpecType;
-		$this->Changed = false;
-	}
+    /**
+     * @var bool
+     */
+    public $IsDefault;
+
+    /**
+     *
+     * @param mixed $mValue
+     * @param string $sType
+     * @param string $sSpecType
+     * @param string $sDescription
+     */
+    public function __construct($mValue, $sType, $sSpecType = null, $sDescription = '')
+    {
+        $this->Value = $mValue;
+        $this->Type = $sType;
+        $this->SpecType = $sSpecType;
+        $this->Description = $sDescription;
+        $this->Changed = false;
+        $this->IsDefault = true;
+    }
 }

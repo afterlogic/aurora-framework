@@ -14,20 +14,20 @@ namespace Aurora\System\Enums;
  */
 class Capa extends \Aurora\System\Enums\AbstractEnumeration
 {
-	const WEBMAIL = 'WEBMAIL';
-	const CALENDAR = 'CALENDAR';
-	const CAL_SHARING = 'CAL_SHARING';
-	const CONTACTS_SHARING = 'CONTACTS_SHARING';
-	const MEETINGS = 'MEETINGS';
-	const PAB = 'PAB';
-	const GAB = 'GAB';
-	const FILES = 'FILES';
-	const VOICE = 'VOICE';
-	const SIP = 'SIP';
-	const TWILIO = 'TWILIO';
-	const HELPDESK = 'HELPDESK';
-	const MOBILE_SYNC = 'MOBILE_SYNC';
-	const OUTLOOK_SYNC = 'OUTLOOK_SYNC';
+    public const WEBMAIL = 'WEBMAIL';
+    public const CALENDAR = 'CALENDAR';
+    public const CAL_SHARING = 'CAL_SHARING';
+    public const CONTACTS_SHARING = 'CONTACTS_SHARING';
+    public const MEETINGS = 'MEETINGS';
+    public const PAB = 'PAB';
+    public const GAB = 'GAB';
+    public const FILES = 'FILES';
+    public const VOICE = 'VOICE';
+    public const SIP = 'SIP';
+    public const TWILIO = 'TWILIO';
+    public const HELPDESK = 'HELPDESK';
+    public const MOBILE_SYNC = 'MOBILE_SYNC';
+    public const OUTLOOK_SYNC = 'OUTLOOK_SYNC';
 
-	const NO = 'NO';
+    public const NO = 'NO';
 }

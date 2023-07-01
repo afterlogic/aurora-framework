@@ -16,22 +16,21 @@ namespace Aurora\System\Module;
  */
 abstract class AbstractLicensedModule extends AbstractModule
 {
-	protected $isValid = null;
+    protected $isValid = null;
 
-	public function __construct($sPath, $sVersion = '1.0')
-	{
-		parent::__construct($sPath, $sVersion);
-		$this->RequireModule('Licensing');
-	}
+    public function __construct($sPath, $sVersion = '1.0')
+    {
+        parent::__construct($sPath, $sVersion);
+        $this->RequireModule('Licensing');
+    }
 
-	public function isValid()
-	{
-		if (!isset($this->isValid))
-		{
-			$oLicensing = \Aurora\System\Api::GetModule('Licensing');
-			$this->isValid = $oLicensing ? ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName())) : false;
-		}
+    public function isValid()
+    {
+        if (!isset($this->isValid)) {
+            $oLicensing = \Aurora\System\Api::GetModule('Licensing');
+            $this->isValid = $oLicensing ? ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName())) : false;
+        }
 
-		return $this->isValid;
-	}
+        return $this->isValid;
+    }
 }

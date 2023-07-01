@@ -14,14 +14,14 @@ namespace Aurora\System\Enums;
  */
 class SortOrder extends \Aurora\System\Enums\AbstractEnumeration
 {
-	const ASC = 0;
-	const DESC = 1;
+    public const ASC = 0;
+    public const DESC = 1;
 
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'ASC' => self::ASC,
-		'DESC' => self::DESC
-	);
+    /**
+     * @var array
+     */
+    protected $aConsts = array(
+        'ASC' => self::ASC,
+        'DESC' => self::DESC
+    );
 }

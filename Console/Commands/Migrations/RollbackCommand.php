@@ -36,12 +36,12 @@ class RollbackCommand extends BaseCommand
     {
         $this->setName('migrate:rollback')
             ->setDescription('Rollback the last database migration')
-            ->addOption('database', null,InputOption::VALUE_OPTIONAL, 'The database connection to use')
-            ->addOption('force', null,InputOption::VALUE_NONE, 'Force the operation to run when in production')
-            ->addOption('path', null,InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The path(s) to the migrations files to be executed')
-            ->addOption('realpath', null,InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths')
-            ->addOption('pretend', null,InputOption::VALUE_NONE, 'Dump the SQL queries that would be run')
-            ->addOption('step', null,InputOption::VALUE_OPTIONAL, 'The number of migrations to be reverted');
+            ->addOption('database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production')
+            ->addOption('path', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The path(s) to the migrations files to be executed')
+            ->addOption('realpath', null, InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths')
+            ->addOption('pretend', null, InputOption::VALUE_NONE, 'Dump the SQL queries that would be run')
+            ->addOption('step', null, InputOption::VALUE_OPTIONAL, 'The number of migrations to be reverted');
     }
 
     /**
@@ -60,7 +60,8 @@ class RollbackCommand extends BaseCommand
 
         $this->migrator->usingConnection($input->getOption('database'), function () use ($input, $output) {
             $this->migrator->setOutput($output)->rollback(
-                $this->getMigrationPaths($input, $output), [
+                $this->getMigrationPaths($input, $output),
+                [
                     'pretend' => $input->getOption('pretend'),
                     'step' => (int) $input->getOption('step'),
                 ]
@@ -69,5 +70,4 @@ class RollbackCommand extends BaseCommand
 
         return Command::SUCCESS;
     }
-
 }

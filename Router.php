@@ -29,12 +29,11 @@ class Router
     }
 
     /**
-     * @return Aurora\System\Router
+     * @return \Aurora\System\Router
      */
     public static function getInstance()
     {
-        if (is_null(self::$self))
-        {
+        if (is_null(self::$self)) {
             self::$self = new self();
         }
 
@@ -43,45 +42,39 @@ class Router
 
     public function register($sModule, $sName, $mCallbak)
     {
-        if (!isset($this->aRoutes[$sName][$sModule]))
-        {
+        if (!isset($this->aRoutes[$sName][$sModule])) {
             $this->aRoutes[$sName][$sModule] = $mCallbak;
         }
     }
 
     public function registerArray($sModule, $aRoutes)
     {
-		foreach ($aRoutes as $sName => $mCallbak)
-		{
-			$this->register($sModule, $sName, $mCallbak);
-		}
+        foreach ($aRoutes as $sName => $mCallbak) {
+            $this->register($sModule, $sName, $mCallbak);
+        }
     }
 
     /**
-	 *
-	 * @param stranig $sName
-	 * @return mixed
-	 */
-	public function getCallback($sName)
-	{
-		$mResult = false;
-		if (isset($this->aRoutes[$sName]))
-		{
-			$mResult = $this->aRoutes[$sName];
-		}
+     *
+     * @param stranig $sName
+     * @return mixed
+     */
+    public function getCallback($sName)
+    {
+        $mResult = false;
+        if (isset($this->aRoutes[$sName])) {
+            $mResult = $this->aRoutes[$sName];
+        }
 
-		return $mResult;
+        return $mResult;
     }
 
-	public function hasCallback($mCallbak)
-	{
+    public function hasCallback($mCallbak)
+    {
         $aCallbacks = [];
-        foreach ($this->aRoutes as $sRoute => $aRoutes)
-        {
-            foreach ($aRoutes as $sModule => $aRoute)
-            {
-                if (!in_array($aRoute[1], $aCallbacks))
-                {
+        foreach ($this->aRoutes as $sRoute => $aRoutes) {
+            foreach ($aRoutes as $sModule => $aRoute) {
+                if (!in_array($aRoute[1], $aCallbacks)) {
                     $aCallbacks[] = $aRoute[1];
                 }
             }
@@ -92,74 +85,72 @@ class Router
 
     public function hasRoute($sName)
     {
-		return isset($this->aRoutes[$sName]);
+        return isset($this->aRoutes[$sName]);
     }
 
     public function route($sName)
     {
         $mResult = false;
+        $oHttp = \MailSo\Base\Http::SingletonInstance();
 
         $mMethod = $this->getCallback($sName);
-        if ($mMethod)
-        {
-            foreach ($mMethod as $sModule => $mCallbak)
-            {
-                if (\Aurora\System\Api::GetModuleManager()->IsAllowedModule($sModule))
-                {
+        if ($mMethod) {
+            foreach ($mMethod as $sModule => $mCallbak) {
+                if (\Aurora\System\Api::GetModuleManager()->IsAllowedModule($sModule)) {
+                    \Aurora\System\Api::Log(" ");
+                    \Aurora\System\Api::Log(" ===== ENTRY: " . $sModule . '::' . $sName);
+                    \Aurora\System\Api::Log(" URL: " . $oHttp->GetUrl());
                     $mResult .= call_user_func_array(
                         $mCallbak,
                         []
                     );
                 }
             }
-		}
+        }
 
         return $mResult;
     }
 
     public function removeRoute($sName)
     {
-		unset($this->aRoutes[$sName]);
+        unset($this->aRoutes[$sName]);
     }
 
-	/**
-	 * @return array
-	 */
-	public static function getItems()
-	{
-		static $aResult = null;
-		if ($aResult === null)
-		{
-			$aResult = array();
+    /**
+     * @return array
+     */
+    public static function getItems()
+    {
+        static $aResult = null;
+        if ($aResult === null) {
+            $aResult = array();
 
-			$oHttp = \MailSo\Base\Http::SingletonInstance();
+            $oHttp = \MailSo\Base\Http::SingletonInstance();
 
-			$sQuery = \trim(\trim(urldecode($oHttp->GetQueryString())), ' /');
+            $sQuery = \trim(\trim(urldecode($oHttp->GetQueryString())), ' /');
 
-			$iPos = \strpos($sQuery, '&');
-			if (0 < $iPos)
-			{
-				$sQuery = \substr($sQuery, 0, $iPos);
-			}
-			$aQuery = \explode('/', $sQuery);
-			foreach ($aQuery as $sQueryItem)
-			{
-				$iPos = \strpos($sQueryItem, '=');
-				$aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
-			}
-		}
+            $iPos = \strpos($sQuery, '&');
+            if (0 < $iPos) {
+                $sQuery = \substr($sQuery, 0, $iPos);
+            }
+            $aQuery = \explode('/', $sQuery);
+            foreach ($aQuery as $sQueryItem) {
+                $iPos = \strpos($sQueryItem, '=');
+                $aResult[] = (!$iPos) ? $sQueryItem : \substr($sQueryItem, 0, $iPos);
+            }
+        }
 
-		return $aResult;
-	}
+        return $aResult;
+    }
 
-	/**
-	 *
-	 * @param int $iIndex
-	 */
-	public static function getItemByIndex($iIndex, $mDefaultValue = null)
-	{
-		$aPath = self::getItems();
+    /**
+     *
+     * @param int $iIndex
+     */
+    public static function getItemByIndex($iIndex, $mDefaultValue = null)
+    {
+        $aPath = self::getItems();
 
-		return !empty($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
-	}
+        return !empty($aPath[$iIndex]) ? $aPath[$iIndex] : $mDefaultValue;
+    }
 }

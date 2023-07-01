@@ -20,20 +20,27 @@ class EventEmitter
     protected static $self = null;
 
     /**
-	 * @var array
-	 */
+     * @var array
+     */
     private $aListenersResult;
 
+    /**
+     * @var int
+     */
     private $iEventLevel = 0;
 
     /**
-	 *
-	 * @return \self
-	 */
+     * @var array
+     */
+    private $aListeners;
+
+    /**
+     *
+     * @return EventEmitter
+     */
     public static function getInstance()
     {
-        if (is_null(self::$self))
-        {
+        if (is_null(self::$self)) {
             self::$self = new self();
         }
 
@@ -41,29 +48,29 @@ class EventEmitter
     }
 
     /**
-	 *
-	 * @return \self
-	 */
-	public static function createInstance()
-	{
-		return new self();
+     *
+     * @return EventEmitter
+     */
+    public static function createInstance()
+    {
+        return new self();
     }
 
     /**
-	 *
-	 * @return array
-	 */
-	public function getListeners()
-	{
-		return $this->aListeners;
+     *
+     * @return array
+     */
+    public function getListeners()
+    {
+        return $this->aListeners;
     }
 
-	/**
-	 * @return array
-	 */
-	public function getListenersResult()
-	{
-		return $this->aListenersResult;
+    /**
+     * @return array
+     */
+    public function getListenersResult()
+    {
+        return $this->aListenersResult;
     }
 
     public function strPad($sText, $iCount, $sPadText, $iPadType = STR_PAD_LEFT)
@@ -72,21 +79,19 @@ class EventEmitter
     }
 
     /**
-	 *
-	 * @return array
-	 */
-	public function getListenersByEvent($sModule, $sEvent)
-	{
-		$aListeners = [];
+     *
+     * @return array
+     */
+    public function getListenersByEvent($sModule, $sEvent)
+    {
+        $aListeners = [];
 
-        if (isset($this->aListeners[$sEvent]))
-		{
-			$aListeners = $this->aListeners[$sEvent];
+        if (isset($this->aListeners[$sEvent])) {
+            $aListeners = $this->aListeners[$sEvent];
         }
-		$sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
-		if (isset($this->aListeners[$sEvent]))
-		{
-			$aListeners = array_merge($aListeners, $this->aListeners[$sEvent]);
+        $sEvent = $sModule . Module\AbstractModule::$Delimiter . $sEvent;
+        if (isset($this->aListeners[$sEvent])) {
+            $aListeners = array_merge($aListeners, $this->aListeners[$sEvent]);
         }
 
         return $aListeners;
@@ -109,31 +114,24 @@ class EventEmitter
      * @return void
      */
     public function on($sEvent, $fCallback, $iPriority = 100)
-	{
-        if (!isset($this->aListeners[$sEvent]))
-		{
+    {
+        if (!isset($this->aListeners[$sEvent])) {
             $this->aListeners[$sEvent] = [];
         }
-        while(isset($this->aListeners[$sEvent][$iPriority]))
-		{
-			$iPriority++;
-		}
+        while (isset($this->aListeners[$sEvent][$iPriority])) {
+            $iPriority++;
+        }
         $this->aListeners[$sEvent][$iPriority] = $fCallback;
         \ksort($this->aListeners[$sEvent]);
     }
 
     public function onAny($aListeners)
     {
-        foreach ($aListeners as $sKey => $mListener)
-        {
-            if (is_array($mListener) && is_callable($mListener[1]))
-            {
-                if (isset($mListener[2]))
-                {
+        foreach ($aListeners as $sKey => $mListener) {
+            if (is_array($mListener) && is_callable($mListener[1])) {
+                if (isset($mListener[2])) {
                     $this->on($mListener[0], $mListener[1], $mListener[2]);
-                }
-                else
-                {
+                } else {
                     $this->on($mListener[0], $mListener[1]);
                 }
             }
@@ -154,25 +152,21 @@ class EventEmitter
      * @return boolean
      */
     public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null, $bSkipIsAllowedModuleCheck = false)
-	{
-		$bResult = false;
-		$mListenersResult = null;
+    {
+        $bResult = false;
+        $mListenersResult = null;
 
         $aListeners = $this->getListenersByEvent($sModule, $sEvent);
-        if (count($aListeners) > 0)
-        {
+        if (count($aListeners) > 0) {
             $this->iEventLevel = $this->iEventLevel + 4;
             \Aurora\System\Api::Log($this->strPad("Emit $sModule::$sEvent", $this->iEventLevel, "-"), Enums\LogLevel::Full, 'subscriptions-');
             \Aurora\System\Api::Log($this->strPad("START Execute subscriptions", $this->iEventLevel, "-"), Enums\LogLevel::Full, 'subscriptions-');
-            foreach($aListeners as $fCallback)
-            {
+            foreach ($aListeners as $fCallback) {
                 $bIsAllowedModule = true;
-                if (!$bSkipIsAllowedModuleCheck)
-                {
+                if (!$bSkipIsAllowedModuleCheck) {
                     $bIsAllowedModule =  Api::GetModuleManager()->IsAllowedModule($fCallback[0]::GetName());
                 }
-                if (\is_callable($fCallback) && $bIsAllowedModule)
-                {
+                if (\is_callable($fCallback) && $bIsAllowedModule) {
                     \Aurora\System\Api::Log($this->strPad($fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], $this->iEventLevel + 2, "-"), Enums\LogLevel::Full, 'subscriptions-');
 
                     $mCallBackResult = \call_user_func_array(
@@ -184,8 +178,7 @@ class EventEmitter
                         ]
                     );
 
-                    if (\is_callable($mCountinueCallback))
-                    {
+                    if (\is_callable($mCountinueCallback)) {
                         $mCountinueCallback(
                             $fCallback[0]::GetName(),
                             $aArguments,
@@ -193,13 +186,11 @@ class EventEmitter
                         );
                     }
 
-                    if (isset($mListenersResult))
-                    {
+                    if (isset($mListenersResult)) {
                         $this->aListenersResult[$fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]] = $mListenersResult;
                     }
 
-                    if ($mCallBackResult)
-                    {
+                    if ($mCallBackResult) {
                         $bResult = $mCallBackResult;
 
                         break;

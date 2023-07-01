@@ -23,8 +23,7 @@ class TenantSettings extends \Aurora\System\AbstractSettings
         $this->sTenantName = $sTenantName;
         $sTenantsPath = $sPath = \Aurora\System\Api::GetModuleManager()->GetModulesSettingsPath() . 'tenants';
 
-        if (!file_exists($sTenantsPath))
-        {
+        if (!file_exists($sTenantsPath)) {
             @\mkdir($sTenantsPath);
         }
 
@@ -33,11 +32,12 @@ class TenantSettings extends \Aurora\System\AbstractSettings
     }
 
     /**
+     * @var string
      * @var \Aurora\System\SettingsProperty
      */
-    public function SetProperty($oProperty)
+    public function SetProperty($sName, $oProperty)
     {
-        $this->aContainer[$oProperty->Name] = $oProperty;
+        $this->aContainer[$sName] = $oProperty;
     }
 
     /**

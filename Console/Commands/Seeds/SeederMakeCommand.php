@@ -42,13 +42,15 @@ class SeederMakeCommand extends GeneratorCommand
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        parent::execute($input, $output);
+        $result = parent::execute($input, $output);
 
         $this->composer->dumpAutoloads();
+
+        return $result;
     }
 
     /**

@@ -14,14 +14,14 @@ namespace Aurora\System\Enums;
  */
 class DbType extends AbstractEnumeration
 {
-	const MySQL = "MySql";
-	const PostgreSQL = "PostgreSQL";
+    public const MySQL = "MySql";
+    public const PostgreSQL = "PostgreSQL";
 
-	/**
-	 * @var array
-	 */
-	protected $aConsts = array(
-		'MySQL' => self::MySQL,
-		'PostgreSQL' => self::PostgreSQL
-	);
+    /**
+     * @var array
+     */
+    protected $aConsts = array(
+        'MySQL' => self::MySQL,
+        'PostgreSQL' => self::PostgreSQL
+    );
 }

@@ -15,4 +15,6 @@ namespace Aurora\System\Exceptions;
  * @category Core
  * @package Exceptions
  */
-class InvalidArgumentException extends Exception {}
+class InvalidArgumentException extends Exception
+{
+}
