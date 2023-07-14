@@ -2,6 +2,7 @@
 
 namespace Aurora\System\Console\Commands;
 
+use Aurora\System\Api;
 use Aurora\System\Console\Commands\BaseCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -9,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class GetOrphansCommand extends BaseCommand
 {
@@ -160,6 +162,60 @@ class GetOrphansCommand extends BaseCommand
         }
     }
 
+    protected function checkDavOrphans($fdEntities, $input, $output)
+    {
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('Remove DAV objects of the orphan users? [yes]', true);
+
+        $dbPrefix = Api::GetSettings()->DBPrefix;
+        if (Capsule::schema()->hasTable('adav_calendarinstances')) {
+            echo PHP_EOL;
+            $this->logger->info("Checking DAV calendar.");
+
+            $rows = Capsule::connection()->select('SELECT aci.calendarid, aci.id FROM ' . $dbPrefix . 'adav_calendarinstances as aci
+                WHERE SUBSTRING(principaluri, 12) NOT IN (SELECT PublicId FROM ' . $dbPrefix . 'core_users)');
+
+            if (count($rows) > 0) {
+                $this->logger->error("DAV calendars orphans were found: " . count($rows));
+
+                if ($input->getOption('remove')) {
+                    $bRemove = $helper->ask($input, $output, $question);
+        
+                    if ($bRemove) {
+                        foreach ($rows as $row) {
+                            \Afterlogic\DAV\Backend::Caldav()->deleteCalendar([$row->calendarid, $row->id]);
+                        }
+                    }
+                }
+            } else {
+                $this->logger->info("DAV calendars orphans were not found.");
+            }
+        }
+
+        if (Capsule::schema()->hasTable('adav_addressbooks')) {
+            echo PHP_EOL;
+            $this->logger->info("Checking DAV addressbooks.");
+
+            $rows = Capsule::connection()->select('SELECT id FROM ' . $dbPrefix . 'adav_addressbooks WHERE (SUBSTRING(principaluri, 12) NOT IN (SELECT PublicId FROM ' . $dbPrefix . 'core_users) AND principaluri NOT LIKE \'%_dav_tenant_user@%\') OR ISNULL(principaluri)');
+
+            if (count($rows) > 0) {
+                $this->logger->error("DAV addressbooks orphans were found: " . count($rows));
+
+                if ($input->getOption('remove')) {
+                    $bRemove = $helper->ask($input, $output, $question);
+        
+                    if ($bRemove) {
+                        foreach ($rows as $row) {
+                            \Afterlogic\DAV\Backend::Carddav()->deleteAddressBook($row->id);
+                        }
+                    }
+                }
+            } else {
+                $this->logger->info("DAV addressbooks orphans were not found.");
+            }
+        }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $verbosityLevelMap = array(
@@ -179,6 +235,7 @@ class GetOrphansCommand extends BaseCommand
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
         $this->checkOrphans($fdEntities, $input, $output);
         $this->checkFileOrphans($fdEntities, $input, $output);
+        $this->checkDavOrphans($fdEntities, $input, $output);
         return Command::SUCCESS;
     }
 }
