@@ -173,7 +173,7 @@ class GetOrphansCommand extends BaseCommand
             $this->logger->info("Checking DAV calendar.");
 
             $rows = Capsule::connection()->select('SELECT aci.calendarid, aci.id FROM ' . $dbPrefix . 'adav_calendarinstances as aci
-                WHERE SUBSTRING(principaluri, 12) NOT IN (SELECT PublicId FROM ' . $dbPrefix . 'core_users)');
+                WHERE SUBSTRING(principaluri, 12) NOT IN (SELECT PublicId FROM ' . $dbPrefix . 'core_users) AND principaluri NOT LIKE \'%_dav_tenant_user@%\'');
 
             if (count($rows) > 0) {
                 $this->logger->error("DAV calendars orphans were found: " . count($rows));
