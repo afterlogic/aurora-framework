@@ -69,11 +69,10 @@ class GetOrphansCommand extends BaseCommand
 
         $aOrphansEntities = [];
         $aModels = $this->getAllModels();
-        foreach ($aModels as $modelName => $modelPath) {
+        foreach ($aModels as $modelPath) {
             $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
             $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
             $model = explode(DIRECTORY_SEPARATOR, $model);
-            $modelClass = [];
 
             while ($model[0] !== 'modules') {
                 array_shift($model);
