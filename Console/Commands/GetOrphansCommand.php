@@ -111,7 +111,7 @@ class GetOrphansCommand extends BaseCommand
             }
             echo PHP_EOL;
         }
-        $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
+        return $aOrphansEntities;
     }
 
     protected function checkFileOrphans($fdEntities, $input, $output)
@@ -133,7 +133,6 @@ class GetOrphansCommand extends BaseCommand
             $orphanUUIDs = array_values(array_diff($dirs, $users::pluck('UUID')->toArray()));
 
             $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;
-            $this->rewriteFile($fdEntities, $this->jsonPretify($aOrphansEntities));
 
             if (!empty($orphanUUIDs)) {
                 $this->logger->error("Personal files orphans were found: " . count($orphanUUIDs));
@@ -159,6 +158,7 @@ class GetOrphansCommand extends BaseCommand
                 $this->logger->info("Personal files orphans were not found.");
             }
         }
+        return $aOrphansEntities;
     }
 
     protected function checkDavOrphans($fdEntities, $input, $output)
@@ -167,6 +167,7 @@ class GetOrphansCommand extends BaseCommand
         $question = new ConfirmationQuestion('Remove DAV objects of the orphan users? [yes]', true);
 
         $dbPrefix = Api::GetSettings()->DBPrefix;
+        $aOrphansEntities = [];
         if (Capsule::schema()->hasTable('adav_calendarinstances')) {
             echo PHP_EOL;
             $this->logger->info("Checking DAV calendar.");
@@ -176,6 +177,10 @@ class GetOrphansCommand extends BaseCommand
 
             if (count($rows) > 0) {
                 $this->logger->error("DAV calendars orphans were found: " . count($rows));
+
+                $aOrphansEntities['DAV-Calendars'] = array_map(function ($row) {
+                    return $row->id;
+                }, $rows);
 
                 if ($input->getOption('remove')) {
                     $bRemove = $helper->ask($input, $output, $question);
@@ -200,6 +205,10 @@ class GetOrphansCommand extends BaseCommand
             if (count($rows) > 0) {
                 $this->logger->error("DAV addressbooks orphans were found: " . count($rows));
 
+                $aOrphansEntities['DAV-Addressbooks'] = array_map(function ($row) {
+                    return $row->id;
+                }, $rows);
+
                 if ($input->getOption('remove')) {
                     $bRemove = $helper->ask($input, $output, $question);
         
@@ -213,6 +222,8 @@ class GetOrphansCommand extends BaseCommand
                 $this->logger->info("DAV addressbooks orphans were not found.");
             }
         }
+
+        return $aOrphansEntities;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -223,6 +234,7 @@ class GetOrphansCommand extends BaseCommand
         );
         $dirName = \Aurora\System\Api::DataPath() . "/get-orphans-logs";
         $entitiesFileName = $dirName . "/orphans_".date('Y-m-d_H-i-s').".json";
+        $orphansEntities = [];
 
         $dirname = dirname($entitiesFileName);
         if (!is_dir($dirname)) {
@@ -232,9 +244,23 @@ class GetOrphansCommand extends BaseCommand
         $fdEntities = fopen($entitiesFileName, 'a+') or die("Can't create migration-progress.txt file");
 
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
-        $this->checkOrphans($fdEntities, $input, $output);
-        $this->checkFileOrphans($fdEntities, $input, $output);
-        $this->checkDavOrphans($fdEntities, $input, $output);
+        $orphansEntities = array_merge(
+            $orphansEntities, 
+            $this->checkOrphans($fdEntities, $input, $output)
+        );
+        $orphansEntities = array_merge(
+            $orphansEntities, 
+            $this->checkFileOrphans($fdEntities, $input, $output)
+        );
+        $orphansEntities = array_merge(
+            $orphansEntities, 
+            $this->checkDavOrphans($fdEntities, $input, $output)
+        );
+
+        if (count($orphansEntities) > 0) {
+            $this->rewriteFile($fdEntities, $this->jsonPretify($orphansEntities));
+        }
+
         return Command::SUCCESS;
     }
 }
