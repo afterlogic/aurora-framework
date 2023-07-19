@@ -11,6 +11,7 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Log\LogLevel;
 
 class GetOrphansCommand extends BaseCommand
 {
@@ -132,7 +133,6 @@ class GetOrphansCommand extends BaseCommand
             $orphanUUIDs = array_values(array_diff($dirs, \Aurora\Modules\Core\Models\User::pluck('UUID')->toArray()));
 
             if (!empty($orphanUUIDs)) {
-
                 $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;
 
                 $this->logger->error("Personal files orphans were found: " . count($orphanUUIDs));
@@ -184,7 +184,7 @@ class GetOrphansCommand extends BaseCommand
 
                 if ($input->getOption('remove')) {
                     $bRemove = $helper->ask($input, $output, $question);
-        
+
                     if ($bRemove) {
                         foreach ($rows as $row) {
                             \Afterlogic\DAV\Backend::Caldav()->deleteCalendar([$row->calendarid, $row->id]);
@@ -211,7 +211,7 @@ class GetOrphansCommand extends BaseCommand
 
                 if ($input->getOption('remove')) {
                     $bRemove = $helper->ask($input, $output, $question);
-        
+
                     if ($bRemove) {
                         foreach ($rows as $row) {
                             \Afterlogic\DAV\Backend::Carddav()->deleteAddressBook($row->id);
@@ -228,10 +228,10 @@ class GetOrphansCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $verbosityLevelMap = array(
-            'notice' => OutputInterface::VERBOSITY_NORMAL,
-            'info' => OutputInterface::VERBOSITY_NORMAL
-        );
+        $verbosityLevelMap = [
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+        ];
         $dirName = \Aurora\System\Api::DataPath() . "/get-orphans-logs";
         $entitiesFileName = $dirName . "/orphans_".date('Y-m-d_H-i-s').".json";
         $orphansEntities = [];
@@ -241,19 +241,19 @@ class GetOrphansCommand extends BaseCommand
             mkdir($dirname, 0755, true);
         }
 
-        $fdEntities = fopen($entitiesFileName, 'a+') or die("Can't create migration-progress.txt file");
+        $fdEntities = fopen($entitiesFileName, 'a+') or die("Can't create migration-progress.txt file");
 
         $this->logger = new ConsoleLogger($output, $verbosityLevelMap);
         $orphansEntities = array_merge(
-            $orphansEntities, 
+            $orphansEntities,
             $this->checkOrphans($fdEntities, $input, $output)
         );
         $orphansEntities = array_merge(
-            $orphansEntities, 
+            $orphansEntities,
             $this->checkFileOrphans($fdEntities, $input, $output)
         );
         $orphansEntities = array_merge(
-            $orphansEntities, 
+            $orphansEntities,
             $this->checkDavOrphans($fdEntities, $input, $output)
         );
 
