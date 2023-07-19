@@ -13,7 +13,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Log\LogLevel;
 
-class GetOrphansCommand extends BaseCommand
+class OrphansCommand extends BaseCommand
 {
     /**
      * @var ConsoleLogger
@@ -30,7 +30,7 @@ class GetOrphansCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('get-orphans')
+        $this->setName('orphans')
             ->setDescription('Collect orphan entries')
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove orphan entries from DB.')
         ;
@@ -232,7 +232,8 @@ class GetOrphansCommand extends BaseCommand
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
         ];
-        $dirName = \Aurora\System\Api::DataPath() . "/get-orphans-logs";
+
+        $dirName = \Aurora\System\Logger::GetLogFileDir() . "/orphans-logs";
         $entitiesFileName = $dirName . "/orphans_".date('Y-m-d_H-i-s').".json";
         $orphansEntities = [];
 

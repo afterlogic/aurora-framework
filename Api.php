@@ -1637,7 +1637,7 @@ class Api
                 $consoleaApp->add(new Commands\Seeds\SeederMakeCommand($ac['filesystem'], $ac['composer']));
 
                 $consoleaApp->add(new Commands\Migrations\EavToSqlCommand());
-                $consoleaApp->add(new Commands\GetOrphansCommand());
+                $consoleaApp->add(new Commands\OrphansCommand());
 
                 $consoleaApp->add(new Commands\ModelsCommand($ac));
 
