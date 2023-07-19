@@ -129,12 +129,12 @@ class GetOrphansCommand extends BaseCommand
 
             $dirs = array_diff(scandir($dirPersonalFiles), array('..', '.'));
 
-            $users = new \Aurora\Modules\Core\Models\User();
-            $orphanUUIDs = array_values(array_diff($dirs, $users::pluck('UUID')->toArray()));
-
-            $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;
+            $orphanUUIDs = array_values(array_diff($dirs, \Aurora\Modules\Core\Models\User::pluck('UUID')->toArray()));
 
             if (!empty($orphanUUIDs)) {
+
+                $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;
+
                 $this->logger->error("Personal files orphans were found: " . count($orphanUUIDs));
 
                 if ($input->getOption('remove') && !empty($orphanUUIDs)) {
