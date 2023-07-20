@@ -654,7 +654,7 @@ class Api
 
     public static function removeOldLogs()
     {
-        Logger::removeOldLogs();
+        Logger::RemoveOldLogs();
     }
 
     public static function GetLoggerGuid()
