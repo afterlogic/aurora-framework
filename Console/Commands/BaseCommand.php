@@ -74,32 +74,31 @@ class BaseCommand extends Command
 
     public function getAllModels()
     {
-        $finder = Finder::create();
-        $aModules = \Aurora\Api::GetModuleManager()->GetModulesPaths();
-        $aModulesModelsPaths = array_map(function ($sModule, $sPath) {
-            return $sPath . $sModule . DIRECTORY_SEPARATOR . 'Models';
-        }, array_keys($aModules), $aModules);
+        $modules = \Aurora\Api::GetModuleManager()->GetModulesPaths();
 
-        $aDirModels = [];
-        foreach ($aModulesModelsPaths as $sModuleModel) {
-            if (is_dir($sModuleModel)) {
+        array_walk($modules, function(&$modelPath, $module) { 
+            $modelPath = $modelPath . $module . DIRECTORY_SEPARATOR . 'Models';
+        });
+
+        $dirModels = [];
+        foreach ($modules as $module => $moduleModelPath) {
+            $finder = Finder::create();
+            if (is_dir($moduleModelPath)) {
                 $finder
-                ->in($sModuleModel)
+                ->in($moduleModelPath)
                 ->depth(0);
-                $aDirModels = array_keys(\iterator_to_array($finder));
+                $dirModels[$module] = array_keys(\iterator_to_array($finder));
             }
         }
 
-        $aFormatedDirModels = [];
-        foreach ($aDirModels as $sDirModel) {
-            $fileWithoutExtenstion = explode('.', $sDirModel);
-            array_pop($fileWithoutExtenstion);
-            $fileWithoutExtenstion = implode('.', $fileWithoutExtenstion);
-            $sModelName = explode(DIRECTORY_SEPARATOR, $fileWithoutExtenstion);
-            $sModelName = array_pop($sModelName);
-            $aFormatedDirModels[$sModelName] = $fileWithoutExtenstion;
+        $formatedDirModels = [];
+        foreach ($dirModels as $module => $moduleDirModels) {
+            foreach ($moduleDirModels as $dirModel) {
+                $modelName = pathinfo($dirModel, PATHINFO_FILENAME);
+                $formatedDirModels[$module][$modelName] = dirname($dirModel) . DIRECTORY_SEPARATOR . $modelName;
+            }
         }
-        return $aFormatedDirModels;
+        return $formatedDirModels;
     }
 
     /**

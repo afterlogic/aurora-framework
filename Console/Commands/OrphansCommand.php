@@ -70,47 +70,49 @@ class OrphansCommand extends BaseCommand
 
         $aOrphansEntities = [];
         $aModels = $this->getAllModels();
-        foreach ($aModels as $modelPath) {
-            $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
-            $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
-            $model = explode(DIRECTORY_SEPARATOR, $model);
+        foreach ($aModels as $moduleModels) {
+            foreach ($moduleModels as $modelPath) {
+                $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
+                $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
+                $model = explode(DIRECTORY_SEPARATOR, $model);
 
-            while ($model[0] !== 'modules') {
-                array_shift($model);
-            }
-            $model[0] = 'Modules';
-            array_unshift($model, "Aurora");
-            $model = implode('\\', $model);
+                while ($model[0] !== 'modules') {
+                    array_shift($model);
+                }
+                $model[0] = 'Modules';
+                array_unshift($model, "Aurora");
+                $model = implode('\\', $model);
 
-            $this->logger->info('Checking ' . $model::query()->getQuery()->from . ' table.');
+                $this->logger->info('Checking ' . $model::query()->getQuery()->from . ' table.');
 
-            $modelObject = new $model();
-            $checkOrphan = $modelObject->getOrphanIds();
-            switch($checkOrphan['status']) {
-                case 0:
-                    $this->logger->info($checkOrphan['message']);
-                    break;
-                case 1:
-                    $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
-                    if ($input->getOption('remove') && !empty($aOrphansEntities[$model])) {
-                        $this->logger->error($checkOrphan['message']);
-                        $bRemove = $helper->ask($input, $output, $question);
+                $modelObject = new $model();
+                $checkOrphan = $modelObject->getOrphanIds();
+                switch($checkOrphan['status']) {
+                    case 0:
+                        $this->logger->info($checkOrphan['message']);
+                        break;
+                    case 1:
+                        $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
+                        if ($input->getOption('remove') && !empty($aOrphansEntities[$model])) {
+                            $this->logger->error($checkOrphan['message']);
+                            $bRemove = $helper->ask($input, $output, $question);
 
-                        if ($bRemove) {
-                            $modelObject::whereIn('id', $aOrphansEntities[$model])->delete();
-                            $this->logger->warning('Orphan entries was removed.');
+                            if ($bRemove) {
+                                $modelObject::whereIn('id', $aOrphansEntities[$model])->delete();
+                                $this->logger->warning('Orphan entries was removed.');
+                            } else {
+                                $this->logger->warning('Orphan entries removing was skipped.');
+                            }
                         } else {
-                            $this->logger->warning('Orphan entries removing was skipped.');
+                            $this->logger->error($checkOrphan['message']);
                         }
-                    } else {
-                        $this->logger->error($checkOrphan['message']);
-                    }
-                    break;
-                default:
-                    $this->logger->info($checkOrphan['message']);
-                    break;
+                        break;
+                    default:
+                        $this->logger->info($checkOrphan['message']);
+                        break;
+                }
+                echo PHP_EOL;
             }
-            echo PHP_EOL;
         }
         return $aOrphansEntities;
     }
