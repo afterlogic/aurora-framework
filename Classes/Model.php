@@ -11,6 +11,7 @@ use Aurora\System\EventEmitter;
 use Aurora\System\Validator;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Aurora\System\Classes\Model
@@ -190,7 +191,7 @@ class Model extends Eloquent
         $foreignTable = $foreignObject->getTable();
         $foreignPK = $foreignObject->primaryKey;
 
-        $orphanIds = self::pluck($this->primaryKey)->diff(
+        $orphanIds = self::where("$tableName.$this->foreignModelIdColumn", '<>', -1)->pluck($this->primaryKey)->diff(
             self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 

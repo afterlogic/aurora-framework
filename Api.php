@@ -263,12 +263,12 @@ class Api
             switch ($oAuthUser->Role) {
                 case \Aurora\System\Enums\UserRole::TenantAdmin:
                     if ($oUser->IdTenant !== $oAuthUser->IdTenant) {
-                        throw new ApiException(Notifications::AccessDenied);
+                        throw new ApiException(Notifications::AccessDenied, null, 'AccessDenied');
                     }
                     break;
                 case \Aurora\System\Enums\UserRole::NormalUser:
                     if ($oUser->Id !== $oAuthUser->Id) {
-                        throw new ApiException(Notifications::AccessDenied);
+                        throw new ApiException(Notifications::AccessDenied, null, 'AccessDenied');
                     }
                     break;
             }
@@ -1137,7 +1137,7 @@ class Api
                 !empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin &&
                     ($iRole === Enums\UserRole::SuperAdmin || $iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous);
             if (!$bUserRoleIsAtLeast) {
-                throw new Exceptions\ApiException(Notifications::AccessDenied);
+                throw new Exceptions\ApiException(Notifications::AccessDenied, null, 'AccessDenied');
             }
         }
     }
@@ -1702,7 +1702,7 @@ class Api
                     break;
             }
             if ($bAccessDenied) {
-                throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::AccessDenied);
+                throw new ApiException(\Aurora\System\Notifications::AccessDenied, null, 'AccessDenied');
             }
         }
     }
