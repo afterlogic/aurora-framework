@@ -1087,15 +1087,17 @@ class Utils
      */
     public static function GenerateShortHashString($sLen = 10)
     {
-        $sResult = '';
-        $sChars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
-        $iCharLen = strlen($sChars);
+        $string = '';
 
-        for (; 0 < $sLen; $sLen--) {
-            $sResult .= substr($sChars, rand(0, $iCharLen), 1);
+        while (($len = strlen($string)) < $sLen) {
+            $size = $sLen - $len;
+
+            $bytes = random_bytes($size);
+
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
 
-        return $sResult;
+        return $string;
     }
 
     public static function GetMimeContentTypes()
