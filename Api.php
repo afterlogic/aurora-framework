@@ -168,7 +168,6 @@ class Api
         $sSalt8File = self::GetSaltPath();
 
         if (!@file_exists($sSalt8File)) {
-            $sSalt = base64_encode(microtime(true).rand(1000, 9999).microtime(true).rand(1000, 9999));
             $sSalt = bin2hex(random_bytes(16));
 
             $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "'. $sSalt . '";';

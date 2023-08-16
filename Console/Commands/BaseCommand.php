@@ -76,7 +76,7 @@ class BaseCommand extends Command
     {
         $modules = \Aurora\Api::GetModuleManager()->GetModulesPaths();
 
-        array_walk($modules, function(&$modelPath, $module) { 
+        array_walk($modules, function (&$modelPath, $module) {
             $modelPath = $modelPath . $module . DIRECTORY_SEPARATOR . 'Models';
         });
 
