@@ -100,7 +100,7 @@ class Model extends Eloquent
      */
     public const UPDATED_AT = 'UpdatedAt';
 
-    public static $inheritedAttributesCache = [];
+    protected static $inheritedAttributes = [];
 
     protected function castAttribute($key, $value)
     {
@@ -125,19 +125,17 @@ class Model extends Eloquent
         return parent::castAttribute($key, $value);
     }
 
+    public static function addInheritedAttributes($attributes) 
+    {
+        static::$inheritedAttributes = array_merge(
+            static::$inheritedAttributes,
+            $attributes
+        );
+    }
+
     public function getInheritedAttributes()
     {
-        $className = get_class($this);
-        $aArgs = ['ClassName' => get_class($this)];
-        $aResult = [];
-        if (!isset(self::$inheritedAttributesCache[$className])) {
-            $inheritedAttributes = [];
-            \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $inheritedAttributes);
-            self::$inheritedAttributesCache[$className] = $inheritedAttributes;
-        }
-        $aResult = self::$inheritedAttributesCache[$className];
-
-        return $aResult;
+        return static::$inheritedAttributes;
     }
 
     /**
@@ -146,8 +144,7 @@ class Model extends Eloquent
      */
     public function isInheritedAttribute($key)
     {
-        $aInheritedAttributes = $this->getInheritedAttributes();
-        return in_array($key, $aInheritedAttributes);
+        return in_array($key, static::$inheritedAttributes);
     }
 
     /**
@@ -278,7 +275,11 @@ class Model extends Eloquent
         if (isset($this->Properties[$key])) {
             $mResult = $this->Properties[$key];
         } else {
-            $mResult = $default;
+            if ($this->isInheritedAttribute($key)) {
+                $mResult = $this->getInheritedValue($key);
+            } else {
+                $mResult = $default;
+            }
         }
 
         return $mResult;
