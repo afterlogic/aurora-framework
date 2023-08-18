@@ -189,7 +189,7 @@ class Model extends Eloquent
         $foreignPK = $foreignObject->primaryKey;
 
         $query = self::query();
-        if (isset($this->UserId) || isset($this->IdUser)) {
+        if ($this->foreignModelIdColumn === 'UserId' || $this->foreignModelIdColumn === 'IdUser') {
             $query = $query->where("$tableName.$this->foreignModelIdColumn", '<>', -1);
         }
 
