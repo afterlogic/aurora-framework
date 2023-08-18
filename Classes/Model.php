@@ -188,7 +188,12 @@ class Model extends Eloquent
         $foreignTable = $foreignObject->getTable();
         $foreignPK = $foreignObject->primaryKey;
 
-        $orphanIds = self::where("$tableName.$this->foreignModelIdColumn", '<>', -1)->pluck($this->primaryKey)->diff(
+        $query = self::query();
+        if (isset($this->UserId) || isset($this->IdUser)) {
+            $query = $query->where("$tableName.$this->foreignModelIdColumn", '<>', -1);
+        }
+
+        $orphanIds = $query->pluck($this->primaryKey)->diff(
             self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 
