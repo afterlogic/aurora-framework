@@ -125,17 +125,9 @@ class Model extends Eloquent
         return parent::castAttribute($key, $value);
     }
 
-    public static function addInheritedAttributes($attributes) 
-    {
-        static::$inheritedAttributes = array_merge(
-            static::$inheritedAttributes,
-            $attributes
-        );
-    }
-
     public function getInheritedAttributes()
     {
-        return static::$inheritedAttributes;
+        return InheritedAttributes::getAttributes(static::class);
     }
 
     /**
@@ -144,7 +136,7 @@ class Model extends Eloquent
      */
     public function isInheritedAttribute($key)
     {
-        return in_array($key, static::$inheritedAttributes);
+        return InheritedAttributes::hasAttribute(static::class, $key);
     }
 
     /**
