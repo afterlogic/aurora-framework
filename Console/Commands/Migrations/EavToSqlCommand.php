@@ -106,20 +106,22 @@ class EavToSqlCommand extends BaseCommand
     protected function wipeP9Tables()
     {
         $aModels = $this->getAllModels();
-        foreach ($aModels as $modelName => $modelPath) {
-            $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
-            $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
-            $model = explode(DIRECTORY_SEPARATOR, $model);
-            $modelClass = [];
+        foreach ($aModels as $moduleModels) {
+            foreach ($moduleModels as $modelPath) {
+                $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
+                $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
+                $model = explode(DIRECTORY_SEPARATOR, $model);
+                $modelClass = [];
 
-            while ($model[0] !== 'modules') {
-                array_shift($model);
+                while ($model[0] !== 'modules') {
+                    array_shift($model);
+                }
+                $model[0] = 'Modules';
+                array_unshift($model, "Aurora");
+                $model = implode('\\', $model);
+                $this->logger->info('wiping ' . $model::query()->getQuery()->from);
+                $model::truncate();
             }
-            $model[0] = 'Modules';
-            array_unshift($model, "Aurora");
-            $model = implode('\\', $model);
-            $this->logger->info('wiping ' . $model::query()->getQuery()->from);
-            $model::truncate();
         }
     }
 

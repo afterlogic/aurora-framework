@@ -11,6 +11,7 @@ use Aurora\System\EventEmitter;
 use Aurora\System\Validator;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Aurora\System\Classes\Model
@@ -99,7 +100,7 @@ class Model extends Eloquent
      */
     public const UPDATED_AT = 'UpdatedAt';
 
-    public static $inheritedAttributesCache = [];
+    protected static $inheritedAttributes = [];
 
     protected function castAttribute($key, $value)
     {
@@ -126,17 +127,7 @@ class Model extends Eloquent
 
     public function getInheritedAttributes()
     {
-        $className = get_class($this);
-        $aArgs = ['ClassName' => get_class($this)];
-        $aResult = [];
-        if (!isset(self::$inheritedAttributesCache[$className])) {
-            $inheritedAttributes = [];
-            \Aurora\System\EventEmitter::getInstance()->emit($this->moduleName, 'getInheritedAttributes', $aArgs, $inheritedAttributes);
-            self::$inheritedAttributesCache[$className] = $inheritedAttributes;
-        }
-        $aResult = self::$inheritedAttributesCache[$className];
-
-        return $aResult;
+        return InheritedAttributes::getAttributes(static::class);
     }
 
     /**
@@ -145,8 +136,7 @@ class Model extends Eloquent
      */
     public function isInheritedAttribute($key)
     {
-        $aInheritedAttributes = $this->getInheritedAttributes();
-        return in_array($key, $aInheritedAttributes);
+        return InheritedAttributes::hasAttribute(static::class, $key);
     }
 
     /**
@@ -190,7 +180,12 @@ class Model extends Eloquent
         $foreignTable = $foreignObject->getTable();
         $foreignPK = $foreignObject->primaryKey;
 
-        $orphanIds = self::pluck($this->primaryKey)->diff(
+        $query = self::query();
+        if ($this->foreignModelIdColumn === 'UserId' || $this->foreignModelIdColumn === 'IdUser') {
+            $query = $query->where("$tableName.$this->foreignModelIdColumn", '<>', -1);
+        }
+
+        $orphanIds = $query->pluck($this->primaryKey)->diff(
             self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 
@@ -277,7 +272,11 @@ class Model extends Eloquent
         if (isset($this->Properties[$key])) {
             $mResult = $this->Properties[$key];
         } else {
-            $mResult = $default;
+            if ($this->isInheritedAttribute($key)) {
+                $mResult = $this->getInheritedValue($key);
+            } else {
+                $mResult = $default;
+            }
         }
 
         return $mResult;

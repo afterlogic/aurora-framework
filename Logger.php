@@ -322,7 +322,7 @@ class Logger
         }
     }
 
-    public static function removeOldLogs()
+    public static function RemoveOldLogs()
     {
         $oSettings = &Api::GetSettings();
 
@@ -332,17 +332,18 @@ class Logger
 
             $sLogDir = self::GetLogFileDir();
             if (is_dir($sLogDir) && $bRemoveOldLogs) {
-                $aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
+                $aLogFiles = glob($sLogDir.'*.txt');
+                $nowDateTime = new \DateTimeImmutable(date(self::getLogFileDateFormat()));
+                $dateTimeToRemove = $nowDateTime->sub(new \DateInterval(sprintf('P%dD', $iRemoveOldLogsDays)));
+
                 foreach ($aLogFiles as $sFileName) {
                     $aPathInfo = pathinfo($sFileName);
-                    $nowDateTime = new \DateTimeImmutable(date(self::getLogFileDateFormat()));
-                    $format = $nowDateTime->format(self::getLogFileDateFormat());
-                    $fileDate = substr($aPathInfo['filename'], -strlen($format));
-                    $fileDateTime = new \DateTimeImmutable($fileDate);
-
-                    $dateTimeToRemove = $nowDateTime->sub(new \DateInterval(sprintf('P%dD', $iRemoveOldLogsDays)));
-                    if ($fileDateTime <= $dateTimeToRemove) {
-                        unlink($sLogDir.$sFileName);
+                    preg_match('/\w+\-([\d\-]+)$/', $aPathInfo['filename'], $matches, 0);
+                    if (isset($matches[1])) {
+                        $fileDateTime = new \DateTimeImmutable($matches[1]);
+                        if ($fileDateTime <= $dateTimeToRemove) {
+                            unlink($sFileName);
+                        }
                     }
                 }
             }

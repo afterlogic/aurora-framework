@@ -168,7 +168,6 @@ class Api
         $sSalt8File = self::GetSaltPath();
 
         if (!@file_exists($sSalt8File)) {
-            $sSalt = base64_encode(microtime(true).rand(1000, 9999).microtime(true).rand(1000, 9999));
             $sSalt = bin2hex(random_bytes(16));
 
             $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "'. $sSalt . '";';
@@ -263,12 +262,12 @@ class Api
             switch ($oAuthUser->Role) {
                 case \Aurora\System\Enums\UserRole::TenantAdmin:
                     if ($oUser->IdTenant !== $oAuthUser->IdTenant) {
-                        throw new ApiException(Notifications::AccessDenied);
+                        throw new ApiException(Notifications::AccessDenied, null, 'AccessDenied');
                     }
                     break;
                 case \Aurora\System\Enums\UserRole::NormalUser:
                     if ($oUser->Id !== $oAuthUser->Id) {
-                        throw new ApiException(Notifications::AccessDenied);
+                        throw new ApiException(Notifications::AccessDenied, null, 'AccessDenied');
                     }
                     break;
             }
@@ -654,7 +653,7 @@ class Api
 
     public static function removeOldLogs()
     {
-        Logger::removeOldLogs();
+        Logger::RemoveOldLogs();
     }
 
     public static function GetLoggerGuid()
@@ -1137,7 +1136,7 @@ class Api
                 !empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin &&
                     ($iRole === Enums\UserRole::SuperAdmin || $iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous);
             if (!$bUserRoleIsAtLeast) {
-                throw new Exceptions\ApiException(Notifications::AccessDenied);
+                throw new Exceptions\ApiException(Notifications::AccessDenied, null, 'AccessDenied');
             }
         }
     }
@@ -1637,7 +1636,7 @@ class Api
                 $consoleaApp->add(new Commands\Seeds\SeederMakeCommand($ac['filesystem'], $ac['composer']));
 
                 $consoleaApp->add(new Commands\Migrations\EavToSqlCommand());
-                $consoleaApp->add(new Commands\GetOrphansCommand());
+                $consoleaApp->add(new Commands\OrphansCommand());
 
                 $consoleaApp->add(new Commands\ModelsCommand($ac));
 
@@ -1702,7 +1701,7 @@ class Api
                     break;
             }
             if ($bAccessDenied) {
-                throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::AccessDenied);
+                throw new ApiException(\Aurora\System\Notifications::AccessDenied, null, 'AccessDenied');
             }
         }
     }
