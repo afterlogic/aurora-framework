@@ -1822,15 +1822,20 @@ class Utils
      *
      * @return string
      */
-    public static function ConvertCssToInlineStyles($sHtml, $sEncoding = 'utf-8')
+    public static function ConvertCssToInlineStyles($sHtml)
     {
         $sResult = '';
 
         if (is_string($sHtml)) {
+            // custom styles processing for Outlook messages
+            $sHtml = preg_replace('/<style><!--/mi', '<style>', $sHtml);
+            $sHtml = preg_replace('/--><\/style>/mi', '</style>', $sHtml);
+
+            // custom html processing for Outlook messages that removes empty outlook paragraphs
+            $sHtml = preg_replace('/<o:p><\/o:p>/mi', '', $sHtml);
+
             $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
-            $oCssToInlineStyles->setEncoding($sEncoding);
-            $oCssToInlineStyles->setUseInlineStylesBlock(true);
-            $sResult = $oCssToInlineStyles->convert();
+            $sResult = $oCssToInlineStyles->convert($sHtml);
         }
 
         return $sResult;
