@@ -1827,15 +1827,20 @@ class Utils
         $sResult = '';
 
         if (is_string($sHtml)) {
-            // custom styles processing for Outlook messages
-            $sHtml = preg_replace('/<style><!--/mi', '<style>', $sHtml);
-            $sHtml = preg_replace('/--><\/style>/mi', '</style>', $sHtml);
+            preg_match_all('/<html.*?>/mi', $sHtml, $matches, PREG_SET_ORDER);
+            if ($matches) {
+                // custom styles processing for Outlook messages
+                $sHtml = preg_replace('/<style><!--/mi', '<style>', $sHtml);
+                $sHtml = preg_replace('/--><\/style>/mi', '</style>', $sHtml);
 
-            // custom html processing for Outlook messages that removes empty outlook paragraphs
-            $sHtml = preg_replace('/<o:p><\/o:p>/mi', '', $sHtml);
+                // custom html processing for Outlook messages that removes empty outlook paragraphs
+                $sHtml = preg_replace('/<o:p><\/o:p>/mi', '', $sHtml);
 
-            $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
-            $sResult = $oCssToInlineStyles->convert($sHtml);
+                $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+                $sResult = $oCssToInlineStyles->convert($sHtml);
+            } else {
+                $sResult = $sHtml;
+            }
         }
 
         return $sResult;
