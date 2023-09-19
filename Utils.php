@@ -368,7 +368,7 @@ class Utils
 
                 if (($ch || $k < 6) ||
                     (!$strlen || $char != '-') ||
-                    ($strlen > 2 && '&' === $str[$i+1] && '-' !==  $str[$i+2])) {
+                    ($strlen > 2 && '&' === $str[$i + 1] && '-' !==  $str[$i + 2])) {
                     return $error;
                 }
             } elseif (ord($char) < 0x20 || ord($char) >= 0x7f) {
@@ -429,8 +429,8 @@ class Utils
                 return $error;
             }
 
-            for ($j=0; $j < $n; $j++) {
-                $o = ord($str[$i+$j]);
+            for ($j = 0; $j < $n; $j++) {
+                $o = ord($str[$i + $j]);
                 if (($o & 0xc0) != 0x80) {
                     return $error;
                 }
@@ -750,7 +750,7 @@ class Utils
                 $iTimeOffset = -9 * 60;
                 break;
             case 5:
-                $iTimeOffset =  -8*60;
+                $iTimeOffset =  -8 * 60;
                 break;
             case 6:
             case 7:
@@ -1262,7 +1262,7 @@ class Utils
         );
     }
 
-        /**
+    /**
      * @param string $sFileName
      * @return string
      */
@@ -1279,7 +1279,7 @@ class Utils
         return $sResult;
     }
 
-        /**
+    /**
      * @param string $sMimeContentType
      * @return string
      */
@@ -1512,7 +1512,7 @@ class Utils
     {
         $files = glob($pattern, $flags);
 
-        $aPaternFiles = glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT);
+        $aPaternFiles = glob(dirname($pattern).'/*', GLOB_ONLYDIR | GLOB_NOSORT);
 
         if (is_array($aPaternFiles) && is_array($files)) {
             foreach ($aPaternFiles as $dir) {
@@ -1926,7 +1926,7 @@ class Utils
                 'url' => '?file-cache/' . $sHash
             )
         );
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         $iThumbnailLimit = ((int) $oSettings->GetValue('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
         $bThumb = ($oSettings->GetValue('AllowThumbnail', true) &&
                 $iSize < $iThumbnailLimit && Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));
@@ -2018,9 +2018,7 @@ class Ints
     }
 }
 
-function fNullCallback()
-{
-}
+function fNullCallback() {}
 
 defined('AU_API_PHP_INT_MAX') || define('AU_API_PHP_INT_MAX', (int) Ints::getIntMax());
 defined('AU_API_PHP_INT_MIN') || define('AU_API_PHP_INT_MIN', (int) (AU_API_PHP_INT_MAX + 1));

@@ -60,7 +60,7 @@ class Logger
     {
         $sMessage = '';
 
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         // if ($oSettings && $oSettings->GetValue('LogStackTrace', false))
         // {
         // 	$sMessage = (string) $mObject;
@@ -84,7 +84,7 @@ class Logger
      */
     public static function GetLogFileName($sFilePrefix = '', $iTimestamp = 0)
     {
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
 
         $sFileName = "log.txt";
 
@@ -105,7 +105,7 @@ class Logger
     public static function getLogFileDateFormat()
     {
         $result = '';
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         if ($oSettings && $oSettings->LogFileName) {
             preg_match('/\{([\w|-]*)\}/', $oSettings->LogFileName, $matches);
             if (isset($matches[1])) {
@@ -121,7 +121,7 @@ class Logger
         static $sLogDir = null;
 
         if (null === $sLogDir) {
-            $oSettings =& Api::GetSettings();
+            $oSettings = & Api::GetSettings();
             if ($oSettings) {
                 $sS = $oSettings->GetValue('LogCustomFullPath', '');
                 $sLogDir = empty($sS) ? Api::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
@@ -154,7 +154,7 @@ class Logger
                 ->AddForbiddenType(\MailSo\Log\Enumerations\Type::TIME)
             ;
 
-            $oSettings =& Api::GetSettings();
+            $oSettings = & Api::GetSettings();
             $oLogger->bLogStackTrace = ($oSettings && $oSettings->GetValue('LogStackTrace', false));
         }
 
@@ -170,7 +170,7 @@ class Logger
         static $iDbBacktraceCount = null;
 
         if (null === $iDbBacktraceCount) {
-            $oSettings =& Api::GetSettings();
+            $oSettings = & Api::GetSettings();
             $iDbBacktraceCount = (int) $oSettings->GetValue('DBDebugBacktraceLimit', 0);
             if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) {
                 $iDbBacktraceCount = 0;

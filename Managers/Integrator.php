@@ -114,7 +114,7 @@ class Integrator extends AbstractManager
         $sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 
         $sCacheFileName = '';
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             $sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
@@ -124,7 +124,7 @@ class Integrator extends AbstractManager
         }
 
         $sResult = '';
-        $sPath =\Aurora\System\Api::WebMailPath().'modules';
+        $sPath = \Aurora\System\Api::WebMailPath().'modules';
 
         $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -160,7 +160,7 @@ class Integrator extends AbstractManager
         }
 
         $sResult = trim($sResult);
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             if (!is_dir(dirname($sCacheFullFileName))) {
                 @mkdir(dirname($sCacheFullFileName), 0777, true);
@@ -245,7 +245,7 @@ class Integrator extends AbstractManager
         $sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 
         $sCacheFileName = '';
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
             $sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version().$sHash) . '.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
@@ -256,7 +256,7 @@ class Integrator extends AbstractManager
 
         if ($sResult === "") {
             $aResult = array();
-            $sPath =\Aurora\System\Api::WebMailPath().'modules';
+            $sPath = \Aurora\System\Api::WebMailPath().'modules';
 
             $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -282,7 +282,7 @@ class Integrator extends AbstractManager
 
             $sResult .= json_encode($aResult);
 
-            $oSettings =& \Aurora\System\Api::GetSettings();
+            $oSettings = & \Aurora\System\Api::GetSettings();
             if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
                 if (!is_dir(dirname($sCacheFullFileName))) {
                     mkdir(dirname($sCacheFullFileName), 0777, true);
@@ -379,7 +379,7 @@ class Integrator extends AbstractManager
         $iHdUserId = 0;
         $sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
         if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
+            $aUserHashTable = \Aurora\System\Api::DecodeKeyValues($sKey);
             if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
                 'hd_auth' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id'])) {
                 $iHdUserId = (int) $aUserHashTable['id'];
@@ -479,7 +479,7 @@ class Integrator extends AbstractManager
         $aHdThreadId = array();
         $sKey = empty($_COOKIE[self::TOKEN_HD_THREAD_ID]) ? '' : $_COOKIE[self::TOKEN_HD_THREAD_ID];
         if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
+            $aUserHashTable = \Aurora\System\Api::DecodeKeyValues($sKey);
             if (is_array($aUserHashTable) && isset($aUserHashTable['token'], $aUserHashTable['id']) &&
                 'thread_id' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id'])) {
                 $aHdThreadId['id'] = (int) $aUserHashTable['id'];
@@ -535,7 +535,7 @@ class Integrator extends AbstractManager
             'email' => $oHelpdeskUser->Email
         );
 
-        $_COOKIE[self::TOKEN_HD_ACTIVATED] =\Aurora\System\Api::EncodeKeyValues($aHashTable);
+        $_COOKIE[self::TOKEN_HD_ACTIVATED] = \Aurora\System\Api::EncodeKeyValues($aHashTable);
         @\setcookie(
             self::TOKEN_HD_ACTIVATED,
             \Aurora\System\Api::EncodeKeyValues($aHashTable),
@@ -554,7 +554,7 @@ class Integrator extends AbstractManager
         $sEmail = '';
         $sKey = empty($_COOKIE[self::TOKEN_HD_ACTIVATED]) ? '' : $_COOKIE[self::TOKEN_HD_ACTIVATED];
         if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
+            $aUserHashTable = \Aurora\System\Api::DecodeKeyValues($sKey);
             if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
                 'hd_activated_email' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['email'])) {
                 $sEmail = $aUserHashTable['email'];
@@ -672,7 +672,7 @@ class Integrator extends AbstractManager
     {
         $sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
         if (0 < strlen($sHelpdeskHash)) {
-            $aHelpdeskHashTable =\Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
+            $aHelpdeskHashTable = \Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
             if (isset($aHelpdeskHashTable['sign-me']) && $aHelpdeskHashTable['sign-me']) {
                 @\setcookie(
                     self::AUTH_HD_KEY,
@@ -696,7 +696,7 @@ class Integrator extends AbstractManager
         if (null === $aList) {
             $aList = array();
             $sEnglishLang = null;
-            $sPath =\Aurora\System\Api::WebMailPath().'modules';
+            $sPath = \Aurora\System\Api::WebMailPath().'modules';
 
             $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -750,7 +750,7 @@ class Integrator extends AbstractManager
             $oModuleManager = \Aurora\System\Api::GetModuleManager();
             $sCoreWebclientModule = \Aurora\System\Api::IsMobileApplication() ? 'CoreMobileWebclient' : 'CoreWebclient';
             $aThemes = $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'ThemeList');
-            $sDir =\Aurora\System\Api::WebMailPath().'static/styles/themes/';
+            $sDir = \Aurora\System\Api::WebMailPath().'static/styles/themes/';
 
             if (is_array($aThemes)) {
                 $sPostfix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
@@ -842,7 +842,7 @@ class Integrator extends AbstractManager
         //		}
         ////		$oApiHelpdeskManager =\Aurora\System\Api::Manager('helpdesk'); // TODO:
         //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
-//
+        //
         //		return $oUser;
 
         return false;
@@ -965,7 +965,7 @@ class Integrator extends AbstractManager
      */
     public function compileJS($aConfig = array())
     {
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         $sPostfix = '';
 
         if ($oSettings && $oSettings->GetValue('UseAppMinJs', false)) {

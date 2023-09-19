@@ -72,10 +72,10 @@ class Settings extends \Aurora\System\AbstractSettings
      *
      * @return mixed
      */
-   public function GetValue($sName, $sDefaultValue = null)
-   {
-       return $this->GetTenantValue(Api::getTenantName(), $sName, $sDefaultValue);
-   }
+    public function GetValue($sName, $sDefaultValue = null)
+    {
+        return $this->GetTenantValue(Api::getTenantName(), $sName, $sDefaultValue);
+    }
 
     /**
      * @param string $sName

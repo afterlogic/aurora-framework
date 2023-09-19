@@ -31,9 +31,7 @@ class Session
      */
     public static $bStarted = false;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @param string $sKey

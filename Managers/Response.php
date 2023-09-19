@@ -314,7 +314,7 @@ class Response
         $sErrorMessage = null;
         $sModule = '';
 
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         $bShowError = $oSettings && $oSettings->GetValue('DisplayServerErrorInformation', false);
 
         if ($oException instanceof \Aurora\System\Exceptions\ApiException) {

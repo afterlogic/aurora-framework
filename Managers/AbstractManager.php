@@ -56,11 +56,6 @@ abstract class AbstractManager
         return $this->oSettings;
     }
 
-    public function &GetConnection()
-    {
-        return \Aurora\System\Api::GetConnection();
-    }
-
     /**
      * @param Exception $oException
      * @param bool $bLog = true

@@ -12,6 +12,4 @@ namespace Aurora\System\Exceptions;
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2019, Afterlogic Corp.
  */
-class StorageException extends BaseException
-{
-}
+class StorageException extends BaseException {}
