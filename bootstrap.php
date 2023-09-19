@@ -14,6 +14,4 @@ if (!function_exists('base_path')) {
     }
 }
 
-class Eloquent extends \Illuminate\Database\Eloquent\Model
-{
-}
+class Eloquent extends \Illuminate\Database\Eloquent\Model {}

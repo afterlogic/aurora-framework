@@ -433,7 +433,7 @@ abstract class AbstractContainer
         $aExclude = \is_array($aExclude) && 0 < \count($aExclude) ? $aExclude : array();
 
         $sQueryParams = '';
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         $bUseLogQueryParams = (bool) $oSettings->GetValue('DBLogQueryParams', false);
 
         $oObject->initBeforeChange();
@@ -545,7 +545,7 @@ abstract class AbstractContainer
         $aResult = array(false, false);
 
         $sQueryParams = '';
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         $bUseLogQueryParams = (bool) $oSettings->GetValue('DBLogQueryParams', false);
 
         $oObject->initBeforeChange();

@@ -69,7 +69,7 @@ class Node
     public function AppendChild(&$oNode)
     {
         if ($oNode) {
-            $this->Children[] =& $oNode;
+            $this->Children[] = & $oNode;
         }
     }
 
@@ -103,7 +103,7 @@ class Node
         $aNodeKeys = array_keys($this->Children);
         foreach ($aNodeKeys as $iNodeKey) {
             if ($this->Children[$iNodeKey] && $this->Children[$iNodeKey]->TagName === $sTagName) {
-                $oCXmlDomNode =& $this->Children[$iNodeKey];
+                $oCXmlDomNode = & $this->Children[$iNodeKey];
                 break;
             }
         }
@@ -117,7 +117,7 @@ class Node
     public function GetChildValueByTagName($sTagName)
     {
         $sResult = '';
-        $oNode =& $this->GetChildNodeByTagName($sTagName);
+        $oNode = & $this->GetChildNodeByTagName($sTagName);
         if (null !== $oNode) {
             $sResult = \Aurora\System\Utils::DecodeSpecialXmlChars($oNode->Value);
         }

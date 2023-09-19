@@ -71,7 +71,7 @@ class Validate
     public static function IsValidPassword($mValue)
     {
         $bResult = true;
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         $iPasswordMinLength = $oSettings->PasswordMinLength;
         $bPasswordMustBeComplex = $oSettings->PasswordMustBeComplex;
 

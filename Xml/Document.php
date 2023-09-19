@@ -119,7 +119,7 @@ class Document
      */
     public function GetParamValueByName($sName)
     {
-        $oParam =& $this->getParamNodeByName($sName);
+        $oParam = & $this->getParamNodeByName($sName);
         return (null !== $oParam && isset($oParam->Attributes['value']))
             ? \Aurora\System\Utils::DecodeSpecialXmlChars($oParam->Attributes['value']) : '';
     }
@@ -130,7 +130,7 @@ class Document
      */
     public function GetParamTagValueByName($sName)
     {
-        $oParam =& $this->getParamNodeByName($sName);
+        $oParam = & $this->getParamNodeByName($sName);
         return (null !== $oParam) ? \Aurora\System\Utils::DecodeSpecialXmlChars($oParam->Value) : '';
     }
 
@@ -167,14 +167,14 @@ class Document
         $oNode = new Node($sName);
         $oNode->Attributes = $aAttributes;
         if ($this->XmlRoot == null) {
-            $this->XmlRoot =& $oNode;
+            $this->XmlRoot = & $oNode;
         } else {
             $oRootNode = null;
-            $oRootNode =& $this->_stack[count($this->_stack) - 1];
-            $oRootNode->Children[] =& $oNode;
+            $oRootNode = & $this->_stack[count($this->_stack) - 1];
+            $oRootNode->Children[] = & $oNode;
         }
 
-        $this->_stack[] =& $oNode;
+        $this->_stack[] = & $oNode;
     }
 
     /**
@@ -194,7 +194,7 @@ class Document
     {
         $oNode = null;
         $this->_nullFunction($oParser);
-        $oNode =& $this->_stack[count($this->_stack) - 1];
+        $oNode = & $this->_stack[count($this->_stack) - 1];
         if ($oNode->Value == null) {
             $oNode->Value = '';
         }

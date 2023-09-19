@@ -161,7 +161,7 @@ class Installer
                     }
                 }
                 if ($oPreConfig['system']) {
-                    $oSettings =&\Aurora\System\Api::GetSettings();
+                    $oSettings = &\Aurora\System\Api::GetSettings();
                     foreach ($oPreConfig['system'] as $mKey => $mSett) {
                         $oSettings->{$mKey} = $mSett;
                     }

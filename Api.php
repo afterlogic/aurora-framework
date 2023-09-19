@@ -430,8 +430,7 @@ class Api
             try {
                 $sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
                 if (!\file_exists($sSettingsPath)) {
-                    set_error_handler(function () {
-                    });
+                    set_error_handler(function () {});
                     mkdir($sSettingsPath, 0777);
                     restore_error_handler();
                     if (!file_exists($sSettingsPath)) {
@@ -463,20 +462,6 @@ class Api
         }
 
         return $bResult;
-    }
-
-    public static function &GetConnection()
-    {
-        if (null === self::$oConnection) {
-            $oSettings =& self::GetSettings();
-
-            if ($oSettings) {
-                self::$oConnection = new \Aurora\System\Db\Storage($oSettings);
-            } else {
-                self::$oConnection = false;
-            }
-        }
-        return self::$oConnection;
     }
 
     /**
@@ -1415,7 +1400,7 @@ class Api
         return $sPublicId;
     }
 
-        /**
+    /**
      * @param string $sPublicId
      * @return int
      */
@@ -1635,7 +1620,6 @@ class Api
                 $consoleaApp->add(new Commands\Seeds\SeedCommand($ac['resolver']));
                 $consoleaApp->add(new Commands\Seeds\SeederMakeCommand($ac['filesystem'], $ac['composer']));
 
-                $consoleaApp->add(new Commands\Migrations\EavToSqlCommand());
                 $consoleaApp->add(new Commands\OrphansCommand());
 
                 $consoleaApp->add(new Commands\ModelsCommand($ac));

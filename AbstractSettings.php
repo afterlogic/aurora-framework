@@ -229,8 +229,7 @@ abstract class AbstractSettings
         // backup previous configuration
         $sJsonFile = $this->sPath;
         if (!\file_exists(\dirname($sJsonFile))) {
-            \set_error_handler(function () {
-            });
+            \set_error_handler(function () {});
             \mkdir(\dirname($sJsonFile), 0777);
             \restore_error_handler();
             $bResult = \file_exists(\dirname($sJsonFile));
