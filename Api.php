@@ -123,11 +123,6 @@ class Api
     protected static $oSettings;
 
     /**
-     * @var \Aurora\System\Db\Storage
-     */
-    protected static $oConnection;
-
-    /**
      * @var boolean
      */
     protected static $bInitialized = false;
