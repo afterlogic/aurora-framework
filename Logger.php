@@ -342,7 +342,9 @@ class Logger
                     if (isset($matches[1])) {
                         $fileDateTime = new \DateTimeImmutable($matches[1]);
                         if ($fileDateTime <= $dateTimeToRemove) {
-                            unlink($sFileName);
+                            if (file_exists($sFileName)) {
+                                unlink($sFileName);
+                            }
                         }
                     }
                 }
