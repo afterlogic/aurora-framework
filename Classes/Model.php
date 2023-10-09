@@ -282,6 +282,11 @@ class Model extends Eloquent
         return $mResult;
     }
 
+    public function getExtendedProps()
+    {
+        return $this->Properties;
+    }
+
     public function setExtendedProp($key, $value)
     {
         $properties = $this->Properties;
