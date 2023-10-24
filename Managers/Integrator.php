@@ -237,7 +237,7 @@ class Integrator extends AbstractManager
      *
      * @return string
      */
-    public function compileLanguage($sLanguage)
+    public function getLanguage($sLanguage)
     {
         $sLanguage = $this->validatedLanguageValue($sLanguage);
         $sResult = "";
@@ -293,7 +293,18 @@ class Integrator extends AbstractManager
             }
         }
 
-        return '<script>window.auroraI18n='.($sResult ? $sResult : '{}').';</script>';
+        return $sResult ? $sResult : '{}';
+    }
+
+    /**
+     * @TODO use tenants modules if exist
+     * @param string $sLanguage
+     *
+     * @return string
+     */
+    public function compileLanguage($sLanguage)
+    {
+        return '<script>window.auroraI18n='.$this->getLanguage($sLanguage).';</script>';
     }
 
     /**
