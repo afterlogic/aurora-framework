@@ -138,6 +138,11 @@ class Api
     public static $oContainer = null;
 
     /**
+     * @var array
+     */
+    protected static $usersCache = [];
+
+    /**
      *
      * @return string
      */
@@ -1415,17 +1420,17 @@ class Api
         return $iUserId;
     }
 
-    public static function getUserById($iUserId)
+    public static function getUserById($iUserId, $bForce = false)
     {
-        $mUser = false;
-
         try {
-            $mUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+            if (!isset(self::$usersCache[$iUserId]) || $bForce) {
+                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+            }
         } catch (\Exception $oEx) {
-            $mUser = false;
+            self::$usersCache[$iUserId] = false;
         }
 
-        return $mUser;
+        return self::$usersCache[$iUserId];
     }
 
     public static function getTenantById($iTenantId)
