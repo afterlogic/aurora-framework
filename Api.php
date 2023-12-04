@@ -1529,8 +1529,8 @@ class Api
             'database' => $DbName,
             'username' => $DbLogin,
             'password' => $DbPassword,
-            'charset'   => 'utf8',
-            'collation' => 'utf8_general_ci',
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix' => $DbPrefix,
         ];
         if (isset($aDbHost[1])) {
