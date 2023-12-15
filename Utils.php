@@ -525,7 +525,7 @@ class Utils
     public static function IsEncryptedValue($sEncryptedValue)
     {
         $sValue = \Aurora\System\Utils::DecryptValue($sEncryptedValue);
-        return $sValue === false ? false : true;
+        return ($sValue === false || $sValue === '') ? false : true;
     }
 
     /**
@@ -2023,7 +2023,9 @@ class Ints
     }
 }
 
-function fNullCallback() {}
+function fNullCallback()
+{
+}
 
 defined('AU_API_PHP_INT_MAX') || define('AU_API_PHP_INT_MAX', (int) Ints::getIntMax());
 defined('AU_API_PHP_INT_MIN') || define('AU_API_PHP_INT_MIN', (int) (AU_API_PHP_INT_MAX + 1));
