@@ -2023,9 +2023,7 @@ class Ints
     }
 }
 
-function fNullCallback()
-{
-}
+function fNullCallback() {}
 
 defined('AU_API_PHP_INT_MAX') || define('AU_API_PHP_INT_MAX', (int) Ints::getIntMax());
 defined('AU_API_PHP_INT_MIN') || define('AU_API_PHP_INT_MIN', (int) (AU_API_PHP_INT_MAX + 1));

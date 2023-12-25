@@ -52,7 +52,7 @@ class Logger
     }
 
     /**
-     * @param Exception $mObject
+     * @param Exceptions\Exception $mObject
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
      * @param string $sFilePrefix = ''
      */
