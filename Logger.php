@@ -25,6 +25,11 @@ class Logger
     public static $sEventLogPrefix = 'event-';
 
     /**
+     * @var string
+     */
+    public static $sExceptionLogPrefix = 'error-';
+
+    /**
      * @param string $sDesc
      * @param string $sModuleName
      */

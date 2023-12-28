@@ -576,10 +576,11 @@ class Api
     /**
      * @param Exceptions\Exception $mObject
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
-     * @param string $sFilePrefix = ''
+     * @param string|null $sFilePrefix = null
      */
-    public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = 'error-')
+    public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = null)
     {
+        $sFilePrefix = $sFilePrefix ?: Logger::$sExceptionLogPrefix;
         Logger::LogException($mObject, $iLogLevel, $sFilePrefix);
     }
 
