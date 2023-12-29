@@ -27,7 +27,7 @@ class Logger
     /**
      * @var string
      */
-    public static $sExceptionLogPrefix = 'error-';
+    public static $sErrorLogPrefix = 'error-';
 
     /**
      * @param string $sDesc

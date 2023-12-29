@@ -580,7 +580,7 @@ class Api
      */
     public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = null)
     {
-        $sFilePrefix = $sFilePrefix ?: Logger::$sExceptionLogPrefix;
+        $sFilePrefix = $sFilePrefix ?: Logger::$sErrorLogPrefix;
         Logger::LogException($mObject, $iLogLevel, $sFilePrefix);
     }
 
