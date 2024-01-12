@@ -21,7 +21,7 @@ class Cache
 {
     protected $cacheManager = null;
 
-    public function __construct($sStorage, $sPath, $sDriver = 'phpfile')
+    public function __construct($sStorage)
     {
         if (!file_exists(self::getPath())) {
             @mkdir(self::getPath(), 0777, true);
@@ -53,9 +53,9 @@ class Cache
         }
     }
 
-    public function getInstance($sStorage, $sPath)
+    public function getInstance($sStorage)
     {
-        return new self($sStorage, $sPath);
+        return new self($sStorage);
     }
 
     public static function getPath()

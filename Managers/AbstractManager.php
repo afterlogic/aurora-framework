@@ -49,7 +49,7 @@ abstract class AbstractManager
     }
 
     /**
-     * @return &\Aurora\System\Settings
+     * @return \Aurora\System\Settings
      */
     public function &GetSettings()
     {
@@ -57,7 +57,7 @@ abstract class AbstractManager
     }
 
     /**
-     * @param Exception $oException
+     * @param \Exception $oException
      * @param bool $bLog = true
      */
     protected function setLastException(\Exception $oException, $bLog = true)
@@ -79,7 +79,7 @@ abstract class AbstractManager
     }
 
     /**
-     * @return Exception
+     * @return \Exception
      */
     public function GetLastException()
     {

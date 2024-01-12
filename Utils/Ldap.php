@@ -276,7 +276,7 @@ class Ldap
 
     /**
      * @param string $sSortField
-     * @param string $bAsc 'asc' or 'desc'
+     * @param bool $bAsc 'asc' or 'desc'
      * @param int $iOffset = null
      * @param int $iRequestLimit = null
      * @return array

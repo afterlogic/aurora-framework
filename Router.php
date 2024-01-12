@@ -56,7 +56,7 @@ class Router
 
     /**
      *
-     * @param stranig $sName
+     * @param string $sName
      * @return mixed
      */
     public function getCallback($sName)

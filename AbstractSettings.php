@@ -466,11 +466,5 @@ abstract class AbstractSettings
     /**
      * @return void
      */
-    protected function init()
-    {
-        foreach ($this->aMap as $sKey => $aField) {
-            $this->aLowerMap[strtolower($sKey)] = $aField;
-            $this->SetValue($sKey, $aField[0]);
-        }
-    }
+    protected function init() {}
 }

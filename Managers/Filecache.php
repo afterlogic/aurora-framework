@@ -21,17 +21,13 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
      */
     public $oStorage;
 
-    /**
-     *
-     * @param string $sForcedStorage
-     */
     public function __construct()
     {
         parent::__construct(\Aurora\System\Api::GetModule('Core'), new Filecache\Storage($this));
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sValue
      * @param string $sFileSuffix Default value is empty string.
@@ -39,11 +35,11 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
      *
      * @return bool
      */
-    public function put($oAccount, $sKey, $sValue, $sFileSuffix = '', $sFolder = 'System')
+    public function put($sUserPublicId, $sKey, $sValue, $sFileSuffix = '', $sFolder = 'System')
     {
         $bResult = false;
         try {
-            $bResult = $this->oStorage->put($oAccount, $sKey, $sValue, $sFileSuffix, $sFolder);
+            $bResult = $this->oStorage->put($sUserPublicId, $sKey, $sValue, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -51,7 +47,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param resource $rSource
      * @param string $sFileSuffix Default value is empty string.
@@ -59,11 +55,11 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
      *
      * @return bool
      */
-    public function putFile($oAccount, $sKey, $rSource, $sFileSuffix = '', $sFolder = 'System')
+    public function putFile($sUserPublicId, $sKey, $rSource, $sFileSuffix = '', $sFolder = 'System')
     {
         $bResult = false;
         try {
-            $bResult = $this->oStorage->putFile($oAccount, $sKey, $rSource, $sFileSuffix, $sFolder);
+            $bResult = $this->oStorage->putFile($sUserPublicId, $sKey, $rSource, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -71,7 +67,7 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param string $sUUID
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sSource
      * @param string $sFileSuffix Default value is empty string.
@@ -79,11 +75,11 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
      *
      * @return bool
      */
-    public function moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix = '', $sFolder = 'System')
+    public function moveUploadedFile($sUserPublicId, $sKey, $sSource, $sFileSuffix = '', $sFolder = 'System')
     {
         $bResult = false;
         try {
-            $bResult = $this->oStorage->moveUploadedFile($sUUID, $sKey, $sSource, $sFileSuffix, $sFolder);
+            $bResult = $this->oStorage->moveUploadedFile($sUserPublicId, $sKey, $sSource, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -91,18 +87,18 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sFileSuffix Default value is empty string.
      * @param string $sFolder Default value is empty string.
      *
      * @return string|bool
      */
-    public function get($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
+    public function get($sUserPublicId, $sKey, $sFileSuffix = '', $sFolder = 'System')
     {
         $mResult = false;
         try {
-            $mResult = $this->oStorage->get($oAccount, $sKey, $sFileSuffix, $sFolder);
+            $mResult = $this->oStorage->get($sUserPublicId, $sKey, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -110,18 +106,18 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sFileSuffix Default value is empty string.
      * @param string $sFolder Default value is empty string.
      *
      * @return resource|bool
      */
-    public function getFile($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
+    public function getFile($sUserPublicId, $sKey, $sFileSuffix = '', $sFolder = 'System')
     {
         $mResult = false;
         try {
-            $mResult = $this->oStorage->getFile($oAccount, $sKey, $sFileSuffix, $sFolder);
+            $mResult = $this->oStorage->getFile($sUserPublicId, $sKey, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -129,17 +125,17 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sTempName
      * @param string $sMode Default value is empty string.
      *
      * @return resource|bool
      */
-    public function getTempFile($oAccount, $sTempName, $sMode = 'System')
+    public function getTempFile($sUserPublicId, $sTempName, $sMode = 'System')
     {
         $mResult = false;
         try {
-            $mResult = $this->oStorage->getTempFile($oAccount, $sTempName, $sMode);
+            $mResult = $this->oStorage->getTempFile($sUserPublicId, $sTempName, $sMode);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -147,18 +143,18 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param string $sUUID
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sFileSuffix Default value is empty string.
      * @param string $sFolder Default value is empty string.
      *
      * @return bool
      */
-    public function clear($sUUID, $sKey, $sFileSuffix = '', $sFolder = 'System')
+    public function clear($sUserPublicId, $sKey, $sFileSuffix = '', $sFolder = 'System')
     {
         $bResult = false;
         try {
-            $bResult = $this->oStorage->clear($sUUID, $sKey, $sFileSuffix, $sFolder);
+            $bResult = $this->oStorage->clear($sUserPublicId, $sKey, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -166,18 +162,18 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sFileSuffix Default value is empty string.
      * @param string $sFolder Default value is empty string.
      *
      * @return int|bool
      */
-    public function fileSize($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
+    public function fileSize($sUserPublicId, $sKey, $sFileSuffix = '', $sFolder = 'System')
     {
         $mResult = false;
         try {
-            $mResult = $this->oStorage->fileSize($oAccount, $sKey, $sFileSuffix, $sFolder);
+            $mResult = $this->oStorage->fileSize($sUserPublicId, $sKey, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -185,18 +181,18 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount|CHelpdeskUser $oAccount
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sFileSuffix Default value is empty string.
      * @param string $sFolder Default value is empty string.
      *
      * @return bool
      */
-    public function isFileExists($oAccount, $sKey, $sFileSuffix = '', $sFolder = 'System')
+    public function isFileExists($sUserPublicId, $sKey, $sFileSuffix = '', $sFolder = 'System')
     {
         $bResult = false;
         try {
-            $bResult = $this->oStorage->isFileExists($oAccount, $sKey, $sFileSuffix, $sFolder);
+            $bResult = $this->oStorage->isFileExists($sUserPublicId, $sKey, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }
@@ -204,18 +200,18 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
-     * @param string $sUUID
+     * @param string $sUserPublicId
      * @param string $sKey
      * @param string $sFileSuffix Default value is empty string.
      * @param string $sFolder Default value is empty string.
      *
      * @return bool|string
      */
-    public function generateFullFilePath($sUUID, $sKey, $sFileSuffix = '', $sFolder = 'System')
+    public function generateFullFilePath($sUserPublicId, $sKey, $sFileSuffix = '', $sFolder = 'System')
     {
         $mResult = false;
         try {
-            $mResult = $this->oStorage->generateFullFilePath($sUUID, $sKey, $sFileSuffix, $sFolder);
+            $mResult = $this->oStorage->generateFullFilePath($sUserPublicId, $sKey, $sFileSuffix, $sFolder);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }

@@ -41,7 +41,7 @@ abstract class AbstractStorage
     }
 
     /**
-     * @return &\Aurora\System\Settings
+     * @return \Aurora\System\Settings
      */
     public function &GetSettings()
     {

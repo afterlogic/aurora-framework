@@ -32,8 +32,8 @@ class TenantSettings extends \Aurora\System\AbstractSettings
     }
 
     /**
-     * @var string
-     * @var \Aurora\System\SettingsProperty
+     * @param string $sName
+     * @param \Aurora\System\SettingsProperty $oProperty
      */
     public function SetProperty($sName, $oProperty)
     {

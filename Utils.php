@@ -544,7 +544,7 @@ class Utils
     }
 
     /**
-     * @param string $iSizeInBytes
+     * @param int $iSizeInBytes
      * @return string
      */
     public static function GetFriendlySize($iSizeInBytes)
@@ -563,7 +563,7 @@ class Utils
     }
 
     /**
-     * @param string $iSizeInBytes
+     * @param int $iSizeInBytes
      * @return string
      */
     public static function GetFriendlySizeSpec($iSizeInBytes)
@@ -1818,7 +1818,6 @@ class Utils
      * This function converst block CSS styles to inline styles in provided HTML.
      *
      * @param string $sHtml
-     * @param string $sEncoding Optional. Defines the charset encoding. Default value is utf-8
      *
      * @return string
      */

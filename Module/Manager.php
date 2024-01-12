@@ -84,7 +84,7 @@ class Manager
 
     /**
      *
-     * @return \self
+     * @return self
      */
     public static function createInstance()
     {
@@ -765,13 +765,13 @@ class Manager
      * number, it is recommended to ommit.
      *
      * @param string $sEvent
-     * @param callback $fCallback
+     * @param callable $fCallback
      * @param int $iPriority
      * @return void
      */
     public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
     {
-        return $this->oEventEmitter->on($sEvent, $fCallback, $iPriority);
+        $this->oEventEmitter->on($sEvent, $fCallback, $iPriority);
     }
 
     public function getEvents()

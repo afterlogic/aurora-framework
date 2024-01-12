@@ -60,7 +60,7 @@ class RollbackCommand extends BaseCommand
 
         $this->migrator->usingConnection($input->getOption('database'), function () use ($input, $output) {
             $this->migrator->setOutput($output)->rollback(
-                $this->getMigrationPaths($input, $output),
+                $this->getMigrationPaths($input),
                 [
                     'pretend' => $input->getOption('pretend'),
                     'step' => (int) $input->getOption('step'),

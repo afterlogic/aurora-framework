@@ -7,18 +7,12 @@
 
 namespace Aurora\System;
 
-use ArrayAccess;
 use Aurora\Modules\Core\Models\User;
 use Aurora\Modules\Core\Models\Tenant;
 use Aurora\System\Enums\DbType;
-use Pimple\Container;
 use Aurora\System\Console\Commands;
 use Aurora\System\Exceptions\ApiException;
-use Aurora\System\Models\Hook;
-use Barryvdh\LaravelIdeHelper\Console\ModelsCommand;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
-use RuntimeException;
+use Illuminate\Container\Container;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -337,13 +331,12 @@ class Api
     /**
      *
      * @param string $sModuleName
-     * @param int $iUser
      * @return \Aurora\System\Module\Decorator
      */
-    public static function GetModuleDecorator($sModuleName, $iUser = null)
+    public static function GetModuleDecorator($sModuleName)
     {
         if (!isset(self::$aModuleDecorators[$sModuleName]) && self::GetModule($sModuleName) !== false) {
-            self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName, $iUser);
+            self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName);
         }
 
         return isset(self::$aModuleDecorators[$sModuleName]) ? self::$aModuleDecorators[$sModuleName] : false;
@@ -611,7 +604,6 @@ class Api
      * @param string $sDesc
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Full
      * @param string $sFilePrefix = ''
-     * @param bool $bIdDb = false
      */
     public static function Log($sDesc, $iLogLevel = Enums\LogLevel::Full, $sFilePrefix = '')
     {
@@ -724,7 +716,7 @@ class Api
         if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) {
             include self::WebMailPath().'inc_settings_path.php';
         }
-        if (!defined('AU_API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) {
+        if (!defined('AU_API_DATA_FOLDER')) {
             define('AU_API_DATA_FOLDER', Utils::GetFullPath($dataPath, self::WebMailPath()));
         }
         $sDataFullPath = defined('AU_API_DATA_FOLDER') ? AU_API_DATA_FOLDER : '';
@@ -920,7 +912,7 @@ class Api
 
     /**
      * @param string $sData
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount $oAccount
+     * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
      * @param array $aParams = null
      *
      * @return string
@@ -1112,14 +1104,14 @@ class Api
     {
         if (!self::$__SKIP_CHECK_USER_ROLE__) {
             $oUser = self::getAuthenticatedUser();
-            $bUserRoleIsAtLeast = empty($oUser) && $iRole === Enums\UserRole::Anonymous ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::Customer &&
+            $bUserRoleIsAtLeast = $oUser === null && $iRole === Enums\UserRole::Anonymous ||
+                $oUser !== null && $oUser->Role === Enums\UserRole::Customer &&
                     ($iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::NormalUser &&
+                $oUser !== null && $oUser->Role === Enums\UserRole::NormalUser &&
                     ($iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::TenantAdmin &&
+                $oUser !== null && $oUser->Role === Enums\UserRole::TenantAdmin &&
                     ($iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin &&
+                $oUser !== null && $oUser->Role === Enums\UserRole::SuperAdmin &&
                     ($iRole === Enums\UserRole::SuperAdmin || $iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous);
             if (!$bUserRoleIsAtLeast) {
                 throw new Exceptions\ApiException(Notifications::AccessDenied, null, 'AccessDenied');
@@ -1390,7 +1382,7 @@ class Api
         $sPublicId = '';
 
         if (\is_numeric($iUserId)) {
-            $oUser = User::select('PublicId')->firstWhere('Id', $iUserId);
+            $oUser = User::query()->select('PublicId')->where('Id', $iUserId)->first();
             if ($oUser) {
                 return $oUser->PublicId;
             }
@@ -1413,7 +1405,7 @@ class Api
             return -1;
         }
 
-        $oUser = User::select('Id')->firstWhere('PublicId', $sPublicId);
+        $oUser = User::query()->select('Id')->where('PublicId', $sPublicId)->first();
         if ($oUser) {
             return $oUser->Id;
         }
@@ -1545,7 +1537,7 @@ class Api
     {
         if (!isset(self::$oContainer)) {
             // Instantiate the app container
-            $appContainer = \Illuminate\Container\Container::getInstance();
+            $appContainer = Container::getInstance();
 
             // Tell facade about the application instance
             \Illuminate\Support\Facades\Facade::setFacadeApplication($appContainer);
