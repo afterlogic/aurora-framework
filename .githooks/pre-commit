@@ -32,7 +32,7 @@ PHPSTAN="../vendor/bin/phpstan"
 if [ -f "$PHPSTAN" ]; then
     echo ""
     printf "Running PhpStan..."
-	eval "$PHPSTAN analyze --level 0 --no-progress ./"
+    eval "$PHPSTAN analyze --level 2 --configuration ../phpstan.neon --no-progress ./"
     if [ $? != 0 ]
     then
         echo "Fix PhpStan errors before commit."
