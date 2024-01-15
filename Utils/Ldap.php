@@ -17,14 +17,12 @@ class Ldap
     /**
      * @var \LDAP\Connection
      */
-    //@TODO remove phpstan ignore
-    private $rLink; // @phpstan-ignore-line
+    private $rLink;
 
     /**
      * @var \LDAP\Result
      */
-    //@TODO remove phpstan ignore
-    private $rSearch; // @phpstan-ignore-line
+    private $rSearch;
 
     /**
      * @var string
