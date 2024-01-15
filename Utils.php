@@ -1835,7 +1835,7 @@ class Utils
                 // custom html processing for Outlook messages that removes empty outlook paragraphs
                 $sHtml = preg_replace('/<o:p><\/o:p>/mi', '', $sHtml);
 
-                $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
+                $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles();
                 $sResult = $oCssToInlineStyles->convert($sHtml);
             } else {
                 $sResult = $sHtml;

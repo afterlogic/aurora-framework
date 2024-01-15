@@ -912,12 +912,12 @@ class Api
 
     /**
      * @param string $sData
-     * @param \Aurora\Modules\StandardAuth\Models\Account $oAccount
      * @param array $aParams = null
+     * @param mixed $iPluralCount = null
      *
      * @return string
      */
-    public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
+    public static function ClientI18N($sData, $aParams = null, $iPluralCount = null)
     {
         $sLanguage = self::GetLanguage();
 
@@ -941,7 +941,6 @@ class Api
             }
         }
 
-        //return self::processTranslateParams($aLang, $sData, $aParams);
         return isset($iPluralCount) ? self::processTranslateParams($aLang, $sData, $aParams, self::getPlural($sLanguage, $iPluralCount)) : self::processTranslateParams($aLang, $sData, $aParams);
     }
 
