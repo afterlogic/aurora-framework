@@ -242,11 +242,11 @@ class Utils
         switch (true) {
             default:
                 break;
-            case ($sFromEncoding === 'iso-8859-1' && $sToEncoding === 'utf-8' && function_exists('utf8_encode')):
-                $sResult = utf8_encode($sResult);
+            case ($sFromEncoding === 'iso-8859-1' && $sToEncoding === 'utf-8' && function_exists('mb_convert_encoding')):
+                $sResult = mb_convert_encoding($sResult, $sToEncoding, $sFromEncoding);
                 break;
-            case ($sFromEncoding === 'utf-8' && $sToEncoding === 'iso-8859-1' && function_exists('utf8_decode')):
-                $sResult = utf8_decode($sResult);
+            case ($sFromEncoding === 'utf-8' && $sToEncoding === 'iso-8859-1' && function_exists('mb_convert_encoding')):
+                $sResult = mb_convert_encoding($sResult, $sToEncoding, $sFromEncoding);
                 break;
             case ($sFromEncoding === 'utf7-imap' && $sToEncoding === 'utf-8'):
                 $sResult = self::Utf7ModifiedToUtf8($sResult);
