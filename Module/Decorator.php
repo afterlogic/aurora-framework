@@ -56,6 +56,42 @@ class Decorator
 
         return $mResult;
     }
+
+    public function GetSettings()
+    {
+        $mResult = null;
+
+        $oModule = \Aurora\System\Api::GetModule($this->sModuleName);
+        if ($oModule instanceof AbstractModule) {
+            $mResult = $oModule->GetSettings();
+        }
+
+        return $mResult;
+    }
+
+    public function GetErrors()
+    {
+        $mResult = null;
+
+        $oModule = \Aurora\System\Api::GetModule($this->sModuleName);
+        if ($oModule instanceof AbstractModule) {
+            $mResult = $oModule->GetErrors();
+        }
+
+        return $mResult;
+    }
+
+    public function GetAdditionalEntityFieldsToEdit()
+    {
+        $mResult = null;
+
+        $oModule = \Aurora\System\Api::GetModule($this->sModuleName);
+        if ($oModule instanceof AbstractModule) {
+            $mResult = $oModule->GetAdditionalEntityFieldsToEdit();
+        }
+
+        return $mResult;
+    }
 }
 
 function Decorator()

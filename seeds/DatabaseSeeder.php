@@ -16,11 +16,12 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $channel = Channel::firstOrCreate([
+        /** @var Channel */
+        $channel = Channel::query()->firstOrCreate([
             'Login' => 'Default'
         ]);
 
-        Tenant::firstOrCreate([
+        Tenant::query()->firstOrCreate([
             'IdChannel' => $channel->Id,
             'Name' => 'Default',
             'IsDefault' => true

@@ -11,10 +11,12 @@ use Aurora\System\EventEmitter;
 use Aurora\System\Validator;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Aurora\System\Classes\Model
+ *
+ * @property int    $Id             Object primary key
+ * @property array  $Properties     Custom properties for use by other modules
  *
  * @property-read mixed $entity_id
  * @method static \Illuminate\Database\Eloquent\Builder|\Aurora\System\Classes\Model firstWhere(Closure|string|array|\Illuminate\Database\Query\Expression $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
@@ -186,7 +188,8 @@ class Model extends Eloquent
         }
 
         $orphanIds = $query->pluck($this->primaryKey)->diff(
-            self::leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
+            self::query()->leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")
+                ->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
         )->all();
 
         $message = $orphanIds ? "$tableName table has orphans: " . count($orphanIds) . "." : "Orphans were not found.";
@@ -280,6 +283,11 @@ class Model extends Eloquent
         }
 
         return $mResult;
+    }
+
+    public function getExtendedProps()
+    {
+        return $this->Properties;
     }
 
     public function setExtendedProp($key, $value)

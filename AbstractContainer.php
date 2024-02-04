@@ -124,7 +124,7 @@ abstract class AbstractContainer
     }
 
     /**
-     * @param stdClass $oRow
+     * @param \stdClass $oRow
      */
     public function InitByDbRow($oRow)
     {
@@ -181,13 +181,13 @@ abstract class AbstractContainer
      * @param string $sKey = null
      * @return void
      */
-    public function FlushObsolete($nsKey = null)
+    public function FlushObsolete($sKey = null)
     {
-        if (null === $nsKey) {
+        if (null === $sKey) {
             $this->aObsolete = array();
         } else {
-            if (\key_exists($nsKey, $this->aObsolete)) {
-                unset($this->aObsolete[$nsKey]);
+            if (\key_exists($sKey, $this->aObsolete)) {
+                unset($this->aObsolete[$sKey]);
             }
         }
     }
@@ -247,7 +247,6 @@ abstract class AbstractContainer
 
     /**
      * @param string $sPropertyName
-     * @param mixed $mValue
      * @return bool
      */
     public function IsProperty($sPropertyName)
@@ -302,7 +301,7 @@ abstract class AbstractContainer
     /**
      * @param string $sKey
      *
-     * @throws Exception
+     * @throws Exceptions\Exception
      *
      * @return mixed
      */
@@ -433,7 +432,7 @@ abstract class AbstractContainer
         $aExclude = \is_array($aExclude) && 0 < \count($aExclude) ? $aExclude : array();
 
         $sQueryParams = '';
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         $bUseLogQueryParams = (bool) $oSettings->GetValue('DBLogQueryParams', false);
 
         $oObject->initBeforeChange();
@@ -545,7 +544,7 @@ abstract class AbstractContainer
         $aResult = array(false, false);
 
         $sQueryParams = '';
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         $bUseLogQueryParams = (bool) $oSettings->GetValue('DBLogQueryParams', false);
 
         $oObject->initBeforeChange();

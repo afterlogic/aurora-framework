@@ -14,6 +14,4 @@ namespace Aurora\System\Exceptions;
  *
  * @package Api
  */
-class DbException extends Exception
-{
-}
+class DbException extends Exception {}

@@ -25,6 +25,11 @@ class Logger
     public static $sEventLogPrefix = 'event-';
 
     /**
+     * @var string
+     */
+    public static $sErrorLogPrefix = 'error-';
+
+    /**
      * @param string $sDesc
      * @param string $sModuleName
      */
@@ -52,7 +57,7 @@ class Logger
     }
 
     /**
-     * @param Exception $mObject
+     * @param Exceptions\Exception $mObject
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
      * @param string $sFilePrefix = ''
      */
@@ -60,7 +65,7 @@ class Logger
     {
         $sMessage = '';
 
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         // if ($oSettings && $oSettings->GetValue('LogStackTrace', false))
         // {
         // 	$sMessage = (string) $mObject;
@@ -84,7 +89,7 @@ class Logger
      */
     public static function GetLogFileName($sFilePrefix = '', $iTimestamp = 0)
     {
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
 
         $sFileName = "log.txt";
 
@@ -105,7 +110,7 @@ class Logger
     public static function getLogFileDateFormat()
     {
         $result = '';
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         if ($oSettings && $oSettings->LogFileName) {
             preg_match('/\{([\w|-]*)\}/', $oSettings->LogFileName, $matches);
             if (isset($matches[1])) {
@@ -121,7 +126,7 @@ class Logger
         static $sLogDir = null;
 
         if (null === $sLogDir) {
-            $oSettings =& Api::GetSettings();
+            $oSettings = & Api::GetSettings();
             if ($oSettings) {
                 $sS = $oSettings->GetValue('LogCustomFullPath', '');
                 $sLogDir = empty($sS) ? Api::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
@@ -145,16 +150,15 @@ class Logger
     {
         static $oLogger = null;
         if (null === $oLogger) {
-            $oLogger = \MailSo\Log\Logger::NewInstance()
-                ->Add(
-                    \MailSo\Log\Drivers\Callback::NewInstance(function ($sDesc) {
-                        self::Log($sDesc);
-                    })->DisableTimePrefix()->DisableGuidPrefix()
-                )
-                ->AddForbiddenType(\MailSo\Log\Enumerations\Type::TIME)
-            ;
+            $oLogger = \MailSo\Log\Logger::NewInstance();
+            $oLogger->Add(
+                \MailSo\Log\Drivers\Callback::NewInstance(function ($sDesc) {
+                    self::Log($sDesc);
+                })->DisableTimePrefix()->DisableGuidPrefix()
+            );
+            $oLogger->AddForbiddenType(\MailSo\Log\Enumerations\Type::TIME);
 
-            $oSettings =& Api::GetSettings();
+            $oSettings = & Api::GetSettings();
             $oLogger->bLogStackTrace = ($oSettings && $oSettings->GetValue('LogStackTrace', false));
         }
 
@@ -170,7 +174,7 @@ class Logger
         static $iDbBacktraceCount = null;
 
         if (null === $iDbBacktraceCount) {
-            $oSettings =& Api::GetSettings();
+            $oSettings = & Api::GetSettings();
             $iDbBacktraceCount = (int) $oSettings->GetValue('DBDebugBacktraceLimit', 0);
             if (!function_exists('debug_backtrace') || version_compare(PHP_VERSION, '5.4.0') < 0) {
                 $iDbBacktraceCount = 0;
@@ -225,7 +229,6 @@ class Logger
      * @param string $sDesc
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Full
      * @param string $sFilePrefix = ''
-     * @param bool $bIdDb = false
      */
     public static function Log($sDesc, $iLogLevel = Enums\LogLevel::Full, $sFilePrefix = '')
     {
@@ -240,8 +243,8 @@ class Logger
                 $oAuthenticatedUser = false;
             }
             $sFirstPrefix = "";
-            if (isset($oAuthenticatedUser)) {
-                $sFirstPrefix = isset($oAuthenticatedUser->WriteSeparateLog) && $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
+            if ($oAuthenticatedUser) {
+                $sFirstPrefix = $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
             }
             $sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
@@ -251,16 +254,16 @@ class Logger
             if ($bIsFirst) {
                 $sUri = Utils::RequestUri();
                 $bIsFirst = false;
-                $sPost = (isset($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
+                $sPost = (is_array($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
 
                 self::LogOnly(AU_API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
-                if (!empty($sPost)) {
-                    if ($oSettings->GetValue('LogPostView', false)) {
-                        self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
-                    } else {
-                        self::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
-                    }
+
+                if ($oSettings->GetValue('LogPostView', false)) {
+                    self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
+                } else {
+                    self::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
                 }
+
                 self::LogOnly('['.$sDate.']['.$sGuid.']', $sLogFile);
             }
 
@@ -342,7 +345,9 @@ class Logger
                     if (isset($matches[1])) {
                         $fileDateTime = new \DateTimeImmutable($matches[1]);
                         if ($fileDateTime <= $dateTimeToRemove) {
-                            unlink($sFileName);
+                            if (file_exists($sFileName)) {
+                                unlink($sFileName);
+                            }
                         }
                     }
                 }

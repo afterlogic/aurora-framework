@@ -16,7 +16,5 @@ namespace Aurora\System\Module;
  */
 abstract class AbstractWebclientModule extends AbstractModule
 {
-    public function init()
-    {
-    }
+    public function init() {}
 }

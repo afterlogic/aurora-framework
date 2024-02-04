@@ -28,7 +28,7 @@ class ObjectExtender
 
     /**
      *
-     * @return \self
+     * @return self
      */
     public static function createInstance()
     {

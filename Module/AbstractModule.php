@@ -150,7 +150,6 @@ abstract class AbstractModule
 
     /**
      *
-     * @param string $sName
      * @param string $sPath
      * @param string $sVersion
      * @return \Aurora\System\Module\AbstractModule
@@ -315,7 +314,7 @@ abstract class AbstractModule
     public function loadModuleSettings()
     {
         if (!isset($this->oModuleSettings)) {
-            $this->oModuleSettings =& $this->GetModuleManager()->getModuleSettings(self::GetName());
+            $this->oModuleSettings = & $this->GetModuleManager()->getModuleSettings(self::GetName());
             $this->oModuleSettings->Load();
         }
         return $this->oModuleSettings;
@@ -398,7 +397,7 @@ abstract class AbstractModule
 
     /**
      *
-     * @param callback $mCallbak
+     * @param string $sMethodName
      * @return boolean
      */
     protected function isDeniedMethodByWebApi($sMethodName)
@@ -438,7 +437,7 @@ abstract class AbstractModule
     /**
      *
      * @param string $sEvent
-     * @param callback $fCallback
+     * @param callable $fCallback
      * @param int $iPriority
      */
     public function subscribeEvent($sEvent, $fCallback, $iPriority = 100)
@@ -587,7 +586,7 @@ abstract class AbstractModule
     /**
      *
      * @param string $sName
-     * @param callback $mCallbak
+     * @param callable $mCallbak
      */
     final public function AddEntry($sName, $mCallbak)
     {
@@ -641,7 +640,7 @@ abstract class AbstractModule
 
     /**
      *
-     * @param callback $mCallbak
+     * @param callable $mCallbak
      * @return boolean
      */
     protected function isEntryCallback($mCallbak)
@@ -651,7 +650,7 @@ abstract class AbstractModule
 
     /**
      *
-     * @param stranig $sName
+     * @param string $sName
      * @return mixed
      */
     final public function GetEntryCallback($sName)
@@ -875,7 +874,7 @@ abstract class AbstractModule
     /**
      * Obtains list of module settings for authenticated user.
      *
-     * @return array
+     * @return array|null
      */
     public function GetSettings()
     {
@@ -978,7 +977,7 @@ abstract class AbstractModule
     }
 
     /**
-     * @param int
+     * @param int $iErrorCode
      * @return string
      */
     public function GetErrorMessageByCode($iErrorCode)

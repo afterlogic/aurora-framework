@@ -70,10 +70,10 @@ class BaseException extends Exception
                 $oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '';
         } elseif ($this->oPrevious instanceof \MailSo\Smtp\Exceptions\NegativeResponseException) {
             $sMessage = $this->oPrevious->getMessage();
-        //			$oSub = $this->oPrevious->getPrevious();
-        //			$oSub = $oSub instanceof \MailSo\Smtp\Exceptions\NegativeResponseException ? $oSub : null;
-//
-        //			$sMessage = $oSub ? $oSub->getMessage() : $this->oPrevious->getMessage();
+            //			$oSub = $this->oPrevious->getPrevious();
+            //			$oSub = $oSub instanceof \MailSo\Smtp\Exceptions\NegativeResponseException ? $oSub : null;
+            //
+            //			$sMessage = $oSub ? $oSub->getMessage() : $this->oPrevious->getMessage();
         } elseif ($this->oPrevious instanceof \Exception) {
             $sMessage = $this->oPrevious->getMessage();
         }

@@ -174,11 +174,12 @@ class Ldap
      */
     public function Search($sObjectFilter)
     {
+        $result = false;
         if ($this->rSearch && $this->sLastRequest === $this->sSearchDN.$sObjectFilter) {
             \Aurora\System\Api::Log('LDAP: search repeat = "'.$this->sSearchDN.'" / '.$sObjectFilter);
 
             $this->validateLdapErrorOnFalse($this->rSearch);
-            return is_resource($this->rSearch) || is_object($this->rSearch);
+            $result = is_resource($this->rSearch) || is_object($this->rSearch);
         } else {
             \Aurora\System\Api::Log('LDAP: search = "'.$this->sSearchDN.'" / '.$sObjectFilter);
             $this->rSearch = @ldap_search($this->rLink, $this->sSearchDN, $sObjectFilter, array('*'), 0, 3000);
@@ -186,10 +187,10 @@ class Ldap
             $this->validateLdapErrorOnFalse($this->rSearch);
 
             $this->sLastRequest = $this->sSearchDN.$sObjectFilter;
-            return is_resource($this->rSearch) || is_object($this->rSearch);
+            $result = is_resource($this->rSearch) || is_object($this->rSearch);
         }
 
-        return false;
+        return $result;
     }
 
     /**
@@ -276,7 +277,7 @@ class Ldap
 
     /**
      * @param string $sSortField
-     * @param string $bAsc 'asc' or 'desc'
+     * @param bool $bAsc 'asc' or 'desc'
      * @param int $iOffset = null
      * @param int $iRequestLimit = null
      * @return array

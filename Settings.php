@@ -40,7 +40,7 @@ namespace Aurora\System;
 
 * @property bool $EnableLogging
 * @property bool $EnableEventLogging
-* @property \Aurora\System\Enums\LogLevel $LoggingLevel
+* @property int $LoggingLevel
 * @property string $LogFileName
 * @property string $LogCustomFullPath
 * @property bool $LogPostView

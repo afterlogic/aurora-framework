@@ -165,13 +165,13 @@ class UserSession
     public function GetExpiredAuthTokens($iDays)
     {
         $iTime = $iDays * 86400;
-        return AuthToken::whereRaw('(LastUsageDateTime + ' . $iTime . ') < UNIX_TIMESTAMP()')->get();
+        return AuthToken::query()->whereRaw('(LastUsageDateTime + ' . $iTime . ') < UNIX_TIMESTAMP()')->get();
     }
 
     public function DeleteExpiredAuthTokens($iDays)
     {
         $iTime = $iDays * 86400;
-        return AuthToken::whereRaw('(LastUsageDateTime + ' . $iTime . ') < UNIX_TIMESTAMP()')->delete();
+        return AuthToken::query()->whereRaw('(LastUsageDateTime + ' . $iTime . ') < UNIX_TIMESTAMP()')->delete();
     }
 
     public function GetUserSessionsFromDB($iUserId)

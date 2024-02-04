@@ -109,7 +109,7 @@ class EventEmitter
      * number, it is recommended to ommit.
      *
      * @param string $sEvent
-     * @param callback $fCallback
+     * @param callable $fCallback
      * @param int $iPriority
      * @return void
      */
@@ -145,10 +145,11 @@ class EventEmitter
      *
      * The arguments parameter will be sent to all subscribers
      *
+     * @param string $sModule
      * @param string $sEvent
      * @param array $aArguments
      * @param mixed $mResult
-     * @param callback $mCountinueCallback
+     * @param callable $mCountinueCallback
      * @return boolean
      */
     public function emit($sModule, $sEvent, &$aArguments = [], &$mResult = null, $mCountinueCallback = null, $bSkipIsAllowedModuleCheck = false)
@@ -186,7 +187,7 @@ class EventEmitter
                         );
                     }
 
-                    if (isset($mListenersResult)) {
+                    if ($mListenersResult !== null) {
                         $this->aListenersResult[$fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1]] = $mListenersResult;
                     }
 

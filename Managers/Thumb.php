@@ -18,16 +18,12 @@ class Thumb
 {
     public static function RemoveFromCache($iUserId, $sHash, $sFileName)
     {
-        $oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+        $oCache = new Cache('thumbs');
         $sMd5Hash = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
         if ($oCache->has($sMd5Hash)) {
             $oCache->delete($sMd5Hash);
         }
     }
-
-    /**
-     * @param \Intervention\Image\Image $image
-     */
 
     public static function GetHash()
     {
@@ -39,6 +35,12 @@ class Thumb
         return $sHash;
     }
 
+    /**
+     * @param string $sHash
+     * @param string $sFileName
+     *
+     * @return string
+     */
     public static function GetCacheFilename($sHash, $sFileName)
     {
         return \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
@@ -46,7 +48,7 @@ class Thumb
 
     public static function GetResourceCache($iUserId, $sFileName)
     {
-        $oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+        $oCache = new Cache('thumbs');
 
         return $oCache->get(
             self::GetCacheFilename(self::GetHash(), $sFileName)
@@ -70,7 +72,7 @@ class Thumb
 
             \unlink($sCacheFilePathTmp);
 
-            $oCache = new Cache('thumbs', \Aurora\System\Api::getUserUUIDById($iUserId));
+            $oCache = new Cache('thumbs');
             $oCache->set(
                 $sCacheFilename,
                 $sThumb

@@ -189,7 +189,7 @@ class Response
     {
         if (!empty($sKey)) {
             $oHttp = \MailSo\Base\Http::NewInstance();
-            $sIfModifiedSince = $oHttp->GetHeader('If-Modified-Since', '');
+            $sIfModifiedSince = $oHttp->GetHeader('If-Modified-Since');
             if (!empty($sIfModifiedSince)) {
                 $oHttp->StatusHeader(304);
                 self::cacheByKey($sKey);
@@ -252,11 +252,15 @@ class Response
             }
         }
         $aResult['SubscriptionsResult'] = \Aurora\System\Api::GetModuleManager()->GetSubscriptionsResult();
-        $aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4) + 0;
-        $aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4) + 0;
+        if (defined('AU_APP_START')) {
+            $aResult['@Time'] = number_format(microtime(true) - AU_APP_START, 4);
+            \Aurora\System\Api::Log('@Time: ' . $aResult['@Time']);
+        }
+        if (defined('AU_API_INIT')) {
+            $aResult['@TimeApiInit'] = number_format(AU_API_INIT, 4);
+            \Aurora\System\Api::Log('@TimeApiInit: ' . $aResult['@TimeApiInit']);
+        }
 
-        \Aurora\System\Api::Log('@Time: ' . $aResult['@Time']);
-        \Aurora\System\Api::Log('@TimeApiInit: ' . $aResult['@TimeApiInit']);
         $sLoggerGuid = \Aurora\System\Api::GetLoggerGuid();
         if (!empty($sLoggerGuid)) {
             $aResult['@LoggerGuid'] = \MailSo\Log\Logger::Guid();
@@ -314,7 +318,7 @@ class Response
         $sErrorMessage = null;
         $sModule = '';
 
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         $bShowError = $oSettings && $oSettings->GetValue('DisplayServerErrorInformation', false);
 
         if ($oException instanceof \Aurora\System\Exceptions\ApiException) {

@@ -28,7 +28,7 @@ abstract class AbstractLicensedModule extends AbstractModule
     {
         if (!isset($this->isValid)) {
             $oLicensing = \Aurora\System\Api::GetModule('Licensing');
-            $this->isValid = $oLicensing ? ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName())) : false;
+            $this->isValid = $oLicensing ? ($oLicensing->Validate(self::GetName()) && $oLicensing->ValidatePeriod(self::GetName())) : false; /** @phpstan-ignore-line */
         }
 
         return $this->isValid;

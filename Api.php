@@ -7,18 +7,12 @@
 
 namespace Aurora\System;
 
-use ArrayAccess;
 use Aurora\Modules\Core\Models\User;
 use Aurora\Modules\Core\Models\Tenant;
 use Aurora\System\Enums\DbType;
-use Pimple\Container;
 use Aurora\System\Console\Commands;
 use Aurora\System\Exceptions\ApiException;
-use Aurora\System\Models\Hook;
-use Barryvdh\LaravelIdeHelper\Console\ModelsCommand;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
-use RuntimeException;
+use Illuminate\Container\Container;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -123,11 +117,6 @@ class Api
     protected static $oSettings;
 
     /**
-     * @var \Aurora\System\Db\Storage
-     */
-    protected static $oConnection;
-
-    /**
      * @var boolean
      */
     protected static $bInitialized = false;
@@ -141,6 +130,11 @@ class Api
      * @var \Illuminate\Container\Container
      */
     public static $oContainer = null;
+
+    /**
+     * @var array
+     */
+    protected static $usersCache = [];
 
     /**
      *
@@ -337,13 +331,12 @@ class Api
     /**
      *
      * @param string $sModuleName
-     * @param int $iUser
      * @return \Aurora\System\Module\Decorator
      */
-    public static function GetModuleDecorator($sModuleName, $iUser = null)
+    public static function GetModuleDecorator($sModuleName)
     {
         if (!isset(self::$aModuleDecorators[$sModuleName]) && self::GetModule($sModuleName) !== false) {
-            self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName, $iUser);
+            self::$aModuleDecorators[$sModuleName] = new Module\Decorator($sModuleName);
         }
 
         return isset(self::$aModuleDecorators[$sModuleName]) ? self::$aModuleDecorators[$sModuleName] : false;
@@ -430,8 +423,7 @@ class Api
             try {
                 $sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
                 if (!\file_exists($sSettingsPath)) {
-                    set_error_handler(function () {
-                    });
+                    set_error_handler(function () {});
                     mkdir($sSettingsPath, 0777);
                     restore_error_handler();
                     if (!file_exists($sSettingsPath)) {
@@ -463,20 +455,6 @@ class Api
         }
 
         return $bResult;
-    }
-
-    public static function &GetConnection()
-    {
-        if (null === self::$oConnection) {
-            $oSettings =& self::GetSettings();
-
-            if ($oSettings) {
-                self::$oConnection = new \Aurora\System\Db\Storage($oSettings);
-            } else {
-                self::$oConnection = false;
-            }
-        }
-        return self::$oConnection;
     }
 
     /**
@@ -589,12 +567,13 @@ class Api
     }
 
     /**
-     * @param Exception $mObject
+     * @param Exceptions\Exception $mObject
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
-     * @param string $sFilePrefix = ''
+     * @param string|null $sFilePrefix = null
      */
-    public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = 'error-')
+    public static function LogException($mObject, $iLogLevel = Enums\LogLevel::Error, $sFilePrefix = null)
     {
+        $sFilePrefix = $sFilePrefix ?: Logger::$sErrorLogPrefix;
         Logger::LogException($mObject, $iLogLevel, $sFilePrefix);
     }
 
@@ -625,7 +604,6 @@ class Api
      * @param string $sDesc
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Full
      * @param string $sFilePrefix = ''
-     * @param bool $bIdDb = false
      */
     public static function Log($sDesc, $iLogLevel = Enums\LogLevel::Full, $sFilePrefix = '')
     {
@@ -738,7 +716,7 @@ class Api
         if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) {
             include self::WebMailPath().'inc_settings_path.php';
         }
-        if (!defined('AU_API_DATA_FOLDER') && isset($dataPath) && null !== $dataPath) {
+        if (!defined('AU_API_DATA_FOLDER')) {
             define('AU_API_DATA_FOLDER', Utils::GetFullPath($dataPath, self::WebMailPath()));
         }
         $sDataFullPath = defined('AU_API_DATA_FOLDER') ? AU_API_DATA_FOLDER : '';
@@ -934,12 +912,12 @@ class Api
 
     /**
      * @param string $sData
-     * @param \Aurora\Modules\StandardAuth\Models\StandardAuthAccount $oAccount
      * @param array $aParams = null
+     * @param mixed $iPluralCount = null
      *
      * @return string
      */
-    public static function ClientI18N($sData, $oAccount = null, $aParams = null, $iPluralCount = null)
+    public static function ClientI18N($sData, $aParams = null, $iPluralCount = null)
     {
         $sLanguage = self::GetLanguage();
 
@@ -963,7 +941,6 @@ class Api
             }
         }
 
-        //return self::processTranslateParams($aLang, $sData, $aParams);
         return isset($iPluralCount) ? self::processTranslateParams($aLang, $sData, $aParams, self::getPlural($sLanguage, $iPluralCount)) : self::processTranslateParams($aLang, $sData, $aParams);
     }
 
@@ -1126,14 +1103,14 @@ class Api
     {
         if (!self::$__SKIP_CHECK_USER_ROLE__) {
             $oUser = self::getAuthenticatedUser();
-            $bUserRoleIsAtLeast = empty($oUser) && $iRole === Enums\UserRole::Anonymous ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::Customer &&
+            $bUserRoleIsAtLeast = $oUser === null && $iRole === Enums\UserRole::Anonymous ||
+                $oUser !== null && $oUser->Role === Enums\UserRole::Customer &&
                     ($iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::NormalUser &&
+                $oUser !== null && $oUser->Role === Enums\UserRole::NormalUser &&
                     ($iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::TenantAdmin &&
+                $oUser !== null && $oUser->Role === Enums\UserRole::TenantAdmin &&
                     ($iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous) ||
-                !empty($oUser) && $oUser->Role === Enums\UserRole::SuperAdmin &&
+                $oUser !== null && $oUser->Role === Enums\UserRole::SuperAdmin &&
                     ($iRole === Enums\UserRole::SuperAdmin || $iRole === Enums\UserRole::TenantAdmin || $iRole === Enums\UserRole::NormalUser || $iRole === Enums\UserRole::Customer || $iRole === Enums\UserRole::Anonymous);
             if (!$bUserRoleIsAtLeast) {
                 throw new Exceptions\ApiException(Notifications::AccessDenied, null, 'AccessDenied');
@@ -1404,7 +1381,7 @@ class Api
         $sPublicId = '';
 
         if (\is_numeric($iUserId)) {
-            $oUser = User::select('PublicId')->firstWhere('Id', $iUserId);
+            $oUser = User::query()->select('PublicId')->where('Id', $iUserId)->first();
             if ($oUser) {
                 return $oUser->PublicId;
             }
@@ -1415,7 +1392,7 @@ class Api
         return $sPublicId;
     }
 
-        /**
+    /**
      * @param string $sPublicId
      * @return int
      */
@@ -1427,7 +1404,7 @@ class Api
             return -1;
         }
 
-        $oUser = User::select('Id')->firstWhere('PublicId', $sPublicId);
+        $oUser = User::query()->select('Id')->where('PublicId', $sPublicId)->first();
         if ($oUser) {
             return $oUser->Id;
         }
@@ -1435,17 +1412,17 @@ class Api
         return $iUserId;
     }
 
-    public static function getUserById($iUserId)
+    public static function getUserById($iUserId, $bForce = false)
     {
-        $mUser = false;
-
         try {
-            $mUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+            if (!isset(self::$usersCache[$iUserId]) || $bForce) {
+                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+            }
         } catch (\Exception $oEx) {
-            $mUser = false;
+            self::$usersCache[$iUserId] = false;
         }
 
-        return $mUser;
+        return self::$usersCache[$iUserId];
     }
 
     public static function getTenantById($iTenantId)
@@ -1544,8 +1521,8 @@ class Api
             'database' => $DbName,
             'username' => $DbLogin,
             'password' => $DbPassword,
-            'charset'   => 'utf8',
-            'collation' => 'utf8_general_ci',
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix' => $DbPrefix,
         ];
         if (isset($aDbHost[1])) {
@@ -1557,93 +1534,95 @@ class Api
 
     private static function CreateContainer()
     {
-        // Instantiate the app container
-        $appContainer = \Illuminate\Container\Container::getInstance();
+        if (!isset(self::$oContainer)) {
+            // Instantiate the app container
+            $appContainer = Container::getInstance();
 
-        // Tell facade about the application instance
-        \Illuminate\Support\Facades\Facade::setFacadeApplication($appContainer);
+            // Tell facade about the application instance
+            \Illuminate\Support\Facades\Facade::setFacadeApplication($appContainer);
 
-        $appContainer['app'] = $appContainer;
+            $appContainer['app'] = $appContainer;
 
-        $appContainer['config'] = new \Illuminate\Config\Repository();
+            $appContainer['config'] = new \Illuminate\Config\Repository();
 
-        $oSettings = &Api::GetSettings();
-        if ($oSettings) {
-            $appContainer['db-config'] = self::GetDbConfig(
-                $oSettings->DBType,
-                $oSettings->DBHost,
-                $oSettings->DBName,
-                $oSettings->DBPrefix,
-                $oSettings->DBLogin,
-                $oSettings->DBPassword
-            );
+            $oSettings = &Api::GetSettings();
+            if ($oSettings) {
+                $appContainer['db-config'] = self::GetDbConfig(
+                    $oSettings->DBType,
+                    $oSettings->DBHost,
+                    $oSettings->DBName,
+                    $oSettings->DBPrefix,
+                    $oSettings->DBLogin,
+                    $oSettings->DBPassword
+                );
 
-            $capsule = new \Illuminate\Database\Capsule\Manager();
-            $capsule->addConnection($appContainer['db-config']);
+                $capsule = new \Illuminate\Database\Capsule\Manager();
+                $appContainer['capsule'] = $capsule;
+                $capsule->addConnection($appContainer['db-config']);
 
-            //Make this Capsule instance available globally.
-            $capsule->setAsGlobal();
+                //Make this Capsule instance available globally.
+                $capsule->setAsGlobal();
 
-            // Setup the Eloquent ORM.
-            $capsule->bootEloquent();
+                // Setup the Eloquent ORM.
+                $capsule->bootEloquent();
 
-            $appContainer['connection'] = function ($ac) use ($capsule) {
-                return $capsule->getConnection('default');
-            };
+                $appContainer['connection'] = function ($ac) use ($capsule) {
+                    return $capsule->getConnection('default');
+                };
 
-            $appContainer['migration-table'] = 'migrations';
+                $appContainer['migration-table'] = 'migrations';
 
-            $appContainer['filesystem'] = function ($ac) {
-                return new \Illuminate\Filesystem\Filesystem();
-            };
+                $appContainer['filesystem'] = function ($ac) {
+                    return new \Illuminate\Filesystem\Filesystem();
+                };
 
-            $appContainer['resolver'] = function ($ac) {
-                $r = new \Illuminate\Database\ConnectionResolver(['default' => $ac['connection']]);
-                $r->setDefaultConnection('default');
-                return $r;
-            };
+                $appContainer['resolver'] = function ($ac) {
+                    $r = new \Illuminate\Database\ConnectionResolver(['default' => $ac['connection']]);
+                    $r->setDefaultConnection('default');
+                    return $r;
+                };
 
-            $appContainer['migration-repo'] = function ($ac) {
-                return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($ac['resolver'], $ac['migration-table']);
-            };
+                $appContainer['migration-repo'] = function ($ac) {
+                    return new \Illuminate\Database\Migrations\DatabaseMigrationRepository($ac['resolver'], $ac['migration-table']);
+                };
 
-            $appContainer['migrator'] = function ($ac) {
-                return new \Illuminate\Database\Migrations\Migrator($ac['migration-repo'], $ac['resolver'], $ac['filesystem']);
-            };
+                $appContainer['migrator'] = function ($ac) {
+                    return new \Illuminate\Database\Migrations\Migrator($ac['migration-repo'], $ac['resolver'], $ac['filesystem']);
+                };
 
-            $appContainer['migration-creator'] = function ($ac) {
-                return new \Illuminate\Database\Migrations\MigrationCreator($ac['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
-            };
+                $appContainer['migration-creator'] = function ($ac) {
+                    return new \Illuminate\Database\Migrations\MigrationCreator($ac['filesystem'], \Aurora\Api::RootPath() . 'Console' . DIRECTORY_SEPARATOR . 'stubs');
+                };
 
-            $appContainer['composer'] = function ($ac) {
-                return new \Illuminate\Support\Composer($ac['filesystem']);
-            };
+                $appContainer['composer'] = function ($ac) {
+                    return new \Illuminate\Support\Composer($ac['filesystem']);
+                };
 
-            $appContainer['console'] = function ($ac) {
-                $consoleaApp = new \Symfony\Component\Console\Application();
+                $appContainer['console'] = function ($ac) {
+                    $consoleaApp = new \Symfony\Component\Console\Application();
 
-                $events = new \Illuminate\Events\Dispatcher($ac);
+                    $events = new \Illuminate\Events\Dispatcher($ac);
 
-                $consoleaApp = new \Illuminate\Console\Application($ac, $events, 'Version 1.0');
-                $consoleaApp->setName('Aurora console app');
+                    $consoleaApp = new \Illuminate\Console\Application($ac, $events, 'Version 1.0');
+                    $consoleaApp->setName('Aurora console app');
 
-                $consoleaApp->add(new Commands\Migrations\InstallCommand($ac['migration-repo']));
-                $consoleaApp->add(new Commands\Migrations\MigrateCommand($ac['migrator']));
-                $consoleaApp->add(new Commands\Migrations\RollbackCommand($ac['migrator']));
-                $consoleaApp->add(new Commands\Migrations\MigrateMakeCommand($ac['migration-creator'], $ac['composer']));
+                    $consoleaApp->add(new Commands\Migrations\InstallCommand($ac['migration-repo']));
+                    $consoleaApp->add(new Commands\Migrations\MigrateCommand($ac['migrator']));
+                    $consoleaApp->add(new Commands\Migrations\RollbackCommand($ac['migrator']));
+                    $consoleaApp->add(new Commands\Migrations\MigrateMakeCommand($ac['migration-creator'], $ac['composer']));
 
-                $consoleaApp->add(new Commands\Seeds\SeedCommand($ac['resolver']));
-                $consoleaApp->add(new Commands\Seeds\SeederMakeCommand($ac['filesystem'], $ac['composer']));
+                    $consoleaApp->add(new Commands\Seeds\SeedCommand($ac['resolver']));
+                    $consoleaApp->add(new Commands\Seeds\SeederMakeCommand($ac['filesystem'], $ac['composer']));
 
-                $consoleaApp->add(new Commands\Migrations\EavToSqlCommand());
-                $consoleaApp->add(new Commands\OrphansCommand());
+                    $consoleaApp->add(new Commands\OrphansCommand());
 
-                $consoleaApp->add(new Commands\ModelsCommand($ac));
+                    $consoleaApp->add(new Commands\ModelsCommand($ac));
 
-                return $consoleaApp;
-            };
+                    return $consoleaApp;
+                };
 
-            self::$oContainer = $appContainer;
+                self::$oContainer = $appContainer;
+            }
         }
     }
 

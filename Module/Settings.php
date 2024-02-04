@@ -72,10 +72,10 @@ class Settings extends \Aurora\System\AbstractSettings
      *
      * @return mixed
      */
-   public function GetValue($sName, $sDefaultValue = null)
-   {
-       return $this->GetTenantValue(Api::getTenantName(), $sName, $sDefaultValue);
-   }
+    public function GetValue($sName, $sDefaultValue = null)
+    {
+        return $this->GetTenantValue(Api::getTenantName(), $sName, $sDefaultValue);
+    }
 
     /**
      * @param string $sName
@@ -89,7 +89,7 @@ class Settings extends \Aurora\System\AbstractSettings
 
         if ($this->IsTenantSettingsExists($sTenantName)) {
             $oTenantSettings = $this->GetTenantSetttings($sTenantName);
-            if (isset($oTenantSettings) && isset($oTenantSettings->{$sName})) {
+            if ($oTenantSettings !== null && isset($oTenantSettings->{$sName})) {
                 $mResult = $oTenantSettings->GetValue($sName, $sDefaultValue);
             }
         }
@@ -107,7 +107,7 @@ class Settings extends \Aurora\System\AbstractSettings
             }
             $oTenantSettings->SetValue($key, $value);
         }
-        if (isset($oTenantSettings)) {
+        if ($oTenantSettings !== null) {
             $mResult = $oTenantSettings->Save();
         }
 

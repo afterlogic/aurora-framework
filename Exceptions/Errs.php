@@ -16,6 +16,4 @@ namespace Aurora\System\Exceptions;
  *
  * @package Api
  */
-class Errs extends ErrorCodes
-{
-}
+class Errs extends ErrorCodes {}

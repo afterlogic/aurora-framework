@@ -242,11 +242,11 @@ class Utils
         switch (true) {
             default:
                 break;
-            case ($sFromEncoding === 'iso-8859-1' && $sToEncoding === 'utf-8' && function_exists('utf8_encode')):
-                $sResult = utf8_encode($sResult);
+            case ($sFromEncoding === 'iso-8859-1' && $sToEncoding === 'utf-8' && function_exists('mb_convert_encoding')):
+                $sResult = mb_convert_encoding($sResult, $sToEncoding, $sFromEncoding);
                 break;
-            case ($sFromEncoding === 'utf-8' && $sToEncoding === 'iso-8859-1' && function_exists('utf8_decode')):
-                $sResult = utf8_decode($sResult);
+            case ($sFromEncoding === 'utf-8' && $sToEncoding === 'iso-8859-1' && function_exists('mb_convert_encoding')):
+                $sResult = mb_convert_encoding($sResult, $sToEncoding, $sFromEncoding);
                 break;
             case ($sFromEncoding === 'utf7-imap' && $sToEncoding === 'utf-8'):
                 $sResult = self::Utf7ModifiedToUtf8($sResult);
@@ -368,7 +368,7 @@ class Utils
 
                 if (($ch || $k < 6) ||
                     (!$strlen || $char != '-') ||
-                    ($strlen > 2 && '&' === $str[$i+1] && '-' !==  $str[$i+2])) {
+                    ($strlen > 2 && '&' === $str[$i + 1] && '-' !==  $str[$i + 2])) {
                     return $error;
                 }
             } elseif (ord($char) < 0x20 || ord($char) >= 0x7f) {
@@ -429,8 +429,8 @@ class Utils
                 return $error;
             }
 
-            for ($j=0; $j < $n; $j++) {
-                $o = ord($str[$i+$j]);
+            for ($j = 0; $j < $n; $j++) {
+                $o = ord($str[$i + $j]);
                 if (($o & 0xc0) != 0x80) {
                     return $error;
                 }
@@ -525,7 +525,7 @@ class Utils
     public static function IsEncryptedValue($sEncryptedValue)
     {
         $sValue = \Aurora\System\Utils::DecryptValue($sEncryptedValue);
-        return $sValue === false ? false : true;
+        return ($sValue === false || $sValue === '') ? false : true;
     }
 
     /**
@@ -544,7 +544,7 @@ class Utils
     }
 
     /**
-     * @param string $iSizeInBytes
+     * @param int $iSizeInBytes
      * @return string
      */
     public static function GetFriendlySize($iSizeInBytes)
@@ -563,7 +563,7 @@ class Utils
     }
 
     /**
-     * @param string $iSizeInBytes
+     * @param int $iSizeInBytes
      * @return string
      */
     public static function GetFriendlySizeSpec($iSizeInBytes)
@@ -750,7 +750,7 @@ class Utils
                 $iTimeOffset = -9 * 60;
                 break;
             case 5:
-                $iTimeOffset =  -8*60;
+                $iTimeOffset =  -8 * 60;
                 break;
             case 6:
             case 7:
@@ -1262,7 +1262,7 @@ class Utils
         );
     }
 
-        /**
+    /**
      * @param string $sFileName
      * @return string
      */
@@ -1279,7 +1279,7 @@ class Utils
         return $sResult;
     }
 
-        /**
+    /**
      * @param string $sMimeContentType
      * @return string
      */
@@ -1512,7 +1512,7 @@ class Utils
     {
         $files = glob($pattern, $flags);
 
-        $aPaternFiles = glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT);
+        $aPaternFiles = glob(dirname($pattern).'/*', GLOB_ONLYDIR | GLOB_NOSORT);
 
         if (is_array($aPaternFiles) && is_array($files)) {
             foreach ($aPaternFiles as $dir) {
@@ -1818,19 +1818,28 @@ class Utils
      * This function converst block CSS styles to inline styles in provided HTML.
      *
      * @param string $sHtml
-     * @param string $sEncoding Optional. Defines the charset encoding. Default value is utf-8
      *
      * @return string
      */
-    public static function ConvertCssToInlineStyles($sHtml, $sEncoding = 'utf-8')
+    public static function ConvertCssToInlineStyles($sHtml)
     {
         $sResult = '';
 
         if (is_string($sHtml)) {
-            $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles($sHtml);
-            $oCssToInlineStyles->setEncoding($sEncoding);
-            $oCssToInlineStyles->setUseInlineStylesBlock(true);
-            $sResult = $oCssToInlineStyles->convert();
+            preg_match_all('/<html.*?>/mi', $sHtml, $matches, PREG_SET_ORDER);
+            if ($matches) {
+                // custom styles processing for Outlook messages
+                $sHtml = preg_replace('/<style><!--/mi', '<style>', $sHtml);
+                $sHtml = preg_replace('/--><\/style>/mi', '</style>', $sHtml);
+
+                // custom html processing for Outlook messages that removes empty outlook paragraphs
+                $sHtml = preg_replace('/<o:p><\/o:p>/mi', '', $sHtml);
+
+                $oCssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles();
+                $sResult = $oCssToInlineStyles->convert($sHtml);
+            } else {
+                $sResult = $sHtml;
+            }
         }
 
         return $sResult;
@@ -1921,7 +1930,7 @@ class Utils
                 'url' => '?file-cache/' . $sHash
             )
         );
-        $oSettings =& Api::GetSettings();
+        $oSettings = & Api::GetSettings();
         $iThumbnailLimit = ((int) $oSettings->GetValue('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
         $bThumb = ($oSettings->GetValue('AllowThumbnail', true) &&
                 $iSize < $iThumbnailLimit && Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));
@@ -2013,9 +2022,7 @@ class Ints
     }
 }
 
-function fNullCallback()
-{
-}
+function fNullCallback() {}
 
 defined('AU_API_PHP_INT_MAX') || define('AU_API_PHP_INT_MAX', (int) Ints::getIntMax());
 defined('AU_API_PHP_INT_MIN') || define('AU_API_PHP_INT_MIN', (int) (AU_API_PHP_INT_MAX + 1));

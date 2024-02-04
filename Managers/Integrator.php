@@ -17,42 +17,42 @@ namespace Aurora\System\Managers;
 class Integrator extends AbstractManager
 {
     /**
-     * @type string
+     * @const string
      */
     public const MOBILE_KEY = 'aurora-mobile';
 
     /**
-     * @type string
+     * @const string
      */
     public const AUTH_HD_KEY = 'aurora-hd-auth';
 
     /**
-     * @type string
+     * @const string
      */
     public const TOKEN_KEY = 'aurora-token';
 
     /**
-     * @type string
+     * @const string
      */
     public const TOKEN_LAST_CODE = 'aurora-last-code';
 
     /**
-     * @type string
+     * @const string
      */
     public const TOKEN_HD_THREAD_ID = 'aurora-hd-thread';
 
     /**
-     * @type string
+     * @var string
      */
     public const TOKEN_HD_ACTIVATED = 'aurora-hd-activated';
 
     /**
-     * @type string
+     * @const string
      */
     public const TOKEN_SKIP_MOBILE_CHECK = 'aurora-skip-mobile';
 
     /**
-     * @var $bCache bool
+     * @var bool
      */
     private $bCache;
 
@@ -114,7 +114,8 @@ class Integrator extends AbstractManager
         $sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 
         $sCacheFileName = '';
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $sCacheFullFileName = '';
+        $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             $sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
@@ -124,7 +125,7 @@ class Integrator extends AbstractManager
         }
 
         $sResult = '';
-        $sPath =\Aurora\System\Api::WebMailPath().'modules';
+        $sPath = \Aurora\System\Api::WebMailPath().'modules';
 
         $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -160,7 +161,7 @@ class Integrator extends AbstractManager
         }
 
         $sResult = trim($sResult);
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             if (!is_dir(dirname($sCacheFullFileName))) {
                 @mkdir(dirname($sCacheFullFileName), 0777, true);
@@ -237,7 +238,7 @@ class Integrator extends AbstractManager
      *
      * @return string
      */
-    public function compileLanguage($sLanguage)
+    public function getLanguage($sLanguage)
     {
         $sLanguage = $this->validatedLanguageValue($sLanguage);
         $sResult = "";
@@ -245,7 +246,8 @@ class Integrator extends AbstractManager
         $sHash = \Aurora\System\Api::GetModuleManager()->GetModulesHash();
 
         $sCacheFileName = '';
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $sCacheFullFileName = '';
+        $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
             $sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version().$sHash) . '.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
@@ -256,7 +258,7 @@ class Integrator extends AbstractManager
 
         if ($sResult === "") {
             $aResult = array();
-            $sPath =\Aurora\System\Api::WebMailPath().'modules';
+            $sPath = \Aurora\System\Api::WebMailPath().'modules';
 
             $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -282,7 +284,7 @@ class Integrator extends AbstractManager
 
             $sResult .= json_encode($aResult);
 
-            $oSettings =& \Aurora\System\Api::GetSettings();
+            $oSettings = & \Aurora\System\Api::GetSettings();
             if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
                 if (!is_dir(dirname($sCacheFullFileName))) {
                     mkdir(dirname($sCacheFullFileName), 0777, true);
@@ -293,7 +295,18 @@ class Integrator extends AbstractManager
             }
         }
 
-        return '<script>window.auroraI18n='.($sResult ? $sResult : '{}').';</script>';
+        return $sResult ? $sResult : '{}';
+    }
+
+    /**
+     * @TODO use tenants modules if exist
+     * @param string $sLanguage
+     *
+     * @return string
+     */
+    public function compileLanguage($sLanguage)
+    {
+        return '<script>window.auroraI18n='.$this->getLanguage($sLanguage).';</script>';
     }
 
     /**
@@ -379,7 +392,7 @@ class Integrator extends AbstractManager
         $iHdUserId = 0;
         $sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
         if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
+            $aUserHashTable = \Aurora\System\Api::DecodeKeyValues($sKey);
             if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
                 'hd_auth' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id'])) {
                 $iHdUserId = (int) $aUserHashTable['id'];
@@ -447,139 +460,6 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * @param int $iThreadID
-     * @param string $sThreadAction Default value is empty string.
-     */
-    public function setThreadIdFromRequest($iThreadID, $sThreadAction = '')
-    {
-        $aHashTable = array(
-            'token' => 'thread_id',
-            'id' => (int) $iThreadID,
-            'action' => (string) $sThreadAction
-        );
-
-        \Aurora\System\Api::LogObject($aHashTable);
-
-        $_COOKIE[self::TOKEN_HD_THREAD_ID] = \Aurora\System\Api::EncodeKeyValues($aHashTable);
-        @\setcookie(
-            self::TOKEN_HD_THREAD_ID,
-            \Aurora\System\Api::EncodeKeyValues($aHashTable),
-            0,
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getThreadIdFromRequestAndClear()
-    {
-        $aHdThreadId = array();
-        $sKey = empty($_COOKIE[self::TOKEN_HD_THREAD_ID]) ? '' : $_COOKIE[self::TOKEN_HD_THREAD_ID];
-        if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
-            if (is_array($aUserHashTable) && isset($aUserHashTable['token'], $aUserHashTable['id']) &&
-                'thread_id' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id'])) {
-                $aHdThreadId['id'] = (int) $aUserHashTable['id'];
-                $aHdThreadId['action'] = isset($aUserHashTable['action']) ? (string) $aUserHashTable['action'] : '';
-            }
-        }
-
-        if (0 < strlen($sKey)) {
-            if (isset($_COOKIE[self::TOKEN_HD_THREAD_ID])) {
-                unset($_COOKIE[self::TOKEN_HD_THREAD_ID]);
-            }
-
-            @\setcookie(
-                self::TOKEN_HD_THREAD_ID,
-                '',
-                \strtotime('-1 hour'),
-                \Aurora\System\Api::getCookiePath(),
-                null,
-                \Aurora\System\Api::getCookieSecure()
-            );
-        }
-
-        return $aHdThreadId;
-    }
-
-    public function removeUserAsActivated()
-    {
-        if (isset($_COOKIE[self::TOKEN_HD_ACTIVATED])) {
-            $_COOKIE[self::TOKEN_HD_ACTIVATED] = '';
-            unset($_COOKIE[self::TOKEN_HD_ACTIVATED]);
-            @\setcookie(
-                self::TOKEN_HD_ACTIVATED,
-                '',
-                \strtotime('-1 hour'),
-                \Aurora\System\Api::getCookiePath(),
-                null,
-                \Aurora\System\Api::getCookieSecure()
-            );
-        }
-    }
-
-    /**
-     * @param CHelpdeskUser $oHelpdeskUser
-     * @param bool $bForgot Default value is **false**.
-     *
-     * @return void
-     */
-    public function setUserAsActivated($oHelpdeskUser, $bForgot = false)
-    {
-        $aHashTable = array(
-            'token' => 'hd_activated_email',
-            'forgot' => $bForgot,
-            'email' => $oHelpdeskUser->Email
-        );
-
-        $_COOKIE[self::TOKEN_HD_ACTIVATED] =\Aurora\System\Api::EncodeKeyValues($aHashTable);
-        @\setcookie(
-            self::TOKEN_HD_ACTIVATED,
-            \Aurora\System\Api::EncodeKeyValues($aHashTable),
-            0,
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
-        );
-    }
-
-    /**
-     * @return int
-     */
-    public function getActivatedUserEmailAndClear()
-    {
-        $sEmail = '';
-        $sKey = empty($_COOKIE[self::TOKEN_HD_ACTIVATED]) ? '' : $_COOKIE[self::TOKEN_HD_ACTIVATED];
-        if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable =\Aurora\System\Api::DecodeKeyValues($sKey);
-            if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
-                'hd_activated_email' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['email'])) {
-                $sEmail = $aUserHashTable['email'];
-            }
-        }
-
-        if (0 < strlen($sKey)) {
-            if (isset($_COOKIE[self::TOKEN_HD_ACTIVATED])) {
-                unset($_COOKIE[self::TOKEN_HD_ACTIVATED]);
-            }
-
-            @\setcookie(
-                self::TOKEN_HD_THREAD_ID,
-                '',
-                \strtotime('-1 hour'),
-                \Aurora\System\Api::getCookiePath(),
-                null,
-                \Aurora\System\Api::getCookieSecure()
-            );
-        }
-
-        return $sEmail;
-    }
-
-    /**
      * @param object $oAccount
      * @param bool $bSignMe Default value is **false**.
      *
@@ -600,22 +480,6 @@ class Integrator extends AbstractManager
         $sAuthToken = \md5($oAccount->IdUser.$oAccount->IncomingLogin.\microtime(true).\rand(10000, 99999));
 
         return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
-    }
-
-    /**
-     * @return bool
-     */
-    public function logoutHelpdeskUser()
-    {
-        @\setcookie(
-            self::AUTH_HD_KEY,
-            '',
-            \strtotime('-1 hour'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
-        );
-        return true;
     }
 
     public function skipMobileCheck()
@@ -678,7 +542,7 @@ class Integrator extends AbstractManager
     {
         $sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
         if (0 < strlen($sHelpdeskHash)) {
-            $aHelpdeskHashTable =\Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
+            $aHelpdeskHashTable = \Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
             if (isset($aHelpdeskHashTable['sign-me']) && $aHelpdeskHashTable['sign-me']) {
                 @\setcookie(
                     self::AUTH_HD_KEY,
@@ -702,7 +566,7 @@ class Integrator extends AbstractManager
         if (null === $aList) {
             $aList = array();
             $sEnglishLang = null;
-            $sPath =\Aurora\System\Api::WebMailPath().'modules';
+            $sPath = \Aurora\System\Api::WebMailPath().'modules';
 
             $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -756,7 +620,7 @@ class Integrator extends AbstractManager
             $oModuleManager = \Aurora\System\Api::GetModuleManager();
             $sCoreWebclientModule = \Aurora\System\Api::IsMobileApplication() ? 'CoreMobileWebclient' : 'CoreWebclient';
             $aThemes = $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'ThemeList');
-            $sDir =\Aurora\System\Api::WebMailPath().'static/styles/themes/';
+            $sDir = \Aurora\System\Api::WebMailPath().'static/styles/themes/';
 
             if (is_array($aThemes)) {
                 $sPostfix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
@@ -829,36 +693,6 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * @depricated
-     * @param string $sHelpdeskTenantHash Default value is empty string.
-     * @param string $sUserId Default value is empty string.
-     *
-     * @throws \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::InvalidInputParameter) 103
-     *
-     * @return User|bool
-     */
-    public function getAhdSocialUser($sHelpdeskTenantHash = '', $sUserId = '')
-    {
-        //		$sTenantHash = $sHelpdeskTenantHash;
-        //		$oApiTenant = \Aurora\System\Api::GetCoreManager('tenants');
-        //		$iIdTenant = $oApiTenant->getTenantIdByName($sTenantHash);
-        //		if (!is_int($iIdTenant))
-        //		{
-        //			throw new \Aurora\System\Exceptions\ApiException(\Aurora\System\Notifications::InvalidInputParameter);
-        //		}
-        ////		$oApiHelpdeskManager =\Aurora\System\Api::Manager('helpdesk'); // TODO:
-        //		$oUser = $oApiHelpdeskManager->getUserBySocialId($iIdTenant, $sUserId);
-//
-        //		return $oUser;
-
-        return false;
-    }
-
-    /**
-     * @param string $sHelpdeskHash Default value is empty string.
-     * @param string $sCalendarPubHash Default value is empty string.
-     * @param string $sFileStoragePubHash Default value is empty string.
-     *
      * @return string
      */
     public function compileAppData()
@@ -971,7 +805,7 @@ class Integrator extends AbstractManager
      */
     public function compileJS($aConfig = array())
     {
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = & \Aurora\System\Api::GetSettings();
         $sPostfix = '';
 
         if ($oSettings && $oSettings->GetValue('UseAppMinJs', false)) {

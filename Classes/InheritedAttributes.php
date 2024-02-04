@@ -11,7 +11,7 @@ class InheritedAttributes
 {
     protected static $attributes = [];
 
-    public static function addAttributes($model, $attributes) 
+    public static function addAttributes($model, $attributes)
     {
         if (!isset(self::$attributes[$model])) {
             self::$attributes[$model] = [];
