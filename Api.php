@@ -127,6 +127,11 @@ class Api
 	protected static $oAuthenticatedUser = null;
 
 	/**
+     * @var array
+     */
+    public static $usersCache = [];
+
+	/**
 	 *
 	 * @return string
 	 */
@@ -1459,25 +1464,18 @@ class Api
 		return $sPublicId;
 	}
 
-	public static function getUserById($iUserId)
-	{
-		$mUser = false;
+    public static function getUserById($iUserId, $bForce = false)
+    {
+        try {
+            if (!isset(self::$usersCache[$iUserId]) || $bForce) {
+                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+            }
+        } catch (\Exception $oEx) {
+            self::$usersCache[$iUserId] = false;
+        }
 
-		try
-		{
-			$mUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
-			if (!($mUser instanceof \Aurora\Modules\Core\Classes\User))
-			{
-				$mUser = false;
-			}
-		}
-		catch (\Exception $oEx)
-		{
-			$mUser = false;
-		}
-
-		return $mUser;
-	}
+        return self::$usersCache[$iUserId];
+    }
 
 	public static function getTenantById($iUserId)
 	{
