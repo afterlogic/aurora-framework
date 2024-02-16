@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Managers;
 
+use Aurora\System\Api;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -224,7 +226,7 @@ class Integrator extends AbstractManager
 	public function GetUser($iUserId)
 	{
 		$mResult = false;
-		$oUser = \Aurora\System\Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\User::class);
+		$oUser = Api::getUserById($iUserId);
 
 		if ($oUser instanceof \Aurora\Modules\Core\Classes\User)
 		{

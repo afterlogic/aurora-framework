@@ -1406,24 +1406,15 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			if (isset($aUUIDs[$iUserId]))
-			{
-				$sUUID = $aUUIDs[$iUserId];
+			$user = null;
+			if (isset(self::$usersCache[$iUserId])) {
+				$user = self::$usersCache[$iUserId];
+			} else {
+				$user = self::getUserById($iUserId);
 			}
-			else
-			{
-				$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
-					->select(['UUID'])
-					->where(['EntityId' => $iUserId])
-					->one()
-					->asArray()
-					->exec();
 
-				if (isset($aResult['UUID']))
-				{
-					$sUUID = $aResult['UUID'];
-					$aUUIDs[$iUserId] = $sUUID;
-				}
+			if ($user) {
+				$sUUID = $user->UUID;
 			}
 		}
 		else
@@ -1444,16 +1435,15 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			$aResult = (new \Aurora\System\EAV\Query(\Aurora\Modules\Core\Classes\User::class))
-				->select(['PublicId'])
-				->where(['EntityId' => $iUserId])
-				->one()
-				->asArray()
-				->exec();
+			$user = null;
+			if (isset(self::$usersCache[$iUserId])) {
+				$user = self::$usersCache[$iUserId];
+			} else {
+				$user = self::getUserById($iUserId);
+			}
 
-			if (isset($aResult['PublicId']))
-			{
-				$sPublicId = $aResult['PublicId'];
+			if ($user) {
+				$sPublicId = $user->PublicId;
 			}
 		}
 		else
@@ -1468,7 +1458,7 @@ class Api
     {
         try {
             if (!isset(self::$usersCache[$iUserId]) || $bForce) {
-                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+                self::$usersCache[$iUserId] = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUser($iUserId);
             }
         } catch (\Exception $oEx) {
             self::$usersCache[$iUserId] = false;
@@ -1477,15 +1467,15 @@ class Api
         return self::$usersCache[$iUserId];
     }
 
-	public static function getTenantById($iUserId)
+	public static function getTenantById($iTenantId)
 	{
-		$mUser = Managers\Eav::getInstance()->getEntity($iUserId, \Aurora\Modules\Core\Classes\Tenant::class);
-		if (!($mUser instanceof \Aurora\Modules\Core\Classes\Tenant))
+		$mTenant = \Aurora\Modules\Core\Module::getInstance()->getTenantsManager()->getTenantById($iTenantId);
+		if (!($mTenant instanceof \Aurora\Modules\Core\Classes\Tenant))
 		{
-			$mUser = false;
+			$mTenant = false;
 		}
 
-		return $mUser;
+		return $mTenant;
 	}
 
 	public static function setTenantName($sTenantName)

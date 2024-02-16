@@ -171,8 +171,6 @@ WHERE %s AND attrs.name IS NOT NULL)
 		$sSql = implode("UNION ALL
 ", $aSql);
 
-		\Aurora\System\Logger::LogSql($sSql);
-
 		return $sSql;
 	}
 
