@@ -63,7 +63,7 @@ class UserSession
     {
         $mResult = false;
 
-        if (strlen($sAuthToken) !== 0) {
+        if (strlen((string)$sAuthToken) !== 0) {
             $bStoreAuthTokenInDB = \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false);
             if ($bStoreAuthTokenInDB && !$this->GetFromDB($sAuthToken)) {
                 return false;
