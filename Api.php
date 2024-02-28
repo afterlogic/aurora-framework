@@ -127,11 +127,6 @@ class Api
 	protected static $oAuthenticatedUser = null;
 
 	/**
-     * @var array
-     */
-    public static $usersCache = [];
-
-	/**
 	 *
 	 * @return string
 	 */
@@ -1406,12 +1401,7 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			$user = null;
-			if (isset(self::$usersCache[$iUserId])) {
-				$user = self::$usersCache[$iUserId];
-			} else {
-				$user = self::getUserById($iUserId);
-			}
+			$user = self::getUserById($iUserId);
 
 			if ($user) {
 				$sUUID = $user->UUID;
@@ -1435,12 +1425,7 @@ class Api
 
 		if (\is_numeric($iUserId))
 		{
-			$user = null;
-			if (isset(self::$usersCache[$iUserId])) {
-				$user = self::$usersCache[$iUserId];
-			} else {
-				$user = self::getUserById($iUserId);
-			}
+			$user = self::getUserById($iUserId);
 
 			if ($user) {
 				$sPublicId = $user->PublicId;
@@ -1454,17 +1439,15 @@ class Api
 		return $sPublicId;
 	}
 
-    public static function getUserById($iUserId, $bForce = false)
+    public static function getUserById($iUserId)
     {
-        try {
-            if (!isset(self::$usersCache[$iUserId]) || $bForce) {
-                self::$usersCache[$iUserId] = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUser($iUserId);
-            }
-        } catch (\Exception $oEx) {
-            self::$usersCache[$iUserId] = false;
-        }
+		$mUser = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUser($iUserId);
+        if (!($mUser instanceof \Aurora\Modules\Core\Classes\User))
+		{
+			$mUser = false;
+		}
 
-        return self::$usersCache[$iUserId];
+        return $mUser;
     }
 
 	public static function getTenantById($iTenantId)
