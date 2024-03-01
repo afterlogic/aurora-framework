@@ -495,11 +495,11 @@ abstract class AbstractModule
      */
     public function includeTemplate($sParsedTemplateID, $sParsedPlace, $sTemplateFileName, $sModuleName = '')
     {
-        if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath().'/'.$sTemplateFileName)) {
+        if (0 < strlen($sParsedTemplateID) && 0 < strlen($sParsedPlace) && file_exists($this->GetPath() . '/' . $sTemplateFileName)) {
             $this->GetModuleManager()->includeTemplate(
                 $sParsedTemplateID,
                 $sParsedPlace,
-                $this->GetPath().'/'.$sTemplateFileName,
+                $this->GetPath() . '/' . $sTemplateFileName,
                 $sModuleName
             );
         }
@@ -580,7 +580,7 @@ abstract class AbstractModule
      */
     final public function GetFullName()
     {
-        return self::GetName().'-'.$this->sVersion;
+        return self::GetName() . '-' . $this->sVersion;
     }
 
     /**
@@ -884,7 +884,7 @@ abstract class AbstractModule
     protected function getLangsData($sLang)
     {
         $mResult = false;
-        $sLangFile = $this->GetPath().'/i18n/' . $sLang . '.ini';
+        $sLangFile = $this->GetPath() . '/i18n/' . $sLang . '.ini';
         $sLangFile = @\file_exists($sLangFile) ? $sLangFile : '';
 
         if (0 < \strlen($sLangFile)) {

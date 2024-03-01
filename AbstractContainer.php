@@ -226,7 +226,7 @@ abstract class AbstractContainer
     protected function getSessionUniqueKey()
     {
         $sUniqueKey = (0 === \strlen($this->sSessionUniqueProperty)) ? '' : $this->{$this->sSessionUniqueProperty};
-        return AbstractContainer::SESSION_CONTAINER_PREFIX.$this->sParentClassName.$sUniqueKey;
+        return AbstractContainer::SESSION_CONTAINER_PREFIX . $this->sParentClassName . $sUniqueKey;
     }
 
     /**
@@ -311,7 +311,7 @@ abstract class AbstractContainer
         if (\array_key_exists($sKey, $this->aContainer)) {
             $mReturn = $this->aContainer[$sKey];
         } else {
-            throw new Exceptions\Exception('Undefined property '.$sKey);
+            throw new Exceptions\Exception('Undefined property ' . $sKey);
         }
 
         return $mReturn;
@@ -456,12 +456,12 @@ abstract class AbstractContainer
                 }
             }
 
-            $aResult[] = $oHelper->EscapeColumn($sDbKey).' = '.
+            $aResult[] = $oHelper->EscapeColumn($sDbKey) . ' = ' .
                 (\is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue);
 
             if ($bUseLogQueryParams) {
                 $sQueryParams .=
-                    AU_API_CRLF.AU_API_TAB.$sDbKey.' = '.(
+                    AU_API_CRLF . AU_API_TAB . $sDbKey . ' = ' . (
                         \is_string($mValue) ? $oHelper->EscapeString($mValue) : (int) $mValue
                     );
             }
@@ -573,7 +573,7 @@ abstract class AbstractContainer
 
             if ($bUseLogQueryParams) {
                 $sDbKey = isset($aDbKeys[$iIndex]) ? $aDbKeys[$iIndex] : '!unknown!';
-                $sQueryParams .= AU_API_CRLF.AU_API_TAB.$sDbKey.' = '.$aDbValues[$iIndex];
+                $sQueryParams .= AU_API_CRLF . AU_API_TAB . $sDbKey . ' = ' . $aDbValues[$iIndex];
             }
         }
 

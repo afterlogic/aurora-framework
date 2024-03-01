@@ -28,7 +28,7 @@ class Installer
         $NC = "\033[0m";
 
         $sBaseDir = dirname(dirname(__File__));
-        $sModulesDir = $sBaseDir."/modules/";
+        $sModulesDir = $sBaseDir . "/modules/";
         $aModuleDirs = glob($sModulesDir . '*', GLOB_ONLYDIR);
 
         $aModulesOk = [];
@@ -38,7 +38,7 @@ class Installer
         foreach ($aModuleDirs as $sModuleDir) {
             $sModuleName = str_replace($sModulesDir, "", $sModuleDir);
 
-            $sConfigFile = $sModuleDir."/config.json";
+            $sConfigFile = $sModuleDir . "/config.json";
             if (file_exists($sConfigFile)) {
                 if (json_decode(file_get_contents($sConfigFile))) {
                     $aModulesOk[] = $sModuleName;
@@ -50,22 +50,22 @@ class Installer
             }
         }
 
-        echo $GREEN.count($aModuleDirs)." modules were processed".$NC."\r\n\r\n";
+        echo $GREEN . count($aModuleDirs) . " modules were processed" . $NC . "\r\n\r\n";
 
         if (count($aModulesHasError) > 0) {
-            echo $YELLOW."The following modules have syntax problems in the config file (".count($aModulesHasError)."):".$NC."\r\n";
-            echo $RED.implode("\r\n", $aModulesHasError).$NC;
+            echo $YELLOW . "The following modules have syntax problems in the config file (" . count($aModulesHasError) . "):" . $NC . "\r\n";
+            echo $RED . implode("\r\n", $aModulesHasError) . $NC;
             echo "\r\n\r\n";
         }
 
         if (count($aModulesNoConfig) > 0) {
-            echo $YELLOW."The following modules have no config files (".count($aModulesNoConfig)."):".$NC."\r\n";
-            echo $RED.implode("\r\n", $aModulesNoConfig).$NC;
+            echo $YELLOW . "The following modules have no config files (" . count($aModulesNoConfig) . "):" . $NC . "\r\n";
+            echo $RED . implode("\r\n", $aModulesNoConfig) . $NC;
             echo "\r\n\r\n";
         }
 
         if (count($aModulesOk) > 0) {
-            echo $GREEN.count($aModulesOk)." modules have no problem with config files".$NC;
+            echo $GREEN . count($aModulesOk) . " modules have no problem with config files" . $NC;
             echo "\r\n";
         }
     }
@@ -84,7 +84,7 @@ class Installer
             $sMessage = "An error occurred while updating the configuration";
         }
 
-        echo $sMessage."\r\n";
+        echo $sMessage . "\r\n";
     }
 
     /**
@@ -103,7 +103,7 @@ class Installer
         $sBaseDir = dirname(__File__);
 
         //Checking that configuration files already exist
-        if (count(glob(dirname($sBaseDir)."/data/settings/modules/*")) !== 0) {
+        if (count(glob(dirname($sBaseDir) . "/data/settings/modules/*")) !== 0) {
             echo "The config files are already exist \r\n";
             return;
         } else {
@@ -174,6 +174,6 @@ class Installer
             $sMessage = "Config file didn't found";
         }
 
-        echo $sMessage."\r\n";
+        echo $sMessage . "\r\n";
     }
 }

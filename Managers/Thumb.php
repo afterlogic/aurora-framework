@@ -19,7 +19,7 @@ class Thumb
     public static function RemoveFromCache($iUserId, $sHash, $sFileName)
     {
         $oCache = new Cache('thumbs');
-        $sMd5Hash = \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+        $sMd5Hash = \md5('Raw/Thumb/' . $sHash . '/' . $sFileName);
         if ($oCache->has($sMd5Hash)) {
             $oCache->delete($sMd5Hash);
         }
@@ -43,7 +43,7 @@ class Thumb
      */
     public static function GetCacheFilename($sHash, $sFileName)
     {
-        return \md5('Raw/Thumb/'.$sHash.'/'.$sFileName);
+        return \md5('Raw/Thumb/' . $sHash . '/' . $sFileName);
     }
 
     public static function GetResourceCache($iUserId, $sFileName)

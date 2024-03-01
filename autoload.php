@@ -27,7 +27,7 @@ spl_autoload_register(function ($sClassName) {
     foreach ($aClassesTree as $sFolder => $aClasses) {
         foreach ($aClasses as $sClass) {
             if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\')) {
-                $sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR .$sFolder.str_replace('\\', DIRECTORY_SEPARATOR, substr($sClassName, strlen($sClass) + 1)).'.php';
+                $sFileName = dirname(__DIR__) . DIRECTORY_SEPARATOR . $sFolder . str_replace('\\', DIRECTORY_SEPARATOR, substr($sClassName, strlen($sClass) + 1)) . '.php';
                 if (file_exists($sFileName)) {
                     include_once $sFileName;
                 }

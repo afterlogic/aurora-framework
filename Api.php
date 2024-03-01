@@ -20,7 +20,7 @@ use Illuminate\Container\Container;
  * @copyright Copyright (c) 2019, Afterlogic Corp.
  */
 if (!defined('AU_APP_ROOT_PATH')) {
-    define('AU_APP_ROOT_PATH', rtrim(realpath(dirname(__DIR__)), '\\/').'/');
+    define('AU_APP_ROOT_PATH', rtrim(realpath(dirname(__DIR__)), '\\/') . '/');
 }
 
 define('AU_API_PATH_TO_AURORA', '/../');
@@ -142,7 +142,7 @@ class Api
      */
     public static function GetSaltPath()
     {
-        return self::DataPath().'/salt8.php';
+        return self::DataPath() . '/salt8.php';
     }
 
     /**
@@ -164,7 +164,7 @@ class Api
         if (!@file_exists($sSalt8File)) {
             $sSalt = bin2hex(random_bytes(16));
 
-            $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "'. $sSalt . '";';
+            $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "' . $sSalt . '";';
             @file_put_contents($sSalt8File, $sSalt);
         }
 
@@ -213,7 +213,7 @@ class Api
         if (!defined('AU_API_INIT')) {
             $apiInitTimeStart = \microtime(true);
 
-            include_once self::GetVendorPath().'autoload.php';
+            include_once self::GetVendorPath() . 'autoload.php';
             include_once 'bootstrap.php';
 
             if ($bGrantAdminPrivileges) {
@@ -394,7 +394,7 @@ class Api
         static $oCacher = null;
         if (null === $oCacher) {
             $oCacher = \MailSo\Cache\CacheClient::NewInstance();
-            $oCacher->SetDriver(\MailSo\Cache\Drivers\File::NewInstance(self::DataPath().'/cache'));
+            $oCacher->SetDriver(\MailSo\Cache\Drivers\File::NewInstance(self::DataPath() . '/cache'));
             $oCacher->SetCacheIndex(self::Version());
         }
 
@@ -493,10 +493,10 @@ class Api
 
             if (class_exists('PDO')) {
                 try {
-                    $oPdo = @new \PDO((Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql').':dbname='.$sDbName.
-                        (empty($sDbHost) ? '' : ';host='.$sDbHost).
-                        (empty($sDbPort) ? '' : ';port='.$sDbPort).
-                        (empty($sUnixSocket) ? '' : ';unix_socket='.$sUnixSocket) . ';charset=utf8', $sDbLogin, $sDbPassword);
+                    $oPdo = @new \PDO((Enums\DbType::PostgreSQL === $iDbType ? 'pgsql' : 'mysql') . ':dbname=' . $sDbName .
+                        (empty($sDbHost) ? '' : ';host=' . $sDbHost) .
+                        (empty($sDbPort) ? '' : ';port=' . $sDbPort) .
+                        (empty($sUnixSocket) ? '' : ';unix_socket=' . $sUnixSocket) . ';charset=utf8', $sDbLogin, $sDbPassword);
 
                     if ($oPdo) {
                         $oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -535,8 +535,8 @@ class Api
      */
     public static function Location($sNewLocation)
     {
-        self::Log('Location: '.$sNewLocation);
-        @header('Location: '.$sNewLocation);
+        self::Log('Location: ' . $sNewLocation);
+        @header('Location: ' . $sNewLocation);
     }
 
     /**
@@ -544,7 +544,7 @@ class Api
      */
     public static function Location2($sNewLocation)
     {
-        exit('<META HTTP-EQUIV="refresh" CONTENT="0; url='.$sNewLocation.'">');
+        exit('<META HTTP-EQUIV="refresh" CONTENT="0; url=' . $sNewLocation . '">');
     }
 
     /**
@@ -644,7 +644,7 @@ class Api
      */
     public static function RootPath()
     {
-        defined('AU_API_ROOTPATH') || define('AU_API_ROOTPATH', rtrim(dirname(__FILE__), '/\\').'/');
+        defined('AU_API_ROOTPATH') || define('AU_API_ROOTPATH', rtrim(dirname(__FILE__), '/\\') . '/');
         return AU_API_ROOTPATH;
     }
 
@@ -653,7 +653,7 @@ class Api
      */
     public static function WebMailPath()
     {
-        return self::RootPath().ltrim(AU_API_PATH_TO_AURORA, '/');
+        return self::RootPath() . ltrim(AU_API_PATH_TO_AURORA, '/');
     }
 
     /**
@@ -661,7 +661,7 @@ class Api
      */
     public static function GetVendorPath()
     {
-        return self::RootPath().'../vendor/';
+        return self::RootPath() . '../vendor/';
     }
 
     /**
@@ -670,7 +670,7 @@ class Api
     public static function VersionFull()
     {
         static $sVersion = null;
-        $sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
+        $sAppVersion = @file_get_contents(self::WebMailPath() . 'VERSION');
 
         $sVersion = (empty($sAppVersion)) ? '0.0.0' : $sAppVersion;
 
@@ -684,7 +684,7 @@ class Api
     {
         static $sVersion = null;
         if (null === $sVersion) {
-            preg_match('/[\d\.]+/', @file_get_contents(self::WebMailPath().'VERSION'), $matches);
+            preg_match('/[\d\.]+/', @file_get_contents(self::WebMailPath() . 'VERSION'), $matches);
 
             if (isset($matches[0])) {
                 $sAppVersion = preg_replace('/[^0-9]/', '', $matches[0]);
@@ -701,7 +701,7 @@ class Api
     public static function VersionJs()
     {
         $oSettings = &self::GetSettings();
-        $sAppVersion = @file_get_contents(self::WebMailPath().'VERSION');
+        $sAppVersion = @file_get_contents(self::WebMailPath() . 'VERSION');
         $sAppVersion = empty($sAppVersion) ? '0.0.0' : $sAppVersion;
 
         return preg_replace('/[^0-9]/', '', $sAppVersion);
@@ -713,8 +713,8 @@ class Api
     public static function DataPath()
     {
         $dataPath = 'data';
-        if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath().'inc_settings_path.php')) {
-            include self::WebMailPath().'inc_settings_path.php';
+        if (!defined('AU_API_DATA_FOLDER') && @file_exists(self::WebMailPath() . 'inc_settings_path.php')) {
+            include self::WebMailPath() . 'inc_settings_path.php';
         }
         if (!defined('AU_API_DATA_FOLDER')) {
             define('AU_API_DATA_FOLDER', Utils::GetFullPath($dataPath, self::WebMailPath()));
@@ -761,8 +761,8 @@ class Api
      */
     public static function GenerateSsoToken($sEmail, $sPassword, $sLogin = '')
     {
-        $sSsoHash = \md5($sEmail.$sPassword.$sLogin.\microtime(true).\rand(10000, 99999));
-        return self::Cacher()->Set('SSO:'.$sSsoHash, self::EncodeKeyValues(array(
+        $sSsoHash = \md5($sEmail . $sPassword . $sLogin . \microtime(true) . \rand(10000, 99999));
+        return self::Cacher()->Set('SSO:' . $sSsoHash, self::EncodeKeyValues(array(
             'Email' => $sEmail,
             'Password' => $sPassword,
             'Login' => $sLogin
@@ -783,7 +783,7 @@ class Api
             foreach ($aLang as $sKey => $mValue) {
                 if (\is_array($mValue)) {
                     foreach ($mValue as $sSecKey => $mSecValue) {
-                        $aResultLang[$sKey.'/'.$sSecKey] = $mSecValue;
+                        $aResultLang[$sKey . '/' . $sSecKey] = $mSecValue;
                     }
                 } else {
                     $aResultLang[$sKey] = $mValue;
@@ -817,7 +817,7 @@ class Api
 
         if (null !== $aParams && is_array($aParams)) {
             foreach ($aParams as $sKey => $sValue) {
-                $sResult = str_replace('%'.$sKey.'%', $sValue, $sResult);
+                $sResult = str_replace('%' . $sKey . '%', $sValue, $sResult);
             }
         }
 
@@ -927,9 +927,9 @@ class Api
         } else {
             self::$aClientI18N[$sLanguage] = false;
 
-            $sLangFile = self::WebMailPath().'i18n/'.$sLanguage.'.ini';
+            $sLangFile = self::WebMailPath() . 'i18n/' . $sLanguage . '.ini';
             if (!@file_exists($sLangFile)) {
-                $sLangFile = self::WebMailPath().'i18n/English.ini';
+                $sLangFile = self::WebMailPath() . 'i18n/English.ini';
                 $sLangFile = @file_exists($sLangFile) ? $sLangFile : '';
             }
 
@@ -1076,11 +1076,11 @@ class Api
 
             $sLangFile = '';
             if (0 < strlen($sForceCustomInitialisationLang)) {
-                $sLangFile = self::RootPath().'common/i18n/'.$sForceCustomInitialisationLang.'.ini';
+                $sLangFile = self::RootPath() . 'common/i18n/' . $sForceCustomInitialisationLang . '.ini';
             }
 
             if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) {
-                $sLangFile = self::RootPath().'common/i18n/English.ini';
+                $sLangFile = self::RootPath() . 'common/i18n/English.ini';
             }
 
             if (0 < strlen($sLangFile) && @file_exists($sLangFile)) {

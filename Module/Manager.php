@@ -261,7 +261,7 @@ class Manager
                     $aArgs
                 );
 
-                if (@\file_exists($sModulePath.$sModuleName.'/Module.php')) {
+                if (@\file_exists($sModulePath . $sModuleName . '/Module.php')) {
                     $sModuleClassName = '\\Aurora\\Modules\\' . $sModuleName . '\\Module';
                     $oModule = new $sModuleClassName($sModulePath);
                     if ($oModule instanceof AbstractModule) {
@@ -327,8 +327,8 @@ class Manager
                         $sTemplateHtml = \str_replace('%MODULENAME%', \strtoupper($aItem[2]), $sTemplateHtml);
                     }
                     $sTemplateSource = \str_replace(
-                        '{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
-                        $sTemplateHtml.'{%INCLUDE-START/'.$aItem[0].'/INCLUDE-END%}',
+                        '{%INCLUDE-START/' . $aItem[0] . '/INCLUDE-END%}',
+                        $sTemplateHtml . '{%INCLUDE-START/' . $aItem[0] . '/INCLUDE-END%}',
                         $sTemplateSource
                     );
                 }
@@ -376,7 +376,7 @@ class Manager
      */
     public function GetModulesRootPath()
     {
-        return AU_APP_ROOT_PATH.'modules/';
+        return AU_APP_ROOT_PATH . 'modules/';
     }
 
     /**
@@ -444,7 +444,7 @@ class Manager
      */
     public function GetTenantModulesPath($sTenant)
     {
-        return AU_APP_ROOT_PATH.'tenants/' . $sTenant . '/modules/';
+        return AU_APP_ROOT_PATH . 'tenants/' . $sTenant . '/modules/';
     }
 
     /**
@@ -629,7 +629,7 @@ class Manager
         $sResult = md5(\Aurora\System\Api::Version());
         $aModuleNames = $this->GetAllowedModulesName();
         foreach ($aModuleNames as $sModuleName) {
-            $sResult = md5($sResult.$this->GetModuleHashByName($sModuleName));
+            $sResult = md5($sResult . $this->GetModuleHashByName($sModuleName));
         }
 
         return $sResult;

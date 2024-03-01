@@ -41,8 +41,8 @@ class Logger
             $iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
             $sUserId = Api::getAuthenticatedUserId();
 
-            self::Log('Event: '.$sUserId.' > '.$sDesc);
-            self::LogOnly('['.$sDate.']['.$iIp.']['.$sUserId.']['.$sModuleName.'] > '.$sDesc, self::GetLogFileDir().self::GetLogFileName(self::$sEventLogPrefix));
+            self::Log('Event: ' . $sUserId . ' > ' . $sDesc);
+            self::LogOnly('[' . $sDate . '][' . $iIp . '][' . $sUserId . '][' . $sModuleName . '] > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
         }
     }
 
@@ -104,7 +104,7 @@ class Logger
             $sFileName = preg_replace_callback('/\{([\w|-]*)\}/', $fCallback, $oSettings->LogFileName);
         }
 
-        return $sFilePrefix.$sFileName;
+        return $sFilePrefix . $sFileName;
     }
 
     public static function getLogFileDateFormat()
@@ -129,7 +129,7 @@ class Logger
             $oSettings = & Api::GetSettings();
             if ($oSettings) {
                 $sS = $oSettings->GetValue('LogCustomFullPath', '');
-                $sLogDir = empty($sS) ? Api::DataPath().'/logs/' : rtrim(trim($sS), '\\/').'/';
+                $sLogDir = empty($sS) ? Api::DataPath() . '/logs/' : rtrim(trim($sS), '\\/') . '/';
             }
         }
 
@@ -196,16 +196,16 @@ class Logger
                 if (!$bSkip) {
                     $iCount--;
                     if (isset($aData['class'], $aData['type'], $aData['function'])) {
-                        $sLogData .= $aData['class'].$aData['type'].$aData['function'];
+                        $sLogData .= $aData['class'] . $aData['type'] . $aData['function'];
                     } elseif (isset($aData['function'])) {
                         $sLogData .= $aData['function'];
                     }
 
                     if (isset($aData['file'])) {
-                        $sLogData .= ' ../'.basename($aData['file']);
+                        $sLogData .= ' ../' . basename($aData['file']);
                     }
                     if (isset($aData['line'])) {
-                        $sLogData .= ' *'.$aData['line'];
+                        $sLogData .= ' *' . $aData['line'];
                     }
 
                     $sLogData .= "\n";
@@ -218,7 +218,7 @@ class Logger
 
             if (0 < strlen($sLogData)) {
                 try {
-                    @error_log('['.\MailSo\Log\Logger::Guid().'][DB/backtrace]'.AU_API_CRLF.trim($sLogData).AU_API_CRLF, 3, $sLogFile);
+                    @error_log('[' . \MailSo\Log\Logger::Guid() . '][DB/backtrace]' . AU_API_CRLF . trim($sLogData) . AU_API_CRLF, 3, $sLogFile);
                 } catch (\Exception $oE) {
                 }
             }
@@ -250,24 +250,24 @@ class Logger
 
             $sGuid = \MailSo\Log\Logger::Guid();
             $aMicro = explode('.', microtime(true));
-            $sDate = gmdate('H:i:s.').str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
+            $sDate = gmdate('H:i:s.') . str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
             if ($bIsFirst) {
                 $sUri = Utils::RequestUri();
                 $bIsFirst = false;
-                $sPost = (is_array($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
+                $sPost = (is_array($_POST) && count($_POST) > 0) ? '[POST(' . count($_POST) . ')]' : '[GET]';
 
-                self::LogOnly(AU_API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
+                self::LogOnly(AU_API_CRLF . '[' . $sDate . '][' . $sGuid . '] ' . $sPost . '[ip:' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown') . '] ' . $sUri, $sLogFile);
 
                 if ($oSettings->GetValue('LogPostView', false)) {
-                    self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
+                    self::LogOnly('[' . $sDate . '][' . $sGuid . '] POST > ' . print_r($_POST, true), $sLogFile);
                 } else {
-                    self::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
+                    self::LogOnly('[' . $sDate . '][' . $sGuid . '] POST > [' . implode(', ', array_keys($_POST)) . ']', $sLogFile);
                 }
 
-                self::LogOnly('['.$sDate.']['.$sGuid.']', $sLogFile);
+                self::LogOnly('[' . $sDate . '][' . $sGuid . ']', $sLogFile);
             }
 
-            self::LogOnly('['.$sDate.']['.$sGuid.'] '.(is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
+            self::LogOnly('[' . $sDate . '][' . $sGuid . '] ' . (is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
         }
     }
 
@@ -282,7 +282,7 @@ class Logger
         }
 
         try {
-            @error_log($sDesc.AU_API_CRLF, 3, $sLogFile);
+            @error_log($sDesc . AU_API_CRLF, 3, $sLogFile);
         } catch (\Exception $oE) {
         }
 
@@ -299,9 +299,9 @@ class Logger
 
                 $sGuid = \MailSo\Log\Logger::Guid();
                 $aMicro = explode('.', microtime(true));
-                $sDate = gmdate('H:i:s.').str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
+                $sDate = gmdate('H:i:s.') . str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
 
-                self::LogOnly('['.$sDate.']['.$sGuid.'] '.  $sDesc, $sLogFile);
+                self::LogOnly('[' . $sDate . '][' . $sGuid . '] ' . $sDesc, $sLogFile);
             }
         }
     }
@@ -319,7 +319,7 @@ class Logger
             $aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
             foreach ($aLogFiles as $sFileName) {
                 if ($sFileName !== $sLogFile && $sFileName !== (self::$sEventLogPrefix . $sLogFile) && strpos($sFileName, $sLogFile) !== false) {
-                    unlink($sLogDir.$sFileName);
+                    unlink($sLogDir . $sFileName);
                 }
             }
         }
@@ -335,7 +335,7 @@ class Logger
 
             $sLogDir = self::GetLogFileDir();
             if (is_dir($sLogDir) && $bRemoveOldLogs) {
-                $aLogFiles = glob($sLogDir.'*.txt');
+                $aLogFiles = glob($sLogDir . '*.txt');
                 $nowDateTime = new \DateTimeImmutable(date(self::getLogFileDateFormat()));
                 $dateTimeToRemove = $nowDateTime->sub(new \DateInterval(sprintf('P%dD', $iRemoveOldLogsDays)));
 

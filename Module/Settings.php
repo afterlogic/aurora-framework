@@ -116,6 +116,6 @@ class Settings extends \Aurora\System\AbstractSettings
 
     public function IsTenantSettingsExists($sTenantName)
     {
-        return \file_exists(Api::GetModuleManager()->GetModulesSettingsPath() . 'tenants/' . $sTenantName . '/' .  $this->ModuleName . '.config.json');
+        return \file_exists(Api::GetModuleManager()->GetModulesSettingsPath() . 'tenants/' . $sTenantName . '/' . $this->ModuleName . '.config.json');
     }
 }
