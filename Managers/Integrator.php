@@ -775,6 +775,7 @@ class Integrator extends AbstractManager
         foreach ($aModuleNames as $sModuleName) {
             $this->populateClientModuleNames($sModulesPath, $sModuleName, $bIsMobileApplication, $aClientModuleNames, false);
         }
+        sort($aClientModuleNames);
 
         return $aClientModuleNames;
     }
@@ -789,6 +790,8 @@ class Integrator extends AbstractManager
                 $aBackendModuleNames[] = $sModuleName;
             }
         }
+        sort($aBackendModuleNames);
+
         return $aBackendModuleNames;
     }
 
