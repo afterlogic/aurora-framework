@@ -115,12 +115,54 @@ abstract class AbstractModule
     protected $bIsPermanent = false;
 
     protected $aDeniedMethodsByWebApi =  [
+        '__construct',
         'init',
         'initialize',
+        'createInstance',
+        'getInstance',
+        'Decorator',
+        'RequireModule',
+        'GetRequireModules',
+        'isPermanent',
+        'isValid',
+        'getNamespace',
+        'getModuleSettings',
         'loadModuleSettings',
         'saveModuleConfig',
         'getConfig',
-        'CallMethod'
+        'setConfig',
+        'denyMethodsCallByWebApi',
+        'denyMethodCallByWebApi',
+        'subscribeEvent',
+        'broadcastEvent',
+        'skipEvent',
+        'removeEventFromSkiped',
+        'includeTemplate',
+        'extendObject',
+        'getExtendedObject',
+        'issetObject',
+        'SetPath',
+        'GetHash',
+        'GetName',
+        'GetPath',
+        'GetVersion',
+        'GetFullName',
+        'AddEntry',
+        'AddEntries',
+        'HasEntry',
+        'RemoveEntry',
+        'RemoveEntries',
+        'GetEntryCallback',
+        'DefaultResponse',
+        'TrueResponse',
+        'FalseResponse',
+        'ExceptionResponse',
+        'CallMethod',
+        'GetSettings',
+        'i18N',
+        'GetErrors',
+        'GetErrorMessageByCode',
+        'GetAdditionalEntityFieldsToEdit',
     ];
 
     /**
@@ -180,24 +222,6 @@ abstract class AbstractModule
 
     /**
      *
-     * @return \Aurora\System\Module\Decorator
-     */
-    public function __invoke()
-    {
-        return \Aurora\System\Api::GetModuleDecorator(self::GetName());
-    }
-
-    public static function __callStatic($name, $arguments)
-    {
-        if (Str::startsWith($name, '_')) {
-            $moduleInstance = self::Decorator();
-            $name = substr($name, 1);
-            return call_user_func_array([$moduleInstance, $name], $arguments);
-        }
-    }
-
-    /**
-     *
      * @param \Aurora\System\Module\Manager $oModuleManager
      * @return  \Aurora\System\Module\Manager
      */
@@ -213,15 +237,6 @@ abstract class AbstractModule
     protected function GetModuleManager()
     {
         return $this->oModuleManager;
-    }
-
-    /**
-     *
-     * @return \Aurora\System\Module\Settings
-     */
-    public function getModuleSettings()
-    {
-        return $this->oModuleSettings;
     }
 
     /**
@@ -262,7 +277,6 @@ abstract class AbstractModule
         return true;
     }
 
-
     /**
      *
      * @return boolean
@@ -271,7 +285,6 @@ abstract class AbstractModule
     {
         return $this->isPermanent() || $this->oModuleManager->IsAllowedModule(self::GetName());
     }
-
 
     /**
      *
@@ -305,6 +318,15 @@ abstract class AbstractModule
     final public static function getNamespace()
     {
         return \substr_replace(static::class, '', -7);
+    }
+
+    /**
+     *
+     * @return \Aurora\System\Module\Settings
+     */
+    public function getModuleSettings()
+    {
+        return $this->oModuleSettings;
     }
 
     /**
