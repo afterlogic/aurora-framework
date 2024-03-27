@@ -126,7 +126,7 @@ class Utils
     public static function GetFullPath($sPath, $sPrefix = null)
     {
         if ($sPrefix !== null && !self::IsFullPath($sPath)) {
-            $sPath = rtrim($sPrefix, '\\/').'/'.trim($sPath, '\\/');
+            $sPath = rtrim($sPrefix, '\\/') . '/' . trim($sPath, '\\/');
         }
 
         if (@is_dir($sPath)) {
@@ -263,9 +263,9 @@ class Utils
                 }
                 break;
             case (in_array(strtolower($sFromEncoding), self::$aSuppostedCharsets)):
-                $sResult = @iconv($sFromEncoding, $sToEncoding.'//IGNORE', $sResult);
+                $sResult = @iconv($sFromEncoding, $sToEncoding . '//IGNORE', $sResult);
                 if (false === $sResult) {
-                    Api::Log('iconv FALSE result ["'.$sFromEncoding.'", "'.$sToEncoding.'//IGNORE", "'.substr($sString, 0, 20).' / cut"]', Enums\LogLevel::Error);
+                    Api::Log('iconv FALSE result ["' . $sFromEncoding . '", "' . $sToEncoding . '//IGNORE", "' . substr($sString, 0, 20) . ' / cut"]', Enums\LogLevel::Error);
                     $sResult = $sString;
                 }
                 break;
@@ -552,11 +552,11 @@ class Utils
         $iSizeInKB = ceil($iSizeInBytes / 1024);
         $iSizeInMB = $iSizeInKB / 1024;
         if ($iSizeInMB >= 100) {
-            $iSizeInKB = ceil($iSizeInMB * 10 / 10).'MB';
+            $iSizeInKB = ceil($iSizeInMB * 10 / 10) . 'MB';
         } elseif ($iSizeInMB > 1) {
-            $iSizeInKB = (ceil($iSizeInMB * 10) / 10).'MB';
+            $iSizeInKB = (ceil($iSizeInMB * 10) / 10) . 'MB';
         } else {
-            $iSizeInKB = $iSizeInKB.'KB';
+            $iSizeInKB = $iSizeInKB . 'KB';
         }
 
         return $iSizeInKB;
@@ -572,9 +572,9 @@ class Utils
         $mbSize = $size / 1024;
         return ($mbSize > 1)
             ? (($mbSize >= 1024)
-                ? (ceil(($mbSize * 10) / 1024) / 10).'GB'
-                : (ceil($mbSize * 10) / 10).'MB')
-            : $size.'KB';
+                ? (ceil(($mbSize * 10) / 1024) / 10) . 'GB'
+                : (ceil($mbSize * 10) / 10) . 'MB')
+            : $size . 'KB';
     }
 
     /**
@@ -982,7 +982,7 @@ class Utils
         if (0 === $iDefaultTimeZone) {
             $iOffset = self::GetTimeOffset($iDefaultTimeZone, $sClientTimeZone) / 60 * -1;
             $sSign = ($iOffset < 0) ? '-' : '+';
-            $sResult = 'Etc/GMT'.$sSign.abs($iOffset);
+            $sResult = 'Etc/GMT' . $sSign . abs($iOffset);
         } else {
             $sResult = $aTimeZones[$iDefaultTimeZone];
         }
@@ -1000,10 +1000,10 @@ class Utils
             $aObjects = scandir($sDir);
             foreach ($aObjects as $sObject) {
                 if ($sObject != '.' && $sObject != '..') {
-                    if (filetype($sDir.'/'.$sObject) == 'dir') {
-                        self::RecRmdir($sDir.'/'.$sObject);
+                    if (filetype($sDir . '/' . $sObject) == 'dir') {
+                        self::RecRmdir($sDir . '/' . $sObject);
                     } else {
-                        unlink($sDir.'/'.$sObject);
+                        unlink($sDir . '/' . $sObject);
                     }
                 }
             }
@@ -1478,23 +1478,23 @@ class Utils
         } else {
             if (isset($_SERVER['SCRIPT_NAME'])) {
                 if (isset($_SERVER['argv'], $_SERVER['argv'][0])) {
-                    $sUri = $_SERVER['SCRIPT_NAME'].'?'.$_SERVER['argv'][0];
+                    $sUri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['argv'][0];
                 } elseif (isset($_SERVER['QUERY_STRING'])) {
-                    $sUri = $_SERVER['SCRIPT_NAME'].'?'.$_SERVER['QUERY_STRING'];
+                    $sUri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
                 } else {
                     $sUri = $_SERVER['SCRIPT_NAME'];
                 }
             }
         }
 
-        $sUri = '/'. ltrim($sUri, '/');
+        $sUri = '/' . ltrim($sUri, '/');
         return $sUri;
     }
 
     public static function DirMtime($dir)
     {
         $last_modified = 0;
-        $files = glob($dir.'/*');
+        $files = glob($dir . '/*');
         foreach ($files as $file) {
             if (is_dir($file)) {
                 $modified = self::DirMtime($file);
@@ -1512,11 +1512,11 @@ class Utils
     {
         $files = glob($pattern, $flags);
 
-        $aPaternFiles = glob(dirname($pattern).'/*', GLOB_ONLYDIR | GLOB_NOSORT);
+        $aPaternFiles = glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
 
         if (is_array($aPaternFiles) && is_array($files)) {
             foreach ($aPaternFiles as $dir) {
-                $files = array_merge($files, self::GlobRecursive($dir.'/'.basename($pattern), $flags));
+                $files = array_merge($files, self::GlobRecursive($dir . '/' . basename($pattern), $flags));
             }
         }
 
@@ -1780,9 +1780,9 @@ class Utils
         $sProtocol = !empty($aUrlParts['scheme']) ? $aUrlParts['scheme'] : 'http';
         $sHost = !empty($aUrlParts['host']) ? $aUrlParts['host'] : 'localhost';
         $sPath = !empty($aUrlParts['path']) ? str_replace('index.php', '', $aUrlParts['path']) : '';
-        $sPort = !empty($aUrlParts['port']) ? ':'.$aUrlParts['port'] : '';
+        $sPort = !empty($aUrlParts['port']) ? ':' . $aUrlParts['port'] : '';
 
-        return $sProtocol.'://'.$sHost.$sPath.$sPort;
+        return $sProtocol . '://' . $sHost . $sPath . $sPort;
     }
 
     /**
@@ -1855,21 +1855,21 @@ class Utils
     public static function OutputFileHeaders($bDownload, $sContentType, $sFileName)
     {
         if ($bDownload) {
-            \header('Content-Type: '.$sContentType, true);
+            \header('Content-Type: ' . $sContentType, true);
         } else {
             $aParts = \explode('/', $sContentType, 2);
             if (\in_array(\strtolower($aParts[0]), array('image', 'video', 'audio')) ||
                 \in_array(\strtolower($sContentType), array('application/pdf', 'application/x-pdf', 'text/html'))) {
-                \header('Content-Type: '.$sContentType, true);
+                \header('Content-Type: ' . $sContentType, true);
             } elseif (\strtolower($sContentType) === 'application/octet-stream') {
                 $sContentType = \MailSo\Base\Utils::MimeContentType($sFileName);
-                \header('Content-Type: '.$sContentType, true);
+                \header('Content-Type: ' . $sContentType, true);
             } else {
                 \header('Content-Type: text/plain', true);
             }
         }
 
-        \header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline').'; '.
+        \header('Content-Disposition: ' . ($bDownload ? 'attachment' : 'inline') . '; ' .
             \trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
 
         \header('Accept-Ranges: none', true);
@@ -1897,8 +1897,8 @@ class Utils
                     );
                 }
 
-                echo '<html><head></head><body>'.
-                    \MailSo\Base\HtmlUtils::ClearHtmlSimple(self::ConvertCssToInlineStyles($sHtml), true).
+                echo '<html><head></head><body>' .
+                    \MailSo\Base\HtmlUtils::ClearHtmlSimple(self::ConvertCssToInlineStyles($sHtml), true) .
                     '</body></html>';
             }
         } else {
@@ -1924,7 +1924,7 @@ class Utils
         ));
         $aActions = array(
             'view' => array(
-                'url' => '?file-cache/' . $sHash .'/view'
+                'url' => '?file-cache/' . $sHash . '/view'
             ),
             'download' => array(
                 'url' => '?file-cache/' . $sHash
@@ -1942,7 +1942,7 @@ class Utils
             'Size' =>  (int) $iSize,
             'Hash' => $sHash,
             'Actions' => $aActions,
-            'ThumbnailUrl' => $bThumb ? '?file-cache/' . $sHash .'/thumb' : '',
+            'ThumbnailUrl' => $bThumb ? '?file-cache/' . $sHash . '/thumb' : '',
         );
     }
 
@@ -1955,13 +1955,13 @@ class Utils
      */
     public static function clearFileName($sFileName, $sContentType, $sMimeIndex = '')
     {
-        $sFileName = 0 === \strlen($sFileName) ? \preg_replace('/[^a-zA-Z0-9]/', '.', (empty($sMimeIndex) ? '' : $sMimeIndex.'.').$sContentType) : $sFileName;
+        $sFileName = 0 === \strlen($sFileName) ? \preg_replace('/[^a-zA-Z0-9]/', '.', (empty($sMimeIndex) ? '' : $sMimeIndex . '.') . $sContentType) : $sFileName;
         $sClearedFileName = \preg_replace('/[\s]+/', ' ', \preg_replace('/[\.]+/', '.', $sFileName));
         $sExt = \MailSo\Base\Utils::GetFileExtension($sClearedFileName);
 
         $iSize = 100;
         if ($iSize < \strlen($sClearedFileName) - \strlen($sExt)) {
-            $sClearedFileName = \substr($sClearedFileName, 0, $iSize).(empty($sExt) ? '' : '.'.$sExt);
+            $sClearedFileName = \substr($sClearedFileName, 0, $iSize) . (empty($sExt) ? '' : '.' . $sExt);
         }
 
         return \MailSo\Base\Utils::ClearFileName(\MailSo\Base\Utils::Utf8Clear($sClearedFileName));
@@ -1984,6 +1984,18 @@ class Utils
     {
         $ipaddress = '';
 
+        // The HTTP_CLIENT_IP and HTTP_X_FORWARDED_FOR headers can be spoofed and should not be trusted for security purposes.
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        }
+
+        return $ipaddress;
+    }
+
+    public static function getClientIpInsecure()
+    {
+        $ipaddress = '';
+
         if (isset($_SERVER['HTTP_CLIENT_IP'])) {
             $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -2000,6 +2012,7 @@ class Utils
 
         return $ipaddress;
     }
+
 }
 
 /**

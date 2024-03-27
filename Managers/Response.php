@@ -60,11 +60,11 @@ class Response
             );
 
             if ($oData instanceof \MailSo\Base\Collection) {
-                $mResult['@Object'] = 'Collection/'.$mResult['@Object'];
+                $mResult['@Object'] = 'Collection/' . $mResult['@Object'];
                 $mResult['@Count'] = $oData->Count();
                 $mResult['@Collection'] = self::GetResponseObject($oData->CloneAsArray(), $aParameters);
             } else {
-                $mResult['@Object'] = 'Object/'.$mResult['@Object'];
+                $mResult['@Object'] = 'Object/' . $mResult['@Object'];
             }
         }
 
@@ -144,18 +144,18 @@ class Response
     public static function OutputHeaders($bDownload, $sContentType, $sFileName)
     {
         if ($bDownload) {
-            \header('Content-Type: '.$sContentType, true);
+            \header('Content-Type: ' . $sContentType, true);
         } else {
             $aParts = \explode('/', $sContentType, 2);
             if (\in_array(\strtolower($aParts[0]), array('image', 'video', 'audio')) ||
                 \in_array(\strtolower($sContentType), array('application/pdf', 'application/x-pdf', 'text/html'))) {
-                \header('Content-Type: '.$sContentType, true);
+                \header('Content-Type: ' . $sContentType, true);
             } else {
                 \header('Content-Type: text/plain; charset=', true);
             }
         }
 
-        \header('Content-Disposition: '.($bDownload ? 'attachment' : 'inline').'; '.
+        \header('Content-Disposition: ' . ($bDownload ? 'attachment' : 'inline') . '; ' .
             \trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
 
         \header('Accept-Ranges: none', true);
@@ -174,9 +174,9 @@ class Response
 
             \header('Cache-Control: private', true);
             \header('Pragma: private', true);
-            \header('Etag: '.\md5('Etag:'.\md5($sKey)), true);
-            \header('Last-Modified: '.\gmdate('D, d M Y H:i:s', $iUtcTimeStamp - $iExpireTime).' UTC', true);
-            \header('Expires: '.\gmdate('D, j M Y H:i:s', $iUtcTimeStamp + $iExpireTime).' UTC', true);
+            \header('Etag: ' . \md5('Etag:' . \md5($sKey)), true);
+            \header('Last-Modified: ' . \gmdate('D, d M Y H:i:s', $iUtcTimeStamp - $iExpireTime) . ' UTC', true);
+            \header('Expires: ' . \gmdate('D, j M Y H:i:s', $iUtcTimeStamp + $iExpireTime) . ' UTC', true);
         }
     }
 
@@ -205,7 +205,7 @@ class Response
             $sObjectName = \get_class($oCollection);
 
             $aResult = array(
-                '@Object' => 'Collection/'. self::GetObjectName($sObjectName),
+                '@Object' => 'Collection/' . self::GetObjectName($sObjectName),
                 '@Count' => $oCollection->Count(),
                 '@Collection' => self::GetResponseObject($oCollection->CloneAsArray(), $aParameters)
             );
@@ -340,7 +340,7 @@ class Response
             $oResponse = /* @var $oResponse \MailSo\Imap\Response */ $oException->GetLastResponse();
             if ($oResponse instanceof \MailSo\Imap\Response) {
                 $sErrorMessage = $oResponse instanceof \MailSo\Imap\Response ?
-                    $oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : null;
+                    $oResponse->Tag . ' ' . $oResponse->StatusOrIndex . ' ' . $oResponse->HumanReadable : null;
             }
         } else {
             $iErrorCode = \Aurora\System\Notifications::UnknownError;

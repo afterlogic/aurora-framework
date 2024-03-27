@@ -72,10 +72,10 @@ abstract class AbstractProtocol
      */
     public function Connect()
     {
-        $sHost = ($this->bUseSsl) ? 'ssl://'.$this->sHost : $this->sHost;
+        $sHost = ($this->bUseSsl) ? 'ssl://' . $this->sHost : $this->sHost;
 
         if ($this->IsConnected()) {
-            \Aurora\System\Api::Log('already connected['.$sHost.':'.$this->iPort.']: result = false', \Aurora\System\Enums\LogLevel::Error);
+            \Aurora\System\Api::Log('already connected[' . $sHost . ':' . $this->iPort . ']: result = false', \Aurora\System\Enums\LogLevel::Error);
 
             $this->Disconnect();
             return false;
@@ -84,11 +84,11 @@ abstract class AbstractProtocol
         $sErrorStr = '';
         $iErrorNo = 0;
 
-        \Aurora\System\Api::Log('start connect to '.$sHost.':'.$this->iPort);
+        \Aurora\System\Api::Log('start connect to ' . $sHost . ':' . $this->iPort);
         $this->rConnect = @fsockopen($sHost, $this->iPort, $iErrorNo, $sErrorStr, $this->iConnectTimeOut);
 
         if (!$this->IsConnected()) {
-            \Aurora\System\Api::Log('connection error['.$sHost.':'.$this->iPort.']: fsockopen = false ('.$iErrorNo.': '.$sErrorStr.')', \Aurora\System\Enums\LogLevel::Error);
+            \Aurora\System\Api::Log('connection error[' . $sHost . ':' . $this->iPort . ']: fsockopen = false (' . $iErrorNo . ': ' . $sErrorStr . ')', \Aurora\System\Enums\LogLevel::Error);
             return false;
         } else {
             \Aurora\System\Api::Log('connected');
@@ -111,7 +111,7 @@ abstract class AbstractProtocol
     public function Disconnect()
     {
         if ($this->IsConnected()) {
-            \Aurora\System\Api::Log('disconnect from '.$this->sHost.':'.$this->iPort);
+            \Aurora\System\Api::Log('disconnect from ' . $this->sHost . ':' . $this->iPort);
             @fclose($this->rConnect);
         }
         $this->rConnect = null;
@@ -140,7 +140,7 @@ abstract class AbstractProtocol
     public function ReadLine()
     {
         $sLine = @fgets($this->rConnect, 4096);
-        \Aurora\System\Api::Log('NET < '.\Aurora\System\Utils::ShowCRLF($sLine));
+        \Aurora\System\Api::Log('NET < ' . \Aurora\System\Utils::ShowCRLF($sLine));
 
         if (false === $sLine) {
             $aSocketStatus = @socket_get_status($this->rConnect);
@@ -160,11 +160,11 @@ abstract class AbstractProtocol
      */
     public function WriteLine($sLine, $aHideValues = array())
     {
-        $sLine = $sLine."\r\n";
+        $sLine = $sLine . "\r\n";
         $sLogLine = (0 < count($aHideValues))
             ? str_replace($aHideValues, '*******', $sLine) : $sLine;
 
-        \Aurora\System\Api::Log('NET > '.\Aurora\System\Utils::ShowCRLF($sLogLine));
+        \Aurora\System\Api::Log('NET > ' . \Aurora\System\Utils::ShowCRLF($sLogLine));
 
         if (!@fputs($this->rConnect, $sLine)) {
             \Aurora\System\Api::Log('NET[Error] < Could not send user request', \Aurora\System\Enums\LogLevel::Error);

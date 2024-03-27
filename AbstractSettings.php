@@ -213,13 +213,13 @@ abstract class AbstractSettings
     {
         $sJsonFile = $this->sPath;
         if (\file_exists($sJsonFile)) {
-            \copy($sJsonFile, $sJsonFile.'.bak');
+            \copy($sJsonFile, $sJsonFile . '.bak');
         }
     }
 
     public function LoadDataFromBackup()
     {
-        return $this->LoadDataFromFile($this->sPath.'.bak');
+        return $this->LoadDataFromFile($this->sPath . '.bak');
     }
 
     public function CheckConfigFile()
@@ -264,9 +264,9 @@ abstract class AbstractSettings
                         $sSpecType = isset($mValue[2]) ? $mValue[2] : null;
                         $sDescription = isset($mValue[3]) ? $mValue[3] : '';
                         $mValue = isset($mValue[0]) ? $mValue[0] : '';
-                        if (isset($aData[$sKey.'_Description'])) {
-                            $sDescription = isset($aData[$sKey.'_Description'][0]) ? $aData[$sKey.'_Description'][0] : '';
-                            unset($aData[$sKey.'_Description']);
+                        if (isset($aData[$sKey . '_Description'])) {
+                            $sDescription = isset($aData[$sKey . '_Description'][0]) ? $aData[$sKey . '_Description'][0] : '';
+                            unset($aData[$sKey . '_Description']);
                         }
                     } else {
                         $sType = \gettype($mValue);

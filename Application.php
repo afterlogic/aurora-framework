@@ -43,11 +43,11 @@ class Application
         $aStatistic = \MailSo\Base\Loader::Statistic();
         if (\is_array($aStatistic)) {
             if (isset($aStatistic['php']['memory_get_peak_usage'])) {
-                \Aurora\Api::Log('INFO[MEMORY]: Memory peak usage: '.$aStatistic['php']['memory_get_peak_usage']);
+                \Aurora\Api::Log('INFO[MEMORY]: Memory peak usage: ' . $aStatistic['php']['memory_get_peak_usage']);
             }
 
             if (isset($aStatistic['time'])) {
-                \Aurora\Api::Log('INFO[TIME]: Time delta: '.$aStatistic['time']);
+                \Aurora\Api::Log('INFO[TIME]: Time delta: ' . $aStatistic['time']);
             }
         }
     }
@@ -113,7 +113,7 @@ class Application
     public static function GetVersion()
     {
         if (!defined('AU_APP_VERSION')) {
-            $sVersion = @\file_get_contents(AU_APP_ROOT_PATH.'VERSION');
+            $sVersion = @\file_get_contents(AU_APP_ROOT_PATH . 'VERSION');
             \define('AU_APP_VERSION', $sVersion);
         }
         return AU_APP_VERSION;

@@ -205,11 +205,11 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
         $sEmailMd5 = md5(strtolower($sUserPublicId));
 
         $sKeyPath = md5($sKey);
-        $sKeyPath = substr($sKeyPath, 0, 2).'/'.$sKeyPath;
+        $sKeyPath = substr($sKeyPath, 0, 2) . '/' . $sKeyPath;
         if (!empty($sFolder)) {
             $sFolder = $sFolder . '/';
         }
-        $sFilePath = $this->sDataPath.$this->sPath.$sFolder.substr($sEmailMd5, 0, 2).'/'.$sEmailMd5.'/'.$sKeyPath.$sFileSuffix;
+        $sFilePath = $this->sDataPath . $this->sPath . $sFolder . substr($sEmailMd5, 0, 2) . '/' . $sEmailMd5 . '/' . $sKeyPath . $sFileSuffix;
         if ($bMkDir && !@is_dir(dirname($sFilePath))) {
             if (!@mkdir(dirname($sFilePath), 0777, true)) {
                 throw new \Aurora\System\Exceptions\Exception('Can\'t make storage directory "' . $sFilePath . '"');
@@ -238,7 +238,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
     public function gc()
     {
         return \MailSo\Base\Utils::RecTimeDirRemove(
-            $this->sDataPath. $this->sPath,
+            $this->sDataPath . $this->sPath,
             60 * 60 * 6,
             time()
         );

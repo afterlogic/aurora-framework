@@ -35,7 +35,7 @@ class BaseException extends Exception
     public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
     {
         if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode) {
-            \Aurora\System\Api::Log('Exception error: '.\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
+            \Aurora\System\Api::Log('Exception error: ' . \Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
             $iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;
         }
 
@@ -43,7 +43,7 @@ class BaseException extends Exception
         $this->oPrevious = $oPrevious ? $oPrevious : null;
 
         if ($this->oPrevious) {
-            \Aurora\System\Api::Log('Previous Exception: '.$this->oPrevious->getMessage(), \Aurora\System\Enums\LogLevel::Error);
+            \Aurora\System\Api::Log('Previous Exception: ' . $this->oPrevious->getMessage(), \Aurora\System\Enums\LogLevel::Error);
         }
 
         parent::__construct(\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
@@ -67,7 +67,7 @@ class BaseException extends Exception
             $oResponse = /* @var $oResponse \MailSo\Imap\Response */ $this->oPrevious->GetLastResponse();
 
             $sMessage = $oResponse instanceof \MailSo\Imap\Response ?
-                $oResponse->Tag.' '.$oResponse->StatusOrIndex.' '.$oResponse->HumanReadable : '';
+                $oResponse->Tag . ' ' . $oResponse->StatusOrIndex . ' ' . $oResponse->HumanReadable : '';
         } elseif ($this->oPrevious instanceof \MailSo\Smtp\Exceptions\NegativeResponseException) {
             $sMessage = $this->oPrevious->getMessage();
             //			$oSub = $this->oPrevious->getPrevious();

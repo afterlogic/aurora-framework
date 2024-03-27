@@ -33,15 +33,6 @@ class Decorator
 
     /**
      *
-     * @return Decorator
-     */
-    public static function __callStatic($sMethodName, $aArguments)
-    {
-        return new self($sMethodName);
-    }
-
-    /**
-     *
      * @param string $sMethodName
      * @param array $aArguments
      * @return mixed

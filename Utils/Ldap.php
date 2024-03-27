@@ -51,7 +51,7 @@ class Ldap
 
         $aQuotedMetaChars = array();
         foreach ($aMetaChars as $iKey => $sValue) {
-            $aQuotedMetaChars[$iKey] = '\\'.str_pad(dechex(ord($sValue)), 2, '0');
+            $aQuotedMetaChars[$iKey] = '\\' . str_pad(dechex(ord($sValue)), 2, '0');
         }
 
         return str_replace($aMetaChars, $aQuotedMetaChars, $sStr);
@@ -92,14 +92,14 @@ class Ldap
         }
 
         if (!(is_resource($this->rLink) || is_object($this->rLink))) {
-            \Aurora\System\Api::Log('LDAP: connect to '.$sHost.':'.$iPort);
+            \Aurora\System\Api::Log('LDAP: connect to ' . $sHost . ':' . $iPort);
 
             $rLink = ldap_connect($sHost, $iPort);
             if ($rLink) {
                 @ldap_set_option($rLink, LDAP_OPT_PROTOCOL_VERSION, 3);
                 @ldap_set_option($rLink, LDAP_OPT_REFERRALS, 0);
 
-                \Aurora\System\Api::Log('LDAP: bind = "'.$sBindDb.'" / "'.$sBindPassword.'"');
+                \Aurora\System\Api::Log('LDAP: bind = "' . $sBindDb . '" / "' . $sBindPassword . '"');
                 if (0 < strlen($sBindDb) && 0 < strlen($sBindPassword) ?
                     !@ldap_bind($rLink, $sBindDb, $sBindPassword) : !@ldap_bind($rLink)
                 ) {
@@ -138,7 +138,7 @@ class Ldap
     public function ReBind($sBindDb, $sBindPassword)
     {
         if (is_resource($this->rLink) || is_object($this->rLink)) {
-            \Aurora\System\Api::Log('LDAP: rebind '.$sBindDb);
+            \Aurora\System\Api::Log('LDAP: rebind ' . $sBindDb);
 
             if (!@ldap_bind($this->rLink, $sBindDb, $sBindPassword)) {
                 $this->validateLdapErrorOnFalse(false);
@@ -159,7 +159,7 @@ class Ldap
     {
         if (false === $mReturn) {
             if ($this->rLink) {
-                \Aurora\System\Api::Log('LDAP: error #'.@ldap_errno($this->rLink).': '.@ldap_error($this->rLink), \Aurora\System\Enums\LogLevel::Error);
+                \Aurora\System\Api::Log('LDAP: error #' . @ldap_errno($this->rLink) . ': ' . @ldap_error($this->rLink), \Aurora\System\Enums\LogLevel::Error);
             } else {
                 \Aurora\System\Api::Log('LDAP: unknown ldap error', \Aurora\System\Enums\LogLevel::Error);
             }
@@ -175,18 +175,18 @@ class Ldap
     public function Search($sObjectFilter)
     {
         $result = false;
-        if ($this->rSearch && $this->sLastRequest === $this->sSearchDN.$sObjectFilter) {
-            \Aurora\System\Api::Log('LDAP: search repeat = "'.$this->sSearchDN.'" / '.$sObjectFilter);
+        if ($this->rSearch && $this->sLastRequest === $this->sSearchDN . $sObjectFilter) {
+            \Aurora\System\Api::Log('LDAP: search repeat = "' . $this->sSearchDN . '" / ' . $sObjectFilter);
 
             $this->validateLdapErrorOnFalse($this->rSearch);
             $result = is_resource($this->rSearch) || is_object($this->rSearch);
         } else {
-            \Aurora\System\Api::Log('LDAP: search = "'.$this->sSearchDN.'" / '.$sObjectFilter);
+            \Aurora\System\Api::Log('LDAP: search = "' . $this->sSearchDN . '" / ' . $sObjectFilter);
             $this->rSearch = @ldap_search($this->rLink, $this->sSearchDN, $sObjectFilter, array('*'), 0, 3000);
 
             $this->validateLdapErrorOnFalse($this->rSearch);
 
-            $this->sLastRequest = $this->sSearchDN.$sObjectFilter;
+            $this->sLastRequest = $this->sSearchDN . $sObjectFilter;
             $result = is_resource($this->rSearch) || is_object($this->rSearch);
         }
 
@@ -198,10 +198,10 @@ class Ldap
      */
     public function Add($sNewDn, $aEntry)
     {
-        \Aurora\System\Api::Log('ldap_add = '.((empty($sNewDn) ? '' : $sNewDn.',').$this->sSearchDN));
+        \Aurora\System\Api::Log('ldap_add = ' . ((empty($sNewDn) ? '' : $sNewDn . ',') . $this->sSearchDN));
         \Aurora\System\Api::LogObject($aEntry);
 
-        $bResult = !!@ldap_add($this->rLink, (empty($sNewDn) ? '' : $sNewDn.',').$this->sSearchDN, $aEntry);
+        $bResult = !!@ldap_add($this->rLink, (empty($sNewDn) ? '' : $sNewDn . ',') . $this->sSearchDN, $aEntry);
         $this->validateLdapErrorOnFalse($bResult);
 
         return $bResult;
@@ -214,8 +214,8 @@ class Ldap
     {
         $bResult = false;
         if (!empty($sDeleteDn)) {
-            \Aurora\System\Api::Log('ldap_delete = '.($sDeleteDn.','.$this->sSearchDN));
-            $bResult = !!@ldap_delete($this->rLink, $sDeleteDn.','.$this->sSearchDN);
+            \Aurora\System\Api::Log('ldap_delete = ' . ($sDeleteDn . ',' . $this->sSearchDN));
+            $bResult = !!@ldap_delete($this->rLink, $sDeleteDn . ',' . $this->sSearchDN);
             $this->validateLdapErrorOnFalse($bResult);
         }
 
@@ -230,10 +230,10 @@ class Ldap
         $bResult = false;
         if (!empty($sModifyDn)) {
             if (!empty($this->sSearchDN)) {
-                $sModifyDn = $sModifyDn.','.$this->sSearchDN;
+                $sModifyDn = $sModifyDn . ',' . $this->sSearchDN;
             }
 
-            \Aurora\System\Api::Log('ldap_modify = '.$sModifyDn);
+            \Aurora\System\Api::Log('ldap_modify = ' . $sModifyDn);
             \Aurora\System\Api::LogObject($aModifyEntry);
 
             $bResult = !!@ldap_modify($this->rLink, $sModifyDn, $aModifyEntry);

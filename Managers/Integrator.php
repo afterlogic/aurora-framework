@@ -93,7 +93,7 @@ class Integrator extends AbstractManager
     {
         $aResult = array();
         if (is_dir($sDir)) {
-            $aFiles = \Aurora\System\Utils::GlobRecursive($sDir.'/*'.$sType);
+            $aFiles = \Aurora\System\Utils::GlobRecursive($sDir . '/*' . $sType);
             foreach ($aFiles as $sFile) {
                 if ((empty($sType) || $sType === substr($sFile, -strlen($sType))) && is_file($sFile)) {
                     $aResult[] = $sFile;
@@ -117,15 +117,15 @@ class Integrator extends AbstractManager
         $sCacheFullFileName = '';
         $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
-            $sCacheFileName = 'templates-'.md5(\Aurora\System\Api::Version().$sHash).'.cache';
-            $sCacheFullFileName = \Aurora\System\Api::DataPath().'/cache/'.$sCacheFileName;
+            $sCacheFileName = 'templates-' . md5(\Aurora\System\Api::Version() . $sHash) . '.cache';
+            $sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
             if (file_exists($sCacheFullFileName)) {
                 return file_get_contents($sCacheFullFileName);
             }
         }
 
         $sResult = '';
-        $sPath = \Aurora\System\Api::WebMailPath().'modules';
+        $sPath = \Aurora\System\Api::WebMailPath() . 'modules';
 
         $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -140,10 +140,10 @@ class Integrator extends AbstractManager
                     if ($iPos === 0) {
                         $sName = substr($sFileName, $iDirNameLen + 1);
                     } else {
-                        $sName = '@errorName'.md5(rand(10000, 20000));
+                        $sName = '@errorName' . md5(rand(10000, 20000));
                     }
 
-                    $sTemplateID = $sModuleName.'_'.preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
+                    $sTemplateID = $sModuleName . '_' . preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(array('/', '\\'), '_', substr($sName, 0, -5)));
                     $sTemplateHtml = file_get_contents($sFileName);
 
                     $sTemplateHtml = \Aurora\System\Api::GetModuleManager()->ParseTemplate($sTemplateID, $sTemplateHtml);
@@ -154,8 +154,8 @@ class Integrator extends AbstractManager
                     $sTemplateHtml = preg_replace('/<script([^>]*)>/', '&lt;script$1&gt;', $sTemplateHtml);
                     $sTemplateHtml = preg_replace('/<\/script>/', '&lt;/script&gt;', $sTemplateHtml);
 
-                    $sResult .= '<script id="'.$sTemplateID.'" type="text/html">'.
-                        preg_replace('/[\r\n\t]+/', ' ', $sTemplateHtml).'</script>';
+                    $sResult .= '<script id="' . $sTemplateID . '" type="text/html">' .
+                        preg_replace('/[\r\n\t]+/', ' ', $sTemplateHtml) . '</script>';
                 }
             }
         }
@@ -167,7 +167,7 @@ class Integrator extends AbstractManager
                 @mkdir(dirname($sCacheFullFileName), 0777, true);
             }
 
-            $sResult = '<!-- '.$sCacheFileName.' -->'.$sResult;
+            $sResult = '<!-- ' . $sCacheFileName . ' -->' . $sResult;
             file_put_contents($sCacheFullFileName, $sResult);
         }
 
@@ -249,7 +249,7 @@ class Integrator extends AbstractManager
         $sCacheFullFileName = '';
         $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
-            $sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version().$sHash) . '.cache';
+            $sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version() . $sHash) . '.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
             if (file_exists($sCacheFullFileName)) {
                 $sResult = file_get_contents($sCacheFullFileName);
@@ -258,14 +258,14 @@ class Integrator extends AbstractManager
 
         if ($sResult === "") {
             $aResult = array();
-            $sPath = \Aurora\System\Api::WebMailPath().'modules';
+            $sPath = \Aurora\System\Api::WebMailPath() . 'modules';
 
             $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
             foreach ($aModuleNames as $sModuleName) {
                 $aLangContent = '';
 
-                $sFileName = $sPath . '/' . $sModuleName . '/i18n/'.$sLanguage.'.ini';
+                $sFileName = $sPath . '/' . $sModuleName . '/i18n/' . $sLanguage . '.ini';
 
                 if (file_exists($sFileName)) {
                     $aLangContent = @parse_ini_string(file_get_contents($sFileName), true);
@@ -277,7 +277,7 @@ class Integrator extends AbstractManager
 
                 if ($aLangContent) {
                     foreach ($aLangContent as $sLangKey => $sLangValue) {
-                        $aResult[strtoupper($sModuleName)."/".$sLangKey] = $sLangValue;
+                        $aResult[strtoupper($sModuleName) . "/" . $sLangKey] = $sLangValue;
                     }
                 }
             }
@@ -290,7 +290,7 @@ class Integrator extends AbstractManager
                     mkdir(dirname($sCacheFullFileName), 0777, true);
                 }
 
-                $sResult = '/* '.$sCacheFileName.' */'.$sResult;
+                $sResult = '/* ' . $sCacheFileName . ' */' . $sResult;
                 file_put_contents($sCacheFullFileName, $sResult);
             }
         }
@@ -306,7 +306,7 @@ class Integrator extends AbstractManager
      */
     public function compileLanguage($sLanguage)
     {
-        return '<script>window.auroraI18n='.$this->getLanguage($sLanguage).';</script>';
+        return '<script>window.auroraI18n=' . $this->getLanguage($sLanguage) . ';</script>';
     }
 
     /**
@@ -477,9 +477,9 @@ class Integrator extends AbstractManager
         $iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
         $sAccountHashTable = \Aurora\System\Api::EncodeKeyValues($aAccountHashTable);
 
-        $sAuthToken = \md5($oAccount->IdUser.$oAccount->IncomingLogin.\microtime(true).\rand(10000, 99999));
+        $sAuthToken = \md5($oAccount->IdUser . $oAccount->IncomingLogin . \microtime(true) . \rand(10000, 99999));
 
-        return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:'.$sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
+        return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:' . $sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
     }
 
     public function skipMobileCheck()
@@ -566,7 +566,7 @@ class Integrator extends AbstractManager
         if (null === $aList) {
             $aList = array();
             $sEnglishLang = null;
-            $sPath = \Aurora\System\Api::WebMailPath().'modules';
+            $sPath = \Aurora\System\Api::WebMailPath() . 'modules';
 
             $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
 
@@ -578,7 +578,7 @@ class Integrator extends AbstractManager
                     if ($rDirH) {
                         while (($sFile = @readdir($rDirH)) !== false) {
                             $sLanguage = substr($sFile, 0, -4);
-                            if ('.' !== $sFile[0] && is_file($sModuleLangsDir.'/'.$sFile) && '.ini' === substr($sFile, -4)) {
+                            if ('.' !== $sFile[0] && is_file($sModuleLangsDir . '/' . $sFile) && '.ini' === substr($sFile, -4)) {
                                 if (0 < strlen($sLanguage) && !in_array($sLanguage, $aList)) {
                                     if ('english' === strtolower($sLanguage)) {
                                         $sEnglishLang = $sLanguage;
@@ -620,7 +620,7 @@ class Integrator extends AbstractManager
             $oModuleManager = \Aurora\System\Api::GetModuleManager();
             $sCoreWebclientModule = \Aurora\System\Api::IsMobileApplication() ? 'CoreMobileWebclient' : 'CoreWebclient';
             $aThemes = $oModuleManager->getModuleConfigValue($sCoreWebclientModule, 'ThemeList');
-            $sDir = \Aurora\System\Api::WebMailPath().'static/styles/themes/';
+            $sDir = \Aurora\System\Api::WebMailPath() . 'static/styles/themes/';
 
             if (is_array($aThemes)) {
                 $sPostfix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
@@ -697,7 +697,7 @@ class Integrator extends AbstractManager
      */
     public function compileAppData()
     {
-        return '<script>window.auroraAppData='.@json_encode($this->appData()).';</script>';
+        return '<script>window.auroraAppData=' . @json_encode($this->appData()) . ';</script>';
     }
 
     /**
@@ -765,8 +765,8 @@ class Integrator extends AbstractManager
         //		else
         //		{
         $sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
-'<link type="text/css" rel="stylesheet" href="./static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
+'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css' . '?' . \Aurora\System\Api::VersionJs() . '" />' .
+'<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css' . '?' . \Aurora\System\Api::VersionJs() . '" />';
         //		}
 
         return $sS;
@@ -781,6 +781,7 @@ class Integrator extends AbstractManager
         foreach ($aModuleNames as $sModuleName) {
             $this->populateClientModuleNames($sModulesPath, $sModuleName, $bIsMobileApplication, $aClientModuleNames, false);
         }
+        sort($aClientModuleNames);
 
         return $aClientModuleNames;
     }
@@ -795,6 +796,8 @@ class Integrator extends AbstractManager
                 $aBackendModuleNames[] = $sModuleName;
             }
         }
+        sort($aBackendModuleNames);
+
         return $aBackendModuleNames;
     }
 
@@ -829,11 +832,11 @@ class Integrator extends AbstractManager
         $bIsPublic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
         $bIsNewTab = isset($aConfig['new_tab']) ? (bool)$aConfig['new_tab'] : false;
 
-        return '<script>window.isPublic = '.($bIsPublic ? 'true' : 'false').
-                '; window.isNewTab = '.($bIsNewTab ? 'true' : 'false').
-                '; window.aAvailableModules = ["'.implode('","', $aClientModuleNames).'"]'.
-                '; window.aAvailableBackendModules = ["'.implode('","', $this->GetBackendModules()).'"];</script>
-		<script src="'.$sJsScriptPath."static/js/app".$sPostfix.".js?".\Aurora\System\Api::VersionJs().'"></script>';
+        return '<script>window.isPublic = ' . ($bIsPublic ? 'true' : 'false') .
+                '; window.isNewTab = ' . ($bIsNewTab ? 'true' : 'false') .
+                '; window.aAvailableModules = ["' . implode('","', $aClientModuleNames) . '"]' .
+                '; window.aAvailableBackendModules = ["' . implode('","', $this->GetBackendModules()) . '"];</script>
+		<script src="' . $sJsScriptPath . "static/js/app" . $sPostfix . ".js?" . \Aurora\System\Api::VersionJs() . '"></script>';
     }
 
     /**
@@ -880,11 +883,11 @@ class Integrator extends AbstractManager
     {
         list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
         return
-            $this->compileTemplates()."\r\n".
-            $this->compileLanguage($sLanguage)."\r\n".
-            $this->compileAppData()."\r\n".
-            $this->compileJS($aConfig).
-            "\r\n".'<!-- '.\Aurora\System\Api::VersionFull().' -->'
+            $this->compileTemplates() . "\r\n" .
+            $this->compileLanguage($sLanguage) . "\r\n" .
+            $this->compileAppData() . "\r\n" .
+            $this->compileJS($aConfig) .
+            "\r\n" . '<!-- ' . \Aurora\System\Api::VersionFull() . ' -->'
         ;
     }
 

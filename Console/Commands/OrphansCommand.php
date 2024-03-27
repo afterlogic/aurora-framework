@@ -148,7 +148,7 @@ class OrphansCommand extends BaseCommand
                         }
 
                         foreach ($orphanUUIDs as $orphanUUID) {
-                            rename($dirPersonalFiles."/".$orphanUUID, $dirOrphanFiles."/".$orphanUUID);
+                            rename($dirPersonalFiles . "/" . $orphanUUID, $dirOrphanFiles . "/" . $orphanUUID);
                         }
 
                         $this->logger->warning('Orphan user files were moved to ' . $dirOrphanFiles . '.');
@@ -236,7 +236,7 @@ class OrphansCommand extends BaseCommand
         ];
 
         $dirName = \Aurora\System\Logger::GetLogFileDir() . "/orphans-logs";
-        $entitiesFileName = $dirName . "/orphans_".date('Y-m-d_H-i-s').".json";
+        $entitiesFileName = $dirName . "/orphans_" . date('Y-m-d_H-i-s') . ".json";
         $orphansEntities = [];
 
         $dirname = dirname($entitiesFileName);
