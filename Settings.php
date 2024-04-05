@@ -418,5 +418,6 @@ class Settings extends AbstractSettings
         if ($result) {
             Api::CreateContainer(true);
         }
+        return $result;
     }
 }
