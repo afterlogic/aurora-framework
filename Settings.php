@@ -411,4 +411,12 @@ class Settings extends AbstractSettings
         );
         $this->Save();
     }
+
+    public function Save($bBackupConfigFile = true)
+    {
+        $result = parent::Save($bBackupConfigFile);
+        if ($result) {
+            Api::CreateContainer(true);
+        }
+    }
 }

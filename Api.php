@@ -1532,9 +1532,9 @@ class Api
         return $aDbConfig;
     }
 
-    private static function CreateContainer()
+    public static function CreateContainer($force = false)
     {
-        if (!isset(self::$oContainer)) {
+        if (!isset(self::$oContainer) || $force) {
             // Instantiate the app container
             $appContainer = Container::getInstance();
 
@@ -1547,18 +1547,18 @@ class Api
 
             $oSettings = &Api::GetSettings();
             if ($oSettings) {
-                $appContainer['db-config'] = self::GetDbConfig(
-                    $oSettings->DBType,
-                    $oSettings->DBHost,
-                    $oSettings->DBName,
-                    $oSettings->DBPrefix,
-                    $oSettings->DBLogin,
-                    $oSettings->DBPassword
-                );
-
                 $capsule = new \Illuminate\Database\Capsule\Manager();
                 $appContainer['capsule'] = $capsule;
-                $capsule->addConnection($appContainer['db-config']);
+                $capsule->addConnection(
+                    self::GetDbConfig(
+                        $oSettings->DBType,
+                        $oSettings->DBHost,
+                        $oSettings->DBName,
+                        $oSettings->DBPrefix,
+                        $oSettings->DBLogin,
+                        $oSettings->DBPassword
+                    )
+                );
 
                 //Make this Capsule instance available globally.
                 $capsule->setAsGlobal();
@@ -1629,9 +1629,9 @@ class Api
     /**
      * @return Container
      */
-    public static function GetContainer()
+    public static function GetContainer($force = false)
     {
-        self::CreateContainer();
+        self::CreateContainer($force);
 
         return self::$oContainer;
     }
