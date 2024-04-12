@@ -61,7 +61,7 @@ class Thumb
 
         try {
             $sCacheFilename = self::GetCacheFilename(self::GetHash(), $sFileName);
-            $sCacheFilePathTmp = Cache::getPath() . $sCacheFilename . '-' . $sFileName;
+            $sCacheFilePathTmp = Cache::getPath() . $sCacheFilename;
             $rFile = \fopen($sCacheFilePathTmp, 'w+');
             \fwrite($rFile, \stream_get_contents($rResource));
 
