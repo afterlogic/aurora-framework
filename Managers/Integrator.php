@@ -223,13 +223,12 @@ class Integrator extends AbstractManager
      */
     public static function GetAdminUser()
     {
-        $oUser = new \Aurora\Modules\Core\Models\User();
-
-        $oUser->Id = -1;
-        $oUser->Role = \Aurora\System\Enums\UserRole::SuperAdmin;
-        $oUser->PublicId = 'Administrator';
-
-        return $oUser;
+        return new \Aurora\Modules\Core\Models\User([
+            'Id' => -1,
+            'Role' => \Aurora\System\Enums\UserRole::SuperAdmin,
+            'PublicId' => 'Administrator',
+            'TokensValidFromTimestamp' => 0
+        ]);
     }
 
     /**
@@ -317,7 +316,7 @@ class Integrator extends AbstractManager
     public function getAuthenticatedUserHelper($sAuthToken = '')
     {
         $aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
-        $iUserId = $aUserInfo['userId'];
+        $iUserId = (int) $aUserInfo['userId'];
         $oUser = null;
         if (0 < $iUserId) {
             $oUser = self::GetUser($iUserId);
@@ -335,6 +334,7 @@ class Integrator extends AbstractManager
     public function getAuthenticatedUserByIdHelper($iUserId)
     {
         $oUser = null;
+        $iUserId = (int) $iUserId;
         if (0 < $iUserId) {
             $oUser = static::GetUser($iUserId);
         } elseif ($iUserId === -1) {
@@ -352,7 +352,7 @@ class Integrator extends AbstractManager
     /**
      * @param string $sAuthToken Default value is empty string.
      *
-     * @return int
+     * @return array
      */
     public function getAuthenticatedUserInfo($sAuthToken = '')
     {
