@@ -177,9 +177,19 @@ class Model extends Eloquent
         if (!$this->foreignModel || !$this->foreignModelIdColumn) {
             return ['status' => -1, 'message' => 'Foreign field doesn\'t exist'];
         }
+
+        $container = \Aurora\System\Api::GetContainer();   
+        $connection = $container['capsule']->getConnection($this->getConnectionName());
         $tableName = $this->getTable();
         $foreignObject = new $this->foreignModel();
+        $foreignConnection = $container['capsule']->getConnection($foreignObject->getConnectionName());
         $foreignTable = $foreignObject->getTable();
+
+        // Adding prefix is required because current module work with custom DB connection without prefix. See MtaConnector module
+        if ($connection->getName() != 'default' && $foreignConnection->getName() == 'default') {
+            $foreignTable = $foreignConnection->getTablePrefix() . $foreignTable;
+        }
+
         $foreignPK = $foreignObject->primaryKey;
 
         $query = self::query();
