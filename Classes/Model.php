@@ -178,7 +178,7 @@ class Model extends Eloquent
             return ['status' => -1, 'message' => 'Foreign field doesn\'t exist'];
         }
 
-        $container = \Aurora\System\Api::GetContainer();   
+        $container = \Aurora\System\Api::GetContainer();
         $connection = $container['capsule']->getConnection($this->getConnectionName());
         $tableName = $this->getTable();
         $foreignObject = new $this->foreignModel();

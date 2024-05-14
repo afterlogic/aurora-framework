@@ -104,6 +104,7 @@ class OrphansCommand extends BaseCommand
                         break;
                     case 1:
                         $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
+                        sort($aOrphansEntities[$model]);
                         if ($input->getOption('remove') && !empty($aOrphansEntities[$model])) {
                             $this->logger->error($checkOrphan['message']);
                             $bRemove = $helper->ask($input, $output, $question);
