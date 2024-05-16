@@ -417,9 +417,9 @@ class Api
     /**
      * @return \Aurora\System\Settings
      */
-    public static function &GetSettings()
+    public static function &GetSettings($force = false)
     {
-        if (null === self::$oSettings) {
+        if (null === self::$oSettings || $force) {
             try {
                 $sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
                 if (!\file_exists($sSettingsPath)) {
@@ -433,6 +433,7 @@ class Api
                 }
 
                 self::$oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
+                self::$oSettings->Load();
             } catch (\Aurora\System\Exceptions\BaseException $oException) {
                 self::$oSettings = false;
             }
