@@ -202,35 +202,6 @@ class Integrator extends AbstractManager
         return $sLanguage;
     }
 
-
-    /**
-     *
-     */
-    public static function GetUser($iUserId)
-    {
-        $mResult = false;
-        $oUser = \Aurora\Modules\Core\Models\User::find($iUserId);
-
-        if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
-            $mResult = $oUser;
-        }
-
-        return $mResult;
-    }
-
-    /**
-     *
-     */
-    public static function GetAdminUser()
-    {
-        return new \Aurora\Modules\Core\Models\User([
-            'Id' => -1,
-            'Role' => \Aurora\System\Enums\UserRole::SuperAdmin,
-            'PublicId' => 'Administrator',
-            'TokensValidFromTimestamp' => 0
-        ]);
-    }
-
     /**
      * @TODO use tenants modules if exist
      * @param string $sLanguage
@@ -319,30 +290,12 @@ class Integrator extends AbstractManager
         $iUserId = (int) $aUserInfo['userId'];
         $oUser = null;
         if (0 < $iUserId) {
-            $oUser = self::GetUser($iUserId);
+            $oUser = \Aurora\System\Api::getUserById($iUserId);
         } elseif ($aUserInfo['isAdmin']) {
-            $oUser = self::GetAdminUser();
+            $oUser = \Aurora\System\Api::getUserById(-1);
         }
         return $oUser;
     }
-
-    /**
-     * @param int $iUserId Default value is empty string.
-     *
-     * @return \Aurora\Modules\Core\Models\User|null
-     */
-    public function getAuthenticatedUserByIdHelper($iUserId)
-    {
-        $oUser = null;
-        $iUserId = (int) $iUserId;
-        if (0 < $iUserId) {
-            $oUser = static::GetUser($iUserId);
-        } elseif ($iUserId === -1) {
-            $oUser = self::GetAdminUser();
-        }
-        return $oUser;
-    }
-
 
     public function validateAuthToken($sAuthToken)
     {
@@ -364,7 +317,7 @@ class Integrator extends AbstractManager
         $aAccountHashTable = \Aurora\System\Api::UserSession()->Get($sAuthToken);
         if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
             'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
-            $oUser = static::GetUser((int) $aAccountHashTable['id']);
+            $oUser = \Aurora\System\Api::getUserById((int) $aAccountHashTable['id']);
             if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
                 $aInfo = array(
                     'isAdmin' => false,

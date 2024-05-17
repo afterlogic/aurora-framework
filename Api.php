@@ -132,11 +132,6 @@ class Api
     public static $oContainer = null;
 
     /**
-     * @var array
-     */
-    protected static $usersCache = [];
-
-    /**
      *
      * @return string
      */
@@ -1200,7 +1195,7 @@ class Api
 
     /**
      *
-     * @return \Aurora\Modules\Core\Models\User
+     * @return User
      */
     public static function authorise($sAuthToken = '')
     {
@@ -1213,7 +1208,7 @@ class Api
                 $sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
                 $mUserId = self::getAuthenticatedUserId($sAuthToken);
             }
-            $oUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mUserId);
+            $oUser = self::getUserById($mUserId);
         } catch (\Exception $oException) {
         }
         return $oUser;
@@ -1317,7 +1312,7 @@ class Api
      * @param string $sAuthToken
      * @param bool $bForce
      *
-     * @return \Aurora\Modules\Core\Models\User
+     * @return User
      */
     public static function getAuthenticatedUser($sAuthToken = '', $bForce = false)
     {
@@ -1331,7 +1326,7 @@ class Api
 
             $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
             if ($oIntegrator) {
-                self::$oAuthenticatedUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
+                self::$oAuthenticatedUser = self::getUserById($iUserId);
             }
         }
         return self::$oAuthenticatedUser;
@@ -1355,16 +1350,12 @@ class Api
     public static function getUserUUIDById($iUserId)
     {
         $sUUID = '';
-        static $aUUIDs = []; // cache
 
         if (\is_numeric($iUserId)) {
-            if (isset($aUUIDs[$iUserId])) {
-                $sUUID = $aUUIDs[$iUserId];
-            } else {
-                $oUser = User::find($iUserId);
-                if ($oUser) {
-                    $aUUIDs[$iUserId] = $sUUID = $oUser->UUID;
-                }
+            $oUser = self::getUserById($iUserId);
+
+            if ($oUser instanceof User) {
+                $sUUID = $oUser->UUID;
             }
         } else {
             $sUUID = $iUserId;
@@ -1382,10 +1373,11 @@ class Api
         $sPublicId = '';
 
         if (\is_numeric($iUserId)) {
-            $oUser = User::query()->select('PublicId')->where('Id', $iUserId)->first();
+            $oUser = self::getUserById($iUserId);
             if ($oUser) {
                 return $oUser->PublicId;
             }
+            // @TODO: check if it's needed
         } else {
             $sPublicId = $iUserId;
         }
@@ -1395,19 +1387,20 @@ class Api
 
     /**
      * @param string $sPublicId
-     * @return int
+     * @return int|false
      */
     public static function getUserIdByPublicId($sPublicId)
     {
         $iUserId = false;
 
         if (Api::GetSettings()->GetValue('AdminLogin') === $sPublicId) { // superadmin user
-            return -1;
-        }
+            $iUserId = -1;
+        } else {
+            $mUser = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUserByPublicId($sPublicId);
 
-        $oUser = User::query()->select('Id')->where('PublicId', $sPublicId)->first();
-        if ($oUser) {
-            return $oUser->Id;
+            if ($mUser instanceof User) {
+                $iUserId = $mUser->Id;
+            }
         }
 
         return $iUserId;
@@ -1415,15 +1408,18 @@ class Api
 
     public static function getUserById($iUserId, $bForce = false)
     {
-        try {
-            if (!isset(self::$usersCache[$iUserId]) || $bForce) {
-                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+        $mUser = false;
+
+        if ($iUserId === 0) {
+            $mUser = null;
+        } else {
+            $oUser = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUser($iUserId, $bForce);
+            if ($oUser instanceof User) {
+                $mUser = $oUser;
             }
-        } catch (\Exception $oEx) {
-            self::$usersCache[$iUserId] = false;
         }
 
-        return self::$usersCache[$iUserId];
+        return $mUser;
     }
 
     public static function getTenantById($iTenantId)
@@ -1651,7 +1647,7 @@ class Api
         } else {
             $iUserId = (int) $UserId;
 
-            $iUserRole = $oAuthenticatedUser instanceof \Aurora\Modules\Core\Models\User ? $oAuthenticatedUser->Role : \Aurora\System\Enums\UserRole::Anonymous;
+            $iUserRole = $oAuthenticatedUser instanceof User ? $oAuthenticatedUser->Role : \Aurora\System\Enums\UserRole::Anonymous;
             switch ($iUserRole) {
                 case (\Aurora\System\Enums\UserRole::SuperAdmin):
                     // everything is allowed for SuperAdmin
@@ -1660,8 +1656,8 @@ class Api
                     break;
                 case (\Aurora\System\Enums\UserRole::TenantAdmin):
                     // everything is allowed for TenantAdmin
-                    $oUser = \Aurora\Modules\Core\Module::getInstance()->GetUser($iUserId);
-                    if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
+                    $oUser = self::getUserById($iUserId);
+                    if ($oUser instanceof User) {
                         if ($oAuthenticatedUser->IdTenant === $oUser->IdTenant) {
                             $UserId = $iUserId;
                             $bAccessDenied = false;
