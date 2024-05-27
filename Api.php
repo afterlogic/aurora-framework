@@ -132,6 +132,16 @@ class Api
     public static $oContainer = null;
 
     /**
+     * @var array
+     */
+    protected static $usersCache = [];
+
+    /**
+     * @var array
+     */
+    protected static $tenantsCache = [];
+
+    /**
      *
      * @return string
      */
@@ -1195,7 +1205,7 @@ class Api
 
     /**
      *
-     * @return User
+     * @return \Aurora\Modules\Core\Models\User
      */
     public static function authorise($sAuthToken = '')
     {
@@ -1312,7 +1322,7 @@ class Api
      * @param string $sAuthToken
      * @param bool $bForce
      *
-     * @return User
+     * @return \Aurora\Modules\Core\Models\User
      */
     public static function getAuthenticatedUser($sAuthToken = '', $bForce = false)
     {
@@ -1324,10 +1334,7 @@ class Api
                 $iUserId = self::$aUserSession['UserId'];
             }
 
-            $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-            if ($oIntegrator) {
-                self::$oAuthenticatedUser = self::getUserById($iUserId);
-            }
+            self::$oAuthenticatedUser = self::getUserById($iUserId);
         }
         return self::$oAuthenticatedUser;
     }
@@ -1394,37 +1401,105 @@ class Api
         $iUserId = false;
 
         if (Api::GetSettings()->GetValue('AdminLogin') === $sPublicId) { // superadmin user
-            $iUserId = -1;
-        } else {
-            $mUser = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUserByPublicId($sPublicId);
-
-            if ($mUser instanceof User) {
-                $iUserId = $mUser->Id;
-            }
+            return -1;
         }
+
+        $iUserId = self::getUserByPublicId($sPublicId);
 
         return $iUserId;
     }
 
-    public static function getUserById($iUserId, $bForce = false)
+    public static function getUserByPublicId($sPublicId, $bForce = false)
     {
-        $mUser = false;
-
-        if ($iUserId === 0) {
-            $mUser = null;
-        } else {
-            $oUser = \Aurora\Modules\Core\Module::getInstance()->getUsersManager()->getUser($iUserId, $bForce);
-            if ($oUser instanceof User) {
-                $mUser = $oUser;
+        $result = null;
+        if (!$bForce) {
+            foreach (self::$usersCache as $user) {
+                if ($user->PublicId === $sPublicId) {
+                    $result = $user;
+                    break;
+                }
+            }
+        }
+        if (!$result) {
+            $result = User::where('PublicId', $sPublicId)->first();
+            if ($result) {
+                self::$usersCache[$result->Id] = $result;
             }
         }
 
-        return $mUser;
+        return $result;
     }
 
-    public static function getTenantById($iTenantId)
+    public static function getUserById($iUserId, $bForce = false)
     {
-        return Tenant::find($iTenantId);
+        try {
+            if (!isset(self::$usersCache[$iUserId]) || $bForce) {
+                $oUser = Managers\Integrator::getUserByIdHelper($iUserId);
+                if ($oUser) {
+                    self::$usersCache[$iUserId] = $oUser;
+                }
+            }
+        } catch (\Exception $oEx) {
+            self::LogException($oEx);
+        }
+
+        return isset(self::$usersCache[$iUserId]) ? self::$usersCache[$iUserId] : null;
+    }
+
+    public static function removeUserFromCache($iUserId)
+    {
+        if (!isset(self::$usersCache[$iUserId])) {
+            unset(self::$usersCache[$iUserId]);
+        }
+    }
+
+    public static function getTenantById($iTenantId, $bForce = false)
+    {
+        try {
+            if (!isset(self::$tenantsCache[$iTenantId]) || $bForce) {
+                self::$tenantsCache[$iTenantId] = Tenant::find($iTenantId);
+                ;
+            }
+        } catch (\Exception $oEx) {
+            self::$tenantsCache[$iTenantId] = false;
+        }
+
+        return self::$tenantsCache[$iTenantId];
+    }
+
+    public static function getTenantByWebDomain()
+    {
+        static $bTenantInitialized = false;
+        static $oTenant = null;
+
+        if (!$bTenantInitialized) {
+            if (!empty($_SERVER['SERVER_NAME'])) {
+
+                foreach (self::$tenantsCache as $tenantCache) {
+                    if ($tenantCache->WebDomain === $_SERVER['SERVER_NAME']) {
+                        $oTenant = $tenantCache;
+                        break;
+                    }
+                }
+
+                if (!$oTenant) {
+                    $oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
+                    if ($oTenant) {
+                        self::$tenantsCache[$oTenant->Id] = $oTenant;
+                    }
+                }
+            }
+            $bTenantInitialized = true;
+        }
+
+        return $oTenant;
+    }
+
+    public static function removeTenantFromCache($iTenantId)
+    {
+        if (!isset(self::$tenantsCache[$iTenantId])) {
+            unset(self::$tenantsCache[$iTenantId]);
+        }
     }
 
     public static function setTenantName($sTenantName)
@@ -1459,21 +1534,6 @@ class Api
             }
 
             //			$bTenantInitialized = true;
-        }
-
-        return $oTenant;
-    }
-
-    public static function getTenantByWebDomain()
-    {
-        static $bTenantInitialized = false;
-        static $oTenant = null;
-
-        if (!$bTenantInitialized) {
-            if (!empty($_SERVER['SERVER_NAME'])) {
-                $oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
-            }
-            $bTenantInitialized = true;
         }
 
         return $oTenant;
@@ -1647,7 +1707,7 @@ class Api
         } else {
             $iUserId = (int) $UserId;
 
-            $iUserRole = $oAuthenticatedUser instanceof User ? $oAuthenticatedUser->Role : \Aurora\System\Enums\UserRole::Anonymous;
+            $iUserRole = $oAuthenticatedUser instanceof \Aurora\Modules\Core\Models\User ? $oAuthenticatedUser->Role : \Aurora\System\Enums\UserRole::Anonymous;
             switch ($iUserRole) {
                 case (\Aurora\System\Enums\UserRole::SuperAdmin):
                     // everything is allowed for SuperAdmin
@@ -1656,8 +1716,8 @@ class Api
                     break;
                 case (\Aurora\System\Enums\UserRole::TenantAdmin):
                     // everything is allowed for TenantAdmin
-                    $oUser = self::getUserById($iUserId);
-                    if ($oUser instanceof User) {
+                    $oUser = \Aurora\Modules\Core\Module::getInstance()->GetUser($iUserId);
+                    if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
                         if ($oAuthenticatedUser->IdTenant === $oUser->IdTenant) {
                             $UserId = $iUserId;
                             $bAccessDenied = false;

@@ -202,6 +202,35 @@ class Integrator extends AbstractManager
         return $sLanguage;
     }
 
+
+    /**
+     *
+     */
+    public static function GetUser($iUserId)
+    {
+        $mResult = false;
+        $oUser = \Aurora\Modules\Core\Models\User::find($iUserId);
+
+        if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
+            $mResult = $oUser;
+        }
+
+        return $mResult;
+    }
+
+    /**
+     *
+     */
+    public static function GetAdminUser()
+    {
+        return new \Aurora\Modules\Core\Models\User([
+            'Id' => -1,
+            'Role' => \Aurora\System\Enums\UserRole::SuperAdmin,
+            'PublicId' => 'Administrator',
+            'TokensValidFromTimestamp' => 0
+        ]);
+    }
+
     /**
      * @TODO use tenants modules if exist
      * @param string $sLanguage
@@ -280,22 +309,22 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * @param string $sAuthToken Default value is empty string.
+     * @param int $iUserId Default value is empty string.
      *
-     * @return \Aurora\Modules\Core\Models\User
+     * @return \Aurora\Modules\Core\Models\User|null
      */
-    public function getAuthenticatedUserHelper($sAuthToken = '')
+    public static function getUserByIdHelper($iUserId)
     {
-        $aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
-        $iUserId = (int) $aUserInfo['userId'];
         $oUser = null;
+        $iUserId = (int) $iUserId;
         if (0 < $iUserId) {
-            $oUser = \Aurora\System\Api::getUserById($iUserId);
-        } elseif ($aUserInfo['isAdmin']) {
-            $oUser = \Aurora\System\Api::getUserById(-1);
+            $oUser = static::GetUser($iUserId);
+        } elseif ($iUserId === -1) {
+            $oUser = self::GetAdminUser();
         }
         return $oUser;
     }
+
 
     public function validateAuthToken($sAuthToken)
     {
@@ -314,45 +343,27 @@ class Integrator extends AbstractManager
             'userId' => 0,
             'accountType' => 0
         );
-        $aAccountHashTable = \Aurora\System\Api::UserSession()->Get($sAuthToken);
-        if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-            'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
-            $oUser = \Aurora\System\Api::getUserById((int) $aAccountHashTable['id']);
-            if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
+        $aAccountHashTable = \Aurora\Api::UserSession()->Get($sAuthToken);
+        if (is_array($aAccountHashTable) && isset($aAccountHashTable['token'])) {
+            if ('auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
+                $oUser = \Aurora\Api::getUserById((int) $aAccountHashTable['id']);
+                if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
+                    $aInfo = array(
+                        'isAdmin' => false,
+                        'userId' => (int) $aAccountHashTable['id'],
+                        'account' => isset($aAccountHashTable['account']) ? $aAccountHashTable['account'] : 0,
+                        'accountType' => isset($aAccountHashTable['account_type']) ? $aAccountHashTable['account_type'] : 0,
+                    );
+                }
+            } elseif ('admin' === $aAccountHashTable['token']) {
                 $aInfo = array(
-                    'isAdmin' => false,
-                    'userId' => (int) $aAccountHashTable['id'],
-                    'account' => isset($aAccountHashTable['account']) ? $aAccountHashTable['account'] : 0,
-                    'accountType' => isset($aAccountHashTable['account_type']) ? $aAccountHashTable['account_type'] : 0,
+                    'isAdmin' => true,
+                    'userId' => -1,
+                    'accountType' => 0
                 );
             }
-        } elseif (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-            'admin' === $aAccountHashTable['token']) {
-            $aInfo = array(
-                'isAdmin' => true,
-                'userId' => -1,
-                'accountType' => 0
-            );
         }
         return $aInfo;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAuthenticatedHelpdeskUserId()
-    {
-        $iHdUserId = 0;
-        $sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
-        if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable = \Aurora\System\Api::DecodeKeyValues($sKey);
-            if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
-                'hd_auth' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id'])) {
-                $iHdUserId = (int) $aUserHashTable['id'];
-            }
-        }
-
-        return $iHdUserId;
     }
 
     /**
