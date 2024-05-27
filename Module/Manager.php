@@ -97,10 +97,10 @@ class Manager
      */
     public function loadModules()
     {
+        $oUser = \Aurora\System\Api::authorise();
         $oCoreModule = $this->loadModule('Core');
 
         if ($oCoreModule instanceof AbstractModule) {
-            $oUser = \Aurora\System\Api::authorise();
             $oTenant = null;
             if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
                 $oTenant = \Aurora\Modules\Core\Module::Decorator()->GetTenantWithoutRoleCheck($oUser->IdTenant);
