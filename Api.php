@@ -137,6 +137,11 @@ class Api
     protected static $usersCache = [];
 
     /**
+     * @var array
+     */
+    protected static $tenantsCache = [];
+
+    /**
      *
      * @return string
      */
@@ -1213,7 +1218,7 @@ class Api
                 $sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
                 $mUserId = self::getAuthenticatedUserId($sAuthToken);
             }
-            $oUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mUserId);
+            $oUser = self::getUserById($mUserId);
         } catch (\Exception $oException) {
         }
         return $oUser;
@@ -1329,10 +1334,7 @@ class Api
                 $iUserId = self::$aUserSession['UserId'];
             }
 
-            $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-            if ($oIntegrator) {
-                self::$oAuthenticatedUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
-            }
+            self::$oAuthenticatedUser = self::getUserById($iUserId);
         }
         return self::$oAuthenticatedUser;
     }
@@ -1355,16 +1357,12 @@ class Api
     public static function getUserUUIDById($iUserId)
     {
         $sUUID = '';
-        static $aUUIDs = []; // cache
 
         if (\is_numeric($iUserId)) {
-            if (isset($aUUIDs[$iUserId])) {
-                $sUUID = $aUUIDs[$iUserId];
-            } else {
-                $oUser = User::find($iUserId);
-                if ($oUser) {
-                    $aUUIDs[$iUserId] = $sUUID = $oUser->UUID;
-                }
+            $oUser = self::getUserById($iUserId);
+
+            if ($oUser instanceof User) {
+                $sUUID = $oUser->UUID;
             }
         } else {
             $sUUID = $iUserId;
@@ -1382,10 +1380,11 @@ class Api
         $sPublicId = '';
 
         if (\is_numeric($iUserId)) {
-            $oUser = User::query()->select('PublicId')->where('Id', $iUserId)->first();
+            $oUser = self::getUserById($iUserId);
             if ($oUser) {
                 return $oUser->PublicId;
             }
+            // @TODO: check if it's needed
         } else {
             $sPublicId = $iUserId;
         }
@@ -1395,7 +1394,7 @@ class Api
 
     /**
      * @param string $sPublicId
-     * @return int
+     * @return int|false
      */
     public static function getUserIdByPublicId($sPublicId)
     {
@@ -1405,30 +1404,102 @@ class Api
             return -1;
         }
 
-        $oUser = User::query()->select('Id')->where('PublicId', $sPublicId)->first();
-        if ($oUser) {
-            return $oUser->Id;
-        }
+        $iUserId = self::getUserByPublicId($sPublicId);
 
         return $iUserId;
+    }
+
+    public static function getUserByPublicId($sPublicId, $bForce = false)
+    {
+        $result = null;
+        if (!$bForce) {
+            foreach (self::$usersCache as $user) {
+                if ($user->PublicId === $sPublicId) {
+                    $result = $user;
+                    break;
+                }
+            }
+        }
+        if (!$result) {
+            $result = User::where('PublicId', $sPublicId)->first();
+            if ($result) {
+                self::$usersCache[$result->Id] = $result;
+            }
+        }
+
+        return $result;
     }
 
     public static function getUserById($iUserId, $bForce = false)
     {
         try {
             if (!isset(self::$usersCache[$iUserId]) || $bForce) {
-                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+                $oUser = Managers\Integrator::getUserByIdHelper($iUserId);
+                if ($oUser) {
+                    self::$usersCache[$iUserId] = $oUser;
+                }
             }
         } catch (\Exception $oEx) {
-            self::$usersCache[$iUserId] = false;
+            self::LogException($oEx);
         }
 
-        return self::$usersCache[$iUserId];
+        return isset(self::$usersCache[$iUserId]) ? self::$usersCache[$iUserId] : null;
     }
 
-    public static function getTenantById($iTenantId)
+    public static function removeUserFromCache($iUserId)
     {
-        return Tenant::find($iTenantId);
+        if (!isset(self::$usersCache[$iUserId])) {
+            unset(self::$usersCache[$iUserId]);
+        }
+    }
+
+    public static function getTenantById($iTenantId, $bForce = false)
+    {
+        try {
+            if (!isset(self::$tenantsCache[$iTenantId]) || $bForce) {
+                self::$tenantsCache[$iTenantId] = Tenant::find($iTenantId);
+                ;
+            }
+        } catch (\Exception $oEx) {
+            self::$tenantsCache[$iTenantId] = false;
+        }
+
+        return self::$tenantsCache[$iTenantId];
+    }
+
+    public static function getTenantByWebDomain()
+    {
+        static $bTenantInitialized = false;
+        static $oTenant = null;
+
+        if (!$bTenantInitialized) {
+            if (!empty($_SERVER['SERVER_NAME'])) {
+
+                foreach (self::$tenantsCache as $tenantCache) {
+                    if ($tenantCache->WebDomain === $_SERVER['SERVER_NAME']) {
+                        $oTenant = $tenantCache;
+                        break;
+                    }
+                }
+
+                if (!$oTenant) {
+                    $oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
+                    if ($oTenant) {
+                        self::$tenantsCache[$oTenant->Id] = $oTenant;
+                    }
+                }
+            }
+            $bTenantInitialized = true;
+        }
+
+        return $oTenant;
+    }
+
+    public static function removeTenantFromCache($iTenantId)
+    {
+        if (!isset(self::$tenantsCache[$iTenantId])) {
+            unset(self::$tenantsCache[$iTenantId]);
+        }
     }
 
     public static function setTenantName($sTenantName)
@@ -1463,21 +1534,6 @@ class Api
             }
 
             //			$bTenantInitialized = true;
-        }
-
-        return $oTenant;
-    }
-
-    public static function getTenantByWebDomain()
-    {
-        static $bTenantInitialized = false;
-        static $oTenant = null;
-
-        if (!$bTenantInitialized) {
-            if (!empty($_SERVER['SERVER_NAME'])) {
-                $oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
-            }
-            $bTenantInitialized = true;
         }
 
         return $oTenant;
