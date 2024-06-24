@@ -1241,13 +1241,17 @@ class Api
         return $mResult;
     }
 
-    public static function validateAuthToken()
+    public static function validateAuthToken($authToken = null)
     {
         $bResult = false;
+
+        if ($authToken === null) {
+            $authToken = self::getAuthToken();
+        }
         /* @var $oIntegrator \Aurora\System\Managers\Integrator */
         $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
         if ($oIntegrator) {
-            $bResult = $oIntegrator->validateAuthToken(self::getAuthToken());
+            $bResult = $oIntegrator->validateAuthToken($authToken);
         }
 
         return $bResult;
