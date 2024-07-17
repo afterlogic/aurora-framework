@@ -18,7 +18,7 @@ use Aurora\System\Models\AuthToken;
  */
 class UserSession
 {
-    public const TOKEN_VERSION = '2.4';
+    public const TOKEN_VERSION = '3.0';
 
     public static $aTokensCache = [];
 

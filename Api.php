@@ -294,7 +294,7 @@ class Api
     public static function EncodeKeyValues(array $aValues)
     {
         return Utils::UrlSafeBase64Encode(
-            Utils::EncryptValue(@\serialize($aValues))
+            Utils::EncryptValue(@\json_encode($aValues))
         );
     }
 
@@ -314,7 +314,7 @@ class Api
             $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, \md5(Api::GetHashSalt()));
         }
 
-        $aResult = @\unserialize($sValue);
+        $aResult = @\json_decode($sValue, true);
 
         return \is_array($aResult) ? $aResult : array();
     }
