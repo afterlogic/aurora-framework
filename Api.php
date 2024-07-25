@@ -625,6 +625,17 @@ class Api
         Logger::LogOnly($sDesc, $sLogFile);
     }
 
+    public static function LogSql($query)
+    {
+        $sql = $query->toSql();
+        foreach($query->getBindings() as $binding) {
+            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
+            $sql = preg_replace('/\?/', $value, $sql, 1);
+        }
+
+        Api::Log($sql, \Aurora\System\Enums\LogLevel::Full, 'sql-');
+    }
+
     public static function ClearLog($sFileFullPath)
     {
         return Logger::ClearLog($sFileFullPath);
