@@ -10,7 +10,12 @@ class Encrypt implements CastsAttributes
 {
     public function get($model, $key, $value, $attributes)
     {
-        return substr(Utils::DecryptValue($value), 6);
+        $decrypted = Utils::DecryptValue($value);
+        if ($decrypted) {
+            return substr($decrypted, 6);
+        }
+
+        return false;
     }
 
     public function set($model, $key, $value, $attributes)
