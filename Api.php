@@ -151,14 +151,6 @@ class Api
     }
 
     /**
-     * @return string
-     */
-    public static function GetHashSalt()
-    {
-        return '$2y$07$' . self::$sSalt . '$';
-    }
-
-    /**
      *
      */
     public static function InitSalt()
@@ -310,8 +302,15 @@ class Api
         $sEncryptedValues = Utils::UrlSafeBase64Decode(trim($sEncryptedValues));
 
         $sValue = Utils::DecryptValue($sEncryptedValues);
+
+        $sCryptKey = '$2y$07$' . self::$sSalt . '$';
+
         if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, \md5(Api::GetHashSalt()));
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, \md5($sCryptKey));
+        }
+
+        if ($sValue === false) {
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, $sCryptKey);
         }
 
         $aResult = @\json_decode($sValue, true);

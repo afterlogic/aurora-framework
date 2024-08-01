@@ -511,11 +511,7 @@ class Utils
     {
         $mKey = ctype_xdigit(Api::$sSalt) ? hex2bin(Api::$sSalt) : Api::$sSalt;
         $sEncryptedValue = self::UrlSafeBase64Decode(trim($sEncryptedValue));
-        $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
-        if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, Api::GetHashSalt());
-        }
-        return $sValue;
+        return \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
     }
 
     /**
