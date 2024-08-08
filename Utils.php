@@ -511,7 +511,19 @@ class Utils
     {
         $mKey = ctype_xdigit(Api::$sSalt) ? hex2bin(Api::$sSalt) : Api::$sSalt;
         $sEncryptedValue = self::UrlSafeBase64Decode(trim($sEncryptedValue));
-        return \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
+        $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
+
+        $sCryptKey = '$2y$07$' . Api::$sSalt . '$';
+
+        if ($sValue === false) {
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, \md5($sCryptKey));
+        }
+
+        if ($sValue === false) {
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $sCryptKey);
+        }
+
+        return $sValue;
     }
 
     /**

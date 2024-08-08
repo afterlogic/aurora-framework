@@ -303,16 +303,6 @@ class Api
 
         $sValue = Utils::DecryptValue($sEncryptedValues);
 
-        $sCryptKey = '$2y$07$' . self::$sSalt . '$';
-
-        if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, \md5($sCryptKey));
-        }
-
-        if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, $sCryptKey);
-        }
-
         $aResult = @\json_decode($sValue, true);
 
         return \is_array($aResult) ? $aResult : array();
