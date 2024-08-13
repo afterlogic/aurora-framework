@@ -1408,7 +1408,10 @@ class Api
             return -1;
         }
 
-        $iUserId = self::getUserByPublicId($sPublicId);
+        $user = self::getUserByPublicId($sPublicId);
+        if ($user instanceof User) {
+            $iUserId = $user->Id;
+        }
 
         return $iUserId;
     }
