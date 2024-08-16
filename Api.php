@@ -1201,10 +1201,9 @@ class Api
      */
     public static function getAuthToken()
     {
-        $sAuthToken = self::getAuthTokenFromHeaders();
+        $sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ? $_COOKIE[Application::AUTH_TOKEN_KEY] : '';
         if (!$sAuthToken) {
-            $sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ?
-                    $_COOKIE[Application::AUTH_TOKEN_KEY] : '';
+            $sAuthToken = self::getAuthTokenFromHeaders();
         }
 
         return $sAuthToken;
@@ -1216,14 +1215,7 @@ class Api
      */
     public static function validateCsrfToken()
     {
-        $bResult = true;
-        if (isset($_COOKIE[Application::AUTH_TOKEN_KEY])) {
-            $sAuthToken = self::getAuthTokenFromHeaders();
-
-            $bResult = ($sAuthToken === $_COOKIE[Application::AUTH_TOKEN_KEY]);
-        }
-
-        return $bResult;
+        return true; // TODO: remove this function
     }
 
     /**
