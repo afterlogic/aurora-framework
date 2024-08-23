@@ -585,7 +585,7 @@ class Api
     }
 
     /**
-     * @param Exceptions\Exception $mObject
+     * @param \Throwable $mObject
      * @param int $iLogLevel = \Aurora\System\Enums\LogLevel::Error
      * @param string|null $sFilePrefix = null
      */

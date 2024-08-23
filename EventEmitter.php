@@ -170,14 +170,19 @@ class EventEmitter
                 if (\is_callable($fCallback) && $bIsAllowedModule) {
                     \Aurora\System\Api::Log($this->strPad($fCallback[0]::GetName() . Module\AbstractModule::$Delimiter . $fCallback[1], $this->iEventLevel + 2, "-"), Enums\LogLevel::Full, 'subscriptions-');
 
-                    $mCallBackResult = \call_user_func_array(
-                        $fCallback,
-                        [
-                            &$aArguments,
-                            &$mResult,
-                            &$mListenersResult
-                        ]
-                    );
+                    $mCallBackResult = false;
+                    try {
+                        $mCallBackResult = \call_user_func_array(
+                            $fCallback,
+                            [
+                                &$aArguments,
+                                &$mResult,
+                                &$mListenersResult
+                            ]
+                        );
+                    } catch (\Throwable $oEx) {
+                        \Aurora\System\Api::LogException($oEx);
+                    }
 
                     if (\is_callable($mCountinueCallback)) {
                         $mCountinueCallback(
