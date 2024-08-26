@@ -790,7 +790,7 @@ class Api
      */
     public static function GenerateSsoToken($sEmail, $sPassword, $sLogin = '')
     {
-        $sSsoHash = \md5($sEmail . $sPassword . $sLogin . \microtime(true) . \rand(10000, 99999));
+        $sSsoHash = \Illuminate\Support\Str::random(32);
         return self::Cacher()->Set('SSO:' . $sSsoHash, self::EncodeKeyValues(array(
             'Email' => $sEmail,
             'Password' => $sPassword,
