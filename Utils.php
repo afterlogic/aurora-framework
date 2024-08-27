@@ -1089,25 +1089,6 @@ class Utils
         return $sExtension;
     }
 
-    /**
-     * @param int $sLen = 6
-     * @return string
-     */
-    public static function GenerateShortHashString($sLen = 10)
-    {
-        $string = '';
-
-        while (($len = strlen($string)) < $sLen) {
-            $size = $sLen - $len;
-
-            $bytes = random_bytes($size);
-
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
-        }
-
-        return $string;
-    }
-
     public static function GetMimeContentTypes()
     {
         return array(
