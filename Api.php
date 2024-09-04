@@ -70,10 +70,16 @@ class Api
      */
     public static $bIsValid;
 
+
     /**
      * @var string
      */
     public static $sSalt;
+
+    /**
+     * @var string
+     */
+    public static $sEncryptionKey;
 
     /**
      * @var array
@@ -152,21 +158,37 @@ class Api
 
     /**
      *
+     * @return string
      */
-    public static function InitSalt()
+    public static function GetEncryptionKeyPath()
     {
-        $sSalt = '';
-        $sSalt8File = self::GetSaltPath();
+        return self::DataPath() . '/encryption_key.php';
+    }
 
-        if (!@file_exists($sSalt8File)) {
-            $sSalt = bin2hex(random_bytes(16));
+    /**
+     *
+     */
+    public static function InitEncryptionKey()
+    {
+        $sEncryptionKey = '';
+        $sEncryptionKeyPath = self::GetEncryptionKeyPath();
 
-            $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "' . $sSalt . '";';
-            @file_put_contents($sSalt8File, $sSalt);
+        if (!@file_exists($sEncryptionKeyPath)) {
+            if (@file_exists(self::GetSaltPath())) {
+                include self::GetSaltPath();
+                $sEncryptionKey = self::$sSalt;
+            } else {
+                $sEncryptionKey = bin2hex(random_bytes(16));
+            }
+
+            $sEncryptionKey = '<?php \\Aurora\\System\\Api::$sEncryptionKey = "' . $sEncryptionKey . '";';
+            if (@file_put_contents($sEncryptionKeyPath, $sEncryptionKey) && @file_exists(self::GetSaltPath())) {
+                @unlink(self::GetSaltPath());
+            }
         }
 
-        if (is_writable($sSalt8File)) {
-            include_once $sSalt8File;
+        if (is_writable($sEncryptionKeyPath)) {
+            include_once $sEncryptionKeyPath;
         }
     }
 
@@ -217,7 +239,7 @@ class Api
                 self::GrantAdminPrivileges();
             }
 
-            self::InitSalt();
+            self::InitEncryptionKey();
             self::validateApi();
             self::GetModuleManager()->loadModules();
 
