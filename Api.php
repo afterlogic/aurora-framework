@@ -70,8 +70,8 @@ class Api
      */
     public static $bIsValid;
 
-
     /**
+     * @deprecated
      * @var string
      */
     public static $sSalt;
@@ -100,7 +100,6 @@ class Api
      * @var bool
      */
     public static $bDebug = false;
-
 
     /**
      * @var array
@@ -148,7 +147,7 @@ class Api
     protected static $tenantsCache = [];
 
     /**
-     *
+     * @deprecated
      * @return string
      */
     public static function GetSaltPath()
@@ -187,8 +186,10 @@ class Api
             }
         }
 
-        if (is_writable($sEncryptionKeyPath)) {
+        if (is_readable($sEncryptionKeyPath)) {
             include_once $sEncryptionKeyPath;
+        } else {
+            throw new ApiException(Notifications::SystemNotConfigured, null, 'Check the read permission of the encryption key file');
         }
     }
 
