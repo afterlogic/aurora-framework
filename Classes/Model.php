@@ -72,6 +72,12 @@ class Model extends Eloquent
     protected $foreignModelIdColumn  = '';
 
     /**
+     *
+     * @var string
+     */
+    protected $foreignModelPrimaryKey  = '';
+
+    /**
      * Inherited attributes.
      *
      * @var array
@@ -190,7 +196,7 @@ class Model extends Eloquent
             $foreignTable = $foreignConnection->getTablePrefix() . $foreignTable;
         }
 
-        $foreignPK = $foreignObject->primaryKey;
+        $foreignPK = !empty($this->foreignModelPrimaryKey) ? $this->foreignModelPrimaryKey : $foreignObject->primaryKey;
 
         $query = self::query();
         if ($this->foreignModelIdColumn === 'UserId' || $this->foreignModelIdColumn === 'IdUser') {

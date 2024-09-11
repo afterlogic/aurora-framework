@@ -2,5 +2,6 @@
 <?php
 require_once __DIR__ . '/../bootstrap.php';
 
+\Aurora\Api::init();
 $container = \Aurora\Api::GetContainer();
 $container['console']->run();
