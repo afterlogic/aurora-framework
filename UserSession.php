@@ -18,7 +18,7 @@ use Aurora\System\Models\AuthToken;
  */
 class UserSession
 {
-    public const TOKEN_VERSION = '3.0';
+    public const TOKEN_VERSION = '3.1';
 
     public static $aTokensCache = [];
 
@@ -47,7 +47,7 @@ class UserSession
         );
 
         if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
-            $this->SetToDB($aData['id'], $sAuthToken);
+            $this->SetToDB($aData['id'], $aData['account'], $aData['account_type'], $sAuthToken);
         }
 
         return $sAuthToken;
@@ -99,9 +99,10 @@ class UserSession
                 }
 
                 // checking the token is valid from timestamp
-                if ($mResult) {
+                if ($mResult && isset($mAuthTokenData['account'], $mAuthTokenData['account_type']) && class_exists($mAuthTokenData['account_type'])) {
                     $iTime = (int) $mAuthTokenData['@time']; // 0 means that signMe was true when user logged in, so there is no need to check it in that case
-                    if ($oUser && $iTime !== 0 && (int) $oUser->TokensValidFromTimestamp > $iTime) {
+                    $oAccount = $mAuthTokenData['account_type']::where('Id', $mAuthTokenData['account'])->first();
+                    if ($oAccount && $iTime !== 0 && (int) $oAccount->getExtendedProp('TokensValidFromTimestamp') > $iTime) {
                         $mResult = false;
                     }
                 }
@@ -151,14 +152,43 @@ class UserSession
         return AuthToken::where('UserId', $iUserId)->delete();
     }
 
-    public function SetToDB($iUserId, $sAuthToken)
+    public function DeleteAllAccountSessions($oAccount)
     {
-        $oAuthToken = AuthToken::where('UserId', $iUserId)->where('Token', $sAuthToken)->first();
+        if ($oAccount instanceof \Aurora\System\Classes\Account) {
+            $iAccountId = $oAccount->Id;
+            $sAccountType = get_class($oAccount);
+            if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
+                try {
+                    AuthToken::where('AccountId', $iAccountId)->where('AccountType', $sAccountType)->delete();
+                } catch (\Aurora\System\Exceptions\DbException $oEx) {
+                    // DB is not configured
+                }
+            } else {
+                if (class_exists($sAccountType)) {
+                    $oAccount = $sAccountType::where('Id', $iAccountId)->first();
+                    if ($oAccount) {
+                        $oAccount->setExtendedProp('TokensValidFromTimestamp', time());
+                        $oAccount->save();
+                    }
+                }
+            }
+        }
+    }
+
+    public function SetToDB($iUserId, $iAccountId, $sAccountType, $sAuthToken)
+    {
+        $oAuthToken = AuthToken::where('UserId', $iUserId)
+            ->where('AccountId', $iAccountId)
+            ->where('AccountType', $sAccountType)
+            ->where('Token', $sAuthToken)
+            ->first();
 
         if (!$oAuthToken) {
             $oAuthToken = new AuthToken();
         }
         $oAuthToken->UserId = $iUserId;
+        $oAuthToken->AccountId = $iAccountId;
+        $oAuthToken->AccountType = $sAccountType;
         $oAuthToken->Token = $sAuthToken;
         $oAuthToken->LastUsageDateTime = time();
 
