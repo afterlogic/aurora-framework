@@ -10,6 +10,8 @@ use Aurora\Modules\Core\Models\User;
  *
  * @property integer $Id
  * @property integer $UserId
+ * @property integer $AccountId
+ * @property string $AccountType
  * @property string $Token
  * @property integer $LastUsageDateTime
  * @property \Illuminate\Support\Carbon|null $CreatedAt
@@ -27,6 +29,7 @@ use Aurora\Modules\Core\Models\User;
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereUserId($value)
+ * @method static void truncate()
  * @mixin \Eloquent
  */
 class AuthToken extends Model
@@ -39,6 +42,8 @@ class AuthToken extends Model
     protected $fillable = [
         'Id',
         'UserId',
+        'AccountId',
+        'AccountType',
         'Token'
     ];
 }
