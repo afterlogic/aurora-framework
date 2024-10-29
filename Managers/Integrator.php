@@ -371,13 +371,10 @@ class Integrator extends AbstractManager
      */
     public function setLastErrorCode($iCode)
     {
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::TOKEN_LAST_CODE,
             $iCode,
-            0,
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
+            0
         );
     }
 
@@ -395,32 +392,11 @@ class Integrator extends AbstractManager
             unset($_COOKIE[self::TOKEN_LAST_CODE]);
         }
 
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::TOKEN_LAST_CODE,
             '',
             \strtotime('-1 hour'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
         );
-    }
-
-    /**
-     * @param string $sAuthToken Default value is empty string.
-     *
-     * @return bool
-     */
-    public function logoutAccount($sAuthToken = '')
-    {
-        @\setcookie(
-            \Aurora\System\Application::AUTH_TOKEN_KEY,
-            '',
-            \strtotime('-1 hour'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
-        );
-        return true;
     }
 
     /**
@@ -448,13 +424,10 @@ class Integrator extends AbstractManager
 
     public function skipMobileCheck()
     {
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::TOKEN_SKIP_MOBILE_CHECK,
             '1',
-            0,
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
+            0
         );
     }
 
@@ -464,13 +437,10 @@ class Integrator extends AbstractManager
     public function isMobile()
     {
         if (isset($_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) && '1' === (string) $_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) {
-            @\setcookie(
+            \Aurora\System\Api::setCookie(
                 self::TOKEN_SKIP_MOBILE_CHECK,
                 '',
-                \strtotime('-1 hour'),
-                \Aurora\System\Api::getCookiePath(),
-                null,
-                \Aurora\System\Api::getCookieSecure()
+                \strtotime('-1 hour')
             );
             return 0;
         }
@@ -485,33 +455,13 @@ class Integrator extends AbstractManager
      */
     public function setMobile($bMobile)
     {
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::MOBILE_KEY,
             $bMobile ? '1' : '0',
-            \strtotime('+200 days'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
+            \strtotime('+200 days')
         );
-        return true;
-    }
 
-    public function resetCookies()
-    {
-        $sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
-        if (0 < strlen($sHelpdeskHash)) {
-            $aHelpdeskHashTable = \Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
-            if (isset($aHelpdeskHashTable['sign-me']) && $aHelpdeskHashTable['sign-me']) {
-                @\setcookie(
-                    self::AUTH_HD_KEY,
-                    \Aurora\System\Api::EncodeKeyValues($aHelpdeskHashTable),
-                    \strtotime('+30 days'),
-                    \Aurora\System\Api::getCookiePath(),
-                    null,
-                    \Aurora\System\Api::getCookieSecure()
-                );
-            }
-        }
+        return true;
     }
 
     /**

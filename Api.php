@@ -1763,4 +1763,43 @@ class Api
             }
         }
     }
+
+    public static function setCookie($name, $value, $expires = 0, $sameSite = 'None')
+    {
+        @\setcookie(
+            $name,
+            $value,
+            [
+                'expires' => $expires,
+                'path' => self::getCookiePath(),
+                'domain' => '',
+                'httponly' => true,
+                'secure' => self::getCookieSecure(),
+                'samesite' => $sameSite // None || Lax || Strict
+            ]
+        );
+    }
+
+    public static function setAuthTokenCookie($authToken)
+    {
+        $iAuthTokenCookieExpireTime = (int) self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieExpireTime');
+        $sSameSite = self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieSameSite', 'Strict');
+
+        self::setCookie(
+            \Aurora\System\Application::AUTH_TOKEN_KEY,
+            $authToken,
+            ($iAuthTokenCookieExpireTime === 0) ? 0 : \strtotime("+$iAuthTokenCookieExpireTime days"),
+            $sSameSite
+        );
+    }
+
+    public static function unsetAuthTokenCookie()
+    {
+        self::setCookie(
+            \Aurora\System\Application::AUTH_TOKEN_KEY,
+            '',
+            -1,
+            self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieSameSite', 'Strict')
+        );
+    }
 }
