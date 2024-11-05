@@ -1764,7 +1764,7 @@ class Api
         }
     }
 
-    public static function setCookie($name, $value, $expires = 0, $sameSite = 'None')
+    public static function setCookie($name, $value, $expires = 0, $httpOnly = true, $sameSite = 'Strict')
     {
         @\setcookie(
             $name,
@@ -1773,7 +1773,7 @@ class Api
                 'expires' => $expires,
                 'path' => self::getCookiePath(),
                 'domain' => '',
-                'httponly' => true,
+                'httponly' => $httpOnly,
                 'secure' => self::getCookieSecure(),
                 'samesite' => $sameSite // None || Lax || Strict
             ]
@@ -1789,6 +1789,7 @@ class Api
             \Aurora\System\Application::AUTH_TOKEN_KEY,
             $authToken,
             ($iAuthTokenCookieExpireTime === 0) ? 0 : \strtotime("+$iAuthTokenCookieExpireTime days"),
+            true,
             $sSameSite
         );
     }
@@ -1799,6 +1800,7 @@ class Api
             \Aurora\System\Application::AUTH_TOKEN_KEY,
             '',
             -1,
+            true,
             self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieSameSite', 'Strict')
         );
     }
