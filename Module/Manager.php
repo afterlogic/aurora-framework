@@ -596,6 +596,7 @@ class Manager
             'Parameters' => \json_decode($oHttp->GetPost('Parameters', ''), true)
         ];
         $mResult = false;
+
         try {
             $bEventResult = $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
 
@@ -608,14 +609,14 @@ class Manager
                     $sEntryName
                 );
             }
-
-            $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
         } catch(\Exception $oException) {
             $mResult = \Aurora\System\Managers\Response::GetJsonFromObject(
-                "Json",
+                'Json',
                 \Aurora\System\Managers\Response::ExceptionResponse("System", $oException)
             );
             \Aurora\System\Api::LogException($oException);
+        } finally {
+            $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
         }
 
         return $mResult;
