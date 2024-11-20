@@ -295,6 +295,26 @@ abstract class AbstractModule
         return (bool) $this->bInitialized;
     }
 
+    protected function initSubscriptions()
+    {
+        $class = new \ReflectionClass($this);
+        $subscriptionsClassName = $class->getNamespaceName() . "\\Subscriptions";
+        if (class_exists($subscriptionsClassName)) {
+            $subscriptions = new $subscriptionsClassName($this);
+            $subscriptions->init();
+        }
+    }
+
+    protected function initEntries()
+    {
+        $class = new \ReflectionClass($this);
+        $entitiesClassName = $class->getNamespaceName() . "\\Entries";
+        if (class_exists($entitiesClassName)) {
+            $entities = new $entitiesClassName($this);
+            $entities->init();
+        }
+    }
+
     /**
      *
      * @return boolean
@@ -306,6 +326,8 @@ abstract class AbstractModule
             $this->bInitialized = true;
             $this->loadModuleSettings();
             $this->init();
+            $this->initSubscriptions();
+            $this->initEntries();
         }
 
         return $mResult;
@@ -579,6 +601,11 @@ abstract class AbstractModule
     final public static function GetName()
     {
         return substr(strrchr(static::getNamespace(), "\\"), 1);
+    }
+
+    public function getModuleName()
+    {
+        return static::GetName();
     }
 
     /**
