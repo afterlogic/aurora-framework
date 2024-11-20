@@ -325,12 +325,6 @@ class Integrator extends AbstractManager
         return $oUser;
     }
 
-
-    public function validateAuthToken($sAuthToken)
-    {
-        return (\Aurora\System\Api::UserSession()->Get($sAuthToken) !== false);
-    }
-
     /**
      * @param string $sAuthToken Default value is empty string.
      *

@@ -1201,21 +1201,12 @@ class Api
      */
     public static function getAuthToken()
     {
-        $sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ? $_COOKIE[Application::AUTH_TOKEN_KEY] : '';
+        $sAuthToken = $_COOKIE[Application::AUTH_TOKEN_KEY] ?? false;
         if (!$sAuthToken) {
             $sAuthToken = self::getAuthTokenFromHeaders();
         }
 
         return $sAuthToken;
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    public static function validateCsrfToken()
-    {
-        return true; // TODO: remove this function
     }
 
     /**
@@ -1231,6 +1222,7 @@ class Api
                 $mUserId = self::$aUserSession['UserId'];
             } else {
                 $sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
+
                 $mUserId = self::getAuthenticatedUserId($sAuthToken);
             }
             $oUser = self::getUserById($mUserId);
@@ -1258,18 +1250,12 @@ class Api
 
     public static function validateAuthToken($authToken = null)
     {
-        $bResult = false;
-
         if ($authToken === null) {
             $authToken = self::getAuthToken();
         }
-        /* @var $oIntegrator \Aurora\System\Managers\Integrator */
-        $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-        if ($oIntegrator) {
-            $bResult = $oIntegrator->validateAuthToken($authToken);
+        if ($authToken && !self::UserSession()->Get($authToken)) {
+            throw new ApiException(Notifications::InvalidToken);
         }
-
-        return $bResult;
     }
 
     public static function getCookiePath()

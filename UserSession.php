@@ -64,7 +64,7 @@ class UserSession
         $mAuthTokenData = false;
         $mResult = true;
 
-        if (strlen((string)$sAuthToken) !== 0) {
+        if (is_string($sAuthToken) && strlen($sAuthToken) !== 0) {
             $bStoreAuthTokenInDB = \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false);
 
             // check if the auth token is stored in the database
@@ -138,7 +138,7 @@ class UserSession
 
     public function Delete($sAuthToken)
     {
-        if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
+        if (is_string($sAuthToken) && \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
             try {
                 $this->DeleteFromDB($sAuthToken);
             } catch (\Aurora\System\Exceptions\DbException $oEx) {
