@@ -113,19 +113,11 @@ class Model extends Eloquent
     protected function castAttribute($key, $value)
     {
         if (is_null($value)) {
-            switch ($this->getCastType($key)) {
-                case 'array':
-                    $value = [];
-                    break;
-
-                case 'string':
-                    $value = '';
-                    break;
-
-                case 'boolean':
-                    $value = false;
-                    break;
-            }
+            $value = match ($this->getCastType($key)) {
+                'array' => [],
+                'string' => '',
+                'boolean' => false,
+            };
 
             return $value;
         }
@@ -164,7 +156,7 @@ class Model extends Eloquent
             }
             if ($this->parentType === \Aurora\System\Module\Settings::class) {
                 if (strpos($key, '::') !== false) {
-                    list($moduleName, $key) = \explode('::', $key);
+                    [$moduleName, $key] = \explode('::', $key);
                 } else {
                     $moduleName = $this->moduleName;
                 }
@@ -291,11 +283,7 @@ class Model extends Eloquent
         if (isset($this->Properties[$key])) {
             $mResult = $this->Properties[$key];
         } else {
-            if ($this->isInheritedAttribute($key)) {
-                $mResult = $this->getInheritedValue($key);
-            } else {
-                $mResult = $default;
-            }
+            $mResult = ($this->isInheritedAttribute($key)) ? $this->getInheritedValue($key) : $default;
         }
 
         return $mResult;
@@ -353,17 +341,20 @@ class Model extends Eloquent
     }
 
     /**
+     * Convert the model instance to an array.
+     *
      * @return array
      */
-    public function toResponseArray()
+    public function toArray()
     {
-        $array = $this->toArray();
+        $array = $this->attributesToArray();
 
-        if (!isset($array['UUID'])) {
-            $array['UUID'] = '';
+        $relations = $this->getRelations();
+        if (count($relations) > 0) {
+            foreach ($relations as $key => $attribute) {
+                $array[$key] = $attribute->toArray();
+            }
         }
-        $array['ParentUUID'] = '';
-        $array['ModuleName'] = $this->moduleName;
 
         $parentInheritedAttributes = $this->getInheritedAttributes();
         if (count($parentInheritedAttributes) > 0) {
@@ -377,6 +368,7 @@ class Model extends Eloquent
                 }
             }
         }
+
         if (isset($array['Properties'])) {
             foreach ($array['Properties'] as $key => $value) {
                 if ($value !== null) {
@@ -393,6 +385,22 @@ class Model extends Eloquent
                 $array[$key] = '*****';
             }
         }
+
+        return $array;
+    }
+
+    /**
+     * @return array
+     */
+    public function toResponseArray()
+    {
+        $array = $this->toArray();
+
+        if (!isset($array['UUID'])) {
+            $array['UUID'] = '';
+        }
+        $array['ParentUUID'] = '';
+        $array['ModuleName'] = $this->moduleName;
 
         return $array;
     }
