@@ -341,18 +341,18 @@ class Model extends Eloquent
     }
 
     /**
-     * Convert the model instance to an array.
+     * Convert the model instance to an array that can be sent with the response payload.
      *
      * @return array
      */
-    public function toArray()
+    public function toResponseArray()
     {
         $array = $this->attributesToArray();
 
         $relations = $this->getRelations();
         if (count($relations) > 0) {
             foreach ($relations as $key => $attribute) {
-                $array[$key] = $attribute->toArray();
+                $array[$key] = $attribute->toResponseArray();
             }
         }
 
@@ -385,16 +385,6 @@ class Model extends Eloquent
                 $array[$key] = '*****';
             }
         }
-
-        return $array;
-    }
-
-    /**
-     * @return array
-     */
-    public function toResponseArray()
-    {
-        $array = $this->toArray();
 
         if (!isset($array['UUID'])) {
             $array['UUID'] = '';
