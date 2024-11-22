@@ -113,11 +113,19 @@ class Model extends Eloquent
     protected function castAttribute($key, $value)
     {
         if (is_null($value)) {
-            $value = match ($this->getCastType($key)) {
-                'array' => [],
-                'string' => '',
-                'boolean' => false,
-            };
+            switch ($this->getCastType($key)) {
+                case 'array':
+                    $value = [];
+                    break;
+
+                case 'string':
+                    $value = '';
+                    break;
+
+                case 'boolean':
+                    $value = false;
+                    break;
+            }
 
             return $value;
         }
