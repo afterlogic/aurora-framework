@@ -158,7 +158,6 @@ abstract class AbstractModule
         'FalseResponse',
         'ExceptionResponse',
         'CallMethod',
-        'GetSettings',
         'i18N',
         'GetErrors',
         'GetErrorMessageByCode',
