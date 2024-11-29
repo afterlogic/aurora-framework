@@ -62,6 +62,7 @@ namespace Aurora\System;
 * @property bool $SocketVerifySsl
 * @property bool $UseAppMinJs
 * @property string $XFrameOptions
+* @property bool $AllowCrossDomainRequestsFromOrigin
 * @property bool $RemoveOldLogs
 * @property int $RemoveOldLogsDays
 * @property bool $LogStackTrace
@@ -330,6 +331,12 @@ class Settings extends AbstractSettings
                 'string',
                 null,
                 'If set to SAMEORIGIN, disallows embedding product interface into IFrame to prevent from clickjacking attacks'
+            ),
+            'AllowCrossDomainRequestsFromOrigin' => new SettingsProperty(
+                '',
+                'string',
+                null,
+                'Allows cross-domain requests and handles OPTIONS requests from specified origin. To allow request from any origin use *'
             ),
             'RemoveOldLogs' => new SettingsProperty(
                 true,
