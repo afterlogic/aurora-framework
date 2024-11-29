@@ -1769,7 +1769,7 @@ class Api
     public static function setAuthTokenCookie($authToken)
     {
         $iAuthTokenCookieExpireTime = (int) self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieExpireTime');
-        $sSameSite = self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieSameSite', 'Strict');
+        $sSameSite = self::GetModuleManager()->getModuleConfigValue('Core', 'CookieSameSite', 'Strict');
 
         self::setCookie(
             \Aurora\System\Application::AUTH_TOKEN_KEY,
@@ -1787,7 +1787,7 @@ class Api
             '',
             -1,
             true,
-            self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieSameSite', 'Strict')
+            self::GetModuleManager()->getModuleConfigValue('Core', 'CookieSameSite', 'Strict')
         );
     }
 }
