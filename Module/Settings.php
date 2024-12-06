@@ -78,6 +78,7 @@ class Settings extends \Aurora\System\AbstractSettings
     }
 
     /**
+     * @param string $sTenantName
      * @param string $sName
      * @param mixed $sDefaultValue
      *
