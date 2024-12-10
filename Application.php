@@ -99,7 +99,7 @@ class Application
         $sAllowedOrigin = $oSettings->AllowCrossDomainRequestsFromOrigin;
         if ($sAllowedOrigin) {
             // you cannot simply set Access-Control-Allow-Origin: * to allow any origin, it's doesn't work correctly with cookies
-            header('Access-Control-Allow-Origin: ' . (trim($sAllowedOrigin) === '*' ? $_SERVER['HTTP_ORIGIN'] : $sAllowedOrigin));
+            header('Access-Control-Allow-Origin: ' . (trim($sAllowedOrigin) === '*' ? @$_SERVER['HTTP_ORIGIN'] : $sAllowedOrigin));
             // if set to false server tells the browser do not sent credentials (cookie)
             header('Access-Control-Allow-Credentials: true');
 
