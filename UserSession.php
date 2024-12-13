@@ -47,7 +47,11 @@ class UserSession
         );
 
         if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
-            $this->SetToDB($aData['id'], $aData['account'], $aData['account_type'], $sAuthToken);
+
+            $account = $aData['account'] ?? 0;
+            $account_type = $aData['account_type'] ?? '';
+
+            $this->SetToDB($aData['id'], $account, $account_type, $sAuthToken);
         }
 
         return $sAuthToken;
