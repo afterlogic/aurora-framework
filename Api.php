@@ -1451,7 +1451,7 @@ class Api
             self::LogException($oEx);
         }
 
-        return isset(self::$usersCache[$iUserId]) ? self::$usersCache[$iUserId] : null;
+        return self::$usersCache[$iUserId] ?? null;
     }
 
     public static function removeUserFromCache($iUserId)
@@ -1465,14 +1465,16 @@ class Api
     {
         try {
             if (!isset(self::$tenantsCache[$iTenantId]) || $bForce) {
-                self::$tenantsCache[$iTenantId] = Tenant::find($iTenantId);
-                ;
+                $oTenant = Tenant::find($iTenantId);
+                if ($oTenant) {
+                    self::$tenantsCache[$iTenantId] = $oTenant;
+                }
             }
         } catch (\Exception $oEx) {
-            self::$tenantsCache[$iTenantId] = false;
+            self::LogException($oEx);
         }
 
-        return self::$tenantsCache[$iTenantId];
+        return self::$tenantsCache[$iTenantId] ?? null;
     }
 
     public static function getTenantByWebDomain()
