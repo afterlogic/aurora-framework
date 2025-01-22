@@ -645,14 +645,16 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * Returns css links for building in html.
-     *
+     * Returns favicons and CSS links for building in html.
+     * 
+     * @param bool $bThemeCSS Define if theme css should be included.
      * @return string
      */
-    public function buildHeadersLink()
+    public function buildHeadersLink($bThemeCSS = true)
     {
         list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
         $sMobileSuffix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
+        $sHash = \Aurora\System\Api::VersionJs();
         //		$sTenantName = \Aurora\System\Api::getTenantName();
         //		$oSettings =&\Aurora\System\Api::GetSettings();
 
@@ -660,18 +662,31 @@ class Integrator extends AbstractManager
         //		So we don't use tenants folder for static files.
         //		if ($oSettings->GetValue('EnableMultiTenant') && $sTenantName)
         //		{
-        //			$sS =
+        //			$sLinks =
         //'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
         //'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
         //		}
         //		else
         //		{
-        $sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css' . '?' . \Aurora\System\Api::VersionJs() . '" />' .
-'<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css' . '?' . \Aurora\System\Api::VersionJs() . '" />';
+
+        $aLinks = [];
+
+        if (file_exists(AU_APP_ROOT_PATH . '/static/styles/themes/' . $sTheme . '/favicon.svg')) {
+            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="./static/styles/themes/' . $sTheme . '/favicon.svg" />';
+            $aLinks[] = '<link rel="apple-touch-icon" href="./static/styles/themes/' . $sTheme . '/apple-touch-icon.png" /><!-- 180x180 -->';
+        } else {
+            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="static/styles/images/favicon.svg" />';
+            $aLinks[] = '<link rel="apple-touch-icon" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
+        }
+        $aLinks[] = '<link rel="shortcut icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
+        
+        $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css?' . $sHash . '" />';
+        if ($bThemeCSS) {
+            $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css?' . $sHash . '" />';
+        }
         //		}
 
-        return $sS;
+        return implode("\r\n", $aLinks);
     }
 
     public function GetClientModuleNames()
