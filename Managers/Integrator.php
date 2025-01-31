@@ -646,7 +646,7 @@ class Integrator extends AbstractManager
 
     /**
      * Returns favicons and CSS links for building in html.
-     * 
+     *
      * @param bool $bThemeCSS Define if theme css should be included.
      * @return string
      */
@@ -679,7 +679,7 @@ class Integrator extends AbstractManager
             $aLinks[] = '<link rel="apple-touch-icon" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
         }
         $aLinks[] = '<link rel="shortcut icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
-        
+
         $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css?' . $sHash . '" />';
         if ($bThemeCSS) {
             $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css?' . $sHash . '" />';

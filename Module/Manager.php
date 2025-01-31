@@ -103,7 +103,7 @@ class Manager
         if ($oCoreModule instanceof AbstractModule) {
             $oTenant = null;
             if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
-                $oTenant = \Aurora\Modules\Core\Module::Decorator()->GetTenantWithoutRoleCheck($oUser->IdTenant);
+                $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
             }
             foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath) {
                 $bIsModuleDisabledForTenant = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oTenant, $sModuleName);
