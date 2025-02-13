@@ -106,8 +106,8 @@ class Manager
                 $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
             }
             foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath) {
-                $bIsModuleDisabledForTenant = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oTenant, $sModuleName);
-                $bIsModuleDisabledForUser = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oUser, $sModuleName);
+                $bIsModuleDisabledForTenant = $this->isModuleDisabledForObject($oTenant, $sModuleName);
+                $bIsModuleDisabledForUser = $this->isModuleDisabledForObject($oUser, $sModuleName);
                 $bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
                 if (!($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled) {
                     $oLoadedModule = $this->loadModule($sModuleName, $sModulePath);
@@ -126,6 +126,14 @@ class Manager
             echo "Can't load 'Core' Module";
             exit;
         }
+    }
+
+    /**
+     *
+     */
+    protected function isModuleDisabledForObject($oObject, $sModuleName)
+    {
+        return ($oObject instanceof \Aurora\System\Classes\Model) ? $oObject->isModuleDisabled($sModuleName) : false;
     }
 
     /**
