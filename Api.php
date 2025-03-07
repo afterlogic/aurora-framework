@@ -1289,6 +1289,15 @@ class Api
     public static function getAuthenticatedUserId($sAuthToken = '')
     {
         $mResult = false;
+
+        if (empty($sAuthToken)) {
+            if (is_array(self::$aUserSession) && isset(self::$aUserSession['UserId'])) {
+                $mResult = self::$aUserSession['UserId'];
+            } else {
+                $sAuthToken = self::getAuthToken();
+            }
+        }
+
         if (!empty($sAuthToken)) {
             $aInfo = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserInfo($sAuthToken);
             if (!empty(self::$aUserSession['UserId']) && (int) $aInfo['userId'] === (int) self::$aUserSession['UserId']) {
@@ -1298,14 +1307,7 @@ class Api
                 self::$aUserSession['UserId'] = (int) $mResult;
                 self::$aUserSession['AuthToken'] = $sAuthToken;
             }
-        } else {
-            if (is_array(self::$aUserSession) && isset(self::$aUserSession['UserId'])) {
-                $mResult = self::$aUserSession['UserId'];
-            } else {
-                $mResult = 0;
-            }
         }
-
         return $mResult;
     }
 
