@@ -271,7 +271,7 @@ class Api
 
     public static function checkUserAccess($oUser)
     {
-        if ($oUser) {
+        if (!self::$__SKIP_CHECK_USER_ROLE__ && $oUser) {
             $oAuthUser = Api::getAuthenticatedUser();
             switch ($oAuthUser->Role) {
                 case \Aurora\System\Enums\UserRole::TenantAdmin:
