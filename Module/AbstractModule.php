@@ -948,17 +948,17 @@ abstract class AbstractModule
      * @param string $sData
      * @param array $aParams = null
      * @param int $iPluralCount = null
-     * @param string $sUUID = null
+     * @param int $iUserId = 0
      *
      * @return string
      */
-    public function i18N($sData, $aParams = null, $iPluralCount = null, $sUUID = null)
+    public function i18N($sData, $aParams = null, $iPluralCount = null, $iUserId = 0)
     {
         static $sLanguage = null;
         if (is_null($sLanguage)) {
-            if ($sUUID) {
-                $oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
-                $oUser = $oCoreDecorator ? $oCoreDecorator->GetUserByUUID($sUUID) : null;
+            if ($iUserId > 0) {
+
+                $oUser = Api::getUserById($iUserId);
                 if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
                     $sLanguage = $oUser->Language;
                 }
