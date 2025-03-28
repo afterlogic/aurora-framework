@@ -970,7 +970,7 @@ abstract class AbstractModule
 
         if (is_null($this->aLang)) {
             if (isset(\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage])) {
-                $aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
+                $this->aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
             } else {
                 \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = false;
 

@@ -1093,37 +1093,6 @@ class Api
     }
 
     /**
-     * @param string $sData
-     * @param array $aParams = null
-     *
-     * @return string
-     */
-    public static function I18N($sData, $aParams = null, $sForceCustomInitialisationLang = '')
-    {
-        if (null === self::$aI18N) {
-            self::$aI18N = false;
-
-            $sLangFile = '';
-            if (0 < strlen($sForceCustomInitialisationLang)) {
-                $sLangFile = self::RootPath() . 'common/i18n/' . $sForceCustomInitialisationLang . '.ini';
-            }
-
-            if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) {
-                $sLangFile = self::RootPath() . 'common/i18n/English.ini';
-            }
-
-            if (0 < strlen($sLangFile) && @file_exists($sLangFile)) {
-                $aResultLang = self::convertIniToLang($sLangFile);
-                if (is_array($aResultLang)) {
-                    self::$aI18N = $aResultLang;
-                }
-            }
-        }
-
-        return self::processTranslateParams(self::$aI18N, $sData, $aParams);
-    }
-
-    /**
      * Checks if authenticated user has at least specified role.
      * @param int $iRole
      * @throws \Aurora\System\Exceptions\ApiException
