@@ -29,16 +29,10 @@ class BaseException extends Exception
     /**
      * @param int $iCode
      * @param Exception $oPrevious = null
-     * @param array $aParams = array()
      * @param array $aObjectParams = array()
      */
-    public function __construct($iCode, $oPrevious = null, $aParams = array(), $aObjectParams = array())
+    public function __construct($iCode, $oPrevious = null, $aObjectParams = array())
     {
-        if (\Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty === $iCode) {
-            \Aurora\System\Api::Log('Exception error: ' . \Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), \Aurora\System\Enums\LogLevel::Error);
-            $iCode = \Aurora\System\Exceptions\ErrorCodes::Validation_FieldIsEmpty_OutInfo;
-        }
-
         $this->aObjectParams = $aObjectParams;
         $this->oPrevious = $oPrevious ? $oPrevious : null;
 
@@ -46,7 +40,7 @@ class BaseException extends Exception
             \Aurora\System\Api::Log('Previous Exception: ' . $this->oPrevious->getMessage(), \Aurora\System\Enums\LogLevel::Error);
         }
 
-        parent::__construct(\Aurora\System\Exceptions\ErrorCodes::GetMessageByCode($iCode, $aParams), $iCode);
+        parent::__construct('BaseException', $iCode);
     }
 
     /**
@@ -70,10 +64,6 @@ class BaseException extends Exception
                 $oResponse->Tag . ' ' . $oResponse->StatusOrIndex . ' ' . $oResponse->HumanReadable : '';
         } elseif ($this->oPrevious instanceof \MailSo\Smtp\Exceptions\NegativeResponseException) {
             $sMessage = $this->oPrevious->getMessage();
-            //			$oSub = $this->oPrevious->getPrevious();
-            //			$oSub = $oSub instanceof \MailSo\Smtp\Exceptions\NegativeResponseException ? $oSub : null;
-            //
-            //			$sMessage = $oSub ? $oSub->getMessage() : $this->oPrevious->getMessage();
         } elseif ($this->oPrevious instanceof \Exception) {
             $sMessage = $this->oPrevious->getMessage();
         }

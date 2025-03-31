@@ -46,13 +46,6 @@ class ErrorCodes
     // Sabre
     public const Sabre_PreconditionFailed = 5002;
 
-    // Helpdesk
-    public const HelpdeskManager_UserAlreadyExists = 6001;
-    public const HelpdeskManager_UserCreateFailed = 6002;
-    public const HelpdeskManager_AccountAuthentication = 6004;
-    public const HelpdeskManager_AccountSystemAuthentication = 6008;
-    public const HelpdeskManager_UnactivatedUser = 6010;
-
     /**
      * @param int $iCode
      * @param array $aParams = array()
