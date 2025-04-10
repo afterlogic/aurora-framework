@@ -95,6 +95,28 @@ class Application
             \Aurora\System\Api::LogException($oEx);
         }
 
+        $oSettings = Api::GetSettings();
+        $sAllowedOrigin = $oSettings->AllowCrossDomainRequestsFromOrigin;
+        if ($sAllowedOrigin) {
+            // you cannot simply set Access-Control-Allow-Origin: * to allow any origin, it's doesn't work correctly with cookies
+            header('Access-Control-Allow-Origin: ' . (trim($sAllowedOrigin) === '*' ? @$_SERVER['HTTP_ORIGIN'] : $sAllowedOrigin));
+            // if set to false server tells the browser do not sent credentials (cookie)
+            header('Access-Control-Allow-Credentials: true');
+
+            if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+                if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+                    // may also be used: PUT, PATCH, HEAD etc, or *
+                    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+                }
+
+                if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+                    header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+                }
+
+                exit(0);
+            }
+        }
+
         self::GetVersion();
 
         $mResult = self::SingletonInstance()->Route(

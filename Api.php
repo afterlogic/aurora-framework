@@ -71,9 +71,15 @@ class Api
     public static $bIsValid;
 
     /**
+     * @deprecated
      * @var string
      */
     public static $sSalt;
+
+    /**
+     * @var string
+     */
+    public static $sEncryptionKey;
 
     /**
      * @var array
@@ -94,7 +100,6 @@ class Api
      * @var bool
      */
     public static $bDebug = false;
-
 
     /**
      * @var array
@@ -137,7 +142,12 @@ class Api
     protected static $usersCache = [];
 
     /**
-     *
+     * @var array
+     */
+    protected static $tenantsCache = [];
+
+    /**
+     * @deprecated
      * @return string
      */
     public static function GetSaltPath()
@@ -146,30 +156,40 @@ class Api
     }
 
     /**
+     *
      * @return string
      */
-    public static function GetHashSalt()
+    public static function GetEncryptionKeyPath()
     {
-        return '$2y$07$' . self::$sSalt . '$';
+        return self::DataPath() . '/encryption_key.php';
     }
 
     /**
      *
      */
-    public static function InitSalt()
+    public static function InitEncryptionKey()
     {
-        $sSalt = '';
-        $sSalt8File = self::GetSaltPath();
+        $sEncryptionKey = '';
+        $sEncryptionKeyPath = self::GetEncryptionKeyPath();
 
-        if (!@file_exists($sSalt8File)) {
-            $sSalt = bin2hex(random_bytes(16));
+        if (!@file_exists($sEncryptionKeyPath)) {
+            if (@file_exists(self::GetSaltPath())) {
+                include self::GetSaltPath();
+                $sEncryptionKey = self::$sSalt;
+            } else {
+                $sEncryptionKey = bin2hex(random_bytes(16));
+            }
 
-            $sSalt = '<?php \\Aurora\\System\\Api::$sSalt = "' . $sSalt . '";';
-            @file_put_contents($sSalt8File, $sSalt);
+            $sEncryptionKey = '<?php \\Aurora\\System\\Api::$sEncryptionKey = "' . $sEncryptionKey . '";';
+            if (@file_put_contents($sEncryptionKeyPath, $sEncryptionKey) && @file_exists(self::GetSaltPath())) {
+                @unlink(self::GetSaltPath());
+            }
         }
 
-        if (is_writable($sSalt8File)) {
-            include_once $sSalt8File;
+        if (is_readable($sEncryptionKeyPath)) {
+            include_once $sEncryptionKeyPath;
+        } else {
+            throw new ApiException(Notifications::SystemNotConfigured, null, 'Check the read permission of the encryption key file');
         }
     }
 
@@ -220,7 +240,7 @@ class Api
                 self::GrantAdminPrivileges();
             }
 
-            self::InitSalt();
+            self::InitEncryptionKey();
             self::validateApi();
             self::GetModuleManager()->loadModules();
 
@@ -251,7 +271,7 @@ class Api
 
     public static function checkUserAccess($oUser)
     {
-        if ($oUser) {
+        if (!self::$__SKIP_CHECK_USER_ROLE__ && $oUser) {
             $oAuthUser = Api::getAuthenticatedUser();
             switch ($oAuthUser->Role) {
                 case \Aurora\System\Enums\UserRole::TenantAdmin:
@@ -289,7 +309,7 @@ class Api
     public static function EncodeKeyValues(array $aValues)
     {
         return Utils::UrlSafeBase64Encode(
-            Utils::EncryptValue(@\serialize($aValues))
+            Utils::EncryptValue(@\json_encode($aValues))
         );
     }
 
@@ -305,11 +325,8 @@ class Api
         $sEncryptedValues = Utils::UrlSafeBase64Decode(trim($sEncryptedValues));
 
         $sValue = Utils::DecryptValue($sEncryptedValues);
-        if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValues, \md5(Api::GetHashSalt()));
-        }
 
-        $aResult = @\unserialize($sValue);
+        $aResult = @\json_decode($sValue, true);
 
         return \is_array($aResult) ? $aResult : array();
     }
@@ -417,9 +434,9 @@ class Api
     /**
      * @return \Aurora\System\Settings
      */
-    public static function &GetSettings()
+    public static function &GetSettings($force = false)
     {
-        if (null === self::$oSettings) {
+        if (null === self::$oSettings || $force) {
             try {
                 $sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
                 if (!\file_exists($sSettingsPath)) {
@@ -433,6 +450,7 @@ class Api
                 }
 
                 self::$oSettings = new \Aurora\System\Settings($sSettingsPath . 'config.json');
+                self::$oSettings->Load();
             } catch (\Aurora\System\Exceptions\BaseException $oException) {
                 self::$oSettings = false;
             }
@@ -619,6 +637,17 @@ class Api
         Logger::LogOnly($sDesc, $sLogFile);
     }
 
+    public static function LogSql($query)
+    {
+        $sql = $query->toSql();
+        foreach($query->getBindings() as $binding) {
+            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
+            $sql = preg_replace('/\?/', $value, $sql, 1);
+        }
+
+        Api::Log($sql, \Aurora\System\Enums\LogLevel::Full, 'sql-');
+    }
+
     public static function ClearLog($sFileFullPath)
     {
         return Logger::ClearLog($sFileFullPath);
@@ -761,7 +790,7 @@ class Api
      */
     public static function GenerateSsoToken($sEmail, $sPassword, $sLogin = '')
     {
-        $sSsoHash = \md5($sEmail . $sPassword . $sLogin . \microtime(true) . \rand(10000, 99999));
+        $sSsoHash = \Illuminate\Support\Str::random(32);
         return self::Cacher()->Set('SSO:' . $sSsoHash, self::EncodeKeyValues(array(
             'Email' => $sEmail,
             'Password' => $sPassword,
@@ -1064,37 +1093,6 @@ class Api
     }
 
     /**
-     * @param string $sData
-     * @param array $aParams = null
-     *
-     * @return string
-     */
-    public static function I18N($sData, $aParams = null, $sForceCustomInitialisationLang = '')
-    {
-        if (null === self::$aI18N) {
-            self::$aI18N = false;
-
-            $sLangFile = '';
-            if (0 < strlen($sForceCustomInitialisationLang)) {
-                $sLangFile = self::RootPath() . 'common/i18n/' . $sForceCustomInitialisationLang . '.ini';
-            }
-
-            if (0 === strlen($sLangFile) || !@file_exists($sLangFile)) {
-                $sLangFile = self::RootPath() . 'common/i18n/English.ini';
-            }
-
-            if (0 < strlen($sLangFile) && @file_exists($sLangFile)) {
-                $aResultLang = self::convertIniToLang($sLangFile);
-                if (is_array($aResultLang)) {
-                    self::$aI18N = $aResultLang;
-                }
-            }
-        }
-
-        return self::processTranslateParams(self::$aI18N, $sData, $aParams);
-    }
-
-    /**
      * Checks if authenticated user has at least specified role.
      * @param int $iRole
      * @throws \Aurora\System\Exceptions\ApiException
@@ -1172,29 +1170,12 @@ class Api
      */
     public static function getAuthToken()
     {
-        $sAuthToken = self::getAuthTokenFromHeaders();
+        $sAuthToken = $_COOKIE[Application::AUTH_TOKEN_KEY] ?? false;
         if (!$sAuthToken) {
-            $sAuthToken = isset($_COOKIE[Application::AUTH_TOKEN_KEY]) ?
-                    $_COOKIE[Application::AUTH_TOKEN_KEY] : '';
+            $sAuthToken = self::getAuthTokenFromHeaders();
         }
 
         return $sAuthToken;
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    public static function validateCsrfToken()
-    {
-        $bResult = true;
-        if (isset($_COOKIE[Application::AUTH_TOKEN_KEY])) {
-            $sAuthToken = self::getAuthTokenFromHeaders();
-
-            $bResult = ($sAuthToken === $_COOKIE[Application::AUTH_TOKEN_KEY]);
-        }
-
-        return $bResult;
     }
 
     /**
@@ -1210,9 +1191,10 @@ class Api
                 $mUserId = self::$aUserSession['UserId'];
             } else {
                 $sAuthToken = empty($sAuthToken) ? self::getAuthToken() : $sAuthToken;
+
                 $mUserId = self::getAuthenticatedUserId($sAuthToken);
             }
-            $oUser = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($mUserId);
+            $oUser = self::getUserById($mUserId);
         } catch (\Exception $oException) {
         }
         return $oUser;
@@ -1235,16 +1217,14 @@ class Api
         return $mResult;
     }
 
-    public static function validateAuthToken()
+    public static function validateAuthToken($authToken = null)
     {
-        $bResult = false;
-        /* @var $oIntegrator \Aurora\System\Managers\Integrator */
-        $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-        if ($oIntegrator) {
-            $bResult = $oIntegrator->validateAuthToken(self::getAuthToken());
+        if ($authToken === null) {
+            $authToken = self::getAuthToken();
         }
-
-        return $bResult;
+        if ($authToken && !self::UserSession()->Get($authToken)) {
+            throw new ApiException(Notifications::InvalidToken);
+        }
     }
 
     public static function getCookiePath()
@@ -1278,6 +1258,15 @@ class Api
     public static function getAuthenticatedUserId($sAuthToken = '')
     {
         $mResult = false;
+
+        if (empty($sAuthToken)) {
+            if (is_array(self::$aUserSession) && isset(self::$aUserSession['UserId'])) {
+                $mResult = self::$aUserSession['UserId'];
+            } else {
+                $sAuthToken = self::getAuthToken();
+            }
+        }
+
         if (!empty($sAuthToken)) {
             $aInfo = \Aurora\System\Managers\Integrator::getInstance()->getAuthenticatedUserInfo($sAuthToken);
             if (!empty(self::$aUserSession['UserId']) && (int) $aInfo['userId'] === (int) self::$aUserSession['UserId']) {
@@ -1287,14 +1276,7 @@ class Api
                 self::$aUserSession['UserId'] = (int) $mResult;
                 self::$aUserSession['AuthToken'] = $sAuthToken;
             }
-        } else {
-            if (is_array(self::$aUserSession) && isset(self::$aUserSession['UserId'])) {
-                $mResult = self::$aUserSession['UserId'];
-            } else {
-                $mResult = 0;
-            }
         }
-
         return $mResult;
     }
 
@@ -1328,10 +1310,7 @@ class Api
                 $iUserId = self::$aUserSession['UserId'];
             }
 
-            $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-            if ($oIntegrator) {
-                self::$oAuthenticatedUser = $oIntegrator->getAuthenticatedUserByIdHelper($iUserId);
-            }
+            self::$oAuthenticatedUser = self::getUserById($iUserId);
         }
         return self::$oAuthenticatedUser;
     }
@@ -1354,16 +1333,12 @@ class Api
     public static function getUserUUIDById($iUserId)
     {
         $sUUID = '';
-        static $aUUIDs = []; // cache
 
         if (\is_numeric($iUserId)) {
-            if (isset($aUUIDs[$iUserId])) {
-                $sUUID = $aUUIDs[$iUserId];
-            } else {
-                $oUser = User::find($iUserId);
-                if ($oUser) {
-                    $aUUIDs[$iUserId] = $sUUID = $oUser->UUID;
-                }
+            $oUser = self::getUserById($iUserId);
+
+            if ($oUser instanceof User) {
+                $sUUID = $oUser->UUID;
             }
         } else {
             $sUUID = $iUserId;
@@ -1381,10 +1356,11 @@ class Api
         $sPublicId = '';
 
         if (\is_numeric($iUserId)) {
-            $oUser = User::query()->select('PublicId')->where('Id', $iUserId)->first();
+            $oUser = self::getUserById($iUserId);
             if ($oUser) {
                 return $oUser->PublicId;
             }
+            // @TODO: check if it's needed
         } else {
             $sPublicId = $iUserId;
         }
@@ -1394,7 +1370,7 @@ class Api
 
     /**
      * @param string $sPublicId
-     * @return int
+     * @return int|false
      */
     public static function getUserIdByPublicId($sPublicId)
     {
@@ -1404,30 +1380,107 @@ class Api
             return -1;
         }
 
-        $oUser = User::query()->select('Id')->where('PublicId', $sPublicId)->first();
-        if ($oUser) {
-            return $oUser->Id;
+        $user = self::getUserByPublicId($sPublicId);
+        if ($user instanceof User) {
+            $iUserId = $user->Id;
         }
 
         return $iUserId;
+    }
+
+    public static function getUserByPublicId($sPublicId, $bForce = false)
+    {
+        $result = null;
+        if (!$bForce) {
+            foreach (self::$usersCache as $user) {
+                if ($user->PublicId === $sPublicId) {
+                    $result = $user;
+                    break;
+                }
+            }
+        }
+        if (!$result) {
+            $result = User::where('PublicId', $sPublicId)->first();
+            if ($result) {
+                self::$usersCache[$result->Id] = $result;
+            }
+        }
+
+        return $result;
     }
 
     public static function getUserById($iUserId, $bForce = false)
     {
         try {
             if (!isset(self::$usersCache[$iUserId]) || $bForce) {
-                self::$usersCache[$iUserId] = Managers\Integrator::getInstance()->getAuthenticatedUserByIdHelper($iUserId);
+                $oUser = Managers\Integrator::getUserByIdHelper($iUserId);
+                if ($oUser) {
+                    self::$usersCache[$iUserId] = $oUser;
+                }
             }
         } catch (\Exception $oEx) {
-            self::$usersCache[$iUserId] = false;
+            self::LogException($oEx);
         }
 
-        return self::$usersCache[$iUserId];
+        return self::$usersCache[$iUserId] ?? null;
     }
 
-    public static function getTenantById($iTenantId)
+    public static function removeUserFromCache($iUserId)
     {
-        return Tenant::find($iTenantId);
+        if (!isset(self::$usersCache[$iUserId])) {
+            unset(self::$usersCache[$iUserId]);
+        }
+    }
+
+    public static function getTenantById($iTenantId, $bForce = false)
+    {
+        try {
+            if (!isset(self::$tenantsCache[$iTenantId]) || $bForce) {
+                $oTenant = Tenant::find($iTenantId);
+                if ($oTenant) {
+                    self::$tenantsCache[$iTenantId] = $oTenant;
+                }
+            }
+        } catch (\Exception $oEx) {
+            self::LogException($oEx);
+        }
+
+        return self::$tenantsCache[$iTenantId] ?? null;
+    }
+
+    public static function getTenantByWebDomain()
+    {
+        static $bTenantInitialized = false;
+        static $oTenant = null;
+
+        if (!$bTenantInitialized) {
+            if (!empty($_SERVER['SERVER_NAME'])) {
+
+                foreach (self::$tenantsCache as $tenantCache) {
+                    if ($tenantCache->WebDomain === $_SERVER['SERVER_NAME']) {
+                        $oTenant = $tenantCache;
+                        break;
+                    }
+                }
+
+                if (!$oTenant) {
+                    $oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
+                    if ($oTenant) {
+                        self::$tenantsCache[$oTenant->Id] = $oTenant;
+                    }
+                }
+            }
+            $bTenantInitialized = true;
+        }
+
+        return $oTenant;
+    }
+
+    public static function removeTenantFromCache($iTenantId)
+    {
+        if (!isset(self::$tenantsCache[$iTenantId])) {
+            unset(self::$tenantsCache[$iTenantId]);
+        }
     }
 
     public static function setTenantName($sTenantName)
@@ -1462,21 +1515,6 @@ class Api
             }
 
             //			$bTenantInitialized = true;
-        }
-
-        return $oTenant;
-    }
-
-    public static function getTenantByWebDomain()
-    {
-        static $bTenantInitialized = false;
-        static $oTenant = null;
-
-        if (!$bTenantInitialized) {
-            if (!empty($_SERVER['SERVER_NAME'])) {
-                $oTenant = Tenant::firstWhere('WebDomain', $_SERVER['SERVER_NAME']);
-            }
-            $bTenantInitialized = true;
         }
 
         return $oTenant;
@@ -1532,9 +1570,9 @@ class Api
         return $aDbConfig;
     }
 
-    private static function CreateContainer()
+    public static function CreateContainer($force = false)
     {
-        if (!isset(self::$oContainer)) {
+        if (!isset(self::$oContainer) || $force) {
             // Instantiate the app container
             $appContainer = Container::getInstance();
 
@@ -1547,18 +1585,18 @@ class Api
 
             $oSettings = &Api::GetSettings();
             if ($oSettings) {
-                $appContainer['db-config'] = self::GetDbConfig(
-                    $oSettings->DBType,
-                    $oSettings->DBHost,
-                    $oSettings->DBName,
-                    $oSettings->DBPrefix,
-                    $oSettings->DBLogin,
-                    $oSettings->DBPassword
-                );
-
                 $capsule = new \Illuminate\Database\Capsule\Manager();
                 $appContainer['capsule'] = $capsule;
-                $capsule->addConnection($appContainer['db-config']);
+                $capsule->addConnection(
+                    self::GetDbConfig(
+                        $oSettings->DBType,
+                        $oSettings->DBHost,
+                        $oSettings->DBName,
+                        $oSettings->DBPrefix,
+                        $oSettings->DBLogin,
+                        $oSettings->DBPassword
+                    )
+                );
 
                 //Make this Capsule instance available globally.
                 $capsule->setAsGlobal();
@@ -1629,9 +1667,9 @@ class Api
     /**
      * @return Container
      */
-    public static function GetContainer()
+    public static function GetContainer($force = false)
     {
-        self::CreateContainer();
+        self::CreateContainer($force);
 
         return self::$oContainer;
     }
@@ -1683,5 +1721,46 @@ class Api
                 throw new ApiException(\Aurora\System\Notifications::AccessDenied, null, 'AccessDenied');
             }
         }
+    }
+
+    public static function setCookie($name, $value, $expires = 0, $httpOnly = true, $sameSite = 'Strict')
+    {
+        @\setcookie(
+            $name,
+            $value,
+            [
+                'expires' => $expires,
+                'path' => self::getCookiePath(),
+                'domain' => '',
+                'httponly' => $httpOnly,
+                'secure' => self::getCookieSecure(),
+                'samesite' => $sameSite // None || Lax || Strict
+            ]
+        );
+    }
+
+    public static function setAuthTokenCookie($authToken)
+    {
+        $iAuthTokenCookieExpireTime = (int) self::GetModuleManager()->getModuleConfigValue('Core', 'AuthTokenCookieExpireTime');
+        $sSameSite = self::GetModuleManager()->getModuleConfigValue('Core', 'CookieSameSite', 'Strict');
+
+        self::setCookie(
+            \Aurora\System\Application::AUTH_TOKEN_KEY,
+            $authToken,
+            ($iAuthTokenCookieExpireTime === 0) ? 0 : \strtotime("+$iAuthTokenCookieExpireTime days"),
+            true,
+            $sSameSite
+        );
+    }
+
+    public static function unsetAuthTokenCookie()
+    {
+        self::setCookie(
+            \Aurora\System\Application::AUTH_TOKEN_KEY,
+            '',
+            -1,
+            true,
+            self::GetModuleManager()->getModuleConfigValue('Core', 'CookieSameSite', 'Strict')
+        );
     }
 }

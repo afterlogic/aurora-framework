@@ -158,7 +158,6 @@ abstract class AbstractModule
         'FalseResponse',
         'ExceptionResponse',
         'CallMethod',
-        'GetSettings',
         'i18N',
         'GetErrors',
         'GetErrorMessageByCode',
@@ -295,6 +294,26 @@ abstract class AbstractModule
         return (bool) $this->bInitialized;
     }
 
+    protected function initSubscriptions()
+    {
+        $class = new \ReflectionClass($this);
+        $subscriptionsClassName = $class->getNamespaceName() . "\\Subscriptions";
+        if (class_exists($subscriptionsClassName)) {
+            $subscriptions = new $subscriptionsClassName($this);
+            $subscriptions->init();
+        }
+    }
+
+    protected function initEntries()
+    {
+        $class = new \ReflectionClass($this);
+        $entitiesClassName = $class->getNamespaceName() . "\\Entries";
+        if (class_exists($entitiesClassName)) {
+            $entities = new $entitiesClassName($this);
+            $entities->init();
+        }
+    }
+
     /**
      *
      * @return boolean
@@ -306,6 +325,8 @@ abstract class AbstractModule
             $this->bInitialized = true;
             $this->loadModuleSettings();
             $this->init();
+            $this->initSubscriptions();
+            $this->initEntries();
         }
 
         return $mResult;
@@ -579,6 +600,11 @@ abstract class AbstractModule
     final public static function GetName()
     {
         return substr(strrchr(static::getNamespace(), "\\"), 1);
+    }
+
+    public function getModuleName()
+    {
+        return static::GetName();
     }
 
     /**
@@ -922,17 +948,17 @@ abstract class AbstractModule
      * @param string $sData
      * @param array $aParams = null
      * @param int $iPluralCount = null
-     * @param string $sUUID = null
+     * @param int $iUserId = 0
      *
      * @return string
      */
-    public function i18N($sData, $aParams = null, $iPluralCount = null, $sUUID = null)
+    public function i18N($sData, $aParams = null, $iPluralCount = null, $iUserId = 0)
     {
         static $sLanguage = null;
         if (is_null($sLanguage)) {
-            if ($sUUID) {
-                $oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
-                $oUser = $oCoreDecorator ? $oCoreDecorator->GetUserByUUID($sUUID) : null;
+            if ($iUserId > 0) {
+
+                $oUser = Api::getUserById($iUserId);
                 if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
                     $sLanguage = $oUser->Language;
                 }
@@ -944,7 +970,7 @@ abstract class AbstractModule
 
         if (is_null($this->aLang)) {
             if (isset(\Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage])) {
-                $aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
+                $this->aLang = \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage];
             } else {
                 \Aurora\System\Api::$aClientI18N[self::GetName()][$sLanguage] = false;
 

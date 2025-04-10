@@ -498,7 +498,7 @@ class Utils
      */
     public static function EncryptValue($sValue)
     {
-        $mKey = ctype_xdigit(Api::$sSalt) ? hex2bin(Api::$sSalt) : Api::$sSalt;
+        $mKey = ctype_xdigit(Api::$sEncryptionKey) ? hex2bin(Api::$sEncryptionKey) : Api::$sEncryptionKey;
         $sEncryptedValue = \Aurora\System\Utils\Crypt::XxteaEncrypt($sValue, $mKey);
         return @trim(self::UrlSafeBase64Encode($sEncryptedValue));
     }
@@ -509,12 +509,20 @@ class Utils
      */
     public static function DecryptValue($sEncryptedValue)
     {
-        $mKey = ctype_xdigit(Api::$sSalt) ? hex2bin(Api::$sSalt) : Api::$sSalt;
+        $mKey = ctype_xdigit(Api::$sEncryptionKey) ? hex2bin(Api::$sEncryptionKey) : Api::$sEncryptionKey;
         $sEncryptedValue = self::UrlSafeBase64Decode(trim($sEncryptedValue));
         $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
+
+        $sCryptKey = '$2y$07$' . Api::$sEncryptionKey . '$';
+
         if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, Api::GetHashSalt());
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, \md5($sCryptKey));
         }
+
+        if ($sValue === false) {
+            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $sCryptKey);
+        }
+
         return $sValue;
     }
 
@@ -1079,25 +1087,6 @@ class Utils
             }
         }
         return $sExtension;
-    }
-
-    /**
-     * @param int $sLen = 6
-     * @return string
-     */
-    public static function GenerateShortHashString($sLen = 10)
-    {
-        $string = '';
-
-        while (($len = strlen($string)) < $sLen) {
-            $size = $sLen - $len;
-
-            $bytes = random_bytes($size);
-
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
-        }
-
-        return $string;
     }
 
     public static function GetMimeContentTypes()
@@ -2013,6 +2002,27 @@ class Utils
         return $ipaddress;
     }
 
+    /**
+     * Get size parameters from php.ini
+     * @param string $sizeName
+     * @return float size in bytes
+     */
+    public static function getSizeFromIni($sizeName)
+    {
+        $size = ini_get($sizeName);
+        if ($size) {
+            $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
+            $size = (int) preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
+            if ($unit) {
+                // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+                return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            } else {
+                return round($size);
+            }
+        } else {
+            return 0;
+        }
+    }
 }
 
 /**

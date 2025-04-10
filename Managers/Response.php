@@ -81,7 +81,9 @@ class Response
         $mResult = null;
 
         if (\is_object($mResponse) && !($mResponse instanceof \stdClass)) {
-            if (\method_exists($mResponse, 'toResponseArray')) {
+            if ($mResponse instanceof \Illuminate\Support\Collection) {
+                $mResult = $mResponse->toArray();
+            } elseif (\method_exists($mResponse, 'toResponseArray')) {
                 $aArgs = [$mResponse, $aParameters];
                 \Aurora\System\Api::GetModuleManager()->broadcastEvent(
                     'System',

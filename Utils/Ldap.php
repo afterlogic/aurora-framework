@@ -151,6 +151,7 @@ class Ldap
         return false;
     }
 
+
     /**
      * @param mixed $mReturn
      * @return mixed

@@ -45,6 +45,7 @@ class Notifications
     public const CanNotGetContact = 607;
 
     public const CanNotCreateAccount = 701;
+    public const CanNotUpdateAccount = 702;
     public const AccountExists = 704;
 
     // Rest

@@ -7,6 +7,8 @@
 
 namespace Aurora\System\Managers;
 
+use Aurora\System\Notifications;
+
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
@@ -73,7 +75,7 @@ abstract class AbstractStorage
         if ($this->oConnection) {
             $oException = $this->oConnection->GetException();
             if ($oException instanceof \Aurora\System\Exceptions\DbException) {
-                throw new \Aurora\System\Exceptions\BaseException(\Aurora\System\Exceptions\Errs::Db_ExceptionError, $oException);
+                throw new \Aurora\System\Exceptions\ApiException(Notifications::DataBaseError, $oException);
             }
         }
     }

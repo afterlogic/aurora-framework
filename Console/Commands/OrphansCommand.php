@@ -70,7 +70,7 @@ class OrphansCommand extends BaseCommand
 
         $aOrphansEntities = [];
         $aModels = $this->getAllModels();
-        foreach ($aModels as $moduleModels) {
+        foreach ($aModels as $moduleName => $moduleModels) {
             foreach ($moduleModels as $modelPath) {
                 $model = str_replace('/', DIRECTORY_SEPARATOR, $modelPath);
                 $model = str_replace('\\', DIRECTORY_SEPARATOR, $model);
@@ -83,9 +83,20 @@ class OrphansCommand extends BaseCommand
                 array_unshift($model, "Aurora");
                 $model = implode('\\', $model);
 
+                $modelObject = new $model();
+                $primaryKey = $modelObject->getKeyName(); // get primary key column name
+
+                // This block is required for the work with custom connection to DB which is defined in MtaConnector module
+                $sConnectionName = $modelObject->getConnectionName();
+                if ($sConnectionName) {
+                    $sModuleClassName = '\\Aurora\\Modules\\' . $moduleName . '\\Module';
+                    $sModelPath = Api::GetModuleManager()->GetModulePath($moduleName);
+                    $oModule = new $sModuleClassName($sModelPath);
+                    $oModule->addDbConnection();
+                }
+
                 $this->logger->info('Checking ' . $model::query()->getQuery()->from . ' table.');
 
-                $modelObject = new $model();
                 $checkOrphan = $modelObject->getOrphanIds();
                 switch($checkOrphan['status']) {
                     case 0:
@@ -93,12 +104,13 @@ class OrphansCommand extends BaseCommand
                         break;
                     case 1:
                         $aOrphansEntities[$model] = array_values($checkOrphan['orphansIds']);
+                        sort($aOrphansEntities[$model]);
                         if ($input->getOption('remove') && !empty($aOrphansEntities[$model])) {
                             $this->logger->error($checkOrphan['message']);
                             $bRemove = $helper->ask($input, $output, $question);
 
                             if ($bRemove) {
-                                $modelObject::whereIn('id', $aOrphansEntities[$model])->delete();
+                                $modelObject::whereIn($primaryKey, $aOrphansEntities[$model])->delete();
                                 $this->logger->warning('Orphan entries was removed.');
                             } else {
                                 $this->logger->warning('Orphan entries removing was skipped.');

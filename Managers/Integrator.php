@@ -223,13 +223,12 @@ class Integrator extends AbstractManager
      */
     public static function GetAdminUser()
     {
-        $oUser = new \Aurora\Modules\Core\Models\User();
-
-        $oUser->Id = -1;
-        $oUser->Role = \Aurora\System\Enums\UserRole::SuperAdmin;
-        $oUser->PublicId = 'Administrator';
-
-        return $oUser;
+        return new \Aurora\Modules\Core\Models\User([
+            'Id' => -1,
+            'Role' => \Aurora\System\Enums\UserRole::SuperAdmin,
+            'PublicId' => 'Administrator',
+            'TokensValidFromTimestamp' => 0
+        ]);
     }
 
     /**
@@ -310,31 +309,14 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * @param string $sAuthToken Default value is empty string.
-     *
-     * @return \Aurora\Modules\Core\Models\User
-     */
-    public function getAuthenticatedUserHelper($sAuthToken = '')
-    {
-        $aUserInfo = $this->getAuthenticatedUserInfo($sAuthToken);
-        $iUserId = $aUserInfo['userId'];
-        $oUser = null;
-        if (0 < $iUserId) {
-            $oUser = self::GetUser($iUserId);
-        } elseif ($aUserInfo['isAdmin']) {
-            $oUser = self::GetAdminUser();
-        }
-        return $oUser;
-    }
-
-    /**
      * @param int $iUserId Default value is empty string.
      *
      * @return \Aurora\Modules\Core\Models\User|null
      */
-    public function getAuthenticatedUserByIdHelper($iUserId)
+    public static function getUserByIdHelper($iUserId)
     {
         $oUser = null;
+        $iUserId = (int) $iUserId;
         if (0 < $iUserId) {
             $oUser = static::GetUser($iUserId);
         } elseif ($iUserId === -1) {
@@ -343,16 +325,10 @@ class Integrator extends AbstractManager
         return $oUser;
     }
 
-
-    public function validateAuthToken($sAuthToken)
-    {
-        return (\Aurora\System\Api::UserSession()->Get($sAuthToken) !== false);
-    }
-
     /**
      * @param string $sAuthToken Default value is empty string.
      *
-     * @return int
+     * @return array
      */
     public function getAuthenticatedUserInfo($sAuthToken = '')
     {
@@ -361,45 +337,27 @@ class Integrator extends AbstractManager
             'userId' => 0,
             'accountType' => 0
         );
-        $aAccountHashTable = \Aurora\System\Api::UserSession()->Get($sAuthToken);
-        if (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-            'auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
-            $oUser = static::GetUser((int) $aAccountHashTable['id']);
-            if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
+        $aAccountHashTable = \Aurora\Api::UserSession()->Get($sAuthToken);
+        if (is_array($aAccountHashTable) && isset($aAccountHashTable['token'])) {
+            if ('auth' === $aAccountHashTable['token'] && 0 < strlen($aAccountHashTable['id'])) {
+                $oUser = \Aurora\Api::getUserById((int) $aAccountHashTable['id']);
+                if ($oUser instanceof \Aurora\Modules\Core\Models\User) {
+                    $aInfo = array(
+                        'isAdmin' => false,
+                        'userId' => (int) $aAccountHashTable['id'],
+                        'account' => isset($aAccountHashTable['account']) ? $aAccountHashTable['account'] : 0,
+                        'accountType' => isset($aAccountHashTable['account_type']) ? $aAccountHashTable['account_type'] : 0,
+                    );
+                }
+            } elseif ('admin' === $aAccountHashTable['token']) {
                 $aInfo = array(
-                    'isAdmin' => false,
-                    'userId' => (int) $aAccountHashTable['id'],
-                    'account' => isset($aAccountHashTable['account']) ? $aAccountHashTable['account'] : 0,
-                    'accountType' => isset($aAccountHashTable['account_type']) ? $aAccountHashTable['account_type'] : 0,
+                    'isAdmin' => true,
+                    'userId' => -1,
+                    'accountType' => 0
                 );
             }
-        } elseif (is_array($aAccountHashTable) && isset($aAccountHashTable['token']) &&
-            'admin' === $aAccountHashTable['token']) {
-            $aInfo = array(
-                'isAdmin' => true,
-                'userId' => -1,
-                'accountType' => 0
-            );
         }
         return $aInfo;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAuthenticatedHelpdeskUserId()
-    {
-        $iHdUserId = 0;
-        $sKey = empty($_COOKIE[self::AUTH_HD_KEY]) ? '' : $_COOKIE[self::AUTH_HD_KEY];
-        if (!empty($sKey) && is_string($sKey)) {
-            $aUserHashTable = \Aurora\System\Api::DecodeKeyValues($sKey);
-            if (is_array($aUserHashTable) && isset($aUserHashTable['token']) &&
-                'hd_auth' === $aUserHashTable['token'] && 0 < strlen($aUserHashTable['id']) && is_int($aUserHashTable['id'])) {
-                $iHdUserId = (int) $aUserHashTable['id'];
-            }
-        }
-
-        return $iHdUserId;
     }
 
     /**
@@ -407,13 +365,10 @@ class Integrator extends AbstractManager
      */
     public function setLastErrorCode($iCode)
     {
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::TOKEN_LAST_CODE,
             $iCode,
-            0,
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
+            0
         );
     }
 
@@ -431,32 +386,11 @@ class Integrator extends AbstractManager
             unset($_COOKIE[self::TOKEN_LAST_CODE]);
         }
 
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::TOKEN_LAST_CODE,
             '',
             \strtotime('-1 hour'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
         );
-    }
-
-    /**
-     * @param string $sAuthToken Default value is empty string.
-     *
-     * @return bool
-     */
-    public function logoutAccount($sAuthToken = '')
-    {
-        @\setcookie(
-            \Aurora\System\Application::AUTH_TOKEN_KEY,
-            '',
-            \strtotime('-1 hour'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
-        );
-        return true;
     }
 
     /**
@@ -484,13 +418,10 @@ class Integrator extends AbstractManager
 
     public function skipMobileCheck()
     {
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::TOKEN_SKIP_MOBILE_CHECK,
             '1',
-            0,
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
+            0
         );
     }
 
@@ -500,13 +431,10 @@ class Integrator extends AbstractManager
     public function isMobile()
     {
         if (isset($_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) && '1' === (string) $_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) {
-            @\setcookie(
+            \Aurora\System\Api::setCookie(
                 self::TOKEN_SKIP_MOBILE_CHECK,
                 '',
-                \strtotime('-1 hour'),
-                \Aurora\System\Api::getCookiePath(),
-                null,
-                \Aurora\System\Api::getCookieSecure()
+                \strtotime('-1 hour')
             );
             return 0;
         }
@@ -527,33 +455,13 @@ class Integrator extends AbstractManager
      */
     public function setMobile($bMobile)
     {
-        @\setcookie(
+        \Aurora\System\Api::setCookie(
             self::MOBILE_KEY,
             $bMobile ? '1' : '0',
-            \strtotime('+200 days'),
-            \Aurora\System\Api::getCookiePath(),
-            null,
-            \Aurora\System\Api::getCookieSecure()
+            \strtotime('+200 days')
         );
-        return true;
-    }
 
-    public function resetCookies()
-    {
-        $sHelpdeskHash = !empty($_COOKIE[self::AUTH_HD_KEY]) ? $_COOKIE[self::AUTH_HD_KEY] : '';
-        if (0 < strlen($sHelpdeskHash)) {
-            $aHelpdeskHashTable = \Aurora\System\Api::DecodeKeyValues($sHelpdeskHash);
-            if (isset($aHelpdeskHashTable['sign-me']) && $aHelpdeskHashTable['sign-me']) {
-                @\setcookie(
-                    self::AUTH_HD_KEY,
-                    \Aurora\System\Api::EncodeKeyValues($aHelpdeskHashTable),
-                    \strtotime('+30 days'),
-                    \Aurora\System\Api::getCookiePath(),
-                    null,
-                    \Aurora\System\Api::getCookieSecure()
-                );
-            }
-        }
+        return true;
     }
 
     /**
@@ -743,14 +651,16 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * Returns css links for building in html.
+     * Returns favicons and CSS links for building in html.
      *
+     * @param bool $bThemeCSS Define if theme css should be included.
      * @return string
      */
-    public function buildHeadersLink()
+    public function buildHeadersLink($bThemeCSS = true)
     {
         list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
         $sMobileSuffix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
+        $sHash = \Aurora\System\Api::VersionJs();
         //		$sTenantName = \Aurora\System\Api::getTenantName();
         //		$oSettings =&\Aurora\System\Api::GetSettings();
 
@@ -758,18 +668,31 @@ class Integrator extends AbstractManager
         //		So we don't use tenants folder for static files.
         //		if ($oSettings->GetValue('EnableMultiTenant') && $sTenantName)
         //		{
-        //			$sS =
+        //			$sLinks =
         //'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css'.'?'.\Aurora\System\Api::VersionJs().'" />'.
         //'<link type="text/css" rel="stylesheet" href="./tenants/'.$sTenantName.'/static/styles/themes/'.$sTheme.'/styles'.$sMobileSuffix.'.css'.'?'.\Aurora\System\Api::VersionJs().'" />';
         //		}
         //		else
         //		{
-        $sS =
-'<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css' . '?' . \Aurora\System\Api::VersionJs() . '" />' .
-'<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css' . '?' . \Aurora\System\Api::VersionJs() . '" />';
+
+        $aLinks = [];
+
+        if (file_exists(AU_APP_ROOT_PATH . '/static/styles/themes/' . $sTheme . '/favicon.svg')) {
+            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="./static/styles/themes/' . $sTheme . '/favicon.svg" />';
+            $aLinks[] = '<link rel="apple-touch-icon" href="./static/styles/themes/' . $sTheme . '/apple-touch-icon.png" /><!-- 180x180 -->';
+        } else {
+            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="static/styles/images/favicon.svg" />';
+            $aLinks[] = '<link rel="apple-touch-icon" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
+        }
+        $aLinks[] = '<link rel="shortcut icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
+
+        $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css?' . $sHash . '" />';
+        if ($bThemeCSS) {
+            $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css?' . $sHash . '" />';
+        }
         //		}
 
-        return $sS;
+        return implode("\r\n", $aLinks);
     }
 
     public function GetClientModuleNames()

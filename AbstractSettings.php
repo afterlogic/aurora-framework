@@ -115,7 +115,22 @@ abstract class AbstractSettings
             $this->Load();
         }
 
-        return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey]->Value : $mDefault;
+        $value = $mDefault;
+        if (isset($this->aContainer[$sKey])) {
+            $prop = $this->aContainer[$sKey];
+            if ($prop->Type === 'encrypted') {
+                $value = \Aurora\System\Utils::DecryptValue($prop->Value);
+                if (!$value) {
+                    $value = $prop->Value;
+                    $this->SetValue($sKey, $value);
+                    $this->Save();
+                }
+            } else {
+                $value = $prop->Value;
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -180,6 +195,9 @@ abstract class AbstractSettings
                     // rebuild array indexes
                     $mValue = array_values($mValue);
                 }
+                break;
+            case 'encrypted':
+                $mValue = \Aurora\System\Utils::EncryptValue($mValue);
                 break;
             default:
                 $mValue = null;

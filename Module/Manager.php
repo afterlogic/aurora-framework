@@ -97,17 +97,17 @@ class Manager
      */
     public function loadModules()
     {
+        $oUser = \Aurora\System\Api::authorise();
         $oCoreModule = $this->loadModule('Core');
 
         if ($oCoreModule instanceof AbstractModule) {
-            $oUser = \Aurora\System\Api::authorise();
             $oTenant = null;
             if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
-                $oTenant = \Aurora\Modules\Core\Module::Decorator()->GetTenantWithoutRoleCheck($oUser->IdTenant);
+                $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
             }
             foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath) {
-                $bIsModuleDisabledForTenant = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oTenant, $sModuleName);
-                $bIsModuleDisabledForUser = \Aurora\Modules\Core\Module::Decorator()->IsModuleDisabledForObject($oUser, $sModuleName);
+                $bIsModuleDisabledForTenant = $this->isModuleDisabledForObject($oTenant, $sModuleName);
+                $bIsModuleDisabledForUser = $this->isModuleDisabledForObject($oUser, $sModuleName);
                 $bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
                 if (!($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled) {
                     $oLoadedModule = $this->loadModule($sModuleName, $sModulePath);
@@ -128,16 +128,24 @@ class Manager
         }
     }
 
-	/**
-	 *
-	 * @param string $sModuleName
-	 * @return boolean
-	 */
-	protected function isClientModule($sModuleName)
-	{
-		$sModulePath = $this->GetModulePath($sModuleName);
-		return \file_exists($sModulePath . $sModuleName . '/js/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue-mobile/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue/manager.js');
-	}
+    /**
+     *
+     */
+    protected function isModuleDisabledForObject($oObject, $sModuleName)
+    {
+        return ($oObject instanceof \Aurora\System\Classes\Model) ? $oObject->isModuleDisabled($sModuleName) : false;
+    }
+
+    /**
+     *
+     * @param string $sModuleName
+     * @return boolean
+     */
+    protected function isClientModule($sModuleName)
+    {
+        $sModulePath = $this->GetModulePath($sModuleName);
+        return \file_exists($sModulePath . $sModuleName . '/js/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue-mobile/manager.js') || \file_exists($sModulePath . $sModuleName . '/vue/manager.js');
+    }
 
     /**
      *
@@ -596,6 +604,7 @@ class Manager
             'Parameters' => \json_decode($oHttp->GetPost('Parameters', ''), true)
         ];
         $mResult = false;
+
         try {
             $bEventResult = $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'before', $aArguments, $mResult);
 
@@ -608,14 +617,14 @@ class Manager
                     $sEntryName
                 );
             }
-
-            $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
         } catch(\Exception $oException) {
             $mResult = \Aurora\System\Managers\Response::GetJsonFromObject(
-                "Json",
+                'Json',
                 \Aurora\System\Managers\Response::ExceptionResponse("System", $oException)
             );
             \Aurora\System\Api::LogException($oException);
+        } finally {
+            $this->broadcastEvent('System', 'RunEntry' . AbstractModule::$Delimiter . 'after', $aArguments, $mResult);
         }
 
         return $mResult;

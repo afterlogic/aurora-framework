@@ -90,7 +90,7 @@ class Router
 
     public function route($sName)
     {
-        $mResult = false;
+        $mResult = [];
         $oHttp = \MailSo\Base\Http::SingletonInstance();
 
         $mMethod = $this->getCallback($sName);
@@ -100,7 +100,7 @@ class Router
                     \Aurora\System\Api::Log(" ");
                     \Aurora\System\Api::Log(" ===== ENTRY: " . $sModule . '::' . $sName);
                     \Aurora\System\Api::Log(" URL: " . $oHttp->GetUrl());
-                    $mResult .= call_user_func_array(
+                    $mResult[] = call_user_func_array(
                         $mCallbak,
                         []
                     );
@@ -108,7 +108,12 @@ class Router
             }
         }
 
-        return $mResult;
+        // This is an unsupported case. Work with multiple callbacks of one an entry point was kept for backward compatibility.
+        if (count($mResult) > 1) {
+            \Aurora\System\Api::Log(" WARNING: More than one entry result returned");
+        }
+
+        return $mResult[0] ?? false;
     }
 
     public function removeRoute($sName)
