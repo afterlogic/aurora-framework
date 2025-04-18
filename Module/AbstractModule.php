@@ -294,10 +294,17 @@ abstract class AbstractModule
         return (bool) $this->bInitialized;
     }
 
+    protected function getNamespaceName()
+    {
+        $className = get_class($this);
+        return str_contains($className, '\\') 
+            ? substr($className, 0, strrpos($className, '\\'))
+            : null;
+    }
+
     protected function initSubscriptions()
     {
-        $class = new \ReflectionClass($this);
-        $subscriptionsClassName = $class->getNamespaceName() . "\\Subscriptions";
+        $subscriptionsClassName = $this->getNamespaceName() . "\\Subscriptions";
         if (class_exists($subscriptionsClassName)) {
             $subscriptions = new $subscriptionsClassName($this);
             $subscriptions->init();
@@ -306,8 +313,7 @@ abstract class AbstractModule
 
     protected function initEntries()
     {
-        $class = new \ReflectionClass($this);
-        $entitiesClassName = $class->getNamespaceName() . "\\Entries";
+        $entitiesClassName = $this->getNamespaceName() . "\\Entries";
         if (class_exists($entitiesClassName)) {
             $entities = new $entitiesClassName($this);
             $entities->init();
@@ -852,13 +858,11 @@ abstract class AbstractModule
                         $oReflector = new \ReflectionMethod($this, $sMethod);
                         if (!$oReflector->isPublic()) {
                             throw new \Aurora\System\Exceptions\ApiException(
-                                \Aurora\System\Notifications::MethodNotFound
+                                \Aurora\System\Notifications::MethodAccessDenied
                             );
                         }
-                        $mMethodResult = call_user_func_array(
-                            array($this, $sMethod),
-                            $aMethodArgs
-                        );
+                        $mMethodResult = $this->$sMethod(...$aMethodArgs);
+
                         if (is_array($mMethodResult) && is_array($mResult)) {
                             $mResult = array_merge($mMethodResult, $mResult);
                         } elseif ($mMethodResult !== null) {
