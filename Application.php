@@ -117,8 +117,6 @@ class Application
             }
         }
 
-        self::GetVersion();
-
         $mResult = self::SingletonInstance()->Route(
             \strtolower(
                 Router::getItemByIndex(0, $sDefaultEntry)
@@ -127,18 +125,6 @@ class Application
         if (\MailSo\Base\Http::SingletonInstance()->GetRequest('Format') !== 'Raw') {
             echo $mResult;
         }
-    }
-
-    /**
-     * @return string
-     */
-    public static function GetVersion()
-    {
-        if (!defined('AU_APP_VERSION')) {
-            $sVersion = @\file_get_contents(AU_APP_ROOT_PATH . 'VERSION');
-            \define('AU_APP_VERSION', $sVersion);
-        }
-        return AU_APP_VERSION;
     }
 
     /**

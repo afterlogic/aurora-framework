@@ -43,6 +43,11 @@ if (defined('AU_API_SERVER_TIME_ZONE') && function_exists('date_default_timezone
     @date_default_timezone_set(AU_API_SERVER_TIME_ZONE);
 }
 
+if (!defined('AU_APP_VERSION')) {
+    $sVersion = @\file_get_contents(AU_APP_ROOT_PATH . 'VERSION');
+    \define('AU_APP_VERSION', $sVersion);
+}
+
 unset($sDefaultTimeZone);
 
 /**
@@ -699,7 +704,7 @@ class Api
     public static function VersionFull()
     {
         static $sVersion = null;
-        $sAppVersion = @file_get_contents(self::WebMailPath() . 'VERSION');
+        $sAppVersion = AU_APP_VERSION;
 
         $sVersion = (empty($sAppVersion)) ? '0.0.0' : $sAppVersion;
 
@@ -713,7 +718,7 @@ class Api
     {
         static $sVersion = null;
         if (null === $sVersion) {
-            preg_match('/[\d\.]+/', @file_get_contents(self::WebMailPath() . 'VERSION'), $matches);
+            preg_match('/[\d\.]+/', AU_APP_VERSION, $matches);
 
             if (isset($matches[0])) {
                 $sAppVersion = preg_replace('/[^0-9]/', '', $matches[0]);
@@ -729,8 +734,7 @@ class Api
      */
     public static function VersionJs()
     {
-        $oSettings = &self::GetSettings();
-        $sAppVersion = @file_get_contents(self::WebMailPath() . 'VERSION');
+        $sAppVersion = AU_APP_VERSION;
         $sAppVersion = empty($sAppVersion) ? '0.0.0' : $sAppVersion;
 
         return preg_replace('/[^0-9]/', '', $sAppVersion);
