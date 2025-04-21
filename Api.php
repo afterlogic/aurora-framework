@@ -276,7 +276,10 @@ class Api
 
     public static function checkUserAccess($oUser)
     {
-        if (!self::$__SKIP_CHECK_USER_ROLE__ && $oUser) {
+        if (!($oUser instanceof User)) {
+            throw new ApiException(Notifications::InvalidInputParameter, null, 'InvalidInputParameter');
+        }
+        if (!Api::accessCheckIsSkipped()) {
             $oAuthUser = Api::getAuthenticatedUser();
             switch ($oAuthUser->Role) {
                 case \Aurora\System\Enums\UserRole::TenantAdmin:
