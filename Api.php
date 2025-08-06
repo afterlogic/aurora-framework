@@ -553,7 +553,11 @@ class Api
         /* @var $oIntegrator \Aurora\System\Managers\Integrator */
         $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 
-        return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
+        if (\Aurora\Modules\Core\Module::getInstance()->getModuleSettings()->AllowMobile) {
+            return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
+        } else {
+            return false;
+        }
     }
 
     /**
