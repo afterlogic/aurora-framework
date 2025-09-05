@@ -553,7 +553,7 @@ class Api
         /* @var $oIntegrator \Aurora\System\Managers\Integrator */
         $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 
-        if (\Aurora\Modules\Core\Module::getInstance()->getModuleSettings()->AllowMobile) {
+        if (\Aurora\Modules\CoreWebclient\Module::getInstance()->getModuleSettings()->AllowMobile) {
             return (bool) $oIntegrator /*&& $oApiCapability->isNotLite()*/ && 1 === $oIntegrator->isMobile(); // todo
         } else {
             return false;
