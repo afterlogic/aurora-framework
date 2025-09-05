@@ -297,7 +297,7 @@ abstract class AbstractModule
     protected function getNamespaceName()
     {
         $className = get_class($this);
-        return str_contains($className, '\\') 
+        return str_contains($className, '\\')
             ? substr($className, 0, strrpos($className, '\\'))
             : null;
     }

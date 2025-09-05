@@ -15,7 +15,8 @@ if (!function_exists('base_path')) {
 }
 
 if (!function_exists('str_ends_with')) {
-    function str_ends_with($haystack, $needle) {
+    function str_ends_with($haystack, $needle)
+    {
         return substr_compare($haystack, $needle, -strlen($needle)) === 0;
     }
 }
