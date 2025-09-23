@@ -28,6 +28,8 @@ class Application
 
     protected static $sBaseUrl = '';
 
+    public static $mobileAppChecked = false;
+
     /**
      * @return void
      */
