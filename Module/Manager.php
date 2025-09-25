@@ -97,19 +97,14 @@ class Manager
      */
     public function loadModules()
     {
-        $oUser = \Aurora\System\Api::authorise();
+        \Aurora\System\Api::authorise();
         $oCoreModule = $this->loadModule('Core');
 
         if ($oCoreModule instanceof AbstractModule) {
-            $oTenant = null;
-            if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
-                $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
-            }
+
             foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath) {
-                $bIsModuleDisabledForTenant = $this->isModuleDisabledForObject($oTenant, $sModuleName);
-                $bIsModuleDisabledForUser = $this->isModuleDisabledForObject($oUser, $sModuleName);
-                $bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
-                if (!($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled) {
+
+                if ($this->canLoadModule($sModuleName)) {
                     $oLoadedModule = $this->loadModule($sModuleName, $sModulePath);
                     $bClientModule = $this->isClientModule($sModuleName);
                     if ($oLoadedModule instanceof AbstractModule || $bClientModule) {
@@ -126,6 +121,20 @@ class Manager
             echo "Can't load 'Core' Module";
             exit;
         }
+    }
+
+    protected function canLoadModule($sModuleName)
+    {
+        $oUser = \Aurora\System\Api::getAuthenticatedUser();
+        $oTenant = null;
+        if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
+            $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
+        }
+
+        $bIsModuleDisabledForTenant = $this->isModuleDisabledForObject($oTenant, $sModuleName);
+        $bIsModuleDisabledForUser = $this->isModuleDisabledForObject($oUser, $sModuleName);
+        $bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
+        return !($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled;
     }
 
     /**
