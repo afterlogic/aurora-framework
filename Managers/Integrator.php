@@ -671,14 +671,14 @@ class Integrator extends AbstractManager
 
         $aLinks = [];
 
-        if (file_exists(AU_APP_ROOT_PATH . '/static/styles/themes/' . $sTheme . '/favicon.svg')) {
-            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="./static/styles/themes/' . $sTheme . '/favicon.svg" />';
-            $aLinks[] = '<link rel="apple-touch-icon" href="./static/styles/themes/' . $sTheme . '/apple-touch-icon.png" /><!-- 180x180 -->';
+        if (file_exists(AU_APP_ROOT_PATH . '/static/styles/themes/' . $sTheme . '/images/favicon.svg')) {
+            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="./static/styles/themes/' . $sTheme . '/images/favicon.svg" />';
+            $aLinks[] = '<link rel="apple-touch-icon" sizes="180x180" href="./static/styles/themes/' . $sTheme . '/images/apple-touch-icon.png" />';
         } else {
             $aLinks[] = '<link rel="icon" type="image/svg+xml" href="static/styles/images/favicon.svg" />';
-            $aLinks[] = '<link rel="apple-touch-icon" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
+            $aLinks[] = '<link rel="apple-touch-icon" sizes="180x180" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
         }
-        $aLinks[] = '<link rel="shortcut icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
+        $aLinks[] = '<link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
 
         $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css?' . $sHash . '" />';
         if ($bThemeCSS) {
