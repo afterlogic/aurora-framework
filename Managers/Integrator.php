@@ -24,32 +24,12 @@ class Integrator extends AbstractManager
     /**
      * @const string
      */
-    public const AUTH_HD_KEY = 'aurora-hd-auth';
-
-    /**
-     * @const string
-     */
     public const TOKEN_KEY = 'aurora-token';
 
     /**
      * @const string
      */
     public const TOKEN_LAST_CODE = 'aurora-last-code';
-
-    /**
-     * @const string
-     */
-    public const TOKEN_HD_THREAD_ID = 'aurora-hd-thread';
-
-    /**
-     * @var string
-     */
-    public const TOKEN_HD_ACTIVATED = 'aurora-hd-activated';
-
-    /**
-     * @const string
-     */
-    public const TOKEN_SKIP_MOBILE_CHECK = 'aurora-skip-mobile';
 
     /**
      * @var bool
@@ -416,29 +396,11 @@ class Integrator extends AbstractManager
         return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:' . $sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
     }
 
-    public function skipMobileCheck()
-    {
-        \Aurora\System\Api::setCookie(
-            self::TOKEN_SKIP_MOBILE_CHECK,
-            '1',
-            0
-        );
-    }
-
     /**
      * @return int
      */
     public function isMobile()
     {
-        if (isset($_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) && '1' === (string) $_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) {
-            \Aurora\System\Api::setCookie(
-                self::TOKEN_SKIP_MOBILE_CHECK,
-                '',
-                \strtotime('-1 hour')
-            );
-            return 0;
-        }
-
         return isset($_COOKIE[self::MOBILE_KEY]) ? ('1' === (string) $_COOKIE[self::MOBILE_KEY] ? 1 : 0) : -1;
     }
 
