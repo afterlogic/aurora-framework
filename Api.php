@@ -1558,7 +1558,7 @@ class Api
         return $mResult;
     }
 
-    public static function GetDbConfig($DbType, $DbHost, $DbName, $DbPrefix, $DbLogin, $DbPassword)
+    public static function GetDbConfig($DbType, $DbHost, $DbName, $DbPrefix, $DbLogin, $DbPassword, $DBEngine = 'InnoDB')
     {
         $aDbHost = \explode(':', $DbHost);
         if (isset($aDbHost[0])) {
@@ -1576,6 +1576,9 @@ class Api
         ];
         if (isset($aDbHost[1])) {
             $aDbConfig['port'] = $aDbHost[1];
+        }
+        if (DbType::MySQL === $DbType && !empty($DBEngine)) {
+            $aDbConfig['engine'] = $DBEngine;
         }
 
         return $aDbConfig;
@@ -1605,7 +1608,8 @@ class Api
                         $oSettings->DBName,
                         $oSettings->DBPrefix,
                         $oSettings->DBLogin,
-                        $oSettings->DBPassword
+                        $oSettings->DBPassword,
+                        $oSettings->DBEngine
                     )
                 );
 

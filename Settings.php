@@ -27,6 +27,7 @@ namespace Aurora\System;
 * @property string $DBName
 * @property string $DBLogin
 * @property string $DBPassword
+* @property string $DBEngine
 
 * @property bool $UseSlaveConnection
 * @property string $DBSlaveHost
@@ -111,6 +112,12 @@ class Settings extends AbstractSettings
                 'spec',
                 Enums\DbType::class,
                 'Database engine used. Currently, only MySQL is supported'
+            ),
+            'DBEngine' => new SettingsProperty(
+                'InnoDB',
+                'string',
+                null,
+                'Database engine used. (InnoDB or MyISAM) For MySQL only.'
             ),
             'DBPrefix' => new SettingsProperty(
                 'au_',
