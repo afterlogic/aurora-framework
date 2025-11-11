@@ -207,7 +207,6 @@ class Integrator extends AbstractManager
             'Id' => -1,
             'Role' => \Aurora\System\Enums\UserRole::SuperAdmin,
             'PublicId' => 'Administrator',
-            'TokensValidFromTimestamp' => 0
         ]);
     }
 
