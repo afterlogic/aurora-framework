@@ -14,6 +14,9 @@ namespace Aurora\System\Module;
  *
  * @package Api
  */
+
+use Aurora\System\Facades\Route;
+
 abstract class AbstractEntries
 {
     protected AbstractModule $module;
@@ -28,8 +31,8 @@ abstract class AbstractEntries
     final public function init()
     {
         if ($this->entries) {
-            \Aurora\System\Router::getInstance()->registerArray(
-                $this->module->getModuleName(),
+            Route::add(
+                $this,
                 $this->entries
             );
         }
