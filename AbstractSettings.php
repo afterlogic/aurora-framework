@@ -147,19 +147,6 @@ abstract class AbstractSettings
         return (isset($this->aContainer[$sKey])) ? $this->aContainer[$sKey] : null;
     }
 
-
-    /**
-     * @deprecated
-     *
-     * @param string $sKey
-     *
-     * @return mixed
-     */
-    public function GetConf($sKey, $mDefault = null)
-    {
-        return $this->GetValue($sKey, $mDefault);
-    }
-
     /**
      * @param string $sKey
      * @param mixed $mValue = null
@@ -207,19 +194,6 @@ abstract class AbstractSettings
         $this->aContainer[$sKey]->Changed = true;
 
         return $bResult;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param string $sKey
-     * @param mixed $mValue = null
-     *
-     * @return bool
-     */
-    public function SetConf($sKey, $mValue)
-    {
-        return $this->SetValue($sKey, $mValue);
     }
 
     public function IsExists()
