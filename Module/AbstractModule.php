@@ -439,6 +439,7 @@ abstract class AbstractModule
      */
     public function denyMethodCallByWebApi($sMethodName)
     {
+        $sMethodName = strtolower($sMethodName);
         if (!in_array($sMethodName, $this->aDeniedMethodsByWebApi)) {
             $this->aDeniedMethodsByWebApi[] = $sMethodName;
         }
@@ -451,17 +452,17 @@ abstract class AbstractModule
      */
     protected function isDeniedMethodByWebApi($sMethodName)
     {
-        return in_array($sMethodName, array_values($this->aDeniedMethodsByWebApi));
+        return in_array(strtolower($sMethodName), array_values($this->aDeniedMethodsByWebApi));
     }
 
     /**
      *
-     * @param string $sMethod
+     * @param string $sMethodName
      * @return boolean
      */
-    protected function isEventCallback($sMethod)
+    protected function isEventCallback($sMethodName)
     {
-        return in_array($sMethod, $this->getEventsCallbacks());
+        return in_array(strtolower($sMethodName), $this->getEventsCallbacks());
     }
 
     /**
@@ -475,7 +476,7 @@ abstract class AbstractModule
         foreach (array_values($aEvents) as $aEvent) {
             foreach ($aEvent as $aEv) {
                 if ($aEv[0]::GetName() === self::GetName()) {
-                    $aEventsValues[] = $aEv[1];
+                    $aEventsValues[] = strtolower($aEv[1]);
                 }
             }
         }
