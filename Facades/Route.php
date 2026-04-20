@@ -16,7 +16,7 @@ class Route
     /**
      * Add route
      * 
-     * @param object|string $sModule module object
+     * @param object|string $mModule module object
      * @param array|string $mRoute oute name or array of route name => callback pairs
      * @param callable|string $mCallbak callback or function name if $mRoute is string
      * @return void

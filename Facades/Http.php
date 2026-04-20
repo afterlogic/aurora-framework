@@ -5,6 +5,9 @@ namespace Aurora\System\Facades;
 use MailSo\Base\Http as HttpBase;
 use BadMethodCallException;
 
+/**
+ * @mixin \MailSo\Base\Http
+ */
 class Http
 {
     protected static function getInstance(): HttpBase
