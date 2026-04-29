@@ -452,7 +452,9 @@ abstract class AbstractModule
      */
     protected function isDeniedMethodByWebApi($sMethodName)
     {
-        return in_array(strtolower($sMethodName), array_values($this->aDeniedMethodsByWebApi));
+        $denied = array_flip(array_map('strtolower', $this->aDeniedMethodsByWebApi));
+
+        return isset($denied[strtolower($sMethodName)]);
     }
 
     /**
