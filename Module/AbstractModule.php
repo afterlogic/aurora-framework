@@ -647,6 +647,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::add instead.
+     * 
      * @param string $sName
      * @param callable $mCallbak
      */
@@ -661,6 +663,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::add instead.
+     * 
      * @param array $aEntries
      */
     final public function AddEntries($aEntries)
@@ -672,6 +676,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::has instead.
+     * 
      * @param string $sName
      * @return boolean
      */
@@ -682,6 +688,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::remove instead.
+     * 
      * @param string $sName
      */
     final public function RemoveEntry($sName)
@@ -691,6 +699,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::remove instead.
+     * 
      * @param array $aEntries
      */
     final public function RemoveEntries($aEntries)
