@@ -114,7 +114,11 @@ abstract class AbstractModule
      */
     protected $bIsPermanent = false;
 
-    protected $aDeniedMethodsByWebApi =  [
+    /**
+     * Defined methods of module that are not allowed to be called via Web API.
+     * @var array
+     */
+    private $aDeniedMethodsByWebApi =  [
         '__construct',
         'init',
         'initialize',
@@ -446,7 +450,8 @@ abstract class AbstractModule
     }
 
     /**
-     *
+     *  Checks if method is denied by web api.
+     * 
      * @param string $sMethodName
      * @return boolean
      */
