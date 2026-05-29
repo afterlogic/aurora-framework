@@ -10,6 +10,7 @@ namespace Aurora\System\Module;
 use Aurora\Modules\Core\Models\User;
 use Aurora\System\Exceptions\ApiException;
 use Aurora\System\Managers\Response;
+use \Aurora\System\Facades\Route;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -562,6 +563,8 @@ class Manager
 
     /**
      *
+     * @deprecated
+     * 
      * @param string $sEntryName
      * @return array
      */
@@ -570,12 +573,12 @@ class Manager
         $aModules = array();
         $oResult = $this->GetModuleFromRequest();
 
-        if ($oResult && !$oResult->HasEntry($sEntryName)) {
+        if ($oResult && !Route::has($sEntryName)) {
             $oResult = false;
         }
         if ($oResult === false) {
             foreach ($this->_aModules as $oModule) {
-                if ($oModule instanceof AbstractModule && $oModule->HasEntry($sEntryName)) {
+                if ($oModule instanceof AbstractModule && Route::has($sEntryName)) {
                     $aModules[] = $oModule;
                 }
             }
