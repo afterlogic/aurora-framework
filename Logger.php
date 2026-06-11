@@ -251,28 +251,39 @@ class Logger
 			$sGuid = \MailSo\Log\Logger::Guid();
 			$aMicro = explode('.', microtime(true));
 			$sDate = gmdate('H:i:s.').str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
+		
+			$sAuthToken = Api::getAuthenticatedUserAuthToken();
+			if (is_string($sAuthToken) && 0 < strlen($sAuthToken))
+			{
+				$sSessionId = sha1($sAuthToken);
+			}
+			else
+			{
+				$sSessionId = 'unknown';
+			}
+
 			if ($bIsFirst)
 			{
 				$sUri = Utils::RequestUri();
 				$bIsFirst = false;
 				$sPost = (isset($_POST) && count($_POST) > 0) ? '[POST('.count($_POST).')]' : '[GET]';
 
-				self::LogOnly(AU_API_CRLF.'['.$sDate.']['.$sGuid.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
+				self::LogOnly(AU_API_CRLF.'['.$sDate.']['.$sGuid.']['.$sSessionId.'] '.$sPost.'[ip:'.(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown').'] '.$sUri, $sLogFile);
 				if (!empty($sPost))
 				{
 					if ($oSettings->GetValue('LogPostView', false))
 					{
-						self::LogOnly('['.$sDate.']['.$sGuid.'] POST > '.print_r($_POST, true), $sLogFile);
+						self::LogOnly('['.$sDate.']['.$sGuid.']['.$sSessionId.'] POST > '.print_r($_POST, true), $sLogFile);
 					}
 					else
 					{
-						self::LogOnly('['.$sDate.']['.$sGuid.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
+						self::LogOnly('['.$sDate.']['.$sGuid.']['.$sSessionId.'] POST > ['.implode(', ', array_keys($_POST)).']', $sLogFile);
 					}
 				}
-				self::LogOnly('['.$sDate.']['.$sGuid.']', $sLogFile);
+				self::LogOnly('['.$sDate.']['.$sGuid.']['.$sSessionId.']', $sLogFile);
 			}
 
-			self::LogOnly('['.$sDate.']['.$sGuid.'] '.(is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
+			self::LogOnly('['.$sDate.']['.$sGuid.']['.$sSessionId.'] '.(is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
 		}
 	}
 
