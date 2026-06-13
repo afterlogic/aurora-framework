@@ -1150,7 +1150,7 @@ class Api
         if (!$userPass = $basicAuth->getCredentials()) {
             $basicAuth->requireLogin();
             \Sabre\HTTP\Sapi::sendResponse($response);
-        } elseif (!\Aurora\Modules\AdminAuth\Module::getInstance()->Login($userPass[0], $userPass[1])) {
+        } elseif (!\Aurora\Modules\AdminAuth\Module::getInstance()->Authenticate($userPass[0], $userPass[1])) {
             $basicAuth->requireLogin();
             \Sabre\HTTP\Sapi::sendResponse($response);
         } else {
