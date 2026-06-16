@@ -16,16 +16,13 @@ class Route
     /**
      * Add route
      * 
-     * @param object|string $mModule module object
+     * @param object $mModule module object
      * @param array|string $mRoute oute name or array of route name => callback pairs
      * @param callable|string $mCallbak callback or function name if $mRoute is string
      * @return void
      */
     public static function add($mModule, $mRoute, $mCallbak = null): void
     {
-        if (is_string($mModule)) {
-            $mModule = \Aurora\System\Api::GetModuleManager()->GetModule($mModule);
-        }
         if ($mModule instanceof \Aurora\System\Module\AbstractModule || $mModule instanceof \Aurora\System\Module\AbstractEntries) {
             if (!is_array($mRoute)) {
                 $mRoute = [
