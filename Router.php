@@ -74,13 +74,14 @@ class Router
         $aCallbacks = [];
         foreach ($this->aRoutes as $sRoute => $aRoutes) {
             foreach ($aRoutes as $sModule => $aRoute) {
-                if (!in_array($aRoute[1], $aCallbacks)) {
-                    $aCallbacks[] = $aRoute[1];
+                $sRouteCallbackname = strtolower($aRoute[1]);
+                if (!in_array($sRouteCallbackname, $aCallbacks)) {
+                    $aCallbacks[] = $sRouteCallbackname;
                 }
             }
         }
 
-        return in_array($mCallbak, $aCallbacks);
+        return in_array(strtolower($mCallbak), $aCallbacks);
     }
 
     public function hasRoute($sName)

@@ -9,6 +9,7 @@ namespace Aurora\System;
 
 use DateTime;
 use DateTimeImmutable;
+use Illuminate\Support\Str;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -314,12 +315,14 @@ class Logger
     public static function RemoveSeparateLogs()
     {
         $sLogDir = self::GetLogFileDir();
-        $sLogFile = self::GetLogFileName();
         if (is_dir($sLogDir)) {
             $aLogFiles = array_diff(scandir($sLogDir), array('..', '.'));
+            $aUsers = \Aurora\Modules\Core\Module::getInstance()->GetUsersWithSeparateLog();
             foreach ($aLogFiles as $sFileName) {
-                if ($sFileName !== $sLogFile && $sFileName !== (self::$sEventLogPrefix . $sLogFile) && strpos($sFileName, $sLogFile) !== false) {
-                    unlink($sLogDir . $sFileName);
+                foreach ($aUsers as $sUserPublicId) {
+                    if (Str::startsWith($sFileName, $sUserPublicId)) {
+                        self::ClearLog($sLogDir . $sFileName);
+                    }
                 }
             }
         }

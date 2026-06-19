@@ -24,32 +24,12 @@ class Integrator extends AbstractManager
     /**
      * @const string
      */
-    public const AUTH_HD_KEY = 'aurora-hd-auth';
-
-    /**
-     * @const string
-     */
     public const TOKEN_KEY = 'aurora-token';
 
     /**
      * @const string
      */
     public const TOKEN_LAST_CODE = 'aurora-last-code';
-
-    /**
-     * @const string
-     */
-    public const TOKEN_HD_THREAD_ID = 'aurora-hd-thread';
-
-    /**
-     * @var string
-     */
-    public const TOKEN_HD_ACTIVATED = 'aurora-hd-activated';
-
-    /**
-     * @const string
-     */
-    public const TOKEN_SKIP_MOBILE_CHECK = 'aurora-skip-mobile';
 
     /**
      * @var bool
@@ -227,7 +207,6 @@ class Integrator extends AbstractManager
             'Id' => -1,
             'Role' => \Aurora\System\Enums\UserRole::SuperAdmin,
             'PublicId' => 'Administrator',
-            'TokensValidFromTimestamp' => 0
         ]);
     }
 
@@ -416,29 +395,11 @@ class Integrator extends AbstractManager
         return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:' . $sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
     }
 
-    public function skipMobileCheck()
-    {
-        \Aurora\System\Api::setCookie(
-            self::TOKEN_SKIP_MOBILE_CHECK,
-            '1',
-            0
-        );
-    }
-
     /**
      * @return int
      */
     public function isMobile()
     {
-        if (isset($_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) && '1' === (string) $_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) {
-            \Aurora\System\Api::setCookie(
-                self::TOKEN_SKIP_MOBILE_CHECK,
-                '',
-                \strtotime('-1 hour')
-            );
-            return 0;
-        }
-
         $sMobileApp =  \MailSo\Base\Http::SingletonInstance()->GetHeader('X-MobileApp');
         if (!empty($sMobileApp))
         {
@@ -677,14 +638,14 @@ class Integrator extends AbstractManager
 
         $aLinks = [];
 
-        if (file_exists(AU_APP_ROOT_PATH . '/static/styles/themes/' . $sTheme . '/favicon.svg')) {
-            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="./static/styles/themes/' . $sTheme . '/favicon.svg" />';
-            $aLinks[] = '<link rel="apple-touch-icon" href="./static/styles/themes/' . $sTheme . '/apple-touch-icon.png" /><!-- 180x180 -->';
+        if (file_exists(AU_APP_ROOT_PATH . '/static/styles/themes/' . $sTheme . '/images/favicon.svg')) {
+            $aLinks[] = '<link rel="icon" type="image/svg+xml" href="./static/styles/themes/' . $sTheme . '/images/favicon.svg" />';
+            $aLinks[] = '<link rel="apple-touch-icon" sizes="180x180" href="./static/styles/themes/' . $sTheme . '/images/apple-touch-icon.png" />';
         } else {
             $aLinks[] = '<link rel="icon" type="image/svg+xml" href="static/styles/images/favicon.svg" />';
-            $aLinks[] = '<link rel="apple-touch-icon" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
+            $aLinks[] = '<link rel="apple-touch-icon" sizes="180x180" type="image/png" href="static/styles/images/apple-touch-icon.png" />';
         }
-        $aLinks[] = '<link rel="shortcut icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
+        $aLinks[] = '<link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico" />';
 
         $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css?' . $sHash . '" />';
         if ($bThemeCSS) {

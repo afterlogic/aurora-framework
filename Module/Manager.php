@@ -10,6 +10,7 @@ namespace Aurora\System\Module;
 use Aurora\Modules\Core\Models\User;
 use Aurora\System\Exceptions\ApiException;
 use Aurora\System\Managers\Response;
+use \Aurora\System\Facades\Route;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -97,19 +98,14 @@ class Manager
      */
     public function loadModules()
     {
-        $oUser = \Aurora\System\Api::authorise();
+        \Aurora\System\Api::authorise();
         $oCoreModule = $this->loadModule('Core');
 
         if ($oCoreModule instanceof AbstractModule) {
-            $oTenant = null;
-            if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
-                $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
-            }
+
             foreach ($this->GetModulesPaths() as $sModuleName => $sModulePath) {
-                $bIsModuleDisabledForTenant = $this->isModuleDisabledForObject($oTenant, $sModuleName);
-                $bIsModuleDisabledForUser = $this->isModuleDisabledForObject($oUser, $sModuleName);
-                $bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
-                if (!($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled) {
+
+                if ($this->canLoadModule($sModuleName)) {
                     $oLoadedModule = $this->loadModule($sModuleName, $sModulePath);
                     $bClientModule = $this->isClientModule($sModuleName);
                     if ($oLoadedModule instanceof AbstractModule || $bClientModule) {
@@ -126,6 +122,20 @@ class Manager
             echo "Can't load 'Core' Module";
             exit;
         }
+    }
+
+    protected function canLoadModule($sModuleName)
+    {
+        $oUser = \Aurora\System\Api::getAuthenticatedUser();
+        $oTenant = null;
+        if ($oUser instanceof User && $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
+            $oTenant = \Aurora\System\Api::getTenantById($oUser->IdTenant);
+        }
+
+        $bIsModuleDisabledForTenant = $this->isModuleDisabledForObject($oTenant, $sModuleName);
+        $bIsModuleDisabledForUser = $this->isModuleDisabledForObject($oUser, $sModuleName);
+        $bModuleIsDisabled = $this->getModuleConfigValue($sModuleName, 'Disabled', false);
+        return !($bIsModuleDisabledForUser || $bIsModuleDisabledForTenant) && !$bModuleIsDisabled;
     }
 
     /**
@@ -553,6 +563,8 @@ class Manager
 
     /**
      *
+     * @deprecated
+     * 
      * @param string $sEntryName
      * @return array
      */
@@ -561,12 +573,12 @@ class Manager
         $aModules = array();
         $oResult = $this->GetModuleFromRequest();
 
-        if ($oResult && !$oResult->HasEntry($sEntryName)) {
+        if ($oResult && !Route::has($sEntryName)) {
             $oResult = false;
         }
         if ($oResult === false) {
             foreach ($this->_aModules as $oModule) {
-                if ($oModule instanceof AbstractModule && $oModule->HasEntry($sEntryName)) {
+                if ($oModule instanceof AbstractModule && Route::has($sEntryName)) {
                     $aModules[] = $oModule;
                 }
             }

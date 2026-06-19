@@ -114,7 +114,11 @@ abstract class AbstractModule
      */
     protected $bIsPermanent = false;
 
-    protected $aDeniedMethodsByWebApi =  [
+    /**
+     * Defined methods of module that are not allowed to be called via Web API.
+     * @var array
+     */
+    private $aDeniedMethodsByWebApi =  [
         '__construct',
         'init',
         'initialize',
@@ -294,10 +298,17 @@ abstract class AbstractModule
         return (bool) $this->bInitialized;
     }
 
+    protected function getNamespaceName()
+    {
+        $className = get_class($this);
+        return str_contains($className, '\\')
+            ? substr($className, 0, strrpos($className, '\\'))
+            : null;
+    }
+
     protected function initSubscriptions()
     {
-        $class = new \ReflectionClass($this);
-        $subscriptionsClassName = $class->getNamespaceName() . "\\Subscriptions";
+        $subscriptionsClassName = $this->getNamespaceName() . "\\Subscriptions";
         if (class_exists($subscriptionsClassName)) {
             $subscriptions = new $subscriptionsClassName($this);
             $subscriptions->init();
@@ -306,8 +317,7 @@ abstract class AbstractModule
 
     protected function initEntries()
     {
-        $class = new \ReflectionClass($this);
-        $entitiesClassName = $class->getNamespaceName() . "\\Entries";
+        $entitiesClassName = $this->getNamespaceName() . "\\Entries";
         if (class_exists($entitiesClassName)) {
             $entities = new $entitiesClassName($this);
             $entities->init();
@@ -433,9 +443,23 @@ abstract class AbstractModule
      */
     public function denyMethodCallByWebApi($sMethodName)
     {
+        $sMethodName = strtolower($sMethodName);
         if (!in_array($sMethodName, $this->aDeniedMethodsByWebApi)) {
             $this->aDeniedMethodsByWebApi[] = $sMethodName;
         }
+    }
+
+    /**
+     *  Checks if method is denied by web api.
+     * 
+     * @param string $sMethodName
+     * @return boolean
+     */
+    protected function isDeniedMethodByWebApi($sMethodName)
+    {
+        $denied = array_flip(array_map('strtolower', $this->aDeniedMethodsByWebApi));
+
+        return isset($denied[strtolower($sMethodName)]);
     }
 
     /**
@@ -443,19 +467,9 @@ abstract class AbstractModule
      * @param string $sMethodName
      * @return boolean
      */
-    protected function isDeniedMethodByWebApi($sMethodName)
+    protected function isEventCallback($sMethodName)
     {
-        return in_array($sMethodName, array_values($this->aDeniedMethodsByWebApi));
-    }
-
-    /**
-     *
-     * @param string $sMethod
-     * @return boolean
-     */
-    protected function isEventCallback($sMethod)
-    {
-        return in_array($sMethod, $this->getEventsCallbacks());
+        return in_array(strtolower($sMethodName), $this->getEventsCallbacks());
     }
 
     /**
@@ -469,7 +483,7 @@ abstract class AbstractModule
         foreach (array_values($aEvents) as $aEvent) {
             foreach ($aEvent as $aEv) {
                 if ($aEv[0]::GetName() === self::GetName()) {
-                    $aEventsValues[] = $aEv[1];
+                    $aEventsValues[] = strtolower($aEv[1]);
                 }
             }
         }
@@ -633,6 +647,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::add instead.
+     * 
      * @param string $sName
      * @param callable $mCallbak
      */
@@ -647,6 +663,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::add instead.
+     * 
      * @param array $aEntries
      */
     final public function AddEntries($aEntries)
@@ -658,6 +676,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::has instead.
+     * 
      * @param string $sName
      * @return boolean
      */
@@ -668,6 +688,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::remove instead.
+     * 
      * @param string $sName
      */
     final public function RemoveEntry($sName)
@@ -677,6 +699,8 @@ abstract class AbstractModule
 
     /**
      *
+     * @deprecated Use \Aurora\System\Facades\Route::remove instead.
+     * 
      * @param array $aEntries
      */
     final public function RemoveEntries($aEntries)
@@ -852,13 +876,11 @@ abstract class AbstractModule
                         $oReflector = new \ReflectionMethod($this, $sMethod);
                         if (!$oReflector->isPublic()) {
                             throw new \Aurora\System\Exceptions\ApiException(
-                                \Aurora\System\Notifications::MethodNotFound
+                                \Aurora\System\Notifications::MethodAccessDenied
                             );
                         }
-                        $mMethodResult = call_user_func_array(
-                            array($this, $sMethod),
-                            $aMethodArgs
-                        );
+                        $mMethodResult = $this->$sMethod(...$aMethodArgs);
+
                         if (is_array($mMethodResult) && is_array($mResult)) {
                             $mResult = array_merge($mMethodResult, $mResult);
                         } elseif ($mMethodResult !== null) {
