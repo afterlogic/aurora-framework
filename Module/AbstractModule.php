@@ -216,7 +216,7 @@ abstract class AbstractModule
 
     /**
      *
-     * @return \Aurora\System\Module\Decorator
+     * @return \Aurora\System\Module\Decorator|static
      */
     public static function Decorator()
     {
