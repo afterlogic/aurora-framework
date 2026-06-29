@@ -7,7 +7,7 @@
 	},
 	"require": {
 		"intervention/image": "^2.4",
-		"symfony/filesystem": "^2.8",
+		"symfony/filesystem": "^v6.4.0 || ^v7.1.0",
 		"afterlogic/mailso": "^1.4",
         "illuminate/container": "^8.30",
         "illuminate/cache": "^8.30",
