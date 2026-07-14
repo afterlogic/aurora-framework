@@ -498,32 +498,16 @@ class Utils
      */
     public static function EncryptValue($sValue)
     {
-        $mKey = ctype_xdigit(Api::$sEncryptionKey) ? hex2bin(Api::$sEncryptionKey) : Api::$sEncryptionKey;
-        $sEncryptedValue = \Aurora\System\Utils\Crypt::XxteaEncrypt($sValue, $mKey);
-        return @trim(self::UrlSafeBase64Encode($sEncryptedValue));
+        return SecureCrypt::EncryptValue($sValue);
     }
 
     /**
      * @param string $sEncryptedValue
-     * @return string
+     * @return string|false
      */
     public static function DecryptValue($sEncryptedValue)
     {
-        $mKey = ctype_xdigit(Api::$sEncryptionKey) ? hex2bin(Api::$sEncryptionKey) : Api::$sEncryptionKey;
-        $sEncryptedValue = self::UrlSafeBase64Decode(trim($sEncryptedValue));
-        $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $mKey);
-
-        $sCryptKey = '$2y$07$' . Api::$sEncryptionKey . '$';
-
-        if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, \md5($sCryptKey));
-        }
-
-        if ($sValue === false) {
-            $sValue = \Aurora\System\Utils\Crypt::XxteaDecrypt($sEncryptedValue, $sCryptKey);
-        }
-
-        return $sValue;
+        return SecureCrypt::DecryptValue($sEncryptedValue);
     }
 
     /**
