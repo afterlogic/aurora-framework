@@ -104,9 +104,13 @@ class UserSession
 
                 // checking the token is valid from timestamp
                 if ($mResult && isset($mAuthTokenData['account'], $mAuthTokenData['account_type']) && class_exists($mAuthTokenData['account_type'])) {
-                    $iTime = (int) $mAuthTokenData['@time']; // 0 means that signMe was true when user logged in, so there is no need to check it in that case
+                    $iTime = (int) $mAuthTokenData['@time'];
                     $oAccount = $mAuthTokenData['account_type']::where('Id', $mAuthTokenData['account'])->first();
-                    if ($oAccount && $iTime !== 0 && (int) $oAccount->getExtendedProp('TokensValidFromTimestamp') > $iTime) {
+                    $iTokensValidFromTimestamp = (int) ($oAccount ? $oAccount->getExtendedProp('TokensValidFromTimestamp') : 0);
+
+                    // Any token created before a password-change invalidation timestamp should be rejected,
+                    // including tokens that were created without an explicit timestamp (for example, remember-me sessions).
+                    if ($oAccount && $iTokensValidFromTimestamp > 0 && ($iTime === 0 || $iTokensValidFromTimestamp > $iTime)) {
                         $mResult = false;
                     }
                 }
@@ -149,6 +153,10 @@ class UserSession
                 // DB is not configured
             }
         }
+
+        if (is_string($sAuthToken)) {
+            unset(self::$aTokensCache[$sAuthToken]);
+        }
     }
 
     public function DeleteAllUserSessions($iUserId)
@@ -176,6 +184,8 @@ class UserSession
                     }
                 }
             }
+
+            self::$aTokensCache = [];
         }
     }
 
