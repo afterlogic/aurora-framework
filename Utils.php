@@ -1451,9 +1451,11 @@ class Utils
         } else {
             if (isset($_SERVER['SCRIPT_NAME'])) {
                 if (isset($_SERVER['argv'], $_SERVER['argv'][0])) {
-                    $sUri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['argv'][0];
+                    $query_string = !empty($_SERVER['argv'][0]) ? '?' . $_SERVER['argv'][0] : '';
+                    $sUri = $_SERVER['SCRIPT_NAME'] . $query_string;
                 } elseif (isset($_SERVER['QUERY_STRING'])) {
-                    $sUri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+                    $query_string = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+                    $sUri = $_SERVER['SCRIPT_NAME'] . $query_string;
                 } else {
                     $sUri = $_SERVER['SCRIPT_NAME'];
                 }

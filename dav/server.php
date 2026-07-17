@@ -22,8 +22,9 @@ require_once __DIR__ . '/../autoload.php';
 
 use Illuminate\Support\Str;
 
-if (Str::endsWith($_SERVER['REQUEST_URI'], basename($_SERVER['SCRIPT_FILENAME']))) {
-    \header('Location: ' . $_SERVER['REQUEST_URI'] . '/');
+$sRequestUri = \Aurora\System\Utils::RequestUri();
+if (Str::endsWith($sRequestUri, basename($_SERVER['SCRIPT_FILENAME']))) {
+    \header('Location: ' . $sRequestUri . '/');
     exit;
 }
 
