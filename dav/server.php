@@ -24,7 +24,8 @@ use Illuminate\Support\Str;
 
 $sRequestUri = \Aurora\System\Utils::RequestUri();
 if (Str::endsWith($sRequestUri, basename($_SERVER['SCRIPT_FILENAME']))) {
-    \header('Location: ' . $sRequestUri . '/');
+    $sRedirect = \rtrim($sRequestUri, '/') . '/';
+    \Aurora\System\Api::Location($sRedirect);
     exit;
 }
 

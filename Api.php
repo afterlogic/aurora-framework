@@ -566,7 +566,70 @@ class Api
     public static function Location($sNewLocation)
     {
         self::Log('Location: ' . $sNewLocation);
-        @header('Location: ' . $sNewLocation);
+
+        $sLocation = self::sanitizeLocation($sNewLocation);
+        if ($sLocation !== null) {
+            @header('Location: ' . $sLocation);
+        }
+    }
+
+    /**
+     * Ensures the redirect target is safe: relative paths only.
+     * Returns null for any absolute URL or protocol-relative URL to prevent open redirect.
+     *
+     * @param string $sNewLocation
+     * @return string|null
+     */
+    protected static function sanitizeLocation($sNewLocation)
+    {
+        $sNewLocation = trim((string) $sNewLocation);
+
+        if ($sNewLocation === '' || $sNewLocation === '/') {
+            return $sNewLocation;
+        }
+
+        if (strpos($sNewLocation, '/') === 0 || strpos($sNewLocation, '?') === 0 || strpos($sNewLocation, '#') === 0) {
+            return $sNewLocation;
+        }
+
+        $aAllowedHosts = self::getAllowedRedirectHosts();
+        $sHost = self::getUrlHost($sNewLocation);
+        if ($sHost !== false && in_array($sHost, $aAllowedHosts, true)) {
+            return $sNewLocation;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the list of allowed hosts for absolute redirect URLs.
+     *
+     * @return array
+     */
+    protected static function getAllowedRedirectHosts()
+    {
+        return array_filter(array_unique([
+            isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '',
+            isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '',
+        ]));
+    }
+
+    /**
+     * Extracts the host from an absolute URL.
+     *
+     * @param string $sUrl
+     * @return string|false
+     */
+    protected static function getUrlHost($sUrl)
+    {
+        $sUrl = trim($sUrl);
+        if (strncasecmp($sUrl, 'http://', 7) === 0) {
+            return parse_url($sUrl, PHP_URL_HOST);
+        }
+        if (strncasecmp($sUrl, 'https://', 8) === 0) {
+            return parse_url($sUrl, PHP_URL_HOST);
+        }
+        return false;
     }
 
     /**
@@ -1144,24 +1207,30 @@ class Api
 
     public static function requireAdminAuth()
     {
-        $mResult = false;
-        $response = new \Sabre\HTTP\Response();
-        $basicAuth = new \Sabre\HTTP\Auth\Basic("Locked down area", \Sabre\HTTP\Sapi::getRequest(), $response);
-        if (!$userPass = $basicAuth->getCredentials()) {
-            $basicAuth->requireLogin();
-            \Sabre\HTTP\Sapi::sendResponse($response);
-        } elseif (!\Aurora\Modules\AdminAuth\Module::getInstance()->Authenticate($userPass[0], $userPass[1])) {
-            $basicAuth->requireLogin();
-            \Sabre\HTTP\Sapi::sendResponse($response);
-        } else {
-            $mResult = true;
-        }
+        try {
+            $sAuthToken = self::getAuthToken();
+            if (!$sAuthToken) {
+                self::responseUnauthorized();
+            }
+            self::validateAuthToken($sAuthToken);
 
-        if (!$mResult) {
-            $response->setBody('Unauthorized');
-            \Sabre\HTTP\Sapi::sendResponse($response);
-            exit;
+            $oUser = self::getAuthenticatedUser();
+            if (!$oUser instanceof \Aurora\Modules\Core\Models\User ||
+                $oUser->Role !== \Aurora\System\Enums\UserRole::SuperAdmin) {
+                self::responseUnauthorized();
+            }
+        } catch (\Exception $oException) {
+            self::responseUnauthorized();
         }
+    }
+
+    /**
+     * Sends a 401 Unauthorized response and exits.
+     */
+    protected static function responseUnauthorized()
+    {
+        header('HTTP/1.1 401 Unauthorized');
+        exit('Unauthorized');
     }
 
     public static function getDeviceIdFromHeaders()
@@ -1262,8 +1331,24 @@ class Api
 
     public static function isHttps()
     {
-        return	(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+        $bResult = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
                 (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443');
+
+        if (!$bResult) {
+            $sForwardedProto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) : '';
+            if ($sForwardedProto === 'https') {
+                $bResult = true;
+            }
+        }
+
+        if (!$bResult) {
+            $sForwardedSsl = isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) : '';
+            if ($sForwardedSsl === 'on' || $sForwardedSsl === '1') {
+                $bResult = true;
+            }
+        }
+
+        return $bResult;
     }
 
     public static function getAuthenticatedUserId($sAuthToken = '')

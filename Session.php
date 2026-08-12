@@ -99,12 +99,29 @@ class Session
     }
 
     /**
-     * @return string
-     */
+      * @return string
+      */
     public static function Id()
     {
         self::Start();
         return @session_id();
+    }
+
+    /**
+     * Regenerates the session ID to prevent session fixation attacks.
+     * Must be called after privilege level changes (e.g., authentication).
+     *
+     * @param bool $bDeleteOldSession
+     * @return bool
+     */
+    public static function regenerateId($bDeleteOldSession = true)
+    {
+        self::Start();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            return @session_regenerate_id($bDeleteOldSession);
+        }
+
+        return false;
     }
 
     /**
@@ -144,7 +161,13 @@ class Session
                 }
             }
 
-            @session_set_cookie_params(0);
+            @session_set_cookie_params([
+                'lifetime' => 0,
+                'path' =>  Api::getCookiePath(),
+                'secure' => Api::getCookieSecure(),
+                'httponly' => true,
+                'samesite' => Api::GetModuleManager()->getModuleConfigValue('Core', 'CookieSameSite', 'Strict'),
+            ]);
             if (!empty(self::$sSessionName)) {
                 @session_name(self::$sSessionName);
             }

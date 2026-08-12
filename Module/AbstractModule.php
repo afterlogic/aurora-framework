@@ -856,7 +856,19 @@ abstract class AbstractModule
                 );
             } else {
                 if ($bWebApi && !isset($aArguments['UserId'])) {
-                    $aArguments['UserId'] = \Aurora\System\Api::getAuthenticatedUserId();
+                    $iUserId = \Aurora\System\Api::getAuthenticatedUserId();
+                    if (is_int($iUserId)) {
+                        $aArguments['UserId'] = $iUserId;
+                    }
+                }
+
+                // Framework-level access control: automatically validate UserId
+                // at the API boundary so that future methods don't have to
+                // manually call Api::CheckAccess($UserId). This prevents IDOR
+                // and tenant isolation bypass when a per-method check is forgotten.
+                // Respects skipCheckUserRole() for internal/system operations.
+                if ($bWebApi && isset($aArguments['UserId']) && !\Aurora\System\Api::accessCheckIsSkipped()) {
+                    \Aurora\System\Api::CheckAccess($aArguments['UserId']);
                 }
 
                 // prepare arguments for before event
