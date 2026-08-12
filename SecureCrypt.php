@@ -32,12 +32,12 @@ class SecureCrypt
             : Api::$sEncryptionKey;
     }
 
-    /**
+     /**
      * Summary of EncryptValue
      * @param string $sValue
      * @return string|false
      */
-    public static function EncryptValue(string $sValue): string|false
+    public static function EncryptValue(string $sValue)
     {
         $key = self::getRawKey();
         $nonce = random_bytes(self::NONCE_LEN);
@@ -66,7 +66,7 @@ class SecureCrypt
      * @param string $sEncryptedValue
      * @return bool|string
      */
-    public static function DecryptValue(?string $sEncryptedValue): string|false
+    public static function DecryptValue(?string $sEncryptedValue)
     {
         if ($sEncryptedValue === null || trim($sEncryptedValue) === '') {
             return false;
@@ -91,8 +91,8 @@ class SecureCrypt
      * Summary of decryptV2
      * @param string $raw
      * @return bool|string
-     */ 
-    private static function decryptV2(string $raw): string|false
+     */
+    private static function decryptV2(string $raw)
     {
         $minLen = 2 + self::NONCE_LEN + self::TAG_LEN;
         if (strlen($raw) < $minLen) {
@@ -119,7 +119,7 @@ class SecureCrypt
      * Fully replicates the original DecryptValue logic,
      * but is used only as a fallback for legacy data.
      */
-    private static function decryptLegacy(string $sEncryptedValue): string|false
+    private static function decryptLegacy(string $sEncryptedValue)
     {
         $mKey = self::getLegacyKey();
         $sCryptKey = '$2y$07$' . Api::$sEncryptionKey . '$';
