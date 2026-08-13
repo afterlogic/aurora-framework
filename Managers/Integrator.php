@@ -667,10 +667,9 @@ class Integrator extends AbstractManager
     {
         $aClientModuleNames = [];
         $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
-        $sModulesPath = \Aurora\System\Api::GetModuleManager()->GetModulesRootPath();
         $bIsMobileApplication = \Aurora\System\Api::IsMobileApplication();
         foreach ($aModuleNames as $sModuleName) {
-            $this->populateClientModuleNames($sModulesPath, $sModuleName, $bIsMobileApplication, $aClientModuleNames, false);
+            $this->populateClientModuleNames($sModuleName, $bIsMobileApplication, $aClientModuleNames, false);
         }
         sort($aClientModuleNames);
 
@@ -679,11 +678,12 @@ class Integrator extends AbstractManager
 
     public function GetBackendModules()
     {
+        $oModuleManager = \Aurora\System\Api::GetModuleManager();
+
         $aBackendModuleNames = [];
         $aModuleNames = \Aurora\System\Api::GetModuleManager()->GetAllowedModulesName();
-        $sModulesPath = \Aurora\System\Api::GetModuleManager()->GetModulesRootPath();
         foreach ($aModuleNames as $sModuleName) {
-            if (!\file_exists($sModulesPath . $sModuleName . '/js/manager.js')) {
+            if (!$oModuleManager->isClientModule($sModuleName)) {
                 $aBackendModuleNames[] = $sModuleName;
             }
         }
@@ -732,13 +732,12 @@ class Integrator extends AbstractManager
 
     /**
      * Populates array with names of modules that should be loaded on client side.
-     * @param string $sModulesPath Path to folder with modules.
      * @param string $sModuleName Name of module to add.
      * @param boolean $bIsMobileApplication Indicates if there is mobile version of application.
      * @param array $aClientModuleNames Array with names of modules that should be loaded on client side. Array is passed by reference and populated with this method.
      * @param boolean $bAddAnyway Indicates if module should be added anyway.
      */
-    protected function populateClientModuleNames($sModulesPath, $sModuleName, $bIsMobileApplication, &$aClientModuleNames, $bAddAnyway)
+    protected function populateClientModuleNames($sModuleName, $bIsMobileApplication, &$aClientModuleNames, $bAddAnyway)
     {
         if (!in_array($sModuleName, $aClientModuleNames)) {
             $bAddModuleName = $bAddAnyway;
@@ -750,13 +749,14 @@ class Integrator extends AbstractManager
                 $bAddModuleName = $oModuleManager->getModuleConfigValue($sModuleName, 'IncludeInDesktop', true);
             }
 
-            if ($bAddModuleName && \file_exists($sModulesPath . $sModuleName . '/js/manager.js')) {
+            
+            if ($bAddModuleName && $oModuleManager->isClientModule($sModuleName)) {
                 $aClientModuleNames[] = $sModuleName;
                 if ($bIsMobileApplication) {
                     $aRequire = $oModuleManager->getModuleConfigValue($sModuleName, 'RequireInMobile', true);
                     if (is_array($aRequire)) {
                         foreach ($aRequire as $sRequireModuleName) {
-                            $this->populateClientModuleNames($sModulesPath, $sRequireModuleName, $bIsMobileApplication, $aClientModuleNames, true);
+                            $this->populateClientModuleNames($sRequireModuleName, $bIsMobileApplication, $aClientModuleNames, true);
                         }
                     }
                 }
