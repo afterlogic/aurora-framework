@@ -400,6 +400,19 @@ class Integrator extends AbstractManager
      */
     public function isMobile()
     {
+        // if (isset($_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) && '1' === (string) $_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK])
+        // {
+        //     @\setcookie(self::TOKEN_SKIP_MOBILE_CHECK, '', \strtotime('-1 hour'), \Aurora\System\Api::getCookiePath(),
+        //             null, \Aurora\System\Api::getCookieSecure());
+        //     return 0;
+        // }
+
+        $sMobileApp =  \MailSo\Base\Http::SingletonInstance()->GetHeader('X-MobileApp');
+        if (!empty($sMobileApp))
+        {
+            return 1;
+        }
+
         return isset($_COOKIE[self::MOBILE_KEY]) ? ('1' === (string) $_COOKIE[self::MOBILE_KEY] ? 1 : 0) : -1;
     }
 
