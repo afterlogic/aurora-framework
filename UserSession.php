@@ -191,19 +191,27 @@ class UserSession
 
     public function SetToDB($iUserId, $iAccountId, $sAccountType, $sAuthToken)
     {
+        $sTokenHash = hash('sha256', $sAuthToken);
+
         $oAuthToken = AuthToken::where('UserId', $iUserId)
             ->where('AccountId', $iAccountId)
             ->where('AccountType', $sAccountType)
-            ->where('Token', $sAuthToken)
+            ->where('TokenHash', $sTokenHash)
             ->first();
 
         if (!$oAuthToken) {
-            $oAuthToken = new AuthToken();
+            $oAuthToken = AuthToken::where('UserId', $iUserId)
+                ->where('AccountId', $iAccountId)
+                ->where('AccountType', $sAccountType)
+                ->first();
+            if (!$oAuthToken) {
+                $oAuthToken = new AuthToken();
+            }
         }
         $oAuthToken->UserId = $iUserId;
         $oAuthToken->AccountId = $iAccountId;
         $oAuthToken->AccountType = $sAccountType;
-        $oAuthToken->Token = $sAuthToken;
+        $oAuthToken->TokenHash = $sTokenHash;
         $oAuthToken->LastUsageDateTime = time();
 
         try {
@@ -216,8 +224,9 @@ class UserSession
     public function GetFromDB($sAuthToken)
     {
         if (!isset(self::$aTokensCache[$sAuthToken])) {
+            $sTokenHash = hash('sha256', $sAuthToken);
             try {
-                $oAuthToken = AuthToken::firstWhere('Token', $sAuthToken);
+                $oAuthToken = AuthToken::where('TokenHash', $sTokenHash)->first();
                 if ($oAuthToken) {
                     $oAuthToken->LastUsageDateTime = time();
                     $oAuthToken->save();
@@ -232,7 +241,8 @@ class UserSession
 
     public function DeleteFromDB($sAuthToken)
     {
-        AuthToken::where('Token', $sAuthToken)->delete();
+        $sTokenHash = hash('sha256', $sAuthToken);
+        AuthToken::where('TokenHash', $sTokenHash)->delete();
     }
 
     public function GetExpiredAuthTokens($iDays)

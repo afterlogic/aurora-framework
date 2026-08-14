@@ -12,7 +12,7 @@ use Aurora\Modules\Core\Models\User;
  * @property integer $UserId
  * @property integer $AccountId
  * @property string $AccountType
- * @property string $Token
+ * @property string $TokenHash
  * @property integer $LastUsageDateTime
  * @property \Illuminate\Support\Carbon|null $CreatedAt
  * @property \Illuminate\Support\Carbon|null $UpdatedAt
@@ -26,7 +26,7 @@ use Aurora\Modules\Core\Models\User;
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Aurora\System\Models\AuthToken whereIn(string $column, mixed $values, string $boolean = 'and', bool $not = false)
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereLastUsageDateTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereTokenHash($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AuthToken whereUserId($value)
  * @method static void truncate()
@@ -44,6 +44,6 @@ class AuthToken extends Model
         'UserId',
         'AccountId',
         'AccountType',
-        'Token'
+        'TokenHash'
     ];
 }
