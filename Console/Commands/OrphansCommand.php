@@ -144,7 +144,11 @@ class OrphansCommand extends BaseCommand
 
             $dirs = array_diff(scandir($dirPersonalFiles), array('..', '.'));
 
-            $orphanUUIDs = array_values(array_diff($dirs, \Aurora\Modules\Core\Models\User::query()->pluck('UUID')->toArray()));
+            $orphanUUIDs = [];
+            foreach (array_chunk($dirs, 1000) as $chunk) {
+                $existingUsers = \Aurora\Modules\Core\Models\User::whereIn('UUID', $chunk)->pluck('UUID')->toArray();
+                $orphanUUIDs = array_merge($orphanUUIDs, array_diff($chunk, $existingUsers));
+            }
 
             if (!empty($orphanUUIDs)) {
                 $aOrphansEntities['PersonalFiles'] = $orphanUUIDs;

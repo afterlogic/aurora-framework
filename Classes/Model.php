@@ -198,15 +198,22 @@ class Model extends Eloquent
 
         $foreignPK = !empty($this->foreignModelPrimaryKey) ? $this->foreignModelPrimaryKey : $foreignObject->primaryKey;
 
+        $sm = $connection->getDoctrineSchemaManager();
+        $doctrineTable = $sm->listTableDetails($connection->getTablePrefix() . $tableName);
+
+        if (!$doctrineTable->hasColumn($this->foreignModelIdColumn)) {
+            return ['status' => -1, 'message' => "Column {$this->foreignModelIdColumn} doesn't exist in {$tableName}"];
+        }
+
         $query = self::query();
         if ($this->foreignModelIdColumn === 'UserId' || $this->foreignModelIdColumn === 'IdUser') {
             $query = $query->where("$tableName.$this->foreignModelIdColumn", '<>', -1);
         }
 
-        $orphanIds = $query->pluck($this->primaryKey)->diff(
-            self::query()->leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")
-                ->whereNotNull("$foreignTable.$foreignPK")->pluck("$tableName.$this->primaryKey")
-        )->all();
+        $orphanIds = $query->leftJoin($foreignTable, "$tableName.$this->foreignModelIdColumn", '=', "$foreignTable.$foreignPK")
+            ->whereNull("$foreignTable.$foreignPK")
+            ->pluck("$tableName.$this->primaryKey")
+            ->all();
 
         $message = $orphanIds ? "$tableName table has orphans: " . count($orphanIds) . "." : "Orphans were not found.";
         $oResult = ['status' => $orphanIds ? 1 : 0, 'message' => $message, 'orphansIds' => $orphanIds];
