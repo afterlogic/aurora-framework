@@ -449,7 +449,7 @@ class Api
                 $sSettingsPath = \Aurora\System\Api::DataPath() . '/settings/';
                 if (!\file_exists($sSettingsPath)) {
                     set_error_handler(function () {});
-                    mkdir($sSettingsPath, 0777);
+                    mkdir($sSettingsPath, 0750);
                     restore_error_handler();
                     if (!file_exists($sSettingsPath)) {
                         self::$oSettings = false;
@@ -764,7 +764,7 @@ class Api
         /**
                 if (!\file_exists($sDataFullPath))
                 {
-                    \mkdir($sDataFullPath, 0777);
+                    \mkdir($sDataFullPath, 0750);
                 }
         */
         return $sDataFullPath;

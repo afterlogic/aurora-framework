@@ -211,7 +211,7 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
         }
         $sFilePath = $this->sDataPath . $this->sPath . $sFolder . substr($sEmailMd5, 0, 2) . '/' . $sEmailMd5 . '/' . $sKeyPath . $sFileSuffix;
         if ($bMkDir && !@is_dir(dirname($sFilePath))) {
-            if (!@mkdir(dirname($sFilePath), 0777, true)) {
+            if (!@mkdir(dirname($sFilePath), 0750, true)) {
                 throw new \Aurora\System\Exceptions\Exception('Can\'t make storage directory "' . $sFilePath . '"');
             }
         }

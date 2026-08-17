@@ -222,7 +222,7 @@ abstract class AbstractSettings
         $sJsonFile = $this->sPath;
         if (!\file_exists(\dirname($sJsonFile))) {
             \set_error_handler(function () {});
-            \mkdir(\dirname($sJsonFile), 0777);
+            \mkdir(\dirname($sJsonFile), 0750);
             \restore_error_handler();
             $bResult = \file_exists(\dirname($sJsonFile));
         }

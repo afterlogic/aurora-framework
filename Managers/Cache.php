@@ -24,11 +24,11 @@ class Cache
     public function __construct($sStorage)
     {
         if (!file_exists(self::getPath())) {
-            @mkdir(self::getPath(), 0777, true);
+            @mkdir(self::getPath(), 0750, true);
         }
         $sStoragePath = self::getPath() . '/' . $sStorage;
         if (!file_exists($sStoragePath)) {
-            @mkdir($sStoragePath, 0777, true);
+            @mkdir($sStoragePath, 0750, true);
         }
 
         if ($this->cacheManager === null) {

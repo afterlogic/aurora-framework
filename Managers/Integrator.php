@@ -144,7 +144,7 @@ class Integrator extends AbstractManager
         $oSettings = & \Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             if (!is_dir(dirname($sCacheFullFileName))) {
-                @mkdir(dirname($sCacheFullFileName), 0777, true);
+                @mkdir(dirname($sCacheFullFileName), 0750, true);
             }
 
             $sResult = '<!-- ' . $sCacheFileName . ' -->' . $sResult;
@@ -265,7 +265,7 @@ class Integrator extends AbstractManager
             $oSettings = & \Aurora\System\Api::GetSettings();
             if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
                 if (!is_dir(dirname($sCacheFullFileName))) {
-                    mkdir(dirname($sCacheFullFileName), 0777, true);
+                    mkdir(dirname($sCacheFullFileName), 0750, true);
                 }
 
                 $sResult = '/* ' . $sCacheFileName . ' */' . $sResult;

@@ -137,7 +137,7 @@ class Logger
         if (null === $bDir) {
             $bDir = true;
             if (!@is_dir($sLogDir)) {
-                @mkdir($sLogDir, 0777);
+                @mkdir($sLogDir, 0750);
             }
         }
 
