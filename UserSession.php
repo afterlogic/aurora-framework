@@ -245,6 +245,17 @@ class UserSession
         AuthToken::where('TokenHash', $sTokenHash)->delete();
     }
 
+    public function DeleteByTokenHash($sTokenHash)
+    {
+        if (is_string($sTokenHash) && \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
+            try {
+                AuthToken::where('TokenHash', $sTokenHash)->delete();
+            } catch (\Aurora\System\Exceptions\DbException $oEx) {
+                // DB is not configured
+            }
+        }
+    }
+
     public function GetExpiredAuthTokens($iDays)
     {
         $iTime = $iDays * 86400;
