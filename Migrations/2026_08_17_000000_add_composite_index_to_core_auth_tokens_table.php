@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-class AddCompositeIndexUserIdLastUsageToCoreAuthTokensTable extends Migration
+class AddCompositeIndexToCoreAuthTokensTable extends Migration
 {
     public function up()
     {
