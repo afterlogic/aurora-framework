@@ -62,6 +62,29 @@ class SecureCrypt
     }
 
     /**
+     * Tells whether the given encrypted value was produced by the legacy
+     * XXTEA encryption (used before AES-GCM). Legacy values encrypted via
+     * the old Casts\Encrypt had a 6-char random salt prepended to the
+     * plaintext; V2 (AES-GCM) values never did.
+     * @param string|null $sEncryptedValue
+     * @return bool
+     */
+    public static function isLegacyFormat(?string $sEncryptedValue): bool
+    {
+        if ($sEncryptedValue === null || trim($sEncryptedValue) === '') {
+            return false;
+        }
+
+        $raw = Utils::UrlSafeBase64Decode(trim($sEncryptedValue));
+
+        if ($raw === false || $raw === '') {
+            return false;
+        }
+
+        return strncmp($raw, 'V2', 2) !== 0;
+    }
+
+    /**
      * Summary of DecryptValue
      * @param string $sEncryptedValue
      * @return bool|string
