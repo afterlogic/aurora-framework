@@ -77,6 +77,7 @@ class UserSession
             }
 
             $mAuthTokenData = Api::DecodeKeyValues($sAuthToken);
+            $sReason = '';
 
             // checking the validity of auth token data
             if ($mAuthTokenData && isset($mAuthTokenData['id'])) {
@@ -85,12 +86,14 @@ class UserSession
                 // check if user is disabled
                 if ($oUser && $oUser->IsDisabled) {
                     $mResult = false;
+                    $sReason = 'user is disabled';
                 }
 
                 // check auth token version
                 if ($mResult) {
                     if ((isset($mAuthTokenData['@ver']) && $mAuthTokenData['@ver'] !== self::TOKEN_VERSION) || !isset($mAuthTokenData['@ver'])) {
                         $mResult = false;
+                        $sReason = 'auth token version mismatch';
                     }
                 }
 
@@ -99,6 +102,7 @@ class UserSession
                     $iExpireTime = (int) isset($mAuthTokenData['@expire']) ? $mAuthTokenData['@expire'] : 0;
                     if ($iExpireTime > 0 && $iExpireTime < time()) {
                         $mResult = false;
+                        $sReason = 'auth token expired';
                     }
                 }
 
@@ -112,6 +116,7 @@ class UserSession
                     // including tokens that were created without an explicit timestamp (for example, remember-me sessions).
                     if ($oAccount && $iTokensValidFromTimestamp > 0 && ($iTime === 0 || $iTokensValidFromTimestamp > $iTime)) {
                         $mResult = false;
+                        $sReason = 'auth token invalidated by password change';
                     }
                 }
 
@@ -125,18 +130,20 @@ class UserSession
                         $iExpireUserSessionsBeforeTimestamp = \Aurora\System\Api::GetSettings()->GetValue("ExpireUserSessionsBeforeTimestamp", 0);
                         if ($iExpireUserSessionsBeforeTimestamp > $iTime && $iTime > 0) {
                             $mResult = false;
+                            $sReason = 'user sessions expired by admin';
                         }
                     }
                 }
             } else {
                 $mResult = false;
+                $sReason = 'auth token could not be decoded';
             }
 
             if (!$mResult) {
                 $this->Delete($sAuthToken);
                 $mAuthTokenData = $mResult;
 
-                \Aurora\System\Api::Log('User session expired: ');
+                \Aurora\System\Api::Log('Auth token rejected: ' . ($sReason !== '' ? $sReason : 'unknown reason'));
                 \Aurora\System\Api::LogObject($mAuthTokenData);
             }
         }
