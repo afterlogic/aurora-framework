@@ -219,13 +219,16 @@ class Filecache extends \Aurora\System\Managers\AbstractManagerWithStorage
     }
 
     /**
+     * @param string $sFolder Default value is empty string (whole cache).
+     * @param int $iLifeTime Default value is 6 hours.
+     *
      * @return bool
      */
-    public function gc()
+    public function gc($sFolder = '', $iLifeTime = 60 * 60 * 6)
     {
         $bResult = false;
         try {
-            $bResult = $this->oStorage->gc();
+            $bResult = $this->oStorage->gc($sFolder, $iLifeTime);
         } catch (\Aurora\System\Exceptions\BaseException $oException) {
             $this->setLastException($oException);
         }

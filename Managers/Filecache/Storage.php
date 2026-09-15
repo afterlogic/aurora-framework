@@ -233,13 +233,18 @@ class Storage extends \Aurora\System\Managers\AbstractStorage
     }
 
     /**
+     * @param string $sFolder Default value is empty string (whole cache).
+     * @param int $iLifeTime Default value is 6 hours.
+     *
      * @return bool
      */
-    public function gc()
+    public function gc($sFolder = '', $iLifeTime = 60 * 60 * 6)
     {
+        $sPath = $this->sDataPath . $this->sPath . (!empty($sFolder) ? $sFolder . '/' : '');
+
         return \MailSo\Base\Utils::RecTimeDirRemove(
-            $this->sDataPath . $this->sPath,
-            60 * 60 * 6,
+            $sPath,
+            $iLifeTime,
             time()
         );
     }
