@@ -649,10 +649,10 @@ class Manager
      */
     public function GetModulesHash()
     {
-        $sResult = md5(\Aurora\System\Api::Version());
+        $sResult = hash('sha256', \Aurora\System\Api::Version());
         $aModuleNames = $this->GetAllowedModulesName();
         foreach ($aModuleNames as $sModuleName) {
-            $sResult = md5($sResult . $this->GetModuleHashByName($sModuleName));
+            $sResult = hash('sha256', $sResult . $this->GetModuleHashByName($sModuleName));
         }
 
         return $sResult;
@@ -672,7 +672,7 @@ class Manager
         $sResult .= $sTenantName !== 'Default' ? $this->GetModulesRootPath() : $this->GetTenantModulesPath($sTenantName);
         $sResult .= $sModuleName;
 
-        return md5($sResult);
+        return hash('sha256', $sResult);
     }
 
     /**

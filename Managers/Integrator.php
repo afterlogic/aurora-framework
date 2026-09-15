@@ -373,29 +373,6 @@ class Integrator extends AbstractManager
     }
 
     /**
-     * @param object $oAccount
-     * @param bool $bSignMe Default value is **false**.
-     *
-     * @return string
-     */
-    public function setAccountAsLoggedIn($oAccount, $bSignMe = false)
-    {
-        $aAccountHashTable = array(
-            'token' => 'auth',
-            'sign-me' => $bSignMe,
-            'id' => $oAccount->IdUser,
-            'email' => $oAccount->Email
-        );
-
-        $iTime = $bSignMe ? time() + 60 * 60 * 24 * 30 : 0;
-        $sAccountHashTable = \Aurora\System\Api::EncodeKeyValues($aAccountHashTable);
-
-        $sAuthToken = \md5($oAccount->IdUser . $oAccount->IncomingLogin . \microtime(true) . \rand(10000, 99999));
-
-        return \Aurora\System\Api::Cacher()->Set('AUTHTOKEN:' . $sAuthToken, $sAccountHashTable) ? $sAuthToken : '';
-    }
-
-    /**
      * @return int
      */
     public function isMobile()
