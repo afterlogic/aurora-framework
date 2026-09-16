@@ -1708,6 +1708,12 @@ class Api
                     return $capsule->getConnection('default');
                 };
 
+                // Bind 'db' so that the DB facade (used e.g. by Illuminate\Support\Facades\DB::transaction())
+                // can resolve against this container instead of throwing "Target class [db] does not exist.".
+                $appContainer['db'] = function ($ac) use ($capsule) {
+                    return $capsule->getDatabaseManager();
+                };
+
                 $appContainer['migration-table'] = 'migrations';
 
                 $appContainer['filesystem'] = function ($ac) {
