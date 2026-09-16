@@ -1329,22 +1329,47 @@ class Api
         return self::isHttps();
     }
 
+    /**
+     * Checks whether X-Forwarded-Proto/X-Forwarded-Ssl may be trusted for the current request.
+     * Controlled by Core::TrustedProxyIps: empty (default) trusts these headers from any source,
+     * preserving previous behavior; a non-empty comma-separated IP list restricts trust to requests
+     * coming from one of those addresses, so a client can't spoof the headers when the backend is
+     * directly reachable (i.e. not exclusively behind that reverse proxy).
+     */
+    protected static function isForwardedProtoTrusted()
+    {
+        try {
+            $sTrustedProxyIps = (string) \Aurora\Modules\Core\Module::getInstance()->getModuleSettings()->TrustedProxyIps;
+        } catch (\Throwable $oEx) {
+            return true;
+        }
+
+        if (trim($sTrustedProxyIps) === '') {
+            return true;
+        }
+
+        $sRemoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        $aTrustedIps = array_map('trim', explode(',', $sTrustedProxyIps));
+
+        return $sRemoteAddr !== '' && in_array($sRemoteAddr, $aTrustedIps, true);
+    }
+
     public static function isHttps()
     {
         $bResult = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
                 (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443');
 
-        if (!$bResult) {
+        if (!$bResult && self::isForwardedProtoTrusted()) {
             $sForwardedProto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) : '';
             if ($sForwardedProto === 'https') {
                 $bResult = true;
             }
-        }
 
-        if (!$bResult) {
-            $sForwardedSsl = isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) : '';
-            if ($sForwardedSsl === 'on' || $sForwardedSsl === '1') {
-                $bResult = true;
+            if (!$bResult) {
+                $sForwardedSsl = isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) : '';
+                if ($sForwardedSsl === 'on' || $sForwardedSsl === '1') {
+                    $bResult = true;
+                }
             }
         }
 
