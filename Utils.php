@@ -1668,17 +1668,50 @@ class Utils
     }
 
     /**
+     * Rejects non-http(s) schemes and hosts resolving to private/reserved IP ranges,
+     * to prevent SSRF via GetRemoteFileRealUrl() (including through redirects).
+     *
+     * @param string $sUrl
+     * @return bool
+     */
+    private static function isRemoteUrlSafeToFetch($sUrl)
+    {
+        $aParts = \parse_url((string) $sUrl);
+        if (!isset($aParts['scheme'], $aParts['host']) || !\in_array(\strtolower($aParts['scheme']), ['http', 'https'], true)) {
+            return false;
+        }
+
+        $sHost = $aParts['host'];
+        if (\filter_var($sHost, FILTER_VALIDATE_IP)) {
+            $sIp = $sHost;
+        } else {
+            $sIp = \gethostbyname($sHost);
+            if ($sIp === $sHost) {
+                // Could not resolve the host.
+                return false;
+            }
+        }
+
+        return (bool) \filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+    }
+
+    /**
      * @param string $sUrl
      * @param int $iStep Default value = **1**
      * @return bool
      */
     public static function GetRemoteFileRealUrl($sUrl, $iStep = 1)
     {
+        if (!self::isRemoteUrlSafeToFetch($sUrl)) {
+            return false;
+        }
+
         $oCurl = curl_init();
         \curl_setopt_array($oCurl, array(
             CURLOPT_URL => $sUrl,
             CURLOPT_HEADER => true,
-            CURLOPT_SSL_VERIFYPEER => false, //problems width soundcloud
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_NOBODY => true
         ));
