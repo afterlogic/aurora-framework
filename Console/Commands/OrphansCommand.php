@@ -186,12 +186,26 @@ class OrphansCommand extends BaseCommand
 
         $dbPrefix = Api::GetSettings()->DBPrefix;
         $aOrphansEntities = [];
+
+        // SUBSTRING(principaluri, 12) can't use an index, so the PublicId comparison is done in
+        // PHP instead of in SQL. This command runs interactively/on-demand, not per web request,
+        // so the extra round-trip and in-memory filtering (row counts are on the order of the
+        // number of users) is a non-issue.
+        $aPublicIds = array_flip(array_column(
+            Capsule::connection()->select('SELECT PublicId FROM ' . $dbPrefix . 'core_users'),
+            'PublicId'
+        ));
+
         if (Capsule::schema()->hasTable('adav_calendarinstances')) {
             echo PHP_EOL;
             $this->logger->info("Checking DAV calendar.");
 
-            $rows = Capsule::connection()->select('SELECT aci.calendarid, aci.id FROM ' . $dbPrefix . 'adav_calendarinstances as aci
-                WHERE SUBSTRING(principaluri, 12) NOT IN (SELECT PublicId FROM ' . $dbPrefix . 'core_users) AND principaluri NOT LIKE \'%_dav_tenant_user@%\'');
+            $aCalendarRows = Capsule::connection()->select('SELECT aci.calendarid, aci.id, aci.principaluri FROM ' . $dbPrefix . 'adav_calendarinstances as aci
+                WHERE principaluri NOT LIKE \'%_dav_tenant_user@%\'');
+
+            $rows = array_values(array_filter($aCalendarRows, function ($row) use ($aPublicIds) {
+                return !isset($aPublicIds[substr((string) $row->principaluri, 11)]);
+            }));
 
             if (count($rows) > 0) {
                 $this->logger->error("DAV calendars orphans were found: " . count($rows));
@@ -218,7 +232,17 @@ class OrphansCommand extends BaseCommand
             echo PHP_EOL;
             $this->logger->info("Checking DAV addressbooks.");
 
-            $rows = Capsule::connection()->select('SELECT id FROM ' . $dbPrefix . 'adav_addressbooks WHERE (SUBSTRING(principaluri, 12) NOT IN (SELECT PublicId FROM ' . $dbPrefix . 'core_users) AND principaluri NOT LIKE \'%_dav_tenant_user@%\') OR ISNULL(principaluri)');
+            $aAddressbookRows = Capsule::connection()->select('SELECT id, principaluri FROM ' . $dbPrefix . 'adav_addressbooks');
+
+            $rows = array_values(array_filter($aAddressbookRows, function ($row) use ($aPublicIds) {
+                if ($row->principaluri === null) {
+                    return true;
+                }
+                if (strpos($row->principaluri, '_dav_tenant_user@') !== false) {
+                    return false;
+                }
+                return !isset($aPublicIds[substr((string) $row->principaluri, 11)]);
+            }));
 
             if (count($rows) > 0) {
                 $this->logger->error("DAV addressbooks orphans were found: " . count($rows));
