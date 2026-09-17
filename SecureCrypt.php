@@ -171,13 +171,11 @@ class SecureCrypt
     /**
      * Logs the usage of the legacy format to track migration.
      * NEVER log the actual decrypted data (passwords, tokens).
+     * Goes through the app's own log (gated by the EnableLogging setting)
+     * instead of error_log, so it doesn't flood the web server's error log.
      */
     private static function logLegacyUsage(string $format): void
     {
-        error_log(sprintf(
-            '[SecureCrypt] Legacy format "%s" decrypted at %s',
-            $format,
-            date('Y-m-d H:i:s')
-        ));
+        Logger::Log(sprintf('[SecureCrypt] Legacy format "%s" decrypted', $format));
     }
 }
