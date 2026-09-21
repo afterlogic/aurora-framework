@@ -60,7 +60,25 @@ class UserSession
     public function UpdateTimestamp($sAuthToken, $iTime = 0)
     {
         $aData = $this->Get($sAuthToken);
-        return $this->Set($aData, $iTime);
+        $sNewAuthToken = $this->Set($aData, $iTime);
+
+        // Reissuing the token invalidates anything keyed off the old token value (e.g. the
+        // 2FA trusted-device AuthTokenHash in TwoFactorAuth\Manager::saveDevice()). Let
+        // listeners re-key their state to the new token instead of silently going stale.
+        $mResult = null;
+        $aArgs = [
+            'UserId' => $aData['id'] ?? null,
+            'OldAuthToken' => $sAuthToken,
+            'NewAuthToken' => $sNewAuthToken,
+        ];
+        Api::GetModuleManager()->broadcastEvent(
+            'System',
+            'UserSession::RefreshAuthToken::after',
+            $aArgs,
+            $mResult
+        );
+
+        return $sNewAuthToken;
     }
 
     public function Get($sAuthToken)

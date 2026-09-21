@@ -32,6 +32,7 @@ class Notifications
     public const MethodNotFound = 114;
     public const LicenseLimit = 115;
     public const MethodAccessDenied = 116;
+    public const UntrustedDevice = 117;
 
     public const CanNotSaveSettings = 501;
     public const CanNotChangePassword = 502;
