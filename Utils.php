@@ -1318,10 +1318,10 @@ class Utils
     {
         if (null === $iBigInt || false == $iBigInt) {
             return 0;
-        } elseif ($iBigInt > AU_API_PHP_INT_MAX) {
-            return AU_API_PHP_INT_MAX;
-        } elseif ($iBigInt < AU_API_PHP_INT_MIN) {
-            return AU_API_PHP_INT_MIN;
+        } elseif ($iBigInt > PHP_INT_MAX) {
+            return PHP_INT_MAX;
+        } elseif ($iBigInt < PHP_INT_MIN) {
+            return PHP_INT_MIN;
         }
 
         return (int) $iBigInt;
@@ -1661,7 +1661,6 @@ class Utils
         }
 
         if (\is_resource($oCurl)) {
-            \curl_close($oCurl);
         }
 
         return $aResult;
@@ -1720,7 +1719,6 @@ class Utils
         $aInfo = \curl_getinfo($oCurl);
         $iCode = \curl_getinfo($oCurl, CURLINFO_HTTP_CODE);
 
-        curl_close($oCurl);
 
         if (($iCode === 301 || $iCode === 302) && isset($aInfo['redirect_url']) && $aInfo['redirect_url'] !== '' && $iStep < 2) {
             return self::GetRemoteFileRealUrl($aInfo['redirect_url'], ++$iStep);
@@ -2044,27 +2042,4 @@ class Utils
     }
 }
 
-/**
- * @package Api
- */
-class Ints
-{
-    /**
-     * @return int
-     */
-    public static function getIntMax()
-    {
-        $iMax = 0x7fff;
-        $iProbe = 0x7fffffff;
-        while ($iMax == ($iProbe >> 16)) {
-            $iMax = $iProbe;
-            $iProbe = ($iProbe << 16) + 0xffff;
-        }
-        return $iMax;
-    }
-}
-
 function fNullCallback() {}
-
-defined('AU_API_PHP_INT_MAX') || define('AU_API_PHP_INT_MAX', (int) Ints::getIntMax());
-defined('AU_API_PHP_INT_MIN') || define('AU_API_PHP_INT_MIN', (int) (AU_API_PHP_INT_MAX + 1));

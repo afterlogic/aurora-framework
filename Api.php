@@ -526,7 +526,10 @@ class Api
 
                     if ($oPdo) {
                         $oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-                        $oPdo->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+                        // PDO::MYSQL_ATTR_INIT_COMMAND is deprecated as of PHP 8.5 in favor of
+                        // Pdo\Mysql::ATTR_INIT_COMMAND, which doesn't exist before PHP 8.4.
+                        $sInitCommandAttr = class_exists('Pdo\\Mysql') ? \Pdo\Mysql::ATTR_INIT_COMMAND : \PDO::MYSQL_ATTR_INIT_COMMAND;
+                        $oPdo->setAttribute($sInitCommandAttr, "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
                     }
                 } catch (\Exception $oException) {
                     self::Log($oException->getMessage(), Enums\LogLevel::Error);
