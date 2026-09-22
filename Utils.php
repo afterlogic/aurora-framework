@@ -1627,6 +1627,73 @@ class Utils
         return $files;
     }
 
+    /**
+     * Resolves a URL's host to a single IP and validates it's safe to fetch: http(s) scheme
+     * only, and a public (non-private, non-reserved) IP address. Guards against SSRF via
+     * dangerous schemes (file://, gopher://, ...) or requests to internal/link-local network
+     * targets (e.g. cloud metadata endpoints, LAN services).
+     *
+     * Returns the resolved IP so the caller can pin curl to it via buildCurlResolveOption()
+     * instead of letting curl resolve the host again at connect time -- resolving twice would
+     * let an attacker who controls the host's DNS answer safely for this check and then point
+     * at an internal address for the actual request (DNS rebinding).
+     *
+     * @param string $sUrl
+     * @return string|null The resolved IP, or null if the URL isn't safe to fetch.
+     */
+    private static function resolveSafeIp($sUrl)
+    {
+        $aParts = \parse_url((string) $sUrl);
+        if (!isset($aParts['scheme'], $aParts['host']) || !\in_array(\strtolower($aParts['scheme']), ['http', 'https'], true)) {
+            return null;
+        }
+
+        $sHost = $aParts['host'];
+        if (\filter_var($sHost, FILTER_VALIDATE_IP)) {
+            $sIp = $sHost;
+        } else {
+            $sIp = \gethostbyname($sHost);
+            if ($sIp === $sHost) {
+                // Could not resolve the host.
+                return null;
+            }
+        }
+
+        return \filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) ? $sIp : null;
+    }
+
+    /**
+     * Rejects non-http(s) schemes and hosts resolving to private/reserved IP ranges,
+     * to prevent SSRF via GetRemoteFileRealUrl() (including through redirects).
+     *
+     * @param string $sUrl
+     * @return bool
+     */
+    private static function isRemoteUrlSafeToFetch($sUrl)
+    {
+        return self::resolveSafeIp($sUrl) !== null;
+    }
+
+    /**
+     * Builds a CURLOPT_RESOLVE entry pinning $sUrl's host to $sIp, so curl connects to exactly
+     * the address that was validated by resolveSafeIp() instead of resolving the host again
+     * itself. The Host header, TLS SNI and certificate check still use the original hostname,
+     * so this doesn't affect HTTPS validation.
+     *
+     * @param string $sUrl
+     * @param string $sIp
+     * @return string[]
+     */
+    private static function buildCurlResolveOption($sUrl, $sIp)
+    {
+        $aParts = \parse_url((string) $sUrl);
+        $sHost = $aParts['host'] ?? '';
+        $iPort = $aParts['port'] ?? (\strtolower($aParts['scheme'] ?? '') === 'https' ? 443 : 80);
+        $sTarget = false !== \strpos($sIp, ':') ? '[' . $sIp . ']' : $sIp; // bracket IPv6 addresses
+
+        return [$sHost . ':' . $iPort . ':' . $sTarget];
+    }
+
     public static function GetRemoteFileInfo($sUrl)
     {
         $aResult = array(
@@ -1635,13 +1702,19 @@ class Utils
             'code' => 0
         );
 
+        $sIp = self::resolveSafeIp($sUrl);
+        if ($sIp === null) {
+            return $aResult;
+        }
+
         $oCurl = \curl_init();
         \curl_setopt_array($oCurl, array(
             CURLOPT_URL => $sUrl,
             CURLOPT_HEADER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_NOBODY => true
+            CURLOPT_NOBODY => true,
+            CURLOPT_RESOLVE => self::buildCurlResolveOption($sUrl, $sIp),
         ));
 
         \curl_exec($oCurl);
@@ -1667,41 +1740,14 @@ class Utils
     }
 
     /**
-     * Rejects non-http(s) schemes and hosts resolving to private/reserved IP ranges,
-     * to prevent SSRF via GetRemoteFileRealUrl() (including through redirects).
-     *
-     * @param string $sUrl
-     * @return bool
-     */
-    private static function isRemoteUrlSafeToFetch($sUrl)
-    {
-        $aParts = \parse_url((string) $sUrl);
-        if (!isset($aParts['scheme'], $aParts['host']) || !\in_array(\strtolower($aParts['scheme']), ['http', 'https'], true)) {
-            return false;
-        }
-
-        $sHost = $aParts['host'];
-        if (\filter_var($sHost, FILTER_VALIDATE_IP)) {
-            $sIp = $sHost;
-        } else {
-            $sIp = \gethostbyname($sHost);
-            if ($sIp === $sHost) {
-                // Could not resolve the host.
-                return false;
-            }
-        }
-
-        return (bool) \filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
-    }
-
-    /**
      * @param string $sUrl
      * @param int $iStep Default value = **1**
      * @return bool
      */
     public static function GetRemoteFileRealUrl($sUrl, $iStep = 1)
     {
-        if (!self::isRemoteUrlSafeToFetch($sUrl)) {
+        $sIp = self::resolveSafeIp($sUrl);
+        if ($sIp === null) {
             return false;
         }
 
@@ -1712,7 +1758,8 @@ class Utils
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_NOBODY => true
+            CURLOPT_NOBODY => true,
+            CURLOPT_RESOLVE => self::buildCurlResolveOption($sUrl, $sIp),
         ));
         curl_exec($oCurl);
 
@@ -1721,6 +1768,8 @@ class Utils
 
 
         if (($iCode === 301 || $iCode === 302) && isset($aInfo['redirect_url']) && $aInfo['redirect_url'] !== '' && $iStep < 2) {
+            // Each redirect hop is re-validated (and re-pinned) from scratch by the recursive
+            // call above, since it's a different URL/host than the one already checked.
             return self::GetRemoteFileRealUrl($aInfo['redirect_url'], ++$iStep);
         }
 
