@@ -31,6 +31,25 @@ class Logger
     public static $sErrorLogPrefix = 'error-';
 
     /**
+     * Returns the authenticated user's PublicId (email), or an empty string for anonymous
+     * requests or if the user can't be resolved. Written unconditionally into every log line
+     * (see LogEvent(), Log(), LogSql()) so entries can be grouped/filtered by user regardless
+     * of the per-user WriteSeparateLog setting.
+     *
+     * @return string
+     */
+    private static function getAuthenticatedUserPublicId()
+    {
+        try {
+            $oUser = Api::getAuthenticatedUser();
+        } catch (\Exception $oEx) {
+            $oUser = false;
+        }
+
+        return $oUser ? $oUser->PublicId : '';
+    }
+
+    /**
      * @param string $sDesc
      * @param string $sModuleName
      */
@@ -41,9 +60,10 @@ class Logger
             $sDate = gmdate('H:i:s');
             $iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
             $sUserId = Api::getAuthenticatedUserId();
+            $sPublicId = self::getAuthenticatedUserPublicId();
 
             self::Log('Event: ' . $sUserId . ' > ' . $sDesc);
-            self::LogOnly('[' . $sDate . '][' . $iIp . '][' . $sUserId . '][' . $sModuleName . '] > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
+            self::LogOnly('[' . $sDate . '][' . $iIp . '][' . $sUserId . '][' . $sPublicId . '][' . $sModuleName . '] > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
         }
     }
 
@@ -249,6 +269,11 @@ class Logger
             }
             $sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
+            // Written unconditionally (not just into the file name above, which only happens
+            // for users with WriteSeparateLog on), so entries in the shared log can also be
+            // grouped/filtered by user.
+            $sPublicId = $oAuthenticatedUser ? $oAuthenticatedUser->PublicId : '';
+
             $sGuid = \MailSo\Log\Logger::Guid();
             $aMicro = explode('.', microtime(true));
             $sDate = gmdate('H:i:s.') . str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
@@ -257,18 +282,18 @@ class Logger
                 $bIsFirst = false;
                 $sPost = (is_array($_POST) && count($_POST) > 0) ? '[POST(' . count($_POST) . ')]' : '[GET]';
 
-                self::LogOnly(AU_API_CRLF . '[' . $sDate . '][' . $sGuid . '] ' . $sPost . '[ip:' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown') . '] ' . $sUri, $sLogFile);
+                self::LogOnly(AU_API_CRLF . '[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . $sPost . '[ip:' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown') . '] ' . $sUri, $sLogFile);
 
                 if ($oSettings->GetValue('LogPostView', false)) {
-                    self::LogOnly('[' . $sDate . '][' . $sGuid . '] POST > ' . print_r($_POST, true), $sLogFile);
+                    self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] POST > ' . print_r($_POST, true), $sLogFile);
                 } else {
-                    self::LogOnly('[' . $sDate . '][' . $sGuid . '] POST > [' . implode(', ', array_keys($_POST)) . ']', $sLogFile);
+                    self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] POST > [' . implode(', ', array_keys($_POST)) . ']', $sLogFile);
                 }
 
-                self::LogOnly('[' . $sDate . '][' . $sGuid . ']', $sLogFile);
+                self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . ']', $sLogFile);
             }
 
-            self::LogOnly('[' . $sDate . '][' . $sGuid . '] ' . (is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
+            self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . (is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
         }
     }
 
@@ -301,8 +326,9 @@ class Logger
                 $sGuid = \MailSo\Log\Logger::Guid();
                 $aMicro = explode('.', microtime(true));
                 $sDate = gmdate('H:i:s.') . str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
+                $sPublicId = self::getAuthenticatedUserPublicId();
 
-                self::LogOnly('[' . $sDate . '][' . $sGuid . '] ' . $sDesc, $sLogFile);
+                self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . $sDesc, $sLogFile);
             }
         }
     }
