@@ -50,6 +50,45 @@ class Logger
     }
 
     /**
+     * Returns the time zone of the logs. It is the server time zone.
+     *
+     * @return \DateTimeZone
+     */
+    private static function getLogTimeZone()
+    {
+        return new \DateTimeZone(date_default_timezone_get());
+    }
+
+    /**
+     * Returns the time for the logs in the log time zone. All log timestamps and log file names
+     * use it, so the time in the lines and the date in the file name always match.
+     *
+     * @param int|null $iTimestamp Unix timestamp, or null for the current time with microseconds
+     *
+     * @return DateTimeImmutable
+     */
+    public static function getLogDateTime($iTimestamp = null)
+    {
+        if ($iTimestamp === null) {
+            $oDateTime = DateTimeImmutable::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
+        } else {
+            $oDateTime = (new DateTimeImmutable())->setTimestamp((int) $iTimestamp);
+        }
+
+        return $oDateTime->setTimezone(self::getLogTimeZone());
+    }
+
+    /**
+     * @return string Time for a log line: hours, minutes, seconds and hundredths of a second
+     */
+    private static function getLogLineTime()
+    {
+        $oDateTime = self::getLogDateTime();
+
+        return $oDateTime->format('H:i:s.') . substr($oDateTime->format('u'), 0, 2);
+    }
+
+    /**
      * @param string $sDesc
      * @param string $sModuleName
      */
@@ -57,7 +96,7 @@ class Logger
     {
         $oSettings = &Api::GetSettings();
         if ($oSettings && $oSettings->EnableEventLogging) {
-            $sDate = gmdate('H:i:s');
+            $sDate = self::getLogDateTime()->format('H:i:s');
             $iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
             $sUserId = Api::getAuthenticatedUserId();
             $sPublicId = self::getAuthenticatedUserPublicId();
@@ -115,14 +154,10 @@ class Logger
         $sFileName = "log.txt";
 
         if ($oSettings && $oSettings->LogFileName) {
-            $fCallback = ($iTimestamp === 0)
-                    ? function ($matches) {
-                        return date($matches[1]);
-                    }
-                    : function ($matches) use ($iTimestamp) {
-                        return date($matches[1], $iTimestamp);
-                    };
-            $sFileName = preg_replace_callback('/\{([\w|-]*)\}/', $fCallback, $oSettings->LogFileName);
+            $oDateTime = self::getLogDateTime($iTimestamp === 0 ? null : $iTimestamp);
+            $sFileName = preg_replace_callback('/\{([\w|-]*)\}/', function ($matches) use ($oDateTime) {
+                return $oDateTime->format($matches[1]);
+            }, $oSettings->LogFileName);
         }
 
         return $sFilePrefix . $sFileName;
@@ -275,8 +310,7 @@ class Logger
             $sPublicId = $oAuthenticatedUser ? $oAuthenticatedUser->PublicId : '';
 
             $sGuid = \MailSo\Log\Logger::Guid();
-            $aMicro = explode('.', microtime(true));
-            $sDate = gmdate('H:i:s.') . str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
+            $sDate = self::getLogLineTime();
             if ($bIsFirst) {
                 $sUri = Utils::RequestUri();
                 $bIsFirst = false;
@@ -324,8 +358,7 @@ class Logger
                 $sLogFile = self::GetLogFileDir() . self::GetLogFileName('sql-');
 
                 $sGuid = \MailSo\Log\Logger::Guid();
-                $aMicro = explode('.', microtime(true));
-                $sDate = gmdate('H:i:s.') . str_pad((isset($aMicro[1]) ? substr($aMicro[1], 0, 2) : '0'), 2, '0');
+                $sDate = self::getLogLineTime();
                 $sPublicId = self::getAuthenticatedUserPublicId();
 
                 self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . $sDesc, $sLogFile);
@@ -365,14 +398,15 @@ class Logger
             $sLogDir = self::GetLogFileDir();
             if (is_dir($sLogDir) && $bRemoveOldLogs) {
                 $aLogFiles = glob($sLogDir . '*.txt');
-                $nowDateTime = new \DateTimeImmutable(date(self::getLogFileDateFormat()));
+                $oTimeZone = self::getLogTimeZone();
+                $nowDateTime = new \DateTimeImmutable(self::getLogDateTime()->format(self::getLogFileDateFormat()), $oTimeZone);
                 $dateTimeToRemove = $nowDateTime->sub(new \DateInterval(sprintf('P%dD', $iRemoveOldLogsDays)));
 
                 foreach ($aLogFiles as $sFileName) {
                     $aPathInfo = pathinfo($sFileName);
                     preg_match('/\w+\-([\d\-]+)$/', $aPathInfo['filename'], $matches, 0);
                     if (isset($matches[1])) {
-                        $fileDateTime = new \DateTimeImmutable($matches[1]);
+                        $fileDateTime = new \DateTimeImmutable($matches[1], $oTimeZone);
                         if ($fileDateTime <= $dateTimeToRemove) {
                             if (file_exists($sFileName)) {
                                 unlink($sFileName);
