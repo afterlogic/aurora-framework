@@ -79,13 +79,23 @@ class Logger
     }
 
     /**
-     * @return string Time for a log line: hours, minutes, seconds and hundredths of a second
+     * Returns the time for a log line with the UTC offset of the log time zone,
+     * e.g. "12:16:22.47 +05:30".
+     *
+     * @param bool $bHundredths Whether to add hundredths of a second
+     *
+     * @return string
      */
-    private static function getLogLineTime()
+    private static function getLogLineTime($bHundredths = true)
     {
         $oDateTime = self::getLogDateTime();
 
-        return $oDateTime->format('H:i:s.') . substr($oDateTime->format('u'), 0, 2);
+        $sTime = $oDateTime->format('H:i:s');
+        if ($bHundredths) {
+            $sTime .= '.' . substr($oDateTime->format('u'), 0, 2);
+        }
+
+        return $sTime . ' ' . $oDateTime->format('P');
     }
 
     /**
@@ -96,7 +106,7 @@ class Logger
     {
         $oSettings = &Api::GetSettings();
         if ($oSettings && $oSettings->EnableEventLogging) {
-            $sDate = self::getLogDateTime()->format('H:i:s');
+            $sDate = self::getLogLineTime(false);
             $iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
             $sUserId = Api::getAuthenticatedUserId();
             $sPublicId = self::getAuthenticatedUserPublicId();
