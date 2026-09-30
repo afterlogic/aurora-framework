@@ -31,14 +31,12 @@ class Logger
     public static $sErrorLogPrefix = 'error-';
 
     /**
-     * Returns the authenticated user's PublicId (email), or an empty string for anonymous
-     * requests or if the user can't be resolved. Written unconditionally into every log line
-     * (see LogEvent(), Log(), LogSql()) so entries can be grouped/filtered by user regardless
-     * of the per-user WriteSeparateLog setting.
+     * Returns the authenticated user, or false for anonymous requests or if the user can't be
+     * resolved.
      *
-     * @return string
+     * @return \Aurora\Modules\Core\Models\User|false
      */
-    private static function getAuthenticatedUserPublicId()
+    private static function getAuthenticatedUserOrFalse()
     {
         try {
             $oUser = Api::getAuthenticatedUser();
@@ -46,7 +44,7 @@ class Logger
             $oUser = false;
         }
 
-        return $oUser ? $oUser->PublicId : '';
+        return $oUser ? $oUser : false;
     }
 
     /**
@@ -79,14 +77,40 @@ class Logger
     }
 
     /**
-     * Returns the time for a log line with the UTC offset of the log time zone,
-     * e.g. "12:16:22 +05:30".
+     * Returns the time for a log line with the date and the UTC offset of the log time zone,
+     * e.g. "2026-09-30 12:16:22 +05:30".
      *
      * @return string
      */
     private static function getLogLineTime()
     {
-        return self::getLogDateTime()->format('H:i:s P');
+        return self::getLogDateTime()->format('Y-m-d H:i:s P');
+    }
+
+    /**
+     * Returns the beginning that every line of every log has:
+     * "[date time offset][ip][user id][PublicId][module][guid]", e.g.
+     * "[2026-09-30 12:47:41 +05:30][1.2.3.4][5][user@domain][Core][a6e920ea]".
+     * The user id and the PublicId are empty for anonymous requests, the module is empty where
+     * it is not known. The PublicId is written unconditionally (not only into the file name for
+     * users with WriteSeparateLog on), so entries in a shared log can be grouped by user, and the
+     * guid is the same for all lines of a request in all logs. Modules that write their own log
+     * files should use it too, so all logs have the same format.
+     *
+     * @param string $sModuleName Name of the module that writes the line
+     * @param string|null $sGuid Guid of the request, the current one by default
+     *
+     * @return string
+     */
+    public static function getLogLineHeader($sModuleName = '', $sGuid = null)
+    {
+        if ($sGuid === null) {
+            $sGuid = \MailSo\Log\Logger::Guid();
+        }
+        $oUser = self::getAuthenticatedUserOrFalse();
+        $sIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
+
+        return '[' . self::getLogLineTime() . '][' . $sIp . '][' . ($oUser ? $oUser->Id : '') . '][' . ($oUser ? $oUser->PublicId : '') . '][' . $sModuleName . '][' . $sGuid . ']';
     }
 
     /**
@@ -97,13 +121,10 @@ class Logger
     {
         $oSettings = &Api::GetSettings();
         if ($oSettings && $oSettings->EnableEventLogging) {
-            $sDate = self::getLogLineTime();
-            $iIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
             $sUserId = Api::getAuthenticatedUserId();
-            $sPublicId = self::getAuthenticatedUserPublicId();
 
             self::Log('Event: ' . $sUserId . ' > ' . $sDesc);
-            self::LogOnly('[' . $sDate . '][' . $iIp . '][' . $sUserId . '][' . $sPublicId . '][' . $sModuleName . '] > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
+            self::LogOnly(self::getLogLineHeader($sModuleName) . ' > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
         }
     }
 
@@ -275,7 +296,7 @@ class Logger
 
             if (0 < strlen($sLogData)) {
                 try {
-                    @error_log('[' . \MailSo\Log\Logger::Guid() . '][DB/backtrace]' . AU_API_CRLF . trim($sLogData) . AU_API_CRLF, 3, $sLogFile);
+                    @error_log(self::getLogLineHeader() . '[DB/backtrace]' . AU_API_CRLF . trim($sLogData) . AU_API_CRLF, 3, $sLogFile);
                 } catch (\Exception $oE) {
                 }
             }
@@ -294,41 +315,32 @@ class Logger
         $oSettings = &Api::GetSettings();
 
         if ($oSettings && $oSettings->EnableLogging && $iLogLevel <= $oSettings->LoggingLevel) {
-            try {
-                $oAuthenticatedUser = Api::getAuthenticatedUser();
-            } catch (\Exception $oEx) {
-                $oAuthenticatedUser = false;
-            }
+            $oAuthenticatedUser = self::getAuthenticatedUserOrFalse();
             $sFirstPrefix = "";
             if ($oAuthenticatedUser) {
                 $sFirstPrefix = $oAuthenticatedUser->WriteSeparateLog ? $oAuthenticatedUser->PublicId . '-' : '';
             }
             $sLogFile = self::GetLogFileDir() . self::GetLogFileName($sFirstPrefix . $sFilePrefix);
 
-            // Written unconditionally (not just into the file name above, which only happens
-            // for users with WriteSeparateLog on), so entries in the shared log can also be
-            // grouped/filtered by user.
-            $sPublicId = $oAuthenticatedUser ? $oAuthenticatedUser->PublicId : '';
+            $sHeader = self::getLogLineHeader();
 
-            $sGuid = \MailSo\Log\Logger::Guid();
-            $sDate = self::getLogLineTime();
             if ($bIsFirst) {
                 $sUri = Utils::RequestUri();
                 $bIsFirst = false;
                 $sPost = (is_array($_POST) && count($_POST) > 0) ? '[POST(' . count($_POST) . ')]' : '[GET]';
 
-                self::LogOnly(AU_API_CRLF . '[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . $sPost . '[ip:' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown') . '] ' . $sUri, $sLogFile);
+                self::LogOnly(AU_API_CRLF . $sHeader . ' ' . $sPost . ' ' . $sUri, $sLogFile);
 
                 if ($oSettings->GetValue('LogPostView', false)) {
-                    self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] POST > ' . print_r($_POST, true), $sLogFile);
+                    self::LogOnly($sHeader . ' POST > ' . print_r($_POST, true), $sLogFile);
                 } else {
-                    self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] POST > [' . implode(', ', array_keys($_POST)) . ']', $sLogFile);
+                    self::LogOnly($sHeader . ' POST > [' . implode(', ', array_keys($_POST)) . ']', $sLogFile);
                 }
 
-                self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . ']', $sLogFile);
+                self::LogOnly($sHeader, $sLogFile);
             }
 
-            self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . (is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
+            self::LogOnly($sHeader . ' ' . (is_string($sDesc) ? $sDesc : print_r($sDesc, true)), $sLogFile);
         }
     }
 
@@ -358,11 +370,7 @@ class Logger
             if ($oSettings && $oSettings->EnableLogging && $iLogLevel <= $oSettings->LoggingLevel) {
                 $sLogFile = self::GetLogFileDir() . self::GetLogFileName('sql-');
 
-                $sGuid = \MailSo\Log\Logger::Guid();
-                $sDate = self::getLogLineTime();
-                $sPublicId = self::getAuthenticatedUserPublicId();
-
-                self::LogOnly('[' . $sDate . '][' . $sGuid . '][' . $sPublicId . '] ' . $sDesc, $sLogFile);
+                self::LogOnly(self::getLogLineHeader() . ' ' . $sDesc, $sLogFile);
             }
         }
     }
