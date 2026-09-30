@@ -1659,7 +1659,44 @@ class Utils
             }
         }
 
-        return \filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) ? $sIp : null;
+        return self::IsPublicIpAddress($sIp) ? $sIp : null;
+    }
+
+    /**
+     * Tells whether an IP address is publicly routable. On top of the private and reserved
+     * ranges rejected by filter_var() this also rejects ranges it lets through: shared address
+     * space (100.64.0.0/10, which includes cloud metadata addresses such as 100.100.100.200),
+     * benchmarking, documentation (TEST-NET) and multicast ranges.
+     *
+     * @param string $sIp
+     * @return bool
+     */
+    public static function IsPublicIpAddress($sIp)
+    {
+        if (!\filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return false;
+        }
+
+        if (\filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $iIp = \ip2long($sIp);
+            foreach ([
+                ['100.64.0.0', 10],
+                ['192.0.0.0', 24],
+                ['192.0.2.0', 24],
+                ['192.88.99.0', 24],
+                ['198.18.0.0', 15],
+                ['198.51.100.0', 24],
+                ['203.0.113.0', 24],
+                ['224.0.0.0', 4],
+            ] as [$sNetwork, $iBits]) {
+                $iMask = -1 << (32 - $iBits);
+                if (($iIp & $iMask) === (\ip2long($sNetwork) & $iMask)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1714,6 +1751,8 @@ class Utils
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_NOBODY => true,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 5,
             CURLOPT_RESOLVE => self::buildCurlResolveOption($sUrl, $sIp),
         ));
 
@@ -1759,6 +1798,8 @@ class Utils
             CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_NOBODY => true,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 5,
             CURLOPT_RESOLVE => self::buildCurlResolveOption($sUrl, $sIp),
         ));
         curl_exec($oCurl);
