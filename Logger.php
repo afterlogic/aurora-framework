@@ -88,21 +88,41 @@ class Logger
     }
 
     /**
-     * Returns the beginning that every line of every log has:
-     * "[date time offset][ip][user id][PublicId][module][guid]", e.g.
-     * "[2026-09-30 12:47:41 +05:30][1.2.3.4][5][user@domain][Core][a6e920ea]".
-     * The user id and the PublicId are empty for anonymous requests, the module is empty where
-     * it is not known. The PublicId is written unconditionally (not only into the file name for
-     * users with WriteSeparateLog on), so entries in a shared log can be grouped by user, and the
-     * guid is the same for all lines of a request in all logs. Modules that write their own log
-     * files should use it too, so all logs have the same format.
+     * Returns a short id of the current login session: the first 8 hex characters of the
+     * SHA-256 of the auth token. It differs for every browser or device the user logged in from
+     * and doesn't change during the session. The token itself is a secret and is never logged.
+     * Empty for anonymous requests and for requests of users that have no token (e.g. DAV).
      *
-     * @param string $sModuleName Name of the module that writes the line
+     * @return string
+     */
+    private static function getLogSessionId()
+    {
+        try {
+            // the token the current user was authenticated with
+            $sAuthToken = Api::getAuthenticatedUserAuthToken();
+        } catch (\Throwable $oEx) {
+            $sAuthToken = false;
+        }
+
+        return $sAuthToken ? substr(hash('sha256', (string) $sAuthToken), 0, 8) : '';
+    }
+
+    /**
+     * Returns the beginning that every line of every log has:
+     * "[date time offset][ip][user id][PublicId][session][guid]", e.g.
+     * "[2026-09-30 12:47:41 +05:30][1.2.3.4][5][user@domain][3f9c1a7b][a6e920ea]".
+     * The user id, the PublicId and the session are empty for anonymous requests. The PublicId is
+     * written unconditionally (not only into the file name for users with WriteSeparateLog on),
+     * so entries in a shared log can be grouped by user. The session is a short hash of the auth
+     * token that tells the browsers and devices of one user apart. The guid is the same for all
+     * lines of a request in all logs. Modules that write their own log files should use it too,
+     * so all logs have the same format.
+     *
      * @param string|null $sGuid Guid of the request, the current one by default
      *
      * @return string
      */
-    public static function getLogLineHeader($sModuleName = '', $sGuid = null)
+    public static function getLogLineHeader($sGuid = null)
     {
         if ($sGuid === null) {
             $sGuid = \MailSo\Log\Logger::Guid();
@@ -110,7 +130,7 @@ class Logger
         $oUser = self::getAuthenticatedUserOrFalse();
         $sIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
 
-        return '[' . self::getLogLineTime() . '][' . $sIp . '][' . ($oUser ? $oUser->Id : '') . '][' . ($oUser ? $oUser->PublicId : '') . '][' . $sModuleName . '][' . $sGuid . ']';
+        return '[' . self::getLogLineTime() . '][' . $sIp . '][' . ($oUser ? $oUser->Id : '') . '][' . ($oUser ? $oUser->PublicId : '') . '][' . self::getLogSessionId() . '][' . $sGuid . ']';
     }
 
     /**
@@ -124,7 +144,7 @@ class Logger
             $sUserId = Api::getAuthenticatedUserId();
 
             self::Log('Event: ' . $sUserId . ' > ' . $sDesc);
-            self::LogOnly(self::getLogLineHeader($sModuleName) . ' > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
+            self::LogOnly(self::getLogLineHeader() . '[' . $sModuleName . '] > ' . $sDesc, self::GetLogFileDir() . self::GetLogFileName(self::$sEventLogPrefix));
         }
     }
 
