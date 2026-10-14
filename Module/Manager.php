@@ -10,7 +10,7 @@ namespace Aurora\System\Module;
 use Aurora\Modules\Core\Models\User;
 use Aurora\System\Exceptions\ApiException;
 use Aurora\System\Managers\Response;
-use \Aurora\System\Facades\Route;
+use Aurora\System\Facades\Route;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
@@ -154,7 +154,7 @@ class Manager
     public function isClientModule($sModuleName)
     {
         $sModulePath = $this->GetModulePath($sModuleName);
-        return \file_exists($sModulePath . $sModuleName . '/js/manager.js') 
+        return \file_exists($sModulePath . $sModuleName . '/js/manager.js')
             || \file_exists($sModulePath . $sModuleName . '/vue/manager.js')
             || \file_exists($sModulePath . $sModuleName . '/vue-mobile/manager.js');
     }
@@ -566,7 +566,7 @@ class Manager
     /**
      *
      * @deprecated
-     * 
+     *
      * @param string $sEntryName
      * @return array
      */

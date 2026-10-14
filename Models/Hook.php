@@ -11,7 +11,7 @@ class Hook implements ModelHookInterface
 {
     public function run(ModelsCommand $command, Model $model): void
     {
-        if (! $model instanceof ClassesModel) {
+        if (!$model instanceof ClassesModel) {
             return;
         }
 

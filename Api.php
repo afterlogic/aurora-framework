@@ -1484,7 +1484,7 @@ class Api
             if ($oUser) {
                 return $oUser->PublicId;
             }
-            // @TODO: check if it's needed
+        // @TODO: check if it's needed
         } else {
             $sPublicId = $iUserId;
         }

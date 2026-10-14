@@ -367,7 +367,7 @@ abstract class AbstractModule
     public function loadModuleSettings()
     {
         if (!isset($this->oModuleSettings)) {
-            $this->oModuleSettings = & $this->GetModuleManager()->getModuleSettings(self::GetName());
+            $this->oModuleSettings = &$this->GetModuleManager()->getModuleSettings(self::GetName());
             $this->oModuleSettings->Load();
         }
         return $this->oModuleSettings;
@@ -451,7 +451,7 @@ abstract class AbstractModule
 
     /**
      *  Checks if method is denied by web api.
-     * 
+     *
      * @param string $sMethodName
      * @return boolean
      */
@@ -648,7 +648,7 @@ abstract class AbstractModule
     /**
      *
      * @deprecated Use \Aurora\System\Facades\Route::add instead.
-     * 
+     *
      * @param string $sName
      * @param callable $mCallbak
      */
@@ -664,7 +664,7 @@ abstract class AbstractModule
     /**
      *
      * @deprecated Use \Aurora\System\Facades\Route::add instead.
-     * 
+     *
      * @param array $aEntries
      */
     final public function AddEntries($aEntries)
@@ -677,7 +677,7 @@ abstract class AbstractModule
     /**
      *
      * @deprecated Use \Aurora\System\Facades\Route::has instead.
-     * 
+     *
      * @param string $sName
      * @return boolean
      */
@@ -689,7 +689,7 @@ abstract class AbstractModule
     /**
      *
      * @deprecated Use \Aurora\System\Facades\Route::remove instead.
-     * 
+     *
      * @param string $sName
      */
     final public function RemoveEntry($sName)
@@ -700,7 +700,7 @@ abstract class AbstractModule
     /**
      *
      * @deprecated Use \Aurora\System\Facades\Route::remove instead.
-     * 
+     *
      * @param array $aEntries
      */
     final public function RemoveEntries($aEntries)

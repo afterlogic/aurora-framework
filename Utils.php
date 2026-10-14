@@ -2026,7 +2026,7 @@ class Utils
                 'url' => '?file-cache/' . $sHash
             )
         );
-        $oSettings = & Api::GetSettings();
+        $oSettings = &Api::GetSettings();
         $iThumbnailLimit = ((int) $oSettings->GetValue('ThumbnailMaxFileSizeMb', 5)) * 1024 * 1024;
         $bThumb = ($oSettings->GetValue('AllowThumbnail', true) &&
                 $iSize < $iThumbnailLimit && Utils::IsGDImageMimeTypeSuppoted($sMimeType, $sFileName));

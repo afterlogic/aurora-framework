@@ -95,7 +95,7 @@ class Integrator extends AbstractManager
 
         $sCacheFileName = '';
         $sCacheFullFileName = '';
-        $oSettings = & \Aurora\System\Api::GetSettings();
+        $oSettings = &\Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             $sCacheFileName = 'templates-' . md5(\Aurora\System\Api::Version() . $sHash) . '.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
@@ -141,7 +141,7 @@ class Integrator extends AbstractManager
         }
 
         $sResult = trim($sResult);
-        $oSettings = & \Aurora\System\Api::GetSettings();
+        $oSettings = &\Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheTemplates', $this->bCache)) {
             if (!is_dir(dirname($sCacheFullFileName))) {
                 @mkdir(dirname($sCacheFullFileName), 0750, true);
@@ -225,7 +225,7 @@ class Integrator extends AbstractManager
 
         $sCacheFileName = '';
         $sCacheFullFileName = '';
-        $oSettings = & \Aurora\System\Api::GetSettings();
+        $oSettings = &\Aurora\System\Api::GetSettings();
         if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
             $sCacheFileName = 'langs-' . $sLanguage . '-' . md5(\Aurora\System\Api::Version() . $sHash) . '.cache';
             $sCacheFullFileName = \Aurora\System\Api::DataPath() . '/cache/' . $sCacheFileName;
@@ -262,7 +262,7 @@ class Integrator extends AbstractManager
 
             $sResult .= json_encode($aResult);
 
-            $oSettings = & \Aurora\System\Api::GetSettings();
+            $oSettings = &\Aurora\System\Api::GetSettings();
             if ($oSettings && $oSettings->GetValue('CacheLangs', $this->bCache)) {
                 if (!is_dir(dirname($sCacheFullFileName))) {
                     mkdir(dirname($sCacheFullFileName), 0750, true);
@@ -385,8 +385,7 @@ class Integrator extends AbstractManager
         // }
 
         $sMobileApp =  \MailSo\Base\Http::SingletonInstance()->GetHeader('X-MobileApp');
-        if (!empty($sMobileApp))
-        {
+        if (!empty($sMobileApp)) {
             return 1;
         }
 
@@ -676,7 +675,7 @@ class Integrator extends AbstractManager
      */
     public function compileJS($aConfig = array())
     {
-        $oSettings = & \Aurora\System\Api::GetSettings();
+        $oSettings = &\Aurora\System\Api::GetSettings();
         $sPostfix = '';
 
         if ($oSettings && $oSettings->GetValue('UseAppMinJs', false)) {
@@ -726,7 +725,7 @@ class Integrator extends AbstractManager
                 $bAddModuleName = $oModuleManager->getModuleConfigValue($sModuleName, 'IncludeInDesktop', true);
             }
 
-            
+
             if ($bAddModuleName && $oModuleManager->isClientModule($sModuleName)) {
                 $aClientModuleNames[] = $sModuleName;
                 if ($bIsMobileApplication) {

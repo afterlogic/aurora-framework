@@ -78,7 +78,7 @@ class MigrateCommand extends BaseCommand
             // Finally, if the "seed" option has been given, we will re-run the database
             // seed task to re-populate the database, which is convenient when adding
             // a migration and a seed at the same time, as it is only this command.
-            if ($input->getOption('seed') && ! $input->getOption('pretend')) {
+            if ($input->getOption('seed') && !$input->getOption('pretend')) {
                 $seedInput = new ArrayInput([
                     '--force'  => true,
                 ]);

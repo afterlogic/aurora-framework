@@ -32,11 +32,11 @@ class SecureCrypt
             : Api::$sEncryptionKey;
     }
 
-     /**
-     * Summary of EncryptValue
-     * @param string $sValue
-     * @return string|false
-     */
+    /**
+    * Summary of EncryptValue
+    * @param string $sValue
+    * @return string|false
+    */
     public static function EncryptValue(string $sValue)
     {
         $key = self::getRawKey();
