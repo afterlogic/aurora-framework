@@ -1788,6 +1788,8 @@ class Api
 
                     $consoleaApp->add(new Commands\OrphansCommand());
 
+                    $consoleaApp->add(new Commands\ConvertUsersCharsetCommand());
+
                     $consoleaApp->add(new Commands\ModelsCommand($ac));
 
                     return $consoleaApp;
