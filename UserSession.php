@@ -101,8 +101,11 @@ class UserSession
             if ($mAuthTokenData && isset($mAuthTokenData['id'])) {
                 $oUser = Api::getUserById((int) $mAuthTokenData['id']);
 
-                // check if user is disabled
-                if ($oUser && $oUser->IsDisabled) {
+                // check if user still exists and is not disabled
+                if (!$oUser) {
+                    $mResult = false;
+                    $sReason = 'user not found';
+                } elseif ($oUser->IsDisabled) {
                     $mResult = false;
                     $sReason = 'user is disabled';
                 }
