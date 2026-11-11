@@ -157,10 +157,28 @@ class Response
             }
         }
 
+        self::OutputActiveContentHeaders($sContentType);
+
         \header('Content-Disposition: ' . ($bDownload ? 'attachment' : 'inline') . '; ' .
             \trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
 
         \header('Accept-Ranges: none', true);
+    }
+
+    /**
+     * SVG files can carry scripts and are served from the application origin,
+     * so they get their own sandboxing CSP regardless of how they are opened.
+     *
+     * @param string $sContentType
+     *
+     * @return void
+     */
+    public static function OutputActiveContentHeaders($sContentType)
+    {
+        \header('X-Content-Type-Options: nosniff', true);
+        if (\strtolower(\trim(\explode(';', $sContentType, 2)[0])) === 'image/svg+xml') {
+            \header("Content-Security-Policy: default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox", true);
+        }
     }
 
     /**

@@ -1965,6 +1965,8 @@ class Utils
             }
         }
 
+        Managers\Response::OutputActiveContentHeaders($sContentType);
+
         \header('Content-Disposition: ' . ($bDownload ? 'attachment' : 'inline') . '; ' .
             \trim(\MailSo\Base\Utils::EncodeHeaderUtf8AttributeValue('filename', $sFileName)), true);
 
