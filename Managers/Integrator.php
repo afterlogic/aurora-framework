@@ -603,7 +603,6 @@ class Integrator extends AbstractManager
     public function buildHeadersLink($bThemeCSS = true)
     {
         list($sLanguage, $sTheme) = $this->getThemeAndLanguage();
-        $sMobileSuffix = \Aurora\System\Api::IsMobileApplication() ? '-mobile' : '';
         $sHash = \Aurora\System\Api::VersionJs();
         //		$sTenantName = \Aurora\System\Api::getTenantName();
         //		$oSettings =&\Aurora\System\Api::GetSettings();
@@ -632,7 +631,7 @@ class Integrator extends AbstractManager
 
         $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/libs/libs.css?' . $sHash . '" />';
         if ($bThemeCSS) {
-            $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles' . $sMobileSuffix . '.css?' . $sHash . '" />';
+            $aLinks[] = '<link type="text/css" rel="stylesheet" href="./static/styles/themes/' . $sTheme . '/styles.css?' . $sHash . '" />';
         }
         //		}
 
