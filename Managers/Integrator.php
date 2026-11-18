@@ -372,40 +372,31 @@ class Integrator extends AbstractManager
         );
     }
 
-    /**
-     * @return int
-     */
-    public function isMobile()
+    public function isMobile(): int
     {
-        // if (isset($_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK]) && '1' === (string) $_COOKIE[self::TOKEN_SKIP_MOBILE_CHECK])
-        // {
-        //     @\setcookie(self::TOKEN_SKIP_MOBILE_CHECK, '', \strtotime('-1 hour'), \Aurora\System\Api::getCookiePath(),
-        //             null, \Aurora\System\Api::getCookieSecure());
-        //     return 0;
-        // }
+        return empty(\MailSo\Base\Http::SingletonInstance()->GetHeader('X-MobileApp')) ? 0 : 1;
+    }
 
-        $sMobileApp =  \MailSo\Base\Http::SingletonInstance()->GetHeader('X-MobileApp');
-        if (!empty($sMobileApp)) {
-            return 1;
-        }
-
-        return isset($_COOKIE[self::MOBILE_KEY]) ? ('1' === (string) $_COOKIE[self::MOBILE_KEY] ? 1 : 0) : -1;
+    public function getMobilePreference(): ?bool
+    {
+        return match ($_COOKIE[self::MOBILE_KEY] ?? null) {
+            '1' => true,
+            '0' => false,
+            default => null,
+        };
     }
 
     /**
-     * @param bool $bMobile
-     *
-     * @return bool
+     * @param bool|string $mMobile A fixed layout or 'auto' to clear the preference.
      */
-    public function setMobile($bMobile)
+    public function setMobile($mMobile): bool
     {
-        \Aurora\System\Api::setCookie(
+        $bAuto = $mMobile === 'auto';
+        return \Aurora\System\Api::setCookie(
             self::MOBILE_KEY,
-            $bMobile ? '1' : '0',
-            \strtotime('+200 days')
+            $bAuto ? '' : ($mMobile ? '1' : '0'),
+            $bAuto ? -1 : \strtotime('+200 days')
         );
-
-        return true;
     }
 
     /**
@@ -697,9 +688,11 @@ class Integrator extends AbstractManager
 
         $bIsPublic = isset($aConfig['public_app']) ? (bool)$aConfig['public_app'] : false;
         $bIsNewTab = isset($aConfig['new_tab']) ? (bool)$aConfig['new_tab'] : false;
+        $bCheckMobileLayout = !empty($aConfig['check_mobile_layout']);
 
         return '<script>window.isPublic = ' . ($bIsPublic ? 'true' : 'false') .
                 '; window.isNewTab = ' . ($bIsNewTab ? 'true' : 'false') .
+                '; window.checkMobileLayout = ' . ($bCheckMobileLayout ? 'true' : 'false') .
                 '; window.aAvailableModules = ["' . implode('","', $aClientModuleNames) . '"]' .
                 '; window.aAvailableBackendModules = ["' . implode('","', $this->GetBackendModules()) . '"];</script>
 		<script src="' . $sJsScriptPath . "static/js/app" . $sPostfix . ".js?" . \Aurora\System\Api::VersionJs() . '"></script>';

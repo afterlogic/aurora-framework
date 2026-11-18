@@ -1861,7 +1861,7 @@ class Api
 
     public static function setCookie($name, $value, $expires = 0, $httpOnly = true, $sameSite = 'Strict')
     {
-        @\setcookie(
+        return @\setcookie(
             $name,
             $value,
             [
