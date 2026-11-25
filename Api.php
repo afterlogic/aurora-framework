@@ -1810,6 +1810,23 @@ class Api
         return self::$oContainer;
     }
 
+    /** Resolve the user whose private data the current session may access. */
+    public static function checkUserDataAccess(&$UserId)
+    {
+        if (self::accessCheckIsSkipped()) {
+            return;
+        }
+
+        self::checkUserRoleIsAtLeast(Enums\UserRole::NormalUser);
+        $user = self::getAuthenticatedUser();
+        $id = $UserId === null ? $user->Id : (int) $UserId;
+        if ($user->Role !== Enums\UserRole::SuperAdmin && $id !== $user->Id) {
+            throw new ApiException(Notifications::AccessDenied);
+        }
+
+        $UserId = $id;
+    }
+
     public static function CheckAccess(&$UserId)
     {
         if (self::accessCheckIsSkipped()) {
