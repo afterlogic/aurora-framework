@@ -74,6 +74,7 @@ namespace Aurora\System;
 
 * @property bool $StoreAuthTokenInDB
 * @property int $AuthTokenExpirationLifetimeDays
+* @property int $SuperAdminAuthTokenExpirationLifetimeDays
 */
 
 class Settings extends AbstractSettings
@@ -387,13 +388,19 @@ class Settings extends AbstractSettings
                 false,
                 'bool',
                 null,
-                'If enabled, authentication tokens will be stored in the database and can be revoked'
+                'Deprecated. Stores non-superadmin sessions in the database. A new login can replace another session for the same account.'
             ),
             'AuthTokenExpirationLifetimeDays' => new SettingsProperty(
                 0,
                 'int',
                 null,
-                'If set to non-zero value, means auth tokens will expire after this number of days. 0 means the feature is disabled.'
+                'Lifetime of non-superadmin authentication tokens in days. 0 disables expiration.'
+            ),
+            'SuperAdminAuthTokenExpirationLifetimeDays' => new SettingsProperty(
+                1,
+                'int',
+                null,
+                'Absolute lifetime of a superadmin session in days. The default and minimum are 1 day.'
             ),
         ];
     }

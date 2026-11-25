@@ -19,8 +19,50 @@ use Aurora\System\Models\AuthToken;
 class UserSession
 {
     public const TOKEN_VERSION = '4.0';
+    private const SETUP_SESSION_KEY = 'SuperAdminSetupSession';
 
     public static $aTokensCache = [];
+
+    private static function isSuperAdminToken(array $data)
+    {
+        return ($data['token'] ?? '') === 'admin' || (int) ($data['id'] ?? 0) === -1;
+    }
+
+    private static function adminSessions()
+    {
+        return \Illuminate\Database\Capsule\Manager::table('core_superadmin_sessions');
+    }
+
+    private function createAdminSession(array &$data)
+    {
+        $settings = Api::GetSettings();
+        $days = (int) $settings->GetValue('SuperAdminAuthTokenExpirationLifetimeDays', 1);
+        $data['@expire'] = time() + max(1, $days) * 86400;
+        $data['@session'] = bin2hex(random_bytes(32));
+        $hash = hash('sha256', $data['@session']);
+        if ($settings->DBName === '') {
+            // The setup UI needs a session to configure the database and run migrations.
+            $data['@setup'] = true;
+            Session::Set(self::SETUP_SESSION_KEY, $hash);
+            return;
+        }
+
+        self::adminSessions()->where('ExpiresAt', '<=', time())->delete();
+        self::adminSessions()->insert(['SessionHash' => $hash, 'ExpiresAt' => $data['@expire']]);
+    }
+
+    private function isActiveAdminSession(array $data)
+    {
+        if (($data['token'] ?? '') !== 'admin' || (int) ($data['id'] ?? 0) !== -1
+            || !is_string($data['@session'] ?? null) || ($data['@expire'] ?? 0) <= time()) {
+            return false;
+        }
+        $hash = hash('sha256', $data['@session']);
+        if (!empty($data['@setup'])) {
+            return hash_equals($hash, Session::get(self::SETUP_SESSION_KEY, ''));
+        }
+        return self::adminSessions()->where('SessionHash', $hash)->where('ExpiresAt', '>', time())->exists();
+    }
 
     public static function getTokenData($oAccount, $bSignMe = true)
     {
@@ -39,14 +81,15 @@ class UserSession
         $aData['@time'] = $iTime;
         $aData['@expire'] = $iExpire;
         $aData['@ver'] = self::TOKEN_VERSION;
-        if ($iExpire > 0) {
-            $aData['@expire'] = $iExpire;
+        $isAdmin = self::isSuperAdminToken($aData);
+        if ($isAdmin) {
+            $this->createAdminSession($aData);
         }
         $sAuthToken = Api::EncodeKeyValues(
             $aData
         );
 
-        if (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
+        if (!$isAdmin && \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
 
             $account = $aData['account'] ?? 0;
             $account_type = $aData['account_type'] ?? '';
@@ -60,7 +103,16 @@ class UserSession
     public function UpdateTimestamp($sAuthToken, $iTime = 0)
     {
         $aData = $this->Get($sAuthToken);
-        $sNewAuthToken = $this->Set($aData, $iTime);
+        if (!$aData) {
+            return false;
+        }
+        if (self::isSuperAdminToken($aData)) {
+            // Keep the original deadline and session ID. A concurrent logout revokes both token values.
+            $aData['@time'] = $iTime;
+            $sNewAuthToken = Api::EncodeKeyValues($aData);
+        } else {
+            $sNewAuthToken = $this->Set($aData, $iTime);
+        }
 
         // Reissuing the token invalidates anything keyed off the old token value (e.g. the
         // 2FA trusted-device AuthTokenHash in TwoFactorAuth\Manager::saveDevice()). Let
@@ -87,14 +139,15 @@ class UserSession
         $mResult = true;
 
         if (is_string($sAuthToken) && strlen($sAuthToken) !== 0) {
-            $bStoreAuthTokenInDB = \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false);
-
-            // check if the auth token is stored in the database
-            if ($bStoreAuthTokenInDB && !$this->GetFromDB($sAuthToken)) {
+            $mAuthTokenData = Api::DecodeKeyValues($sAuthToken);
+            if (self::isSuperAdminToken($mAuthTokenData)) {
+                if (!$this->isActiveAdminSession($mAuthTokenData)) {
+                    return false;
+                }
+            } elseif (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false) && !$this->GetFromDB($sAuthToken)) {
                 return false;
             }
 
-            $mAuthTokenData = Api::DecodeKeyValues($sAuthToken);
             $sReason = '';
 
             // checking the validity of auth token data
@@ -174,7 +227,20 @@ class UserSession
 
     public function Delete($sAuthToken)
     {
-        if (is_string($sAuthToken) && \Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
+        if (!is_string($sAuthToken)) {
+            return;
+        }
+        $data = Api::DecodeKeyValues($sAuthToken);
+        if (self::isSuperAdminToken($data)) {
+            if (is_string($data['@session'] ?? null)) {
+                $hash = hash('sha256', $data['@session']);
+                if (empty($data['@setup'])) {
+                    self::adminSessions()->where('SessionHash', $hash)->delete();
+                } elseif (hash_equals($hash, Session::get(self::SETUP_SESSION_KEY, ''))) {
+                    Session::clear(self::SETUP_SESSION_KEY);
+                }
+            }
+        } elseif (\Aurora\Api::GetSettings()->GetValue('StoreAuthTokenInDB', false)) {
             try {
                 $this->DeleteFromDB($sAuthToken);
             } catch (\Aurora\System\Exceptions\DbException $oEx) {
@@ -182,9 +248,7 @@ class UserSession
             }
         }
 
-        if (is_string($sAuthToken)) {
-            unset(self::$aTokensCache[$sAuthToken]);
-        }
+        unset(self::$aTokensCache[$sAuthToken]);
     }
 
     public function DeleteAllUserSessions($iUserId)
