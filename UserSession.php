@@ -111,7 +111,7 @@ class UserSession
             $aData['@time'] = $iTime;
             $sNewAuthToken = Api::EncodeKeyValues($aData);
         } else {
-            $sNewAuthToken = $this->Set($aData, $iTime);
+            $sNewAuthToken = $this->Set($aData, $iTime, $aData['@expire'] ?? 0);
         }
 
         // Reissuing the token invalidates anything keyed off the old token value (e.g. the
